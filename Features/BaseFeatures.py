@@ -32,7 +32,7 @@ class TextFeature(Feature):
         super().__init__()
 
     @abstractmethod
-    def get_description(character_stat_block: Character) -> str:
+    def get_description(self, character_stat_block: Character) -> str:
         pass
 
     def modify(self, character_stat_block: Character):

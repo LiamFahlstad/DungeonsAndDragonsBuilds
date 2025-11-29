@@ -11,7 +11,7 @@ class SecondWind(TextFeature):
     def __init__(self):
         super().__init__(name="Second Wind", origin="Fighter Level 1")
 
-    def get_description(self, character_stat_block: Character):
+    def get_description(self, character_stat_block: Character) -> str:
         uses = 2
         if character_stat_block.level >= 4:
             uses = 3
@@ -37,7 +37,7 @@ class ActionSurge(TextFeature):
     def __init__(self):
         super().__init__(name="Action Surge", origin="Fighter Level 2")
 
-    def get_description(self, character_stat_block: Character):
+    def get_description(self, character_stat_block: Character) -> str:
         return (
             "Level 2: You can take one additional action on your turn.\n"
             "You must finish a short or long rest to use this feature again.\n"
@@ -48,7 +48,7 @@ class TacticalMind(TextFeature):
     def __init__(self):
         super().__init__(name="Tactical Mind", origin="Fighter Level 2")
 
-    def get_description(self, character_stat_block: Character):
+    def get_description(self, character_stat_block: Character) -> str:
         return (
             "When you fail an ability check, you can use Second Wind to roll 1d10 and add it to the check.\n"
             "If the check still fails, the Second Wind use isn't expended.\n"
@@ -63,7 +63,7 @@ class SuperiorityDice(TextFeature):
     def add_maneuver(self, maneuver: Maneuvers.Maneuver):
         self.maneuvers.append(maneuver)
 
-    def get_description(self, character_stat_block: Character):
+    def get_description(self, character_stat_block: Character) -> str:
         if character_stat_block.level < 7:
             number_of_superiority_die = 4
         elif character_stat_block.level < 15:
@@ -94,7 +94,7 @@ class ExtraAttack(TextFeature):
     def __init__(self):
         super().__init__(name="Extra Attack", origin="Fighter Level 5")
 
-    def get_description(self, character_stat_block: Character):
+    def get_description(self, character_stat_block: Character) -> str:
         return "You can attack twice, instead of once, whenever you take the Attack action on your turn.\n"
 
 
@@ -102,5 +102,5 @@ class TacticalShift(TextFeature):
     def __init__(self):
         super().__init__(name="Tactical Shift", origin="Fighter Level 5")
 
-    def get_description(self, character_stat_block: Character):
+    def get_description(self, character_stat_block: Character) -> str:
         return "Whenever you activate your Second Wind with a Bonus Action, you can move up to half your Speed without provoking Opportunity Attacks.\n"

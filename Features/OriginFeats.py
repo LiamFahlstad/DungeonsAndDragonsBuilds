@@ -26,7 +26,7 @@ class Alert(TextFeature):
     def __init__(self):
         super().__init__(name="Alert", origin="Origin Feat")
 
-    def get_description(self, character_stat_block: Character):
+    def get_description(self, character_stat_block: Character) -> str:
         return (
             "Initiative Proficiency. When you roll Initiative, you can add your Proficiency Bonus to the roll.\n"
             "Initiative Swap. Immediately after you roll Initiative, you can swap your Initiative with the Initiative of one willing ally in the same combat. You can't make this swap if you or the ally has the Incapacitated condition.\n"
@@ -60,7 +60,7 @@ class Crater(TextFeature):
 
         return "\n".join(f" * {tool_map[t]}" for t in self.artisans_tools)
 
-    def get_description(self, character_stat_block: Character):
+    def get_description(self, character_stat_block: Character) -> str:
         return (
             "Tool Proficiency. You gain proficiency with three different Artisan's Tools of your choice from the Fast Crafting table.\n"
             "Discount. Whenever you buy a nonmagical item, you receive a 20 percent discount on it.\n"
@@ -76,7 +76,7 @@ class Healer(TextFeature):
     def __init__(self):
         super().__init__(name="Healer", origin="Origin Feat")
 
-    def get_description(self, character_stat_block: Character):
+    def get_description(self, character_stat_block: Character) -> str:
         return (
             "Battle Medic:\n"
             "  If you have a Healer's Kit, you can expend one use of it and tend to a creature within 5 feet of yourself as a Utilize action.\n"
@@ -91,7 +91,7 @@ class Lucky(TextFeature):
     def __init__(self):
         super().__init__(name="Lucky", origin="Origin Feat")
 
-    def get_description(self, character_stat_block: Character):
+    def get_description(self, character_stat_block: Character) -> str:
         return (
             "Luck Points. You have a number of Luck Points equal to your Proficiency Bonus and can spend the points on the benefits below. You regain your expended Luck Points when you finish a Long Rest.\n"
             "Advantage. When you roll a d20 for a D20 Test, you can spend 1 Luck Point to give yourself Advantage on the roll.\n"
@@ -104,7 +104,7 @@ class MagicInitiate(TextFeature):
         self.spell_list = spell_list
         super().__init__(name="Magic Initiate", origin="Origin Feat")
 
-    def get_description(self, character_stat_block: Character):
+    def get_description(self, character_stat_block: Character) -> str:
         return (
             f"Spell List: {self.spell_list}\n"
             "Two Cantrips. You learn two cantrips of your choice from the Cleric, Druid, or Wizard spell list.\n"
@@ -123,7 +123,7 @@ class Musician(TextFeature):
     def __init__(self):
         super().__init__(name="Musician", origin="Origin Feat")
 
-    def get_description(self, character_stat_block: Character):
+    def get_description(self, character_stat_block: Character) -> str:
         return (
             "Instrument Training: You gain proficiency with three Musical Instruments of your choice.\n"
             "\n"
@@ -135,7 +135,7 @@ class SavageAttacker(TextFeature):
     def __init__(self):
         super().__init__(name="Savage Attacker", origin="Origin Feat")
 
-    def get_description(self, character_stat_block: Character):
+    def get_description(self, character_stat_block: Character) -> str:
         return (
             "You've trained to deal particularly damaging strikes.\n"
             "Once per turn when you hit a target with a weapon, you can roll the weapon's damage dice twice and use either roll against the target.\n"
@@ -146,7 +146,7 @@ class TavernBrawler(TextFeature):
     def __init__(self):
         super().__init__(name="Tavern Brawler", origin="Origin Feat")
 
-    def get_description(self, character_stat_block: Character):
+    def get_description(self, character_stat_block: Character) -> str:
         return (
             "Enhanced Unarmed Strike. When you hit with your Unarmed Strike and deal damage, you can deal Bludgeoning damage equal to 1d4 plus your Strength modifier instead of the normal damage of an Unarmed Strike.\n"
             "\n"

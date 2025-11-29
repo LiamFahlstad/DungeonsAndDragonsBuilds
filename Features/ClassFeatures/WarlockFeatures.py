@@ -10,7 +10,7 @@ class MagicalCunning(TextFeature):
     def __init__(self):
         super().__init__(name="Magical Cunning", origin="Warlock Level 2")
 
-    def get_description(self, character_stat_block: Character):
+    def get_description(self, character_stat_block: Character) -> str:
         return (
             "You can perform an esoteric rite for 1 minute.\n"
             "At the end of it, you regain expended Pact Magic spell slots but no more than a number equal to half your maximum (round up).\n"
@@ -22,7 +22,7 @@ class StepsOfTheFey(TextFeature):
     def __init__(self):
         super().__init__(name="Steps of the Fey", origin="Warlock Archfey Level 3")
 
-    def get_description(self, character_stat_block: Character):
+    def get_description(self, character_stat_block: Character) -> str:
         charisma_mod = character_stat_block.get_ability_modifier(Ability.CHARISMA)
         return (
             f"You can cast Misty Step without expending a spell slot."

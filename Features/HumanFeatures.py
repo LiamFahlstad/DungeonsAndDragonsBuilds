@@ -11,7 +11,7 @@ class Resourceful(TextFeature):
     def __init__(self):
         super().__init__(name="Resourceful", origin="Human Trait")
 
-    def get_description(self, character_stat_block: Character):
+    def get_description(self, character_stat_block: Character) -> str:
         return "You gain Heroic Inspiration whenever you finish a Long Rest.\n"
 
 
@@ -31,5 +31,5 @@ class Versatile(TextFeature):
     def __init__(self):
         super().__init__(name="Versatile", origin="Human Trait")
 
-    def get_description(self, character_stat_block: Character):
+    def get_description(self, character_stat_block: Character) -> str:
         return "You gain an Origin feat of your choice (see 'Feats'). Skilled is recommended.\n"

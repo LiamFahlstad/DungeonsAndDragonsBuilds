@@ -43,7 +43,7 @@ class ChannelDivinityFeature(TextFeature):
             f"{indent}If the creature drops to 0 Hit Points before the vow ends, you can transfer the vow to a different creature within 30 feet of yourself (no action required).\n"
         )
 
-    def get_description(self, character_stat_block: Character):
+    def get_description(self, character_stat_block: Character) -> str:
         usages = 2
         if character_stat_block.level >= 11:
             usages = 3
@@ -70,7 +70,7 @@ class PaladinsSmite(TextFeature):
     def __init__(self):
         super().__init__(name="Paladin's Smite", origin="Paladin Level 2")
 
-    def get_description(self, character_stat_block: Character):
+    def get_description(self, character_stat_block: Character) -> str:
         return "Level 2: Divine Smite is always prepared and can be cast once per Long Rest without a spell slot.\n"
 
 
@@ -78,7 +78,7 @@ class LayOnHands(TextFeature):
     def __init__(self):
         super().__init__(name="Lay on Hands", origin="Paladin Level 1")
 
-    def get_description(self, character_stat_block: Character):
+    def get_description(self, character_stat_block: Character) -> str:
         return (
             "You have a pool of healing power.\n"
             f"Power in pool: 5 x Paladin level (5 x {character_stat_block.level} = {5 * character_stat_block.level}) Hit Points.\n"
@@ -93,7 +93,7 @@ class ExtraAttack(TextFeature):
     def __init__(self):
         super().__init__(name="Extra Attack", origin="Paladin Level 5")
 
-    def get_description(self, character_stat_block: Character):
+    def get_description(self, character_stat_block: Character) -> str:
         return (
             "Level 5: Extra Attack\n"
             "You can attack twice instead of once whenever you take the Attack action on your turn.\n"
@@ -104,7 +104,7 @@ class FaithfulSteed(TextFeature):
     def __init__(self):
         super().__init__(name="Faithful Steed", origin="Paladin Level 5")
 
-    def get_description(self, character_stat_block: Character):
+    def get_description(self, character_stat_block: Character) -> str:
         return (
             "Level 5: Faithful Steed\n"
             "You can call on the aid of an otherworldly steed. You always have the Find Steed spell prepared.\n"
@@ -116,7 +116,7 @@ class AuraOfProtection(TextFeature):
     def __init__(self):
         super().__init__(name="Aura of Protection", origin="Paladin Level 6")
 
-    def get_description(self, character_stat_block: Character):
+    def get_description(self, character_stat_block: Character) -> str:
         charisma_mod = character_stat_block.get_ability_modifier(Ability.CHARISMA)
         return (
             "Level 6: Aura of Protection\n"
