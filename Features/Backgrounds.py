@@ -1,4 +1,4 @@
-from Character import Character
+from CharacterStatBlock import CharacterStatBlock
 from Definitions import Ability, Skill
 from Features.BaseFeatures import CharacterFeature
 
@@ -12,7 +12,7 @@ class FreeBackgroundAbilityBonus(CharacterFeature):
         if not (sum([bonus[1] for bonus in self.bonuses]) == 3):
             raise ValueError("Bonuses must sum to 3.")
 
-    def modify(self, character_stat_block: Character):
+    def modify(self, character_stat_block: CharacterStatBlock):
         for ability, bonus in self.bonuses:
             character_stat_block.abilities.add_bonus(ability, bonus)
 
@@ -25,7 +25,7 @@ class FreeBackgroundSkillProficiency(CharacterFeature):
             raise ValueError("Must choose exactly two skills for proficiency.")
         self.skills = skills
 
-    def modify(self, character_stat_block: Character):
+    def modify(self, character_stat_block: CharacterStatBlock):
         for skill in self.skills:
             if character_stat_block.skills.proficiencies.get(skill):
                 raise ValueError(f"Character is already proficient in {skill}.")

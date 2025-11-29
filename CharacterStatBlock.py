@@ -7,7 +7,7 @@ from StatBlocks.CombatStatBlock import CombatStatBlock
 from Utils import write_table, write_separator
 
 
-class Character:
+class CharacterStatBlock:
     def __init__(
         self,
         name: str,

@@ -1,6 +1,6 @@
 from enum import Enum
 from typing import Optional
-from Character import Character
+from CharacterStatBlock import CharacterStatBlock
 from Definitions import Ability
 from Features.BaseFeatures import TextFeature
 from Utils import write_table
@@ -134,21 +134,25 @@ class AbstractWeapon(TextFeature):
     def stats(self) -> WeaponsStats:
         raise NotImplementedError("Subclasses must implement stats property.")
 
-    def calculate_ability_modifier_bonus(self, character_stat_block: Character) -> str:
+    def calculate_ability_modifier_bonus(
+        self, character_stat_block: CharacterStatBlock
+    ) -> str:
         ability_modifier = character_stat_block.get_ability_modifier(
             self.stats().ability
         )
         return f"{ability_modifier} (ability mod: {self.stats().ability.value})"
 
     def calculate_proficiency_damage_bonus(
-        self, character_stat_block: Character
+        self, character_stat_block: CharacterStatBlock
     ) -> str:
         if self.player_is_proficient:
             proficiency_bonus = character_stat_block.get_proficiency_bonus()
             return f"{proficiency_bonus} (Proficient)"
         return "0 (Not Proficient)"
 
-    def calculate_total_attack_roll_bonus(self, character_stat_block: Character) -> str:
+    def calculate_total_attack_roll_bonus(
+        self, character_stat_block: CharacterStatBlock
+    ) -> str:
         attack_roll_bonus = (
             f"{self.calculate_ability_modifier_bonus(character_stat_block)}"
         )
@@ -162,7 +166,7 @@ class AbstractWeapon(TextFeature):
     def get_headers(self) -> list[str]:
         return ["Field", "Value"]
 
-    def get_rows(self, character_stat_block: Character) -> list[list[str]]:
+    def get_rows(self, character_stat_block: CharacterStatBlock) -> list[list[str]]:
         stats = self.stats()
         rows = []
         rows.append(["Name", stats.name])
@@ -189,10 +193,10 @@ class AbstractWeapon(TextFeature):
 
         return rows
 
-    def get_description(character_stat_block: Character) -> str:
+    def get_description(character_stat_block: CharacterStatBlock) -> str:
         pass
 
-    def write_to_file(self, character_stat_block: Character, file):
+    def write_to_file(self, character_stat_block: CharacterStatBlock, file):
         headers = self.get_headers()
         rows = self.get_rows(character_stat_block)
         write_table(headers, rows, file)
@@ -734,7 +738,7 @@ class Pistol(AbstractWeapon):
 
 
 def write_weapons_to_file(
-    weapons: list[AbstractWeapon], character_stat_block: Character, file
+    weapons: list[AbstractWeapon], character_stat_block: CharacterStatBlock, file
 ):
     if not weapons:
         return

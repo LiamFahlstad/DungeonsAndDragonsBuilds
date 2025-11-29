@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from Character import Character
+from CharacterStatBlock import CharacterStatBlock
 from Definitions import Ability, Skill, DiceRollCondition
 from Utils import write_table
 
@@ -8,18 +8,18 @@ class Feature(ABC):
     """A feature can be anything"""
 
     @abstractmethod
-    def write_to_file(self, character_stat_block: Character, file):
+    def write_to_file(self, character_stat_block: CharacterStatBlock, file):
         pass
 
     @abstractmethod
-    def modify(self, character_stat_block: Character):
+    def modify(self, character_stat_block: CharacterStatBlock):
         pass
 
 
 class CharacterFeature(Feature):
     """A feature that can modify a character's stat block."""
 
-    def write_to_file(self, character_stat_block: Character, file):
+    def write_to_file(self, character_stat_block: CharacterStatBlock, file):
         pass
 
 
@@ -32,14 +32,14 @@ class TextFeature(Feature):
         super().__init__()
 
     @abstractmethod
-    def get_description(self, character_stat_block: Character) -> str:
+    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         pass
 
-    def modify(self, character_stat_block: Character):
+    def modify(self, character_stat_block: CharacterStatBlock):
         pass
 
     def add_feature_effects(
-        self, character_stat_block: Character, text_feature: "TextFeature"
+        self, character_stat_block: CharacterStatBlock, text_feature: "TextFeature"
     ):
         description = text_feature.get_description(character_stat_block)
         indent = "    "
@@ -51,7 +51,7 @@ class TextFeature(Feature):
         text += indented + "\n"
         return text
 
-    def write_to_file(self, character_stat_block: Character, file):
+    def write_to_file(self, character_stat_block: CharacterStatBlock, file):
         file.write(f"Name: {self.name}\n")
         file.write(f"Origin: {self.origin}\n")
         description = self.get_description(character_stat_block)
@@ -71,7 +71,7 @@ class MagicianDruidFeature(CharacterFeature):
                 "MagicianDruidFeature can only be applied to Arcana or Nature skills."
             )
 
-    def modify(self, character_stat_block: Character):
+    def modify(self, character_stat_block: CharacterStatBlock):
         character_stat_block.skills.bonuses[self.skill] = (
             character_stat_block.get_ability_modifier(Ability.WISDOM)
         )
@@ -83,5 +83,5 @@ class SkillfulFeature(CharacterFeature):
     def __init__(self, skill: Skill):
         self.skill = skill
 
-    def modify(self, character_stat_block: Character):
+    def modify(self, character_stat_block: CharacterStatBlock):
         character_stat_block.skills.proficiencies[self.skill] = True

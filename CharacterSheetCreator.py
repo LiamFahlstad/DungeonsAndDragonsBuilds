@@ -1,7 +1,7 @@
 from enum import Enum
 import pathlib
 from typing import Optional
-from Character import Character
+from CharacterStatBlock import CharacterStatBlock
 from Definitions import Ability, Skill, CharacterClass
 import Definitions
 import Scrapers.InvocationScrapers as InvocationScrapers
@@ -94,7 +94,7 @@ class CharacterSheetData:
             speed=self.speed,
             size=self.size,
         )
-        character = Character(
+        character = CharacterStatBlock(
             name=self.character_name,
             character_class=self.character_class,
             character_subclass=self.character_subclass,

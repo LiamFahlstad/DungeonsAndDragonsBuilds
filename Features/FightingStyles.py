@@ -1,6 +1,6 @@
 from abc import abstractmethod
 from pyparsing import ABC
-from Character import Character
+from CharacterStatBlock import CharacterStatBlock
 from Features.Weapons import AbstractWeapon, WeaponType, WeaponProperty
 
 
@@ -14,7 +14,7 @@ class FightingStyle(ABC):
 
 class FightStyleCharacterFeature(FightingStyle):
     @abstractmethod
-    def modify(self, character_stat_block: Character):
+    def modify(self, character_stat_block: CharacterStatBlock):
         pass
 
 
@@ -46,7 +46,7 @@ class BlindFighting(FightingStyle):
 
 
 class Defense(FightStyleCharacterFeature):
-    def modify(self, character_stat_block: Character):
+    def modify(self, character_stat_block: CharacterStatBlock):
         character_stat_block.combat.armor_class_bonus += 1
 
     def write_to_file(self, file):

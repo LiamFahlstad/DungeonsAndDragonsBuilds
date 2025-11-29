@@ -1,4 +1,4 @@
-from Character import Character
+from CharacterStatBlock import CharacterStatBlock
 from Definitions import Ability, DiceRollCondition, Skill
 from Features import Weapons, Maneuvers
 from Features.BaseFeatures import CharacterFeature, TextFeature
@@ -9,7 +9,7 @@ RANGER_HIT_DIE = 10
 
 class SpellSlots(CharacterFeature):
 
-    def modify(self, character_stat_block: Character):
+    def modify(self, character_stat_block: CharacterStatBlock):
 
         level_1_spell_slots = 0
         level_2_spell_slots = 0
@@ -62,7 +62,7 @@ class FavoredEnemy(TextFeature):
     def __init__(self):
         super().__init__(name="Favored Enemy", origin="Ranger Level 1")
 
-    def get_description(self, character_stat_block: Character) -> str:
+    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         free_hunters_mark = 0
         if character_stat_block.level >= 1:
             free_hunters_mark = 2
@@ -81,7 +81,7 @@ class ActionSurge(TextFeature):
     def __init__(self):
         super().__init__(name="Action Surge", origin="Fighter Level 2")
 
-    def get_description(self, character_stat_block: Character) -> str:
+    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         return (
             "Level 2: You can take one additional action on your turn.\n"
             "You must finish a short or long rest to use this feature again.\n"
@@ -92,7 +92,7 @@ class TacticalMind(TextFeature):
     def __init__(self):
         super().__init__(name="Tactical Mind", origin="Fighter Level 2")
 
-    def get_description(self, character_stat_block: Character) -> str:
+    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         return (
             "When you fail an ability check, you can use Second Wind to roll 1d10 and add it to the check.\n"
             "If the check still fails, the Second Wind use isn't expended.\n"
@@ -107,7 +107,7 @@ class SuperiorityDice(TextFeature):
     def add_maneuver(self, maneuver: Maneuvers):
         self.maneuvers.append(maneuver)
 
-    def get_description(self, character_stat_block: Character) -> str:
+    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         if character_stat_block.level < 7:
             number_of_superiority_die = 4
         elif character_stat_block.level < 15:
@@ -138,7 +138,7 @@ class ExtraAttack(TextFeature):
     def __init__(self):
         super().__init__(name="Extra Attack", origin="Fighter Level 5")
 
-    def get_description(self, character_stat_block: Character) -> str:
+    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         return "You can attack twice, instead of once, whenever you take the Attack action on your turn.\n"
 
 
@@ -146,5 +146,5 @@ class TacticalShift(TextFeature):
     def __init__(self):
         super().__init__(name="Tactical Shift", origin="Fighter Level 5")
 
-    def get_description(self, character_stat_block: Character) -> str:
+    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         return "Whenever you activate your Second Wind with a Bonus Action, you can move up to half your Speed without provoking Opportunity Attacks.\n"
