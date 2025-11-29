@@ -1,7 +1,6 @@
 from Character import Character
 from Definitions import Ability, DiceRollCondition, Skill
 from Features.BaseFeatures import CharacterFeature, TextFeature
-import StatBlocks
 
 
 WARLOCK_HIT_DIE = 8

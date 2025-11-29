@@ -1,11 +1,9 @@
 from typing import Optional
 from Definitions import Ability, Skill, CharacterClass
-from StatBlocks import (
-    AbilitiesStatBlock,
-    CombatStatBlock,
-    SavingThrowsStatBlock,
-    SkillsStatBlock,
-)
+from StatBlocks.AbilitiesStatBlock import AbilitiesStatBlock
+from StatBlocks.SavingThrowsStatBlock import SavingThrowsStatBlock
+from StatBlocks.SkillsStatBlock import SkillsStatBlock
+from StatBlocks.CombatStatBlock import CombatStatBlock
 from Utils import write_table, write_separator
 
 

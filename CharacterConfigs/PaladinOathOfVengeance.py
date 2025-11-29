@@ -6,7 +6,7 @@ from Features import Backgrounds
 from Features import FightingStyles
 from Features import Weapons
 from Features.ClassFeatures import PaladinFeatures
-import StatBlocks
+import StatBlocks.AllStatBlocks as AllStatBlocks
 
 DATA = CharacterSheetCreator.CharacterSheetData()
 
@@ -26,7 +26,7 @@ DATA.add_feature(PaladinFeatures.SpellSlots())
 # ================ LEVEL 0 ============= #
 
 # Distribute 15, 14, 13, 12, 10, 8 among your abilities.
-DATA.abilities = StatBlocks.StandardArrayAbilitiesStatBlock(
+DATA.abilities = StandardArrayAbilitiesStatBlock(
     strength=15,
     dexterity=10,
     constitution=14,
@@ -36,7 +36,7 @@ DATA.abilities = StatBlocks.StandardArrayAbilitiesStatBlock(
 )
 
 # Choose two skills to be proficient in
-DATA.skills = StatBlocks.PaladinSkillsStatBlock(
+DATA.skills = PaladinSkillsStatBlock(
     proficiencies={
         Skill.ATHLETICS: False,
         Skill.INSIGHT: True,
@@ -48,7 +48,7 @@ DATA.skills = StatBlocks.PaladinSkillsStatBlock(
 )
 
 # Leave as is: Paladin specific saving throws
-DATA.saving_throws = StatBlocks.PaladinSavingThrowsStatBlock()
+DATA.saving_throws = PaladinSavingThrowsStatBlock()
 
 # Leave as is: Paladin specific combat stats
 DATA.hit_die = PaladinFeatures.PALADIN_HIT_DIE

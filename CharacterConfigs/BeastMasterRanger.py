@@ -6,7 +6,7 @@ from Features import Backgrounds
 from Features import FightingStyles
 from Features import Weapons
 from Features.ClassFeatures import RangerFeatures
-import StatBlocks
+import StatBlocks.AllStatBlocks as AllStatBlocks
 
 DATA = CharacterSheetCreator.CharacterSheetData()
 
@@ -25,7 +25,7 @@ DATA.add_feature(RangerFeatures.SpellSlots())
 # ================ LEVEL 0 ============= #
 
 # Distribute 15, 14, 13, 12, 10, 8 among your abilities.
-DATA.abilities = StatBlocks.StandardArrayAbilitiesStatBlock(
+DATA.abilities = StandardArrayAbilitiesStatBlock(
     strength=8,
     dexterity=15,
     constitution=13,
@@ -35,7 +35,7 @@ DATA.abilities = StatBlocks.StandardArrayAbilitiesStatBlock(
 )
 
 # Choose two skills to be proficient in
-DATA.skills = StatBlocks.FighterSkillsStatBlock(
+DATA.skills = FighterSkillsStatBlock(
     proficiencies={
         Skill.ANIMAL_HANDLING: False,
         Skill.ATHLETICS: False,
@@ -49,7 +49,7 @@ DATA.skills = StatBlocks.FighterSkillsStatBlock(
 )
 
 # Leave as is: Paladin specific saving throws
-DATA.saving_throws = StatBlocks.RangerSavingThrowsStatBlock()
+DATA.saving_throws = RangerSavingThrowsStatBlock()
 
 # Leave as is: Paladin specific combat stats
 DATA.hit_die = RangerFeatures.RANGER_HIT_DIE

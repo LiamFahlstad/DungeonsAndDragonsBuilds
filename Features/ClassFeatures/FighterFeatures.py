@@ -2,7 +2,6 @@ from Character import Character
 from Definitions import Ability, DiceRollCondition, Skill
 from Features import Weapons, Maneuvers
 from Features.BaseFeatures import CharacterFeature, TextFeature
-import StatBlocks
 
 
 FIGHTER_HIT_DIE = 10
@@ -61,7 +60,7 @@ class SuperiorityDice(TextFeature):
         self.maneuvers = []
         super().__init__(name="Superiority Dice", origin="Fighter Battle Master")
 
-    def add_maneuver(self, maneuver: Maneuvers):
+    def add_maneuver(self, maneuver: Maneuvers.Maneuver):
         self.maneuvers.append(maneuver)
 
     def get_description(self, character_stat_block: Character):

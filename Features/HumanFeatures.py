@@ -1,7 +1,6 @@
 from Character import Character
 from Definitions import Ability, DiceRollCondition, Skill, CreatureSize
 from Features.BaseFeatures import CharacterFeature, TextFeature
-import StatBlocks
 
 
 SPEED = 30  # Given by your species

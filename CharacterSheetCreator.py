@@ -4,10 +4,13 @@ from typing import Optional
 from Character import Character
 from Definitions import Ability, Skill, CharacterClass
 import Definitions
-import InvocationParser
-import SpellParser
+import Scrapers.InvocationScrapers as InvocationScrapers
+import Scrapers.SpellScraper as SpellScraper
 from Features.Weapons import AbstractWeapon, WeaponMastery, write_weapons_to_file
-import StatBlocks
+from StatBlocks.CombatStatBlock import CombatStatBlock
+from StatBlocks.SkillsStatBlock import SkillsStatBlock
+from StatBlocks.AbilitiesStatBlock import AbilitiesStatBlock
+from StatBlocks.SavingThrowsStatBlock import SavingThrowsStatBlock
 import Utils
 from Features.FightingStyles import (
     FightingStyle,
@@ -25,12 +28,12 @@ class CharacterSheetData:
     character_class: Optional[CharacterClass] = None
     character_subclass: Optional[str] = None
     level: Optional[int] = None
-    abilities: Optional[StatBlocks.AbilitiesStatBlock] = None
-    skills: Optional[StatBlocks.SkillsStatBlock] = None
+    abilities: Optional[AbilitiesStatBlock] = None
+    skills: Optional[SkillsStatBlock] = None
     hit_die: Optional[int] = None
     speed: Optional[int] = None
     size: Optional[Definitions.CreatureSize] = None
-    saving_throws: Optional[StatBlocks.SavingThrowsStatBlock] = None
+    saving_throws: Optional[SavingThrowsStatBlock] = None
     features: list[Feature] = []
     invocations: list[str] = []
     spells: list[str] = []
@@ -86,7 +89,7 @@ class CharacterSheetData:
         self._create_character_sheet()
 
     def _create_character_sheet(self):
-        combat = StatBlocks.CombatStatBlock(
+        combat = CombatStatBlock(
             hit_die=self.hit_die,  # Paladin hit die is d10
             speed=self.speed,
             size=self.size,
@@ -147,7 +150,7 @@ class CharacterSheetData:
                 file.write("\n")
                 Utils.write_separator(file, "Invocations")
                 for invocation_index, invocation_name in enumerate(self.invocations):
-                    invocation = InvocationParser.InvocationParser(invocation_name)
+                    invocation = InvocationScrapers.InvocationParser(invocation_name)
                     invocation.fetch()
                     invocation.write_to_file(file)
                     if invocation_index < len(self.invocations) - 1:
@@ -170,7 +173,7 @@ class CharacterSheetData:
                 file.write("\n")
                 Utils.write_separator(file, "Spells")
                 for spell_index, spell_name in enumerate(self.spells):
-                    spell = SpellParser.SpellParser(spell_name)
+                    spell = SpellScraper.SpellParser(spell_name)
                     spell.fetch()
                     spell.write_to_file(file)
                     if spell_index < len(self.spells) - 1:

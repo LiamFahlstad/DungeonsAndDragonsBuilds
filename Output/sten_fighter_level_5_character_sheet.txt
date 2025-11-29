@@ -1,0 +1,139 @@
+################################################################################
+# =============================== General Info =============================== #
+################################################################################
+Field              | Value                        
+-------------------+------------------------------
+Name               | Sten                         
+Level              | 5                            
+Character Class    | Fighter                      
+Character Subclass | FighterSubclass.BATTLE_MASTER
+Proficiency Bonus  | 3                            
+
+################################################################################
+# =============================== Combat Stats =============================== #
+################################################################################
+Field          | Value  
+---------------+--------
+Max Hit Points | 64     
+Armor Class    | 19     
+Initiative     | d20 + 1
+Speed (ft)     | 30     
+Size           | Medium 
+
+################################################################################
+# ================================ Abilities ================================= #
+################################################################################
+Ability      | Score | Modifier | Saving Throw | Proficient
+-------------+-------+----------+--------------+-----------
+Strength     | 16    | 3        | 6            | Yes       
+Dexterity    | 12    | 1        | 1            | No        
+Constitution | 18    | 4        | 7            | Yes       
+Intelligence | 8     | -1       | -1           | No        
+Wisdom       | 10    | 0        | 0            | No        
+Charisma     | 13    | 1        | 1            | No        
+
+################################################################################
+# ================================== Skills ================================== #
+################################################################################
+Skill           | Modifier | Proficient | Ability      | RollCondition
+----------------+----------+------------+--------------+--------------
+Acrobatics      | 4        | Yes        | Dexterity    | Neutral      
+Animal Handling | 0        | No         | Wisdom       | Neutral      
+Arcana          | -1       | No         | Intelligence | Neutral      
+Athletics       | 6        | Yes        | Strength     | Neutral      
+Deception       | 1        | No         | Charisma     | Neutral      
+History         | -1       | No         | Intelligence | Neutral      
+Insight         | 0        | No         | Wisdom       | Neutral      
+Intimidation    | 4        | Yes        | Charisma     | Neutral      
+Investigation   | -1       | No         | Intelligence | Neutral      
+Medicine        | 0        | No         | Wisdom       | Neutral      
+Nature          | -1       | No         | Intelligence | Neutral      
+Perception      | 0        | No         | Wisdom       | Neutral      
+Performance     | 1        | No         | Charisma     | Neutral      
+Persuasion      | 4        | Yes        | Charisma     | Neutral      
+Religion        | -1       | No         | Intelligence | Neutral      
+Sleight of Hand | 1        | No         | Dexterity    | Neutral      
+Stealth         | 1        | No         | Dexterity    | Disadvantage 
+Survival        | 3        | Yes        | Wisdom       | Neutral      
+
+################################################################################
+# ================================= Features ================================= #
+################################################################################
+Name: Second Wind
+Origin: Fighter Level 1
+Description: You have a limited well of physical and mental stamina that you can draw on. As a Bonus Action, you can use it to regain Hit Points equal to 1d10 plus your Fighter level.
+You can use this feature 3 time(s). You regain one expended use when you finish a Short Rest, and you regain all expended uses when you finish a Long Rest.
+
+    Tactical Mind Fighter Level 2:
+    When you fail an ability check, you can use Second Wind to roll 1d10 and add it to the check.
+    If the check still fails, the Second Wind use isn't expended.
+
+    Tactical Shift Fighter Level 5:
+    Whenever you activate your Second Wind with a Bonus Action, you can move up to half your Speed without provoking Opportunity Attacks.
+
+Name: Action Surge
+Origin: Fighter Level 2
+Description: Level 2: You can take one additional action on your turn.
+You must finish a short or long rest to use this feature again.
+
+Name: Extra Attack
+Origin: Fighter Level 5
+Description: You can attack twice, instead of once, whenever you take the Attack action on your turn.
+
+Name: Superiority Dice
+Origin: Fighter Battle Master
+Description: These are 1d8s, and you can expend them to fuel your maneuvers.
+You regain all expended superiority dice when you finish a short or long rest.
+Number of Superiority Dice: 4
+
+    Goading Attack Maneuver:
+    When you hit a creature with an attack roll, you can expend one Superiority
+    Die to attempt to goad the target into attacking you. Add the Superiority Die to the attack's
+    damage roll. The target must succeed on a Wisdom saving throw (DC 14) or the target has
+    Disadvantage on attack rolls against targets other than you until the end of your next turn.
+
+    Pushing Attack Maneuver:
+    When you hit a creature with a weapon attack, you can expend one superiority die to attempt to drive the target back.
+    You add the superiority die to the attack's damage roll, and if the target is Large or smaller, it must make a Strength saving throw (DC 14).
+    On a failed save, you push the target up to 15 feet away from you.
+
+    Riposte Maneuver:
+    When a creature misses you with a melee attack,
+    you can use your reaction and expend one superiority die to make a melee weapon attack against the creature.
+    If you hit, you add the superiority die to the attack's damage roll.
+
+Name: Resourceful
+Origin: Human Trait
+Description: You gain Heroic Inspiration whenever you finish a Long Rest.
+
+Name: Versatile
+Origin: Human Trait
+Description: You gain an Origin feat of your choice (see 'Feats'). Skilled is recommended.
+
+
+################################################################################
+# ================================= Weapons ================================== #
+################################################################################
+Field                       | Value                                                                                 
+----------------------------+---------------------------------------------------------------------------------------
+Name                        | Longsword                                                                             
+Type                        | Martial Melee                                                                         
+DamageType                  | Slashing                                                                              
+Property 'Versatile (1d10)' | Can use one or two hands; if two-handed, use damage die shown in parentheses.         
+Proficient                  | Yes                                                                                   
+AttackRoll                  | 1d20 + 3 (ability mod: Strength) + 3 (Proficient)                                     
+DamageRoll                  | 1d8 + 3 (ability mod: Strength)                                                       
+Mastery 'Sap'               | On a hit, the target has Disadvantage on its next attack before your next turn starts.
+----------------------------+---------------------------------------------------------------------------------------
+Name                        | Javelin                                                                               
+Type                        | Simple Melee                                                                          
+DamageType                  | Piercing                                                                              
+Property 'Thrown'           | Can throw weapon for ranged attack; use same ability mod as melee version.            
+Proficient                  | Yes                                                                                   
+AttackRoll                  | 1d20 + 3 (ability mod: Strength) + 3 (Proficient)                                     
+DamageRoll                  | 1d6 + 3 (ability mod: Strength)                                                       
+
+################################################################################
+# ============================= Fighting Styles ============================== #
+################################################################################
+Defense: While you're wearing Light, Medium, or Heavy armor, you gain a +1 bonus to Armor Class. (calculated automatically)

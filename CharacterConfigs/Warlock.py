@@ -6,7 +6,9 @@ from Features import Backgrounds
 from Features import FightingStyles
 from Features import Weapons
 from Features.ClassFeatures import WarlockFeatures
-import StatBlocks
+from StatBlocks.AbilitiesStatBlock import StandardArrayAbilitiesStatBlock
+from StatBlocks.SavingThrowsStatBlock import WarlockSavingThrowsStatBlock
+from StatBlocks.SkillsStatBlock import WarlockSkillsStatBlock
 
 DATA = CharacterSheetCreator.CharacterSheetData()
 
@@ -26,7 +28,7 @@ DATA.add_feature(WarlockFeatures.SpellSlots())
 # ================ LEVEL 0 ============= #
 
 # Distribute 15, 14, 13, 12, 10, 8 among your abilities.
-DATA.abilities = StatBlocks.StandardArrayAbilitiesStatBlock(
+DATA.abilities = StandardArrayAbilitiesStatBlock(
     strength=8,
     dexterity=10,
     constitution=14,
@@ -36,7 +38,7 @@ DATA.abilities = StatBlocks.StandardArrayAbilitiesStatBlock(
 )
 
 # Choose two skills to be proficient in
-DATA.skills = StatBlocks.WarlockSkillsStatBlock(
+DATA.skills = WarlockSkillsStatBlock(
     proficiencies={
         Skill.ARCANA: True,
         Skill.DECEPTION: False,
@@ -49,7 +51,7 @@ DATA.skills = StatBlocks.WarlockSkillsStatBlock(
 )
 
 # Leave as is: Paladin specific saving throws
-DATA.saving_throws = StatBlocks.WarlockSavingThrowsStatBlock()
+DATA.saving_throws = WarlockSavingThrowsStatBlock()
 
 # Leave as is: Paladin specific combat stats
 DATA.hit_die = WarlockFeatures.WARLOCK_HIT_DIE

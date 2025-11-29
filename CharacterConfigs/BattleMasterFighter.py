@@ -6,7 +6,9 @@ from Features import Backgrounds
 from Features import FightingStyles
 from Features import Weapons
 from Features.ClassFeatures import FighterFeatures
-import StatBlocks
+from StatBlocks.AbilitiesStatBlock import StandardArrayAbilitiesStatBlock
+from StatBlocks.SavingThrowsStatBlock import FighterSavingThrowsStatBlock
+from StatBlocks.SkillsStatBlock import FighterSkillsStatBlock
 
 DATA = CharacterSheetCreator.CharacterSheetData()
 
@@ -23,7 +25,7 @@ DATA.character_subclass = FighterSubclass.BATTLE_MASTER
 # ================ LEVEL 0 ============= #
 
 # Distribute 15, 14, 13, 12, 10, 8 among your abilities.
-DATA.abilities = StatBlocks.StandardArrayAbilitiesStatBlock(
+DATA.abilities = StandardArrayAbilitiesStatBlock(
     strength=14,
     dexterity=12,
     constitution=15,
@@ -33,7 +35,7 @@ DATA.abilities = StatBlocks.StandardArrayAbilitiesStatBlock(
 )
 
 # Choose two skills to be proficient in
-DATA.skills = StatBlocks.FighterSkillsStatBlock(
+DATA.skills = FighterSkillsStatBlock(
     proficiencies={
         Skill.ACROBATICS: True,
         Skill.ANIMAL_HANDLING: False,
@@ -47,7 +49,7 @@ DATA.skills = StatBlocks.FighterSkillsStatBlock(
 )
 
 # Leave as is: Paladin specific saving throws
-DATA.saving_throws = StatBlocks.FighterSavingThrowsStatBlock()
+DATA.saving_throws = FighterSavingThrowsStatBlock()
 
 # Leave as is: Paladin specific combat stats
 DATA.hit_die = FighterFeatures.FIGHTER_HIT_DIE
