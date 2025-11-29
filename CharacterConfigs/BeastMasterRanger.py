@@ -1,10 +1,11 @@
 from Definitions import Ability, Skill, CharacterClass, RangerSubclass
-from Features import BaseFeatures, Feats, RangerFeatures, Maneuvers, OriginFeats
+from Features import BaseFeatures, GeneralFeats, Maneuvers, OriginFeats
 import CharacterSheetCreator
 from Features import Armor
 from Features import Backgrounds
 from Features import FightingStyles
 from Features import Weapons
+from Features.ClassFeatures import RangerFeatures
 import StatBlocks
 
 DATA = CharacterSheetCreator.CharacterSheetData()
@@ -120,7 +121,7 @@ if DATA.level >= 3:
 if DATA.level >= 4:
     # Automatic feature
     DATA.add_feature(
-        Feats.AbilityScoreImprovement(
+        GeneralFeats.AbilityScoreImprovement(
             [
                 (Ability.STRENGTH, 1),
                 (Ability.CONSTITUTION, 1),

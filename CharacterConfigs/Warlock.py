@@ -1,10 +1,11 @@
 from Definitions import Ability, Skill, CharacterClass, WarlockSubclass
-from Features import Feats, WarlockFeatures, OriginFeats
+from Features import GeneralFeats, OriginFeats
 import CharacterSheetCreator
 from Features import Armor
 from Features import Backgrounds
 from Features import FightingStyles
 from Features import Weapons
+from Features.ClassFeatures import WarlockFeatures
 import StatBlocks
 
 DATA = CharacterSheetCreator.CharacterSheetData()
@@ -125,7 +126,7 @@ if DATA.level >= 4:
     # Choose one ability score to increase by 2
     # OR two ability scores to increase by 1 each
     DATA.add_feature(
-        Feats.AbilityScoreImprovement(
+        GeneralFeats.AbilityScoreImprovement(
             [
                 (Ability.CHARISMA, 1),
                 (Ability.CONSTITUTION, 1),
