@@ -1,3 +1,5 @@
+from pyexpat import features
+import attr
 from Definitions import Ability, Skill, CharacterClass, FighterSubclass
 from Features import BaseFeatures, GeneralFeats, Maneuvers, OriginFeats
 import CharacterSheetCreator
@@ -6,144 +8,194 @@ from Features import Backgrounds
 from Features import FightingStyles
 from Features import Weapons
 from Features.ClassFeatures import FighterFeatures
-from StatBlocks.AbilitiesStatBlock import StandardArrayAbilitiesStatBlock
+from StatBlocks.AbilitiesStatBlock import (
+    StandardArrayAbilitiesStatBlock,
+    AbilitiesStatBlock,
+)
 from StatBlocks.SavingThrowsStatBlock import FighterSavingThrowsStatBlock
 from StatBlocks.SkillsStatBlock import FighterSkillsStatBlock
 
-DATA = CharacterSheetCreator.CharacterSheetData()
 
-##########################################
-# ================ CHANGE ============== #
-##########################################
+@attr.dataclass
+class FighterLevel1:
+    weapon_mastery_1: Weapons.AbstractWeapon
+    weapon_mastery_2: Weapons.AbstractWeapon
+    weapon_mastery_3: Weapons.AbstractWeapon
+    fighting_style: FightingStyles.FightingStyle
 
-# ================ GENERAL ============= #
 
-DATA.character_class = CharacterClass.FIGHTER
-DATA.level = 5
-DATA.character_subclass = FighterSubclass.BATTLE_MASTER
+@attr.dataclass
+class FighterLevel3:
+    maneuver_1: Maneuvers.Maneuver
+    maneuver_2: Maneuvers.Maneuver
+    maneuver_3: Maneuvers.Maneuver
 
-# ================ LEVEL 0 ============= #
 
-# Distribute 15, 14, 13, 12, 10, 8 among your abilities.
-DATA.abilities = StandardArrayAbilitiesStatBlock(
-    strength=14,
-    dexterity=12,
-    constitution=15,
-    intelligence=8,
-    wisdom=10,
-    charisma=13,
-)
+@attr.dataclass
+class FighterLevel4:
+    general_feat: GeneralFeats.GeneralFeat
 
-# Choose two skills to be proficient in
-DATA.skills = FighterSkillsStatBlock(
-    proficiencies={
-        Skill.ACROBATICS: True,
-        Skill.ANIMAL_HANDLING: False,
-        Skill.ATHLETICS: True,
-        Skill.HISTORY: False,
-        Skill.INSIGHT: False,
-        Skill.INTIMIDATION: False,
-        Skill.PERCEPTION: False,
-        Skill.SURVIVAL: False,
-    }
-)
 
-# Leave as is: Paladin specific saving throws
-DATA.saving_throws = FighterSavingThrowsStatBlock()
+def create_battle_master_fighter_data(
+    fighter_level: int,
+    abilities: AbilitiesStatBlock,
+    skills: FighterSkillsStatBlock,
+    background_ability_bonuses: Backgrounds.FreeBackgroundAbilityBonus,
+    background_skill_proficiencies: Backgrounds.FreeBackgroundSkillProficiency,
+    add_default_equipment: bool,
+    origin_feat: OriginFeats.OriginCharacterFeat | OriginFeats.OriginTextFeat,
+    armor: list[Armor.AbstractArmor] = None,
+    weapons: list[Weapons.AbstractWeapon] = None,
+    fighter_level_1: FighterLevel1 = None,
+    fighter_level_3: FighterLevel3 = None,
+    fighter_level_4: FighterLevel4 = None,
+) -> CharacterSheetCreator.CharacterSheetData:
 
-# Leave as is: Paladin specific combat stats
-DATA.hit_die = FighterFeatures.FIGHTER_HIT_DIE
+    if not isinstance(skills, FighterSkillsStatBlock):
+        raise ValueError("skills must be an instance of FighterSkillsStatBlock")
 
-DATA.add_feature(
-    # Free background feature
-    # Distribute +2 and +1 to two different ability scores
-    # OR +1 to three different ability scores
-    Backgrounds.FreeBackgroundAbilityBonus(
+    data = CharacterSheetCreator.CharacterSheetData(
+        character_class=CharacterClass.FIGHTER,
+        level=fighter_level,
+        character_subclass=FighterSubclass.BATTLE_MASTER,
+        abilities=abilities,
+        skills=skills,
+        saving_throws=FighterSavingThrowsStatBlock(),
+        hit_die=FighterFeatures.FIGHTER_HIT_DIE,
+    )
+
+    # ================ LEVEL 0 ============= #
+
+    data.add_feature(background_ability_bonuses)
+    data.add_feature(background_skill_proficiencies)
+
+    ### Equipment ###
+
+    if add_default_equipment:
+        # Starting armor
+        data.add_armor(Armor.ChainMailArmor())
+        data.add_armor(Armor.ShieldArmor())
+
+        # Starting weapons
+        data.add_weapon(Weapons.Longsword(player_is_proficient=True))
+        data.add_weapon(Weapons.Javelin(player_is_proficient=True))
+
+    if armor is not None:
+        for a in armor:
+            data.add_armor(a)
+
+    if weapons is not None:
+        for w in weapons:
+            data.add_weapon(w)
+
+    # Origin feat
+    data.add_feature(origin_feat)
+
+    # ================ LEVEL 1 ============= #
+    if fighter_level >= 1:
+        if fighter_level_1 is None:
+            raise ValueError("fighter_level1 must be provided for level 1 features.")
+
+        # 3 weapon masteries
+        data.add_weapon_mastery(fighter_level_1.weapon_mastery_1)
+        data.add_weapon_mastery(fighter_level_1.weapon_mastery_2)
+        data.add_weapon_mastery(fighter_level_1.weapon_mastery_3)
+
+        # 1 fighting style
+        data.add_fighting_style(fighter_level_1.fighting_style)
+
+        # Automatic feature
+        data.add_feature(FighterFeatures.SecondWind())
+
+    # ================ LEVEL 2 ============= #
+    if fighter_level >= 2:
+        # Automatic feature
+        data.add_feature(FighterFeatures.ActionSurge())
+
+    # ================ LEVEL 3 ============= #
+    if fighter_level >= 3:
+        # Automatic feature
+        if data.character_subclass == FighterSubclass.BATTLE_MASTER:
+            superiority_dice = FighterFeatures.SuperiorityDice()
+            superiority_dice.add_maneuver(fighter_level_3.maneuver_1)
+            superiority_dice.add_maneuver(fighter_level_3.maneuver_2)
+            superiority_dice.add_maneuver(fighter_level_3.maneuver_3)
+
+    # ================ LEVEL 4 ============= #
+    if fighter_level >= 4:
+        # Automatic feature
+        data.add_feature(fighter_level_4.general_feat)
+
+    # ================ LEVEL 4 ============= #
+    if fighter_level >= 5:
+        # Automatic feature
+        data.add_feature(FighterFeatures.ExtraAttack())
+
+    ##########################################
+    # ============ LEAVE AS IS ============= #
+    ##########################################
+
+    if fighter_level >= 3 and data.character_subclass == FighterSubclass.BATTLE_MASTER:
+        data.add_feature(superiority_dice)
+
+    return data
+
+
+DATA = create_battle_master_fighter_data(
+    fighter_level=5,
+    # Distribute 15, 14, 13, 12, 10, 8 among your abilities.
+    abilities=StandardArrayAbilitiesStatBlock(
+        strength=14,
+        dexterity=12,
+        constitution=15,
+        intelligence=8,
+        wisdom=10,
+        charisma=13,
+    ),
+    # Choose two skills to be proficient in
+    skills=FighterSkillsStatBlock(
+        proficiencies={
+            Skill.ACROBATICS: True,
+            Skill.ANIMAL_HANDLING: False,
+            Skill.ATHLETICS: True,
+            Skill.HISTORY: False,
+            Skill.INSIGHT: False,
+            Skill.INTIMIDATION: False,
+            Skill.PERCEPTION: False,
+            Skill.SURVIVAL: False,
+        }
+    ),
+    background_ability_bonuses=Backgrounds.FreeBackgroundAbilityBonus(
         [
             (Ability.STRENGTH, 1),
             (Ability.CONSTITUTION, 2),
         ]
-    )
-)
-
-DATA.add_feature(
-    # Free background feature
-    # Distribute +2 and +1 to two different ability scores
-    # OR +1 to three different ability scores
-    Backgrounds.FreeBackgroundSkillProficiency(
+    ),
+    background_skill_proficiencies=Backgrounds.FreeBackgroundSkillProficiency(
         [
             Skill.INTIMIDATION,
             Skill.PERSUASION,
         ]
-    )
-)
-
-# Starting armor
-DATA.add_armor(Armor.ChainMailArmor())
-DATA.add_armor(Armor.ShieldArmor())
-
-# Starting weapons
-DATA.add_weapon(Weapons.Longsword(player_is_proficient=True))
-DATA.add_weapon(Weapons.Javelin(player_is_proficient=True))
-
-# Origin feat
-DATA.add_feature(OriginFeats.Tough())
-
-
-# ================ LEVEL 1 ============= #
-if DATA.level >= 1:
-    # 3 weapon masteries
-    DATA.add_weapon_mastery(Weapons.Longsword)
-    DATA.add_weapon_mastery(Weapons.Flail)
-    DATA.add_weapon_mastery(Weapons.Greatsword)
-
-    # 1 fighting style
-    DATA.add_fighting_style(FightingStyles.Defense())
-
-    # Automatic feature
-    DATA.add_feature(FighterFeatures.SecondWind())
-
-# ================ LEVEL 2 ============= #
-if DATA.level >= 2:
-    # Automatic feature
-    DATA.add_feature(FighterFeatures.ActionSurge())
-
-# ================ LEVEL 3 ============= #
-if DATA.level >= 3:
-    # Automatic feature
-    if DATA.character_subclass == FighterSubclass.BATTLE_MASTER:
-        superiority_dice = FighterFeatures.SuperiorityDice()
-        superiority_dice.add_maneuver(Maneuvers.GoadingAttack())
-        superiority_dice.add_maneuver(Maneuvers.PushingAttack())
-        superiority_dice.add_maneuver(Maneuvers.Riposte())
-
-# ================ LEVEL 4 ============= #
-if DATA.level >= 4:
-    # Automatic feature
-    DATA.add_feature(
-        GeneralFeats.AbilityScoreImprovement(
+    ),
+    add_default_equipment=True,
+    origin_feat=OriginFeats.Tough(),
+    fighter_level_1=FighterLevel1(
+        weapon_mastery_1=Weapons.Longsword(),
+        weapon_mastery_2=Weapons.Flail(),
+        weapon_mastery_3=Weapons.Greatsword(),
+        fighting_style=FightingStyles.Defense(),
+    ),
+    fighter_level_3=FighterLevel3(
+        maneuver_1=Maneuvers.GoadingAttack(),
+        maneuver_2=Maneuvers.PushingAttack(),
+        maneuver_3=Maneuvers.Riposte(),
+    ),
+    fighter_level_4=FighterLevel4(
+        general_feat=GeneralFeats.AbilityScoreImprovement(
             [
                 (Ability.STRENGTH, 1),
                 (Ability.CONSTITUTION, 1),
             ]
         )
-    )
-
-# ================ LEVEL 4 ============= #
-if DATA.level >= 5:
-    # Automatic feature
-    DATA.add_feature(FighterFeatures.ExtraAttack())
-
-##########################################
-# ========== MANUAL ADDITIONS ========== #
-##########################################
-
-# DATA.add_weapon(Weapons.Handaxe(player_is_proficient=True))
-# DATA.add_weapon(Weapons.LightHammer(player_is_proficient=True))
-
-##########################################
-# ============ LEAVE AS IS ============= #
-##########################################
-
-if DATA.level >= 3 and DATA.character_subclass == FighterSubclass.BATTLE_MASTER:
-    DATA.add_feature(superiority_dice)
+    ),
+)

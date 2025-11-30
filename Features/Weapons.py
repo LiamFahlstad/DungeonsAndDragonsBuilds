@@ -193,7 +193,7 @@ class AbstractWeapon(TextFeature):
 
         return rows
 
-    def get_description(character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         pass
 
     def write_to_file(self, character_stat_block: CharacterStatBlock, file):

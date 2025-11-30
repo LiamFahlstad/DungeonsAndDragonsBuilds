@@ -3,7 +3,11 @@ from Definitions import Ability
 from Features.BaseFeatures import CharacterFeature
 
 
-class AbilityScoreImprovement(CharacterFeature):
+class GeneralFeat(CharacterFeature):
+    pass
+
+
+class AbilityScoreImprovement(GeneralFeat):
     """Also add either [+1, +1] OR [+2] to any abilities."""
 
     def __init__(self, bonuses: list[tuple[Ability, int]]):

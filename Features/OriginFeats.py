@@ -3,11 +3,18 @@ from Definitions import Ability, Skill
 from Features.BaseFeatures import CharacterFeature, TextFeature
 
 
-class Skilled(CharacterFeature):
+class OriginCharacterFeat(CharacterFeature):
+    pass
+
+
+class OriginTextFeat(TextFeature):
+    pass
+
+
+class Skilled(OriginCharacterFeat):
     """Also add proficiency in any combination of three skills or tools of your choice."""
 
     def __init__(self, skills: list[Skill]):
-        super().__init__(name="Skilled", origin="Human Trait")
         self.skills = skills
         assert len(self.skills) == 3, "Must choose exactly three skills or tools."
 
@@ -22,7 +29,7 @@ class Skilled(CharacterFeature):
             character_stat_block.skills.add_skill_proficiency(skill)
 
 
-class Alert(TextFeature):
+class Alert(OriginTextFeat):
     def __init__(self):
         super().__init__(name="Alert", origin="Origin Feat")
 
@@ -33,7 +40,7 @@ class Alert(TextFeature):
         )
 
 
-class Crater(TextFeature):
+class Crater(OriginTextFeat):
     def __init__(self, artisans_tools: list[str]):
         self.artisans_tools = artisans_tools
         super().__init__(name="Alert", origin="Origin Feat")
@@ -72,7 +79,7 @@ class Crater(TextFeature):
         )
 
 
-class Healer(TextFeature):
+class Healer(OriginTextFeat):
     def __init__(self):
         super().__init__(name="Healer", origin="Origin Feat")
 
@@ -87,7 +94,7 @@ class Healer(TextFeature):
         )
 
 
-class Lucky(TextFeature):
+class Lucky(OriginTextFeat):
     def __init__(self):
         super().__init__(name="Lucky", origin="Origin Feat")
 
@@ -99,7 +106,7 @@ class Lucky(TextFeature):
         )
 
 
-class MagicInitiate(TextFeature):
+class MagicInitiate(OriginTextFeat):
     def __init__(self, spell_list: str):
         self.spell_list = spell_list
         super().__init__(name="Magic Initiate", origin="Origin Feat")
@@ -119,7 +126,7 @@ class MagicInitiate(TextFeature):
         )
 
 
-class Musician(TextFeature):
+class Musician(OriginTextFeat):
     def __init__(self):
         super().__init__(name="Musician", origin="Origin Feat")
 
@@ -131,7 +138,7 @@ class Musician(TextFeature):
         )
 
 
-class SavageAttacker(TextFeature):
+class SavageAttacker(OriginTextFeat):
     def __init__(self):
         super().__init__(name="Savage Attacker", origin="Origin Feat")
 
@@ -142,7 +149,7 @@ class SavageAttacker(TextFeature):
         )
 
 
-class TavernBrawler(TextFeature):
+class TavernBrawler(OriginTextFeat):
     def __init__(self):
         super().__init__(name="Tavern Brawler", origin="Origin Feat")
 
@@ -158,7 +165,7 @@ class TavernBrawler(TextFeature):
         )
 
 
-class Tough(CharacterFeature):
+class Tough(OriginCharacterFeat):
     def modify(self, character_stat_block: CharacterStatBlock):
         character_level = character_stat_block.level
         character_stat_block.combat.hit_points_bonus += 2 * character_level

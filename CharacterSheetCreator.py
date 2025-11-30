@@ -41,7 +41,7 @@ class CharacterSheetData:
     spell_slots: dict[int, int] = attr.Factory(dict)
     armors: list[AbstractArmor] = []
     weapons: list[AbstractWeapon] = []
-    weapon_mastery_choices: list[type[AbstractWeapon]] = []
+    weapon_masteries: list[AbstractWeapon] = []
     fighting_styles: list[FightingStyle] = []
 
     def add_feature(self, feature: Feature):
@@ -53,10 +53,8 @@ class CharacterSheetData:
     def add_weapon(self, weapon: AbstractWeapon):
         self.weapons.append(weapon)
 
-    def add_weapon_mastery(self, weapon_type: type[AbstractWeapon]):
-        if not weapon_type:
-            raise ValueError("weapon_type cannot be None.")
-        self.weapon_mastery_choices.append(weapon_type)
+    def add_weapon_mastery(self, weapon: AbstractWeapon):
+        self.weapon_masteries.append(weapon)
 
     def add_fighting_style(self, fighting_style: FightingStyle):
         self.fighting_styles.append(fighting_style)
@@ -84,7 +82,7 @@ class CharacterSheetData:
             ]
         ):
             raise ValueError(
-                "All fields except weapon_mastery_choices and fighting_style must be set."
+                "All fields except weapon_masteries and fighting_styles must be set."
             )
         self._create_character_sheet()
 
@@ -198,9 +196,9 @@ class CharacterSheetData:
 
             Utils.write_separator(file, "Weapons")
             for weapon in self.weapons:
-                if self.weapon_mastery_choices:
-                    for mastery in self.weapon_mastery_choices:
-                        if isinstance(weapon, mastery):
+                if self.weapon_masteries:
+                    for mastery in self.weapon_masteries:
+                        if isinstance(weapon, type(mastery)):
                             weapon.player_has_mastery = True
             write_weapons_to_file(self.weapons, character, file)
 
