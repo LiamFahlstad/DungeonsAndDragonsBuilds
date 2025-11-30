@@ -90,7 +90,7 @@ class CharacterSheetData:
 
     def _create_character_sheet(self):
         combat = CombatStatBlock(
-            hit_die=self.hit_die,  # Paladin hit die is d10
+            hit_die=self.hit_die,
             speed=self.speed,
             size=self.size,
         )
@@ -122,7 +122,71 @@ class CharacterSheetData:
 
         pathlib.Path(output_path).parent.mkdir(parents=True, exist_ok=True)
         with open(output_path, "w") as file:
-            character.save_character_to_file(file)
+            Utils.write_separator(file, "General Info")
+            Utils.write_table(
+                headers=["Field", "Value"],
+                rows=[
+                    ["Name", character.name],
+                    ["Level", character.level],
+                    ["Character Class", character.character_class.value],
+                    ["Character Subclass", character.character_subclass],
+                    ["Proficiency Bonus", character.get_proficiency_bonus()],
+                ],
+                file=file,
+            )
+
+            file.write("\n")
+            Utils.write_separator(file, "Combat Stats")
+            Utils.write_table(
+                headers=["Field", "Value"],
+                rows=[
+                    ["Max Hit Points", character.calculate_hit_points()],
+                    ["Armor Class", character.calculate_armor_class()],
+                    ["Initiative", f"d20 + {character.combat.initiative}"],
+                    ["Speed (ft)", character.combat.speed],
+                    ["Size", character.combat.size.value],
+                ],
+                file=file,
+            )
+
+            file.write("\n")
+            Utils.write_separator(file, "Abilities")
+            headings = ["Ability", "Score", "Modifier", "Saving Throw", "Proficient"]
+            Utils.write_table(
+                headings,
+                [
+                    [
+                        ability.value,
+                        character.get_ability_score(ability),
+                        character.get_ability_modifier(ability),
+                        character.get_saving_throw_modifier(ability),
+                        (
+                            "Yes"
+                            if character.is_proficient_in_saving_throw(ability)
+                            else "No"
+                        ),
+                    ]
+                    for ability in Ability
+                ],
+                file,
+            )
+            file.write("\n")
+            Utils.write_separator(file, "Skills")
+            headings = ["Skill", "Modifier", "Proficient", "Ability", "RollCondition"]
+            Utils.write_table(
+                headings,
+                [
+                    [
+                        skill.value,
+                        character.get_skill_modifier(skill),
+                        "Yes" if character.is_proficient_in_skill(skill) else "No",
+                        character.get_skill_ability(skill).value,
+                        character.get_skill_roll_condition(skill).value,
+                    ]
+                    for skill in Skill
+                ],
+                file,
+            )
 
             if not all([isinstance(feat, CharacterFeature) for feat in self.features]):
                 file.write("\n")
