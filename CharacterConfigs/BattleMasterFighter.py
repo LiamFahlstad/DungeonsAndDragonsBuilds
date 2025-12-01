@@ -57,7 +57,7 @@ def create_battle_master_fighter_data(
     data = CharacterSheetCreator.CharacterSheetData(
         character_class=CharacterClass.FIGHTER,
         level=fighter_level,
-        character_subclass=FighterSubclass.BATTLE_MASTER,
+        character_subclass=FighterSubclass.BATTLE_MASTER.value,
         abilities=abilities,
         skills=skills,
         saving_throws=FighterSavingThrowsStatBlock(),
@@ -94,7 +94,7 @@ def create_battle_master_fighter_data(
     # ================ LEVEL 1 ============= #
     if fighter_level >= 1:
         if fighter_level_1 is None:
-            raise ValueError("fighter_level1 must be provided for level 1 features.")
+            raise ValueError("fighter_level_1 must be provided for level 1 features.")
 
         # 3 weapon masteries
         data.add_weapon_mastery(fighter_level_1.weapon_mastery_1)
@@ -109,12 +109,12 @@ def create_battle_master_fighter_data(
 
     # ================ LEVEL 2 ============= #
     if fighter_level >= 2:
-        # Automatic feature
         data.add_feature(FighterFeatures.ActionSurge())
 
     # ================ LEVEL 3 ============= #
     if fighter_level >= 3:
-        # Automatic feature
+        if fighter_level_3 is None:
+            raise ValueError("fighter_level_3 must be provided for level 3 features.")
         if data.character_subclass == FighterSubclass.BATTLE_MASTER:
             superiority_dice = FighterFeatures.SuperiorityDice()
             superiority_dice.add_maneuver(fighter_level_3.maneuver_1)
@@ -123,12 +123,12 @@ def create_battle_master_fighter_data(
 
     # ================ LEVEL 4 ============= #
     if fighter_level >= 4:
-        # Automatic feature
+        if fighter_level_4 is None:
+            raise ValueError("fighter_level_4 must be provided for level 4 features.")
         data.add_feature(fighter_level_4.general_feat)
 
     # ================ LEVEL 4 ============= #
     if fighter_level >= 5:
-        # Automatic feature
         data.add_feature(FighterFeatures.ExtraAttack())
 
     ##########################################

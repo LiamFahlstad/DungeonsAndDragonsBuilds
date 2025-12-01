@@ -5,7 +5,7 @@ from abc import ABC, abstractmethod
 import attr
 
 
-class CharacterClass(Enum):
+class CharacterClass(str, Enum):
     BARBARIAN = "Barbarian"
     BARD = "Bard"
     CLERIC = "Cleric"
@@ -20,7 +20,7 @@ class CharacterClass(Enum):
     WIZARD = "Wizard"
 
 
-class Species(Enum):
+class Species(str, Enum):
     HUMAN = "Human"
     ELF = "Elf"
     DWARF = "Dwarf"
@@ -34,7 +34,7 @@ class Species(Enum):
 ###### ABILITIES AND SKILLS ######
 
 
-class Ability(Enum):
+class Ability(str, Enum):
     STRENGTH = "Strength"
     DEXTERITY = "Dexterity"
     CONSTITUTION = "Constitution"
@@ -43,7 +43,7 @@ class Ability(Enum):
     CHARISMA = "Charisma"
 
 
-class Skill(Enum):
+class Skill(str, Enum):
     ACROBATICS = "Acrobatics"  # Dexterity
     ANIMAL_HANDLING = "Animal Handling"  # Wisdom
     ARCANA = "Arcana"  # Intelligence
@@ -64,13 +64,13 @@ class Skill(Enum):
     SURVIVAL = "Survival"  # Wisdom
 
 
-class DiceRollCondition(Enum):
+class DiceRollCondition(str, Enum):
     ADVANTAGE = "Advantage"
     DISADVANTAGE = "Disadvantage"
     NEUTRAL = "Neutral"
 
 
-class PaladinSubclass(Enum):
+class PaladinSubclass(str, Enum):
     OATH_OF_DEVOTION = "Oath of Devotion"
     OATH_OF_THE_ANCIENTS = "Oath of the Ancients"
     OATH_OF_VENGEANCE = "Oath of Vengeance"
@@ -78,22 +78,22 @@ class PaladinSubclass(Enum):
     OATH_OF_REDEMPTION = "Oath of Redemption"
 
 
-class WarlockSubclass(Enum):
+class WarlockSubclass(str, Enum):
     THE_FIEND = "The Fiend"
     THE_ARCHFEY = "The Archfey"
     THE_GREAT_OLD_ONE = "The Great Old One"
     THE_UNDEAD = "The Undead"
 
 
-class FighterSubclass(Enum):
+class FighterSubclass(str, Enum):
     BATTLE_MASTER = "Battle Master"
 
 
-class RangerSubclass(Enum):
+class RangerSubclass(str, Enum):
     BEAST_MASTER = "Beast Master"
 
 
-class CreatureSize(Enum):
+class CreatureSize(str, Enum):
     TINY = "Tiny"
     SMALL = "Small"
     MEDIUM = "Medium"
