@@ -3,14 +3,20 @@ import Definitions
 from Features import HumanFeatures
 from Features import OriginFeats
 
-DATA = CharacterSheetCreator.CharacterSheetData()
 
+def human_character_data(
+    skill_proficiency: Definitions.Skill,
+    origin_feat: OriginFeats.OriginCharacterFeat | OriginFeats.OriginTextFeat,
+) -> CharacterSheetCreator.CharacterSheetData:
 
-DATA.speed = HumanFeatures.SPEED  # Given by your species
-DATA.size = HumanFeatures.SIZE  # Given by your species
+    data = CharacterSheetCreator.CharacterSheetData()
 
-DATA.add_feature(HumanFeatures.Resourceful())
-DATA.add_feature(HumanFeatures.Skillful(Definitions.Skill.SURVIVAL))
-DATA.add_feature(HumanFeatures.Versatile())
+    data.speed = HumanFeatures.SPEED  # Given by your species
+    data.size = HumanFeatures.SIZE  # Given by your species
 
-# DATA.add_feature(OriginFeats.Skilled(Definitions.Skill.PERSUASION))
+    data.add_feature(HumanFeatures.Resourceful())
+    data.add_feature(HumanFeatures.Skillful(skill_proficiency))
+    data.add_feature(HumanFeatures.Versatile())
+
+    data.add_feature(origin_feat)
+    return data

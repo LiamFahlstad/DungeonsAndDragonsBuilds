@@ -18,10 +18,18 @@ class Skilled(OriginCharacterFeat):
         self.skills = skills
         assert len(self.skills) == 3, "Must choose exactly three skills or tools."
 
-    def validate(self, character_stat_block: CharacterStatBlock) -> bool:
-        return not all(
+    def validate(self, character_stat_block: CharacterStatBlock) -> None:
+        if any(
             character_stat_block.skills.is_proficient(skill) for skill in self.skills
-        )
+        ):
+            raise ValueError(
+                "Character already has proficiency with the following selected skills: "
+                + ", ".join(
+                    skill.name
+                    for skill in self.skills
+                    if character_stat_block.skills.is_proficient(skill)
+                )
+            )
 
     def modify(self, character_stat_block: CharacterStatBlock):
         self.validate(character_stat_block)

@@ -1,13 +1,13 @@
 ################################################################################
 # =============================== General Info =============================== #
 ################################################################################
-Field              | Value                        
--------------------+------------------------------
-Name               | Sten                         
-Level              | 5                            
-Character Class    | Fighter                      
-Character Subclass | FighterSubclass.BATTLE_MASTER
-Proficiency Bonus  | 3                            
+Field              | Value        
+-------------------+--------------
+Name               | Sten         
+Level              | 5            
+Character Class    | Fighter      
+Character Subclass | Battle Master
+Proficiency Bonus  | 3            
 
 ################################################################################
 # =============================== Combat Stats =============================== #
@@ -42,13 +42,13 @@ Animal Handling | 0        | No         | Wisdom       | Neutral
 Arcana          | -1       | No         | Intelligence | Neutral      
 Athletics       | 6        | Yes        | Strength     | Neutral      
 Deception       | 1        | No         | Charisma     | Neutral      
-History         | -1       | No         | Intelligence | Neutral      
-Insight         | 0        | No         | Wisdom       | Neutral      
+History         | 2        | Yes        | Intelligence | Neutral      
+Insight         | 3        | Yes        | Wisdom       | Neutral      
 Intimidation    | 4        | Yes        | Charisma     | Neutral      
 Investigation   | -1       | No         | Intelligence | Neutral      
 Medicine        | 0        | No         | Wisdom       | Neutral      
 Nature          | -1       | No         | Intelligence | Neutral      
-Perception      | 0        | No         | Wisdom       | Neutral      
+Perception      | 3        | Yes        | Wisdom       | Neutral      
 Performance     | 1        | No         | Charisma     | Neutral      
 Persuasion      | 4        | Yes        | Charisma     | Neutral      
 Religion        | -1       | No         | Intelligence | Neutral      

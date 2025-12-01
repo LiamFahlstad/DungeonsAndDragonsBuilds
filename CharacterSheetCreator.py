@@ -34,15 +34,18 @@ class CharacterSheetData:
     speed: Optional[int] = None
     size: Optional[Definitions.CreatureSize] = None
     saving_throws: Optional[SavingThrowsStatBlock] = None
-    features: list[Feature] = []
-    invocations: list[str] = []
-    spells: list[str] = []
+
+    features: list[Feature] = attr.Factory(list)
+    invocations: list[str] = attr.Factory(list)
+    spells: list[str] = attr.Factory(list)
     spell_casting_ability: Optional[Ability] = None
+
     spell_slots: dict[int, int] = attr.Factory(dict)
-    armors: list[AbstractArmor] = []
-    weapons: list[AbstractWeapon] = []
-    weapon_masteries: list[AbstractWeapon] = []
-    fighting_styles: list[FightingStyle] = []
+
+    armors: list[AbstractArmor] = attr.Factory(list)
+    weapons: list[AbstractWeapon] = attr.Factory(list)
+    weapon_masteries: list[AbstractWeapon] = attr.Factory(list)
+    fighting_styles: list[FightingStyle] = attr.Factory(list)
 
     def add_feature(self, feature: Feature):
         self.features.append(feature)
@@ -240,6 +243,29 @@ class CharacterSheetData:
                     spell.write_to_file(file)
                     if spell_index < len(self.spells) - 1:
                         file.write("-" * 40 + "\n")
+
+    def merge_with(self, other: "CharacterSheetData"):
+        """Merge this CharacterSheetData with another, with the other taking precedence."""
+
+        for attr in vars(self):
+            other_value = getattr(other, attr)
+            my_value = getattr(self, attr)
+
+            if other_value not in (None, [], {}, ""):
+                setattr(self, attr, other_value)
+
+            if isinstance(my_value, list) and isinstance(other_value, list):
+                combined_list = my_value + other_value
+                setattr(self, attr, combined_list)
+
+            if isinstance(my_value, dict) and isinstance(other_value, dict):
+                combined_dict = my_value.copy()
+                combined_dict.update(other_value)
+                setattr(self, attr, combined_dict)
+
+            if isinstance(my_value, set) and isinstance(other_value, set):
+                combined_set = my_value.union(other_value)
+                setattr(self, attr, combined_set)
 
 
 def slugify(name: str) -> str:

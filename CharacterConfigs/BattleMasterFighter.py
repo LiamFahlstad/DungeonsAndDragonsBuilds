@@ -65,7 +65,7 @@ def create_battle_master_fighter_data(
     )
 
     # ================ LEVEL 0 ============= #
-
+    superiority_dice = None
     data.add_feature(background_ability_bonuses)
     data.add_feature(background_skill_proficiencies)
 
@@ -135,67 +135,7 @@ def create_battle_master_fighter_data(
     # ============ LEAVE AS IS ============= #
     ##########################################
 
-    if fighter_level >= 3 and data.character_subclass == FighterSubclass.BATTLE_MASTER:
+    if superiority_dice is not None:
         data.add_feature(superiority_dice)
 
     return data
-
-
-DATA = create_battle_master_fighter_data(
-    fighter_level=5,
-    # Distribute 15, 14, 13, 12, 10, 8 among your abilities.
-    abilities=StandardArrayAbilitiesStatBlock(
-        strength=14,
-        dexterity=12,
-        constitution=15,
-        intelligence=8,
-        wisdom=10,
-        charisma=13,
-    ),
-    # Choose two skills to be proficient in
-    skills=FighterSkillsStatBlock(
-        proficiencies={
-            Skill.ACROBATICS: True,
-            Skill.ANIMAL_HANDLING: False,
-            Skill.ATHLETICS: True,
-            Skill.HISTORY: False,
-            Skill.INSIGHT: False,
-            Skill.INTIMIDATION: False,
-            Skill.PERCEPTION: False,
-            Skill.SURVIVAL: False,
-        }
-    ),
-    background_ability_bonuses=Backgrounds.FreeBackgroundAbilityBonus(
-        [
-            (Ability.STRENGTH, 1),
-            (Ability.CONSTITUTION, 2),
-        ]
-    ),
-    background_skill_proficiencies=Backgrounds.FreeBackgroundSkillProficiency(
-        [
-            Skill.INTIMIDATION,
-            Skill.PERSUASION,
-        ]
-    ),
-    add_default_equipment=True,
-    origin_feat=OriginFeats.Tough(),
-    fighter_level_1=FighterLevel1(
-        weapon_mastery_1=Weapons.Longsword(),
-        weapon_mastery_2=Weapons.Flail(),
-        weapon_mastery_3=Weapons.Greatsword(),
-        fighting_style=FightingStyles.Defense(),
-    ),
-    fighter_level_3=FighterLevel3(
-        maneuver_1=Maneuvers.GoadingAttack(),
-        maneuver_2=Maneuvers.PushingAttack(),
-        maneuver_3=Maneuvers.Riposte(),
-    ),
-    fighter_level_4=FighterLevel4(
-        general_feat=GeneralFeats.AbilityScoreImprovement(
-            [
-                (Ability.STRENGTH, 1),
-                (Ability.CONSTITUTION, 1),
-            ]
-        )
-    ),
-)
