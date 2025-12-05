@@ -1,6 +1,6 @@
 from enum import Enum
 from typing import Optional
-from CharacterStatBlock import CharacterStatBlock
+from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Definitions import Ability
 from Features.BaseFeatures import TextFeature
 from Utils import write_table

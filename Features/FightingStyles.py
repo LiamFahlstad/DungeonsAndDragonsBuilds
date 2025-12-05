@@ -1,6 +1,6 @@
 from abc import abstractmethod
 from pyparsing import ABC
-from CharacterStatBlock import CharacterStatBlock
+from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Features.Weapons import AbstractWeapon, WeaponType, WeaponProperty
 
 

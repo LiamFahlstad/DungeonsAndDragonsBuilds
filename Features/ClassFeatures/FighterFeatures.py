@@ -1,4 +1,4 @@
-from CharacterStatBlock import CharacterStatBlock
+from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Definitions import Ability, DiceRollCondition, Skill
 from Features import Weapons, Maneuvers
 from Features.BaseFeatures import CharacterFeature, TextFeature

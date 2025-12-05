@@ -1,7 +1,7 @@
 from enum import Enum
 import pathlib
 from typing import Optional
-from CharacterStatBlock import CharacterStatBlock
+from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Definitions import Ability, Skill, CharacterClass
 import Definitions
 import Scrapers.InvocationScrapers as InvocationScrapers

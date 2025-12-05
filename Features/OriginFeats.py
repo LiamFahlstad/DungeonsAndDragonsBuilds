@@ -1,4 +1,4 @@
-from CharacterStatBlock import CharacterStatBlock
+from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Definitions import Ability, Skill
 from Features.BaseFeatures import CharacterFeature, TextFeature
 

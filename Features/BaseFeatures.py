@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from CharacterStatBlock import CharacterStatBlock
+from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Definitions import Ability, Skill, DiceRollCondition
 from Utils import write_table
 
