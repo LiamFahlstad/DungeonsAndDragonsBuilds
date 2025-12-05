@@ -4,7 +4,7 @@ from StatBlocks.AbilitiesStatBlock import AbilitiesStatBlock
 from StatBlocks.SavingThrowsStatBlock import SavingThrowsStatBlock
 from StatBlocks.SkillsStatBlock import SkillsStatBlock
 from StatBlocks.CombatStatBlock import CombatStatBlock
-from Utils import write_table, write_separator
+from Utils.CharacterSheetUtils import write_table, write_separator
 
 
 class CharacterStatBlock:

@@ -3,7 +3,7 @@ from typing import Optional
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Definitions import Ability
 from Features.BaseFeatures import TextFeature
-from Utils import write_table
+from Utils.CharacterSheetUtils import write_table
 from dataclasses import dataclass, field
 from abc import abstractmethod
 

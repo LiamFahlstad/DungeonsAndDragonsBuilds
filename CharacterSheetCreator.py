@@ -11,7 +11,7 @@ from StatBlocks.CombatStatBlock import CombatStatBlock
 from StatBlocks.SkillsStatBlock import SkillsStatBlock
 from StatBlocks.AbilitiesStatBlock import AbilitiesStatBlock
 from StatBlocks.SavingThrowsStatBlock import SavingThrowsStatBlock
-import Utils
+import Utils.CharacterSheetUtils as CharacterSheetUtils
 from Features.FightingStyles import (
     FightingStyle,
     FightStyleCharacterFeature,
@@ -123,8 +123,8 @@ class CharacterSheetData:
 
         pathlib.Path(output_path).parent.mkdir(parents=True, exist_ok=True)
         with open(output_path, "w") as file:
-            Utils.write_separator(file, "General Info")
-            Utils.write_table(
+            CharacterSheetUtils.write_separator(file, "General Info")
+            CharacterSheetUtils.write_table(
                 headers=["Field", "Value"],
                 rows=[
                     ["Name", character.name],
@@ -137,8 +137,8 @@ class CharacterSheetData:
             )
 
             file.write("\n")
-            Utils.write_separator(file, "Combat Stats")
-            Utils.write_table(
+            CharacterSheetUtils.write_separator(file, "Combat Stats")
+            CharacterSheetUtils.write_table(
                 headers=["Field", "Value"],
                 rows=[
                     ["Max Hit Points", character.calculate_hit_points()],
@@ -151,9 +151,9 @@ class CharacterSheetData:
             )
 
             file.write("\n")
-            Utils.write_separator(file, "Abilities")
+            CharacterSheetUtils.write_separator(file, "Abilities")
             headings = ["Ability", "Score", "Modifier", "Saving Throw", "Proficient"]
-            Utils.write_table(
+            CharacterSheetUtils.write_table(
                 headings,
                 [
                     [
@@ -172,9 +172,9 @@ class CharacterSheetData:
                 file,
             )
             file.write("\n")
-            Utils.write_separator(file, "Skills")
+            CharacterSheetUtils.write_separator(file, "Skills")
             headings = ["Skill", "Modifier", "Proficient", "Ability", "RollCondition"]
-            Utils.write_table(
+            CharacterSheetUtils.write_table(
                 headings,
                 [
                     [
@@ -191,13 +191,13 @@ class CharacterSheetData:
 
             if not all([isinstance(feat, CharacterFeature) for feat in self.features]):
                 file.write("\n")
-                Utils.write_separator(file, "Features")
+                CharacterSheetUtils.write_separator(file, "Features")
                 for feature in self.features:
                     feature.write_to_file(character, file)
 
             file.write("\n")
 
-            Utils.write_separator(file, "Weapons")
+            CharacterSheetUtils.write_separator(file, "Weapons")
             for weapon in self.weapons:
                 if self.weapon_masteries:
                     for mastery in self.weapon_masteries:
@@ -207,13 +207,13 @@ class CharacterSheetData:
 
             if self.fighting_styles:
                 file.write("\n")
-                Utils.write_separator(file, "Fighting Styles")
+                CharacterSheetUtils.write_separator(file, "Fighting Styles")
                 for fighting_style in self.fighting_styles:
                     fighting_style.write_to_file(file)
 
             if self.invocations:
                 file.write("\n")
-                Utils.write_separator(file, "Invocations")
+                CharacterSheetUtils.write_separator(file, "Invocations")
                 for invocation_index, invocation_name in enumerate(self.invocations):
                     invocation = InvocationScrapers.InvocationParser(invocation_name)
                     invocation.fetch()
@@ -223,20 +223,20 @@ class CharacterSheetData:
 
             if self.spells:
                 file.write("\n")
-                Utils.write_separator(file, "Spell Modifiers")
+                CharacterSheetUtils.write_separator(file, "Spell Modifiers")
                 character_spell_save_dc = character.calculate_spell_save_dc()
                 character_spell_attack_bonus = character.calculate_spell_attack_bonus()
                 file.write(f"Spell Save DC: {character_spell_save_dc}\n")
                 file.write(f"Spell Attack Bonus: +{character_spell_attack_bonus}\n")
 
                 file.write("\n")
-                Utils.write_separator(file, "Spell Slots")
+                CharacterSheetUtils.write_separator(file, "Spell Slots")
                 character_spell_slots = character.get_spell_slots()
                 for level, slots in character_spell_slots.items():
                     file.write(f"Level {level} Spell Slots: {slots}\n")
 
                 file.write("\n")
-                Utils.write_separator(file, "Spells")
+                CharacterSheetUtils.write_separator(file, "Spells")
                 for spell_index, spell_name in enumerate(self.spells):
                     spell = SpellScraper.SpellParser(spell_name)
                     spell.fetch()
