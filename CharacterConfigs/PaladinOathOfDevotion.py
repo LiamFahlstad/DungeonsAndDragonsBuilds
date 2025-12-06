@@ -147,6 +147,7 @@ def create(
         # Oath of devotion features
         data.add_spell("Protection from Evil and Good")
         data.add_spell("Shield of Faith")
+        channel_divinity_feature.add_spell("Sacred Weapon")
 
         # Add prepared spells:
         data.add_spell(paladin_level_3.spell)

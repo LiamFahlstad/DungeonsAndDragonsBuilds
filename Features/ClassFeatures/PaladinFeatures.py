@@ -43,6 +43,18 @@ class ChannelDivinityFeature(TextFeature):
             f"{indent}If the creature drops to 0 Hit Points before the vow ends, you can transfer the vow to a different creature within 30 feet of yourself (no action required).\n"
         )
 
+    def get_sacred_weapon_description(self, character_stat_block: CharacterStatBlock):
+        indent = self.indent
+        return (
+            f"{indent}Sacred Weapon:\n"
+            f"{indent}Unlocked: Oath of Devotion Paladin level 3:\n"
+            f"{indent}Range: 30 ft;\n"
+            f"{indent}Casting Time: None, but requires the Attack action to use.\n"
+            f"{indent}Duration: 10 minutes or until you use this feature again or turn it off (not action required) or you aren't carrying your weapon.\n"
+            f"{indent}You add your Charisma modifier to attack rolls you make with that weapon (minimum bonus of +1), and each time you hit with it, you cause it to deal its normal damage type or Radiant damage.\n"
+            f"{indent}The weapon also emits Bright Light in a 20-foot radius and Dim Light 20 feet beyond that.\n"
+        )
+
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         usages = 2
         if character_stat_block.level >= 11:
@@ -62,6 +74,10 @@ class ChannelDivinityFeature(TextFeature):
         if "Vow of Enmity" in self.spells:
             description += "\n"
             description += self.get_vow_of_enmity_description(character_stat_block)
+
+        if "Sacred Weapon" in self.spells:
+            description += "\n"
+            description += self.get_sacred_weapon_description(character_stat_block)
 
         return description
 

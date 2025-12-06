@@ -85,6 +85,14 @@ DC: class's Spellcasting feature.
     Duration: 10 minutes.
     Detects Celestials, Fiends, and Undead (location and creature type), and senses consecrated/desecrated places/objects within range.
 
+    Sacred Weapon:
+    Unlocked: Oath of Devotion Paladin level 3:
+    Range: 30 ft;
+    Casting Time: None, but requires the Attack action to use.
+    Duration: 10 minutes or until you use this feature again or turn it off (not action required) or you aren't carrying your weapon.
+    You add your Charisma modifier to attack rolls you make with that weapon (minimum bonus of +1), and each time you hit with it, you cause it to deal its normal damage type or Radiant damage.
+    The weapon also emits Bright Light in a 20-foot radius and Dim Light 20 feet beyond that.
+
 Name: Resourceful
 Origin: Human Trait
 Description: You gain Heroic Inspiration whenever you finish a Long Rest.
