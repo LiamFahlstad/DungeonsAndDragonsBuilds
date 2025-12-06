@@ -25,14 +25,6 @@ DATA.add_feature(RangerFeatures.SpellSlots())
 # ================ LEVEL 0 ============= #
 
 # Distribute 15, 14, 13, 12, 10, 8 among your abilities.
-DATA.abilities = StandardArrayAbilitiesStatBlock(
-    strength=8,
-    dexterity=15,
-    constitution=13,
-    intelligence=12,
-    wisdom=14,
-    charisma=10,
-)
 
 # Choose two skills to be proficient in
 DATA.skills = FighterSkillsStatBlock(

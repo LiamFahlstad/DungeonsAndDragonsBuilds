@@ -23,16 +23,16 @@ from StatBlocks.SkillsStatBlock import FighterSkillsStatBlock
 
 
 if __name__ == "__main__":
-    character_class_data = BattleMasterFighter.create_battle_master_fighter_data(
+    character_class_data = BattleMasterFighter.create(
         fighter_level=5,
         # Distribute 15, 14, 13, 12, 10, 8 among your abilities.
         abilities=StandardArrayAbilitiesStatBlock(
-            strength=14,
-            dexterity=12,
-            constitution=15,
-            intelligence=8,
-            wisdom=10,
-            charisma=13,
+            strength=8,
+            dexterity=15,
+            constitution=13,
+            intelligence=12,
+            wisdom=14,
+            charisma=10,
         ),
         # Choose two skills to be proficient in
         skills=FighterSkillsStatBlock(

@@ -1,4 +1,3 @@
-from pyexpat import features
 import attr
 from Definitions import Ability, Skill, CharacterClass, FighterSubclass
 from Features import BaseFeatures, GeneralFeats, Maneuvers, OriginFeats
@@ -36,7 +35,7 @@ class FighterLevel4:
     general_feat: GeneralFeats.GeneralFeat
 
 
-def create_battle_master_fighter_data(
+def create(
     fighter_level: int,
     abilities: AbilitiesStatBlock,
     skills: FighterSkillsStatBlock,
@@ -109,17 +108,18 @@ def create_battle_master_fighter_data(
 
     # ================ LEVEL 2 ============= #
     if fighter_level >= 2:
+
         data.add_feature(FighterFeatures.ActionSurge())
 
     # ================ LEVEL 3 ============= #
     if fighter_level >= 3:
         if fighter_level_3 is None:
             raise ValueError("fighter_level_3 must be provided for level 3 features.")
-        if data.character_subclass == FighterSubclass.BATTLE_MASTER:
-            superiority_dice = FighterFeatures.SuperiorityDice()
-            superiority_dice.add_maneuver(fighter_level_3.maneuver_1)
-            superiority_dice.add_maneuver(fighter_level_3.maneuver_2)
-            superiority_dice.add_maneuver(fighter_level_3.maneuver_3)
+
+        superiority_dice = FighterFeatures.SuperiorityDice()
+        superiority_dice.add_maneuver(fighter_level_3.maneuver_1)
+        superiority_dice.add_maneuver(fighter_level_3.maneuver_2)
+        superiority_dice.add_maneuver(fighter_level_3.maneuver_3)
 
     # ================ LEVEL 4 ============= #
     if fighter_level >= 4:
