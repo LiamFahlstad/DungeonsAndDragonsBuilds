@@ -1,6 +1,6 @@
 from CharacterConfigs import BattleMasterFighter
 from CharacterConfigs import PaladinOathOfVengeance
-from CharacterConfigs.PaladinOathOfVengeance import (
+from CharacterConfigs.PaladinBase import (
     PaladinLevel1,
     PaladinLevel2,
     PaladinLevel3,

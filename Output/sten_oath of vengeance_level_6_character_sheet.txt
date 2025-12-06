@@ -159,7 +159,7 @@ Property 'Thrown'           | Can throw weapon for ranged attack; use same abili
 Proficient                  | Yes                                                                                                                                       
 AttackRoll                  | 1d20 + 4 (ability mod: Strength) + 3 (Proficient)                                                                                         
 DamageRoll                  | 1d4 + 4 (ability mod: Strength)                                                                                                           
-Mastery 'Nick'              | When using a Light weapon’s extra attack, you can make it during the Attack action instead of as a Bonus Action. Once per turn.           
+Mastery 'Nick'              | When using a Light weaponâ€™s extra attack, you can make it during the Attack action instead of as a Bonus Action. Once per turn.           
 
 ################################################################################
 # ============================= Fighting Styles ============================== #
@@ -191,7 +191,7 @@ Range: Touch
 Components: V, S
 Duration: Instantaneous
 Description: A creature you touch regains a number of Hit Points equal to 2d8 plus your spellcasting ability modifier. Using a Higher-Level Spell Slot . The healing increases by 2d8 for each spell slot level above 1.
-Source: Player´s Handbook 2024 (BR)
+Source: PlayerÂ´s Handbook 2024 (BR)
 ----------------------------------------
 Name: Divine Favor
 Level And School: Level 1 Transmutation (Paladin)
@@ -200,7 +200,7 @@ Range: Self
 Components: V, S
 Duration: 1 minute
 Description: Until the spell ends, your attacks with weapons deal an extra 1d4 Radiant damage on a hit.
-Source: Player´s Handbook 2024 (BR)
+Source: PlayerÂ´s Handbook 2024 (BR)
 ----------------------------------------
 Name: Divine Smite
 Level And School: Level 1 Evocation (Paladin)
@@ -209,7 +209,7 @@ Range: Self
 Components: V
 Duration: Instantaneous
 Description: The target takes an extra 2d8 Radiant damage from the attack. The damage increases by 1d8 if the target is a Fiend or an Undead. Using a Higher-Level Spell Slot . The damage increases by 1d8 for each spell slot level above 1.
-Source: Player´s Handbook 2024 (BR)
+Source: PlayerÂ´s Handbook 2024 (BR)
 ----------------------------------------
 Name: Shield of Faith
 Level And School: Level 1 Abjuration (Cleric, Paladin)
@@ -218,25 +218,7 @@ Range: 60 feet
 Components: V, S, M (a prayer scroll)
 Duration: Concentration, up to 10 minutes
 Description: A shimmering field surrounds a creature of your choice within range, granting it a +2 bonus to AC for the duration.
-Source: Player´s Handbook 2024 (BR)
-----------------------------------------
-Name: Bane
-Level And School: Level 1 Enchantment (Bard, Cleric, Warlock)
-Casting Time: Action
-Range: 30 feet
-Components: V, S, M (a drop of blood)
-Duration: Concentration, up to 1 minute
-Description: Up to three creatures of your choice that you can see within range must each make a Charisma saving throw. Whenever a target that fails this save makes an attack roll or a saving throw before the spell ends, the target must subtract 1d4 from the attack roll or save. Using a Higher-Level Spell Slot . You can target one additional creature for each spell slot level above 1.
-Source: Player´s Handbook 2024 (BR)
-----------------------------------------
-Name: Hunter's Mark
-Level And School: Level 1 Divination (Ranger)
-Casting Time: Bonus Action
-Range: 90 feet
-Components: V
-Duration: Concentration, up to 1 hour
-Description: You magically mark one creature you can see within range as your quarry. Until the spell ends, you deal an extra 1d6 Force damage to the target whenever you hit it with an attack roll. You also have Advantage on any Wisdom (Perception or Survival) check you make to find it. If the target drops to 0 Hit Points before this spell ends, you can use a Bonus Action to mark a new creature you can see within range. Using a Higher-Level Spell Slot . Your Concentration can last longer with a spell slot of level 3-4 (up to 8 hours) or 5+ (up to 24 hours).
-Source: Player´s Handbook 2024 (BR)
+Source: PlayerÂ´s Handbook 2024 (BR)
 ----------------------------------------
 Name: Bless
 Level And School: Level 1 Enchantment (Cleric, Paladin)
@@ -245,7 +227,25 @@ Range: 30 feet
 Components: V, S, M (a Holy Symbol, worth 5+ GP)
 Duration: Concentration, up to 1 minute
 Description: You bless up to three creatures within range. Whenever a target makes an attack roll or a saving throw before the spell ends, the target adds 1d4 to the attack roll or save. Using a Higher-Level Spell Slot . You can target one additional creature for each spell slot level above 1.
-Source: Player´s Handbook 2024 (BR)
+Source: PlayerÂ´s Handbook 2024 (BR)
+----------------------------------------
+Name: Bane
+Level And School: Level 1 Enchantment (Bard, Cleric, Warlock)
+Casting Time: Action
+Range: 30 feet
+Components: V, S, M (a drop of blood)
+Duration: Concentration, up to 1 minute
+Description: Up to three creatures of your choice that you can see within range must each make a Charisma saving throw. Whenever a target that fails this save makes an attack roll or a saving throw before the spell ends, the target must subtract 1d4 from the attack roll or save. Using a Higher-Level Spell Slot . You can target one additional creature for each spell slot level above 1.
+Source: PlayerÂ´s Handbook 2024 (BR)
+----------------------------------------
+Name: Hunter's Mark
+Level And School: Level 1 Divination (Ranger)
+Casting Time: Bonus Action
+Range: 90 feet
+Components: V
+Duration: Concentration, up to 1 hour
+Description: You magically mark one creature you can see within range as your quarry. Until the spell ends, you deal an extra 1d6 Force damage to the target whenever you hit it with an attack roll. You also have Advantage on any Wisdom (Perception or Survival) check you make to find it. If the target drops to 0 Hit Points before this spell ends, you can use a Bonus Action to mark a new creature you can see within range. Using a Higher-Level Spell Slot . Your Concentration can last longer with a spell slot of level 3-4 (up to 8 hours) or 5+ (up to 24 hours).
+Source: PlayerÂ´s Handbook 2024 (BR)
 ----------------------------------------
 Name: Magic Weapon
 Level And School: Level 2 Transmutation (Paladin, Ranger, Sorcerer, Wizard)
@@ -253,8 +253,8 @@ Casting Time: Bonus Action
 Range: Touch
 Components: V, S
 Duration: 1 hour
-Description: You touch a nonmagical weapon. Until the spell ends, that weapon becomes a magic weapon with a +1 bonus to attack rolls and damage rolls. The spell ends early if you cast it again. Using a Higher-Level Spell Slot . The bonus increases to +2 with a level 3–5 spell slot. The bonus increases to +3 with a level 6+ spell slot.
-Source: Player´s Handbook 2024 (BR)
+Description: You touch a nonmagical weapon. Until the spell ends, that weapon becomes a magic weapon with a +1 bonus to attack rolls and damage rolls. The spell ends early if you cast it again. Using a Higher-Level Spell Slot . The bonus increases to +2 with a level 3â€“5 spell slot. The bonus increases to +3 with a level 6+ spell slot.
+Source: PlayerÂ´s Handbook 2024 (BR)
 ----------------------------------------
 Name: Find Steed
 Level And School: Level 2 Conjuration (Paladin)
@@ -262,8 +262,8 @@ Casting Time: Action
 Range: 30 feet
 Components: V, S
 Duration: Instantaneous
-Description: You summon an otherworldly being that appears as a loyal steed in an unoccupied space of your choice within range. This creature uses the Otherworldly Steed stat block. If you already have a steed from this spell, the steed is replaced by the new one. The steed resembles a Large, rideable animal of your choice, such as a horse, a camel, a dire wolf, or an elk. Whenever you cast the spell, choose the steed's creature type—Celestial, Fey, or Fiend—which determines certain traits in the stat block. Combat . The steed is an ally to you and your allies. In combat, it shares your Initiative count, and it functions as a controlled mount while you ride it (as defined in the rules on mounted combat). If you have the Incapacitated condition, the steed takes its turn immediately after yours and acts independently, focusing on protecting you. Disappearance of the Steed . The steed disappears if it drops to 0 Hit Points or if you die. When it disappears, it leaves behind anything it was wearing or carrying. If you cast this spell again, you decide whether you summon the steed that disappeared or a different one. Using a Higher-Level Spell Slot . Use the spell slot's level for the spell's level in the stat block.
-Source: Player´s Handbook 2024 (BR)
+Description: You summon an otherworldly being that appears as a loyal steed in an unoccupied space of your choice within range. This creature uses the Otherworldly Steed stat block. If you already have a steed from this spell, the steed is replaced by the new one. The steed resembles a Large, rideable animal of your choice, such as a horse, a camel, a dire wolf, or an elk. Whenever you cast the spell, choose the steed's creature typeâ€”Celestial, Fey, or Fiendâ€”which determines certain traits in the stat block. Combat . The steed is an ally to you and your allies. In combat, it shares your Initiative count, and it functions as a controlled mount while you ride it (as defined in the rules on mounted combat). If you have the Incapacitated condition, the steed takes its turn immediately after yours and acts independently, focusing on protecting you. Disappearance of the Steed . The steed disappears if it drops to 0 Hit Points or if you die. When it disappears, it leaves behind anything it was wearing or carrying. If you cast this spell again, you decide whether you summon the steed that disappeared or a different one. Using a Higher-Level Spell Slot . Use the spell slot's level for the spell's level in the stat block.
+Source: PlayerÂ´s Handbook 2024 (BR)
 ----------------------------------------
 Name: Hold Person
 Level And School: Level 2 Enchantment (Bard, Cleric, Druid, Sorcerer, Warlock, Wizard)
@@ -272,7 +272,7 @@ Range: 60 feet
 Components: V, S, M (a straight piece of iron)
 Duration: Concentration, up to 1 minute
 Description: Choose a Humanoid that you can see within range. The target must succeed on a Wisdom saving throw or have the Paralyzed condition for the duration. At the end of each of its turns, the target repeats the save, ending the spell on itself on a success. Using a Higher-Level Spell Slot . You can target one additional Humanoid for each spell slot level above 2.
-Source: Player´s Handbook 2024 (BR)
+Source: PlayerÂ´s Handbook 2024 (BR)
 ----------------------------------------
 Name: Misty Step
 Level And School: Level 2 Conjuration (Sorcerer, Warlock, Wizard)
@@ -281,7 +281,7 @@ Range: Self
 Components: V
 Duration: Instantaneous
 Description: Briefly surrounded by silvery mist, you teleport up to 30 feet to an unoccupied space you can see.
-Source: Player´s Handbook 2024 (BR)
+Source: PlayerÂ´s Handbook 2024 (BR)
 ----------------------------------------
 Name: Dispel Magic
 Level And School: Level 3 Abjuration (Bard, Cleric, Druid, Paladin, Ranger, Sorcerer, Warlock, Wizard)
@@ -290,4 +290,4 @@ Range: 120 feet
 Components: V, S
 Duration: Instantaneous
 Description: Choose one creature, object, or magical effect within range. Any ongoing spell of level 3 or lower on the target ends. For each ongoing spell of level 4 or higher on the target, make an ability check using your spellcasting ability (DC 10 plus that spell's level). On a successful check, the spell ends. Using a Higher-Level Spell Slot . You automatically end a spell on the target if the spell's level is equal to or less than the level of the spell slot you use.
-Source: Player´s Handbook 2024 (BR)
+Source: PlayerÂ´s Handbook 2024 (BR)
