@@ -119,7 +119,7 @@ class CharacterSheetData:
             elif isinstance(fighting_style, FightStyleWeaponFeature):
                 fighting_style.modify(self.weapons)
 
-        output_path = f"Output/{slugify(self.character_name)}_{self.character_class.value.lower()}_level_{self.level}_character_sheet.txt"
+        output_path = f"Output/{slugify(self.character_name)}_{self.character_subclass.lower()}_level_{self.level}_character_sheet.txt"
 
         pathlib.Path(output_path).parent.mkdir(parents=True, exist_ok=True)
         with open(output_path, "w") as file:

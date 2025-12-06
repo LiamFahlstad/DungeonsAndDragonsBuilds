@@ -1,171 +1,187 @@
-from Definitions import Ability, Skill, CharacterClass, PaladinSubclass
-from Features import GeneralFeats
+import attr
+from Definitions import Ability, PaladinSubclass, Skill, CharacterClass, FighterSubclass
+from Features import BaseFeatures, GeneralFeats, Maneuvers, OriginFeats
 import CharacterSheetCreator
 from Features import Armor
 from Features import Backgrounds
 from Features import FightingStyles
 from Features import Weapons
-from Features.ClassFeatures import PaladinFeatures
-import StatBlocks.AllStatBlocks as AllStatBlocks
-
-DATA = CharacterSheetCreator.CharacterSheetData()
-
-##########################################
-# ================ CHANGE ============== #
-##########################################
-
-# ================ GENERAL ============= #
-
-DATA.character_name = "Devotion"
-DATA.character_class = CharacterClass.PALADIN
-DATA.level = 3
-DATA.character_subclass = PaladinSubclass.OATH_OF_DEVOTION
-DATA.spell_casting_ability = Ability.CHARISMA
-DATA.add_feature(PaladinFeatures.SpellSlots())
-
-# ================ LEVEL 0 ============= #
-
-# Distribute 15, 14, 13, 12, 10, 8 among your abilities.
-DATA.abilities = StandardArrayAbilitiesStatBlock(
-    strength=13,
-    dexterity=10,
-    constitution=14,
-    intelligence=12,
-    wisdom=8,
-    charisma=15,
+from Features.ClassFeatures import FighterFeatures, PaladinFeatures
+from StatBlocks.AbilitiesStatBlock import (
+    StandardArrayAbilitiesStatBlock,
+    AbilitiesStatBlock,
 )
-
-# Choose two skills to be proficient in
-DATA.skills = PaladinSkillsStatBlock(
-    proficiencies={
-        Skill.ATHLETICS: False,
-        Skill.INSIGHT: True,
-        Skill.INTIMIDATION: True,
-        Skill.MEDICINE: False,
-        Skill.PERSUASION: False,
-        Skill.RELIGION: False,
-    }
-)
-
-# Leave as is: Paladin specific saving throws
-DATA.saving_throws = PaladinSavingThrowsStatBlock()
-
-# Leave as is: Paladin specific combat stats
-DATA.hit_die = PaladinFeatures.PALADIN_HIT_DIE
-DATA.speed = 30
-
-DATA.add_feature(
-    # Free background feature
-    # Distribute +2 and +1 to two different ability scores
-    # OR +1 to three different ability scores
-    Backgrounds.FreeBackgroundAbilityBonus(
-        [
-            (Ability.CONSTITUTION, 2),
-            (Ability.CHARISMA, 1),
-        ]
-    )
-)
-
-# Starting armor
-DATA.add_armor(Armor.ChainMailArmor())
-DATA.add_armor(Armor.ShieldArmor())
-
-# Starting weapons
-DATA.add_weapon(Weapons.Longsword(player_is_proficient=True))
-DATA.add_weapon(Weapons.Javelin(player_is_proficient=True))
+from StatBlocks.SavingThrowsStatBlock import PaladinSavingThrowsStatBlock
+from StatBlocks.SkillsStatBlock import PaladinSkillsStatBlock
 
 
-# ================ LEVEL 1 ============= #
-if DATA.level >= 1:
-    # Weapon Mastery: Choose two proficient weapon types to use their mastery properties.
-    # You can change your choices after a Long Rest.
-    DATA.add_weapon_mastery(Weapons.Handaxe)
-    DATA.add_weapon_mastery(Weapons.LightHammer)
-    DATA.add_feature(PaladinFeatures.LayOnHands())
-
-    # Add/Change prepared spells:
-    DATA.add_spell("Cure Wounds")
-    DATA.add_spell("Divine Favor")
+@attr.dataclass
+class PaladinLevel1:
+    weapon_mastery_1: Weapons.AbstractWeapon
+    weapon_mastery_2: Weapons.AbstractWeapon
+    spell_1: str
+    spell_2: str
 
 
-# ================ LEVEL 2 ============= #
-if DATA.level >= 2:
-    # Choose one Fighting Style
-    DATA.add_fighting_style(FightingStyles.Defense())
+@attr.dataclass
+class PaladinLevel2:
+    fighting_style: FightingStyles.FightingStyle
+    spell: str
 
-    # Automatic feature
-    DATA.add_feature(PaladinFeatures.PaladinsSmite())
-    DATA.add_spell("Divine Smite")
 
-    # Add/Change prepared spells:
-    DATA.add_spell("Shield of Faith")
+@attr.dataclass
+class PaladinLevel3:
+    spell: str
 
-# ================ LEVEL 3 ============= #
-if DATA.level >= 3:
-    # Automatic feature
-    channel_divinity_feature = PaladinFeatures.ChannelDivinityFeature()
-    channel_divinity_feature.add_spell("Divine Sense")
 
-    # Automatic feature
-    if DATA.character_subclass == PaladinSubclass.OATH_OF_DEVOTION:
-        DATA.add_spell("Protection from Evil and Good")
-        DATA.add_spell("Shield of Faith")
+@attr.dataclass
+class PaladinLevel4:
+    general_feat: GeneralFeats.GeneralFeat
+    spell: str
 
-    # Automatic feature
-    if DATA.character_subclass == PaladinSubclass.OATH_OF_VENGEANCE:
-        DATA.add_spell("Bane")
-        DATA.add_spell("Hunter's Mark")
-        channel_divinity_feature.add_spell("Vow of Enmity")
 
-    # Add/Change prepared spells:
-    DATA.add_spell("Bless")
+@attr.dataclass
+class PaladinLevel5:
+    spell: str
 
-# ================ LEVEL 4 ============= #
-if DATA.level >= 4:
-    # Choose one ability score to increase by 2
-    # OR two ability scores to increase by 1 each
-    DATA.add_feature(
-        GeneralFeats.AbilityScoreImprovement(
-            [
-                (Ability.STRENGTH, 1),
-                (Ability.CONSTITUTION, 1),
-            ]
-        )
+
+def create(
+    paladin_level: int,
+    abilities: AbilitiesStatBlock,
+    skills: PaladinSkillsStatBlock,
+    background_ability_bonuses: Backgrounds.FreeBackgroundAbilityBonus,
+    background_skill_proficiencies: Backgrounds.FreeBackgroundSkillProficiency,
+    add_default_equipment: bool,
+    origin_feat: OriginFeats.OriginCharacterFeat | OriginFeats.OriginTextFeat,
+    armor: list[Armor.AbstractArmor] = None,
+    weapons: list[Weapons.AbstractWeapon] = None,
+    paladin_level_1: PaladinLevel1 = None,
+    paladin_level_2: PaladinLevel2 = None,
+    paladin_level_3: PaladinLevel3 = None,
+    paladin_level_4: PaladinLevel4 = None,
+    paladin_level_5: PaladinLevel5 = None,
+) -> CharacterSheetCreator.CharacterSheetData:
+
+    if not isinstance(skills, PaladinSkillsStatBlock):
+        raise ValueError("skills must be an instance of PaladinSkillsStatBlock")
+
+    data = CharacterSheetCreator.CharacterSheetData(
+        character_class=CharacterClass.PALADIN,
+        level=paladin_level,
+        character_subclass=PaladinSubclass.OATH_OF_DEVOTION.value,
+        abilities=abilities,
+        skills=skills,
+        saving_throws=PaladinSavingThrowsStatBlock(),
+        hit_die=PaladinFeatures.PALADIN_HIT_DIE,
+        spell_casting_ability=Ability.CHARISMA,
     )
 
-    # Add/Change prepared spells:
-    # DATA.add_spell("Restoration")
+    # ================ LEVEL 0 ============= #
+    channel_divinity_feature = None
+    data.add_feature(PaladinFeatures.SpellSlots())
+    data.add_feature(background_ability_bonuses)
+    data.add_feature(background_skill_proficiencies)
 
-# ================ LEVEL 5 ============= #
-if DATA.level >= 5:
-    # Automatic feature
-    DATA.add_feature(PaladinFeatures.ExtraAttack())
-    DATA.add_feature(PaladinFeatures.FaithfulSteed())
-    DATA.add_spell("Find Steed")
+    ### Equipment ###
 
-    # Automatic feature
-    if DATA.character_subclass == PaladinSubclass.OATH_OF_VENGEANCE:
-        DATA.add_spell("Hold Person")
-        DATA.add_spell("Misty Step")
+    if add_default_equipment:
+        # Starting armor
+        data.add_armor(Armor.ChainMailArmor())
+        data.add_armor(Armor.ShieldArmor())
 
-    # Add/Change prepared spells:
-    DATA.add_spell("Dispel Magic")
+        # Starting weapons
+        data.add_weapon(Weapons.Longsword(player_is_proficient=True))
+        data.add_weapon(Weapons.Javelin(player_is_proficient=True))
 
-# ================ LEVEL 6 ============= #
-if DATA.level >= 6:
-    # Automatic feature
-    DATA.add_feature(PaladinFeatures.AuraOfProtection())
+    if armor is not None:
+        for a in armor:
+            data.add_armor(a)
 
+    if weapons is not None:
+        for w in weapons:
+            data.add_weapon(w)
 
-##########################################
-# ========== MANUAL ADDITIONS ========== #
-##########################################
+    # Origin feat
+    data.add_feature(origin_feat)
 
-# DATA.add_weapon(Weapons.Handaxe(player_is_proficient=True))
-# DATA.add_weapon(Weapons.LightHammer(player_is_proficient=True))
+    # ================ LEVEL 1 ============= #
+    if paladin_level >= 1:
+        if paladin_level_1 is None:
+            raise ValueError("paladin_level_1 must be provided for level 1 features.")
+        # Weapon Mastery: Choose two proficient weapon types to use their mastery properties.
+        # You can change your choices after a Long Rest.
+        data.add_weapon_mastery(paladin_level_1.weapon_mastery_1)
+        data.add_weapon_mastery(paladin_level_1.weapon_mastery_2)
 
-##########################################
-# ============ LEAVE AS IS ============= #
-##########################################
+        # Lay on Hands
+        data.add_feature(PaladinFeatures.LayOnHands())
 
-DATA.add_feature(channel_divinity_feature)
+        # Add/Change prepared spells:
+        data.add_spell(paladin_level_1.spell_1)
+        data.add_spell(paladin_level_1.spell_2)
+
+    # ================ LEVEL 2 ============= #
+    if paladin_level >= 2:
+        if paladin_level_2 is None:
+            raise ValueError("paladin_level_2 must be provided for level 2 features.")
+
+        # Choose one Fighting Style
+        data.add_fighting_style(paladin_level_2.fighting_style)
+
+        # Automatic feature
+        data.add_feature(PaladinFeatures.PaladinsSmite())
+        data.add_spell("Divine Smite")
+
+        # Add prepared spells:
+        data.add_spell(paladin_level_2.spell)
+
+    # ================ LEVEL 3 ============= #
+    if paladin_level >= 3:
+        if paladin_level_3 is None:
+            raise ValueError("paladin_level_3 must be provided for level 3 features.")
+
+        # Automatic feature
+        channel_divinity_feature = PaladinFeatures.ChannelDivinityFeature()
+        channel_divinity_feature.add_spell("Divine Sense")
+
+        # Oath of devotion features
+        data.add_spell("Protection from Evil and Good")
+        data.add_spell("Shield of Faith")
+
+        # Add prepared spells:
+        data.add_spell(paladin_level_3.spell)
+
+    # ================ LEVEL 4 ============= #
+    if paladin_level >= 4:
+        if paladin_level_4 is None:
+            raise ValueError("paladin_level_4 must be provided for level 4 features.")
+        data.add_feature(paladin_level_4.general_feat)
+        data.add_spell(paladin_level_4.spell)
+
+    # ================ LEVEL 5 ============= #
+    if paladin_level >= 5:
+        # Automatic feature
+        data.add_feature(PaladinFeatures.ExtraAttack())
+        data.add_feature(PaladinFeatures.FaithfulSteed())
+        data.add_spell("Find Steed")
+
+        # Oath of vengeance features
+        data.add_spell("Hold Person")
+        data.add_spell("Misty Step")
+
+        # Add/Change prepared spells:
+        data.add_spell(paladin_level_5.spell)
+
+    # ================ LEVEL 6 ============= #
+    if paladin_level >= 6:
+        # Automatic feature
+        data.add_feature(PaladinFeatures.AuraOfProtection())
+
+    ##########################################
+    # ============ LEAVE AS IS ============= #
+    ##########################################
+
+    if channel_divinity_feature is not None:
+        data.add_feature(channel_divinity_feature)
+
+    return data

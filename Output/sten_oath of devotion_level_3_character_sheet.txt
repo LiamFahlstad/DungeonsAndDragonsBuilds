@@ -1,0 +1,202 @@
+################################################################################
+# =============================== General Info =============================== #
+################################################################################
+Field              | Value           
+-------------------+-----------------
+Name               | Sten            
+Level              | 3               
+Character Class    | Paladin         
+Character Subclass | Oath of Devotion
+Proficiency Bonus  | 2               
+
+################################################################################
+# =============================== Combat Stats =============================== #
+################################################################################
+Field          | Value  
+---------------+--------
+Max Hit Points | 37     
+Armor Class    | 18     
+Initiative     | d20 + 0
+Speed (ft)     | 30     
+Size           | Medium 
+
+################################################################################
+# ================================ Abilities ================================= #
+################################################################################
+Ability      | Score | Modifier | Saving Throw | Proficient
+-------------+-------+----------+--------------+-----------
+Strength     | 13    | 1        | 1            | No        
+Dexterity    | 10    | 0        | 0            | No        
+Constitution | 16    | 3        | 3            | No        
+Intelligence | 12    | 1        | 1            | No        
+Wisdom       | 8     | -1       | 1            | Yes       
+Charisma     | 16    | 3        | 5            | Yes       
+
+################################################################################
+# ================================== Skills ================================== #
+################################################################################
+Skill           | Modifier | Proficient | Ability      | RollCondition
+----------------+----------+------------+--------------+--------------
+Acrobatics      | 0        | No         | Dexterity    | Neutral      
+Animal Handling | -1       | No         | Wisdom       | Neutral      
+Arcana          | 1        | No         | Intelligence | Neutral      
+Athletics       | 3        | Yes        | Strength     | Neutral      
+Deception       | 3        | No         | Charisma     | Neutral      
+History         | 3        | Yes        | Intelligence | Neutral      
+Insight         | 1        | Yes        | Wisdom       | Neutral      
+Intimidation    | 5        | Yes        | Charisma     | Neutral      
+Investigation   | 1        | No         | Intelligence | Neutral      
+Medicine        | 1        | Yes        | Wisdom       | Neutral      
+Nature          | 1        | No         | Intelligence | Neutral      
+Perception      | 1        | Yes        | Wisdom       | Neutral      
+Performance     | 3        | No         | Charisma     | Neutral      
+Persuasion      | 5        | Yes        | Charisma     | Neutral      
+Religion        | 1        | No         | Intelligence | Neutral      
+Sleight of Hand | 0        | No         | Dexterity    | Neutral      
+Stealth         | 0        | No         | Dexterity    | Disadvantage 
+Survival        | 1        | Yes        | Wisdom       | Neutral      
+
+################################################################################
+# ================================= Features ================================= #
+################################################################################
+Name: Lay on Hands
+Origin: Paladin Level 1
+Description: You have a pool of healing power.
+Power in pool: 5 x Paladin level (5 x 3 = 15) Hit Points.
+You can also expend 5 Hit Points from the pool of healing power to remove the Poisoned condition from the creature; those points don't also restore Hit Points to the creature.Replenishes on Long Rest.
+Casting time: Bonus Action.
+Range: Touch.
+
+Name: Paladin's Smite
+Origin: Paladin Level 2
+Description: Level 2: Divine Smite is always prepared and can be cast once per Long Rest without a spell slot.
+
+Name: Channel Divinity
+Origin: Paladin Level 3
+Description: Each time you use this class's Channel Divinity, you choose which effect from this class to create.
+Usage: 2.
+You regain one after a Short Rest, all after a Long Rest.
+DC: class's Spellcasting feature.
+
+    Divine Sense:
+    Unlocked: Paladin level 3:
+    Range: 60 ft radius;
+    Casting Time: Bonus Action;
+    Duration: 10 minutes.
+    Detects Celestials, Fiends, and Undead (location and creature type), and senses consecrated/desecrated places/objects within range.
+
+Name: Resourceful
+Origin: Human Trait
+Description: You gain Heroic Inspiration whenever you finish a Long Rest.
+
+Name: Versatile
+Origin: Human Trait
+Description: You gain an Origin feat of your choice (see 'Feats'). Skilled is recommended.
+
+
+################################################################################
+# ================================= Weapons ================================== #
+################################################################################
+Field                       | Value                                                                        
+----------------------------+------------------------------------------------------------------------------
+Name                        | Longsword                                                                    
+Type                        | Martial Melee                                                                
+DamageType                  | Slashing                                                                     
+Property 'Versatile (1d10)' | Can use one or two hands; if two-handed, use damage die shown in parentheses.
+Proficient                  | Yes                                                                          
+AttackRoll                  | 1d20 + 1 (ability mod: Strength) + 2 (Proficient)                            
+DamageRoll                  | 1d8 + 1 (ability mod: Strength)                                              
+----------------------------+------------------------------------------------------------------------------
+Name                        | Javelin                                                                      
+Type                        | Simple Melee                                                                 
+DamageType                  | Piercing                                                                     
+Property 'Thrown'           | Can throw weapon for ranged attack; use same ability mod as melee version.   
+Proficient                  | Yes                                                                          
+AttackRoll                  | 1d20 + 1 (ability mod: Strength) + 2 (Proficient)                            
+DamageRoll                  | 1d6 + 1 (ability mod: Strength)                                              
+
+################################################################################
+# ============================= Fighting Styles ============================== #
+################################################################################
+Two-Weapon Fighting: When you make an extra attack as a result of using a weapon that has the Light property, you can add your ability modifier to the damage of that attack if you aren't already adding it to the damage. (calculate manually)
+
+################################################################################
+# ============================= Spell Modifiers ============================== #
+################################################################################
+Spell Save DC: 13
+Spell Attack Bonus: +5
+
+################################################################################
+# =============================== Spell Slots ================================ #
+################################################################################
+Level 1 Spell Slots: 3
+Level 2 Spell Slots: 0
+Level 3 Spell Slots: 0
+Level 4 Spell Slots: 0
+Level 5 Spell Slots: 0
+
+################################################################################
+# ================================== Spells ================================== #
+################################################################################
+Name: Cure Wounds
+Level And School: Level 1 Abjuration (Bard, Cleric, Druid, Paladin, Ranger)
+Casting Time: Action
+Range: Touch
+Components: V, S
+Duration: Instantaneous
+Description: A creature you touch regains a number of Hit Points equal to 2d8 plus your spellcasting ability modifier. Using a Higher-Level Spell Slot . The healing increases by 2d8 for each spell slot level above 1.
+Source: Player큦 Handbook 2024 (BR)
+----------------------------------------
+Name: Divine Favor
+Level And School: Level 1 Transmutation (Paladin)
+Casting Time: Bonus Action
+Range: Self
+Components: V, S
+Duration: 1 minute
+Description: Until the spell ends, your attacks with weapons deal an extra 1d4 Radiant damage on a hit.
+Source: Player큦 Handbook 2024 (BR)
+----------------------------------------
+Name: Divine Smite
+Level And School: Level 1 Evocation (Paladin)
+Casting Time: Bonus Action, which you take immediately after hitting a target with a Melee weapon or an Unarmed Strike
+Range: Self
+Components: V
+Duration: Instantaneous
+Description: The target takes an extra 2d8 Radiant damage from the attack. The damage increases by 1d8 if the target is a Fiend or an Undead. Using a Higher-Level Spell Slot . The damage increases by 1d8 for each spell slot level above 1.
+Source: Player큦 Handbook 2024 (BR)
+----------------------------------------
+Name: Shield of Faith
+Level And School: Level 1 Abjuration (Cleric, Paladin)
+Casting Time: Bonus Action
+Range: 60 feet
+Components: V, S, M (a prayer scroll)
+Duration: Concentration, up to 10 minutes
+Description: A shimmering field surrounds a creature of your choice within range, granting it a +2 bonus to AC for the duration.
+Source: Player큦 Handbook 2024 (BR)
+----------------------------------------
+Name: Protection from Evil and Good
+Level And School: Level 1 Abjuration (Cleric, Druid, Paladin, Warlock, Wizard)
+Casting Time: Action
+Range: Touch
+Components: V, S, M (a flask of Holy Water worth 25+ GP, which the spell consumes)
+Duration: Concentration, up to 10 minutes
+Description: Until the spell ends, one willing creature you touch is protected against creatures that are Aberrations, Celestials, Elementals, Fey, Fiends, or Undead. The protection grants several benefits. Creatures of those types have Disadvantage on attack rolls against the target. The target also can't be possessed by or gain the Charmed or Frightened conditions from them. If the target is already possessed, Charmed, or Frightened by such a creature, the target has Advantage on any new saving throw against the relevant effect.
+Source: Player큦 Handbook 2024 (BR)
+----------------------------------------
+Name: Shield of Faith
+Level And School: Level 1 Abjuration (Cleric, Paladin)
+Casting Time: Bonus Action
+Range: 60 feet
+Components: V, S, M (a prayer scroll)
+Duration: Concentration, up to 10 minutes
+Description: A shimmering field surrounds a creature of your choice within range, granting it a +2 bonus to AC for the duration.
+Source: Player큦 Handbook 2024 (BR)
+----------------------------------------
+Name: Bless
+Level And School: Level 1 Enchantment (Cleric, Paladin)
+Casting Time: Action
+Range: 30 feet
+Components: V, S, M (a Holy Symbol, worth 5+ GP)
+Duration: Concentration, up to 1 minute
+Description: You bless up to three creatures within range. Whenever a target makes an attack roll or a saving throw before the spell ends, the target adds 1d4 to the attack roll or save. Using a Higher-Level Spell Slot . You can target one additional creature for each spell slot level above 1.
+Source: Player큦 Handbook 2024 (BR)
