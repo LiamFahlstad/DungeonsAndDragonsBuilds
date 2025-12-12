@@ -118,10 +118,18 @@ def create(
         # Automatic feature
         aura_of_protection = PaladinFeatures.AuraOfProtection()
 
-    # ================ LEVEL 6 ============= #
+    # ================ LEVEL 7 ============= #
     if paladin_level >= 7:
         # Automatic feature
         aura_of_protection.add_addition(PaladinFeatures.AuraOfDevotion())
+
+    # ================ LEVEL 15 ============= #
+    if paladin_level >= 15:
+        data.add_feature(PaladinFeatures.SmiteOfProtection())
+
+    # ================ LEVEL 20 ============= #
+    if paladin_level >= 20:
+        data.add_feature(PaladinFeatures.HolyNimbus())
 
     ##########################################
     # ============ LEAVE AS IS ============= #

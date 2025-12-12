@@ -32,7 +32,7 @@ from StatBlocks.SkillsStatBlock import FighterSkillsStatBlock, PaladinSkillsStat
 
 if __name__ == "__main__":
     character_class_data = PaladinOathOfDevotion.create(
-        paladin_level=7,
+        paladin_level=20,
         # Distribute 15, 14, 13, 12, 10, 8 among your abilities.
         abilities=StandardArrayAbilitiesStatBlock(
             strength=13,

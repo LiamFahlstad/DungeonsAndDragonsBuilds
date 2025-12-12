@@ -154,11 +154,36 @@ class AuraOfProtection(TextFeature):
 class AuraOfDevotion(TextFeature):
     def __init__(self):
         super().__init__(
-            name="Aura of Devotion", origin="Oath of Devotion Paladin Level 2"
+            name="Aura of Devotion", origin="Oath of Devotion Paladin Level 7"
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         return "You and your allies have Immunity to the Charmed condition while in your Aura of Protection.\nIf a Charmed ally enters the aura, that condition has no effect on that ally while there."
+
+
+class SmiteOfProtection(TextFeature):
+    def __init__(self):
+        super().__init__(
+            name="Smite of Protection", origin="Oath of Devotion Paladin Level 15"
+        )
+
+    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+        return "Your magical smite now radiates protective energy. Whenever you cast Divine Smite, you and your allies have Half Cover while in your Aura of Protection. The aura has this benefit until the start of your next turn."
+
+
+class HolyNimbus(TextFeature):
+    def __init__(self):
+        super().__init__(name="Holy Nimbus", origin="Oath of Devotion Paladin Level 20")
+
+    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+        text = (
+            "As a Bonus Action, you can imbue your Aura of Protection with holy power, granting the benefits below for 10 minutes or until you end them (no action required). Once you use this feature, you can’t use it again until you finish a Long Rest. You can also restore your use of it by expending a level 5 spell slot (no action required).\n"
+            "Holy Ward. You have Advantage on any saving throw you are forced to make by a Fiend or an Undead.\n"
+            "Radiant Damage. Whenever an enemy starts its turn in the aura, that creature takes Radiant damage equal to your Charisma modifier plus your Proficiency Bonus.\n"
+            "Sunlight. The aura is filled with Bright Light that is sunlight.\n"
+        )
+
+        return text
 
 
 class SpellSlots(CharacterFeature):
