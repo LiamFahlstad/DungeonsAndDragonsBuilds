@@ -21,6 +21,11 @@ from Features import (
     Weapons,
 )
 from SpeciesConfigs import Human
+from Spells.Definitions import (
+    PaladinLevel1Spells,
+    PaladinLevel2Spells,
+    PaladinLevel3Spells,
+)
 from StatBlocks.AbilitiesStatBlock import StandardArrayAbilitiesStatBlock
 from StatBlocks.SkillsStatBlock import FighterSkillsStatBlock, PaladinSkillsStatBlock
 
@@ -70,15 +75,15 @@ if __name__ == "__main__":
         paladin_level_1=PaladinLevel1(
             weapon_mastery_1=Weapons.Handaxe(),
             weapon_mastery_2=Weapons.LightHammer(),
-            spell_1="Cure Wounds",
-            spell_2="Divine Favor",
+            spell_1=PaladinLevel1Spells.CURE_WOUNDS,
+            spell_2=PaladinLevel1Spells.DIVINE_FAVOR,
         ),
         paladin_level_2=PaladinLevel2(
             fighting_style=FightingStyles.TwoWeaponFighting(),
-            spell="Shield of Faith",
+            spell=PaladinLevel1Spells.SHIELD_OF_FAITH,
         ),
         paladin_level_3=PaladinLevel3(
-            spell="Bless",
+            spell=PaladinLevel1Spells.BLESS,
         ),
         paladin_level_4=PaladinLevel4(
             general_feat=GeneralFeats.AbilityScoreImprovement(
@@ -87,11 +92,14 @@ if __name__ == "__main__":
                     (Ability.CONSTITUTION, 1),
                 ]
             ),
-            spell="Magic Weapon",
+            spell=PaladinLevel1Spells.CURE_WOUNDS,
         ),
         paladin_level_5=PaladinLevel5(
-            spell="Dispel Magic",
+            spell=PaladinLevel2Spells.ZONE_OF_TRUTH,
         ),
+        replace_spells={
+            PaladinLevel1Spells.CURE_WOUNDS: PaladinLevel2Spells.MAGIC_WEAPON,
+        },
     )
 
     species_data = Human.human_character_data(

@@ -14,6 +14,15 @@ from StatBlocks.AbilitiesStatBlock import (
 from StatBlocks.SavingThrowsStatBlock import PaladinSavingThrowsStatBlock
 from StatBlocks.SkillsStatBlock import PaladinSkillsStatBlock
 from CharacterConfigs import PaladinBase
+from Spells.Definitions import (
+    PaladinLevel1Spells,
+    PaladinLevel2Spells,
+    PaladinLevel3Spells,
+    PaladinLevel4Spells,
+    PaladinLevel5Spells,
+    RangerLevel1Spells,
+    WarlockLevel1Spells,
+)
 
 
 def create(
@@ -31,6 +40,7 @@ def create(
     paladin_level_3: PaladinBase.PaladinLevel3 = None,
     paladin_level_4: PaladinBase.PaladinLevel4 = None,
     paladin_level_5: PaladinBase.PaladinLevel5 = None,
+    replace_spells: dict[str, str] = None,
 ) -> CharacterSheetCreator.CharacterSheetData:
 
     if not isinstance(skills, PaladinSkillsStatBlock):
@@ -80,8 +90,8 @@ def create(
         )
 
         # Oath of vengeance features
-        data.add_spell("Bane")
-        data.add_spell("Hunter's Mark")
+        data.add_spell(WarlockLevel1Spells.BANE)
+        data.add_spell(RangerLevel1Spells.HUNTERS_MARK)
         channel_divinity_feature.add_spell("Vow of Enmity")
 
     # ================ LEVEL 4 ============= #
@@ -116,4 +126,5 @@ def create(
     if channel_divinity_feature is not None:
         data.add_feature(channel_divinity_feature)
 
+    data.replace_spells(replace_spells or {})
     return data

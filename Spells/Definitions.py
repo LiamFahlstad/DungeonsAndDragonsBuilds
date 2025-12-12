@@ -1056,7 +1056,7 @@ class RangerLevel1Spells(str, Enum):
     FOG_CLOUD = "Fog Cloud"
     GOODBERRY = "Goodberry"
     HAIL_OF_THORNS = "Hail of Thorns"
-    HUNTER_S_MARK = "Hunter's Mark"
+    HUNTERS_MARK = "Hunter's Mark"
     JUMP = "Jump"
     LONGSTRIDER = "Longstrider"
     SPEAK_WITH_ANIMALS = "Speak with Animals"
