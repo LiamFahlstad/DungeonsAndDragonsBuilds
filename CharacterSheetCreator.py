@@ -20,6 +20,7 @@ from Features.FightingStyles import (
 from Features.BaseFeatures import Feature, CharacterFeature
 import attr
 from Features.Armor import AbstractArmor
+from Spells.SpellFactory import SpellFactory
 
 
 @attr.dataclass
@@ -238,8 +239,7 @@ class CharacterSheetData:
                 file.write("\n")
                 CharacterSheetUtils.write_separator(file, "Spells")
                 for spell_index, spell_name in enumerate(self.spells):
-                    spell = SpellScraper.SpellParser(spell_name)
-                    spell.fetch()
+                    spell = SpellFactory.create(spell_name)
                     spell.write_to_file(file)
                     if spell_index < len(self.spells) - 1:
                         file.write("-" * 40 + "\n")

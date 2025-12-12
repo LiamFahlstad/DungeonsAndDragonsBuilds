@@ -1,3 +1,4 @@
+import re
 import requests
 from bs4 import BeautifulSoup
 
@@ -26,6 +27,8 @@ class SpellParser:
         # Replace curly apostrophes and normalize common punctuation
         name = name.replace("’", "'")
         name = name.replace("'", "-")
+        name = name.replace("/", "-")
+        name = name.replace("é", "e")
         if "hunter" in name:
             pass
 
@@ -59,29 +62,50 @@ class SpellParser:
     # Individual field getters
     # -------------------
 
-    def get_name(self):
-        return self._get_text(self.col1.find("h1"))
+    def format_text(self, text: str) -> str:
+        return text.replace("´", "'")
 
-    def get_level_and_school(self):
-        return self._get_text(self.col1.find("div", class_="ecole"))
+    def get_name(self):
+        text = self._get_text(self.col1.find("h1"))
+        return self.format_text(text)
+
+    def get_level_and_school(self) -> dict:
+        text = self._get_text(self.col1.find("div", class_="ecole"))
+        text = self.format_text(text)
+        pattern = r"^Level\s+(\d+)\s+([A-Za-z ]+)\s+\(([^)]+)\)"
+        match = re.match(pattern, text)
+        if not match:
+            raise ValueError(f"Could not parse level and school from text: '{text}'")
+
+        level = int(match.group(1))
+        school = match.group(2).strip()
+        classes = [c.strip() for c in match.group(3).split(",")]
+
+        return {"level": level, "school": school, "classes": classes}
 
     def get_casting_time(self):
-        return self._clean_field(self.col1.find("div", class_="t"))
+        text = self._clean_field(self.col1.find("div", class_="t"))
+        return self.format_text(text)
 
     def get_range(self):
-        return self._clean_field(self.col1.find("div", class_="r"))
+        text = self._clean_field(self.col1.find("div", class_="r"))
+        return self.format_text(text)
 
     def get_components(self):
-        return self._clean_field(self.col1.find("div", class_="c"))
+        text = self._clean_field(self.col1.find("div", class_="c"))
+        return self.format_text(text)
 
     def get_duration(self):
-        return self._clean_field(self.col1.find("div", class_="d"))
+        text = self._clean_field(self.col1.find("div", class_="d"))
+        return self.format_text(text)
 
     def get_description(self):
-        return self._get_text(self.col1.find("div", class_="description"))
+        text = self._get_text(self.col1.find("div", class_="description"))
+        return self.format_text(text)
 
     def get_source(self):
-        return self._get_text(self.col1.find("div", class_="source"))
+        text = self._get_text(self.col1.find("div", class_="source"))
+        return self.format_text(text)
 
     # -------------------
     # Helpers
@@ -97,9 +121,13 @@ class SpellParser:
 
     def to_dict(self):
         """Return all spell info as a dictionary."""
+        level_school = (
+            self.get_level_and_school()
+        )  # returns dict with level, school, classes
+
         return {
             "name": self.get_name(),
-            "level_and_school": self.get_level_and_school(),
+            **level_school,  # <-- Unpacks into "level", "school", "classes"
             "casting_time": self.get_casting_time(),
             "range": self.get_range(),
             "components": self.get_components(),

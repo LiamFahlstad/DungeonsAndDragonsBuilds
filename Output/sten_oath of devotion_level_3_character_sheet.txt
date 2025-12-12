@@ -147,64 +147,94 @@ Level 5 Spell Slots: 0
 # ================================== Spells ================================== #
 ################################################################################
 Name: Cure Wounds
-Level And School: Level 1 Abjuration (Bard, Cleric, Druid, Paladin, Ranger)
+Level: 1
+School: Abjuration
+Classes: Bard, Cleric, Druid, Paladin, Ranger
 Casting Time: Action
 Range: Touch
 Components: V, S
 Duration: Instantaneous
-Description: A creature you touch regains a number of Hit Points equal to 2d8 plus your spellcasting ability modifier. Using a Higher-Level Spell Slot . The healing increases by 2d8 for each spell slot level above 1.
-Source: Player큦 Handbook 2024 (BR)
+Description:
+A creature you touch regains a number of Hit Points equal to 2d8 plus your spellcasting ability modifier. 
+
+Using a Higher-Level Spell Slot:
+The healing increases by 2d8 for each spell slot level above 1.
+Source: Player's Handbook 2024 (BR)
 ----------------------------------------
 Name: Divine Favor
-Level And School: Level 1 Transmutation (Paladin)
+Level: 1
+School: Transmutation
+Classes: Paladin
 Casting Time: Bonus Action
 Range: Self
 Components: V, S
 Duration: 1 minute
-Description: Until the spell ends, your attacks with weapons deal an extra 1d4 Radiant damage on a hit.
-Source: Player큦 Handbook 2024 (BR)
+Description:
+Until the spell ends, your attacks with weapons deal an extra 1d4 Radiant damage on a hit.
+Source: Player's Handbook 2024 (BR)
 ----------------------------------------
 Name: Divine Smite
-Level And School: Level 1 Evocation (Paladin)
+Level: 1
+School: Evocation
+Classes: Paladin
 Casting Time: Bonus Action, which you take immediately after hitting a target with a Melee weapon or an Unarmed Strike
 Range: Self
 Components: V
 Duration: Instantaneous
-Description: The target takes an extra 2d8 Radiant damage from the attack. The damage increases by 1d8 if the target is a Fiend or an Undead. Using a Higher-Level Spell Slot . The damage increases by 1d8 for each spell slot level above 1.
-Source: Player큦 Handbook 2024 (BR)
+Description:
+The target takes an extra 2d8 Radiant damage from the attack. The damage increases by 1d8 if the target is a Fiend or an Undead. 
+
+Using a Higher-Level Spell Slot:
+The damage increases by 1d8 for each spell slot level above 1.
+Source: Player's Handbook 2024 (BR)
 ----------------------------------------
 Name: Shield of Faith
-Level And School: Level 1 Abjuration (Cleric, Paladin)
+Level: 1
+School: Abjuration
+Classes: Cleric, Paladin
 Casting Time: Bonus Action
 Range: 60 feet
 Components: V, S, M (a prayer scroll)
 Duration: Concentration, up to 10 minutes
-Description: A shimmering field surrounds a creature of your choice within range, granting it a +2 bonus to AC for the duration.
-Source: Player큦 Handbook 2024 (BR)
-----------------------------------------
-Name: Protection from Evil and Good
-Level And School: Level 1 Abjuration (Cleric, Druid, Paladin, Warlock, Wizard)
-Casting Time: Action
-Range: Touch
-Components: V, S, M (a flask of Holy Water worth 25+ GP, which the spell consumes)
-Duration: Concentration, up to 10 minutes
-Description: Until the spell ends, one willing creature you touch is protected against creatures that are Aberrations, Celestials, Elementals, Fey, Fiends, or Undead. The protection grants several benefits. Creatures of those types have Disadvantage on attack rolls against the target. The target also can't be possessed by or gain the Charmed or Frightened conditions from them. If the target is already possessed, Charmed, or Frightened by such a creature, the target has Advantage on any new saving throw against the relevant effect.
-Source: Player큦 Handbook 2024 (BR)
-----------------------------------------
-Name: Shield of Faith
-Level And School: Level 1 Abjuration (Cleric, Paladin)
-Casting Time: Bonus Action
-Range: 60 feet
-Components: V, S, M (a prayer scroll)
-Duration: Concentration, up to 10 minutes
-Description: A shimmering field surrounds a creature of your choice within range, granting it a +2 bonus to AC for the duration.
-Source: Player큦 Handbook 2024 (BR)
+Description:
+A shimmering field surrounds a creature of your choice within range, granting it a +2 bonus to AC for the duration.
+Source: Player's Handbook 2024 (BR)
 ----------------------------------------
 Name: Bless
-Level And School: Level 1 Enchantment (Cleric, Paladin)
+Level: 1
+School: Enchantment
+Classes: Cleric, Paladin
 Casting Time: Action
 Range: 30 feet
 Components: V, S, M (a Holy Symbol, worth 5+ GP)
 Duration: Concentration, up to 1 minute
-Description: You bless up to three creatures within range. Whenever a target makes an attack roll or a saving throw before the spell ends, the target adds 1d4 to the attack roll or save. Using a Higher-Level Spell Slot . You can target one additional creature for each spell slot level above 1.
-Source: Player큦 Handbook 2024 (BR)
+Description:
+You bless up to three creatures within range. Whenever a target makes an attack roll or a saving throw before the spell ends, the target adds 1d4 to the attack roll or save. 
+
+Using a Higher-Level Spell Slot:
+You can target one additional creature for each spell slot level above 1.
+Source: Player's Handbook 2024 (BR)
+----------------------------------------
+Name: Protection from Evil and Good
+Level: 1
+School: Abjuration
+Classes: Cleric, Druid, Paladin, Warlock, Wizard
+Casting Time: Action
+Range: Touch
+Components: V, S, M (a flask of Holy Water worth 25+ GP, which the spell consumes)
+Duration: Concentration, up to 10 minutes
+Description:
+Until the spell ends, one willing creature you touch is protected against creatures that are Aberrations, Celestials, Elementals, Fey, Fiends, or Undead. The protection grants several benefits. Creatures of those types have Disadvantage on attack rolls against the target. The target also can't be possessed by or gain the Charmed or Frightened conditions from them. If the target is already possessed, Charmed, or Frightened by such a creature, the target has Advantage on any new saving throw against the relevant effect.
+Source: Player's Handbook 2024 (BR)
+----------------------------------------
+Name: Shield of Faith
+Level: 1
+School: Abjuration
+Classes: Cleric, Paladin
+Casting Time: Bonus Action
+Range: 60 feet
+Components: V, S, M (a prayer scroll)
+Duration: Concentration, up to 10 minutes
+Description:
+A shimmering field surrounds a creature of your choice within range, granting it a +2 bonus to AC for the duration.
+Source: Player's Handbook 2024 (BR)
