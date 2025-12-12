@@ -4,17 +4,17 @@
 Field              | Value            
 -------------------+------------------
 Name               | Sten             
-Level              | 6                
+Level              | 20               
 Character Class    | Paladin          
 Character Subclass | Oath of Vengeance
-Proficiency Bonus  | 3                
+Proficiency Bonus  | 6                
 
 ################################################################################
 # =============================== Combat Stats =============================== #
 ################################################################################
 Field          | Value  
 ---------------+--------
-Max Hit Points | 70     
+Max Hit Points | 224    
 Armor Class    | 18     
 Initiative     | d20 + 0
 Speed (ft)     | 30     
@@ -29,8 +29,8 @@ Strength     | 18    | 4        | 4            | No
 Dexterity    | 10    | 0        | 0            | No        
 Constitution | 16    | 3        | 3            | No        
 Intelligence | 12    | 1        | 1            | No        
-Wisdom       | 8     | -1       | 2            | Yes       
-Charisma     | 13    | 1        | 4            | Yes       
+Wisdom       | 8     | -1       | 5            | Yes       
+Charisma     | 13    | 1        | 7            | Yes       
 
 ################################################################################
 # ================================== Skills ================================== #
@@ -40,33 +40,25 @@ Skill           | Modifier | Proficient | Ability      | RollCondition
 Acrobatics      | 0        | No         | Dexterity    | Neutral      
 Animal Handling | -1       | No         | Wisdom       | Neutral      
 Arcana          | 1        | No         | Intelligence | Neutral      
-Athletics       | 7        | Yes        | Strength     | Neutral      
+Athletics       | 10       | Yes        | Strength     | Neutral      
 Deception       | 1        | No         | Charisma     | Neutral      
-History         | 4        | Yes        | Intelligence | Neutral      
-Insight         | 2        | Yes        | Wisdom       | Neutral      
-Intimidation    | 4        | Yes        | Charisma     | Neutral      
+History         | 7        | Yes        | Intelligence | Neutral      
+Insight         | 5        | Yes        | Wisdom       | Neutral      
+Intimidation    | 7        | Yes        | Charisma     | Neutral      
 Investigation   | 1        | No         | Intelligence | Neutral      
-Medicine        | 2        | Yes        | Wisdom       | Neutral      
+Medicine        | 5        | Yes        | Wisdom       | Neutral      
 Nature          | 1        | No         | Intelligence | Neutral      
-Perception      | 2        | Yes        | Wisdom       | Neutral      
+Perception      | 5        | Yes        | Wisdom       | Neutral      
 Performance     | 1        | No         | Charisma     | Neutral      
-Persuasion      | 4        | Yes        | Charisma     | Neutral      
+Persuasion      | 7        | Yes        | Charisma     | Neutral      
 Religion        | 1        | No         | Intelligence | Neutral      
 Sleight of Hand | 0        | No         | Dexterity    | Neutral      
 Stealth         | 0        | No         | Dexterity    | Disadvantage 
-Survival        | 2        | Yes        | Wisdom       | Neutral      
+Survival        | 5        | Yes        | Wisdom       | Neutral      
 
 ################################################################################
 # ================================= Features ================================= #
 ################################################################################
-Name: Lay on Hands
-Origin: Paladin Level 1
-Description: You have a pool of healing power.
-Power in pool: 5 x Paladin level (5 x 6 = 30) Hit Points.
-You can also expend 5 Hit Points from the pool of healing power to remove the Poisoned condition from the creature; those points don't also restore Hit Points to the creature.Replenishes on Long Rest.
-Casting time: Bonus Action.
-Range: Touch.
-
 Name: Paladin's Smite
 Origin: Paladin Level 2
 Description: Level 2: Divine Smite is always prepared and can be cast once per Long Rest without a spell slot.
@@ -82,17 +74,21 @@ Description: Level 5: Faithful Steed
 You can call on the aid of an otherworldly steed. You always have the Find Steed spell prepared.
 You can also cast the spell once without expending a spell slot, and you regain the ability to do so when you finish a Long Rest.
 
-Name: Aura of Protection
-Origin: Paladin Level 6
-Description: Level 6: Aura of Protection
-You radiate a protective, unseeable aura in a 10-foot Emanation that originates from you. The aura is inactive while you have the Incapacitated condition.
-You and your allies in the aura gain a bonus to saving throws equal to your Charisma modifier (+1).
-(Doesn't stack choose which one if multiple).
+Name: Radiant Strikes
+Origin: Paladin Level 10
+Description: Your strikes now carry supernatural power. When you hit a target with an attack roll using a Melee weapon or an Unarmed Strike, the target takes an extra 1d8 Radiant damage.
+
+Name: Avenging Angel
+Origin: Paladin Level 20
+Description: As a Bonus Action, you gain the benefits below for 10 minutes or until you end them (no action required). Once you use this feature, you can't use it
+again until you finish a Long Rest. You can also restore your use of it by expending a level 5 spell slot (no action required).
+Flight. You sprout spectral wings on your back, have a Fly Speed of 60 feet, and can hover.
+Frightful Aura. Whenever an enemy starts its turn in your Aura of Protection, that creature must succeed on a Wisdom saving throw or have the Frightened condition for 1 minute or until it takes any damage. Attack rolls against the Frightened creature have Advantage.
 
 Name: Channel Divinity
 Origin: Paladin Level 3
 Description: Each time you use this class's Channel Divinity, you choose which effect from this class to create.
-Usage: 2.
+Usage: 3.
 You regain one after a Short Rest, all after a Long Rest.
 DC: class's Spellcasting feature.
 
@@ -110,6 +106,39 @@ DC: class's Spellcasting feature.
     Duration: 1 minute or until you use this feature again.
     You gain Advantage on attack rolls against targeted creature.
     If the creature drops to 0 Hit Points before the vow ends, you can transfer the vow to a different creature within 30 feet of yourself (no action required).
+
+    Abjure Foes Paladin Level 9:
+    As a Magic action, you can expend one use of this class’s Channel Divinity to overwhelm foes with awe. As you present your Holy Symbol or weapon, you can target a number of creatures equal to your Charisma modifier (1) (minimum of one creature) that you can see within 60 feet of yourself. Each target must succeed on a Wisdom saving throw (DC=15) or have the Frightened condition for 1 minute or until it takes any damage. While Frightened in this way, a target can do only one of the following on its turns: move, take an action, or take a Bonus Action.
+
+    Soul of Vengeance Paladin Level 15:
+    Immediately after a creature under the effect of your Vow of Enmity hits or misses with an attack roll, you can take a Reaction to make a melee attack against that creature if it’s within range.
+
+Name: Aura of Protection
+Origin: Paladin Level 6
+Description: Level 6: Aura of Protection
+You radiate a protective, unseeable aura in a 10-foot Emanation that originates from you. The aura is inactive while you have the Incapacitated condition.
+You and your allies in the aura gain a bonus to saving throws equal to your Charisma modifier (+1).
+(Doesn't stack choose which one if multiple).
+
+    Relentless Avenger Paladin Level 7:
+    Your supernatural focus helps you close off a foe’s retreat. When you hit a creature with an Opportunity Attack, you can reduce the creature’s Speed to 0 until the end of the current turn. You can then move up to half your Speed as part of the same Reaction. This movement doesn't provoke Opportunity Attacks.
+
+    Aura of Courage Paladin Level 10:
+    You and your allies have Immunity to the Frightened condition while in your Aura of Protection. If a Frightened ally enters the aura, that condition has no effect on that ally while there.
+
+    Aura of Expansion Paladin Level 18:
+    Your Aura of Protection is now a 30-foot Emanation.
+
+Name: Lay on Hands
+Origin: Paladin Level 1
+Description: You have a pool of healing power.
+Power in pool: 5 x Paladin level (5 x 20 = 100) Hit Points.
+You can also expend 5 Hit Points from the pool of healing power to remove the Poisoned condition from the creature; those points don't also restore Hit Points to the creature.Replenishes on Long Rest.
+Casting time: Bonus Action.
+Range: Touch.
+
+    Restoring Touch Paladin Level 14:
+    When you use Lay On Hands on a creature, you can also remove one or more of the following conditions from the creature: Blinded, Charmed, Deafened, Frightened, Paralyzed, or Stunned. You must expend 5 Hit Points from the healing pool of Lay On Hands for each of these conditions you remove; those points don’t also restore Hit Points to the creature.
 
 Name: Resourceful
 Origin: Human Trait
@@ -130,7 +159,7 @@ Type                        | Martial Melee
 DamageType                  | Slashing                                                                                                                                  
 Property 'Versatile (1d10)' | Can use one or two hands; if two-handed, use damage die shown in parentheses.                                                             
 Proficient                  | Yes                                                                                                                                       
-AttackRoll                  | 1d20 + 4 (ability mod: Strength) + 3 (Proficient)                                                                                         
+AttackRoll                  | 1d20 + 4 (ability mod: Strength) + 6 (Proficient)                                                                                         
 DamageRoll                  | 1d8 + 4 (ability mod: Strength)                                                                                                           
 ----------------------------+-------------------------------------------------------------------------------------------------------------------------------------------
 Name                        | Javelin                                                                                                                                   
@@ -138,7 +167,7 @@ Type                        | Simple Melee
 DamageType                  | Piercing                                                                                                                                  
 Property 'Thrown'           | Can throw weapon for ranged attack; use same ability mod as melee version.                                                                
 Proficient                  | Yes                                                                                                                                       
-AttackRoll                  | 1d20 + 4 (ability mod: Strength) + 3 (Proficient)                                                                                         
+AttackRoll                  | 1d20 + 4 (ability mod: Strength) + 6 (Proficient)                                                                                         
 DamageRoll                  | 1d6 + 4 (ability mod: Strength)                                                                                                           
 ----------------------------+-------------------------------------------------------------------------------------------------------------------------------------------
 Name                        | Handaxe                                                                                                                                   
@@ -147,7 +176,7 @@ DamageType                  | Slashing
 Property 'Light'            | When you Attack with a Light weapon, you can Bonus Action attack with another Light weapon; no ability mod to that damage unless negative.
 Property 'Thrown'           | Can throw weapon for ranged attack; use same ability mod as melee version.                                                                
 Proficient                  | Yes                                                                                                                                       
-AttackRoll                  | 1d20 + 4 (ability mod: Strength) + 3 (Proficient)                                                                                         
+AttackRoll                  | 1d20 + 4 (ability mod: Strength) + 6 (Proficient)                                                                                         
 DamageRoll                  | 1d6 + 4 (ability mod: Strength)                                                                                                           
 Mastery 'Vex'               | On a hit that deals damage, you gain Advantage on your next attack against that creature before your next turn ends.                      
 ----------------------------+-------------------------------------------------------------------------------------------------------------------------------------------
@@ -157,7 +186,7 @@ DamageType                  | Bludgeoning
 Property 'Light'            | When you Attack with a Light weapon, you can Bonus Action attack with another Light weapon; no ability mod to that damage unless negative.
 Property 'Thrown'           | Can throw weapon for ranged attack; use same ability mod as melee version.                                                                
 Proficient                  | Yes                                                                                                                                       
-AttackRoll                  | 1d20 + 4 (ability mod: Strength) + 3 (Proficient)                                                                                         
+AttackRoll                  | 1d20 + 4 (ability mod: Strength) + 6 (Proficient)                                                                                         
 DamageRoll                  | 1d4 + 4 (ability mod: Strength)                                                                                                           
 Mastery 'Nick'              | When using a Light weapon’s extra attack, you can make it during the Attack action instead of as a Bonus Action. Once per turn.           
 
@@ -169,17 +198,17 @@ Two-Weapon Fighting: When you make an extra attack as a result of using a weapon
 ################################################################################
 # ============================= Spell Modifiers ============================== #
 ################################################################################
-Spell Save DC: 12
-Spell Attack Bonus: +4
+Spell Save DC: 15
+Spell Attack Bonus: +7
 
 ################################################################################
 # =============================== Spell Slots ================================ #
 ################################################################################
 Level 1 Spell Slots: 4
-Level 2 Spell Slots: 2
-Level 3 Spell Slots: 0
-Level 4 Spell Slots: 0
-Level 5 Spell Slots: 0
+Level 2 Spell Slots: 3
+Level 3 Spell Slots: 3
+Level 4 Spell Slots: 3
+Level 5 Spell Slots: 2
 
 ################################################################################
 # ================================== Spells ================================== #

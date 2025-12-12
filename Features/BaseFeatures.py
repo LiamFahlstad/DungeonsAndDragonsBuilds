@@ -29,7 +29,11 @@ class TextFeature(Feature):
     def __init__(self, name: str, origin: str):
         self.name = name
         self.origin = origin
+        self.additional_features = []
         super().__init__()
+
+    def add_feature(self, feature: "TextFeature"):
+        self.additional_features.append(feature)
 
     @abstractmethod
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -55,6 +59,8 @@ class TextFeature(Feature):
         file.write(f"Name: {self.name}\n")
         file.write(f"Origin: {self.origin}\n")
         description = self.get_description(character_stat_block)
+        for addition in self.additional_features:
+            description += self.add_feature_effects(character_stat_block, addition)
         if description[-1] != "\n":
             description += "\n"  # Ensure newline at end
         file.write(f"Description: {description}\n")

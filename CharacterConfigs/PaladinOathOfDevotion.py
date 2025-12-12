@@ -58,12 +58,13 @@ def create(
     data.character_subclass = PaladinSubclass.OATH_OF_DEVOTION.value
     channel_divinity_feature = None
     aura_of_protection = None
+    lay_on_hands = None
 
     # ================ LEVEL 1 ============= #
     if paladin_level >= 1:
         if paladin_level_1 is None:
             raise ValueError("paladin_level_1 must be provided for level 1 features.")
-        data = PaladinBase.get_level_1_features(
+        data, lay_on_hands = PaladinBase.get_level_1_features(
             paladin_level_1=paladin_level_1,
             data=data,
         )
@@ -116,16 +117,41 @@ def create(
     # ================ LEVEL 6 ============= #
     if paladin_level >= 6:
         # Automatic feature
-        aura_of_protection = PaladinFeatures.AuraOfProtection()
+        aura_of_protection = PaladinBase.get_level_6_features()
 
     # ================ LEVEL 7 ============= #
     if paladin_level >= 7:
         # Automatic feature
-        aura_of_protection.add_addition(PaladinFeatures.AuraOfDevotion())
+        aura_of_protection.add_feature(PaladinFeatures.AuraOfDevotion())
+
+    # ================ LEVEL 9 ============= #
+    if paladin_level >= 9:
+        # Automatic feature
+        channel_divinity_feature = PaladinBase.get_level_9_features(
+            channel_divinity_feature=channel_divinity_feature,
+        )
+
+    # ================ LEVEL 10 ============= #
+    if paladin_level >= 10:
+        aura_of_protection.add_feature(PaladinFeatures.AuraOfCourage())
+
+    # ================ LEVEL 11 ============= #
+    if paladin_level >= 11:
+        data = PaladinBase.get_level_11_features(data=data)
+
+    # ================ LEVEL 14 ============= #
+    if paladin_level >= 14:
+        lay_on_hands = PaladinBase.get_level_14_features(lay_on_hands=lay_on_hands)
 
     # ================ LEVEL 15 ============= #
     if paladin_level >= 15:
         data.add_feature(PaladinFeatures.SmiteOfProtection())
+
+    # ================ LEVEL 18 ============= #
+    if paladin_level >= 18:
+        aura_of_protection = PaladinBase.get_level_18_features(
+            aura_of_protection=aura_of_protection,
+        )
 
     # ================ LEVEL 20 ============= #
     if paladin_level >= 20:
@@ -140,6 +166,9 @@ def create(
 
     if aura_of_protection is not None:
         data.add_feature(aura_of_protection)
+
+    if lay_on_hands is not None:
+        data.add_feature(lay_on_hands)
 
     data.replace_spells(replace_spells or {})
     return data

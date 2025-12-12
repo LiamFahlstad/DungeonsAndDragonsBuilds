@@ -106,19 +106,19 @@ def get_character_sheet_creator_base(
 
 def get_level_1_features(
     paladin_level_1: PaladinLevel1, data: CharacterSheetCreator.CharacterSheetData
-) -> CharacterSheetCreator.CharacterSheetData:
+) -> tuple[CharacterSheetCreator.CharacterSheetData, PaladinFeatures.LayOnHands]:
     # Weapon Mastery: Choose two proficient weapon types to use their mastery properties.
     # You can change your choices after a Long Rest.
     data.add_weapon_mastery(paladin_level_1.weapon_mastery_1)
     data.add_weapon_mastery(paladin_level_1.weapon_mastery_2)
 
     # Lay on Hands
-    data.add_feature(PaladinFeatures.LayOnHands())
+    lay_on_hands = PaladinFeatures.LayOnHands()
 
     # Add/Change prepared spells:
     data.add_spell(paladin_level_1.spell_1)
     data.add_spell(paladin_level_1.spell_2)
-    return data
+    return data, lay_on_hands
 
 
 def get_level_2_features(
@@ -177,3 +177,46 @@ def get_level_5_features(
     # Add/Change prepared spells:
     data.add_spell(paladin_level_5.spell)
     return data
+
+
+def get_level_6_features():
+    # Automatic feature
+    return PaladinFeatures.AuraOfProtection()
+
+
+def get_level_9_features(
+    channel_divinity_feature: PaladinFeatures.ChannelDivinityFeature,
+):
+    channel_divinity_feature.add_spell("Abjure Foes")
+    return channel_divinity_feature
+
+
+def get_level_10_features(
+    aura_of_protection: PaladinFeatures.AuraOfProtection,
+):
+    aura_of_protection.add_feature(PaladinFeatures.AuraOfCourage())
+    return aura_of_protection
+
+
+def get_level_11_features(
+    data: CharacterSheetCreator.CharacterSheetData,
+) -> CharacterSheetCreator.CharacterSheetData:
+
+    data.add_feature(PaladinFeatures.RadiantStrikes())
+    return data
+
+
+def get_level_14_features(
+    lay_on_hands: PaladinFeatures.LayOnHands,
+) -> PaladinFeatures.LayOnHands:
+
+    lay_on_hands.add_feature(PaladinFeatures.RestoringTouch())
+    return lay_on_hands
+
+
+def get_level_18_features(
+    aura_of_protection: PaladinFeatures.AuraOfProtection,
+) -> PaladinFeatures.AuraOfProtection:
+
+    aura_of_protection.add_feature(PaladinFeatures.AuraOfExpansion())
+    return aura_of_protection

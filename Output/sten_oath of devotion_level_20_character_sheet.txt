@@ -59,14 +59,6 @@ Survival        | 5        | Yes        | Wisdom       | Neutral
 ################################################################################
 # ================================= Features ================================= #
 ################################################################################
-Name: Lay on Hands
-Origin: Paladin Level 1
-Description: You have a pool of healing power.
-Power in pool: 5 x Paladin level (5 x 20 = 100) Hit Points.
-You can also expend 5 Hit Points from the pool of healing power to remove the Poisoned condition from the creature; those points don't also restore Hit Points to the creature.Replenishes on Long Rest.
-Casting time: Bonus Action.
-Range: Touch.
-
 Name: Paladin's Smite
 Origin: Paladin Level 2
 Description: Level 2: Divine Smite is always prepared and can be cast once per Long Rest without a spell slot.
@@ -81,6 +73,10 @@ Origin: Paladin Level 5
 Description: Level 5: Faithful Steed
 You can call on the aid of an otherworldly steed. You always have the Find Steed spell prepared.
 You can also cast the spell once without expending a spell slot, and you regain the ability to do so when you finish a Long Rest.
+
+Name: Radiant Strikes
+Origin: Paladin Level 10
+Description: Your strikes now carry supernatural power. When you hit a target with an attack roll using a Melee weapon or an Unarmed Strike, the target takes an extra 1d8 Radiant damage.
 
 Name: Smite of Protection
 Origin: Oath of Devotion Paladin Level 15
@@ -115,6 +111,9 @@ DC: class's Spellcasting feature.
     You add your Charisma modifier to attack rolls you make with that weapon (minimum bonus of +1), and each time you hit with it, you cause it to deal its normal damage type or Radiant damage.
     The weapon also emits Bright Light in a 20-foot radius and Dim Light 20 feet beyond that.
 
+    Abjure Foes Paladin Level 9:
+    As a Magic action, you can expend one use of this class’s Channel Divinity to overwhelm foes with awe. As you present your Holy Symbol or weapon, you can target a number of creatures equal to your Charisma modifier (3) (minimum of one creature) that you can see within 60 feet of yourself. Each target must succeed on a Wisdom saving throw (DC=17) or have the Frightened condition for 1 minute or until it takes any damage. While Frightened in this way, a target can do only one of the following on its turns: move, take an action, or take a Bonus Action.
+
 Name: Aura of Protection
 Origin: Paladin Level 6
 Description: Level 6: Aura of Protection
@@ -125,6 +124,20 @@ You and your allies in the aura gain a bonus to saving throws equal to your Char
     Aura of Devotion Oath of Devotion Paladin Level 7:
     You and your allies have Immunity to the Charmed condition while in your Aura of Protection.
     If a Charmed ally enters the aura, that condition has no effect on that ally while there.
+
+    Aura of Courage Paladin Level 10:
+    You and your allies have Immunity to the Frightened condition while in your Aura of Protection. If a Frightened ally enters the aura, that condition has no effect on that ally while there.
+
+Name: Lay on Hands
+Origin: Paladin Level 1
+Description: You have a pool of healing power.
+Power in pool: 5 x Paladin level (5 x 20 = 100) Hit Points.
+You can also expend 5 Hit Points from the pool of healing power to remove the Poisoned condition from the creature; those points don't also restore Hit Points to the creature.Replenishes on Long Rest.
+Casting time: Bonus Action.
+Range: Touch.
+
+    Restoring Touch Paladin Level 14:
+    When you use Lay On Hands on a creature, you can also remove one or more of the following conditions from the creature: Blinded, Charmed, Deafened, Frightened, Paralyzed, or Stunned. You must expend 5 Hit Points from the healing pool of Lay On Hands for each of these conditions you remove; those points don’t also restore Hit Points to the creature.
 
 Name: Resourceful
 Origin: Human Trait
