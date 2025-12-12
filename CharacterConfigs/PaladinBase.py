@@ -13,36 +13,44 @@ from StatBlocks.AbilitiesStatBlock import (
 )
 from StatBlocks.SavingThrowsStatBlock import PaladinSavingThrowsStatBlock
 from StatBlocks.SkillsStatBlock import PaladinSkillsStatBlock
+from Spells.Definitions import (
+    PaladinLevel1Spells,
+    PaladinLevel2Spells,
+    PaladinLevel3Spells,
+    PaladinLevel4Spells,
+    PaladinLevel5Spells,
+    WarlockLevel2Spells,
+)
 
 
 @attr.dataclass
 class PaladinLevel1:
     weapon_mastery_1: Weapons.AbstractWeapon
     weapon_mastery_2: Weapons.AbstractWeapon
-    spell_1: str
-    spell_2: str
+    spell_1: PaladinLevel1Spells
+    spell_2: PaladinLevel1Spells
 
 
 @attr.dataclass
 class PaladinLevel2:
     fighting_style: FightingStyles.FightingStyle
-    spell: str
+    spell: PaladinLevel1Spells
 
 
 @attr.dataclass
 class PaladinLevel3:
-    spell: str
+    spell: PaladinLevel1Spells
 
 
 @attr.dataclass
 class PaladinLevel4:
     general_feat: GeneralFeats.GeneralFeat
-    spell: str
+    spell: PaladinLevel1Spells
 
 
 @attr.dataclass
 class PaladinLevel5:
-    spell: str
+    spell: PaladinLevel1Spells | PaladinLevel2Spells
 
 
 def get_character_sheet_creator_base(
@@ -122,7 +130,7 @@ def get_level_2_features(
 
     # Automatic feature
     data.add_feature(PaladinFeatures.PaladinsSmite())
-    data.add_spell("Divine Smite")
+    data.add_spell(PaladinLevel1Spells.DIVINE_SMITE)
 
     # Add prepared spells:
     data.add_spell(paladin_level_2.spell)
@@ -160,11 +168,11 @@ def get_level_5_features(
     # Automatic feature
     data.add_feature(PaladinFeatures.ExtraAttack())
     data.add_feature(PaladinFeatures.FaithfulSteed())
-    data.add_spell("Find Steed")
+    data.add_spell(PaladinLevel2Spells.FIND_STEED)
 
     # Oath of vengeance features
-    data.add_spell("Hold Person")
-    data.add_spell("Misty Step")
+    data.add_spell(WarlockLevel2Spells.HOLD_PERSON)
+    data.add_spell(WarlockLevel2Spells.MISTY_STEP)
 
     # Add/Change prepared spells:
     data.add_spell(paladin_level_5.spell)

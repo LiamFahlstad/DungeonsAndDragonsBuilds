@@ -14,6 +14,13 @@ from StatBlocks.AbilitiesStatBlock import (
 from StatBlocks.SavingThrowsStatBlock import PaladinSavingThrowsStatBlock
 from StatBlocks.SkillsStatBlock import PaladinSkillsStatBlock
 from CharacterConfigs import PaladinBase
+from Spells.Definitions import (
+    PaladinLevel1Spells,
+    PaladinLevel2Spells,
+    PaladinLevel3Spells,
+    PaladinLevel4Spells,
+    PaladinLevel5Spells,
+)
 
 
 def create(
@@ -31,6 +38,7 @@ def create(
     paladin_level_3: PaladinBase.PaladinLevel3 = None,
     paladin_level_4: PaladinBase.PaladinLevel4 = None,
     paladin_level_5: PaladinBase.PaladinLevel5 = None,
+    replace_spells: dict[str, str] = None,
 ) -> CharacterSheetCreator.CharacterSheetData:
 
     if not isinstance(skills, PaladinSkillsStatBlock):
@@ -80,8 +88,8 @@ def create(
         )
 
         # Oath of devotion features
-        data.add_spell("Protection from Evil and Good")
-        data.add_spell("Shield of Faith")
+        data.add_spell(PaladinLevel1Spells.PROTECTION_FROM_EVIL_AND_GOOD)
+        data.add_spell(PaladinLevel1Spells.SHIELD_OF_FAITH)
         channel_divinity_feature.add_spell("Sacred Weapon")
 
     # ================ LEVEL 4 ============= #
@@ -116,4 +124,5 @@ def create(
     if channel_divinity_feature is not None:
         data.add_feature(channel_divinity_feature)
 
+    data.replace_spells(replace_spells or {})
     return data

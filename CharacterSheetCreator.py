@@ -66,6 +66,17 @@ class CharacterSheetData:
     def add_spell(self, spell: str):
         self.spells.append(spell)
 
+    def replace_spells(self, replace_spells: dict[str, str]):
+        for old_spell, new_spell in replace_spells.items():
+            self.replace_spell(old_spell, new_spell)
+
+    def replace_spell(self, old_spell: str, new_spell: str):
+        try:
+            index = self.spells.index(old_spell)
+            self.spells[index] = new_spell
+        except ValueError:
+            raise ValueError(f"Spell '{old_spell}' not found in the spell list.")
+
     def add_invocation(self, invocation: str):
         self.invocations.append(invocation)
 

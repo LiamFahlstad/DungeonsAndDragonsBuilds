@@ -146,18 +146,18 @@ Level 5 Spell Slots: 0
 ################################################################################
 # ================================== Spells ================================== #
 ################################################################################
-Name: Cure Wounds
-Level: 1
-School: Abjuration
-Classes: Bard, Cleric, Druid, Paladin, Ranger
-Casting Time: Action
+Name: Magic Weapon
+Level: 2
+School: Transmutation
+Classes: Paladin, Ranger, Sorcerer, Wizard
+Casting Time: Bonus Action
 Range: Touch
 Components: V, S
-Duration: Instantaneous
+Duration: 1 hour
 Description:
-A creature you touch regains a number of Hit Points equal to 2d8 plus your spellcasting ability modifier.
+You touch a nonmagical weapon. Until the spell ends, that weapon becomes a magic weapon with a +1 bonus to attack rolls and damage rolls. The spell ends early if you cast it again.
 Using a Higher-Level Spell Slot:
-The healing increases by 2d8 for each spell slot level above 1.
+The bonus increases to +2 with a level 3–5 spell slot. The bonus increases to +3 with a level 6+ spell slot.
 Source: Player's Handbook 2024 (BR)
 ----------------------------------------
 Name: Divine Favor
