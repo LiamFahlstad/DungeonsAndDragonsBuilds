@@ -73,6 +73,7 @@ class DiceRollCondition(str, Enum):
 class PaladinSubclass(str, Enum):
     OATH_OF_DEVOTION = "Oath of Devotion"
     OATH_OF_THE_ANCIENTS = "Oath of the Ancients"
+    OATH_OF_GLORY = "Oath of Glory"
     OATH_OF_VENGEANCE = "Oath of Vengeance"
     OATH_OF_CONQUEST = "Oath of Conquest"
     OATH_OF_REDEMPTION = "Oath of Redemption"
