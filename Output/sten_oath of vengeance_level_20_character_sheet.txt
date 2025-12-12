@@ -14,9 +14,9 @@ Proficiency Bonus  | 6
 ################################################################################
 Field          | Value  
 ---------------+--------
-Max Hit Points | 224    
-Armor Class    | 18     
-Initiative     | d20 + 0
+Max Hit Points | 164    
+Armor Class    | 15     
+Initiative     | d20 + 2
 Speed (ft)     | 30     
 Size           | Medium 
 
@@ -25,40 +25,45 @@ Size           | Medium
 ################################################################################
 Ability      | Score | Modifier | Saving Throw | Proficient
 -------------+-------+----------+--------------+-----------
-Strength     | 18    | 4        | 4            | No        
-Dexterity    | 10    | 0        | 0            | No        
-Constitution | 16    | 3        | 3            | No        
-Intelligence | 12    | 1        | 1            | No        
-Wisdom       | 8     | -1       | 5            | Yes       
-Charisma     | 13    | 1        | 7            | Yes       
+Strength     | 8     | -1       | -1           | No        
+Dexterity    | 18    | 4        | 4            | No        
+Constitution | 15    | 2        | 2            | No        
+Intelligence | 10    | 0        | 0            | No        
+Wisdom       | 12    | 1        | 7            | Yes       
+Charisma     | 14    | 2        | 8            | Yes       
 
 ################################################################################
 # ================================== Skills ================================== #
 ################################################################################
 Skill           | Modifier | Proficient | Ability      | RollCondition
 ----------------+----------+------------+--------------+--------------
-Acrobatics      | 0        | No         | Dexterity    | Neutral      
-Animal Handling | -1       | No         | Wisdom       | Neutral      
-Arcana          | 1        | No         | Intelligence | Neutral      
-Athletics       | 10       | Yes        | Strength     | Neutral      
-Deception       | 1        | No         | Charisma     | Neutral      
-History         | 7        | Yes        | Intelligence | Neutral      
-Insight         | 5        | Yes        | Wisdom       | Neutral      
-Intimidation    | 7        | Yes        | Charisma     | Neutral      
-Investigation   | 1        | No         | Intelligence | Neutral      
-Medicine        | 5        | Yes        | Wisdom       | Neutral      
-Nature          | 1        | No         | Intelligence | Neutral      
-Perception      | 5        | Yes        | Wisdom       | Neutral      
-Performance     | 1        | No         | Charisma     | Neutral      
-Persuasion      | 7        | Yes        | Charisma     | Neutral      
-Religion        | 1        | No         | Intelligence | Neutral      
-Sleight of Hand | 0        | No         | Dexterity    | Neutral      
-Stealth         | 0        | No         | Dexterity    | Disadvantage 
-Survival        | 5        | Yes        | Wisdom       | Neutral      
+Acrobatics      | 4        | No         | Dexterity    | Neutral      
+Animal Handling | 1        | No         | Wisdom       | Neutral      
+Arcana          | 0        | No         | Intelligence | Neutral      
+Athletics       | 5        | Yes        | Strength     | Neutral      
+Deception       | 2        | No         | Charisma     | Neutral      
+History         | 6        | Yes        | Intelligence | Neutral      
+Insight         | 7        | Yes        | Wisdom       | Neutral      
+Intimidation    | 8        | Yes        | Charisma     | Neutral      
+Investigation   | 0        | No         | Intelligence | Neutral      
+Medicine        | 7        | Yes        | Wisdom       | Neutral      
+Nature          | 0        | No         | Intelligence | Neutral      
+Perception      | 7        | Yes        | Wisdom       | Neutral      
+Performance     | 2        | No         | Charisma     | Neutral      
+Persuasion      | 8        | Yes        | Charisma     | Neutral      
+Religion        | 0        | No         | Intelligence | Neutral      
+Sleight of Hand | 4        | No         | Dexterity    | Neutral      
+Stealth         | 4        | No         | Dexterity    | Neutral      
+Survival        | 7        | Yes        | Wisdom       | Neutral      
 
 ################################################################################
 # ================================= Features ================================= #
 ################################################################################
+Name: Alert
+Origin: Origin Feat
+Description: Initiative Proficiency. When you roll Initiative, you can add your Proficiency Bonus to the roll.
+Initiative Swap. Immediately after you roll Initiative, you can swap your Initiative with the Initiative of one willing ally in the same combat. You can't make this swap if you or the ally has the Incapacitated condition.
+
 Name: Paladin's Smite
 Origin: Paladin Level 2
 Description: Level 2: Divine Smite is always prepared and can be cast once per Long Rest without a spell slot.
@@ -108,7 +113,7 @@ DC: class's Spellcasting feature.
     If the creature drops to 0 Hit Points before the vow ends, you can transfer the vow to a different creature within 30 feet of yourself (no action required).
 
     Abjure Foes Paladin Level 9:
-    As a Magic action, you can expend one use of this class’s Channel Divinity to overwhelm foes with awe. As you present your Holy Symbol or weapon, you can target a number of creatures equal to your Charisma modifier (1) (minimum of one creature) that you can see within 60 feet of yourself. Each target must succeed on a Wisdom saving throw (DC=15) or have the Frightened condition for 1 minute or until it takes any damage. While Frightened in this way, a target can do only one of the following on its turns: move, take an action, or take a Bonus Action.
+    As a Magic action, you can expend one use of this class’s Channel Divinity to overwhelm foes with awe. As you present your Holy Symbol or weapon, you can target a number of creatures equal to your Charisma modifier (2) (minimum of one creature) that you can see within 60 feet of yourself. Each target must succeed on a Wisdom saving throw (DC=16) or have the Frightened condition for 1 minute or until it takes any damage. While Frightened in this way, a target can do only one of the following on its turns: move, take an action, or take a Bonus Action.
 
     Soul of Vengeance Paladin Level 15:
     Immediately after a creature under the effect of your Vow of Enmity hits or misses with an attack roll, you can take a Reaction to make a melee attack against that creature if it’s within range.
@@ -117,7 +122,7 @@ Name: Aura of Protection
 Origin: Paladin Level 6
 Description: Level 6: Aura of Protection
 You radiate a protective, unseeable aura in a 10-foot Emanation that originates from you. The aura is inactive while you have the Incapacitated condition.
-You and your allies in the aura gain a bonus to saving throws equal to your Charisma modifier (+1).
+You and your allies in the aura gain a bonus to saving throws equal to your Charisma modifier (+2).
 (Doesn't stack choose which one if multiple).
 
     Relentless Avenger Paladin Level 7:
@@ -152,43 +157,27 @@ Description: You gain an Origin feat of your choice (see 'Feats'). Skilled is re
 ################################################################################
 # ================================= Weapons ================================== #
 ################################################################################
-Field                       | Value                                                                                                                                     
-----------------------------+-------------------------------------------------------------------------------------------------------------------------------------------
-Name                        | Longsword                                                                                                                                 
-Type                        | Martial Melee                                                                                                                             
-DamageType                  | Slashing                                                                                                                                  
-Property 'Versatile (1d10)' | Can use one or two hands; if two-handed, use damage die shown in parentheses.                                                             
-Proficient                  | Yes                                                                                                                                       
-AttackRoll                  | 1d20 + 4 (ability mod: Strength) + 6 (Proficient)                                                                                         
-DamageRoll                  | 1d8 + 4 (ability mod: Strength)                                                                                                           
-----------------------------+-------------------------------------------------------------------------------------------------------------------------------------------
-Name                        | Javelin                                                                                                                                   
-Type                        | Simple Melee                                                                                                                              
-DamageType                  | Piercing                                                                                                                                  
-Property 'Thrown'           | Can throw weapon for ranged attack; use same ability mod as melee version.                                                                
-Proficient                  | Yes                                                                                                                                       
-AttackRoll                  | 1d20 + 4 (ability mod: Strength) + 6 (Proficient)                                                                                         
-DamageRoll                  | 1d6 + 4 (ability mod: Strength)                                                                                                           
-----------------------------+-------------------------------------------------------------------------------------------------------------------------------------------
-Name                        | Handaxe                                                                                                                                   
-Type                        | Simple Melee                                                                                                                              
-DamageType                  | Slashing                                                                                                                                  
-Property 'Light'            | When you Attack with a Light weapon, you can Bonus Action attack with another Light weapon; no ability mod to that damage unless negative.
-Property 'Thrown'           | Can throw weapon for ranged attack; use same ability mod as melee version.                                                                
-Proficient                  | Yes                                                                                                                                       
-AttackRoll                  | 1d20 + 4 (ability mod: Strength) + 6 (Proficient)                                                                                         
-DamageRoll                  | 1d6 + 4 (ability mod: Strength)                                                                                                           
-Mastery 'Vex'               | On a hit that deals damage, you gain Advantage on your next attack against that creature before your next turn ends.                      
-----------------------------+-------------------------------------------------------------------------------------------------------------------------------------------
-Name                        | Light Hammer                                                                                                                              
-Type                        | Simple Melee                                                                                                                              
-DamageType                  | Bludgeoning                                                                                                                               
-Property 'Light'            | When you Attack with a Light weapon, you can Bonus Action attack with another Light weapon; no ability mod to that damage unless negative.
-Property 'Thrown'           | Can throw weapon for ranged attack; use same ability mod as melee version.                                                                
-Proficient                  | Yes                                                                                                                                       
-AttackRoll                  | 1d20 + 4 (ability mod: Strength) + 6 (Proficient)                                                                                         
-DamageRoll                  | 1d4 + 4 (ability mod: Strength)                                                                                                           
-Mastery 'Nick'              | When using a Light weapon’s extra attack, you can make it during the Attack action instead of as a Bonus Action. Once per turn.           
+Field              | Value                                                                                                                                     
+-------------------+-------------------------------------------------------------------------------------------------------------------------------------------
+Name               | Shortsword                                                                                                                                
+Type               | Martial Melee                                                                                                                             
+DamageType         | Piercing                                                                                                                                  
+Property 'Finesse' | Use Str or Dex (your choice) for attack and damage rolls; same mod for both.                                                              
+Property 'Light'   | When you Attack with a Light weapon, you can Bonus Action attack with another Light weapon; no ability mod to that damage unless negative.
+Proficient         | Yes                                                                                                                                       
+AttackRoll         | 1d20 + 4 (ability mod: Dexterity) + 6 (Proficient)                                                                                        
+DamageRoll         | 1d6 + 4 (ability mod: Dexterity)                                                                                                          
+Mastery 'Vex'      | On a hit that deals damage, you gain Advantage on your next attack against that creature before your next turn ends.                      
+-------------------+-------------------------------------------------------------------------------------------------------------------------------------------
+Name               | Scimitar                                                                                                                                  
+Type               | Martial Melee                                                                                                                             
+DamageType         | Slashing                                                                                                                                  
+Property 'Finesse' | Use Str or Dex (your choice) for attack and damage rolls; same mod for both.                                                              
+Property 'Light'   | When you Attack with a Light weapon, you can Bonus Action attack with another Light weapon; no ability mod to that damage unless negative.
+Proficient         | Yes                                                                                                                                       
+AttackRoll         | 1d20 + 4 (ability mod: Dexterity) + 6 (Proficient)                                                                                        
+DamageRoll         | 1d6 + 4 (ability mod: Dexterity)                                                                                                          
+Mastery 'Nick'     | When using a Light weapon’s extra attack, you can make it during the Attack action instead of as a Bonus Action. Once per turn.           
 
 ################################################################################
 # ============================= Fighting Styles ============================== #
@@ -198,8 +187,8 @@ Two-Weapon Fighting: When you make an extra attack as a result of using a weapon
 ################################################################################
 # ============================= Spell Modifiers ============================== #
 ################################################################################
-Spell Save DC: 15
-Spell Attack Bonus: +7
+Spell Save DC: 16
+Spell Attack Bonus: +8
 
 ################################################################################
 # =============================== Spell Slots ================================ #
@@ -213,18 +202,18 @@ Level 5 Spell Slots: 2
 ################################################################################
 # ================================== Spells ================================== #
 ################################################################################
-Name: Magic Weapon
-Level: 2
-School: Transmutation
-Classes: Paladin, Ranger, Sorcerer, Wizard
-Casting Time: Bonus Action
-Range: Touch
-Components: V, S
-Duration: 1 hour
+Name: Bless
+Level: 1
+School: Enchantment
+Classes: Cleric, Paladin
+Casting Time: Action
+Range: 30 feet
+Components: V, S, M (a Holy Symbol, worth 5+ GP)
+Duration: Concentration, up to 1 minute
 Description:
-You touch a nonmagical weapon. Until the spell ends, that weapon becomes a magic weapon with a +1 bonus to attack rolls and damage rolls. The spell ends early if you cast it again.
+You bless up to three creatures within range. Whenever a target makes an attack roll or a saving throw before the spell ends, the target adds 1d4 to the attack roll or save.
 Using a Higher-Level Spell Slot:
-The bonus increases to +2 with a level 3–5 spell slot. The bonus increases to +3 with a level 6+ spell slot.
+You can target one additional creature for each spell slot level above 1.
 Source: Player's Handbook 2024 (BR)
 ----------------------------------------
 Name: Divine Favor
@@ -265,18 +254,18 @@ Description:
 A shimmering field surrounds a creature of your choice within range, granting it a +2 bonus to AC for the duration.
 Source: Player's Handbook 2024 (BR)
 ----------------------------------------
-Name: Bless
-Level: 1
-School: Enchantment
-Classes: Cleric, Paladin
-Casting Time: Action
-Range: 30 feet
-Components: V, S, M (a Holy Symbol, worth 5+ GP)
-Duration: Concentration, up to 1 minute
+Name: Magic Weapon
+Level: 2
+School: Transmutation
+Classes: Paladin, Ranger, Sorcerer, Wizard
+Casting Time: Bonus Action
+Range: Touch
+Components: V, S
+Duration: 1 hour
 Description:
-You bless up to three creatures within range. Whenever a target makes an attack roll or a saving throw before the spell ends, the target adds 1d4 to the attack roll or save.
+You touch a nonmagical weapon. Until the spell ends, that weapon becomes a magic weapon with a +1 bonus to attack rolls and damage rolls. The spell ends early if you cast it again.
 Using a Higher-Level Spell Slot:
-You can target one additional creature for each spell slot level above 1.
+The bonus increases to +2 with a level 3–5 spell slot. The bonus increases to +3 with a level 6+ spell slot.
 Source: Player's Handbook 2024 (BR)
 ----------------------------------------
 Name: Bane
@@ -307,19 +296,19 @@ Using a Higher-Level Spell Slot:
 Your Concentration can last longer with a spell slot of level 3-4 (up to 8 hours) or 5+ (up to 24 hours).
 Source: Player's Handbook 2024 (BR)
 ----------------------------------------
-Name: Cure Wounds
+Name: Thunderous Smite
 Level: 1
-School: Abjuration
-Classes: Bard, Cleric, Druid, Paladin, Ranger
-Casting Time: Action
-Range: Touch
-Components: V, S
+School: Evocation
+Classes: Paladin
+Casting Time: Bonus Action, which you take immediately after hitting a target with a Melee weapon or an Unarmed Strike
+Range: Self
+Components: V
 Duration: Instantaneous
 Description:
-A creature you touch regains a number of Hit Points equal to 2d8 plus your spellcasting ability modifier.
+Your strike rings with thunder that is audible within 300 feet of you, and the target takes an extra 2d6 Thunder damage from the attack. Additionally, if the target is a creature, it must succeed on a Strength saving throw or be pushed 10 feet away from you and have the Prone condition.
 Using a Higher-Level Spell Slot:
-The healing increases by 2d8 for each spell slot level above 1.
-Source: Player's Handbook 2024 (BR)
+The damage increases by 1d6 for each spell slot level above 1.
+Source: Player's Handbook 2024
 ----------------------------------------
 Name: Find Steed
 Level: 2
@@ -363,14 +352,16 @@ Description:
 Briefly surrounded by silvery mist, you teleport up to 30 feet to an unoccupied space you can see.
 Source: Player's Handbook 2024 (BR)
 ----------------------------------------
-Name: Zone of Truth
+Name: Prayer of Healing
 Level: 2
-School: Enchantment
-Classes: Bard, Cleric, Paladin
-Casting Time: Action
-Range: 60 feet
-Components: V, S
-Duration: 10 minutes
+School: Abjuration
+Classes: Cleric, Paladin
+Casting Time: 10 minutes
+Range: 30 feet
+Components: V
+Duration: Instantaneous
 Description:
-You create a magical zone that guards against deception in a 15-foot-radius Sphere centered on a point within range. Until the spell ends, a creature that enters the spell's area for the first time on a turn or starts its turn there makes a Charisma saving throw. On a failed save, a creature can't speak a deliberate lie while in the radius. You know whether a creature succeeds or fails on this save. An affected creature is aware of the spell and can avoid answering questions to which it would normally respond with a lie. Such a creature can be evasive yet must be truthful.
+Up to five creatures of your choice who remain within range for the spell's entire casting gain the benefits of a Short Rest and also regain 2d8 Hit Points. A creature can't be affected by this spell again until that creature finishes a Long Rest.
+Using a Higher-Level Spell Slot:
+The healing increases by 1d8 for each spell slot level above 2.
 Source: Player's Handbook 2024 (BR)

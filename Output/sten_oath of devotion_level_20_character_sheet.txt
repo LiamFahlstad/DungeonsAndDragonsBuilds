@@ -12,25 +12,25 @@ Proficiency Bonus  | 6
 ################################################################################
 # =============================== Combat Stats =============================== #
 ################################################################################
-Field          | Value  
----------------+--------
-Max Hit Points | 224    
-Armor Class    | 18     
-Initiative     | d20 + 0
-Speed (ft)     | 30     
-Size           | Medium 
+Field          | Value                                   
+---------------+-----------------------------------------
+Max Hit Points | 244                                     
+Armor Class    | 18 (with Shield) and 16 (without Shield)
+Initiative     | d20 + 0                                 
+Speed (ft)     | 30                                      
+Size           | Medium                                  
 
 ################################################################################
 # ================================ Abilities ================================= #
 ################################################################################
 Ability      | Score | Modifier | Saving Throw | Proficient
 -------------+-------+----------+--------------+-----------
-Strength     | 14    | 2        | 2            | No        
+Strength     | 13    | 1        | 1            | No        
 Dexterity    | 10    | 0        | 0            | No        
-Constitution | 17    | 3        | 3            | No        
+Constitution | 19    | 4        | 4            | No        
 Intelligence | 12    | 1        | 1            | No        
 Wisdom       | 8     | -1       | 5            | Yes       
-Charisma     | 16    | 3        | 9            | Yes       
+Charisma     | 15    | 2        | 8            | Yes       
 
 ################################################################################
 # ================================== Skills ================================== #
@@ -40,17 +40,17 @@ Skill           | Modifier | Proficient | Ability      | RollCondition
 Acrobatics      | 0        | No         | Dexterity    | Neutral      
 Animal Handling | -1       | No         | Wisdom       | Neutral      
 Arcana          | 1        | No         | Intelligence | Neutral      
-Athletics       | 8        | Yes        | Strength     | Neutral      
-Deception       | 3        | No         | Charisma     | Neutral      
+Athletics       | 7        | Yes        | Strength     | Neutral      
+Deception       | 2        | No         | Charisma     | Neutral      
 History         | 7        | Yes        | Intelligence | Neutral      
 Insight         | 5        | Yes        | Wisdom       | Neutral      
-Intimidation    | 9        | Yes        | Charisma     | Neutral      
+Intimidation    | 8        | Yes        | Charisma     | Neutral      
 Investigation   | 1        | No         | Intelligence | Neutral      
 Medicine        | 5        | Yes        | Wisdom       | Neutral      
 Nature          | 1        | No         | Intelligence | Neutral      
 Perception      | 5        | Yes        | Wisdom       | Neutral      
-Performance     | 3        | No         | Charisma     | Neutral      
-Persuasion      | 9        | Yes        | Charisma     | Neutral      
+Performance     | 2        | No         | Charisma     | Neutral      
+Persuasion      | 8        | Yes        | Charisma     | Neutral      
 Religion        | 1        | No         | Intelligence | Neutral      
 Sleight of Hand | 0        | No         | Dexterity    | Neutral      
 Stealth         | 0        | No         | Dexterity    | Disadvantage 
@@ -112,13 +112,13 @@ DC: class's Spellcasting feature.
     The weapon also emits Bright Light in a 20-foot radius and Dim Light 20 feet beyond that.
 
     Abjure Foes Paladin Level 9:
-    As a Magic action, you can expend one use of this class’s Channel Divinity to overwhelm foes with awe. As you present your Holy Symbol or weapon, you can target a number of creatures equal to your Charisma modifier (3) (minimum of one creature) that you can see within 60 feet of yourself. Each target must succeed on a Wisdom saving throw (DC=17) or have the Frightened condition for 1 minute or until it takes any damage. While Frightened in this way, a target can do only one of the following on its turns: move, take an action, or take a Bonus Action.
+    As a Magic action, you can expend one use of this class’s Channel Divinity to overwhelm foes with awe. As you present your Holy Symbol or weapon, you can target a number of creatures equal to your Charisma modifier (2) (minimum of one creature) that you can see within 60 feet of yourself. Each target must succeed on a Wisdom saving throw (DC=16) or have the Frightened condition for 1 minute or until it takes any damage. While Frightened in this way, a target can do only one of the following on its turns: move, take an action, or take a Bonus Action.
 
 Name: Aura of Protection
 Origin: Paladin Level 6
 Description: Level 6: Aura of Protection
 You radiate a protective, unseeable aura in a 10-foot Emanation that originates from you. The aura is inactive while you have the Incapacitated condition.
-You and your allies in the aura gain a bonus to saving throws equal to your Charisma modifier (+3).
+You and your allies in the aura gain a bonus to saving throws equal to your Charisma modifier (+2).
 (Doesn't stack choose which one if multiple).
 
     Aura of Devotion Oath of Devotion Paladin Level 7:
@@ -127,6 +127,9 @@ You and your allies in the aura gain a bonus to saving throws equal to your Char
 
     Aura of Courage Paladin Level 10:
     You and your allies have Immunity to the Frightened condition while in your Aura of Protection. If a Frightened ally enters the aura, that condition has no effect on that ally while there.
+
+    Aura of Expansion Paladin Level 18:
+    Your Aura of Protection is now a 30-foot Emanation.
 
 Name: Lay on Hands
 Origin: Paladin Level 1
@@ -158,16 +161,16 @@ Type                        | Martial Melee
 DamageType                  | Slashing                                                                     
 Property 'Versatile (1d10)' | Can use one or two hands; if two-handed, use damage die shown in parentheses.
 Proficient                  | Yes                                                                          
-AttackRoll                  | 1d20 + 2 (ability mod: Strength) + 6 (Proficient)                            
-DamageRoll                  | 1d8 + 2 (ability mod: Strength)                                              
+AttackRoll                  | 1d20 + 1 (ability mod: Strength) + 6 (Proficient)                            
+DamageRoll                  | 1d8 + 1 (ability mod: Strength)                                              
 ----------------------------+------------------------------------------------------------------------------
 Name                        | Javelin                                                                      
 Type                        | Simple Melee                                                                 
 DamageType                  | Piercing                                                                     
 Property 'Thrown'           | Can throw weapon for ranged attack; use same ability mod as melee version.   
 Proficient                  | Yes                                                                          
-AttackRoll                  | 1d20 + 2 (ability mod: Strength) + 6 (Proficient)                            
-DamageRoll                  | 1d6 + 2 (ability mod: Strength)                                              
+AttackRoll                  | 1d20 + 1 (ability mod: Strength) + 6 (Proficient)                            
+DamageRoll                  | 1d6 + 1 (ability mod: Strength)                                              
 
 ################################################################################
 # ============================= Fighting Styles ============================== #
@@ -177,8 +180,8 @@ Two-Weapon Fighting: When you make an extra attack as a result of using a weapon
 ################################################################################
 # ============================= Spell Modifiers ============================== #
 ################################################################################
-Spell Save DC: 17
-Spell Attack Bonus: +9
+Spell Save DC: 16
+Spell Attack Bonus: +8
 
 ################################################################################
 # =============================== Spell Slots ================================ #

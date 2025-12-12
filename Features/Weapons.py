@@ -137,10 +137,21 @@ class AbstractWeapon(TextFeature):
     def calculate_ability_modifier_bonus(
         self, character_stat_block: CharacterStatBlock
     ) -> str:
-        ability_modifier = character_stat_block.get_ability_modifier(
-            self.stats().ability
-        )
-        return f"{ability_modifier} (ability mod: {self.stats().ability.value})"
+        if WeaponProperty.FINESSE in self.stats().properties:
+            str_mod = character_stat_block.get_ability_modifier(Ability.STRENGTH)
+            dex_mod = character_stat_block.get_ability_modifier(Ability.DEXTERITY)
+            ability = (
+                Ability.STRENGTH.value
+                if str_mod >= dex_mod
+                else Ability.DEXTERITY.value
+            )
+            ability_modifier = max(str_mod, dex_mod)
+        else:
+            ability_modifier = character_stat_block.get_ability_modifier(
+                self.stats().ability
+            )
+            ability = self.stats().ability.value
+        return f"{ability_modifier} (ability mod: {ability})"
 
     def calculate_proficiency_damage_bonus(
         self, character_stat_block: CharacterStatBlock

@@ -37,10 +37,10 @@ if __name__ == "__main__":
         abilities=StandardArrayAbilitiesStatBlock(
             strength=13,
             dexterity=10,
-            constitution=14,
+            constitution=15,
             intelligence=12,
             wisdom=8,
-            charisma=15,
+            charisma=14,
         ),
         # Choose two skills to be proficient in
         skills=PaladinSkillsStatBlock(
@@ -85,8 +85,7 @@ if __name__ == "__main__":
         paladin_level_4=PaladinLevel4(
             general_feat=GeneralFeats.AbilityScoreImprovement(
                 [
-                    (Ability.STRENGTH, 1),
-                    (Ability.CONSTITUTION, 1),
+                    (Ability.CONSTITUTION, 2),
                 ]
             ),
             spell=PaladinLevel1Spells.CURE_WOUNDS,

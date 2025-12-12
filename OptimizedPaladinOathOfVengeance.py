@@ -1,4 +1,3 @@
-from CharacterConfigs import BattleMasterFighter
 from CharacterConfigs import PaladinOathOfVengeance
 from CharacterConfigs.PaladinBase import (
     PaladinLevel1,
@@ -13,10 +12,10 @@ from Definitions import (
     Skill,
 )
 from Features import (
+    Armor,
     Backgrounds,
     FightingStyles,
     GeneralFeats,
-    Maneuvers,
     OriginFeats,
     Weapons,
 )
@@ -24,10 +23,9 @@ from SpeciesConfigs import Human
 from Spells.Definitions import (
     PaladinLevel1Spells,
     PaladinLevel2Spells,
-    PaladinLevel3Spells,
 )
 from StatBlocks.AbilitiesStatBlock import StandardArrayAbilitiesStatBlock
-from StatBlocks.SkillsStatBlock import FighterSkillsStatBlock, PaladinSkillsStatBlock
+from StatBlocks.SkillsStatBlock import PaladinSkillsStatBlock
 
 
 if __name__ == "__main__":
@@ -35,12 +33,12 @@ if __name__ == "__main__":
         paladin_level=20,
         # Distribute 15, 14, 13, 12, 10, 8 among your abilities.
         abilities=StandardArrayAbilitiesStatBlock(
-            strength=15,
-            dexterity=10,
-            constitution=14,
-            intelligence=12,
-            wisdom=8,
-            charisma=13,
+            strength=8,
+            dexterity=15,
+            constitution=13,
+            intelligence=10,
+            wisdom=12,
+            charisma=14,
         ),
         # Choose two skills to be proficient in
         skills=PaladinSkillsStatBlock(
@@ -55,7 +53,7 @@ if __name__ == "__main__":
         ),
         background_ability_bonuses=Backgrounds.FreeBackgroundAbilityBonus(
             [
-                (Ability.STRENGTH, 2),
+                (Ability.DEXTERITY, 2),
                 (Ability.CONSTITUTION, 1),
             ]
         ),
@@ -65,17 +63,19 @@ if __name__ == "__main__":
                 Skill.PERSUASION,
             ]
         ),
-        add_default_equipment=True,
-        origin_feat=OriginFeats.Tough(),
+        add_default_equipment=False,
+        origin_feat=OriginFeats.Alert(),
         weapons=[
-            Weapons.Handaxe(player_is_proficient=True),
-            Weapons.LightHammer(player_is_proficient=True),
+            Weapons.Shortsword(player_is_proficient=True),
+            Weapons.Scimitar(player_is_proficient=True),
         ],
-        armor=[],
+        armor=[
+            Armor.LeatherArmor(),
+        ],
         paladin_level_1=PaladinLevel1(
-            weapon_mastery_1=Weapons.Handaxe(),
-            weapon_mastery_2=Weapons.LightHammer(),
-            spell_1=PaladinLevel1Spells.CURE_WOUNDS,
+            weapon_mastery_1=Weapons.Shortsword(),
+            weapon_mastery_2=Weapons.Scimitar(),
+            spell_1=PaladinLevel1Spells.BLESS,
             spell_2=PaladinLevel1Spells.DIVINE_FAVOR,
         ),
         paladin_level_2=PaladinLevel2(
@@ -83,19 +83,19 @@ if __name__ == "__main__":
             spell=PaladinLevel1Spells.SHIELD_OF_FAITH,
         ),
         paladin_level_3=PaladinLevel3(
-            spell=PaladinLevel1Spells.BLESS,
+            spell=PaladinLevel1Spells.CURE_WOUNDS,
         ),
         paladin_level_4=PaladinLevel4(
             general_feat=GeneralFeats.AbilityScoreImprovement(
                 [
-                    (Ability.STRENGTH, 1),
+                    (Ability.DEXTERITY, 1),
                     (Ability.CONSTITUTION, 1),
                 ]
             ),
-            spell=PaladinLevel1Spells.CURE_WOUNDS,
+            spell=PaladinLevel1Spells.THUNDEROUS_SMITE,
         ),
         paladin_level_5=PaladinLevel5(
-            spell=PaladinLevel2Spells.ZONE_OF_TRUTH,
+            spell=PaladinLevel2Spells.PRAYER_OF_HEALING,
         ),
         replace_spells={
             PaladinLevel1Spells.CURE_WOUNDS: PaladinLevel2Spells.MAGIC_WEAPON,

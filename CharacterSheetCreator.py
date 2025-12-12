@@ -1,6 +1,7 @@
 from enum import Enum
 import pathlib
 from typing import Optional
+from Features import Armor
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Definitions import Ability, Skill, CharacterClass
 import Definitions
@@ -150,11 +151,14 @@ class CharacterSheetData:
 
             file.write("\n")
             CharacterSheetUtils.write_separator(file, "Combat Stats")
+            ac = character.calculate_armor_class()
+            if Armor.ShieldArmor in [type(armor) for armor in self.armors]:
+                ac = f"{ac} (with Shield) and {ac - 2} (without Shield)"
             CharacterSheetUtils.write_table(
                 headers=["Field", "Value"],
                 rows=[
                     ["Max Hit Points", character.calculate_hit_points()],
-                    ["Armor Class", character.calculate_armor_class()],
+                    ["Armor Class", ac],
                     ["Initiative", f"d20 + {character.combat.initiative}"],
                     ["Speed (ft)", character.combat.speed],
                     ["Size", character.combat.size.value],
