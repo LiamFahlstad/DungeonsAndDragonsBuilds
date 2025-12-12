@@ -43,9 +43,24 @@ class Spell:
     @property
     def description(self):
         text = self._data.get("description")
-        return "\n\nUsing a Higher-Level Spell Slot:\n".join(
-            text.split("Using a Higher-Level Spell Slot . ")
-        )
+
+        def replace_last(text, old, new):
+            parts = text.rsplit(old, 1)  # split from the right, max 1 split
+            return new.join(parts)
+
+        def inject_newline(text):
+            go = True
+            while go:
+                try:
+                    index = text.index(" . ")
+                    text = replace_last(text[:index], ". ", ".\n") + text[index:]
+                    text = text.replace(" . ", ":\n")
+                    pass
+                except ValueError:
+                    go = False
+            return text
+
+        return inject_newline(text)
 
     @property
     def source(self):
