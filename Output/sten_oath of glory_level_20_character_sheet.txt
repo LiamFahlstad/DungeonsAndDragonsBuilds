@@ -25,12 +25,12 @@ Size           | Medium
 ################################################################################
 Ability      | Score | Modifier | Saving Throw | Proficient
 -------------+-------+----------+--------------+-----------
-Strength     | 13    | 1        | 1            | No        
+Strength     | 15    | 2        | 2            | No        
 Dexterity    | 10    | 0        | 0            | No        
 Constitution | 19    | 4        | 4            | No        
 Intelligence | 12    | 1        | 1            | No        
 Wisdom       | 8     | -1       | 5            | Yes       
-Charisma     | 15    | 2        | 8            | Yes       
+Charisma     | 19    | 4        | 10           | Yes       
 
 ################################################################################
 # ================================== Skills ================================== #
@@ -40,17 +40,17 @@ Skill           | Modifier | Proficient | Ability      | RollCondition
 Acrobatics      | 0        | No         | Dexterity    | Neutral      
 Animal Handling | -1       | No         | Wisdom       | Neutral      
 Arcana          | 1        | No         | Intelligence | Neutral      
-Athletics       | 7        | Yes        | Strength     | Neutral      
-Deception       | 2        | No         | Charisma     | Neutral      
+Athletics       | 8        | Yes        | Strength     | Neutral      
+Deception       | 4        | No         | Charisma     | Neutral      
 History         | 7        | Yes        | Intelligence | Neutral      
 Insight         | 5        | Yes        | Wisdom       | Neutral      
-Intimidation    | 8        | Yes        | Charisma     | Neutral      
+Intimidation    | 10       | Yes        | Charisma     | Neutral      
 Investigation   | 1        | No         | Intelligence | Neutral      
 Medicine        | 5        | Yes        | Wisdom       | Neutral      
 Nature          | 1        | No         | Intelligence | Neutral      
 Perception      | 5        | Yes        | Wisdom       | Neutral      
-Performance     | 2        | No         | Charisma     | Neutral      
-Persuasion      | 8        | Yes        | Charisma     | Neutral      
+Performance     | 4        | No         | Charisma     | Neutral      
+Persuasion      | 10       | Yes        | Charisma     | Neutral      
 Religion        | 1        | No         | Intelligence | Neutral      
 Sleight of Hand | 0        | No         | Dexterity    | Neutral      
 Stealth         | 0        | No         | Dexterity    | Disadvantage 
@@ -105,16 +105,19 @@ DC: class's Spellcasting feature.
     Detects Celestials, Fiends, and Undead (location and creature type), and senses consecrated/desecrated places/objects within range.
 
     Abjure Foes Paladin Level 9:
-    As a Magic action, you can expend one use of this class’s Channel Divinity to overwhelm foes with awe. As you present your Holy Symbol or weapon, you can target a number of creatures equal to your Charisma modifier (2) (minimum of one creature) that you can see within 60 feet of yourself. Each target must succeed on a Wisdom saving throw (DC=16) or have the Frightened condition for 1 minute or until it takes any damage. While Frightened in this way, a target can do only one of the following on its turns: move, take an action, or take a Bonus Action.
+    As a Magic action, you can expend one use of this class’s Channel Divinity to overwhelm foes with awe. As you present your Holy Symbol or weapon, you can target a number of creatures equal to your Charisma modifier (4) (minimum of one creature) that you can see within 60 feet of yourself. Each target must succeed on a Wisdom saving throw (DC=18) or have the Frightened condition for 1 minute or until it takes any damage. While Frightened in this way, a target can do only one of the following on its turns: move, take an action, or take a Bonus Action.
 
     Peerless Athlete Oath of Glory Paladin Level 3:
     As a Bonus Action, you can expend one use of your Channel Divinity to augment your athleticism. For 1 hour, you have Advantage on Strength (Athletics) and Dexterity (Acrobatics) checks, and the distance of your Long and High Jumps increases by 10 feet (this extra distance costs movement as normal).
+
+    Inspiring Smite Oath of Glory Paladin Level 3:
+    Immediately after you cast Divine Smite, you can expend one use of your Channel Divinity and distribute Temporary Hit Points to creatures of your choice within 30 feet of yourself, which can include you. The total number of Temporary Hit Points equals 2d8 plus your Paladin level, divided among the chosen creatures however you like.
 
 Name: Aura of Protection
 Origin: Paladin Level 6
 Description: Level 6: Aura of Protection
 You radiate a protective, unseeable aura in a 10-foot Emanation that originates from you. The aura is inactive while you have the Incapacitated condition.
-You and your allies in the aura gain a bonus to saving throws equal to your Charisma modifier (+2).
+You and your allies in the aura gain a bonus to saving throws equal to your Charisma modifier (+4).
 (Doesn't stack choose which one if multiple).
 
     Aura of Alacrity Oath of Glory Paladin Level 7:
@@ -156,16 +159,16 @@ Type                        | Martial Melee
 DamageType                  | Slashing                                                                     
 Property 'Versatile (1d10)' | Can use one or two hands; if two-handed, use damage die shown in parentheses.
 Proficient                  | Yes                                                                          
-AttackRoll                  | 1d20 + 1 (ability mod: Strength) + 6 (Proficient)                            
-DamageRoll                  | 1d8 + 1 (ability mod: Strength)                                              
+AttackRoll                  | 1d20 + 2 (ability mod: Strength) + 6 (Proficient)                            
+DamageRoll                  | 1d8 + 2 (ability mod: Strength)                                              
 ----------------------------+------------------------------------------------------------------------------
 Name                        | Javelin                                                                      
 Type                        | Simple Melee                                                                 
 DamageType                  | Piercing                                                                     
 Property 'Thrown'           | Can throw weapon for ranged attack; use same ability mod as melee version.   
 Proficient                  | Yes                                                                          
-AttackRoll                  | 1d20 + 1 (ability mod: Strength) + 6 (Proficient)                            
-DamageRoll                  | 1d6 + 1 (ability mod: Strength)                                              
+AttackRoll                  | 1d20 + 2 (ability mod: Strength) + 6 (Proficient)                            
+DamageRoll                  | 1d6 + 2 (ability mod: Strength)                                              
 
 ################################################################################
 # ============================= Fighting Styles ============================== #
@@ -175,8 +178,8 @@ Two-Weapon Fighting: When you make an extra attack as a result of using a weapon
 ################################################################################
 # ============================= Spell Modifiers ============================== #
 ################################################################################
-Spell Save DC: 16
-Spell Attack Bonus: +8
+Spell Save DC: 18
+Spell Attack Bonus: +10
 
 ################################################################################
 # =============================== Spell Slots ================================ #
@@ -256,6 +259,34 @@ Using a Higher-Level Spell Slot:
 You can target one additional creature for each spell slot level above 1.
 Source: Player's Handbook 2024 (BR)
 ----------------------------------------
+Name: Guiding Bolt
+Level: 1
+School: Evocation
+Classes: Cleric
+Casting Time: Action
+Range: 120 feet
+Components: V, S
+Duration: 1 round
+Description:
+You hurl a bolt of light toward a creature within range. Make a ranged spell attack against the target. On a hit, it takes 4d6 Radiant damage, and the next attack roll made against it before the end of your next turn has Advantage.
+Using a Higher-Level Spell Slot:
+The damage increases by 1d6 for each spell slot level above 1.
+Source: Player's Handbook 2024 (BR)
+----------------------------------------
+Name: Heroism
+Level: 1
+School: Enchantment
+Classes: Bard, Paladin
+Casting Time: Action
+Range: Touch
+Components: V, S
+Duration: Concentration, up to 1 minute
+Description:
+A willing creature you touch is imbued with bravery. Until the spell ends, the creature is immune to the Frightened condition and gains Temporary Hit Points equal to your spellcasting ability modifier at the start of each of its turns.
+Using a Higher-Level Spell Slot:
+You can target one additional creature for each spell slot level above 1.
+Source: Player's Handbook 2024 (BR)
+----------------------------------------
 Name: Cure Wounds
 Level: 1
 School: Abjuration
@@ -323,3 +354,205 @@ Duration: 10 minutes
 Description:
 You create a magical zone that guards against deception in a 15-foot-radius Sphere centered on a point within range. Until the spell ends, a creature that enters the spell's area for the first time on a turn or starts its turn there makes a Charisma saving throw. On a failed save, a creature can't speak a deliberate lie while in the radius. You know whether a creature succeeds or fails on this save. An affected creature is aware of the spell and can avoid answering questions to which it would normally respond with a lie. Such a creature can be evasive yet must be truthful.
 Source: Player's Handbook 2024 (BR)
+----------------------------------------
+Name: Enhance Ability
+Level: 2
+School: Transmutation
+Classes: Bard, Cleric, Druid, Ranger, Sorcerer, Wizard
+Casting Time: Action
+Range: Touch
+Components: V, S, M (fur or a feather)
+Duration: Concentration, up to 1 hour
+Description:
+You touch a creature and choose Strength, Dexterity, Intelligence, Wisdom, or Charisma. For the duration, the target has Advantage on ability checks using the chosen ability.
+Using a Higher-Level Spell Slot:
+You can target one additional creature for each spell slot level above 2. You can choose a different ability for each target.
+Source: Player's Handbook 2024 (BR)
+----------------------------------------
+Name: Magic Weapon
+Level: 2
+School: Transmutation
+Classes: Paladin, Ranger, Sorcerer, Wizard
+Casting Time: Bonus Action
+Range: Touch
+Components: V, S
+Duration: 1 hour
+Description:
+You touch a nonmagical weapon. Until the spell ends, that weapon becomes a magic weapon with a +1 bonus to attack rolls and damage rolls. The spell ends early if you cast it again.
+Using a Higher-Level Spell Slot:
+The bonus increases to +2 with a level 3–5 spell slot. The bonus increases to +3 with a level 6+ spell slot.
+Source: Player's Handbook 2024 (BR)
+----------------------------------------
+Name: Lesser Restoration
+Level: 2
+School: Abjuration
+Classes: Bard, Cleric, Druid, Paladin, Ranger
+Casting Time: Bonus Action
+Range: Touch
+Components: V, S
+Duration: Instantaneous
+Description:
+You touch a creature and end one condition on it: Blinded, Deafened, Paralyzed, or Poisoned.
+Source: Player's Handbook 2024 (BR)
+----------------------------------------
+Name: Aura of Vitality
+Level: 3
+School: Abjuration
+Classes: Cleric, Druid, Paladin
+Casting Time: Action
+Range: Self
+Components: V
+Duration: Concentration, up to 1 minute
+Description:
+An aura radiates from you in a 30-foot Emanation for the duration. When you create the aura and at the start of each of your turns while it persists, you can restore 2d6 Hit Points to one creature in it.
+Source: Player's Handbook 2024
+----------------------------------------
+Name: Haste
+Level: 3
+School: Transmutation
+Classes: Sorcerer, Wizard
+Casting Time: Action
+Range: 30 feet
+Components: V, S, M (a shaving of licorice root)
+Duration: Concentration, up to 1 minute
+Description:
+Choose a willing creature that you can see within range. Until the spell ends, the target's Speed is doubled, it gains a +2 bonus to Armor Class, it has Advantage on Dexterity saving throws, and it gains an additional action on each of its turns. That action can be used to take only the Attack (one attack only), Dash, Disengage, Hide, or Utilize action. When the spell ends, the target is Incapacitated and has a Speed of 0 until the end of its next turn, as a wave of lethargy washes over it.
+Source: Player's Handbook 2024 (BR)
+----------------------------------------
+Name: Protection from Energy
+Level: 3
+School: Abjuration
+Classes: Cleric, Druid, Ranger, Sorcerer, Wizard
+Casting Time: Action
+Range: Touch
+Components: V, S
+Duration: Concentration, up to 1 hour
+Description:
+For the duration, the willing creature you touch has Resistance to one damage type of your choice: Acid, Cold, Fire, Lightning, or Thunder.
+Source: Player's Handbook 2024 (BR)
+----------------------------------------
+Name: Blinding Smite
+Level: 3
+School: Evocation
+Classes: Paladin
+Casting Time: Bonus Action, which you take immediately after hitting a creature with a Melee weapon or an Unarmed Strike
+Range: Self
+Components: V
+Duration: 1 minute
+Description:
+The target hit by the strike takes an extra 3d8 Radiant damage from the attack, and the target has the Blinded condition until the spell ends. At the end of each of its turns, the Blinded target makes a Constitution saving throw, ending the spell on itself on a success.
+Using a Higher-Level Spell Slot:
+The extra damage increases by 1d8 for each spell slot level above 3.
+Source: Player's Handbook 2024
+----------------------------------------
+Name: Death Ward
+Level: 4
+School: Abjuration
+Classes: Cleric, Paladin
+Casting Time: Action
+Range: Touch
+Components: V, S
+Duration: 8 hours
+Description:
+You touch a creature and grant it a measure of protection from death. The first time the target would drop to 0 Hit Points before the spell ends, the target instead drops to 1 Hit Point, and the spell ends. If the spell is still in effect when the target is subjected to an effect that would kill it instantly without dealing damage, that effect is negated against the target, and the spell ends.
+Source: Player's Handbook 2024 (BR)
+----------------------------------------
+Name: Compulsion
+Level: 4
+School: Enchantment
+Classes: Bard
+Casting Time: Action
+Range: 30 feet
+Components: V, S
+Duration: Concentration, up to 1 minute
+Description:
+Each creature of your choice that you can see within range must succeed on a Wisdom saving throw or have the Charmed condition until the spell ends. For the duration, you can take a Bonus Action to designate a direction that is horizontal to you. Each Charmed target must use as much of its movement as possible to move in that direction on its next turn, taking the safest route. After moving in this way, a target repeats the save, ending the spell on itself on a success.
+Source: Player's Handbook 2024 (BR)
+----------------------------------------
+Name: Freedom of Movement
+Level: 4
+School: Abjuration
+Classes: Bard, Cleric, Druid, Ranger
+Casting Time: Action
+Range: Touch
+Components: V, S, M (a leather strap)
+Duration: 1 hour
+Description:
+You touch a willing creature. For the duration, the target's movement is unaffected by Difficult Terrain, and spells and other magical effects can neither reduce the target's Speed nor cause the target to have the Paralyzed or Restrained conditions. The target also has a Swim Speed equal to its Speed. In addition, the target can spend 5 feet of movement to automatically escape from nonmagical restraints, such as manacles or a creature imposing the Grappled condition on it.
+Using a Higher-Level Spell Slot:
+You can target one additional creature for each spell slot level above 4.
+Source: Player's Handbook 2024 (BR)
+----------------------------------------
+Name: Aura of Purity
+Level: 4
+School: Abjuration
+Classes: Cleric, Paladin
+Casting Time: Action
+Range: Self
+Components: V
+Duration: Concentration, up to 10 minutes
+Description:
+An aura radiates from you in a 30-foot Emanation for the duration. While in the aura, you and your allies have Resistance to Poison damage and Advantage on saving throws to avoid or end effects that include the Blinded, Charmed, Deafened, Frightened, Paralyzed, Poisoned, or Stunned condition.
+Source: Player's Handbook 2024
+----------------------------------------
+Name: Legend Lore
+Level: 5
+School: Divination
+Classes: Bard, Cleric, Wizard
+Casting Time: 10 minutes
+Range: Self
+Components: V, S, M (incense worth 250+ GP, which the spell consumes, and four ivory strips worth 50+ GP each)
+Duration: Instantaneous
+Description:
+Name or describe a famous person, place, or object. The spell brings to your mind a brief summary of the significant lore about that famous thing, as described by the DM. The lore might consist of important details, amusing revelations, or even secret lore that has never been widely known. The more information you already know about the thing, the more precise and detailed the information you receive is. That information is accurate but might be couched in figurative language or poetry, as determined by the DM. If the famous thing you chose isn't actually famous, you hear sad musical notes played on a trombone, and the spell fails.
+Source: Player's Handbook 2024 (BR)
+----------------------------------------
+Name: Yolande's Regal Presence
+Level: 5
+School: Enchantment
+Classes: Bard, Wizard
+Casting Time: Action
+Range: Self
+Components: V, S, M (a miniature tiara)
+Duration: Concentration, up to 1 minute
+Description:
+You surround yourself with unearthly majesty in a 10-foot Emanation. Whenever the Emanation enters the space of a creature you can see and whenever a creature you can see enters the Emanation or ends its turn there, you can force that creature to make a Wisdom saving throw. On a failed save, the target takes 4d6 Psychic damage and has the Prone condition, and you can push it up to 10 feet away. On a successful save, the target takes half as much damage only. A creature makes this save only once per turn.
+Source: Player's Handbook 2024
+----------------------------------------
+Name: Banishing Smite
+Level: 5
+School: Conjuration
+Classes: Paladin
+Casting Time: Bonus Action, which you take immediately after hitting a creature with a Melee weapon or an Unarmed Strike
+Range: Self
+Components: V
+Duration: Concentration, up to 1 minute
+Description:
+The target hit by the attack roll takes an extra 5d10 Force damage from the attack. If the attack reduces the target to 50 Hit Points or fewer, the target must succeed on a Charisma saving throw or be transported to a harmless demiplane for the duration. While there, the target has the Incapacitated condition. When the spell ends, the target reappears in the space it left or in the nearest unoccupied space if that space is occupied.
+Source: Player's Handbook 2024
+----------------------------------------
+Name: Geas
+Level: 5
+School: Enchantment
+Classes: Bard, Cleric, Druid, Paladin, Wizard
+Casting Time: 1 minute
+Range: 60 feet
+Components: V
+Duration: 30 days
+Description:
+You give a verbal command to a creature that you can see within range, ordering it to carry out some service or refrain from an action or a course of activity as you decide. The target must succeed on a Wisdom saving throw or have the Charmed condition for the duration. The target automatically succeeds if it can't understand your command. While Charmed, the creature takes 5d10 Psychic damage if it acts in a manner directly counter to your command. It takes this damage no more than once each day. You can issue any command you choose, short of an activity that would result in certain death. Should you issue a suicidal command, the spell ends. A Remove Curse , Greater Restoration , or Wish spell ends this spell.
+Using a Higher-Level Spell Slot:
+If you use a level 7 or 8 spell slot, the duration is 365 days. If you use a level 9 spell slot, the spell lasts until it is ended by one of the spells mentioned above.
+Source: Player's Handbook 2024 (BR)
+----------------------------------------
+Name: Circle of Power
+Level: 5
+School: Abjuration
+Classes: Cleric, Paladin, Wizard
+Casting Time: Action
+Range: Self
+Components: V
+Duration: Concentration, up to 10 minutes
+Description:
+An aura radiates from you in a 30-foot Emanation for the duration. While in the aura, you and your allies have Advantage on saving throws against spells and other magical effects. When an affected creature makes a saving throw against a spell or magical effect that allows a save to take only half damage, it takes no damage if it succeeds on the save.
+Source: Player's Handbook 2024

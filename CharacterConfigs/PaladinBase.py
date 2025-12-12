@@ -53,6 +53,85 @@ class PaladinLevel5:
     spell: PaladinLevel1Spells | PaladinLevel2Spells
 
 
+@attr.dataclass
+class PaladinLevel7:
+    spell: PaladinLevel1Spells | PaladinLevel2Spells
+
+
+@attr.dataclass
+class PaladinLevel8:
+    general_feat: GeneralFeats.GeneralFeat
+
+
+@attr.dataclass
+class PaladinLevel9:
+    spell: PaladinLevel1Spells | PaladinLevel2Spells | PaladinLevel3Spells
+
+
+@attr.dataclass
+class PaladinLevel11:
+    spell: PaladinLevel1Spells | PaladinLevel2Spells | PaladinLevel3Spells
+
+
+@attr.dataclass
+class PaladinLevel12:
+    general_feat: GeneralFeats.GeneralFeat
+
+
+@attr.dataclass
+class PaladinLevel13:
+    spell: (
+        PaladinLevel1Spells
+        | PaladinLevel2Spells
+        | PaladinLevel3Spells
+        | PaladinLevel4Spells
+    )
+
+
+@attr.dataclass
+class PaladinLevel15:
+    spell: (
+        PaladinLevel1Spells
+        | PaladinLevel2Spells
+        | PaladinLevel3Spells
+        | PaladinLevel4Spells
+    )
+
+
+@attr.dataclass
+class PaladinLevel16:
+    general_feat: GeneralFeats.GeneralFeat
+
+
+@attr.dataclass
+class PaladinLevel17:
+    spell_1: (
+        PaladinLevel1Spells
+        | PaladinLevel2Spells
+        | PaladinLevel3Spells
+        | PaladinLevel4Spells
+        | PaladinLevel5Spells
+    )
+    spell_2: (
+        PaladinLevel1Spells
+        | PaladinLevel2Spells
+        | PaladinLevel3Spells
+        | PaladinLevel4Spells
+        | PaladinLevel5Spells
+    )
+
+
+@attr.dataclass
+class PaladinLevel19:
+    spell: (
+        PaladinLevel1Spells
+        | PaladinLevel2Spells
+        | PaladinLevel3Spells
+        | PaladinLevel4Spells
+        | PaladinLevel5Spells
+    )
+
+
 def get_character_sheet_creator_base(
     paladin_level: int,
     abilities: AbilitiesStatBlock,
@@ -184,6 +263,14 @@ def get_level_6_features():
     return PaladinFeatures.AuraOfProtection()
 
 
+def get_level_8_features(
+    paladin_level_8: PaladinLevel8, data: CharacterSheetCreator.CharacterSheetData
+) -> CharacterSheetCreator.CharacterSheetData:
+
+    data.add_feature(paladin_level_8.general_feat)
+    return data
+
+
 def get_level_9_features(
     channel_divinity_feature: PaladinFeatures.ChannelDivinityFeature,
 ):
@@ -206,12 +293,28 @@ def get_level_11_features(
     return data
 
 
+def get_level_12_features(
+    paladin_level_12: PaladinLevel12, data: CharacterSheetCreator.CharacterSheetData
+) -> CharacterSheetCreator.CharacterSheetData:
+
+    data.add_feature(paladin_level_12.general_feat)
+    return data
+
+
 def get_level_14_features(
     lay_on_hands: PaladinFeatures.LayOnHands,
 ) -> PaladinFeatures.LayOnHands:
 
     lay_on_hands.add_feature(PaladinFeatures.RestoringTouch())
     return lay_on_hands
+
+
+def get_level_16_features(
+    paladin_level_16: PaladinLevel16, data: CharacterSheetCreator.CharacterSheetData
+) -> CharacterSheetCreator.CharacterSheetData:
+
+    data.add_feature(paladin_level_16.general_feat)
+    return data
 
 
 def get_level_18_features(
