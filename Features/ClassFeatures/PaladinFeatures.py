@@ -130,16 +130,35 @@ class FaithfulSteed(TextFeature):
 
 class AuraOfProtection(TextFeature):
     def __init__(self):
+        self.additions = []
         super().__init__(name="Aura of Protection", origin="Paladin Level 6")
+
+    def add_addition(self, feature: TextFeature):
+        self.additions.append(feature)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         charisma_mod = character_stat_block.get_ability_modifier(Ability.CHARISMA)
-        return (
+
+        text = (
             "Level 6: Aura of Protection\n"
             "You radiate a protective, unseeable aura in a 10-foot Emanation that originates from you. The aura is inactive while you have the Incapacitated condition.\n"
             f"You and your allies in the aura gain a bonus to saving throws equal to your Charisma modifier (+{charisma_mod}).\n"
             "(Doesn't stack choose which one if multiple).\n"
         )
+
+        for addition in self.additions:
+            text += self.add_feature_effects(character_stat_block, addition)
+        return text
+
+
+class AuraOfDevotion(TextFeature):
+    def __init__(self):
+        super().__init__(
+            name="Aura of Devotion", origin="Oath of Devotion Paladin Level 2"
+        )
+
+    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+        return "You and your allies have Immunity to the Charmed condition while in your Aura of Protection.\nIf a Charmed ally enters the aura, that condition has no effect on that ally while there."
 
 
 class SpellSlots(CharacterFeature):

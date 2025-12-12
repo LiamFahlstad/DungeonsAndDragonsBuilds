@@ -57,6 +57,7 @@ def create(
     )
     data.character_subclass = PaladinSubclass.OATH_OF_DEVOTION.value
     channel_divinity_feature = None
+    aura_of_protection = None
 
     # ================ LEVEL 1 ============= #
     if paladin_level >= 1:
@@ -115,7 +116,12 @@ def create(
     # ================ LEVEL 6 ============= #
     if paladin_level >= 6:
         # Automatic feature
-        data.add_feature(PaladinFeatures.AuraOfProtection())
+        aura_of_protection = PaladinFeatures.AuraOfProtection()
+
+    # ================ LEVEL 6 ============= #
+    if paladin_level >= 7:
+        # Automatic feature
+        aura_of_protection.add_addition(PaladinFeatures.AuraOfDevotion())
 
     ##########################################
     # ============ LEAVE AS IS ============= #
@@ -123,6 +129,9 @@ def create(
 
     if channel_divinity_feature is not None:
         data.add_feature(channel_divinity_feature)
+
+    if aura_of_protection is not None:
+        data.add_feature(aura_of_protection)
 
     data.replace_spells(replace_spells or {})
     return data
