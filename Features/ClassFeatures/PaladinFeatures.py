@@ -92,7 +92,7 @@ class AbjureFoes(TextFeature):
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         charisma_mod = character_stat_block.get_ability_modifier(Ability.CHARISMA)
         spell_casting_dc = character_stat_block.calculate_spell_save_dc()
-        text = f"As a Magic action, you can expend one use of this class’s Channel Divinity to overwhelm foes with awe. As you present your Holy Symbol or weapon, you can target a number of creatures equal to your Charisma modifier ({charisma_mod}) (minimum of one creature) that you can see within 60 feet of yourself. Each target must succeed on a Wisdom saving throw (DC={spell_casting_dc}) or have the Frightened condition for 1 minute or until it takes any damage. While Frightened in this way, a target can do only one of the following on its turns: move, take an action, or take a Bonus Action."
+        text = f"As a Magic action, you can expend one use of this class's Channel Divinity to overwhelm foes with awe. As you present your Holy Symbol or weapon, you can target a number of creatures equal to your Charisma modifier ({charisma_mod}) (minimum of one creature) that you can see within 60 feet of yourself. Each target must succeed on a Wisdom saving throw (DC={spell_casting_dc}) or have the Frightened condition for 1 minute or until it takes any damage. While Frightened in this way, a target can do only one of the following on its turns: move, take an action, or take a Bonus Action."
         return text
 
 
@@ -163,7 +163,7 @@ class SoulOfVengeance(TextFeature):
         super().__init__(name="Soul of Vengeance", origin="Paladin Level 15")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        return "Immediately after a creature under the effect of your Vow of Enmity hits or misses with an attack roll, you can take a Reaction to make a melee attack against that creature if it’s within range."
+        return "Immediately after a creature under the effect of your Vow of Enmity hits or misses with an attack roll, you can take a Reaction to make a melee attack against that creature if it's within range."
 
 
 class AuraOfAlacrity(TextFeature):
@@ -181,7 +181,7 @@ class RelentlessAvenger(TextFeature):
         super().__init__(name="Relentless Avenger", origin="Paladin Level 7")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        return "Your supernatural focus helps you close off a foe’s retreat. When you hit a creature with an Opportunity Attack, you can reduce the creature’s Speed to 0 until the end of the current turn. You can then move up to half your Speed as part of the same Reaction. This movement doesn't provoke Opportunity Attacks."
+        return "Your supernatural focus helps you close off a foe's retreat. When you hit a creature with an Opportunity Attack, you can reduce the creature's Speed to 0 until the end of the current turn. You can then move up to half your Speed as part of the same Reaction. This movement doesn't provoke Opportunity Attacks."
 
 
 class PaladinsSmite(TextFeature):
@@ -277,7 +277,7 @@ class RestoringTouch(TextFeature):
         super().__init__(name="Restoring Touch", origin="Paladin Level 14")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        return "When you use Lay On Hands on a creature, you can also remove one or more of the following conditions from the creature: Blinded, Charmed, Deafened, Frightened, Paralyzed, or Stunned. You must expend 5 Hit Points from the healing pool of Lay On Hands for each of these conditions you remove; those points don’t also restore Hit Points to the creature."
+        return "When you use Lay On Hands on a creature, you can also remove one or more of the following conditions from the creature: Blinded, Charmed, Deafened, Frightened, Paralyzed, or Stunned. You must expend 5 Hit Points from the healing pool of Lay On Hands for each of these conditions you remove; those points don't also restore Hit Points to the creature."
 
 
 class AuraOfExpansion(TextFeature):
@@ -304,7 +304,7 @@ class HolyNimbus(TextFeature):
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         text = (
-            "As a Bonus Action, you can imbue your Aura of Protection with holy power, granting the benefits below for 10 minutes or until you end them (no action required). Once you use this feature, you can’t use it again until you finish a Long Rest. You can also restore your use of it by expending a level 5 spell slot (no action required).\n"
+            "As a Bonus Action, you can imbue your Aura of Protection with holy power, granting the benefits below for 10 minutes or until you end them (no action required). Once you use this feature, you can't use it again until you finish a Long Rest. You can also restore your use of it by expending a level 5 spell slot (no action required).\n"
             "Holy Ward. You have Advantage on any saving throw you are forced to make by a Fiend or an Undead.\n"
             "Radiant Damage. Whenever an enemy starts its turn in the aura, that creature takes Radiant damage equal to your Charisma modifier plus your Proficiency Bonus.\n"
             "Sunlight. The aura is filled with Bright Light that is sunlight.\n"

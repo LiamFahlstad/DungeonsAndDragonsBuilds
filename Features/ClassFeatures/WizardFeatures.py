@@ -12,7 +12,7 @@ class RitualAdept(TextFeature):
         super().__init__(name="Ritual Adept", origin="Wizard Level 1")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        return "You can cast any spell as a Ritual if that spell has the Ritual tag and the spell is in your spellbook. You needn’t have the spell prepared, but you must read from the book to cast a spell in this way."
+        return "You can cast any spell as a Ritual if that spell has the Ritual tag and the spell is in your spellbook. You needn't have the spell prepared, but you must read from the book to cast a spell in this way."
 
 
 class ArcaneRecovery(TextFeature):
@@ -22,7 +22,7 @@ class ArcaneRecovery(TextFeature):
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
 
         text = (
-            "You can regain some of your magical energy by studying your spellbook. When you finish a Short Rest, you can choose expended spell slots to recover. The spell slots can have a combined level equal to no more than half your Wizard level (round up), and none of the slots can be level 6 or higher. For example, if you're a level 4 Wizard, you can recover up to two levels’ worth of spell slots, regaining either one level 2 spell slot or two level 1 spell slots.\n"
+            "You can regain some of your magical energy by studying your spellbook. When you finish a Short Rest, you can choose expended spell slots to recover. The spell slots can have a combined level equal to no more than half your Wizard level (round up), and none of the slots can be level 6 or higher. For example, if you're a level 4 Wizard, you can recover up to two levels' worth of spell slots, regaining either one level 2 spell slot or two level 1 spell slots.\n"
             "Once you use this feature, you can't do so again until you finish a Long Rest."
         )
         return text
@@ -41,7 +41,7 @@ class ArcaneTradition(TextFeature):
         super().__init__(name="Arcane Tradition", origin="Wizard Level 3")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        return "You gain a Wizard subclass of your choice. The Abjurer, Diviner, Evoker, and Illusionist subclasses are detailed after this class’s description. A subclass is a specialization that grants you features at certain Wizard levels. For the rest of your career, you gain each of your subclass’s features that are of your Wizard level or lower."
+        return "You gain a Wizard subclass of your choice. The Abjurer, Diviner, Evoker, and Illusionist subclasses are detailed after this class's description. A subclass is a specialization that grants you features at certain Wizard levels. For the rest of your career, you gain each of your subclass's features that are of your Wizard level or lower."
 
 
 class MemorizeSpell(TextFeature):
@@ -94,9 +94,9 @@ class ArcaneWard(TextFeature):
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         int_mod = character_stat_block.get_ability_modifier(Ability.INTELLIGENCE)
         description = (
-            f"You can weave magic around yourself for protection. When you cast an Abjuration spell with a spell slot, you can simultaneously use a strand of the spell’s magic to create a magical ward on yourself that lasts until you finish a Long Rest. The ward has a Hit Point maximum equal to twice your Wizard level plus your Intelligence modifier ({int_mod}). Whenever you take damage, the ward takes the damage instead, and if you have any Resistances or Vulnerabilities, apply them before reducing the ward's Hit Points. If the damage reduces the ward to O Hit Points, you take any remaining damage. While the ward has 0 Hit Points, it can't absorb damage, but its magic remains.\n"
+            f"You can weave magic around yourself for protection. When you cast an Abjuration spell with a spell slot, you can simultaneously use a strand of the spell's magic to create a magical ward on yourself that lasts until you finish a Long Rest. The ward has a Hit Point maximum equal to twice your Wizard level plus your Intelligence modifier ({int_mod}). Whenever you take damage, the ward takes the damage instead, and if you have any Resistances or Vulnerabilities, apply them before reducing the ward's Hit Points. If the damage reduces the ward to O Hit Points, you take any remaining damage. While the ward has 0 Hit Points, it can't absorb damage, but its magic remains.\n"
             "Whenever you cast an Abjuration spell with a spell slot, the ward regains a number of Hit Points equal to twice the level of the spell slot. Alternatively, as a Bonus Action, you can expend a spell slot, and the ward regains a number of Hit Points equal to twice the level of the spell slot expended.\n"
-            "Once you create the ward, you can’t create it again until you finish a Long Rest."
+            "Once you create the ward, you can't create it again until you finish a Long Rest."
         )
         return description
 
@@ -141,7 +141,7 @@ class Bladesong(TextFeature):
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         int_mod = character_stat_block.get_ability_modifier(Ability.INTELLIGENCE)
         description = (
-            "As a Bonus Action, you invoke an elven magic called the Bladesong, provided you aren’t wearing armor or using a Shield.\n"
+            "As a Bonus Action, you invoke an elven magic called the Bladesong, provided you aren't wearing armor or using a Shield.\n"
             "The Bladesong lasts for 1 minute and ends early if you have the Incapacitated condition, if you don armor or a Shield, or if you use two hands to make an attack with a weapon. You can dismiss the Bladesong at any time (no action required).\n"
             f"While the Bladesong is active, you gain the following benefits. You can invoke the Bladesong a number of times equal to your Intelligence modifier ({int_mod}, minimum of once), and you regain all expended uses when you finish a Long Rest. You regain one expended use when you use Arcane Recovery.\n"
             f"Agility. You gain a bonus to your AC equal to your Intelligence modifier ({int_mod}, minimum of +1), and your Speed increases by 10 feet. In addition, you have Advantage on Dexterity (Acrobatics) checks.\n"
@@ -159,7 +159,7 @@ class TraininginWarandSong(TextFeature):
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
-            "You gain proficiency with all Melee Martial weapons that don’t have the Two-Handed or Heavy property. You can use a Melee weapon with which you have proficiency as a Spellcasting Focus for your Wizard spells.\n"
+            "You gain proficiency with all Melee Martial weapons that don't have the Two-Handed or Heavy property. You can use a Melee weapon with which you have proficiency as a Spellcasting Focus for your Wizard spells.\n"
             "You also gain proficiency in one of the following skills of your choice: Acrobatics, Athletics, Performance, or Persuasion."
         )
         return description
@@ -179,7 +179,7 @@ class SongOfDefense(TextFeature):
         super().__init__(name="Song of Defense", origin="Bladesinger Wizard Level 10")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        description = "When you take damage while your Bladesong is active, you can take a Reaction to expend one spell slot and reduce the damage taken by an amount equal to five times the spell slot’s level."
+        description = "When you take damage while your Bladesong is active, you can take a Reaction to expend one spell slot and reduce the damage taken by an amount equal to five times the spell slot's level."
         return description
 
 
@@ -264,7 +264,7 @@ class PotentCantrip(TextFeature):
         super().__init__(name="Potent Cantrip", origin="Evoker Wizard Level 3")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        description = "Your damaging cantrips affect even creatures that avoid the brunt of the effect. When you cast a cantrip at a creature and you miss with the attack roll or the target succeeds on a saving throw against the cantrip, the target takes half the cantrip’s damage (if any) but suffers no additional effect from the cantrip."
+        description = "Your damaging cantrips affect even creatures that avoid the brunt of the effect. When you cast a cantrip at a creature and you miss with the attack roll or the target succeeds on a saving throw against the cantrip, the target takes half the cantrip's damage (if any) but suffers no additional effect from the cantrip."
         return description
 
 
@@ -322,7 +322,7 @@ class ImprovedIllusions(TextFeature):
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
             "You can cast Illusion spells without providing Verbal components, and if an Illusion spell you cast has a range of 10+ feet, the range increases by 60 feet.\n"
-            "You also know the Minor Illusion cantrip. If you already know it, you learn a different Wizard cantrip of your choice. The cantrip doesn’t count against your number of cantrips known. You can create both a sound and an image with a single casting of Minor Illusion, and you can cast it as a Bonus Action."
+            "You also know the Minor Illusion cantrip. If you already know it, you learn a different Wizard cantrip of your choice. The cantrip doesn't count against your number of cantrips known. You can create both a sound and an image with a single casting of Minor Illusion, and you can cast it as a Bonus Action."
         )
         return description
 
@@ -334,7 +334,7 @@ class PhantasmalCreatures(TextFeature):
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        description = "You always have the Summon Beast and Summon Fey spells prepared. Whenever you cast either spell, you can change its school to Illusion, which causes the summoned creature to appear spectral. You can cast the Illusion version of each spell without expending a spell slot, but casting it without a slot halves the creature’s Hit Points. Once you cast either spell without a spell slot, you must finish a Long Rest before you can cast the spell in that way again."
+        description = "You always have the Summon Beast and Summon Fey spells prepared. Whenever you cast either spell, you can change its school to Illusion, which causes the summoned creature to appear spectral. You can cast the Illusion version of each spell without expending a spell slot, but casting it without a slot halves the creature's Hit Points. Once you cast either spell without a spell slot, you must finish a Long Rest before you can cast the spell in that way again."
         return description
 
 

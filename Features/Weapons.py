@@ -69,13 +69,13 @@ class WeaponMastery(Enum):
         if self == WeaponMastery.GRAZE:
             return "If you miss with an attack, deal damage equal to the ability modifier used for the attack (same damage type)."
         if self == WeaponMastery.NICK:
-            return "When using a Light weapon’s extra attack, you can make it during the Attack action instead of as a Bonus Action. Once per turn."
+            return "When using a Light weapon's extra attack, you can make it during the Attack action instead of as a Bonus Action. Once per turn."
         if self == WeaponMastery.PUSH:
             return "On a hit, you can push a Large or smaller target up to 10 ft away."
         if self == WeaponMastery.SAP:
             return "On a hit, the target has Disadvantage on its next attack before your next turn starts."
         if self == WeaponMastery.SLOW:
-            return "On a hit that deals damage, reduce the target’s Speed by 10 ft until your next turn. Multiple hits don’t stack."
+            return "On a hit that deals damage, reduce the target's Speed by 10 ft until your next turn. Multiple hits don't stack."
         if self == WeaponMastery.TOPPLE:
             return "On a hit, the target makes a Con save (DC = 8 + attack mod + prof). Fail = Prone."
         if self == WeaponMastery.VEX:
