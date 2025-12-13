@@ -67,6 +67,9 @@ class CharacterSheetData:
     def add_spell(self, spell: str):
         self.spells.append(spell)
 
+    def add_cantrip(self, cantrip: str):
+        self.spells.append(cantrip)
+
     def replace_spells(self, replace_spells: dict[str, str]):
         for old_spell, new_spell in replace_spells.items():
             self.replace_spell(old_spell, new_spell)
@@ -253,8 +256,11 @@ class CharacterSheetData:
 
                 file.write("\n")
                 CharacterSheetUtils.write_separator(file, "Spells")
-                for spell_index, spell_name in enumerate(self.spells):
-                    spell = SpellFactory.create(spell_name)
+
+                spells = [SpellFactory.create(spell_name) for spell_name in self.spells]
+                sorted_spells = sorted(spells, key=lambda s: (s.level, s.name))
+
+                for spell_index, spell in enumerate(sorted_spells):
                     spell.write_to_file(file)
                     if spell_index < len(self.spells) - 1:
                         file.write("-" * 40 + "\n")

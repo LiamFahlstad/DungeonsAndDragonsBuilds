@@ -57,3 +57,13 @@ class RangerSavingThrowsStatBlock(SavingThrowsStatBlock):
                 Ability.DEXTERITY: True,
             }
         )
+
+
+class WizardSavingThrowsStatBlock(SavingThrowsStatBlock):
+    def __init__(self):
+        super().__init__(
+            proficiencies={
+                Ability.WISDOM: True,
+                Ability.INTELLIGENCE: True,
+            }
+        )

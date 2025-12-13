@@ -193,18 +193,32 @@ Level 5 Spell Slots: 2
 ################################################################################
 # ================================== Spells ================================== #
 ################################################################################
-Name: Magic Weapon
-Level: 2
-School: Transmutation
-Classes: Paladin, Ranger, Sorcerer, Wizard
-Casting Time: Bonus Action
+Name: Bless
+Level: 1
+School: Enchantment
+Classes: Cleric, Paladin
+Casting Time: Action
+Range: 30 feet
+Components: V, S, M (a Holy Symbol, worth 5+ GP)
+Duration: Concentration, up to 1 minute
+Description:
+You bless up to three creatures within range. Whenever a target makes an attack roll or a saving throw before the spell ends, the target adds 1d4 to the attack roll or save.
+Using a Higher-Level Spell Slot:
+You can target one additional creature for each spell slot level above 1.
+Source: Player's Handbook 2024 (BR)
+----------------------------------------
+Name: Cure Wounds
+Level: 1
+School: Abjuration
+Classes: Bard, Cleric, Druid, Paladin, Ranger
+Casting Time: Action
 Range: Touch
 Components: V, S
-Duration: 1 hour
+Duration: Instantaneous
 Description:
-You touch a nonmagical weapon. Until the spell ends, that weapon becomes a magic weapon with a +1 bonus to attack rolls and damage rolls. The spell ends early if you cast it again.
+A creature you touch regains a number of Hit Points equal to 2d8 plus your spellcasting ability modifier.
 Using a Higher-Level Spell Slot:
-The bonus increases to +2 with a level 3–5 spell slot. The bonus increases to +3 with a level 6+ spell slot.
+The healing increases by 2d8 for each spell slot level above 1.
 Source: Player's Handbook 2024 (BR)
 ----------------------------------------
 Name: Divine Favor
@@ -231,32 +245,6 @@ Description:
 The target takes an extra 2d8 Radiant damage from the attack. The damage increases by 1d8 if the target is a Fiend or an Undead.
 Using a Higher-Level Spell Slot:
 The damage increases by 1d8 for each spell slot level above 1.
-Source: Player's Handbook 2024 (BR)
-----------------------------------------
-Name: Shield of Faith
-Level: 1
-School: Abjuration
-Classes: Cleric, Paladin
-Casting Time: Bonus Action
-Range: 60 feet
-Components: V, S, M (a prayer scroll)
-Duration: Concentration, up to 10 minutes
-Description:
-A shimmering field surrounds a creature of your choice within range, granting it a +2 bonus to AC for the duration.
-Source: Player's Handbook 2024 (BR)
-----------------------------------------
-Name: Bless
-Level: 1
-School: Enchantment
-Classes: Cleric, Paladin
-Casting Time: Action
-Range: 30 feet
-Components: V, S, M (a Holy Symbol, worth 5+ GP)
-Duration: Concentration, up to 1 minute
-Description:
-You bless up to three creatures within range. Whenever a target makes an attack roll or a saving throw before the spell ends, the target adds 1d4 to the attack roll or save.
-Using a Higher-Level Spell Slot:
-You can target one additional creature for each spell slot level above 1.
 Source: Player's Handbook 2024 (BR)
 ----------------------------------------
 Name: Guiding Bolt
@@ -287,18 +275,30 @@ Using a Higher-Level Spell Slot:
 You can target one additional creature for each spell slot level above 1.
 Source: Player's Handbook 2024 (BR)
 ----------------------------------------
-Name: Cure Wounds
+Name: Shield of Faith
 Level: 1
 School: Abjuration
-Classes: Bard, Cleric, Druid, Paladin, Ranger
+Classes: Cleric, Paladin
+Casting Time: Bonus Action
+Range: 60 feet
+Components: V, S, M (a prayer scroll)
+Duration: Concentration, up to 10 minutes
+Description:
+A shimmering field surrounds a creature of your choice within range, granting it a +2 bonus to AC for the duration.
+Source: Player's Handbook 2024 (BR)
+----------------------------------------
+Name: Enhance Ability
+Level: 2
+School: Transmutation
+Classes: Bard, Cleric, Druid, Ranger, Sorcerer, Wizard
 Casting Time: Action
 Range: Touch
-Components: V, S
-Duration: Instantaneous
+Components: V, S, M (fur or a feather)
+Duration: Concentration, up to 1 hour
 Description:
-A creature you touch regains a number of Hit Points equal to 2d8 plus your spellcasting ability modifier.
+You touch a creature and choose Strength, Dexterity, Intelligence, Wisdom, or Charisma. For the duration, the target has Advantage on ability checks using the chosen ability.
 Using a Higher-Level Spell Slot:
-The healing increases by 2d8 for each spell slot level above 1.
+You can target one additional creature for each spell slot level above 2. You can choose a different ability for each target.
 Source: Player's Handbook 2024 (BR)
 ----------------------------------------
 Name: Find Steed
@@ -331,6 +331,46 @@ Using a Higher-Level Spell Slot:
 You can target one additional Humanoid for each spell slot level above 2.
 Source: Player's Handbook 2024 (BR)
 ----------------------------------------
+Name: Lesser Restoration
+Level: 2
+School: Abjuration
+Classes: Bard, Cleric, Druid, Paladin, Ranger
+Casting Time: Bonus Action
+Range: Touch
+Components: V, S
+Duration: Instantaneous
+Description:
+You touch a creature and end one condition on it: Blinded, Deafened, Paralyzed, or Poisoned.
+Source: Player's Handbook 2024 (BR)
+----------------------------------------
+Name: Magic Weapon
+Level: 2
+School: Transmutation
+Classes: Paladin, Ranger, Sorcerer, Wizard
+Casting Time: Bonus Action
+Range: Touch
+Components: V, S
+Duration: 1 hour
+Description:
+You touch a nonmagical weapon. Until the spell ends, that weapon becomes a magic weapon with a +1 bonus to attack rolls and damage rolls. The spell ends early if you cast it again.
+Using a Higher-Level Spell Slot:
+The bonus increases to +2 with a level 3–5 spell slot. The bonus increases to +3 with a level 6+ spell slot.
+Source: Player's Handbook 2024 (BR)
+----------------------------------------
+Name: Magic Weapon
+Level: 2
+School: Transmutation
+Classes: Paladin, Ranger, Sorcerer, Wizard
+Casting Time: Bonus Action
+Range: Touch
+Components: V, S
+Duration: 1 hour
+Description:
+You touch a nonmagical weapon. Until the spell ends, that weapon becomes a magic weapon with a +1 bonus to attack rolls and damage rolls. The spell ends early if you cast it again.
+Using a Higher-Level Spell Slot:
+The bonus increases to +2 with a level 3–5 spell slot. The bonus increases to +3 with a level 6+ spell slot.
+Source: Player's Handbook 2024 (BR)
+----------------------------------------
 Name: Misty Step
 Level: 2
 School: Conjuration
@@ -355,46 +395,6 @@ Description:
 You create a magical zone that guards against deception in a 15-foot-radius Sphere centered on a point within range. Until the spell ends, a creature that enters the spell's area for the first time on a turn or starts its turn there makes a Charisma saving throw. On a failed save, a creature can't speak a deliberate lie while in the radius. You know whether a creature succeeds or fails on this save. An affected creature is aware of the spell and can avoid answering questions to which it would normally respond with a lie. Such a creature can be evasive yet must be truthful.
 Source: Player's Handbook 2024 (BR)
 ----------------------------------------
-Name: Enhance Ability
-Level: 2
-School: Transmutation
-Classes: Bard, Cleric, Druid, Ranger, Sorcerer, Wizard
-Casting Time: Action
-Range: Touch
-Components: V, S, M (fur or a feather)
-Duration: Concentration, up to 1 hour
-Description:
-You touch a creature and choose Strength, Dexterity, Intelligence, Wisdom, or Charisma. For the duration, the target has Advantage on ability checks using the chosen ability.
-Using a Higher-Level Spell Slot:
-You can target one additional creature for each spell slot level above 2. You can choose a different ability for each target.
-Source: Player's Handbook 2024 (BR)
-----------------------------------------
-Name: Magic Weapon
-Level: 2
-School: Transmutation
-Classes: Paladin, Ranger, Sorcerer, Wizard
-Casting Time: Bonus Action
-Range: Touch
-Components: V, S
-Duration: 1 hour
-Description:
-You touch a nonmagical weapon. Until the spell ends, that weapon becomes a magic weapon with a +1 bonus to attack rolls and damage rolls. The spell ends early if you cast it again.
-Using a Higher-Level Spell Slot:
-The bonus increases to +2 with a level 3–5 spell slot. The bonus increases to +3 with a level 6+ spell slot.
-Source: Player's Handbook 2024 (BR)
-----------------------------------------
-Name: Lesser Restoration
-Level: 2
-School: Abjuration
-Classes: Bard, Cleric, Druid, Paladin, Ranger
-Casting Time: Bonus Action
-Range: Touch
-Components: V, S
-Duration: Instantaneous
-Description:
-You touch a creature and end one condition on it: Blinded, Deafened, Paralyzed, or Poisoned.
-Source: Player's Handbook 2024 (BR)
-----------------------------------------
 Name: Aura of Vitality
 Level: 3
 School: Abjuration
@@ -405,6 +405,20 @@ Components: V
 Duration: Concentration, up to 1 minute
 Description:
 An aura radiates from you in a 30-foot Emanation for the duration. When you create the aura and at the start of each of your turns while it persists, you can restore 2d6 Hit Points to one creature in it.
+Source: Player's Handbook 2024
+----------------------------------------
+Name: Blinding Smite
+Level: 3
+School: Evocation
+Classes: Paladin
+Casting Time: Bonus Action, which you take immediately after hitting a creature with a Melee weapon or an Unarmed Strike
+Range: Self
+Components: V
+Duration: 1 minute
+Description:
+The target hit by the strike takes an extra 3d8 Radiant damage from the attack, and the target has the Blinded condition until the spell ends. At the end of each of its turns, the Blinded target makes a Constitution saving throw, ending the spell on itself on a success.
+Using a Higher-Level Spell Slot:
+The extra damage increases by 1d8 for each spell slot level above 3.
 Source: Player's Handbook 2024
 ----------------------------------------
 Name: Haste
@@ -431,31 +445,17 @@ Description:
 For the duration, the willing creature you touch has Resistance to one damage type of your choice: Acid, Cold, Fire, Lightning, or Thunder.
 Source: Player's Handbook 2024 (BR)
 ----------------------------------------
-Name: Blinding Smite
-Level: 3
-School: Evocation
-Classes: Paladin
-Casting Time: Bonus Action, which you take immediately after hitting a creature with a Melee weapon or an Unarmed Strike
-Range: Self
-Components: V
-Duration: 1 minute
-Description:
-The target hit by the strike takes an extra 3d8 Radiant damage from the attack, and the target has the Blinded condition until the spell ends. At the end of each of its turns, the Blinded target makes a Constitution saving throw, ending the spell on itself on a success.
-Using a Higher-Level Spell Slot:
-The extra damage increases by 1d8 for each spell slot level above 3.
-Source: Player's Handbook 2024
-----------------------------------------
-Name: Death Ward
+Name: Aura of Purity
 Level: 4
 School: Abjuration
 Classes: Cleric, Paladin
 Casting Time: Action
-Range: Touch
-Components: V, S
-Duration: 8 hours
+Range: Self
+Components: V
+Duration: Concentration, up to 10 minutes
 Description:
-You touch a creature and grant it a measure of protection from death. The first time the target would drop to 0 Hit Points before the spell ends, the target instead drops to 1 Hit Point, and the spell ends. If the spell is still in effect when the target is subjected to an effect that would kill it instantly without dealing damage, that effect is negated against the target, and the spell ends.
-Source: Player's Handbook 2024 (BR)
+An aura radiates from you in a 30-foot Emanation for the duration. While in the aura, you and your allies have Resistance to Poison damage and Advantage on saving throws to avoid or end effects that include the Blinded, Charmed, Deafened, Frightened, Paralyzed, Poisoned, or Stunned condition.
+Source: Player's Handbook 2024
 ----------------------------------------
 Name: Compulsion
 Level: 4
@@ -467,6 +467,18 @@ Components: V, S
 Duration: Concentration, up to 1 minute
 Description:
 Each creature of your choice that you can see within range must succeed on a Wisdom saving throw or have the Charmed condition until the spell ends. For the duration, you can take a Bonus Action to designate a direction that is horizontal to you. Each Charmed target must use as much of its movement as possible to move in that direction on its next turn, taking the safest route. After moving in this way, a target repeats the save, ending the spell on itself on a success.
+Source: Player's Handbook 2024 (BR)
+----------------------------------------
+Name: Death Ward
+Level: 4
+School: Abjuration
+Classes: Cleric, Paladin
+Casting Time: Action
+Range: Touch
+Components: V, S
+Duration: 8 hours
+Description:
+You touch a creature and grant it a measure of protection from death. The first time the target would drop to 0 Hit Points before the spell ends, the target instead drops to 1 Hit Point, and the spell ends. If the spell is still in effect when the target is subjected to an effect that would kill it instantly without dealing damage, that effect is negated against the target, and the spell ends.
 Source: Player's Handbook 2024 (BR)
 ----------------------------------------
 Name: Freedom of Movement
@@ -483,17 +495,43 @@ Using a Higher-Level Spell Slot:
 You can target one additional creature for each spell slot level above 4.
 Source: Player's Handbook 2024 (BR)
 ----------------------------------------
-Name: Aura of Purity
-Level: 4
+Name: Banishing Smite
+Level: 5
+School: Conjuration
+Classes: Paladin
+Casting Time: Bonus Action, which you take immediately after hitting a creature with a Melee weapon or an Unarmed Strike
+Range: Self
+Components: V
+Duration: Concentration, up to 1 minute
+Description:
+The target hit by the attack roll takes an extra 5d10 Force damage from the attack. If the attack reduces the target to 50 Hit Points or fewer, the target must succeed on a Charisma saving throw or be transported to a harmless demiplane for the duration. While there, the target has the Incapacitated condition. When the spell ends, the target reappears in the space it left or in the nearest unoccupied space if that space is occupied.
+Source: Player's Handbook 2024
+----------------------------------------
+Name: Circle of Power
+Level: 5
 School: Abjuration
-Classes: Cleric, Paladin
+Classes: Cleric, Paladin, Wizard
 Casting Time: Action
 Range: Self
 Components: V
 Duration: Concentration, up to 10 minutes
 Description:
-An aura radiates from you in a 30-foot Emanation for the duration. While in the aura, you and your allies have Resistance to Poison damage and Advantage on saving throws to avoid or end effects that include the Blinded, Charmed, Deafened, Frightened, Paralyzed, Poisoned, or Stunned condition.
+An aura radiates from you in a 30-foot Emanation for the duration. While in the aura, you and your allies have Advantage on saving throws against spells and other magical effects. When an affected creature makes a saving throw against a spell or magical effect that allows a save to take only half damage, it takes no damage if it succeeds on the save.
 Source: Player's Handbook 2024
+----------------------------------------
+Name: Geas
+Level: 5
+School: Enchantment
+Classes: Bard, Cleric, Druid, Paladin, Wizard
+Casting Time: 1 minute
+Range: 60 feet
+Components: V
+Duration: 30 days
+Description:
+You give a verbal command to a creature that you can see within range, ordering it to carry out some service or refrain from an action or a course of activity as you decide. The target must succeed on a Wisdom saving throw or have the Charmed condition for the duration. The target automatically succeeds if it can't understand your command. While Charmed, the creature takes 5d10 Psychic damage if it acts in a manner directly counter to your command. It takes this damage no more than once each day. You can issue any command you choose, short of an activity that would result in certain death. Should you issue a suicidal command, the spell ends. A Remove Curse , Greater Restoration , or Wish spell ends this spell.
+Using a Higher-Level Spell Slot:
+If you use a level 7 or 8 spell slot, the duration is 365 days. If you use a level 9 spell slot, the spell lasts until it is ended by one of the spells mentioned above.
+Source: Player's Handbook 2024 (BR)
 ----------------------------------------
 Name: Legend Lore
 Level: 5
@@ -517,42 +555,4 @@ Components: V, S, M (a miniature tiara)
 Duration: Concentration, up to 1 minute
 Description:
 You surround yourself with unearthly majesty in a 10-foot Emanation. Whenever the Emanation enters the space of a creature you can see and whenever a creature you can see enters the Emanation or ends its turn there, you can force that creature to make a Wisdom saving throw. On a failed save, the target takes 4d6 Psychic damage and has the Prone condition, and you can push it up to 10 feet away. On a successful save, the target takes half as much damage only. A creature makes this save only once per turn.
-Source: Player's Handbook 2024
-----------------------------------------
-Name: Banishing Smite
-Level: 5
-School: Conjuration
-Classes: Paladin
-Casting Time: Bonus Action, which you take immediately after hitting a creature with a Melee weapon or an Unarmed Strike
-Range: Self
-Components: V
-Duration: Concentration, up to 1 minute
-Description:
-The target hit by the attack roll takes an extra 5d10 Force damage from the attack. If the attack reduces the target to 50 Hit Points or fewer, the target must succeed on a Charisma saving throw or be transported to a harmless demiplane for the duration. While there, the target has the Incapacitated condition. When the spell ends, the target reappears in the space it left or in the nearest unoccupied space if that space is occupied.
-Source: Player's Handbook 2024
-----------------------------------------
-Name: Geas
-Level: 5
-School: Enchantment
-Classes: Bard, Cleric, Druid, Paladin, Wizard
-Casting Time: 1 minute
-Range: 60 feet
-Components: V
-Duration: 30 days
-Description:
-You give a verbal command to a creature that you can see within range, ordering it to carry out some service or refrain from an action or a course of activity as you decide. The target must succeed on a Wisdom saving throw or have the Charmed condition for the duration. The target automatically succeeds if it can't understand your command. While Charmed, the creature takes 5d10 Psychic damage if it acts in a manner directly counter to your command. It takes this damage no more than once each day. You can issue any command you choose, short of an activity that would result in certain death. Should you issue a suicidal command, the spell ends. A Remove Curse , Greater Restoration , or Wish spell ends this spell.
-Using a Higher-Level Spell Slot:
-If you use a level 7 or 8 spell slot, the duration is 365 days. If you use a level 9 spell slot, the spell lasts until it is ended by one of the spells mentioned above.
-Source: Player's Handbook 2024 (BR)
-----------------------------------------
-Name: Circle of Power
-Level: 5
-School: Abjuration
-Classes: Cleric, Paladin, Wizard
-Casting Time: Action
-Range: Self
-Components: V
-Duration: Concentration, up to 10 minutes
-Description:
-An aura radiates from you in a 30-foot Emanation for the duration. While in the aura, you and your allies have Advantage on saving throws against spells and other magical effects. When an affected creature makes a saving throw against a spell or magical effect that allows a save to take only half damage, it takes no damage if it succeeds on the save.
 Source: Player's Handbook 2024

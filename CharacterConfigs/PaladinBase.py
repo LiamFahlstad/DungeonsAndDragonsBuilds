@@ -6,7 +6,7 @@ from Features import Armor
 from Features import Backgrounds
 from Features import FightingStyles
 from Features import Weapons
-from Features.ClassFeatures import FighterFeatures, PaladinFeatures
+from Features.ClassFeatures import FighterFeatures, PaladinFeatures, SpellSlots
 from StatBlocks.AbilitiesStatBlock import (
     StandardArrayAbilitiesStatBlock,
     AbilitiesStatBlock,
@@ -154,7 +154,7 @@ def get_character_sheet_creator_base(
     )
 
     # ================ LEVEL 0 ============= #
-    data.add_feature(PaladinFeatures.SpellSlots())
+    data.add_feature(SpellSlots.SpellSlots(SpellSlots.CasterType.HALF_CASTER))
     data.add_feature(background_ability_bonuses)
     data.add_feature(background_skill_proficiencies)
 

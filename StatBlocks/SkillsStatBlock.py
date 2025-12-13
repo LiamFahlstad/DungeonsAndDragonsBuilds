@@ -198,3 +198,31 @@ class RangerSkillsStatBlock(ClassSkillsStatBlock):
             bonuses=bonuses,
             dice_roll_conditions=dice_roll_conditions,
         )
+
+
+class WizardSkillsStatBlock(ClassSkillsStatBlock):
+    """Wizard Skills Stat Block"""
+
+    def __init__(
+        self,
+        proficiencies: dict[Skill, bool],
+        bonuses: Optional[dict[Skill, int]] = None,
+        dice_roll_conditions: Optional[dict[Skill, DiceRollCondition]] = None,
+    ):
+        excepted_skills = [
+            Skill.ARCANA,
+            Skill.HISTORY,
+            Skill.INSIGHT,
+            Skill.INVESTIGATION,
+            Skill.MEDICINE,
+            Skill.NATURE,
+            Skill.RELIGION,
+        ]
+        super().__init__(
+            character_class=Definitions.CharacterClass.WIZARD,
+            excepted_skills=excepted_skills,
+            num_proficiencies=2,
+            proficiencies=proficiencies,
+            bonuses=bonuses,
+            dice_roll_conditions=dice_roll_conditions,
+        )

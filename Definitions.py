@@ -79,6 +79,14 @@ class PaladinSubclass(str, Enum):
     OATH_OF_REDEMPTION = "Oath of Redemption"
 
 
+class WizardSubclass(str, Enum):
+    ABJURER = "Abjurer"
+    DIVINER = "Diviner"
+    EVOKER = "Evoker"
+    ILLUSIONIST = "Illusionist"
+    BLADESINGER = "Bladesinger"
+
+
 class WarlockSubclass(str, Enum):
     THE_FIEND = "The Fiend"
     THE_ARCHFEY = "The Archfey"
