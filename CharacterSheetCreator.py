@@ -208,10 +208,23 @@ class CharacterSheetData:
                 file,
             )
 
+            def sort_features(feat: Feature):
+                if isinstance(feat, CharacterFeature):
+                    return (0, 0, feat.__class__.__name__)
+                if "Level " in feat.origin:
+                    parts = feat.origin.split("Level ")
+                    try:
+                        level_num = int(parts[1])
+                    except ValueError:
+                        level_num = 0
+                    return (2, level_num, feat.name)
+                return (1, 0, feat.name)
+
             if not all([isinstance(feat, CharacterFeature) for feat in self.features]):
                 file.write("\n")
                 CharacterSheetUtils.write_separator(file, "Features")
-                for feature in self.features:
+                sorted_features = sorted(self.features, key=sort_features)
+                for feature in sorted_features:
                     feature.write_to_file(character, file)
 
             file.write("\n")
