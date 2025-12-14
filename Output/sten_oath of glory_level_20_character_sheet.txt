@@ -59,36 +59,28 @@ Survival        | 5        | Yes        | Wisdom       | Neutral
 ################################################################################
 # ================================= Features ================================= #
 ################################################################################
+Name: Resourceful
+Origin: Human Trait
+Description: You gain Heroic Inspiration whenever you finish a Long Rest.
+
+Name: Versatile
+Origin: Human Trait
+Description: You gain an Origin feat of your choice (see 'Feats'). Skilled is recommended.
+
+Name: Lay on Hands
+Origin: Paladin Level 1
+Description: You have a pool of healing power.
+Power in pool: 5 x Paladin level (5 x 20 = 100) Hit Points.
+You can also expend 5 Hit Points from the pool of healing power to remove the Poisoned condition from the creature; those points don't also restore Hit Points to the creature.Replenishes on Long Rest.
+Casting time: Bonus Action.
+Range: Touch.
+
+    Restoring Touch Paladin Level 14:
+    When you use Lay On Hands on a creature, you can also remove one or more of the following conditions from the creature: Blinded, Charmed, Deafened, Frightened, Paralyzed, or Stunned. You must expend 5 Hit Points from the healing pool of Lay On Hands for each of these conditions you remove; those points don't also restore Hit Points to the creature.
+
 Name: Paladin's Smite
 Origin: Paladin Level 2
 Description: Level 2: Divine Smite is always prepared and can be cast once per Long Rest without a spell slot.
-
-Name: Extra Attack
-Origin: Paladin Level 5
-Description: Level 5: Extra Attack
-You can attack twice instead of once whenever you take the Attack action on your turn.
-
-Name: Faithful Steed
-Origin: Paladin Level 5
-Description: Level 5: Faithful Steed
-You can call on the aid of an otherworldly steed. You always have the Find Steed spell prepared.
-You can also cast the spell once without expending a spell slot, and you regain the ability to do so when you finish a Long Rest.
-
-Name: Radiant Strikes
-Origin: Paladin Level 10
-Description: Your strikes now carry supernatural power. When you hit a target with an attack roll using a Melee weapon or an Unarmed Strike, the target takes an extra 1d8 Radiant damage.
-
-Name: Glorious Defense
-Origin: Oath of Glory Paladin Level 15
-Description: You can turn defense into a sudden strike. When you or another creature you can see within 10 feet of you is hit by an attack roll, you can take a Reaction to grant a bonus to the target's AC against that attack, potentially causing it to miss. The bonus equals your Charisma modifier (minimum of +1). If the attack misses, you can make one attack with a weapon against the attacker as part of this Reaction if the attacker is within your weapon's range.
-You can use this feature a number of times equal to your Charisma modifier (minimum of once), and you regain all expended uses when you finish a Long Rest.
-
-Name: Living Legend
-Origin: Oath of Glory Paladin Level 20
-Description: You can empower yourself with the legends - whether true or exaggerated - of your great deeds. As a Bonus Action, you gain the benefits below for 10 minutes. Once you use this feature, you can't use it again until you finish a Long Rest. You can also restore your use of it by expending a level 5 spell slot (no action required).
-Charismatic. You are blessed with an otherworldly presence and have Advantage on all Charisma checks.
-Saving Throw Reroll. If you fail a saving throw, you can take a Reaction to reroll it. You must use this new roll.
-Unerring Strike. Once on each of your turns when you make an attack roll with a weapon and miss, you can cause that attack to hit instead.
 
 Name: Channel Divinity
 Origin: Paladin Level 3
@@ -105,13 +97,24 @@ DC: class's Spellcasting feature.
     Detects Celestials, Fiends, and Undead (location and creature type), and senses consecrated/desecrated places/objects within range.
 
     Abjure Foes Paladin Level 9:
-    As a Magic action, you can expend one use of this class’s Channel Divinity to overwhelm foes with awe. As you present your Holy Symbol or weapon, you can target a number of creatures equal to your Charisma modifier (4) (minimum of one creature) that you can see within 60 feet of yourself. Each target must succeed on a Wisdom saving throw (DC=18) or have the Frightened condition for 1 minute or until it takes any damage. While Frightened in this way, a target can do only one of the following on its turns: move, take an action, or take a Bonus Action.
+    As a Magic action, you can expend one use of this class's Channel Divinity to overwhelm foes with awe. As you present your Holy Symbol or weapon, you can target a number of creatures equal to your Charisma modifier (4) (minimum of one creature) that you can see within 60 feet of yourself. Each target must succeed on a Wisdom saving throw (DC=18) or have the Frightened condition for 1 minute or until it takes any damage. While Frightened in this way, a target can do only one of the following on its turns: move, take an action, or take a Bonus Action.
 
     Peerless Athlete Oath of Glory Paladin Level 3:
     As a Bonus Action, you can expend one use of your Channel Divinity to augment your athleticism. For 1 hour, you have Advantage on Strength (Athletics) and Dexterity (Acrobatics) checks, and the distance of your Long and High Jumps increases by 10 feet (this extra distance costs movement as normal).
 
     Inspiring Smite Oath of Glory Paladin Level 3:
     Immediately after you cast Divine Smite, you can expend one use of your Channel Divinity and distribute Temporary Hit Points to creatures of your choice within 30 feet of yourself, which can include you. The total number of Temporary Hit Points equals 2d8 plus your Paladin level, divided among the chosen creatures however you like.
+
+Name: Extra Attack
+Origin: Paladin Level 5
+Description: Level 5: Extra Attack
+You can attack twice instead of once whenever you take the Attack action on your turn.
+
+Name: Faithful Steed
+Origin: Paladin Level 5
+Description: Level 5: Faithful Steed
+You can call on the aid of an otherworldly steed. You always have the Find Steed spell prepared.
+You can also cast the spell once without expending a spell slot, and you regain the ability to do so when you finish a Long Rest.
 
 Name: Aura of Protection
 Origin: Paladin Level 6
@@ -129,24 +132,21 @@ You and your allies in the aura gain a bonus to saving throws equal to your Char
     Aura of Expansion Paladin Level 18:
     Your Aura of Protection is now a 30-foot Emanation.
 
-Name: Lay on Hands
-Origin: Paladin Level 1
-Description: You have a pool of healing power.
-Power in pool: 5 x Paladin level (5 x 20 = 100) Hit Points.
-You can also expend 5 Hit Points from the pool of healing power to remove the Poisoned condition from the creature; those points don't also restore Hit Points to the creature.Replenishes on Long Rest.
-Casting time: Bonus Action.
-Range: Touch.
+Name: Radiant Strikes
+Origin: Paladin Level 10
+Description: Your strikes now carry supernatural power. When you hit a target with an attack roll using a Melee weapon or an Unarmed Strike, the target takes an extra 1d8 Radiant damage.
 
-    Restoring Touch Paladin Level 14:
-    When you use Lay On Hands on a creature, you can also remove one or more of the following conditions from the creature: Blinded, Charmed, Deafened, Frightened, Paralyzed, or Stunned. You must expend 5 Hit Points from the healing pool of Lay On Hands for each of these conditions you remove; those points don’t also restore Hit Points to the creature.
+Name: Glorious Defense
+Origin: Oath of Glory Paladin Level 15
+Description: You can turn defense into a sudden strike. When you or another creature you can see within 10 feet of you is hit by an attack roll, you can take a Reaction to grant a bonus to the target's AC against that attack, potentially causing it to miss. The bonus equals your Charisma modifier (minimum of +1). If the attack misses, you can make one attack with a weapon against the attacker as part of this Reaction if the attacker is within your weapon's range.
+You can use this feature a number of times equal to your Charisma modifier (minimum of once), and you regain all expended uses when you finish a Long Rest.
 
-Name: Resourceful
-Origin: Human Trait
-Description: You gain Heroic Inspiration whenever you finish a Long Rest.
-
-Name: Versatile
-Origin: Human Trait
-Description: You gain an Origin feat of your choice (see 'Feats'). Skilled is recommended.
+Name: Living Legend
+Origin: Oath of Glory Paladin Level 20
+Description: You can empower yourself with the legends - whether true or exaggerated - of your great deeds. As a Bonus Action, you gain the benefits below for 10 minutes. Once you use this feature, you can't use it again until you finish a Long Rest. You can also restore your use of it by expending a level 5 spell slot (no action required).
+Charismatic. You are blessed with an otherworldly presence and have Advantage on all Charisma checks.
+Saving Throw Reroll. If you fail a saving throw, you can take a Reaction to reroll it. You must use this new roll.
+Unerring Strike. Once on each of your turns when you make an attack roll with a weapon and miss, you can cause that attack to hit instead.
 
 
 ################################################################################
