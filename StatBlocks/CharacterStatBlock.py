@@ -46,16 +46,22 @@ class CharacterStatBlock:
     def is_proficient_in_skill(self, skill: Skill) -> bool:
         return self.skills.is_proficient(skill)
 
+    def has_expertise_in_skill(self, skill: Skill) -> bool:
+        return self.skills.has_expertise(skill)
+
     def get_skill_ability(self, skill: Skill) -> Ability:
         return self.skills.get_skill_ability(skill)
 
     def get_skill_modifier(self, skill: Skill) -> int:
-        base_modifier = self.get_ability_modifier(self.get_skill_ability(skill))
-        proficiency_bonus = (
-            self.get_proficiency_bonus() if self.is_proficient_in_skill(skill) else 0
-        )
+        ability_modifier = self.get_ability_modifier(self.get_skill_ability(skill))
+        if self.has_expertise_in_skill(skill):
+            proficiency_bonus = self.get_proficiency_bonus() * 2
+        elif self.is_proficient_in_skill(skill):
+            proficiency_bonus = self.get_proficiency_bonus()
+        else:
+            proficiency_bonus = 0
         bonus = self.skills.bonuses.get(skill, 0)
-        return base_modifier + proficiency_bonus + bonus
+        return ability_modifier + proficiency_bonus + bonus
 
     def is_proficient_in_saving_throw(self, ability: Ability) -> bool:
         return self.saving_throws.is_proficient(ability)

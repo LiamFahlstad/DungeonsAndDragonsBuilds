@@ -1,21 +1,36 @@
 from CharacterConfigs import BattleMasterFighter
-from CharacterConfigs import PaladinOathOfGlory
 from CharacterConfigs.PaladinBase import (
     PaladinLevel1,
+    PaladinLevel10,
     PaladinLevel11,
     PaladinLevel12,
     PaladinLevel13,
+    PaladinLevel14,
     PaladinLevel15,
     PaladinLevel16,
     PaladinLevel17,
+    PaladinLevel18,
     PaladinLevel19,
     PaladinLevel2,
+    PaladinLevel20,
     PaladinLevel3,
     PaladinLevel4,
     PaladinLevel5,
+    PaladinLevel6,
     PaladinLevel7,
     PaladinLevel8,
     PaladinLevel9,
+)
+from CharacterConfigs.PaladinOathOfGlory import (
+    GloryPaladinLevel13,
+    GloryPaladinLevel15,
+    GloryPaladinLevel17,
+    GloryPaladinLevel20,
+    GloryPaladinLevel3,
+    GloryPaladinLevel5,
+    GloryPaladinLevel7,
+    GloryPaladinLevel9,
+    PaladinOathOfGlory,
 )
 import CharacterSheetCreator
 from Definitions import (
@@ -43,7 +58,7 @@ from StatBlocks.SkillsStatBlock import FighterSkillsStatBlock, PaladinSkillsStat
 
 
 if __name__ == "__main__":
-    character_class_data = PaladinOathOfGlory.create(
+    paladin_oath_of_glory = PaladinOathOfGlory(
         paladin_level=20,
         # Distribute 15, 14, 13, 12, 10, 8 among your abilities.
         abilities=StandardArrayAbilitiesStatBlock(
@@ -105,6 +120,7 @@ if __name__ == "__main__":
         paladin_level_5=PaladinLevel5(
             spell=PaladinLevel2Spells.ZONE_OF_TRUTH,
         ),
+        paladin_level_6=PaladinLevel6(),
         paladin_level_7=PaladinLevel7(
             spell=PaladinLevel2Spells.LESSER_RESTORATION,
         ),
@@ -118,6 +134,7 @@ if __name__ == "__main__":
         paladin_level_9=PaladinLevel9(
             spell=PaladinLevel3Spells.AURA_OF_VITALITY,
         ),
+        paladin_level_10=PaladinLevel10(),
         paladin_level_11=PaladinLevel11(
             spell=PaladinLevel3Spells.BLINDING_SMITE,
         ),
@@ -131,6 +148,7 @@ if __name__ == "__main__":
         paladin_level_13=PaladinLevel13(
             spell=PaladinLevel4Spells.DEATH_WARD,
         ),
+        paladin_level_14=PaladinLevel14(),
         paladin_level_15=PaladinLevel15(
             spell=PaladinLevel4Spells.AURA_OF_PURITY,
         ),
@@ -148,6 +166,16 @@ if __name__ == "__main__":
         paladin_level_19=PaladinLevel19(
             spell=PaladinLevel5Spells.CIRCLE_OF_POWER,
         ),
+        paladin_level_18=PaladinLevel18(),
+        paladin_level_20=PaladinLevel20(),
+        glory_paladin_level_3=GloryPaladinLevel3(),
+        glory_paladin_level_5=GloryPaladinLevel5(),
+        glory_paladin_level_7=GloryPaladinLevel7(),
+        glory_paladin_level_9=GloryPaladinLevel9(),
+        glory_paladin_level_13=GloryPaladinLevel13(),
+        glory_paladin_level_15=GloryPaladinLevel15(),
+        glory_paladin_level_17=GloryPaladinLevel17(),
+        glory_paladin_level_20=GloryPaladinLevel20(),
         replace_spells={
             PaladinLevel1Spells.CURE_WOUNDS: PaladinLevel2Spells.MAGIC_WEAPON,
         },
@@ -163,6 +191,7 @@ if __name__ == "__main__":
             ]
         ),
     )
+    character_class_data = paladin_oath_of_glory.create()
 
     character_sheet_data = CharacterSheetCreator.CharacterSheetData()
 

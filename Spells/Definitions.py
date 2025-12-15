@@ -399,7 +399,7 @@ class WizardLevel5Spells(str, Enum):
     TELEPORTATION_CIRCLE = "Teleportation Circle"
     WALL_OF_FORCE = "Wall of Force"
     WALL_OF_STONE = "Wall of Stone"
-    YOLANDE_S_REGAL_PRESENCE = "Yolande's Regal Presence"
+    YOLANDES_REGAL_PRESENCE = "Yolande's Regal Presence"
 
 
 class WizardLevel6Spells(str, Enum):

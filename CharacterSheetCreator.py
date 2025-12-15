@@ -1,6 +1,6 @@
 from enum import Enum
 import pathlib
-from typing import Optional
+from typing import Any, Optional
 from Features import Armor
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Definitions import Ability, Skill, CharacterClass
@@ -51,6 +51,11 @@ class CharacterSheetData:
 
     def add_feature(self, feature: Feature):
         self.features.append(feature)
+
+    def get_features_by_type(self, feature_type: type) -> list[Any]:
+        return [
+            feature for feature in self.features if isinstance(feature, feature_type)
+        ]
 
     def add_armor(self, armor: AbstractArmor):
         self.armors.append(armor)

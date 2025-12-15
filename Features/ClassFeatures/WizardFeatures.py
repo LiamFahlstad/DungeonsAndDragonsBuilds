@@ -28,20 +28,25 @@ class ArcaneRecovery(TextFeature):
         return text
 
 
-class Scholar(TextFeature):
-    def __init__(self):
-        super().__init__(name="Scholar", origin="Wizard Level 2")
+class Scholar(CharacterFeature):
+    """While studying magic, you also specialized in another field of study. Choose one of the following skills in which you have proficiency: Arcana, History, Investigation, Medicine, Nature, or Religion. You have Expertise in the chosen skill."""
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        return "While studying magic, you also specialized in another field of study. Choose one of the following skills in which you have proficiency: Arcana, History, Investigation, Medicine, Nature, or Religion. You have Expertise in the chosen skill."
+    def __init__(self, skill: Skill):
+        if skill not in [
+            Skill.ARCANA,
+            Skill.HISTORY,
+            Skill.INVESTIGATION,
+            Skill.MEDICINE,
+            Skill.NATURE,
+            Skill.RELIGION,
+        ]:
+            raise ValueError(
+                "Scholar skill must be one of: Arcana, History, Investigation, Medicine, Nature, Religion"
+            )
+        self.skill = skill
 
-
-class ArcaneTradition(TextFeature):
-    def __init__(self):
-        super().__init__(name="Arcane Tradition", origin="Wizard Level 3")
-
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        return "You gain a Wizard subclass of your choice. The Abjurer, Diviner, Evoker, and Illusionist subclasses are detailed after this class's description. A subclass is a specialization that grants you features at certain Wizard levels. For the rest of your career, you gain each of your subclass's features that are of your Wizard level or lower."
+    def modify(self, character_stat_block: CharacterStatBlock):
+        character_stat_block.skills.add_skill_expertise(self.skill)
 
 
 class MemorizeSpell(TextFeature):
@@ -54,7 +59,7 @@ class MemorizeSpell(TextFeature):
 
 class SpellMastery(TextFeature):
     def __init__(self):
-        super().__init__(name="Scholar", origin="Wizard Level 18")
+        super().__init__(name="Spell Mastery", origin="Wizard Level 18")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         text = (

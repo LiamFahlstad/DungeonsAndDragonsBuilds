@@ -8,10 +8,12 @@ class SkillsStatBlock(StatBlock):
     def __init__(
         self,
         proficiencies: Optional[dict[Skill, bool]] = None,
+        expertise: Optional[dict[Skill, bool]] = None,
         bonuses: Optional[dict[Skill, int]] = None,
         dice_roll_conditions: Optional[dict[Skill, DiceRollCondition]] = None,
     ):
         self.proficiencies = proficiencies if proficiencies is not None else {}
+        self.expertise = expertise if expertise is not None else {}
         self.bonuses = bonuses if bonuses is not None else {}
         self.dice_roll_conditions = (
             dice_roll_conditions if dice_roll_conditions is not None else {}
@@ -20,8 +22,16 @@ class SkillsStatBlock(StatBlock):
     def add_skill_proficiency(self, skill: Skill):
         self.proficiencies[skill] = True
 
+    def add_skill_expertise(self, skill: Skill):
+        if not self.is_proficient(skill):
+            raise ValueError(f"Cannot add expertise to unproficient skill: {skill}")
+        self.expertise[skill] = True
+
     def is_proficient(self, skill: Skill) -> bool:
         return self.proficiencies.get(skill, False)
+
+    def has_expertise(self, skill: Skill) -> bool:
+        return self.expertise.get(skill, False)
 
     def get_roll_condition(self, skill: Skill) -> DiceRollCondition:
         return self.dice_roll_conditions.get(skill, DiceRollCondition.NEUTRAL)
