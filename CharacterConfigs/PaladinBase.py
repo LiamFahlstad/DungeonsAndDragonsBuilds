@@ -496,7 +496,6 @@ class PaladinStarter(PaladinBase):
 
     def _get_character_sheet_creator_base(self) -> CharacterSheetData:
         data = CharacterSheetData(
-            character_class=CharacterClass.PALADIN,
             character_subclass=self.subclass,
             level_per_class={CharacterClass.PALADIN: self.paladin_level},
             abilities=self.abilities,
@@ -555,7 +554,6 @@ class PaladinMulticlass(PaladinBase):
 
     def _get_character_sheet_creator_base(self) -> CharacterSheetData:
         data = CharacterSheetData(
-            character_class=CharacterClass.PALADIN,
             character_subclass=self.subclass,
             level_per_class={CharacterClass.PALADIN: self.paladin_level},
             spell_casting_ability=Ability.CHARISMA,

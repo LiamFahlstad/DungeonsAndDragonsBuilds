@@ -60,7 +60,6 @@ class SkillsStatBlock(StatBlock):
         return skill_to_ability[skill]
 
 
-### PALADIN
 class ClassSkillsStatBlock(SkillsStatBlock):
     """Paladin Skills Stat Block"""
 

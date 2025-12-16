@@ -27,7 +27,6 @@ from Spells.SpellFactory import SpellFactory
 @attr.dataclass
 class CharacterSheetData:
     character_name: Optional[str] = None
-    character_class: Optional[CharacterClass] = None
     character_subclass: Optional[str] = None
     starter_class: Optional[CharacterClass] = None
     level_per_class: dict[CharacterClass, int] = attr.Factory(dict)
@@ -101,12 +100,12 @@ class CharacterSheetData:
             field is None
             for field in [
                 self.character_name,
-                self.character_class,
                 self.character_subclass,
                 self.abilities,
                 self.skills,
                 self.speed,
                 self.size,
+                self.starter_class,
                 self.saving_throws,
             ]
         ):
@@ -122,7 +121,6 @@ class CharacterSheetData:
         )
         character = CharacterStatBlock(
             name=self.character_name,
-            character_class=self.character_class,
             character_subclass=self.character_subclass,
             starter_class=self.starter_class,
             level_per_class=self.level_per_class,
@@ -155,7 +153,15 @@ class CharacterSheetData:
                 rows=[
                     ["Name", character.name],
                     ["Level", character.character_level],
-                    ["Character Class", character.character_class.value],
+                    ["Starter Class", character.starter_class.value],
+                    [
+                        "Level per Class",
+                        ", ".join(
+                            f"{cls.value}: {lvl}"
+                            for cls, lvl in character.level_per_class.items()
+                            if lvl > 0
+                        ),
+                    ],
                     ["Character Subclass", character.character_subclass],
                     ["Proficiency Bonus", character.get_proficiency_bonus()],
                 ],

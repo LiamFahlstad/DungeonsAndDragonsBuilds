@@ -11,7 +11,6 @@ class CharacterStatBlock:
     def __init__(
         self,
         name: str,
-        character_class: CharacterClass,
         character_subclass: str,
         starter_class: CharacterClass,
         level_per_class: dict[CharacterClass, int],
@@ -23,7 +22,6 @@ class CharacterStatBlock:
         spell_slots: Optional[dict[int, int]] = None,
     ):
         self.name = name
-        self.character_class = character_class
         self.character_subclass = character_subclass
         self.starter_class = starter_class
         self.level_per_class = level_per_class

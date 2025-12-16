@@ -5,7 +5,8 @@ Field              | Value
 -------------------+------------------------------
 Name               | Sten                         
 Level              | 20                           
-Character Class    | Paladin                      
+Starter Class      | Paladin                      
+Level per Class    | Paladin: 20                  
 Character Subclass | PaladinSubclass.OATH_OF_GLORY
 Proficiency Bonus  | 6                            
 
