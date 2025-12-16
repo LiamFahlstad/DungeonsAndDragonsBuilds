@@ -103,7 +103,7 @@ class ChannelDivinity(TextFeature):
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         usages = 2
-        if character_stat_block.level >= 11:
+        if character_stat_block.character_level >= 11:
             usages = 3
 
         description = (

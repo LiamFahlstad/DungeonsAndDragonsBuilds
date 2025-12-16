@@ -286,7 +286,7 @@ def get_character_sheet_creator_base(
 ):
     data = CharacterSheetCreator.CharacterSheetData(
         character_class=CharacterClass.WIZARD,
-        level=wizard_level,
+        character_level=wizard_level,
         abilities=abilities,
         skills=skills,
         saving_throws=WizardSavingThrowsStatBlock(),

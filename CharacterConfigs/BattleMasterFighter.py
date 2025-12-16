@@ -55,7 +55,7 @@ def create(
 
     data = CharacterSheetCreator.CharacterSheetData(
         character_class=CharacterClass.FIGHTER,
-        level=fighter_level,
+        character_level=fighter_level,
         character_subclass=FighterSubclass.BATTLE_MASTER.value,
         abilities=abilities,
         skills=skills,

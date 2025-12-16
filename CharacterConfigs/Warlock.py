@@ -20,7 +20,7 @@ DATA = CharacterSheetCreator.CharacterSheetData()
 
 DATA.character_name = "Greta"
 DATA.character_class = CharacterClass.WARLOCK
-DATA.level = 4
+DATA.character_level = 4
 DATA.character_subclass = WarlockSubclass.THE_ARCHFEY
 DATA.spell_casting_ability = Ability.CHARISMA
 DATA.add_feature(WarlockFeatures.SpellSlots())
@@ -79,7 +79,7 @@ DATA.add_weapon(Weapons.LightCrossbow(player_is_proficient=True))
 DATA.add_feature(OriginFeats.Lucky())
 
 # ================ LEVEL 1 ============= #
-if DATA.level >= 1:
+if DATA.character_level >= 1:
     # Prepared spells
     DATA.add_spell("Hex")
     DATA.add_spell("Charm Person")
@@ -92,7 +92,7 @@ if DATA.level >= 1:
     DATA.add_invocation("Eldritch Mind")
 
 # ================ LEVEL 2 ============= #
-if DATA.level >= 2:
+if DATA.character_level >= 2:
     # Prepared spells
     DATA.add_spell("Spider Climb")
     DATA.add_feature(WarlockFeatures.MagicalCunning())
@@ -102,7 +102,7 @@ if DATA.level >= 2:
     DATA.add_invocation("Repelling Blast")
 
 # ================ LEVEL 3 ============= #
-if DATA.level >= 3:
+if DATA.character_level >= 3:
     # Prepared spells
     DATA.add_spell("Mirror Image")
 
@@ -118,7 +118,7 @@ if DATA.level >= 3:
 
 
 # ================ LEVEL 4 ============= #
-if DATA.level >= 4:
+if DATA.character_level >= 4:
     # Prepared spells
     DATA.add_spell("Crown of Madness")
 
@@ -137,7 +137,7 @@ if DATA.level >= 4:
     )
 
 # ================ LEVEL 5 ============= #
-if DATA.level >= 5:
+if DATA.character_level >= 5:
     pass
 
 ##########################################

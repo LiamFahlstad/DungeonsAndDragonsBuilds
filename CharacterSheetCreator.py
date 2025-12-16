@@ -29,10 +29,10 @@ class CharacterSheetData:
     character_name: Optional[str] = None
     character_class: Optional[CharacterClass] = None
     character_subclass: Optional[str] = None
-    level: Optional[int] = None
+    starter_class: Optional[CharacterClass] = None
+    level_per_class: dict[CharacterClass, int] = attr.Factory(dict)
     abilities: Optional[AbilitiesStatBlock] = None
     skills: Optional[SkillsStatBlock] = None
-    hit_die: Optional[int] = None
     speed: Optional[int] = None
     size: Optional[Definitions.CreatureSize] = None
     saving_throws: Optional[SavingThrowsStatBlock] = None
@@ -49,6 +49,10 @@ class CharacterSheetData:
     weapon_masteries: list[AbstractWeapon] = attr.Factory(list)
     fighting_styles: list[FightingStyle] = attr.Factory(list)
 
+    @property
+    def character_level(self) -> int:
+        return sum(self.level_per_class.values())
+
     def add_feature(self, feature: Feature):
         self.features.append(feature)
 
@@ -56,6 +60,9 @@ class CharacterSheetData:
         return [
             feature for feature in self.features if isinstance(feature, feature_type)
         ]
+
+    def get_level_for_class(self, character_class: CharacterClass) -> int:
+        return self.level_per_class.get(character_class, 0)
 
     def add_armor(self, armor: AbstractArmor):
         self.armors.append(armor)
@@ -96,10 +103,8 @@ class CharacterSheetData:
                 self.character_name,
                 self.character_class,
                 self.character_subclass,
-                self.level,
                 self.abilities,
                 self.skills,
-                self.hit_die,
                 self.speed,
                 self.size,
                 self.saving_throws,
@@ -112,7 +117,6 @@ class CharacterSheetData:
 
     def _create_character_sheet(self):
         combat = CombatStatBlock(
-            hit_die=self.hit_die,
             speed=self.speed,
             size=self.size,
         )
@@ -120,7 +124,8 @@ class CharacterSheetData:
             name=self.character_name,
             character_class=self.character_class,
             character_subclass=self.character_subclass,
-            level=self.level,
+            starter_class=self.starter_class,
+            level_per_class=self.level_per_class,
             abilities=self.abilities,
             skills=self.skills,
             combat=combat,
@@ -140,7 +145,7 @@ class CharacterSheetData:
             elif isinstance(fighting_style, FightStyleWeaponFeature):
                 fighting_style.modify(self.weapons)
 
-        output_path = f"Output/{slugify(self.character_name)}_{self.character_subclass.lower()}_level_{self.level}_character_sheet.txt"
+        output_path = f"Output/{slugify(self.character_name)}_{self.character_subclass.lower()}_level_{self.character_level}_character_sheet.txt"
 
         pathlib.Path(output_path).parent.mkdir(parents=True, exist_ok=True)
         with open(output_path, "w", encoding="utf-8") as file:
@@ -149,7 +154,7 @@ class CharacterSheetData:
                 headers=["Field", "Value"],
                 rows=[
                     ["Name", character.name],
-                    ["Level", character.level],
+                    ["Level", character.character_level],
                     ["Character Class", character.character_class.value],
                     ["Character Subclass", character.character_subclass],
                     ["Proficiency Bonus", character.get_proficiency_bonus()],

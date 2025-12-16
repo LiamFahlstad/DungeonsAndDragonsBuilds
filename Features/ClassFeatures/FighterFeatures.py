@@ -25,9 +25,9 @@ class SecondWind(TextFeature):
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         uses = 2
-        if character_stat_block.level >= 4:
+        if character_stat_block.character_level >= 4:
             uses = 3
-        if character_stat_block.level >= 10:
+        if character_stat_block.character_level >= 10:
             uses = 3
 
         base_text = (
@@ -36,10 +36,10 @@ class SecondWind(TextFeature):
             f"You can use this feature {uses} time(s). You regain one expended use when you finish a Short Rest, "
             f"and you regain all expended uses when you finish a Long Rest.\n"
         )
-        if character_stat_block.level >= 2:
+        if character_stat_block.character_level >= 2:
             base_text += self.add_feature_effects(character_stat_block, TacticalMind())
 
-        if character_stat_block.level >= 5:
+        if character_stat_block.character_level >= 5:
             base_text += self.add_feature_effects(character_stat_block, TacticalShift())
 
         return base_text
@@ -87,16 +87,16 @@ class SuperiorityDice(TextFeature):
         self.maneuvers.append(maneuver)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        if character_stat_block.level < 7:
+        if character_stat_block.character_level < 7:
             number_of_superiority_die = 4
-        elif character_stat_block.level < 15:
+        elif character_stat_block.character_level < 15:
             number_of_superiority_die = 5
         else:
             number_of_superiority_die = 6
 
-        if character_stat_block.level < 10:
+        if character_stat_block.character_level < 10:
             superiority_die = "1d8"
-        elif character_stat_block.level < 18:
+        elif character_stat_block.character_level < 18:
             superiority_die = "1d10"
         else:
             superiority_die = "1d12"

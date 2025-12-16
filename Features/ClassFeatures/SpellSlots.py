@@ -68,7 +68,7 @@ class SpellSlots(CharacterFeature):
     def modify(self, character_stat_block: CharacterStatBlock):
 
         spells_slots = get_spell_slots_for_level(
-            character_stat_block.level, self.caster_type
+            character_stat_block.character_level, self.caster_type
         )
 
         spells_slots_dict = {}

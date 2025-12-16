@@ -13,7 +13,8 @@ class CharacterStatBlock:
         name: str,
         character_class: CharacterClass,
         character_subclass: str,
-        level: int,
+        starter_class: CharacterClass,
+        level_per_class: dict[CharacterClass, int],
         abilities: AbilitiesStatBlock,
         skills: SkillsStatBlock,
         combat: CombatStatBlock,
@@ -24,7 +25,8 @@ class CharacterStatBlock:
         self.name = name
         self.character_class = character_class
         self.character_subclass = character_subclass
-        self.level = level
+        self.starter_class = starter_class
+        self.level_per_class = level_per_class
         self.abilities = abilities
         self.skills = skills
         self.combat = combat
@@ -34,8 +36,12 @@ class CharacterStatBlock:
 
         self.combat.initiative_bonus = self.abilities.get_modifier(Ability.DEXTERITY)
 
+    @property
+    def character_level(self) -> int:
+        return sum(self.level_per_class.values())
+
     def get_proficiency_bonus(self) -> int:
-        return 2 + (self.level - 1) // 4
+        return 2 + (self.character_level - 1) // 4
 
     def get_ability_score(self, ability: Ability) -> int:
         return self.abilities.get_score(ability)
@@ -80,7 +86,11 @@ class CharacterStatBlock:
 
     def calculate_hit_points(self) -> int:
         constitution_modifier = self.get_ability_modifier(Ability.CONSTITUTION)
-        return self.combat.calculate_hit_points(self.level, constitution_modifier)
+        return self.combat.calculate_hit_points(
+            starter_class=self.starter_class,
+            level_per_class=self.level_per_class,
+            constitution_modifier=constitution_modifier,
+        )
 
     def calculate_armor_class(self) -> int:
         return self.combat.armor_class

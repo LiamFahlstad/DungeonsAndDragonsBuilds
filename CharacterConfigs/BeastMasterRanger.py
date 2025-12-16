@@ -17,7 +17,7 @@ DATA = CharacterSheetCreator.CharacterSheetData()
 # ================ GENERAL ============= #
 
 DATA.character_class = CharacterClass.RANGER
-DATA.level = 5
+DATA.character_level = 5
 DATA.character_subclass = RangerSubclass.BEAST_MASTER
 DATA.spell_casting_ability = Ability.CHARISMA
 DATA.add_feature(RangerFeatures.SpellSlots())
@@ -83,7 +83,7 @@ DATA.add_feature(OriginFeats.Tough())
 
 
 # ================ LEVEL 1 ============= #
-if DATA.level >= 1:
+if DATA.character_level >= 1:
     # 3 weapon masteries
     DATA.add_weapon_mastery(Weapons.Longsword)
     DATA.add_weapon_mastery(Weapons.Flail)
@@ -96,12 +96,12 @@ if DATA.level >= 1:
     DATA.add_feature(FighterFeatures.SecondWind())
 
 # ================ LEVEL 2 ============= #
-if DATA.level >= 2:
+if DATA.character_level >= 2:
     # Automatic feature
     DATA.add_feature(FighterFeatures.ActionSurge())
 
 # ================ LEVEL 3 ============= #
-if DATA.level >= 3:
+if DATA.character_level >= 3:
     # Automatic feature
     if DATA.character_subclass == FighterSubclass.BATTLE_MASTER:
         superiority_dice = FighterFeatures.SuperiorityDice()
@@ -110,7 +110,7 @@ if DATA.level >= 3:
         superiority_dice.add_maneuver(Maneuvers.Riposte())
 
 # ================ LEVEL 4 ============= #
-if DATA.level >= 4:
+if DATA.character_level >= 4:
     # Automatic feature
     DATA.add_feature(
         GeneralFeats.AbilityScoreImprovement(
@@ -122,7 +122,7 @@ if DATA.level >= 4:
     )
 
 # ================ LEVEL 4 ============= #
-if DATA.level >= 5:
+if DATA.character_level >= 5:
     # Automatic feature
     DATA.add_feature(FighterFeatures.ExtraAttack())
 
@@ -137,5 +137,8 @@ if DATA.level >= 5:
 # ============ LEAVE AS IS ============= #
 ##########################################
 
-if DATA.level >= 3 and DATA.character_subclass == FighterSubclass.BATTLE_MASTER:
+if (
+    DATA.character_level >= 3
+    and DATA.character_subclass == FighterSubclass.BATTLE_MASTER
+):
     DATA.add_feature(superiority_dice)

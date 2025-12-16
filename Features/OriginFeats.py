@@ -175,5 +175,5 @@ class TavernBrawler(OriginTextFeat):
 
 class Tough(OriginCharacterFeat):
     def modify(self, character_stat_block: CharacterStatBlock):
-        character_level = character_stat_block.level
+        character_level = character_stat_block.character_level
         character_stat_block.combat.hit_points_bonus += 2 * character_level

@@ -405,9 +405,7 @@ class PaladinFeaturePerLevel:
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        if data.level is None:
-            raise ValueError("Character level must be set to add class features.")
-        level = data.level
+        paladin_level = data.get_level_for_class(CharacterClass.PALADIN)
         for level_features in attr.fields(self.__class__):
             class_level_features: Optional[ClassLevelFeatures] = getattr(
                 self, level_features.name
@@ -420,7 +418,7 @@ class PaladinFeaturePerLevel:
 
             if class_level_features is None:
                 # Skip if the character level is lower than the expected level
-                if level < expected_level:
+                if paladin_level < expected_level:
                     continue
 
                 # Must provide features for this level
@@ -429,7 +427,7 @@ class PaladinFeaturePerLevel:
                 )
 
             # Skip if the character level is lower than the class level features
-            if class_level_features.level > level:
+            if class_level_features.level > paladin_level:
                 return data
 
             # Add features for this level
@@ -500,11 +498,11 @@ class PaladinStarter(PaladinBase):
         data = CharacterSheetData(
             character_class=CharacterClass.PALADIN,
             character_subclass=self.subclass,
-            level=self.paladin_level,
+            level_per_class={CharacterClass.PALADIN: self.paladin_level},
             abilities=self.abilities,
             skills=self.skills,
             saving_throws=PaladinSavingThrowsStatBlock(),
-            hit_die=PaladinFeatures.PALADIN_HIT_DIE,
+            starter_class=CharacterClass.PALADIN,
             spell_casting_ability=Ability.CHARISMA,
         )
 
@@ -559,8 +557,7 @@ class PaladinMulticlass(PaladinBase):
         data = CharacterSheetData(
             character_class=CharacterClass.PALADIN,
             character_subclass=self.subclass,
-            level=self.paladin_level,
-            hit_die=PaladinFeatures.PALADIN_HIT_DIE,
+            level_per_class={CharacterClass.PALADIN: self.paladin_level},
             spell_casting_ability=Ability.CHARISMA,
         )
 

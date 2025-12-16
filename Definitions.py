@@ -6,6 +6,7 @@ import attr
 
 
 class CharacterClass(str, Enum):
+    ARTIFICER = "Artificer"
     BARBARIAN = "Barbarian"
     BARD = "Bard"
     CLERIC = "Cleric"
@@ -18,6 +19,29 @@ class CharacterClass(str, Enum):
     SORCERER = "Sorcerer"
     WARLOCK = "Warlock"
     WIZARD = "Wizard"
+
+    @property
+    def hit_die(self) -> int:
+        hit_dice_mapping = {
+            CharacterClass.ARTIFICER: 8,
+            CharacterClass.BARBARIAN: 12,
+            CharacterClass.BARD: 8,
+            CharacterClass.CLERIC: 8,
+            CharacterClass.DRUID: 8,
+            CharacterClass.FIGHTER: 10,
+            CharacterClass.MONK: 8,
+            CharacterClass.PALADIN: 10,
+            CharacterClass.RANGER: 10,
+            CharacterClass.ROGUE: 8,
+            CharacterClass.SORCERER: 6,
+            CharacterClass.WARLOCK: 8,
+            CharacterClass.WIZARD: 6,
+        }
+        return hit_dice_mapping[self]
+
+    @property
+    def average_hit_die(self) -> int:
+        return (self.hit_die // 2) + 1
 
 
 class Species(str, Enum):
