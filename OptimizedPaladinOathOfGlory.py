@@ -1,4 +1,3 @@
-from CharacterConfigs import BattleMasterFighter
 from CharacterConfigs.PaladinBase import (
     PaladinLevel1,
     PaladinLevel10,
@@ -30,18 +29,17 @@ from CharacterConfigs.PaladinOathOfGlory import (
     GloryPaladinLevel5,
     GloryPaladinLevel7,
     GloryPaladinLevel9,
-    PaladinOathOfGlory,
 )
 import CharacterSheetCreator
 from Definitions import (
     Ability,
     Skill,
 )
+import Definitions
 from Features import (
     Backgrounds,
     FightingStyles,
     GeneralFeats,
-    Maneuvers,
     OriginFeats,
     Weapons,
 )
@@ -55,11 +53,13 @@ from Spells.Definitions import (
 )
 from StatBlocks.AbilitiesStatBlock import StandardArrayAbilitiesStatBlock
 from StatBlocks.SkillsStatBlock import FighterSkillsStatBlock, PaladinSkillsStatBlock
-
+from CharacterConfigs import PaladinBase
+from CharacterConfigs import PaladinOathOfGlory
 
 if __name__ == "__main__":
-    paladin_oath_of_glory = PaladinOathOfGlory(
+    paladin_oath_of_glory = PaladinBase.PaladinStarter(
         paladin_level=20,
+        subclass=Definitions.PaladinSubclass.OATH_OF_GLORY,
         # Distribute 15, 14, 13, 12, 10, 8 among your abilities.
         abilities=StandardArrayAbilitiesStatBlock(
             strength=13,
@@ -96,86 +96,88 @@ if __name__ == "__main__":
         origin_feat=OriginFeats.Tough(),
         weapons=[],
         armor=[],
-        paladin_level_1=PaladinLevel1(
-            weapon_mastery_1=Weapons.Handaxe(),
-            weapon_mastery_2=Weapons.LightHammer(),
-            spell_1=PaladinLevel1Spells.CURE_WOUNDS,
-            spell_2=PaladinLevel1Spells.DIVINE_FAVOR,
-        ),
-        paladin_level_2=PaladinLevel2(
-            fighting_style=FightingStyles.TwoWeaponFighting(),
-            spell=PaladinLevel1Spells.SHIELD_OF_FAITH,
-        ),
-        paladin_level_3=PaladinLevel3(
-            spell=PaladinLevel1Spells.BLESS,
-        ),
-        paladin_level_4=PaladinLevel4(
-            general_feat=GeneralFeats.AbilityScoreImprovement(
-                [
-                    (Ability.CONSTITUTION, 2),
-                ]
+        paladin_feature_per_level=PaladinBase.PaladinFeaturePerLevel(
+            paladin_level_1=PaladinLevel1(
+                weapon_mastery_1=Weapons.Handaxe(),
+                weapon_mastery_2=Weapons.LightHammer(),
+                spell_1=PaladinLevel1Spells.CURE_WOUNDS,
+                spell_2=PaladinLevel1Spells.DIVINE_FAVOR,
             ),
-            spell=PaladinLevel1Spells.CURE_WOUNDS,
-        ),
-        paladin_level_5=PaladinLevel5(
-            spell=PaladinLevel2Spells.ZONE_OF_TRUTH,
-        ),
-        paladin_level_6=PaladinLevel6(),
-        paladin_level_7=PaladinLevel7(
-            spell=PaladinLevel2Spells.LESSER_RESTORATION,
-        ),
-        paladin_level_8=PaladinLevel8(
-            general_feat=GeneralFeats.AbilityScoreImprovement(
-                [
-                    (Ability.STRENGTH, 2),
-                ]
+            paladin_level_2=PaladinLevel2(
+                fighting_style=FightingStyles.TwoWeaponFighting(),
+                spell=PaladinLevel1Spells.SHIELD_OF_FAITH,
             ),
-        ),
-        paladin_level_9=PaladinLevel9(
-            spell=PaladinLevel3Spells.AURA_OF_VITALITY,
-        ),
-        paladin_level_10=PaladinLevel10(),
-        paladin_level_11=PaladinLevel11(
-            spell=PaladinLevel3Spells.BLINDING_SMITE,
-        ),
-        paladin_level_12=PaladinLevel12(
-            general_feat=GeneralFeats.AbilityScoreImprovement(
-                [
-                    (Ability.CHARISMA, 2),
-                ]
+            paladin_level_3=PaladinLevel3(
+                spell=PaladinLevel1Spells.BLESS,
             ),
-        ),
-        paladin_level_13=PaladinLevel13(
-            spell=PaladinLevel4Spells.DEATH_WARD,
-        ),
-        paladin_level_14=PaladinLevel14(),
-        paladin_level_15=PaladinLevel15(
-            spell=PaladinLevel4Spells.AURA_OF_PURITY,
-        ),
-        paladin_level_16=PaladinLevel16(
-            general_feat=GeneralFeats.AbilityScoreImprovement(
-                [
-                    (Ability.CHARISMA, 2),
-                ]
+            paladin_level_4=PaladinLevel4(
+                general_feat=GeneralFeats.AbilityScoreImprovement(
+                    [
+                        (Ability.CONSTITUTION, 2),
+                    ]
+                ),
+                spell=PaladinLevel1Spells.CURE_WOUNDS,
             ),
+            paladin_level_5=PaladinLevel5(
+                spell=PaladinLevel2Spells.ZONE_OF_TRUTH,
+            ),
+            paladin_level_6=PaladinLevel6(),
+            paladin_level_7=PaladinLevel7(
+                spell=PaladinLevel2Spells.LESSER_RESTORATION,
+            ),
+            paladin_level_8=PaladinLevel8(
+                general_feat=GeneralFeats.AbilityScoreImprovement(
+                    [
+                        (Ability.STRENGTH, 2),
+                    ]
+                ),
+            ),
+            paladin_level_9=PaladinLevel9(
+                spell=PaladinLevel3Spells.AURA_OF_VITALITY,
+            ),
+            paladin_level_10=PaladinLevel10(),
+            paladin_level_11=PaladinLevel11(
+                spell=PaladinLevel3Spells.BLINDING_SMITE,
+            ),
+            paladin_level_12=PaladinLevel12(
+                general_feat=GeneralFeats.AbilityScoreImprovement(
+                    [
+                        (Ability.CHARISMA, 2),
+                    ]
+                ),
+            ),
+            paladin_level_13=PaladinLevel13(
+                spell=PaladinLevel4Spells.DEATH_WARD,
+            ),
+            paladin_level_14=PaladinLevel14(),
+            paladin_level_15=PaladinLevel15(
+                spell=PaladinLevel4Spells.AURA_OF_PURITY,
+            ),
+            paladin_level_16=PaladinLevel16(
+                general_feat=GeneralFeats.AbilityScoreImprovement(
+                    [
+                        (Ability.CHARISMA, 2),
+                    ]
+                ),
+            ),
+            paladin_level_17=PaladinLevel17(
+                spell_1=PaladinLevel5Spells.BANISHING_SMITE,
+                spell_2=PaladinLevel5Spells.GEAS,
+            ),
+            paladin_level_19=PaladinLevel19(
+                spell=PaladinLevel5Spells.CIRCLE_OF_POWER,
+            ),
+            paladin_level_18=PaladinLevel18(),
+            paladin_level_20=PaladinLevel20(),
+            paladin_subclass_level_3=GloryPaladinLevel3(),
+            paladin_subclass_level_5=GloryPaladinLevel5(),
+            paladin_subclass_level_7=GloryPaladinLevel7(),
+            paladin_subclass_level_9=GloryPaladinLevel9(),
+            paladin_subclass_level_13=GloryPaladinLevel13(),
+            paladin_subclass_level_15=GloryPaladinLevel15(),
+            paladin_subclass_level_17=GloryPaladinLevel17(),
+            paladin_subclass_level_20=GloryPaladinLevel20(),
         ),
-        paladin_level_17=PaladinLevel17(
-            spell_1=PaladinLevel5Spells.BANISHING_SMITE,
-            spell_2=PaladinLevel5Spells.GEAS,
-        ),
-        paladin_level_19=PaladinLevel19(
-            spell=PaladinLevel5Spells.CIRCLE_OF_POWER,
-        ),
-        paladin_level_18=PaladinLevel18(),
-        paladin_level_20=PaladinLevel20(),
-        glory_paladin_level_3=GloryPaladinLevel3(),
-        glory_paladin_level_5=GloryPaladinLevel5(),
-        glory_paladin_level_7=GloryPaladinLevel7(),
-        glory_paladin_level_9=GloryPaladinLevel9(),
-        glory_paladin_level_13=GloryPaladinLevel13(),
-        glory_paladin_level_15=GloryPaladinLevel15(),
-        glory_paladin_level_17=GloryPaladinLevel17(),
-        glory_paladin_level_20=GloryPaladinLevel20(),
         replace_spells={
             PaladinLevel1Spells.CURE_WOUNDS: PaladinLevel2Spells.MAGIC_WEAPON,
         },

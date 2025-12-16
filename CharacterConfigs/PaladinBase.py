@@ -25,7 +25,7 @@ from Spells.Definitions import (
 
 
 @attr.dataclass
-class ClassLevelBase(ABC):
+class ClassLevelFeatures(ABC):
     level: int = attr.field(init=False)
 
     @abstractmethod
@@ -37,47 +37,47 @@ class ClassLevelBase(ABC):
 
 
 @attr.dataclass
-class PaladinSubclassLevel3(ClassLevelBase):
+class PaladinSubclassLevel3(ClassLevelFeatures):
     pass
 
 
 @attr.dataclass
-class PaladinSubclassLevel5(ClassLevelBase):
+class PaladinSubclassLevel5(ClassLevelFeatures):
     pass
 
 
 @attr.dataclass
-class PaladinSubclassLevel7(ClassLevelBase):
+class PaladinSubclassLevel7(ClassLevelFeatures):
     pass
 
 
 @attr.dataclass
-class PaladinSubclassLevel9(ClassLevelBase):
+class PaladinSubclassLevel9(ClassLevelFeatures):
     pass
 
 
 @attr.dataclass
-class PaladinSubclassLevel13(ClassLevelBase):
+class PaladinSubclassLevel13(ClassLevelFeatures):
     pass
 
 
 @attr.dataclass
-class PaladinSubclassLevel15(ClassLevelBase):
+class PaladinSubclassLevel15(ClassLevelFeatures):
     pass
 
 
 @attr.dataclass
-class PaladinSubclassLevel17(ClassLevelBase):
+class PaladinSubclassLevel17(ClassLevelFeatures):
     pass
 
 
 @attr.dataclass
-class PaladinSubclassLevel20(ClassLevelBase):
+class PaladinSubclassLevel20(ClassLevelFeatures):
     pass
 
 
 @attr.dataclass
-class PaladinLevel1(ClassLevelBase):
+class PaladinLevel1(ClassLevelFeatures):
     level: int = attr.field(init=False, default=1)
     weapon_mastery_1: Weapons.AbstractWeapon
     weapon_mastery_2: Weapons.AbstractWeapon
@@ -101,7 +101,7 @@ class PaladinLevel1(ClassLevelBase):
 
 
 @attr.dataclass
-class PaladinLevel2(ClassLevelBase):
+class PaladinLevel2(ClassLevelFeatures):
     level: int = attr.field(init=False, default=2)
     fighting_style: FightingStyles.FightingStyle
     spell: PaladinLevel1Spells
@@ -121,7 +121,7 @@ class PaladinLevel2(ClassLevelBase):
 
 
 @attr.dataclass
-class PaladinLevel3(ClassLevelBase):
+class PaladinLevel3(ClassLevelFeatures):
     level: int = attr.field(init=False, default=3)
     spell: PaladinLevel1Spells
 
@@ -134,7 +134,7 @@ class PaladinLevel3(ClassLevelBase):
 
 
 @attr.dataclass
-class PaladinLevel4(ClassLevelBase):
+class PaladinLevel4(ClassLevelFeatures):
     level: int = attr.field(init=False, default=4)
     general_feat: GeneralFeats.GeneralFeat
     spell: PaladinLevel1Spells
@@ -147,7 +147,7 @@ class PaladinLevel4(ClassLevelBase):
 
 
 @attr.dataclass
-class PaladinLevel5(ClassLevelBase):
+class PaladinLevel5(ClassLevelFeatures):
     level: int = attr.field(init=False, default=5)
     spell: PaladinLevel1Spells | PaladinLevel2Spells
 
@@ -168,7 +168,7 @@ class PaladinLevel5(ClassLevelBase):
 
 
 @attr.dataclass
-class PaladinLevel6(ClassLevelBase):
+class PaladinLevel6(ClassLevelFeatures):
     level: int = attr.field(init=False, default=6)
 
     def add_features(self, data: CharacterSheetData) -> CharacterSheetData:
@@ -177,7 +177,7 @@ class PaladinLevel6(ClassLevelBase):
 
 
 @attr.dataclass
-class PaladinLevel7(ClassLevelBase):
+class PaladinLevel7(ClassLevelFeatures):
     level: int = attr.field(init=False, default=7)
     spell: PaladinLevel1Spells | PaladinLevel2Spells
 
@@ -187,7 +187,7 @@ class PaladinLevel7(ClassLevelBase):
 
 
 @attr.dataclass
-class PaladinLevel8(ClassLevelBase):
+class PaladinLevel8(ClassLevelFeatures):
     level: int = attr.field(init=False, default=8)
     general_feat: GeneralFeats.GeneralFeat
 
@@ -197,7 +197,7 @@ class PaladinLevel8(ClassLevelBase):
 
 
 @attr.dataclass
-class PaladinLevel9(ClassLevelBase):
+class PaladinLevel9(ClassLevelFeatures):
     level: int = attr.field(init=False, default=9)
     spell: PaladinLevel1Spells | PaladinLevel2Spells | PaladinLevel3Spells
 
@@ -214,7 +214,7 @@ class PaladinLevel9(ClassLevelBase):
 
 
 @attr.dataclass
-class PaladinLevel10(ClassLevelBase):
+class PaladinLevel10(ClassLevelFeatures):
     level: int = attr.field(init=False, default=10)
 
     def add_features(
@@ -229,7 +229,7 @@ class PaladinLevel10(ClassLevelBase):
 
 
 @attr.dataclass
-class PaladinLevel11(ClassLevelBase):
+class PaladinLevel11(ClassLevelFeatures):
     level: int = attr.field(init=False, default=11)
     spell: PaladinLevel1Spells | PaladinLevel2Spells | PaladinLevel3Spells
 
@@ -243,7 +243,7 @@ class PaladinLevel11(ClassLevelBase):
 
 
 @attr.dataclass
-class PaladinLevel12(ClassLevelBase):
+class PaladinLevel12(ClassLevelFeatures):
     level: int = attr.field(init=False, default=12)
     general_feat: GeneralFeats.GeneralFeat
 
@@ -253,7 +253,7 @@ class PaladinLevel12(ClassLevelBase):
 
 
 @attr.dataclass
-class PaladinLevel13(ClassLevelBase):
+class PaladinLevel13(ClassLevelFeatures):
     level: int = attr.field(init=False, default=13)
     spell: (
         PaladinLevel1Spells
@@ -268,7 +268,7 @@ class PaladinLevel13(ClassLevelBase):
 
 
 @attr.dataclass
-class PaladinLevel14(ClassLevelBase):
+class PaladinLevel14(ClassLevelFeatures):
     level: int = attr.field(init=False, default=14)
 
     def add_features(
@@ -283,7 +283,7 @@ class PaladinLevel14(ClassLevelBase):
 
 
 @attr.dataclass
-class PaladinLevel15(ClassLevelBase):
+class PaladinLevel15(ClassLevelFeatures):
     level: int = attr.field(init=False, default=15)
     spell: (
         PaladinLevel1Spells
@@ -298,7 +298,7 @@ class PaladinLevel15(ClassLevelBase):
 
 
 @attr.dataclass
-class PaladinLevel16(ClassLevelBase):
+class PaladinLevel16(ClassLevelFeatures):
     level: int = attr.field(init=False, default=16)
     general_feat: GeneralFeats.GeneralFeat
 
@@ -308,7 +308,7 @@ class PaladinLevel16(ClassLevelBase):
 
 
 @attr.dataclass
-class PaladinLevel17(ClassLevelBase):
+class PaladinLevel17(ClassLevelFeatures):
     level: int = attr.field(init=False, default=17)
     spell_1: (
         PaladinLevel1Spells
@@ -332,7 +332,7 @@ class PaladinLevel17(ClassLevelBase):
 
 
 @attr.dataclass
-class PaladinLevel18(ClassLevelBase):
+class PaladinLevel18(ClassLevelFeatures):
     level: int = attr.field(init=False, default=18)
 
     def add_features(
@@ -347,7 +347,7 @@ class PaladinLevel18(ClassLevelBase):
 
 
 @attr.dataclass
-class PaladinLevel19(ClassLevelBase):
+class PaladinLevel19(ClassLevelFeatures):
     level: int = attr.field(init=False, default=19)
     spell: (
         PaladinLevel1Spells
@@ -363,10 +363,77 @@ class PaladinLevel19(ClassLevelBase):
 
 
 @attr.dataclass
-class PaladinLevel20(ClassLevelBase):
+class PaladinLevel20(ClassLevelFeatures):
     level: int = attr.field(init=False, default=20)
 
     def add_features(self, data: CharacterSheetData) -> CharacterSheetData:
+        return data
+
+
+@attr.dataclass
+class PaladinFeaturePerLevel:
+    paladin_level_1: Optional[PaladinLevel1] = None
+    paladin_level_2: Optional[PaladinLevel2] = None
+    paladin_level_3: Optional[PaladinLevel3] = None
+    paladin_level_4: Optional[PaladinLevel4] = None
+    paladin_level_5: Optional[PaladinLevel5] = None
+    paladin_level_6: Optional[PaladinLevel6] = None
+    paladin_level_7: Optional[PaladinLevel7] = None
+    paladin_level_8: Optional[PaladinLevel8] = None
+    paladin_level_9: Optional[PaladinLevel9] = None
+    paladin_level_10: Optional[PaladinLevel10] = None
+    paladin_level_11: Optional[PaladinLevel11] = None
+    paladin_level_12: Optional[PaladinLevel12] = None
+    paladin_level_13: Optional[PaladinLevel13] = None
+    paladin_level_14: Optional[PaladinLevel14] = None
+    paladin_level_15: Optional[PaladinLevel15] = None
+    paladin_level_16: Optional[PaladinLevel16] = None
+    paladin_level_17: Optional[PaladinLevel17] = None
+    paladin_level_18: Optional[PaladinLevel18] = None
+    paladin_level_19: Optional[PaladinLevel19] = None
+    paladin_level_20: Optional[PaladinLevel20] = None
+    paladin_subclass_level_3: Optional[PaladinSubclassLevel3] = None
+    paladin_subclass_level_5: Optional[PaladinSubclassLevel5] = None
+    paladin_subclass_level_7: Optional[PaladinSubclassLevel7] = None
+    paladin_subclass_level_9: Optional[PaladinSubclassLevel9] = None
+    paladin_subclass_level_13: Optional[PaladinSubclassLevel13] = None
+    paladin_subclass_level_15: Optional[PaladinSubclassLevel15] = None
+    paladin_subclass_level_17: Optional[PaladinSubclassLevel17] = None
+    paladin_subclass_level_20: Optional[PaladinSubclassLevel20] = None
+
+    def add_features(
+        self,
+        data: CharacterSheetData,
+    ) -> CharacterSheetData:
+        if data.level is None:
+            raise ValueError("Character level must be set to add class features.")
+        level = data.level
+        for level_features in attr.fields(self.__class__):
+            class_level_features: Optional[ClassLevelFeatures] = getattr(
+                self, level_features.name
+            )
+            expected_level: int = (
+                class_level_features.level
+                if class_level_features is not None
+                else int(level_features.name.split("_")[-1])
+            )
+
+            if class_level_features is None:
+                # Skip if the character level is lower than the expected level
+                if level < expected_level:
+                    continue
+
+                # Must provide features for this level
+                raise ValueError(
+                    f"paladin level {expected_level} features must be provided for level {expected_level}."
+                )
+
+            # Skip if the character level is lower than the class level features
+            if class_level_features.level > level:
+                return data
+
+            # Add features for this level
+            data = class_level_features.add_features(data=data)
         return data
 
 
@@ -375,6 +442,32 @@ class PaladinBase:
     def __init__(
         self,
         paladin_level: int,
+        paladin_feature_per_level: PaladinFeaturePerLevel,
+        replace_spells: Optional[dict[str, str]] = None,
+    ):
+        self.paladin_level = paladin_level
+        self.paladin_feature_per_level = paladin_feature_per_level
+        self.replace_spells = replace_spells
+
+    @abstractmethod
+    def _get_character_sheet_creator_base(self) -> CharacterSheetData:
+        pass
+
+    def create(
+        self,
+    ) -> CharacterSheetData:
+        data = self._get_character_sheet_creator_base()
+        data = self.paladin_feature_per_level.add_features(data)
+        data.replace_spells(self.replace_spells or {})
+        return data
+
+
+class PaladinStarter(PaladinBase):
+
+    def __init__(
+        self,
+        paladin_level: int,
+        paladin_feature_per_level: PaladinFeaturePerLevel,
         subclass: PaladinSubclass,
         abilities: AbilitiesStatBlock,
         skills: PaladinSkillsStatBlock,
@@ -384,37 +477,10 @@ class PaladinBase:
         origin_feat: OriginFeats.OriginCharacterFeat | OriginFeats.OriginTextFeat,
         armor: Optional[list[Armor.AbstractArmor]] = None,
         weapons: Optional[list[Weapons.AbstractWeapon]] = None,
-        paladin_level_1: Optional[PaladinLevel1] = None,
-        paladin_level_2: Optional[PaladinLevel2] = None,
-        paladin_level_3: Optional[PaladinLevel3] = None,
-        paladin_level_4: Optional[PaladinLevel4] = None,
-        paladin_level_5: Optional[PaladinLevel5] = None,
-        paladin_level_6: Optional[PaladinLevel6] = None,
-        paladin_level_7: Optional[PaladinLevel7] = None,
-        paladin_level_8: Optional[PaladinLevel8] = None,
-        paladin_level_9: Optional[PaladinLevel9] = None,
-        paladin_level_10: Optional[PaladinLevel10] = None,
-        paladin_level_11: Optional[PaladinLevel11] = None,
-        paladin_level_12: Optional[PaladinLevel12] = None,
-        paladin_level_13: Optional[PaladinLevel13] = None,
-        paladin_level_14: Optional[PaladinLevel14] = None,
-        paladin_level_15: Optional[PaladinLevel15] = None,
-        paladin_level_16: Optional[PaladinLevel16] = None,
-        paladin_level_17: Optional[PaladinLevel17] = None,
-        paladin_level_18: Optional[PaladinLevel18] = None,
-        paladin_level_19: Optional[PaladinLevel19] = None,
-        paladin_level_20: Optional[PaladinLevel20] = None,
-        paladin_subclass_level_3: Optional[PaladinSubclassLevel3] = None,
-        paladin_subclass_level_5: Optional[PaladinSubclassLevel5] = None,
-        paladin_subclass_level_7: Optional[PaladinSubclassLevel7] = None,
-        paladin_subclass_level_9: Optional[PaladinSubclassLevel9] = None,
-        paladin_subclass_level_13: Optional[PaladinSubclassLevel13] = None,
-        paladin_subclass_level_15: Optional[PaladinSubclassLevel15] = None,
-        paladin_subclass_level_17: Optional[PaladinSubclassLevel17] = None,
-        paladin_subclass_level_20: Optional[PaladinSubclassLevel20] = None,
         replace_spells: Optional[dict[str, str]] = None,
     ):
         self.paladin_level = paladin_level
+        self.paladin_feature_per_level = paladin_feature_per_level
         self.subclass = subclass
         self.abilities = abilities
         self.skills = skills
@@ -424,35 +490,11 @@ class PaladinBase:
         self.origin_feat = origin_feat
         self.armor = armor
         self.weapons = weapons
-        self.paladin_level_1 = paladin_level_1
-        self.paladin_level_2 = paladin_level_2
-        self.paladin_level_3 = paladin_level_3
-        self.paladin_level_4 = paladin_level_4
-        self.paladin_level_5 = paladin_level_5
-        self.paladin_level_6 = paladin_level_6
-        self.paladin_level_7 = paladin_level_7
-        self.paladin_level_8 = paladin_level_8
-        self.paladin_level_9 = paladin_level_9
-        self.paladin_level_10 = paladin_level_10
-        self.paladin_level_11 = paladin_level_11
-        self.paladin_level_12 = paladin_level_12
-        self.paladin_level_13 = paladin_level_13
-        self.paladin_level_14 = paladin_level_14
-        self.paladin_level_15 = paladin_level_15
-        self.paladin_level_16 = paladin_level_16
-        self.paladin_level_17 = paladin_level_17
-        self.paladin_level_18 = paladin_level_18
-        self.paladin_level_19 = paladin_level_19
-        self.paladin_level_20 = paladin_level_20
-        self.paladin_subclass_level_3 = paladin_subclass_level_3
-        self.paladin_subclass_level_5 = paladin_subclass_level_5
-        self.paladin_subclass_level_7 = paladin_subclass_level_7
-        self.paladin_subclass_level_9 = paladin_subclass_level_9
-        self.paladin_subclass_level_13 = paladin_subclass_level_13
-        self.paladin_subclass_level_15 = paladin_subclass_level_15
-        self.paladin_subclass_level_17 = paladin_subclass_level_17
-        self.paladin_subclass_level_20 = paladin_subclass_level_20
-        self.replace_spells = replace_spells
+        super().__init__(
+            paladin_level=paladin_level,
+            paladin_feature_per_level=paladin_feature_per_level,
+            replace_spells=replace_spells,
+        )
 
     def _get_character_sheet_creator_base(self) -> CharacterSheetData:
         data = CharacterSheetData(
@@ -495,59 +537,34 @@ class PaladinBase:
 
         return data
 
-    def create(
+
+class PaladinMulticlass(PaladinBase):
+
+    def __init__(
         self,
-    ) -> CharacterSheetData:
-        data = self._get_character_sheet_creator_base()
-        data = self.add_features(data, self.paladin_level_1, 1)
-        data = self.add_features(data, self.paladin_level_2, 2)
-        data = self.add_features(data, self.paladin_level_3, 3)
-        data = self.add_features(data, self.paladin_level_4, 4)
-        data = self.add_features(data, self.paladin_level_5, 5)
-        data = self.add_features(data, self.paladin_level_6, 6)
-        data = self.add_features(data, self.paladin_level_7, 7)
-        data = self.add_features(data, self.paladin_level_8, 8)
-        data = self.add_features(data, self.paladin_level_9, 9)
-        data = self.add_features(data, self.paladin_level_10, 10)
-        data = self.add_features(data, self.paladin_level_11, 11)
-        data = self.add_features(data, self.paladin_level_12, 12)
-        data = self.add_features(data, self.paladin_level_13, 13)
-        data = self.add_features(data, self.paladin_level_14, 14)
-        data = self.add_features(data, self.paladin_level_15, 15)
-        data = self.add_features(data, self.paladin_level_16, 16)
-        data = self.add_features(data, self.paladin_level_17, 17)
-        data = self.add_features(data, self.paladin_level_18, 18)
-        data = self.add_features(data, self.paladin_level_19, 19)
-        data = self.add_features(data, self.paladin_level_20, 20)
+        paladin_level: int,
+        paladin_feature_per_level: PaladinFeaturePerLevel,
+        subclass: PaladinSubclass,
+        replace_spells: Optional[dict[str, str]] = None,
+    ):
+        self.subclass = subclass
+        self.paladin_level = paladin_level
+        super().__init__(
+            paladin_level=paladin_level,
+            paladin_feature_per_level=paladin_feature_per_level,
+            replace_spells=replace_spells,
+        )
 
-        data = self.add_features(data, self.paladin_subclass_level_3, 3)
-        data = self.add_features(data, self.paladin_subclass_level_5, 5)
-        data = self.add_features(data, self.paladin_subclass_level_7, 7)
-        data = self.add_features(data, self.paladin_subclass_level_9, 9)
-        data = self.add_features(data, self.paladin_subclass_level_13, 13)
-        data = self.add_features(data, self.paladin_subclass_level_15, 15)
-        data = self.add_features(data, self.paladin_subclass_level_17, 17)
-        data = self.add_features(data, self.paladin_subclass_level_20, 20)
+    def _get_character_sheet_creator_base(self) -> CharacterSheetData:
+        data = CharacterSheetData(
+            character_class=CharacterClass.PALADIN,
+            character_subclass=self.subclass,
+            level=self.paladin_level,
+            hit_die=PaladinFeatures.PALADIN_HIT_DIE,
+            spell_casting_ability=Ability.CHARISMA,
+        )
 
-        data.replace_spells(self.replace_spells or {})
-        return data
+        # ================ LEVEL 0 ============= #
+        data.add_feature(SpellSlots.SpellSlots(SpellSlots.CasterType.HALF_CASTER))
 
-    def add_features(
-        self,
-        data: CharacterSheetData,
-        class_level_base: Optional[ClassLevelBase],
-        expected_level: int,
-    ) -> CharacterSheetData:
-        if class_level_base is None:
-            if self.paladin_level < expected_level:
-                return data
-            else:
-                raise ValueError(
-                    f"paladin level {expected_level} features must be provided for level {expected_level}."
-                )
-
-        if class_level_base.level > self.paladin_level:
-            return data
-
-        data = class_level_base.add_features(data=data)
         return data
