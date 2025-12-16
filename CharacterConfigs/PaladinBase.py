@@ -126,7 +126,7 @@ class PaladinLevel3(ClassLevelBase):
     spell: PaladinLevel1Spells
 
     def add_features(self, data: CharacterSheetData) -> CharacterSheetData:
-        channel_divinity_feature = PaladinFeatures.ChannelDivinityFeature()
+        channel_divinity_feature = PaladinFeatures.ChannelDivinity()
         channel_divinity_feature.add_spell("Divine Sense")
         data.add_feature(channel_divinity_feature)
         data.add_spell(self.spell)
@@ -205,8 +205,8 @@ class PaladinLevel9(ClassLevelBase):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        channel_divinity_feature: PaladinFeatures.ChannelDivinityFeature = (
-            data.get_features_by_type(PaladinFeatures.ChannelDivinityFeature)[0]
+        channel_divinity_feature: PaladinFeatures.ChannelDivinity = (
+            data.get_features_by_type(PaladinFeatures.ChannelDivinity)[0]
         )
         channel_divinity_feature.add_spell("Abjure Foes")
         data.add_spell(self.spell)
@@ -342,7 +342,7 @@ class PaladinLevel18(ClassLevelBase):
         aura_of_protection: PaladinFeatures.AuraOfProtection = (
             data.get_features_by_type(PaladinFeatures.AuraOfProtection)[0]
         )
-        aura_of_protection.add_feature(PaladinFeatures.AuraOfExpansion())
+        aura_of_protection.add_feature(PaladinFeatures.AuraExpansion())
         return data
 
 

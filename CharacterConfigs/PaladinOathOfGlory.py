@@ -70,8 +70,8 @@ class GloryPaladinLevel3(PaladinSubclassLevel3):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        channel_divinity_feature: PaladinFeatures.ChannelDivinityFeature = (
-            data.get_features_by_type(PaladinFeatures.ChannelDivinityFeature)[0]
+        channel_divinity_feature: PaladinFeatures.ChannelDivinity = (
+            data.get_features_by_type(PaladinFeatures.ChannelDivinity)[0]
         )
         channel_divinity_feature.add_feature(PaladinFeatures.InspiringSmite())
         channel_divinity_feature.add_feature(PaladinFeatures.PeerlessAthlete())
