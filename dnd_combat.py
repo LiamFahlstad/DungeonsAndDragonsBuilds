@@ -1,6 +1,30 @@
+from enum import Enum
 import tkinter as tk
 import json
 from pathlib import Path
+
+
+class Action(str, Enum):
+    HEAL = "heal"
+    DAMAGE = "damage"
+    ADD_CONDITION = "add_condition"
+    REMOVE_CONDITION = "remove_condition"
+
+
+class Condition(str, Enum):
+    BLINDED = "Blinded"
+    CHARMED = "Charmed"
+    CONCENTRATING = "Concentrating"
+    FRIGHTENED = "Frightened"
+    GRAPPLED = "Grappled"
+    PARALYZED = "Paralyzed"
+    POISONED = "Poisoned"
+    PRONE = "Prone"
+    STUNNED = "Stunned"
+
+    @staticmethod
+    def list_all():
+        return [cond.value for cond in Condition]
 
 
 class CombatApp:
@@ -14,24 +38,13 @@ class CombatApp:
             {"name": "Goblin", "hp": 7, "ac": 13, "temp_hp": 0, "conditions": []},
         ]
 
-        self.conditions = [
-            "Blinded",
-            "Charmed",
-            "Concentrating",
-            "Frightened",
-            "Grappled",
-            "Paralyzed",
-            "Poisoned",
-            "Prone",
-            "Stunned",
-        ]
+        self.conditions = Condition.list_all()
 
         self.selected_character = None
         self.round_number = 1
+        self.history: list[tuple[Action, str | int]] = []
         self.log_file = Path("combat_log.json")
-        self.log_file.write_text(
-            self.log_file.read_text() if self.log_file.exists() else "{}"
-        )
+        self.log_file.write_text("{}")
 
         # -------- UI --------
         self.build_ui()
@@ -59,6 +72,7 @@ class CombatApp:
             return
 
         self.selected_character["hp"] -= dmg
+        self.history.append((Action.DAMAGE, dmg))
         self.log_event(f"{self.selected_character['name']} takes {dmg} damage")
         self.refresh_ui()
 
@@ -71,6 +85,7 @@ class CombatApp:
             return
 
         self.selected_character["hp"] += heal
+        self.history.append((Action.HEAL, heal))
         self.log_event(f"{self.selected_character['name']} heals {heal} HP")
         self.refresh_ui()
 
@@ -81,6 +96,7 @@ class CombatApp:
         cond = self.condition_var.get()
         if cond not in self.selected_character["conditions"]:
             self.selected_character["conditions"].append(cond)
+            self.history.append((Action.ADD_CONDITION, cond))
             self.log_event(f"{self.selected_character['name']} gains {cond}")
             self.refresh_ui()
 
@@ -91,7 +107,36 @@ class CombatApp:
         cond = self.condition_var.get()
         if cond in self.selected_character["conditions"]:
             self.selected_character["conditions"].remove(cond)
+            self.history.append((Action.REMOVE_CONDITION, cond))
             self.log_event(f"{self.selected_character['name']} loses {cond}")
+            self.refresh_ui()
+
+    def undo_last_action(self):
+        if not self.selected_character:
+            return
+
+        data = json.loads(self.log_file.read_text())
+        key = f"round_{self.round_number}"
+        if key in data and data[key]:
+            action, value = self.history.pop()
+
+            if action == Action.DAMAGE:
+                self.selected_character["hp"] += value
+            elif action == Action.HEAL:
+                self.selected_character["hp"] -= value
+            elif action == Action.ADD_CONDITION:
+                cond = value
+                if cond in self.selected_character["conditions"]:
+                    self.selected_character["conditions"].remove(value)
+            elif action == Action.REMOVE_CONDITION:
+                cond = value
+                if cond not in self.selected_character["conditions"]:
+                    self.selected_character["conditions"].append(value)
+
+            last_event = data[key].pop()
+            self.log_file.write_text(json.dumps(data, indent=2))
+            # Note: Actual state reversal logic would be needed here
+            print(f"Undid action: {last_event}")
             self.refresh_ui()
 
     # -------- UI BUILD --------
@@ -129,6 +174,10 @@ class CombatApp:
             fill="x"
         )
 
+        tk.Button(control, text="Undo Last Action", command=self.undo_last_action).pack(
+            fill="x"
+        )
+
         self.char_widgets = []
 
     # -------- RENDER --------
@@ -136,7 +185,6 @@ class CombatApp:
         for w in self.char_widgets:
             w.destroy()
         self.char_widgets.clear()
-
         for char in self.characters:
             frame = tk.Frame(self.char_frame, bd=2, relief="ridge", padx=6, pady=4)
             frame.pack(fill="x", pady=4)
