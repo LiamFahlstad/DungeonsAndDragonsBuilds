@@ -13,7 +13,7 @@ def get_spell_slots_for_level(level: int, caster_type: CasterType) -> list[int]:
     if caster_type == CasterType.FULL_CASTER:
         pass
     if caster_type == CasterType.HALF_CASTER:
-        level = level // 2
+        level = (level + 1) // 2
 
     if level < 1 or level > 20:
         raise ValueError("Level must be between 1 and 20")

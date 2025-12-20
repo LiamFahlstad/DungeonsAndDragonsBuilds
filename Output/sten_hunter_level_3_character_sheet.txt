@@ -1,0 +1,230 @@
+################################################################################
+# =============================== General Info =============================== #
+################################################################################
+Field              | Value                
+-------------------+----------------------
+Name               | Sten                 
+Level              | 3                    
+Starter Class      | Ranger               
+Level per Class    | Ranger: 3            
+Character Subclass | RangerSubclass.HUNTER
+Proficiency Bonus  | 2                    
+
+################################################################################
+# =============================== Combat Stats =============================== #
+################################################################################
+Field          | Value  
+---------------+--------
+Max Hit Points | 34     
+Armor Class    | 14     
+Initiative     | d20 + 2
+Speed (ft)     | 30     
+Size           | Medium 
+
+################################################################################
+# ================================ Abilities ================================= #
+################################################################################
+Ability      | Score | Modifier | Saving Throw | ST Proficient | ST Advantaged
+-------------+-------+----------+--------------+---------------+--------------
+Strength     | 8     | -1       | 1            | Yes           | No           
+Dexterity    | 15    | 2        | 4            | Yes           | No           
+Constitution | 15    | 2        | 2            | No            | No           
+Intelligence | 12    | 1        | 1            | No            | No           
+Wisdom       | 14    | 2        | 2            | No            | No           
+Charisma     | 11    | 0        | 0            | No            | No           
+
+################################################################################
+# ================================== Skills ================================== #
+################################################################################
+Skill           | Modifier | Proficient | Ability      | RollCondition
+----------------+----------+------------+--------------+--------------
+Acrobatics      | 4        | Yes        | Dexterity    | Neutral      
+Animal Handling | 4        | Yes        | Wisdom       | Neutral      
+Arcana          | 1        | No         | Intelligence | Neutral      
+Athletics       | -1       | No         | Strength     | Neutral      
+Deception       | 0        | No         | Charisma     | Neutral      
+History         | 1        | No         | Intelligence | Neutral      
+Insight         | 4        | Yes        | Wisdom       | Neutral      
+Intimidation    | 2        | Yes        | Charisma     | Neutral      
+Investigation   | 1        | No         | Intelligence | Neutral      
+Medicine        | 4        | Yes        | Wisdom       | Neutral      
+Nature          | 1        | No         | Intelligence | Neutral      
+Perception      | 4        | Yes        | Wisdom       | Neutral      
+Performance     | 0        | No         | Charisma     | Neutral      
+Persuasion      | 2        | Yes        | Charisma     | Neutral      
+Religion        | 1        | No         | Intelligence | Neutral      
+Sleight of Hand | 2        | No         | Dexterity    | Neutral      
+Stealth         | 6        | Yes        | Dexterity    | Neutral      
+Survival        | 4        | Yes        | Wisdom       | Neutral      
+
+################################################################################
+# ================================= Features ================================= #
+################################################################################
+Name: Resourceful
+Origin: Human Trait
+Description: You gain Heroic Inspiration whenever you finish a Long Rest.
+
+Name: Versatile
+Origin: Human Trait
+Description: You gain an Origin feat of your choice (see 'Feats'). Skilled is recommended.
+
+Name: Favored Enemy
+Origin: Ranger Level 1
+Description: You always have the Hunter's Mark spell prepared.
+You can cast it 2 times without expending a spell slot, and you regain all expended uses of this ability when you finish a Long Rest.
+
+Name: Replacing Spells
+Origin: Ranger Level 1
+Description: Whenever you finish a Long Rest, you can replace one spell on your list with another Ranger spell for which you have spell slots.
+
+Name: Replacing Weapon Masteries
+Origin: Ranger Level 1
+Description: Whenever you finish a Long Rest, you can change the kinds of weapons you chose.
+
+Name: Deft Explorer
+Origin: Ranger Level 2
+Description: Languages.: You know two languages of your choice from the language tables in chapter 2.
+
+Name: Regaining Spell Slots
+Origin: Ranger Level 2
+Description: You regain all expended slots when you finish a Long Rest.
+
+Name: Hunter's Lore
+Origin: Hunter Ranger Level 3
+Description: You can call upon the forces of nature to reveal certain strengths and weaknesses of your prey. While a creature is marked by your Hunter's Mark, you know whether the creature has any Immunities, Resistances, or Vulnerabilities, and if the creature has any, you know what they are.
+
+Name: Hunter's Prey
+Origin: Hunter Ranger Level 3
+Description: You gain one of the following feature options of your choice. Whenever you finish a Short or Long Rest, you can replace the chosen option with the other one.
+ * Colossus Slayer: Your tenacity can wear down even the most resilient foes. When you hit a creature with a weapon, the weapon deals an extra 1d8 damage to the target if it's missing any of its Hit Points. You can deal this extra damage only once per turn.
+ * Horde Breaker: Once on each of your turns when you make an attack with a weapon, you can make another attack with the same weapon against a different creature that is within 5 feet of the original target, that is within the weapon's range, and that you haven't attacked this turn.
+
+
+################################################################################
+# ================================= Weapons ================================== #
+################################################################################
+Field                 | Value                                                                                                                                                     
+----------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------
+Name                  | Scimitar                                                                                                                                                  
+Type                  | Martial Melee                                                                                                                                             
+DamageType            | Slashing                                                                                                                                                  
+Property 'Finesse'    | Use Str or Dex (your choice) for attack and damage rolls; same mod for both.                                                                              
+Property 'Light'      | When you Attack with a Light weapon, you can Bonus Action attack with another Light weapon; no ability mod to that damage unless negative.                
+Proficient            | Yes                                                                                                                                                       
+AttackRoll            | 1d20 + 2 (ability mod: Dexterity) + 2 (Proficient)                                                                                                        
+DamageRoll            | 1d6 + 2 (ability mod: Dexterity)                                                                                                                          
+Mastery 'Nick'        | When using a Light weapon's extra attack, you can make it during the Attack action instead of as a Bonus Action. Once per turn.                           
+----------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------
+Name                  | Shortsword                                                                                                                                                
+Type                  | Martial Melee                                                                                                                                             
+DamageType            | Piercing                                                                                                                                                  
+Property 'Finesse'    | Use Str or Dex (your choice) for attack and damage rolls; same mod for both.                                                                              
+Property 'Light'      | When you Attack with a Light weapon, you can Bonus Action attack with another Light weapon; no ability mod to that damage unless negative.                
+Proficient            | Yes                                                                                                                                                       
+AttackRoll            | 1d20 + 2 (ability mod: Dexterity) + 2 (Proficient)                                                                                                        
+DamageRoll            | 1d6 + 2 (ability mod: Dexterity)                                                                                                                          
+----------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------
+Name                  | Longbow                                                                                                                                                   
+Type                  | Martial Ranged                                                                                                                                            
+DamageType            | Piercing                                                                                                                                                  
+Property 'Ammunition' | Use only with matching ammo; each attack expends 1. Drawing ammo is part of attack (need free hand for 1-handed). After combat, recover half (round down).
+Property 'Heavy'      | Disadvantage if Melee + Str < 13 or Ranged + Dex < 13.                                                                                                    
+Property 'Two-handed' | Requires two hands to attack.                                                                                                                             
+Proficient            | Yes                                                                                                                                                       
+AttackRoll            | 1d20 + 2 (ability mod: Dexterity) + 2 (Proficient) + 2 (Archery Fighting Style)                                                                           
+DamageRoll            | 1d8 + 2 (ability mod: Dexterity)                                                                                                                          
+Mastery 'Slow'        | On a hit that deals damage, reduce the target's Speed by 10 ft until your next turn. Multiple hits don't stack.                                           
+
+################################################################################
+# ============================= Fighting Styles ============================== #
+################################################################################
+Archery: You gain a +2 bonus to attack rolls you make with Ranged weapons. (calculated automatically)
+
+################################################################################
+# ============================= Spell Modifiers ============================== #
+################################################################################
+Spell Save DC: 12
+Spell Attack Bonus: +4
+
+################################################################################
+# =============================== Spell Slots ================================ #
+################################################################################
+Level 1 Spell Slots: 3
+
+################################################################################
+# ================================== Spells ================================== #
+################################################################################
+Name: Cure Wounds
+Level: 1
+School: Abjuration
+Classes: Bard, Cleric, Druid, Paladin, Ranger
+Casting Time: Action
+Range: Touch
+Components: V, S
+Duration: Instantaneous
+Description:
+A creature you touch regains a number of Hit Points equal to 2d8 plus your spellcasting ability modifier.
+Using a Higher-Level Spell Slot:
+The healing increases by 2d8 for each spell slot level above 1.
+Source: Player's Handbook 2024 (BR)
+Spellcasting Ability: Wisdom
+----------------------------------------
+Name: Fog Cloud
+Level: 1
+School: Conjuration
+Classes: Druid, Ranger, Sorcerer, Wizard
+Casting Time: Action
+Range: 120 feet
+Components: V, S
+Duration: Concentration, up to 1 hour
+Description:
+You create a 20-foot-radius Sphere of fog centered on a point within range. The Sphere is Heavily Obscured. It lasts for the duration or until a strong wind (such as one created by Gust of Wind ) disperses it.
+Using a Higher-Level Spell Slot:
+The fog's radius increases by 20 feet for each spell slot level above 1.
+Source: Player's Handbook 2024 (BR)
+Spellcasting Ability: Wisdom
+----------------------------------------
+Name: Hunter's Mark
+Level: 1
+School: Divination
+Classes: Ranger
+Casting Time: Bonus Action
+Range: 90 feet
+Components: V
+Duration: Concentration, up to 1 hour
+Description:
+You magically mark one creature you can see within range as your quarry. Until the spell ends, you deal an extra 1d6 Force damage to the target whenever you hit it with an attack roll. You also have Advantage on any Wisdom (Perception or Survival) check you make to find it. If the target drops to 0 Hit Points before this spell ends, you can use a Bonus Action to mark a new creature you can see within range.
+Using a Higher-Level Spell Slot:
+Your Concentration can last longer with a spell slot of level 3-4 (up to 8 hours) or 5+ (up to 24 hours).
+Source: Player's Handbook 2024 (BR)
+Spellcasting Ability: Wisdom
+----------------------------------------
+Name: Jump
+Level: 1
+School: Transmutation
+Classes: Druid, Ranger, Sorcerer, Wizard
+Casting Time: Bonus Action
+Range: Touch
+Components: V, S, M (a grasshopper's hind leg)
+Duration: 1 minute
+Description:
+You touch a willing creature. Once on each of its turns until the spell ends, that creature can jump up to 30 feet by spending 10 feet of movement.
+Using a Higher-Level Spell Slot:
+You can target one additional creature for each spell slot level above 1.
+Source: Player's Handbook 2024 (BR)
+Spellcasting Ability: Wisdom
+----------------------------------------
+Name: Longstrider
+Level: 1
+School: Transmutation
+Classes: Bard, Druid, Ranger, Wizard
+Casting Time: Action
+Range: Touch
+Components: V, S, M (a pinch of dirt)
+Duration: 1 hour
+Description:
+You touch a creature. The target's Speed increases by 10 feet until the spell ends.
+Using a Higher-Level Spell Slot:
+You can target one additional creature for each spell slot level above 1.
+Source: Player's Handbook 2024 (BR)
+Spellcasting Ability: Wisdom

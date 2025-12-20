@@ -5,6 +5,7 @@ from pathlib import Path
 
 import CharacterSheetCreator
 from Features import Armor
+import OptimizedRangerHunter
 
 
 class Action(str, Enum):
@@ -266,7 +267,10 @@ class CombatApp:
 if __name__ == "__main__":
     import OptimizedPaladinOathOfGlory
 
-    character_sheets = [OptimizedPaladinOathOfGlory.get_data()]
+    character_sheets = [
+        OptimizedPaladinOathOfGlory.get_data(),
+        OptimizedRangerHunter.get_data(),
+    ]
     root = tk.Tk()
     app = CombatApp(root, character_sheets)
     root.mainloop()

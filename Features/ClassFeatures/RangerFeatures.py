@@ -9,29 +9,25 @@ RANGER_HIT_DIE = 10
 
 class ReplacingSpells(TextFeature):
     def __init__(self):
-        super().__init__(name="Replacing Spells", origin="Warlock Level 1")
+        super().__init__(name="Replacing Spells", origin="Ranger Level 1")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        description = (
-            "Whenever you finish a Long Rest, you can replace one spell on your list with another Ranger spell for which you have spell slots."
-        )
+        description = "Whenever you finish a Long Rest, you can replace one spell on your list with another Ranger spell for which you have spell slots."
         return description
-    
+
+
 class ReplacingWeaponMasteries(TextFeature):
     def __init__(self):
-        super().__init__(name="Replacing Weapon Masteries", origin="Warlock Level 1")
+        super().__init__(name="Replacing Weapon Masteries", origin="Ranger Level 1")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        description = (
-            "Whenever you finish a Long Rest, you can change the kinds of weapons you chose."
-        )
+        description = "Whenever you finish a Long Rest, you can change the kinds of weapons you chose."
         return description
-
 
 
 class RegainingSpellSlots(TextFeature):
     def __init__(self):
-        super().__init__(name="Regaining Spell Slots", origin="Warlock Level 2")
+        super().__init__(name="Regaining Spell Slots", origin="Ranger Level 2")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "You regain all expended slots when you finish a Long Rest."
@@ -53,7 +49,7 @@ class FavoredEnemy(TextFeature):
             free_hunters_mark_uses = 5
         else:
             free_hunters_mark_uses = 6
-            
+
         description = (
             "You always have the Hunter's Mark spell prepared.\n"
             f"You can cast it {free_hunters_mark_uses} times without expending a spell slot, and you regain all expended uses of this ability when you finish a Long Rest.\n"
@@ -76,9 +72,7 @@ class DeftExplorerLanguages(TextFeature):
         super().__init__(name="Deft Explorer", origin="Ranger Level 2")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        description = (
-            "Languages.: You know two languages of your choice from the language tables in chapter 2."
-        )
+        description = "Languages.: You know two languages of your choice from the language tables in chapter 2."
         return description
 
 
@@ -221,33 +215,35 @@ class ShareSpells(TextFeature):
         description = "When you cast a spell targeting yourself, you can also affect your Primal Companion beast with the spell if the beast is within 30 feet of you."
         return description
 
+
 ### Fey Wanderer Ranger Features ###
+
 
 class DreadfulStrikes(TextFeature):
     def __init__(self):
         super().__init__(name="Dreadful Strikes", origin="Fey Wanderer Ranger Level 3")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        description = (
-            "You can augment your weapon strikes with mind-scarring magic drawn from the murky hollows of the Feywild. When you hit a creature with a weapon, you can deal an extra 1d4 Psychic damage to the target, which can take this extra damage only once per turn. The extra damage increases to 1d6 when you reach Ranger level 11."
-        )
+        description = "You can augment your weapon strikes with mind-scarring magic drawn from the murky hollows of the Feywild. When you hit a creature with a weapon, you can deal an extra 1d4 Psychic damage to the target, which can take this extra damage only once per turn. The extra damage increases to 1d6 when you reach Ranger level 11."
         return description
 
 
 class FeyWandererSpells(TextFeature):
     def __init__(self):
-        super().__init__(name="Fey Wanderer Spells", origin="Fey Wanderer Ranger Level 3")
+        super().__init__(
+            name="Fey Wanderer Spells", origin="Fey Wanderer Ranger Level 3"
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        description = (
-            "When you reach a Ranger level specified in the Fey Wanderer spells table, you thereafter always have the listed spells prepared."
-        )
+        description = "When you reach a Ranger level specified in the Fey Wanderer spells table, you thereafter always have the listed spells prepared."
         return description
 
 
-class OtherworldlyGlamour.(TextFeature):
+class OtherworldlyGlamour(TextFeature):
     def __init__(self):
-        super().__init__(name="Otherworldly Glamour.", origin="Fey Wanderer Ranger Level 3")
+        super().__init__(
+            name="Otherworldly Glamour.", origin="Fey Wanderer Ranger Level 3"
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -271,7 +267,9 @@ class BeguilingTwist(TextFeature):
 
 class FeyReinforcements(TextFeature):
     def __init__(self):
-        super().__init__(name="Fey Reinforcements", origin="Fey Wanderer Ranger Level 11")
+        super().__init__(
+            name="Fey Reinforcements", origin="Fey Wanderer Ranger Level 11"
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -295,6 +293,7 @@ class MistyWanderer(TextFeature):
 
 ### Gloom Stalker Ranger Features ###
 
+
 class DreadAmbusher(TextFeature):
     def __init__(self):
         super().__init__(name="Dread Ambusher", origin="Gloom Stalker Ranger Level 3")
@@ -311,12 +310,12 @@ class DreadAmbusher(TextFeature):
 
 class GloomStalkerSpells(TextFeature):
     def __init__(self):
-        super().__init__(name="Gloom Stalker Spells", origin="Gloom Stalker Ranger Level 3")
+        super().__init__(
+            name="Gloom Stalker Spells", origin="Gloom Stalker Ranger Level 3"
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        description = (
-            "When you reach a Ranger level specified in the Gloom Stalker spells table, you thereafter always have the listed spells prepared."
-        )
+        description = "When you reach a Ranger level specified in the Gloom Stalker spells table, you thereafter always have the listed spells prepared."
         return description
 
 
@@ -337,15 +336,15 @@ class IronMind(TextFeature):
         super().__init__(name="Iron Mind", origin="Gloom Stalker Ranger Level 7")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        description = (
-            "You have honed your ability to resist mind-altering powers. You gain proficiency in Wisdom saving throws. If you already have this proficiency, you instead gain proficiency in Intelligence or Charisma saving throws (your choice)."
-        )
+        description = "You have honed your ability to resist mind-altering powers. You gain proficiency in Wisdom saving throws. If you already have this proficiency, you instead gain proficiency in Intelligence or Charisma saving throws (your choice)."
         return description
 
 
 class StalkersFlurry(TextFeature):
     def __init__(self):
-        super().__init__(name="Stalker's Flurry", origin="Gloom Stalker Ranger Level 11")
+        super().__init__(
+            name="Stalker's Flurry", origin="Gloom Stalker Ranger Level 11"
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -361,22 +360,19 @@ class ShadowyDodge(TextFeature):
         super().__init__(name="Shadowy Dodge", origin="Gloom Stalker Ranger Level 15")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        description = (
-            "When a creature makes an attack roll against you, you can take a Reaction to impose Disadvantage on that roll. Whether the attack hits or misses, you can teleport up to 30 feet to an unoccupied space that you can see."
-        )
+        description = "When a creature makes an attack roll against you, you can take a Reaction to impose Disadvantage on that roll. Whether the attack hits or misses, you can teleport up to 30 feet to an unoccupied space that you can see."
         return description
 
 
 ### Hunter Ranger Features ###
+
 
 class HuntersLore(TextFeature):
     def __init__(self):
         super().__init__(name="Hunter's Lore", origin="Hunter Ranger Level 3")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        description = (
-            "You can call upon the forces of nature to reveal certain strengths and weaknesses of your prey. While a creature is marked by your Hunter's Mark, you know whether the creature has any Immunities, Resistances, or Vulnerabilities, and if the creature has any, you know what they are."
-        )
+        description = "You can call upon the forces of nature to reveal certain strengths and weaknesses of your prey. While a creature is marked by your Hunter's Mark, you know whether the creature has any Immunities, Resistances, or Vulnerabilities, and if the creature has any, you know what they are."
         return description
 
 
@@ -411,24 +407,23 @@ class SuperiorHuntersPrey(TextFeature):
         super().__init__(name="Superior Hunter's Prey", origin="Hunter Ranger Level 11")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        description = (
-            "Once per turn when you deal damage to a creature marked by your Hunter's Mark, you can also deal that spell's extra damage to a different creature that you can see within 30 feet of the first creature."
-        )
+        description = "Once per turn when you deal damage to a creature marked by your Hunter's Mark, you can also deal that spell's extra damage to a different creature that you can see within 30 feet of the first creature."
         return description
 
 
 class SuperiorHuntersDefense(TextFeature):
     def __init__(self):
-        super().__init__(name="Superior Hunter's Defense", origin="Hunter Ranger Level 15")
+        super().__init__(
+            name="Superior Hunter's Defense", origin="Hunter Ranger Level 15"
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        description = (
-            "When you take damage, you can take a Reaction to give yourself Resistance to that damage and any other damage of the same type until the end of the current turn."
-        )
+        description = "When you take damage, you can take a Reaction to give yourself Resistance to that damage and any other damage of the same type until the end of the current turn."
         return description
 
 
 ### Winter Walker Ranger Features ###
+
 
 class FrigidExplorer(TextFeature):
     def __init__(self):
@@ -458,12 +453,12 @@ class HuntersRime(TextFeature):
 
 class WinterWalkerSpells(TextFeature):
     def __init__(self):
-        super().__init__(name="Winter Walker Spells", origin="Winter Walker Ranger Level 3")
+        super().__init__(
+            name="Winter Walker Spells", origin="Winter Walker Ranger Level 3"
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        description = (
-            "When you reach a Ranger level specified in the Winter Walker Spells table, you thereafter always have the listed spells prepared."
-        )
+        description = "When you reach a Ranger level specified in the Winter Walker Spells table, you thereafter always have the listed spells prepared."
         return description
 
 
@@ -481,7 +476,9 @@ class FortifyingSoul(TextFeature):
 
 class ChillingRetribution(TextFeature):
     def __init__(self):
-        super().__init__(name="Chilling Retribution", origin="Winter Walker Ranger Level 11")
+        super().__init__(
+            name="Chilling Retribution", origin="Winter Walker Ranger Level 11"
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -502,5 +499,3 @@ class FrozenHaunt(TextFeature):
             "Partially Incorporeal. You have Immunity to the Grappled, Prone, and Restrained conditions. You can move through creatures and objects as if they were Difficult Terrain, but you take 1d10 Force damage if you end your turn inside a creature or an object. If the form ends while you are inside a creature or an object, you are shunted to the nearest unoccupied space."
         )
         return description
-
-

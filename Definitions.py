@@ -124,6 +124,7 @@ class FighterSubclass(str, Enum):
 
 class RangerSubclass(str, Enum):
     BEAST_MASTER = "Beast Master"
+    HUNTER = "Hunter"
 
 
 class CreatureSize(str, Enum):

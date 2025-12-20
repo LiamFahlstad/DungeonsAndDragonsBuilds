@@ -106,6 +106,7 @@ class CharacterSheetData:
         new_spell_ability: Optional[Ability] = None,
     ):
         new_spells = []
+        success = False
         for spell_name, spell_ability in self.spells:
 
             if spell_name == old_spell:
@@ -115,8 +116,11 @@ class CharacterSheetData:
                     else spell_ability
                 )
                 new_spells.append((new_spell, new_spell_ability))
+                success = True
             else:
                 new_spells.append((spell_name, spell_ability))
+        if not success:
+            raise ValueError(f"Spell {old_spell} not found to replace.")
         self.spells = new_spells
 
     def add_invocation(self, invocation: str):
