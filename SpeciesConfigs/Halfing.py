@@ -1,5 +1,5 @@
 import CharacterSheetCreator
-from Features import HalflingFeatures
+from Features.SpeciesFeatures import HalflingFeatures
 from Features import OriginFeats
 
 

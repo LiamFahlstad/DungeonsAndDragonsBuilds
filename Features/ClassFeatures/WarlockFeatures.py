@@ -6,6 +6,42 @@ from Features.BaseFeatures import CharacterFeature, TextFeature
 WARLOCK_HIT_DIE = 8
 
 
+class ReplacingEldritchInvocations(TextFeature):
+    def __init__(self):
+        super().__init__(
+            name="Replacing Eldritch Invocations", origin="Warlock Level 1"
+        )
+
+    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+        description = (
+            "Replacing and Gaining Invocations. Whenever you gain a Warlock level, you can replace one of your invocations with another one for which you qualify. You can’t replace an invocation if it’s a prerequisite for another invocation that you have.\n"
+            "When you gain certain Warlock levels, you gain more invocations of your choice, as shown in the Invocations column of the Warlock Features table.\n"
+            "You can’t pick the same invocation more than once unless its description says otherwise."
+        )
+        return description
+
+
+class ReplacingCantripsAndSpells(TextFeature):
+    def __init__(self):
+        super().__init__(name="Replacing Cantrips and Spells", origin="Warlock Level 1")
+
+    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+        description = (
+            "Whenever you gain a Warlock level, you can replace one of your cantrips from this feature with another Warlock cantrip of your choice.\n"
+            "Whenever you gain a Warlock level, you can replace one spell on your list with another Warlock spell of an eligible level."
+        )
+        return description
+
+
+class RegainingSpellSlots(TextFeature):
+    def __init__(self):
+        super().__init__(name="Regaining Spell Slots", origin="Warlock Level 2")
+
+    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+        description = "You regain all expended Pact Magic spell slots when you finish a Short or Long Rest."
+        return description
+
+
 class MagicalCunning(TextFeature):
     def __init__(self):
         super().__init__(name="Magical Cunning", origin="Warlock Level 2")

@@ -1,5 +1,5 @@
 import CharacterSheetCreator
-from Features import AasimarFeatures
+from Features.SpeciesFeatures import AasimarFeatures
 from Features import OriginFeats
 from Spells.Definitions import SorcererLevel0Spells
 

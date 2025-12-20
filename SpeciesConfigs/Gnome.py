@@ -1,6 +1,6 @@
 import CharacterSheetCreator
 import Definitions
-from Features import GnomeFeatures
+from Features.SpeciesFeatures import GnomeFeatures
 from Features import OriginFeats
 from Spells.Definitions import BardLevel0Spells
 

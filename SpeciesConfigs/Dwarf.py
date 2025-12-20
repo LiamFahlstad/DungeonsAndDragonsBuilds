@@ -1,5 +1,5 @@
 import CharacterSheetCreator
-from Features import DwarfFeatures
+from Features.SpeciesFeatures import DwarfFeatures
 from Features import OriginFeats
 
 

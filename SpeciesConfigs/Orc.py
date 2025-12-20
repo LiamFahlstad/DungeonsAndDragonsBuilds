@@ -1,5 +1,5 @@
 import CharacterSheetCreator
-from Features import OrcFeatures
+from Features.SpeciesFeatures import OrcFeatures
 from Features import OriginFeats
 
 

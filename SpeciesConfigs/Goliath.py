@@ -1,5 +1,5 @@
 import CharacterSheetCreator
-from Features import GoliathFeatures
+from Features.SpeciesFeatures import GoliathFeatures
 from Features import OriginFeats
 
 

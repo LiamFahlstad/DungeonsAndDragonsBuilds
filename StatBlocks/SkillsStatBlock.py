@@ -200,7 +200,7 @@ class RangerSkillsStatBlock(ClassSkillsStatBlock):
             Skill.SURVIVAL,
         ]
         super().__init__(
-            character_class=Definitions.CharacterClass.WARLOCK,
+            character_class=Definitions.CharacterClass.RANGER,
             excepted_skills=excepted_skills,
             num_proficiencies=3,
             proficiencies=proficiencies,

@@ -7,52 +7,77 @@ from Features.BaseFeatures import CharacterFeature, TextFeature
 RANGER_HIT_DIE = 10
 
 
+class ReplacingSpells(TextFeature):
+    def __init__(self):
+        super().__init__(name="Replacing Spells", origin="Warlock Level 1")
+
+    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+        description = (
+            "Whenever you finish a Long Rest, you can replace one spell on your list with another Ranger spell for which you have spell slots."
+        )
+        return description
+    
+class ReplacingWeaponMasteries(TextFeature):
+    def __init__(self):
+        super().__init__(name="Replacing Weapon Masteries", origin="Warlock Level 1")
+
+    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+        description = (
+            "Whenever you finish a Long Rest, you can change the kinds of weapons you chose."
+        )
+        return description
+
+
+
+class RegainingSpellSlots(TextFeature):
+    def __init__(self):
+        super().__init__(name="Regaining Spell Slots", origin="Warlock Level 2")
+
+    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+        description = "You regain all expended slots when you finish a Long Rest."
+        return description
+
+
 class FavoredEnemy(TextFeature):
     def __init__(self):
         super().__init__(name="Favored Enemy", origin="Ranger Level 1")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+        if character_stat_block.character_level < 5:
+            free_hunters_mark_uses = 2
+        elif character_stat_block.character_level < 9:
+            free_hunters_mark_uses = 3
+        elif character_stat_block.character_level < 13:
+            free_hunters_mark_uses = 4
+        elif character_stat_block.character_level < 16:
+            free_hunters_mark_uses = 5
+        else:
+            free_hunters_mark_uses = 6
+            
         description = (
             "You always have the Hunter's Mark spell prepared.\n"
-            "You can cast it twice without expending a spell slot, and you regain all expended uses of this ability when you finish a Long Rest.\n"
-            "The number of times you can cast the spell without a spell slot increases when you reach certain Ranger Levels, as shown in the Favored Enemy column of the Ranger Features table."
+            f"You can cast it {free_hunters_mark_uses} times without expending a spell slot, and you regain all expended uses of this ability when you finish a Long Rest.\n"
         )
         return description
 
 
-class WeaponMastery(TextFeature):
-    def __init__(self):
-        super().__init__(name="Weapon Mastery", origin="Ranger Level 1")
+class DeftExplorerExpertise(CharacterFeature):
+    """While studying magic, you also specialized in another field of study. Choose one of the following skills in which you have proficiency: Arcana, History, Investigation, Medicine, Nature, or Religion. You have Expertise in the chosen skill."""
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        description = (
-            "Your training with weapons allows you to use the mastery properties of two kinds of weapons of your choice with which you have proficiency, such as Longbows and Shortswords.\n"
-            "Whenever you finish a Long Rest, you can change the kinds of weapons you chose. For Example, you could switch to using the mastery properties of Scimitars and Longswords."
-        )
-        return description
+    def __init__(self, skill: Skill):
+        self.skill = skill
+
+    def modify(self, character_stat_block: CharacterStatBlock):
+        character_stat_block.skills.add_skill_expertise(self.skill)
 
 
-class DeftExplorer(TextFeature):
+class DeftExplorerLanguages(TextFeature):
     def __init__(self):
         super().__init__(name="Deft Explorer", origin="Ranger Level 2")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
-            "Thanks to your travels, you gain the following benefits.\n"
-            "Expertise.: Choose one of your skill proficiencies with which you lack Expertise. You gain Expertise in that skill.\n"
             "Languages.: You know two languages of your choice from the language tables in chapter 2."
-        )
-        return description
-
-
-class FightingStyle(TextFeature):
-    def __init__(self):
-        super().__init__(name="Fighting Style", origin="Ranger Level 2")
-
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        description = (
-            "You gain a Fighting Style feat of your choice (see chapter 5). Instead of choosing one of those feats, you can choose the option below.\n"
-            "Druidic Warrior. You learn two Druid cantrips of your choice (See the Druid class's section for a list of Druid spells). Guidance and Starry Wisp are recommended. The chosen cantrips count as Ranger spells for you, and Wisdom is your spellcasting ability for them. Whenever you gain a Ranger level, you can replace one of these cantrips with another Druid cantrip."
         )
         return description
 
@@ -362,8 +387,8 @@ class HuntersPrey(TextFeature):
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
             "You gain one of the following feature options of your choice. Whenever you finish a Short or Long Rest, you can replace the chosen option with the other one.\n"
-            "Colossus Slayer. Your tenacity can wear down even the most resilient foes. When you hit a creature with a weapon, the weapon deals an extra 1d8 damage to the target if it's missing any of its Hit Points. You can deal this extra damage only once per turn.\n"
-            "Horde Breaker. Once on each of your turns when you make an attack with a weapon, you can make another attack with the same weapon against a different creature that is within 5 feet of the original target, that is within the weapon's range, and that you haven't attacked this turn."
+            " * Colossus Slayer: Your tenacity can wear down even the most resilient foes. When you hit a creature with a weapon, the weapon deals an extra 1d8 damage to the target if it's missing any of its Hit Points. You can deal this extra damage only once per turn.\n"
+            " * Horde Breaker: Once on each of your turns when you make an attack with a weapon, you can make another attack with the same weapon against a different creature that is within 5 feet of the original target, that is within the weapon's range, and that you haven't attacked this turn."
         )
         return description
 
