@@ -190,7 +190,14 @@ class CharacterSheetData:
 
             file.write("\n")
             CharacterSheetUtils.write_separator(file, "Abilities")
-            headings = ["Ability", "Score", "Modifier", "Saving Throw", "Proficient"]
+            headings = [
+                "Ability",
+                "Score",
+                "Modifier",
+                "Saving Throw",
+                "ST Proficient",
+                "ST Advantaged",
+            ]
             CharacterSheetUtils.write_table(
                 headings,
                 [
@@ -202,6 +209,11 @@ class CharacterSheetData:
                         (
                             "Yes"
                             if character.is_proficient_in_saving_throw(ability)
+                            else "No"
+                        ),
+                        (
+                            "Yes"
+                            if character.has_advantage_in_saving_throw(ability)
                             else "No"
                         ),
                     ]

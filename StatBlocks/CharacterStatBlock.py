@@ -70,6 +70,15 @@ class CharacterStatBlock:
     def is_proficient_in_saving_throw(self, ability: Ability) -> bool:
         return self.saving_throws.is_proficient(ability)
 
+    def add_proficiency_in_saving_throw(self, ability: Ability) -> None:
+        self.saving_throws.add_proficiency(ability)
+
+    def has_advantage_in_saving_throw(self, ability: Ability) -> bool:
+        return self.saving_throws.is_advantaged(ability)
+
+    def add_advantage_in_saving_throw(self, ability: Ability) -> None:
+        self.saving_throws.add_advantage(ability)
+
     def get_skill_roll_condition(self, skill: Skill):
         return self.skills.get_roll_condition(skill)
 

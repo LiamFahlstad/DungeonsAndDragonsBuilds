@@ -15,8 +15,16 @@ class SavingThrowsStatBlock(StatBlock):
     def is_proficient(self, ability: Ability) -> bool:
         return self.proficiencies.get(ability, False)
 
+    def add_proficiency(self, ability: Ability) -> None:
+        new_proficiencies = self.proficiencies.copy()
+        new_proficiencies[ability] = True
+
     def is_advantaged(self, ability: Ability) -> bool:
         return self.advantages.get(ability, False)
+
+    def add_advantage(self, ability: Ability) -> None:
+        new_advantages = self.advantages.copy()
+        new_advantages[ability] = True
 
 
 class PaladinSavingThrowsStatBlock(SavingThrowsStatBlock):
