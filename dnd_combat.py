@@ -2,167 +2,153 @@ import tkinter as tk
 import json
 from pathlib import Path
 
-# ------------------ DATA ------------------
 
-characters = [
-    {"name": "Hero", "hp": 20, "ac": 15, "temp_hp": 0, "conditions": []},
-    {"name": "Goblin", "hp": 7, "ac": 13, "temp_hp": 0, "conditions": []},
-]
+class CombatApp:
+    def __init__(self, root):
+        self.root = root
+        self.root.title("DnD Combat Engine")
 
-CONDITIONS = [
-    "Blinded",
-    "Charmed",
-    "Concentrating",
-    "Frightened",
-    "Grappled",
-    "Paralyzed",
-    "Poisoned",
-    "Prone",
-    "Stunned",
-]
+        # -------- DATA --------
+        self.characters = [
+            {"name": "Hero", "hp": 20, "ac": 15, "temp_hp": 0, "conditions": []},
+            {"name": "Goblin", "hp": 7, "ac": 13, "temp_hp": 0, "conditions": []},
+        ]
 
-SELECTED_CHARACTER = None
-round_number = 1
-log_file = Path("combat_log.json")
+        self.conditions = [
+            "Blinded",
+            "Charmed",
+            "Concentrating",
+            "Frightened",
+            "Grappled",
+            "Paralyzed",
+            "Poisoned",
+            "Prone",
+            "Stunned",
+        ]
 
-if not log_file.exists():
-    log_file.write_text(json.dumps({}, indent=2))
+        self.selected_character = None
+        self.round_number = 1
+        self.log_file = Path("combat_log.json")
+        self.log_file.write_text(
+            self.log_file.read_text() if self.log_file.exists() else "{}"
+        )
 
+        # -------- UI --------
+        self.build_ui()
+        self.refresh_ui()
 
-# ------------------ LOGGING ------------------
+    # -------- LOGGING --------
+    def log_event(self, text):
+        data = json.loads(self.log_file.read_text())
+        key = f"round_{self.round_number}"
+        data.setdefault(key, []).append(text)
+        self.log_file.write_text(json.dumps(data, indent=2))
 
+    # -------- ACTIONS --------
+    def select_character(self, char):
+        self.selected_character = char
+        self.selected_label.config(text=f"Selected: {char['name']}")
+        self.refresh_ui()
 
-def log_event(text):
-    data = json.loads(log_file.read_text())
-    round_key = f"round_{round_number}"
-    data.setdefault(round_key, []).append(text)
-    log_file.write_text(json.dumps(data, indent=2))
+    def apply_damage(self):
+        if not self.selected_character:
+            return
+        try:
+            dmg = int(self.damage_var.get())
+        except ValueError:
+            return
 
+        self.selected_character["hp"] -= dmg
+        self.log_event(f"{self.selected_character['name']} takes {dmg} damage")
+        self.refresh_ui()
 
-# ------------------ UI ACTIONS ------------------
+    def apply_heal(self):
+        if not self.selected_character:
+            return
+        try:
+            heal = int(self.heal_var.get())
+        except ValueError:
+            return
 
+        self.selected_character["hp"] += heal
+        self.log_event(f"{self.selected_character['name']} heals {heal} HP")
+        self.refresh_ui()
 
-def select_character(char):
-    global SELECTED_CHARACTER
-    SELECTED_CHARACTER = char
-    selected_label.config(text=f"Selected: {char['name']}")
-    refresh_ui()
+    def apply_condition(self):
+        if not self.selected_character:
+            return
 
+        cond = self.condition_var.get()
+        if cond not in self.selected_character["conditions"]:
+            self.selected_character["conditions"].append(cond)
+            self.log_event(f"{self.selected_character['name']} gains {cond}")
+            self.refresh_ui()
 
-def apply_damage(damage_var, selected_character):
-    if not selected_character:
-        return
-    try:
-        dmg = int(damage_var.get())
-    except ValueError:
-        return
+    # -------- UI BUILD --------
+    def build_ui(self):
+        main = tk.Frame(self.root)
+        main.pack(padx=10, pady=10)
 
-    selected_character["hp"] -= dmg
-    log_event(f"{selected_character['name']} takes {dmg} damage")
-    refresh_ui()
+        self.char_frame = tk.Frame(main)
+        self.char_frame.grid(row=0, column=0, padx=10)
 
+        control = tk.Frame(main)
+        control.grid(row=0, column=1, padx=10, sticky="n")
 
-def apply_heal(heal_var, selected_character):
-    if not selected_character:
-        return
-    try:
-        heal = int(heal_var.get())
-    except ValueError:
-        return
+        self.selected_label = tk.Label(
+            control, text="Selected: None", font=("Arial", 10, "bold")
+        )
+        self.selected_label.pack(pady=(0, 10))
 
-    selected_character["hp"] += heal
-    log_event(f"{selected_character['name']} heals {heal} HP")
-    refresh_ui()
+        self.damage_var = tk.StringVar()
+        tk.Entry(control, textvariable=self.damage_var).pack(fill="x")
+        tk.Button(control, text="Apply Damage", command=self.apply_damage).pack(
+            fill="x"
+        )
 
+        self.heal_var = tk.StringVar()
+        tk.Entry(control, textvariable=self.heal_var).pack(fill="x")
+        tk.Button(control, text="Apply Heal", command=self.apply_heal).pack(fill="x")
 
-def apply_condition(selected_character):
-    if not selected_character:
-        return
+        self.condition_var = tk.StringVar(value=self.conditions[0])
+        tk.OptionMenu(control, self.condition_var, *self.conditions).pack(fill="x")
+        tk.Button(control, text="Add Condition", command=self.apply_condition).pack(
+            fill="x"
+        )
 
-    cond = condition_var.get()
-    if cond and cond not in selected_character["conditions"]:
-        selected_character["conditions"].append(cond)
-        log_event(f"{selected_character['name']} gains {cond}")
-        refresh_ui()
+        self.char_widgets = []
 
+    # -------- RENDER --------
+    def refresh_ui(self):
+        for w in self.char_widgets:
+            w.destroy()
+        self.char_widgets.clear()
 
-# ------------------ UI ------------------
+        for char in self.characters:
+            frame = tk.Frame(self.char_frame, bd=2, relief="ridge", padx=6, pady=4)
+            frame.pack(fill="x", pady=4)
 
-root = tk.Tk()
-root.title("DnD Combat Engine")
+            if char is self.selected_character:
+                frame.config(bg="#cce5ff")
 
-main = tk.Frame(root)
-main.pack(padx=10, pady=10)
+            tk.Label(frame, text=char["name"], font=("Arial", 11, "bold")).pack(
+                anchor="w"
+            )
+            tk.Label(frame, text=f"HP: {char['hp']} | AC: {char['ac']}").pack(
+                anchor="w"
+            )
+            tk.Label(
+                frame, text=f"Conditions: {', '.join(char['conditions']) or 'None'}"
+            ).pack(anchor="w")
 
-# Character list (left)
-char_frame = tk.Frame(main)
-char_frame.grid(row=0, column=0, padx=10)
+            frame.bind("<Button-1>", lambda e, c=char: self.select_character(c))
+            for child in frame.winfo_children():
+                child.bind("<Button-1>", lambda e, c=char: self.select_character(c))
 
-# Control panel (right)
-control = tk.Frame(main)
-control.grid(row=0, column=1, padx=10, sticky="n")
-
-selected_label = tk.Label(control, text="Selected: None", font=("Arial", 10, "bold"))
-selected_label.pack(pady=(0, 10))
-
-# ----- Damage -----
-tk.Label(control, text="Deal Damage").pack(anchor="w")
-damage_var = tk.StringVar()
-tk.Entry(control, textvariable=damage_var).pack(fill="x")
-tk.Button(
-    control,
-    text="Apply Damage",
-    command=lambda: apply_damage(damage_var, SELECTED_CHARACTER),
-).pack(fill="x", pady=2)
-
-# ----- Heal -----
-tk.Label(control, text="Heal HP").pack(anchor="w", pady=(10, 0))
-heal_var = tk.StringVar()
-tk.Entry(control, textvariable=heal_var).pack(fill="x")
-tk.Button(
-    control, text="Apply Heal", command=lambda: apply_heal(heal_var, SELECTED_CHARACTER)
-).pack(fill="x", pady=2)
-
-# ----- Conditions -----
-tk.Label(control, text="Apply Condition").pack(anchor="w", pady=(10, 0))
-condition_var = tk.StringVar(value=CONDITIONS[0])
-tk.OptionMenu(control, condition_var, *CONDITIONS).pack(fill="x")
-tk.Button(
-    control, text="Add Condition", command=lambda: apply_condition(SELECTED_CHARACTER)
-).pack(fill="x", pady=2)
-
-# ------------------ CHARACTER RENDER ------------------
-
-char_widgets = []
-
-
-def refresh_ui():
-    for w in char_widgets:
-        w.destroy()
-    char_widgets.clear()
-
-    for char in characters:
-        frame = tk.Frame(char_frame, bd=2, relief="ridge", padx=6, pady=4)
-        frame.pack(fill="x", pady=4)
-
-        if char == SELECTED_CHARACTER:
-            frame.config(bg="#cce5ff")
-
-        tk.Label(frame, text=char["name"], font=("Arial", 11, "bold")).pack(anchor="w")
-        tk.Label(
-            frame,
-            text=f"HP: {char['hp']} | AC: {char['ac']} | Temp HP: {char['temp_hp']}",
-        ).pack(anchor="w")
-        tk.Label(
-            frame, text=f"Conditions: {', '.join(char['conditions']) or 'None'}"
-        ).pack(anchor="w")
-
-        frame.bind("<Button-1>", lambda e, c=char: select_character(c))
-        for child in frame.winfo_children():
-            child.bind("<Button-1>", lambda e, c=char: select_character(c))
-
-        char_widgets.append(frame)
+            self.char_widgets.append(frame)
 
 
-refresh_ui()
-root.mainloop()
+if __name__ == "__main__":
+    root = tk.Tk()
+    app = CombatApp(root)
+    root.mainloop()
