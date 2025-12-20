@@ -19,8 +19,8 @@ class Skillful(CharacterFeature):
     def __init__(self, skill: Skill):
         self.skill = skill
 
-    def validate(self, character_stat_block: CharacterStatBlock) -> bool:
-        return not character_stat_block.skills.is_proficient(self.skill)
+    def validate(self, character_stat_block: CharacterStatBlock):
+        assert not character_stat_block.skills.is_proficient(self.skill)
 
     def modify(self, character_stat_block: CharacterStatBlock):
         self.validate(character_stat_block)
