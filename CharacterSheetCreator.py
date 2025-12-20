@@ -114,7 +114,7 @@ class CharacterSheetData:
             )
         self._create_character_sheet()
 
-    def _create_character_sheet(self):
+    def setup_character_stat_block(self) -> CharacterStatBlock:
         combat = CombatStatBlock(
             speed=self.speed,
             size=self.size,
@@ -142,7 +142,10 @@ class CharacterSheetData:
                 fighting_style.modify(character)
             elif isinstance(fighting_style, FightStyleWeaponFeature):
                 fighting_style.modify(self.weapons)
+        return character
 
+    def _create_character_sheet(self):
+        character = self.setup_character_stat_block()
         output_path = f"Output/{slugify(self.character_name)}_{self.character_subclass.lower()}_level_{self.character_level}_character_sheet.txt"
 
         pathlib.Path(output_path).parent.mkdir(parents=True, exist_ok=True)

@@ -56,7 +56,8 @@ from StatBlocks.SkillsStatBlock import FighterSkillsStatBlock, PaladinSkillsStat
 from CharacterConfigs import PaladinBase
 from CharacterConfigs import PaladinOathOfGlory
 
-if __name__ == "__main__":
+
+def get_data() -> CharacterSheetCreator.CharacterSheetData:
     paladin_oath_of_glory = PaladinBase.PaladinStarter(
         paladin_level=20,
         subclass=Definitions.PaladinSubclass.OATH_OF_GLORY,
@@ -200,4 +201,9 @@ if __name__ == "__main__":
     character_sheet_data.character_name = "Sten"
     character_sheet_data.merge_with(character_class_data)
     character_sheet_data.merge_with(species_data)
+    return character_sheet_data
+
+
+if __name__ == "__main__":
+    character_sheet_data = get_data()
     character_sheet_data.create_character_sheet()

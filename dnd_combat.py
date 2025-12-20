@@ -3,6 +3,9 @@ import tkinter as tk
 import json
 from pathlib import Path
 
+import CharacterSheetCreator
+from Features import Armor
+
 
 class Action(str, Enum):
     HEAL = "heal"
@@ -28,7 +31,9 @@ class Condition(str, Enum):
 
 
 class CombatApp:
-    def __init__(self, root):
+    def __init__(
+        self, root, character_sheets: list[CharacterSheetCreator.CharacterSheetData]
+    ):
         self.root = root
         self.root.title("DnD Combat Engine")
 
@@ -37,6 +42,22 @@ class CombatApp:
             {"name": "Hero", "hp": 20, "ac": 15, "temp_hp": 0, "conditions": []},
             {"name": "Goblin", "hp": 7, "ac": 13, "temp_hp": 0, "conditions": []},
         ]
+        for character_sheet in character_sheets:
+            character = character_sheet.setup_character_stat_block()
+            ac = character.calculate_armor_class()
+            if Armor.ShieldArmor in [type(armor) for armor in character_sheet.armors]:
+                ac = f"{ac} (with Shield) and {ac - 2} (without Shield)"
+            else:
+                ac = f"{ac} (no Shield)"
+            self.characters.append(
+                {
+                    "name": character_sheet.character_name,
+                    "hp": character.calculate_hit_points(),  # Placeholder HP
+                    "ac": ac,  # Placeholder AC
+                    "temp_hp": 0,
+                    "conditions": [],
+                }
+            )
 
         self.conditions = Condition.list_all()
 
@@ -195,9 +216,8 @@ class CombatApp:
             tk.Label(frame, text=char["name"], font=("Arial", 11, "bold")).pack(
                 anchor="w"
             )
-            tk.Label(frame, text=f"HP: {char['hp']} | AC: {char['ac']}").pack(
-                anchor="w"
-            )
+            tk.Label(frame, text=f"HP: {char['hp']}").pack(anchor="w")
+            tk.Label(frame, text=f"AC: {char['ac']}").pack(anchor="w")
             tk.Label(
                 frame, text=f"Conditions: {', '.join(char['conditions']) or 'None'}"
             ).pack(anchor="w")
@@ -210,6 +230,9 @@ class CombatApp:
 
 
 if __name__ == "__main__":
+    import OptimizedPaladinOathOfGlory
+
+    character_sheets = [OptimizedPaladinOathOfGlory.get_data()]
     root = tk.Tk()
-    app = CombatApp(root)
+    app = CombatApp(root, character_sheets)
     root.mainloop()
