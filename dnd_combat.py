@@ -21,7 +21,7 @@ CONDITIONS = [
     "Stunned",
 ]
 
-selected_character = None
+SELECTED_CHARACTER = None
 round_number = 1
 log_file = Path("combat_log.json")
 
@@ -43,13 +43,13 @@ def log_event(text):
 
 
 def select_character(char):
-    global selected_character
-    selected_character = char
+    global SELECTED_CHARACTER
+    SELECTED_CHARACTER = char
     selected_label.config(text=f"Selected: {char['name']}")
     refresh_ui()
 
 
-def apply_damage():
+def apply_damage(damage_var, selected_character):
     if not selected_character:
         return
     try:
@@ -62,7 +62,7 @@ def apply_damage():
     refresh_ui()
 
 
-def apply_heal():
+def apply_heal(heal_var, selected_character):
     if not selected_character:
         return
     try:
@@ -75,7 +75,7 @@ def apply_heal():
     refresh_ui()
 
 
-def apply_condition():
+def apply_condition(selected_character):
     if not selected_character:
         return
 
@@ -109,20 +109,27 @@ selected_label.pack(pady=(0, 10))
 tk.Label(control, text="Deal Damage").pack(anchor="w")
 damage_var = tk.StringVar()
 tk.Entry(control, textvariable=damage_var).pack(fill="x")
-tk.Button(control, text="Apply Damage", command=apply_damage).pack(fill="x", pady=2)
+tk.Button(
+    control,
+    text="Apply Damage",
+    command=lambda: apply_damage(damage_var, SELECTED_CHARACTER),
+).pack(fill="x", pady=2)
 
 # ----- Heal -----
 tk.Label(control, text="Heal HP").pack(anchor="w", pady=(10, 0))
 heal_var = tk.StringVar()
 tk.Entry(control, textvariable=heal_var).pack(fill="x")
-tk.Button(control, text="Apply Heal", command=apply_heal).pack(fill="x", pady=2)
+tk.Button(
+    control, text="Apply Heal", command=lambda: apply_heal(heal_var, SELECTED_CHARACTER)
+).pack(fill="x", pady=2)
 
 # ----- Conditions -----
 tk.Label(control, text="Apply Condition").pack(anchor="w", pady=(10, 0))
 condition_var = tk.StringVar(value=CONDITIONS[0])
 tk.OptionMenu(control, condition_var, *CONDITIONS).pack(fill="x")
-tk.Button(control, text="Add Condition", command=apply_condition).pack(fill="x", pady=2)
-
+tk.Button(
+    control, text="Add Condition", command=lambda: apply_condition(SELECTED_CHARACTER)
+).pack(fill="x", pady=2)
 
 # ------------------ CHARACTER RENDER ------------------
 
@@ -138,7 +145,7 @@ def refresh_ui():
         frame = tk.Frame(char_frame, bd=2, relief="ridge", padx=6, pady=4)
         frame.pack(fill="x", pady=4)
 
-        if char == selected_character:
+        if char == SELECTED_CHARACTER:
             frame.config(bg="#cce5ff")
 
         tk.Label(frame, text=char["name"], font=("Arial", 11, "bold")).pack(anchor="w")
