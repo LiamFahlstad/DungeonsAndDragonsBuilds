@@ -84,6 +84,16 @@ class CombatApp:
             self.log_event(f"{self.selected_character['name']} gains {cond}")
             self.refresh_ui()
 
+    def remove_condition(self):
+        if not self.selected_character:
+            return
+
+        cond = self.condition_var.get()
+        if cond in self.selected_character["conditions"]:
+            self.selected_character["conditions"].remove(cond)
+            self.log_event(f"{self.selected_character['name']} loses {cond}")
+            self.refresh_ui()
+
     # -------- UI BUILD --------
     def build_ui(self):
         main = tk.Frame(self.root)
@@ -113,6 +123,9 @@ class CombatApp:
         self.condition_var = tk.StringVar(value=self.conditions[0])
         tk.OptionMenu(control, self.condition_var, *self.conditions).pack(fill="x")
         tk.Button(control, text="Add Condition", command=self.apply_condition).pack(
+            fill="x"
+        )
+        tk.Button(control, text="Remove Condition", command=self.remove_condition).pack(
             fill="x"
         )
 
