@@ -12,6 +12,7 @@ class Action(str, Enum):
     DAMAGE = "damage"
     ADD_CONDITION = "add_condition"
     REMOVE_CONDITION = "remove_condition"
+    REMOVE_SPELL_SLOT = "remove_spell_slot"
 
 
 class Condition(str, Enum):
@@ -49,6 +50,10 @@ class CombatApp:
                 ac = f"{ac} (with Shield) and {ac - 2} (without Shield)"
             else:
                 ac = f"{ac} (no Shield)"
+            try:
+                character_spell_slots = character.get_spell_slots()
+            except ValueError:
+                character_spell_slots = {}
             self.characters.append(
                 {
                     "name": character_sheet.character_name,
@@ -56,6 +61,7 @@ class CombatApp:
                     "ac": ac,  # Placeholder AC
                     "temp_hp": 0,
                     "conditions": [],
+                    "spell_slots": character_spell_slots,
                 }
             )
 
@@ -132,6 +138,21 @@ class CombatApp:
             self.log_event(f"{self.selected_character['name']} loses {cond}")
             self.refresh_ui()
 
+    def remove_spell_slot(self):
+        if not self.selected_character:
+            return
+
+        slot = self.spell_slot_var.get()
+        level = int(slot.split()[1])
+        if self.selected_character["spell_slots"].get(level, 0) <= 0:
+            return
+
+        old_value = self.selected_character["spell_slots"][level]
+        self.selected_character["spell_slots"][level] = max(old_value - 1, 0)
+        self.history.append((Action.REMOVE_SPELL_SLOT, level))
+        self.log_event(f"{self.selected_character['name']} uses a {slot}")
+        self.refresh_ui()
+
     def undo_last_action(self):
         if not self.selected_character:
             return
@@ -153,6 +174,9 @@ class CombatApp:
                 cond = value
                 if cond not in self.selected_character["conditions"]:
                     self.selected_character["conditions"].append(value)
+            elif action == Action.REMOVE_SPELL_SLOT:
+                level = value
+                self.selected_character["spell_slots"][level] += 1
 
             last_event = data[key].pop()
             self.log_file.write_text(json.dumps(data, indent=2))
@@ -195,6 +219,12 @@ class CombatApp:
             fill="x"
         )
 
+        spell_slots = [f"Level {level} spell slot" for level in range(1, 10)]
+        self.spell_slot_var = tk.StringVar(value=spell_slots[0])
+        tk.OptionMenu(control, self.spell_slot_var, *spell_slots).pack(fill="x")
+        tk.Button(control, text="Cast spell", command=self.remove_spell_slot).pack(
+            fill="x"
+        )
         tk.Button(control, text="Undo Last Action", command=self.undo_last_action).pack(
             fill="x"
         )
@@ -221,6 +251,10 @@ class CombatApp:
             tk.Label(
                 frame, text=f"Conditions: {', '.join(char['conditions']) or 'None'}"
             ).pack(anchor="w")
+            for level, slots in char.get("spell_slots", {}).items():
+                tk.Label(frame, text=f"Level {level} Spell Slots: {slots}").pack(
+                    anchor="w"
+                )
 
             frame.bind("<Button-1>", lambda e, c=char: self.select_character(c))
             for child in frame.winfo_children():
