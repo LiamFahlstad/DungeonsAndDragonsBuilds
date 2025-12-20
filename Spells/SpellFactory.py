@@ -1,11 +1,19 @@
 import json
+from typing import Optional
+
+import Definitions
 
 
 class Spell:
     """Spell object that wraps JSON spell data."""
 
-    def __init__(self, spell_data: dict):
+    def __init__(
+        self,
+        spell_data: dict,
+        spell_casting_ability: Optional[Definitions.Ability] = None,
+    ):
         self._data = spell_data
+        self.spell_casting_ability = spell_casting_ability
 
     # ---------- Property Accessors ---------- #
     @property
@@ -86,6 +94,8 @@ class Spell:
         file.write(f"Duration: {self.duration}\n")
         file.write(f"Description:\n{self.description}\n")
         file.write(f"Source: {self.source}\n")
+        if self.spell_casting_ability is not None:
+            file.write(f"Spellcasting Ability: {self.spell_casting_ability.value}\n")
 
 
 class SpellFactory:
@@ -102,14 +112,20 @@ class SpellFactory:
         return cls._cache
 
     @classmethod
-    def create(cls, spell_name: str) -> Spell:
+    def create(
+        cls,
+        spell_name: str,
+        spell_casting_ability: Optional[Definitions.Ability] = None,
+    ) -> Spell:
         """Create a Spell object from the name."""
         data = cls._load_json()
 
         if spell_name not in data:
             raise ValueError(f"Spell '{spell_name}' not found in JSON file.")
 
-        return Spell(data[spell_name])
+        return Spell(
+            spell_data=data[spell_name], spell_casting_ability=spell_casting_ability
+        )
 
     @classmethod
     def all_spells(cls):

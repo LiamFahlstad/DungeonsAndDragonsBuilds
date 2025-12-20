@@ -38,7 +38,7 @@ class CharacterSheetData:
 
     features: list[Feature] = attr.Factory(list)
     invocations: list[str] = attr.Factory(list)
-    spells: list[str] = attr.Factory(list)
+    spells: list[tuple[str, Ability]] = attr.Factory(list)
     spell_casting_ability: Optional[Ability] = None
 
     spell_slots: dict[int, int] = attr.Factory(dict)
@@ -75,22 +75,49 @@ class CharacterSheetData:
     def add_fighting_style(self, fighting_style: FightingStyle):
         self.fighting_styles.append(fighting_style)
 
-    def add_spell(self, spell: str):
-        self.spells.append(spell)
+    def add_spell(self, spell: str, spell_casting_ability: Optional[Ability] = None):
+        if spell_casting_ability is None:
+            if self.spell_casting_ability is None:
+                raise ValueError(
+                    "Spell casting ability must be provided if not already set."
+                )
+            spell_casting_ability = self.spell_casting_ability
+        self.spells.append((spell, spell_casting_ability))
 
-    def add_cantrip(self, cantrip: str):
-        self.spells.append(cantrip)
+    def add_cantrip(
+        self, cantrip: str, spell_casting_ability: Optional[Ability] = None
+    ):
+        if spell_casting_ability is None:
+            if self.spell_casting_ability is None:
+                raise ValueError(
+                    "Spell casting ability must be provided if not already set."
+                )
+            spell_casting_ability = self.spell_casting_ability
+        self.spells.append((cantrip, spell_casting_ability))
 
     def replace_spells(self, replace_spells: dict[str, str]):
         for old_spell, new_spell in replace_spells.items():
             self.replace_spell(old_spell, new_spell)
 
-    def replace_spell(self, old_spell: str, new_spell: str):
-        try:
-            index = self.spells.index(old_spell)
-            self.spells[index] = new_spell
-        except ValueError:
-            raise ValueError(f"Spell '{old_spell}' not found in the spell list.")
+    def replace_spell(
+        self,
+        old_spell: str,
+        new_spell: str,
+        new_spell_ability: Optional[Ability] = None,
+    ):
+        new_spells = []
+        for spell_name, spell_ability in self.spells:
+
+            if spell_name == old_spell:
+                new_spell_ability = (
+                    new_spell_ability
+                    if new_spell_ability is not None
+                    else spell_ability
+                )
+                new_spells.append((new_spell, new_spell_ability))
+            else:
+                new_spells.append((spell_name, spell_ability))
+        self.spells = new_spells
 
     def add_invocation(self, invocation: str):
         self.invocations.append(invocation)
@@ -301,7 +328,10 @@ class CharacterSheetData:
                 file.write("\n")
                 CharacterSheetUtils.write_separator(file, "Spells")
 
-                spells = [SpellFactory.create(spell_name) for spell_name in self.spells]
+                spells = [
+                    SpellFactory.create(spell_name, spell_casting_ability)
+                    for spell_name, spell_casting_ability in self.spells
+                ]
                 sorted_spells = sorted(spells, key=lambda s: (s.level, s.name))
 
                 for spell_index, spell in enumerate(sorted_spells):
