@@ -4,8 +4,8 @@ import json
 from pathlib import Path
 
 import CharacterSheetCreator
+import Definitions
 from Features import Armor
-import OptimizedRangerHunter
 
 
 class Action(str, Enum):
@@ -63,6 +63,14 @@ class CombatApp:
                     "temp_hp": 0,
                     "conditions": [],
                     "spell_slots": character_spell_slots,
+                    "Ability Scores": {
+                        ability.name: character.get_ability_score(ability)
+                        for ability in Definitions.Ability
+                    },
+                    "Saving Throws": {
+                        ability.name: character.get_saving_throw_modifier(ability)
+                        for ability in Definitions.Ability
+                    },
                 }
             )
 
@@ -257,6 +265,26 @@ class CombatApp:
                     anchor="w"
                 )
 
+            if "Ability Scores" in char:
+                text = ", ".join(
+                    [
+                        f"{ability[:3]} {modifier:02}"
+                        for ability, modifier in char.get("Ability Scores", {}).items()
+                    ]
+                )
+                tk.Label(frame, text="Ability Scores:").pack(anchor="w")
+                tk.Label(frame, text=text).pack(anchor="w")
+
+            if "Saving Throws" in char:
+                text = ", ".join(
+                    [
+                        f"{ability[:3]} {modifier:02}"
+                        for ability, modifier in char.get("Saving Throws", {}).items()
+                    ]
+                )
+                tk.Label(frame, text="Saving Throws:").pack(anchor="w")
+                tk.Label(frame, text=text).pack(anchor="w")
+
             frame.bind("<Button-1>", lambda e, c=char: self.select_character(c))
             for child in frame.winfo_children():
                 child.bind("<Button-1>", lambda e, c=char: self.select_character(c))
@@ -265,11 +293,12 @@ class CombatApp:
 
 
 if __name__ == "__main__":
-    import OptimizedPaladinOathOfGlory
+    import OptimizedRangerHunter
+    import OptimizedBerserkerBarbarian
 
     character_sheets = [
-        OptimizedPaladinOathOfGlory.get_data(),
         OptimizedRangerHunter.get_data(),
+        OptimizedBerserkerBarbarian.get_data(),
     ]
     root = tk.Tk()
     app = CombatApp(root, character_sheets)
