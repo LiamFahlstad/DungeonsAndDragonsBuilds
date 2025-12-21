@@ -1,3 +1,4 @@
+import Definitions
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Definitions import Ability, DiceRollCondition, Skill
 from Features.BaseFeatures import CharacterFeature, TextFeature
@@ -11,18 +12,35 @@ class Rage(TextFeature):
         super().__init__(name="Rage", origin="Barbarian Level 1")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+        barbarian_level = character_stat_block.get_class_level(
+            Definitions.CharacterClass.BARBARIAN
+        )
+        if barbarian_level <= 4:
+            rage_usages = 2
+        elif barbarian_level <= 8:
+            rage_usages = 3
+        elif barbarian_level <= 12:
+            rage_usages = 4
+        elif barbarian_level <= 16:
+            rage_usages = 5
+        else:
+            rage_usages = 6
+        rage_damage_bonus = get_rage_damage_bonus(barbarian_level)
         description = (
-            "You can imbue yourself with a primal power called Rage, a force that grants you extraordinary might and resilience. You can enter it as a Bonus Action if you aren't wearing Heavy armor.\n"
-            "You can enter your Rage the number of times shown for your Barbarian level in the Rages column of the Barbarian Features table. You regain one expended use when you finish a Short Rest, and you regain all expended uses when you finish a Long Rest.\n"
-            "While active, your Rage follows the rules below.\n"
-            "Damage Resistance. You have Resistance to Bludgeoning, Piercing, and Slashing damage.\n"
-            "Rage Damage. When you make an attack using Strength—with either a weapon or an Unarmed Strike—and deal damage to the target, you gain a bonus to the damage that increases as you gain levels as a Barbarian, as shown in the Rage Damage column of the Barbarian Features table.\n"
-            "Strength Advantage. You have Advantage on Strength checks and Strength saving throws.\n"
-            "No Concentration or Spells. You can't maintain Concentration, and you can't cast spells.\n"
-            "Duration. The Rage lasts until the end of your next turn, and it ends early if you don Heavy armor or have the Incapacitated condition. If your Rage is still active on your next turn, you can extend the Rage for another round by doing one of the following:\n"
-            "Make an attack roll against an enemy.\n"
-            "Force an enemy to make a saving throw.\n"
-            "Take a Bonus Action to extend your Rage.\n"
+            "You can imbue yourself with a primal power called Rage, a force that grants you extraordinary might and resilience.\n"
+            " * Casting Time: Bonus Action\n"
+            " * Condition: Not wearing Heavy armor\n"
+            f" * Number of usages: You can enter your Rage {rage_usages} times.\n"
+            " * Regaining: You regain one expended use when you finish a Short Rest, and you regain all expended uses when you finish a Long Rest.\n"
+            " * While active, your Rage follows the rules below.\n"
+            "    - Damage Resistance: You have Resistance to Bludgeoning, Piercing, and Slashing damage.\n"
+            f"    - Rage Damage: When you make an attack using Strength—with either a weapon or an Unarmed Strike—and deal damage to the target, you gain +{rage_damage_bonus} bonus to the damage.\n"
+            "    - Strength Advantage: You have Advantage on Strength checks and Strength saving throws.\n"
+            "    - No Concentration or Spells: You can't maintain Concentration, and you can't cast spells.\n"
+            "    - Duration: The Rage lasts until the end of your next turn, and it ends early if you don Heavy armor or have the Incapacitated condition. If your Rage is still active on your next turn, you can extend the Rage for another round by doing one of the following:\n"
+            "       > Make an attack roll against an enemy.\n"
+            "       > Force an enemy to make a saving throw.\n"
+            "       > Take a Bonus Action to extend your Rage.\n"
             "Each time the Rage is extended, it lasts until the end of your next turn. You can maintain a Rage for up to 10 minutes."
         )
         return description
@@ -49,13 +67,19 @@ class WeaponMastery(TextFeature):
         return description
 
 
-class DangerSense(TextFeature):
+class DangerSenseText(TextFeature):
     def __init__(self):
         super().__init__(name="Danger Sense", origin="Barbarian Level 2")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "You gain an uncanny sense of when things aren't as they should be, giving you an edge when you dodge perils. You have Advantage on Dexterity saving throws unless you have the Incapacitated condition."
         return description
+
+
+class DangerSense(CharacterFeature):
+    def modify(self, character_stat_block: CharacterStatBlock):
+        character_stat_block.saving_throws.add_advantage(Ability.DEXTERITY)
+        character_stat_block.saving_throws.add_advantage(Ability.STRENGTH)
 
 
 class RecklessAttack(TextFeature):
@@ -67,15 +91,29 @@ class RecklessAttack(TextFeature):
         return description
 
 
+class PrimalKnowledgeSkillProficiency(CharacterFeature):
+    def __init__(self, skill: Skill):
+        if skill not in [
+            Skill.ANIMAL_HANDLING,
+            Skill.ATHLETICS,
+            Skill.INTIMIDATION,
+            Skill.NATURE,
+            Skill.PERCEPTION,
+            Skill.SURVIVAL,
+        ]:
+            raise ValueError(f"Invalid skill for Primal Knowledge: {skill}")
+        self.skill = skill
+
+    def modify(self, character_stat_block: CharacterStatBlock):
+        character_stat_block.skills.add_skill_proficiency(self.skill)
+
+
 class PrimalKnowledge(TextFeature):
     def __init__(self):
         super().__init__(name="Primal Knowledge", origin="Barbarian Level 3")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        description = (
-            "You gain proficiency in another skill of your choice from the skill list available to Barbarians at level 1.\n"
-            "In addition, while your Rage is active, you can channel primal power when you attempt certain tasks; whenever you make an ability check using one of the following skills, you can make it as a Strength check even if it normally uses a different ability: Acrobatics, Intimidation, Perception, Stealth, or Survival. When you use this ability, your Strength represents primal power coursing through you, honing your agility, bearing, and senses."
-        )
+        description = "In addition, while your Rage is active, you can channel primal power when you attempt certain tasks; whenever you make an ability check using one of the following skills, you can make it as a Strength check even if it normally uses a different ability: Acrobatics, Intimidation, Perception, Stealth, or Survival. When you use this ability, your Strength represents primal power coursing through you, honing your agility, bearing, and senses."
         return description
 
 
@@ -207,7 +245,10 @@ class Frenzy(TextFeature):
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        description = "If you use Reckless Attack while your Rage is active, you deal extra damage to the first target you hit on your turn with a Strength-based attack. To determine the extra damage, roll a number of d6s equal to your Rage Damage bonus, and add them together. The damage has the same type as the weapon or Unarmed Strike used for the attack."
+        rage_damage_bonus = get_rage_damage_bonus(
+            character_stat_block.get_class_level(Definitions.CharacterClass.BARBARIAN)
+        )
+        description = f"If you use Reckless Attack while your Rage is active, you deal extra damage to the first target you hit on your turn with a Strength-based attack. To determine the extra damage, roll a number of d6s equal to your Rage Damage bonus ({rage_damage_bonus}), and add them together. The damage has the same type as the weapon or Unarmed Strike used for the attack."
         return description
 
 
@@ -446,3 +487,13 @@ class RageOfTheGods(TextFeature):
             "Revivification. When a creature within 30 feet of you would drop to 0 Hit Points, you can take a Reaction to expend a use of your Rage to instead change the target’s Hit Points to a number equal to your Barbarian level."
         )
         return description
+
+
+def get_rage_damage_bonus(barbarian_level: int) -> int:
+    if barbarian_level <= 8:
+        rage_damage_bonus = 2
+    elif barbarian_level <= 15:
+        rage_damage_bonus = 3
+    else:
+        rage_damage_bonus = 4
+    return rage_damage_bonus

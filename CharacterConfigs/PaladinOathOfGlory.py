@@ -1,6 +1,6 @@
 from typing import Optional
 import attr
-from CharacterConfigs.PaladinBase import (
+from CharacterConfigs.Bases.PaladinBase import (
     PaladinFeaturePerLevel,
     PaladinSubclassLevel13,
     PaladinSubclassLevel15,

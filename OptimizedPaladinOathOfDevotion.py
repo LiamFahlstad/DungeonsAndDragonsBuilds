@@ -1,6 +1,6 @@
 from CharacterConfigs import BattleMasterFighter
 from CharacterConfigs import PaladinOathOfDevotion
-from CharacterConfigs.PaladinBase import (
+from CharacterConfigs.Bases.PaladinBase import (
     PaladinLevel1,
     PaladinLevel2,
     PaladinLevel3,

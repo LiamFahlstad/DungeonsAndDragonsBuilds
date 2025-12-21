@@ -75,3 +75,13 @@ class WizardSavingThrowsStatBlock(SavingThrowsStatBlock):
                 Ability.INTELLIGENCE: True,
             }
         )
+
+
+class BarbarianSavingThrowsStatBlock(SavingThrowsStatBlock):
+    def __init__(self):
+        super().__init__(
+            proficiencies={
+                Ability.STRENGTH: True,
+                Ability.CONSTITUTION: True,
+            }
+        )

@@ -13,7 +13,7 @@ from StatBlocks.AbilitiesStatBlock import (
 )
 from StatBlocks.SavingThrowsStatBlock import PaladinSavingThrowsStatBlock
 from StatBlocks.SkillsStatBlock import PaladinSkillsStatBlock
-from CharacterConfigs import PaladinBase
+from CharacterConfigs.Bases import PaladinBase
 from Spells.Definitions import (
     PaladinLevel1Spells,
     PaladinLevel2Spells,

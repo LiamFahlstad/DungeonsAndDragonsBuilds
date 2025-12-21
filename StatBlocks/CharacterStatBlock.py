@@ -38,6 +38,9 @@ class CharacterStatBlock:
     def character_level(self) -> int:
         return sum(self.level_per_class.values())
 
+    def get_class_level(self, character_class: CharacterClass) -> int:
+        return self.level_per_class.get(character_class, 0)
+
     def get_proficiency_bonus(self) -> int:
         return 2 + (self.character_level - 1) // 4
 

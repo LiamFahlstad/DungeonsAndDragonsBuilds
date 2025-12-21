@@ -127,6 +127,13 @@ class RangerSubclass(str, Enum):
     HUNTER = "Hunter"
 
 
+class BarbarianSubclass(str, Enum):
+    PATH_OF_THE_BERSERKER = "Path of the Berserker"
+    PATH_OF_THE_ZEALOT = "Path of the Zealot"
+    PATH_OF_THE_WORLD_TREE = "Path of the World Tree"
+    PATH_OF_THE_WILD_HEART = "Path of the Wild Heart"
+
+
 class CreatureSize(str, Enum):
     TINY = "Tiny"
     SMALL = "Small"

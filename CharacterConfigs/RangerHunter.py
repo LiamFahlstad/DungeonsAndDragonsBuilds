@@ -1,6 +1,6 @@
 from typing import Optional
 import attr
-from CharacterConfigs.RangerBase import (
+from CharacterConfigs.Bases.RangerBase import (
     RangerFeaturePerLevel,
     RangerSubclassLevel13,
     RangerSubclassLevel15,

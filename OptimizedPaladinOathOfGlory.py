@@ -1,4 +1,4 @@
-from CharacterConfigs.PaladinBase import (
+from CharacterConfigs.Bases.PaladinBase import (
     PaladinLevel1,
     PaladinLevel10,
     PaladinLevel11,
@@ -53,7 +53,7 @@ from Spells.Definitions import (
 )
 from StatBlocks.AbilitiesStatBlock import StandardArrayAbilitiesStatBlock
 from StatBlocks.SkillsStatBlock import FighterSkillsStatBlock, PaladinSkillsStatBlock
-from CharacterConfigs import PaladinBase
+from CharacterConfigs.Bases import PaladinBase
 from CharacterConfigs import PaladinOathOfGlory
 
 
