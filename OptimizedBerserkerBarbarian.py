@@ -51,11 +51,11 @@ def get_data() -> CharacterSheetCreator.CharacterSheetData:
         subclass=Definitions.BarbarianSubclass.PATH_OF_THE_BERSERKER,
         # Distribute 15, 14, 13, 12, 10, 8 among your abilities.
         abilities=StandardArrayAbilitiesStatBlock(
-            strength=8,
-            dexterity=15,
-            constitution=13,
-            intelligence=12,
-            wisdom=14,
+            strength=15,
+            dexterity=13,
+            constitution=14,
+            intelligence=8,
+            wisdom=12,
             charisma=10,
         ),
         # Choose two skills to be proficient in
@@ -73,7 +73,7 @@ def get_data() -> CharacterSheetCreator.CharacterSheetData:
         background_ability_bonuses=Backgrounds.FreeBackgroundAbilityBonus(
             [
                 (Ability.CONSTITUTION, 2),
-                (Ability.CHARISMA, 1),
+                (Ability.STRENGTH, 1),
             ]
         ),
         background_skill_proficiencies=Backgrounds.FreeBackgroundSkillProficiency(
@@ -88,8 +88,8 @@ def get_data() -> CharacterSheetCreator.CharacterSheetData:
         armor=[],
         barbarian_feature_per_level=BarbarianBase.BarbarianFeaturePerLevel(
             barbarian_level_1=BarbarianLevel1(
-                weapon_mastery_1=Weapons.Longbow(),
-                weapon_mastery_2=Weapons.Scimitar(),
+                weapon_mastery_1=Weapons.Handaxe(),
+                weapon_mastery_2=Weapons.Greataxe(),
             ),
             barbarian_level_2=BarbarianLevel2(),
             barbarian_level_3=BarbarianLevel3(

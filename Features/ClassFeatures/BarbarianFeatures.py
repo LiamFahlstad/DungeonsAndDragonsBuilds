@@ -46,13 +46,32 @@ class Rage(TextFeature):
         return description
 
 
-class UnarmoredDefense(TextFeature):
+class UnarmoredDefenseText(TextFeature):
     def __init__(self):
         super().__init__(name="Unarmored Defense", origin="Barbarian Level 1")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        description = "While you aren't wearing any armor, your base Armor Class equals 10 plus your Dexterity and Constitution modifiers. You can use a Shield and still gain this benefit."
+        dexterity_modifier = character_stat_block.get_ability_modifier(
+            Definitions.Ability.DEXTERITY
+        )
+        constitution_modifier = character_stat_block.get_ability_modifier(
+            Definitions.Ability.CONSTITUTION
+        )
+        armor_class = 10 + dexterity_modifier + constitution_modifier
+        description = f"While you aren't wearing any armor, your base Armor Class equals 10 plus your Dexterity and Constitution modifiers (total {armor_class}). You can use a Shield and still gain this benefit."
         return description
+
+
+class UnarmoredDefense(CharacterFeature):
+    def modify(self, character_stat_block: CharacterStatBlock):
+        dexterity_modifier = character_stat_block.get_ability_modifier(
+            Definitions.Ability.DEXTERITY
+        )
+        constitution_modifier = character_stat_block.get_ability_modifier(
+            Definitions.Ability.CONSTITUTION
+        )
+        armor_class = 10 + dexterity_modifier + constitution_modifier
+        character_stat_block.combat.update_armor_class(armor_class, pick_max=True)
 
 
 class WeaponMastery(TextFeature):

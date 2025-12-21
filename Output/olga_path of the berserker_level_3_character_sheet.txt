@@ -15,9 +15,9 @@ Proficiency Bonus  | 2
 ################################################################################
 Field          | Value  
 ---------------+--------
-Max Hit Points | 38     
+Max Hit Points | 41     
 Armor Class    | 14     
-Initiative     | d20 + 2
+Initiative     | d20 + 1
 Speed (ft)     | 30     
 Size           | Medium 
 
@@ -26,36 +26,36 @@ Size           | Medium
 ################################################################################
 Ability      | Score | Modifier | Saving Throw | ST Proficient | ST Advantaged
 -------------+-------+----------+--------------+---------------+--------------
-Strength     | 8     | -1       | 1            | Yes           | No           
-Dexterity    | 15    | 2        | 2            | No            | No           
-Constitution | 15    | 2        | 4            | Yes           | No           
-Intelligence | 12    | 1        | 1            | No            | No           
-Wisdom       | 14    | 2        | 2            | No            | No           
-Charisma     | 11    | 0        | 0            | No            | No           
+Strength     | 16    | 3        | 5            | Yes           | Yes          
+Dexterity    | 13    | 1        | 1            | No            | Yes          
+Constitution | 16    | 3        | 5            | Yes           | No           
+Intelligence | 8     | -1       | -1           | No            | No           
+Wisdom       | 12    | 1        | 1            | No            | No           
+Charisma     | 10    | 0        | 0            | No            | No           
 
 ################################################################################
 # ================================== Skills ================================== #
 ################################################################################
 Skill           | Modifier | Proficient | Ability      | RollCondition
 ----------------+----------+------------+--------------+--------------
-Acrobatics      | 2        | No         | Dexterity    | Neutral      
-Animal Handling | 2        | No         | Wisdom       | Neutral      
-Arcana          | 1        | No         | Intelligence | Neutral      
-Athletics       | 1        | Yes        | Strength     | Neutral      
+Acrobatics      | 1        | No         | Dexterity    | Neutral      
+Animal Handling | 1        | No         | Wisdom       | Neutral      
+Arcana          | -1       | No         | Intelligence | Neutral      
+Athletics       | 5        | Yes        | Strength     | Neutral      
 Deception       | 0        | No         | Charisma     | Neutral      
-History         | 1        | No         | Intelligence | Neutral      
-Insight         | 4        | Yes        | Wisdom       | Neutral      
+History         | -1       | No         | Intelligence | Neutral      
+Insight         | 3        | Yes        | Wisdom       | Neutral      
 Intimidation    | 2        | Yes        | Charisma     | Neutral      
-Investigation   | 1        | No         | Intelligence | Neutral      
-Medicine        | 2        | No         | Wisdom       | Neutral      
-Nature          | 1        | No         | Intelligence | Neutral      
-Perception      | 4        | Yes        | Wisdom       | Neutral      
+Investigation   | -1       | No         | Intelligence | Neutral      
+Medicine        | 1        | No         | Wisdom       | Neutral      
+Nature          | -1       | No         | Intelligence | Neutral      
+Perception      | 3        | Yes        | Wisdom       | Neutral      
 Performance     | 0        | No         | Charisma     | Neutral      
 Persuasion      | 2        | Yes        | Charisma     | Neutral      
-Religion        | 1        | No         | Intelligence | Neutral      
-Sleight of Hand | 2        | No         | Dexterity    | Neutral      
-Stealth         | 2        | No         | Dexterity    | Neutral      
-Survival        | 2        | No         | Wisdom       | Neutral      
+Religion        | -1       | No         | Intelligence | Neutral      
+Sleight of Hand | 1        | No         | Dexterity    | Neutral      
+Stealth         | 1        | No         | Dexterity    | Neutral      
+Survival        | 1        | No         | Wisdom       | Neutral      
 
 ################################################################################
 # ================================= Features ================================= #
@@ -98,7 +98,7 @@ Each time the Rage is extended, it lasts until the end of your next turn. You ca
 
 Name: Unarmored Defense
 Origin: Barbarian Level 1
-Description: While you aren't wearing any armor, your base Armor Class equals 10 plus your Dexterity and Constitution modifiers. You can use a Shield and still gain this benefit.
+Description: While you aren't wearing any armor, your base Armor Class equals 10 plus your Dexterity and Constitution modifiers (total 14). You can use a Shield and still gain this benefit.
 
 Name: Weapon Mastery
 Origin: Barbarian Level 1
@@ -129,34 +129,14 @@ Description: You have Immunity to the Charmed and Frightened conditions while yo
 ################################################################################
 # ================================= Weapons ================================== #
 ################################################################################
-Field                 | Value                                                                                                                                                     
-----------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------
-Name                  | Scimitar                                                                                                                                                  
-Type                  | Martial Melee                                                                                                                                             
-DamageType            | Slashing                                                                                                                                                  
-Property 'Finesse'    | Use Str or Dex (your choice) for attack and damage rolls; same mod for both.                                                                              
-Property 'Light'      | When you Attack with a Light weapon, you can Bonus Action attack with another Light weapon; no ability mod to that damage unless negative.                
-Proficient            | Yes                                                                                                                                                       
-AttackRoll            | 1d20 + 2 (ability mod: Dexterity) + 2 (Proficient)                                                                                                        
-DamageRoll            | 1d6 + 2 (ability mod: Dexterity)                                                                                                                          
-Mastery 'Nick'        | When using a Light weapon's extra attack, you can make it during the Attack action instead of as a Bonus Action. Once per turn.                           
-----------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------
-Name                  | Shortsword                                                                                                                                                
-Type                  | Martial Melee                                                                                                                                             
-DamageType            | Piercing                                                                                                                                                  
-Property 'Finesse'    | Use Str or Dex (your choice) for attack and damage rolls; same mod for both.                                                                              
-Property 'Light'      | When you Attack with a Light weapon, you can Bonus Action attack with another Light weapon; no ability mod to that damage unless negative.                
-Proficient            | Yes                                                                                                                                                       
-AttackRoll            | 1d20 + 2 (ability mod: Dexterity) + 2 (Proficient)                                                                                                        
-DamageRoll            | 1d6 + 2 (ability mod: Dexterity)                                                                                                                          
-----------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------
-Name                  | Longbow                                                                                                                                                   
-Type                  | Martial Ranged                                                                                                                                            
-DamageType            | Piercing                                                                                                                                                  
-Property 'Ammunition' | Use only with matching ammo; each attack expends 1. Drawing ammo is part of attack (need free hand for 1-handed). After combat, recover half (round down).
-Property 'Heavy'      | Disadvantage if Melee + Str < 13 or Ranged + Dex < 13.                                                                                                    
-Property 'Two-handed' | Requires two hands to attack.                                                                                                                             
-Proficient            | Yes                                                                                                                                                       
-AttackRoll            | 1d20 + 2 (ability mod: Dexterity) + 2 (Proficient)                                                                                                        
-DamageRoll            | 1d8 + 2 (ability mod: Dexterity)                                                                                                                          
-Mastery 'Slow'        | On a hit that deals damage, reduce the target's Speed by 10 ft until your next turn. Multiple hits don't stack.                                           
+Field                 | Value                                                                                                                                                                                                                                                
+----------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Name                  | Greataxe                                                                                                                                                                                                                                             
+Type                  | Martial Melee                                                                                                                                                                                                                                        
+DamageType            | Slashing                                                                                                                                                                                                                                             
+Property 'Heavy'      | Disadvantage if Melee + Str < 13 or Ranged + Dex < 13.                                                                                                                                                                                               
+Property 'Two-handed' | Requires two hands to attack.                                                                                                                                                                                                                        
+Proficient            | Yes                                                                                                                                                                                                                                                  
+AttackRoll            | 1d20 + 3 (ability mod: Strength) + 2 (Proficient)                                                                                                                                                                                                    
+DamageRoll            | 1d12 + 3 (ability mod: Strength)                                                                                                                                                                                                                     
+Mastery 'Cleave'      | When you hit a creature with a melee attack, you can make one extra melee attack with the same weapon against another creature within 5 ft of the first and in your reach. On a hit, deal weapon damage only (no mod unless negative). Once per turn.

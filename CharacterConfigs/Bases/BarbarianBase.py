@@ -84,6 +84,7 @@ class BarbarianLevel1(ClassLevelFeatures):
 
         data.add_feature(BarbarianFeatures.Rage())
         data.add_feature(BarbarianFeatures.UnarmoredDefense())
+        data.add_feature(BarbarianFeatures.UnarmoredDefenseText())
         data.add_feature(BarbarianFeatures.WeaponMastery())
         return data
 
@@ -437,12 +438,11 @@ class BarbarianStarter(BarbarianBase):
 
         if self.add_default_equipment:
             # Starting armor
-            data.add_armor(Armor.StuddedLeatherArmor())
+            # data.add_armor(Armor.StuddedLeatherArmor())
 
             # Starting weapons
-            data.add_weapon(Weapons.Scimitar(player_is_proficient=True))
-            data.add_weapon(Weapons.Shortsword(player_is_proficient=True))
-            data.add_weapon(Weapons.Longbow(player_is_proficient=True))
+            data.add_weapon(Weapons.Greataxe(player_is_proficient=True))
+            # data.add_weapon(Weapons.Handaxe(player_is_proficient=True))
 
         if self.armor is not None:
             for a in self.armor:

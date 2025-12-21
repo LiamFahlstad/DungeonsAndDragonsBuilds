@@ -11,18 +11,19 @@ class CombatStatBlock(StatBlock):
         self.hit_points_bonus = 0
         self.speed = speed
         self.size = size
-        self.armor_class_without_bonus = 10
-        self.armor_class_bonus = 0
+        self.armor_class = 10  # Overridden during character creation
         self.initiative_bonus = 0  # Overridden during character creation
         self.weapons_masteries = []
 
     @property
-    def armor_class(self) -> int:
-        return self.armor_class_without_bonus + self.armor_class_bonus
-
-    @property
     def initiative(self) -> int:
         return self.initiative_bonus
+
+    def update_armor_class(self, new_armor_class: int, pick_max: bool = True):
+        if pick_max:
+            self.armor_class = max(self.armor_class, new_armor_class)
+        else:
+            self.armor_class = new_armor_class
 
     def calculate_hit_points(
         self,
