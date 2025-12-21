@@ -245,9 +245,13 @@ class CombatApp:
         for w in self.char_widgets:
             w.destroy()
         self.char_widgets.clear()
-        for char in self.characters:
+
+        for index, char in enumerate(self.characters):
+            row = index % 3
+            column = index // 3
+
             frame = tk.Frame(self.char_frame, bd=2, relief="ridge", padx=6, pady=4)
-            frame.pack(fill="x", pady=4)
+            frame.grid(row=row, column=column, padx=6, pady=4, sticky="nw")
 
             if char is self.selected_character:
                 frame.config(bg="#cce5ff")
@@ -257,9 +261,12 @@ class CombatApp:
             )
             tk.Label(frame, text=f"HP: {char['hp']}").pack(anchor="w")
             tk.Label(frame, text=f"AC: {char['ac']}").pack(anchor="w")
+
             tk.Label(
-                frame, text=f"Conditions: {', '.join(char['conditions']) or 'None'}"
+                frame,
+                text=f"Conditions: {', '.join(char['conditions']) or 'None'}",
             ).pack(anchor="w")
+
             for level, slots in char.get("spell_slots", {}).items():
                 tk.Label(frame, text=f"Level {level} Spell Slots: {slots}").pack(
                     anchor="w"
@@ -267,20 +274,16 @@ class CombatApp:
 
             if "Ability Scores" in char:
                 text = ", ".join(
-                    [
-                        f"{ability[:3]} {modifier:02}"
-                        for ability, modifier in char.get("Ability Scores", {}).items()
-                    ]
+                    f"{ability[:3]} {modifier:02}"
+                    for ability, modifier in char["Ability Scores"].items()
                 )
                 tk.Label(frame, text="Ability Scores:").pack(anchor="w")
                 tk.Label(frame, text=text).pack(anchor="w")
 
             if "Saving Throws" in char:
                 text = ", ".join(
-                    [
-                        f"{ability[:3]} {modifier:02}"
-                        for ability, modifier in char.get("Saving Throws", {}).items()
-                    ]
+                    f"{ability[:3]} {modifier:02}"
+                    for ability, modifier in char["Saving Throws"].items()
                 )
                 tk.Label(frame, text="Saving Throws:").pack(anchor="w")
                 tk.Label(frame, text=text).pack(anchor="w")
