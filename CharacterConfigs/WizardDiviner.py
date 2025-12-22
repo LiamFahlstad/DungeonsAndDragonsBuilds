@@ -8,7 +8,6 @@ from CharacterConfigs.Bases.WizardBase import (
     WizardSubclassLevel14,
     WizardSubclassLevel15,
     WizardSubclassLevel17,
-    WizardSubclassLevel20,
     WizardSubclassLevel3,
     WizardSubclassLevel5,
     WizardSubclassLevel6,
@@ -18,54 +17,59 @@ from CharacterConfigs.Bases.WizardBase import (
 from CharacterSheetCreator import CharacterSheetData
 from Features.ClassFeatures import WizardFeatures
 from Spells.Definitions import (
-    EvocationLevel1Spells,
-    EvocationLevel2Spells,
-    EvocationLevel3Spells,
-    EvocationLevel4Spells,
-    EvocationLevel5Spells,
-    EvocationLevel6Spells,
-    EvocationLevel7Spells,
-    EvocationLevel8Spells,
+    ConjurationLevel2Spells,
+    ConjurationLevel3Spells,
+    DivinationLevel0Spells,
+    DivinationLevel1Spells,
+    DivinationLevel2Spells,
+    DivinationLevel3Spells,
+    DivinationLevel4Spells,
+    DivinationLevel5Spells,
+    DivinationLevel6Spells,
+    DivinationLevel7Spells,
+    DivinationLevel8Spells,
+    DivinationLevel9Spells,
     WizardLevel9Spells,
 )
 
-EvocationSpellsUpTo2: TypeAlias = EvocationLevel1Spells | EvocationLevel2Spells
+DivinationSpellsUpTo2: TypeAlias = DivinationLevel1Spells | DivinationLevel2Spells
 
-EvocationSpellsUpTo3: TypeAlias = EvocationSpellsUpTo2 | EvocationLevel3Spells
+DivinationSpellsUpTo3: TypeAlias = DivinationSpellsUpTo2 | DivinationLevel3Spells
 
-EvocationSpellsUpTo4: TypeAlias = EvocationSpellsUpTo3 | EvocationLevel4Spells
+DivinationSpellsUpTo4: TypeAlias = DivinationSpellsUpTo3 | DivinationLevel4Spells
 
-EvocationSpellsUpTo5: TypeAlias = EvocationSpellsUpTo4 | EvocationLevel5Spells
+DivinationSpellsUpTo5: TypeAlias = DivinationSpellsUpTo4 | DivinationLevel5Spells
 
-EvocationSpellsUpTo6: TypeAlias = EvocationSpellsUpTo5 | EvocationLevel6Spells
+DivinationSpellsUpTo6: TypeAlias = DivinationSpellsUpTo5 | DivinationLevel6Spells
 
-EvocationSpellsUpTo7: TypeAlias = EvocationSpellsUpTo6 | EvocationLevel7Spells
+DivinationSpellsUpTo7: TypeAlias = DivinationSpellsUpTo6 | DivinationLevel7Spells
 
-EvocationSpellsUpTo8: TypeAlias = EvocationSpellsUpTo7 | EvocationLevel8Spells
+DivinationSpellsUpTo8: TypeAlias = DivinationSpellsUpTo7 | DivinationLevel8Spells
 
-EvocationSpellsUpTo9: TypeAlias = EvocationSpellsUpTo8 | WizardLevel9Spells
+DivinationSpellsUpTo9: TypeAlias = DivinationSpellsUpTo8 | DivinationLevel9Spells
 
 
 @attr.dataclass
-class EvokerWizardLevel3(WizardSubclassLevel3):
+class DivinerWizardLevel3(WizardSubclassLevel3):
     level: int = attr.field(init=False, default=3)
-    spell_1: EvocationSpellsUpTo2
-    spell_2: EvocationSpellsUpTo2
+    spell_1: DivinationSpellsUpTo2
+    spell_2: DivinationSpellsUpTo2
 
     def add_features(
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(WizardFeatures.PotentCantrip())
+        data.add_feature(WizardFeatures.DivinationSavant())
+        data.add_feature(WizardFeatures.Portent())
         data.add_spell(self.spell_1)
         data.add_spell(self.spell_2)
         return data
 
 
 @attr.dataclass
-class EvokerWizardLevel5(WizardSubclassLevel5):
+class DivinerWizardLevel5(WizardSubclassLevel5):
     level: int = attr.field(init=False, default=5)
-    spell: EvocationSpellsUpTo3
+    spell: DivinationSpellsUpTo3
 
     def add_features(
         self,
@@ -76,21 +80,21 @@ class EvokerWizardLevel5(WizardSubclassLevel5):
 
 
 @attr.dataclass
-class EvokerWizardLevel6(WizardSubclassLevel6):
+class DivinerWizardLevel6(WizardSubclassLevel6):
     level: int = attr.field(init=False, default=6)
 
     def add_features(
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(WizardFeatures.SculptSpells())
+        data.add_feature(WizardFeatures.ExpertDivination())
         return data
 
 
 @attr.dataclass
-class EvokerWizardLevel7(WizardSubclassLevel7):
+class DivinerWizardLevel7(WizardSubclassLevel7):
     level: int = attr.field(init=False, default=7)
-    spell: EvocationSpellsUpTo4
+    spell: DivinationSpellsUpTo4
 
     def add_features(
         self,
@@ -101,9 +105,9 @@ class EvokerWizardLevel7(WizardSubclassLevel7):
 
 
 @attr.dataclass
-class EvokerWizardLevel9(WizardSubclassLevel9):
+class DivinerWizardLevel9(WizardSubclassLevel9):
     level: int = attr.field(init=False, default=9)
-    spell: EvocationSpellsUpTo5
+    spell: DivinationSpellsUpTo5
 
     def add_features(
         self,
@@ -114,21 +118,21 @@ class EvokerWizardLevel9(WizardSubclassLevel9):
 
 
 @attr.dataclass
-class EvokerWizardLevel10(WizardSubclassLevel10):
+class DivinerWizardLevel10(WizardSubclassLevel10):
     level: int = attr.field(init=False, default=10)
 
     def add_features(
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(WizardFeatures.EmpoweredEvocation())
+        data.add_feature(WizardFeatures.TheThirdEye())
         return data
 
 
 @attr.dataclass
-class EvokerWizardLevel11(WizardSubclassLevel11):
+class DivinerWizardLevel11(WizardSubclassLevel11):
     level: int = attr.field(init=False, default=11)
-    spell: EvocationSpellsUpTo6
+    spell: DivinationSpellsUpTo6
 
     def add_features(
         self,
@@ -139,9 +143,9 @@ class EvokerWizardLevel11(WizardSubclassLevel11):
 
 
 @attr.dataclass
-class EvokerWizardLevel13(WizardSubclassLevel13):
+class DivinerWizardLevel13(WizardSubclassLevel13):
     level: int = attr.field(init=False, default=13)
-    spell: EvocationSpellsUpTo7
+    spell: DivinationSpellsUpTo7
 
     def add_features(
         self,
@@ -152,21 +156,21 @@ class EvokerWizardLevel13(WizardSubclassLevel13):
 
 
 @attr.dataclass
-class EvokerWizardLevel14(WizardSubclassLevel14):
+class DivinerWizardLevel14(WizardSubclassLevel14):
     level: int = attr.field(init=False, default=14)
 
     def add_features(
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(WizardFeatures.Overchannel())
+        data.add_feature(WizardFeatures.GreaterPortent())
         return data
 
 
 @attr.dataclass
-class EvokerWizardLevel15(WizardSubclassLevel15):
+class DivinerWizardLevel15(WizardSubclassLevel15):
     level: int = attr.field(init=False, default=15)
-    spell: EvocationSpellsUpTo8
+    spell: DivinationSpellsUpTo8
 
     def add_features(
         self,
@@ -177,9 +181,9 @@ class EvokerWizardLevel15(WizardSubclassLevel15):
 
 
 @attr.dataclass
-class EvokerWizardLevel17(WizardSubclassLevel17):
+class DivinerWizardLevel17(WizardSubclassLevel17):
     level: int = attr.field(init=False, default=17)
-    spell: EvocationSpellsUpTo8
+    spell: DivinationSpellsUpTo8
 
     def add_features(
         self,
@@ -190,15 +194,15 @@ class EvokerWizardLevel17(WizardSubclassLevel17):
 
 
 @attr.dataclass
-class EvokerWizardFeaturePerLevel(WizardFeaturePerLevel):
-    subclass_level_3: Optional[EvokerWizardLevel3] = None
-    subclass_level_5: Optional[EvokerWizardLevel5] = None
-    subclass_level_6: Optional[EvokerWizardLevel6] = None
-    subclass_level_7: Optional[EvokerWizardLevel7] = None
-    subclass_level_9: Optional[EvokerWizardLevel9] = None
-    subclass_level_10: Optional[EvokerWizardLevel10] = None
-    subclass_level_11: Optional[EvokerWizardLevel11] = None
-    subclass_level_13: Optional[EvokerWizardLevel13] = None
-    subclass_level_14: Optional[EvokerWizardLevel14] = None
-    subclass_level_15: Optional[EvokerWizardLevel15] = None
-    subclass_level_17: Optional[EvokerWizardLevel17] = None
+class DivinerWizardFeaturePerLevel(WizardFeaturePerLevel):
+    subclass_level_3: Optional[DivinerWizardLevel3] = None
+    subclass_level_5: Optional[DivinerWizardLevel5] = None
+    subclass_level_6: Optional[DivinerWizardLevel6] = None
+    subclass_level_7: Optional[DivinerWizardLevel7] = None
+    subclass_level_9: Optional[DivinerWizardLevel9] = None
+    subclass_level_10: Optional[DivinerWizardLevel10] = None
+    subclass_level_11: Optional[DivinerWizardLevel11] = None
+    subclass_level_13: Optional[DivinerWizardLevel13] = None
+    subclass_level_14: Optional[DivinerWizardLevel14] = None
+    subclass_level_15: Optional[DivinerWizardLevel15] = None
+    subclass_level_17: Optional[DivinerWizardLevel17] = None

@@ -149,20 +149,31 @@ class Bladesong(TextFeature):
             "As a Bonus Action, you invoke an elven magic called the Bladesong, provided you aren't wearing armor or using a Shield.\n"
             "The Bladesong lasts for 1 minute and ends early if you have the Incapacitated condition, if you don armor or a Shield, or if you use two hands to make an attack with a weapon. You can dismiss the Bladesong at any time (no action required).\n"
             f"While the Bladesong is active, you gain the following benefits. You can invoke the Bladesong a number of times equal to your Intelligence modifier ({int_mod}, minimum of once), and you regain all expended uses when you finish a Long Rest. You regain one expended use when you use Arcane Recovery.\n"
-            f"Agility. You gain a bonus to your AC equal to your Intelligence modifier ({int_mod}, minimum of +1), and your Speed increases by 10 feet. In addition, you have Advantage on Dexterity (Acrobatics) checks.\n"
-            f"Bladework. Whenever you attack with a weapon with which you have proficiency, you can use your Intelligence modifier ({int_mod}) for the attack and damage rolls instead of using Strength or Dexterity.\n"
-            f"Focus. When you make a Constitution saving throw to maintain Concentration, you can add your Intelligence modifier ({int_mod}) to the total."
+            f" * Agility: You gain a bonus to your AC equal to your Intelligence modifier ({int_mod}, minimum of +1), and your Speed increases by 10 feet. In addition, you have Advantage on Dexterity (Acrobatics) checks.\n"
+            f" * Bladework: Whenever you attack with a weapon with which you have proficiency, you can use your Intelligence modifier ({int_mod}) for the attack and damage rolls instead of using Strength or Dexterity.\n"
+            f" * Focus: When you make a Constitution saving throw to maintain Concentration, you can add your Intelligence modifier ({int_mod}) to the total."
         )
         return description
 
 
-class TraininginWarandSong(TextFeature):
-    def __init__(self):
+class TrainingInWarAndSong(TextFeature):
+    def __init__(self, skill: Skill):
+        if skill not in [
+            Skill.ACROBATICS,
+            Skill.ATHLETICS,
+            Skill.PERFORMANCE,
+            Skill.PERSUASION,
+        ]:
+            raise ValueError(
+                "Training in War and Song skill must be one of: Acrobatics, Athletics, Performance, Persuasion"
+            )
+        self.skill = skill
         super().__init__(
             name="Training in War and Song", origin="Bladesinger Wizard Level 3"
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+        character_stat_block.skills.add_skill_proficiency(self.skill)
         description = (
             "You gain proficiency with all Melee Martial weapons that don't have the Two-Handed or Heavy property. You can use a Melee weapon with which you have proficiency as a Spellcasting Focus for your Wizard spells.\n"
             "You also gain proficiency in one of the following skills of your choice: Acrobatics, Athletics, Performance, or Persuasion."
@@ -229,13 +240,20 @@ class ExpertDivination(TextFeature):
         super().__init__(name="Expert Divination", origin="Diviner Wizard Level 6")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+        description = "Casting Divination spells comes so easily to you that it expends only a fraction of your spellcasting efforts. When you cast a Divination spell using a level 2+ spell slot, you regain one expended spell slot. The slot you regain must be of a level lower than the slot you expended and can't be higher than level 5.\n"
+        return description
+
+
+class TheThirdEye(TextFeature):
+    def __init__(self):
+        super().__init__(name="The Third Eye", origin="Diviner Wizard Level 10")
+
+    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
-            "Casting Divination spells comes so easily to you that it expends only a fraction of your spellcasting efforts. When you cast a Divination spell using a level 2+ spell slot, you regain one expended spell slot. The slot you regain must be of a level lower than the slot you expended and can't be higher than level 5.\n"
-            "level 10: The Third Eye\n"
             "You can increase your powers of perception. As a Bonus Action, choose one of the following benefits, which lasts until you start a Short or Long Rest. You can't use this feature again until you finish a Short or Long Rest.\n"
-            "Darkvision. You gain Darkvision with a range of 120 feet.\n"
-            "Greater Comprehension. You can read any language.\n"
-            "See Invisibility. You can cast See Invisibility without expending a spell slot."
+            " * Darkvision: You gain Darkvision with a range of 120 feet.\n"
+            " * Greater Comprehension: You can read any language.\n"
+            " * See Invisibility: You can cast See Invisibility without expending a spell slot."
         )
         return description
 

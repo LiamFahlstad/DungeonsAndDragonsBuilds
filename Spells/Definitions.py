@@ -1493,6 +1493,10 @@ class DivinationLevel6Spells(str, Enum):
     TRUE_SEEING = "True Seeing"
 
 
+class DivinationLevel7Spells(str, Enum):
+    pass
+
+
 class DivinationLevel8Spells(str, Enum):
     TELEPATHY = "Telepathy"
 
@@ -1721,6 +1725,10 @@ class IllusionLevel7Spells(str, Enum):
     MIRAGE_ARCANE = "Mirage Arcane"
     PROJECT_IMAGE = "Project Image"
     SIMULACRUM = "Simulacrum"
+
+
+class IllusionLevel8Spells(str, Enum):
+    pass
 
 
 class IllusionLevel9Spells(str, Enum):
