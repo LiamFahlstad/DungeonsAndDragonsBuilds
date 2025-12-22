@@ -317,11 +317,31 @@ class CharacterSheetData:
 
             if self.spells:
                 file.write("\n")
-                CharacterSheetUtils.write_separator(file, "Spell Modifiers")
-                character_spell_save_dc = character.calculate_spell_save_dc()
-                character_spell_attack_bonus = character.calculate_spell_attack_bonus()
-                file.write(f"Spell Save DC: {character_spell_save_dc}\n")
-                file.write(f"Spell Attack Bonus: +{character_spell_attack_bonus}\n")
+
+                CharacterSheetUtils.write_separator(file, "Difficulties & Spell Slots")
+                spell_casting_ability = self.spell_casting_ability
+                rest_abilities = [ability for ability in Ability]
+                if spell_casting_ability is not None:
+                    rest_abilities.remove(spell_casting_ability)
+
+                    character_spell_save_dc = character.calculate_difficulty_class()
+                    character_spell_attack_bonus = character.calculate_attack_bonus()
+                    file.write(
+                        f"Ability {spell_casting_ability} (Spell Casting Ability)\n"
+                    )
+                    file.write(f" * Difficulty Class: {character_spell_save_dc}\n")
+                    file.write(f" * Attack Bonus: +{character_spell_attack_bonus}\n")
+
+                for ability in rest_abilities:
+                    character_spell_save_dc = (
+                        character.calculate_difficulty_class_for_ability(ability)
+                    )
+                    character_spell_attack_bonus = (
+                        character.calculate_attack_bonus_for_ability(ability)
+                    )
+                    file.write(f"Ability {ability}\n")
+                    file.write(f" * Difficulty Class: {character_spell_save_dc}\n")
+                    file.write(f" * Attack Bonus: +{character_spell_attack_bonus}\n")
 
                 file.write("\n")
                 CharacterSheetUtils.write_separator(file, "Spell Slots")

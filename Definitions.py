@@ -103,6 +103,14 @@ class PaladinSubclass(str, Enum):
     OATH_OF_REDEMPTION = "Oath of Redemption"
 
 
+class RogueSubclass(str, Enum):
+    THIEF = "Thief"
+    ASSASSIN = "Assassin"
+    ARCANE_TRICKSTER = "Arcane Trickster"
+    SOUL_KNIFE = "Soul Knife"
+    SCION_OF_THE_THREE = "Scion of the Three"
+
+
 class WizardSubclass(str, Enum):
     ABJURER = "Abjurer"
     DIVINER = "Diviner"

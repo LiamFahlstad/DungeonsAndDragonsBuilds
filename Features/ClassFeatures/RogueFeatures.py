@@ -7,16 +7,14 @@ from Features.BaseFeatures import CharacterFeature, TextFeature
 RANGER_HIT_DIE = 8
 
 
-class Expertise(TextFeature):
-    def __init__(self):
-        super().__init__(name="Expertise", origin="Rogue Level 1")
+class Expertise(CharacterFeature):
+    def __init__(self, skill_1: Skill, skill_2: Skill):
+        self.skill_1 = skill_1
+        self.skill_2 = skill_2
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        description = (
-            "You gain Expertise in two of your skill proficiencies of your choice. Sleight of Hand and Stealth are recommended if you have proficiency in them.\n"
-            "At Rogue Level 6, you gain Expertise in two more of your skill proficiencies of your Choice."
-        )
-        return description
+    def modify(self, character_stat_block: CharacterStatBlock):
+        character_stat_block.skills.add_skill_expertise(self.skill_1)
+        character_stat_block.skills.add_skill_expertise(self.skill_2)
 
 
 class SneakAttack(TextFeature):
@@ -84,10 +82,10 @@ class CunningStrike(TextFeature):
         description = (
             "You've developed cunning ways to use your Sneak Attack. When you deal Sneak Attack damage, you can add one of the following Cunning Strike effects. Each effect has a die cost, which is the number of Sneak Attack dice you must forgo to add the effect. You remove the die before rolling, and the effect occurs immediately after the attack's damage is dealt. For example, if you add the Poison effect, remove 1d6 from the Sneak Attack's damage before rolling.\n"
             f"If a Cunning Strike requires a saving throw, the DC equals 8 plus your Dexterity modifier and Proficiency Bonus ({saving_throw}).\n"
-            "Poison (Cost: 1d6). You add a toxin to your strike, forcing the target to make a Constitution saving throw. On a failed save, the target has the Poisoned condition for 1 minute. At the end of each of its turns, the poisoned target repeats the save, ending the effect on a success.\n"
-            "To use this effect, you must have a Poisoner's Kit on your person.\n"
-            "Trip (Cost: 1d6). If the target is Large or smaller, it must succeed on a Dexterity saving throw or have the Prone condition.\n"
-            "Withdraw (Cost: 1d6). Immediately after the attack, you move up to half your speed without provoking Opportunity Attacks."
+            " * Poison (Cost: 1d6). You add a toxin to your strike, forcing the target to make a Constitution saving throw. On a failed save, the target has the Poisoned condition for 1 minute. At the end of each of its turns, the poisoned target repeats the save, ending the effect on a success.\n"
+            "   To use this effect, you must have a Poisoner's Kit on your person.\n"
+            " * Trip (Cost: 1d6). If the target is Large or smaller, it must succeed on a Dexterity saving throw or have the Prone condition.\n"
+            " * Withdraw (Cost: 1d6). Immediately after the attack, you move up to half your speed without provoking Opportunity Attacks."
         )
         return description
 
@@ -147,6 +145,8 @@ class SlipperyMind(TextFeature):
         super().__init__(name="Slippery Mind", origin="Rogue Level 15")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+        character_stat_block.saving_throws.add_proficiency(Ability.WISDOM)
+        character_stat_block.saving_throws.add_proficiency(Ability.CHARISMA)
         description = "Your mind is exceptionally difficult to control. You gain proficiency in Wisdom and Charisma saving throws."
         return description
 
@@ -160,7 +160,7 @@ class Elusive(TextFeature):
         return description
 
 
-class StrokeofLuck(TextFeature):
+class StrokeOfLuck(TextFeature):
     def __init__(self):
         super().__init__(name="Stroke of Luck", origin="Rogue Level 20")
 

@@ -26,18 +26,16 @@ class ElvenLineage(str, Enum):
     SHADOWMOOR_ELF = "Shadowmoor Elf"
 
 
-def forest_Elf_character_data(
+def elf_character_data(
     character_level: int,
     elven_lineage: ElvenLineage,
     skill_proficiency: Definitions.Skill,
-    origin_feat: OriginFeats.OriginCharacterFeat | OriginFeats.OriginTextFeat,
+    spell_casting_ability: Definitions.Ability = Definitions.Ability.INTELLIGENCE,
 ) -> CharacterSheetCreator.CharacterSheetData:
-
     data = CharacterSheetCreator.CharacterSheetData()
 
     data.speed = ElfFeatures.SPEED  # Given by your species
     data.size = ElfFeatures.SIZE  # Given by your species
-    data.add_feature(origin_feat)
 
     data.add_feature(ElfFeatures.FeyAncestry())
     data.add_feature(ElfFeatures.KeenSenses(skill_proficiency))
@@ -45,42 +43,40 @@ def forest_Elf_character_data(
 
     if elven_lineage == ElvenLineage.DROW:
         data.add_feature(ElfFeatures.Darkvision(120))
-        data.add_cantrip(BardLevel0Spells.DANCING_LIGHTS)
+        data.add_cantrip(BardLevel0Spells.DANCING_LIGHTS, spell_casting_ability)
         if character_level >= 3:
-            data.add_spell(DruidLevel1Spells.FAERIE_FIRE)
+            data.add_spell(DruidLevel1Spells.FAERIE_FIRE, spell_casting_ability)
         if character_level >= 5:
-            data.add_spell(WarlockLevel2Spells.DARKNESS)
+            data.add_spell(WarlockLevel2Spells.DARKNESS, spell_casting_ability)
 
     elif elven_lineage == ElvenLineage.HIGH_ELF:
         data.add_feature(ElfFeatures.Darkvision(60))
-        data.add_cantrip(SorcererLevel0Spells.PRESTIDIGITATION)
+        data.add_cantrip(SorcererLevel0Spells.PRESTIDIGITATION, spell_casting_ability)
         if character_level >= 3:
-            data.add_spell(ClericLevel1Spells.DETECT_MAGIC)
+            data.add_spell(ClericLevel1Spells.DETECT_MAGIC, spell_casting_ability)
         if character_level >= 5:
-            data.add_spell(WarlockLevel2Spells.MISTY_STEP)
-
+            data.add_spell(WarlockLevel2Spells.MISTY_STEP, spell_casting_ability)
     elif elven_lineage == ElvenLineage.WOOD_ELF:
         data.add_feature(ElfFeatures.Darkvision(60))
-        data.add_cantrip(DruidLevel0Spells.DRUIDCRAFT)
+        data.add_cantrip(DruidLevel0Spells.DRUIDCRAFT, spell_casting_ability)
         data.speed = 35
         if character_level >= 3:
-            data.add_spell(WizardLevel1Spells.LONGSTRIDER)
+            data.add_spell(WizardLevel1Spells.LONGSTRIDER, spell_casting_ability)
         if character_level >= 5:
-            data.add_spell(DruidLevel2Spells.PASS_WITHOUT_TRACE)
+            data.add_spell(DruidLevel2Spells.PASS_WITHOUT_TRACE, spell_casting_ability)
 
     elif elven_lineage == ElvenLineage.LORWYN_ELF:
         data.add_feature(ElfFeatures.Darkvision(60))
-        data.add_cantrip(DruidLevel0Spells.THORN_WHIP)
+        data.add_cantrip(DruidLevel0Spells.THORN_WHIP, spell_casting_ability)
         if character_level >= 3:
-            data.add_spell(ClericLevel1Spells.COMMAND)
+            data.add_spell(ClericLevel1Spells.COMMAND, spell_casting_ability)
         if character_level >= 5:
-            data.add_spell(ClericLevel2Spells.SILENCE)
-
+            data.add_spell(ClericLevel2Spells.SILENCE, spell_casting_ability)
     elif elven_lineage == ElvenLineage.SHADOWMOOR_ELF:
         data.add_feature(ElfFeatures.Darkvision(120))
-        data.add_cantrip(DruidLevel0Spells.STARRY_WISP)
+        data.add_cantrip(DruidLevel0Spells.STARRY_WISP, spell_casting_ability)
         if character_level >= 3:
-            data.add_spell(BardLevel1Spells.HEROISM)
+            data.add_spell(BardLevel1Spells.HEROISM, spell_casting_ability)
         if character_level >= 5:
-            data.add_spell(WizardLevel2Spells.GENTLE_REPOSE)
+            data.add_spell(WizardLevel2Spells.GENTLE_REPOSE, spell_casting_ability)
     return data

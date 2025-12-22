@@ -171,10 +171,26 @@ DamageRoll                  | 1d6 + 2 (ability mod: Strength)
 Two-Weapon Fighting: When you make an extra attack as a result of using a weapon that has the Light property, you can add your ability modifier to the damage of that attack if you aren't already adding it to the damage. (calculate manually)
 
 ################################################################################
-# ============================= Spell Modifiers ============================== #
+# ======================== Difficulties & Spell Slots ======================== #
 ################################################################################
-Spell Save DC: 18
-Spell Attack Bonus: +10
+Ability Ability.CHARISMA (Spell Casting Ability)
+ * Difficulty Class: 18
+ * Attack Bonus: +10
+Ability Ability.STRENGTH
+ * Difficulty Class: 16
+ * Attack Bonus: +8
+Ability Ability.DEXTERITY
+ * Difficulty Class: 14
+ * Attack Bonus: +6
+Ability Ability.CONSTITUTION
+ * Difficulty Class: 18
+ * Attack Bonus: +10
+Ability Ability.INTELLIGENCE
+ * Difficulty Class: 15
+ * Attack Bonus: +7
+Ability Ability.WISDOM
+ * Difficulty Class: 13
+ * Attack Bonus: +5
 
 ################################################################################
 # =============================== Spell Slots ================================ #

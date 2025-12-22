@@ -105,17 +105,28 @@ class CharacterStatBlock:
     def calculate_armor_class(self) -> int:
         return self.combat.armor_class
 
-    def calculate_spell_save_dc(self) -> int:
+    def get_spell_casting_ability(self) -> Ability:
         if self.spell_casting_ability is None:
             raise ValueError("Character does not have a spell casting ability.")
-        spellcasting_modifier = self.get_ability_modifier(self.spell_casting_ability)
-        return 8 + self.get_proficiency_bonus() + spellcasting_modifier
+        return self.spell_casting_ability
 
-    def calculate_spell_attack_bonus(self) -> int:
+    def calculate_difficulty_class(self) -> int:
         if self.spell_casting_ability is None:
             raise ValueError("Character does not have a spell casting ability.")
-        spellcasting_modifier = self.get_ability_modifier(self.spell_casting_ability)
-        return self.get_proficiency_bonus() + spellcasting_modifier
+        return self.calculate_difficulty_class_for_ability(self.spell_casting_ability)
+
+    def calculate_difficulty_class_for_ability(self, ability: Ability) -> int:
+        modifier = self.get_ability_modifier(ability)
+        return 8 + self.get_proficiency_bonus() + modifier
+
+    def calculate_attack_bonus(self) -> int:
+        if self.spell_casting_ability is None:
+            raise ValueError("Character does not have a spell casting ability.")
+        return self.calculate_attack_bonus_for_ability(self.spell_casting_ability)
+
+    def calculate_attack_bonus_for_ability(self, ability: Ability) -> int:
+        ability_modifier = self.get_ability_modifier(ability)
+        return self.get_proficiency_bonus() + ability_modifier
 
     def get_spell_slots(self) -> dict[int, int]:
         if self.spell_slots is None:

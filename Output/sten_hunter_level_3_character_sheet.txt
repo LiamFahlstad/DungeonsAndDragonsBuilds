@@ -141,10 +141,26 @@ Mastery 'Slow'        | On a hit that deals damage, reduce the target's Speed by
 Archery: You gain a +2 bonus to attack rolls you make with Ranged weapons. (calculated automatically)
 
 ################################################################################
-# ============================= Spell Modifiers ============================== #
+# ======================== Difficulties & Spell Slots ======================== #
 ################################################################################
-Spell Save DC: 12
-Spell Attack Bonus: +4
+Ability Ability.WISDOM (Spell Casting Ability)
+ * Difficulty Class: 12
+ * Attack Bonus: +4
+Ability Ability.STRENGTH
+ * Difficulty Class: 9
+ * Attack Bonus: +1
+Ability Ability.DEXTERITY
+ * Difficulty Class: 12
+ * Attack Bonus: +4
+Ability Ability.CONSTITUTION
+ * Difficulty Class: 12
+ * Attack Bonus: +4
+Ability Ability.INTELLIGENCE
+ * Difficulty Class: 11
+ * Attack Bonus: +3
+Ability Ability.CHARISMA
+ * Difficulty Class: 10
+ * Attack Bonus: +2
 
 ################################################################################
 # =============================== Spell Slots ================================ #

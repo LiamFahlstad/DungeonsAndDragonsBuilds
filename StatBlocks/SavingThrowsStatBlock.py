@@ -83,3 +83,13 @@ class BarbarianSavingThrowsStatBlock(SavingThrowsStatBlock):
                 Ability.CONSTITUTION: True,
             }
         )
+
+
+class RogueSavingThrowsStatBlock(SavingThrowsStatBlock):
+    def __init__(self):
+        super().__init__(
+            proficiencies={
+                Ability.DEXTERITY: True,
+                Ability.INTELLIGENCE: True,
+            }
+        )
