@@ -1,20 +1,19 @@
 from abc import ABC, abstractmethod
 from typing import Optional
 import attr
-from Definitions import Ability, CharacterClass, BarbarianSubclass, Skill
+from Definitions import CharacterClass
 import Definitions
 from Features import GeneralFeats, OriginFeats
 from CharacterSheetCreator import CharacterSheetData
 from Features import Armor
 from Features import Backgrounds
-from Features import FightingStyles
+from Features.ClassFeatures import SpellSlots
 from Features import Weapons
-from Features.ClassFeatures import BarbarianFeatures
 from StatBlocks.SavingThrowsStatBlock import SavingThrowsStatBlock
 from StatBlocks.AbilitiesStatBlock import (
     AbilitiesStatBlock,
 )
-from StatBlocks.SkillsStatBlock import BarbarianSkillsStatBlock
+from StatBlocks.SkillsStatBlock import ClassSkillsStatBlock
 
 
 @attr.dataclass
@@ -134,7 +133,6 @@ class BaseClassLevel2(LevelFeatures):
 @attr.dataclass
 class BaseClassLevel3(LevelFeatures):
     level: int = attr.field(init=False, default=3)
-    skill: Definitions.Skill
 
 
 @attr.dataclass
@@ -229,46 +227,14 @@ class BaseClassLevel20(LevelFeatures):
         return data
 
 
-@attr.dataclass
 class BaseClassLevelFeatures:
-    base_class_level_1: Optional[BaseClassLevel1] = None
-    base_class_level_2: Optional[BaseClassLevel2] = None
-    base_class_level_3: Optional[BaseClassLevel3] = None
-    base_class_level_4: Optional[BaseClassLevel4] = None
-    base_class_level_5: Optional[BaseClassLevel5] = None
-    base_class_level_6: Optional[BaseClassLevel6] = None
-    base_class_level_7: Optional[BaseClassLevel7] = None
-    base_class_level_8: Optional[BaseClassLevel8] = None
-    base_class_level_9: Optional[BaseClassLevel9] = None
-    base_class_level_10: Optional[BaseClassLevel10] = None
-    base_class_level_11: Optional[BaseClassLevel11] = None
-    base_class_level_12: Optional[BaseClassLevel12] = None
-    base_class_level_13: Optional[BaseClassLevel13] = None
-    base_class_level_14: Optional[BaseClassLevel14] = None
-    base_class_level_15: Optional[BaseClassLevel15] = None
-    base_class_level_16: Optional[BaseClassLevel16] = None
-    base_class_level_17: Optional[BaseClassLevel17] = None
-    base_class_level_18: Optional[BaseClassLevel18] = None
-    base_class_level_19: Optional[BaseClassLevel19] = None
-    base_class_level_20: Optional[BaseClassLevel20] = None
-    subclass_level_3: Optional[SubclassLevel3] = None
-    subclass_level_4: Optional[SubclassLevel4] = None
-    subclass_level_5: Optional[SubclassLevel5] = None
-    subclass_level_6: Optional[SubclassLevel6] = None
-    subclass_level_7: Optional[SubclassLevel7] = None
-    subclass_level_8: Optional[SubclassLevel8] = None
-    subclass_level_9: Optional[SubclassLevel9] = None
-    subclass_level_10: Optional[SubclassLevel10] = None
-    subclass_level_11: Optional[SubclassLevel11] = None
-    subclass_level_12: Optional[SubclassLevel12] = None
-    subclass_level_13: Optional[SubclassLevel13] = None
-    subclass_level_14: Optional[SubclassLevel14] = None
-    subclass_level_15: Optional[SubclassLevel15] = None
-    subclass_level_16: Optional[SubclassLevel16] = None
-    subclass_level_17: Optional[SubclassLevel17] = None
-    subclass_level_18: Optional[SubclassLevel18] = None
-    subclass_level_19: Optional[SubclassLevel19] = None
-    subclass_level_20: Optional[SubclassLevel20] = None
+    def __init__(
+        self,
+        base_class_features_by_level: dict[int, LevelFeatures],
+        subclass_features_by_level: dict[int, LevelFeatures],
+    ):
+        self.base_class_features_by_level = base_class_features_by_level
+        self.subclass_features_by_level = subclass_features_by_level
 
     def add_features(
         self,
@@ -276,32 +242,20 @@ class BaseClassLevelFeatures:
         base_class: CharacterClass,
     ) -> CharacterSheetData:
         class_level = data.get_level_for_class(base_class)
-        for level_features in attr.fields(self.__class__):
-            class_level_features: Optional[LevelFeatures] = getattr(
-                self, level_features.name
-            )
-            expected_level: int = (
-                class_level_features.level
-                if class_level_features is not None
-                else int(level_features.name.split("_")[-1])
-            )
 
-            if class_level_features is None:
-                # Skip if the character level is lower than the expected level
-                if class_level < expected_level:
+        for features_by_level in [
+            self.base_class_features_by_level,
+            self.subclass_features_by_level,
+        ]:
+            for level, features in features_by_level.items():
+                if class_level < level:
                     continue
 
-                # Must provide features for this level
-                raise ValueError(
-                    f"{base_class.name.lower()} level {expected_level} features must be provided for level {expected_level}."
-                )
+                assert features is not None, "Features for level cannot be None."
+                assert level == features.level, "Level mismatch in base class features."
 
-            # Skip if the character level is lower than the class level features
-            if class_level_features.level > class_level:
-                return data
-
-            # Add features for this level
-            data = class_level_features.add_features(data=data)
+                # Add features for this level
+                data = features.add_features(data=data)
         return data
 
 
@@ -312,10 +266,16 @@ class ClassBuilder(ABC):
         base_class: CharacterClass,
         base_class_level_features: BaseClassLevelFeatures,
         base_class_level: int,
+        replace_spells: Optional[dict[str, str]] = None,
+        spell_casting_ability: Optional[Definitions.Ability] = None,
+        caster_type: Optional[SpellSlots.CasterType] = None,
     ):
         self.base_class = base_class
         self.base_class_level_features = base_class_level_features
         self.base_class_level = base_class_level
+        self.replace_spells = replace_spells
+        self.spell_casting_ability = spell_casting_ability
+        self.caster_type = caster_type
 
     @abstractmethod
     def _get_character_sheet_creator_base(self) -> CharacterSheetData:
@@ -326,6 +286,7 @@ class ClassBuilder(ABC):
     ) -> CharacterSheetData:
         data = self._get_character_sheet_creator_base()
         data = self.base_class_level_features.add_features(data, self.base_class)
+        data.replace_spells(self.replace_spells or {})
         return data
 
 
@@ -338,7 +299,7 @@ class StarterClassBuilder(ClassBuilder):
         base_class_level: int,
         subclass: str,
         abilities: AbilitiesStatBlock,
-        skills: BarbarianSkillsStatBlock,
+        skills: ClassSkillsStatBlock,
         background_ability_bonuses: Backgrounds.FreeBackgroundAbilityBonus,
         background_skill_proficiencies: Backgrounds.FreeBackgroundSkillProficiency,
         saving_throws: SavingThrowsStatBlock,
@@ -347,6 +308,9 @@ class StarterClassBuilder(ClassBuilder):
         origin_feat: OriginFeats.OriginCharacterFeat | OriginFeats.OriginTextFeat,
         armor: Optional[list[Armor.AbstractArmor]] = None,
         weapons: Optional[list[Weapons.AbstractWeapon]] = None,
+        replace_spells: Optional[dict[str, str]] = None,
+        spell_casting_ability: Optional[Definitions.Ability] = None,
+        caster_type: Optional[SpellSlots.CasterType] = None,
     ):
         self.subclass = subclass
         self.abilities = abilities
@@ -363,6 +327,9 @@ class StarterClassBuilder(ClassBuilder):
             base_class=base_class,
             base_class_level_features=base_class_level_features,
             base_class_level=base_class_level,
+            replace_spells=replace_spells,
+            spell_casting_ability=spell_casting_ability,
+            caster_type=caster_type,
         )
 
     def _get_character_sheet_creator_base(self) -> CharacterSheetData:
@@ -373,12 +340,13 @@ class StarterClassBuilder(ClassBuilder):
             skills=self.skills,
             saving_throws=self.saving_throws,
             starter_class=self.base_class,
+            spell_casting_ability=self.spell_casting_ability,
         )
-
-        # ================ LEVEL 0 ============= #
 
         data.add_feature(self.background_ability_bonuses)
         data.add_feature(self.background_skill_proficiencies)
+        if self.caster_type is not None:
+            data.add_feature(SpellSlots.SpellSlots(self.caster_type))
 
         ### Equipment ###
 
@@ -411,20 +379,24 @@ class MulticlassBuilder(ClassBuilder):
         base_class_level_features: BaseClassLevelFeatures,
         base_class_level: int,
         subclass: str,
+        replace_spells: Optional[dict[str, str]] = None,
+        spell_casting_ability: Optional[Definitions.Ability] = None,
+        caster_type: Optional[SpellSlots.CasterType] = None,
     ):
         self.subclass = subclass
         super().__init__(
             base_class=base_class,
             base_class_level_features=base_class_level_features,
             base_class_level=base_class_level,
+            replace_spells=replace_spells,
+            spell_casting_ability=spell_casting_ability,
+            caster_type=caster_type,
         )
 
     def _get_character_sheet_creator_base(self) -> CharacterSheetData:
         data = CharacterSheetData(
             character_subclass=self.subclass,
             level_per_class={self.base_class: self.base_class_level},
+            spell_casting_ability=self.spell_casting_ability,
         )
-
-        # ================ LEVEL 0 ============= #
-
         return data

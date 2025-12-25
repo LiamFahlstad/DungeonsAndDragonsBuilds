@@ -1,6 +1,6 @@
 from typing import Optional
 import attr
-from CharacterConfigs.Bases.BarbarianBase import (
+from CharacterConfigs.CharacterClasses.BarbarianBase import (
     BarbarianFeaturePerLevel,
     BarbarianSubclassLevel13,
     BarbarianSubclassLevel15,

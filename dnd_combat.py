@@ -298,10 +298,12 @@ class CombatApp:
 if __name__ == "__main__":
     import OptimizedRangerHunter
     import OptimizedBerserkerBarbarian
+    import OptimizedRogueAssassin
 
     character_sheets = [
         OptimizedRangerHunter.get_data(),
         OptimizedBerserkerBarbarian.get_data(),
+        OptimizedRogueAssassin.get_data(),
     ]
     root = tk.Tk()
     app = CombatApp(root, character_sheets)

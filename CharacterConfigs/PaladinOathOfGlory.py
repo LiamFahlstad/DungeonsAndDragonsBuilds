@@ -1,15 +1,8 @@
 from typing import Optional
 import attr
 from CharacterConfigs.CharacterClasses.PaladinBase import (
-    PaladinFeaturePerLevel,
-    PaladinSubclassLevel13,
-    PaladinSubclassLevel15,
-    PaladinSubclassLevel17,
-    PaladinSubclassLevel20,
-    PaladinSubclassLevel3,
-    PaladinSubclassLevel5,
-    PaladinSubclassLevel7,
-    PaladinSubclassLevel9,
+    PaladinMulticlassBuilder,
+    PaladinStarterClassBuilder,
 )
 from CharacterSheetCreator import CharacterSheetData
 from Features.ClassFeatures import PaladinFeatures
@@ -23,10 +16,25 @@ from Spells.Definitions import (
     WizardLevel3Spells,
     WizardLevel5Spells,
 )
+from CharacterConfigs.CharacterClasses import ClassBuilder
+from typing import Optional
+import attr
+from Definitions import Ability, CharacterClass, PaladinSubclass
+from Features import OriginFeats
+from Features import Armor
+from Features import Backgrounds
+from Features import Weapons
+from Features.ClassFeatures import SpellSlots
+from StatBlocks.AbilitiesStatBlock import (
+    AbilitiesStatBlock,
+)
+from StatBlocks.SavingThrowsStatBlock import PaladinSavingThrowsStatBlock
+from StatBlocks.SkillsStatBlock import PaladinSkillsStatBlock
+from CharacterConfigs.CharacterClasses import ClassBuilder
 
 
 @attr.dataclass
-class GloryPaladinLevel3(PaladinSubclassLevel3):
+class GloryPaladinLevel3(ClassBuilder.SubclassLevel3):
     level: int = attr.field(init=False, default=3)
 
     def add_features(
@@ -44,7 +52,7 @@ class GloryPaladinLevel3(PaladinSubclassLevel3):
 
 
 @attr.dataclass
-class GloryPaladinLevel5(PaladinSubclassLevel5):
+class GloryPaladinLevel5(ClassBuilder.SubclassLevel5):
     level: int = attr.field(init=False, default=5)
 
     def add_features(
@@ -57,7 +65,7 @@ class GloryPaladinLevel5(PaladinSubclassLevel5):
 
 
 @attr.dataclass
-class GloryPaladinLevel7(PaladinSubclassLevel7):
+class GloryPaladinLevel7(ClassBuilder.SubclassLevel7):
     level: int = attr.field(init=False, default=7)
 
     def add_features(
@@ -72,7 +80,7 @@ class GloryPaladinLevel7(PaladinSubclassLevel7):
 
 
 @attr.dataclass
-class GloryPaladinLevel9(PaladinSubclassLevel9):
+class GloryPaladinLevel9(ClassBuilder.SubclassLevel9):
     level: int = attr.field(init=False, default=9)
 
     def add_features(
@@ -85,7 +93,7 @@ class GloryPaladinLevel9(PaladinSubclassLevel9):
 
 
 @attr.dataclass
-class GloryPaladinLevel13(PaladinSubclassLevel13):
+class GloryPaladinLevel13(ClassBuilder.SubclassLevel13):
     level: int = attr.field(init=False, default=13)
 
     def add_features(
@@ -98,7 +106,7 @@ class GloryPaladinLevel13(PaladinSubclassLevel13):
 
 
 @attr.dataclass
-class GloryPaladinLevel15(PaladinSubclassLevel15):
+class GloryPaladinLevel15(ClassBuilder.SubclassLevel15):
     level: int = attr.field(init=False, default=15)
 
     def add_features(
@@ -110,7 +118,7 @@ class GloryPaladinLevel15(PaladinSubclassLevel15):
 
 
 @attr.dataclass
-class GloryPaladinLevel17(PaladinSubclassLevel17):
+class GloryPaladinLevel17(ClassBuilder.SubclassLevel17):
     level: int = attr.field(init=False, default=17)
 
     def add_features(
@@ -123,7 +131,7 @@ class GloryPaladinLevel17(PaladinSubclassLevel17):
 
 
 @attr.dataclass
-class GloryPaladinLevel20(PaladinSubclassLevel20):
+class GloryPaladinLevel20(ClassBuilder.SubclassLevel20):
     level: int = attr.field(init=False, default=20)
 
     def add_features(
@@ -134,13 +142,49 @@ class GloryPaladinLevel20(PaladinSubclassLevel20):
         return data
 
 
-@attr.dataclass
-class GloryPaladinFeaturePerLevel(PaladinFeaturePerLevel):
-    subclass_level_3: Optional[GloryPaladinLevel3] = None
-    subclass_level_5: Optional[GloryPaladinLevel5] = None
-    subclass_level_7: Optional[GloryPaladinLevel7] = None
-    subclass_level_9: Optional[GloryPaladinLevel9] = None
-    subclass_level_13: Optional[GloryPaladinLevel13] = None
-    subclass_level_15: Optional[GloryPaladinLevel15] = None
-    subclass_level_17: Optional[GloryPaladinLevel17] = None
-    subclass_level_20: Optional[GloryPaladinLevel20] = None
+class OathOfGloryPaladinStarterClassBuilder(PaladinStarterClassBuilder):
+
+    def __init__(
+        self,
+        paladin_level_features: ClassBuilder.BaseClassLevelFeatures,
+        paladin_level: int,
+        abilities: AbilitiesStatBlock,
+        paladin_skills: PaladinSkillsStatBlock,
+        background_ability_bonuses: Backgrounds.FreeBackgroundAbilityBonus,
+        background_skill_proficiencies: Backgrounds.FreeBackgroundSkillProficiency,
+        add_default_equipment: bool,
+        origin_feat: OriginFeats.OriginCharacterFeat | OriginFeats.OriginTextFeat,
+        armor: Optional[list[Armor.AbstractArmor]] = None,
+        weapons: Optional[list[Weapons.AbstractWeapon]] = None,
+        replace_spells: Optional[dict[str, str]] = None,
+    ):
+        super().__init__(
+            paladin_level_features=paladin_level_features,
+            paladin_level=paladin_level,
+            subclass=PaladinSubclass.OATH_OF_GLORY.value,
+            abilities=abilities,
+            paladin_skills=paladin_skills,
+            background_ability_bonuses=background_ability_bonuses,
+            background_skill_proficiencies=background_skill_proficiencies,
+            add_default_equipment=add_default_equipment,
+            origin_feat=origin_feat,
+            armor=armor,
+            weapons=weapons,
+            replace_spells=replace_spells,
+        )
+
+
+class OathOfGloryPaladinMulticlassBuilder(PaladinMulticlassBuilder):
+
+    def __init__(
+        self,
+        paladin_level_features: ClassBuilder.BaseClassLevelFeatures,
+        paladin_level: int,
+        replace_spells: Optional[dict[str, str]] = None,
+    ):
+        super().__init__(
+            paladin_level_features=paladin_level_features,
+            paladin_level=paladin_level,
+            subclass=PaladinSubclass.OATH_OF_GLORY.value,
+            replace_spells=replace_spells,
+        )

@@ -1,14 +1,14 @@
 ################################################################################
 # =============================== General Info =============================== #
 ################################################################################
-Field              | Value                        
--------------------+------------------------------
-Name               | Sten                         
-Level              | 20                           
-Starter Class      | Paladin                      
-Level per Class    | Paladin: 20                  
-Character Subclass | PaladinSubclass.OATH_OF_GLORY
-Proficiency Bonus  | 6                            
+Field              | Value        
+-------------------+--------------
+Name               | Sten         
+Level              | 20           
+Starter Class      | Paladin      
+Level per Class    | Paladin: 20  
+Character Subclass | Oath of Glory
+Proficiency Bonus  | 6            
 
 ################################################################################
 # =============================== Combat Stats =============================== #
