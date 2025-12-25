@@ -1,4 +1,4 @@
-from CharacterConfigs.Bases.RogueBase import (
+from CharacterConfigs.CharacterClasses.RogueBase import (
     RogueLevel1,
     RogueLevel10,
     RogueLevel11,
@@ -37,7 +37,7 @@ from SpeciesConfigs import Elf
 from StatBlocks import AbilitiesStatBlock
 from StatBlocks.AbilitiesStatBlock import StandardArrayAbilitiesStatBlock
 from StatBlocks.SkillsStatBlock import RogueSkillsStatBlock
-from CharacterConfigs.Bases import RogueBase
+from CharacterConfigs.CharacterClasses.import RogueBase
 from CharacterConfigs.RogueAssassin import (
     AssassinRogueLevel3,
     AssassinRogueLevel9,

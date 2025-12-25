@@ -1,6 +1,6 @@
 from typing import Optional, TypeAlias
 import attr
-from CharacterConfigs.Bases.WizardBase import (
+from CharacterConfigs.CharacterClasses.WizardBase import (
     WizardFeaturePerLevel,
     WizardSubclassLevel10,
     WizardSubclassLevel11,

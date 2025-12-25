@@ -1,6 +1,6 @@
 from typing import Optional
 import attr
-from CharacterConfigs.Bases.RogueBase import (
+from CharacterConfigs.CharacterClasses.RogueBase import (
     RogueFeaturePerLevel,
     RogueSubclassLevel13,
     RogueSubclassLevel17,

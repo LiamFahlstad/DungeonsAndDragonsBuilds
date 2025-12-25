@@ -1,4 +1,4 @@
-from CharacterConfigs.Bases.BarbarianBase import (
+from CharacterConfigs.CharacterClasses.BarbarianBase import (
     BarbarianLevel1,
     BarbarianLevel10,
     BarbarianLevel11,
@@ -36,7 +36,7 @@ from Features import (
 from SpeciesConfigs import Orc
 from StatBlocks.AbilitiesStatBlock import StandardArrayAbilitiesStatBlock
 from StatBlocks.SkillsStatBlock import BarbarianSkillsStatBlock
-from CharacterConfigs.Bases import BarbarianBase
+from CharacterConfigs.CharacterClasses.import BarbarianBase
 from CharacterConfigs.BarbarianPathOfTheBerserker import (
     PathOfTheBerserkerBarbarianLevel3,
     PathOfTheBerserkerBarbarianLevel5,

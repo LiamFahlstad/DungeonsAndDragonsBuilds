@@ -1,5 +1,5 @@
 from CharacterConfigs import PaladinOathOfVengeance
-from CharacterConfigs.Bases.PaladinBase import (
+from CharacterConfigs.CharacterClasses.PaladinBase import (
     PaladinLevel1,
     PaladinLevel2,
     PaladinLevel3,

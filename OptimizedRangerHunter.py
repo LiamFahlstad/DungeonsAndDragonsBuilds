@@ -1,4 +1,4 @@
-from CharacterConfigs.Bases.RangerBase import (
+from CharacterConfigs.CharacterClasses.RangerBase import (
     RangerLevel1,
     RangerLevel10,
     RangerLevel11,
@@ -53,7 +53,7 @@ from Spells.Definitions import (
 )
 from StatBlocks.AbilitiesStatBlock import StandardArrayAbilitiesStatBlock
 from StatBlocks.SkillsStatBlock import FighterSkillsStatBlock, RangerSkillsStatBlock
-from CharacterConfigs.Bases import RangerBase
+from CharacterConfigs.CharacterClasses.import RangerBase
 from CharacterConfigs import RangerHunter
 
 
