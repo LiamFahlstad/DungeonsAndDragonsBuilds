@@ -1,17 +1,13 @@
 from typing import Optional
-import attr
+
+
+from CharacterConfigs.CharacterClasses import ClassBuilder
 from Definitions import Ability, CharacterClass
-from Features import OriginFeats
-from Features import Armor
-from Features import Backgrounds
-from Features import Weapons
+from Features import Armor, Backgrounds, OriginFeats, Weapons
 from Features.ClassFeatures import SpellSlots
-from StatBlocks.AbilitiesStatBlock import (
-    AbilitiesStatBlock,
-)
+from StatBlocks.AbilitiesStatBlock import AbilitiesStatBlock
 from StatBlocks.SavingThrowsStatBlock import PaladinSavingThrowsStatBlock
 from StatBlocks.SkillsStatBlock import PaladinSkillsStatBlock
-from CharacterConfigs.CharacterClasses import ClassBuilder
 
 
 class PaladinStarterClassBuilder(ClassBuilder.StarterClassBuilder):

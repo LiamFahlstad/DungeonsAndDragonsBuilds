@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
+
+from Definitions import Ability, Skill
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
-from Definitions import Ability, Skill, DiceRollCondition
-from Utils.CharacterSheetUtils import write_table
 
 
 class Feature(ABC):

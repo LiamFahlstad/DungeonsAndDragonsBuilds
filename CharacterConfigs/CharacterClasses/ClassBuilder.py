@@ -1,18 +1,15 @@
 from abc import ABC, abstractmethod
 from typing import Optional
+
 import attr
-from Definitions import CharacterClass
+
 import Definitions
-from Features import GeneralFeats, OriginFeats
 from CharacterSheetCreator import CharacterSheetData
-from Features import Armor
-from Features import Backgrounds
+from Definitions import CharacterClass
+from Features import Armor, Backgrounds, GeneralFeats, OriginFeats, Weapons
 from Features.ClassFeatures import SpellSlots
-from Features import Weapons
+from StatBlocks.AbilitiesStatBlock import AbilitiesStatBlock
 from StatBlocks.SavingThrowsStatBlock import SavingThrowsStatBlock
-from StatBlocks.AbilitiesStatBlock import (
-    AbilitiesStatBlock,
-)
 from StatBlocks.SkillsStatBlock import ClassSkillsStatBlock
 
 

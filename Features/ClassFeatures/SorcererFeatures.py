@@ -1,8 +1,5 @@
+from Features.BaseFeatures import TextFeature
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
-from Definitions import Ability, DiceRollCondition, Skill
-from Features import Weapons, Maneuvers
-from Features.BaseFeatures import CharacterFeature, TextFeature
-
 
 RANGER_HIT_DIE = 6
 

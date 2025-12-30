@@ -1,10 +1,15 @@
 from typing import Optional
+
 import attr
+
+from CharacterConfigs.CharacterClasses import ClassBuilder
 from CharacterConfigs.CharacterClasses.PaladinBase import (
     PaladinMulticlassBuilder,
     PaladinStarterClassBuilder,
 )
 from CharacterSheetCreator import CharacterSheetData
+from Definitions import PaladinSubclass
+from Features import Armor, Backgrounds, OriginFeats, Weapons
 from Features.ClassFeatures import PaladinFeatures
 from Spells.Definitions import (
     BardLevel4Spells,
@@ -16,20 +21,8 @@ from Spells.Definitions import (
     WizardLevel3Spells,
     WizardLevel5Spells,
 )
-from CharacterConfigs.CharacterClasses import ClassBuilder
-from typing import Optional
-import attr
-from Definitions import Ability, CharacterClass, PaladinSubclass
-from Features import OriginFeats
-from Features import Armor
-from Features import Backgrounds
-from Features import Weapons
-from Features.ClassFeatures import SpellSlots
-from StatBlocks.AbilitiesStatBlock import (
-    AbilitiesStatBlock,
-)
+from StatBlocks.AbilitiesStatBlock import AbilitiesStatBlock
 from StatBlocks.SkillsStatBlock import PaladinSkillsStatBlock
-from CharacterConfigs.CharacterClasses import ClassBuilder
 
 
 @attr.dataclass

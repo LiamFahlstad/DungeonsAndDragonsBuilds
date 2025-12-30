@@ -1,6 +1,6 @@
 import CharacterSheetCreator
-from Features.SpeciesFeatures import OrcFeatures
 from Features import OriginFeats
+from Features.SpeciesFeatures import OrcFeatures
 
 
 def orc_character_data(

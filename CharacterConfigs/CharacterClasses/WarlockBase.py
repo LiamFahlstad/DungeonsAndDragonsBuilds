@@ -1,27 +1,29 @@
 from abc import ABC, abstractmethod
 from typing import Optional
+
 import attr
-from Definitions import Ability, CharacterClass, WarlockSubclass
-from Features import GeneralFeats, OriginFeats
+
 from CharacterSheetCreator import CharacterSheetData
-from Features import Armor
-from Features import Backgrounds
-from Features import FightingStyles
-from Features import Weapons
-from Features.ClassFeatures import WarlockFeatures, SpellSlots
-from StatBlocks.AbilitiesStatBlock import (
-    AbilitiesStatBlock,
+from Definitions import Ability, CharacterClass, WarlockSubclass
+from Features import (
+    Armor,
+    Backgrounds,
+    FightingStyles,
+    GeneralFeats,
+    OriginFeats,
+    Weapons,
 )
-from StatBlocks.SavingThrowsStatBlock import WarlockSavingThrowsStatBlock
-from StatBlocks.SkillsStatBlock import WarlockSkillsStatBlock
+from Features.ClassFeatures import SpellSlots, WarlockFeatures
 from Spells.Definitions import (
     WarlockLevel1Spells,
     WarlockLevel2Spells,
     WarlockLevel3Spells,
     WarlockLevel4Spells,
     WarlockLevel5Spells,
-    WarlockLevel2Spells,
 )
+from StatBlocks.AbilitiesStatBlock import AbilitiesStatBlock
+from StatBlocks.SavingThrowsStatBlock import WarlockSavingThrowsStatBlock
+from StatBlocks.SkillsStatBlock import WarlockSkillsStatBlock
 
 
 @attr.dataclass

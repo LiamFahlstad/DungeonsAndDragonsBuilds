@@ -1,6 +1,6 @@
-from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Definitions import Ability
 from Features.BaseFeatures import CharacterFeature
+from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
 class GeneralFeat(CharacterFeature):

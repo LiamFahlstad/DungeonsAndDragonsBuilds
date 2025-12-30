@@ -1,5 +1,15 @@
+import CharacterSheetCreator
+from CharacterConfigs.CharacterClasses import ClassBuilder
 from CharacterConfigs.CharacterClasses.PaladinLevelFeatures import (
     PaladinLevel1,
+    PaladinLevel2,
+    PaladinLevel3,
+    PaladinLevel4,
+    PaladinLevel5,
+    PaladinLevel6,
+    PaladinLevel7,
+    PaladinLevel8,
+    PaladinLevel9,
     PaladinLevel10,
     PaladinLevel11,
     PaladinLevel12,
@@ -10,38 +20,21 @@ from CharacterConfigs.CharacterClasses.PaladinLevelFeatures import (
     PaladinLevel17,
     PaladinLevel18,
     PaladinLevel19,
-    PaladinLevel2,
     PaladinLevel20,
-    PaladinLevel3,
-    PaladinLevel4,
-    PaladinLevel5,
-    PaladinLevel6,
-    PaladinLevel7,
-    PaladinLevel8,
-    PaladinLevel9,
 )
 from CharacterConfigs.PaladinOathOfGlory import (
-    GloryPaladinLevel13,
-    GloryPaladinLevel15,
-    GloryPaladinLevel17,
-    GloryPaladinLevel20,
     GloryPaladinLevel3,
     GloryPaladinLevel5,
     GloryPaladinLevel7,
     GloryPaladinLevel9,
+    GloryPaladinLevel13,
+    GloryPaladinLevel15,
+    GloryPaladinLevel17,
+    GloryPaladinLevel20,
+    OathOfGloryPaladinStarterClassBuilder,
 )
-import CharacterSheetCreator
-from Definitions import (
-    Ability,
-    Skill,
-)
-from Features import (
-    Backgrounds,
-    FightingStyles,
-    GeneralFeats,
-    OriginFeats,
-    Weapons,
-)
+from Definitions import Ability, Skill
+from Features import Backgrounds, FightingStyles, GeneralFeats, OriginFeats, Weapons
 from SpeciesConfigs import Human
 from Spells.Definitions import (
     PaladinLevel1Spells,
@@ -51,9 +44,7 @@ from Spells.Definitions import (
     PaladinLevel5Spells,
 )
 from StatBlocks.AbilitiesStatBlock import StandardArrayAbilitiesStatBlock
-from StatBlocks.SkillsStatBlock import FighterSkillsStatBlock, PaladinSkillsStatBlock
-from CharacterConfigs.CharacterClasses import ClassBuilder, PaladinBase
-from CharacterConfigs.PaladinOathOfGlory import OathOfGloryPaladinStarterClassBuilder
+from StatBlocks.SkillsStatBlock import PaladinSkillsStatBlock
 
 
 def get_data() -> CharacterSheetCreator.CharacterSheetData:

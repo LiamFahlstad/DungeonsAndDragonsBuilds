@@ -1,6 +1,6 @@
 import CharacterSheetCreator
-from Features.SpeciesFeatures import DwarfFeatures
 from Features import OriginFeats
+from Features.SpeciesFeatures import DwarfFeatures
 
 
 def forest_Dwarf_character_data(

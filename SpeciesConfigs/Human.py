@@ -1,7 +1,7 @@
 import CharacterSheetCreator
 import Definitions
-from Features.SpeciesFeatures import HumanFeatures
 from Features import OriginFeats
+from Features.SpeciesFeatures import HumanFeatures
 
 
 def human_character_data(

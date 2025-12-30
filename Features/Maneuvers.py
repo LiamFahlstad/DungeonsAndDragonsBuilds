@@ -1,6 +1,6 @@
-from StatBlocks.CharacterStatBlock import CharacterStatBlock
-from Features.BaseFeatures import TextFeature
 from Definitions import Ability
+from Features.BaseFeatures import TextFeature
+from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
 class Maneuver(TextFeature):

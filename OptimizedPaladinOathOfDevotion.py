@@ -1,34 +1,11 @@
-from CharacterConfigs import BattleMasterFighter
-from CharacterConfigs import PaladinOathOfDevotion
-from CharacterConfigs.CharacterClasses.PaladinBase import (
-    PaladinLevel1,
-    PaladinLevel2,
-    PaladinLevel3,
-    PaladinLevel4,
-    PaladinLevel5,
-)
 import CharacterSheetCreator
-from Definitions import (
-    Ability,
-    Skill,
-)
-from Features import (
-    Backgrounds,
-    FightingStyles,
-    GeneralFeats,
-    Maneuvers,
-    OriginFeats,
-    Weapons,
-)
+from CharacterConfigs import PaladinOathOfDevotion
+from Definitions import Ability, Skill
+from Features import Backgrounds, FightingStyles, GeneralFeats, OriginFeats, Weapons
 from SpeciesConfigs import Human
-from Spells.Definitions import (
-    PaladinLevel1Spells,
-    PaladinLevel2Spells,
-    PaladinLevel3Spells,
-)
+from Spells.Definitions import PaladinLevel1Spells, PaladinLevel2Spells
 from StatBlocks.AbilitiesStatBlock import StandardArrayAbilitiesStatBlock
-from StatBlocks.SkillsStatBlock import FighterSkillsStatBlock, PaladinSkillsStatBlock
-
+from StatBlocks.SkillsStatBlock import PaladinSkillsStatBlock
 
 if __name__ == "__main__":
     character_class_data = PaladinOathOfDevotion.create(

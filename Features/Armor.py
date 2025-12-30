@@ -1,6 +1,6 @@
-from StatBlocks.CharacterStatBlock import CharacterStatBlock
-from Definitions import Ability, Skill, DiceRollCondition
+from Definitions import Ability, DiceRollCondition, Skill
 from Features.BaseFeatures import CharacterFeature
+from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
 class AbstractArmor(CharacterFeature):

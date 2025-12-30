@@ -1,51 +1,20 @@
+import CharacterSheetCreator
+import Definitions
+from CharacterConfigs.BarbarianPathOfTheBerserker import (
+    PathOfTheBerserkerBarbarianLevel3,
+    PathOfTheBerserkerBarbarianStarterClassBuilder,
+)
+from CharacterConfigs.CharacterClasses import ClassBuilder
 from CharacterConfigs.CharacterClasses.BarbarianFeatures import (
     BarbarianLevel1,
-    BarbarianLevel10,
-    BarbarianLevel11,
-    BarbarianLevel12,
-    BarbarianLevel13,
-    BarbarianLevel14,
-    BarbarianLevel15,
-    BarbarianLevel16,
-    BarbarianLevel17,
-    BarbarianLevel18,
-    BarbarianLevel19,
     BarbarianLevel2,
-    BarbarianLevel20,
     BarbarianLevel3,
-    BarbarianLevel4,
-    BarbarianLevel5,
-    BarbarianLevel6,
-    BarbarianLevel7,
-    BarbarianLevel8,
-    BarbarianLevel9,
 )
-import CharacterSheetCreator
-from Definitions import (
-    Ability,
-    Skill,
-)
-import Definitions
-from Features import (
-    Backgrounds,
-    FightingStyles,
-    GeneralFeats,
-    OriginFeats,
-    Weapons,
-)
+from Definitions import Ability, Skill
+from Features import Backgrounds, OriginFeats, Weapons
 from SpeciesConfigs import Orc
 from StatBlocks.AbilitiesStatBlock import StandardArrayAbilitiesStatBlock
 from StatBlocks.SkillsStatBlock import BarbarianSkillsStatBlock
-from CharacterConfigs.CharacterClasses import BarbarianBase, ClassBuilder
-from CharacterConfigs.BarbarianPathOfTheBerserker import (
-    PathOfTheBerserkerBarbarianLevel3,
-    PathOfTheBerserkerBarbarianLevel5,
-    PathOfTheBerserkerBarbarianLevel7,
-    PathOfTheBerserkerBarbarianLevel9,
-)
-from CharacterConfigs.BarbarianPathOfTheBerserker import (
-    PathOfTheBerserkerBarbarianStarterClassBuilder,
-)
 
 
 def get_data() -> CharacterSheetCreator.CharacterSheetData:

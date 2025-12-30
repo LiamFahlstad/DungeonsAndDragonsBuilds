@@ -1,15 +1,11 @@
 from typing import Optional
+
+from CharacterConfigs.CharacterClasses import ClassBuilder
 from Definitions import CharacterClass
-from Features import OriginFeats
-from Features import Armor
-from Features import Backgrounds
-from Features import Weapons
-from StatBlocks.AbilitiesStatBlock import (
-    AbilitiesStatBlock,
-)
+from Features import Armor, Backgrounds, OriginFeats, Weapons
+from StatBlocks.AbilitiesStatBlock import AbilitiesStatBlock
 from StatBlocks.SavingThrowsStatBlock import BarbarianSavingThrowsStatBlock
 from StatBlocks.SkillsStatBlock import BarbarianSkillsStatBlock
-from CharacterConfigs.CharacterClasses import ClassBuilder
 
 
 class BarbarianStarterClassBuilder(ClassBuilder.StarterClassBuilder):

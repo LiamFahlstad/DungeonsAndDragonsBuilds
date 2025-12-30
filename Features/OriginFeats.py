@@ -1,6 +1,6 @@
-from StatBlocks.CharacterStatBlock import CharacterStatBlock
-from Definitions import Ability, Skill
+from Definitions import Skill
 from Features.BaseFeatures import CharacterFeature, TextFeature
+from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
 class OriginCharacterFeat(CharacterFeature):

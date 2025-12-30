@@ -1,7 +1,6 @@
-from StatBlocks.CharacterStatBlock import CharacterStatBlock
-from Definitions import Ability, DiceRollCondition, Skill, CreatureSize
+from Definitions import Ability, CreatureSize
 from Features.BaseFeatures import CharacterFeature, TextFeature
-
+from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 SPEED = 30  # Given by your species
 SIZE = CreatureSize.SMALL  # Given by your species

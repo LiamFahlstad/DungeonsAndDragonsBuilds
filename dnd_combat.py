@@ -1,6 +1,6 @@
-from enum import Enum
-import tkinter as tk
 import json
+import tkinter as tk
+from enum import Enum
 from pathlib import Path
 
 import CharacterSheetCreator
@@ -296,8 +296,8 @@ class CombatApp:
 
 
 if __name__ == "__main__":
-    import OptimizedRangerHunter
     import OptimizedBerserkerBarbarian
+    import OptimizedRangerHunter
     import OptimizedRogueAssassin
 
     character_sheets = [

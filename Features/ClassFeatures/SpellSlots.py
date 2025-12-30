@@ -1,4 +1,5 @@
 from enum import Enum
+
 from Features.BaseFeatures import CharacterFeature
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 

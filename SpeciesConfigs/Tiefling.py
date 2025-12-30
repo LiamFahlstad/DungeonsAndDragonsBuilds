@@ -1,7 +1,8 @@
 from enum import Enum
+
 import CharacterSheetCreator
-from Features.SpeciesFeatures import TieflingFeatures
 from Features import OriginFeats
+from Features.SpeciesFeatures import TieflingFeatures
 from Spells.Definitions import (
     ClericLevel2Spells,
     SorcererLevel0Spells,

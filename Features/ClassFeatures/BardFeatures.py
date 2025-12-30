@@ -1,7 +1,5 @@
+from Features.BaseFeatures import TextFeature
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
-from Definitions import Ability, DiceRollCondition, Skill
-from Features.BaseFeatures import CharacterFeature, TextFeature
-
 
 BARD_HIT_DIE = 8
 

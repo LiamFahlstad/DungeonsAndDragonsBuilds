@@ -2,24 +2,25 @@ import attr
 
 from CharacterConfigs.CharacterClasses import ClassBuilder
 from CharacterSheetCreator import CharacterSheetData
+from Definitions import Skill
 from Features import FightingStyles, GeneralFeats, Weapons
-from Features.ClassFeatures import PaladinFeatures
+from Features.ClassFeatures import RangerFeatures
 from Spells.Definitions import (
-    PaladinLevel1Spells,
-    PaladinLevel2Spells,
-    PaladinLevel3Spells,
-    PaladinLevel4Spells,
-    PaladinLevel5Spells,
+    RangerLevel1Spells,
+    RangerLevel2Spells,
+    RangerLevel3Spells,
+    RangerLevel4Spells,
+    RangerLevel5Spells,
     WarlockLevel2Spells,
 )
 
 
 @attr.dataclass
-class PaladinLevel1(ClassBuilder.BaseClassLevel1):
+class RangerLevel1(ClassBuilder.BaseClassLevel1):
     weapon_mastery_1: Weapons.AbstractWeapon
     weapon_mastery_2: Weapons.AbstractWeapon
-    spell_1: PaladinLevel1Spells
-    spell_2: PaladinLevel1Spells
+    spell_1: RangerLevel1Spells
+    spell_2: RangerLevel1Spells
 
     def add_features(
         self,
@@ -28,66 +29,63 @@ class PaladinLevel1(ClassBuilder.BaseClassLevel1):
         data.add_weapon_mastery(self.weapon_mastery_1)
         data.add_weapon_mastery(self.weapon_mastery_2)
 
-        # Lay on Hands
-        data.add_feature(PaladinFeatures.LayOnHands())
+        data.add_feature(RangerFeatures.RegainingSpellSlots())
+        data.add_feature(RangerFeatures.ReplacingSpells())
+        data.add_feature(RangerFeatures.ReplacingWeaponMasteries())
+        data.add_feature(RangerFeatures.FavoredEnemy())
 
         # Add/Change prepared spells:
+        data.add_spell(RangerLevel1Spells.HUNTERS_MARK)
         data.add_spell(self.spell_1)
         data.add_spell(self.spell_2)
         return data
 
 
 @attr.dataclass
-class PaladinLevel2(ClassBuilder.BaseClassLevel2):
+class RangerLevel2(ClassBuilder.BaseClassLevel2):
+    skill: Skill
     fighting_style: FightingStyles.FightingStyle
-    spell: PaladinLevel1Spells
+    spell: RangerLevel1Spells
 
     def add_features(self, data: CharacterSheetData) -> CharacterSheetData:
-
-        # Choose one Fighting Style
+        data.add_feature(RangerFeatures.DeftExplorerLanguages())
+        data.add_feature(RangerFeatures.DeftExplorerExpertise(self.skill))
         data.add_fighting_style(self.fighting_style)
-
-        # Automatic feature
-        data.add_feature(PaladinFeatures.PaladinsSmite())
-        data.add_spell(PaladinLevel1Spells.DIVINE_SMITE)
-
-        # Add prepared spells:
         data.add_spell(self.spell)
         return data
 
 
 @attr.dataclass
-class PaladinLevel3(ClassBuilder.BaseClassLevel3):
-    spell: PaladinLevel1Spells
+class RangerLevel3(ClassBuilder.BaseClassLevel3):
+    spell: RangerLevel1Spells
 
     def add_features(self, data: CharacterSheetData) -> CharacterSheetData:
-        channel_divinity_feature = PaladinFeatures.ChannelDivinity()
-        channel_divinity_feature.add_spell("Divine Sense")
-        data.add_feature(channel_divinity_feature)
         data.add_spell(self.spell)
         return data
 
 
 @attr.dataclass
-class PaladinLevel4(ClassBuilder.BaseClassLevel4):
+class RangerLevel4(ClassBuilder.BaseClassLevel4):
     general_feat: GeneralFeats.GeneralFeat
-    spell: PaladinLevel1Spells
+    spell: RangerLevel1Spells
 
     def add_features(self, data: CharacterSheetData) -> CharacterSheetData:
+
         data.add_feature(self.general_feat)
         data.add_spell(self.spell)
         return data
 
 
 @attr.dataclass
-class PaladinLevel5(ClassBuilder.BaseClassLevel5):
-    spell: PaladinLevel1Spells | PaladinLevel2Spells
+class RangerLevel5(ClassBuilder.BaseClassLevel5):
+    spell: RangerLevel1Spells | RangerLevel2Spells
 
     def add_features(self, data: CharacterSheetData) -> CharacterSheetData:
+
         # Automatic feature
-        data.add_feature(PaladinFeatures.ExtraAttack())
-        data.add_feature(PaladinFeatures.FaithfulSteed())
-        data.add_spell(PaladinLevel2Spells.FIND_STEED)
+        data.add_feature(RangerFeatures.ExtraAttack())
+        data.add_feature(RangerFeatures.FaithfulSteed())
+        data.add_spell(RangerLevel2Spells.FIND_STEED)
 
         # Oath of vengeance features
         data.add_spell(WarlockLevel2Spells.HOLD_PERSON)
@@ -99,16 +97,16 @@ class PaladinLevel5(ClassBuilder.BaseClassLevel5):
 
 
 @attr.dataclass
-class PaladinLevel6(ClassBuilder.BaseClassLevel6):
+class RangerLevel6(ClassBuilder.BaseClassLevel6):
 
     def add_features(self, data: CharacterSheetData) -> CharacterSheetData:
-        data.add_feature(PaladinFeatures.AuraOfProtection())
+        data.add_feature(RangerFeatures.AuraOfProtection())
         return data
 
 
 @attr.dataclass
-class PaladinLevel7(ClassBuilder.BaseClassLevel7):
-    spell: PaladinLevel1Spells | PaladinLevel2Spells
+class RangerLevel7(ClassBuilder.BaseClassLevel7):
+    spell: RangerLevel1Spells | RangerLevel2Spells
 
     def add_features(self, data: CharacterSheetData) -> CharacterSheetData:
         data.add_spell(self.spell)
@@ -116,7 +114,7 @@ class PaladinLevel7(ClassBuilder.BaseClassLevel7):
 
 
 @attr.dataclass
-class PaladinLevel8(ClassBuilder.BaseClassLevel8):
+class RangerLevel8(ClassBuilder.BaseClassLevel8):
     general_feat: GeneralFeats.GeneralFeat
 
     def add_features(self, data: CharacterSheetData) -> CharacterSheetData:
@@ -125,15 +123,15 @@ class PaladinLevel8(ClassBuilder.BaseClassLevel8):
 
 
 @attr.dataclass
-class PaladinLevel9(ClassBuilder.BaseClassLevel9):
-    spell: PaladinLevel1Spells | PaladinLevel2Spells | PaladinLevel3Spells
+class RangerLevel9(ClassBuilder.BaseClassLevel9):
+    spell: RangerLevel1Spells | RangerLevel2Spells | RangerLevel3Spells
 
     def add_features(
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        channel_divinity_feature: PaladinFeatures.ChannelDivinity = (
-            data.get_features_by_type(PaladinFeatures.ChannelDivinity)[0]
+        channel_divinity_feature: RangerFeatures.ChannelDivinity = (
+            data.get_features_by_type(RangerFeatures.ChannelDivinity)[0]
         )
         channel_divinity_feature.add_spell("Abjure Foes")
         data.add_spell(self.spell)
@@ -141,85 +139,34 @@ class PaladinLevel9(ClassBuilder.BaseClassLevel9):
 
 
 @attr.dataclass
-class PaladinLevel10(ClassBuilder.BaseClassLevel10):
+class RangerLevel10(ClassBuilder.BaseClassLevel10):
 
     def add_features(
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        aura_of_protection: PaladinFeatures.AuraOfProtection = (
-            data.get_features_by_type(PaladinFeatures.AuraOfProtection)[0]
-        )
-        aura_of_protection.add_feature(PaladinFeatures.AuraOfCourage())
-        return data
-
-
-@attr.dataclass
-class PaladinLevel11(ClassBuilder.BaseClassLevel11):
-    spell: PaladinLevel1Spells | PaladinLevel2Spells | PaladinLevel3Spells
-
-    def add_features(
-        self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
-        data.add_feature(PaladinFeatures.RadiantStrikes())
-        data.add_spell(self.spell)
-        return data
-
-
-@attr.dataclass
-class PaladinLevel12(ClassBuilder.BaseClassLevel12):
-    general_feat: GeneralFeats.GeneralFeat
-
-    def add_features(self, data: CharacterSheetData) -> CharacterSheetData:
-        data.add_feature(self.general_feat)
-        return data
-
-
-@attr.dataclass
-class PaladinLevel13(ClassBuilder.BaseClassLevel13):
-    spell: (
-        PaladinLevel1Spells
-        | PaladinLevel2Spells
-        | PaladinLevel3Spells
-        | PaladinLevel4Spells
-    )
-
-    def add_features(self, data: CharacterSheetData) -> CharacterSheetData:
-        data.add_spell(self.spell)
-        return data
-
-
-@attr.dataclass
-class PaladinLevel14(ClassBuilder.BaseClassLevel14):
-
-    def add_features(
-        self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
-        lay_on_hands: PaladinFeatures.LayOnHands = data.get_features_by_type(
-            PaladinFeatures.LayOnHands
+        aura_of_protection: RangerFeatures.AuraOfProtection = data.get_features_by_type(
+            RangerFeatures.AuraOfProtection
         )[0]
-        lay_on_hands.add_feature(PaladinFeatures.RestoringTouch())
+        aura_of_protection.add_feature(RangerFeatures.AuraOfCourage())
         return data
 
 
 @attr.dataclass
-class PaladinLevel15(ClassBuilder.BaseClassLevel15):
-    spell: (
-        PaladinLevel1Spells
-        | PaladinLevel2Spells
-        | PaladinLevel3Spells
-        | PaladinLevel4Spells
-    )
+class RangerLevel11(ClassBuilder.BaseClassLevel11):
+    spell: RangerLevel1Spells | RangerLevel2Spells | RangerLevel3Spells
 
-    def add_features(self, data: CharacterSheetData) -> CharacterSheetData:
+    def add_features(
+        self,
+        data: CharacterSheetData,
+    ) -> CharacterSheetData:
+        data.add_feature(RangerFeatures.RadiantStrikes())
         data.add_spell(self.spell)
         return data
 
 
 @attr.dataclass
-class PaladinLevel16(ClassBuilder.BaseClassLevel16):
+class RangerLevel12(ClassBuilder.BaseClassLevel12):
     general_feat: GeneralFeats.GeneralFeat
 
     def add_features(self, data: CharacterSheetData) -> CharacterSheetData:
@@ -228,20 +175,71 @@ class PaladinLevel16(ClassBuilder.BaseClassLevel16):
 
 
 @attr.dataclass
-class PaladinLevel17(ClassBuilder.BaseClassLevel17):
+class RangerLevel13(ClassBuilder.BaseClassLevel13):
+    spell: (
+        RangerLevel1Spells
+        | RangerLevel2Spells
+        | RangerLevel3Spells
+        | RangerLevel4Spells
+    )
+
+    def add_features(self, data: CharacterSheetData) -> CharacterSheetData:
+        data.add_spell(self.spell)
+        return data
+
+
+@attr.dataclass
+class RangerLevel14(ClassBuilder.BaseClassLevel14):
+
+    def add_features(
+        self,
+        data: CharacterSheetData,
+    ) -> CharacterSheetData:
+        lay_on_hands: RangerFeatures.LayOnHands = data.get_features_by_type(
+            RangerFeatures.LayOnHands
+        )[0]
+        lay_on_hands.add_feature(RangerFeatures.RestoringTouch())
+        return data
+
+
+@attr.dataclass
+class RangerLevel15(ClassBuilder.BaseClassLevel15):
+    spell: (
+        RangerLevel1Spells
+        | RangerLevel2Spells
+        | RangerLevel3Spells
+        | RangerLevel4Spells
+    )
+
+    def add_features(self, data: CharacterSheetData) -> CharacterSheetData:
+        data.add_spell(self.spell)
+        return data
+
+
+@attr.dataclass
+class RangerLevel16(ClassBuilder.BaseClassLevel16):
+    general_feat: GeneralFeats.GeneralFeat
+
+    def add_features(self, data: CharacterSheetData) -> CharacterSheetData:
+        data.add_feature(self.general_feat)
+        return data
+
+
+@attr.dataclass
+class RangerLevel17(ClassBuilder.BaseClassLevel17):
     spell_1: (
-        PaladinLevel1Spells
-        | PaladinLevel2Spells
-        | PaladinLevel3Spells
-        | PaladinLevel4Spells
-        | PaladinLevel5Spells
+        RangerLevel1Spells
+        | RangerLevel2Spells
+        | RangerLevel3Spells
+        | RangerLevel4Spells
+        | RangerLevel5Spells
     )
     spell_2: (
-        PaladinLevel1Spells
-        | PaladinLevel2Spells
-        | PaladinLevel3Spells
-        | PaladinLevel4Spells
-        | PaladinLevel5Spells
+        RangerLevel1Spells
+        | RangerLevel2Spells
+        | RangerLevel3Spells
+        | RangerLevel4Spells
+        | RangerLevel5Spells
     )
 
     def add_features(self, data: CharacterSheetData) -> CharacterSheetData:
@@ -251,27 +249,27 @@ class PaladinLevel17(ClassBuilder.BaseClassLevel17):
 
 
 @attr.dataclass
-class PaladinLevel18(ClassBuilder.BaseClassLevel18):
+class RangerLevel18(ClassBuilder.BaseClassLevel18):
 
     def add_features(
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        aura_of_protection: PaladinFeatures.AuraOfProtection = (
-            data.get_features_by_type(PaladinFeatures.AuraOfProtection)[0]
-        )
-        aura_of_protection.add_feature(PaladinFeatures.AuraExpansion())
+        aura_of_protection: RangerFeatures.AuraOfProtection = data.get_features_by_type(
+            RangerFeatures.AuraOfProtection
+        )[0]
+        aura_of_protection.add_feature(RangerFeatures.AuraExpansion())
         return data
 
 
 @attr.dataclass
-class PaladinLevel19(ClassBuilder.BaseClassLevel19):
+class RangerLevel19(ClassBuilder.BaseClassLevel19):
     spell: (
-        PaladinLevel1Spells
-        | PaladinLevel2Spells
-        | PaladinLevel3Spells
-        | PaladinLevel4Spells
-        | PaladinLevel5Spells
+        RangerLevel1Spells
+        | RangerLevel2Spells
+        | RangerLevel3Spells
+        | RangerLevel4Spells
+        | RangerLevel5Spells
     )
 
     def add_features(self, data: CharacterSheetData) -> CharacterSheetData:
@@ -280,7 +278,7 @@ class PaladinLevel19(ClassBuilder.BaseClassLevel19):
 
 
 @attr.dataclass
-class PaladinLevel20(ClassBuilder.BaseClassLevel20):
+class RangerLevel20(ClassBuilder.BaseClassLevel20):
 
     def add_features(self, data: CharacterSheetData) -> CharacterSheetData:
         return data

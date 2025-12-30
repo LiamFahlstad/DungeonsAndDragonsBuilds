@@ -1,5 +1,8 @@
 from typing import Optional
+
 import attr
+
+from CharacterConfigs.CharacterClasses import ClassBuilder
 from CharacterConfigs.CharacterClasses.BarbarianBase import (
     BarbarianMulticlassBuilder,
     BarbarianStarterClassBuilder,
@@ -8,7 +11,6 @@ from CharacterSheetCreator import CharacterSheetData
 from Definitions import BarbarianSubclass
 from Features import Armor, Backgrounds, OriginFeats, Weapons
 from Features.ClassFeatures import BarbarianFeatures
-from CharacterConfigs.CharacterClasses import ClassBuilder
 from StatBlocks.AbilitiesStatBlock import AbilitiesStatBlock
 from StatBlocks.SkillsStatBlock import BarbarianSkillsStatBlock
 

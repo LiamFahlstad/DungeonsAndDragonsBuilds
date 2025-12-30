@@ -1,12 +1,10 @@
 import CharacterSheetCreator
-import Definitions
-from Features.SpeciesFeatures import GnomeFeatures
 from Features import OriginFeats
+from Features.SpeciesFeatures import GnomeFeatures
 from Spells.Definitions import BardLevel0Spells
 
 
 def forest_gnome_character_data(
-    skill_proficiency: Definitions.Skill,
     origin_feat: OriginFeats.OriginCharacterFeat | OriginFeats.OriginTextFeat,
 ) -> CharacterSheetCreator.CharacterSheetData:
 
@@ -17,7 +15,7 @@ def forest_gnome_character_data(
     data.add_feature(origin_feat)
 
     data.add_feature(GnomeFeatures.Darkvision())
-    data.add_feature(GnomeFeatures.ForestGnomeSpeakWithAnimals(skill_proficiency))
+    data.add_feature(GnomeFeatures.ForestGnomeSpeakWithAnimals())
 
     data.add_spell(BardLevel0Spells.MINOR_ILLUSION)
 
@@ -25,7 +23,6 @@ def forest_gnome_character_data(
 
 
 def rock_gnome_character_data(
-    skill_proficiency: Definitions.Skill,
     origin_feat: OriginFeats.OriginCharacterFeat | OriginFeats.OriginTextFeat,
 ) -> CharacterSheetCreator.CharacterSheetData:
 
@@ -36,7 +33,7 @@ def rock_gnome_character_data(
     data.add_feature(origin_feat)
 
     data.add_feature(GnomeFeatures.Darkvision())
-    data.add_feature(GnomeFeatures.RockGnomePrestidigitation(skill_proficiency))
+    data.add_feature(GnomeFeatures.RockGnomePrestidigitation())
 
     data.add_spell(BardLevel0Spells.MENDING)
     data.add_spell(BardLevel0Spells.PRESTIDIGITATION)

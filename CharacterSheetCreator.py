@@ -1,27 +1,27 @@
-from enum import Enum
 import pathlib
 from typing import Any, Optional
-from Features import Armor
-from StatBlocks.CharacterStatBlock import CharacterStatBlock
-from Definitions import Ability, Skill, CharacterClass
+
+import attr
+
 import Definitions
 import Scrapers.InvocationScrapers as InvocationScrapers
-import Scrapers.SpellScraper as SpellScraper
-from Features.Weapons import AbstractWeapon, WeaponMastery, write_weapons_to_file
-from StatBlocks.CombatStatBlock import CombatStatBlock
-from StatBlocks.SkillsStatBlock import SkillsStatBlock
-from StatBlocks.AbilitiesStatBlock import AbilitiesStatBlock
-from StatBlocks.SavingThrowsStatBlock import SavingThrowsStatBlock
 import Utils.CharacterSheetUtils as CharacterSheetUtils
+from Definitions import Ability, CharacterClass, Skill
+from Features import Armor
+from Features.Armor import AbstractArmor
+from Features.BaseFeatures import CharacterFeature, Feature
 from Features.FightingStyles import (
     FightingStyle,
     FightStyleCharacterFeature,
     FightStyleWeaponFeature,
 )
-from Features.BaseFeatures import Feature, CharacterFeature
-import attr
-from Features.Armor import AbstractArmor
+from Features.Weapons import AbstractWeapon, write_weapons_to_file
 from Spells.SpellFactory import SpellFactory
+from StatBlocks.AbilitiesStatBlock import AbilitiesStatBlock
+from StatBlocks.CharacterStatBlock import CharacterStatBlock
+from StatBlocks.CombatStatBlock import CombatStatBlock
+from StatBlocks.SavingThrowsStatBlock import SavingThrowsStatBlock
+from StatBlocks.SkillsStatBlock import SkillsStatBlock
 
 
 @attr.dataclass

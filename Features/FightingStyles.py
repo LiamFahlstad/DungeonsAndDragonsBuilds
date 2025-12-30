@@ -1,7 +1,9 @@
 from abc import abstractmethod
+
 from pyparsing import ABC
+
+from Features.Weapons import AbstractWeapon, WeaponProperty, WeaponType
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
-from Features.Weapons import AbstractWeapon, WeaponType, WeaponProperty
 
 
 class FightingStyle(ABC):

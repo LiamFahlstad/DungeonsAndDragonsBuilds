@@ -1,11 +1,11 @@
+from abc import abstractmethod
+from dataclasses import dataclass, field
 from enum import Enum
-from typing import Optional
-from StatBlocks.CharacterStatBlock import CharacterStatBlock
+
 from Definitions import Ability
 from Features.BaseFeatures import TextFeature
+from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils.CharacterSheetUtils import write_table
-from dataclasses import dataclass, field
-from abc import abstractmethod
 
 
 class WeaponProperty(Enum):

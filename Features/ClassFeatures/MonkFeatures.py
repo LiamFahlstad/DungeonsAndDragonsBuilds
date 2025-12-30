@@ -1,6 +1,5 @@
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
-from Definitions import Ability, DiceRollCondition, Skill
-from Features.BaseFeatures import CharacterFeature, TextFeature
+from Features.BaseFeatures import TextFeature
 
 
 BARBARIAN_HIT_DIE = 8

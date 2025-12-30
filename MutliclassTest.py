@@ -1,33 +1,19 @@
+import CharacterSheetCreator
+import Definitions
+import Spells.Definitions as SpellDefinitions
+from CharacterConfigs import RogueAssassin
 from CharacterConfigs.CharacterClasses import (
     ClassBuilder,
-    RogueBase,
     RogueLevelFeatures,
+    WizardBase,
+    WizardLevelFeatures,
 )
-from CharacterConfigs import RogueAssassin
-from CharacterConfigs.CharacterClasses import WizardBase, WizardLevelFeatures
-import CharacterSheetCreator
-from Definitions import (
-    Ability,
-    Skill,
-)
-import Definitions
-from Features import (
-    Backgrounds,
-    FightingStyles,
-    GeneralFeats,
-    OriginFeats,
-    Weapons,
-)
+from Definitions import Ability, Skill
+from Features import Backgrounds, OriginFeats, Weapons
 from SpeciesConfigs import Elf
 from StatBlocks import AbilitiesStatBlock
 from StatBlocks.AbilitiesStatBlock import StandardArrayAbilitiesStatBlock
 from StatBlocks.SkillsStatBlock import RogueSkillsStatBlock
-from CharacterConfigs.CharacterClasses import RogueBase
-from CharacterConfigs.RogueAssassin import (
-    AssassinRogueLevel3,
-    AssassinRogueLevel9,
-)
-import Spells.Definitions as SpellDefinitions
 
 
 def _get_starter_data() -> CharacterSheetCreator.CharacterSheetData:

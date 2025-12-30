@@ -1,9 +1,5 @@
 from enum import Enum
 
-from abc import ABC, abstractmethod
-
-import attr
-
 
 class CharacterClass(str, Enum):
     ARTIFICER = "Artificer"

@@ -1,8 +1,8 @@
 from enum import Enum
+
 import CharacterSheetCreator
 import Definitions
 from Features.SpeciesFeatures import ElfFeatures
-from Features import OriginFeats
 from Spells.Definitions import (
     BardLevel0Spells,
     BardLevel1Spells,

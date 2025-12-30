@@ -1,6 +1,6 @@
 import CharacterSheetCreator
-from Features.SpeciesFeatures import HalflingFeatures
 from Features import OriginFeats
+from Features.SpeciesFeatures import HalflingFeatures
 
 
 def halfling_character_data(

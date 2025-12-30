@@ -1,25 +1,10 @@
 from typing import Optional, TypeAlias
+
 import attr
-from CharacterConfigs.CharacterClasses.WizardBase import (
-    WizardFeaturePerLevel,
-    WizardSubclassLevel10,
-    WizardSubclassLevel11,
-    WizardSubclassLevel13,
-    WizardSubclassLevel14,
-    WizardSubclassLevel15,
-    WizardSubclassLevel17,
-    WizardSubclassLevel3,
-    WizardSubclassLevel5,
-    WizardSubclassLevel6,
-    WizardSubclassLevel7,
-    WizardSubclassLevel9,
-)
+
 from CharacterSheetCreator import CharacterSheetData
 from Features.ClassFeatures import WizardFeatures
 from Spells.Definitions import (
-    ConjurationLevel2Spells,
-    ConjurationLevel3Spells,
-    DivinationLevel0Spells,
     DivinationLevel1Spells,
     DivinationLevel2Spells,
     DivinationLevel3Spells,
@@ -29,7 +14,6 @@ from Spells.Definitions import (
     DivinationLevel7Spells,
     DivinationLevel8Spells,
     DivinationLevel9Spells,
-    WizardLevel9Spells,
 )
 
 DivinationSpellsUpTo2: TypeAlias = DivinationLevel1Spells | DivinationLevel2Spells

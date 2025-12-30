@@ -1,50 +1,21 @@
+import CharacterSheetCreator
+import Definitions
+from CharacterConfigs.CharacterClasses import ClassBuilder
 from CharacterConfigs.CharacterClasses.RogueLevelFeatures import (
     RogueLevel1,
-    RogueLevel10,
-    RogueLevel11,
-    RogueLevel12,
-    RogueLevel13,
-    RogueLevel14,
-    RogueLevel15,
-    RogueLevel16,
-    RogueLevel17,
-    RogueLevel18,
-    RogueLevel19,
     RogueLevel2,
-    RogueLevel20,
     RogueLevel3,
-    RogueLevel4,
-    RogueLevel5,
-    RogueLevel6,
-    RogueLevel7,
-    RogueLevel8,
-    RogueLevel9,
 )
-import CharacterSheetCreator
-from Definitions import (
-    Ability,
-    Skill,
+from CharacterConfigs.RogueAssassin import (
+    AssassinRogueLevel3,
+    AssassinRogueStarterClassBuilder,
 )
-import Definitions
-from Features import (
-    Backgrounds,
-    FightingStyles,
-    GeneralFeats,
-    OriginFeats,
-    Weapons,
-)
+from Definitions import Ability, Skill
+from Features import Backgrounds, OriginFeats, Weapons
 from SpeciesConfigs import Elf
 from StatBlocks import AbilitiesStatBlock
 from StatBlocks.AbilitiesStatBlock import StandardArrayAbilitiesStatBlock
 from StatBlocks.SkillsStatBlock import RogueSkillsStatBlock
-from CharacterConfigs.CharacterClasses import RogueBase, ClassBuilder
-from CharacterConfigs.RogueAssassin import (
-    AssassinRogueLevel3,
-    AssassinRogueLevel9,
-)
-from CharacterConfigs.RogueAssassin import (
-    AssassinRogueStarterClassBuilder,
-)
 
 
 def get_data() -> CharacterSheetCreator.CharacterSheetData:

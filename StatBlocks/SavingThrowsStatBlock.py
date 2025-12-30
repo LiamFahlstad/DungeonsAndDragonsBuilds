@@ -1,4 +1,5 @@
 from typing import Optional
+
 from Definitions import Ability
 from StatBlocks.StatBlock import StatBlock
 

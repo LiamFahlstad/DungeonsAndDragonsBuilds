@@ -1,24 +1,18 @@
 from typing import Optional
+
 import attr
+
+from CharacterConfigs.CharacterClasses import ClassBuilder
 from CharacterConfigs.CharacterClasses.RogueBase import (
     RogueMulticlassBuilder,
     RogueStarterClassBuilder,
 )
 from CharacterSheetCreator import CharacterSheetData
-from Features.ClassFeatures import RogueFeatures
-from CharacterConfigs.CharacterClasses import ClassBuilder
-from typing import Optional
-import attr
 from Definitions import RogueSubclass
-from Features import OriginFeats
-from Features import Armor
-from Features import Backgrounds
-from Features import Weapons
-from StatBlocks.AbilitiesStatBlock import (
-    AbilitiesStatBlock,
-)
+from Features import Armor, Backgrounds, OriginFeats, Weapons
+from Features.ClassFeatures import RogueFeatures
+from StatBlocks.AbilitiesStatBlock import AbilitiesStatBlock
 from StatBlocks.SkillsStatBlock import RogueSkillsStatBlock
-from CharacterConfigs.CharacterClasses import ClassBuilder
 
 
 @attr.dataclass

@@ -1,8 +1,12 @@
+from typing import TypeAlias
+
 import attr
+
+from CharacterConfigs.CharacterClasses import ClassBuilder
+from CharacterSheetCreator import CharacterSheetData
 from Definitions import Skill
 from Features import GeneralFeats
-from CharacterSheetCreator import CharacterSheetData
-from Features.ClassFeatures import WizardFeatures, WizardFeatures
+from Features.ClassFeatures import WizardFeatures
 from Spells.Definitions import (
     WizardLevel0Spells,
     WizardLevel1Spells,
@@ -15,8 +19,6 @@ from Spells.Definitions import (
     WizardLevel8Spells,
     WizardLevel9Spells,
 )
-from CharacterConfigs.CharacterClasses import ClassBuilder
-from typing import TypeAlias
 
 WizardSpellsUpTo2: TypeAlias = WizardLevel1Spells | WizardLevel2Spells
 

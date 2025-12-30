@@ -1,6 +1,6 @@
-from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Definitions import Ability, Skill
 from Features.BaseFeatures import CharacterFeature
+from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
 class FreeBackgroundAbilityBonus(CharacterFeature):

@@ -1,8 +1,6 @@
-from StatBlocks.CharacterStatBlock import CharacterStatBlock
-from Definitions import Ability, DiceRollCondition, Skill
-from Features import Weapons, Maneuvers
+from Definitions import Ability, Skill
 from Features.BaseFeatures import CharacterFeature, TextFeature
-
+from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 WIZARD_HIT_DIE = 6
 

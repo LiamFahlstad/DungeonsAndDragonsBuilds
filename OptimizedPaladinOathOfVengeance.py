@@ -1,3 +1,4 @@
+import CharacterSheetCreator
 from CharacterConfigs import PaladinOathOfVengeance
 from CharacterConfigs.CharacterClasses.PaladinBase import (
     PaladinLevel1,
@@ -6,11 +7,7 @@ from CharacterConfigs.CharacterClasses.PaladinBase import (
     PaladinLevel4,
     PaladinLevel5,
 )
-import CharacterSheetCreator
-from Definitions import (
-    Ability,
-    Skill,
-)
+from Definitions import Ability, Skill
 from Features import (
     Armor,
     Backgrounds,
@@ -20,13 +17,9 @@ from Features import (
     Weapons,
 )
 from SpeciesConfigs import Human
-from Spells.Definitions import (
-    PaladinLevel1Spells,
-    PaladinLevel2Spells,
-)
+from Spells.Definitions import PaladinLevel1Spells, PaladinLevel2Spells
 from StatBlocks.AbilitiesStatBlock import StandardArrayAbilitiesStatBlock
 from StatBlocks.SkillsStatBlock import PaladinSkillsStatBlock
-
 
 if __name__ == "__main__":
     character_class_data = PaladinOathOfVengeance.create(

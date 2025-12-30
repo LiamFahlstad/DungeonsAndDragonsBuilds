@@ -1,8 +1,8 @@
 from enum import Enum
-from StatBlocks.CharacterStatBlock import CharacterStatBlock
+
 from Definitions import CreatureSize
 from Features.BaseFeatures import TextFeature
-
+from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 SPEED = 35  # Given by your species
 SIZE = CreatureSize.MEDIUM  # Given by your species

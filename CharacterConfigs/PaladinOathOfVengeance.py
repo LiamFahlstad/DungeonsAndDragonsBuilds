@@ -1,28 +1,11 @@
-import attr
-from Definitions import Ability, PaladinSubclass, Skill, CharacterClass, FighterSubclass
-from Features import BaseFeatures, GeneralFeats, Maneuvers, OriginFeats
 import CharacterSheetCreator
-from Features import Armor
-from Features import Backgrounds
-from Features import FightingStyles
-from Features import Weapons
-from Features.ClassFeatures import FighterFeatures, PaladinFeatures
-from StatBlocks.AbilitiesStatBlock import (
-    StandardArrayAbilitiesStatBlock,
-    AbilitiesStatBlock,
-)
-from StatBlocks.SavingThrowsStatBlock import PaladinSavingThrowsStatBlock
+from CharacterConfigs.CharacterClasses import PaladinBase
+from Definitions import PaladinSubclass
+from Features import Armor, Backgrounds, OriginFeats, Weapons
+from Features.ClassFeatures import PaladinFeatures
+from Spells.Definitions import RangerLevel1Spells, WarlockLevel1Spells
+from StatBlocks.AbilitiesStatBlock import AbilitiesStatBlock
 from StatBlocks.SkillsStatBlock import PaladinSkillsStatBlock
-from CharacterConfigs.CharacterClasses.import PaladinBase
-from Spells.Definitions import (
-    PaladinLevel1Spells,
-    PaladinLevel2Spells,
-    PaladinLevel3Spells,
-    PaladinLevel4Spells,
-    PaladinLevel5Spells,
-    RangerLevel1Spells,
-    WarlockLevel1Spells,
-)
 
 
 def create(

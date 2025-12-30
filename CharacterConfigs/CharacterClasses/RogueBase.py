@@ -1,17 +1,12 @@
 from typing import Optional
-import attr
-from Definitions import Ability, CharacterClass
-from Features import OriginFeats
-from Features import Armor
-from Features import Backgrounds
-from Features import Weapons
-from Features.ClassFeatures import SpellSlots
-from StatBlocks.AbilitiesStatBlock import (
-    AbilitiesStatBlock,
-)
+
+
+from CharacterConfigs.CharacterClasses import ClassBuilder
+from Definitions import CharacterClass
+from Features import Armor, Backgrounds, OriginFeats, Weapons
+from StatBlocks.AbilitiesStatBlock import AbilitiesStatBlock
 from StatBlocks.SavingThrowsStatBlock import RogueSavingThrowsStatBlock
 from StatBlocks.SkillsStatBlock import RogueSkillsStatBlock
-from CharacterConfigs.CharacterClasses import ClassBuilder
 
 
 class RogueStarterClassBuilder(ClassBuilder.StarterClassBuilder):

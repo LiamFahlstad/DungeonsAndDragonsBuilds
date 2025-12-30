@@ -1,14 +1,11 @@
+import CharacterSheetCreator
 from CharacterConfigs import BattleMasterFighter
 from CharacterConfigs.BattleMasterFighter import (
     FighterLevel1,
     FighterLevel3,
     FighterLevel4,
 )
-import CharacterSheetCreator
-from Definitions import (
-    Ability,
-    Skill,
-)
+from Definitions import Ability, Skill
 from Features import (
     Backgrounds,
     FightingStyles,
@@ -20,7 +17,6 @@ from Features import (
 from SpeciesConfigs import Human
 from StatBlocks.AbilitiesStatBlock import StandardArrayAbilitiesStatBlock
 from StatBlocks.SkillsStatBlock import FighterSkillsStatBlock
-
 
 if __name__ == "__main__":
     character_class_data = BattleMasterFighter.create(

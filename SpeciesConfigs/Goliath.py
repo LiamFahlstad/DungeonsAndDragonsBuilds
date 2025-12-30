@@ -1,6 +1,6 @@
 import CharacterSheetCreator
-from Features.SpeciesFeatures import GoliathFeatures
 from Features import OriginFeats
+from Features.SpeciesFeatures import GoliathFeatures
 
 
 def goliath_character_data(

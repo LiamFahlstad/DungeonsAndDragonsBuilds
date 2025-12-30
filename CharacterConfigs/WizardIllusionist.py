@@ -1,19 +1,7 @@
 from typing import Optional, TypeAlias
+
 import attr
-from CharacterConfigs.CharacterClasses.WizardBase import (
-    WizardFeaturePerLevel,
-    WizardSubclassLevel10,
-    WizardSubclassLevel11,
-    WizardSubclassLevel13,
-    WizardSubclassLevel14,
-    WizardSubclassLevel15,
-    WizardSubclassLevel17,
-    WizardSubclassLevel3,
-    WizardSubclassLevel5,
-    WizardSubclassLevel6,
-    WizardSubclassLevel7,
-    WizardSubclassLevel9,
-)
+
 from CharacterSheetCreator import CharacterSheetData
 from Features.ClassFeatures import WizardFeatures
 from Spells.Definitions import (
@@ -29,7 +17,6 @@ from Spells.Definitions import (
     IllusionLevel7Spells,
     IllusionLevel8Spells,
     IllusionLevel9Spells,
-    WizardLevel9Spells,
 )
 
 IllusionSpellsUpTo2: TypeAlias = IllusionLevel1Spells | IllusionLevel2Spells
