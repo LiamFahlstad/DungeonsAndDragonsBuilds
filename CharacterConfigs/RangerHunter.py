@@ -2,18 +2,10 @@ from typing import Optional
 
 import attr
 
-from CharacterConfigs.CharacterClasses.RangerBase import (
-    RangerFeaturePerLevel,
-    RangerSubclassLevel3,
-    RangerSubclassLevel5,
-    RangerSubclassLevel7,
-    RangerSubclassLevel9,
-    RangerSubclassLevel13,
-    RangerSubclassLevel15,
-    RangerSubclassLevel17,
-    RangerSubclassLevel20,
-)
+from CharacterConfigs.CharacterClasses.RangerBase import RangerStarterClassBuilder, RangerMulticlassBuilder
 from CharacterSheetCreator import CharacterSheetData
+from Definitions import RangerSubclass
+from Features import Armor, Backgrounds, OriginFeats, Weapons
 from Features.ClassFeatures import RangerFeatures
 from Spells.Definitions import (
     BardLevel4Spells,
@@ -23,10 +15,13 @@ from Spells.Definitions import (
     WizardLevel3Spells,
     WizardLevel5Spells,
 )
+from CharacterConfigs.CharacterClasses import ClassBuilder
+from StatBlocks.AbilitiesStatBlock import AbilitiesStatBlock
+from StatBlocks.SkillsStatBlock import RangerSkillsStatBlock
 
 
 @attr.dataclass
-class HunterRangerLevel3(RangerSubclassLevel3):
+class HunterRangerLevel3(ClassBuilder.SubclassLevel3):
     level: int = attr.field(init=False, default=3)
 
     def add_features(
@@ -39,7 +34,7 @@ class HunterRangerLevel3(RangerSubclassLevel3):
 
 
 @attr.dataclass
-class HunterRangerLevel5(RangerSubclassLevel5):
+class HunterRangerLevel5(ClassBuilder.SubclassLevel5):
     level: int = attr.field(init=False, default=5)
 
     def add_features(
@@ -52,7 +47,7 @@ class HunterRangerLevel5(RangerSubclassLevel5):
 
 
 @attr.dataclass
-class HunterRangerLevel7(RangerSubclassLevel7):
+class HunterRangerLevel7(ClassBuilder.SubclassLevel7):
     level: int = attr.field(init=False, default=7)
 
     def add_features(
@@ -67,7 +62,7 @@ class HunterRangerLevel7(RangerSubclassLevel7):
 
 
 @attr.dataclass
-class HunterRangerLevel9(RangerSubclassLevel9):
+class HunterRangerLevel9(ClassBuilder.SubclassLevel9):
     level: int = attr.field(init=False, default=9)
 
     def add_features(
@@ -80,7 +75,7 @@ class HunterRangerLevel9(RangerSubclassLevel9):
 
 
 @attr.dataclass
-class HunterRangerLevel13(RangerSubclassLevel13):
+class HunterRangerLevel13(ClassBuilder.1SubclassLevel13):
     level: int = attr.field(init=False, default=13)
 
     def add_features(
@@ -93,7 +88,7 @@ class HunterRangerLevel13(RangerSubclassLevel13):
 
 
 @attr.dataclass
-class HunterRangerLevel15(RangerSubclassLevel15):
+class HunterRangerLevel15(ClassBuilder.1SubclassLevel15):
     level: int = attr.field(init=False, default=15)
 
     def add_features(
@@ -105,7 +100,7 @@ class HunterRangerLevel15(RangerSubclassLevel15):
 
 
 @attr.dataclass
-class HunterRangerLevel17(RangerSubclassLevel17):
+class HunterRangerLevel17(ClassBuilder.1SubclassLevel17):
     level: int = attr.field(init=False, default=17)
 
     def add_features(
@@ -118,7 +113,7 @@ class HunterRangerLevel17(RangerSubclassLevel17):
 
 
 @attr.dataclass
-class HunterRangerLevel20(RangerSubclassLevel20):
+class HunterRangerLevel20(ClassBuilder.2SubclassLevel20):
     level: int = attr.field(init=False, default=20)
 
     def add_features(
@@ -128,14 +123,49 @@ class HunterRangerLevel20(RangerSubclassLevel20):
         data.add_feature(RangerFeatures.LivingLegend())
         return data
 
+class HHunterRangerStarterClassBuilder(RangerStarterClassBuilder):
 
-@attr.dataclass
-class HunterRangerFeaturePerLevel(RangerFeaturePerLevel):
-    subclass_level_3: Optional[HunterRangerLevel3] = None
-    subclass_level_5: Optional[HunterRangerLevel5] = None
-    subclass_level_7: Optional[HunterRangerLevel7] = None
-    subclass_level_9: Optional[HunterRangerLevel9] = None
-    subclass_level_13: Optional[HunterRangerLevel13] = None
-    subclass_level_15: Optional[HunterRangerLevel15] = None
-    subclass_level_17: Optional[HunterRangerLevel17] = None
-    subclass_level_20: Optional[HunterRangerLevel20] = None
+    def __init__(
+        self,
+        ranger_level_features: ClassBuilder.BaseClassLevelFeatures,
+        ranger_level: int,
+        abilities: AbilitiesStatBlock,
+        ranger_skills: RangerSkillsStatBlock,
+        background_ability_bonuses: Backgrounds.FreeBackgroundAbilityBonus,
+        background_skill_proficiencies: Backgrounds.FreeBackgroundSkillProficiency,
+        add_default_equipment: bool,
+        origin_feat: OriginFeats.OriginCharacterFeat | OriginFeats.OriginTextFeat,
+        armor: Optional[list[Armor.AbstractArmor]] = None,
+        weapons: Optional[list[Weapons.AbstractWeapon]] = None,
+        replace_spells: Optional[dict[str, str]] = None,
+    ):
+        super().__init__(
+            ranger_level_features=ranger_level_features,
+            ranger_level=ranger_level,
+            subclass=RangerSubclass.HUNTER.value,
+            abilities=abilities,
+            ranger_skills=ranger_skills,
+            background_ability_bonuses=background_ability_bonuses,
+            background_skill_proficiencies=background_skill_proficiencies,
+            add_default_equipment=add_default_equipment,
+            origin_feat=origin_feat,
+            armor=armor,
+            weapons=weapons,
+            replace_spells=replace_spells,
+        )
+
+
+class HHunterRangerMulticlassBuilder(RangerMulticlassBuilder):
+
+    def __init__(
+        self,
+        ranger_level_features: ClassBuilder.BaseClassLevelFeatures,
+        ranger_level: int,
+        replace_spells: Optional[dict[str, str]] = None,
+    ):
+        super().__init__(
+            ranger_level_features=ranger_level_features,
+            ranger_level=ranger_level,
+            subclass=RangerSubclass.HUNTER.value,
+            replace_spells=replace_spells,
+        )
