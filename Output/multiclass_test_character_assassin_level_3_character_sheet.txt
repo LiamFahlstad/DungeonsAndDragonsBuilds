@@ -1,14 +1,14 @@
 ################################################################################
 # =============================== General Info =============================== #
 ################################################################################
-Field              | Value                
--------------------+----------------------
-Name               | Dark Shadow Nightmare
-Level              | 3                    
-Starter Class      | Rogue                
-Level per Class    | Rogue: 3             
-Character Subclass | Assassin             
-Proficiency Bonus  | 2                    
+Field              | Value                    
+-------------------+--------------------------
+Name               | Multiclass Test Character
+Level              | 3                        
+Starter Class      | Rogue                    
+Level per Class    | Rogue: 3                 
+Character Subclass | Assassin                 
+Proficiency Bonus  | 2                        
 
 ################################################################################
 # =============================== Combat Stats =============================== #
@@ -95,16 +95,6 @@ Whenever you finish a Long Rest, you can change the kinds of weapons you chose. 
 Name: Cunning Action
 Origin: Rogue Level 2
 Description: Your quick thinking and agility allow you to move and act quickly. On your turn, you can take one of the following actions as a Bonus Action: Dash, Disengage, or Hide.
-
-Name: Assassin's Tools
-Origin: Assassin Rogue Level 3
-Description: You gain a Disguise Kit and a Poisoner's Kit, and you have proficiency with them.
-
-Name: Assassinate
-Origin: Assassin Rogue Level 3
-Description: You're adept at ambushing a target, granting you the following benefits.
-Initiative. You have Advantage on Initiative rolls.
-Surprising Strikes. During the first round of each combat, you have Advantage on attack rolls against any creature that hasn't taken a turn. If your Sneak Attack hits any target during that round, the target takes extra damage of the weapon's type equal to your Rogue level.
 
 Name: Steady Aim
 Origin: Rogue Level 3

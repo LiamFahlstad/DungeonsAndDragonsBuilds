@@ -1,18 +1,28 @@
 from typing import Optional
 import attr
 from CharacterConfigs.CharacterClasses.RogueBase import (
-    RogueFeaturePerLevel,
-    RogueSubclassLevel13,
-    RogueSubclassLevel17,
-    RogueSubclassLevel3,
-    RogueSubclassLevel9,
+    RogueMulticlassBuilder,
+    RogueStarterClassBuilder,
 )
 from CharacterSheetCreator import CharacterSheetData
 from Features.ClassFeatures import RogueFeatures
+from CharacterConfigs.CharacterClasses import ClassBuilder
+from typing import Optional
+import attr
+from Definitions import RogueSubclass
+from Features import OriginFeats
+from Features import Armor
+from Features import Backgrounds
+from Features import Weapons
+from StatBlocks.AbilitiesStatBlock import (
+    AbilitiesStatBlock,
+)
+from StatBlocks.SkillsStatBlock import RogueSkillsStatBlock
+from CharacterConfigs.CharacterClasses import ClassBuilder
 
 
 @attr.dataclass
-class AssassinRogueLevel3(RogueSubclassLevel3):
+class AssassinRogueLevel3(ClassBuilder.SubclassLevel3):
     level: int = attr.field(init=False, default=3)
 
     def add_features(
@@ -25,7 +35,7 @@ class AssassinRogueLevel3(RogueSubclassLevel3):
 
 
 @attr.dataclass
-class AssassinRogueLevel9(RogueSubclassLevel9):
+class AssassinRogueLevel9(ClassBuilder.SubclassLevel9):
     level: int = attr.field(init=False, default=9)
 
     def add_features(
@@ -37,7 +47,7 @@ class AssassinRogueLevel9(RogueSubclassLevel9):
 
 
 @attr.dataclass
-class AssassinRogueLevel13(RogueSubclassLevel13):
+class AssassinRogueLevel13(ClassBuilder.SubclassLevel13):
     level: int = attr.field(init=False, default=13)
 
     def add_features(
@@ -53,7 +63,7 @@ class AssassinRogueLevel13(RogueSubclassLevel13):
 
 
 @attr.dataclass
-class AssassinRogueLevel17(RogueSubclassLevel17):
+class AssassinRogueLevel17(ClassBuilder.SubclassLevel17):
     level: int = attr.field(init=False, default=17)
 
     def add_features(
@@ -68,9 +78,49 @@ class AssassinRogueLevel17(RogueSubclassLevel17):
         return data
 
 
-@attr.dataclass
-class AssassinRogueFeaturePerLevel(RogueFeaturePerLevel):
-    subclass_level_3: Optional[AssassinRogueLevel3] = None
-    subclass_level_9: Optional[AssassinRogueLevel9] = None
-    subclass_level_13: Optional[AssassinRogueLevel13] = None
-    subclass_level_17: Optional[AssassinRogueLevel17] = None
+class AssassinRogueStarterClassBuilder(RogueStarterClassBuilder):
+
+    def __init__(
+        self,
+        rogue_level_features: ClassBuilder.BaseClassLevelFeatures,
+        rogue_level: int,
+        abilities: AbilitiesStatBlock,
+        rogue_skills: RogueSkillsStatBlock,
+        background_ability_bonuses: Backgrounds.FreeBackgroundAbilityBonus,
+        background_skill_proficiencies: Backgrounds.FreeBackgroundSkillProficiency,
+        add_default_equipment: bool,
+        origin_feat: OriginFeats.OriginCharacterFeat | OriginFeats.OriginTextFeat,
+        armor: Optional[list[Armor.AbstractArmor]] = None,
+        weapons: Optional[list[Weapons.AbstractWeapon]] = None,
+        replace_spells: Optional[dict[str, str]] = None,
+    ):
+        super().__init__(
+            rogue_level_features=rogue_level_features,
+            rogue_level=rogue_level,
+            subclass=RogueSubclass.ASSASSIN.value,
+            abilities=abilities,
+            rogue_skills=rogue_skills,
+            background_ability_bonuses=background_ability_bonuses,
+            background_skill_proficiencies=background_skill_proficiencies,
+            add_default_equipment=add_default_equipment,
+            origin_feat=origin_feat,
+            armor=armor,
+            weapons=weapons,
+            replace_spells=replace_spells,
+        )
+
+
+class AssassinRogueMulticlassBuilder(RogueMulticlassBuilder):
+
+    def __init__(
+        self,
+        rogue_level_features: ClassBuilder.BaseClassLevelFeatures,
+        rogue_level: int,
+        replace_spells: Optional[dict[str, str]] = None,
+    ):
+        super().__init__(
+            rogue_level_features=rogue_level_features,
+            rogue_level=rogue_level,
+            subclass=RogueSubclass.ASSASSIN.value,
+            replace_spells=replace_spells,
+        )

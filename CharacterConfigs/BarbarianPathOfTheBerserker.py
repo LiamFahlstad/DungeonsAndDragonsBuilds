@@ -1,22 +1,20 @@
 from typing import Optional
 import attr
 from CharacterConfigs.CharacterClasses.BarbarianBase import (
-    BarbarianFeaturePerLevel,
-    BarbarianSubclassLevel13,
-    BarbarianSubclassLevel15,
-    BarbarianSubclassLevel17,
-    BarbarianSubclassLevel20,
-    BarbarianSubclassLevel3,
-    BarbarianSubclassLevel5,
-    BarbarianSubclassLevel7,
-    BarbarianSubclassLevel9,
+    BarbarianMulticlassBuilder,
+    BarbarianStarterClassBuilder,
 )
 from CharacterSheetCreator import CharacterSheetData
+from Definitions import BarbarianSubclass
+from Features import Armor, Backgrounds, OriginFeats, Weapons
 from Features.ClassFeatures import BarbarianFeatures
+from CharacterConfigs.CharacterClasses import ClassBuilder
+from StatBlocks.AbilitiesStatBlock import AbilitiesStatBlock
+from StatBlocks.SkillsStatBlock import BarbarianSkillsStatBlock
 
 
 @attr.dataclass
-class PathOfTheBerserkerBarbarianLevel3(BarbarianSubclassLevel3):
+class PathOfTheBerserkerBarbarianLevel3(ClassBuilder.SubclassLevel3):
     level: int = attr.field(init=False, default=3)
 
     def add_features(
@@ -29,7 +27,7 @@ class PathOfTheBerserkerBarbarianLevel3(BarbarianSubclassLevel3):
 
 
 @attr.dataclass
-class PathOfTheBerserkerBarbarianLevel5(BarbarianSubclassLevel5):
+class PathOfTheBerserkerBarbarianLevel5(ClassBuilder.SubclassLevel5):
     level: int = attr.field(init=False, default=5)
 
     def add_features(
@@ -42,7 +40,7 @@ class PathOfTheBerserkerBarbarianLevel5(BarbarianSubclassLevel5):
 
 
 @attr.dataclass
-class PathOfTheBerserkerBarbarianLevel7(BarbarianSubclassLevel7):
+class PathOfTheBerserkerBarbarianLevel7(ClassBuilder.SubclassLevel7):
     level: int = attr.field(init=False, default=7)
 
     def add_features(
@@ -57,7 +55,7 @@ class PathOfTheBerserkerBarbarianLevel7(BarbarianSubclassLevel7):
 
 
 @attr.dataclass
-class PathOfTheBerserkerBarbarianLevel9(BarbarianSubclassLevel9):
+class PathOfTheBerserkerBarbarianLevel9(ClassBuilder.SubclassLevel9):
     level: int = attr.field(init=False, default=9)
 
     def add_features(
@@ -70,7 +68,7 @@ class PathOfTheBerserkerBarbarianLevel9(BarbarianSubclassLevel9):
 
 
 @attr.dataclass
-class PathOfTheBerserkerBarbarianLevel13(BarbarianSubclassLevel13):
+class PathOfTheBerserkerBarbarianLevel13(ClassBuilder.SubclassLevel13):
     level: int = attr.field(init=False, default=13)
 
     def add_features(
@@ -83,7 +81,7 @@ class PathOfTheBerserkerBarbarianLevel13(BarbarianSubclassLevel13):
 
 
 @attr.dataclass
-class PathOfTheBerserkerBarbarianLevel15(BarbarianSubclassLevel15):
+class PathOfTheBerserkerBarbarianLevel15(ClassBuilder.SubclassLevel15):
     level: int = attr.field(init=False, default=15)
 
     def add_features(
@@ -95,7 +93,7 @@ class PathOfTheBerserkerBarbarianLevel15(BarbarianSubclassLevel15):
 
 
 @attr.dataclass
-class PathOfTheBerserkerBarbarianLevel17(BarbarianSubclassLevel17):
+class PathOfTheBerserkerBarbarianLevel17(ClassBuilder.SubclassLevel17):
     level: int = attr.field(init=False, default=17)
 
     def add_features(
@@ -107,25 +105,49 @@ class PathOfTheBerserkerBarbarianLevel17(BarbarianSubclassLevel17):
         return data
 
 
-@attr.dataclass
-class PathOfTheBerserkerBarbarianLevel20(BarbarianSubclassLevel20):
-    level: int = attr.field(init=False, default=20)
+class PathOfTheBerserkerBarbarianStarterClassBuilder(BarbarianStarterClassBuilder):
 
-    def add_features(
+    def __init__(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
-        data.add_feature(BarbarianFeatures.LivingLegend())
-        return data
+        barbarian_level_features: ClassBuilder.BaseClassLevelFeatures,
+        barbarian_level: int,
+        abilities: AbilitiesStatBlock,
+        barbarian_skills: BarbarianSkillsStatBlock,
+        background_ability_bonuses: Backgrounds.FreeBackgroundAbilityBonus,
+        background_skill_proficiencies: Backgrounds.FreeBackgroundSkillProficiency,
+        add_default_equipment: bool,
+        origin_feat: OriginFeats.OriginCharacterFeat | OriginFeats.OriginTextFeat,
+        armor: Optional[list[Armor.AbstractArmor]] = None,
+        weapons: Optional[list[Weapons.AbstractWeapon]] = None,
+        replace_spells: Optional[dict[str, str]] = None,
+    ):
+        super().__init__(
+            barbarian_level_features=barbarian_level_features,
+            barbarian_level=barbarian_level,
+            subclass=BarbarianSubclass.PATH_OF_THE_BERSERKER.value,
+            abilities=abilities,
+            barbarian_skills=barbarian_skills,
+            background_ability_bonuses=background_ability_bonuses,
+            background_skill_proficiencies=background_skill_proficiencies,
+            add_default_equipment=add_default_equipment,
+            origin_feat=origin_feat,
+            armor=armor,
+            weapons=weapons,
+            replace_spells=replace_spells,
+        )
 
 
-@attr.dataclass
-class PathOfTheBerserkerBarbarianFeaturePerLevel(BarbarianFeaturePerLevel):
-    subclass_level_3: Optional[PathOfTheBerserkerBarbarianLevel3] = None
-    subclass_level_5: Optional[PathOfTheBerserkerBarbarianLevel5] = None
-    subclass_level_7: Optional[PathOfTheBerserkerBarbarianLevel7] = None
-    subclass_level_9: Optional[PathOfTheBerserkerBarbarianLevel9] = None
-    subclass_level_13: Optional[PathOfTheBerserkerBarbarianLevel13] = None
-    subclass_level_15: Optional[PathOfTheBerserkerBarbarianLevel15] = None
-    subclass_level_17: Optional[PathOfTheBerserkerBarbarianLevel17] = None
-    subclass_level_20: Optional[PathOfTheBerserkerBarbarianLevel20] = None
+class PathOfTheBerserkerBarbarianMulticlassBuilder(BarbarianMulticlassBuilder):
+
+    def __init__(
+        self,
+        barbarian_level_features: ClassBuilder.BaseClassLevelFeatures,
+        barbarian_level: int,
+        replace_spells: Optional[dict[str, str]] = None,
+    ):
+        super().__init__(
+            barbarian_level_features=barbarian_level_features,
+            barbarian_level=barbarian_level,
+            subclass=BarbarianSubclass.PATH_OF_THE_BERSERKER.value,
+            replace_spells=replace_spells,
+        )

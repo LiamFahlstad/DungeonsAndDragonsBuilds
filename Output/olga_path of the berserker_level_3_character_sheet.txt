@@ -1,14 +1,14 @@
 ################################################################################
 # =============================== General Info =============================== #
 ################################################################################
-Field              | Value                                  
--------------------+----------------------------------------
-Name               | Olga                                   
-Level              | 3                                      
-Starter Class      | Barbarian                              
-Level per Class    | Barbarian: 3                           
-Character Subclass | BarbarianSubclass.PATH_OF_THE_BERSERKER
-Proficiency Bonus  | 2                                      
+Field              | Value                
+-------------------+----------------------
+Name               | Olga                 
+Level              | 3                    
+Starter Class      | Barbarian            
+Level per Class    | Barbarian: 3         
+Character Subclass | Path of the Berserker
+Proficiency Bonus  | 2                    
 
 ################################################################################
 # =============================== Combat Stats =============================== #

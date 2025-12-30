@@ -1,4 +1,4 @@
-from CharacterConfigs.CharacterClasses.RogueBase import (
+from CharacterConfigs.CharacterClasses.RogueLevelFeatures import (
     RogueLevel1,
     RogueLevel10,
     RogueLevel11,
@@ -37,17 +37,19 @@ from SpeciesConfigs import Elf
 from StatBlocks import AbilitiesStatBlock
 from StatBlocks.AbilitiesStatBlock import StandardArrayAbilitiesStatBlock
 from StatBlocks.SkillsStatBlock import RogueSkillsStatBlock
-from CharacterConfigs.CharacterClasses.import RogueBase
+from CharacterConfigs.CharacterClasses import RogueBase, ClassBuilder
 from CharacterConfigs.RogueAssassin import (
     AssassinRogueLevel3,
     AssassinRogueLevel9,
 )
+from CharacterConfigs.RogueAssassin import (
+    AssassinRogueStarterClassBuilder,
+)
 
 
 def get_data() -> CharacterSheetCreator.CharacterSheetData:
-    rogue_assassin = RogueBase.RogueStarter(
+    rogue_assassin = AssassinRogueStarterClassBuilder(
         rogue_level=3,
-        subclass=Definitions.RogueSubclass.ASSASSIN,
         # Distribute 15, 14, 13, 12, 10, 8 among your abilities.
         abilities=StandardArrayAbilitiesStatBlock(
             strength=8,
@@ -58,7 +60,7 @@ def get_data() -> CharacterSheetCreator.CharacterSheetData:
             charisma=10,
         ),
         # Choose two skills to be proficient in
-        skills=RogueSkillsStatBlock(
+        rogue_skills=RogueSkillsStatBlock(
             proficiencies={
                 Skill.ACROBATICS: True,
                 Skill.ATHLETICS: False,
@@ -85,88 +87,23 @@ def get_data() -> CharacterSheetCreator.CharacterSheetData:
         ),
         add_default_equipment=True,
         origin_feat=OriginFeats.Alert(),
-        weapons=[],
         armor=[],
-        rogue_feature_per_level=RogueBase.RogueFeaturePerLevel(
-            rogue_level_1=RogueLevel1(
-                skill_1=Definitions.Skill.STEALTH,
-                skill_2=Definitions.Skill.SLEIGHT_OF_HAND,
-                weapon_mastery_1=Weapons.Shortsword(),
-                weapon_mastery_2=Weapons.Scimitar(),
-            ),
-            rogue_level_2=RogueLevel2(),
-            rogue_level_3=RogueLevel3(),
-            # rogue_level_4=RogueLevel4(
-            #     general_feat=GeneralFeats.AbilityScoreImprovement(
-            #         [
-            #             (Ability.CONSTITUTION, 2),
-            #         ]
-            #     ),
-            #     spell=RogueLevel1Spells.CURE_WOUNDS,
-            # ),
-            # rogue_level_5=RogueLevel5(
-            #     spell=RogueLevel2Spells.ZONE_OF_TRUTH,
-            # ),
-            # rogue_level_6=RogueLevel6(),
-            # rogue_level_7=RogueLevel7(
-            #     spell=RogueLevel2Spells.LESSER_RESTORATION,
-            # ),
-            # rogue_level_8=RogueLevel8(
-            #     general_feat=GeneralFeats.AbilityScoreImprovement(
-            #         [
-            #             (Ability.STRENGTH, 2),
-            #         ]
-            #     ),
-            # ),
-            # rogue_level_9=RogueLevel9(
-            #     spell=RogueLevel3Spells.AURA_OF_VITALITY,
-            # ),
-            # rogue_level_10=RogueLevel10(),
-            # rogue_level_11=RogueLevel11(
-            #     spell=RogueLevel3Spells.BLINDING_SMITE,
-            # ),
-            # rogue_level_12=RogueLevel12(
-            #     general_feat=GeneralFeats.AbilityScoreImprovement(
-            #         [
-            #             (Ability.CHARISMA, 2),
-            #         ]
-            #     ),
-            # ),
-            # rogue_level_13=RogueLevel13(
-            #     spell=RogueLevel4Spells.DEATH_WARD,
-            # ),
-            # rogue_level_14=RogueLevel14(),
-            # rogue_level_15=RogueLevel15(
-            #     spell=RogueLevel4Spells.AURA_OF_PURITY,
-            # ),
-            # rogue_level_16=RogueLevel16(
-            #     general_feat=GeneralFeats.AbilityScoreImprovement(
-            #         [
-            #             (Ability.CHARISMA, 2),
-            #         ]
-            #     ),
-            # ),
-            # rogue_level_17=RogueLevel17(
-            #     spell_1=RogueLevel5Spells.BANISHING_SMITE,
-            #     spell_2=RogueLevel5Spells.GEAS,
-            # ),
-            # rogue_level_19=RogueLevel19(
-            #     spell=RogueLevel5Spells.CIRCLE_OF_POWER,
-            # ),
-            # rogue_level_18=RogueLevel18(),
-            # rogue_level_20=RogueLevel20(),
-            rogue_subclass_level_3=AssassinRogueLevel3(),
-            # rogue_subclass_level_5=AssassinRogueLevel5(),
-            # rogue_subclass_level_7=AssassinRogueLevel7(),
-            # rogue_subclass_level_9=AssassinRogueLevel9(),
-            # rogue_subclass_level_13=AssassinRogueLevel13(),
-            # rogue_subclass_level_15=AssassinRogueLevel15(),
-            # rogue_subclass_level_17=AssassinRogueLevel17(),
-            # rogue_subclass_level_20=AssassinRogueLevel20(),
+        weapons=[],
+        rogue_level_features=ClassBuilder.BaseClassLevelFeatures(
+            base_class_features_by_level={
+                1: RogueLevel1(
+                    skill_1=Definitions.Skill.STEALTH,
+                    skill_2=Definitions.Skill.SLEIGHT_OF_HAND,
+                    weapon_mastery_1=Weapons.Shortsword(),
+                    weapon_mastery_2=Weapons.Scimitar(),
+                ),
+                2: RogueLevel2(),
+                3: RogueLevel3(),
+            },
+            subclass_features_by_level={
+                3: AssassinRogueLevel3(),
+            },
         ),
-        # replace_spells={
-        #     RogueLevel1Spells.CURE_WOUNDS: RogueLevel2Spells.MAGIC_WEAPON,
-        # },
     )
 
     character_class_data = rogue_assassin.create()

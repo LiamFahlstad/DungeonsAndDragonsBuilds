@@ -121,8 +121,6 @@ class SubclassLevel20(LevelFeatures):
 @attr.dataclass
 class BaseClassLevel1(LevelFeatures):
     level: int = attr.field(init=False, default=1)
-    weapon_mastery_1: Weapons.AbstractWeapon
-    weapon_mastery_2: Weapons.AbstractWeapon
 
 
 @attr.dataclass

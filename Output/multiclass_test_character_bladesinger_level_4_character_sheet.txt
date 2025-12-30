@@ -1,21 +1,21 @@
 ################################################################################
 # =============================== General Info =============================== #
 ################################################################################
-Field              | Value                
--------------------+----------------------
-Name               | Dark Shadow Nightmare
-Level              | 3                    
-Starter Class      | Rogue                
-Level per Class    | Rogue: 3             
-Character Subclass | Assassin             
-Proficiency Bonus  | 2                    
+Field              | Value                     
+-------------------+---------------------------
+Name               | Multiclass Test Character 
+Level              | 4                         
+Starter Class      | Rogue                     
+Level per Class    | Rogue: 3, Wizard: 1       
+Character Subclass | WizardSubclass.BLADESINGER
+Proficiency Bonus  | 2                         
 
 ################################################################################
 # =============================== Combat Stats =============================== #
 ################################################################################
 Field          | Value  
 ---------------+--------
-Max Hit Points | 27     
+Max Hit Points | 34     
 Armor Class    | 14     
 Initiative     | d20 + 2
 Speed (ft)     | 35     
@@ -77,6 +77,15 @@ Name: Trance
 Origin: Elf Trait
 Description: You don't need to sleep, and magic can't put you to sleep. You can finish a Long Rest in 4 hours if you spend those hours in a trancelike meditation, during which you retain consciousness.
 
+Name: Ritual Adept
+Origin: Wizard Level 1
+Description: You can cast any spell as a Ritual if that spell has the Ritual tag and the spell is in your spellbook. You needn't have the spell prepared, but you must read from the book to cast a spell in this way.
+
+Name: Ritual Adept
+Origin: Wizard Level 1
+Description: You can regain some of your magical energy by studying your spellbook. When you finish a Short Rest, you can choose expended spell slots to recover. The spell slots can have a combined level equal to no more than half your Wizard level (round up), and none of the slots can be level 6 or higher. For example, if you're a level 4 Wizard, you can recover up to two levels' worth of spell slots, regaining either one level 2 spell slot or two level 1 spell slots.
+Once you use this feature, you can't do so again until you finish a Long Rest.
+
 Name: Sneak Attack
 Origin: Rogue Level 1
 Description: You know how to strike subtly and exploit a foe's distraction. Once per turn you can deal an extra 1d6 damage to one creature you hit with an attack roll if you have Advantage on the roll and the attack uses a Finesse or a Ranged weapon. The extra damage's type is the same was the weapon's type.
@@ -95,16 +104,6 @@ Whenever you finish a Long Rest, you can change the kinds of weapons you chose. 
 Name: Cunning Action
 Origin: Rogue Level 2
 Description: Your quick thinking and agility allow you to move and act quickly. On your turn, you can take one of the following actions as a Bonus Action: Dash, Disengage, or Hide.
-
-Name: Assassin's Tools
-Origin: Assassin Rogue Level 3
-Description: You gain a Disguise Kit and a Poisoner's Kit, and you have proficiency with them.
-
-Name: Assassinate
-Origin: Assassin Rogue Level 3
-Description: You're adept at ambushing a target, granting you the following benefits.
-Initiative. You have Advantage on Initiative rolls.
-Surprising Strikes. During the first round of each combat, you have Advantage on attack rolls against any creature that hasn't taken a turn. If your Sneak Attack hits any target during that round, the target takes extra damage of the weapon's type equal to your Rogue level.
 
 Name: Steady Aim
 Origin: Rogue Level 3
@@ -175,6 +174,19 @@ Ability Ability.CHARISMA
 ################################################################################
 # ================================== Spells ================================== #
 ################################################################################
+Name: Blade Ward
+Level: 0
+School: Abjuration
+Classes: Bard, Sorcerer, Warlock, Wizard
+Casting Time: Action
+Range: Self
+Components: V, S
+Duration: Concentration, up to 1 minute
+Description:
+Whenever a creature makes an attack roll against you before the spell ends, the attacker subtracts 1d4 from the attack roll.
+Source: Player's Handbook 2024
+Spellcasting Ability: Intelligence
+----------------------------------------
 Name: Druidcraft
 Level: 0
 School: Transmutation
@@ -193,6 +205,60 @@ You light or snuff out a candle, a torch, or a campfire.
 Source: Player's Handbook 2024 (BR)
 Spellcasting Ability: Intelligence
 ----------------------------------------
+Name: Mage Hand
+Level: 0
+School: Conjuration
+Classes: Bard, Sorcerer, Warlock, Wizard
+Casting Time: Action
+Range: 30 feet
+Components: V, S
+Duration: 1 minute
+Description:
+A spectral, floating hand appears at a point you choose within range. The hand lasts for the duration. The hand vanishes if it is ever more than 30 feet away from you or if you cast this spell again. When you cast the spell, you can use the hand to manipulate an object, open an unlocked door or container, stow or retrieve an item from an open container, or pour the contents out of a vial. As a Magic action on your later turns, you can control the hand thus again. As part of that action, you can move the hand up to 30 feet. The hand can't attack, activate magic items, or carry more than 10 pounds.
+Source: Player's Handbook 2024 (BR)
+Spellcasting Ability: Intelligence
+----------------------------------------
+Name: True Strike
+Level: 0
+School: Divination
+Classes: Bard, Sorcerer, Warlock, Wizard
+Casting Time: Action
+Range: Self
+Components: S, M (a weapon with which you have proficiency and that is worth 1+ CP)
+Duration: Instantaneous
+Description:
+Guided by a flash of magical insight, you make one attack with the weapon used in the spell's casting. The attack uses your spellcasting ability for the attack and damage rolls instead of using Strength or Dexterity. If the attack deals damage, it can be Radiant damage or the weapon's normal damage type (your choice).
+Cantrip Upgrade:
+Whether you deal Radiant damage or the weapon's normal damage type, the attack deals extra Radiant damage when you reach levels 5 (1d6), 11 (2d6), and 17 (3d6).
+Source: Player's Handbook 2024 (BR)
+Spellcasting Ability: Intelligence
+----------------------------------------
+Name: Detect Magic
+Level: 1
+School: Divination
+Classes: Bard, Cleric, Druid, Paladin, Ranger, Sorcerer, Warlock, Wizard
+Casting Time: Action or Ritual
+Range: Self
+Components: V, S
+Duration: Concentration, up to 10 minutes
+Description:
+For the duration, you sense the presence of magical effects within 30 feet of yourself. If you sense such effects, you can take the Magic action to see a faint aura around any visible creature or object in the area that bears the magic, and if an effect was created by a spell, you learn the spell's school of magic. The spell is blocked by 1 foot of stone, dirt, or wood; 1 inch of metal; or a thin sheet of lead.
+Source: Player's Handbook 2024 (BR)
+Spellcasting Ability: Intelligence
+----------------------------------------
+Name: Feather Fall
+Level: 1
+School: Transmutation
+Classes: Bard, Sorcerer, Wizard
+Casting Time: Reaction, which you take when you or a creature you can see within 60 feet of you falls
+Range: 60 feet
+Components: V, M (a small feather or piece of down)
+Duration: 1 minute
+Description:
+Choose up to five falling creatures within range. A falling creature's rate of descent slows to 60 feet per round until the spell ends. If a creature lands before the spell ends, the creature takes no damage from the fall, and the spell ends for that creature.
+Source: Player's Handbook 2024 (BR)
+Spellcasting Ability: Intelligence
+----------------------------------------
 Name: Longstrider
 Level: 1
 School: Transmutation
@@ -205,5 +271,33 @@ Description:
 You touch a creature. The target's Speed increases by 10 feet until the spell ends.
 Using a Higher-Level Spell Slot:
 You can target one additional creature for each spell slot level above 1.
+Source: Player's Handbook 2024 (BR)
+Spellcasting Ability: Intelligence
+----------------------------------------
+Name: Magic Missile
+Level: 1
+School: Evocation
+Classes: Sorcerer, Wizard
+Casting Time: Action
+Range: 120 feet
+Components: V, S
+Duration: Instantaneous
+Description:
+You create three glowing darts of magical force. Each dart strikes a creature of your choice that you can see within range. A dart deals 1d4 + 1 Force damage to its target. The darts all strike simultaneously, and you can direct them to hit one creature or several.
+Using a Higher-Level Spell Slot:
+The spell creates one more dart for each spell slot level above 1.
+Source: Player's Handbook 2024 (BR)
+Spellcasting Ability: Intelligence
+----------------------------------------
+Name: Shield
+Level: 1
+School: Abjuration
+Classes: Sorcerer, Wizard
+Casting Time: Reaction, which you take when you are hit by an attack roll or targeted by the Magic Missile spell
+Range: Self
+Components: V, S
+Duration: 1 round
+Description:
+An imperceptible barrier of magical force protects you. Until the start of your next turn, you have a +5 bonus to AC, including against the triggering attack, and you take no damage from Magic Missile .
 Source: Player's Handbook 2024 (BR)
 Spellcasting Ability: Intelligence

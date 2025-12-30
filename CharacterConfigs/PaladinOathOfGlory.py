@@ -28,7 +28,6 @@ from Features.ClassFeatures import SpellSlots
 from StatBlocks.AbilitiesStatBlock import (
     AbilitiesStatBlock,
 )
-from StatBlocks.SavingThrowsStatBlock import PaladinSavingThrowsStatBlock
 from StatBlocks.SkillsStatBlock import PaladinSkillsStatBlock
 from CharacterConfigs.CharacterClasses import ClassBuilder
 
