@@ -1,12 +1,12 @@
 import CharacterSheetCreator
-from CharacterConfigs import PaladinOathOfVengeance
-from CharacterConfigs.CharacterClasses.PaladinBase import (
+from CharacterConfigs.BaseClasses.PaladinBase import (
     PaladinLevel1,
     PaladinLevel2,
     PaladinLevel3,
     PaladinLevel4,
     PaladinLevel5,
 )
+from CharacterConfigs.SubClasses import PaladinOathOfVengeance
 from Definitions import Ability, Skill
 from Features import (
     Armor,

@@ -2,8 +2,8 @@ from typing import Optional
 
 import attr
 
-from CharacterConfigs.CharacterClasses import ClassBuilder
-from CharacterConfigs.CharacterClasses.RogueBase import (
+from CharacterConfigs.BaseClasses.import ClassBuilder
+from CharacterConfigs.BaseClasses.RogueBase import (
     RogueMulticlassBuilder,
     RogueStarterClassBuilder,
 )

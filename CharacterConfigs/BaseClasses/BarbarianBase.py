@@ -1,6 +1,6 @@
 from typing import Optional
 
-from CharacterConfigs.CharacterClasses import ClassBuilder
+from CharacterConfigs.BaseClasses.import ClassBuilder
 from Definitions import CharacterClass
 from Features import Armor, Backgrounds, OriginFeats, Weapons
 from StatBlocks.AbilitiesStatBlock import AbilitiesStatBlock

@@ -2,39 +2,49 @@ from typing import Optional
 
 import attr
 
-from CharacterConfigs.CharacterClasses.RangerBase import RangerStarterClassBuilder, RangerMulticlassBuilder
+from CharacterConfigs.BaseClasses.import ClassBuilder
+from CharacterConfigs.BaseClasses.PaladinBase import (
+    PaladinMulticlassBuilder,
+    PaladinStarterClassBuilder,
+)
 from CharacterSheetCreator import CharacterSheetData
-from Definitions import RangerSubclass
+from Definitions import PaladinSubclass
 from Features import Armor, Backgrounds, OriginFeats, Weapons
-from Features.ClassFeatures import RangerFeatures
+from Features.ClassFeatures import PaladinFeatures
 from Spells.Definitions import (
     BardLevel4Spells,
+    ClericLevel1Spells,
     ClericLevel2Spells,
     ClericLevel4Spells,
-    RangerLevel2Spells,
+    PaladinLevel1Spells,
+    PaladinLevel2Spells,
     WizardLevel3Spells,
     WizardLevel5Spells,
 )
-from CharacterConfigs.CharacterClasses import ClassBuilder
 from StatBlocks.AbilitiesStatBlock import AbilitiesStatBlock
-from StatBlocks.SkillsStatBlock import RangerSkillsStatBlock
+from StatBlocks.SkillsStatBlock import PaladinSkillsStatBlock
 
 
 @attr.dataclass
-class HunterRangerLevel3(ClassBuilder.SubclassLevel3):
+class GloryPaladinLevel3(ClassBuilder.SubclassLevel3):
     level: int = attr.field(init=False, default=3)
 
     def add_features(
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(RangerFeatures.HuntersLore())
-        data.add_feature(RangerFeatures.HuntersPrey())
+        channel_divinity_feature: PaladinFeatures.ChannelDivinity = (
+            data.get_features_by_type(PaladinFeatures.ChannelDivinity)[0]
+        )
+        channel_divinity_feature.add_feature(PaladinFeatures.InspiringSmite())
+        channel_divinity_feature.add_feature(PaladinFeatures.PeerlessAthlete())
+        data.add_spell(ClericLevel1Spells.GUIDING_BOLT)
+        data.add_spell(PaladinLevel1Spells.HEROISM)
         return data
 
 
 @attr.dataclass
-class HunterRangerLevel5(ClassBuilder.SubclassLevel5):
+class GloryPaladinLevel5(ClassBuilder.SubclassLevel5):
     level: int = attr.field(init=False, default=5)
 
     def add_features(
@@ -42,27 +52,27 @@ class HunterRangerLevel5(ClassBuilder.SubclassLevel5):
         data: CharacterSheetData,
     ) -> CharacterSheetData:
         data.add_spell(ClericLevel2Spells.ENHANCE_ABILITY)
-        data.add_spell(RangerLevel2Spells.MAGIC_WEAPON)
+        data.add_spell(PaladinLevel2Spells.MAGIC_WEAPON)
         return data
 
 
 @attr.dataclass
-class HunterRangerLevel7(ClassBuilder.SubclassLevel7):
+class GloryPaladinLevel7(ClassBuilder.SubclassLevel7):
     level: int = attr.field(init=False, default=7)
 
     def add_features(
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        aura_of_protection: RangerFeatures.AuraOfProtection = data.get_features_by_type(
-            RangerFeatures.AuraOfProtection
-        )[0]
-        aura_of_protection.add_feature(RangerFeatures.AuraOfAlacrity())
+        aura_of_protection: PaladinFeatures.AuraOfProtection = (
+            data.get_features_by_type(PaladinFeatures.AuraOfProtection)[0]
+        )
+        aura_of_protection.add_feature(PaladinFeatures.AuraOfAlacrity())
         return data
 
 
 @attr.dataclass
-class HunterRangerLevel9(ClassBuilder.SubclassLevel9):
+class GloryPaladinLevel9(ClassBuilder.SubclassLevel9):
     level: int = attr.field(init=False, default=9)
 
     def add_features(
@@ -75,7 +85,7 @@ class HunterRangerLevel9(ClassBuilder.SubclassLevel9):
 
 
 @attr.dataclass
-class HunterRangerLevel13(ClassBuilder.1SubclassLevel13):
+class GloryPaladinLevel13(ClassBuilder.SubclassLevel13):
     level: int = attr.field(init=False, default=13)
 
     def add_features(
@@ -88,19 +98,19 @@ class HunterRangerLevel13(ClassBuilder.1SubclassLevel13):
 
 
 @attr.dataclass
-class HunterRangerLevel15(ClassBuilder.1SubclassLevel15):
+class GloryPaladinLevel15(ClassBuilder.SubclassLevel15):
     level: int = attr.field(init=False, default=15)
 
     def add_features(
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(RangerFeatures.GloriousDefense())
+        data.add_feature(PaladinFeatures.GloriousDefense())
         return data
 
 
 @attr.dataclass
-class HunterRangerLevel17(ClassBuilder.1SubclassLevel17):
+class GloryPaladinLevel17(ClassBuilder.SubclassLevel17):
     level: int = attr.field(init=False, default=17)
 
     def add_features(
@@ -113,24 +123,25 @@ class HunterRangerLevel17(ClassBuilder.1SubclassLevel17):
 
 
 @attr.dataclass
-class HunterRangerLevel20(ClassBuilder.2SubclassLevel20):
+class GloryPaladinLevel20(ClassBuilder.SubclassLevel20):
     level: int = attr.field(init=False, default=20)
 
     def add_features(
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(RangerFeatures.LivingLegend())
+        data.add_feature(PaladinFeatures.LivingLegend())
         return data
 
-class HHunterRangerStarterClassBuilder(RangerStarterClassBuilder):
+
+class OathOfGloryPaladinStarterClassBuilder(PaladinStarterClassBuilder):
 
     def __init__(
         self,
-        ranger_level_features: ClassBuilder.BaseClassLevelFeatures,
-        ranger_level: int,
+        paladin_level_features: ClassBuilder.BaseClassLevelFeatures,
+        paladin_level: int,
         abilities: AbilitiesStatBlock,
-        ranger_skills: RangerSkillsStatBlock,
+        paladin_skills: PaladinSkillsStatBlock,
         background_ability_bonuses: Backgrounds.FreeBackgroundAbilityBonus,
         background_skill_proficiencies: Backgrounds.FreeBackgroundSkillProficiency,
         add_default_equipment: bool,
@@ -140,11 +151,11 @@ class HHunterRangerStarterClassBuilder(RangerStarterClassBuilder):
         replace_spells: Optional[dict[str, str]] = None,
     ):
         super().__init__(
-            ranger_level_features=ranger_level_features,
-            ranger_level=ranger_level,
-            subclass=RangerSubclass.HUNTER.value,
+            paladin_level_features=paladin_level_features,
+            paladin_level=paladin_level,
+            subclass=PaladinSubclass.OATH_OF_GLORY.value,
             abilities=abilities,
-            ranger_skills=ranger_skills,
+            paladin_skills=paladin_skills,
             background_ability_bonuses=background_ability_bonuses,
             background_skill_proficiencies=background_skill_proficiencies,
             add_default_equipment=add_default_equipment,
@@ -155,17 +166,17 @@ class HHunterRangerStarterClassBuilder(RangerStarterClassBuilder):
         )
 
 
-class HHunterRangerMulticlassBuilder(RangerMulticlassBuilder):
+class OathOfGloryPaladinMulticlassBuilder(PaladinMulticlassBuilder):
 
     def __init__(
         self,
-        ranger_level_features: ClassBuilder.BaseClassLevelFeatures,
-        ranger_level: int,
+        paladin_level_features: ClassBuilder.BaseClassLevelFeatures,
+        paladin_level: int,
         replace_spells: Optional[dict[str, str]] = None,
     ):
         super().__init__(
-            ranger_level_features=ranger_level_features,
-            ranger_level=ranger_level,
-            subclass=RangerSubclass.HUNTER.value,
+            paladin_level_features=paladin_level_features,
+            paladin_level=paladin_level,
+            subclass=PaladinSubclass.OATH_OF_GLORY.value,
             replace_spells=replace_spells,
         )

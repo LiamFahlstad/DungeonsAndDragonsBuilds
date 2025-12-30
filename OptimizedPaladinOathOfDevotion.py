@@ -1,5 +1,5 @@
 import CharacterSheetCreator
-from CharacterConfigs import PaladinOathOfDevotion
+from CharacterConfigs.SubClasses import PaladinOathOfDevotion
 from Definitions import Ability, Skill
 from Features import Backgrounds, FightingStyles, GeneralFeats, OriginFeats, Weapons
 from SpeciesConfigs import Human

@@ -1,13 +1,14 @@
-import CharacterSheetCreator
-import Definitions
-import Spells.Definitions as SpellDefinitions
-from CharacterConfigs import RogueAssassin
-from CharacterConfigs.CharacterClasses import (
+from CharacterConfigs.BaseClasses.import (
     ClassBuilder,
     RogueLevelFeatures,
     WizardBase,
     WizardLevelFeatures,
 )
+
+import CharacterSheetCreator
+import Definitions
+import Spells.Definitions as SpellDefinitions
+from CharacterConfigs.SubClasses import RogueAssassin
 from Definitions import Ability, Skill
 from Features import Backgrounds, OriginFeats, Weapons
 from SpeciesConfigs import Elf

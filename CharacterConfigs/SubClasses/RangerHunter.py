@@ -2,34 +2,39 @@ from typing import Optional
 
 import attr
 
-from CharacterConfigs.CharacterClasses import ClassBuilder
-from CharacterConfigs.CharacterClasses.BarbarianBase import (
-    BarbarianMulticlassBuilder,
-    BarbarianStarterClassBuilder,
-)
+from CharacterConfigs.BaseClasses.RangerBase import RangerStarterClassBuilder, RangerMulticlassBuilder
 from CharacterSheetCreator import CharacterSheetData
-from Definitions import BarbarianSubclass
+from Definitions import RangerSubclass
 from Features import Armor, Backgrounds, OriginFeats, Weapons
-from Features.ClassFeatures import BarbarianFeatures
+from Features.ClassFeatures import RangerFeatures
+from Spells.Definitions import (
+    BardLevel4Spells,
+    ClericLevel2Spells,
+    ClericLevel4Spells,
+    RangerLevel2Spells,
+    WizardLevel3Spells,
+    WizardLevel5Spells,
+)
+from CharacterConfigs.BaseClasses.import ClassBuilder
 from StatBlocks.AbilitiesStatBlock import AbilitiesStatBlock
-from StatBlocks.SkillsStatBlock import BarbarianSkillsStatBlock
+from StatBlocks.SkillsStatBlock import RangerSkillsStatBlock
 
 
 @attr.dataclass
-class PathOfTheBerserkerBarbarianLevel3(ClassBuilder.SubclassLevel3):
+class HunterRangerLevel3(ClassBuilder.SubclassLevel3):
     level: int = attr.field(init=False, default=3)
 
     def add_features(
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(BarbarianFeatures.Frenzy())
-        data.add_feature(BarbarianFeatures.MindlessRage())
+        data.add_feature(RangerFeatures.HuntersLore())
+        data.add_feature(RangerFeatures.HuntersPrey())
         return data
 
 
 @attr.dataclass
-class PathOfTheBerserkerBarbarianLevel5(ClassBuilder.SubclassLevel5):
+class HunterRangerLevel5(ClassBuilder.SubclassLevel5):
     level: int = attr.field(init=False, default=5)
 
     def add_features(
@@ -37,27 +42,27 @@ class PathOfTheBerserkerBarbarianLevel5(ClassBuilder.SubclassLevel5):
         data: CharacterSheetData,
     ) -> CharacterSheetData:
         data.add_spell(ClericLevel2Spells.ENHANCE_ABILITY)
-        data.add_spell(BarbarianLevel2Spells.MAGIC_WEAPON)
+        data.add_spell(RangerLevel2Spells.MAGIC_WEAPON)
         return data
 
 
 @attr.dataclass
-class PathOfTheBerserkerBarbarianLevel7(ClassBuilder.SubclassLevel7):
+class HunterRangerLevel7(ClassBuilder.SubclassLevel7):
     level: int = attr.field(init=False, default=7)
 
     def add_features(
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        aura_of_protection: BarbarianFeatures.AuraOfProtection = (
-            data.get_features_by_type(BarbarianFeatures.AuraOfProtection)[0]
-        )
-        aura_of_protection.add_feature(BarbarianFeatures.AuraOfAlacrity())
+        aura_of_protection: RangerFeatures.AuraOfProtection = data.get_features_by_type(
+            RangerFeatures.AuraOfProtection
+        )[0]
+        aura_of_protection.add_feature(RangerFeatures.AuraOfAlacrity())
         return data
 
 
 @attr.dataclass
-class PathOfTheBerserkerBarbarianLevel9(ClassBuilder.SubclassLevel9):
+class HunterRangerLevel9(ClassBuilder.SubclassLevel9):
     level: int = attr.field(init=False, default=9)
 
     def add_features(
@@ -70,7 +75,7 @@ class PathOfTheBerserkerBarbarianLevel9(ClassBuilder.SubclassLevel9):
 
 
 @attr.dataclass
-class PathOfTheBerserkerBarbarianLevel13(ClassBuilder.SubclassLevel13):
+class HunterRangerLevel13(ClassBuilder.1SubclassLevel13):
     level: int = attr.field(init=False, default=13)
 
     def add_features(
@@ -83,19 +88,19 @@ class PathOfTheBerserkerBarbarianLevel13(ClassBuilder.SubclassLevel13):
 
 
 @attr.dataclass
-class PathOfTheBerserkerBarbarianLevel15(ClassBuilder.SubclassLevel15):
+class HunterRangerLevel15(ClassBuilder.1SubclassLevel15):
     level: int = attr.field(init=False, default=15)
 
     def add_features(
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(BarbarianFeatures.GloriousDefense())
+        data.add_feature(RangerFeatures.GloriousDefense())
         return data
 
 
 @attr.dataclass
-class PathOfTheBerserkerBarbarianLevel17(ClassBuilder.SubclassLevel17):
+class HunterRangerLevel17(ClassBuilder.1SubclassLevel17):
     level: int = attr.field(init=False, default=17)
 
     def add_features(
@@ -107,14 +112,25 @@ class PathOfTheBerserkerBarbarianLevel17(ClassBuilder.SubclassLevel17):
         return data
 
 
-class PathOfTheBerserkerBarbarianStarterClassBuilder(BarbarianStarterClassBuilder):
+@attr.dataclass
+class HunterRangerLevel20(ClassBuilder.2SubclassLevel20):
+    level: int = attr.field(init=False, default=20)
+
+    def add_features(
+        self,
+        data: CharacterSheetData,
+    ) -> CharacterSheetData:
+        data.add_feature(RangerFeatures.LivingLegend())
+        return data
+
+class HHunterRangerStarterClassBuilder(RangerStarterClassBuilder):
 
     def __init__(
         self,
-        barbarian_level_features: ClassBuilder.BaseClassLevelFeatures,
-        barbarian_level: int,
+        ranger_level_features: ClassBuilder.BaseClassLevelFeatures,
+        ranger_level: int,
         abilities: AbilitiesStatBlock,
-        barbarian_skills: BarbarianSkillsStatBlock,
+        ranger_skills: RangerSkillsStatBlock,
         background_ability_bonuses: Backgrounds.FreeBackgroundAbilityBonus,
         background_skill_proficiencies: Backgrounds.FreeBackgroundSkillProficiency,
         add_default_equipment: bool,
@@ -124,11 +140,11 @@ class PathOfTheBerserkerBarbarianStarterClassBuilder(BarbarianStarterClassBuilde
         replace_spells: Optional[dict[str, str]] = None,
     ):
         super().__init__(
-            barbarian_level_features=barbarian_level_features,
-            barbarian_level=barbarian_level,
-            subclass=BarbarianSubclass.PATH_OF_THE_BERSERKER.value,
+            ranger_level_features=ranger_level_features,
+            ranger_level=ranger_level,
+            subclass=RangerSubclass.HUNTER.value,
             abilities=abilities,
-            barbarian_skills=barbarian_skills,
+            ranger_skills=ranger_skills,
             background_ability_bonuses=background_ability_bonuses,
             background_skill_proficiencies=background_skill_proficiencies,
             add_default_equipment=add_default_equipment,
@@ -139,17 +155,17 @@ class PathOfTheBerserkerBarbarianStarterClassBuilder(BarbarianStarterClassBuilde
         )
 
 
-class PathOfTheBerserkerBarbarianMulticlassBuilder(BarbarianMulticlassBuilder):
+class HHunterRangerMulticlassBuilder(RangerMulticlassBuilder):
 
     def __init__(
         self,
-        barbarian_level_features: ClassBuilder.BaseClassLevelFeatures,
-        barbarian_level: int,
+        ranger_level_features: ClassBuilder.BaseClassLevelFeatures,
+        ranger_level: int,
         replace_spells: Optional[dict[str, str]] = None,
     ):
         super().__init__(
-            barbarian_level_features=barbarian_level_features,
-            barbarian_level=barbarian_level,
-            subclass=BarbarianSubclass.PATH_OF_THE_BERSERKER.value,
+            ranger_level_features=ranger_level_features,
+            ranger_level=ranger_level,
+            subclass=RangerSubclass.HUNTER.value,
             replace_spells=replace_spells,
         )

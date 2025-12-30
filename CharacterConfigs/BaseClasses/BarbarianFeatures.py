@@ -1,7 +1,7 @@
 import attr
 
 import Definitions
-from CharacterConfigs.CharacterClasses import ClassBuilder
+from CharacterConfigs.BaseClasses.import ClassBuilder
 from CharacterSheetCreator import CharacterSheetData
 from Features import GeneralFeats, Weapons
 from Features.ClassFeatures import BarbarianFeatures

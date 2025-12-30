@@ -1,6 +1,6 @@
 import attr
 
-from CharacterConfigs.CharacterClasses import ClassBuilder
+from CharacterConfigs.BaseClasses.import ClassBuilder
 from CharacterSheetCreator import CharacterSheetData
 from Definitions import Skill
 from Features import FightingStyles, GeneralFeats, Weapons

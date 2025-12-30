@@ -9,7 +9,7 @@ from StatBlocks.AbilitiesStatBlock import (
     AbilitiesStatBlock,
 )
 from StatBlocks.SkillsStatBlock import PaladinSkillsStatBlock
-from CharacterConfigs.CharacterClasses.import PaladinBase
+from CharacterConfigs.BaseClasses.import PaladinBase
 from Spells.Definitions import (
     PaladinLevel1Spells,
 )

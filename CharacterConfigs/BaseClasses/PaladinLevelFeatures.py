@@ -1,6 +1,6 @@
 import attr
 
-from CharacterConfigs.CharacterClasses import ClassBuilder
+from CharacterConfigs.BaseClasses.import ClassBuilder
 from CharacterSheetCreator import CharacterSheetData
 from Features import FightingStyles, GeneralFeats, Weapons
 from Features.ClassFeatures import PaladinFeatures

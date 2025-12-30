@@ -1,14 +1,15 @@
-import CharacterSheetCreator
-import Definitions
-from CharacterConfigs.BarbarianPathOfTheBerserker import (
-    PathOfTheBerserkerBarbarianLevel3,
-    PathOfTheBerserkerBarbarianStarterClassBuilder,
-)
-from CharacterConfigs.CharacterClasses import ClassBuilder
-from CharacterConfigs.CharacterClasses.BarbarianFeatures import (
+from CharacterConfigs.BaseClasses.import ClassBuilder
+from CharacterConfigs.BaseClasses.BarbarianFeatures import (
     BarbarianLevel1,
     BarbarianLevel2,
     BarbarianLevel3,
+)
+
+import CharacterSheetCreator
+import Definitions
+from CharacterConfigs.SubClasses.BarbarianPathOfTheBerserker import (
+    PathOfTheBerserkerBarbarianLevel3,
+    PathOfTheBerserkerBarbarianStarterClassBuilder,
 )
 from Definitions import Ability, Skill
 from Features import Backgrounds, OriginFeats, Weapons

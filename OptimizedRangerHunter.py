@@ -1,9 +1,9 @@
-from CharacterConfigs.CharacterClasses.RangerBase import (
+from CharacterConfigs.BaseClasses.RangerBase import (
     RangerLevel1,
     RangerLevel2,
     RangerLevel3,
 )
-from CharacterConfigs.RangerHunter import (
+from CharacterConfigs.SubClasses.RangerHunter import (
     HunterRangerLevel3,
 )
 import CharacterSheetCreator
@@ -24,7 +24,7 @@ from Spells.Definitions import (
 )
 from StatBlocks.AbilitiesStatBlock import StandardArrayAbilitiesStatBlock
 from StatBlocks.SkillsStatBlock import RangerSkillsStatBlock
-from CharacterConfigs.CharacterClasses.import RangerBase
+from CharacterConfigs.BaseClasses.import RangerBase
 
 
 def get_data() -> CharacterSheetCreator.CharacterSheetData:

@@ -1,6 +1,6 @@
 import CharacterSheetCreator
-from CharacterConfigs import BattleMasterFighter
-from CharacterConfigs.BattleMasterFighter import (
+from CharacterConfigs.SubClasses import BattleMasterFighter
+from CharacterConfigs.SubClasses.BattleMasterFighter import (
     FighterLevel1,
     FighterLevel3,
     FighterLevel4,
