@@ -47,6 +47,7 @@ class CharacterSheetData:
     weapons: list[AbstractWeapon] = attr.Factory(list)
     weapon_masteries: list[AbstractWeapon] = attr.Factory(list)
     fighting_styles: list[FightingStyle] = attr.Factory(list)
+    armor_proficiencies: set[Definitions.ArmorType] = attr.Factory(set)
 
     @property
     def character_level(self) -> int:
@@ -71,6 +72,9 @@ class CharacterSheetData:
 
     def add_weapon_mastery(self, weapon: AbstractWeapon):
         self.weapon_masteries.append(weapon)
+
+    def add_armor_proficiency(self, armor_type: Definitions.ArmorType):
+        self.armor_proficiencies.add(armor_type)
 
     def add_fighting_style(self, fighting_style: FightingStyle):
         self.fighting_styles.append(fighting_style)
@@ -212,6 +216,12 @@ class CharacterSheetData:
                 rows=[
                     ["Max Hit Points", character.calculate_hit_points()],
                     ["Armor Class", ac],
+                    [
+                        "Armor Proficiencies",
+                        ", ".join(
+                            sorted([atype.value for atype in self.armor_proficiencies])
+                        ),
+                    ],
                     ["Initiative", f"d20 + {character.combat.initiative}"],
                     ["Speed (ft)", character.combat.speed],
                     ["Size", character.combat.size.value],

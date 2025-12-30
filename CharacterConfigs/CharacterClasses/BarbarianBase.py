@@ -27,7 +27,6 @@ class BarbarianStarterClassBuilder(ClassBuilder.StarterClassBuilder):
     ):
         default_equipment = [
             Weapons.Greataxe(player_is_proficient=True),
-            Armor.LeatherArmor(),
         ]
         super().__init__(
             base_class=CharacterClass.BARBARIAN,

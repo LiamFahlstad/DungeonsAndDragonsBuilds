@@ -13,7 +13,6 @@ class CombatStatBlock(StatBlock):
         self.size = size
         self.armor_class = 10  # Overridden during character creation
         self.initiative_bonus = 0  # Overridden during character creation
-        self.weapons_masteries = []
 
     @property
     def initiative(self) -> int:

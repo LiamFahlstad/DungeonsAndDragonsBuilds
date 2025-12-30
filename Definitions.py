@@ -161,3 +161,10 @@ class DamageType(str, Enum):
     RADIANT = "Radiant"
     SLASHING = "Slashing"
     THUNDER = "Thunder"
+
+
+class ArmorType(str, Enum):
+    LIGHT = "Light"
+    MEDIUM = "Medium"
+    HEAVY = "Heavy"
+    SHIELD = "Shield"

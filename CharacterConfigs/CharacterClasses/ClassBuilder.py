@@ -301,6 +301,7 @@ class StarterClassBuilder(ClassBuilder):
         add_default_equipment: bool,
         default_equipment: list[Weapons.AbstractWeapon | Armor.AbstractArmor],
         origin_feat: OriginFeats.OriginCharacterFeat | OriginFeats.OriginTextFeat,
+        armor_proficiencies: Optional[list[Definitions.ArmorType]] = None,
         armor: Optional[list[Armor.AbstractArmor]] = None,
         weapons: Optional[list[Weapons.AbstractWeapon]] = None,
         replace_spells: Optional[dict[str, str]] = None,
@@ -316,6 +317,7 @@ class StarterClassBuilder(ClassBuilder):
         self.add_default_equipment = add_default_equipment
         self.default_equipment = default_equipment
         self.origin_feat = origin_feat
+        self.armor_proficiencies = armor_proficiencies
         self.armor = armor
         self.weapons = weapons
         super().__init__(
@@ -342,6 +344,9 @@ class StarterClassBuilder(ClassBuilder):
         data.add_feature(self.background_skill_proficiencies)
         if self.caster_type is not None:
             data.add_feature(SpellSlots.SpellSlots(self.caster_type))
+
+        for armor_type in self.armor_proficiencies or []:
+            data.add_armor_proficiency(armor_type)
 
         ### Equipment ###
 

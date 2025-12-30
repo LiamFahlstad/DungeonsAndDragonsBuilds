@@ -1,6 +1,6 @@
 from typing import Optional
 
-
+import Definitions
 from CharacterConfigs.CharacterClasses import ClassBuilder
 from Definitions import CharacterClass
 from Features import Armor, Backgrounds, OriginFeats, Weapons
@@ -45,6 +45,7 @@ class RogueStarterClassBuilder(ClassBuilder.StarterClassBuilder):
             add_default_equipment=add_default_equipment,
             default_equipment=default_equipment,
             origin_feat=origin_feat,
+            armor_proficiencies=[Definitions.ArmorType.LIGHT],
             armor=armor,
             weapons=weapons,
             replace_spells=replace_spells,
