@@ -1,3 +1,6 @@
+import numpy as np
+
+import Definitions
 from Definitions import Ability
 from StatBlocks.StatBlock import StatBlock
 
@@ -43,6 +46,36 @@ class AbilitiesStatBlock(StatBlock):
     def get_modifier(self, ability: Ability):
         score = self.get_score(ability)
         return (score - 10) // 2
+
+    def get_ability_with_highest_modifier(
+        self,
+    ) -> Definitions.Ability:
+        return self._get_ability_with_highest_modifier(list(Definitions.Ability))
+
+    def get_spellcasting_ability_with_highest_modifier(
+        self,
+    ) -> Definitions.Ability:
+        return self._get_ability_with_highest_modifier(
+            [
+                Definitions.Ability.INTELLIGENCE,
+                Definitions.Ability.WISDOM,
+                Definitions.Ability.CHARISMA,
+            ]
+        )
+
+    def _get_ability_with_highest_modifier(
+        self, abilities: list[Definitions.Ability]
+    ) -> Definitions.Ability:
+        highest_ability = None
+        highest_modifier = -np.inf
+        for ability in abilities:
+            modifier = self.get_modifier(ability)
+            if modifier > highest_modifier:
+                highest_modifier = modifier
+                highest_ability = ability
+        if highest_ability is None:
+            raise ValueError("No abilities found.")
+        return highest_ability
 
 
 class StandardArrayAbilitiesStatBlock(AbilitiesStatBlock):

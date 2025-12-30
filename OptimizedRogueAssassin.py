@@ -13,7 +13,6 @@ from CharacterConfigs.RogueAssassin import (
 from Definitions import Ability, Skill
 from Features import Backgrounds, OriginFeats, Weapons
 from SpeciesConfigs import Elf
-from StatBlocks import AbilitiesStatBlock
 from StatBlocks.AbilitiesStatBlock import StandardArrayAbilitiesStatBlock
 from StatBlocks.SkillsStatBlock import RogueSkillsStatBlock
 
@@ -79,29 +78,11 @@ def get_data() -> CharacterSheetCreator.CharacterSheetData:
 
     character_class_data = rogue_assassin.create()
 
-    def ability_with_highest_modifier(
-        abilities: AbilitiesStatBlock.AbilitiesStatBlock,
-    ) -> Definitions.Ability:
-        highest_ability = None
-        highest_modifier = -999
-        for ability in [
-            Definitions.Ability.INTELLIGENCE,
-            Definitions.Ability.WISDOM,
-            Definitions.Ability.CHARISMA,
-        ]:
-            modifier = abilities.get_modifier(ability)
-            if modifier > highest_modifier:
-                highest_modifier = modifier
-                highest_ability = ability
-        if highest_ability is None:
-            raise ValueError("No abilities found.")
-        return highest_ability
-
     abilities = character_class_data.abilities
     if abilities is None:
         raise ValueError("AbilitiesStatBlock is None.")
 
-    spell_casting_ability = ability_with_highest_modifier(abilities)
+    spell_casting_ability = abilities.get_spellcasting_ability_with_highest_modifier()
     character_class_data.spell_casting_ability = spell_casting_ability
     species_data = Elf.elf_character_data(
         character_level=character_class_data.character_level,
