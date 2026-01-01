@@ -15,7 +15,7 @@ from Spells.Definitions import (
     WizardLevel3Spells,
     WizardLevel5Spells,
 )
-from CharacterConfigs.BaseClasses.import ClassBuilder
+from CharacterConfigs.BaseClasses import ClassBuilder
 from StatBlocks.AbilitiesStatBlock import AbilitiesStatBlock
 from StatBlocks.SkillsStatBlock import RangerSkillsStatBlock
 

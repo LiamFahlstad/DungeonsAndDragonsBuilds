@@ -1,13 +1,8 @@
-from CharacterConfigs.BaseClasses.import (
-    ClassBuilder,
-    RogueLevelFeatures,
-    WizardBase,
-    WizardLevelFeatures,
-)
-
 import CharacterSheetCreator
 import Definitions
 import Spells.Definitions as SpellDefinitions
+from CharacterConfigs.BaseClasses import ClassBuilder, WizardBase
+from CharacterConfigs.BaseClasses.RogueBase import RogueLevel1, RogueLevel2, RogueLevel3
 from CharacterConfigs.SubClasses import RogueAssassin
 from Definitions import Ability, Skill
 from Features import Backgrounds, OriginFeats, Weapons
@@ -60,14 +55,14 @@ def _get_starter_data() -> CharacterSheetCreator.CharacterSheetData:
         armor=[],
         rogue_level_features=ClassBuilder.BaseClassLevelFeatures(
             base_class_features_by_level={
-                1: RogueLevelFeatures.RogueLevel1(
+                1: RogueLevel1(
                     skill_1=Definitions.Skill.STEALTH,
                     skill_2=Definitions.Skill.SLEIGHT_OF_HAND,
                     weapon_mastery_1=Weapons.Shortsword(),
                     weapon_mastery_2=Weapons.Scimitar(),
                 ),
-                2: RogueLevelFeatures.RogueLevel2(),
-                3: RogueLevelFeatures.RogueLevel3(),
+                2: RogueLevel2(),
+                3: RogueLevel3(),
             },
             subclass_features_by_level={},
         ),
@@ -83,7 +78,7 @@ def _get_multiclass_data() -> CharacterSheetCreator.CharacterSheetData:
         subclass=Definitions.WizardSubclass.BLADESINGER,
         wizard_level_features=ClassBuilder.BaseClassLevelFeatures(
             base_class_features_by_level={
-                1: WizardLevelFeatures.WizardLevel1(
+                1: WizardBase.WizardLevel1(
                     cantrip_1=SpellDefinitions.WizardLevel0Spells.MAGE_HAND,
                     cantrip_2=SpellDefinitions.WizardLevel0Spells.BLADE_WARD,
                     cantrip_3=SpellDefinitions.WizardLevel0Spells.TRUE_STRIKE,

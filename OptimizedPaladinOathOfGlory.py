@@ -1,5 +1,6 @@
-from CharacterConfigs.BaseClasses.import ClassBuilder
-from CharacterConfigs.BaseClasses.PaladinLevelFeatures import (
+import CharacterSheetCreator
+from CharacterConfigs.BaseClasses import ClassBuilder
+from CharacterConfigs.BaseClasses.PaladinBase import (
     PaladinLevel1,
     PaladinLevel2,
     PaladinLevel3,
@@ -21,8 +22,6 @@ from CharacterConfigs.BaseClasses.PaladinLevelFeatures import (
     PaladinLevel19,
     PaladinLevel20,
 )
-
-import CharacterSheetCreator
 from CharacterConfigs.SubClasses.PaladinOathOfGlory import (
     GloryPaladinLevel3,
     GloryPaladinLevel5,

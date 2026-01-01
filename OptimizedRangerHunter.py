@@ -1,34 +1,22 @@
+import CharacterSheetCreator
+import Definitions
+from CharacterConfigs.BaseClasses import RangerBase
 from CharacterConfigs.BaseClasses.RangerBase import (
     RangerLevel1,
     RangerLevel2,
     RangerLevel3,
 )
-from CharacterConfigs.SubClasses.RangerHunter import (
-    HunterRangerLevel3,
-)
-import CharacterSheetCreator
-from Definitions import (
-    Ability,
-    Skill,
-)
-import Definitions
-from Features import (
-    Backgrounds,
-    FightingStyles,
-    OriginFeats,
-    Weapons,
-)
+from CharacterConfigs.SubClasses.RangerHunter import HunterRangerLevel3
+from Definitions import Ability, Skill
+from Features import Backgrounds, FightingStyles, OriginFeats, Weapons
 from SpeciesConfigs import Human
-from Spells.Definitions import (
-    RangerLevel1Spells,
-)
+from Spells.Definitions import RangerLevel1Spells
 from StatBlocks.AbilitiesStatBlock import StandardArrayAbilitiesStatBlock
 from StatBlocks.SkillsStatBlock import RangerSkillsStatBlock
-from CharacterConfigs.BaseClasses.import RangerBase
 
 
 def get_data() -> CharacterSheetCreator.CharacterSheetData:
-    ranger_hunter = RangerBase.RangerStarter(
+    ranger_hunter = RangerBase.RangerStarterClassBuilder(
         ranger_level=3,
         subclass=Definitions.RangerSubclass.HUNTER,
         # Distribute 15, 14, 13, 12, 10, 8 among your abilities.

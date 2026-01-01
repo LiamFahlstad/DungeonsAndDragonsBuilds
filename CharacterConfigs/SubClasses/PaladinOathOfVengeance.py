@@ -1,5 +1,5 @@
 import CharacterSheetCreator
-from CharacterConfigs.BaseClasses.import PaladinBase
+from CharacterConfigs.BaseClasses import PaladinBase
 from Definitions import PaladinSubclass
 from Features import Armor, Backgrounds, OriginFeats, Weapons
 from Features.ClassFeatures import PaladinFeatures

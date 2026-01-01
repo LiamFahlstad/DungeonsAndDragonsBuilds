@@ -1,18 +1,11 @@
-from Definitions import PaladinSubclass
-from Features import OriginFeats
 import CharacterSheetCreator
-from Features import Armor
-from Features import Backgrounds
-from Features import Weapons
+from CharacterConfigs.BaseClasses import PaladinBase
+from Definitions import PaladinSubclass
+from Features import Armor, Backgrounds, OriginFeats, Weapons
 from Features.ClassFeatures import PaladinFeatures
-from StatBlocks.AbilitiesStatBlock import (
-    AbilitiesStatBlock,
-)
+from Spells.Definitions import PaladinLevel1Spells
+from StatBlocks.AbilitiesStatBlock import AbilitiesStatBlock
 from StatBlocks.SkillsStatBlock import PaladinSkillsStatBlock
-from CharacterConfigs.BaseClasses.import PaladinBase
-from Spells.Definitions import (
-    PaladinLevel1Spells,
-)
 
 
 def create(

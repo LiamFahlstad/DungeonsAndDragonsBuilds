@@ -2,7 +2,7 @@ from typing import Optional
 
 import attr
 
-from CharacterConfigs.BaseClasses.import ClassBuilder
+from CharacterConfigs.BaseClasses import ClassBuilder
 from CharacterConfigs.BaseClasses.PaladinBase import (
     PaladinMulticlassBuilder,
     PaladinStarterClassBuilder,

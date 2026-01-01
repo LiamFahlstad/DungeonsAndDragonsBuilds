@@ -1,12 +1,11 @@
-from CharacterConfigs.BaseClasses.import ClassBuilder
-from CharacterConfigs.BaseClasses.BarbarianFeatures import (
+import CharacterSheetCreator
+import Definitions
+from CharacterConfigs.BaseClasses import ClassBuilder
+from CharacterConfigs.BaseClasses.BarbarianBase import (
     BarbarianLevel1,
     BarbarianLevel2,
     BarbarianLevel3,
 )
-
-import CharacterSheetCreator
-import Definitions
 from CharacterConfigs.SubClasses.BarbarianPathOfTheBerserker import (
     PathOfTheBerserkerBarbarianLevel3,
     PathOfTheBerserkerBarbarianStarterClassBuilder,

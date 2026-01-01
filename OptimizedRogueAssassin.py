@@ -1,12 +1,7 @@
-from CharacterConfigs.BaseClasses.import ClassBuilder
-from CharacterConfigs.BaseClasses.RogueLevelFeatures import (
-    RogueLevel1,
-    RogueLevel2,
-    RogueLevel3,
-)
-
 import CharacterSheetCreator
 import Definitions
+from CharacterConfigs.BaseClasses import ClassBuilder
+from CharacterConfigs.BaseClasses.RogueBase import RogueLevel1, RogueLevel2, RogueLevel3
 from CharacterConfigs.SubClasses.RogueAssassin import (
     AssassinRogueLevel3,
     AssassinRogueStarterClassBuilder,
