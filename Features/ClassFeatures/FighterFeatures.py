@@ -1,4 +1,4 @@
-from Features import Maneuvers
+from Definitions import Ability
 from Features.BaseFeatures import TextFeature
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
@@ -34,11 +34,6 @@ class SecondWind(TextFeature):
             f"You can use this feature {uses} time(s). You regain one expended use when you finish a Short Rest, "
             f"and you regain all expended uses when you finish a Long Rest.\n"
         )
-        if character_stat_block.character_level >= 2:
-            base_text += self.add_feature_effects(character_stat_block, TacticalMind())
-
-        if character_stat_block.character_level >= 5:
-            base_text += self.add_feature_effects(character_stat_block, TacticalShift())
 
         return base_text
 
@@ -74,41 +69,6 @@ class TacticalMind(TextFeature):
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "You have a mind for tactics on and off the battlefield. When you fail an ability check, you can expend a use of your Second Wind to push yourself toward success. Rather than regaining Hit Points, you roll 1d10 and add the number rolled to the ability check, potentially turning it into a success. If the check still fails, this use of Second Wind isn’t expended."
         return description
-
-
-class SuperiorityDice(TextFeature):
-    def __init__(self):
-        self.maneuvers = []
-        super().__init__(name="Superiority Dice", origin="Fighter Battle Master")
-
-    def add_maneuver(self, maneuver: Maneuvers.Maneuver):
-        self.maneuvers.append(maneuver)
-
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        if character_stat_block.character_level < 7:
-            number_of_superiority_die = 4
-        elif character_stat_block.character_level < 15:
-            number_of_superiority_die = 5
-        else:
-            number_of_superiority_die = 6
-
-        if character_stat_block.character_level < 10:
-            superiority_die = "1d8"
-        elif character_stat_block.character_level < 18:
-            superiority_die = "1d10"
-        else:
-            superiority_die = "1d12"
-
-        base_text = (
-            f"These are {superiority_die}s, and you can expend them to fuel your maneuvers.\n"
-            "You regain all expended superiority dice when you finish a short or long rest.\n"
-            f"Number of Superiority Dice: {number_of_superiority_die}\n"
-        )
-
-        for maneuver in self.maneuvers:
-            base_text += self.add_feature_effects(character_stat_block, maneuver)
-
-        return base_text
 
 
 class ExtraAttack(TextFeature):
@@ -259,6 +219,44 @@ class InspiringCommander(TextFeature):
 ### Battle Master Fighter Features ###
 
 
+class SuperiorityDice(TextFeature):
+    def __init__(self):
+        self.maneuvers = []
+        super().__init__(
+            name="Superiority Dice", origin="Fighter Battle Master Level 3"
+        )
+
+    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+        if character_stat_block.character_level < 7:
+            number_of_superiority_die = 4
+        elif character_stat_block.character_level < 15:
+            number_of_superiority_die = 5
+        else:
+            number_of_superiority_die = 6
+
+        if character_stat_block.character_level < 10:
+            superiority_die = "1d8"
+        elif character_stat_block.character_level < 18:
+            superiority_die = "1d10"
+        else:
+            superiority_die = "1d12"
+
+        str_mod = character_stat_block.get_ability_modifier(Ability.STRENGTH)
+        dex_mod = character_stat_block.get_ability_modifier(Ability.DEXTERITY)
+        saving_throw = (
+            8 + max(str_mod, dex_mod) + character_stat_block.get_proficiency_bonus()
+        )
+        base_text = (
+            f"These are {superiority_die}s, and you can expend them to fuel your maneuvers.\n"
+            "You regain all expended superiority dice when you finish a short or long rest.\n"
+            f"Number of Superiority Dice: {number_of_superiority_die}\n"
+            f"If a maneuver requires a saving throw, the DC equals {saving_throw}.\n"
+            f"Maneuvers:"
+        )
+
+        return base_text
+
+
 class CombatSuperiority(TextFeature):
     def __init__(self):
         super().__init__(
@@ -277,7 +275,7 @@ class CombatSuperiority(TextFeature):
         return description
 
 
-class StudentofWar(TextFeature):
+class StudentOfWar(TextFeature):
     def __init__(self):
         super().__init__(name="Student of War", origin="Battle Master Fighter Level 3")
 

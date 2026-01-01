@@ -24,6 +24,9 @@ class CombatStatBlock(StatBlock):
         else:
             self.armor_class = new_armor_class
 
+    def increase_armor_class(self, increase_by: int):
+        self.armor_class += increase_by
+
     def calculate_hit_points(
         self,
         starter_class: Definitions.CharacterClass,

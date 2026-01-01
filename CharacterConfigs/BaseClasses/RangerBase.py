@@ -8,6 +8,7 @@ from Definitions import Ability, CharacterClass, Skill
 from Features import (
     Armor,
     Backgrounds,
+    EpicBoon,
     FightingStyles,
     GeneralFeats,
     OriginFeats,
@@ -20,7 +21,6 @@ from Spells.Definitions import (
     RangerLevel3Spells,
     RangerLevel4Spells,
     RangerLevel5Spells,
-    WarlockLevel2Spells,
 )
 from StatBlocks.AbilitiesStatBlock import AbilitiesStatBlock
 from StatBlocks.SavingThrowsStatBlock import RangerSavingThrowsStatBlock
@@ -41,8 +41,7 @@ class RangerLevel1(ClassBuilder.BaseClassLevel1):
         data.add_weapon_mastery(self.weapon_mastery_1)
         data.add_weapon_mastery(self.weapon_mastery_2)
 
-        data.add_feature(RangerFeatures.RegainingSpellSlots())
-        data.add_feature(RangerFeatures.ReplacingSpells())
+        data.add_feature(RangerFeatures.SpellCasting())
         data.add_feature(RangerFeatures.ReplacingWeaponMasteries())
         data.add_feature(RangerFeatures.FavoredEnemy())
 
@@ -93,17 +92,7 @@ class RangerLevel5(ClassBuilder.BaseClassLevel5):
     spell: RangerLevel1Spells | RangerLevel2Spells
 
     def add_features(self, data: CharacterSheetData) -> CharacterSheetData:
-
-        # Automatic feature
         data.add_feature(RangerFeatures.ExtraAttack())
-        data.add_feature(RangerFeatures.FaithfulSteed())
-        data.add_spell(RangerLevel2Spells.FIND_STEED)
-
-        # Oath of vengeance features
-        data.add_spell(WarlockLevel2Spells.HOLD_PERSON)
-        data.add_spell(WarlockLevel2Spells.MISTY_STEP)
-
-        # Add/Change prepared spells:
         data.add_spell(self.spell)
         return data
 
@@ -112,7 +101,6 @@ class RangerLevel5(ClassBuilder.BaseClassLevel5):
 class RangerLevel6(ClassBuilder.BaseClassLevel6):
 
     def add_features(self, data: CharacterSheetData) -> CharacterSheetData:
-        data.add_feature(RangerFeatures.AuraOfProtection())
         return data
 
 
@@ -136,17 +124,12 @@ class RangerLevel8(ClassBuilder.BaseClassLevel8):
 
 @attr.dataclass
 class RangerLevel9(ClassBuilder.BaseClassLevel9):
+    skill_1: Skill
+    skill_2: Skill
     spell: RangerLevel1Spells | RangerLevel2Spells | RangerLevel3Spells
 
-    def add_features(
-        self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
-        channel_divinity_feature: RangerFeatures.ChannelDivinity = (
-            data.get_features_by_type(RangerFeatures.ChannelDivinity)[0]
-        )
-        channel_divinity_feature.add_spell("Abjure Foes")
-        data.add_spell(self.spell)
+    def add_features(self, data: CharacterSheetData) -> CharacterSheetData:
+        data.add_feature(RangerFeatures.Expertise(self.skill_1, self.skill_2))
         return data
 
 
@@ -157,10 +140,7 @@ class RangerLevel10(ClassBuilder.BaseClassLevel10):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        aura_of_protection: RangerFeatures.AuraOfProtection = data.get_features_by_type(
-            RangerFeatures.AuraOfProtection
-        )[0]
-        aura_of_protection.add_feature(RangerFeatures.AuraOfCourage())
+        data.add_feature(RangerFeatures.Tireless())
         return data
 
 
@@ -172,8 +152,6 @@ class RangerLevel11(ClassBuilder.BaseClassLevel11):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(RangerFeatures.RadiantStrikes())
-        data.add_spell(self.spell)
         return data
 
 
@@ -196,7 +174,10 @@ class RangerLevel13(ClassBuilder.BaseClassLevel13):
     )
 
     def add_features(self, data: CharacterSheetData) -> CharacterSheetData:
-        data.add_spell(self.spell)
+        favored_enemy: RangerFeatures.FavoredEnemy = data.get_features_by_type(
+            RangerFeatures.FavoredEnemy
+        )[0]
+        favored_enemy.add_feature(RangerFeatures.RelentlessHunter())
         return data
 
 
@@ -207,10 +188,7 @@ class RangerLevel14(ClassBuilder.BaseClassLevel14):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        lay_on_hands: RangerFeatures.LayOnHands = data.get_features_by_type(
-            RangerFeatures.LayOnHands
-        )[0]
-        lay_on_hands.add_feature(RangerFeatures.RestoringTouch())
+        data.add_feature(RangerFeatures.NaturesVeil())
         return data
 
 
@@ -257,6 +235,11 @@ class RangerLevel17(ClassBuilder.BaseClassLevel17):
     def add_features(self, data: CharacterSheetData) -> CharacterSheetData:
         data.add_spell(self.spell_1)
         data.add_spell(self.spell_2)
+        favored_enemy: RangerFeatures.FavoredEnemy = data.get_features_by_type(
+            RangerFeatures.FavoredEnemy
+        )[0]
+        favored_enemy.add_feature(RangerFeatures.PreciseHunter())
+
         return data
 
 
@@ -267,15 +250,13 @@ class RangerLevel18(ClassBuilder.BaseClassLevel18):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        aura_of_protection: RangerFeatures.AuraOfProtection = data.get_features_by_type(
-            RangerFeatures.AuraOfProtection
-        )[0]
-        aura_of_protection.add_feature(RangerFeatures.AuraExpansion())
+        data.add_feature(RangerFeatures.FeralSenses())
         return data
 
 
 @attr.dataclass
 class RangerLevel19(ClassBuilder.BaseClassLevel19):
+    epic_boon: EpicBoon.EpicBoonCharacterFeature | EpicBoon.EpicBoonTextFeature
     spell: (
         RangerLevel1Spells
         | RangerLevel2Spells
@@ -285,6 +266,7 @@ class RangerLevel19(ClassBuilder.BaseClassLevel19):
     )
 
     def add_features(self, data: CharacterSheetData) -> CharacterSheetData:
+        data.add_feature(self.epic_boon)
         data.add_spell(self.spell)
         return data
 
@@ -293,6 +275,10 @@ class RangerLevel19(ClassBuilder.BaseClassLevel19):
 class RangerLevel20(ClassBuilder.BaseClassLevel20):
 
     def add_features(self, data: CharacterSheetData) -> CharacterSheetData:
+        favored_enemy: RangerFeatures.FavoredEnemy = data.get_features_by_type(
+            RangerFeatures.FavoredEnemy
+        )[0]
+        favored_enemy.add_feature(RangerFeatures.FoeSlayer())
         return data
 
 

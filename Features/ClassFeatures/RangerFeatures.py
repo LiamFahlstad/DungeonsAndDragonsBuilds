@@ -1,16 +1,21 @@
-from Definitions import Skill
+from Definitions import Ability, Skill
 from Features.BaseFeatures import CharacterFeature, TextFeature
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 RANGER_HIT_DIE = 10
 
 
-class ReplacingSpells(TextFeature):
+class SpellCasting(TextFeature):
     def __init__(self):
-        super().__init__(name="Replacing Spells", origin="Ranger Level 1")
+        super().__init__(name="Spell Casting", origin="Ranger Level 1")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        description = "Whenever you finish a Long Rest, you can replace one spell on your list with another Ranger spell for which you have spell slots."
+        description = (
+            "Spellcasting:\n"
+            " * Whenever you finish a Long Rest, you can replace one spell on your list with another Ranger spell for which you have spell slots.\n"
+            " * You regain all expended slots when you finish a Long Rest.\n"
+            " * Wisdom is your spellcasting ability for your Ranger spells."
+        )
         return description
 
 
@@ -20,15 +25,6 @@ class ReplacingWeaponMasteries(TextFeature):
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "Whenever you finish a Long Rest, you can change the kinds of weapons you chose."
-        return description
-
-
-class RegainingSpellSlots(TextFeature):
-    def __init__(self):
-        super().__init__(name="Regaining Spell Slots", origin="Ranger Level 2")
-
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        description = "You regain all expended slots when you finish a Long Rest."
         return description
 
 
@@ -92,13 +88,14 @@ class Roving(TextFeature):
         return description
 
 
-class Expertise(TextFeature):
-    def __init__(self):
-        super().__init__(name="Expertise", origin="Ranger Level 9")
+class Expertise(CharacterFeature):
+    def __init__(self, skill_1: Skill, skill_2: Skill):
+        self.skill_1 = skill_1
+        self.skill_2 = skill_2
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        description = "Choose two of your skill proficiencies with which you lack Expertise. You gain Expertise in those skills."
-        return description
+    def modify(self, character_stat_block: CharacterStatBlock):
+        character_stat_block.skills.add_skill_expertise(self.skill_1)
+        character_stat_block.skills.add_skill_expertise(self.skill_2)
 
 
 class Tireless(TextFeature):
@@ -106,10 +103,12 @@ class Tireless(TextFeature):
         super().__init__(name="Tireless", origin="Ranger Level 10")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+        wis_mod = character_stat_block.get_ability_modifier(Ability.WISDOM)
         description = (
             "Primal forces now help fuel you on your journeys, granting you the following benefits.\n"
-            "Temporary Hit Points. As a Magic Action, you can give yourself a number of Temporary Hit Points equal to 1d8 plus your Wisdom modifier (minimum of 1). You can use this action a number of times equal to your Wisdom modifier (minimum of once), and you regain all expended uses when you finish a Long Rest.\n"
-            "Decrease Exhaustion. Whenever you finish a Short Rest, your Exhaustion level, if any, decreases by 1."
+            f" * Temporary Hit Points: As a Magic Action, you can give yourself a number of Temporary Hit Points equal to 1d8 plus your Wisdom modifier (minimum of 1) ({max(1, wis_mod)}).\n"
+            f"   You can use this action a number of times equal to your Wisdom modifier (minimum of once) ({max(1, wis_mod)}), and you regain all expended uses when you finish a Long Rest.\n"
+            " * Decrease Exhaustion: Whenever you finish a Short Rest, your Exhaustion level, if any, decreases by 1."
         )
         return description
 
@@ -128,9 +127,10 @@ class NaturesVeil(TextFeature):
         super().__init__(name="Nature's Veil", origin="Ranger Level 14")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+        wis_mod = character_stat_block.get_ability_modifier(Ability.WISDOM)
         description = (
             "You invoke spirits of nature to magically hide yourself. As a Bonus Action you can give yourself the Invisible condition until the end of your next turn.\n"
-            "You can use this feature a number of times equal to your Wisdom modifier (minimum of once), and you regain all expended uses when you finish a Long Rest."
+            f"You can use this feature a number of times equal to your Wisdom modifier (minimum of once) ({max(1, wis_mod)}), and you regain all expended uses when you finish a Long Rest."
         )
         return description
 

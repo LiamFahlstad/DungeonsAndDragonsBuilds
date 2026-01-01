@@ -49,7 +49,7 @@ class BlindFighting(FightingStyle):
 
 class Defense(FightStyleCharacterFeature):
     def modify(self, character_stat_block: CharacterStatBlock):
-        character_stat_block.combat.armor_class_bonus += 1
+        character_stat_block.combat.increase_armor_class(1)
 
     def write_to_file(self, file):
         file.write(
