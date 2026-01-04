@@ -25,38 +25,38 @@ Size                | Medium
 ################################################################################
 # ================================ Abilities ================================= #
 ################################################################################
-Ability      | Score | Modifier | Saving Throw | ST Proficient | ST Advantaged
--------------+-------+----------+--------------+---------------+--------------
-Strength     | 8     | -1       | -1           | No            | No           
-Dexterity    | 16    | 3        | 5            | Yes           | No           
-Constitution | 16    | 3        | 3            | No            | No           
-Intelligence | 13    | 1        | 3            | Yes           | No           
-Wisdom       | 12    | 1        | 1            | No            | No           
-Charisma     | 10    | 0        | 0            | No            | No           
+Ability | Score | Mod | Saving Throw        | DC | ATK Bonus
+--------+-------+-----+---------------------+----+----------
+STR     | 8     | -1  | -1                  | 9  | +1       
+DEX     | 16    | +3  | +3 + 2 (Proficient) | 13 | +5       
+CON     | 16    | +3  | +3                  | 13 | +5       
+INT     | 13    | +1  | +1 + 2 (Proficient) | 11 | +3       
+WIS     | 12    | +1  | +1                  | 11 | +3       
+CHA     | 10    | +0  | +0                  | 10 | +2       
 
 ################################################################################
 # ================================== Skills ================================== #
 ################################################################################
-Skill           | Modifier | Proficient | Ability      | RollCondition
-----------------+----------+------------+--------------+--------------
-Acrobatics      | 5        | Yes        | Dexterity    | Neutral      
-Animal Handling | 1        | No         | Wisdom       | Neutral      
-Arcana          | 1        | No         | Intelligence | Neutral      
-Athletics       | -1       | No         | Strength     | Neutral      
-Deception       | 2        | Yes        | Charisma     | Neutral      
-History         | 1        | No         | Intelligence | Neutral      
-Insight         | 1        | No         | Wisdom       | Neutral      
-Intimidation    | 0        | No         | Charisma     | Neutral      
-Investigation   | 3        | Yes        | Intelligence | Neutral      
-Medicine        | 1        | No         | Wisdom       | Neutral      
-Nature          | 3        | Yes        | Intelligence | Neutral      
-Perception      | 3        | Yes        | Wisdom       | Neutral      
-Performance     | 0        | No         | Charisma     | Neutral      
-Persuasion      | 0        | No         | Charisma     | Neutral      
-Religion        | 1        | No         | Intelligence | Neutral      
-Sleight of Hand | 7        | Yes        | Dexterity    | Neutral      
-Stealth         | 7        | Yes        | Dexterity    | Neutral      
-Survival        | 1        | No         | Wisdom       | Neutral      
+Skill           | Modifier | Proficient | Ability      | Roll Condition
+----------------+----------+------------+--------------+---------------
+Acrobatics      | 5        | Yes        | Dexterity    | Neutral       
+Animal Handling | 1        | No         | Wisdom       | Neutral       
+Arcana          | 1        | No         | Intelligence | Neutral       
+Athletics       | -1       | No         | Strength     | Neutral       
+Deception       | 2        | Yes        | Charisma     | Neutral       
+History         | 1        | No         | Intelligence | Neutral       
+Insight         | 1        | No         | Wisdom       | Neutral       
+Intimidation    | 0        | No         | Charisma     | Neutral       
+Investigation   | 3        | Yes        | Intelligence | Neutral       
+Medicine        | 1        | No         | Wisdom       | Neutral       
+Nature          | 3        | Yes        | Intelligence | Neutral       
+Perception      | 3        | Yes        | Wisdom       | Neutral       
+Performance     | 0        | No         | Charisma     | Neutral       
+Persuasion      | 0        | No         | Charisma     | Neutral       
+Religion        | 1        | No         | Intelligence | Neutral       
+Sleight of Hand | 7        | Yes        | Dexterity    | Neutral       
+Stealth         | 7        | Yes        | Dexterity    | Neutral       
+Survival        | 1        | No         | Wisdom       | Neutral       
 
 ################################################################################
 # ================================= Features ================================= #
@@ -148,32 +148,6 @@ DamageRoll         | 1d6 + 3 (ability mod: Dexterity)
 Mastery 'Nick'     | When using a Light weapon's extra attack, you can make it during the Attack action instead of as a Bonus Action. Once per turn.           
 
 ################################################################################
-# ======================== Difficulties & Spell Slots ======================== #
-################################################################################
-Ability Ability.INTELLIGENCE (Spell Casting Ability)
- * Difficulty Class: 11
- * Attack Bonus: +3
-Ability Ability.STRENGTH
- * Difficulty Class: 9
- * Attack Bonus: +1
-Ability Ability.DEXTERITY
- * Difficulty Class: 13
- * Attack Bonus: +5
-Ability Ability.CONSTITUTION
- * Difficulty Class: 13
- * Attack Bonus: +5
-Ability Ability.WISDOM
- * Difficulty Class: 11
- * Attack Bonus: +3
-Ability Ability.CHARISMA
- * Difficulty Class: 10
- * Attack Bonus: +2
-
-################################################################################
-# =============================== Spell Slots ================================ #
-################################################################################
-
-################################################################################
 # ================================== Spells ================================== #
 ################################################################################
 Name: Druidcraft
@@ -208,3 +182,4 @@ Using a Higher-Level Spell Slot:
 You can target one additional creature for each spell slot level above 1.
 Source: Player's Handbook 2024 (BR)
 Spellcasting Ability: Intelligence
+

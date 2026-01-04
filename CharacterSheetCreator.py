@@ -269,7 +269,7 @@ class CharacterSheetData:
                 character.get_ability_score(ability),
                 f"{ability_mod:+}",
                 saving_throw_text,
-                f"{ability_dc:+}",
+                f"{ability_dc}",
                 f"{ability_attack_bonus:+}",
             ]
             rows.append(row)
@@ -354,7 +354,7 @@ class CharacterSheetData:
         file.write("\n")
 
     def _write_spell_slots(self, character: CharacterStatBlock, file):
-        if character.spell_slots is None:
+        if not character.spell_slots:
             return
 
         CharacterSheetUtils.write_separator(file, "Spell Slots")

@@ -13,49 +13,50 @@ Proficiency Bonus  | 6
 ################################################################################
 # =============================== Combat Stats =============================== #
 ################################################################################
-Field          | Value                                   
----------------+-----------------------------------------
-Max Hit Points | 244                                     
-Armor Class    | 18 (with Shield) and 16 (without Shield)
-Initiative     | d20 + 0                                 
-Speed (ft)     | 30                                      
-Size           | Medium                                  
+Field               | Value                                   
+--------------------+-----------------------------------------
+Max Hit Points      | 244                                     
+Armor Class         | 18 (with Shield) and 16 (without Shield)
+Armor Proficiencies |                                         
+Initiative          | d20 + 0                                 
+Speed (ft)          | 30                                      
+Size                | Medium                                  
 
 ################################################################################
 # ================================ Abilities ================================= #
 ################################################################################
-Ability      | Score | Modifier | Saving Throw | ST Proficient | ST Advantaged
--------------+-------+----------+--------------+---------------+--------------
-Strength     | 15    | 2        | 2            | No            | No           
-Dexterity    | 10    | 0        | 0            | No            | No           
-Constitution | 19    | 4        | 4            | No            | No           
-Intelligence | 12    | 1        | 1            | No            | No           
-Wisdom       | 8     | -1       | 5            | Yes           | No           
-Charisma     | 19    | 4        | 10           | Yes           | No           
+Ability | Score | Mod | Saving Throw        | DC | ATK Bonus
+--------+-------+-----+---------------------+----+----------
+STR     | 15    | +2  | +2                  | 16 | +8       
+DEX     | 10    | +0  | +0                  | 14 | +6       
+CON     | 19    | +4  | +4                  | 18 | +10      
+INT     | 12    | +1  | +1                  | 15 | +7       
+WIS     | 8     | -1  | -1 + 6 (Proficient) | 13 | +5       
+CHA     | 19    | +4  | +4 + 6 (Proficient) | 18 | +10      
 
 ################################################################################
 # ================================== Skills ================================== #
 ################################################################################
-Skill           | Modifier | Proficient | Ability      | RollCondition
-----------------+----------+------------+--------------+--------------
-Acrobatics      | 0        | No         | Dexterity    | Neutral      
-Animal Handling | -1       | No         | Wisdom       | Neutral      
-Arcana          | 1        | No         | Intelligence | Neutral      
-Athletics       | 8        | Yes        | Strength     | Neutral      
-Deception       | 4        | No         | Charisma     | Neutral      
-History         | 7        | Yes        | Intelligence | Neutral      
-Insight         | 5        | Yes        | Wisdom       | Neutral      
-Intimidation    | 10       | Yes        | Charisma     | Neutral      
-Investigation   | 1        | No         | Intelligence | Neutral      
-Medicine        | 5        | Yes        | Wisdom       | Neutral      
-Nature          | 1        | No         | Intelligence | Neutral      
-Perception      | 5        | Yes        | Wisdom       | Neutral      
-Performance     | 4        | No         | Charisma     | Neutral      
-Persuasion      | 10       | Yes        | Charisma     | Neutral      
-Religion        | 1        | No         | Intelligence | Neutral      
-Sleight of Hand | 0        | No         | Dexterity    | Neutral      
-Stealth         | 0        | No         | Dexterity    | Disadvantage 
-Survival        | 5        | Yes        | Wisdom       | Neutral      
+Skill           | Modifier | Proficient | Ability      | Roll Condition
+----------------+----------+------------+--------------+---------------
+Acrobatics      | 0        | No         | Dexterity    | Neutral       
+Animal Handling | -1       | No         | Wisdom       | Neutral       
+Arcana          | 1        | No         | Intelligence | Neutral       
+Athletics       | 8        | Yes        | Strength     | Neutral       
+Deception       | 4        | No         | Charisma     | Neutral       
+History         | 7        | Yes        | Intelligence | Neutral       
+Insight         | 5        | Yes        | Wisdom       | Neutral       
+Intimidation    | 10       | Yes        | Charisma     | Neutral       
+Investigation   | 1        | No         | Intelligence | Neutral       
+Medicine        | 5        | Yes        | Wisdom       | Neutral       
+Nature          | 1        | No         | Intelligence | Neutral       
+Perception      | 5        | Yes        | Wisdom       | Neutral       
+Performance     | 4        | No         | Charisma     | Neutral       
+Persuasion      | 10       | Yes        | Charisma     | Neutral       
+Religion        | 1        | No         | Intelligence | Neutral       
+Sleight of Hand | 0        | No         | Dexterity    | Neutral       
+Stealth         | 0        | No         | Dexterity    | Disadvantage  
+Survival        | 5        | Yes        | Wisdom       | Neutral       
 
 ################################################################################
 # ================================= Features ================================= #
@@ -171,35 +172,11 @@ DamageRoll                  | 1d6 + 2 (ability mod: Strength)
 Two-Weapon Fighting: When you make an extra attack as a result of using a weapon that has the Light property, you can add your ability modifier to the damage of that attack if you aren't already adding it to the damage. (calculate manually)
 
 ################################################################################
-# ======================== Difficulties & Spell Slots ======================== #
-################################################################################
-Ability Ability.CHARISMA (Spell Casting Ability)
- * Difficulty Class: 18
- * Attack Bonus: +10
-Ability Ability.STRENGTH
- * Difficulty Class: 16
- * Attack Bonus: +8
-Ability Ability.DEXTERITY
- * Difficulty Class: 14
- * Attack Bonus: +6
-Ability Ability.CONSTITUTION
- * Difficulty Class: 18
- * Attack Bonus: +10
-Ability Ability.INTELLIGENCE
- * Difficulty Class: 15
- * Attack Bonus: +7
-Ability Ability.WISDOM
- * Difficulty Class: 13
- * Attack Bonus: +5
-
-################################################################################
 # =============================== Spell Slots ================================ #
 ################################################################################
-Level 1 Spell Slots: 4
-Level 2 Spell Slots: 3
-Level 3 Spell Slots: 3
-Level 4 Spell Slots: 3
-Level 5 Spell Slots: 2
+Level 1 | Level 2 | Level 3 | Level 4 | Level 5
+--------+---------+---------+---------+--------
+4       | 3       | 3       | 3       | 2      
 
 ################################################################################
 # ================================== Spells ================================== #
@@ -595,3 +572,4 @@ Description:
 You surround yourself with unearthly majesty in a 10-foot Emanation. Whenever the Emanation enters the space of a creature you can see and whenever a creature you can see enters the Emanation or ends its turn there, you can force that creature to make a Wisdom saving throw. On a failed save, the target takes 4d6 Psychic damage and has the Prone condition, and you can push it up to 10 feet away. On a successful save, the target takes half as much damage only. A creature makes this save only once per turn.
 Source: Player's Handbook 2024
 Spellcasting Ability: Charisma
+

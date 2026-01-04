@@ -13,49 +13,50 @@ Proficiency Bonus  | 2
 ################################################################################
 # =============================== Combat Stats =============================== #
 ################################################################################
-Field          | Value  
----------------+--------
-Max Hit Points | 41     
-Armor Class    | 14     
-Initiative     | d20 + 1
-Speed (ft)     | 30     
-Size           | Medium 
+Field               | Value  
+--------------------+--------
+Max Hit Points      | 41     
+Armor Class         | 14     
+Armor Proficiencies |        
+Initiative          | d20 + 1
+Speed (ft)          | 30     
+Size                | Medium 
 
 ################################################################################
 # ================================ Abilities ================================= #
 ################################################################################
-Ability      | Score | Modifier | Saving Throw | ST Proficient | ST Advantaged
--------------+-------+----------+--------------+---------------+--------------
-Strength     | 16    | 3        | 5            | Yes           | Yes          
-Dexterity    | 13    | 1        | 1            | No            | Yes          
-Constitution | 16    | 3        | 5            | Yes           | No           
-Intelligence | 8     | -1       | -1           | No            | No           
-Wisdom       | 12    | 1        | 1            | No            | No           
-Charisma     | 10    | 0        | 0            | No            | No           
+Ability | Score | Mod | Saving Throw                    | DC | ATK Bonus
+--------+-------+-----+---------------------------------+----+----------
+STR     | 16    | +3  | +3 + 2 (Proficient) (Advantage) | 13 | +5       
+DEX     | 13    | +1  | +1 (Advantage)                  | 11 | +3       
+CON     | 16    | +3  | +3 + 2 (Proficient)             | 13 | +5       
+INT     | 8     | -1  | -1                              | 9  | +1       
+WIS     | 12    | +1  | +1                              | 11 | +3       
+CHA     | 10    | +0  | +0                              | 10 | +2       
 
 ################################################################################
 # ================================== Skills ================================== #
 ################################################################################
-Skill           | Modifier | Proficient | Ability      | RollCondition
-----------------+----------+------------+--------------+--------------
-Acrobatics      | 1        | No         | Dexterity    | Neutral      
-Animal Handling | 1        | No         | Wisdom       | Neutral      
-Arcana          | -1       | No         | Intelligence | Neutral      
-Athletics       | 5        | Yes        | Strength     | Neutral      
-Deception       | 0        | No         | Charisma     | Neutral      
-History         | -1       | No         | Intelligence | Neutral      
-Insight         | 3        | Yes        | Wisdom       | Neutral      
-Intimidation    | 2        | Yes        | Charisma     | Neutral      
-Investigation   | -1       | No         | Intelligence | Neutral      
-Medicine        | 1        | No         | Wisdom       | Neutral      
-Nature          | -1       | No         | Intelligence | Neutral      
-Perception      | 3        | Yes        | Wisdom       | Neutral      
-Performance     | 0        | No         | Charisma     | Neutral      
-Persuasion      | 2        | Yes        | Charisma     | Neutral      
-Religion        | -1       | No         | Intelligence | Neutral      
-Sleight of Hand | 1        | No         | Dexterity    | Neutral      
-Stealth         | 1        | No         | Dexterity    | Neutral      
-Survival        | 1        | No         | Wisdom       | Neutral      
+Skill           | Modifier | Proficient | Ability      | Roll Condition
+----------------+----------+------------+--------------+---------------
+Acrobatics      | 1        | No         | Dexterity    | Neutral       
+Animal Handling | 1        | No         | Wisdom       | Neutral       
+Arcana          | -1       | No         | Intelligence | Neutral       
+Athletics       | 5        | Yes        | Strength     | Neutral       
+Deception       | 0        | No         | Charisma     | Neutral       
+History         | -1       | No         | Intelligence | Neutral       
+Insight         | 3        | Yes        | Wisdom       | Neutral       
+Intimidation    | 2        | Yes        | Charisma     | Neutral       
+Investigation   | -1       | No         | Intelligence | Neutral       
+Medicine        | 1        | No         | Wisdom       | Neutral       
+Nature          | -1       | No         | Intelligence | Neutral       
+Perception      | 3        | Yes        | Wisdom       | Neutral       
+Performance     | 0        | No         | Charisma     | Neutral       
+Persuasion      | 2        | Yes        | Charisma     | Neutral       
+Religion        | -1       | No         | Intelligence | Neutral       
+Sleight of Hand | 1        | No         | Dexterity    | Neutral       
+Stealth         | 1        | No         | Dexterity    | Neutral       
+Survival        | 1        | No         | Wisdom       | Neutral       
 
 ################################################################################
 # ================================= Features ================================= #
@@ -140,3 +141,4 @@ Proficient            | Yes
 AttackRoll            | 1d20 + 3 (ability mod: Strength) + 2 (Proficient)                                                                                                                                                                                                    
 DamageRoll            | 1d12 + 3 (ability mod: Strength)                                                                                                                                                                                                                     
 Mastery 'Cleave'      | When you hit a creature with a melee attack, you can make one extra melee attack with the same weapon against another creature within 5 ft of the first and in your reach. On a hit, deal weapon damage only (no mod unless negative). Once per turn.
+
