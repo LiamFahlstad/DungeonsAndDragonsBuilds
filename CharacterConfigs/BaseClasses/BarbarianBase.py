@@ -26,7 +26,8 @@ class BarbarianLevel1(ClassBuilder.BaseClassLevel1):
         data.add_weapon_mastery(self.weapon_mastery_2)
 
         data.add_feature(BarbarianFeatures.Rage())
-        data.add_feature(BarbarianFeatures.UnarmoredDefense())
+        if not data.armors:
+            data.add_feature(BarbarianFeatures.UnarmoredDefense())
         data.add_feature(BarbarianFeatures.UnarmoredDefenseText())
         data.add_feature(BarbarianFeatures.WeaponMastery())
         return data

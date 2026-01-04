@@ -153,6 +153,7 @@ class CharacterSheetData:
     def setup_character_stat_block(self) -> CharacterStatBlock:
         if self._character_cached is not None:
             return self._character_cached
+
         combat = CombatStatBlock(
             speed=self.speed,
             size=self.size,

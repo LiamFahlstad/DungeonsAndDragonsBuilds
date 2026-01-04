@@ -63,14 +63,9 @@ class UnarmoredDefenseText(TextFeature):
 
 class UnarmoredDefense(CharacterFeature):
     def modify(self, character_stat_block: CharacterStatBlock):
-        dexterity_modifier = character_stat_block.get_ability_modifier(
-            Definitions.Ability.DEXTERITY
-        )
-        constitution_modifier = character_stat_block.get_ability_modifier(
-            Definitions.Ability.CONSTITUTION
-        )
-        armor_class = 10 + dexterity_modifier + constitution_modifier
-        character_stat_block.combat.update_armor_class(armor_class, pick_max=True)
+        character_stat_block.combat.update_armor_class_base(10)
+        character_stat_block.combat.add_armor_class_ability(Ability.DEXTERITY)
+        character_stat_block.combat.add_armor_class_ability(Ability.CONSTITUTION)
 
 
 class WeaponMastery(TextFeature):

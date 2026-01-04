@@ -1,3 +1,5 @@
+from typing import Optional
+
 import Definitions
 from StatBlocks.StatBlock import StatBlock
 
@@ -11,16 +13,24 @@ class CombatStatBlock(StatBlock):
         self.hit_points_bonus = 0
         self.speed = speed
         self.size = size
-        self.armor_class = 10  # Overridden during character creation
+        self.armor_class_base = 10  # Overridden during character creation
+        self.armor_class_abilities = {Definitions.Ability.DEXTERITY}
+        self.armor_class_modifier = 0  # Non-ability related modifier
 
-    def update_armor_class(self, new_armor_class: int, pick_max: bool = True):
-        if pick_max:
-            self.armor_class = max(self.armor_class, new_armor_class)
-        else:
-            self.armor_class = new_armor_class
+    def update_armor_class_base(self, new_armor_class_base: int):
+        self.armor_class_base = new_armor_class_base
 
     def increase_armor_class(self, increase_by: int):
-        self.armor_class += increase_by
+        self.armor_class_modifier += increase_by
+
+    def add_armor_class_ability(self, ability: Definitions.Ability):
+        self.armor_class_abilities.add(ability)
+
+    def change_armor_class_ability(self, new_ability: Optional[Definitions.Ability]):
+        if new_ability is None:
+            self.armor_class_abilities.clear()
+        else:
+            self.armor_class_abilities = {new_ability}
 
     def calculate_hit_points(
         self,

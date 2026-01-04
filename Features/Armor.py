@@ -11,17 +11,14 @@ class AbstractArmor(CharacterFeature):
 
 class LeatherArmor(AbstractArmor):
     def modify(self, character_stat_block: CharacterStatBlock):
-        dex_mod = character_stat_block.get_ability_modifier(Ability.DEXTERITY)
-        character_stat_block.combat.update_armor_class(11 + dex_mod, pick_max=True)
+        character_stat_block.combat.update_armor_class_base(11)
+        character_stat_block.combat.change_armor_class_ability(Ability.DEXTERITY)
 
 
 class StuddedLeatherArmor(AbstractArmor):
     def modify(self, character_stat_block: CharacterStatBlock):
-        dex_mod = character_stat_block.get_ability_modifier(Ability.DEXTERITY)
-        character_stat_block.combat.update_armor_class(
-            12 + dex_mod,
-            pick_max=True,
-        )
+        character_stat_block.combat.update_armor_class_base(12)
+        character_stat_block.combat.change_armor_class_ability(Ability.DEXTERITY)
 
 
 class ChainMailArmor(AbstractArmor):
@@ -33,12 +30,10 @@ class ChainMailArmor(AbstractArmor):
         character_stat_block.skills.dice_roll_conditions.update(
             {Skill.STEALTH: DiceRollCondition.DISADVANTAGE}
         )
-        character_stat_block.combat.update_armor_class(16, pick_max=True)
+        character_stat_block.combat.update_armor_class_base(16)
+        character_stat_block.combat.change_armor_class_ability(None)
 
 
 class ShieldArmor(AbstractArmor):
     def modify(self, character_stat_block: CharacterStatBlock):
-        current_armor_class = character_stat_block.combat.armor_class
-        character_stat_block.combat.update_armor_class(
-            current_armor_class + 2, pick_max=True
-        )
+        character_stat_block.combat.increase_armor_class(2)

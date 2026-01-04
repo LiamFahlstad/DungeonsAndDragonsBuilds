@@ -105,7 +105,13 @@ class CharacterStatBlock:
         )
 
     def calculate_armor_class(self) -> int:
-        return self.combat.armor_class
+        ability_modifier = 0
+        for ability in self.combat.armor_class_abilities:
+            ability_modifier += self.get_ability_modifier(ability)
+
+        additional_modifier = self.combat.armor_class_modifier
+        ac_base = self.combat.armor_class_base
+        return ac_base + ability_modifier + additional_modifier
 
     def get_spell_casting_ability(self) -> Ability:
         if self.spell_casting_ability is None:
