@@ -62,6 +62,18 @@ class Ability(str, Enum):
     WISDOM = "Wisdom"
     CHARISMA = "Charisma"
 
+    @property
+    def short_name(self) -> str:
+        short_names = {
+            Ability.STRENGTH: "STR",
+            Ability.DEXTERITY: "DEX",
+            Ability.CONSTITUTION: "CON",
+            Ability.INTELLIGENCE: "INT",
+            Ability.WISDOM: "WIS",
+            Ability.CHARISMA: "CHA",
+        }
+        return short_names[self]
+
 
 class Skill(str, Enum):
     ACROBATICS = "Acrobatics"  # Dexterity

@@ -303,7 +303,7 @@ class RangerStarterClassBuilder(ClassBuilder.StarterClassBuilder):
             Armor.StuddedLeatherArmor(),
             Weapons.Scimitar(player_is_proficient=True),
             Weapons.Shortsword(player_is_proficient=True),
-            Weapons.Shortbow(player_is_proficient=True),
+            Weapons.Longbow(player_is_proficient=True),
         ]
         super().__init__(
             base_class=CharacterClass.RANGER,

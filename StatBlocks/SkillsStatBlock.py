@@ -62,7 +62,6 @@ class SkillsStatBlock(StatBlock):
 
 
 class ClassSkillsStatBlock(SkillsStatBlock):
-    """Paladin Skills Stat Block"""
 
     def __init__(
         self,

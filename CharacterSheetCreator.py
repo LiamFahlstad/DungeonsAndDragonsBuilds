@@ -48,6 +48,7 @@ class CharacterSheetData:
     weapon_masteries: list[AbstractWeapon] = attr.Factory(list)
     fighting_styles: list[FightingStyle] = attr.Factory(list)
     armor_proficiencies: set[Definitions.ArmorType] = attr.Factory(set)
+    _character_cached: Optional[CharacterStatBlock] = None
 
     @property
     def character_level(self) -> int:
@@ -150,6 +151,8 @@ class CharacterSheetData:
         self._create_character_sheet()
 
     def setup_character_stat_block(self) -> CharacterStatBlock:
+        if self._character_cached is not None:
+            return self._character_cached
         combat = CombatStatBlock(
             speed=self.speed,
             size=self.size,
@@ -177,201 +180,227 @@ class CharacterSheetData:
                 fighting_style.modify(character)
             elif isinstance(fighting_style, FightStyleWeaponFeature):
                 fighting_style.modify(self.weapons)
+        self._character_cached = character
         return character
+
+    def get_ability_modifier(self, ability: Ability) -> int:
+        character = self.setup_character_stat_block()
+        return character.abilities.get_modifier(ability)
+
+    def calculate_attack_bonus_for_ability(self, ability: Ability) -> int:
+        character = self.setup_character_stat_block()
+        return character.calculate_attack_bonus_for_ability(ability)
+
+    def get_file_path(self) -> str:
+        return f"Output/{slugify(self.character_name)}_{self.character_subclass.lower()}_level_{self.character_level}_character_sheet.txt"
+
+    def _write_general_info(self, character: CharacterStatBlock, file):
+        CharacterSheetUtils.write_separator(file, "General Info")
+        CharacterSheetUtils.write_table(
+            headers=["Field", "Value"],
+            rows=[
+                ["Name", character.name],
+                ["Level", character.character_level],
+                ["Starter Class", character.starter_class.value],
+                [
+                    "Level per Class",
+                    ", ".join(
+                        f"{cls.value}: {lvl}"
+                        for cls, lvl in character.level_per_class.items()
+                        if lvl > 0
+                    ),
+                ],
+                ["Character Subclass", character.character_subclass],
+                ["Proficiency Bonus", character.get_proficiency_bonus()],
+            ],
+            file=file,
+        )
+        file.write("\n")
+
+    def _write_combat_stats(self, character: CharacterStatBlock, file):
+        CharacterSheetUtils.write_separator(file, "Combat Stats")
+        ac = character.calculate_armor_class()
+        if Armor.ShieldArmor in [type(armor) for armor in self.armors]:
+            ac = f"{ac} (with Shield) and {ac - 2} (without Shield)"
+        CharacterSheetUtils.write_table(
+            headers=["Field", "Value"],
+            rows=[
+                ["Max Hit Points", character.calculate_hit_points()],
+                ["Armor Class", ac],
+                [
+                    "Armor Proficiencies",
+                    ", ".join(
+                        sorted([atype.value for atype in self.armor_proficiencies])
+                    ),
+                ],
+                ["Initiative", f"d20 + {character.combat.initiative}"],
+                ["Speed (ft)", character.combat.speed],
+                ["Size", character.combat.size.value],
+            ],
+            file=file,
+        )
+        file.write("\n")
+
+    def _write_abilities(self, character: CharacterStatBlock, file):
+        CharacterSheetUtils.write_separator(file, "Abilities")
+        headers = [
+            "Ability",
+            "Score",
+            "Mod",
+            "Saving Throw",
+            "DC",
+            "ATK Bonus",
+        ]
+        rows = []
+        proficiency_bonus = character.get_proficiency_bonus()
+        for ability in Ability:
+            ability_mod = character.get_ability_modifier(ability)
+            saving_throw_text = f"{ability_mod:+}"
+            if character.is_proficient_in_saving_throw(ability):
+                saving_throw_text += f" + {proficiency_bonus} (Proficient)"
+            if character.has_advantage_in_saving_throw(ability):
+                saving_throw_text += " (Advantage)"
+
+            ability_dc = character.calculate_difficulty_class_for_ability(ability)
+            ability_attack_bonus = character.calculate_attack_bonus_for_ability(ability)
+
+            row = [
+                ability.short_name,
+                character.get_ability_score(ability),
+                f"{ability_mod:+}",
+                saving_throw_text,
+                f"{ability_dc:+}",
+                f"{ability_attack_bonus:+}",
+            ]
+            rows.append(row)
+        CharacterSheetUtils.write_table(
+            headers,
+            rows,
+            file,
+        )
+        file.write("\n")
+
+    def _write_skills(self, character: CharacterStatBlock, file):
+        CharacterSheetUtils.write_separator(file, "Skills")
+        headers = ["Skill", "Modifier", "Proficient", "Ability", "Roll Condition"]
+        CharacterSheetUtils.write_table(
+            headers,
+            [
+                [
+                    skill.value,
+                    character.get_skill_modifier(skill),
+                    "Yes" if character.is_proficient_in_skill(skill) else "No",
+                    character.get_skill_ability(skill).value,
+                    character.get_skill_roll_condition(skill).value,
+                ]
+                for skill in Skill
+            ],
+            file,
+        )
+        file.write("\n")
+
+    def _write_features(self, character: CharacterStatBlock, file):
+        def sort_features(feat: Feature):
+            if isinstance(feat, CharacterFeature):
+                return (0, 0, feat.__class__.__name__)
+            if "Level " in feat.origin:
+                parts = feat.origin.split("Level ")
+                try:
+                    level_num = int(parts[1])
+                except ValueError:
+                    level_num = 0
+                return (2, level_num, feat.name)
+            return (1, 0, feat.name)
+
+        if not all([isinstance(feat, CharacterFeature) for feat in self.features]):
+            CharacterSheetUtils.write_separator(file, "Features")
+            sorted_features = sorted(self.features, key=sort_features)
+            for feature in sorted_features:
+                feature.write_to_file(character, file)
+            file.write("\n")
+
+    def _write_weapons(self, character: CharacterStatBlock, file):
+        if not self.weapons:
+            return
+
+        CharacterSheetUtils.write_separator(file, "Weapons")
+        for weapon in self.weapons:
+            if self.weapon_masteries:
+                for mastery in self.weapon_masteries:
+                    if isinstance(weapon, type(mastery)):
+                        weapon.player_has_mastery = True
+        write_weapons_to_file(self.weapons, character, file)
+        file.write("\n")
+
+    def _write_fighting_styles(self, character: CharacterStatBlock, file):
+        if not self.fighting_styles:
+            return
+
+        CharacterSheetUtils.write_separator(file, "Fighting Styles")
+        for fighting_style in self.fighting_styles:
+            fighting_style.write_to_file(file)
+        file.write("\n")
+
+    def _write_invocations(self, character: CharacterStatBlock, file):
+        if not self.invocations:
+            return
+        CharacterSheetUtils.write_separator(file, "Invocations")
+        for invocation_index, invocation_name in enumerate(self.invocations):
+            invocation = InvocationScrapers.InvocationParser(invocation_name)
+            invocation.fetch()
+            invocation.write_to_file(file)
+            if invocation_index < len(self.invocations) - 1:
+                file.write("-" * 40 + "\n")
+        file.write("\n")
+
+    def _write_spell_slots(self, character: CharacterStatBlock, file):
+        if character.spell_slots is None:
+            return
+
+        CharacterSheetUtils.write_separator(file, "Spell Slots")
+        character_spell_slots = character.get_spell_slots()
+        headers = []
+        row = []
+        for level, slots in character_spell_slots.items():
+            headers.append(f"Level {level}")
+            row.append(slots)
+        CharacterSheetUtils.write_table(headers, [row], file)
+        file.write("\n")
+
+    def _write_spells(self, character: CharacterStatBlock, file):
+        if not self.spells:
+            return
+
+        CharacterSheetUtils.write_separator(file, "Spells")
+
+        spells = [
+            SpellFactory.create(spell_name, spell_casting_ability)
+            for spell_name, spell_casting_ability in self.spells
+        ]
+        sorted_spells = sorted(spells, key=lambda s: (s.level, s.name))
+
+        for spell_index, spell in enumerate(sorted_spells):
+            spell.write_to_file(file)
+            if spell_index < len(self.spells) - 1:
+                file.write("-" * 40 + "\n")
+        file.write("\n")
 
     def _create_character_sheet(self):
         character = self.setup_character_stat_block()
-        output_path = f"Output/{slugify(self.character_name)}_{self.character_subclass.lower()}_level_{self.character_level}_character_sheet.txt"
+        output_path = self.get_file_path()
 
         pathlib.Path(output_path).parent.mkdir(parents=True, exist_ok=True)
         with open(output_path, "w", encoding="utf-8") as file:
-            CharacterSheetUtils.write_separator(file, "General Info")
-            CharacterSheetUtils.write_table(
-                headers=["Field", "Value"],
-                rows=[
-                    ["Name", character.name],
-                    ["Level", character.character_level],
-                    ["Starter Class", character.starter_class.value],
-                    [
-                        "Level per Class",
-                        ", ".join(
-                            f"{cls.value}: {lvl}"
-                            for cls, lvl in character.level_per_class.items()
-                            if lvl > 0
-                        ),
-                    ],
-                    ["Character Subclass", character.character_subclass],
-                    ["Proficiency Bonus", character.get_proficiency_bonus()],
-                ],
-                file=file,
-            )
-
-            file.write("\n")
-            CharacterSheetUtils.write_separator(file, "Combat Stats")
-            ac = character.calculate_armor_class()
-            if Armor.ShieldArmor in [type(armor) for armor in self.armors]:
-                ac = f"{ac} (with Shield) and {ac - 2} (without Shield)"
-            CharacterSheetUtils.write_table(
-                headers=["Field", "Value"],
-                rows=[
-                    ["Max Hit Points", character.calculate_hit_points()],
-                    ["Armor Class", ac],
-                    [
-                        "Armor Proficiencies",
-                        ", ".join(
-                            sorted([atype.value for atype in self.armor_proficiencies])
-                        ),
-                    ],
-                    ["Initiative", f"d20 + {character.combat.initiative}"],
-                    ["Speed (ft)", character.combat.speed],
-                    ["Size", character.combat.size.value],
-                ],
-                file=file,
-            )
-
-            file.write("\n")
-            CharacterSheetUtils.write_separator(file, "Abilities")
-            headings = [
-                "Ability",
-                "Score",
-                "Modifier",
-                "Saving Throw",
-                "ST Proficient",
-                "ST Advantaged",
-            ]
-            CharacterSheetUtils.write_table(
-                headings,
-                [
-                    [
-                        ability.value,
-                        character.get_ability_score(ability),
-                        character.get_ability_modifier(ability),
-                        character.get_saving_throw_modifier(ability),
-                        (
-                            "Yes"
-                            if character.is_proficient_in_saving_throw(ability)
-                            else "No"
-                        ),
-                        (
-                            "Yes"
-                            if character.has_advantage_in_saving_throw(ability)
-                            else "No"
-                        ),
-                    ]
-                    for ability in Ability
-                ],
-                file,
-            )
-            file.write("\n")
-            CharacterSheetUtils.write_separator(file, "Skills")
-            headings = ["Skill", "Modifier", "Proficient", "Ability", "RollCondition"]
-            CharacterSheetUtils.write_table(
-                headings,
-                [
-                    [
-                        skill.value,
-                        character.get_skill_modifier(skill),
-                        "Yes" if character.is_proficient_in_skill(skill) else "No",
-                        character.get_skill_ability(skill).value,
-                        character.get_skill_roll_condition(skill).value,
-                    ]
-                    for skill in Skill
-                ],
-                file,
-            )
-
-            def sort_features(feat: Feature):
-                if isinstance(feat, CharacterFeature):
-                    return (0, 0, feat.__class__.__name__)
-                if "Level " in feat.origin:
-                    parts = feat.origin.split("Level ")
-                    try:
-                        level_num = int(parts[1])
-                    except ValueError:
-                        level_num = 0
-                    return (2, level_num, feat.name)
-                return (1, 0, feat.name)
-
-            if not all([isinstance(feat, CharacterFeature) for feat in self.features]):
-                file.write("\n")
-                CharacterSheetUtils.write_separator(file, "Features")
-                sorted_features = sorted(self.features, key=sort_features)
-                for feature in sorted_features:
-                    feature.write_to_file(character, file)
-
-            file.write("\n")
-
-            CharacterSheetUtils.write_separator(file, "Weapons")
-            for weapon in self.weapons:
-                if self.weapon_masteries:
-                    for mastery in self.weapon_masteries:
-                        if isinstance(weapon, type(mastery)):
-                            weapon.player_has_mastery = True
-            write_weapons_to_file(self.weapons, character, file)
-
-            if self.fighting_styles:
-                file.write("\n")
-                CharacterSheetUtils.write_separator(file, "Fighting Styles")
-                for fighting_style in self.fighting_styles:
-                    fighting_style.write_to_file(file)
-
-            if self.invocations:
-                file.write("\n")
-                CharacterSheetUtils.write_separator(file, "Invocations")
-                for invocation_index, invocation_name in enumerate(self.invocations):
-                    invocation = InvocationScrapers.InvocationParser(invocation_name)
-                    invocation.fetch()
-                    invocation.write_to_file(file)
-                    if invocation_index < len(self.invocations) - 1:
-                        file.write("-" * 40 + "\n")
-
-            if self.spells:
-                file.write("\n")
-
-                CharacterSheetUtils.write_separator(file, "Difficulties & Spell Slots")
-                spell_casting_ability = self.spell_casting_ability
-                rest_abilities = [ability for ability in Ability]
-                if spell_casting_ability is not None:
-                    rest_abilities.remove(spell_casting_ability)
-
-                    character_spell_save_dc = character.calculate_difficulty_class()
-                    character_spell_attack_bonus = character.calculate_attack_bonus()
-                    file.write(
-                        f"Ability {spell_casting_ability} (Spell Casting Ability)\n"
-                    )
-                    file.write(f" * Difficulty Class: {character_spell_save_dc}\n")
-                    file.write(f" * Attack Bonus: +{character_spell_attack_bonus}\n")
-
-                for ability in rest_abilities:
-                    character_spell_save_dc = (
-                        character.calculate_difficulty_class_for_ability(ability)
-                    )
-                    character_spell_attack_bonus = (
-                        character.calculate_attack_bonus_for_ability(ability)
-                    )
-                    file.write(f"Ability {ability}\n")
-                    file.write(f" * Difficulty Class: {character_spell_save_dc}\n")
-                    file.write(f" * Attack Bonus: +{character_spell_attack_bonus}\n")
-
-                file.write("\n")
-                CharacterSheetUtils.write_separator(file, "Spell Slots")
-                character_spell_slots = character.get_spell_slots()
-                for level, slots in character_spell_slots.items():
-                    file.write(f"Level {level} Spell Slots: {slots}\n")
-
-                file.write("\n")
-                CharacterSheetUtils.write_separator(file, "Spells")
-
-                spells = [
-                    SpellFactory.create(spell_name, spell_casting_ability)
-                    for spell_name, spell_casting_ability in self.spells
-                ]
-                sorted_spells = sorted(spells, key=lambda s: (s.level, s.name))
-
-                for spell_index, spell in enumerate(sorted_spells):
-                    spell.write_to_file(file)
-                    if spell_index < len(self.spells) - 1:
-                        file.write("-" * 40 + "\n")
+            self._write_general_info(character, file)
+            self._write_combat_stats(character, file)
+            self._write_abilities(character, file)
+            self._write_skills(character, file)
+            self._write_features(character, file)
+            self._write_weapons(character, file)
+            self._write_fighting_styles(character, file)
+            self._write_invocations(character, file)
+            self._write_spell_slots(character, file)
+            self._write_spells(character, file)
 
     def merge_with(self, other: "CharacterSheetData"):
         """Merge this CharacterSheetData with another, with the other taking precedence."""
