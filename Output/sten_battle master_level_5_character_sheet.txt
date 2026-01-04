@@ -25,38 +25,38 @@ Size                | Medium
 ################################################################################
 # ================================ Abilities ================================= #
 ################################################################################
-Ability      | Score | Modifier | Saving Throw | ST Proficient | ST Advantaged
--------------+-------+----------+--------------+---------------+--------------
-Strength     | 16    | 3        | 6            | Yes           | No           
-Dexterity    | 12    | 1        | 1            | No            | No           
-Constitution | 18    | 4        | 7            | Yes           | No           
-Intelligence | 8     | -1       | -1           | No            | No           
-Wisdom       | 10    | 0        | 0            | No            | No           
-Charisma     | 13    | 1        | 1            | No            | No           
+Ability | Score | Mod | Saving Throw        | DC | ATK Bonus
+--------+-------+-----+---------------------+----+----------
+STR     | 16    | +3  | +3 + 3 (Proficient) | 14 | +6       
+DEX     | 12    | +1  | +1                  | 12 | +4       
+CON     | 18    | +4  | +4 + 3 (Proficient) | 15 | +7       
+INT     | 8     | -1  | -1                  | 10 | +2       
+WIS     | 10    | +0  | +0                  | 11 | +3       
+CHA     | 13    | +1  | +1                  | 12 | +4       
 
 ################################################################################
 # ================================== Skills ================================== #
 ################################################################################
-Skill           | Modifier | Proficient | Ability      | RollCondition
-----------------+----------+------------+--------------+--------------
-Acrobatics      | 4        | Yes        | Dexterity    | Neutral      
-Animal Handling | 0        | No         | Wisdom       | Neutral      
-Arcana          | -1       | No         | Intelligence | Neutral      
-Athletics       | 6        | Yes        | Strength     | Neutral      
-Deception       | 1        | No         | Charisma     | Neutral      
-History         | 2        | Yes        | Intelligence | Neutral      
-Insight         | 3        | Yes        | Wisdom       | Neutral      
-Intimidation    | 4        | Yes        | Charisma     | Neutral      
-Investigation   | -1       | No         | Intelligence | Neutral      
-Medicine        | 0        | No         | Wisdom       | Neutral      
-Nature          | -1       | No         | Intelligence | Neutral      
-Perception      | 3        | Yes        | Wisdom       | Neutral      
-Performance     | 1        | No         | Charisma     | Neutral      
-Persuasion      | 4        | Yes        | Charisma     | Neutral      
-Religion        | -1       | No         | Intelligence | Neutral      
-Sleight of Hand | 1        | No         | Dexterity    | Neutral      
-Stealth         | 1        | No         | Dexterity    | Disadvantage 
-Survival        | 3        | Yes        | Wisdom       | Neutral      
+Skill           | Modifier | Proficient | Ability      | Roll Condition
+----------------+----------+------------+--------------+---------------
+Acrobatics      | 4        | Yes        | Dexterity    | Neutral       
+Animal Handling | 0        | No         | Wisdom       | Neutral       
+Arcana          | -1       | No         | Intelligence | Neutral       
+Athletics       | 6        | Yes        | Strength     | Neutral       
+Deception       | 1        | No         | Charisma     | Neutral       
+History         | 2        | Yes        | Intelligence | Neutral       
+Insight         | 3        | Yes        | Wisdom       | Neutral       
+Intimidation    | 4        | Yes        | Charisma     | Neutral       
+Investigation   | -1       | No         | Intelligence | Neutral       
+Medicine        | 0        | No         | Wisdom       | Neutral       
+Nature          | -1       | No         | Intelligence | Neutral       
+Perception      | 3        | Yes        | Wisdom       | Neutral       
+Performance     | 1        | No         | Charisma     | Neutral       
+Persuasion      | 4        | Yes        | Charisma     | Neutral       
+Religion        | -1       | No         | Intelligence | Neutral       
+Sleight of Hand | 1        | No         | Dexterity    | Neutral       
+Stealth         | 1        | No         | Dexterity    | Disadvantage  
+Survival        | 3        | Yes        | Wisdom       | Neutral       
 
 ################################################################################
 # ================================= Features ================================= #
@@ -163,3 +163,4 @@ Mastery 'Sap'               | On a hit, the target has Disadvantage on its next 
 # ============================= Fighting Styles ============================== #
 ################################################################################
 Defense: While you're wearing Light, Medium, or Heavy armor, you gain a +1 bonus to Armor Class. (calculated automatically)
+

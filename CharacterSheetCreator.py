@@ -169,6 +169,7 @@ class CharacterSheetData:
             spell_casting_ability=self.spell_casting_ability,
             spell_slots=self.spell_slots,
         )
+
         for feature in self.features:
             feature.modify(character)
 
@@ -181,6 +182,7 @@ class CharacterSheetData:
             elif isinstance(fighting_style, FightStyleWeaponFeature):
                 fighting_style.modify(self.weapons)
         self._character_cached = character
+
         return character
 
     def get_ability_modifier(self, ability: Ability) -> int:

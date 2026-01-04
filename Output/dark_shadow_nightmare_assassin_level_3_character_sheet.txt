@@ -18,7 +18,7 @@ Field               | Value
 Max Hit Points      | 27     
 Armor Class         | 14     
 Armor Proficiencies | Light  
-Initiative          | d20 + 2
+Initiative          | d20 + 3
 Speed (ft)          | 35     
 Size                | Medium 
 
