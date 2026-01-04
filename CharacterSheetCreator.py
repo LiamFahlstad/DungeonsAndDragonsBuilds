@@ -233,7 +233,7 @@ class CharacterSheetData:
                         sorted([atype.value for atype in self.armor_proficiencies])
                     ),
                 ],
-                ["Initiative", f"d20 + {character.combat.initiative}"],
+                ["Initiative", f"d20 + {character.initiative}"],
                 ["Speed (ft)", character.combat.speed],
                 ["Size", character.combat.size.value],
             ],

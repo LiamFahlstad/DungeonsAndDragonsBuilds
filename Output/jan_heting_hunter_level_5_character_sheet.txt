@@ -18,7 +18,7 @@ Field               | Value
 Max Hit Points      | 39     
 Armor Class         | 16     
 Armor Proficiencies |        
-Initiative          | d20 + 2
+Initiative          | d20 + 4
 Speed (ft)          | 30     
 Size                | Small  
 
@@ -192,6 +192,21 @@ You create a nonmagical trinket or an illusory image that can fit in your hand. 
 Source: Player's Handbook 2024 (BR)
 Spellcasting Ability: Intelligence
 ----------------------------------------
+Name: Cure Wounds
+Level: 1
+School: Abjuration
+Classes: Bard, Cleric, Druid, Paladin, Ranger
+Casting Time: Action
+Range: Touch
+Components: V, S
+Duration: Instantaneous
+Description:
+A creature you touch regains a number of Hit Points equal to 2d8 plus your spellcasting ability modifier.
+Using a Higher-Level Spell Slot:
+The healing increases by 2d8 for each spell slot level above 1.
+Source: Player's Handbook 2024 (BR)
+Spellcasting Ability: Wisdom
+----------------------------------------
 Name: Fog Cloud
 Level: 1
 School: Conjuration
@@ -232,21 +247,6 @@ Components: V, S, M (a grasshopper's hind leg)
 Duration: 1 minute
 Description:
 You touch a willing creature. Once on each of its turns until the spell ends, that creature can jump up to 30 feet by spending 10 feet of movement.
-Using a Higher-Level Spell Slot:
-You can target one additional creature for each spell slot level above 1.
-Source: Player's Handbook 2024 (BR)
-Spellcasting Ability: Wisdom
-----------------------------------------
-Name: Longstrider
-Level: 1
-School: Transmutation
-Classes: Bard, Druid, Ranger, Wizard
-Casting Time: Action
-Range: Touch
-Components: V, S, M (a pinch of dirt)
-Duration: 1 hour
-Description:
-You touch a creature. The target's Speed increases by 10 feet until the spell ends.
 Using a Higher-Level Spell Slot:
 You can target one additional creature for each spell slot level above 1.
 Source: Player's Handbook 2024 (BR)

@@ -96,7 +96,7 @@ def get_data() -> CharacterSheetCreator.CharacterSheetData:
         ),
         replace_spells={
             RangerLevel1Spells.ALARM: RangerLevel2Spells.SILENCE,
-            RangerLevel1Spells.CURE_WOUNDS: RangerLevel2Spells.BEAST_SENSE,
+            RangerLevel1Spells.LONGSTRIDER: RangerLevel2Spells.BEAST_SENSE,
         },
     )
     character_class_data = battle_master_ranger_starter.create()

@@ -12,11 +12,6 @@ class CombatStatBlock(StatBlock):
         self.speed = speed
         self.size = size
         self.armor_class = 10  # Overridden during character creation
-        self.initiative_bonus = 0  # Overridden during character creation
-
-    @property
-    def initiative(self) -> int:
-        return self.initiative_bonus
 
     def update_armor_class(self, new_armor_class: int, pick_max: bool = True):
         if pick_max:

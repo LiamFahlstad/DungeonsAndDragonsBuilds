@@ -32,11 +32,13 @@ class CharacterStatBlock:
         self.spell_casting_ability = spell_casting_ability
         self.spell_slots = spell_slots
 
-        self.combat.initiative_bonus = self.abilities.get_modifier(Ability.DEXTERITY)
-
     @property
     def character_level(self) -> int:
         return sum(self.level_per_class.values())
+
+    @property
+    def initiative(self) -> int:
+        return self.abilities.get_modifier(Ability.DEXTERITY)
 
     def get_class_level(self, character_class: CharacterClass) -> int:
         return self.level_per_class.get(character_class, 0)
