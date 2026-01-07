@@ -294,7 +294,7 @@ class InspiringSmite(TextFeature):
         return description
 
 
-class OathOfGlorySpells(TextFeature):
+class GlorySpells(TextFeature):
     def __init__(self):
         super().__init__(
             name="Oath of Glory Spells", origin="Oath of Glory Paladin Level 3"

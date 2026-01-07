@@ -52,7 +52,7 @@ from StatBlocks.SkillsStatBlock import DruidSkillsStatBlock
 
 
 def get_data() -> CharacterSheetCreator.CharacterSheetData:
-    druid_oath_of_moon = MoonDruidStarterClassBuilder(
+    druid_moon = MoonDruidStarterClassBuilder(
         druid_level=20,
         # Distribute 15, 14, 13, 12, 10, 8 among your abilities.
         abilities=StandardArrayAbilitiesStatBlock(
@@ -197,7 +197,7 @@ def get_data() -> CharacterSheetCreator.CharacterSheetData:
     species_data = Gnome.forest_gnome_character_data(
         spell_casting_ability=Ability.WISDOM
     )
-    character_class_data = druid_oath_of_moon.create()
+    character_class_data = druid_moon.create()
 
     character_sheet_data = CharacterSheetCreator.CharacterSheetData()
 

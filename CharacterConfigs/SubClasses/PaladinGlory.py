@@ -134,7 +134,7 @@ class GloryPaladinLevel20(ClassBuilder.SubclassLevel20):
         return data
 
 
-class OathOfGloryPaladinStarterClassBuilder(PaladinStarterClassBuilder):
+class GloryPaladinStarterClassBuilder(PaladinStarterClassBuilder):
 
     def __init__(
         self,
@@ -166,7 +166,7 @@ class OathOfGloryPaladinStarterClassBuilder(PaladinStarterClassBuilder):
         )
 
 
-class OathOfGloryPaladinMulticlassBuilder(PaladinMulticlassBuilder):
+class GloryPaladinMulticlassBuilder(PaladinMulticlassBuilder):
 
     def __init__(
         self,

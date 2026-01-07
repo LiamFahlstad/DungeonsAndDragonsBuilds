@@ -22,7 +22,7 @@ from CharacterConfigs.BaseClasses.PaladinBase import (
     PaladinLevel19,
     PaladinLevel20,
 )
-from CharacterConfigs.SubClasses.PaladinOathOfGlory import (
+from CharacterConfigs.SubClasses.PaladinGlory import (
     GloryPaladinLevel3,
     GloryPaladinLevel5,
     GloryPaladinLevel7,
@@ -31,7 +31,7 @@ from CharacterConfigs.SubClasses.PaladinOathOfGlory import (
     GloryPaladinLevel15,
     GloryPaladinLevel17,
     GloryPaladinLevel20,
-    OathOfGloryPaladinStarterClassBuilder,
+    GloryPaladinStarterClassBuilder,
 )
 from Definitions import Ability, Skill
 from Features import Backgrounds, FightingStyles, GeneralFeats, OriginFeats, Weapons
@@ -48,7 +48,7 @@ from StatBlocks.SkillsStatBlock import PaladinSkillsStatBlock
 
 
 def get_data() -> CharacterSheetCreator.CharacterSheetData:
-    paladin_oath_of_glory = OathOfGloryPaladinStarterClassBuilder(
+    paladin_glory = GloryPaladinStarterClassBuilder(
         paladin_level=20,
         # Distribute 15, 14, 13, 12, 10, 8 among your abilities.
         abilities=StandardArrayAbilitiesStatBlock(
@@ -187,7 +187,7 @@ def get_data() -> CharacterSheetCreator.CharacterSheetData:
             ]
         ),
     )
-    character_class_data = paladin_oath_of_glory.create()
+    character_class_data = paladin_glory.create()
 
     character_sheet_data = CharacterSheetCreator.CharacterSheetData()
 
