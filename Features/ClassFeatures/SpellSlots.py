@@ -7,9 +7,45 @@ from StatBlocks.CharacterStatBlock import CharacterStatBlock
 class CasterType(Enum):
     FULL_CASTER = 1
     HALF_CASTER = 2
+    WARLOCK_CASTER = 3
 
 
 def get_spell_slots_for_level(level: int, caster_type: CasterType) -> list[int]:
+    if caster_type == CasterType.WARLOCK_CASTER:
+        if level == 1:
+            return [1, 0, 0, 0, 0, 0, 0, 0, 0]
+        elif level == 2:
+            return [2, 0, 0, 0, 0, 0, 0, 0, 0]
+        elif level == 3:
+            return [0, 2, 0, 0, 0, 0, 0, 0, 0]
+        elif level == 4:
+            return [0, 2, 0, 0, 0, 0, 0, 0, 0]
+        elif level == 5:
+            return [0, 0, 2, 0, 0, 0, 0, 0, 0]
+        elif level == 6:
+            return [0, 0, 2, 0, 0, 0, 0, 0, 0]
+        elif level == 7:
+            return [0, 0, 0, 2, 0, 0, 0, 0, 0]
+        elif level == 8:
+            return [0, 0, 0, 2, 0, 0, 0, 0, 0]
+        elif level == 9:
+            return [0, 0, 0, 0, 2, 0, 0, 0, 0]
+        elif level == 10:
+            return [0, 0, 0, 0, 2, 0, 0, 0, 0]
+        elif level == 11:
+            return [0, 0, 0, 0, 3, 0, 0, 0, 0]
+        elif level == 12:
+            return [0, 0, 0, 0, 3, 0, 0, 0, 0]
+        elif level == 13:
+            return [0, 0, 0, 0, 3, 0, 0, 0, 0]
+        elif level == 14:
+            return [0, 0, 0, 0, 3, 0, 0, 0, 0]
+        elif level == 15:
+            return [0, 0, 0, 0, 3, 0, 0, 0, 0]
+        elif level == 16:
+            return [0, 0, 0, 0, 3, 0, 0, 0, 0]
+        else:  # level 17->20
+            return [0, 0, 0, 0, 4, 0, 0, 0, 0]
 
     if caster_type == CasterType.FULL_CASTER:
         pass

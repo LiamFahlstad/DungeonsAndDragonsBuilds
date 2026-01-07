@@ -1,0 +1,198 @@
+{
+    "Agonizing Blast": {
+        "name": "Agonizing Blast",
+        "description": "Choose one of your known Warlock cantrips that deals damage. You can add your Charisma modifier to that spell's damage rolls. Repeatable . You can gain this invocation more than once. Each time you do so, choose a different eligible cantrip.",
+        "prerequisite": "Level 2+ Warlock, a Warlock Cantrip That Deals Damage",
+        "level": 2,
+        "source": "Player's Handbook 2024 (BR)"
+    },
+    "Armor of Shadows": {
+        "name": "Armor of Shadows",
+        "description": "You can cast Mage Armor on yourself without expending a spell slot.",
+        "prerequisite": "",
+        "level": 0,
+        "source": "Player's Handbook 2024 (BR)"
+    },
+    "Ascendant Step": {
+        "name": "Ascendant Step",
+        "description": "You can cast Levitate on yourself without expending a spell slot.",
+        "prerequisite": "Level 5+ Warlock",
+        "level": 5,
+        "source": "Player's Handbook 2024 (BR)"
+    },
+    "Devil's Sight": {
+        "name": "Devil's Sight",
+        "description": "You can see normally in Dim Light and Darkness—both magical and nonmagical—within 120 feet of yourself.",
+        "prerequisite": "Level 2+ Warlock",
+        "level": 2,
+        "source": "Player's Handbook 2024 (BR)"
+    },
+    "Devouring Blade": {
+        "name": "Devouring Blade",
+        "description": "The Extra Attack of your Thirsting Blade invocation confers two extra attacks rather than one.",
+        "prerequisite": "Level 12+ Warlock, Thirsting Blade Invocation",
+        "level": 12,
+        "source": "Player's Handbook 2024 (BR)"
+    },
+    "Eldritch Mind": {
+        "name": "Eldritch Mind",
+        "description": "You have Advantage on Constitution saving throws that you make to maintain Concentration.",
+        "prerequisite": "",
+        "level": 0,
+        "source": "Player's Handbook 2024 (BR)"
+    },
+    "Eldritch Smite": {
+        "name": "Eldritch Smite",
+        "description": "Once per turn when you hit a creature with your pact weapon, you can expend a Pact Magic spell slot to deal an extra 1d8 Force damage to the target, plus another 1d8 per level of the spell slot, and you can give the target the Prone condition if it is Huge or smaller.",
+        "prerequisite": "Level 5+ Warlock, Pact of the Blade Invocation",
+        "level": 5,
+        "source": "Player's Handbook 2024 (BR)"
+    },
+    "Eldritch Spear": {
+        "name": "Eldritch Spear",
+        "description": "Choose one of your known Warlock cantrips that deals damage and has a range of 10+ feet. When you cast that spell, its range increases by a number of feet equal to 30 times your Warlock level. Repeatable . You can gain this invocation more than once. Each time you do so, choose a different eligible cantrip.",
+        "prerequisite": "Level 2+ Warlock, a Warlock Cantrip That Deals Damage",
+        "level": 2,
+        "source": "Player's Handbook 2024 (BR)"
+    },
+    "Fiendish Vigor": {
+        "name": "Fiendish Vigor",
+        "description": "You can cast False Life on yourself without expending a spell slot. When you cast the spell with this feature, you don't roll the die for the Temporary Hit Points; you automatically get the highest number on the die.",
+        "prerequisite": "Level 2+ Warlock",
+        "level": 2,
+        "source": "Player's Handbook 2024 (BR)"
+    },
+    "Gaze of Two Minds": {
+        "name": "Gaze of Two Minds",
+        "description": "You can use a Bonus Action to touch a willing creature and perceive through its senses until the end of your next turn. As long as the creature is on the same plane of existence as you, you can use a Bonus Action on subsequent turns to maintain this connection, extending the duration until the end of your next turn. The connection ends if you don't maintain it in this way. While perceiving through the other creature's senses, you benefit from any special senses possessed by that creature, and you can cast spells as if you were in your space or the other creature's space if the two of you are within 60 feet of each other.",
+        "prerequisite": "Level 5+ Warlock",
+        "level": 5,
+        "source": "Player's Handbook 2024 (BR)"
+    },
+    "Gift of the Depths": {
+        "name": "Gift of the Depths",
+        "description": "You can breathe underwater, and you gain a Swim Speed equal to your Speed. You can also cast Water Breathinga once without expending a spell slot. You regain the ability to cast it in this way again when you finish a Long Rest.",
+        "prerequisite": "Level 5+ Warlock",
+        "level": 5,
+        "source": "Player's Handbook 2024 (BR)"
+    },
+    "Gift of the Protectors": {
+        "name": "Gift of the Protectors",
+        "description": "A new page appears in your Book of Shadows when you conjure it. With your permission, a creature can take an action to write its name on that page, which can contain a number of names equal to your Charisma modifier (minimum of one name). When any creature whose name is on the page is reduced to 0 Hit Points but not killed outright, the creature magically drops to 1 Hit Point instead. Once this magic is triggered, no creature can benefit from it until you finish a Long Rest. As a Magic action, you can erase a name on the page by touching it.",
+        "prerequisite": "Level 9+ Warlock, Pact of the Tome Invocation",
+        "level": 9,
+        "source": "Player's Handbook 2024 (BR)"
+    },
+    "Investment of the Chain Master": {
+        "name": "Investment of the Chain Master",
+        "description": "When you cast Find Familiar , you infuse the summoned familiar with a measure of your eldritch power, granting the creature the following benefits. Aerial or Aquatic . The familiar gains either a Fly Speed or a Swim Speed (your choice) of 40 feet. Quick Attack . As a Bonus Action, you can command the familiar to take the Attack action. Necrotic or Radiant Damage . Whenever the familiar deals Bludgeoning, Piercing, or Slashing damage, you can make it deal Necrotic or Radiant damage instead. Your Save DC . If the familiar forces a creature to make a saving throw, it uses your spell save DC. Resistance . When the familiar takes damage, you can take a Reaction to grant it Resistance against that damage.",
+        "prerequisite": "Level 5+ Warlock, Pact of the Chain Invocation",
+        "level": 5,
+        "source": "Player's Handbook 2024 (BR)"
+    },
+    "Lessons of the First Ones": {
+        "name": "Lessons of the First Ones",
+        "description": "You have received knowledge from an elder entity of the multiverse, allowing you to gain one Origin feat of your choice. Repeatable . You can gain this invocation more than once. Each time you do so, choose a different Origin feat.",
+        "prerequisite": "Level 2+ Warlock",
+        "level": 2,
+        "source": "Player's Handbook 2024 (BR)"
+    },
+    "Lifedrinker": {
+        "name": "Lifedrinker",
+        "description": "Once per turn when you hit a creature with your pact weapon, you can deal an extra 1d6 Necrotic, Psychic, or Radiant damage (your choice) to the creature, and you can expend one of your Hit Point Dice to roll it and regain a number of Hit Points equal to the roll plus your Constitution modifier (minimum of 1 Hit Point).",
+        "prerequisite": "Level 9+ Warlock, Pact of the Blade Invocation",
+        "level": 9,
+        "source": "Player's Handbook 2024 (BR)"
+    },
+    "Mask of the Many Faces": {
+        "name": "Mask of the Many Faces",
+        "description": "You can cast Disguise Self without expending a spell slot.",
+        "prerequisite": "Level 2+ Warlock",
+        "level": 2,
+        "source": "Player's Handbook 2024 (BR)"
+    },
+    "Master of Myriad Forms": {
+        "name": "Master of Myriad Forms",
+        "description": "You can cast Alter Self without expending a spell slot.",
+        "prerequisite": "Level 5+ Warlock",
+        "level": 5,
+        "source": "Player's Handbook 2024 (BR)"
+    },
+    "Misty Visions": {
+        "name": "Misty Visions",
+        "description": "You can cast Silent Image without expending a spell slot.",
+        "prerequisite": "Level 2+ Warlock",
+        "level": 2,
+        "source": "Player's Handbook 2024 (BR)"
+    },
+    "One with Shadows": {
+        "name": "One with Shadows",
+        "description": "While you're in an area of Dim Light or Darkness, you can cast Invisibility on yourself without expending a spell slot.",
+        "prerequisite": "Level 5+ Warlock",
+        "level": 5,
+        "source": "Player's Handbook 2024 (BR)"
+    },
+    "Otherworldly Leap": {
+        "name": "Otherworldly Leap",
+        "description": "You can cast Jump on yourself without expending a spell slot.",
+        "prerequisite": "Level 2+ Warlock",
+        "level": 2,
+        "source": "Player's Handbook 2024 (BR)"
+    },
+    "Pact of the Blade": {
+        "name": "Pact of the Blade",
+        "description": "As a Bonus Action, you can conjure a pact weapon in your hand—a Simple or Martial Melee weapon of your choice with which you bond—or create a bond with a magic weapon you touch; you can't bond with a magic weapon if someone else is attuned to it or another Warlock is bonded with it. Until the bond ends, you have proficiency with the weapon, and you can use it as a Spellcasting Focus. Whenever you attack with the bonded weapon, you can use your Charisma modifier for the attack and damage rolls instead of using Strength or Dexterity; and you can cause the weapon to deal Necrotic, Psychic, or Radiant damage or its normal damage type. Your bond with the weapon ends if you use this feature's Bonus Action again, if the weapon is more than 5 feet away from you for 1 minute or more, or if you die. A conjured weapon disappears when the bond ends.",
+        "prerequisite": "",
+        "level": 0,
+        "source": "Player's Handbook 2024 (BR)"
+    },
+    "Pact of the Chain": {
+        "name": "Pact of the Chain",
+        "description": "You learn the Find Familiar spell and can cast it as a Magic action without expending a spell slot. When you cast the spell, you choose one of the normal forms for your familiar or one of the following special forms: Imp , Pseudodragon , Quasit , Skeleton , Slaad Tadpole, Sphinx of Wonder, Sprite , or Venomous Snake . Additionally, when you take the Attack action, you can forgo one of your own attacks to allow your familiar to make one attack of its own with its Reaction.",
+        "prerequisite": "",
+        "level": 0,
+        "source": "Player's Handbook 2024 (BR)"
+    },
+    "Pact of the Tome": {
+        "name": "Pact of the Tome",
+        "description": "Stitching together strands of shadow, you conjure forth a book in your hand at the end of a Short or Long Rest. This Book of Shadows (you determine its appearance) contains eldritch magic that only you can access, granting you benefits below. The book disappears if you conjure another book with this feature or if you die. Cantrips and Rituals . When the book appears, choose three cantrips, and choose two level 1 spells that have the Ritual tag. The spells can be from any class's spell list, and they must be spells you don't already have prepared. While the book is on your person, you have the chosen spells prepared, and they function as Warlock spells for you. Spellcasting Focus . You can use the book as a Spellcasting Focus.",
+        "prerequisite": "",
+        "level": 0,
+        "source": "Player's Handbook 2024 (BR)"
+    },
+    "Repelling Blast": {
+        "name": "Repelling Blast",
+        "description": "Choose one of your known Warlock cantrips that requires an attack roll. When you hit a Large or smaller creature with that cantrip, you can push the creature up to 10 feet straight away from you. Repeatable . You can gain this invocation more than once. Each time you do so, choose a different eligible cantrip.",
+        "prerequisite": "Level 2+ Warlock, a Warlock Cantrip That Deals Damage via an Attack Roll",
+        "level": 2,
+        "source": "Player's Handbook 2024 (BR)"
+    },
+    "Thirsting Blade": {
+        "name": "Thirsting Blade",
+        "description": "You gain the Extra Attack feature for your pact weapon only. With that feature, you can attack twice with the weapon instead of once when you take the Attack action on your turn.",
+        "prerequisite": "Level 5+ Warlock, Pact of the Blade Invocation",
+        "level": 5,
+        "source": "Player's Handbook 2024 (BR)"
+    },
+    "Visions of Distant Realms": {
+        "name": "Visions of Distant Realms",
+        "description": "You can cast Arcane Eye without expending a spell slot.",
+        "prerequisite": "Level 9+ Warlock",
+        "level": 9,
+        "source": "Player's Handbook 2024 (BR)"
+    },
+    "Whispers of the Grave": {
+        "name": "Whispers of the Grave",
+        "description": "You can cast Speak with Dead without expending a spell slot.",
+        "prerequisite": "Level 7+ Warlock",
+        "level": 7,
+        "source": "Player's Handbook 2024 (BR)"
+    },
+    "Witch Sight": {
+        "name": "Witch Sight",
+        "description": "You have Truesight with a range of 30 feet.",
+        "prerequisite": "Level 15+ Warlock",
+        "level": 15,
+        "source": "Player's Handbook 2024 (BR)"
+    }
+}

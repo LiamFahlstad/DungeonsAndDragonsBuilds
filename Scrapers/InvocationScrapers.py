@@ -65,6 +65,19 @@ class InvocationParser:
     def get_description(self):
         return self._get_text(self.col1.find("div", class_="description"))
 
+    def get_prerequisite(self):
+        return (
+            self._get_text(self.col1.find("div", class_="prerequis"))
+            .split("Prerequisite: ")[-1]
+            .strip()
+        )
+
+    def get_level(self) -> int:
+        prerequisite = self.get_prerequisite()
+        if "Level" not in prerequisite:
+            return 0
+        return int(prerequisite.split("Level ")[-1].strip().split("+")[0])
+
     def get_source(self):
         return self._get_text(self.col1.find("div", class_="source"))
 
@@ -85,6 +98,8 @@ class InvocationParser:
         return {
             "name": self.get_name(),
             "description": self.get_description(),
+            "prerequisite": self.get_prerequisite(),
+            "level": self.get_level(),
             "source": self.get_source(),
         }
 
@@ -102,10 +117,59 @@ class InvocationParser:
 
 
 if __name__ == "__main__":
-    invocations = ["Repelling Blast"]
+    invocations = [
+        "Agonizing Blast",
+        "Armor of Shadows",
+        "Ascendant Step",
+        "Devil's Sight",
+        "Devouring Blade",
+        "Eldritch Mind",
+        "Eldritch Smite",
+        "Eldritch Spear",
+        "Fiendish Vigor",
+        "Gaze of Two Minds",
+        "Gift of the Depths",
+        "Gift of the Protectors",
+        "Investment of the Chain Master",
+        "Lessons of the First Ones",
+        "Lifedrinker",
+        "Mask of the Many Faces",
+        "Master of Myriad Forms",
+        "Misty Visions",
+        "One with Shadows",
+        "Otherworldly Leap",
+        "Pact of the Blade",
+        "Pact of the Chain",
+        "Pact of the Tome",
+        "Repelling Blast",
+        "Thirsting Blade",
+        "Visions of Distant Realms",
+        "Whispers of the Grave",
+        "Witch Sight",
+    ]
 
+    master_dict = {}
     for invocation_name in invocations:
         invocation = InvocationParser(invocation_name)
         invocation.fetch()
-        invocation.print_info()
-        print("-" * 40)
+        invocation_dict = invocation.to_dict()
+        master_dict[invocation_name] = invocation_dict
+
+    dict_per_level = {}
+    for invocation_name, invocation_data in master_dict.items():
+        level = invocation_data["level"]
+        if level not in dict_per_level:
+            dict_per_level[level] = {}
+        dict_per_level[level][invocation_name] = invocation_data
+
+    with open("Invocations/Definitions.py", "w", encoding="utf-8") as f:
+        for level in sorted(dict_per_level.keys()):
+            f.write(f"class InvocationsLevel{level}(str, Enum):\n")
+            for invocation_name, invocation_data in dict_per_level[level].items():
+                a = (
+                    invocation_name.replace(" ", "_")
+                    .replace("'", "")
+                    .replace("-", "_")
+                    .upper()
+                )
+                f.write(f"    {a} : {invocation_name}\n")

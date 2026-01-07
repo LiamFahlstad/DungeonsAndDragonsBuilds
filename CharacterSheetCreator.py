@@ -4,7 +4,6 @@ from typing import Any, Optional
 import attr
 
 import Definitions
-import Scrapers.InvocationScrapers as InvocationScrapers
 import Utils.CharacterSheetUtils as CharacterSheetUtils
 from Definitions import Ability, CharacterClass, Skill
 from Features import Armor
@@ -16,6 +15,7 @@ from Features.FightingStyles import (
     FightStyleWeaponFeature,
 )
 from Features.Weapons import AbstractWeapon, write_weapons_to_file
+from Invocations.InvocationFactory import InvocationFactory
 from Spells.SpellFactory import SpellFactory
 from StatBlocks.AbilitiesStatBlock import AbilitiesStatBlock
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
@@ -347,10 +347,16 @@ class CharacterSheetData:
     def _write_invocations(self, character: CharacterStatBlock, file):
         if not self.invocations:
             return
+
         CharacterSheetUtils.write_separator(file, "Invocations")
-        for invocation_index, invocation_name in enumerate(self.invocations):
-            invocation = InvocationScrapers.InvocationParser(invocation_name)
-            invocation.fetch()
+
+        invocations = [
+            InvocationFactory.create(invocation_name)
+            for invocation_name in self.invocations
+        ]
+        sorted_invocations = sorted(invocations, key=lambda s: (s.level, s.name))
+
+        for invocation_index, invocation in enumerate(sorted_invocations):
             invocation.write_to_file(file)
             if invocation_index < len(self.invocations) - 1:
                 file.write("-" * 40 + "\n")

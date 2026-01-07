@@ -15,7 +15,7 @@ Proficiency Bonus  | 3
 ################################################################################
 Field               | Value                                   
 --------------------+-----------------------------------------
-Max Hit Points      | 64                                      
+Max Hit Points      | 59                                      
 Armor Class         | 19 (with Shield) and 17 (without Shield)
 Armor Proficiencies | Heavy, Light, Medium                    
 Initiative          | d20 + 1                                 
@@ -29,10 +29,10 @@ Ability | Score | Mod | Saving Throw        | DC | ATK Bonus
 --------+-------+-----+---------------------+----+----------
 STR     | 16    | +3  | +3 + 3 (Proficient) | 14 | +6       
 DEX     | 12    | +1  | +1                  | 12 | +4       
-CON     | 18    | +4  | +4 + 3 (Proficient) | 15 | +7       
+CON     | 16    | +3  | +3 + 3 (Proficient) | 14 | +6       
 INT     | 8     | -1  | -1                  | 10 | +2       
 WIS     | 10    | +0  | +0                  | 11 | +3       
-CHA     | 13    | +1  | +1                  | 12 | +4       
+CHA     | 14    | +2  | +2                  | 13 | +5       
 
 ################################################################################
 # ================================== Skills ================================== #
@@ -43,16 +43,16 @@ Acrobatics      | 4        | Yes        | Dexterity    | Neutral
 Animal Handling | 0        | No         | Wisdom       | Neutral       
 Arcana          | -1       | No         | Intelligence | Neutral       
 Athletics       | 6        | Yes        | Strength     | Neutral       
-Deception       | 1        | No         | Charisma     | Neutral       
+Deception       | 2        | No         | Charisma     | Neutral       
 History         | 2        | Yes        | Intelligence | Neutral       
 Insight         | 3        | Yes        | Wisdom       | Neutral       
-Intimidation    | 4        | Yes        | Charisma     | Neutral       
+Intimidation    | 5        | Yes        | Charisma     | Neutral       
 Investigation   | -1       | No         | Intelligence | Neutral       
 Medicine        | 0        | No         | Wisdom       | Neutral       
 Nature          | -1       | No         | Intelligence | Neutral       
 Perception      | 3        | Yes        | Wisdom       | Neutral       
-Performance     | 1        | No         | Charisma     | Neutral       
-Persuasion      | 4        | Yes        | Charisma     | Neutral       
+Performance     | 2        | No         | Charisma     | Neutral       
+Persuasion      | 5        | Yes        | Charisma     | Neutral       
 Religion        | -1       | No         | Intelligence | Neutral       
 Sleight of Hand | 1        | No         | Dexterity    | Neutral       
 Stealth         | 1        | No         | Dexterity    | Disadvantage  
@@ -68,6 +68,13 @@ Description: You gain Heroic Inspiration whenever you finish a Long Rest.
 Name: Versatile
 Origin: Human Trait
 Description: You gain an Origin feat of your choice (see 'Feats'). Skilled is recommended.
+
+Name: Sentinel
+Origin: General Feat Level 4+
+Description: You gain the following benefits.
+Ability Score Increase. Increase your Strength or Dexterity score by 1, to a maximum of 20.
+Guardian. Immediately after a creature within 5 feet of you takes the Disengage action or hits a target other than you with an attack, you can make an Opportunity Attack against that creature.
+Halt. When you hit a creature with an Opportunity Attack, the creature’s Speed becomes 0 for the rest of the current turn.
 
 Name: Fighting Style
 Origin: Fighter Level 1
@@ -130,34 +137,44 @@ Description: You can attack twice instead of once whenever you take the Attack a
 ################################################################################
 # ================================= Weapons ================================== #
 ################################################################################
-Field                       | Value                                                                                                        
-----------------------------+--------------------------------------------------------------------------------------------------------------
-Name                        | Greatsword                                                                                                   
-Type                        | Martial Melee                                                                                                
-DamageType                  | Slashing                                                                                                     
-Property 'Heavy'            | Disadvantage if Melee + Str < 13 or Ranged + Dex < 13.                                                       
-Property 'Two-handed'       | Requires two hands to attack.                                                                                
-Proficient                  | Yes                                                                                                          
-AttackRoll                  | 1d20 + 3 (ability mod: Strength) + 3 (Proficient)                                                            
-DamageRoll                  | 2d6 + 3 (ability mod: Strength)                                                                              
-Mastery 'Graze'             | If you miss with an attack, deal damage equal to the ability modifier used for the attack (same damage type).
-----------------------------+--------------------------------------------------------------------------------------------------------------
-Name                        | Longsword                                                                                                    
-Type                        | Martial Melee                                                                                                
-DamageType                  | Slashing                                                                                                     
-Property 'Versatile (1d10)' | Can use one or two hands; if two-handed, use damage die shown in parentheses.                                
-Proficient                  | Yes                                                                                                          
-AttackRoll                  | 1d20 + 3 (ability mod: Strength) + 3 (Proficient)                                                            
-DamageRoll                  | 1d8 + 3 (ability mod: Strength)                                                                              
-Mastery 'Sap'               | On a hit, the target has Disadvantage on its next attack before your next turn starts.                       
-----------------------------+--------------------------------------------------------------------------------------------------------------
-Name                        | Flail                                                                                                        
-Type                        | Martial Melee                                                                                                
-DamageType                  | Bludgeoning                                                                                                  
-Proficient                  | Yes                                                                                                          
-AttackRoll                  | 1d20 + 3 (ability mod: Strength) + 3 (Proficient)                                                            
-DamageRoll                  | 1d8 + 3 (ability mod: Strength)                                                                              
-Mastery 'Sap'               | On a hit, the target has Disadvantage on its next attack before your next turn starts.                       
+Field                       | Value                                                                                                                                     
+----------------------------+-------------------------------------------------------------------------------------------------------------------------------------------
+Name                        | Greatsword                                                                                                                                
+Type                        | Martial Melee                                                                                                                             
+DamageType                  | Slashing                                                                                                                                  
+Property 'Heavy'            | Disadvantage if Melee + Str < 13 or Ranged + Dex < 13.                                                                                    
+Property 'Two-handed'       | Requires two hands to attack.                                                                                                             
+Proficient                  | Yes                                                                                                                                       
+AttackRoll                  | 1d20 + 3 (ability mod: Strength) + 3 (Proficient)                                                                                         
+DamageRoll                  | 2d6 + 3 (ability mod: Strength)                                                                                                           
+Mastery 'Graze'             | If you miss with an attack, deal damage equal to the ability modifier used for the attack (same damage type).                             
+----------------------------+-------------------------------------------------------------------------------------------------------------------------------------------
+Name                        | Longsword                                                                                                                                 
+Type                        | Martial Melee                                                                                                                             
+DamageType                  | Slashing                                                                                                                                  
+Property 'Versatile (1d10)' | Can use one or two hands; if two-handed, use damage die shown in parentheses.                                                             
+Proficient                  | Yes                                                                                                                                       
+AttackRoll                  | 1d20 + 3 (ability mod: Strength) + 3 (Proficient)                                                                                         
+DamageRoll                  | 1d8 + 3 (ability mod: Strength)                                                                                                           
+Mastery 'Sap'               | On a hit, the target has Disadvantage on its next attack before your next turn starts.                                                    
+----------------------------+-------------------------------------------------------------------------------------------------------------------------------------------
+Name                        | Flail                                                                                                                                     
+Type                        | Martial Melee                                                                                                                             
+DamageType                  | Bludgeoning                                                                                                                               
+Proficient                  | Yes                                                                                                                                       
+AttackRoll                  | 1d20 + 3 (ability mod: Strength) + 3 (Proficient)                                                                                         
+DamageRoll                  | 1d8 + 3 (ability mod: Strength)                                                                                                           
+Mastery 'Sap'               | On a hit, the target has Disadvantage on its next attack before your next turn starts.                                                    
+----------------------------+-------------------------------------------------------------------------------------------------------------------------------------------
+Name                        | Handaxe                                                                                                                                   
+Type                        | Simple Melee                                                                                                                              
+DamageType                  | Slashing                                                                                                                                  
+Property 'Light'            | When you Attack with a Light weapon, you can Bonus Action attack with another Light weapon; no ability mod to that damage unless negative.
+Property 'Thrown'           | Can throw weapon for ranged attack; use same ability mod as melee version.                                                                
+Proficient                  | No                                                                                                                                        
+AttackRoll                  | 1d20 + 3 (ability mod: Strength) + 0 (Not Proficient)                                                                                     
+DamageRoll                  | 1d6 + 3 (ability mod: Strength)                                                                                                           
+Mastery 'Vex'               | On a hit that deals damage, you gain Advantage on your next attack against that creature before your next turn ends.                      
 
 ################################################################################
 # ============================= Fighting Styles ============================== #

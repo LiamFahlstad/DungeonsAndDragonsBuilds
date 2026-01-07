@@ -1150,7 +1150,7 @@ class WarlockLevel1Spells(str, Enum):
     ILLUSORY_SCRIPT = "Illusory Script"
     PROTECTION_FROM_EVIL_AND_GOOD = "Protection from Evil and Good"
     SPEAK_WITH_ANIMALS = "Speak with Animals"
-    TASHA_S_HIDEOUS_LAUGHTER = "Tasha's Hideous Laughter"
+    TASHAS_HIDEOUS_LAUGHTER = "Tasha's Hideous Laughter"
     UNSEEN_SERVANT = "Unseen Servant"
     WITCH_BOLT = "Witch Bolt"
 

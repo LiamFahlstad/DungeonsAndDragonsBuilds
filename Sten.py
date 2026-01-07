@@ -30,9 +30,9 @@ def get_data() -> CharacterSheetCreator.CharacterSheetData:
         fighter_level=5,
         # Distribute 15, 14, 13, 12, 10, 8 among your abilities.
         abilities=StandardArrayAbilitiesStatBlock(
-            strength=14,
+            strength=15,
             dexterity=12,
-            constitution=15,
+            constitution=14,
             intelligence=8,
             wisdom=10,
             charisma=13,
@@ -53,7 +53,7 @@ def get_data() -> CharacterSheetCreator.CharacterSheetData:
         background_ability_bonuses=Backgrounds.FreeBackgroundAbilityBonus(
             [
                 (Ability.CONSTITUTION, 2),
-                (Ability.STRENGTH, 1),
+                (Ability.CHARISMA, 1),
             ]
         ),
         background_skill_proficiencies=Backgrounds.FreeBackgroundSkillProficiency(
@@ -65,7 +65,7 @@ def get_data() -> CharacterSheetCreator.CharacterSheetData:
         add_default_equipment=True,
         origin_feat=OriginFeats.Tough(),
         armor=[],
-        weapons=[],
+        weapons=[Weapons.Handaxe()],
         fighter_level_features=ClassBuilder.BaseClassLevelFeatures(
             base_class_features_by_level={
                 1: FighterLevel1(
@@ -77,12 +77,10 @@ def get_data() -> CharacterSheetCreator.CharacterSheetData:
                 2: FighterLevel2(),
                 3: FighterLevel3(),
                 4: FighterLevel4(
-                    weapon_mastery=Weapons.Javelin(),
-                    general_feat=GeneralFeats.AbilityScoreImprovement(
-                        [
-                            (Ability.STRENGTH, 1),
-                            (Ability.CONSTITUTION, 1),
-                        ]
+                    weapon_mastery=Weapons.Handaxe(),
+                    general_feat=GeneralFeats.Sentinel(
+                        character_level=4,
+                        ability=Ability.STRENGTH,
                     ),
                 ),
                 5: FighterLevel5(),
