@@ -119,6 +119,13 @@ class RogueSubclass(str, Enum):
     SCION_OF_THE_THREE = "Scion of the Three"
 
 
+class DruidSubclass(str, Enum):
+    MOON = "Circle of the Moon"
+    LAND = "Circle of the Land"
+    DREAMS = "Circle of Dreams"
+    SHELL = "Circle of the Shell"
+
+
 class WizardSubclass(str, Enum):
     ABJURER = "Abjurer"
     DIVINER = "Diviner"

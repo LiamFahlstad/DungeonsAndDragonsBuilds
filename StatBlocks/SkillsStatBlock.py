@@ -293,3 +293,32 @@ class RogueSkillsStatBlock(ClassSkillsStatBlock):
             bonuses=bonuses,
             dice_roll_conditions=dice_roll_conditions,
         )
+
+
+class DruidSkillsStatBlock(ClassSkillsStatBlock):
+    """Druid Skills Stat Block"""
+
+    def __init__(
+        self,
+        proficiencies: dict[Skill, bool],
+        bonuses: Optional[dict[Skill, int]] = None,
+        dice_roll_conditions: Optional[dict[Skill, DiceRollCondition]] = None,
+    ):
+        excepted_skills = [
+            Skill.ARCANA,
+            Skill.ANIMAL_HANDLING,
+            Skill.INSIGHT,
+            Skill.MEDICINE,
+            Skill.NATURE,
+            Skill.PERCEPTION,
+            Skill.RELIGION,
+            Skill.SURVIVAL,
+        ]
+        super().__init__(
+            character_class=Definitions.CharacterClass.DRUID,
+            excepted_skills=excepted_skills,
+            num_proficiencies=2,
+            proficiencies=proficiencies,
+            bonuses=bonuses,
+            dice_roll_conditions=dice_roll_conditions,
+        )

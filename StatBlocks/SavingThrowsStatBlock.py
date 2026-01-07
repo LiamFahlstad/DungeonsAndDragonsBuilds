@@ -94,3 +94,13 @@ class RogueSavingThrowsStatBlock(SavingThrowsStatBlock):
                 Ability.INTELLIGENCE: True,
             }
         )
+
+
+class DruidSavingThrowsStatBlock(SavingThrowsStatBlock):
+    def __init__(self):
+        super().__init__(
+            proficiencies={
+                Ability.WISDOM: True,
+                Ability.INTELLIGENCE: True,
+            }
+        )

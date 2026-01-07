@@ -1,0 +1,703 @@
+################################################################################
+# =============================== General Info =============================== #
+################################################################################
+Field              | Value               
+-------------------+---------------------
+Name               | Optimized Moon Druid
+Level              | 20                  
+Starter Class      | Druid               
+Level per Class    | Druid: 20           
+Character Subclass | Circle of the Moon  
+Proficiency Bonus  | 6                   
+
+################################################################################
+# =============================== Combat Stats =============================== #
+################################################################################
+Field               | Value                                   
+--------------------+-----------------------------------------
+Max Hit Points      | 203                                     
+Armor Class         | 16 (with Shield) and 14 (without Shield)
+Armor Proficiencies | Light, Shield                           
+Initiative          | d20 + 3                                 
+Speed (ft)          | 30                                      
+Size                | Small                                   
+
+################################################################################
+# ================================ Abilities ================================= #
+################################################################################
+Ability | Score | Mod | Saving Throw        | DC | ATK Bonus
+--------+-------+-----+---------------------+----+----------
+STR     | 8     | -1  | -1                  | 13 | +5       
+DEX     | 16    | +3  | +3                  | 17 | +9       
+CON     | 16    | +3  | +3                  | 17 | +9       
+INT     | 10    | +0  | +0 + 6 (Proficient) | 14 | +6       
+WIS     | 20    | +5  | +5 + 6 (Proficient) | 19 | +11      
+CHA     | 12    | +1  | +1                  | 15 | +7       
+
+################################################################################
+# ================================== Skills ================================== #
+################################################################################
+Skill           | Modifier | Proficient | Ability      | Roll Condition
+----------------+----------+------------+--------------+---------------
+Acrobatics      | 3        | No         | Dexterity    | Neutral       
+Animal Handling | 5        | No         | Wisdom       | Neutral       
+Arcana          | 6        | Yes        | Intelligence | Neutral       
+Athletics       | -1       | No         | Strength     | Neutral       
+Deception       | 1        | No         | Charisma     | Neutral       
+History         | 0        | No         | Intelligence | Neutral       
+Insight         | 5        | No         | Wisdom       | Neutral       
+Intimidation    | 7        | Yes        | Charisma     | Neutral       
+Investigation   | 0        | No         | Intelligence | Neutral       
+Medicine        | 5        | No         | Wisdom       | Neutral       
+Nature          | 0        | No         | Intelligence | Neutral       
+Perception      | 11       | Yes        | Wisdom       | Neutral       
+Performance     | 1        | No         | Charisma     | Neutral       
+Persuasion      | 7        | Yes        | Charisma     | Neutral       
+Religion        | 0        | No         | Intelligence | Neutral       
+Sleight of Hand | 3        | No         | Dexterity    | Neutral       
+Stealth         | 3        | No         | Dexterity    | Neutral       
+Survival        | 5        | No         | Wisdom       | Neutral       
+
+################################################################################
+# ================================= Features ================================= #
+################################################################################
+Name: Darkvision
+Origin: Gnome Trait
+Description: You have Darkvision with a range of 60 feet.
+
+Name: Forest Gnome Speak with Animals
+Origin: Gnomish Lineage Forest Gnome Trait
+Description: You also always have the Speak with Animals spell prepared. You can cast it without a spell slot a number of times equal to your Proficiency Bonus, and you regain all expended uses when you finish a Long Rest. You can also use any spell slots you have to cast the spell.
+
+Name: War Caster
+Origin: General Feat Level 4+
+Description: Ability Score Increase. Increase your Intelligence, Wisdom, or Charisma score by 1, to a maximum of 20.
+Concentration. You have Advantage on Constitution saving throws that you make to maintain Concentration.
+Reactive Spell. When a creature provokes an Opportunity Attack from you by leaving your reach, you can take a Reaction to cast a spell at the creature rather than making an Opportunity Attack. The spell must have a casting time of one action and must target only that creature.
+Somatic Components. You can perform the Somatic components of spells even when you have weapons or a Shield in one or both hands.
+
+Name: Druidic
+Origin: Druid Level 1
+Description: You know Druidic, the secret language of Druids. While learning this ancient tongue, you also unlocked the magic of communicating with animals; you always have the Speak with Animals spell prepared.
+You can use Druidic to leave hidden messages. You and others who know Druidic automatically spot such a message. Others spot the message's presence with a successful DC 15 Intelligence (Investigation) check but can't decipher it without magic.
+
+Name: Primal Order
+Origin: Druid Level 1
+Description: You have dedicated yourself to one of the following sacred roles of your choice.
+Magician. You know one extra cantrip from the Druid spell list. In addition, your mystical connection to nature gives you a bonus to your Intelligence (Arcana or Nature) checks. The bonus equals your Wisdom modifier (minimum bonus of +1).
+Warden. Trained for battle, you gain proficiency with Martial weapons and training with Medium armor.
+
+Name: Spellcasting
+Origin: Druid Level 1
+Description: Spellcasting
+ * Replacing Cantrips: Change one when you gain a Druid level.
+ * Replacing Spells: Change one when you finish a Long Rest.
+ * Regaining Spell Slots: You regain all expended spell slots when you finish a Long Rest.
+ * Spellcasting Ability: Wisdom
+
+Name: Wild Companion
+Origin: Druid Level 2
+Description: You can summon a nature spirit that assumes an animal form to aid you. As a Magic action, you can expend a spell slot or a use of Wild Shape to cast the Find Familiar spell without Material components.
+When you cast the spell in this way, the familiar is Fey and disappears when you finish a Long Rest.
+
+Name: Wild Shape
+Origin: Druid Level 2
+Description: The power of nature allows you to assume the form of an animal. As a Bonus Action, you shape-shift into a Beast form that you have learned for this feature (see “Known Forms” below). You stay in that form for a number of hours equal to half your Druid level or until you use Wild Shape again, have the Incapacitated condition, or die. You can also leave the form early as a Bonus Action.
+Number of Uses. You can use Wild Shape twice. You regain one expended use when you finish a Short Rest, and you regain all expended uses when you finish a Long Rest.
+You gain additional uses when you reach certain Druid levels, as shown in the Wild Shape column of the Druid Features table.
+Known Forms. You know four Beast forms for this feature, chosen from among Beast stat blocks that have a maximum Challenge Rating of 1/4 and that lack a Fly Speed (see appendix B for stat block options). The Rat, Riding Horse, Spider, and Wolf are recommended. Whenever you finish a Long Rest, you can replace one of your known forms with another eligible form.
+When you reach certain Druid levels, your number of known forms and the maximum Challenge Rating for those forms increases, as shown in the Beast Shapes table. In addition, starting at level 8, you can adopt a form that has a Fly Speed.
+When choosing known forms, you may look in the Monster Manual or elsewhere for eligible Beasts if the Dungeon Master permits you to do so.
+Rules While Shape-Shifted. While in a form, you retain your personality, memories, and ability to speak, and the following rules apply:
+Temporary Hit Points. When you assume a Wild Shape form, you gain a number of Temporary Hit Points equal to your Druid level.
+Game Statistics. Your game statistics are replaced by the Beast's stat block, but you retain your creature type; Hit Points; Hit Point Dice; Intelligence, Wisdom, and Charisma scores; class features; languages; and feats. You also retain your skill and saving throw proficiencies and use your Proficiency Bonus for them, in addition to gaining the proficiencies of the creature. If a skill or saving throw modifier in the Beast's stat block is higher than yours, use the one in the stat block.
+No Spellcasting. You can't cast spells, but shape-shifting doesn't break your Concentration or otherwise interfere with a spell you've already cast.
+Objects. Your ability to handle objects is determined by the form's limbs rather than your own. In addition, you choose whether your equipment falls in your space, merges into your new form, or is worn by it. Worn equipment functions as normal, but the DM decides whether it's practical for the new form to wear a piece of equipment based on the creature's size and shape. Your equipment doesn't change size or shape to match the new form, and any equipment that the new form can't wear must either fall to the ground or merge with the form. Equipment that merges with the form has no effect while you're in that form.
+
+Name: Circle Forms
+Origin: Circle of the Moon Druid Level 3
+Description: You can channel lunar magic when you assume a Wild Shape form, granting you the benefits below.
+Challenge Rating. The maximum Challenge Rating for the form equals your Druid level divided by 3 (round down).
+Armor Class. Until you leave the form, your AC equals 13 plus your Wisdom modifier if that total is higher than the Beast's AC.
+Temporary Hit Points. You gain a number of Temporary Hit Points equal to three times your Druid level.
+
+Name: Circle of the Moon Spells
+Origin: Circle of the Moon Druid Level 3
+Description: When you reach a Druid level specified in the Circle of the Moon Spells table, you thereafter always have the listed spells prepared.
+In addition, you can cast the spells from this feature while you're in a Wild Shape form.
+
+Name: Wild Resurgence
+Origin: Druid Level 5
+Description: Once on each of your turns, if you have no uses of Wild Shape left, you can give yourself one use by expending a spell slot (no action required).
+In addition, you can expend one use of Wild Shape (no action required) to give yourself a level 1 spell slot, but you can't do so again until you finish a Long Rest.
+
+Name: Improved Circle Forms
+Origin: Circle of the Moon Druid Level 6
+Description: While in a Wild Shape form, you gain the following benefits.
+Lunar Radiance. Each of your attacks in a Wild Shape form can deal its normal damage type or Radiant damage. You make this choice each time you hit with those attacks.
+Increased Toughness. You can add your Wisdom modifier to your Constitution saving throws.
+
+Name: Elemental Fury
+Origin: Druid Level 7
+Description: The might of the elements flows through you. You gain one of the following options of your choice.
+Potent Spellcasting. Add your Wisdom modifier to the damage you deal with any Druid cantrip.
+Primal Strike. Once on each of your turns when you hit a creature with an attack roll using a weapon or a Beast form's attack in Wild Shape, you can cause the target to take an extra 1d8 Cold, Fire, Lightning, or Thunder damage (choose when you hit).
+
+Name: Moonlight Step
+Origin: Circle of the Moon Druid Level 10
+Description: You magically transport yourself, reappearing amid a burst of moonlight. As a Bonus Action, you teleport up to 30 feet to an unoccupied space you can see, and you have Advantage on the next attack roll you make before the end of this turn.
+You can use this feature a number of times equal to your Wisdom modifier (minimum of once), and you regain all expended uses when you finish a Long Rest. You can also regain uses by expending a level 2+ spell slot for each use you want to restore (no action required).
+
+Name: Lunar Form
+Origin: Circle of the Moon Druid Level 14
+Description: The power of the moon suffuses you, granting you the following benefits.
+Improved Lunar Radiance. Once per turn, you can deal an extra 2d10 Radiant damage to a target you hit with a Wild Shape form's attack.
+Shared Moonlight. Whenever you use Moonlight Step, you can also teleport one willing creature. That creature must be within 10 feet of you, and you teleport it to an unoccupied space you can see within 10 feet of your destination space.
+
+Name: Improved Elemental Fury
+Origin: Druid Level 15
+Description: The option you chose for Elemental Fury grows more powerful, as detailed below.
+Potent Spellcasting. When you cast a Druid cantrip with a range of 10 feet or greater, the spell's range increases by 300 feet.
+Primal Strike. The extra damage of your Primal Strike increases to 2d8.
+
+Name: Beast Spells
+Origin: Druid Level 18
+Description: While using Wild Shape, you can cast spells in Beast form, except for any spell that has a Material component with a cost specified or that consumes its Material component.
+
+Name: Archdruid
+Origin: Druid Level 20
+Description: The vitality of nature constantly blooms within you, granting you the following benefits.
+Evergreen Wild Shape. Whenever you roll Initiative and have no uses of Wild Shape left, you regain one expended use of it.
+Nature Magician. You can convert uses of Wild Shape into a spell slot (no action required). Choose a number of your unexpended uses of Wild Shape and convert them into a single spell slot, with each use contributing 2 spell levels. For example, if you convert two uses of Wild Shape, you produce a level 4 spell slot. Once you use this benefit, you can't do so again until you finish a Long Rest.
+Longevity. The primal magic that you wield causes you to age more slowly. For every ten years that pass, your body ages only one year.
+
+
+################################################################################
+# ================================= Weapons ================================== #
+################################################################################
+Field                      | Value                                                                                                                                     
+---------------------------+-------------------------------------------------------------------------------------------------------------------------------------------
+Name                       | Sickle                                                                                                                                    
+Type                       | Simple Melee                                                                                                                              
+DamageType                 | Slashing                                                                                                                                  
+Property 'Light'           | When you Attack with a Light weapon, you can Bonus Action attack with another Light weapon; no ability mod to that damage unless negative.
+Proficient                 | Yes                                                                                                                                       
+AttackRoll                 | 1d20 + -1 (ability mod: Strength) + 6 (Proficient)                                                                                        
+DamageRoll                 | 1d4 + -1 (ability mod: Strength)                                                                                                          
+---------------------------+-------------------------------------------------------------------------------------------------------------------------------------------
+Name                       | Quarterstaff                                                                                                                              
+Type                       | Simple Melee                                                                                                                              
+DamageType                 | Bludgeoning                                                                                                                               
+Property 'Versatile (1d8)' | Can use one or two hands; if two-handed, use damage die shown in parentheses.                                                             
+Proficient                 | Yes                                                                                                                                       
+AttackRoll                 | 1d20 + -1 (ability mod: Strength) + 6 (Proficient)                                                                                        
+DamageRoll                 | 1d6 + -1 (ability mod: Strength)                                                                                                          
+
+################################################################################
+# =============================== Spell Slots ================================ #
+################################################################################
+Level 1 | Level 2 | Level 3 | Level 4 | Level 5 | Level 6 | Level 7 | Level 8 | Level 9
+--------+---------+---------+---------+---------+---------+---------+---------+--------
+4       | 3       | 3       | 3       | 3       | 2       | 2       | 1       | 1      
+
+################################################################################
+# ================================== Spells ================================== #
+################################################################################
+Name: Elementalism
+Level: 0
+School: Transmutation
+Classes: Druid, Sorcerer, Wizard
+Casting Time: Action
+Range: 30 feet
+Components: V, S
+Duration: Instantaneous
+Description:
+You exert control over the elements, creating one of the following effects within range: Beckon Air:
+You create a breeze strong enough to ripple cloth, stir dust, rustle leaves, and close open doors and shutters, all in a 5-foot Cube. Doors and shutters being held open by someone or something aren't affected. Beckon Earth:
+You create a thin shroud of dust or sand that covers surfaces in a 5-foot-square area, or you cause a single word to appear in your handwriting in a patch of dirt or sand. Beckon Fire:
+You create a thin cloud of harmless embers and colored, scented smoke in a 5-foot Cube. You choose the color and scent, and the embers can light candles, torches, or lamps in that area. The smoke's scent lingers for 1 minute. Beckon Water:
+You create a spray of cool mist that lightly dampens creatures and objects in a 5-foot Cube. Alternatively, you create 1 cup of clean water either in an open container or on a surface, and the water evaporates in 1 minute. Sculpt Element:
+You cause dirt, sand, fire, smoke, mist, or water that can fit in a 1-foot Cube to assume a crude shape (such as that of a creature or an object) for 1 hour.
+Source: Player's Handbook 2024 (BR)
+Spellcasting Ability: Wisdom
+----------------------------------------
+Name: Minor Illusion
+Level: 0
+School: Illusion
+Classes: Bard, Sorcerer, Warlock, Wizard
+Casting Time: Action
+Range: 30 feet
+Components: S, M (a bit of fleece)
+Duration: 1 minute
+Description:
+You create a sound or an image of an object within range that lasts for the duration. See the descriptions below for the effects of each. The illusion ends if you cast this spell again. If a creature takes a Study action to examine the sound or image, the creature can determine that it is an illusion with a successful Intelligence (Investigation) check against your spell save DC. If a creature discerns the illusion for what it is, the illusion becomes faint to the creature.
+Sound:
+If you create a sound, its volume can range from a whisper to a scream. It can be your voice, someone else's voice, a lion's roar, a beating of drums, or any other sound you choose. The sound continues unabated throughout the duration, or you can make discrete sounds at different times before the spell ends. Image:
+If you create an image of an object—such as a chair, muddy footprints, or a small chest—it must be no larger than a 5-foot Cube. The image can't create sound, light, smell, or any other sensory effect. Physical interaction with the image reveals it to be an illusion, since things can pass through it.
+Source: Player's Handbook 2024 (BR)
+Spellcasting Ability: Wisdom
+----------------------------------------
+Name: Shillelagh
+Level: 0
+School: Transmutation
+Classes: Druid
+Casting Time: Bonus Action
+Range: Self
+Components: V, S, M (mistletoe)
+Duration: 1 minute
+Description:
+A Club or Quarterstaff you are holding is imbued with nature's power. For the duration, you can use your spellcasting ability instead of Strength for the attack and damage rolls of melee attacks using that weapon, and the weapon's damage die becomes a d8. If the attack deals damage, it can be Force damage or the weapon's normal damage type (your choice). The spell ends early if you cast it again or if you let go of the weapon.
+Cantrip Upgrade:
+The weapon's damage die changes when you reach levels 5 (d10), 11 (d12), and 17 (2d6).
+Source: Player's Handbook 2024 (BR)
+Spellcasting Ability: Wisdom
+----------------------------------------
+Name: Starry Wisp
+Level: 0
+School: Evocation
+Classes: Bard, Druid
+Casting Time: Action
+Range: 60 feet
+Components: V, S
+Duration: Instantaneous
+Description:
+You launch a mote of light at one creature or object within range. Make a ranged spell attack against the target. On a hit, the target takes 1d8 Radiant damage, and until the end of your next turn, it emits Dim Light in a 10-foot radius and can't benefit from the Invisible condition.
+Cantrip Upgrade:
+The damage increases by 1d8 when you reach levels 5 (2d8), 11 (3d8), and 17 (4d8).
+Source: Player's Handbook 2024 (BR)
+Spellcasting Ability: Wisdom
+----------------------------------------
+Name: Thunderclap
+Level: 0
+School: Evocation
+Classes: Bard, Druid, Sorcerer, Warlock, Wizard
+Casting Time: Action
+Range: Self
+Components: S
+Duration: Instantaneous
+Description:
+Each creature in a 5-foot Emanation originating from you must succeed on a Constitution saving throw or take 1d6 Thunder damage. The spell's thunderous sound can be heard up to 100 feet away.
+Cantrip Upgrade:
+The damage increases by 1d6 when you reach levels 5 (2d6), 11 (3d6), and 17 (4d6).
+Source: Player's Handbook 2024
+Spellcasting Ability: Wisdom
+----------------------------------------
+Name: Animal Friendship
+Level: 1
+School: Enchantment
+Classes: Bard, Druid, Ranger
+Casting Time: Action
+Range: 30 feet
+Components: V, S, M (a morsel of food)
+Duration: 24 hours
+Description:
+Target a Beast that you can see within range. The target must succeed on a Wisdom saving throw or have the Charmed condition for the duration. If you or one of your allies deals damage to the target, the spell ends.
+Using a Higher-Level Spell Slot:
+You can target one additional Beast for each spell slot level above 1.
+Source: Player's Handbook 2024 (BR)
+Spellcasting Ability: Wisdom
+----------------------------------------
+Name: Charm Person
+Level: 1
+School: Enchantment
+Classes: Bard, Druid, Sorcerer, Warlock, Wizard
+Casting Time: Action
+Range: 30 feet
+Components: V, S
+Duration: 1 hour
+Description:
+One Humanoid you can see within range makes a Wisdom saving throw. It does so with Advantage if you or your allies are fighting it. On a failed save, the target has the Charmed condition until the spell ends or until you or your allies damage it. The Charmed creature is Friendly to you. When the spell ends, the target knows it was Charmed by you.
+Using a Higher-Level Spell Slot:
+You can target one additional creature for each spell slot level above 1.
+Source: Player's Handbook 2024 (BR)
+Spellcasting Ability: Wisdom
+----------------------------------------
+Name: Cure Wounds
+Level: 1
+School: Abjuration
+Classes: Bard, Cleric, Druid, Paladin, Ranger
+Casting Time: Action
+Range: Touch
+Components: V, S
+Duration: Instantaneous
+Description:
+A creature you touch regains a number of Hit Points equal to 2d8 plus your spellcasting ability modifier.
+Using a Higher-Level Spell Slot:
+The healing increases by 2d8 for each spell slot level above 1.
+Source: Player's Handbook 2024 (BR)
+Spellcasting Ability: Wisdom
+----------------------------------------
+Name: Entangle
+Level: 1
+School: Conjuration
+Classes: Druid, Ranger
+Casting Time: Action
+Range: 90 feet
+Components: V, S
+Duration: Concentration, up to 1 minute
+Description:
+Grasping plants sprout from the ground in a 20-foot square within range. For the duration, these plants turn the ground in the area into Difficult Terrain. They disappear when the spell ends. Each creature (other than you) in the area when you cast the spell must succeed on a Strength saving throw or have the Restrained condition until the spell ends. A Restrained creature can take an action to make a Strength (Athletics) check against your spell save DC. On a success, it frees itself from the grasping plants and is no longer Restrained by them.
+Source: Player's Handbook 2024 (BR)
+Spellcasting Ability: Wisdom
+----------------------------------------
+Name: Faerie Fire
+Level: 1
+School: Evocation
+Classes: Bard, Druid
+Casting Time: Action
+Range: 60 feet
+Components: V
+Duration: Concentration, up to 1 minute
+Description:
+Objects in a 20-foot Cube within range are outlined in blue, green, or violet light (your choice). Each creature in the Cube is also outlined if it fails a Dexterity saving throw. For the duration, objects and affected creatures shed Dim Light in a 10-foot radius and can't benefit from the Invisible condition. Attack rolls against an affected creature or object have Advantage if the attacker can see it.
+Source: Player's Handbook 2024 (BR)
+Spellcasting Ability: Wisdom
+----------------------------------------
+Name: Goodberry
+Level: 1
+School: Conjuration
+Classes: Druid, Ranger
+Casting Time: Action
+Range: Self
+Components: V, S, M (a sprig of mistletoe)
+Duration: 24 hours
+Description:
+Ten berries appear in your hand and are infused with magic for the duration. A creature can take a Bonus Action to eat one berry. Eating a berry restores 1 Hit Point, and the berry provides enough nourishment to sustain a creature for one day. Uneaten berries disappear when the spell ends.
+Source: Player's Handbook 2024 (BR)
+Spellcasting Ability: Wisdom
+----------------------------------------
+Name: Healing Word
+Level: 1
+School: Abjuration
+Classes: Bard, Cleric, Druid
+Casting Time: Bonus Action
+Range: 60 feet
+Components: V
+Duration: Instantaneous
+Description:
+A creature of your choice that you can see within range regains Hit Points equal to 2d4 plus your spellcasting ability modifier.
+Using a Higher-Level Spell Slot:
+The healing increases by 2d4 for each spell slot level above 1.
+Source: Player's Handbook 2024 (BR)
+Spellcasting Ability: Wisdom
+----------------------------------------
+Name: Aid
+Level: 2
+School: Abjuration
+Classes: Bard, Cleric, Druid, Paladin, Ranger
+Casting Time: Action
+Range: 30 feet
+Components: V, S, M (a strip of white cloth)
+Duration: 8 hours
+Description:
+Choose up to three creatures within range. Each target's Hit Point maximum and current Hit Points increase by 5 for the duration.
+Using a Higher-Level Spell Slot:
+Each target's Hit Points increase by 5 for each spell slot level above 2.
+Source: Player's Handbook 2024 (BR)
+Spellcasting Ability: Wisdom
+----------------------------------------
+Name: Lesser Restoration
+Level: 2
+School: Abjuration
+Classes: Bard, Cleric, Druid, Paladin, Ranger
+Casting Time: Bonus Action
+Range: Touch
+Components: V, S
+Duration: Instantaneous
+Description:
+You touch a creature and end one condition on it: Blinded, Deafened, Paralyzed, or Poisoned.
+Source: Player's Handbook 2024 (BR)
+Spellcasting Ability: Wisdom
+----------------------------------------
+Name: Moonbeam
+Level: 2
+School: Evocation
+Classes: Druid
+Casting Time: Action
+Range: 120 feet
+Components: V, S, M (a moonseed leaf)
+Duration: Concentration, up to 1 minute
+Description:
+A silvery beam of pale light shines down in a 5-foot-radius, 40-foot-high Cylinder centered on a point within range. Until the spell ends, Dim Light fills the Cylinder, and you can take a Magic action on later turns to move the Cylinder up to 60 feet. When the Cylinder appears, each creature in it makes a Constitution saving throw. On a failed save, a creature takes 2d10 Radiant damage, and if the creature is shape-shifted (as a result of the Polymorph spell, for example), it reverts to its true form and can't shape-shift until it leaves the Cylinder. On a successful save, a creature takes half as much damage only. A creature also makes this save when the spell's area moves into its space and when it enters the spell's area or ends its turn there. A creature makes this save only once per turn.
+Using a Higher-Level Spell Slot:
+The damage increases by 1d10 for each spell slot level above 2.
+Source: Player's Handbook 2024 (BR)
+Spellcasting Ability: Wisdom
+----------------------------------------
+Name: Aura of Vitality
+Level: 3
+School: Abjuration
+Classes: Cleric, Druid, Paladin
+Casting Time: Action
+Range: Self
+Components: V
+Duration: Concentration, up to 1 minute
+Description:
+An aura radiates from you in a 30-foot Emanation for the duration. When you create the aura and at the start of each of your turns while it persists, you can restore 2d6 Hit Points to one creature in it.
+Source: Player's Handbook 2024
+Spellcasting Ability: Wisdom
+----------------------------------------
+Name: Call Lightning
+Level: 3
+School: Conjuration
+Classes: Druid
+Casting Time: Action
+Range: 120 feet
+Components: V, S
+Duration: Concentration, up to 10 minutes
+Description:
+A storm cloud appears at a point within range that you can see above yourself. It takes the shape of a Cylinder that is 10 feet tall with a 60-foot radius. When you cast the spell, choose a point you can see under the cloud. A lightning bolt shoots from the cloud to that point. Each creature within 5 feet of that point makes a Dexterity saving throw, taking 3d10 Lightning damage on a failed save or half as much damage on a successful one. Until the spell ends, you can take a Magic action to call down lightning in that way again, targeting the same point or a different one. If you're outdoors in a storm when you cast this spell, the spell gives you control over that storm instead of creating a new one. Under such conditions, the spell's damage increases by 1d10.
+Using a Higher-Level Spell Slot:
+The damage increases by 1d10 for each spell slot level above 3.
+Source: Player's Handbook 2024 (BR)
+Spellcasting Ability: Wisdom
+----------------------------------------
+Name: Conjure Animals
+Level: 3
+School: Conjuration
+Classes: Druid, Ranger
+Casting Time: Action
+Range: 60 feet
+Components: V, S
+Duration: Concentration, up to 10 minutes
+Description:
+You conjure nature spirits that appear as a Large pack of spectral, intangible animals in an unoccupied space you can see within range. The pack lasts for the duration, and you choose the spirits' animal form, such as wolves, serpents, or birds. You have Advantage on Strength saving throws while you're within 5 feet of the pack, and when you move on your turn, you can also move the pack up to 30 feet to an unoccupied space you can see. Whenever the pack moves within 10 feet of a creature you can see and whenever a creature you can see enters a space within 10 feet of the pack or ends its turn there, you can force that creature to make a Dexterity saving throw. On a failed save, the creature takes 3d10 Slashing damage. A creature makes this save only once per turn.
+Using a Higher-Level Spell Slot:
+The damage increases by 1d10 for each spell slot level above 3.
+Source: Player's Handbook 2024 (BR)
+Spellcasting Ability: Wisdom
+----------------------------------------
+Name: Dispel Magic
+Level: 3
+School: Abjuration
+Classes: Bard, Cleric, Druid, Paladin, Ranger, Sorcerer, Warlock, Wizard
+Casting Time: Action
+Range: 120 feet
+Components: V, S
+Duration: Instantaneous
+Description:
+Choose one creature, object, or magical effect within range. Any ongoing spell of level 3 or lower on the target ends. For each ongoing spell of level 4 or higher on the target, make an ability check using your spellcasting ability (DC 10 plus that spell's level). On a successful check, the spell ends.
+Using a Higher-Level Spell Slot:
+You automatically end a spell on the target if the spell's level is equal to or less than the level of the spell slot you use.
+Source: Player's Handbook 2024 (BR)
+Spellcasting Ability: Wisdom
+----------------------------------------
+Name: Fount of Moonlight
+Level: 4
+School: Evocation
+Classes: Bard, Druid
+Casting Time: Action
+Range: Self
+Components: V, S
+Duration: Concentration, up to 10 minutes
+Description:
+A cool light wreathes your body for the duration, emitting Bright Light in a 20-foot radius and Dim Light for an additional 20 feet. Until the spell ends, you have Resistance to Radiant damage, and your melee attacks deal an extra 2d6 Radiant damage on a hit. In addition, immediately after you take damage from a creature you can see within 60 feet of yourself, you can take a Reaction to force the creature to make a Constitution saving throw. On a failed save, the creature has the Blinded condition until the end of your next turn.
+Source: Player's Handbook 2024
+Spellcasting Ability: Wisdom
+----------------------------------------
+Name: Freedom of Movement
+Level: 4
+School: Abjuration
+Classes: Bard, Cleric, Druid, Ranger
+Casting Time: Action
+Range: Touch
+Components: V, S, M (a leather strap)
+Duration: 1 hour
+Description:
+You touch a willing creature. For the duration, the target's movement is unaffected by Difficult Terrain, and spells and other magical effects can neither reduce the target's Speed nor cause the target to have the Paralyzed or Restrained conditions. The target also has a Swim Speed equal to its Speed. In addition, the target can spend 5 feet of movement to automatically escape from nonmagical restraints, such as manacles or a creature imposing the Grappled condition on it.
+Using a Higher-Level Spell Slot:
+You can target one additional creature for each spell slot level above 4.
+Source: Player's Handbook 2024 (BR)
+Spellcasting Ability: Wisdom
+----------------------------------------
+Name: Antilife Shell
+Level: 5
+School: Abjuration
+Classes: Druid
+Casting Time: Action
+Range: Self
+Components: V, S
+Duration: Concentration, up to 1 hour
+Description:
+An aura extends from you in a 10-foot Emanation for the duration. The aura prevents creatures other than Constructs and Undead from passing or reaching through it. An affected creature can cast spells or make attacks with Ranged or Reach weapons through the barrier. If you move so that an affected creature is forced to pass through the barrier, the spell ends.
+Source: Player's Handbook 2024 (BR)
+Spellcasting Ability: Wisdom
+----------------------------------------
+Name: Antilife Shell
+Level: 5
+School: Abjuration
+Classes: Druid
+Casting Time: Action
+Range: Self
+Components: V, S
+Duration: Concentration, up to 1 hour
+Description:
+An aura extends from you in a 10-foot Emanation for the duration. The aura prevents creatures other than Constructs and Undead from passing or reaching through it. An affected creature can cast spells or make attacks with Ranged or Reach weapons through the barrier. If you move so that an affected creature is forced to pass through the barrier, the spell ends.
+Source: Player's Handbook 2024 (BR)
+Spellcasting Ability: Wisdom
+----------------------------------------
+Name: Geas
+Level: 5
+School: Enchantment
+Classes: Bard, Cleric, Druid, Paladin, Wizard
+Casting Time: 1 minute
+Range: 60 feet
+Components: V
+Duration: 30 days
+Description:
+You give a verbal command to a creature that you can see within range, ordering it to carry out some service or refrain from an action or a course of activity as you decide. The target must succeed on a Wisdom saving throw or have the Charmed condition for the duration. The target automatically succeeds if it can't understand your command. While Charmed, the creature takes 5d10 Psychic damage if it acts in a manner directly counter to your command. It takes this damage no more than once each day. You can issue any command you choose, short of an activity that would result in certain death. Should you issue a suicidal command, the spell ends. A Remove Curse , Greater Restoration , or Wish spell ends this spell.
+Using a Higher-Level Spell Slot:
+If you use a level 7 or 8 spell slot, the duration is 365 days. If you use a level 9 spell slot, the spell lasts until it is ended by one of the spells mentioned above.
+Source: Player's Handbook 2024 (BR)
+Spellcasting Ability: Wisdom
+----------------------------------------
+Name: Mass Cure Wounds
+Level: 5
+School: Abjuration
+Classes: Bard, Cleric, Druid
+Casting Time: Action
+Range: 60 feet
+Components: V, S
+Duration: Instantaneous
+Description:
+A wave of healing energy washes out from a point you can see within range. Choose up to six creatures in a 30-foot-radius Sphere centered on that point. Each target regains Hit Points equal to 5d8 plus your spellcasting ability modifier.
+Using a Higher-Level Spell Slot:
+The healing increases by 1d8 for each spell slot level above 5.
+Source: Player's Handbook 2024 (BR)
+Spellcasting Ability: Wisdom
+----------------------------------------
+Name: Conjure Fey
+Level: 6
+School: Conjuration
+Classes: Druid
+Casting Time: Action
+Range: 60 feet
+Components: V, S
+Duration: Concentration, up to 10 minutes
+Description:
+You conjure a Medium spirit from the Feywild in an unoccupied space you can see within range. The spirit lasts for the duration, and it looks like a Fey creature of your choice. When the spirit appears, you can make one melee spell attack against a creature within 5 feet of it. On a hit, the target takes Psychic damage equal to 3d12 plus your spellcasting ability modifier, and the target has the Frightened condition until the start of your next turn, with both you and the spirit as the source of the fear. As a Bonus Action on your later turns, you can teleport the spirit to an unoccupied space you can see within 30 feet of the space it left and make the attack against a creature within 5 feet of it.
+Using a Higher-Level Spell Slot:
+The damage increases by 1d12 for each spell slot level above 6*.
+Source: Player's Handbook 2024 (BR)
+Spellcasting Ability: Wisdom
+----------------------------------------
+Name: Fire Storm
+Level: 7
+School: Evocation
+Classes: Cleric, Druid, Sorcerer
+Casting Time: Action
+Range: 150 feet
+Components: V, S
+Duration: Instantaneous
+Description:
+A storm of fire appears within range. The area of the storm consists of up to ten 10-foot Cubes, which you arrange as you like. Each Cube must be contiguous with at least one other Cube. Each creature in the area makes a Dexterity saving throw, taking 7d10 Fire damage on a failed save or half as much damage on a successful one. Flammable objects in the area that aren't being worn or carried start burning.
+Source: Player's Handbook 2024 (BR)
+Spellcasting Ability: Wisdom
+----------------------------------------
+Name: Mirage Arcane
+Level: 7
+School: Illusion
+Classes: Bard, Druid, Wizard
+Casting Time: 10 minutes
+Range: Sight
+Components: V, S
+Duration: 10 days
+Description:
+You make terrain in an area up to 1 mile square look, sound, smell, and even feel like some other sort of terrain. Open fields or a road could be made to resemble a swamp, hill, crevasse, or some other rough or impassable terrain. A pond can be made to seem like a grassy meadow, a precipice like a gentle slope, or a rock-strewn gully like a wide and smooth road. Similarly, you can alter the appearance of structures or add them where none are present. The spell doesn't disguise, conceal, or add creatures. The illusion includes audible, visual, tactile, and olfactory elements, so it can turn clear ground into Difficult Terrain (or vice versa) or otherwise impede movement through the area. Any piece of the illusory terrain (such as a rock or stick) that is removed from the spell's area disappears immediately. Creatures with Truesight can see through the illusion to the terrain's true form; however, all other elements of the illusion remain, so while the creature is aware of the illusion's presence, the creature can still physically interact with the illusion.
+Source: Player's Handbook 2024 (BR)
+Spellcasting Ability: Wisdom
+----------------------------------------
+Name: Regenerate
+Level: 7
+School: Transmutation
+Classes: Bard, Cleric, Druid
+Casting Time: 1 minute
+Range: Touch
+Components: V, S, M (a prayer wheel)
+Duration: 1 hour
+Description:
+A creature you touch regains 4d8 + 15 Hit Points. For the duration, the target regains 1 Hit Point at the start of each of its turns, and any severed body parts regrow after 2 minutes.
+Source: Player's Handbook 2024 (BR)
+Spellcasting Ability: Wisdom
+----------------------------------------
+Name: Animal Shapes
+Level: 8
+School: Transmutation
+Classes: Druid
+Casting Time: Action
+Range: 30 feet
+Components: V, S
+Duration: 24 hours
+Description:
+Choose any number of willing creatures that you can see within range. Each target shape-shifts into a Large or smaller Beast of your choice that has a Challenge Rating of 4 or lower. You can choose a different form for each target. On later turns, you can take a Magic action to transform the targets again. A target's game statistics are replaced by the chosen Beast's statistics, but the target retains its creature type; Hit Points; Hit Point Dice; alignment; ability to communicate; and Intelligence, Wisdom, and Charisma scores. The target's actions are limited by the Beast form's anatomy, and it can't cast spells. The target's equipment melds into the new form, and the target can't use any of that equipment while in that form. The target gains a number of Temporary Hit Points equal to the Hit Points of the first form into which it shape-shifts. These Temporary Hit Points vanish if any remain when the spell ends. The transformation lasts for the duration or until the target ends it as a Bonus Action*.
+Source: Player's Handbook 2024 (BR)
+Spellcasting Ability: Wisdom
+----------------------------------------
+Name: Earthquake
+Level: 8
+School: Transmutation
+Classes: Cleric, Druid, Sorcerer
+Casting Time: Action
+Range: 500 feet
+Components: V, S, M (a fractured rock)
+Duration: Concentration, up to 1 minute
+Description:
+Choose a point on the ground that you can see within range. For the duration, an intense tremor rips through the ground in a 100-foot-radius circle centered on that point. The ground there is Difficult Terrain. When you cast this spell and at the end of each of your turns for the duration, each creature on the ground in the area makes a Dexterity saving throw. On a failed save, a creature has the Prone condition, and its Concentration is broken. You can also cause the effects below.
+Fissures:
+A total of 1d6 fissures open in the spell's area at the end of the turn you cast it. You choose the fissures' locations, which can't be under structures. Each fissure is 1d10 x 10 feet deep and 10 feet wide, and it extends from one edge of the spell's area to another edge. A creature in the same space as a fissure must succeed on a Dexterity saving throw or fall in. A creature that successfully saves moves with the fissure's edge as it opens. Structures:
+The tremor deals 50 Bludgeoning damage to any structure in contact with the ground in the area when you cast the spell and at the end of each of your turns until the spell ends. If a structure drops to 0 Hit Points, it collapses. A creature within a distance from a collapsing structure equal to half the structure's height makes a Dexterity saving throw. On a failed save, the creature takes 12d6 Bludgeoning damage, has the Prone condition, and is buried in the rubble, requiring a DC 20 Strength (Athletics) check as an action to escape. On a successful save, the creature takes half as much damage only.
+Source: Player's Handbook 2024 (BR)
+Spellcasting Ability: Wisdom
+----------------------------------------
+Name: Foresight
+Level: 9
+School: Divination
+Classes: Bard, Druid, Warlock, Wizard
+Casting Time: 1 minute
+Range: Touch
+Components: V, S, M (a hummingbird feather)
+Duration: 8 hours
+Description:
+You touch a willing creature and bestow a limited ability to see into the immediate future. For the duration, the target has Advantage on D20 Tests, and other creatures have Disadvantage on attack rolls against it. The spell ends early if you cast it again.
+Source: Player's Handbook 2024 (BR)
+Spellcasting Ability: Wisdom
+----------------------------------------
+Name: Foresight
+Level: 9
+School: Divination
+Classes: Bard, Druid, Warlock, Wizard
+Casting Time: 1 minute
+Range: Touch
+Components: V, S, M (a hummingbird feather)
+Duration: 8 hours
+Description:
+You touch a willing creature and bestow a limited ability to see into the immediate future. For the duration, the target has Advantage on D20 Tests, and other creatures have Disadvantage on attack rolls against it. The spell ends early if you cast it again.
+Source: Player's Handbook 2024 (BR)
+Spellcasting Ability: Wisdom
+----------------------------------------
+Name: Foresight
+Level: 9
+School: Divination
+Classes: Bard, Druid, Warlock, Wizard
+Casting Time: 1 minute
+Range: Touch
+Components: V, S, M (a hummingbird feather)
+Duration: 8 hours
+Description:
+You touch a willing creature and bestow a limited ability to see into the immediate future. For the duration, the target has Advantage on D20 Tests, and other creatures have Disadvantage on attack rolls against it. The spell ends early if you cast it again.
+Source: Player's Handbook 2024 (BR)
+Spellcasting Ability: Wisdom
+----------------------------------------
+Name: True Resurrection
+Level: 9
+School: Necromancy
+Classes: Cleric, Druid
+Casting Time: 1 hour
+Range: Touch
+Components: V, S, M (diamonds worth 25,000+ GP, which the spell consumes)
+Duration: Instantaneous
+Description:
+You touch a creature that has been dead for no longer than 200 years and that died for any reason except old age. The creature is revived with all its Hit Points. This spell closes all wounds, neutralizes any poison, cures all magical contagions, and lifts any curses affecting the creature when it died. The spell replaces damaged or missing organs and limbs. If the creature was Undead, it is restored to its non-Undead form. The spell can provide a new body if the original no longer exists, in which case you must speak the creature's name. The creature then appears in an unoccupied space you choose within 10 feet of you.
+Source: Player's Handbook 2024 (BR)
+Spellcasting Ability: Wisdom
+

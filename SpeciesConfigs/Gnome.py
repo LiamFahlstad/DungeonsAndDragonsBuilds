@@ -1,10 +1,13 @@
 import CharacterSheetCreator
+import Definitions
 from Definitions import Ability
 from Features.SpeciesFeatures import GnomeFeatures
 from Spells.Definitions import BardLevel0Spells
 
 
-def forest_gnome_character_data() -> CharacterSheetCreator.CharacterSheetData:
+def forest_gnome_character_data(
+    spell_casting_ability: Definitions.Ability,
+) -> CharacterSheetCreator.CharacterSheetData:
 
     data = CharacterSheetCreator.CharacterSheetData()
 
@@ -14,7 +17,7 @@ def forest_gnome_character_data() -> CharacterSheetCreator.CharacterSheetData:
     data.add_feature(GnomeFeatures.Darkvision())
     data.add_feature(GnomeFeatures.ForestGnomeSpeakWithAnimals())
 
-    data.add_spell(BardLevel0Spells.MINOR_ILLUSION)
+    data.add_spell(BardLevel0Spells.MINOR_ILLUSION, spell_casting_ability)
 
     return data
 
