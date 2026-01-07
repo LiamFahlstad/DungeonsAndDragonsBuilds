@@ -88,8 +88,10 @@ class RogueLevel7(ClassBuilder.BaseClassLevel7):
 
 @attr.dataclass
 class RogueLevel8(ClassBuilder.BaseClassLevel8):
+    general_feat: GeneralFeats.GeneralFeat
 
     def add_features(self, data: CharacterSheetData) -> CharacterSheetData:
+        data.add_feature(self.general_feat)
         return data
 
 
@@ -102,8 +104,10 @@ class RogueLevel9(ClassBuilder.BaseClassLevel9):
 
 @attr.dataclass
 class RogueLevel10(ClassBuilder.BaseClassLevel10):
+    general_feat: GeneralFeats.GeneralFeat
 
     def add_features(self, data: CharacterSheetData) -> CharacterSheetData:
+        data.add_feature(self.general_feat)
         return data
 
 
@@ -124,8 +128,10 @@ class RogueLevel11(ClassBuilder.BaseClassLevel11):
 
 @attr.dataclass
 class RogueLevel12(ClassBuilder.BaseClassLevel12):
+    general_feat: GeneralFeats.GeneralFeat
 
     def add_features(self, data: CharacterSheetData) -> CharacterSheetData:
+        data.add_feature(self.general_feat)
         return data
 
 
@@ -161,8 +167,10 @@ class RogueLevel15(ClassBuilder.BaseClassLevel15):
 
 @attr.dataclass
 class RogueLevel16(ClassBuilder.BaseClassLevel16):
+    general_feat: GeneralFeats.GeneralFeat
 
     def add_features(self, data: CharacterSheetData) -> CharacterSheetData:
+        data.add_feature(self.general_feat)
         return data
 
 

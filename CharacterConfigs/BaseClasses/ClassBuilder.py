@@ -6,7 +6,7 @@ import attr
 import Definitions
 from CharacterSheetCreator import CharacterSheetData
 from Definitions import CharacterClass
-from Features import Armor, Backgrounds, GeneralFeats, OriginFeats, Weapons
+from Features import Armor, Backgrounds, OriginFeats, Weapons
 from Features.ClassFeatures import SpellSlots
 from StatBlocks.AbilitiesStatBlock import AbilitiesStatBlock
 from StatBlocks.SavingThrowsStatBlock import SavingThrowsStatBlock
@@ -133,7 +133,6 @@ class BaseClassLevel3(LevelFeatures):
 @attr.dataclass
 class BaseClassLevel4(LevelFeatures):
     level: int = attr.field(init=False, default=4)
-    general_feat: GeneralFeats.GeneralFeat
 
 
 @attr.dataclass
@@ -154,7 +153,6 @@ class BaseClassLevel7(LevelFeatures):
 @attr.dataclass
 class BaseClassLevel8(LevelFeatures):
     level: int = attr.field(init=False, default=8)
-    general_feat: GeneralFeats.GeneralFeat
 
 
 @attr.dataclass
@@ -175,7 +173,6 @@ class BaseClassLevel11(LevelFeatures):
 @attr.dataclass
 class BaseClassLevel12(LevelFeatures):
     level: int = attr.field(init=False, default=12)
-    general_feat: GeneralFeats.GeneralFeat
 
 
 @attr.dataclass
@@ -196,7 +193,6 @@ class BaseClassLevel15(LevelFeatures):
 @attr.dataclass
 class BaseClassLevel16(LevelFeatures):
     level: int = attr.field(init=False, default=16)
-    general_feat: GeneralFeats.GeneralFeat
 
 
 @attr.dataclass

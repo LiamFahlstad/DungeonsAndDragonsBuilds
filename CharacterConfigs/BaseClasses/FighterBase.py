@@ -80,8 +80,10 @@ class FighterLevel5(ClassBuilder.BaseClassLevel5):
 
 @attr.dataclass
 class FighterLevel6(ClassBuilder.BaseClassLevel6):
+    general_feat: GeneralFeats.GeneralFeat
 
     def add_features(self, data: CharacterSheetData) -> CharacterSheetData:
+        data.add_feature(self.general_feat)
         return data
 
 
@@ -157,11 +159,13 @@ class FighterLevel13(ClassBuilder.BaseClassLevel13):
 
 @attr.dataclass
 class FighterLevel14(ClassBuilder.BaseClassLevel14):
+    general_feat: GeneralFeats.GeneralFeat
 
     def add_features(
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
+        data.add_feature(self.general_feat)
         return data
 
 
@@ -174,9 +178,8 @@ class FighterLevel15(ClassBuilder.BaseClassLevel15):
 
 @attr.dataclass
 class FighterLevel16(ClassBuilder.BaseClassLevel16):
-    weapon_mastery: Weapons.AbstractWeapon
-
     general_feat: GeneralFeats.GeneralFeat
+    weapon_mastery: Weapons.AbstractWeapon
 
     def add_features(self, data: CharacterSheetData) -> CharacterSheetData:
         data.add_weapon_mastery(self.weapon_mastery)

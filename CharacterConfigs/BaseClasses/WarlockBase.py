@@ -112,9 +112,7 @@ class WarlockLevel3(ClassBuilder.BaseClassLevel3):
 
 @attr.dataclass
 class WarlockLevel4(ClassBuilder.BaseClassLevel4):
-    general_feat: (
-        GeneralFeats.GeneralFeatCharacterFeature | GeneralFeats.GeneralFeatTextFeature
-    )
+    general_feat: GeneralFeats.GeneralFeat
     cantrip: WarlockLevel0Spells
     spell: WarlockSpellsUpTo2
 
