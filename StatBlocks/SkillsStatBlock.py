@@ -328,6 +328,32 @@ class DruidSkillsStatBlock(ClassSkillsStatBlock):
         )
 
 
+class ClericSkillsStatBlock(ClassSkillsStatBlock):
+    """Cleric Skills Stat Block"""
+
+    def __init__(
+        self,
+        proficiencies: dict[Skill, bool],
+        bonuses: Optional[dict[Skill, int]] = None,
+        dice_roll_conditions: Optional[dict[Skill, DiceRollCondition]] = None,
+    ):
+        excepted_skills = [
+            Skill.HISTORY,
+            Skill.INSIGHT,
+            Skill.MEDICINE,
+            Skill.PERSUASION,
+            Skill.RELIGION,
+        ]
+        super().__init__(
+            character_class=Definitions.CharacterClass.CLERIC,
+            excepted_skills=excepted_skills,
+            num_proficiencies=2,
+            proficiencies=proficiencies,
+            bonuses=bonuses,
+            dice_roll_conditions=dice_roll_conditions,
+        )
+
+
 class BardSkillsStatBlock(ClassSkillsStatBlock):
     """Bard Skills Stat Block"""
 

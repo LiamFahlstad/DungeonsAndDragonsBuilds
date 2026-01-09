@@ -45,6 +45,7 @@ ClericSpellsUpTo9: TypeAlias = ClericSpellsUpTo8 | ClericLevel9Spells
 class ClericLevel1(ClassBuilder.BaseClassLevel1):
     cantrip_1: ClericLevel0Spells
     cantrip_2: ClericLevel0Spells
+    cantrip_3: ClericLevel0Spells
     spell_1: ClericLevel1Spells
     spell_2: ClericLevel1Spells
     spell_3: ClericLevel1Spells
@@ -55,10 +56,10 @@ class ClericLevel1(ClassBuilder.BaseClassLevel1):
         data: CharacterSheetData,
     ) -> CharacterSheetData:
         data.add_feature(ClericFeatures.Spellcasting())
-        data.add_feature(ClericFeatures.Clericic())
-        data.add_feature(ClericFeatures.PrimalOrder())
+        data.add_feature(ClericFeatures.DivineOrder())
         data.add_cantrip(self.cantrip_1)
         data.add_cantrip(self.cantrip_2)
+        data.add_cantrip(self.cantrip_3)
         data.add_spell(self.spell_1)
         data.add_spell(self.spell_2)
         data.add_spell(self.spell_3)
@@ -74,8 +75,7 @@ class ClericLevel2(ClassBuilder.BaseClassLevel2):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(ClericFeatures.WildShape())
-        data.add_feature(ClericFeatures.WildCompanion())
+        data.add_feature(ClericFeatures.ChannelDivinity())
         data.add_spell(self.spell)
         return data
 
@@ -117,7 +117,7 @@ class ClericLevel5(ClassBuilder.BaseClassLevel5):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(ClericFeatures.WildResurgence())
+        data.add_feature(ClericFeatures.SearUndead())
         data.add_spell(self.spell_1)
         data.add_spell(self.spell_2)
         return data
@@ -143,7 +143,7 @@ class ClericLevel7(ClassBuilder.BaseClassLevel7):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(ClericFeatures.ElementalFury())
+        data.add_feature(ClericFeatures.BlessedStrikes())
         data.add_spell(self.spell)
         return data
 
@@ -178,6 +178,7 @@ class ClericLevel9(ClassBuilder.BaseClassLevel9):
 
 @attr.dataclass
 class ClericLevel10(ClassBuilder.BaseClassLevel10):
+    cantrip: ClericLevel0Spells
     spell: ClericSpellsUpTo5
 
     def add_features(
@@ -185,6 +186,7 @@ class ClericLevel10(ClassBuilder.BaseClassLevel10):
         data: CharacterSheetData,
     ) -> CharacterSheetData:
         data.add_spell(self.spell)
+        data.add_feature(ClericFeatures.DivineIntervention())
         return data
 
 
@@ -226,13 +228,15 @@ class ClericLevel13(ClassBuilder.BaseClassLevel13):
 
 @attr.dataclass
 class ClericLevel14(ClassBuilder.BaseClassLevel14):
-    spell: ClericSpellsUpTo7
 
     def add_features(
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_spell(self.spell)
+        blessed_strikes: ClericFeatures.BlessedStrikes = data.get_features_by_type(
+            ClericFeatures.BlessedStrikes
+        )[0]
+        blessed_strikes.add_feature(ClericFeatures.ImprovedBlessedStrikes())
         return data
 
 
@@ -244,7 +248,6 @@ class ClericLevel15(ClassBuilder.BaseClassLevel15):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(ClericFeatures.ImprovedElementalFury())
         data.add_spell(self.spell)
         return data
 
@@ -252,13 +255,9 @@ class ClericLevel15(ClassBuilder.BaseClassLevel15):
 @attr.dataclass
 class ClericLevel16(ClassBuilder.BaseClassLevel16):
     general_feat: GeneralFeats.GeneralFeat
-    spell_1: ClericSpellsUpTo8
-    spell_2: ClericSpellsUpTo8
 
     def add_features(self, data: CharacterSheetData) -> CharacterSheetData:
         data.add_feature(self.general_feat)
-        data.add_spell(self.spell_1)
-        data.add_spell(self.spell_2)
         return data
 
 
@@ -282,7 +281,6 @@ class ClericLevel18(ClassBuilder.BaseClassLevel18):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(ClericFeatures.BeastSpells())
         data.add_spell(self.spell)
         return data
 
@@ -306,7 +304,7 @@ class ClericLevel20(ClassBuilder.BaseClassLevel20):
     spell: ClericSpellsUpTo9
 
     def add_features(self, data: CharacterSheetData) -> CharacterSheetData:
-        data.add_feature(ClericFeatures.Archcleric())
+        data.add_feature(ClericFeatures.GreaterDivineIntervention())
         data.add_spell(self.spell)
         return data
 

@@ -111,6 +111,17 @@ class PaladinSubclass(str, Enum):
     OATH_OF_REDEMPTION = "Oath of Redemption"
 
 
+class ClericSubclass(str, Enum):
+    LIGHT = "Light"
+    LIFE = "Life"
+    WAR = "War"
+    KNOWLEDGE = "Knowledge"
+    NATURE = "Nature"
+    TEMPEST = "Tempest"
+    TRICKERY = "Trickery"
+    DEATH = "Death"
+
+
 class RogueSubclass(str, Enum):
     THIEF = "Thief"
     ASSASSIN = "Assassin"

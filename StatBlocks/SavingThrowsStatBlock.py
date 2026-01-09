@@ -114,3 +114,13 @@ class BardSavingThrowsStatBlock(SavingThrowsStatBlock):
                 Ability.CHARISMA: True,
             }
         )
+
+
+class ClericSavingThrowsStatBlock(SavingThrowsStatBlock):
+    def __init__(self):
+        super().__init__(
+            proficiencies={
+                Ability.WISDOM: True,
+                Ability.CHARISMA: True,
+            }
+        )

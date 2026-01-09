@@ -4,6 +4,21 @@ from StatBlocks.CharacterStatBlock import CharacterStatBlock
 BARBARIAN_HIT_DIE = 8
 
 
+class Spellcasting(TextFeature):
+    def __init__(self):
+        super().__init__(name="Spellcasting", origin="Bard Level 1")
+
+    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+        description = (
+            "Spellcasting:\n"
+            " * Replacing cantrips: Whenever you gain a Bard level\n"
+            " * Replacing prepared spells: Whenever you finish a Long Rest\n"
+            " * Spellcasting Ability: Wisdom\n"
+            " * Regaining Spell Slots: You regain all expended spell slots when you finish a Long Rest.\n"
+        )
+        return description
+
+
 class DivineOrder(TextFeature):
     def __init__(self):
         super().__init__(name="Divine Order", origin="Cleric Level 1")
@@ -11,8 +26,8 @@ class DivineOrder(TextFeature):
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
             "You have dedicated yourself to one of the following sacred roles of your choice.\n"
-            "Protector. Trained for battle, you gain proficiency with Martial weapons and training with Heavy armor.\n"
-            "Thaumaturge. You know one extra cantrip from the Cleric spell list. In addition, your mystical connection to the divine gives you a bonus to your Intelligence (Arcana or Religion) checks. The bonus equals your Wisdom modifier (minimum of +1)."
+            "Protector: Trained for battle, you gain proficiency with Martial weapons and training with Heavy armor.\n"
+            "Thaumaturge: You know one extra cantrip from the Cleric spell list. In addition, your mystical connection to the divine gives you a bonus to your Intelligence (Arcana or Religion) checks. The bonus equals your Wisdom modifier (minimum of +1)."
         )
         return description
 
