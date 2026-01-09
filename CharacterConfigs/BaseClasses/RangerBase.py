@@ -4,7 +4,7 @@ import attr
 
 from CharacterConfigs.BaseClasses import ClassBuilder
 from CharacterSheetCreator import CharacterSheetData
-from Definitions import Ability, CharacterClass, Skill
+from Definitions import Ability, ApplyWhen, CharacterClass, Skill
 from Features import (
     Armor,
     Backgrounds,
@@ -60,7 +60,9 @@ class RangerLevel2(ClassBuilder.BaseClassLevel2):
 
     def add_features(self, data: CharacterSheetData) -> CharacterSheetData:
         data.add_feature(RangerFeatures.DeftExplorerLanguages())
-        data.add_feature(RangerFeatures.DeftExplorerExpertise(self.skill))
+        data.add_feature(
+            RangerFeatures.DeftExplorerExpertise(self.skill), apply_when=ApplyWhen.LAST
+        )
         data.add_fighting_style(self.fighting_style)
         data.add_spell(self.spell)
         return data

@@ -37,26 +37,26 @@ CHA     | 19    | +4  | +4 + 6 (Proficient) | 18 | +10
 ################################################################################
 # ================================== Skills ================================== #
 ################################################################################
-Skill           | Modifier | Proficient | Ability      | Roll Condition
-----------------+----------+------------+--------------+---------------
-Acrobatics      | 0        | No         | Dexterity    | Neutral       
-Animal Handling | -1       | No         | Wisdom       | Neutral       
-Arcana          | 1        | No         | Intelligence | Neutral       
-Athletics       | 8        | Yes        | Strength     | Neutral       
-Deception       | 4        | No         | Charisma     | Neutral       
-History         | 7        | Yes        | Intelligence | Neutral       
-Insight         | 5        | Yes        | Wisdom       | Neutral       
-Intimidation    | 10       | Yes        | Charisma     | Neutral       
-Investigation   | 1        | No         | Intelligence | Neutral       
-Medicine        | 5        | Yes        | Wisdom       | Neutral       
-Nature          | 1        | No         | Intelligence | Neutral       
-Perception      | 5        | Yes        | Wisdom       | Neutral       
-Performance     | 4        | No         | Charisma     | Neutral       
-Persuasion      | 10       | Yes        | Charisma     | Neutral       
-Religion        | 1        | No         | Intelligence | Neutral       
-Sleight of Hand | 0        | No         | Dexterity    | Neutral       
-Stealth         | 0        | No         | Dexterity    | Disadvantage  
-Survival        | 5        | Yes        | Wisdom       | Neutral       
+Skill           | Modifier | Proficient | Ability      | Roll Condition | Bonus (already included)
+----------------+----------+------------+--------------+----------------+-------------------------
+Acrobatics      | +0       | No         | Dexterity    | Neutral        | +0                      
+Animal Handling | -1       | No         | Wisdom       | Neutral        | +0                      
+Arcana          | +1       | No         | Intelligence | Neutral        | +0                      
+Athletics       | +8       | Yes        | Strength     | Neutral        | +0                      
+Deception       | +4       | No         | Charisma     | Neutral        | +0                      
+History         | +7       | Yes        | Intelligence | Neutral        | +0                      
+Insight         | +5       | Yes        | Wisdom       | Neutral        | +0                      
+Intimidation    | +10      | Yes        | Charisma     | Neutral        | +0                      
+Investigation   | +1       | No         | Intelligence | Neutral        | +0                      
+Medicine        | +5       | Yes        | Wisdom       | Neutral        | +0                      
+Nature          | +1       | No         | Intelligence | Neutral        | +0                      
+Perception      | +5       | Yes        | Wisdom       | Neutral        | +0                      
+Performance     | +4       | No         | Charisma     | Neutral        | +0                      
+Persuasion      | +10      | Yes        | Charisma     | Neutral        | +0                      
+Religion        | +1       | No         | Intelligence | Neutral        | +0                      
+Sleight of Hand | +0       | No         | Dexterity    | Neutral        | +0                      
+Stealth         | +0       | No         | Dexterity    | Disadvantage   | +0                      
+Survival        | +5       | Yes        | Wisdom       | Neutral        | +0                      
 
 ################################################################################
 # ================================= Features ================================= #
@@ -196,6 +196,19 @@ You can target one additional creature for each spell slot level above 1.
 Source: Player's Handbook 2024 (BR)
 Spellcasting Ability: Charisma
 ----------------------------------------
+Name: Detect Poison and Disease
+Level: 1
+School: Divination
+Classes: Cleric, Druid, Paladin, Ranger
+Casting Time: Action or Ritual
+Range: Self
+Components: V, S, M (a yew leaf)
+Duration: Concentration, up to 10 minutes
+Description:
+For the duration, you sense the location of poisons, poisonous or venomous creatures, and magical contagions within 30 feet of yourself. You sense the kind of poison, creature, or contagion in each case. The spell is blocked by 1 foot of stone, dirt, or wood; 1 inch of metal; or a thin sheet of lead.
+Source: Player's Handbook 2024 (BR)
+Spellcasting Ability: Charisma
+----------------------------------------
 Name: Divine Favor
 Level: 1
 School: Transmutation
@@ -324,21 +337,6 @@ Components: V, S
 Duration: Instantaneous
 Description:
 You touch a creature and end one condition on it: Blinded, Deafened, Paralyzed, or Poisoned.
-Source: Player's Handbook 2024 (BR)
-Spellcasting Ability: Charisma
-----------------------------------------
-Name: Magic Weapon
-Level: 2
-School: Transmutation
-Classes: Paladin, Ranger, Sorcerer, Wizard
-Casting Time: Bonus Action
-Range: Touch
-Components: V, S
-Duration: 1 hour
-Description:
-You touch a nonmagical weapon. Until the spell ends, that weapon becomes a magic weapon with a +1 bonus to attack rolls and damage rolls. The spell ends early if you cast it again.
-Using a Higher-Level Spell Slot:
-The bonus increases to +2 with a level 3–5 spell slot. The bonus increases to +3 with a level 6+ spell slot.
 Source: Player's Handbook 2024 (BR)
 Spellcasting Ability: Charisma
 ----------------------------------------

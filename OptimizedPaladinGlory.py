@@ -91,7 +91,7 @@ def get_data() -> CharacterSheetCreator.CharacterSheetData:
                 1: PaladinLevel1(
                     weapon_mastery_1=Weapons.Handaxe(),
                     weapon_mastery_2=Weapons.LightHammer(),
-                    spell_1=PaladinLevel1Spells.CURE_WOUNDS,
+                    spell_1=PaladinLevel1Spells.DETECT_POISON_AND_DISEASE,
                     spell_2=PaladinLevel1Spells.DIVINE_FAVOR,
                 ),
                 2: PaladinLevel2(

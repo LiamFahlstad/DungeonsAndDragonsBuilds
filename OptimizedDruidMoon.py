@@ -135,7 +135,7 @@ def get_data() -> CharacterSheetCreator.CharacterSheetData:
                     spell=DruidLevel4Spells.FREEDOM_OF_MOVEMENT,
                 ),
                 9: DruidLevel9(
-                    spell_1=DruidLevel5Spells.ANTILIFE_SHELL,
+                    spell_1=DruidLevel5Spells.CONTAGION,
                     spell_2=DruidLevel5Spells.GEAS,
                 ),
                 10: DruidLevel10(
@@ -168,11 +168,11 @@ def get_data() -> CharacterSheetCreator.CharacterSheetData:
                     spell_2=DruidLevel8Spells.ANIMAL_SHAPES,
                 ),
                 17: DruidLevel17(
-                    spell=DruidLevel9Spells.FORESIGHT,
+                    spell=DruidLevel9Spells.STORM_OF_VENGEANCE,
                 ),
                 19: DruidLevel19(
                     epic_boon=EpicBoon.DummyEpicBoon(),
-                    spell=DruidLevel9Spells.FORESIGHT,
+                    spell=DruidLevel9Spells.SHAPECHANGE,
                 ),
                 18: DruidLevel18(
                     spell=DruidLevel9Spells.TRUE_RESURRECTION,

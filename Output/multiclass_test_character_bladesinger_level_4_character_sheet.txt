@@ -37,26 +37,26 @@ CHA     | 10    | +0  | +0                  | 10 | +2
 ################################################################################
 # ================================== Skills ================================== #
 ################################################################################
-Skill           | Modifier | Proficient | Ability      | Roll Condition
-----------------+----------+------------+--------------+---------------
-Acrobatics      | 5        | Yes        | Dexterity    | Neutral       
-Animal Handling | 1        | No         | Wisdom       | Neutral       
-Arcana          | 1        | No         | Intelligence | Neutral       
-Athletics       | -1       | No         | Strength     | Neutral       
-Deception       | 2        | Yes        | Charisma     | Neutral       
-History         | 1        | No         | Intelligence | Neutral       
-Insight         | 1        | No         | Wisdom       | Neutral       
-Intimidation    | 0        | No         | Charisma     | Neutral       
-Investigation   | 3        | Yes        | Intelligence | Neutral       
-Medicine        | 1        | No         | Wisdom       | Neutral       
-Nature          | 3        | Yes        | Intelligence | Neutral       
-Perception      | 3        | Yes        | Wisdom       | Neutral       
-Performance     | 0        | No         | Charisma     | Neutral       
-Persuasion      | 0        | No         | Charisma     | Neutral       
-Religion        | 1        | No         | Intelligence | Neutral       
-Sleight of Hand | 7        | Yes        | Dexterity    | Neutral       
-Stealth         | 7        | Yes        | Dexterity    | Neutral       
-Survival        | 1        | No         | Wisdom       | Neutral       
+Skill           | Modifier | Proficient | Ability      | Roll Condition | Bonus (already included)
+----------------+----------+------------+--------------+----------------+-------------------------
+Acrobatics      | +5       | Yes        | Dexterity    | Neutral        | +0                      
+Animal Handling | +1       | No         | Wisdom       | Neutral        | +0                      
+Arcana          | +1       | No         | Intelligence | Neutral        | +0                      
+Athletics       | -1       | No         | Strength     | Neutral        | +0                      
+Deception       | +2       | Yes        | Charisma     | Neutral        | +0                      
+History         | +1       | No         | Intelligence | Neutral        | +0                      
+Insight         | +1       | No         | Wisdom       | Neutral        | +0                      
+Intimidation    | +0       | No         | Charisma     | Neutral        | +0                      
+Investigation   | +3       | Yes        | Intelligence | Neutral        | +0                      
+Medicine        | +1       | No         | Wisdom       | Neutral        | +0                      
+Nature          | +3       | Yes        | Intelligence | Neutral        | +0                      
+Perception      | +3       | Yes        | Wisdom       | Neutral        | +0                      
+Performance     | +0       | No         | Charisma     | Neutral        | +0                      
+Persuasion      | +0       | No         | Charisma     | Neutral        | +0                      
+Religion        | +1       | No         | Intelligence | Neutral        | +0                      
+Sleight of Hand | +7       | Yes        | Dexterity    | Neutral        | +0                      
+Stealth         | +7       | Yes        | Dexterity    | Neutral        | +0                      
+Survival        | +1       | No         | Wisdom       | Neutral        | +0                      
 
 ################################################################################
 # ================================= Features ================================= #
@@ -80,12 +80,12 @@ Description: You don't need to sleep, and magic can't put you to sleep. You can 
 
 Name: Ritual Adept
 Origin: Wizard Level 1
-Description: You can cast any spell as a Ritual if that spell has the Ritual tag and the spell is in your spellbook. You needn't have the spell prepared, but you must read from the book to cast a spell in this way.
+Description: You can regain some of your magical energy by studying your spellbook. When you finish a Short Rest, you can choose expended spell slots to recover. The spell slots can have a combined level equal to no more than half your Wizard level (round up), and none of the slots can be level 6 or higher. For example, if you're a level 4 Wizard, you can recover up to two levels' worth of spell slots, regaining either one level 2 spell slot or two level 1 spell slots.
+Once you use this feature, you can't do so again until you finish a Long Rest.
 
 Name: Ritual Adept
 Origin: Wizard Level 1
-Description: You can regain some of your magical energy by studying your spellbook. When you finish a Short Rest, you can choose expended spell slots to recover. The spell slots can have a combined level equal to no more than half your Wizard level (round up), and none of the slots can be level 6 or higher. For example, if you're a level 4 Wizard, you can recover up to two levels' worth of spell slots, regaining either one level 2 spell slot or two level 1 spell slots.
-Once you use this feature, you can't do so again until you finish a Long Rest.
+Description: You can cast any spell as a Ritual if that spell has the Ritual tag and the spell is in your spellbook. You needn't have the spell prepared, but you must read from the book to cast a spell in this way.
 
 Name: Sneak Attack
 Origin: Rogue Level 1

@@ -37,26 +37,26 @@ CHA     | 18    | +4  | +4 + 3 (Proficient) | 15 | +7
 ################################################################################
 # ================================== Skills ================================== #
 ################################################################################
-Skill           | Modifier | Proficient | Ability      | Roll Condition
-----------------+----------+------------+--------------+---------------
-Acrobatics      | 0        | No         | Dexterity    | Neutral       
-Animal Handling | 4        | Yes        | Wisdom       | Neutral       
-Arcana          | 4        | Yes        | Intelligence | Neutral       
-Athletics       | -1       | No         | Strength     | Neutral       
-Deception       | 7        | Yes        | Charisma     | Neutral       
-History         | 4        | Yes        | Intelligence | Neutral       
-Insight         | 1        | No         | Wisdom       | Neutral       
-Intimidation    | 4        | No         | Charisma     | Neutral       
-Investigation   | 1        | No         | Intelligence | Neutral       
-Medicine        | 4        | Yes        | Wisdom       | Neutral       
-Nature          | 1        | No         | Intelligence | Neutral       
-Perception      | 1        | No         | Wisdom       | Neutral       
-Performance     | 4        | No         | Charisma     | Neutral       
-Persuasion      | 7        | Yes        | Charisma     | Neutral       
-Religion        | 4        | Yes        | Intelligence | Neutral       
-Sleight of Hand | 0        | No         | Dexterity    | Neutral       
-Stealth         | 0        | No         | Dexterity    | Neutral       
-Survival        | 4        | Yes        | Wisdom       | Neutral       
+Skill           | Modifier | Proficient | Ability      | Roll Condition | Bonus (already included)
+----------------+----------+------------+--------------+----------------+-------------------------
+Acrobatics      | +0       | No         | Dexterity    | Neutral        | +0                      
+Animal Handling | +4       | Yes        | Wisdom       | Neutral        | +0                      
+Arcana          | +4       | Yes        | Intelligence | Neutral        | +0                      
+Athletics       | -1       | No         | Strength     | Neutral        | +0                      
+Deception       | +7       | Yes        | Charisma     | Neutral        | +0                      
+History         | +4       | Yes        | Intelligence | Neutral        | +0                      
+Insight         | +1       | No         | Wisdom       | Neutral        | +0                      
+Intimidation    | +4       | No         | Charisma     | Neutral        | +0                      
+Investigation   | +1       | No         | Intelligence | Neutral        | +0                      
+Medicine        | +4       | Yes        | Wisdom       | Neutral        | +0                      
+Nature          | +1       | No         | Intelligence | Neutral        | +0                      
+Perception      | +1       | No         | Wisdom       | Neutral        | +0                      
+Performance     | +4       | No         | Charisma     | Neutral        | +0                      
+Persuasion      | +7       | Yes        | Charisma     | Neutral        | +0                      
+Religion        | +4       | Yes        | Intelligence | Neutral        | +0                      
+Sleight of Hand | +0       | No         | Dexterity    | Neutral        | +0                      
+Stealth         | +0       | No         | Dexterity    | Neutral        | +0                      
+Survival        | +4       | Yes        | Wisdom       | Neutral        | +0                      
 
 ################################################################################
 # ================================= Features ================================= #
