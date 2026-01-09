@@ -119,6 +119,15 @@ class RogueSubclass(str, Enum):
     SCION_OF_THE_THREE = "Scion of the Three"
 
 
+class BardSubclass(str, Enum):
+    LORE = "College of Lore"
+    VALOR = "College of Valor"
+    GLAMOUR = "College of Glamour"
+    SWORD = "College of Swords"
+    WHISPERS = "College of Whispers"
+    MOON = "College of the Moon"
+
+
 class DruidSubclass(str, Enum):
     MOON = "Circle of the Moon"
     LAND = "Circle of the Land"
@@ -187,3 +196,8 @@ class ArmorType(str, Enum):
     MEDIUM = "Medium"
     HEAVY = "Heavy"
     SHIELD = "Shield"
+
+
+class ApplyWhen(str, Enum):
+    IMMEDIATE = "immediate"
+    LAST = "last"

@@ -72,6 +72,9 @@ class CharacterStatBlock:
         bonus = self.skills.bonuses.get(skill, 0)
         return ability_modifier + proficiency_bonus + bonus
 
+    def get_skill_bonus(self, skill: Skill) -> int:
+        return self.skills.bonuses.get(skill, 0)
+
     def is_proficient_in_saving_throw(self, ability: Ability) -> bool:
         return self.saving_throws.is_proficient(ability)
 

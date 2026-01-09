@@ -23,6 +23,10 @@ class SkillsStatBlock(StatBlock):
     def add_skill_proficiency(self, skill: Skill):
         self.proficiencies[skill] = True
 
+    def add_skill_bonus(self, skill: Skill, bonus: int):
+        current_bonus = self.bonuses.get(skill, 0)
+        self.bonuses[skill] = current_bonus + bonus
+
     def add_skill_expertise(self, skill: Skill):
         if not self.is_proficient(skill):
             raise ValueError(f"Cannot add expertise to unproficient skill: {skill}")
@@ -318,6 +322,26 @@ class DruidSkillsStatBlock(ClassSkillsStatBlock):
             character_class=Definitions.CharacterClass.DRUID,
             excepted_skills=excepted_skills,
             num_proficiencies=2,
+            proficiencies=proficiencies,
+            bonuses=bonuses,
+            dice_roll_conditions=dice_roll_conditions,
+        )
+
+
+class BardSkillsStatBlock(ClassSkillsStatBlock):
+    """Bard Skills Stat Block"""
+
+    def __init__(
+        self,
+        proficiencies: dict[Skill, bool],
+        bonuses: Optional[dict[Skill, int]] = None,
+        dice_roll_conditions: Optional[dict[Skill, DiceRollCondition]] = None,
+    ):
+        excepted_skills = list(Skill)
+        super().__init__(
+            character_class=Definitions.CharacterClass.BARD,
+            excepted_skills=excepted_skills,
+            num_proficiencies=3,
             proficiencies=proficiencies,
             bonuses=bonuses,
             dice_roll_conditions=dice_roll_conditions,

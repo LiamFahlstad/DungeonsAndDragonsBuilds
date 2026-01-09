@@ -5,7 +5,7 @@ import attr
 
 import Definitions
 import Utils.CharacterSheetUtils as CharacterSheetUtils
-from Definitions import Ability, CharacterClass, Skill
+from Definitions import Ability, ApplyWhen, CharacterClass, Skill
 from Features import Armor
 from Features.Armor import AbstractArmor
 from Features.BaseFeatures import CharacterFeature, Feature
@@ -54,8 +54,15 @@ class CharacterSheetData:
     def character_level(self) -> int:
         return sum(self.level_per_class.values())
 
-    def add_feature(self, feature: Feature):
-        self.features.append(feature)
+    def add_feature(
+        self, feature: Feature, apply_when: ApplyWhen = ApplyWhen.IMMEDIATE
+    ):
+        if apply_when == ApplyWhen.IMMEDIATE:
+            self.features.insert(0, feature)
+        elif apply_when == ApplyWhen.LAST:
+            self.features.append(feature)
+        else:
+            raise ValueError(f"Unknown ApplyWhen value: {apply_when}")
 
     def get_features_by_type(self, feature_type: type) -> list[Any]:
         return [
@@ -87,6 +94,9 @@ class CharacterSheetData:
                     "Spell casting ability must be provided if not already set."
                 )
             spell_casting_ability = self.spell_casting_ability
+
+        if spell in [s[0] for s in self.spells]:
+            raise ValueError(f"Spell {spell} already added.")
         self.spells.append((spell, spell_casting_ability))
 
     def add_cantrip(
@@ -285,16 +295,24 @@ class CharacterSheetData:
 
     def _write_skills(self, character: CharacterStatBlock, file):
         CharacterSheetUtils.write_separator(file, "Skills")
-        headers = ["Skill", "Modifier", "Proficient", "Ability", "Roll Condition"]
+        headers = [
+            "Skill",
+            "Modifier",
+            "Proficient",
+            "Ability",
+            "Roll Condition",
+            "Bonus (already included)",
+        ]
         CharacterSheetUtils.write_table(
             headers,
             [
                 [
                     skill.value,
-                    character.get_skill_modifier(skill),
+                    f"{character.get_skill_modifier(skill):+}",
                     "Yes" if character.is_proficient_in_skill(skill) else "No",
                     character.get_skill_ability(skill).value,
                     character.get_skill_roll_condition(skill).value,
+                    f"{character.get_skill_bonus(skill):+}",
                 ]
                 for skill in Skill
             ],

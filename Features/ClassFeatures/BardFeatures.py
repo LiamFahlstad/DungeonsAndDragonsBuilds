@@ -1,7 +1,23 @@
-from Features.BaseFeatures import TextFeature
+from Definitions import Skill
+from Features.BaseFeatures import CharacterFeature, TextFeature
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 BARD_HIT_DIE = 8
+
+
+class Spellcasting(TextFeature):
+    def __init__(self):
+        super().__init__(name="Spellcasting", origin="Bard Level 1")
+
+    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+        description = (
+            "Spellcasting:\n"
+            " * Replacing cantrips: Whenever you gain a Bard level\n"
+            " * Replacing prepared spells: Whenever you gain a Bard level\n"
+            " * Spellcasting Ability: Charisma\n"
+            " * Regaining Spell Slots: You regain all expended spell slots when you finish a Long Rest.\n"
+        )
+        return description
 
 
 class BardicInspiration(TextFeature):
@@ -11,39 +27,44 @@ class BardicInspiration(TextFeature):
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
             "You can supernaturally inspire others through words, music, or dance. This inspiration is represented by your Bardic Inspiration die, which is a d6.\n"
-            "Using Bardic Inspiration. As a Bonus Action, you can inspire another creature within 60 feet of yourself who can see or hear you. That creature gains one of your Bardic Inspiration dice. A creature can have only one Bardic Inspiration die at a time.\n"
-            "Once within the next hour when the creature fails a D20 Test, the creature can roll the Bardic Inspiration die and add the number rolled to the d20, potentially turning the failure into a success. A Bardic Inspiration die is expended when it's rolled.\n"
-            "Number of Uses. You can confer a Bardic Inspiration die a number of times equal to your Charisma modifier (minimum of once), and you regain all expended uses when you finish a Long Rest.\n"
-            "At Higher Levels. Your Bardic Inspiration die changes when you reach certain Bard levels, as shown in the Bardic Die column of the Bard Features table. The die becomes a d8 at level 5, a d10 at level 10, and a d12 at level 15."
+            " * Using Bardic Inspiration: As a Bonus Action, you can inspire another creature within 60 feet of yourself who can see or hear you. That creature gains one of your Bardic Inspiration dice. A creature can have only one Bardic Inspiration die at a time.\n"
+            "   Once within the next hour when the creature fails a D20 Test, the creature can roll the Bardic Inspiration die and add the number rolled to the d20, potentially turning the failure into a success. A Bardic Inspiration die is expended when it's rolled.\n"
+            " * Number of Uses. You can confer a Bardic Inspiration die a number of times equal to your Charisma modifier (minimum of once), and you regain all expended uses when you finish a Long Rest.\n"
+            " * At Higher Levels. Your Bardic Inspiration die changes when you reach certain Bard levels, as shown in the Bardic Die column of the Bard Features table. The die becomes a d8 at level 5, a d10 at level 10, and a d12 at level 15."
         )
         return description
 
 
-class Expertise(TextFeature):
-    def __init__(self):
-        super().__init__(name="Expertise", origin="Bard Level 2")
+class Expertise1(CharacterFeature):
+    def __init__(self, skill_1: Skill, skill_2: Skill):
+        self.skill_1 = skill_1
+        self.skill_2 = skill_2
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        description = (
-            "You gain Expertise (see the rules glossary) in two of your skill proficiencies of your choice. Performance and Persuasion are recommended if you have proficiency in them.\n"
-            "At Bard level 9, you gain Expertise in two more of your skill proficiencies of your choice."
-        )
-        return description
+    def modify(self, character_stat_block: CharacterStatBlock):
+        character_stat_block.skills.add_skill_expertise(self.skill_1)
+        character_stat_block.skills.add_skill_expertise(self.skill_2)
 
 
-class JackofallTrades(TextFeature):
-    def __init__(self):
-        super().__init__(name="Jack of all Trades", origin="Bard Level 2")
+class Expertise2(CharacterFeature):
+    def __init__(self, skill_1: Skill, skill_2: Skill):
+        self.skill_1 = skill_1
+        self.skill_2 = skill_2
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        description = (
-            "You can add half your Proficiency Bonus (round down) to any ability check you make that uses a skill proficiency you lack and that doesn't otherwise use your Proficiency Bonus.\n"
-            "For example, if you make a Strength (Athletics) check and lack Athletics proficiency, you can add half your Proficiency Bonus to the check."
-        )
-        return description
+    def modify(self, character_stat_block: CharacterStatBlock):
+        character_stat_block.skills.add_skill_expertise(self.skill_1)
+        character_stat_block.skills.add_skill_expertise(self.skill_2)
 
 
-class FontofInspiration(TextFeature):
+class JackOfAllTrades(CharacterFeature):
+    def modify(self, character_stat_block: CharacterStatBlock):
+        for skill in Skill:
+            if not character_stat_block.skills.is_proficient(skill):
+                character_stat_block.skills.add_skill_bonus(
+                    skill, character_stat_block.get_proficiency_bonus() // 2
+                )
+
+
+class FontOfInspiration(TextFeature):
     def __init__(self):
         super().__init__(name="Font of Inspiration", origin="Bard Level 5")
 
@@ -82,7 +103,7 @@ class SuperiorInspiration(TextFeature):
         return description
 
 
-class WordsofCreation(TextFeature):
+class WordsOfCreation(TextFeature):
     def __init__(self):
         super().__init__(name="Words of Creation", origin="Bard Level 20")
 
@@ -166,7 +187,7 @@ class BeguilingMagic(TextFeature):
         return description
 
 
-class MantleofInspiration(TextFeature):
+class MantleOfInspiration(TextFeature):
     def __init__(self):
         super().__init__(
             name="Mantle of Inspiration", origin="College of Glamour Bard Level 3"
@@ -177,7 +198,7 @@ class MantleofInspiration(TextFeature):
         return description
 
 
-class MantleofMajesty(TextFeature):
+class MantleOfMajesty(TextFeature):
     def __init__(self):
         super().__init__(
             name="Mantle of Majesty", origin="College of Glamour Bard Level 6"
@@ -210,15 +231,16 @@ class UnbreakableMajesty(TextFeature):
 ### College of Lore Bard Features ###
 
 
-class BonusProficiencies(TextFeature):
-    def __init__(self):
-        super().__init__(
-            name="Bonus Proficiencies", origin="College of Lore Bard Level 3"
-        )
+class BonusProficiencies(CharacterFeature):
+    def __init__(self, skill_1: Skill, skill_2: Skill, skill_3: Skill):
+        self.skill_1 = skill_1
+        self.skill_2 = skill_2
+        self.skill_3 = skill_3
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        description = "You gain proficiency with three skills of your choice."
-        return description
+    def modify(self, character_stat_block: CharacterStatBlock):
+        character_stat_block.skills.add_skill_proficiency(self.skill_1)
+        character_stat_block.skills.add_skill_proficiency(self.skill_2)
+        character_stat_block.skills.add_skill_proficiency(self.skill_3)
 
 
 class CuttingWords(TextFeature):
@@ -283,7 +305,7 @@ class PrimalLore(TextFeature):
         return description
 
 
-class BlessingofMoonlight(TextFeature):
+class BlessingOfMoonlight(TextFeature):
     def __init__(self):
         super().__init__(
             name="Blessing of Moonlight", origin="College of the Moon Bard Level 6"

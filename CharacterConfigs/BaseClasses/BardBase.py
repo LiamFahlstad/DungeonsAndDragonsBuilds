@@ -5,7 +5,7 @@ import attr
 import Definitions
 from CharacterConfigs.BaseClasses import ClassBuilder
 from CharacterSheetCreator import CharacterSheetData
-from Definitions import Ability, CharacterClass
+from Definitions import Ability, ApplyWhen, CharacterClass, Skill
 from Features import Armor, Backgrounds, EpicBoon, GeneralFeats, OriginFeats, Weapons
 from Features.ClassFeatures import BardFeatures, SpellSlots
 from Spells.Definitions import (
@@ -55,8 +55,7 @@ class BardLevel1(ClassBuilder.BaseClassLevel1):
         data: CharacterSheetData,
     ) -> CharacterSheetData:
         data.add_feature(BardFeatures.Spellcasting())
-        data.add_feature(BardFeatures.Bardic())
-        data.add_feature(BardFeatures.PrimalOrder())
+        data.add_feature(BardFeatures.BardicInspiration())
         data.add_cantrip(self.cantrip_1)
         data.add_cantrip(self.cantrip_2)
         data.add_spell(self.spell_1)
@@ -69,14 +68,19 @@ class BardLevel1(ClassBuilder.BaseClassLevel1):
 @attr.dataclass
 class BardLevel2(ClassBuilder.BaseClassLevel2):
     spell: BardLevel1Spells
+    skill_1: Skill
+    skill_2: Skill
 
     def add_features(
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(BardFeatures.WildShape())
-        data.add_feature(BardFeatures.WildCompanion())
+        data.add_feature(BardFeatures.JackOfAllTrades(), apply_when=ApplyWhen.LAST)
         data.add_spell(self.spell)
+        data.add_feature(
+            BardFeatures.Expertise1(skill_1=self.skill_1, skill_2=self.skill_2),
+            apply_when=ApplyWhen.LAST,
+        )
         return data
 
 
@@ -117,7 +121,10 @@ class BardLevel5(ClassBuilder.BaseClassLevel5):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(BardFeatures.WildResurgence())
+        bardic_inspiration: BardFeatures.BardicInspiration = data.get_features_by_type(
+            BardFeatures.BardicInspiration
+        )[0]
+        bardic_inspiration.add_feature(BardFeatures.FontOfInspiration())
         data.add_spell(self.spell_1)
         data.add_spell(self.spell_2)
         return data
@@ -143,7 +150,7 @@ class BardLevel7(ClassBuilder.BaseClassLevel7):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(BardFeatures.ElementalFury())
+        data.add_feature(BardFeatures.Countercharm())
         data.add_spell(self.spell)
         return data
 
@@ -166,6 +173,8 @@ class BardLevel8(ClassBuilder.BaseClassLevel8):
 class BardLevel9(ClassBuilder.BaseClassLevel9):
     spell_1: BardSpellsUpTo5
     spell_2: BardSpellsUpTo5
+    skill_1: Skill
+    skill_2: Skill
 
     def add_features(
         self,
@@ -173,11 +182,16 @@ class BardLevel9(ClassBuilder.BaseClassLevel9):
     ) -> CharacterSheetData:
         data.add_spell(self.spell_1)
         data.add_spell(self.spell_2)
+        data.add_feature(
+            BardFeatures.Expertise1(skill_1=self.skill_1, skill_2=self.skill_2),
+            apply_when=ApplyWhen.LAST,
+        )
         return data
 
 
 @attr.dataclass
 class BardLevel10(ClassBuilder.BaseClassLevel10):
+    cantrip: BardLevel0Spells
     spell: BardSpellsUpTo5
 
     def add_features(
@@ -185,6 +199,7 @@ class BardLevel10(ClassBuilder.BaseClassLevel10):
         data: CharacterSheetData,
     ) -> CharacterSheetData:
         data.add_spell(self.spell)
+        data.add_feature(BardFeatures.MagicalSecrets())
         return data
 
 
@@ -226,13 +241,11 @@ class BardLevel13(ClassBuilder.BaseClassLevel13):
 
 @attr.dataclass
 class BardLevel14(ClassBuilder.BaseClassLevel14):
-    spell: BardSpellsUpTo7
 
     def add_features(
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_spell(self.spell)
         return data
 
 
@@ -244,7 +257,6 @@ class BardLevel15(ClassBuilder.BaseClassLevel15):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(BardFeatures.ImprovedElementalFury())
         data.add_spell(self.spell)
         return data
 
@@ -252,13 +264,9 @@ class BardLevel15(ClassBuilder.BaseClassLevel15):
 @attr.dataclass
 class BardLevel16(ClassBuilder.BaseClassLevel16):
     general_feat: GeneralFeats.GeneralFeat
-    spell_1: BardSpellsUpTo8
-    spell_2: BardSpellsUpTo8
 
     def add_features(self, data: CharacterSheetData) -> CharacterSheetData:
         data.add_feature(self.general_feat)
-        data.add_spell(self.spell_1)
-        data.add_spell(self.spell_2)
         return data
 
 
@@ -282,7 +290,11 @@ class BardLevel18(ClassBuilder.BaseClassLevel18):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(BardFeatures.BeastSpells())
+        bardic_inspiration: BardFeatures.BardicInspiration = data.get_features_by_type(
+            BardFeatures.BardicInspiration
+        )[0]
+        bardic_inspiration.add_feature(BardFeatures.SuperiorInspiration())
+
         data.add_spell(self.spell)
         return data
 
@@ -306,8 +318,10 @@ class BardLevel20(ClassBuilder.BaseClassLevel20):
     spell: BardSpellsUpTo9
 
     def add_features(self, data: CharacterSheetData) -> CharacterSheetData:
-        data.add_feature(BardFeatures.Archbard())
+        data.add_feature(BardFeatures.WordsOfCreation())
         data.add_spell(self.spell)
+        data.add_spell(BardLevel9Spells.POWER_WORD_HEAL)
+        data.add_spell(BardLevel9Spells.POWER_WORD_KILL)
         return data
 
 
@@ -330,9 +344,7 @@ class BardStarterClassBuilder(ClassBuilder.StarterClassBuilder):
     ):
         default_equipment = [
             Armor.LeatherArmor(),
-            Armor.ShieldArmor(),
-            Weapons.Sickle(player_is_proficient=True),
-            Weapons.Quarterstaff(player_is_proficient=True),
+            Weapons.Dagger(player_is_proficient=True),
         ]
         super().__init__(
             base_class=CharacterClass.BARD,
@@ -349,12 +361,11 @@ class BardStarterClassBuilder(ClassBuilder.StarterClassBuilder):
             origin_feat=origin_feat,
             armor_proficiencies=[
                 Definitions.ArmorType.LIGHT,
-                Definitions.ArmorType.SHIELD,
             ],
             armor=armor,
             weapons=weapons,
             replace_spells=replace_spells,
-            spell_casting_ability=Ability.WISDOM,
+            spell_casting_ability=Ability.CHARISMA,
             caster_type=SpellSlots.CasterType.FULL_CASTER,
         )
 
@@ -375,6 +386,6 @@ class BardMulticlassBuilder(ClassBuilder.MulticlassBuilder):
             base_class_level=bard_level,
             subclass=subclass,
             replace_spells=replace_spells,
-            spell_casting_ability=Ability.WISDOM,
+            spell_casting_ability=Ability.CHARISMA,
             caster_type=SpellSlots.CasterType.FULL_CASTER,
         )
