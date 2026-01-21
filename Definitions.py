@@ -170,6 +170,10 @@ class RangerSubclass(str, Enum):
     HUNTER = "Hunter"
 
 
+class MonkSubclass(str, Enum):
+    SHADOW = "Shadow"
+
+
 class BarbarianSubclass(str, Enum):
     PATH_OF_THE_BERSERKER = "Path of the Berserker"
     PATH_OF_THE_ZEALOT = "Path of the Zealot"

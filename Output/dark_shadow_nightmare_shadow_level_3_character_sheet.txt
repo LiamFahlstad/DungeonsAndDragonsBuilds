@@ -1,0 +1,186 @@
+################################################################################
+# =============================== General Info =============================== #
+################################################################################
+Field              | Value                
+-------------------+----------------------
+Name               | Dark Shadow Nightmare
+Level              | 3                    
+Starter Class      | Monk                 
+Level per Class    | Monk: 3              
+Character Subclass | Shadow               
+Proficiency Bonus  | 2                    
+
+################################################################################
+# =============================== Combat Stats =============================== #
+################################################################################
+Field               | Value  
+--------------------+--------
+Max Hit Points      | 21     
+Armor Class         | 15     
+Armor Proficiencies |        
+Initiative          | d20 + 3
+Speed (ft)          | 35     
+Size                | Medium 
+
+################################################################################
+# ================================ Abilities ================================= #
+################################################################################
+Ability | Score | Mod | Saving Throw        | DC | ATK Bonus
+--------+-------+-----+---------------------+----+----------
+STR     | 8     | -1  | -1 + 2 (Proficient) | 9  | +1       
+DEX     | 17    | +3  | +3 + 2 (Proficient) | 13 | +5       
+CON     | 13    | +1  | +1                  | 11 | +3       
+INT     | 12    | +1  | +1                  | 11 | +3       
+WIS     | 15    | +2  | +2                  | 12 | +4       
+CHA     | 10    | +0  | +0                  | 10 | +2       
+
+################################################################################
+# ================================== Skills ================================== #
+################################################################################
+Skill           | Modifier | Proficient | Ability      | Roll Condition | Bonus (already included)
+----------------+----------+------------+--------------+----------------+-------------------------
+Acrobatics      | +5       | Yes        | Dexterity    | Neutral        | +0                      
+Animal Handling | +2       | No         | Wisdom       | Neutral        | +0                      
+Arcana          | +1       | No         | Intelligence | Neutral        | +0                      
+Athletics       | -1       | No         | Strength     | Neutral        | +0                      
+Deception       | +0       | No         | Charisma     | Neutral        | +0                      
+History         | +1       | No         | Intelligence | Neutral        | +0                      
+Insight         | +4       | Yes        | Wisdom       | Neutral        | +0                      
+Intimidation    | +0       | No         | Charisma     | Neutral        | +0                      
+Investigation   | +1       | No         | Intelligence | Neutral        | +0                      
+Medicine        | +2       | No         | Wisdom       | Neutral        | +0                      
+Nature          | +1       | No         | Intelligence | Neutral        | +0                      
+Perception      | +4       | Yes        | Wisdom       | Neutral        | +0                      
+Performance     | +0       | No         | Charisma     | Neutral        | +0                      
+Persuasion      | +0       | No         | Charisma     | Neutral        | +0                      
+Religion        | +1       | No         | Intelligence | Neutral        | +0                      
+Sleight of Hand | +5       | Yes        | Dexterity    | Neutral        | +0                      
+Stealth         | +5       | Yes        | Dexterity    | Neutral        | +0                      
+Survival        | +2       | No         | Wisdom       | Neutral        | +0                      
+
+################################################################################
+# ================================= Features ================================= #
+################################################################################
+Name: Alert
+Origin: Origin Feat
+Description: Initiative Proficiency. When you roll Initiative, you can add your Proficiency Bonus to the roll.
+Initiative Swap. Immediately after you roll Initiative, you can swap your Initiative with the Initiative of one willing ally in the same combat. You can't make this swap if you or the ally has the Incapacitated condition.
+
+Name: Darkvision
+Origin: Orc Trait
+Description: You have Darkvision with a range of 60 feet.
+
+Name: Fey Ancestry
+Origin: Elf Trait
+Description: You have Advantage on saving throws you make to avoid or end the Charmed condition.
+
+Name: Trance
+Origin: Elf Trait
+Description: You don't need to sleep, and magic can't put you to sleep. You can finish a Long Rest in 4 hours if you spend those hours in a trancelike meditation, during which you retain consciousness.
+
+Name: Martial Arts
+Origin: Monk Level 1
+Description: Your practice of martial arts gives you mastery of combat styles that use your Unarmed Strike and Monk weapons, which are the following:
+ * Simple Melee weapons
+ * Martial Melee weapons that have the Light property
+You gain the following benefits while you are unarmed or wielding only Monk weapons and you aren't wearing armor or wielding a Shield.
+ * Bonus Unarmed Strike. You can make an Unarmed Strike as a Bonus Action.
+ * Martial Arts Die. You can roll 1d6 in place of the normal damage of your Unarmed Strike or Monk weapons. This die changes as you gain Monk levels, as shown in the Martial Arts column of the Monk Features table.
+ * Dexterous Attacks. You can use your Dexterity modifier instead of your Strength modifier for the attack and damage rolls of your Unarmed Strikes and Monk weapons. In addition, when you use the Grapple or Shove option of your Unarmed Strike, you can use your Dexterity modifier instead of your Strength modifier to determine the save DC.
+
+Name: Unarmored Defense
+Origin: Monk Level 1
+Description: While you aren't wearing armor or wielding a Shield, your base Armor Class equals 10 plus your Dexterity and Wisdom modifiers. (total 15).
+
+Name: Monk's Focus
+Origin: Monk Level 2
+Description: Rules for Focus Points:
+ * Regaining: You regain all expended Focus Points when you finish a Short or Long Rest.
+ * DC: 12
+Known features:
+
+    Flurry of Blows Monk Level 2:
+    You can expend 1 Focus Point to make two Unarmed Strikes as a Bonus Action.
+
+    Patient Defense Monk Level 2:
+    You can take the Disengage action as a Bonus Action. Alternatively, you can expend 1 Focus Point to take both the Disengage and the Dodge actions as a Bonus Action.
+
+    Step of the Wind Monk Level 2:
+    You can take the Dash action as a Bonus Action. Alternatively, you can expend 1 Focus Point to take both the Disengage and Dash actions as a Bonus Action, and your jump distance is doubled for the turn.
+
+    Deflect Attacks Monk Level 3:
+    When an attack roll hits you and its damage includes Bludgeoning, Piercing, or Slashing damage, you can take a Reaction to reduce the attack's total damage against you. The reduction equals 1d10 plus your Dexterity modifier and Monk level.
+    If you reduce the damage to 0, you can expend 1 Focus Point to redirect some of the attack's force. If you do so, choose a creature you can see within 5 feet of yourself if the attack was a melee attack or a creature you can see within 60 feet of yourself that isn't behind Total Cover if the attack was a ranged attack. That creature must succeed on a Dexterity saving throw or take damage equal to two rolls of your Martial Arts die plus your Dexterity modifier. The damage is the same type dealt by the attack.
+
+    Shadow Arts Warrior of Shadow Monk Level 3:
+    You have learned to draw on the power of the Shadowfell, gaining the following benefits.
+    Darkness. You can expend 1 Focus Point to cast the Darkness spell without spell components. You can see within the spell's area when you cast it with this feature. While the spell persists, you can move its area of Darkness to a space within 60 feet of yourself at the start of each of your turns.
+    Darkvision. You gain Darkvision with a range of 60 feet. If you already have Darkvision, its range increases by 60 feet.
+    Shadowy Figments. You know the Minor Illusion spell. Wisdom is your spellcasting ability for it.
+
+Name: Uncanny Metabolism
+Origin: Monk Level 2
+Description: When you roll Initiative, you can regain all expended Focus Points. When you do so, roll your Martial Arts die, and regain a number of Hit Points equal to your Monk level plus the number rolled.
+Once you use this feature, you can't use it again until you finish a Long Rest.
+
+
+################################################################################
+# ================================= Weapons ================================== #
+################################################################################
+Field                      | Value                                                                                                                                     
+---------------------------+-------------------------------------------------------------------------------------------------------------------------------------------
+Name                       | Spear                                                                                                                                     
+Type                       | Simple Melee                                                                                                                              
+DamageType                 | Piercing                                                                                                                                  
+Property 'Versatile (1d8)' | Can use one or two hands; if two-handed, use damage die shown in parentheses.                                                             
+Property 'Thrown'          | Can throw weapon for ranged attack; use same ability mod as melee version.                                                                
+Proficient                 | Yes                                                                                                                                       
+AttackRoll                 | 1d20 + -1 (ability mod: Strength) + 2 (Proficient)                                                                                        
+DamageRoll                 | 1d6 + -1 (ability mod: Strength)                                                                                                          
+---------------------------+-------------------------------------------------------------------------------------------------------------------------------------------
+Name                       | Dagger                                                                                                                                    
+Type                       | Simple Melee                                                                                                                              
+DamageType                 | Piercing                                                                                                                                  
+Property 'Finesse'         | Use Str or Dex (your choice) for attack and damage rolls; same mod for both.                                                              
+Property 'Light'           | When you Attack with a Light weapon, you can Bonus Action attack with another Light weapon; no ability mod to that damage unless negative.
+Property 'Thrown'          | Can throw weapon for ranged attack; use same ability mod as melee version.                                                                
+Proficient                 | Yes                                                                                                                                       
+AttackRoll                 | 1d20 + 3 (ability mod: Dexterity) + 2 (Proficient)                                                                                        
+DamageRoll                 | 1d4 + 3 (ability mod: Dexterity)                                                                                                          
+
+################################################################################
+# ================================== Spells ================================== #
+################################################################################
+Name: Druidcraft
+Level: 0
+School: Transmutation
+Classes: Druid
+Casting Time: Action
+Range: 30 feet
+Components: V, S
+Duration: Instantaneous
+Description:
+Whispering to the spirits of nature, you create one of the following effects within range.
+Weather Sensor:
+You create a Tiny, harmless sensory effect that predicts what the weather will be at your location for the next 24 hours. The effect might manifest as a golden orb for clear skies, a cloud for rain, falling snowflakes for snow, and so on. This effect persists for 1 round. Bloom:
+You instantly make a flower blossom, a seed pod open, or a leaf bud bloom. Sensory Effect:
+You create a harmless sensory effect, such as falling leaves, spectral dancing fairies, a gentle breeze, the sound of an animal, or the faint odor of skunk. The effect must fit in a 5-foot Cube. Fire Play:
+You light or snuff out a candle, a torch, or a campfire.
+Source: Player's Handbook 2024 (BR)
+Spellcasting Ability: Wisdom
+----------------------------------------
+Name: Longstrider
+Level: 1
+School: Transmutation
+Classes: Bard, Druid, Ranger, Wizard
+Casting Time: Action
+Range: Touch
+Components: V, S, M (a pinch of dirt)
+Duration: 1 hour
+Description:
+You touch a creature. The target's Speed increases by 10 feet until the spell ends.
+Using a Higher-Level Spell Slot:
+You can target one additional creature for each spell slot level above 1.
+Source: Player's Handbook 2024 (BR)
+Spellcasting Ability: Wisdom
+

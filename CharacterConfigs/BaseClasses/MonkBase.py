@@ -2,12 +2,11 @@ from typing import Optional
 
 import attr
 
-import Definitions
 from CharacterConfigs.BaseClasses import ClassBuilder
 from CharacterSheetCreator import CharacterSheetData
 from Definitions import Ability, CharacterClass
 from Features import Armor, Backgrounds, EpicBoon, GeneralFeats, OriginFeats, Weapons
-from Features.ClassFeatures import MonkFeatures, SpellSlots
+from Features.ClassFeatures import MonkFeatures
 from StatBlocks.AbilitiesStatBlock import AbilitiesStatBlock
 from StatBlocks.SavingThrowsStatBlock import MonkSavingThrowsStatBlock
 from StatBlocks.SkillsStatBlock import MonkSkillsStatBlock
@@ -15,160 +14,130 @@ from StatBlocks.SkillsStatBlock import MonkSkillsStatBlock
 
 @attr.dataclass
 class MonkLevel1(ClassBuilder.BaseClassLevel1):
-    cantrip_1: MonkLevel0Spells
-    cantrip_2: MonkLevel0Spells
-    spell_1: MonkLevel1Spells
-    spell_2: MonkLevel1Spells
-    spell_3: MonkLevel1Spells
-    spell_4: MonkLevel1Spells
-
     def add_features(
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(MonkFeatures.Spellcasting())
-        data.add_feature(MonkFeatures.Monkic())
-        data.add_feature(MonkFeatures.PrimalOrder())
-        data.add_cantrip(self.cantrip_1)
-        data.add_cantrip(self.cantrip_2)
-        data.add_spell(self.spell_1)
-        data.add_spell(self.spell_2)
-        data.add_spell(self.spell_3)
-        data.add_spell(self.spell_4)
+        data.add_feature(MonkFeatures.MartialArts())
         return data
 
 
 @attr.dataclass
 class MonkLevel2(ClassBuilder.BaseClassLevel2):
-    spell: MonkLevel1Spells
-
     def add_features(
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(MonkFeatures.WildShape())
-        data.add_feature(MonkFeatures.WildCompanion())
-        data.add_spell(self.spell)
+        monks_focus = MonkFeatures.MonksFocus()
+        monks_focus.add_feature(MonkFeatures.FlurryOfBlows())
+        monks_focus.add_feature(MonkFeatures.PatientDefense())
+        monks_focus.add_feature(MonkFeatures.StepOfTheWind())
+        data.add_feature(monks_focus)
+        data.add_feature(MonkFeatures.UnarmoredDefense())
+        data.add_feature(MonkFeatures.UnarmoredDefenseText())
+        data.add_feature(MonkFeatures.UncannyMetabolism())
         return data
 
 
 @attr.dataclass
 class MonkLevel3(ClassBuilder.BaseClassLevel3):
-    spell: MonkSpellsUpTo2
-
     def add_features(
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_spell(self.spell)
+        monks_focus: MonkFeatures.MonksFocus = data.get_features_by_type(
+            MonkFeatures.MonksFocus
+        )[0]
+        monks_focus.add_feature(MonkFeatures.DeflectAttacks())
         return data
 
 
 @attr.dataclass
 class MonkLevel4(ClassBuilder.BaseClassLevel4):
     general_feat: GeneralFeats.GeneralFeat
-    cantrip: MonkLevel0Spells
-    spell: MonkSpellsUpTo2
 
     def add_features(
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
         data.add_feature(self.general_feat)
-        data.add_cantrip(self.cantrip)
-        data.add_spell(self.spell)
+        data.add_feature(MonkFeatures.SlowFall())
         return data
 
 
 @attr.dataclass
 class MonkLevel5(ClassBuilder.BaseClassLevel5):
-    spell_1: MonkSpellsUpTo3
-    spell_2: MonkSpellsUpTo3
-
     def add_features(
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(MonkFeatures.WildResurgence())
-        data.add_spell(self.spell_1)
-        data.add_spell(self.spell_2)
+        monks_focus: MonkFeatures.MonksFocus = data.get_features_by_type(
+            MonkFeatures.MonksFocus
+        )[0]
+        monks_focus.add_feature(MonkFeatures.StunningStrike())
+        data.add_feature(MonkFeatures.ExtraAttack())
         return data
 
 
 @attr.dataclass
 class MonkLevel6(ClassBuilder.BaseClassLevel6):
-    spell: MonkSpellsUpTo3
-
     def add_features(
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_spell(self.spell)
+        data.add_feature(MonkFeatures.EmpoweredStrikes())
         return data
 
 
 @attr.dataclass
 class MonkLevel7(ClassBuilder.BaseClassLevel7):
-    spell: MonkSpellsUpTo4
-
     def add_features(
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(MonkFeatures.ElementalFury())
-        data.add_spell(self.spell)
+        data.add_feature(MonkFeatures.Evasion())
         return data
 
 
 @attr.dataclass
 class MonkLevel8(ClassBuilder.BaseClassLevel8):
     general_feat: GeneralFeats.GeneralFeat
-    spell: MonkSpellsUpTo4
 
     def add_features(
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
         data.add_feature(self.general_feat)
-        data.add_spell(self.spell)
         return data
 
 
 @attr.dataclass
 class MonkLevel9(ClassBuilder.BaseClassLevel9):
-    spell_1: MonkSpellsUpTo5
-    spell_2: MonkSpellsUpTo5
-
     def add_features(
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_spell(self.spell_1)
-        data.add_spell(self.spell_2)
+        data.add_feature(MonkFeatures.AcrobaticMovement())
         return data
 
 
 @attr.dataclass
 class MonkLevel10(ClassBuilder.BaseClassLevel10):
-    spell: MonkSpellsUpTo5
-
     def add_features(
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_spell(self.spell)
+        data.add_feature(MonkFeatures.HeightenedFocus())
+        data.add_feature(MonkFeatures.SelfRestoration())
         return data
 
 
 @attr.dataclass
 class MonkLevel11(ClassBuilder.BaseClassLevel11):
-    spell: MonkSpellsUpTo6
-
     def add_features(
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_spell(self.spell)
         return data
 
 
@@ -186,100 +155,85 @@ class MonkLevel12(ClassBuilder.BaseClassLevel12):
 
 @attr.dataclass
 class MonkLevel13(ClassBuilder.BaseClassLevel13):
-    spell: MonkSpellsUpTo7
-
     def add_features(
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_spell(self.spell)
+        data.add_feature(MonkFeatures.DeflectEnergy())
         return data
 
 
 @attr.dataclass
 class MonkLevel14(ClassBuilder.BaseClassLevel14):
-    spell: MonkSpellsUpTo7
-
     def add_features(
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_spell(self.spell)
+        data.add_feature(MonkFeatures.DisciplinedSurvivorSavingThrows())
+        monks_focus: MonkFeatures.MonksFocus = data.get_features_by_type(
+            MonkFeatures.MonksFocus
+        )[0]
+        monks_focus.add_feature(MonkFeatures.DisciplinedSurvivorMartialFocus())
+
         return data
 
 
 @attr.dataclass
 class MonkLevel15(ClassBuilder.BaseClassLevel15):
-    spell: MonkSpellsUpTo8
-
     def add_features(
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(MonkFeatures.ImprovedElementalFury())
-        data.add_spell(self.spell)
+        data.add_feature(MonkFeatures.PerfectFocus())
         return data
 
 
 @attr.dataclass
 class MonkLevel16(ClassBuilder.BaseClassLevel16):
     general_feat: GeneralFeats.GeneralFeat
-    spell_1: MonkSpellsUpTo8
-    spell_2: MonkSpellsUpTo8
 
     def add_features(self, data: CharacterSheetData) -> CharacterSheetData:
         data.add_feature(self.general_feat)
-        data.add_spell(self.spell_1)
-        data.add_spell(self.spell_2)
         return data
 
 
 @attr.dataclass
 class MonkLevel17(ClassBuilder.BaseClassLevel17):
-    spell: MonkSpellsUpTo9
-
     def add_features(
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_spell(self.spell)
         return data
 
 
 @attr.dataclass
 class MonkLevel18(ClassBuilder.BaseClassLevel18):
-    spell: MonkSpellsUpTo9
-
     def add_features(
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(MonkFeatures.BeastSpells())
-        data.add_spell(self.spell)
+        monks_focus: MonkFeatures.MonksFocus = data.get_features_by_type(
+            MonkFeatures.MonksFocus
+        )[0]
+        monks_focus.add_feature(MonkFeatures.SuperiorDefense())
         return data
 
 
 @attr.dataclass
 class MonkLevel19(ClassBuilder.BaseClassLevel19):
     epic_boon: EpicBoon.EpicBoon
-    spell: MonkSpellsUpTo9
 
     def add_features(
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-
-        data.add_spell(self.spell)
         return data
 
 
 @attr.dataclass
 class MonkLevel20(ClassBuilder.BaseClassLevel20):
-    spell: MonkSpellsUpTo9
-
     def add_features(self, data: CharacterSheetData) -> CharacterSheetData:
-        data.add_feature(MonkFeatures.Archmonk())
-        data.add_spell(self.spell)
+        data.add_feature(MonkFeatures.BodyAndMind())
         return data
 
 
@@ -301,10 +255,8 @@ class MonkStarterClassBuilder(ClassBuilder.StarterClassBuilder):
         replace_spells: Optional[dict[str, str]] = None,
     ):
         default_equipment = [
-            Armor.LeatherArmor(),
-            Armor.ShieldArmor(),
-            Weapons.Sickle(player_is_proficient=True),
-            Weapons.Quarterstaff(player_is_proficient=True),
+            Weapons.Spear(player_is_proficient=True),
+            Weapons.Dagger(player_is_proficient=True),
         ]
         super().__init__(
             base_class=CharacterClass.MONK,
@@ -319,15 +271,11 @@ class MonkStarterClassBuilder(ClassBuilder.StarterClassBuilder):
             add_default_equipment=add_default_equipment,
             default_equipment=default_equipment,
             origin_feat=origin_feat,
-            armor_proficiencies=[
-                Definitions.ArmorType.LIGHT,
-                Definitions.ArmorType.SHIELD,
-            ],
+            armor_proficiencies=[],
             armor=armor,
             weapons=weapons,
             replace_spells=replace_spells,
             spell_casting_ability=Ability.WISDOM,
-            caster_type=SpellSlots.CasterType.FULL_CASTER,
         )
 
 
@@ -348,5 +296,4 @@ class MonkMulticlassBuilder(ClassBuilder.MulticlassBuilder):
             subclass=subclass,
             replace_spells=replace_spells,
             spell_casting_ability=Ability.WISDOM,
-            caster_type=SpellSlots.CasterType.FULL_CASTER,
         )

@@ -45,38 +45,39 @@ SorcererSpellsUpTo9: TypeAlias = SorcererSpellsUpTo8 | SorcererLevel9Spells
 class SorcererLevel1(ClassBuilder.BaseClassLevel1):
     cantrip_1: SorcererLevel0Spells
     cantrip_2: SorcererLevel0Spells
+    cantrip_3: SorcererLevel0Spells
+    cantrip_4: SorcererLevel0Spells
     spell_1: SorcererLevel1Spells
     spell_2: SorcererLevel1Spells
-    spell_3: SorcererLevel1Spells
-    spell_4: SorcererLevel1Spells
 
     def add_features(
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
         data.add_feature(SorcererFeatures.Spellcasting())
-        data.add_feature(SorcererFeatures.Sorcereric())
-        data.add_feature(SorcererFeatures.PrimalOrder())
+        data.add_feature(SorcererFeatures.InnateSorcery())
         data.add_cantrip(self.cantrip_1)
         data.add_cantrip(self.cantrip_2)
+        data.add_cantrip(self.cantrip_3)
+        data.add_cantrip(self.cantrip_4)
         data.add_spell(self.spell_1)
         data.add_spell(self.spell_2)
-        data.add_spell(self.spell_3)
-        data.add_spell(self.spell_4)
         return data
 
 
 @attr.dataclass
 class SorcererLevel2(ClassBuilder.BaseClassLevel2):
-    spell: SorcererLevel1Spells
+    spell_1: SorcererLevel1Spells
+    spell_2: SorcererLevel1Spells
 
     def add_features(
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(SorcererFeatures.WildShape())
+        data.add_feature(SorcererFeatures.FontOfMagic())
         data.add_feature(SorcererFeatures.WildCompanion())
-        data.add_spell(self.spell)
+        data.add_spell(self.spell_1)
+        data.add_spell(self.spell_2)
         return data
 
 

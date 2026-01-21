@@ -124,3 +124,23 @@ class ClericSavingThrowsStatBlock(SavingThrowsStatBlock):
                 Ability.CHARISMA: True,
             }
         )
+
+
+class SorcererSavingThrowsStatBlock(SavingThrowsStatBlock):
+    def __init__(self):
+        super().__init__(
+            proficiencies={
+                Ability.CONSTITUTION: True,
+                Ability.CHARISMA: True,
+            }
+        )
+
+
+class MonkSavingThrowsStatBlock(SavingThrowsStatBlock):
+    def __init__(self):
+        super().__init__(
+            proficiencies={
+                Ability.STRENGTH: True,
+                Ability.DEXTERITY: True,
+            }
+        )

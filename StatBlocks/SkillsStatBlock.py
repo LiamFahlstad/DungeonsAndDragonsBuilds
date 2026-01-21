@@ -372,3 +372,57 @@ class BardSkillsStatBlock(ClassSkillsStatBlock):
             bonuses=bonuses,
             dice_roll_conditions=dice_roll_conditions,
         )
+
+
+class SorcererSkillsStatBlock(ClassSkillsStatBlock):
+    """Sorcerer Skills Stat Block"""
+
+    def __init__(
+        self,
+        proficiencies: dict[Skill, bool],
+        bonuses: Optional[dict[Skill, int]] = None,
+        dice_roll_conditions: Optional[dict[Skill, DiceRollCondition]] = None,
+    ):
+        excepted_skills = [
+            Skill.ARCANA,
+            Skill.DECEPTION,
+            Skill.INSIGHT,
+            Skill.INTIMIDATION,
+            Skill.PERSUASION,
+            Skill.RELIGION,
+        ]
+        super().__init__(
+            character_class=Definitions.CharacterClass.SORCERER,
+            excepted_skills=excepted_skills,
+            num_proficiencies=2,
+            proficiencies=proficiencies,
+            bonuses=bonuses,
+            dice_roll_conditions=dice_roll_conditions,
+        )
+
+
+class MonkSkillsStatBlock(ClassSkillsStatBlock):
+    """Monk Skills Stat Block"""
+
+    def __init__(
+        self,
+        proficiencies: dict[Skill, bool],
+        bonuses: Optional[dict[Skill, int]] = None,
+        dice_roll_conditions: Optional[dict[Skill, DiceRollCondition]] = None,
+    ):
+        excepted_skills = [
+            Skill.ACROBATICS,
+            Skill.ATHLETICS,
+            Skill.HISTORY,
+            Skill.INSIGHT,
+            Skill.RELIGION,
+            Skill.STEALTH,
+        ]
+        super().__init__(
+            character_class=Definitions.CharacterClass.MONK,
+            excepted_skills=excepted_skills,
+            num_proficiencies=2,
+            proficiencies=proficiencies,
+            bonuses=bonuses,
+            dice_roll_conditions=dice_roll_conditions,
+        )

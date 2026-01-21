@@ -32,6 +32,15 @@ class Condition(str, Enum):
         return [cond.value for cond in Condition]
 
 
+PELLE = {
+    "name": "Pelle",
+    "hp": 20,
+    "ac": 15,
+    "temp_hp": 0,
+    "conditions": [],
+}
+
+
 class CombatApp:
     def __init__(
         self, root, character_sheets: list[CharacterSheetCreator.CharacterSheetData]
@@ -41,8 +50,13 @@ class CombatApp:
 
         # -------- DATA --------
         self.characters = [
-            {"name": "Hero", "hp": 20, "ac": 15, "temp_hp": 0, "conditions": []},
-            {"name": "Goblin", "hp": 7, "ac": 13, "temp_hp": 0, "conditions": []},
+            {
+                "name": "Hero",
+                "hp": 20,
+                "ac": 15,
+                "temp_hp": 0,
+                "conditions": [],
+            },
         ]
         for character_sheet in character_sheets:
             character = character_sheet.setup_character_stat_block()
@@ -296,14 +310,14 @@ class CombatApp:
 
 
 if __name__ == "__main__":
-    import OptimizedBerserkerBarbarian
-    import OptimizedRangerHunter
-    import OptimizedRogueAssassin
+    import Greta
+    import JanHeting
+    import Sten
 
     character_sheets = [
-        OptimizedRangerHunter.get_data(),
-        OptimizedBerserkerBarbarian.get_data(),
-        OptimizedRogueAssassin.get_data(),
+        JanHeting.get_data(),
+        Sten.get_data(),
+        Greta.get_data(),
     ]
     root = tk.Tk()
     app = CombatApp(root, character_sheets)
