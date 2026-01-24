@@ -216,3 +216,37 @@ class ArmorType(str, Enum):
 class ApplyWhen(str, Enum):
     IMMEDIATE = "immediate"
     LAST = "last"
+
+
+class Die(int, Enum):
+    D1 = 1
+    D4 = 4
+    D6 = 6
+    D8 = 8
+    D10 = 10
+    D12 = 12
+    D20 = 20
+
+    @property
+    def average(self) -> float:
+        return (self.value + 1) / 2
+
+    def average_with_advantage(self) -> float:
+        expected_value = 0.0
+        sides = self.value
+        throws = 2
+        for k in range(1, sides + 1):
+            p_k = (k / sides) * throws - ((k - 1) / sides) * throws
+            expected_value += k * p_k
+
+        return expected_value
+
+    def average_with_disadvantage(self) -> float:
+        expected_value = 0.0
+        sides = self.value
+        throws = 2
+        for k in range(1, sides + 1):
+            p_k = ((sides - k + 1) / sides) * throws - ((sides - k) / sides) * throws
+            expected_value += k * p_k
+
+        return expected_value
