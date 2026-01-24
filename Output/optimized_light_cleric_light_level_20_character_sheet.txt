@@ -152,6 +152,17 @@ Property 'Light'           | When you Attack with a Light weapon, you can Bonus 
 Proficient                 | Yes                                                                                                                                       
 AttackRoll                 | 1d20 + -1 (ability mod: Strength) + 6 (Proficient)                                                                                        
 DamageRoll                 | 1d4 + -1 (ability mod: Strength)                                                                                                          
+AC: 10                     | Prob of Hit: 0.80, Avg Dmg: 1.20                                                                                                          
+AC: 11                     | Prob of Hit: 0.75, Avg Dmg: 1.12                                                                                                          
+AC: 12                     | Prob of Hit: 0.70, Avg Dmg: 1.05                                                                                                          
+AC: 13                     | Prob of Hit: 0.65, Avg Dmg: 0.98                                                                                                          
+AC: 14                     | Prob of Hit: 0.60, Avg Dmg: 0.90                                                                                                          
+AC: 15                     | Prob of Hit: 0.55, Avg Dmg: 0.83                                                                                                          
+AC: 16                     | Prob of Hit: 0.50, Avg Dmg: 0.75                                                                                                          
+AC: 17                     | Prob of Hit: 0.45, Avg Dmg: 0.68                                                                                                          
+AC: 18                     | Prob of Hit: 0.40, Avg Dmg: 0.60                                                                                                          
+AC: 19                     | Prob of Hit: 0.35, Avg Dmg: 0.52                                                                                                          
+AC: 20                     | Prob of Hit: 0.30, Avg Dmg: 0.45                                                                                                          
 ---------------------------+-------------------------------------------------------------------------------------------------------------------------------------------
 Name                       | Quarterstaff                                                                                                                              
 Type                       | Simple Melee                                                                                                                              
@@ -160,6 +171,17 @@ Property 'Versatile (1d8)' | Can use one or two hands; if two-handed, use damage
 Proficient                 | Yes                                                                                                                                       
 AttackRoll                 | 1d20 + -1 (ability mod: Strength) + 6 (Proficient)                                                                                        
 DamageRoll                 | 1d6 + -1 (ability mod: Strength)                                                                                                          
+AC: 10                     | Prob of Hit: 0.80, Avg Dmg: 2.00                                                                                                          
+AC: 11                     | Prob of Hit: 0.75, Avg Dmg: 1.88                                                                                                          
+AC: 12                     | Prob of Hit: 0.70, Avg Dmg: 1.75                                                                                                          
+AC: 13                     | Prob of Hit: 0.65, Avg Dmg: 1.62                                                                                                          
+AC: 14                     | Prob of Hit: 0.60, Avg Dmg: 1.50                                                                                                          
+AC: 15                     | Prob of Hit: 0.55, Avg Dmg: 1.38                                                                                                          
+AC: 16                     | Prob of Hit: 0.50, Avg Dmg: 1.25                                                                                                          
+AC: 17                     | Prob of Hit: 0.45, Avg Dmg: 1.12                                                                                                          
+AC: 18                     | Prob of Hit: 0.40, Avg Dmg: 1.00                                                                                                          
+AC: 19                     | Prob of Hit: 0.35, Avg Dmg: 0.88                                                                                                          
+AC: 20                     | Prob of Hit: 0.30, Avg Dmg: 0.75                                                                                                          
 
 ################################################################################
 # =============================== Spell Slots ================================ #

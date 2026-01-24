@@ -2,7 +2,8 @@ from abc import abstractmethod
 from dataclasses import dataclass, field
 from enum import Enum
 
-from Definitions import Ability
+import DamageCalculator
+from Definitions import Ability, Die
 from Features.BaseFeatures import TextFeature
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils.CharacterSheetUtils import write_table
@@ -110,6 +111,14 @@ class WeaponsDamageRolls(Enum):
     D10x2 = "2d10"
     D12x2 = "2d12"
 
+    @property
+    def number_of_dice(self) -> int:
+        return int(self.value.split("d")[0])
+
+    @property
+    def die_size(self) -> int:
+        return int(self.value.split("d")[1])
+
 
 @dataclass
 class WeaponsStats:
@@ -134,9 +143,9 @@ class AbstractWeapon(TextFeature):
     def stats(self) -> WeaponsStats:
         raise NotImplementedError("Subclasses must implement stats property.")
 
-    def calculate_ability_modifier_bonus(
+    def _calculate_ability_modifier_bonus(
         self, character_stat_block: CharacterStatBlock
-    ) -> str:
+    ) -> tuple[int, str]:
         if WeaponProperty.FINESSE in self.stats().properties:
             str_mod = character_stat_block.get_ability_modifier(Ability.STRENGTH)
             dex_mod = character_stat_block.get_ability_modifier(Ability.DEXTERITY)
@@ -151,13 +160,31 @@ class AbstractWeapon(TextFeature):
                 self.stats().ability
             )
             ability = self.stats().ability.value
+        return ability_modifier, ability
+
+    def calculate_ability_modifier_bonus(
+        self, character_stat_block: CharacterStatBlock
+    ) -> str:
+        ability_modifier, ability = self._calculate_ability_modifier_bonus(
+            character_stat_block
+        )
         return f"{ability_modifier} (ability mod: {ability})"
+
+    def _calculate_proficiency_damage_bonus(
+        self, character_stat_block: CharacterStatBlock
+    ) -> int:
+        if self.player_is_proficient:
+            proficiency_bonus = character_stat_block.get_proficiency_bonus()
+            return proficiency_bonus
+        return 0
 
     def calculate_proficiency_damage_bonus(
         self, character_stat_block: CharacterStatBlock
     ) -> str:
-        if self.player_is_proficient:
-            proficiency_bonus = character_stat_block.get_proficiency_bonus()
+        proficiency_bonus = self._calculate_proficiency_damage_bonus(
+            character_stat_block
+        )
+        if proficiency_bonus > 0:
             return f"{proficiency_bonus} (Proficient)"
         return "0 (Not Proficient)"
 
@@ -172,6 +199,19 @@ class AbstractWeapon(TextFeature):
         )
         for bonus in self.bonus_attack_damages:
             attack_roll_bonus += f" + {bonus}"
+        return attack_roll_bonus
+
+    def calculate_total_attack_roll_bonus_int(
+        self, character_stat_block: CharacterStatBlock
+    ) -> int:
+        attack_roll_bonus, _ = self._calculate_ability_modifier_bonus(
+            character_stat_block
+        )
+        attack_roll_bonus += self._calculate_proficiency_damage_bonus(
+            character_stat_block
+        )
+        for bonus in self.bonus_attack_damages:
+            attack_roll_bonus += int(bonus)
         return attack_roll_bonus
 
     def get_headers(self) -> list[str]:
@@ -202,6 +242,41 @@ class AbstractWeapon(TextFeature):
         if self.player_has_mastery:
             rows.append([f"Mastery '{stats.mastery.value}'", stats.mastery.description])
 
+        attack_roll_die = DamageCalculator.Die.D20
+        attack_roll_condition = DamageCalculator.DiceRollCondition.NEUTRAL
+        attack_roll_bonus = self.calculate_total_attack_roll_bonus_int(
+            character_stat_block
+        )
+        damage_die = Die.die_from_value(stats.damage_roll.die_size)
+        number_of_damage_dice = stats.damage_roll.number_of_dice
+        damage_condition = DamageCalculator.DiceRollCondition.NEUTRAL
+        damage_bonus, _ = self._calculate_ability_modifier_bonus(character_stat_block)
+
+        for ac in range(10, 21):
+            probability_of_hit = DamageCalculator.probability_of_success(
+                difficulty_class=ac,
+                die=attack_roll_die,
+                condition=attack_roll_condition,
+                bonus=attack_roll_bonus,
+            )
+
+            avg_damage = DamageCalculator.calculate_average_damage(
+                armor_class=ac,
+                attack_roll_die=attack_roll_die,
+                attack_roll_condition=attack_roll_condition,
+                attack_roll_bonus=attack_roll_bonus,
+                damage_die=damage_die,
+                number_of_damage_dice=number_of_damage_dice,
+                damage_condition=damage_condition,
+                damage_bonus=damage_bonus,
+            )
+            rows.append(
+                [
+                    f"AC: {ac}",
+                    f"Prob of Hit: {probability_of_hit:.2f}, Avg Dmg: {avg_damage:.2f}",
+                ]
+            )
+
         return rows
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -211,6 +286,37 @@ class AbstractWeapon(TextFeature):
         headers = self.get_headers()
         rows = self.get_rows(character_stat_block)
         write_table(headers, rows, file)
+        self.write_damage_report(
+            character_stat_block=character_stat_block,
+            file=file,
+        )
+
+    def write_damage_report(
+        self,
+        character_stat_block: CharacterStatBlock,
+        file,
+    ) -> None:
+        stats = self.stats()
+        attack_roll_die = DamageCalculator.Die.D20
+        attack_roll_condition = DamageCalculator.DiceRollCondition.NEUTRAL
+        attack_roll_bonus = self.calculate_total_attack_roll_bonus_int(
+            character_stat_block
+        )
+        damage_die = Die.die_from_value(stats.damage_roll.die_size)
+        number_of_damage_dice = stats.damage_roll.number_of_dice
+        damage_condition = DamageCalculator.DiceRollCondition.NEUTRAL
+        damage_bonus = character_stat_block.get_ability_modifier(stats.ability)
+
+        DamageCalculator.damage_report(
+            file=file,
+            attack_roll_die=attack_roll_die,
+            attack_roll_condition=attack_roll_condition,
+            attack_roll_bonus=attack_roll_bonus,
+            damage_die=damage_die,
+            number_of_damage_dice=number_of_damage_dice,
+            damage_condition=damage_condition,
+            damage_bonus=damage_bonus,
+        )
 
 
 class Battleaxe(AbstractWeapon):

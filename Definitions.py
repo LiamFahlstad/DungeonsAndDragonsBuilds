@@ -231,6 +231,13 @@ class Die(int, Enum):
     def average(self) -> float:
         return (self.value + 1) / 2
 
+    @classmethod
+    def die_from_value(cls, value: int) -> "Die":
+        for die in Die:
+            if die.value == value:
+                return die
+        raise ValueError(f"No Die found with value {value}")
+
     def average_with_advantage(self) -> float:
         expected_value = 0.0
         sides = self.value

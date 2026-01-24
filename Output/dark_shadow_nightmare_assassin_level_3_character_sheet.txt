@@ -126,6 +126,17 @@ Proficient         | Yes
 AttackRoll         | 1d20 + 3 (ability mod: Dexterity) + 2 (Proficient)                                                                                        
 DamageRoll         | 1d6 + 3 (ability mod: Dexterity)                                                                                                          
 Mastery 'Vex'      | On a hit that deals damage, you gain Advantage on your next attack against that creature before your next turn ends.                      
+AC: 10             | Prob of Hit: 0.80, Avg Dmg: 5.20                                                                                                          
+AC: 11             | Prob of Hit: 0.75, Avg Dmg: 4.88                                                                                                          
+AC: 12             | Prob of Hit: 0.70, Avg Dmg: 4.55                                                                                                          
+AC: 13             | Prob of Hit: 0.65, Avg Dmg: 4.23                                                                                                          
+AC: 14             | Prob of Hit: 0.60, Avg Dmg: 3.90                                                                                                          
+AC: 15             | Prob of Hit: 0.55, Avg Dmg: 3.58                                                                                                          
+AC: 16             | Prob of Hit: 0.50, Avg Dmg: 3.25                                                                                                          
+AC: 17             | Prob of Hit: 0.45, Avg Dmg: 2.93                                                                                                          
+AC: 18             | Prob of Hit: 0.40, Avg Dmg: 2.60                                                                                                          
+AC: 19             | Prob of Hit: 0.35, Avg Dmg: 2.27                                                                                                          
+AC: 20             | Prob of Hit: 0.30, Avg Dmg: 1.95                                                                                                          
 -------------------+-------------------------------------------------------------------------------------------------------------------------------------------
 Name               | Dagger                                                                                                                                    
 Type               | Simple Melee                                                                                                                              
@@ -136,6 +147,17 @@ Property 'Thrown'  | Can throw weapon for ranged attack; use same ability mod as
 Proficient         | Yes                                                                                                                                       
 AttackRoll         | 1d20 + 3 (ability mod: Dexterity) + 2 (Proficient)                                                                                        
 DamageRoll         | 1d4 + 3 (ability mod: Dexterity)                                                                                                          
+AC: 10             | Prob of Hit: 0.80, Avg Dmg: 4.40                                                                                                          
+AC: 11             | Prob of Hit: 0.75, Avg Dmg: 4.12                                                                                                          
+AC: 12             | Prob of Hit: 0.70, Avg Dmg: 3.85                                                                                                          
+AC: 13             | Prob of Hit: 0.65, Avg Dmg: 3.58                                                                                                          
+AC: 14             | Prob of Hit: 0.60, Avg Dmg: 3.30                                                                                                          
+AC: 15             | Prob of Hit: 0.55, Avg Dmg: 3.03                                                                                                          
+AC: 16             | Prob of Hit: 0.50, Avg Dmg: 2.75                                                                                                          
+AC: 17             | Prob of Hit: 0.45, Avg Dmg: 2.48                                                                                                          
+AC: 18             | Prob of Hit: 0.40, Avg Dmg: 2.20                                                                                                          
+AC: 19             | Prob of Hit: 0.35, Avg Dmg: 1.92                                                                                                          
+AC: 20             | Prob of Hit: 0.30, Avg Dmg: 1.65                                                                                                          
 -------------------+-------------------------------------------------------------------------------------------------------------------------------------------
 Name               | Scimitar                                                                                                                                  
 Type               | Martial Melee                                                                                                                             
@@ -146,6 +168,17 @@ Proficient         | Yes
 AttackRoll         | 1d20 + 3 (ability mod: Dexterity) + 2 (Proficient)                                                                                        
 DamageRoll         | 1d6 + 3 (ability mod: Dexterity)                                                                                                          
 Mastery 'Nick'     | When using a Light weapon's extra attack, you can make it during the Attack action instead of as a Bonus Action. Once per turn.           
+AC: 10             | Prob of Hit: 0.80, Avg Dmg: 5.20                                                                                                          
+AC: 11             | Prob of Hit: 0.75, Avg Dmg: 4.88                                                                                                          
+AC: 12             | Prob of Hit: 0.70, Avg Dmg: 4.55                                                                                                          
+AC: 13             | Prob of Hit: 0.65, Avg Dmg: 4.23                                                                                                          
+AC: 14             | Prob of Hit: 0.60, Avg Dmg: 3.90                                                                                                          
+AC: 15             | Prob of Hit: 0.55, Avg Dmg: 3.58                                                                                                          
+AC: 16             | Prob of Hit: 0.50, Avg Dmg: 3.25                                                                                                          
+AC: 17             | Prob of Hit: 0.45, Avg Dmg: 2.93                                                                                                          
+AC: 18             | Prob of Hit: 0.40, Avg Dmg: 2.60                                                                                                          
+AC: 19             | Prob of Hit: 0.35, Avg Dmg: 2.27                                                                                                          
+AC: 20             | Prob of Hit: 0.30, Avg Dmg: 1.95                                                                                                          
 
 ################################################################################
 # ================================== Spells ================================== #

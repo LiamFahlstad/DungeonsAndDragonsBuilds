@@ -54,7 +54,7 @@ def calculate_average_damage(
 
 
 def damage_report(
-    file_name: str,
+    file,
     attack_roll_die: Die,
     attack_roll_condition: DiceRollCondition,
     attack_roll_bonus: int,
@@ -64,47 +64,46 @@ def damage_report(
     damage_bonus: int,
 ) -> None:
 
-    with open(file_name, "w") as file:
-        headers = [
-            "Atk Die",
-            "Atk Condition",
-            "Atk Bonus",
-            "Dmg Die",
-            "Dmg Condition",
-            "Dmg Bonus",
+    headers = [
+        "Atk Die",
+        "Atk Condition",
+        "Atk Bonus",
+        "Dmg Die",
+        "Dmg Condition",
+        "Dmg Bonus",
+    ]
+    rows = [
+        [
+            attack_roll_die,
+            attack_roll_condition.value,
+            attack_roll_bonus,
+            damage_die,
+            damage_condition.value,
+            damage_bonus,
         ]
-        rows = [
-            [
-                attack_roll_die,
-                attack_roll_condition.value,
-                attack_roll_bonus,
-                damage_die,
-                damage_condition.value,
-                damage_bonus,
-            ]
-        ]
+    ]
 
-        write_table_with_title("Parameters", headers, rows, file)
+    write_table_with_title("Parameters", headers, rows, file)
 
-        file.write("\n")
-        headers = []
-        row = []
+    file.write("\n")
+    headers = []
+    row = []
 
-        for ac in range(10, 21):
-            avg_damage = calculate_average_damage(
-                armor_class=ac,
-                attack_roll_die=attack_roll_die,
-                attack_roll_condition=attack_roll_condition,
-                attack_roll_bonus=attack_roll_bonus,
-                damage_die=damage_die,
-                number_of_damage_dice=number_of_damage_dice,
-                damage_condition=damage_condition,
-                damage_bonus=damage_bonus,
-            )
-            headers.append(f"AC{ac}")
-            row.append(f"{avg_damage:.2f}")
+    for ac in range(10, 21):
+        avg_damage = calculate_average_damage(
+            armor_class=ac,
+            attack_roll_die=attack_roll_die,
+            attack_roll_condition=attack_roll_condition,
+            attack_roll_bonus=attack_roll_bonus,
+            damage_die=damage_die,
+            number_of_damage_dice=number_of_damage_dice,
+            damage_condition=damage_condition,
+            damage_bonus=damage_bonus,
+        )
+        headers.append(f"AC{ac}")
+        row.append(f"{avg_damage:.2f}")
 
-        write_table_with_title("Average Damage by AC", headers, [row], file)
+    write_table_with_title("Average Damage by AC", headers, [row], file)
 
 
 if __name__ == "__main__":
@@ -117,14 +116,14 @@ if __name__ == "__main__":
     damage_bonus = 4
 
     file_name = "damage_report.txt"
-
-    damage_report(
-        file_name=file_name,
-        attack_roll_die=attack_roll_die,
-        attack_roll_condition=attack_roll_condition,
-        attack_roll_bonus=attack_roll_bonus,
-        damage_die=damage_die,
-        number_of_damage_dice=number_of_damage_dice,
-        damage_condition=damage_condition,
-        damage_bonus=damage_bonus,
-    )
+    with open(file_name, "w") as file:
+        damage_report(
+            file=file,
+            attack_roll_die=attack_roll_die,
+            attack_roll_condition=attack_roll_condition,
+            attack_roll_bonus=attack_roll_bonus,
+            damage_die=damage_die,
+            number_of_damage_dice=number_of_damage_dice,
+            damage_condition=damage_condition,
+            damage_bonus=damage_bonus,
+        )

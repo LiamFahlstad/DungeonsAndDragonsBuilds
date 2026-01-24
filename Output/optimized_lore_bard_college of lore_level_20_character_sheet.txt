@@ -137,6 +137,17 @@ Property 'Thrown'  | Can throw weapon for ranged attack; use same ability mod as
 Proficient         | Yes                                                                                                                                       
 AttackRoll         | 1d20 + 4 (ability mod: Dexterity) + 6 (Proficient)                                                                                        
 DamageRoll         | 1d4 + 4 (ability mod: Dexterity)                                                                                                          
+AC: 10             | Prob of Hit: 1.00, Avg Dmg: 6.50                                                                                                          
+AC: 11             | Prob of Hit: 1.00, Avg Dmg: 6.50                                                                                                          
+AC: 12             | Prob of Hit: 0.95, Avg Dmg: 6.17                                                                                                          
+AC: 13             | Prob of Hit: 0.90, Avg Dmg: 5.85                                                                                                          
+AC: 14             | Prob of Hit: 0.85, Avg Dmg: 5.52                                                                                                          
+AC: 15             | Prob of Hit: 0.80, Avg Dmg: 5.20                                                                                                          
+AC: 16             | Prob of Hit: 0.75, Avg Dmg: 4.88                                                                                                          
+AC: 17             | Prob of Hit: 0.70, Avg Dmg: 4.55                                                                                                          
+AC: 18             | Prob of Hit: 0.65, Avg Dmg: 4.23                                                                                                          
+AC: 19             | Prob of Hit: 0.60, Avg Dmg: 3.90                                                                                                          
+AC: 20             | Prob of Hit: 0.55, Avg Dmg: 3.58                                                                                                          
 
 ################################################################################
 # =============================== Spell Slots ================================ #
