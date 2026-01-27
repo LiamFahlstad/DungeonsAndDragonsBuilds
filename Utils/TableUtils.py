@@ -1,4 +1,7 @@
-def write_table(headers, rows, file):
+from typing import Any, TextIO
+
+
+def write_table(headers: list[str], rows: list[list[Any]], file: TextIO):
     """
     Write a table with given headers and rows into a file.
 
@@ -33,7 +36,9 @@ def write_table(headers, rows, file):
         file.write(row_line + "\n")
 
 
-def write_table_with_title(title: str, headers: list[str], rows: list[list[str]], file):
+def write_table_with_title(
+    title: str, headers: list[str], rows: list[list[str]], file: TextIO
+):
     # Determine column widths (max length among header and each column's data)
     col_widths = [
         max(len(str(header)), *(len(str(row[i])) for row in rows if row))
@@ -67,16 +72,11 @@ def write_table_with_title(title: str, headers: list[str], rows: list[list[str]]
     file.write(separator + "\n")
 
 
-def write_separator(file, text=None):
-    length = 80
+def write_separator(file: TextIO, text=None, length=80):
+    """Write a separator line or titled separator block to a file."""
     if text:
         file.write("#" * length + "\n")
         file.write("# " + f" {text} ".center(length - 4, "=") + " #\n")
         file.write("#" * length + "\n")
     else:
         file.write("#" * length + "\n")
-
-
-def write_small_separator(file, text):
-    length = 80
-    file.write("# " + f" {text} ".center(length - 4, "-") + " #\n")

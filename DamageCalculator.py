@@ -1,5 +1,5 @@
 from Definitions import DiceRollCondition, Die
-from Utils.CharacterSheetUtils import write_table_with_title
+from Utils.TableUtils import write_table_with_title
 
 
 def probability_of_success(

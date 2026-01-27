@@ -4,7 +4,7 @@ from typing import Any, Optional
 import attr
 
 import Definitions
-import Utils.CharacterSheetUtils as CharacterSheetUtils
+import Utils.TableUtils as TableUtils
 from Definitions import Ability, ApplyWhen, CharacterClass, Skill
 from Features import Armor
 from Features.Armor import AbstractArmor
@@ -208,8 +208,8 @@ class CharacterSheetData:
         return f"Output/{slugify(self.character_name)}_{self.character_subclass.lower()}_level_{self.character_level}_character_sheet.txt"
 
     def _write_general_info(self, character: CharacterStatBlock, file):
-        CharacterSheetUtils.write_separator(file, "General Info")
-        CharacterSheetUtils.write_table(
+        TableUtils.write_separator(file, "General Info")
+        TableUtils.write_table(
             headers=["Field", "Value"],
             rows=[
                 ["Name", character.name],
@@ -231,11 +231,11 @@ class CharacterSheetData:
         file.write("\n")
 
     def _write_combat_stats(self, character: CharacterStatBlock, file):
-        CharacterSheetUtils.write_separator(file, "Combat Stats")
+        TableUtils.write_separator(file, "Combat Stats")
         ac = character.calculate_armor_class()
         if Armor.ShieldArmor in [type(armor) for armor in self.armors]:
             ac = f"{ac} (with Shield) and {ac - 2} (without Shield)"
-        CharacterSheetUtils.write_table(
+        TableUtils.write_table(
             headers=["Field", "Value"],
             rows=[
                 ["Max Hit Points", character.calculate_hit_points()],
@@ -255,7 +255,7 @@ class CharacterSheetData:
         file.write("\n")
 
     def _write_abilities(self, character: CharacterStatBlock, file):
-        CharacterSheetUtils.write_separator(file, "Abilities")
+        TableUtils.write_separator(file, "Abilities")
         headers = [
             "Ability",
             "Score",
@@ -286,7 +286,7 @@ class CharacterSheetData:
                 f"{ability_attack_bonus:+}",
             ]
             rows.append(row)
-        CharacterSheetUtils.write_table(
+        TableUtils.write_table(
             headers,
             rows,
             file,
@@ -294,7 +294,7 @@ class CharacterSheetData:
         file.write("\n")
 
     def _write_skills(self, character: CharacterStatBlock, file):
-        CharacterSheetUtils.write_separator(file, "Skills")
+        TableUtils.write_separator(file, "Skills")
         headers = [
             "Skill",
             "Modifier",
@@ -303,7 +303,7 @@ class CharacterSheetData:
             "Roll Condition",
             "Bonus (already included)",
         ]
-        CharacterSheetUtils.write_table(
+        TableUtils.write_table(
             headers,
             [
                 [
@@ -334,7 +334,7 @@ class CharacterSheetData:
             return (1, 0, feat.name)
 
         if not all([isinstance(feat, CharacterFeature) for feat in self.features]):
-            CharacterSheetUtils.write_separator(file, "Features")
+            TableUtils.write_separator(file, "Features")
             sorted_features = sorted(self.features, key=sort_features)
             for feature in sorted_features:
                 feature.write_to_file(character, file)
@@ -344,7 +344,7 @@ class CharacterSheetData:
         if not self.weapons:
             return
 
-        CharacterSheetUtils.write_separator(file, "Weapons")
+        TableUtils.write_separator(file, "Weapons")
         for weapon in self.weapons:
             if self.weapon_masteries:
                 for mastery in self.weapon_masteries:
@@ -357,7 +357,7 @@ class CharacterSheetData:
         if not self.fighting_styles:
             return
 
-        CharacterSheetUtils.write_separator(file, "Fighting Styles")
+        TableUtils.write_separator(file, "Fighting Styles")
         for fighting_style in self.fighting_styles:
             fighting_style.write_to_file(file)
         file.write("\n")
@@ -366,7 +366,7 @@ class CharacterSheetData:
         if not self.invocations:
             return
 
-        CharacterSheetUtils.write_separator(file, "Invocations")
+        TableUtils.write_separator(file, "Invocations")
 
         invocations = [
             InvocationFactory.create(invocation_name)
@@ -384,21 +384,21 @@ class CharacterSheetData:
         if not character.spell_slots:
             return
 
-        CharacterSheetUtils.write_separator(file, "Spell Slots")
+        TableUtils.write_separator(file, "Spell Slots")
         character_spell_slots = character.get_spell_slots()
         headers = []
         row = []
         for level, slots in character_spell_slots.items():
             headers.append(f"Level {level}")
             row.append(slots)
-        CharacterSheetUtils.write_table(headers, [row], file)
+        TableUtils.write_table(headers, [row], file)
         file.write("\n")
 
     def _write_spells(self, character: CharacterStatBlock, file):
         if not self.spells:
             return
 
-        CharacterSheetUtils.write_separator(file, "Spells")
+        TableUtils.write_separator(file, "Spells")
 
         spells = [
             SpellFactory.create(spell_name, spell_casting_ability)

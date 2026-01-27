@@ -6,7 +6,7 @@ import DamageCalculator
 from Definitions import Ability, Die
 from Features.BaseFeatures import TextFeature
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
-from Utils.CharacterSheetUtils import write_table
+from Utils.TableUtils import write_table
 
 
 class WeaponProperty(Enum):

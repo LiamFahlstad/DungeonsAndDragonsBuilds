@@ -5,7 +5,7 @@ from typing import Optional, Sequence
 
 import Definitions
 from StatBlocks.StatBlock import StatBlock
-from Utils import CharacterSheetUtils
+from Utils import TableUtils
 
 
 class EntityType(str, Enum):
@@ -132,8 +132,8 @@ class BasicEntity(StatBlock):
         return cleaned.replace(" ", "_").replace("-", "_")
 
     def _write_general_info(self, file):
-        CharacterSheetUtils.write_separator(file, self.name)
-        CharacterSheetUtils.write_table(
+        TableUtils.write_separator(file, self.name)
+        TableUtils.write_table(
             headers=["Field", "Value"],
             rows=[
                 ["Name", self.name],
@@ -152,8 +152,8 @@ class BasicEntity(StatBlock):
         file.write("\n")
 
     def _write_combat_stats(self, file):
-        CharacterSheetUtils.write_separator(file, "Combat Stats")
-        CharacterSheetUtils.write_table(
+        TableUtils.write_separator(file, "Combat Stats")
+        TableUtils.write_table(
             headers=["Field", "Value"],
             rows=[
                 ["Max Hit Points", self.hit_points],
@@ -175,7 +175,7 @@ class BasicEntity(StatBlock):
         file.write("\n")
 
     def _write_abilities(self, file):
-        CharacterSheetUtils.write_separator(file, "Abilities")
+        TableUtils.write_separator(file, "Abilities")
         headers = []
         row = []
         for ability in [
@@ -190,7 +190,7 @@ class BasicEntity(StatBlock):
             headers.append(header_text)
             row_text = f"{self.get_ability_score(ability)} ({self.get_ability_modifier(ability):+}/{self.get_saving_throw_modifier(ability):+})"
             row.append(row_text)
-        CharacterSheetUtils.write_table(
+        TableUtils.write_table(
             headers=headers,
             rows=[row],
             file=file,
@@ -200,7 +200,7 @@ class BasicEntity(StatBlock):
     def _write_traits(self, file):
         if not self.traits:
             return
-        CharacterSheetUtils.write_separator(file, "Traits")
+        TableUtils.write_separator(file, "Traits")
         for trait in self.traits:
             trait.write_to_file(file)
 
@@ -209,7 +209,7 @@ class BasicEntity(StatBlock):
     def _write_actions(self, file):
         if not self.actions:
             return
-        CharacterSheetUtils.write_separator(file, "Actions")
+        TableUtils.write_separator(file, "Actions")
         for action in self.actions:
             action.write_to_file(file)
 
