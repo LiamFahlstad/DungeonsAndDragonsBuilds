@@ -30,8 +30,6 @@ class SpellParser:
         name = name.replace("'", "-")
         name = name.replace("/", "-")
         name = name.replace("é", "e")
-        if "hunter" in name:
-            pass
 
         # Remove any non-alphanumeric characters except spaces and hyphens
         allowed_chars = "abcdefghijklmnopqrstuvwxyz0123456789 -"
