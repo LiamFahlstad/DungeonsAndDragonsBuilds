@@ -32,7 +32,7 @@ class BuildSelector:
 
 
 if __name__ == "__main__":
-    build_name = "Sten"
+    build_name = "Greta"
     build_class = BuildSelector.get_build(build_name)
     character_sheet_data = build_class.build()
     character_sheet_data.create_character_sheet()

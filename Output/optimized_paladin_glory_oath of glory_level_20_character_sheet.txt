@@ -212,7 +212,10 @@ Range: 30 feet
 Components: V, S, M (a Holy Symbol worth 5+ GP)
 Duration: Concentration, up to 1 minute
 Description:
-You bless up to three creatures within range. Whenever a target makes an attack roll or a saving throw before the spell ends, the target adds 1d4 to the attack roll or save. Using a Higher-Level Spell Slot. You can target one additional creature for each spell slot level above 1.
+You bless up to three creatures within range.
+Whenever a target makes an attack roll or a saving throw before the spell ends, the target adds 1d4 to the attack roll or save.
+Using a Higher-Level Spell Slot.
+You can target one additional creature for each spell slot level above 1.
 Source: Player's Handbook
 Spellcasting Ability: Charisma
 ----------------------------------------
@@ -225,7 +228,9 @@ Range: Self
 Components: V, S, M (a yew leaf)
 Duration: Concentration, up to 10 minutes
 Description:
-For the duration, you sense the location of poisons, poisonous or venomous creatures, and magical contagions within 30 feet of yourself. You sense the kind of poison, creature, or contagion in each case. The spell is blocked by 1 foot of stone, dirt, or wood; 1 inch of metal; or a thin sheet of lead.
+For the duration, you sense the location of poisons, poisonous or venomous creatures, and magical contagions within 30 feet of yourself.
+You sense the kind of poison, creature, or contagion in each case.
+The spell is blocked by 1 foot of stone, dirt, or wood; 1 inch of metal; or a thin sheet of lead.
 Source: Player's Handbook
 Spellcasting Ability: Charisma
 ----------------------------------------
@@ -251,7 +256,10 @@ Range: Self
 Components: V
 Duration: Instantaneous
 Description:
-The target takes an extra 2d8 Radiant damage from the attack. The damage increases by 1d8 if the target is a Fiend or an Undead. Using a Higher-Level Spell Slot. The damage increases by 1d8 for each spell slot level above 1.
+The target takes an extra 2d8 Radiant damage from the attack.
+The damage increases by 1d8 if the target is a Fiend or an Undead.
+Using a Higher-Level Spell Slot.
+The damage increases by 1d8 for each spell slot level above 1.
 Source: Player's Handbook
 Spellcasting Ability: Charisma
 ----------------------------------------
@@ -264,7 +272,11 @@ Range: 120 feet
 Components: V, S
 Duration: 1 round
 Description:
-You hurl a bolt of light toward a creature within range. Make a ranged spell attack against the target. On a hit, it takes 4d6 Radiant damage, and the next attack roll made against it before the end of your next turn has Advantage. Using a Higher-Level Spell Slot. The damage increases by 1d6 for each spell slot level above 1.
+You hurl a bolt of light toward a creature within range.
+Make a ranged spell attack against the target.
+On a hit, it takes 4d6 Radiant damage, and the next attack roll made against it before the end of your next turn has Advantage.
+Using a Higher-Level Spell Slot.
+The damage increases by 1d6 for each spell slot level above 1.
 Source: Player's Handbook
 Spellcasting Ability: Charisma
 ----------------------------------------
@@ -277,7 +289,10 @@ Range: Touch
 Components: V, S
 Duration: Concentration, up to 1 minute
 Description:
-A willing creature you touch is imbued with bravery. Until the spell ends, the creature is immune to the Frightened condition and gains Temporary Hit Points equal to your spellcasting ability modifier at the start of each of its turns. Using a Higher-Level Spell Slot. You can target one additional creature for each spell slot level above 1.
+A willing creature you touch is imbued with bravery.
+Until the spell ends, the creature is immune to the Frightened condition and gains Temporary Hit Points equal to your spellcasting ability modifier at the start of each of its turns.
+Using a Higher-Level Spell Slot.
+You can target one additional creature for each spell slot level above 1.
 Source: Player's Handbook
 Spellcasting Ability: Charisma
 ----------------------------------------
@@ -303,7 +318,11 @@ Range: Touch
 Components: V, S, M (fur or a feather)
 Duration: Concentration, up to 1 hour
 Description:
-You touch a creature and choose Strength, Dexterity, Intelligence, Wisdom, or Charisma. For the duration, the target has Advantage on ability checks using the chosen ability. Using a Higher-Level Spell Slot. You can target one additional creature for each spell slot level above 2. You can choose a different ability for each target.
+You touch a creature and choose Strength, Dexterity, Intelligence, Wisdom, or Charisma.
+For the duration, the target has Advantage on ability checks using the chosen ability.
+Using a Higher-Level Spell Slot.
+You can target one additional creature for each spell slot level above 2.
+You can choose a different ability for each target.
 Source: Player's Handbook
 Spellcasting Ability: Charisma
 ----------------------------------------
@@ -316,7 +335,21 @@ Range: 30 feet
 Components: V, S
 Duration: Instantaneous
 Description:
-You summon an otherworldly being that appears as a loyal steed in an unoccupied space of your choice within range. This creature uses the Otherworldly Steed stat block. If you already have a steed from this spell, the steed is replaced by the new one. The steed resembles a Large, rideable animal of your choice, such as a horse, a camel, a dire wolf, or an elk. Whenever you cast the spell, choose the steed’s creature type—Celestial, Fey, or Fiend—which determines certain traits in the stat block. Combat. The steed is an ally to you and your allies. In combat, it shares your Initiative count, and it functions as a controlled mount while you ride it (as defined in the rules on mounted combat). If you have the Incapacitated condition, the steed takes its turn immediately after yours and acts independently, focusing on protecting you. Disappearance of the Steed. The steed disappears if it drops to 0 Hit Points or if you die. When it disappears, it leaves behind anything it was wearing or carrying. If you cast this spell again, you decide whether you summon the steed that disappeared or a different one. Using a Higher-Level Spell Slot. Use the spell slot’s level for the spell’s level in the stat block.
+You summon an otherworldly being that appears as a loyal steed in an unoccupied space of your choice within range.
+This creature uses the Otherworldly Steed stat block.
+If you already have a steed from this spell, the steed is replaced by the new one.
+The steed resembles a Large, rideable animal of your choice, such as a horse, a camel, a dire wolf, or an elk.
+Whenever you cast the spell, choose the steed’s creature type—Celestial, Fey, or Fiend—which determines certain traits in the stat block.
+Combat.
+The steed is an ally to you and your allies.
+In combat, it shares your Initiative count, and it functions as a controlled mount while you ride it (as defined in the rules on mounted combat).
+If you have the Incapacitated condition, the steed takes its turn immediately after yours and acts independently, focusing on protecting you.
+Disappearance of the Steed.
+The steed disappears if it drops to 0 Hit Points or if you die.
+When it disappears, it leaves behind anything it was wearing or carrying.
+If you cast this spell again, you decide whether you summon the steed that disappeared or a different one.
+Using a Higher-Level Spell Slot.
+Use the spell slot’s level for the spell’s level in the stat block.
 Source: Player's Handbook
 Spellcasting Ability: Charisma
 ----------------------------------------
@@ -329,7 +362,11 @@ Range: 60 feet
 Components: V, S, M (a straight piece of iron)
 Duration: Concentration, up to 1 minute
 Description:
-Choose a Humanoid that you can see within range. The target must succeed on a Wisdom saving throw or have the Paralyzed condition for the duration. At the end of each of its turns, the target repeats the save, ending the spell on itself on a success. Using a Higher-Level Spell Slot. You can target one additional Humanoid for each spell slot level above 2.
+Choose a Humanoid that you can see within range.
+The target must succeed on a Wisdom saving throw or have the Paralyzed condition for the duration.
+At the end of each of its turns, the target repeats the save, ending the spell on itself on a success.
+Using a Higher-Level Spell Slot.
+You can target one additional Humanoid for each spell slot level above 2.
 Source: Player's Handbook
 Spellcasting Ability: Charisma
 ----------------------------------------
@@ -355,7 +392,12 @@ Range: Touch
 Components: V, S
 Duration: 1 hour
 Description:
-You touch a nonmagical weapon. Until the spell ends, that weapon becomes a magic weapon with a +1 bonus to attack rolls and damage rolls. The spell ends early if you cast it again. Using a Higher-Level Spell Slot. The bonus increases to +2 with a level 3–5 spell slot. The bonus increases to +3 with a level 6+ spell slot.
+You touch a nonmagical weapon.
+Until the spell ends, that weapon becomes a magic weapon with a +1 bonus to attack rolls and damage rolls.
+The spell ends early if you cast it again.
+Using a Higher-Level Spell Slot.
+The bonus increases to +2 with a level 3–5 spell slot.
+The bonus increases to +3 with a level 6+ spell slot.
 Source: Player's Handbook
 Spellcasting Ability: Charisma
 ----------------------------------------
@@ -368,7 +410,12 @@ Range: Touch
 Components: V, S
 Duration: 1 hour
 Description:
-You touch a nonmagical weapon. Until the spell ends, that weapon becomes a magic weapon with a +1 bonus to attack rolls and damage rolls. The spell ends early if you cast it again. Using a Higher-Level Spell Slot. The bonus increases to +2 with a level 3–5 spell slot. The bonus increases to +3 with a level 6+ spell slot.
+You touch a nonmagical weapon.
+Until the spell ends, that weapon becomes a magic weapon with a +1 bonus to attack rolls and damage rolls.
+The spell ends early if you cast it again.
+Using a Higher-Level Spell Slot.
+The bonus increases to +2 with a level 3–5 spell slot.
+The bonus increases to +3 with a level 6+ spell slot.
 Source: Player's Handbook
 Spellcasting Ability: Charisma
 ----------------------------------------
@@ -394,7 +441,12 @@ Range: 60 feet
 Components: V, S
 Duration: 10 minutes
 Description:
-You create a magical zone that guards against deception in a 15-foot-radius Sphere centered on a point within range. Until the spell ends, a creature that enters the spell’s area for the first time on a turn or starts its turn there makes a Charisma saving throw. On a failed save, a creature can’t speak a deliberate lie while in the radius. You know whether a creature succeeds or fails on this save. An affected creature is aware of the spell and can avoid answering questions to which it would normally respond with a lie. Such a creature can be evasive yet must be truthful.
+You create a magical zone that guards against deception in a 15-foot-radius Sphere centered on a point within range.
+Until the spell ends, a creature that enters the spell’s area for the first time on a turn or starts its turn there makes a Charisma saving throw.
+On a failed save, a creature can’t speak a deliberate lie while in the radius.
+You know whether a creature succeeds or fails on this save.
+An affected creature is aware of the spell and can avoid answering questions to which it would normally respond with a lie.
+Such a creature can be evasive yet must be truthful.
 Source: Player's Handbook
 Spellcasting Ability: Charisma
 ----------------------------------------
@@ -407,7 +459,8 @@ Range: Self
 Components: V
 Duration: Concentration, up to 1 minute
 Description:
-An aura radiates from you in a 30-foot Emanation for the duration. When you create the aura and at the start of each of your turns while it persists, you can restore 2d6 Hit Points to one creature in it.
+An aura radiates from you in a 30-foot Emanation for the duration.
+When you create the aura and at the start of each of your turns while it persists, you can restore 2d6 Hit Points to one creature in it.
 Source: Player's Handbook
 Spellcasting Ability: Charisma
 ----------------------------------------
@@ -420,7 +473,10 @@ Range: Self
 Components: V
 Duration: 1 minute
 Description:
-The target hit by the strike takes an extra 3d8 Radiant damage from the attack, and the target has the Blinded condition until the spell ends. At the end of each of its turns, the Blinded target makes a Constitution saving throw, ending the spell on itself on a success. Using a Higher-Level Spell Slot. The extra damage increases by 1d8 for each spell slot level above 3.
+The target hit by the strike takes an extra 3d8 Radiant damage from the attack, and the target has the Blinded condition until the spell ends.
+At the end of each of its turns, the Blinded target makes a Constitution saving throw, ending the spell on itself on a success.
+Using a Higher-Level Spell Slot.
+The extra damage increases by 1d8 for each spell slot level above 3.
 Source: Player's Handbook
 Spellcasting Ability: Charisma
 ----------------------------------------
@@ -433,7 +489,10 @@ Range: 30 feet
 Components: V, S, M (a shaving of licorice root)
 Duration: Concentration, up to 1 minute
 Description:
-Choose a willing creature that you can see within range. Until the spell ends, the target’s Speed is doubled, it gains a +2 bonus to Armor Class, it has Advantage on Dexterity saving throws, and it gains an additional action on each of its turns. That action can be used to take only the Attack (one attack only), Dash, Disengage, Hide, or Utilize action. When the spell ends, the target is Incapacitated and has a Speed of 0 until the end of its next turn, as a wave of lethargy washes over it.
+Choose a willing creature that you can see within range.
+Until the spell ends, the target’s Speed is doubled, it gains a +2 bonus to Armor Class, it has Advantage on Dexterity saving throws, and it gains an additional action on each of its turns.
+That action can be used to take only the Attack (one attack only), Dash, Disengage, Hide, or Utilize action.
+When the spell ends, the target is Incapacitated and has a Speed of 0 until the end of its next turn, as a wave of lethargy washes over it.
 Source: Player's Handbook
 Spellcasting Ability: Charisma
 ----------------------------------------
@@ -459,7 +518,8 @@ Range: Self
 Components: V
 Duration: Concentration, up to 10 minutes
 Description:
-An aura radiates from you in a 30-foot Emanation for the duration. While in the aura, you and your allies have Resistance to Poison damage and Advantage on saving throws to avoid or end effects that include the Blinded, Charmed, Deafened, Frightened, Paralyzed, Poisoned, or Stunned condition.
+An aura radiates from you in a 30-foot Emanation for the duration.
+While in the aura, you and your allies have Resistance to Poison damage and Advantage on saving throws to avoid or end effects that include the Blinded, Charmed, Deafened, Frightened, Paralyzed, Poisoned, or Stunned condition.
 Source: Player's Handbook
 Spellcasting Ability: Charisma
 ----------------------------------------
@@ -472,7 +532,10 @@ Range: 30 feet
 Components: V, S
 Duration: Concentration, up to 1 minute
 Description:
-Each creature of your choice that you can see within range must succeed on a Wisdom saving throw or have the Charmed condition until the spell ends. For the duration, you can take a Bonus Action to designate a direction that is horizontal to you. Each Charmed target must use as much of its movement as possible to move in that direction on its next turn, taking the safest route. After moving in this way, a target repeats the save, ending the spell on itself on a success.
+Each creature of your choice that you can see within range must succeed on a Wisdom saving throw or have the Charmed condition until the spell ends.
+For the duration, you can take a Bonus Action to designate a direction that is horizontal to you.
+Each Charmed target must use as much of its movement as possible to move in that direction on its next turn, taking the safest route.
+After moving in this way, a target repeats the save, ending the spell on itself on a success.
 Source: Player's Handbook
 Spellcasting Ability: Charisma
 ----------------------------------------
@@ -485,7 +548,9 @@ Range: Touch
 Components: V, S
 Duration: 8 hours
 Description:
-You touch a creature and grant it a measure of protection from death. The first time the target would drop to 0 Hit Points before the spell ends, the target instead drops to 1 Hit Point, and the spell ends. If the spell is still in effect when the target is subjected to an effect that would kill it instantly without dealing damage, that effect is negated against the target, and the spell ends.
+You touch a creature and grant it a measure of protection from death.
+The first time the target would drop to 0 Hit Points before the spell ends, the target instead drops to 1 Hit Point, and the spell ends.
+If the spell is still in effect when the target is subjected to an effect that would kill it instantly without dealing damage, that effect is negated against the target, and the spell ends.
 Source: Player's Handbook
 Spellcasting Ability: Charisma
 ----------------------------------------
@@ -498,7 +563,12 @@ Range: Touch
 Components: V, S, M (a leather strap)
 Duration: 1 hour
 Description:
-You touch a willing creature. For the duration, the target’s movement is unaffected by Difficult Terrain, and spells and other magical effects can neither reduce the target’s Speed nor cause the target to have the Paralyzed or Restrained conditions. The target also has a Swim Speed equal to its Speed. In addition, the target can spend 5 feet of movement to automatically escape from nonmagical restraints, such as manacles or a creature imposing the Grappled condition on it. Using a Higher-Level Spell Slot. You can target one additional creature for each spell slot level above 4.
+You touch a willing creature.
+For the duration, the target’s movement is unaffected by Difficult Terrain, and spells and other magical effects can neither reduce the target’s Speed nor cause the target to have the Paralyzed or Restrained conditions.
+The target also has a Swim Speed equal to its Speed.
+In addition, the target can spend 5 feet of movement to automatically escape from nonmagical restraints, such as manacles or a creature imposing the Grappled condition on it.
+Using a Higher-Level Spell Slot.
+You can target one additional creature for each spell slot level above 4.
 Source: Player's Handbook
 Spellcasting Ability: Charisma
 ----------------------------------------
@@ -511,7 +581,10 @@ Range: Self
 Components: V
 Duration: Concentration, up to 1 minute
 Description:
-The target hit by the attack roll takes an extra 5d10 Force damage from the attack. If the attack reduces the target to 50 Hit Points or fewer, the target must succeed on a Charisma saving throw or be transported to a harmless demiplane for the duration. While there, the target has the Incapacitated condition. When the spell ends, the target reappears in the space it left or in the nearest unoccupied space if that space is occupied.
+The target hit by the attack roll takes an extra 5d10 Force damage from the attack.
+If the attack reduces the target to 50 Hit Points or fewer, the target must succeed on a Charisma saving throw or be transported to a harmless demiplane for the duration.
+While there, the target has the Incapacitated condition.
+When the spell ends, the target reappears in the space it left or in the nearest unoccupied space if that space is occupied.
 Source: Player's Handbook
 Spellcasting Ability: Charisma
 ----------------------------------------
@@ -524,7 +597,9 @@ Range: Self
 Components: V
 Duration: Concentration, up to 10 minutes
 Description:
-An aura radiates from you in a 30-foot Emanation for the duration. While in the aura, you and your allies have Advantage on saving throws against spells and other magical effects. When an affected creature makes a saving throw against a spell or magical effect that allows a save to take only half damage, it takes no damage if it succeeds on the save.
+An aura radiates from you in a 30-foot Emanation for the duration.
+While in the aura, you and your allies have Advantage on saving throws against spells and other magical effects.
+When an affected creature makes a saving throw against a spell or magical effect that allows a save to take only half damage, it takes no damage if it succeeds on the save.
 Source: Player's Handbook
 Spellcasting Ability: Charisma
 ----------------------------------------
@@ -537,7 +612,17 @@ Range: 60 feet
 Components: V
 Duration: 30 days
 Description:
-You give a verbal command to a creature that you can see within range, ordering it to carry out some service or refrain from an action or a course of activity as you decide. The target must succeed on a Wisdom saving throw or have the Charmed condition for the duration. The target automatically succeeds if it can’t understand your command. While Charmed, the creature takes 5d10 Psychic damage if it acts in a manner directly counter to your command. It takes this damage no more than once each day. You can issue any command you choose, short of an activity that would result in certain death. Should you issue a suicidal command, the spell ends. A Remove Curse , Greater Restoration , or Wish spell ends this spell. Using a Higher-Level Spell Slot. If you use a level 7 or 8 spell slot, the duration is 365 days. If you use a level 9 spell slot, the spell lasts until it is ended by one of the spells mentioned above.
+You give a verbal command to a creature that you can see within range, ordering it to carry out some service or refrain from an action or a course of activity as you decide.
+The target must succeed on a Wisdom saving throw or have the Charmed condition for the duration.
+The target automatically succeeds if it can’t understand your command.
+While Charmed, the creature takes 5d10 Psychic damage if it acts in a manner directly counter to your command.
+It takes this damage no more than once each day.
+You can issue any command you choose, short of an activity that would result in certain death.
+Should you issue a suicidal command, the spell ends.
+A Remove Curse , Greater Restoration , or Wish spell ends this spell.
+Using a Higher-Level Spell Slot.
+If you use a level 7 or 8 spell slot, the duration is 365 days.
+If you use a level 9 spell slot, the spell lasts until it is ended by one of the spells mentioned above.
 Source: Player's Handbook
 Spellcasting Ability: Charisma
 ----------------------------------------
@@ -550,7 +635,12 @@ Range: Self
 Components: V, S, M (incense worth 250+ GP, which the spell consumes, and four ivory strips worth 50+ GP each)
 Duration: Instantaneous
 Description:
-Name or describe a famous person, place, or object. The spell brings to your mind a brief summary of the significant lore about that famous thing, as described by the DM. The lore might consist of important details, amusing revelations, or even secret lore that has never been widely known. The more information you already know about the thing, the more precise and detailed the information you receive is. That information is accurate but might be couched in figurative language or poetry, as determined by the DM. If the famous thing you chose isn’t actually famous, you hear sad musical notes played on a trombone, and the spell fails.
+Name or describe a famous person, place, or object.
+The spell brings to your mind a brief summary of the significant lore about that famous thing, as described by the DM.
+The lore might consist of important details, amusing revelations, or even secret lore that has never been widely known.
+The more information you already know about the thing, the more precise and detailed the information you receive is.
+That information is accurate but might be couched in figurative language or poetry, as determined by the DM.
+If the famous thing you chose isn’t actually famous, you hear sad musical notes played on a trombone, and the spell fails.
 Source: Player's Handbook
 Spellcasting Ability: Charisma
 ----------------------------------------
@@ -563,7 +653,11 @@ Range: Self
 Components: Component: V, S, M (a miniature tiara)
 Duration: Concentration, up to 1 minute
 Description:
-You surround yourself with unearthly majesty in a 10-foot Emanation. Whenever the Emanation enters the space of a creature you can see and whenever a creature you can see enters the Emanation or ends its turn there, you can force that creature to make a Wisdom saving throw. On a failed save, the target takes 4d6 Psychic damage and has the Prone condition, and you can push it up to 10 feet away. On a successful save, the target takes half as much damage only. A creature makes this save only once per turn.
+You surround yourself with unearthly majesty in a 10-foot Emanation.
+Whenever the Emanation enters the space of a creature you can see and whenever a creature you can see enters the Emanation or ends its turn there, you can force that creature to make a Wisdom saving throw.
+On a failed save, the target takes 4d6 Psychic damage and has the Prone condition, and you can push it up to 10 feet away.
+On a successful save, the target takes half as much damage only.
+A creature makes this save only once per turn.
 Source: Player's Handbook
 Spellcasting Ability: Charisma
 

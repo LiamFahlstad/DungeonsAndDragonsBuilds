@@ -202,7 +202,9 @@ Range: Touch
 Components: V, S, M (two lodestones)
 Duration: Instantaneous
 Description:
-This spell repairs a single break or tear in an object you touch, such as a broken chain link, two halves of a broken key, a torn cloak, or a leaking wineskin. As long as the break or tear is no larger than 1 foot in any dimension, you mend it, leaving no trace of the former damage. This spell can physically repair a magic item, but it can’t restore magic to such an object.
+This spell repairs a single break or tear in an object you touch, such as a broken chain link, two halves of a broken key, a torn cloak, or a leaking wineskin.
+As long as the break or tear is no larger than 1 foot in any dimension, you mend it, leaving no trace of the former damage.
+This spell can physically repair a magic item, but it can’t restore magic to such an object.
 Source: Player's Handbook
 Spellcasting Ability: Intelligence
 ----------------------------------------
@@ -215,7 +217,23 @@ Range: 10 feet
 Components: V, S
 Duration: Up to 1 hour
 Description:
-You create a magical effect within range. Choose the effect from the options below. If you cast this spell multiple times, you can have up to three of its non-instantaneous effects active at a time. Sensory Effect. You create an instantaneous, harmless sensory effect, such as a shower of sparks, a puff of wind, faint musical notes, or an odd odor. Fire Play. You instantaneously light or snuff out a candle, a torch, or a small campfire. Clean or Soil. You instantaneously clean or soil an object no larger than 1 cubic foot. Minor Sensation. You chill, warm, or flavor up to 1 cubic foot of nonliving material for 1 hour. Magic Mark. You make a color, a small mark, or a symbol appear on an object or a surface for 1 hour. Minor Creation. You create a nonmagical trinket or an illusory image that can fit in your hand. It lasts until the end of your next turn. A trinket can deal no damage and has no monetary worth.
+You create a magical effect within range.
+Choose the effect from the options below.
+If you cast this spell multiple times, you can have up to three of its non-instantaneous effects active at a time.
+Sensory Effect.
+You create an instantaneous, harmless sensory effect, such as a shower of sparks, a puff of wind, faint musical notes, or an odd odor.
+Fire Play.
+You instantaneously light or snuff out a candle, a torch, or a small campfire.
+Clean or Soil.
+You instantaneously clean or soil an object no larger than 1 cubic foot.
+Minor Sensation.
+You chill, warm, or flavor up to 1 cubic foot of nonliving material for 1 hour.
+Magic Mark.
+You make a color, a small mark, or a symbol appear on an object or a surface for 1 hour.
+Minor Creation.
+You create a nonmagical trinket or an illusory image that can fit in your hand.
+It lasts until the end of your next turn.
+A trinket can deal no damage and has no monetary worth.
 Source: Player's Handbook
 Spellcasting Ability: Intelligence
 ----------------------------------------
@@ -228,7 +246,9 @@ Range: Touch
 Components: V, S
 Duration: Instantaneous
 Description:
-A creature you touch regains a number of Hit Points equal to 2d8 plus your spellcasting ability modifier. Using a Higher-Level Spell Slot. The healing increases by 2d8 for each spell slot level above 1.
+A creature you touch regains a number of Hit Points equal to 2d8 plus your spellcasting ability modifier.
+Using a Higher-Level Spell Slot.
+The healing increases by 2d8 for each spell slot level above 1.
 Source: Player's Handbook
 Spellcasting Ability: Wisdom
 ----------------------------------------
@@ -241,7 +261,11 @@ Range: 120 feet
 Components: V, S
 Duration: Concentration, up to 1 hour
 Description:
-You create a 20-foot-radius Sphere of fog centered on a point within range. The Sphere is Heavily Obscured. It lasts for the duration or until a strong wind (such as one created by Gust of Wind) disperses it. Using a Higher-Level Spell Slot. The fog’s radius increases by 20 feet for each spell slot level above 1.
+You create a 20-foot-radius Sphere of fog centered on a point within range.
+The Sphere is Heavily Obscured.
+It lasts for the duration or until a strong wind (such as one created by Gust of Wind) disperses it.
+Using a Higher-Level Spell Slot.
+The fog’s radius increases by 20 feet for each spell slot level above 1.
 Source: Player's Handbook
 Spellcasting Ability: Wisdom
 ----------------------------------------
@@ -254,7 +278,12 @@ Range: 90 feet
 Components: V
 Duration: Concentration, up to 1 hour
 Description:
-You magically mark one creature you can see within range as your quarry. Until the spell ends, you deal an extra 1d6 Force damage to the target whenever you hit it with an attack roll. You also have Advantage on any Wisdom (Perception or Survival) check you make to find it. If the target drops to 0 Hit Points before this spell ends, you can take a Bonus Action to move the mark to a new creature you can see within range. Using a Higher-Level Spell Slot. Your Concentration can last longer with a spell slot of level 3–4 (up to 8 hours) or 5+ (up to 24 hours).
+You magically mark one creature you can see within range as your quarry.
+Until the spell ends, you deal an extra 1d6 Force damage to the target whenever you hit it with an attack roll.
+You also have Advantage on any Wisdom (Perception or Survival) check you make to find it.
+If the target drops to 0 Hit Points before this spell ends, you can take a Bonus Action to move the mark to a new creature you can see within range.
+Using a Higher-Level Spell Slot.
+Your Concentration can last longer with a spell slot of level 3–4 (up to 8 hours) or 5+ (up to 24 hours).
 Source: Player's Handbook
 Spellcasting Ability: Wisdom
 ----------------------------------------
@@ -267,7 +296,10 @@ Range: Touch
 Components: V, S, M (a grasshopper’s hind leg)
 Duration: 1 minute
 Description:
-You touch a willing creature. Once on each of its turns until the spell ends, that creature can jump up to 30 feet by spending 10 feet of movement. Using a Higher-Level Spell Slot. You can target one additional creature for each spell slot level above 1.
+You touch a willing creature.
+Once on each of its turns until the spell ends, that creature can jump up to 30 feet by spending 10 feet of movement.
+Using a Higher-Level Spell Slot.
+You can target one additional creature for each spell slot level above 1.
 Source: Player's Handbook
 Spellcasting Ability: Wisdom
 ----------------------------------------
@@ -280,7 +312,9 @@ Range: Touch
 Components: S
 Duration: Concentration, up to 1 hour
 Description:
-You touch a willing Beast. For the duration, you can perceive through the Beast’s senses as well as your own. When perceiving through the Beast’s senses, you benefit from any special senses it has.
+You touch a willing Beast.
+For the duration, you can perceive through the Beast’s senses as well as your own.
+When perceiving through the Beast’s senses, you benefit from any special senses it has.
 Source: Player's Handbook
 Spellcasting Ability: Wisdom
 ----------------------------------------
@@ -293,7 +327,8 @@ Range: Self
 Components: V, S, M (ashes from burned mistletoe)
 Duration: Concentration, up to 1 hour
 Description:
-You radiate a concealing aura in a 30-foot Emanation for the duration. While in the aura, you and each creature you choose have a +10 bonus to Dexterity (Stealth) checks and leave no tracks.
+You radiate a concealing aura in a 30-foot Emanation for the duration.
+While in the aura, you and each creature you choose have a +10 bonus to Dexterity (Stealth) checks and leave no tracks.
 Source: Player's Handbook
 Spellcasting Ability: Wisdom
 ----------------------------------------
@@ -306,7 +341,9 @@ Range: 120 feet
 Components: V, S
 Duration: Concentration, up to 10 minutes
 Description:
-For the duration, no sound can be created within or pass through a 20-foot-radius Sphere centered on a point you choose within range. Any creature or object entirely inside the Sphere has Immunity to Thunder damage, and creatures have the Deafened condition while entirely inside it. Casting a spell that includes a Verbal component is impossible there.
+For the duration, no sound can be created within or pass through a 20-foot-radius Sphere centered on a point you choose within range.
+Any creature or object entirely inside the Sphere has Immunity to Thunder damage, and creatures have the Deafened condition while entirely inside it.
+Casting a spell that includes a Verbal component is impossible there.
 Source: Player's Handbook
 Spellcasting Ability: Wisdom
 

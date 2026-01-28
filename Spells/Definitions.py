@@ -1974,6 +1974,10 @@ class Spell(ABC):
         }
 
     def write_to_file(self, file):
+        lines = [line.strip() + "." for line in self.description.strip().split(".")]
+        lines = lines if len(lines) <= 1 else lines[:-1]
+        description = "\n".join(lines)
+
         file.write(f"Name: {self.name}\n")
         file.write(f"Level: {self.level}\n")
         file.write(f"School: {self.school}\n")
@@ -1982,7 +1986,7 @@ class Spell(ABC):
         file.write(f"Range: {self.range}\n")
         file.write(f"Components: {self.components}\n")
         file.write(f"Duration: {self.duration}\n")
-        file.write(f"Description:\n{self.description}\n")
+        file.write(f"Description:\n{description}\n")
         file.write(f"Source: {self.source}\n")
 
         if self.spell_casting_ability:
