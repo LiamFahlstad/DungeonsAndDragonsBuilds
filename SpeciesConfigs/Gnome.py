@@ -30,12 +30,12 @@ class ForestGnomeSpeciesBuilder(SpeciesBuilder):
         return data
 
 
-class ForestGnomeSpeciesBuilder(SpeciesBuilder):
+class RockGnomeSpeciesBuilder(SpeciesBuilder):
     def __init__(
         self,
     ):
         super().__init__(
-            name="Forest Gnome",
+            name="Rock Gnome",
         )
 
     def build(self) -> CharacterSheetCreator.CharacterSheetData:

@@ -11,6 +11,9 @@ class OriginTextFeat(TextFeature):
     pass
 
 
+OriginFeat = OriginCharacterFeat | OriginTextFeat
+
+
 class Skilled(OriginCharacterFeat):
     """Also add proficiency in any combination of three skills or tools of your choice."""
 

@@ -1,4 +1,4 @@
-import CharacterSheetCreator
+from Builds.CharacterBuilder import CharacterBuilder
 from CharacterConfigs.BaseClasses import ClassBuilder
 from CharacterConfigs.BaseClasses.PaladinBase import (
     PaladinLevel1,
@@ -47,8 +47,8 @@ from StatBlocks.AbilitiesStatBlock import StandardArrayAbilitiesStatBlock
 from StatBlocks.SkillsStatBlock import PaladinSkillsStatBlock
 
 
-def get_data() -> CharacterSheetCreator.CharacterSheetData:
-    paladin_glory = GloryPaladinStarterClassBuilder(
+def get_starter_class_builder():
+    return GloryPaladinStarterClassBuilder(
         paladin_level=20,
         # Distribute 15, 14, 13, 12, 10, 8 among your abilities.
         abilities=StandardArrayAbilitiesStatBlock(
@@ -177,26 +177,20 @@ def get_data() -> CharacterSheetCreator.CharacterSheetData:
         },
     )
 
-    species_data = Human.human_character_data(
-        skill_proficiency=Skill.SURVIVAL,
-        origin_feat=OriginFeats.Skilled(
-            skills=[
-                Skill.PERCEPTION,
-                Skill.INSIGHT,
-                Skill.HISTORY,
-            ]
-        ),
-    )
-    character_class_data = paladin_glory.create()
 
-    character_sheet_data = CharacterSheetCreator.CharacterSheetData()
-
-    character_sheet_data.character_name = "Sten"
-    character_sheet_data.merge_with(character_class_data)
-    character_sheet_data.merge_with(species_data)
-    return character_sheet_data
-
-
-if __name__ == "__main__":
-    character_sheet_data = get_data()
-    character_sheet_data.create_character_sheet()
+class OptimizedGloryPaladinCharacterBuilder(CharacterBuilder):
+    def __init__(self):
+        super().__init__(
+            name="Optimized Paladin Glory",
+            starter_class_builder=get_starter_class_builder(),
+            species_builder=Human.HumanSpeciesBuilder(
+                skill_proficiency=Skill.SURVIVAL,
+                origin_feat=OriginFeats.Skilled(
+                    skills=[
+                        Skill.PERCEPTION,
+                        Skill.INSIGHT,
+                        Skill.HISTORY,
+                    ]
+                ),
+            ),
+        )

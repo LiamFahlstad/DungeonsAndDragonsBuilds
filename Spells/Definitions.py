@@ -748,7 +748,7 @@ class ClericLevel4Spells(str, Enum):
 
 
 class ClericLevel5Spells(str, Enum):
-    CIRCLE_OF_POWER = "Circle of Power"
+    CIRCLE_OF_POWER = "Circle Of Power"
     COMMUNE = "Commune"
     CONTAGION = "Contagion"
     DISPEL_EVIL_AND_GOOD = "Dispel Evil and Good"
@@ -1036,7 +1036,7 @@ class PaladinLevel4Spells(str, Enum):
 
 class PaladinLevel5Spells(str, Enum):
     BANISHING_SMITE = "Banishing Smite"
-    CIRCLE_OF_POWER = "Circle of Power"
+    CIRCLE_OF_POWER = "Circle Of Power"
     DESTRUCTIVE_WAVE = "Destructive Wave"
     DISPEL_EVIL_AND_GOOD = "Dispel Evil and Good"
     GEAS = "Geas"

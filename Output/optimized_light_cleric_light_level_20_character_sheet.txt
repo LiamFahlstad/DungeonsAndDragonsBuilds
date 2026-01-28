@@ -196,27 +196,27 @@ Level 1 | Level 2 | Level 3 | Level 4 | Level 5 | Level 6 | Level 7 | Level 8 | 
 Name: Guidance
 Level: 0
 School: Divination
-Classes: Cleric, Druid
+Classes: Artificer, Cleric, Druid
 Casting Time: Action
 Range: Touch
 Components: V, S
 Duration: Concentration, up to 1 minute
 Description:
 You touch a willing creature and choose a skill. Until the spell ends, the creature adds 1d4 to any ability check using the chosen skill.
-Source: Player's Handbook 2024 (BR)
+Source: Player's Handbook
 Spellcasting Ability: Wisdom
 ----------------------------------------
 Name: Light
 Level: 0
 School: Evocation
-Classes: Bard, Cleric, Sorcerer, Wizard
+Classes: Artificer, Bard, Cleric, Sorcerer, Wizard
 Casting Time: Action
 Range: Touch
 Components: V, M (a firefly or phosphorescent moss)
 Duration: 1 hour
 Description:
-You touch one Large or smaller object that isn't being worn or carried by someone else. Until the spell ends, the object sheds Bright Light in a 20-foot radius and Dim Light for an additional 20 feet. The light can be colored as you like. Covering the object with something opaque blocks the light. The spell ends if you cast it again.
-Source: Player's Handbook 2024 (BR)
+You touch one Large or smaller object that isn’t being worn or carried by someone else. Until the spell ends, the object sheds Bright Light in a 20-foot radius and Dim Light for an additional 20 feet. The light can be colored as you like. Covering the object with something opaque blocks the light. The spell ends if you cast it again.
+Source: Player's Handbook
 Spellcasting Ability: Wisdom
 ----------------------------------------
 Name: Minor Illusion
@@ -228,39 +228,34 @@ Range: 30 feet
 Components: S, M (a bit of fleece)
 Duration: 1 minute
 Description:
-You create a sound or an image of an object within range that lasts for the duration. See the descriptions below for the effects of each. The illusion ends if you cast this spell again. If a creature takes a Study action to examine the sound or image, the creature can determine that it is an illusion with a successful Intelligence (Investigation) check against your spell save DC. If a creature discerns the illusion for what it is, the illusion becomes faint to the creature.
-Sound:
-If you create a sound, its volume can range from a whisper to a scream. It can be your voice, someone else's voice, a lion's roar, a beating of drums, or any other sound you choose. The sound continues unabated throughout the duration, or you can make discrete sounds at different times before the spell ends. Image:
-If you create an image of an object—such as a chair, muddy footprints, or a small chest—it must be no larger than a 5-foot Cube. The image can't create sound, light, smell, or any other sensory effect. Physical interaction with the image reveals it to be an illusion, since things can pass through it.
-Source: Player's Handbook 2024 (BR)
+You create a sound or an image of an object within range that lasts for the duration. See the descriptions below for the effects of each. The illusion ends if you cast this spell again. If a creature takes a Study action to examine the sound or image, the creature can determine that it is an illusion with a successful Intelligence (Investigation) check against your spell save DC. If a creature discerns the illusion for what it is, the illusion becomes faint to the creature. Sound. If you create a sound, its volume can range from a whisper to a scream. It can be your voice, someone else’s voice, a lion’s roar, a beating of drums, or any other sound you choose. The sound continues unabated throughout the duration, or you can make discrete sounds at different times before the spell ends. Image. If you create an image of an object—such as a chair, muddy footprints, or a small chest—it must be no larger than a 5-foot Cube. The image can’t create sound, light, smell, or any other sensory effect. Physical interaction with the image reveals it to be an illusion, since things can pass through it.
+Source: Player's Handbook
 Spellcasting Ability: Wisdom
 ----------------------------------------
 Name: Resistance
 Level: 0
 School: Abjuration
-Classes: Cleric, Druid
+Classes: Artificer, Cleric, Druid
 Casting Time: Action
 Range: Touch
 Components: V, S
 Duration: Concentration, up to 1 minute
 Description:
 You touch a willing creature and choose a damage type: Acid, Bludgeoning, Cold, Fire, Lightning, Necrotic, Piercing, Poison, Radiant, Slashing, or Thunder. When the creature takes damage of the chosen type before the spell ends, the creature reduces the total damage taken by 1d4. A creature can benefit from this spell only once per turn.
-Source: Player's Handbook 2024 (BR)
+Source: Player's Handbook
 Spellcasting Ability: Wisdom
 ----------------------------------------
 Name: Spare the Dying
 Level: 0
 School: Necromancy
-Classes: Cleric, Druid
+Classes: Artificer, Cleric, Druid
 Casting Time: Action
 Range: 15 feet
 Components: V, S
 Duration: Instantaneous
 Description:
-Choose a creature within range that has 0 Hit Points and isn't dead. The creature becomes Stable.
-Cantrip Upgrade:
-The range doubles when you reach levels 5 (30 feet), 11 (60 feet), and 17 (120 feet).
-Source: Player's Handbook 2024 (BR)
+Choose a creature within range that has 0 Hit Points and isn’t dead. The creature becomes Stable. Cantrip Upgrade. The range doubles when you reach levels 5 (30 feet), 11 (60 feet), and 17 (120 feet).
+Source: Player's Handbook
 Spellcasting Ability: Wisdom
 ----------------------------------------
 Name: Bane
@@ -272,10 +267,8 @@ Range: 30 feet
 Components: V, S, M (a drop of blood)
 Duration: Concentration, up to 1 minute
 Description:
-Up to three creatures of your choice that you can see within range must each make a Charisma saving throw. Whenever a target that fails this save makes an attack roll or a saving throw before the spell ends, the target must subtract 1d4 from the attack roll or save.
-Using a Higher-Level Spell Slot:
-You can target one additional creature for each spell slot level above 1.
-Source: Player's Handbook 2024 (BR)
+Up to three creatures of your choice that you can see within range must each make a Charisma saving throw. Whenever a target that fails this save makes an attack roll or a saving throw before the spell ends, the target must subtract 1d4 from the attack roll or save. Using a Higher-Level Spell Slot. You can target one additional creature for each spell slot level above 1.
+Source: Player's Handbook
 Spellcasting Ability: Wisdom
 ----------------------------------------
 Name: Bless
@@ -284,13 +277,11 @@ School: Enchantment
 Classes: Cleric, Paladin
 Casting Time: Action
 Range: 30 feet
-Components: V, S, M (a Holy Symbol, worth 5+ GP)
+Components: V, S, M (a Holy Symbol worth 5+ GP)
 Duration: Concentration, up to 1 minute
 Description:
-You bless up to three creatures within range. Whenever a target makes an attack roll or a saving throw before the spell ends, the target adds 1d4 to the attack roll or save.
-Using a Higher-Level Spell Slot:
-You can target one additional creature for each spell slot level above 1.
-Source: Player's Handbook 2024 (BR)
+You bless up to three creatures within range. Whenever a target makes an attack roll or a saving throw before the spell ends, the target adds 1d4 to the attack roll or save. Using a Higher-Level Spell Slot. You can target one additional creature for each spell slot level above 1.
+Source: Player's Handbook
 Spellcasting Ability: Wisdom
 ----------------------------------------
 Name: Command
@@ -302,15 +293,8 @@ Range: 60 feet
 Components: V
 Duration: Instantaneous
 Description:
-You speak a one-word command to a creature you can see within range. The target must succeed on a Wisdom saving throw or follow the command on its next turn.
-Choose the command from these options: Approach:
-The target moves toward you by the shortest and most direct route, ending its turn if it moves within 5 feet of you. Drop:
-The target drops whatever it is holding and then ends its turn. Flee:
-The target spends its turn moving away from you by the fastest available means. Grovel:
-The target has the Prone condition and then ends its turn. Halt:
-On its turn, the target doesn't move and takes no action or Bonus Action. Using a Higher-Level Spell Slot:
-You can affect one additional creature for each spell slot level above 1.
-Source: Player's Handbook 2024 (BR)
+You speak a one-word command to a creature you can see within range. The target must succeed on a Wisdom saving throw or follow the command on its next turn. Choose the command from these options: Approach. The target moves toward you by the shortest and most direct route, ending its turn if it moves within 5 feet of you. Drop. The target drops whatever it is holding and then ends its turn. Flee. The target spends its turn moving away from you by the fastest available means. Grovel. The target has the Prone condition and then ends its turn. Halt. On its turn, the target doesn’t move and takes no action or Bonus Action. Using a Higher-Level Spell Slot. You can affect one additional creature for each spell slot level above 1.
+Source: Player's Handbook
 Spellcasting Ability: Wisdom
 ----------------------------------------
 Name: Create or Destroy Water
@@ -322,11 +306,8 @@ Range: 30 feet
 Components: V, S, M (a mix of water and sand)
 Duration: Instantaneous
 Description:
-You do one of the following: Create Water:
-You create up to 10 gallons of clean water within range in an open container. Alternatively, the water falls as rain in a 30-foot Cube within range, extinguishing exposed flames there. Destroy Water:
-You destroy up to 10 gallons of water in an open container within range. Alternatively, you destroy fog in a 30-foot Cube within range. Using a Higher-Level Spell Slot:
-You create or destroy 10 additional gallons of water, or the size of the Cube increases by 5 feet, for each spell slot level above 1.
-Source: Player's Handbook 2024 (BR)
+You do one of the following: Create Water. You create up to 10 gallons of clean water within range in an open container. Alternatively, the water falls as rain in a 30-foot Cube within range, extinguishing exposed flames there. Destroy Water. You destroy up to 10 gallons of water in an open container within range. Alternatively, you destroy fog in a 30-foot Cube within range. Using a Higher-Level Spell Slot. You create or destroy 10 additional gallons of water, or the size of the Cube increases by 5 feet, for each spell slot level above 1.
+Source: Player's Handbook
 Spellcasting Ability: Wisdom
 ----------------------------------------
 Name: Guiding Bolt
@@ -338,10 +319,8 @@ Range: 120 feet
 Components: V, S
 Duration: 1 round
 Description:
-You hurl a bolt of light toward a creature within range. Make a ranged spell attack against the target. On a hit, it takes 4d6 Radiant damage, and the next attack roll made against it before the end of your next turn has Advantage.
-Using a Higher-Level Spell Slot:
-The damage increases by 1d6 for each spell slot level above 1.
-Source: Player's Handbook 2024 (BR)
+You hurl a bolt of light toward a creature within range. Make a ranged spell attack against the target. On a hit, it takes 4d6 Radiant damage, and the next attack roll made against it before the end of your next turn has Advantage. Using a Higher-Level Spell Slot. The damage increases by 1d6 for each spell slot level above 1.
+Source: Player's Handbook
 Spellcasting Ability: Wisdom
 ----------------------------------------
 Name: Healing Word
@@ -353,38 +332,34 @@ Range: 60 feet
 Components: V
 Duration: Instantaneous
 Description:
-A creature of your choice that you can see within range regains Hit Points equal to 2d4 plus your spellcasting ability modifier.
-Using a Higher-Level Spell Slot:
-The healing increases by 2d4 for each spell slot level above 1.
-Source: Player's Handbook 2024 (BR)
+A creature of your choice that you can see within range regains Hit Points equal to 2d4 plus your spellcasting ability modifier. Using a Higher-Level Spell Slot. The healing increases by 2d4 for each spell slot level above 1.
+Source: Player's Handbook
 Spellcasting Ability: Wisdom
 ----------------------------------------
 Name: Aid
 Level: 2
 School: Abjuration
-Classes: Bard, Cleric, Druid, Paladin, Ranger
+Classes: Artificer, Bard, Cleric, Druid, Paladin, Ranger
 Casting Time: Action
 Range: 30 feet
 Components: V, S, M (a strip of white cloth)
 Duration: 8 hours
 Description:
-Choose up to three creatures within range. Each target's Hit Point maximum and current Hit Points increase by 5 for the duration.
-Using a Higher-Level Spell Slot:
-Each target's Hit Points increase by 5 for each spell slot level above 2.
-Source: Player's Handbook 2024 (BR)
+Choose up to three creatures within range. Each target’s Hit Point maximum and current Hit Points increase by 5 for the duration. Using a Higher-Level Spell Slot. Each target’s Hit Points increase by 5 for each spell slot level above 2.
+Source: Player's Handbook
 Spellcasting Ability: Wisdom
 ----------------------------------------
 Name: Lesser Restoration
 Level: 2
 School: Abjuration
-Classes: Bard, Cleric, Druid, Paladin, Ranger
+Classes: Artificer, Bard, Cleric, Druid, Paladin, Ranger
 Casting Time: Bonus Action
 Range: Touch
 Components: V, S
 Duration: Instantaneous
 Description:
 You touch a creature and end one condition on it: Blinded, Deafened, Paralyzed, or Poisoned.
-Source: Player's Handbook 2024 (BR)
+Source: Player's Handbook
 Spellcasting Ability: Wisdom
 ----------------------------------------
 Name: Aura of Vitality
@@ -397,7 +372,7 @@ Components: V
 Duration: Concentration, up to 1 minute
 Description:
 An aura radiates from you in a 30-foot Emanation for the duration. When you create the aura and at the start of each of your turns while it persists, you can restore 2d6 Hit Points to one creature in it.
-Source: Player's Handbook 2024
+Source: Player's Handbook
 Spellcasting Ability: Wisdom
 ----------------------------------------
 Name: Bestow Curse
@@ -409,53 +384,47 @@ Range: Touch
 Components: V, S
 Duration: Concentration, up to 1 minute
 Description:
-You touch a creature, which must succeed on a Wisdom saving throw or become cursed for the duration. Until the curse ends, the target suffers one of the following effects of your choice: • Choose one ability. The target has Disadvantage on ability checks and saving throws made with that ability. • The target has Disadvantage on attack rolls against you. • In combat, the target must succeed on a Wisdom saving throw at the start of each of its turns or be forced to take the Dodge action on that turn. • If you deal damage to the target with an attack roll or a spell, the target takes an extra 1d8 Necrotic damage.
-Using a Higher-Level Spell Slot:
-If you cast this spell using a level 4 spell slot, you can maintain Concentration on it for up to 10 minutes. If you use a level 5+ spell slot, the spell doesn't require Concentration, and the duration becomes 8 hours (level 5-6 slot) or 24 hours (level 7-8 slot). If you use a level 9 spell slot, the spell lasts until dispelled.
-Source: Player's Handbook 2024 (BR)
+You touch a creature, which must succeed on a Wisdom saving throw or become cursed for the duration. Until the curse ends, the target suffers one of the following effects of your choice: Using a Higher-Level Spell Slot. If you cast this spell using a level 4 spell slot, you can maintain Concentration on it for up to 10 minutes. If you use a level 5+ spell slot, the spell doesn't require Concentration, and the duration becomes 8 hours (level 5–6 slot) or 24 hours (level 7–8 slot). If you use a level 9 spell slot, the spell lasts until dispelled.
+Source: Player's Handbook
 Spellcasting Ability: Wisdom
 ----------------------------------------
 Name: Dispel Magic
 Level: 3
 School: Abjuration
-Classes: Bard, Cleric, Druid, Paladin, Ranger, Sorcerer, Warlock, Wizard
+Classes: Artificer, Bard, Cleric, Druid, Paladin, Ranger, Sorcerer, Warlock, Wizard
 Casting Time: Action
 Range: 120 feet
 Components: V, S
 Duration: Instantaneous
 Description:
-Choose one creature, object, or magical effect within range. Any ongoing spell of level 3 or lower on the target ends. For each ongoing spell of level 4 or higher on the target, make an ability check using your spellcasting ability (DC 10 plus that spell's level). On a successful check, the spell ends.
-Using a Higher-Level Spell Slot:
-You automatically end a spell on the target if the spell's level is equal to or less than the level of the spell slot you use.
-Source: Player's Handbook 2024 (BR)
+Choose one creature, object, or magical effect within range. Any ongoing spell of level 3 or lower on the target ends. For each ongoing spell of level 4 or higher on the target, make an ability check using your spellcasting ability (DC 10 plus that spell’s level). On a successful check, the spell ends. Using a Higher-Level Spell Slot. You automatically end a spell on the target if the spell’s level is equal to or less than the level of the spell slot you use.
+Source: Player's Handbook
 Spellcasting Ability: Wisdom
 ----------------------------------------
 Name: Freedom of Movement
 Level: 4
 School: Abjuration
-Classes: Bard, Cleric, Druid, Ranger
+Classes: Artificer, Bard, Cleric, Druid, Ranger
 Casting Time: Action
 Range: Touch
 Components: V, S, M (a leather strap)
 Duration: 1 hour
 Description:
-You touch a willing creature. For the duration, the target's movement is unaffected by Difficult Terrain, and spells and other magical effects can neither reduce the target's Speed nor cause the target to have the Paralyzed or Restrained conditions. The target also has a Swim Speed equal to its Speed. In addition, the target can spend 5 feet of movement to automatically escape from nonmagical restraints, such as manacles or a creature imposing the Grappled condition on it.
-Using a Higher-Level Spell Slot:
-You can target one additional creature for each spell slot level above 4.
-Source: Player's Handbook 2024 (BR)
+You touch a willing creature. For the duration, the target’s movement is unaffected by Difficult Terrain, and spells and other magical effects can neither reduce the target’s Speed nor cause the target to have the Paralyzed or Restrained conditions. The target also has a Swim Speed equal to its Speed. In addition, the target can spend 5 feet of movement to automatically escape from nonmagical restraints, such as manacles or a creature imposing the Grappled condition on it. Using a Higher-Level Spell Slot. You can target one additional creature for each spell slot level above 4.
+Source: Player's Handbook
 Spellcasting Ability: Wisdom
 ----------------------------------------
-Name: Circle of Power
+Name: Circle Of Power
 Level: 5
 School: Abjuration
-Classes: Cleric, Paladin, Wizard
+Classes: Artificer, Cleric, Paladin, Wizard
 Casting Time: Action
 Range: Self
 Components: V
 Duration: Concentration, up to 10 minutes
 Description:
 An aura radiates from you in a 30-foot Emanation for the duration. While in the aura, you and your allies have Advantage on saving throws against spells and other magical effects. When an affected creature makes a saving throw against a spell or magical effect that allows a save to take only half damage, it takes no damage if it succeeds on the save.
-Source: Player's Handbook 2024
+Source: Player's Handbook
 Spellcasting Ability: Wisdom
 ----------------------------------------
 Name: Flame Strike
@@ -467,10 +436,8 @@ Range: 60 feet
 Components: V, S, M (a pinch of sulfur)
 Duration: Instantaneous
 Description:
-A vertical column of brilliant fire roars down from above. Each creature in a 10-foot-radius, 40-foot-high Cylinder centered on a point within range makes a Dexterity saving throw, taking 5d6 Fire damage and 5d6 Radiant damage on a failed save or half as much damage on a successful one.
-Using a Higher-Level Spell Slot:
-The Fire damage and the Radiant damage increase by 1d6 for each spell slot level above 5.
-Source: Player's Handbook 2024 (BR)
+A vertical column of brilliant fire roars down from above. Each creature in a 10-foot-radius, 40-foot-high Cylinder centered on a point within range makes a Dexterity saving throw, taking 5d6 Fire damage and 5d6 Radiant damage on a failed save or half as much damage on a successful one. Using a Higher-Level Spell Slot. The Fire damage and the Radiant damage increase by 1d6 for each spell slot level above 5.
+Source: Player's Handbook
 Spellcasting Ability: Wisdom
 ----------------------------------------
 Name: Geas
@@ -482,10 +449,8 @@ Range: 60 feet
 Components: V
 Duration: 30 days
 Description:
-You give a verbal command to a creature that you can see within range, ordering it to carry out some service or refrain from an action or a course of activity as you decide. The target must succeed on a Wisdom saving throw or have the Charmed condition for the duration. The target automatically succeeds if it can't understand your command. While Charmed, the creature takes 5d10 Psychic damage if it acts in a manner directly counter to your command. It takes this damage no more than once each day. You can issue any command you choose, short of an activity that would result in certain death. Should you issue a suicidal command, the spell ends. A Remove Curse , Greater Restoration , or Wish spell ends this spell.
-Using a Higher-Level Spell Slot:
-If you use a level 7 or 8 spell slot, the duration is 365 days. If you use a level 9 spell slot, the spell lasts until it is ended by one of the spells mentioned above.
-Source: Player's Handbook 2024 (BR)
+You give a verbal command to a creature that you can see within range, ordering it to carry out some service or refrain from an action or a course of activity as you decide. The target must succeed on a Wisdom saving throw or have the Charmed condition for the duration. The target automatically succeeds if it can’t understand your command. While Charmed, the creature takes 5d10 Psychic damage if it acts in a manner directly counter to your command. It takes this damage no more than once each day. You can issue any command you choose, short of an activity that would result in certain death. Should you issue a suicidal command, the spell ends. A Remove Curse , Greater Restoration , or Wish spell ends this spell. Using a Higher-Level Spell Slot. If you use a level 7 or 8 spell slot, the duration is 365 days. If you use a level 9 spell slot, the spell lasts until it is ended by one of the spells mentioned above.
+Source: Player's Handbook
 Spellcasting Ability: Wisdom
 ----------------------------------------
 Name: True Seeing
@@ -498,7 +463,7 @@ Components: V, S, M (mushroom powder worth 25+ GP, which the spell consumes)
 Duration: 1 hour
 Description:
 For the duration, the willing creature you touch has Truesight with a range of 120 feet.
-Source: Player's Handbook 2024 (BR)
+Source: Player's Handbook
 Spellcasting Ability: Wisdom
 ----------------------------------------
 Name: Conjure Celestial
@@ -510,10 +475,8 @@ Range: 90 feet
 Components: V, S
 Duration: Concentration, up to 10 minutes
 Description:
-You conjure a spirit from the Upper Planes, which manifests as a pillar of light in a 10-foot-radius, 40-foot-high Cylinder centered on a point within range. For each creature you can see in the Cylinder, choose which of these lights shines on it: Healing Light. The target regains Hit Points equal to 4d12 plus your spellcasting ability modifier. Searing Light. The target makes a Dexterity saving throw, taking 6d12 Radiant damage on a failed save or half as much damage on a successful one. Until the spell ends, Bright Light fills the Cylinder, and when you move on your turn, you can also move the Cylinder up to 30 feet. Whenever the Cylinder moves into the space of a creature you can see and whenever a creature you can see enters the Cylinder or ends its turn there, you can bathe it in one of the lights. A creature can be affected by this spell only once per turn.
-Using a Higher-Level Spell Slot:
-The healing and damage increase by 1d12 for each spell slot level above 7.
-Source: Player's Handbook 2024 (BR)
+You conjure a spirit from the Upper Planes, which manifests as a pillar of light in a 10-foot-radius, 40-foot-high Cylinder centered on a point within range. For each creature you can see in the Cylinder, choose which of these lights shines on it: Healing Light. The target regains Hit Points equal to 4d12 plus your spellcasting ability modifier. Searing Light. The target makes a Dexterity saving throw, taking 6d12 Radiant damage on a failed save or half as much damage on a successful one. Until the spell ends, Bright Light fills the Cylinder, and when you move on your turn, you can also move the Cylinder up to 30 feet. Whenever the Cylinder moves into the space of a creature you can see and whenever a creature you can see enters the Cylinder or ends its turn there, you can bathe it in one of the lights. A creature can be affected by this spell only once per turn. Using a Higher-Level Spell Slot. The healing and damage increase by 1d12 for each spell slot level above 7.
+Source: Player's Handbook
 Spellcasting Ability: Wisdom
 ----------------------------------------
 Name: Regenerate
@@ -526,7 +489,7 @@ Components: V, S, M (a prayer wheel)
 Duration: 1 hour
 Description:
 A creature you touch regains 4d8 + 15 Hit Points. For the duration, the target regains 1 Hit Point at the start of each of its turns, and any severed body parts regrow after 2 minutes.
-Source: Player's Handbook 2024 (BR)
+Source: Player's Handbook
 Spellcasting Ability: Wisdom
 ----------------------------------------
 Name: Astral Projection
@@ -538,8 +501,8 @@ Range: 10 feet
 Components: V, S, M (for each of the spell's targets, one jacinth worth 1,000+ GP and one silver bar worth 100+ GP, all of which the spell consumes)
 Duration: Until dispelled
 Description:
-You and up to eight willing creatures within range project your astral bodies into the Astral Plane (the spell ends instantly if you are already on that plane). Each target's body is left behind in a state of suspended animation; it has the Unconscious condition, doesn't need food or air, and doesn't age. A target's astral form resembles its body in almost every way, replicating its game statistics and possessions. The principal difference is the addition of a silvery cord that trails from between the shoulder blades of the astral form. The cord fades from view after 1 foot. If the cord is cut—which happens only when an effect states that it does so—the target's body and astral form both die. A target's astral form can travel through the Astral Plane. The moment an astral form leaves that plane, the target's body and possessions travel along the silver cord, causing the target to re-enter its body on the new plane. Any damage or other effects that apply to an astral form have no effect on the target's body and vice versa. If a target's body or astral form drops to 0 Hit Points, the spell ends for that target. The spell ends for all the targets if you take a Magic action to dismiss it. When the spell ends for a target who isn't dead, the target reappears in its body and exits the state of suspended animation.
-Source: Player's Handbook 2024 (BR)
+You and up to eight willing creatures within range project your astral bodies into the Astral Plane (the spell ends instantly if you are already on that plane). Each target's body is left behind in a state of suspended animation; it has the Unconscious condition, doesn't need food or air, and doesn't age. A target's astral form resembles its body in almost every way, replicating it's game statistics and possessions. The principal difference is the addition of a silvery cord that trails from between the shoulderblades of the astral form. The cord fades from view after 1 foot. If the cord is cut - which happens only when an effect states that it does so - the target's body and astral form both die. A target's astral form can travel through the Astral Plane. The moment an astral form leaves that plane, the target's body and possessions travel along the silver cord, causing the target to re-enter its body on the new plane. Any damage or other effects that apply to an astral form have no effect on the target's body and vice versa. If a target's body or astral form drops to 0 Hit Points, the spell ends for that target. The spell ends for all the targets if you take a Magic action to dismiss it. When the spell ends for a target who isn't dead, the target reappears in its body and exits the state of suspended animation.
+Source: Player's Handbook
 Spellcasting Ability: Wisdom
 ----------------------------------------
 Name: Gate
@@ -548,24 +511,24 @@ School: Conjuration
 Classes: Cleric, Sorcerer, Warlock, Wizard
 Casting Time: Action
 Range: 60 feet
-Components: V, S, M (a diamond worth 5,000+ GP)
+Components: V, S, M(a diamond worth 5,000+ GP)
 Duration: Concentration, up to 1 minute
 Description:
 You conjure a portal linking an unoccupied space you can see within range to a precise location on a different plane of existence. The portal is a circular opening, which you can make 5 to 20 feet in diameter. You can orient the portal in any direction you choose. The portal lasts for the duration, and the portal's destination is visible through it. The portal has a front and a back on each plane where it appears. Travel through the portal is possible only by moving through its front. Anything that does so is instantly transported to the other plane, appearing in the unoccupied space nearest to the portal. Deities and other planar rulers can prevent portals created by this spell from opening in their presence or anywhere within their domains. When you cast this spell, you can speak the name of a specific creature (a pseudonym, title, or nickname doesn't work). If that creature is on a plane other than the one you are on, the portal opens next to the named creature and transports it to the nearest unoccupied space on your side of the portal. You gain no special power over the creature, and it is free to act as the DM deems appropriate. It might leave, attack you, or help you.
-Source: Player's Handbook 2024 (BR)
+Source: Player's Handbook
 Spellcasting Ability: Wisdom
 ----------------------------------------
 Name: Mass Heal
 Level: 9
 School: Abjuration
 Classes: Cleric
-Casting Time: Action
+Casting Time: 1 Action
 Range: 60 feet
 Components: V, S
 Duration: Instantaneous
 Description:
 A flood of healing energy flows from you into creatures around you. You restore up to 700 Hit Points, divided as you choose among any number of creatures that you can see within range. Creatures healed by this spell also have the Blinded, Deafened, and Poisoned conditions removed from them.
-Source: Player's Handbook 2024 (BR)
+Source: Player's Handbook
 Spellcasting Ability: Wisdom
 ----------------------------------------
 Name: Power Word Heal
@@ -578,6 +541,6 @@ Components: V
 Duration: Instantaneous
 Description:
 A wave of healing energy washes over one creature you can see within range. The target regains all its Hit Points. If the creature has the Charmed, Frightened, Paralyzed, Poisoned, or Stunned condition, the condition ends. If the creature has the Prone condition, it can use its Reaction to stand up.
-Source: Player's Handbook 2024 (BR)
+Source: Player's Handbook
 Spellcasting Ability: Wisdom
 

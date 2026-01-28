@@ -137,7 +137,7 @@ class AbstractWeapon(TextFeature):
 
     player_is_proficient: bool = False
     player_has_mastery: bool = False
-    bonus_attack_damages: list[str] = field(default_factory=list)
+    attack_roll_bonuses: list[tuple[int, str]] = field(default_factory=list)
 
     @abstractmethod
     def stats(self) -> WeaponsStats:
@@ -197,7 +197,7 @@ class AbstractWeapon(TextFeature):
         attack_roll_bonus += (
             f" + {self.calculate_proficiency_damage_bonus(character_stat_block)}"
         )
-        for bonus in self.bonus_attack_damages:
+        for _, bonus in self.attack_roll_bonuses:
             attack_roll_bonus += f" + {bonus}"
         return attack_roll_bonus
 
@@ -210,8 +210,8 @@ class AbstractWeapon(TextFeature):
         attack_roll_bonus += self._calculate_proficiency_damage_bonus(
             character_stat_block
         )
-        for bonus in self.bonus_attack_damages:
-            attack_roll_bonus += int(bonus)
+        for bonus, _ in self.attack_roll_bonuses:
+            attack_roll_bonus += bonus
         return attack_roll_bonus
 
     def get_headers(self) -> list[str]:

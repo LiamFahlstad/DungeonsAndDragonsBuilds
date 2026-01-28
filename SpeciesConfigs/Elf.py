@@ -30,20 +30,28 @@ class ElvenLineage(str, Enum):
 class ElfSpeciesBuilder(SpeciesBuilder):
     def __init__(
         self,
-        character_level: int,
         elven_lineage: ElvenLineage,
         skill_proficiency: Definitions.Skill,
-        spell_casting_ability: Definitions.Ability = Definitions.Ability.INTELLIGENCE,
     ):
-        self.character_level = character_level
         self.elven_lineage = elven_lineage
         self.skill_proficiency = skill_proficiency
-        self.spell_casting_ability = spell_casting_ability
+        self.character_level = None
+        self.spell_casting_ability = None
         super().__init__(
             name="Elf",
         )
 
     def build(self) -> CharacterSheetCreator.CharacterSheetData:
+        if self.character_level is None:
+            raise ValueError(
+                "Character level must be set before building species data."
+            )
+
+        if self.spell_casting_ability is None:
+            raise ValueError(
+                "Spell casting ability must be set before building species data."
+            )
+
         data = CharacterSheetCreator.CharacterSheetData()
 
         data.speed = ElfFeatures.SPEED  # Given by your species

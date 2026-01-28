@@ -34,7 +34,7 @@ class Archery(FightStyleWeaponFeature):
                 WeaponType.MARTIAL_RANGED,
                 WeaponType.SIMPLE_RANGED,
             ):
-                weapon.bonus_attack_damages.append("2 (Archery Fighting Style)")
+                weapon.attack_roll_bonuses.append((2, "2 (Archery Fighting Style)"))
 
     def write_to_file(self, file):
         file.write(
@@ -64,8 +64,11 @@ class Dueling(FightStyleWeaponFeature):
                 WeaponType.MARTIAL_MELEE,
                 WeaponType.SIMPLE_MELEE,
             ):
-                weapon.bonus_attack_damages.append(
-                    "2 (Dueling Fighting Style - Applied if one-handed weapon and no other weapons)"
+                weapon.attack_roll_bonuses.append(
+                    (
+                        2,
+                        "2 (Dueling Fighting Style - Applied if one-handed weapon and no other weapons)",
+                    )
                 )
 
     def write_to_file(self, file):
@@ -108,8 +111,8 @@ class ThrownWeaponFighting(FightStyleWeaponFeature):
             # Only apply to weapons with the Thrown property
             for prop in weapon.stats().properties:
                 if prop.name == WeaponProperty.THROWN:
-                    weapon.bonus_attack_damages.append(
-                        "2 (Thrown Weapon Fighting Style)"
+                    weapon.attack_roll_bonuses.append(
+                        (2, "2 (Thrown Weapon Fighting Style)")
                     )
                     break
 

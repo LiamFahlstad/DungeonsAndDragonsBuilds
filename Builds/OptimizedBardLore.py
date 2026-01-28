@@ -1,4 +1,4 @@
-import CharacterSheetCreator
+from Builds import CharacterBuilder
 from CharacterConfigs.BaseClasses import ClassBuilder
 from CharacterConfigs.BaseClasses.BardBase import (
     BardLevel1,
@@ -48,8 +48,8 @@ from StatBlocks.AbilitiesStatBlock import StandardArrayAbilitiesStatBlock
 from StatBlocks.SkillsStatBlock import BardSkillsStatBlock
 
 
-def get_data() -> CharacterSheetCreator.CharacterSheetData:
-    bard_lore = LoreBardStarterClassBuilder(
+def get_starter_class_builder():
+    return LoreBardStarterClassBuilder(
         bard_level=20,
         # Distribute 15, 14, 13, 12, 10, 8 among your abilities.
         abilities=StandardArrayAbilitiesStatBlock(
@@ -100,7 +100,7 @@ def get_data() -> CharacterSheetCreator.CharacterSheetData:
                     skill_2=Skill.PERSUASION,
                 ),
                 3: BardLevel3(
-                    spell=BardLevel1Spells.COMMAND,
+                    spell=BardLevel1Spells.COMPREHEND_LANGUAGES,
                 ),
                 4: BardLevel4(
                     general_feat=GeneralFeats.AbilityScoreImprovement(
@@ -193,19 +193,13 @@ def get_data() -> CharacterSheetCreator.CharacterSheetData:
         replace_spells={},
     )
 
-    species_data = Gnome.forest_gnome_character_data(
-        spell_casting_ability=Ability.CHARISMA
-    )
-    character_class_data = bard_lore.create()
 
-    character_sheet_data = CharacterSheetCreator.CharacterSheetData()
-
-    character_sheet_data.character_name = "Optimized Lore Bard"
-    character_sheet_data.merge_with(character_class_data)
-    character_sheet_data.merge_with(species_data)
-    return character_sheet_data
-
-
-if __name__ == "__main__":
-    character_sheet_data = get_data()
-    character_sheet_data.create_character_sheet()
+class OptimizedLoreBardCharacterBuilder(CharacterBuilder.CharacterBuilder):
+    def __init__(self):
+        super().__init__(
+            name="Optimized Lore Bard",
+            starter_class_builder=get_starter_class_builder(),
+            species_builder=Gnome.ForestGnomeSpeciesBuilder(
+                spell_casting_ability=Ability.CHARISMA
+            ),
+        )

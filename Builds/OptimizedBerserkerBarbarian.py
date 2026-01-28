@@ -1,5 +1,5 @@
-import CharacterSheetCreator
 import Definitions
+from Builds.CharacterBuilder import CharacterBuilder
 from CharacterConfigs.BaseClasses import ClassBuilder
 from CharacterConfigs.BaseClasses.BarbarianBase import (
     BarbarianLevel1,
@@ -17,8 +17,8 @@ from StatBlocks.AbilitiesStatBlock import StandardArrayAbilitiesStatBlock
 from StatBlocks.SkillsStatBlock import BarbarianSkillsStatBlock
 
 
-def get_data() -> CharacterSheetCreator.CharacterSheetData:
-    barbarian_path_of_the_berserker = PathOfTheBerserkerBarbarianStarterClassBuilder(
+def get_starter_class_builder():
+    return PathOfTheBerserkerBarbarianStarterClassBuilder(
         barbarian_level=3,
         # Distribute 15, 14, 13, 12, 10, 8 among your abilities.
         abilities=StandardArrayAbilitiesStatBlock(
@@ -74,19 +74,13 @@ def get_data() -> CharacterSheetCreator.CharacterSheetData:
         ),
     )
 
-    species_data = Orc.orc_character_data(
-        origin_feat=OriginFeats.SavageAttacker(),
-    )
-    character_class_data = barbarian_path_of_the_berserker.create()
 
-    character_sheet_data = CharacterSheetCreator.CharacterSheetData()
-
-    character_sheet_data.character_name = "Olga"
-    character_sheet_data.merge_with(character_class_data)
-    character_sheet_data.merge_with(species_data)
-    return character_sheet_data
-
-
-if __name__ == "__main__":
-    character_sheet_data = get_data()
-    character_sheet_data.create_character_sheet()
+class OptimizedBerserkerBarbarianCharacterBuilder(CharacterBuilder):
+    def __init__(self):
+        super().__init__(
+            name="Olga",
+            starter_class_builder=get_starter_class_builder(),
+            species_builder=Orc.OrcSpeciesBuilder(
+                origin_feat=OriginFeats.SavageAttacker(),
+            ),
+        )

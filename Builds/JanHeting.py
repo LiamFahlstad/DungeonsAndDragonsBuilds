@@ -1,4 +1,4 @@
-import CharacterSheetCreator
+from Builds.CharacterBuilder import CharacterBuilder
 from CharacterConfigs.BaseClasses import ClassBuilder
 from CharacterConfigs.BaseClasses.RangerBase import (
     RangerLevel1,
@@ -11,8 +11,7 @@ from CharacterConfigs.SubClasses.RangerBeastMaster import (
     BeastMasterRangerLevel3,
     BeastMasterRangerStarterClassBuilder,
 )
-from Definitions import Ability, CharacterClass, Skill
-from Entities import BeastMasterBeastOfTheSky
+from Definitions import Ability, Skill
 from Features import Backgrounds, FightingStyles, GeneralFeats, OriginFeats, Weapons
 from SpeciesConfigs import Gnome
 from Spells.Definitions import RangerLevel1Spells, RangerLevel2Spells
@@ -20,8 +19,8 @@ from StatBlocks.AbilitiesStatBlock import StandardArrayAbilitiesStatBlock
 from StatBlocks.SkillsStatBlock import RangerSkillsStatBlock
 
 
-def get_data() -> CharacterSheetCreator.CharacterSheetData:
-    battle_master_ranger_starter = BeastMasterRangerStarterClassBuilder(
+def get_starter_class_builder():
+    return BeastMasterRangerStarterClassBuilder(
         ranger_level=5,
         # Distribute 15, 14, 13, 12, 10, 8 among your abilities.
         abilities=StandardArrayAbilitiesStatBlock(
@@ -99,28 +98,24 @@ def get_data() -> CharacterSheetCreator.CharacterSheetData:
             RangerLevel1Spells.LONGSTRIDER: RangerLevel2Spells.BEAST_SENSE,
         },
     )
-    character_class_data = battle_master_ranger_starter.create()
-
-    species_data = Gnome.rock_gnome_character_data()
-
-    character_sheet_data = CharacterSheetCreator.CharacterSheetData()
-
-    character_sheet_data.character_name = "Jan Heting"
-    character_sheet_data.merge_with(character_class_data)
-    character_sheet_data.merge_with(species_data)
-    return character_sheet_data
 
 
-if __name__ == "__main__":
-    character_sheet_data = get_data()
-    character_sheet_data.create_character_sheet()
-    output_path = character_sheet_data.get_file_path()
+# if __name__ == "__main__":
 
-    BeastMasterBeastOfTheSky(
-        wisdom_modifier=character_sheet_data.get_ability_modifier(Ability.WISDOM),
-        ranger_level=character_sheet_data.get_level_for_class(CharacterClass.RANGER),
-        proficiency_bonus=character_sheet_data.character_level // 4 + 2,
-        spell_attack_modifier=character_sheet_data.calculate_attack_bonus_for_ability(
-            Ability.WISDOM
-        ),
-    ).write_to_file(output_path, mode="a")
+#     BeastMasterBeastOfTheSky(
+#         wisdom_modifier=character_sheet_data.get_ability_modifier(Ability.WISDOM),
+#         ranger_level=character_sheet_data.get_level_for_class(CharacterClass.RANGER),
+#         proficiency_bonus=character_sheet_data.character_level // 4 + 2,
+#         spell_attack_modifier=character_sheet_data.calculate_attack_bonus_for_ability(
+#             Ability.WISDOM
+#         ),
+#     ).write_to_file(output_path, mode="a")
+
+
+class JanHetingCharacterBuilder(CharacterBuilder):
+    def __init__(self):
+        super().__init__(
+            name="Jan Heting",
+            starter_class_builder=get_starter_class_builder(),
+            species_builder=Gnome.RockGnomeSpeciesBuilder(),
+        )

@@ -1,5 +1,5 @@
-import CharacterSheetCreator
 import Definitions
+from Builds.CharacterBuilder import CharacterBuilder
 from CharacterConfigs.BaseClasses import ClassBuilder
 from CharacterConfigs.BaseClasses.MonkBase import MonkLevel1, MonkLevel2, MonkLevel3
 from CharacterConfigs.SubClasses.MonkShadow import (
@@ -13,8 +13,8 @@ from StatBlocks.AbilitiesStatBlock import StandardArrayAbilitiesStatBlock
 from StatBlocks.SkillsStatBlock import MonkSkillsStatBlock
 
 
-def get_data() -> CharacterSheetCreator.CharacterSheetData:
-    monk_shadow = ShadowMonkStarterClassBuilder(
+def get_starter_class_builder():
+    return ShadowMonkStarterClassBuilder(
         monk_level=3,
         # Distribute 15, 14, 13, 12, 10, 8 among your abilities.
         abilities=StandardArrayAbilitiesStatBlock(
@@ -64,28 +64,14 @@ def get_data() -> CharacterSheetCreator.CharacterSheetData:
         ),
     )
 
-    character_class_data = monk_shadow.create()
 
-    abilities = character_class_data.abilities
-    if abilities is None:
-        raise ValueError("AbilitiesStatBlock is None.")
-
-    spell_casting_ability = abilities.get_spellcasting_ability_with_highest_modifier()
-    character_class_data.spell_casting_ability = spell_casting_ability
-    species_data = Elf.elf_character_data(
-        character_level=character_class_data.character_level,
-        elven_lineage=Elf.ElvenLineage.WOOD_ELF,
-        skill_proficiency=Definitions.Skill.PERCEPTION,
-        spell_casting_ability=spell_casting_ability,
-    )
-    character_sheet_data = CharacterSheetCreator.CharacterSheetData()
-
-    character_sheet_data.character_name = "Dark Shadow Nightmare"
-    character_sheet_data.merge_with(character_class_data)
-    character_sheet_data.merge_with(species_data)
-    return character_sheet_data
-
-
-if __name__ == "__main__":
-    character_sheet_data = get_data()
-    character_sheet_data.create_character_sheet()
+class OptimizedShadowMonkCharacterBuilder(CharacterBuilder):
+    def __init__(self):
+        super().__init__(
+            name="Optimized Shadow Monk",
+            starter_class_builder=get_starter_class_builder(),
+            species_builder=Elf.ElfSpeciesBuilder(
+                elven_lineage=Elf.ElvenLineage.WOOD_ELF,
+                skill_proficiency=Definitions.Skill.PERCEPTION,
+            ),
+        )

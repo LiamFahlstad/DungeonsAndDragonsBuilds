@@ -1,0 +1,211 @@
+################################################################################
+# =============================== General Info =============================== #
+################################################################################
+Field              | Value                   
+-------------------+-------------------------
+Name               | Optimized Rogue Assassin
+Level              | 3                       
+Starter Class      | Rogue                   
+Level per Class    | Rogue: 3                
+Character Subclass | Assassin                
+Proficiency Bonus  | 2                       
+
+################################################################################
+# =============================== Combat Stats =============================== #
+################################################################################
+Field               | Value  
+--------------------+--------
+Max Hit Points      | 27     
+Armor Class         | 14     
+Armor Proficiencies | Light  
+Initiative          | d20 + 3
+Speed (ft)          | 35     
+Size                | Medium 
+
+################################################################################
+# ================================ Abilities ================================= #
+################################################################################
+Ability | Score | Mod | Saving Throw        | DC | ATK Bonus
+--------+-------+-----+---------------------+----+----------
+STR     | 8     | -1  | -1                  | 9  | +1       
+DEX     | 16    | +3  | +3 + 2 (Proficient) | 13 | +5       
+CON     | 16    | +3  | +3                  | 13 | +5       
+INT     | 13    | +1  | +1 + 2 (Proficient) | 11 | +3       
+WIS     | 12    | +1  | +1                  | 11 | +3       
+CHA     | 10    | +0  | +0                  | 10 | +2       
+
+################################################################################
+# ================================== Skills ================================== #
+################################################################################
+Skill           | Modifier | Proficient | Ability      | Roll Condition | Bonus (already included)
+----------------+----------+------------+--------------+----------------+-------------------------
+Acrobatics      | +5       | Yes        | Dexterity    | Neutral        | +0                      
+Animal Handling | +1       | No         | Wisdom       | Neutral        | +0                      
+Arcana          | +1       | No         | Intelligence | Neutral        | +0                      
+Athletics       | -1       | No         | Strength     | Neutral        | +0                      
+Deception       | +2       | Yes        | Charisma     | Neutral        | +0                      
+History         | +1       | No         | Intelligence | Neutral        | +0                      
+Insight         | +1       | No         | Wisdom       | Neutral        | +0                      
+Intimidation    | +0       | No         | Charisma     | Neutral        | +0                      
+Investigation   | +3       | Yes        | Intelligence | Neutral        | +0                      
+Medicine        | +1       | No         | Wisdom       | Neutral        | +0                      
+Nature          | +3       | Yes        | Intelligence | Neutral        | +0                      
+Perception      | +3       | Yes        | Wisdom       | Neutral        | +0                      
+Performance     | +0       | No         | Charisma     | Neutral        | +0                      
+Persuasion      | +0       | No         | Charisma     | Neutral        | +0                      
+Religion        | +1       | No         | Intelligence | Neutral        | +0                      
+Sleight of Hand | +7       | Yes        | Dexterity    | Neutral        | +0                      
+Stealth         | +7       | Yes        | Dexterity    | Neutral        | +0                      
+Survival        | +1       | No         | Wisdom       | Neutral        | +0                      
+
+################################################################################
+# ================================= Features ================================= #
+################################################################################
+Name: Alert
+Origin: Origin Feat
+Description: Initiative Proficiency. When you roll Initiative, you can add your Proficiency Bonus to the roll.
+Initiative Swap. Immediately after you roll Initiative, you can swap your Initiative with the Initiative of one willing ally in the same combat. You can't make this swap if you or the ally has the Incapacitated condition.
+
+Name: Darkvision
+Origin: Orc Trait
+Description: You have Darkvision with a range of 60 feet.
+
+Name: Fey Ancestry
+Origin: Elf Trait
+Description: You have Advantage on saving throws you make to avoid or end the Charmed condition.
+
+Name: Trance
+Origin: Elf Trait
+Description: You don't need to sleep, and magic can't put you to sleep. You can finish a Long Rest in 4 hours if you spend those hours in a trancelike meditation, during which you retain consciousness.
+
+Name: Sneak Attack
+Origin: Rogue Level 1
+Description: You know how to strike subtly and exploit a foe's distraction. Once per turn you can deal an extra 1d6 damage to one creature you hit with an attack roll if you have Advantage on the roll and the attack uses a Finesse or a Ranged weapon. The extra damage's type is the same was the weapon's type.
+You don't need Advantage on the attack roll if at least one of your allies is within 5 feet of the target, the ally doesn't have the Incapacitated condition and you don't have Disadvantage on the attack roll.
+The extra damage increases as you gain Rogue levels, as shown in the Sneak Attack column of the Rogue Features table.
+
+Name: Thieves' Cant
+Origin: Rogue Level 1
+Description: You picked up various languages in the communities where you plied your roguish talents. You know Thieves' Cant and one other language of your choice, which you choose from the language tables in Chapter 2.
+
+Name: Weapon Mastery
+Origin: Rogue Level 1
+Description: Your training with weapons allows you to use the mastery properties of two kinds of weapons of your choice with which you have proficiency, such as Daggers and Shortbows.
+Whenever you finish a Long Rest, you can change the kinds of weapons you chose. For example, you could switch to using the mastery properties of Scimitars and Shortswords.
+
+Name: Cunning Action
+Origin: Rogue Level 2
+Description: Your quick thinking and agility allow you to move and act quickly. On your turn, you can take one of the following actions as a Bonus Action: Dash, Disengage, or Hide.
+
+Name: Assassin's Tools
+Origin: Assassin Rogue Level 3
+Description: You gain a Disguise Kit and a Poisoner's Kit, and you have proficiency with them.
+
+Name: Assassinate
+Origin: Assassin Rogue Level 3
+Description: You're adept at ambushing a target, granting you the following benefits.
+Initiative. You have Advantage on Initiative rolls.
+Surprising Strikes. During the first round of each combat, you have Advantage on attack rolls against any creature that hasn't taken a turn. If your Sneak Attack hits any target during that round, the target takes extra damage of the weapon's type equal to your Rogue level.
+
+Name: Steady Aim
+Origin: Rogue Level 3
+Description: As a Bonus Action, you give yourself Advantage on your next attack roll on your current turn. You can use this feature only if you haven't moved during this turn, and after you use it, your Speed is 0 until the end of the current turn.
+
+
+################################################################################
+# ================================= Weapons ================================== #
+################################################################################
+Field              | Value                                                                                                                                     
+-------------------+-------------------------------------------------------------------------------------------------------------------------------------------
+Name               | Shortsword                                                                                                                                
+Type               | Martial Melee                                                                                                                             
+DamageType         | Piercing                                                                                                                                  
+Property 'Finesse' | Use Str or Dex (your choice) for attack and damage rolls; same mod for both.                                                              
+Property 'Light'   | When you Attack with a Light weapon, you can Bonus Action attack with another Light weapon; no ability mod to that damage unless negative.
+Proficient         | Yes                                                                                                                                       
+AttackRoll         | 1d20 + 3 (ability mod: Dexterity) + 2 (Proficient)                                                                                        
+DamageRoll         | 1d6 + 3 (ability mod: Dexterity)                                                                                                          
+Mastery 'Vex'      | On a hit that deals damage, you gain Advantage on your next attack against that creature before your next turn ends.                      
+AC: 10             | Prob of Hit: 0.80, Avg Dmg: 5.20                                                                                                          
+AC: 11             | Prob of Hit: 0.75, Avg Dmg: 4.88                                                                                                          
+AC: 12             | Prob of Hit: 0.70, Avg Dmg: 4.55                                                                                                          
+AC: 13             | Prob of Hit: 0.65, Avg Dmg: 4.23                                                                                                          
+AC: 14             | Prob of Hit: 0.60, Avg Dmg: 3.90                                                                                                          
+AC: 15             | Prob of Hit: 0.55, Avg Dmg: 3.58                                                                                                          
+AC: 16             | Prob of Hit: 0.50, Avg Dmg: 3.25                                                                                                          
+AC: 17             | Prob of Hit: 0.45, Avg Dmg: 2.93                                                                                                          
+AC: 18             | Prob of Hit: 0.40, Avg Dmg: 2.60                                                                                                          
+AC: 19             | Prob of Hit: 0.35, Avg Dmg: 2.27                                                                                                          
+AC: 20             | Prob of Hit: 0.30, Avg Dmg: 1.95                                                                                                          
+-------------------+-------------------------------------------------------------------------------------------------------------------------------------------
+Name               | Dagger                                                                                                                                    
+Type               | Simple Melee                                                                                                                              
+DamageType         | Piercing                                                                                                                                  
+Property 'Finesse' | Use Str or Dex (your choice) for attack and damage rolls; same mod for both.                                                              
+Property 'Light'   | When you Attack with a Light weapon, you can Bonus Action attack with another Light weapon; no ability mod to that damage unless negative.
+Property 'Thrown'  | Can throw weapon for ranged attack; use same ability mod as melee version.                                                                
+Proficient         | Yes                                                                                                                                       
+AttackRoll         | 1d20 + 3 (ability mod: Dexterity) + 2 (Proficient)                                                                                        
+DamageRoll         | 1d4 + 3 (ability mod: Dexterity)                                                                                                          
+AC: 10             | Prob of Hit: 0.80, Avg Dmg: 4.40                                                                                                          
+AC: 11             | Prob of Hit: 0.75, Avg Dmg: 4.12                                                                                                          
+AC: 12             | Prob of Hit: 0.70, Avg Dmg: 3.85                                                                                                          
+AC: 13             | Prob of Hit: 0.65, Avg Dmg: 3.58                                                                                                          
+AC: 14             | Prob of Hit: 0.60, Avg Dmg: 3.30                                                                                                          
+AC: 15             | Prob of Hit: 0.55, Avg Dmg: 3.03                                                                                                          
+AC: 16             | Prob of Hit: 0.50, Avg Dmg: 2.75                                                                                                          
+AC: 17             | Prob of Hit: 0.45, Avg Dmg: 2.48                                                                                                          
+AC: 18             | Prob of Hit: 0.40, Avg Dmg: 2.20                                                                                                          
+AC: 19             | Prob of Hit: 0.35, Avg Dmg: 1.92                                                                                                          
+AC: 20             | Prob of Hit: 0.30, Avg Dmg: 1.65                                                                                                          
+-------------------+-------------------------------------------------------------------------------------------------------------------------------------------
+Name               | Scimitar                                                                                                                                  
+Type               | Martial Melee                                                                                                                             
+DamageType         | Slashing                                                                                                                                  
+Property 'Finesse' | Use Str or Dex (your choice) for attack and damage rolls; same mod for both.                                                              
+Property 'Light'   | When you Attack with a Light weapon, you can Bonus Action attack with another Light weapon; no ability mod to that damage unless negative.
+Proficient         | Yes                                                                                                                                       
+AttackRoll         | 1d20 + 3 (ability mod: Dexterity) + 2 (Proficient)                                                                                        
+DamageRoll         | 1d6 + 3 (ability mod: Dexterity)                                                                                                          
+Mastery 'Nick'     | When using a Light weapon's extra attack, you can make it during the Attack action instead of as a Bonus Action. Once per turn.           
+AC: 10             | Prob of Hit: 0.80, Avg Dmg: 5.20                                                                                                          
+AC: 11             | Prob of Hit: 0.75, Avg Dmg: 4.88                                                                                                          
+AC: 12             | Prob of Hit: 0.70, Avg Dmg: 4.55                                                                                                          
+AC: 13             | Prob of Hit: 0.65, Avg Dmg: 4.23                                                                                                          
+AC: 14             | Prob of Hit: 0.60, Avg Dmg: 3.90                                                                                                          
+AC: 15             | Prob of Hit: 0.55, Avg Dmg: 3.58                                                                                                          
+AC: 16             | Prob of Hit: 0.50, Avg Dmg: 3.25                                                                                                          
+AC: 17             | Prob of Hit: 0.45, Avg Dmg: 2.93                                                                                                          
+AC: 18             | Prob of Hit: 0.40, Avg Dmg: 2.60                                                                                                          
+AC: 19             | Prob of Hit: 0.35, Avg Dmg: 2.27                                                                                                          
+AC: 20             | Prob of Hit: 0.30, Avg Dmg: 1.95                                                                                                          
+
+################################################################################
+# ================================== Spells ================================== #
+################################################################################
+Name: Druidcraft
+Level: 0
+School: Transmutation
+Classes: Druid
+Casting Time: Action
+Range: 30 feet
+Components: V, S
+Duration: Instantaneous
+Description:
+Whispering to the spirits of nature, you create one of the following effects within range. Weather Sensor. You create a Tiny, harmless sensory effect that predicts what the weather will be at your location for the next 24 hours. The effect might manifest as a golden orb for clear skies, a cloud for rain, falling snowflakes for snow, and so on. This effect persists for 1 round. Bloom. You instantly make a flower blossom, a seed pod open, or a leaf bud bloom. Sensory Effect. You create a harmless sensory effect, such as falling leaves, spectral dancing fairies, a gentle breeze, the sound of an animal, or the faint odor of skunk. The effect must fit in a 5-foot Cube. Fire Play. You light or snuff out a candle, a torch, or a campfire.
+Source: Player's Handbook
+Spellcasting Ability: Intelligence
+----------------------------------------
+Name: Longstrider
+Level: 1
+School: Transmutation
+Classes: Artificer, Bard, Druid, Ranger, Wizard
+Casting Time: Action
+Range: Touch
+Components: V, S, M (a pinch of dirt)
+Duration: 1 hour
+Description:
+You touch a creature. The target’s Speed increases by 10 feet until the spell ends. Using a Higher-Level Spell Slot. You can target one additional creature for each spell slot level above 1.
+Source: Player's Handbook
+Spellcasting Ability: Intelligence
+
