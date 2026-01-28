@@ -10,7 +10,7 @@ class AcidSplash(ExplicitSpell):
             name="Acid Splash",
             level=0,
             school="Evocation",
-            classes=['Artificer', 'Sorcerer', 'Wizard'],
+            classes=["Artificer", "Sorcerer", "Wizard"],
             casting_time="Action",
             range="60 feet",
             components="V, S",
@@ -25,13 +25,14 @@ class AcidSplash(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class Aid(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Aid",
             level=2,
             school="Abjuration",
-            classes=['Artificer', 'Bard', 'Cleric', 'Druid', 'Paladin', 'Ranger'],
+            classes=["Artificer", "Bard", "Cleric", "Druid", "Paladin", "Ranger"],
             casting_time="Action",
             range="30 feet",
             components="V, S, M (a strip of white cloth)",
@@ -46,13 +47,14 @@ class Aid(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class Alarm(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Alarm",
             level=1,
             school="Abjuration",
-            classes=['Artificer', 'Ranger', 'Wizard'],
+            classes=["Artificer", "Ranger", "Wizard"],
             casting_time="1 minute or Ritual",
             range="30 feet",
             components="V, S, M (a bell and silver wire)",
@@ -72,13 +74,14 @@ class Alarm(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class AlterSelf(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Alter Self",
             level=2,
             school="Transmutation",
-            classes=['Artificer', 'Sorcerer', 'Wizard'],
+            classes=["Artificer", "Sorcerer", "Wizard"],
             casting_time="Action",
             range="Self",
             components="V, S",
@@ -104,13 +107,14 @@ class AlterSelf(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class AlustrielsMooncloak(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Alustriel's Mooncloak",
             level=5,
             school="Abjuration",
-            classes=['Bard', 'Druid', 'Ranger', 'Wizard'],
+            classes=["Bard", "Druid", "Ranger", "Wizard"],
             casting_time="Action",
             range="Self",
             components="V, S, M (a moonstone worth 50+ GP)",
@@ -127,13 +131,14 @@ class AlustrielsMooncloak(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class AnimalFriendship(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Animal Friendship",
             level=1,
             school="Enchantment",
-            classes=['Bard', 'Druid', 'Ranger'],
+            classes=["Bard", "Druid", "Ranger"],
             casting_time="Action",
             range="30 feet",
             components="V, S, M (a morsel of food)",
@@ -149,13 +154,14 @@ class AnimalFriendship(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class AnimalMessenger(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Animal Messenger",
             level=2,
             school="Enchantment",
-            classes=['Bard', 'Druid', 'Ranger'],
+            classes=["Bard", "Druid", "Ranger"],
             casting_time="Action or Ritual",
             range="30 feet",
             components="V, S, M (a morsel of food)",
@@ -174,13 +180,14 @@ class AnimalMessenger(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class AnimalShapes(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Animal Shapes",
             level=8,
             school="Transmutation",
-            classes=['Druid'],
+            classes=["Druid"],
             casting_time="Action",
             range="30 Feet",
             components="V, S",
@@ -201,13 +208,14 @@ class AnimalShapes(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class AnimateDead(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Animate Dead",
             level=3,
             school="Necromancy",
-            classes=['Cleric', 'Wizard'],
+            classes=["Cleric", "Wizard"],
             casting_time="1 minute",
             range="10 Feet",
             components="V, S, M (a drop of blood, a piece of flesh, and a pinch of bone dust)",
@@ -230,13 +238,14 @@ class AnimateDead(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class AnimateObjects(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Animate Objects",
             level=5,
             school="Transmutation",
-            classes=['Artificer', 'Bard', 'Sorcerer', 'Wizard'],
+            classes=["Artificer", "Bard", "Sorcerer", "Wizard"],
             casting_time="Action",
             range="120 feet",
             components="V, S",
@@ -258,13 +267,14 @@ class AnimateObjects(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class AntilifeShell(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Antilife Shell",
             level=5,
             school="Abjuration",
-            classes=['Druid'],
+            classes=["Druid"],
             casting_time="Action",
             range="Self",
             components="V, S",
@@ -279,13 +289,14 @@ class AntilifeShell(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class AntimagicField(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Antimagic Field",
             level=8,
             school="Abjuration",
-            classes=['Cleric', 'Wizard'],
+            classes=["Cleric", "Wizard"],
             casting_time="Action",
             range="Self",
             components="V, S, M (iron filings)",
@@ -304,13 +315,14 @@ class AntimagicField(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class Antipathysympathy(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Antipathy/Sympathy",
             level=8,
             school="Enchantment",
-            classes=['Bard', 'Druid', 'Wizard'],
+            classes=["Bard", "Druid", "Wizard"],
             casting_time="1 Hour",
             range="60 Feet",
             components="V, S, M (a mix of vinegar and honey)",
@@ -336,13 +348,14 @@ class Antipathysympathy(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class ArcaneEye(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Arcane Eye",
             level=4,
             school="Divination",
-            classes=['Artificer', 'Wizard'],
+            classes=["Artificer", "Wizard"],
             casting_time="Action",
             range="30 feet",
             components="V, S, M (a bit of bat fur)",
@@ -358,13 +371,14 @@ class ArcaneEye(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class ArcaneGate(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Arcane Gate",
             level=6,
             school="Conjuration",
-            classes=['Sorcerer', 'Warlock', 'Wizard'],
+            classes=["Sorcerer", "Warlock", "Wizard"],
             casting_time="Action",
             range="500 feet",
             components="V, S",
@@ -383,13 +397,14 @@ class ArcaneGate(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class ArcaneLock(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Arcane Lock",
             level=2,
             school="Abjuration",
-            classes=['Artificer', 'Wizard'],
+            classes=["Artificer", "Wizard"],
             casting_time="Action",
             range="Touch",
             components="V, S, M (gold dust worth 25+ GP, which the spell consumes)",
@@ -404,13 +419,14 @@ class ArcaneLock(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class ArcaneVigor(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Arcane Vigor",
             level=2,
             school="Abjuration",
-            classes=['Artificer', 'Sorcerer', 'Wizard'],
+            classes=["Artificer", "Sorcerer", "Wizard"],
             casting_time="Bonus Action",
             range="Self",
             components="V, S",
@@ -426,13 +442,14 @@ class ArcaneVigor(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class ArmorOfAgathys(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Armor of Agathys",
             level=1,
             school="Abjuration",
-            classes=['Warlock'],
+            classes=["Warlock"],
             casting_time="Bonus Action",
             range="Self",
             components="V, S, M (a shard of blue glass)",
@@ -449,13 +466,14 @@ class ArmorOfAgathys(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class ArmsOfHadar(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Arms of Hadar",
             level=1,
             school="Conjuration",
-            classes=['Warlock'],
+            classes=["Warlock"],
             casting_time="Action",
             range="Self",
             components="V, S",
@@ -472,13 +490,14 @@ class ArmsOfHadar(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class AstralProjection(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Astral Projection",
             level=9,
             school="Necromancy",
-            classes=['Cleric', 'Warlock', 'Wizard'],
+            classes=["Cleric", "Warlock", "Wizard"],
             casting_time="1 hour",
             range="10 feet",
             components="V, S, M (for each of the spell's targets, one jacinth worth 1,000+ GP and one silver bar worth 100+ GP, all of which the spell consumes)",
@@ -501,13 +520,14 @@ class AstralProjection(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class Augury(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Augury",
             level=2,
             school="Divination",
-            classes=['Cleric', 'Druid', 'Wizard'],
+            classes=["Cleric", "Druid", "Wizard"],
             casting_time="1 minute or Ritual",
             range="Self",
             components="V, S, M (specially marked sticks, bones, cards, or other divinatory tokens worth 25+ GP)",
@@ -522,13 +542,14 @@ class Augury(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class AuraOfLife(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Aura of Life",
             level=4,
             school="Abjuration",
-            classes=['Cleric', 'Paladin'],
+            classes=["Cleric", "Paladin"],
             casting_time="Action",
             range="Self",
             components="V",
@@ -542,13 +563,14 @@ class AuraOfLife(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class AuraOfPurity(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Aura of Purity",
             level=4,
             school="Abjuration",
-            classes=['Cleric', 'Paladin'],
+            classes=["Cleric", "Paladin"],
             casting_time="Action",
             range="Self",
             components="V",
@@ -561,13 +583,14 @@ class AuraOfPurity(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class AuraOfVitality(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Aura of Vitality",
             level=3,
             school="Abjuration",
-            classes=['Cleric', 'Druid', 'Paladin'],
+            classes=["Cleric", "Druid", "Paladin"],
             casting_time="Action",
             range="Self",
             components="V",
@@ -580,13 +603,14 @@ class AuraOfVitality(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class Awaken(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Awaken",
             level=5,
             school="Transmutation",
-            classes=['Bard', 'Druid'],
+            classes=["Bard", "Druid"],
             casting_time="8 hours",
             range="Touch",
             components="V, S, M (an agate worth 1,000+ GP, which the spell consumes)",
@@ -604,13 +628,14 @@ class Awaken(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class Backlash(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Backlash",
             level=4,
             school="Abjuration",
-            classes=['Bard', 'Sorcerer', 'Warlock', 'Wizard'],
+            classes=["Bard", "Sorcerer", "Warlock", "Wizard"],
             casting_time="Reaction, which you take in response to taking damage",
             range="60 feet",
             components="V",
@@ -626,13 +651,14 @@ class Backlash(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class Bane(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Bane",
             level=1,
             school="Enchantment",
-            classes=['Bard', 'Cleric', 'Warlock'],
+            classes=["Bard", "Cleric", "Warlock"],
             casting_time="Action",
             range="30 feet",
             components="V, S, M (a drop of blood)",
@@ -647,13 +673,14 @@ class Bane(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class BanishingSmite(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Banishing Smite",
             level=5,
             school="Conjuration",
-            classes=['Paladin'],
+            classes=["Paladin"],
             casting_time="Bonus Action, which you take immediately after hitting a creature with a Melee weapon or an Unarmed Strike",
             range="Self",
             components="V",
@@ -668,13 +695,14 @@ class BanishingSmite(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class Banishment(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Banishment",
             level=4,
             school="Abjuration",
-            classes=['Cleric', 'Paladin', 'Sorcerer', 'Warlock', 'Wizard'],
+            classes=["Cleric", "Paladin", "Sorcerer", "Warlock", "Wizard"],
             casting_time="Action",
             range="30 feet",
             components="V, S, M (a pentacle)",
@@ -692,13 +720,14 @@ class Banishment(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class Barkskin(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Barkskin",
             level=2,
             school="Transmutation",
-            classes=['Druid', 'Ranger'],
+            classes=["Druid", "Ranger"],
             casting_time="Bonus Action",
             range="Touch",
             components="V, S, M (a handful of bark)",
@@ -711,13 +740,14 @@ class Barkskin(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class BeaconOfHope(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Beacon Of Hope",
             level=3,
             school="Abjuration",
-            classes=['Cleric'],
+            classes=["Cleric"],
             casting_time="Action",
             range="30 feet",
             components="V, S",
@@ -730,13 +760,14 @@ class BeaconOfHope(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class BeastSense(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Beast Sense",
             level=2,
             school="Divination",
-            classes=['Druid', 'Ranger'],
+            classes=["Druid", "Ranger"],
             casting_time="Action or Ritual",
             range="Touch",
             components="S",
@@ -750,13 +781,14 @@ class BeastSense(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class Befuddlement(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Befuddlement",
             level=8,
             school="Enchantment",
-            classes=['Bard', 'Druid', 'Warlock', 'Wizard'],
+            classes=["Bard", "Druid", "Warlock", "Wizard"],
             casting_time="Action",
             range="150 feet",
             components="V, S, M (a key ring with no keys)",
@@ -773,13 +805,14 @@ class Befuddlement(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class BestowCurse(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Bestow Curse",
             level=3,
             school="Necromancy",
-            classes=['Bard', 'Cleric', 'Wizard'],
+            classes=["Bard", "Cleric", "Wizard"],
             casting_time="Action",
             range="Touch",
             components="V, S",
@@ -795,13 +828,14 @@ class BestowCurse(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class BigbysHand(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Bigby's Hand",
             level=5,
             school="Evocation",
-            classes=['Artificer', 'Sorcerer', 'Wizard'],
+            classes=["Artificer", "Sorcerer", "Wizard"],
             casting_time="Action",
             range="120 feet",
             components="V, S, M (an eggshell and a glove)",
@@ -834,13 +868,14 @@ class BigbysHand(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class BladeBarrier(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Blade Barrier",
             level=6,
             school="Evocation",
-            classes=['Cleric'],
+            classes=["Cleric"],
             casting_time="Action",
             range="90 feet",
             components="V, S",
@@ -858,13 +893,14 @@ class BladeBarrier(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class BladeOfDisaster(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Blade Of Disaster",
             level=9,
             school="Conjuration",
-            classes=['Sorcerer', 'Warlock', 'Wizard'],
+            classes=["Sorcerer", "Warlock", "Wizard"],
             casting_time="Bonus Action",
             range="60 feet",
             components="V, S",
@@ -882,13 +918,14 @@ class BladeOfDisaster(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class BladeWard(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Blade Ward",
             level=0,
             school="Abjuration",
-            classes=['Bard', 'Sorcerer', 'Warlock', 'Wizard'],
+            classes=["Bard", "Sorcerer", "Warlock", "Wizard"],
             casting_time="Action",
             range="Self",
             components="V, S",
@@ -898,13 +935,14 @@ class BladeWard(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class Bless(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Bless",
             level=1,
             school="Enchantment",
-            classes=['Cleric', 'Paladin'],
+            classes=["Cleric", "Paladin"],
             casting_time="Action",
             range="30 feet",
             components="V, S, M (a Holy Symbol worth 5+ GP)",
@@ -919,13 +957,14 @@ class Bless(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class Blight(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Blight",
             level=4,
             school="Necromancy",
-            classes=['Druid', 'Sorcerer', 'Warlock', 'Wizard'],
+            classes=["Druid", "Sorcerer", "Warlock", "Wizard"],
             casting_time="Action",
             range="30 feet",
             components="V, S",
@@ -942,13 +981,14 @@ class Blight(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class BlindingSmite(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Blinding Smite",
             level=3,
             school="Evocation",
-            classes=['Paladin'],
+            classes=["Paladin"],
             casting_time="Bonus Action, which you take immediately after hitting a creature with a Melee weapon or an Unarmed Strike",
             range="Self",
             components="V",
@@ -963,13 +1003,14 @@ class BlindingSmite(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class Blindnessdeafness(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Blindness/Deafness",
             level=2,
             school="Transmutation",
-            classes=['Bard', 'Cleric', 'Sorcerer', 'Wizard'],
+            classes=["Bard", "Cleric", "Sorcerer", "Wizard"],
             casting_time="Action",
             range="120 feet",
             components="V",
@@ -984,13 +1025,14 @@ class Blindnessdeafness(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class Blink(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Blink",
             level=3,
             school="Transmutation",
-            classes=['Artificer', 'Sorcerer', 'Wizard'],
+            classes=["Artificer", "Sorcerer", "Wizard"],
             casting_time="Action",
             range="Self",
             components="V, S",
@@ -1008,13 +1050,14 @@ class Blink(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class Blur(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Blur",
             level=2,
             school="Illusion",
-            classes=['Artificer', 'Sorcerer', 'Wizard'],
+            classes=["Artificer", "Sorcerer", "Wizard"],
             casting_time="Action",
             range="Self",
             components="V",
@@ -1028,13 +1071,14 @@ class Blur(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class BurningHands(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Burning Hands",
             level=1,
             school="Evocation",
-            classes=['Sorcerer', 'Wizard'],
+            classes=["Sorcerer", "Wizard"],
             casting_time="Action",
             range="Self",
             components="V, S",
@@ -1050,13 +1094,14 @@ class BurningHands(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class CacophonicShield(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Cacophonic Shield",
             level=3,
             school="Evocation",
-            classes=['Bard', 'Sorcerer', 'Wizard'],
+            classes=["Bard", "Sorcerer", "Wizard"],
             casting_time="Action",
             range="Self",
             components="V, S",
@@ -1076,13 +1121,14 @@ class CacophonicShield(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class CallLightning(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Call Lightning",
             level=3,
             school="Conjuration",
-            classes=['Druid'],
+            classes=["Druid"],
             casting_time="Action",
             range="120 feet",
             components="V, S",
@@ -1103,13 +1149,14 @@ class CallLightning(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class CalmEmotions(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Calm Emotions",
             level=2,
             school="Enchantment",
-            classes=['Bard', 'Cleric'],
+            classes=["Bard", "Cleric"],
             casting_time="Action",
             range="60 feet",
             components="V, S",
@@ -1119,13 +1166,14 @@ class CalmEmotions(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class ChainLightning(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Chain Lightning",
             level=6,
             school="Evocation",
-            classes=['Sorcerer', 'Wizard'],
+            classes=["Sorcerer", "Wizard"],
             casting_time="Action",
             range="150 feet",
             components="V, S, M (three silver pins)",
@@ -1142,13 +1190,14 @@ class ChainLightning(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class CharmMonster(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Charm Monster",
             level=4,
             school="Enchantment",
-            classes=['Bard', 'Druid', 'Sorcerer', 'Warlock', 'Wizard'],
+            classes=["Bard", "Druid", "Sorcerer", "Warlock", "Wizard"],
             casting_time="Action",
             range="30 feet",
             components="V, S",
@@ -1166,13 +1215,14 @@ class CharmMonster(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class CharmPerson(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Charm Person",
             level=1,
             school="Enchantment",
-            classes=['Bard', 'Druid', 'Sorcerer', 'Warlock', 'Wizard'],
+            classes=["Bard", "Druid", "Sorcerer", "Warlock", "Wizard"],
             casting_time="Action",
             range="30 feet",
             components="V, S",
@@ -1190,13 +1240,14 @@ class CharmPerson(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class ChillTouch(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Chill Touch",
             level=0,
             school="Necromancy",
-            classes=['Sorcerer', 'Warlock', 'Wizard'],
+            classes=["Sorcerer", "Warlock", "Wizard"],
             casting_time="Action",
             range="Touch",
             components="V, S",
@@ -1211,13 +1262,14 @@ class ChillTouch(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class ChromaticOrb(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Chromatic Orb",
             level=1,
             school="Evocation",
-            classes=['Sorcerer', 'Wizard'],
+            classes=["Sorcerer", "Wizard"],
             casting_time="Action",
             range="90 feet",
             components="V, S, M (a diamond worth 50+ GP)",
@@ -1237,13 +1289,14 @@ class ChromaticOrb(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class CircleOfDeath(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Circle Of Death",
             level=6,
             school="Necromancy",
-            classes=['Sorcerer', 'Warlock', 'Wizard'],
+            classes=["Sorcerer", "Warlock", "Wizard"],
             casting_time="Action",
             range="150 feet",
             components="V, S, M (the powder of a crushed black pearl worth 500+ GP)",
@@ -1258,13 +1311,14 @@ class CircleOfDeath(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class CircleOfPower(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Circle Of Power",
             level=5,
             school="Abjuration",
-            classes=['Artificer', 'Cleric', 'Paladin', 'Wizard'],
+            classes=["Artificer", "Cleric", "Paladin", "Wizard"],
             casting_time="Action",
             range="Self",
             components="V",
@@ -1278,13 +1332,14 @@ class CircleOfPower(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class Clairvoyance(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Clairvoyance",
             level=3,
             school="Divination",
-            classes=['Bard', 'Cleric', 'Sorcerer', 'Wizard'],
+            classes=["Bard", "Cleric", "Sorcerer", "Wizard"],
             casting_time="10 minutes",
             range="1 mile",
             components="V, S, M (a focus worth 100+ GP, either a jeweled horn for hearing or a glass eye for seeing)",
@@ -1301,13 +1356,14 @@ class Clairvoyance(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class Clone(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Clone",
             level=8,
             school="Necromancy",
-            classes=['Wizard'],
+            classes=["Wizard"],
             casting_time="1 hour",
             range="Touch",
             components="V, S, M (a diamond worth 1,000+ GP, which the spell consumes, and a sealable vessel worth 2,000+ GP that is large enough to hold the creature being cloned)",
@@ -1324,13 +1380,14 @@ class Clone(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class CloudOfDaggers(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Cloud Of Daggers",
             level=2,
             school="Conjuration",
-            classes=['Bard', 'Sorcerer', 'Warlock', 'Wizard'],
+            classes=["Bard", "Sorcerer", "Warlock", "Wizard"],
             casting_time="Action",
             range="60 feet",
             components="V, S, M (a sliver of glass)",
@@ -1348,13 +1405,14 @@ class CloudOfDaggers(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class Cloudkill(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Cloudkill",
             level=5,
             school="Conjuration",
-            classes=['Sorcerer', 'Wizard'],
+            classes=["Sorcerer", "Wizard"],
             casting_time="Action",
             range="120 feet",
             components="V, S",
@@ -1374,13 +1432,14 @@ class Cloudkill(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class ColorSpray(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Color Spray",
             level=1,
             school="Illusion",
-            classes=['Bard', 'Sorcerer', 'Wizard'],
+            classes=["Bard", "Sorcerer", "Wizard"],
             casting_time="Action",
             range="Self",
             components="V, S, M (a pinch of colorful sand)",
@@ -1393,13 +1452,14 @@ class ColorSpray(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class Command(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Command",
             level=1,
             school="Enchantment",
-            classes=['Bard', 'Cleric', 'Paladin'],
+            classes=["Bard", "Cleric", "Paladin"],
             casting_time="Action",
             range="60 feet",
             components="V",
@@ -1424,13 +1484,14 @@ class Command(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class Commune(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Commune",
             level=5,
             school="Divination",
-            classes=['Cleric'],
+            classes=["Cleric"],
             casting_time="1 minute or Ritual",
             range="Self",
             components="V, S, M (incense)",
@@ -1447,13 +1508,14 @@ class Commune(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class CommuneWithNature(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Commune With Nature",
             level=5,
             school="Divination",
-            classes=['Druid', 'Ranger'],
+            classes=["Druid", "Ranger"],
             casting_time="1 minute or Ritual",
             range="Self",
             components="V, S",
@@ -1469,13 +1531,14 @@ class CommuneWithNature(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class CompelledDuel(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Compelled Duel",
             level=1,
             school="Enchantment",
-            classes=['Paladin'],
+            classes=["Paladin"],
             casting_time="Bonus Action",
             range="30 feet",
             components="V",
@@ -1490,13 +1553,14 @@ class CompelledDuel(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class ComprehendLanguages(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Comprehend Languages",
             level=1,
             school="Divination",
-            classes=['Bard', 'Sorcerer', 'Warlock', 'Wizard'],
+            classes=["Bard", "Sorcerer", "Warlock", "Wizard"],
             casting_time="Action or Ritual",
             range="Self",
             components="V, S, M (a pinch of soot and salt)",
@@ -1511,13 +1575,14 @@ class ComprehendLanguages(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class Compulsion(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Compulsion",
             level=4,
             school="Enchantment",
-            classes=['Bard'],
+            classes=["Bard"],
             casting_time="Action",
             range="30 feet",
             components="V, S",
@@ -1532,13 +1597,14 @@ class Compulsion(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class ConeOfCold(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Cone Of Cold",
             level=5,
             school="Evocation",
-            classes=['Druid', 'Sorcerer', 'Wizard'],
+            classes=["Druid", "Sorcerer", "Wizard"],
             casting_time="Action",
             range="Self",
             components="V, S, M (a small crystal or glass cone)",
@@ -1554,13 +1620,14 @@ class ConeOfCold(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class Confusion(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Confusion",
             level=4,
             school="Enchantment",
-            classes=['Bard', 'Druid', 'Sorcerer', 'Wizard'],
+            classes=["Bard", "Druid", "Sorcerer", "Wizard"],
             casting_time="Action",
             range="90 feet",
             components="V, S, M (three nut shells)",
@@ -1575,13 +1642,14 @@ class Confusion(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class ConjureAnimals(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Conjure Animals",
             level=3,
             school="Conjuration",
-            classes=['Druid', 'Ranger'],
+            classes=["Druid", "Ranger"],
             casting_time="Action",
             range="60 feet",
             components="V, S",
@@ -1600,13 +1668,14 @@ class ConjureAnimals(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class ConjureBarrage(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Conjure Barrage",
             level=3,
             school="Conjuration",
-            classes=['Ranger'],
+            classes=["Ranger"],
             casting_time="Action",
             range="Self",
             components="V, S, M (a Melee or Ranged weapon worth at least 1 CP)",
@@ -1621,13 +1690,14 @@ class ConjureBarrage(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class ConjureCelestial(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Conjure Celestial",
             level=7,
             school="Conjuration",
-            classes=['Cleric'],
+            classes=["Cleric"],
             casting_time="Action",
             range="90 feet",
             components="V, S",
@@ -1648,13 +1718,14 @@ class ConjureCelestial(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class ConjureConstructs(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Conjure Constructs",
             level=3,
             school="Conjuration",
-            classes=['Wizard'],
+            classes=["Wizard"],
             casting_time="Action",
             range="60 feet",
             components="V, S, M (a brass cog)",
@@ -1674,13 +1745,14 @@ class ConjureConstructs(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class ConjureElemental(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Conjure Elemental",
             level=5,
             school="Conjuration",
-            classes=['Druid', 'Wizard'],
+            classes=["Druid", "Wizard"],
             casting_time="Action",
             range="60 feet",
             components="V, S",
@@ -1701,13 +1773,14 @@ class ConjureElemental(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class ConjureFey(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Conjure Fey",
             level=6,
             school="Conjuration",
-            classes=['Druid'],
+            classes=["Druid"],
             casting_time="Action",
             range="60 feet",
             components="V, S",
@@ -1725,13 +1798,14 @@ class ConjureFey(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class ConjureMinorElementals(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Conjure Minor Elementals",
             level=4,
             school="Conjuration",
-            classes=['Druid', 'Wizard'],
+            classes=["Druid", "Wizard"],
             casting_time="Action",
             range="Self",
             components="V, S",
@@ -1748,13 +1822,14 @@ class ConjureMinorElementals(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class ConjureVolley(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Conjure Volley",
             level=5,
             school="Conjuration",
-            classes=['Ranger'],
+            classes=["Ranger"],
             casting_time="Action",
             range="150 feet",
             components="V, S, M (a Melee or Ranged weapon worth at least 1 CP)",
@@ -1769,13 +1844,14 @@ class ConjureVolley(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class ConjureWoodlandBeings(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Conjure Woodland Beings",
             level=4,
             school="Conjuration",
-            classes=['Druid', 'Ranger'],
+            classes=["Druid", "Ranger"],
             casting_time="Action",
             range="Self",
             components="V, S",
@@ -1793,13 +1869,14 @@ class ConjureWoodlandBeings(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class ContactOtherPlane(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Contact Other Plane",
             level=5,
             school="Divination",
-            classes=['Warlock', 'Wizard'],
+            classes=["Warlock", "Wizard"],
             casting_time="1 minute or Ritual",
             range="Self",
             components="V",
@@ -1819,13 +1896,14 @@ class ContactOtherPlane(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class Contagion(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Contagion",
             level=5,
             school="Necromancy",
-            classes=['Cleric', 'Druid'],
+            classes=["Cleric", "Druid"],
             casting_time="Action",
             range="Touch",
             components="V, S",
@@ -1844,13 +1922,14 @@ class Contagion(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class Contingency(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Contingency",
             level=6,
             school="Abjuration",
-            classes=['Wizard'],
+            classes=["Wizard"],
             casting_time="10 minutes",
             range="Self",
             components="V, S, M (a gem-encrusted statuette of yourself worth 1,500+ GP)",
@@ -1871,13 +1950,14 @@ class Contingency(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class ContinualFlame(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Continual Flame",
             level=2,
             school="Evocation",
-            classes=['Artificer', 'Cleric', 'Druid', 'Wizard'],
+            classes=["Artificer", "Cleric", "Druid", "Wizard"],
             casting_time="Action",
             range="Touch",
             components="V, S, M (ruby dust worth 50+ GP, which the spell consumes)",
@@ -1892,13 +1972,14 @@ class ContinualFlame(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class ControlWater(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Control Water",
             level=4,
             school="Transmutation",
-            classes=['Cleric', 'Druid', 'Wizard'],
+            classes=["Cleric", "Druid", "Wizard"],
             casting_time="Action",
             range="300 feet",
             components="V, S, M (a mixture of water and dust)",
@@ -1936,13 +2017,14 @@ class ControlWater(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class ControlWeather(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Control Weather",
             level=8,
             school="Transmutation",
-            classes=['Cleric', 'Druid', 'Wizard'],
+            classes=["Cleric", "Druid", "Wizard"],
             casting_time="10 minutes",
             range="Self",
             components="V, S, M (burning incense)",
@@ -1962,13 +2044,14 @@ class ControlWeather(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class CordonOfArrows(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Cordon Of Arrows",
             level=2,
             school="Transmutation",
-            classes=['Ranger'],
+            classes=["Ranger"],
             casting_time="Action",
             range="Touch",
             components="V, S, M (an ornamental braid)",
@@ -1987,13 +2070,14 @@ class CordonOfArrows(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class Counterspell(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Counterspell",
             level=3,
             school="Abjuration",
-            classes=['Sorcerer', 'Warlock', 'Wizard'],
+            classes=["Sorcerer", "Warlock", "Wizard"],
             casting_time="Reaction, which you take when you see a creature within 60 feet of yourself casting a spell with Verbal, Somatic, or Material components",
             range="60 feet",
             components="S",
@@ -2008,13 +2092,14 @@ class Counterspell(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class CreateFoodAndWater(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Create Food And Water",
             level=3,
             school="Conjuration",
-            classes=['Artificer', 'Cleric', 'Paladin'],
+            classes=["Artificer", "Cleric", "Paladin"],
             casting_time="Action",
             range="30 feet",
             components="V, S",
@@ -2028,13 +2113,14 @@ class CreateFoodAndWater(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class CreateUndead(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Create Undead",
             level=6,
             school="Necromancy",
-            classes=['Cleric', 'Warlock', 'Wizard'],
+            classes=["Cleric", "Warlock", "Wizard"],
             casting_time="1 minute",
             range="10 feet",
             components="V, S, M (one 150+ GP black onyx stone for each corpse)",
@@ -2060,13 +2146,14 @@ class CreateUndead(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class CreateOrDestroyWater(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Create or Destroy Water",
             level=1,
             school="Transmutation",
-            classes=['Cleric', 'Druid'],
+            classes=["Cleric", "Druid"],
             casting_time="Action",
             range="30 feet",
             components="V, S, M (a mix of water and sand)",
@@ -2085,13 +2172,14 @@ class CreateOrDestroyWater(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class Creation(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Creation",
             level=5,
             school="Illusion",
-            classes=['Artificer', 'Sorcerer', 'Wizard'],
+            classes=["Artificer", "Sorcerer", "Wizard"],
             casting_time="1 minute",
             range="30 feet",
             components="V, S, M (a paintbrush)",
@@ -2110,13 +2198,14 @@ class Creation(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class CrownOfMadness(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Crown Of Madness",
             level=2,
             school="Enchantment",
-            classes=['Bard', 'Sorcerer', 'Warlock', 'Wizard'],
+            classes=["Bard", "Sorcerer", "Warlock", "Wizard"],
             casting_time="Action",
             range="120 feet",
             components="V, S",
@@ -2133,13 +2222,14 @@ class CrownOfMadness(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class CrusadersMantle(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Crusader's Mantle",
             level=3,
             school="Evocation",
-            classes=['Paladin'],
+            classes=["Paladin"],
             casting_time="Action",
             range="Self",
             components="V",
@@ -2152,13 +2242,14 @@ class CrusadersMantle(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class CureWounds(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Cure Wounds",
             level=1,
             school="Abjuration",
-            classes=['Artificer', 'Bard', 'Cleric', 'Druid', 'Paladin', 'Ranger'],
+            classes=["Artificer", "Bard", "Cleric", "Druid", "Paladin", "Ranger"],
             casting_time="Action",
             range="Touch",
             components="V, S",
@@ -2172,13 +2263,14 @@ class CureWounds(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class DancingLights(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Dancing Lights",
             level=0,
             school="Illusion",
-            classes=['Artificer', 'Bard', 'Sorcerer', 'Wizard'],
+            classes=["Artificer", "Bard", "Sorcerer", "Wizard"],
             casting_time="Action",
             range="120 feet",
             components="V, S, M (a bit of phosphorus)",
@@ -2194,13 +2286,14 @@ class DancingLights(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class Darkness(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Darkness",
             level=2,
             school="Evocation",
-            classes=['Sorcerer', 'Warlock', 'Wizard'],
+            classes=["Sorcerer", "Warlock", "Wizard"],
             casting_time="Action",
             range="60 feet",
             components="V, M (bat fur and a piece of coal)",
@@ -2216,13 +2309,14 @@ class Darkness(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class Darkvision(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Darkvision",
             level=2,
             school="Transmutation",
-            classes=['Artificer', 'Druid', 'Ranger', 'Sorcerer', 'Wizard'],
+            classes=["Artificer", "Druid", "Ranger", "Sorcerer", "Wizard"],
             casting_time="Action",
             range="Touch",
             components="V, S, M (a dried carrot)",
@@ -2232,13 +2326,14 @@ class Darkvision(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class Daylight(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Daylight",
             level=3,
             school="Evocation",
-            classes=['Cleric', 'Druid', 'Paladin', 'Ranger', 'Sorcerer'],
+            classes=["Cleric", "Druid", "Paladin", "Ranger", "Sorcerer"],
             casting_time="Action",
             range="60 feet",
             components="V, S",
@@ -2254,13 +2349,14 @@ class Daylight(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class DeathArmor(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Death Armor",
             level=2,
             school="Necromancy",
-            classes=['Sorcerer', 'Wizard'],
+            classes=["Sorcerer", "Wizard"],
             casting_time="Action",
             range="Touch",
             components="V, S, M (an onyx worth 50+ GP, which the spell consumes)",
@@ -2273,13 +2369,14 @@ class DeathArmor(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class DeathWard(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Death Ward",
             level=4,
             school="Abjuration",
-            classes=['Cleric', 'Paladin'],
+            classes=["Cleric", "Paladin"],
             casting_time="Action",
             range="Touch",
             components="V, S",
@@ -2293,13 +2390,14 @@ class DeathWard(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class DelayedBlastFireball(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Delayed Blast Fireball",
             level=7,
             school="Evocation",
-            classes=['Sorcerer', 'Wizard'],
+            classes=["Sorcerer", "Wizard"],
             casting_time="Action",
             range="150 feet",
             components="V, S, M (a ball of bat guano and sulfur)",
@@ -2321,13 +2419,14 @@ class DelayedBlastFireball(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class Demiplane(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Demiplane",
             level=8,
             school="Conjuration",
-            classes=['Sorcerer', 'Warlock', 'Wizard'],
+            classes=["Sorcerer", "Warlock", "Wizard"],
             casting_time="Action",
             range="60 feet",
             components="S",
@@ -2344,13 +2443,14 @@ class Demiplane(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class DeryansHelpfulHomunculi(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Deryan's Helpful Homunculi",
             level=2,
             school="Conjuration",
-            classes=['Cleric', 'Wizard'],
+            classes=["Cleric", "Wizard"],
             casting_time="Action or Ritual",
             range="Self",
             components="V, S, M (powdered gemstones worth 100+ GP, which the spell consumes, and one set of Artisan’s Tools with which you have proficiency)",
@@ -2364,13 +2464,14 @@ class DeryansHelpfulHomunculi(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class DestructiveWave(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Destructive Wave",
             level=5,
             school="Evocation",
-            classes=['Paladin'],
+            classes=["Paladin"],
             casting_time="Action",
             range="Self",
             components="V",
@@ -2385,13 +2486,14 @@ class DestructiveWave(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class DetectEvilAndGood(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Detect Evil and Good",
             level=1,
             school="Divination",
-            classes=['Cleric', 'Paladin'],
+            classes=["Cleric", "Paladin"],
             casting_time="Action",
             range="Self",
             components="V, S",
@@ -2405,13 +2507,24 @@ class DetectEvilAndGood(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class DetectMagic(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Detect Magic",
             level=1,
             school="Divination",
-            classes=['Artificer', 'Bard', 'Cleric', 'Druid', 'Paladin', 'Ranger', 'Sorcerer', 'Warlock', 'Wizard'],
+            classes=[
+                "Artificer",
+                "Bard",
+                "Cleric",
+                "Druid",
+                "Paladin",
+                "Ranger",
+                "Sorcerer",
+                "Warlock",
+                "Wizard",
+            ],
             casting_time="Action or Ritual",
             range="Self",
             components="V, S",
@@ -2425,13 +2538,14 @@ class DetectMagic(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class DetectPoisonAndDisease(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Detect Poison and Disease",
             level=1,
             school="Divination",
-            classes=['Cleric', 'Druid', 'Paladin', 'Ranger'],
+            classes=["Cleric", "Druid", "Paladin", "Ranger"],
             casting_time="Action or Ritual",
             range="Self",
             components="V, S, M (a yew leaf)",
@@ -2445,13 +2559,14 @@ class DetectPoisonAndDisease(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class DetectThoughts(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Detect Thoughts",
             level=2,
             school="Divination",
-            classes=['Bard', 'Sorcerer', 'Wizard'],
+            classes=["Bard", "Sorcerer", "Wizard"],
             casting_time="Action",
             range="Self",
             components="V, S, M (1 Copper Piece)",
@@ -2477,13 +2592,14 @@ class DetectThoughts(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class DimensionDoor(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Dimension Door",
             level=4,
             school="Conjuration",
-            classes=['Bard', 'Sorcerer', 'Warlock', 'Wizard'],
+            classes=["Bard", "Sorcerer", "Warlock", "Wizard"],
             casting_time="Action",
             range="500 feet",
             components="V",
@@ -2500,13 +2616,14 @@ class DimensionDoor(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class Dirge(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Dirge",
             level=6,
             school="Enchantment",
-            classes=['Bard', 'Cleric'],
+            classes=["Bard", "Cleric"],
             casting_time="Action",
             range="Self",
             components="V",
@@ -2530,13 +2647,14 @@ class Dirge(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class DisguiseSelf(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Disguise Self",
             level=1,
             school="Illusion",
-            classes=['Artificer', 'Bard', 'Sorcerer', 'Wizard'],
+            classes=["Artificer", "Bard", "Sorcerer", "Wizard"],
             casting_time="Action",
             range="Self",
             components="V, S",
@@ -2554,13 +2672,14 @@ class DisguiseSelf(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class Disintegrate(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Disintegrate",
             level=6,
             school="Transmutation",
-            classes=['Sorcerer', 'Wizard'],
+            classes=["Sorcerer", "Wizard"],
             casting_time="Action",
             range="60 feet",
             components="V, S, M (a lodestone and dust)",
@@ -2581,13 +2700,14 @@ class Disintegrate(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class DispelEvilAndGood(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Dispel Evil and Good",
             level=5,
             school="Abjuration",
-            classes=['Cleric', 'Paladin'],
+            classes=["Cleric", "Paladin"],
             casting_time="Action",
             range="Self",
             components="V, S, M (powdered silver and iron)",
@@ -2607,13 +2727,24 @@ class DispelEvilAndGood(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class DispelMagic(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Dispel Magic",
             level=3,
             school="Abjuration",
-            classes=['Artificer', 'Bard', 'Cleric', 'Druid', 'Paladin', 'Ranger', 'Sorcerer', 'Warlock', 'Wizard'],
+            classes=[
+                "Artificer",
+                "Bard",
+                "Cleric",
+                "Druid",
+                "Paladin",
+                "Ranger",
+                "Sorcerer",
+                "Warlock",
+                "Wizard",
+            ],
             casting_time="Action",
             range="120 feet",
             components="V, S",
@@ -2630,13 +2761,14 @@ class DispelMagic(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class DissonantWhispers(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Dissonant Whispers",
             level=1,
             school="Enchantment",
-            classes=['Bard'],
+            classes=["Bard"],
             casting_time="Action",
             range="60 feet",
             components="V",
@@ -2653,13 +2785,14 @@ class DissonantWhispers(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class Divination(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Divination",
             level=4,
             school="Divination",
-            classes=['Cleric', 'Druid', 'Wizard'],
+            classes=["Cleric", "Druid", "Wizard"],
             casting_time="Action or Ritual",
             range="Self",
             components="V, S, M (incense worth 25+ GP, which the spell consumes)",
@@ -2675,13 +2808,14 @@ class Divination(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class DivineFavor(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Divine Favor",
             level=1,
             school="Transmutation",
-            classes=['Paladin'],
+            classes=["Paladin"],
             casting_time="Bonus Action",
             range="Self",
             components="V, S",
@@ -2691,13 +2825,14 @@ class DivineFavor(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class DivineSmite(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Divine Smite",
             level=1,
             school="Evocation",
-            classes=['Paladin'],
+            classes=["Paladin"],
             casting_time="Bonus Action, which you take immediately after hitting a target with a Melee weapon or an Unarmed Strike",
             range="Self",
             components="V",
@@ -2712,13 +2847,14 @@ class DivineSmite(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class DivineWord(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Divine Word",
             level=7,
             school="Evocation",
-            classes=['Cleric'],
+            classes=["Cleric"],
             casting_time="Bonus Action",
             range="30 feet",
             components="V",
@@ -2733,13 +2869,14 @@ class DivineWord(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class DominateBeast(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Dominate Beast",
             level=4,
             school="Enchantment",
-            classes=['Druid', 'Ranger', 'Sorcerer'],
+            classes=["Druid", "Ranger", "Sorcerer"],
             casting_time="Action",
             range="60 feet",
             components="V, S",
@@ -2760,13 +2897,14 @@ class DominateBeast(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class DominateMonster(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Dominate Monster",
             level=8,
             school="Enchantment",
-            classes=['Bard', 'Sorcerer', 'Warlock', 'Wizard'],
+            classes=["Bard", "Sorcerer", "Warlock", "Wizard"],
             casting_time="Action",
             range="60 feet",
             components="V, S",
@@ -2787,13 +2925,14 @@ class DominateMonster(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class DominatePerson(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Dominate Person",
             level=5,
             school="Enchantment",
-            classes=['Bard', 'Sorcerer', 'Wizard'],
+            classes=["Bard", "Sorcerer", "Wizard"],
             casting_time="Action",
             range="60 feet",
             components="V, S",
@@ -2814,13 +2953,14 @@ class DominatePerson(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class Doomtide(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Doomtide",
             level=4,
             school="Conjuration",
-            classes=['Bard', 'Cleric', 'Warlock'],
+            classes=["Bard", "Cleric", "Warlock"],
             casting_time="Action",
             range="120 feet",
             components="V, S, M (soot and a dried eel)",
@@ -2845,13 +2985,14 @@ class Doomtide(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class DragonsBreath(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Dragon's Breath",
             level=2,
             school="Transmutation",
-            classes=['Artificer', 'Sorcerer', 'Wizard'],
+            classes=["Artificer", "Sorcerer", "Wizard"],
             casting_time="Bonus Action",
             range="Touch",
             components="V, S, M (a hot pepper)",
@@ -2867,13 +3008,14 @@ class DragonsBreath(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class DrawmijsInstantSummons(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Drawmij's Instant Summons",
             level=6,
             school="Conjuration",
-            classes=['Wizard'],
+            classes=["Wizard"],
             casting_time="1 minute or Ritual",
             range="Touch",
             components="V, S, M (a sapphire worth 1,000+ GP)",
@@ -2890,13 +3032,14 @@ class DrawmijsInstantSummons(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class Dream(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Dream",
             level=5,
             school="Illusion",
-            classes=['Bard', 'Warlock', 'Wizard'],
+            classes=["Bard", "Warlock", "Wizard"],
             casting_time="1 minute",
             range="Special",
             components="V, S, M (a handful of sand)",
@@ -2918,13 +3061,14 @@ class Dream(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class Druidcraft(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Druidcraft",
             level=0,
             school="Transmutation",
-            classes=['Druid'],
+            classes=["Druid"],
             casting_time="Action",
             range="30 feet",
             components="V, S",
@@ -2947,13 +3091,14 @@ class Druidcraft(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class Earthquake(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Earthquake",
             level=8,
             school="Transmutation",
-            classes=['Cleric', 'Druid', 'Sorcerer'],
+            classes=["Cleric", "Druid", "Sorcerer"],
             casting_time="Action",
             range="500 feet",
             components="V, S, M (a fractured rock)",
@@ -2982,13 +3127,14 @@ class Earthquake(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class EldritchBlast(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Eldritch Blast",
             level=0,
             school="Evocation",
-            classes=['Warlock'],
+            classes=["Warlock"],
             casting_time="Action",
             range="120 feet",
             components="V, S",
@@ -3006,13 +3152,14 @@ class EldritchBlast(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class ElementalWeapon(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Elemental Weapon",
             level=3,
             school="Transmutation",
-            classes=['Artificer', 'Druid', 'Paladin', 'Ranger'],
+            classes=["Artificer", "Druid", "Paladin", "Ranger"],
             casting_time="Action",
             range="Touch",
             components="V, S",
@@ -3029,13 +3176,14 @@ class ElementalWeapon(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class Elementalism(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Elementalism",
             level=0,
             school="Transmutation",
-            classes=['Artificer', 'Druid', 'Sorcerer', 'Wizard'],
+            classes=["Artificer", "Druid", "Sorcerer", "Wizard"],
             casting_time="Action",
             range="30 feet",
             components="V, S",
@@ -3061,13 +3209,14 @@ class Elementalism(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class ElminstersEffulgentSpheres(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Elminster's Effulgent Spheres",
             level=6,
             school="Evocation",
-            classes=['Druid', 'Sorcerer', 'Wizard'],
+            classes=["Druid", "Sorcerer", "Wizard"],
             casting_time="Action",
             range="Self",
             components="V, S, M (an opal worth 1,000 GP+)",
@@ -3089,13 +3238,14 @@ class ElminstersEffulgentSpheres(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class ElminstersElusion(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Elminster's Elusion",
             level=2,
             school="Abjuration",
-            classes=['Wizard'],
+            classes=["Wizard"],
             casting_time="Bonus Action",
             range="Self",
             components="V, S",
@@ -3109,13 +3259,22 @@ class ElminstersElusion(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class EnhanceAbility(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Enhance Ability",
             level=2,
             school="Transmutation",
-            classes=['Artificer', 'Bard', 'Cleric', 'Druid', 'Ranger', 'Sorcerer', 'Wizard'],
+            classes=[
+                "Artificer",
+                "Bard",
+                "Cleric",
+                "Druid",
+                "Ranger",
+                "Sorcerer",
+                "Wizard",
+            ],
             casting_time="Action",
             range="Touch",
             components="V, S, M (fur or a feather)",
@@ -3131,13 +3290,14 @@ class EnhanceAbility(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class Enlargereduce(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Enlarge/Reduce",
             level=2,
             school="Transmutation",
-            classes=['Artificer', 'Bard', 'Druid', 'Sorcerer', 'Wizard'],
+            classes=["Artificer", "Bard", "Druid", "Sorcerer", "Wizard"],
             casting_time="Action",
             range="30 feet",
             components="V, S, M (a pinch of powdered iron)",
@@ -3163,13 +3323,14 @@ class Enlargereduce(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class EnsnaringStrike(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Ensnaring Strike",
             level=1,
             school="Conjuration",
-            classes=['Ranger'],
+            classes=["Ranger"],
             casting_time="Bonus Action, which you take immediately after hitting a creature with a weapon",
             range="Self",
             components="V",
@@ -3189,13 +3350,14 @@ class EnsnaringStrike(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class Entangle(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Entangle",
             level=1,
             school="Conjuration",
-            classes=['Druid', 'Ranger'],
+            classes=["Druid", "Ranger"],
             casting_time="Action",
             range="90 feet",
             components="V, S",
@@ -3212,13 +3374,14 @@ class Entangle(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class Enthrall(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Enthrall",
             level=2,
             school="Enchantment",
-            classes=['Bard', 'Warlock'],
+            classes=["Bard", "Warlock"],
             casting_time="Action",
             range="60 feet",
             components="V, S",
@@ -3232,13 +3395,14 @@ class Enthrall(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class Etherealness(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Etherealness",
             level=7,
             school="Conjuration",
-            classes=['Bard', 'Cleric', 'Sorcerer', 'Warlock', 'Wizard'],
+            classes=["Bard", "Cleric", "Sorcerer", "Warlock", "Wizard"],
             casting_time="Action",
             range="Self",
             components="V, S",
@@ -3262,13 +3426,14 @@ class Etherealness(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class EvardsBlackTentacles(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Evard's Black Tentacles",
             level=4,
             school="Conjuration",
-            classes=['Wizard'],
+            classes=["Wizard"],
             casting_time="Action",
             range="90 feet",
             components="V, S, M (a tentacle)",
@@ -3286,13 +3451,14 @@ class EvardsBlackTentacles(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class ExpeditiousRetreat(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Expeditious Retreat",
             level=1,
             school="Transmutation",
-            classes=['Artificer', 'Sorcerer', 'Warlock', 'Wizard'],
+            classes=["Artificer", "Sorcerer", "Warlock", "Wizard"],
             casting_time="Bonus Action",
             range="Self",
             components="V, S",
@@ -3302,13 +3468,14 @@ class ExpeditiousRetreat(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class Eyebite(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Eyebite",
             level=6,
             school="Necromancy",
-            classes=['Bard', 'Sorcerer', 'Warlock', 'Wizard'],
+            classes=["Bard", "Sorcerer", "Warlock", "Wizard"],
             casting_time="Action",
             range="Self",
             components="V, S",
@@ -3331,13 +3498,14 @@ class Eyebite(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class Fabricate(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Fabricate",
             level=4,
             school="Transmutation",
-            classes=['Artificer', 'Wizard'],
+            classes=["Artificer", "Wizard"],
             casting_time="10 minutes",
             range="120 feet",
             components="V, S",
@@ -3356,13 +3524,14 @@ class Fabricate(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class FaerieFire(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Faerie Fire",
             level=1,
             school="Evocation",
-            classes=['Artificer', 'Bard', 'Druid'],
+            classes=["Artificer", "Bard", "Druid"],
             casting_time="Action",
             range="60 feet",
             components="V",
@@ -3377,13 +3546,14 @@ class FaerieFire(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class FalseLife(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="False Life",
             level=1,
             school="Necromancy",
-            classes=['Artificer', 'Sorcerer', 'Wizard'],
+            classes=["Artificer", "Sorcerer", "Wizard"],
             casting_time="Action",
             range="Self",
             components="V, S, M (a drop of alcohol)",
@@ -3397,13 +3567,14 @@ class FalseLife(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class Fear(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Fear",
             level=3,
             school="Illusion",
-            classes=['Bard', 'Sorcerer', 'Warlock', 'Wizard'],
+            classes=["Bard", "Sorcerer", "Warlock", "Wizard"],
             casting_time="Action",
             range="Self",
             components="V, S, M (a white feather)",
@@ -3418,13 +3589,14 @@ class Fear(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class FeatherFall(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Feather Fall",
             level=1,
             school="Transmutation",
-            classes=['Artificer', 'Bard', 'Sorcerer', 'Wizard'],
+            classes=["Artificer", "Bard", "Sorcerer", "Wizard"],
             casting_time="Reaction, which you take when you or a creature you can see within 60 feet of you falls",
             range="60 feet",
             components="V, M (a small feather or piece of down)",
@@ -3438,13 +3610,14 @@ class FeatherFall(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class FeignDeath(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Feign Death",
             level=3,
             school="Necromancy",
-            classes=['Bard', 'Cleric', 'Druid', 'Wizard'],
+            classes=["Bard", "Cleric", "Druid", "Wizard"],
             casting_time="Action or Ritual",
             range="Touch",
             components="V, S, M (a pinch of graveyard dirt)",
@@ -3459,13 +3632,14 @@ class FeignDeath(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class FindFamiliar(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Find Familiar",
             level=1,
             school="Conjuration",
-            classes=['Wizard'],
+            classes=["Wizard"],
             casting_time="1 hour or Ritual",
             range="10 feet",
             components="V, S, M (burning incense worth 10+ GP, which the spell consumes)",
@@ -3498,13 +3672,14 @@ class FindFamiliar(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class FindSteed(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Find Steed",
             level=2,
             school="Conjuration",
-            classes=['Paladin'],
+            classes=["Paladin"],
             casting_time="Action",
             range="30 feet",
             components="V, S",
@@ -3530,13 +3705,14 @@ class FindSteed(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class FindTraps(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Find Traps",
             level=2,
             school="Divination",
-            classes=['Cleric', 'Druid', 'Ranger'],
+            classes=["Cleric", "Druid", "Ranger"],
             casting_time="Action",
             range="120 feet",
             components="V, S",
@@ -3552,13 +3728,14 @@ class FindTraps(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class FindThePath(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Find the Path",
             level=6,
             school="Divination",
-            classes=['Bard', 'Cleric', 'Druid'],
+            classes=["Bard", "Cleric", "Druid"],
             casting_time="1 minute",
             range="Self",
             components="V, S, M (a set of divination tools - such as cards or runes - worth 100+ GP)",
@@ -3573,13 +3750,14 @@ class FindThePath(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class FingerOfDeath(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Finger of Death",
             level=7,
             school="Necromancy",
-            classes=['Sorcerer', 'Warlock', 'Wizard'],
+            classes=["Sorcerer", "Warlock", "Wizard"],
             casting_time="Action",
             range="60 feet",
             components="V, S",
@@ -3593,13 +3771,14 @@ class FingerOfDeath(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class FireBolt(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Fire Bolt",
             level=0,
             school="Evocation",
-            classes=['Artificer', 'Sorcerer', 'Wizard'],
+            classes=["Artificer", "Sorcerer", "Wizard"],
             casting_time="Action",
             range="120 feet",
             components="V, S",
@@ -3616,13 +3795,14 @@ class FireBolt(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class FireShield(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Fire Shield",
             level=4,
             school="Evocation",
-            classes=['Druid', 'Sorcerer', 'Wizard'],
+            classes=["Druid", "Sorcerer", "Wizard"],
             casting_time="Action",
             range="Self",
             components="V, S, M (a bit of phosphorus or a firefly)",
@@ -3638,13 +3818,14 @@ class FireShield(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class FireStorm(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Fire Storm",
             level=7,
             school="Evocation",
-            classes=['Cleric', 'Druid', 'Sorcerer'],
+            classes=["Cleric", "Druid", "Sorcerer"],
             casting_time="Action",
             range="150 feet",
             components="V, S",
@@ -3660,13 +3841,14 @@ class FireStorm(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class Fireball(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Fireball",
             level=3,
             school="Evocation",
-            classes=['Sorcerer', 'Wizard'],
+            classes=["Sorcerer", "Wizard"],
             casting_time="Action",
             range="150 feet",
             components="V, S, M (a ball of bat guano and sulfur)",
@@ -3682,13 +3864,14 @@ class Fireball(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class FlameBlade(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Flame Blade",
             level=2,
             school="Evocation",
-            classes=['Druid', 'Sorcerer'],
+            classes=["Druid", "Sorcerer"],
             casting_time="Bonus Action",
             range="Self",
             components="V, S, M (a sumac leaf)",
@@ -3707,13 +3890,14 @@ class FlameBlade(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class FlameStrike(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Flame Strike",
             level=5,
             school="Evocation",
-            classes=['Cleric'],
+            classes=["Cleric"],
             casting_time="Action",
             range="60 feet",
             components="V, S, M (a pinch of sulfur)",
@@ -3728,13 +3912,14 @@ class FlameStrike(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class FlamingSphere(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Flaming Sphere",
             level=2,
             school="Conjuration",
-            classes=['Druid', 'Sorcerer', 'Wizard'],
+            classes=["Druid", "Sorcerer", "Wizard"],
             casting_time="Action",
             range="60 feet",
             components="V, S, M (a ball of wax)",
@@ -3754,13 +3939,14 @@ class FlamingSphere(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class FleshToStone(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Flesh to Stone",
             level=6,
             school="Transmutation",
-            classes=['Druid', 'Sorcerer', 'Wizard'],
+            classes=["Druid", "Sorcerer", "Wizard"],
             casting_time="Action",
             range="60 feet",
             components="V, S, M (a cockatrice feather)",
@@ -3781,13 +3967,14 @@ class FleshToStone(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class Fly(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Fly",
             level=3,
             school="Transmutation",
-            classes=['Artificer', 'Sorcerer', 'Warlock', 'Wizard'],
+            classes=["Artificer", "Sorcerer", "Warlock", "Wizard"],
             casting_time="Action",
             range="Touch",
             components="V, S, M (a feather)",
@@ -3803,13 +3990,14 @@ class Fly(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class FogCloud(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Fog Cloud",
             level=1,
             school="Conjuration",
-            classes=['Druid', 'Ranger', 'Sorcerer', 'Wizard'],
+            classes=["Druid", "Ranger", "Sorcerer", "Wizard"],
             casting_time="Action",
             range="120 feet",
             components="V, S",
@@ -3825,13 +4013,14 @@ class FogCloud(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class Forbiddance(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Forbiddance",
             level=6,
             school="Abjuration",
-            classes=['Cleric'],
+            classes=["Cleric"],
             casting_time="10 minutes or Ritual",
             range="Touch",
             components="V, S, M (ruby dust worth 1,000+ GP)",
@@ -3852,13 +4041,14 @@ class Forbiddance(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class Forcecage(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Forcecage",
             level=7,
             school="Evocation",
-            classes=['Bard', 'Warlock', 'Wizard'],
+            classes=["Bard", "Warlock", "Wizard"],
             casting_time="Action",
             range="100 feet",
             components="V, S, M (ruby dust worth 1,500+ GP, which the spell consumes)",
@@ -3881,13 +4071,14 @@ class Forcecage(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class Foresight(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Foresight",
             level=9,
             school="Divination",
-            classes=['Bard', 'Druid', 'Warlock', 'Wizard'],
+            classes=["Bard", "Druid", "Warlock", "Wizard"],
             casting_time="1 minute",
             range="Touch",
             components="V, S, M (a hummingbird feather)",
@@ -3901,13 +4092,14 @@ class Foresight(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class FountOfMoonlight(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Fount of Moonlight",
             level=4,
             school="Evocation",
-            classes=['Bard', 'Druid'],
+            classes=["Bard", "Druid"],
             casting_time="Action",
             range="Self",
             components="V, S",
@@ -3922,13 +4114,14 @@ class FountOfMoonlight(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class FreedomOfMovement(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Freedom of Movement",
             level=4,
             school="Abjuration",
-            classes=['Artificer', 'Bard', 'Cleric', 'Druid', 'Ranger'],
+            classes=["Artificer", "Bard", "Cleric", "Druid", "Ranger"],
             casting_time="Action",
             range="Touch",
             components="V, S, M (a leather strap)",
@@ -3945,13 +4138,14 @@ class FreedomOfMovement(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class Friends(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Friends",
             level=0,
             school="Enchantment",
-            classes=['Bard', 'Sorcerer', 'Warlock', 'Wizard'],
+            classes=["Bard", "Sorcerer", "Warlock", "Wizard"],
             casting_time="Action",
             range="10 feet",
             components="S, M (some makeup)",
@@ -3967,13 +4161,14 @@ class Friends(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class GaseousForm(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Gaseous Form",
             level=3,
             school="Transmutation",
-            classes=['Sorcerer', 'Warlock', 'Wizard'],
+            classes=["Sorcerer", "Warlock", "Wizard"],
             casting_time="Action",
             range="Touch",
             components="V, S, M (a bit of gauze)",
@@ -3994,13 +4189,14 @@ class GaseousForm(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class Gate(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Gate",
             level=9,
             school="Conjuration",
-            classes=['Cleric', 'Sorcerer', 'Warlock', 'Wizard'],
+            classes=["Cleric", "Sorcerer", "Warlock", "Wizard"],
             casting_time="Action",
             range="60 feet",
             components="V, S, M(a diamond worth 5,000+ GP)",
@@ -4023,13 +4219,14 @@ class Gate(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class Geas(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Geas",
             level=5,
             school="Enchantment",
-            classes=['Bard', 'Cleric', 'Druid', 'Paladin', 'Wizard'],
+            classes=["Bard", "Cleric", "Druid", "Paladin", "Wizard"],
             casting_time="1 minute",
             range="60 feet",
             components="V",
@@ -4051,13 +4248,14 @@ class Geas(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class GentleRepose(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Gentle Repose",
             level=2,
             school="Necromancy",
-            classes=['Cleric', 'Paladin', 'Wizard'],
+            classes=["Cleric", "Paladin", "Wizard"],
             casting_time="Action or Ritual",
             range="Touch",
             components="V, S, M (2 Copper Pieces, which the spell consumes)",
@@ -4071,13 +4269,14 @@ class GentleRepose(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class GiantInsect(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Giant Insect",
             level=4,
             school="Conjuration",
-            classes=['Druid'],
+            classes=["Druid"],
             casting_time="Action",
             range="60 feet",
             components="V, S",
@@ -4098,13 +4297,14 @@ class GiantInsect(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class Glibness(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Glibness",
             level=8,
             school="Enchantment",
-            classes=['Bard', 'Warlock'],
+            classes=["Bard", "Warlock"],
             casting_time="Action",
             range="Self",
             components="V",
@@ -4117,13 +4317,14 @@ class Glibness(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class GlobeOfInvulnerability(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Globe of Invulnerability",
             level=6,
             school="Abjuration",
-            classes=['Sorcerer', 'Wizard'],
+            classes=["Sorcerer", "Wizard"],
             casting_time="Action",
             range="Self",
             components="V, S, M (a glass bead)",
@@ -4140,13 +4341,14 @@ class GlobeOfInvulnerability(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class GlyphOfWarding(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Glyph of Warding",
             level=3,
             school="Abjuration",
-            classes=['Artificer', 'Bard', 'Cleric', 'Wizard'],
+            classes=["Artificer", "Bard", "Cleric", "Wizard"],
             casting_time="1 hour",
             range="Touch",
             components="V, S, M (powdered diamond worth 200+ GP, which the spell consumes)",
@@ -4186,13 +4388,14 @@ class GlyphOfWarding(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class Goodberry(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Goodberry",
             level=1,
             school="Conjuration",
-            classes=['Druid', 'Ranger'],
+            classes=["Druid", "Ranger"],
             casting_time="Action",
             range="Self",
             components="V, S, M (a sprig of mistletoe)",
@@ -4207,13 +4410,14 @@ class Goodberry(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class GraspingVine(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Grasping Vine",
             level=4,
             school="Conjuration",
-            classes=['Druid', 'Ranger'],
+            classes=["Druid", "Ranger"],
             casting_time="Bonus Action",
             range="60 feet",
             components="V, S",
@@ -4232,13 +4436,14 @@ class GraspingVine(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class Grease(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Grease",
             level=1,
             school="Conjuration",
-            classes=['Artificer', 'Sorcerer', 'Wizard'],
+            classes=["Artificer", "Sorcerer", "Wizard"],
             casting_time="Action",
             range="60 feet",
             components="V, S, M (a bit of pork rind or butter)",
@@ -4252,13 +4457,14 @@ class Grease(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class GreaterInvisibility(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Greater Invisibility",
             level=4,
             school="Illusion",
-            classes=['Bard', 'Sorcerer', 'Wizard'],
+            classes=["Bard", "Sorcerer", "Wizard"],
             casting_time="Action",
             range="Touch",
             components="V, S",
@@ -4268,13 +4474,14 @@ class GreaterInvisibility(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class GreaterRestoration(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Greater Restoration",
             level=5,
             school="Abjuration",
-            classes=['Artificer', 'Bard', 'Cleric', 'Druid', 'Paladin', 'Ranger'],
+            classes=["Artificer", "Bard", "Cleric", "Druid", "Paladin", "Ranger"],
             casting_time="Action",
             range="Touch",
             components="V, S, M (diamond dust worth 100+ GP, which the spell consumes)",
@@ -4284,13 +4491,14 @@ class GreaterRestoration(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class GuardianOfFaith(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Guardian of Faith",
             level=4,
             school="Conjuration",
-            classes=['Cleric'],
+            classes=["Cleric"],
             casting_time="Action",
             range="30 feet",
             components="V",
@@ -4305,13 +4513,14 @@ class GuardianOfFaith(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class GuardsAndWards(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Guards and Wards",
             level=6,
             school="Abjuration",
-            classes=['Bard', 'Wizard'],
+            classes=["Bard", "Wizard"],
             casting_time="1 hour",
             range="Touch",
             components="V, S, M (a silver rod worth 10+ GP)",
@@ -4340,13 +4549,14 @@ class GuardsAndWards(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class Guidance(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Guidance",
             level=0,
             school="Divination",
-            classes=['Artificer', 'Cleric', 'Druid'],
+            classes=["Artificer", "Cleric", "Druid"],
             casting_time="Action",
             range="Touch",
             components="V, S",
@@ -4359,13 +4569,14 @@ class Guidance(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class GuidingBolt(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Guiding Bolt",
             level=1,
             school="Evocation",
-            classes=['Cleric'],
+            classes=["Cleric"],
             casting_time="Action",
             range="120 feet",
             components="V, S",
@@ -4381,13 +4592,14 @@ class GuidingBolt(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class GustOfWind(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Gust of Wind",
             level=2,
             school="Evocation",
-            classes=['Druid', 'Ranger', 'Sorcerer', 'Wizard'],
+            classes=["Druid", "Ranger", "Sorcerer", "Wizard"],
             casting_time="Action",
             range="Self",
             components="V, S, M (a legume seed)",
@@ -4405,13 +4617,14 @@ class GustOfWind(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class HailOfThorns(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Hail of Thorns",
             level=1,
             school="Conjuration",
-            classes=['Ranger'],
+            classes=["Ranger"],
             casting_time="Bonus Action, which you take immediately after hitting a creature with a Ranged weapon",
             range="Self",
             components="V",
@@ -4426,13 +4639,14 @@ class HailOfThorns(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class Hallow(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Hallow",
             level=5,
             school="Abjuration",
-            classes=['Cleric'],
+            classes=["Cleric"],
             casting_time="24 hours",
             range="Touch",
             components="V, S, M (incense worth 1,000+ GP, which the spell consumes)",
@@ -4472,13 +4686,14 @@ class Hallow(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class HallucinatoryTerrain(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Hallucinatory Terrain",
             level=4,
             school="Illusion",
-            classes=['Bard', 'Druid', 'Warlock', 'Wizard'],
+            classes=["Bard", "Druid", "Warlock", "Wizard"],
             casting_time="10 minutes",
             range="300 feet",
             components="V, S, M (a mushroom)",
@@ -4496,13 +4711,14 @@ class HallucinatoryTerrain(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class Harm(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Harm",
             level=6,
             school="Necromancy",
-            classes=['Cleric'],
+            classes=["Cleric"],
             casting_time="Action",
             range="60 feet",
             components="V, S",
@@ -4518,13 +4734,14 @@ class Harm(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class Haste(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Haste",
             level=3,
             school="Transmutation",
-            classes=['Artificer', 'Sorcerer', 'Wizard'],
+            classes=["Artificer", "Sorcerer", "Wizard"],
             casting_time="Action",
             range="30 feet",
             components="V, S, M (a shaving of licorice root)",
@@ -4539,13 +4756,14 @@ class Haste(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class Heal(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Heal",
             level=6,
             school="Abjuration",
-            classes=['Cleric', 'Druid'],
+            classes=["Cleric", "Druid"],
             casting_time="Action",
             range="60 feet",
             components="V, S",
@@ -4561,13 +4779,14 @@ class Heal(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class HealingWord(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Healing Word",
             level=1,
             school="Abjuration",
-            classes=['Bard', 'Cleric', 'Druid'],
+            classes=["Bard", "Cleric", "Druid"],
             casting_time="Bonus Action",
             range="60 feet",
             components="V",
@@ -4581,13 +4800,14 @@ class HealingWord(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class HeatMetal(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Heat Metal",
             level=2,
             school="Transmutation",
-            classes=['Artificer', 'Bard', 'Druid'],
+            classes=["Artificer", "Bard", "Druid"],
             casting_time="Action",
             range="60 feet",
             components="V, S, M (a piece of iron and a flame)",
@@ -4606,13 +4826,14 @@ class HeatMetal(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class HellishRebuke(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Hellish Rebuke",
             level=1,
             school="Evocation",
-            classes=['Warlock'],
+            classes=["Warlock"],
             casting_time="Reaction, which you take in response to taking damage from a creature that you can see within 60 feet of yourself",
             range="60 feet",
             components="V, S",
@@ -4627,13 +4848,14 @@ class HellishRebuke(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class HeroesFeast(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Heroes' Feast",
             level=6,
             school="Conjuration",
-            classes=['Bard', 'Cleric', 'Druid'],
+            classes=["Bard", "Cleric", "Druid"],
             casting_time="10 minutes",
             range="Self",
             components="V, S, M (a gem-encrusted bowl worth 1,000+ GP, which the spell consumes)",
@@ -4650,13 +4872,14 @@ class HeroesFeast(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class Heroism(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Heroism",
             level=1,
             school="Enchantment",
-            classes=['Bard', 'Paladin'],
+            classes=["Bard", "Paladin"],
             casting_time="Action",
             range="Touch",
             components="V, S",
@@ -4671,13 +4894,14 @@ class Heroism(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class Hex(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Hex",
             level=1,
             school="Enchantment",
-            classes=['Warlock'],
+            classes=["Warlock"],
             casting_time="Bonus Action",
             range="90 feet",
             components="V, S, M (the petrified eye of a newt)",
@@ -4695,13 +4919,14 @@ class Hex(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class HoldMonster(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Hold Monster",
             level=5,
             school="Enchantment",
-            classes=['Bard', 'Sorcerer', 'Warlock', 'Wizard'],
+            classes=["Bard", "Sorcerer", "Warlock", "Wizard"],
             casting_time="Action",
             range="90 feet",
             components="V, S, M (a straight piece of iron)",
@@ -4717,13 +4942,14 @@ class HoldMonster(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class HoldPerson(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Hold Person",
             level=2,
             school="Enchantment",
-            classes=['Bard', 'Cleric', 'Druid', 'Sorcerer', 'Warlock', 'Wizard'],
+            classes=["Bard", "Cleric", "Druid", "Sorcerer", "Warlock", "Wizard"],
             casting_time="Action",
             range="60 feet",
             components="V, S, M (a straight piece of iron)",
@@ -4739,13 +4965,14 @@ class HoldPerson(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class HolyAura(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Holy Aura",
             level=8,
             school="Abjuration",
-            classes=['Cleric'],
+            classes=["Cleric"],
             casting_time="Action",
             range="Self",
             components="V, S, M (a reliquary worth 1,000+ GP)",
@@ -4759,13 +4986,14 @@ class HolyAura(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class HolyStarOfMystra(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Holy Star of Mystra",
             level=8,
             school="Evocation",
-            classes=['Cleric', 'Wizard'],
+            classes=["Cleric", "Wizard"],
             casting_time="Bonus Action",
             range="Self",
             components="V, S",
@@ -4782,13 +5010,14 @@ class HolyStarOfMystra(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class HomunculusServant(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Homunculus Servant",
             level=2,
             school="Conjuration",
-            classes=['Artificer'],
+            classes=["Artificer"],
             casting_time="1 hour or Ritual",
             range="10 feet",
             components="V, S, M (a gem worth 100+ GP)",
@@ -4808,13 +5037,14 @@ class HomunculusServant(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class HungerOfHadar(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Hunger of Hadar",
             level=3,
             school="Conjuration",
-            classes=['Warlock'],
+            classes=["Warlock"],
             casting_time="Action",
             range="150 feet",
             components="V, S, M (a pickled tentacle)",
@@ -4833,13 +5063,14 @@ class HungerOfHadar(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class HuntersMark(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Hunter's Mark",
             level=1,
             school="Divination",
-            classes=['Ranger'],
+            classes=["Ranger"],
             casting_time="Bonus Action",
             range="90 feet",
             components="V",
@@ -4856,13 +5087,14 @@ class HuntersMark(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class HypnoticPattern(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Hypnotic Pattern",
             level=3,
             school="Illusion",
-            classes=['Bard', 'Sorcerer', 'Warlock', 'Wizard'],
+            classes=["Bard", "Sorcerer", "Warlock", "Wizard"],
             casting_time="Action",
             range="120 feet",
             components="S, M (a pinch of confetti)",
@@ -4878,13 +5110,14 @@ class HypnoticPattern(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class IceKnife(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Ice Knife",
             level=1,
             school="Conjuration",
-            classes=['Druid', 'Sorcerer', 'Wizard'],
+            classes=["Druid", "Sorcerer", "Wizard"],
             casting_time="Action",
             range="60 feet",
             components="S, M (a drop of water or a piece of ice)",
@@ -4902,13 +5135,14 @@ class IceKnife(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class IceStorm(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Ice Storm",
             level=4,
             school="Evocation",
-            classes=['Druid', 'Sorcerer', 'Wizard'],
+            classes=["Druid", "Sorcerer", "Wizard"],
             casting_time="Action",
             range="300 feet",
             components="V, S, M (a mitten)",
@@ -4925,13 +5159,14 @@ class IceStorm(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class Identify(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Identify",
             level=1,
             school="Divination",
-            classes=['Artificer', 'Bard', 'Wizard'],
+            classes=["Artificer", "Bard", "Wizard"],
             casting_time="1 minute or Ritual",
             range="Touch",
             components="V, S, M (a pearl worth 100+ GP)",
@@ -4947,13 +5182,14 @@ class Identify(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class IllusoryScript(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Illusory Script",
             level=1,
             school="Illusion",
-            classes=['Bard', 'Warlock', 'Wizard'],
+            classes=["Bard", "Warlock", "Wizard"],
             casting_time="1 minute or Ritual",
             range="Touch",
             components="S, M (ink worth 10+ GP, which the spell consumes)",
@@ -4970,13 +5206,14 @@ class IllusoryScript(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class Imprisonment(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Imprisonment",
             level=9,
             school="Abjuration",
-            classes=['Warlock', 'Wizard'],
+            classes=["Warlock", "Wizard"],
             casting_time="1 minute",
             range="30 feet",
             components="V, S, M(a statuette of the target worth 5,000+ GP)",
@@ -5012,13 +5249,14 @@ class Imprisonment(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class IncendiaryCloud(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Incendiary Cloud",
             level=8,
             school="Conjuration",
-            classes=['Druid', 'Sorcerer', 'Wizard'],
+            classes=["Druid", "Sorcerer", "Wizard"],
             casting_time="Action",
             range="150 feet",
             components="V, S",
@@ -5036,13 +5274,14 @@ class IncendiaryCloud(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class InflictWounds(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Inflict Wounds",
             level=1,
             school="Necromancy",
-            classes=['Cleric'],
+            classes=["Cleric"],
             casting_time="Action",
             range="Touch",
             components="V, S",
@@ -5056,13 +5295,14 @@ class InflictWounds(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class InsectPlague(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Insect Plague",
             level=5,
             school="Conjuration",
-            classes=['Cleric', 'Druid', 'Sorcerer'],
+            classes=["Cleric", "Druid", "Sorcerer"],
             casting_time="Action",
             range="300 feet",
             components="V, S, M (a locust)",
@@ -5080,13 +5320,14 @@ class InsectPlague(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class Invisibility(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Invisibility",
             level=2,
             school="Illusion",
-            classes=['Artificer', 'Bard', 'Sorcerer', 'Warlock', 'Wizard'],
+            classes=["Artificer", "Bard", "Sorcerer", "Warlock", "Wizard"],
             casting_time="Action",
             range="Touch",
             components="V, S, M (an eyelash in gum arabic)",
@@ -5101,13 +5342,14 @@ class Invisibility(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class JallarzisStormOfRadiance(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Jallarzi's Storm of Radiance",
             level=5,
             school="Evocation",
-            classes=['Warlock', 'Wizard'],
+            classes=["Warlock", "Wizard"],
             casting_time="Action",
             range="120 feet",
             components="V, S, M (a pinch of phosphorus)",
@@ -5125,13 +5367,14 @@ class JallarzisStormOfRadiance(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class Jump(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Jump",
             level=1,
             school="Transmutation",
-            classes=['Artificer', 'Druid', 'Ranger', 'Sorcerer', 'Wizard'],
+            classes=["Artificer", "Druid", "Ranger", "Sorcerer", "Wizard"],
             casting_time="Bonus Action",
             range="Touch",
             components="V, S, M (a grasshopper’s hind leg)",
@@ -5146,13 +5389,14 @@ class Jump(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class Knock(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Knock",
             level=2,
             school="Transmutation",
-            classes=['Bard', 'Sorcerer', 'Wizard'],
+            classes=["Bard", "Sorcerer", "Wizard"],
             casting_time="Action",
             range="60 feet",
             components="V",
@@ -5169,13 +5413,14 @@ class Knock(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class LaeralsSilverLance(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Laeral's Silver Lance",
             level=3,
             school="Evocation",
-            classes=['Cleric', 'Sorcerer', 'Wizard'],
+            classes=["Cleric", "Sorcerer", "Wizard"],
             casting_time="Action",
             range="Self",
             components="V, S, M (a silver pin worth 250+ GP)",
@@ -5192,13 +5437,14 @@ class LaeralsSilverLance(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class LegendLore(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Legend Lore",
             level=5,
             school="Divination",
-            classes=['Bard', 'Cleric', 'Wizard'],
+            classes=["Bard", "Cleric", "Wizard"],
             casting_time="10 minutes",
             range="Self",
             components="V, S, M (incense worth 250+ GP, which the spell consumes, and four ivory strips worth 50+ GP each)",
@@ -5215,13 +5461,14 @@ class LegendLore(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class LeomundsSecretChest(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Leomund's Secret Chest",
             level=4,
             school="Conjuration",
-            classes=['Artificer', 'Wizard'],
+            classes=["Artificer", "Wizard"],
             casting_time="Action",
             range="Touch",
             components="V, S, M (a chest, 3 feet by 2 feet by 2 feet, constructed from rare materials worth 5,000+ GP, and a Tiny replica of the chest made from the same materials worth 50+ GP)",
@@ -5241,13 +5488,14 @@ class LeomundsSecretChest(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class LeomundsTinyHut(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Leomund's Tiny Hut",
             level=3,
             school="Evocation",
-            classes=['Bard', 'Wizard'],
+            classes=["Bard", "Wizard"],
             casting_time="1 minute or Ritual",
             range="Self",
             components="V, S, M (a crystal bead)",
@@ -5267,13 +5515,14 @@ class LeomundsTinyHut(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class LesserRestoration(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Lesser Restoration",
             level=2,
             school="Abjuration",
-            classes=['Artificer', 'Bard', 'Cleric', 'Druid', 'Paladin', 'Ranger'],
+            classes=["Artificer", "Bard", "Cleric", "Druid", "Paladin", "Ranger"],
             casting_time="Bonus Action",
             range="Touch",
             components="V, S",
@@ -5283,13 +5532,14 @@ class LesserRestoration(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class Levitate(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Levitate",
             level=2,
             school="Transmutation",
-            classes=['Artificer', 'Sorcerer', 'Wizard'],
+            classes=["Artificer", "Sorcerer", "Wizard"],
             casting_time="Action",
             range="60 feet",
             components="V, S, M (a metal spring)",
@@ -5308,13 +5558,14 @@ class Levitate(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class Light(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Light",
             level=0,
             school="Evocation",
-            classes=['Artificer', 'Bard', 'Cleric', 'Sorcerer', 'Wizard'],
+            classes=["Artificer", "Bard", "Cleric", "Sorcerer", "Wizard"],
             casting_time="Action",
             range="Touch",
             components="V, M (a firefly or phosphorescent moss)",
@@ -5330,13 +5581,14 @@ class Light(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class LightningArrow(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Lightning Arrow",
             level=3,
             school="Transmutation",
-            classes=['Ranger'],
+            classes=["Ranger"],
             casting_time="Bonus Action, which you take immediately after hitting or missing a target with a ranged attack using a weapon",
             range="Self",
             components="V, S",
@@ -5353,13 +5605,14 @@ class LightningArrow(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class LightningBolt(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Lightning Bolt",
             level=3,
             school="Evocation",
-            classes=['Sorcerer', 'Wizard'],
+            classes=["Sorcerer", "Wizard"],
             casting_time="Action",
             range="Self",
             components="V, S, M (a bit of fur and a crystal rod)",
@@ -5374,13 +5627,14 @@ class LightningBolt(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class LocateAnimalsOrPlants(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Locate Animals or Plants",
             level=2,
             school="Divination",
-            classes=['Bard', 'Druid', 'Ranger'],
+            classes=["Bard", "Druid", "Ranger"],
             casting_time="Action or Ritual",
             range="Self",
             components="V, S, M (fur from a bloodhound)",
@@ -5393,13 +5647,14 @@ class LocateAnimalsOrPlants(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class LocateCreature(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Locate Creature",
             level=4,
             school="Divination",
-            classes=['Bard', 'Cleric', 'Druid', 'Paladin', 'Ranger', 'Wizard'],
+            classes=["Bard", "Cleric", "Druid", "Paladin", "Ranger", "Wizard"],
             casting_time="Action",
             range="Self",
             components="V, S, M (fur from a bloodhound)",
@@ -5416,13 +5671,14 @@ class LocateCreature(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class LocateObject(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Locate Object",
             level=2,
             school="Divination",
-            classes=['Bard', 'Cleric', 'Druid', 'Paladin', 'Ranger', 'Wizard'],
+            classes=["Bard", "Cleric", "Druid", "Paladin", "Ranger", "Wizard"],
             casting_time="Action",
             range="Self",
             components="V, S, M (a forked twig)",
@@ -5439,13 +5695,14 @@ class LocateObject(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class Longstrider(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Longstrider",
             level=1,
             school="Transmutation",
-            classes=['Artificer', 'Bard', 'Druid', 'Ranger', 'Wizard'],
+            classes=["Artificer", "Bard", "Druid", "Ranger", "Wizard"],
             casting_time="Action",
             range="Touch",
             components="V, S, M (a pinch of dirt)",
@@ -5460,13 +5717,14 @@ class Longstrider(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class MageArmor(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Mage Armor",
             level=1,
             school="Abjuration",
-            classes=['Sorcerer', 'Wizard'],
+            classes=["Sorcerer", "Wizard"],
             casting_time="Action",
             range="Touch",
             components="V, S, M (a piece of cured leather)",
@@ -5480,13 +5738,14 @@ class MageArmor(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class MageHand(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Mage Hand",
             level=0,
             school="Conjuration",
-            classes=['Artificer', 'Bard', 'Sorcerer', 'Warlock', 'Wizard'],
+            classes=["Artificer", "Bard", "Sorcerer", "Warlock", "Wizard"],
             casting_time="Action",
             range="30 feet",
             components="V, S",
@@ -5504,13 +5763,14 @@ class MageHand(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class MagicCircle(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Magic Circle",
             level=3,
             school="Abjuration",
-            classes=['Cleric', 'Paladin', 'Warlock', 'Wizard'],
+            classes=["Cleric", "Paladin", "Warlock", "Wizard"],
             casting_time="1 minute",
             range="10 feet",
             components="V, S, M (salt and powdered silver worth 100+ GP, which the spell consumes)",
@@ -5527,13 +5787,14 @@ class MagicCircle(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class MagicJar(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Magic Jar",
             level=6,
             school="Necromancy",
-            classes=['Wizard'],
+            classes=["Wizard"],
             casting_time="1 minute",
             range="Self",
             components="V, S, M (a gem, crystal, or reliquary worth 500+ GP)",
@@ -5565,13 +5826,14 @@ class MagicJar(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class MagicMissile(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Magic Missile",
             level=1,
             school="Evocation",
-            classes=['Sorcerer', 'Wizard'],
+            classes=["Sorcerer", "Wizard"],
             casting_time="Action",
             range="120 feet",
             components="V, S",
@@ -5588,13 +5850,14 @@ class MagicMissile(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class MagicMouth(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Magic Mouth",
             level=2,
             school="Illusion",
-            classes=['Artificer', 'Bard', 'Wizard'],
+            classes=["Artificer", "Bard", "Wizard"],
             casting_time="1 minute or Ritual",
             range="30 feet",
             components="V, S, M (jade dust worth 10+ GP, which the spell consumes)",
@@ -5614,13 +5877,14 @@ class MagicMouth(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class MagicWeapon(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Magic Weapon",
             level=2,
             school="Transmutation",
-            classes=['Artificer', 'Paladin', 'Ranger', 'Sorcerer', 'Wizard'],
+            classes=["Artificer", "Paladin", "Ranger", "Sorcerer", "Wizard"],
             casting_time="Bonus Action",
             range="Touch",
             components="V, S",
@@ -5637,13 +5901,14 @@ class MagicWeapon(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class MajorImage(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Major Image",
             level=3,
             school="Illusion",
-            classes=['Bard', 'Sorcerer', 'Warlock', 'Wizard'],
+            classes=["Bard", "Sorcerer", "Warlock", "Wizard"],
             casting_time="Action",
             range="120 feet",
             components="V, S, M (a bit of fleece)",
@@ -5666,13 +5931,14 @@ class MajorImage(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class MassCureWounds(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Mass Cure Wounds",
             level=5,
             school="Abjuration",
-            classes=['Bard', 'Cleric', 'Druid'],
+            classes=["Bard", "Cleric", "Druid"],
             casting_time="Action",
             range="60 feet",
             components="V, S",
@@ -5688,13 +5954,14 @@ class MassCureWounds(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class MassHeal(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Mass Heal",
             level=9,
             school="Abjuration",
-            classes=['Cleric'],
+            classes=["Cleric"],
             casting_time="1 Action",
             range="60 feet",
             components="V, S",
@@ -5708,13 +5975,14 @@ class MassHeal(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class MassHealingWord(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Mass Healing Word",
             level=3,
             school="Abjuration",
-            classes=['Bard', 'Cleric'],
+            classes=["Bard", "Cleric"],
             casting_time="Bonus Action",
             range="60 feet",
             components="V",
@@ -5728,13 +5996,14 @@ class MassHealingWord(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class MassSuggestion(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Mass Suggestion",
             level=6,
             school="Enchantment",
-            classes=['Bard', 'Sorcerer', 'Wizard'],
+            classes=["Bard", "Sorcerer", "Wizard"],
             casting_time="Action",
             range="60 feet",
             components="V, M (a snake’s tongue)",
@@ -5755,13 +6024,14 @@ class MassSuggestion(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class Maze(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Maze",
             level=8,
             school="Conjuration",
-            classes=['Wizard'],
+            classes=["Wizard"],
             casting_time="Action",
             range="60 feet",
             components="V, S",
@@ -5778,13 +6048,14 @@ class Maze(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class MeldIntoStone(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Meld into Stone",
             level=3,
             school="Transmutation",
-            classes=['Cleric', 'Druid', 'Ranger'],
+            classes=["Cleric", "Druid", "Ranger"],
             casting_time="Action or Ritual",
             range="Touch",
             components="V, S",
@@ -5805,13 +6076,14 @@ class MeldIntoStone(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class MelfsAcidArrow(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Melf's Acid Arrow",
             level=2,
             school="Evocation",
-            classes=['Wizard'],
+            classes=["Wizard"],
             casting_time="Action",
             range="90 feet",
             components="V, S, M (powdered rhubarb leaf)",
@@ -5828,13 +6100,14 @@ class MelfsAcidArrow(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class Mending(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Mending",
             level=0,
             school="Transmutation",
-            classes=['Bard', 'Cleric', 'Druid', 'Sorcerer', 'Wizard'],
+            classes=["Bard", "Cleric", "Druid", "Sorcerer", "Wizard"],
             casting_time="1 minute",
             range="Touch",
             components="V, S, M (two lodestones)",
@@ -5848,13 +6121,14 @@ class Mending(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class Message(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Message",
             level=0,
             school="Transmutation",
-            classes=['Artificer', 'Bard', 'Druid', 'Sorcerer', 'Wizard'],
+            classes=["Artificer", "Bard", "Druid", "Sorcerer", "Wizard"],
             casting_time="Action",
             range="120 feet",
             components="S, M (a copper wire)",
@@ -5869,13 +6143,14 @@ class Message(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class MeteorSwarm(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Meteor Swarm",
             level=9,
             school="Evocation",
-            classes=['Sorcerer', 'Wizard'],
+            classes=["Sorcerer", "Wizard"],
             casting_time="Action",
             range="1 mile",
             components="V, S",
@@ -5891,13 +6166,14 @@ class MeteorSwarm(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class MindBlank(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Mind Blank",
             level=8,
             school="Abjuration",
-            classes=['Bard', 'Wizard'],
+            classes=["Bard", "Wizard"],
             casting_time="Action",
             range="Touch",
             components="V, S",
@@ -5910,13 +6186,14 @@ class MindBlank(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class MindSliver(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Mind Sliver",
             level=0,
             school="Enchantment",
-            classes=['Sorcerer', 'Warlock', 'Wizard'],
+            classes=["Sorcerer", "Warlock", "Wizard"],
             casting_time="Action",
             range="60 feet",
             components="V",
@@ -5931,13 +6208,14 @@ class MindSliver(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class MindSpike(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Mind Spike",
             level=2,
             school="Divination",
-            classes=['Sorcerer', 'Warlock', 'Wizard'],
+            classes=["Sorcerer", "Warlock", "Wizard"],
             casting_time="Action",
             range="120 feet",
             components="S",
@@ -5954,13 +6232,14 @@ class MindSpike(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class MinorIllusion(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Minor Illusion",
             level=0,
             school="Illusion",
-            classes=['Bard', 'Sorcerer', 'Warlock', 'Wizard'],
+            classes=["Bard", "Sorcerer", "Warlock", "Wizard"],
             casting_time="Action",
             range="30 feet",
             components="S, M (a bit of fleece)",
@@ -5984,13 +6263,14 @@ class MinorIllusion(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class MirageArcane(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Mirage Arcane",
             level=7,
             school="Illusion",
-            classes=['Bard', 'Druid', 'Wizard'],
+            classes=["Bard", "Druid", "Wizard"],
             casting_time="10 minutes",
             range="Sight",
             components="V, S",
@@ -6009,13 +6289,14 @@ class MirageArcane(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class MirrorImage(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Mirror Image",
             level=2,
             school="Illusion",
-            classes=['Bard', 'Sorcerer', 'Warlock', 'Wizard'],
+            classes=["Bard", "Sorcerer", "Warlock", "Wizard"],
             casting_time="Action",
             range="Self",
             components="V, S",
@@ -6033,13 +6314,14 @@ class MirrorImage(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class Mislead(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Mislead",
             level=5,
             school="Illusion",
-            classes=['Bard', 'Warlock', 'Wizard'],
+            classes=["Bard", "Warlock", "Wizard"],
             casting_time="Action",
             range="Self",
             components="S",
@@ -6055,13 +6337,14 @@ class Mislead(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class MistyStep(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Misty Step",
             level=2,
             school="Conjuration",
-            classes=['Sorcerer', 'Warlock', 'Wizard'],
+            classes=["Sorcerer", "Warlock", "Wizard"],
             casting_time="Bonus Action",
             range="Self",
             components="V",
@@ -6071,13 +6354,14 @@ class MistyStep(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class ModifyMemory(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Modify Memory",
             level=5,
             school="Enchantment",
-            classes=['Bard', 'Wizard'],
+            classes=["Bard", "Wizard"],
             casting_time="Action",
             range="30 feet",
             components="V, S",
@@ -6106,13 +6390,14 @@ class ModifyMemory(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class Moonbeam(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Moonbeam",
             level=2,
             school="Evocation",
-            classes=['Druid'],
+            classes=["Druid"],
             casting_time="Action",
             range="120 feet",
             components="V, S, M (a moonseed leaf)",
@@ -6132,13 +6417,14 @@ class Moonbeam(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class MordenkainensFaithfulHound(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Mordenkainen's Faithful Hound",
             level=4,
             school="Conjuration",
-            classes=['Wizard'],
+            classes=["Wizard"],
             casting_time="Action",
             range="30 feet",
             components="V, S, M (a silver whistle)",
@@ -6157,13 +6443,14 @@ class MordenkainensFaithfulHound(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class MordenkainensMagnificentMansion(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Mordenkainen's Magnificent Mansion",
             level=7,
             school="Conjuration",
-            classes=['Bard', 'Wizard'],
+            classes=["Bard", "Wizard"],
             casting_time="1 minute",
             range="300 feet",
             components="V, S, M (a miniature door worth 15+ GP)",
@@ -6192,13 +6479,14 @@ class MordenkainensMagnificentMansion(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class MordenkainensPrivateSanctum(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Mordenkainen's Private Sanctum",
             level=4,
             school="Abjuration",
-            classes=['Artificer', 'Wizard'],
+            classes=["Artificer", "Wizard"],
             casting_time="10 minutes",
             range="120 feet",
             components="V, S, M (a thin sheet of lead)",
@@ -6215,13 +6503,14 @@ class MordenkainensPrivateSanctum(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class MordenkainensSword(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Mordenkainen's Sword",
             level=7,
             school="Evocation",
-            classes=['Bard', 'Wizard'],
+            classes=["Bard", "Wizard"],
             casting_time="Action",
             range="90 feet",
             components="V, S, M (a miniature sword worth 250+ GP)",
@@ -6237,13 +6526,14 @@ class MordenkainensSword(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class MoveEarth(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Move Earth",
             level=6,
             school="Transmutation",
-            classes=['Druid', 'Sorcerer', 'Wizard'],
+            classes=["Druid", "Sorcerer", "Wizard"],
             casting_time="Action",
             range="120 feet",
             components="V, S, M (a miniature shovel)",
@@ -6267,13 +6557,14 @@ class MoveEarth(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class Nondetection(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Nondetection",
             level=3,
             school="Abjuration",
-            classes=['Bard', 'Ranger', 'Wizard'],
+            classes=["Bard", "Ranger", "Wizard"],
             casting_time="Action",
             range="Touch",
             components="V, S, M (a pinch of diamond dust worth 25+ GP, which the spell consumes)",
@@ -6287,13 +6578,14 @@ class Nondetection(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class NystulsMagicAura(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Nystul's Magic Aura",
             level=2,
             school="Illusion",
-            classes=['Wizard'],
+            classes=["Wizard"],
             casting_time="Action",
             range="Touch",
             components="V, S, M (a small square of silk)",
@@ -6314,13 +6606,14 @@ class NystulsMagicAura(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class OtilukesFreezingSphere(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Otiluke's Freezing Sphere",
             level=6,
             school="Evocation",
-            classes=['Sorcerer', 'Wizard'],
+            classes=["Sorcerer", "Wizard"],
             casting_time="Action",
             range="300 feet",
             components="V, S, M (a miniature crystal sphere)",
@@ -6345,13 +6638,14 @@ class OtilukesFreezingSphere(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class OtilukesResilientSphere(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Otiluke's Resilient Sphere",
             level=4,
             school="Abjuration",
-            classes=['Artificer', 'Wizard'],
+            classes=["Artificer", "Wizard"],
             casting_time="Action",
             range="30 feet",
             components="V, S, M (a glass sphere)",
@@ -6370,13 +6664,14 @@ class OtilukesResilientSphere(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class OttosIrresistibleDance(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Otto's Irresistible Dance",
             level=6,
             school="Enchantment",
-            classes=['Bard', 'Wizard'],
+            classes=["Bard", "Wizard"],
             casting_time="Action",
             range="30 feet",
             components="V",
@@ -6392,13 +6687,14 @@ class OttosIrresistibleDance(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class PassWithoutTrace(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Pass without Trace",
             level=2,
             school="Abjuration",
-            classes=['Druid', 'Ranger'],
+            classes=["Druid", "Ranger"],
             casting_time="Action",
             range="Self",
             components="V, S, M (ashes from burned mistletoe)",
@@ -6411,13 +6707,14 @@ class PassWithoutTrace(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class Passwall(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Passwall",
             level=5,
             school="Transmutation",
-            classes=['Wizard'],
+            classes=["Wizard"],
             casting_time="Action",
             range="30 feet",
             components="V, S, M (a pinch of sesame seeds)",
@@ -6432,13 +6729,14 @@ class Passwall(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class PhantasmalForce(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Phantasmal Force",
             level=2,
             school="Illusion",
-            classes=['Bard', 'Sorcerer', 'Wizard'],
+            classes=["Bard", "Sorcerer", "Wizard"],
             casting_time="Action",
             range="60 feet",
             components="V, S, M (a bit of fleece)",
@@ -6460,13 +6758,14 @@ class PhantasmalForce(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class PhantasmalKiller(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Phantasmal Killer",
             level=4,
             school="Illusion",
-            classes=['Bard', 'Wizard'],
+            classes=["Bard", "Wizard"],
             casting_time="Action",
             range="120 feet",
             components="V, S",
@@ -6486,13 +6785,14 @@ class PhantasmalKiller(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class PhantomSteed(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Phantom Steed",
             level=3,
             school="Illusion",
-            classes=['Wizard'],
+            classes=["Wizard"],
             casting_time="1 minute or Ritual",
             range="30 feet",
             components="V, S",
@@ -6510,13 +6810,14 @@ class PhantomSteed(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class PlanarAlly(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Planar Ally",
             level=6,
             school="Conjuration",
-            classes=['Cleric'],
+            classes=["Cleric"],
             casting_time="10 minutes",
             range="60 feet",
             components="V, S",
@@ -6547,13 +6848,14 @@ class PlanarAlly(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class PlanarBinding(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Planar Binding",
             level=5,
             school="Abjuration",
-            classes=['Bard', 'Cleric', 'Druid', 'Warlock', 'Wizard'],
+            classes=["Bard", "Cleric", "Druid", "Warlock", "Wizard"],
             casting_time="1 hour",
             range="60 feet",
             components="V, S, M (a jewel worth 1,000+ GP, which the spell consumes)",
@@ -6576,13 +6878,14 @@ class PlanarBinding(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class PlaneShift(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Plane Shift",
             level=7,
             school="Conjuration",
-            classes=['Cleric', 'Druid', 'Sorcerer', 'Warlock', 'Wizard'],
+            classes=["Cleric", "Druid", "Sorcerer", "Warlock", "Wizard"],
             casting_time="Action",
             range="Touch",
             components="V, S, M (a forked, metal rod worth 250+ GP and attuned to a plane of existence)",
@@ -6597,13 +6900,14 @@ class PlaneShift(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class PlantGrowth(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Plant Growth",
             level=3,
             school="Transmutation",
-            classes=['Bard', 'Druid', 'Ranger'],
+            classes=["Bard", "Druid", "Ranger"],
             casting_time="Action (Overgrowth) or 8 hours (Enrichment)",
             range="150 feet",
             components="V, S",
@@ -6625,13 +6929,14 @@ class PlantGrowth(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class PoisonSpray(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Poison Spray",
             level=0,
             school="Necromancy",
-            classes=['Artificer', 'Druid', 'Sorcerer', 'Warlock', 'Wizard'],
+            classes=["Artificer", "Druid", "Sorcerer", "Warlock", "Wizard"],
             casting_time="Action",
             range="30 feet",
             components="V, S",
@@ -6647,13 +6952,14 @@ class PoisonSpray(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class Polymorph(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Polymorph",
             level=4,
             school="Transmutation",
-            classes=['Bard', 'Druid', 'Sorcerer', 'Wizard'],
+            classes=["Bard", "Druid", "Sorcerer", "Wizard"],
             casting_time="Action",
             range="60 feet",
             components="V, S, M (a caterpillar cocoon)",
@@ -6675,13 +6981,14 @@ class Polymorph(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class PowerWordFortify(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Power Word Fortify",
             level=7,
             school="Enchantment",
-            classes=['Bard', 'Cleric'],
+            classes=["Bard", "Cleric"],
             casting_time="Action",
             range="60 foot",
             components="V",
@@ -6694,13 +7001,14 @@ class PowerWordFortify(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class PowerWordHeal(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Power Word Heal",
             level=9,
             school="Enchantment",
-            classes=['Bard', 'Cleric'],
+            classes=["Bard", "Cleric"],
             casting_time="Action",
             range="60 feet",
             components="V",
@@ -6715,13 +7023,14 @@ class PowerWordHeal(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class PowerWordKill(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Power Word Kill",
             level=9,
             school="Enchantment",
-            classes=['Bard', 'Sorcerer', 'Warlock', 'Wizard'],
+            classes=["Bard", "Sorcerer", "Warlock", "Wizard"],
             casting_time="Action",
             range="60 feet",
             components="V",
@@ -6735,13 +7044,14 @@ class PowerWordKill(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class PowerWordStun(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Power Word Stun",
             level=8,
             school="Enchantment",
-            classes=['Bard', 'Sorcerer', 'Warlock', 'Wizard'],
+            classes=["Bard", "Sorcerer", "Warlock", "Wizard"],
             casting_time="Action",
             range="60 feet",
             components="V",
@@ -6756,13 +7066,14 @@ class PowerWordStun(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class PrayerOfHealing(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Prayer of Healing",
             level=2,
             school="Abjuration",
-            classes=['Cleric', 'Paladin'],
+            classes=["Cleric", "Paladin"],
             casting_time="10 minutes",
             range="30 feet",
             components="V",
@@ -6777,13 +7088,14 @@ class PrayerOfHealing(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class Prestidigitation(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Prestidigitation",
             level=0,
             school="Transmutation",
-            classes=['Artificer', 'Bard', 'Sorcerer', 'Warlock', 'Wizard'],
+            classes=["Artificer", "Bard", "Sorcerer", "Warlock", "Wizard"],
             casting_time="Action",
             range="10 feet",
             components="V, S",
@@ -6811,13 +7123,14 @@ class Prestidigitation(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class PrismaticSpray(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Prismatic Spray",
             level=7,
             school="Evocation",
-            classes=['Bard', 'Sorcerer', 'Wizard'],
+            classes=["Bard", "Sorcerer", "Wizard"],
             casting_time="Action",
             range="Self",
             components="V, S",
@@ -6831,13 +7144,14 @@ class PrismaticSpray(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class PrismaticWall(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Prismatic Wall",
             level=9,
             school="Abjuration",
-            classes=['Bard', 'Wizard'],
+            classes=["Bard", "Wizard"],
             casting_time="Action",
             range="60 feet",
             components="V, S",
@@ -6861,13 +7175,14 @@ class PrismaticWall(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class ProduceFlame(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Produce Flame",
             level=0,
             school="Conjuration",
-            classes=['Druid'],
+            classes=["Druid"],
             casting_time="Bonus Action",
             range="Self",
             components="V, S",
@@ -6886,13 +7201,14 @@ class ProduceFlame(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class ProgrammedIllusion(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Programmed Illusion",
             level=6,
             school="Illusion",
-            classes=['Bard', 'Wizard'],
+            classes=["Bard", "Wizard"],
             casting_time="Action",
             range="120 feet",
             components="V, S, M (jade dust worth 25+ GP)",
@@ -6914,13 +7230,14 @@ class ProgrammedIllusion(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class ProjectImage(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Project Image",
             level=7,
             school="Illusion",
-            classes=['Bard', 'Wizard'],
+            classes=["Bard", "Wizard"],
             casting_time="Action",
             range="500 miles",
             components="V, S, M (a statuette of yourself worth 5+ GP)",
@@ -6941,13 +7258,14 @@ class ProjectImage(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class ProtectionFromEnergy(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Protection from Energy",
             level=3,
             school="Abjuration",
-            classes=['Artificer', 'Cleric', 'Druid', 'Ranger', 'Sorcerer', 'Wizard'],
+            classes=["Artificer", "Cleric", "Druid", "Ranger", "Sorcerer", "Wizard"],
             casting_time="Action",
             range="Touch",
             components="V, S",
@@ -6957,13 +7275,14 @@ class ProtectionFromEnergy(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class ProtectionFromEvilAndGood(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Protection from Evil and Good",
             level=1,
             school="Abjuration",
-            classes=['Cleric', 'Druid', 'Paladin', 'Warlock', 'Wizard'],
+            classes=["Cleric", "Druid", "Paladin", "Warlock", "Wizard"],
             casting_time="Action",
             range="Touch",
             components="V, S, M (a flask of Holy Water worth 25+ GP, which the spell consumes)",
@@ -6979,13 +7298,14 @@ class ProtectionFromEvilAndGood(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class ProtectionFromPoison(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Protection from Poison",
             level=2,
             school="Abjuration",
-            classes=['Artificer', 'Cleric', 'Druid', 'Paladin', 'Ranger'],
+            classes=["Artificer", "Cleric", "Druid", "Paladin", "Ranger"],
             casting_time="Action",
             range="Touch",
             components="V, S",
@@ -6998,13 +7318,14 @@ class ProtectionFromPoison(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class PurifyFoodAndDrink(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Purify Food and Drink",
             level=1,
             school="Transmutation",
-            classes=['Artificer', 'Cleric', 'Druid', 'Paladin'],
+            classes=["Artificer", "Cleric", "Druid", "Paladin"],
             casting_time="Action or Ritual",
             range="10 feet",
             components="V, S",
@@ -7014,13 +7335,14 @@ class PurifyFoodAndDrink(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class RaiseDead(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Raise Dead",
             level=5,
             school="Necromancy",
-            classes=['Bard', 'Cleric', 'Paladin'],
+            classes=["Bard", "Cleric", "Paladin"],
             casting_time="1 hour",
             range="Touch",
             components="V, S, M (a diamond worth 500+ GP, which the spell consumes)",
@@ -7039,13 +7361,14 @@ class RaiseDead(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class RarysTelepathicBond(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Rary's Telepathic Bond",
             level=5,
             school="Divination",
-            classes=['Bard', 'Wizard'],
+            classes=["Bard", "Wizard"],
             casting_time="Action or Ritual",
             range="30 feet",
             components="V, S, M (two eggs)",
@@ -7060,13 +7383,14 @@ class RarysTelepathicBond(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class RayOfEnfeeblement(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Ray of Enfeeblement",
             level=2,
             school="Necromancy",
-            classes=['Warlock', 'Wizard'],
+            classes=["Warlock", "Wizard"],
             casting_time="Action",
             range="60 feet",
             components="V, S",
@@ -7083,13 +7407,14 @@ class RayOfEnfeeblement(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class RayOfFrost(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Ray of Frost",
             level=0,
             school="Evocation",
-            classes=['Artificer', 'Sorcerer', 'Wizard'],
+            classes=["Artificer", "Sorcerer", "Wizard"],
             casting_time="Action",
             range="60 feet",
             components="V, S",
@@ -7105,13 +7430,14 @@ class RayOfFrost(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class RayOfSickness(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Ray of Sickness",
             level=1,
             school="Necromancy",
-            classes=['Sorcerer', 'Wizard'],
+            classes=["Sorcerer", "Wizard"],
             casting_time="Action",
             range="60 feet",
             components="V, S",
@@ -7127,13 +7453,14 @@ class RayOfSickness(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class Regenerate(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Regenerate",
             level=7,
             school="Transmutation",
-            classes=['Bard', 'Cleric', 'Druid'],
+            classes=["Bard", "Cleric", "Druid"],
             casting_time="1 minute",
             range="Touch",
             components="V, S, M (a prayer wheel)",
@@ -7146,13 +7473,14 @@ class Regenerate(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class Reincarnate(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Reincarnate",
             level=5,
             school="Necromancy",
-            classes=['Druid'],
+            classes=["Druid"],
             casting_time="1 hour",
             range="Touch",
             components="V, S, M (rare oils worth 1,000+ GP, which the spell consumes)",
@@ -7168,13 +7496,14 @@ class Reincarnate(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class RemoveCurse(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Remove Curse",
             level=3,
             school="Abjuration",
-            classes=['Cleric', 'Paladin', 'Warlock', 'Wizard'],
+            classes=["Cleric", "Paladin", "Warlock", "Wizard"],
             casting_time="Action",
             range="Touch",
             components="V, S",
@@ -7187,13 +7516,14 @@ class RemoveCurse(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class Resistance(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Resistance",
             level=0,
             school="Abjuration",
-            classes=['Artificer', 'Cleric', 'Druid'],
+            classes=["Artificer", "Cleric", "Druid"],
             casting_time="Action",
             range="Touch",
             components="V, S",
@@ -7207,13 +7537,14 @@ class Resistance(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class Resurrection(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Resurrection",
             level=7,
             school="Necromancy",
-            classes=['Bard', 'Cleric'],
+            classes=["Bard", "Cleric"],
             casting_time="1 hour",
             range="Touch",
             components="V, S, M (a diamond worth 1,000+ GP, which the spell consumes)",
@@ -7233,13 +7564,14 @@ class Resurrection(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class ReverseGravity(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Reverse Gravity",
             level=7,
             school="Transmutation",
-            classes=['Druid', 'Sorcerer', 'Wizard'],
+            classes=["Druid", "Sorcerer", "Wizard"],
             casting_time="Action",
             range="100 feet",
             components="V, S, M (a lodestone and iron filings)",
@@ -7256,13 +7588,14 @@ class ReverseGravity(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class Revivify(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Revivify",
             level=3,
             school="Necromancy",
-            classes=['Artificer', 'Cleric', 'Druid', 'Paladin', 'Ranger'],
+            classes=["Artificer", "Cleric", "Druid", "Paladin", "Ranger"],
             casting_time="Action",
             range="Touch",
             components="V, S, M (a diamond worth 300+ GP, which the spell consumes)",
@@ -7276,13 +7609,14 @@ class Revivify(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class RopeTrick(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Rope Trick",
             level=2,
             school="Transmutation",
-            classes=['Artificer', 'Wizard'],
+            classes=["Artificer", "Wizard"],
             casting_time="Action",
             range="Touch",
             components="V, S, M (a segment of rope)",
@@ -7300,13 +7634,14 @@ class RopeTrick(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class SacredFlame(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Sacred Flame",
             level=0,
             school="Evocation",
-            classes=['Cleric'],
+            classes=["Cleric"],
             casting_time="Action",
             range="60 feet",
             components="V, S",
@@ -7322,13 +7657,14 @@ class SacredFlame(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class Sanctuary(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Sanctuary",
             level=1,
             school="Abjuration",
-            classes=['Artificer', 'Cleric'],
+            classes=["Artificer", "Cleric"],
             casting_time="Bonus Action",
             range="30 feet",
             components="V, S, M (a shard of glass from a mirror)",
@@ -7343,13 +7679,14 @@ class Sanctuary(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class ScorchingRay(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Scorching Ray",
             level=2,
             school="Evocation",
-            classes=['Sorcerer', 'Wizard'],
+            classes=["Sorcerer", "Wizard"],
             casting_time="Action",
             range="120 feet",
             components="V, S",
@@ -7366,13 +7703,14 @@ class ScorchingRay(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class Scrying(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Scrying",
             level=5,
             school="Divination",
-            classes=['Bard', 'Cleric', 'Druid', 'Warlock', 'Wizard'],
+            classes=["Bard", "Cleric", "Druid", "Warlock", "Wizard"],
             casting_time="10 minutes",
             range="Self",
             components="V, S, M (a focus worth 1,000+ GP, such as a crystal ball, mirror, or water-filled font)",
@@ -7393,13 +7731,14 @@ class Scrying(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class SearingSmite(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Searing Smite",
             level=1,
             school="Evocation",
-            classes=['Paladin'],
+            classes=["Paladin"],
             casting_time="Bonus Action, which you take immediately after hitting a target with a Melee weapon or an Unarmed Strike",
             range="Self",
             components="V",
@@ -7416,13 +7755,14 @@ class SearingSmite(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class SeeInvisibility(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="See Invisibility",
             level=2,
             school="Divination",
-            classes=['Artificer', 'Bard', 'Sorcerer', 'Wizard'],
+            classes=["Artificer", "Bard", "Sorcerer", "Wizard"],
             casting_time="Action",
             range="Self",
             components="V, S, M (a pinch of talc)",
@@ -7435,13 +7775,14 @@ class SeeInvisibility(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class Seeming(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Seeming",
             level=5,
             school="Illusion",
-            classes=['Bard', 'Sorcerer', 'Wizard'],
+            classes=["Bard", "Sorcerer", "Wizard"],
             casting_time="Action",
             range="30 feet",
             components="V, S",
@@ -7463,13 +7804,14 @@ class Seeming(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class Sending(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Sending",
             level=3,
             school="Divination",
-            classes=['Bard', 'Cleric', 'Wizard'],
+            classes=["Bard", "Cleric", "Wizard"],
             casting_time="Action",
             range="Unlimited",
             components="V, S, M (a copper wire)",
@@ -7487,13 +7829,14 @@ class Sending(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class Sequester(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Sequester",
             level=7,
             school="Transmutation",
-            classes=['Wizard'],
+            classes=["Wizard"],
             casting_time="Action",
             range="Touch",
             components="V, S, M (gem dust worth 5,000+ GP, which the spell consumes)",
@@ -7511,13 +7854,14 @@ class Sequester(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class Shapechange(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Shapechange",
             level=9,
             school="Transmutation",
-            classes=['Druid', 'Wizard'],
+            classes=["Druid", "Wizard"],
             casting_time="Action",
             range="Self",
             components="V, S, M (a jade circlet worth 1,500+ GP)",
@@ -7536,13 +7880,14 @@ class Shapechange(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class Shatter(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Shatter",
             level=2,
             school="Evocation",
-            classes=['Bard', 'Sorcerer', 'Wizard'],
+            classes=["Bard", "Sorcerer", "Wizard"],
             casting_time="Action",
             range="60 feet",
             components="V, S, M (a chip of mica)",
@@ -7559,13 +7904,14 @@ class Shatter(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class Shield(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Shield",
             level=1,
             school="Abjuration",
-            classes=['Sorcerer', 'Wizard'],
+            classes=["Sorcerer", "Wizard"],
             casting_time="Reaction, which you take when you are hit by an attack roll or targeted by the",
             range="Self",
             components="V, S",
@@ -7578,13 +7924,14 @@ class Shield(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class ShieldOfFaith(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Shield of Faith",
             level=1,
             school="Abjuration",
-            classes=['Cleric', 'Paladin'],
+            classes=["Cleric", "Paladin"],
             casting_time="Bonus Action",
             range="60 feet",
             components="V, S, M (a prayer scroll)",
@@ -7594,13 +7941,14 @@ class ShieldOfFaith(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class Shillelagh(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Shillelagh",
             level=0,
             school="Transmutation",
-            classes=['Druid'],
+            classes=["Druid"],
             casting_time="Bonus Action",
             range="Self",
             components="V, S, M (mistletoe)",
@@ -7617,13 +7965,14 @@ class Shillelagh(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class ShiningSmite(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Shining Smite",
             level=2,
             school="Transmutation",
-            classes=['Paladin'],
+            classes=["Paladin"],
             casting_time="Bonus Action, which you take immediately after hitting a creature with a Melee weapon or an Unarmed Strike",
             range="Self",
             components="V",
@@ -7638,13 +7987,14 @@ class ShiningSmite(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class ShockingGrasp(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Shocking Grasp",
             level=0,
             school="Evocation",
-            classes=['Artificer', 'Sorcerer', 'Wizard'],
+            classes=["Artificer", "Sorcerer", "Wizard"],
             casting_time="Action",
             range="Touch",
             components="V, S",
@@ -7660,13 +8010,14 @@ class ShockingGrasp(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class Silence(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Silence",
             level=2,
             school="Illusion",
-            classes=['Bard', 'Cleric', 'Ranger'],
+            classes=["Bard", "Cleric", "Ranger"],
             casting_time="Action or Ritual",
             range="120 feet",
             components="V, S",
@@ -7680,13 +8031,14 @@ class Silence(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class SilentImage(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Silent Image",
             level=1,
             school="Illusion",
-            classes=['Bard', 'Sorcerer', 'Wizard'],
+            classes=["Bard", "Sorcerer", "Wizard"],
             casting_time="Action",
             range="60 feet",
             components="V, S, M (a bit of fleece)",
@@ -7706,13 +8058,14 @@ class SilentImage(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class SimbulsSynostodweomer(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Simbul's Synostodweomer",
             level=7,
             school="Transmutation",
-            classes=['Sorcerer', 'Wizard'],
+            classes=["Sorcerer", "Wizard"],
             casting_time="Action",
             range="Touch",
             components="V, S",
@@ -7725,13 +8078,14 @@ class SimbulsSynostodweomer(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class Simulacrum(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Simulacrum",
             level=7,
             school="Illusion",
-            classes=['Wizard'],
+            classes=["Wizard"],
             casting_time="12 hours",
             range="Touch",
             components="V, S, M (powdered ruby worth 1,500+ GP, which the spell consumes)",
@@ -7752,13 +8106,14 @@ class Simulacrum(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class Sleep(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Sleep",
             level=1,
             school="Enchantment",
-            classes=['Bard', 'Sorcerer', 'Wizard'],
+            classes=["Bard", "Sorcerer", "Wizard"],
             casting_time="Action",
             range="60 feet",
             components="V, S, M (a pinch of sand or rose petals)",
@@ -7773,13 +8128,14 @@ class Sleep(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class SleetStorm(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Sleet Storm",
             level=3,
             school="Conjuration",
-            classes=['Druid', 'Sorcerer', 'Wizard'],
+            classes=["Druid", "Sorcerer", "Wizard"],
             casting_time="Action",
             range="150 feet",
             components="V, S, M (a miniature umbrella)",
@@ -7794,13 +8150,14 @@ class SleetStorm(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class Slow(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Slow",
             level=3,
             school="Transmutation",
-            classes=['Bard', 'Sorcerer', 'Wizard'],
+            classes=["Bard", "Sorcerer", "Wizard"],
             casting_time="Action",
             range="120 feet",
             components="V, S, M (a drop of molasses)",
@@ -7817,13 +8174,14 @@ class Slow(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class SongalsElementalSuffusion(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Songal's Elemental Suffusion",
             level=5,
             school="Transmutation",
-            classes=['Druid', 'Sorcerer', 'Wizard'],
+            classes=["Druid", "Sorcerer", "Wizard"],
             casting_time="Action",
             range="Self",
             components="V, S, M (a pearl worth 100+ GP)",
@@ -7850,13 +8208,14 @@ class SongalsElementalSuffusion(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class SorcerousBurst(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Sorcerous Burst",
             level=0,
             school="Evocation",
-            classes=['Sorcerer'],
+            classes=["Sorcerer"],
             casting_time="Action",
             range="120 feet",
             components="V, S",
@@ -7874,13 +8233,14 @@ class SorcerousBurst(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class SpareTheDying(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Spare the Dying",
             level=0,
             school="Necromancy",
-            classes=['Artificer', 'Cleric', 'Druid'],
+            classes=["Artificer", "Cleric", "Druid"],
             casting_time="Action",
             range="15 feet",
             components="V, S",
@@ -7895,13 +8255,14 @@ class SpareTheDying(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class SpeakWithAnimals(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Speak with Animals",
             level=1,
             school="Divination",
-            classes=['Bard', 'Druid', 'Ranger', 'Warlock'],
+            classes=["Bard", "Druid", "Ranger", "Warlock"],
             casting_time="Action or Ritual",
             range="Self",
             components="V, S",
@@ -7914,13 +8275,14 @@ class SpeakWithAnimals(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class SpeakWithDead(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Speak with Dead",
             level=3,
             school="Necromancy",
-            classes=['Bard', 'Cleric', 'Wizard'],
+            classes=["Bard", "Cleric", "Wizard"],
             casting_time="Action",
             range="10 feet",
             components="V, S, M (burning incense)",
@@ -7939,13 +8301,14 @@ class SpeakWithDead(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class SpeakWithPlants(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Speak with Plants",
             level=3,
             school="Transmutation",
-            classes=['Bard', 'Druid', 'Ranger'],
+            classes=["Bard", "Druid", "Ranger"],
             casting_time="Action",
             range="Self",
             components="V, S",
@@ -7962,13 +8325,14 @@ class SpeakWithPlants(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class SpellfireFlare(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Spellfire Flare",
             level=1,
             school="Evocation",
-            classes=['Sorcerer', 'Wizard'],
+            classes=["Sorcerer", "Wizard"],
             casting_time="Action",
             range="60 feet",
             components="V, S",
@@ -7986,13 +8350,14 @@ class SpellfireFlare(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class SpellfireStorm(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Spellfire Storm",
             level=4,
             school="Evocation",
-            classes=['Sorcerer', 'Wizard'],
+            classes=["Sorcerer", "Wizard"],
             casting_time="Action",
             range="60 feet",
             components="V, S",
@@ -8019,13 +8384,14 @@ class SpellfireStorm(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class SpiderClimb(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Spider Climb",
             level=2,
             school="Transmutation",
-            classes=['Artificer', 'Sorcerer', 'Warlock', 'Wizard'],
+            classes=["Artificer", "Sorcerer", "Warlock", "Wizard"],
             casting_time="Action",
             range="Touch",
             components="V, S, M (a drop of bitumen and a spider)",
@@ -8040,13 +8406,14 @@ class SpiderClimb(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class SpikeGrowth(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Spike Growth",
             level=2,
             school="Transmutation",
-            classes=['Druid', 'Ranger'],
+            classes=["Druid", "Ranger"],
             casting_time="Action",
             range="150 feet",
             components="V, S, M (seven thorns)",
@@ -8062,13 +8429,14 @@ class SpikeGrowth(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class SpiritGuardians(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Spirit Guardians",
             level=3,
             school="Conjuration",
-            classes=['Cleric'],
+            classes=["Cleric"],
             casting_time="Action",
             range="Self",
             components="V, S, M (a prayer scroll)",
@@ -8089,13 +8457,14 @@ class SpiritGuardians(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class SpiritualWeapon(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Spiritual Weapon",
             level=2,
             school="Evocation",
-            classes=['Cleric'],
+            classes=["Cleric"],
             casting_time="Bonus Action",
             range="60 feet",
             components="V, S",
@@ -8112,13 +8481,14 @@ class SpiritualWeapon(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class StaggeringSmite(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Staggering Smite",
             level=4,
             school="Enchantment",
-            classes=['Paladin'],
+            classes=["Paladin"],
             casting_time="Bonus Action, which you take immediately after hitting a creature with a Melee weapon or an Unarmed Strike",
             range="Self",
             components="V",
@@ -8132,13 +8502,14 @@ class StaggeringSmite(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class StarryWisp(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Starry Wisp",
             level=0,
             school="Evocation",
-            classes=['Bard', 'Druid'],
+            classes=["Bard", "Druid"],
             casting_time="Action",
             range="60 feet",
             components="V, S",
@@ -8154,13 +8525,14 @@ class StarryWisp(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class SteelWindStrike(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Steel Wind Strike",
             level=5,
             school="Conjuration",
-            classes=['Ranger', 'Wizard'],
+            classes=["Ranger", "Wizard"],
             casting_time="Action",
             range="30 feet",
             components="S, M (a Melee weapon worth 1+ SP)",
@@ -8176,13 +8548,14 @@ class SteelWindStrike(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class StinkingCloud(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Stinking Cloud",
             level=3,
             school="Conjuration",
-            classes=['Bard', 'Sorcerer', 'Wizard'],
+            classes=["Bard", "Sorcerer", "Wizard"],
             casting_time="Action",
             range="90 feet",
             components="V, S, M (a rotten egg)",
@@ -8198,13 +8571,14 @@ class StinkingCloud(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class StoneShape(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Stone Shape",
             level=4,
             school="Transmutation",
-            classes=['Artificer', 'Cleric', 'Druid', 'Wizard'],
+            classes=["Artificer", "Cleric", "Druid", "Wizard"],
             casting_time="Action",
             range="Touch",
             components="V, S, M (soft clay)",
@@ -8219,13 +8593,14 @@ class StoneShape(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class Stoneskin(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Stoneskin",
             level=4,
             school="Transmutation",
-            classes=['Artificer', 'Druid', 'Ranger', 'Sorcerer', 'Wizard'],
+            classes=["Artificer", "Druid", "Ranger", "Sorcerer", "Wizard"],
             casting_time="Action",
             range="Touch",
             components="V, S, M (diamond dust worth 100+ GP, which the spell consumes)",
@@ -8235,13 +8610,14 @@ class Stoneskin(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class StormOfVengeance(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Storm of Vengeance",
             level=9,
             school="Conjuration",
-            classes=['Druid'],
+            classes=["Druid"],
             casting_time="Action",
             range="1 mile",
             components="V, S",
@@ -8268,13 +8644,14 @@ class StormOfVengeance(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class Suggestion(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Suggestion",
             level=2,
             school="Enchantment",
-            classes=['Bard', 'Sorcerer', 'Warlock', 'Wizard'],
+            classes=["Bard", "Sorcerer", "Warlock", "Wizard"],
             casting_time="Action",
             range="30 feet",
             components="V, M (a drop of honey)",
@@ -8292,13 +8669,14 @@ class Suggestion(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class SummonAberration(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Summon Aberration",
             level=4,
             school="Conjuration",
-            classes=['Warlock', 'Wizard'],
+            classes=["Warlock", "Wizard"],
             casting_time="Action",
             range="90 feet",
             components="V, S, M (a pickled tentacle and an eyeball in a platinum-inlaid vial worth 400+ GP)",
@@ -8320,13 +8698,14 @@ class SummonAberration(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class SummonBeast(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Summon Beast",
             level=2,
             school="Conjuration",
-            classes=['Druid', 'Ranger'],
+            classes=["Druid", "Ranger"],
             casting_time="Action",
             range="90 feet",
             components="V, S, M (a feather, tuft of fur, and fish tail inside a gilded acorn worth 200+ GP)",
@@ -8348,13 +8727,14 @@ class SummonBeast(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class SummonCelestial(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Summon Celestial",
             level=5,
             school="Conjuration",
-            classes=['Cleric', 'Paladin'],
+            classes=["Cleric", "Paladin"],
             casting_time="Action",
             range="90 feet",
             components="V, S, M (a reliquary worth 500+ GP)",
@@ -8376,13 +8756,14 @@ class SummonCelestial(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class SummonConstruct(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Summon Construct",
             level=4,
             school="Conjuration",
-            classes=['Artificer', 'Wizard'],
+            classes=["Artificer", "Wizard"],
             casting_time="Action",
             range="90 feet",
             components="V, S, M (a lockbox worth 400+ GP)",
@@ -8404,13 +8785,14 @@ class SummonConstruct(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class SummonDragon(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Summon Dragon",
             level=5,
             school="Conjuration",
-            classes=['Wizard'],
+            classes=["Wizard"],
             casting_time="Action",
             range="60 feet",
             components="V, S, M (an object with the image of a dragon engraved on it worth 500+ GP)",
@@ -8430,13 +8812,14 @@ class SummonDragon(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class SummonElemental(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Summon Elemental",
             level=4,
             school="Conjuration",
-            classes=['Druid', 'Ranger', 'Wizard'],
+            classes=["Druid", "Ranger", "Wizard"],
             casting_time="Action",
             range="90 feet",
             components="V, S, M (air, a pebble, ash, and water inside a gold-inlaid vial worth 400+ GP)",
@@ -8458,13 +8841,14 @@ class SummonElemental(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class SummonFey(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Summon Fey",
             level=3,
             school="Conjuration",
-            classes=['Druid', 'Ranger', 'Warlock', 'Wizard'],
+            classes=["Druid", "Ranger", "Warlock", "Wizard"],
             casting_time="Action",
             range="90 feet",
             components="V, S, M (a gilded flower worth 300+ GP)",
@@ -8486,13 +8870,14 @@ class SummonFey(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class SummonFiend(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Summon Fiend",
             level=6,
             school="Conjuration",
-            classes=['Warlock', 'Wizard'],
+            classes=["Warlock", "Wizard"],
             casting_time="Action",
             range="90 feet",
             components="V, S, M (a bloody vial worth 600+ GP)",
@@ -8514,13 +8899,14 @@ class SummonFiend(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class SummonUndead(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Summon Undead",
             level=3,
             school="Necromancy",
-            classes=['Warlock', 'Wizard'],
+            classes=["Warlock", "Wizard"],
             casting_time="Action",
             range="90 feet",
             components="V, S, M (a gilded skull worth 300+ GP)",
@@ -8542,13 +8928,14 @@ class SummonUndead(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class Sunbeam(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Sunbeam",
             level=6,
             school="Evocation",
-            classes=['Cleric', 'Druid', 'Sorcerer', 'Wizard'],
+            classes=["Cleric", "Druid", "Sorcerer", "Wizard"],
             casting_time="Action",
             range="Self",
             components="V, S, M (a magnifying glass)",
@@ -8567,13 +8954,14 @@ class Sunbeam(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class Sunburst(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Sunburst",
             level=8,
             school="Evocation",
-            classes=['Cleric', 'Druid', 'Sorcerer', 'Wizard'],
+            classes=["Cleric", "Druid", "Sorcerer", "Wizard"],
             casting_time="Action",
             range="150 feet",
             components="V, S, M (a piece of sunstone)",
@@ -8590,13 +8978,14 @@ class Sunburst(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class SwiftQuiver(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Swift Quiver",
             level=5,
             school="Transmutation",
-            classes=['Ranger'],
+            classes=["Ranger"],
             casting_time="Bonus Action",
             range="Self",
             components="V, S, M (a Quiver worth 1+ GP)",
@@ -8610,13 +8999,14 @@ class SwiftQuiver(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class SylunesViper(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Sylune's Viper",
             level=3,
             school="Conjuration",
-            classes=['Druid', 'Wizard'],
+            classes=["Druid", "Wizard"],
             casting_time="Bonus Action",
             range="Self",
             components="V, S, M (a snake fang)",
@@ -8637,13 +9027,14 @@ class SylunesViper(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class Symbol(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Symbol",
             level=7,
             school="Abjuration",
-            classes=['Bard', 'Cleric', 'Druid', 'Wizard'],
+            classes=["Bard", "Cleric", "Druid", "Wizard"],
             casting_time="1 minute",
             range="Touch",
             components="V, S, M (powdered diamond worth 1,000+ GP, which the spell consumes)",
@@ -8685,13 +9076,14 @@ class Symbol(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class SynapticStatic(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Synaptic Static",
             level=5,
             school="Enchantment",
-            classes=['Bard', 'Sorcerer', 'Warlock', 'Wizard'],
+            classes=["Bard", "Sorcerer", "Warlock", "Wizard"],
             casting_time="Action",
             range="120 feet",
             components="V, S",
@@ -8707,13 +9099,14 @@ class SynapticStatic(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class TashasBubblingCauldron(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Tasha's Bubbling Cauldron",
             level=6,
             school="Conjuration",
-            classes=['Warlock', 'Wizard'],
+            classes=["Warlock", "Wizard"],
             casting_time="Action",
             range="5 feet",
             components="V, S, M (a gilded ladle worth 500+ GP)",
@@ -8733,13 +9126,14 @@ class TashasBubblingCauldron(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class TashasHideousLaughter(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Tasha's Hideous Laughter",
             level=1,
             school="Enchantment",
-            classes=['Bard', 'Warlock', 'Wizard'],
+            classes=["Bard", "Warlock", "Wizard"],
             casting_time="Action",
             range="30 feet",
             components="V, S, M (a tart and a feather)",
@@ -8758,13 +9152,14 @@ class TashasHideousLaughter(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class Telekinesis(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Telekinesis",
             level=5,
             school="Transmutation",
-            classes=['Sorcerer', 'Wizard'],
+            classes=["Sorcerer", "Wizard"],
             casting_time="Action",
             range="60 feet",
             components="V, S",
@@ -8789,13 +9184,14 @@ class Telekinesis(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class Telepathy(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Telepathy",
             level=8,
             school="Divination",
-            classes=['Wizard'],
+            classes=["Wizard"],
             casting_time="Action",
             range="Unlimited",
             components="V, S, M (a pair of linked silver rings)",
@@ -8811,13 +9207,14 @@ class Telepathy(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class Teleport(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Teleport",
             level=7,
             school="Conjuration",
-            classes=['Bard', 'Sorcerer', 'Wizard'],
+            classes=["Bard", "Sorcerer", "Wizard"],
             casting_time="Action",
             range="10 feet",
             components="V",
@@ -8846,13 +9243,14 @@ class Teleport(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class TeleportationCircle(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Teleportation Circle",
             level=5,
             school="Conjuration",
-            classes=['Bard', 'Sorcerer', 'Warlock', 'Wizard'],
+            classes=["Bard", "Sorcerer", "Warlock", "Wizard"],
             casting_time="1 minute",
             range="10 feet",
             components="V, M (rare inks worth 50+ GP, which the spell consumes)",
@@ -8872,13 +9270,14 @@ class TeleportationCircle(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class TensersFloatingDisk(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Tenser's Floating Disk",
             level=1,
             school="Conjuration",
-            classes=['Wizard'],
+            classes=["Wizard"],
             casting_time="Action or Ritual",
             range="30 feet",
             components="V, S, M (a drop of mercury)",
@@ -8897,13 +9296,14 @@ class TensersFloatingDisk(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class Thaumaturgy(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Thaumaturgy",
             level=0,
             school="Transmutation",
-            classes=['Cleric'],
+            classes=["Cleric"],
             casting_time="Action",
             range="30 feet",
             components="V",
@@ -8930,13 +9330,14 @@ class Thaumaturgy(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class ThornWhip(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Thorn Whip",
             level=0,
             school="Transmutation",
-            classes=['Artificer', 'Druid'],
+            classes=["Artificer", "Druid"],
             casting_time="Action",
             range="30 feet",
             components="V, S, M (the stem of a thorny plant)",
@@ -8952,13 +9353,14 @@ class ThornWhip(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class Thunderclap(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Thunderclap",
             level=0,
             school="Evocation",
-            classes=['Artificer', 'Bard', 'Druid', 'Sorcerer', 'Warlock', 'Wizard'],
+            classes=["Artificer", "Bard", "Druid", "Sorcerer", "Warlock", "Wizard"],
             casting_time="Action",
             range="Self",
             components="S",
@@ -8973,13 +9375,14 @@ class Thunderclap(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class ThunderousSmite(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Thunderous Smite",
             level=1,
             school="Evocation",
-            classes=['Paladin'],
+            classes=["Paladin"],
             casting_time="Bonus Action, which you take immediately after hitting a target with a Melee weapon or an Unarmed Strike",
             range="Self",
             components="V",
@@ -8994,13 +9397,14 @@ class ThunderousSmite(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class Thunderwave(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Thunderwave",
             level=1,
             school="Evocation",
-            classes=['Bard', 'Druid', 'Sorcerer', 'Wizard'],
+            classes=["Bard", "Druid", "Sorcerer", "Wizard"],
             casting_time="Action",
             range="Self",
             components="V, S",
@@ -9018,13 +9422,14 @@ class Thunderwave(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class TimeStop(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Time Stop",
             level=9,
             school="Transmutation",
-            classes=['Sorcerer', 'Wizard'],
+            classes=["Sorcerer", "Wizard"],
             casting_time="Action",
             range="Self",
             components="V",
@@ -9039,13 +9444,14 @@ class TimeStop(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class TollTheDead(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Toll the Dead",
             level=0,
             school="Necromancy",
-            classes=['Cleric', 'Warlock', 'Wizard'],
+            classes=["Cleric", "Warlock", "Wizard"],
             casting_time="Action",
             range="60 feet",
             components="V, S",
@@ -9061,13 +9467,14 @@ class TollTheDead(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class Tongues(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Tongues",
             level=3,
             school="Divination",
-            classes=['Bard', 'Cleric', 'Sorcerer', 'Warlock', 'Wizard'],
+            classes=["Bard", "Cleric", "Sorcerer", "Warlock", "Wizard"],
             casting_time="Action",
             range="Touch",
             components="V, M (a miniature ziggurat)",
@@ -9080,13 +9487,14 @@ class Tongues(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class TransportViaPlants(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Transport via Plants",
             level=6,
             school="Conjuration",
-            classes=['Druid'],
+            classes=["Druid"],
             casting_time="Action",
             range="10 feet",
             components="V, S",
@@ -9100,13 +9508,14 @@ class TransportViaPlants(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class TreeStride(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Tree Stride",
             level=5,
             school="Conjuration",
-            classes=['Druid', 'Ranger'],
+            classes=["Druid", "Ranger"],
             casting_time="Action",
             range="Self",
             components="V, S",
@@ -9125,13 +9534,14 @@ class TreeStride(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class TruePolymorph(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="True Polymorph",
             level=9,
             school="Transmutation",
-            classes=['Bard', 'Warlock', 'Wizard'],
+            classes=["Bard", "Warlock", "Wizard"],
             casting_time="Action",
             range="30 feet",
             components="V, S, M (a drop of mercury, a dollop of gum arabic, and a wisp of smoke)",
@@ -9163,13 +9573,14 @@ class TruePolymorph(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class TrueResurrection(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="True Resurrection",
             level=9,
             school="Necromancy",
-            classes=['Cleric', 'Druid'],
+            classes=["Cleric", "Druid"],
             casting_time="1 hour",
             range="Touch",
             components="V, S, M (diamonds worth 25,000+ GP, which the spell consumes)",
@@ -9187,13 +9598,14 @@ class TrueResurrection(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class TrueSeeing(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="True Seeing",
             level=6,
             school="Divination",
-            classes=['Bard', 'Cleric', 'Sorcerer', 'Warlock', 'Wizard'],
+            classes=["Bard", "Cleric", "Sorcerer", "Warlock", "Wizard"],
             casting_time="Action",
             range="Touch",
             components="V, S, M (mushroom powder worth 25+ GP, which the spell consumes)",
@@ -9203,13 +9615,14 @@ class TrueSeeing(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class TrueStrike(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="True Strike",
             level=0,
             school="Divination",
-            classes=['Artificer', 'Bard', 'Sorcerer', 'Warlock', 'Wizard'],
+            classes=["Artificer", "Bard", "Sorcerer", "Warlock", "Wizard"],
             casting_time="Action",
             range="Self",
             components="S, M (a weapon with which you have proficiency and that is worth 1+ CP)",
@@ -9225,13 +9638,14 @@ class TrueStrike(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class Tsunami(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Tsunami",
             level=8,
             school="Conjuration",
-            classes=['Druid'],
+            classes=["Druid"],
             casting_time="1 minute",
             range="1 mile",
             components="V, S",
@@ -9255,13 +9669,14 @@ class Tsunami(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class UnseenServant(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Unseen Servant",
             level=1,
             school="Conjuration",
-            classes=['Bard', 'Warlock', 'Wizard'],
+            classes=["Bard", "Warlock", "Wizard"],
             casting_time="Action or Ritual",
             range="60 feet",
             components="V, S, M (a bit of string and of wood)",
@@ -9280,13 +9695,14 @@ class UnseenServant(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class VampiricTouch(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Vampiric Touch",
             level=3,
             school="Necromancy",
-            classes=['Sorcerer', 'Warlock', 'Wizard'],
+            classes=["Sorcerer", "Warlock", "Wizard"],
             casting_time="Action",
             range="Self",
             components="V, S",
@@ -9303,13 +9719,14 @@ class VampiricTouch(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class ViciousMockery(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Vicious Mockery",
             level=0,
             school="Enchantment",
-            classes=['Bard'],
+            classes=["Bard"],
             casting_time="Action",
             range="60 feet",
             components="V",
@@ -9324,13 +9741,14 @@ class ViciousMockery(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class VitriolicSphere(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Vitriolic Sphere",
             level=4,
             school="Evocation",
-            classes=['Sorcerer', 'Wizard'],
+            classes=["Sorcerer", "Wizard"],
             casting_time="Action",
             range="150 feet",
             components="V, S, M (a drop of bile)",
@@ -9347,13 +9765,14 @@ class VitriolicSphere(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class WallOfFire(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Wall of Fire",
             level=4,
             school="Evocation",
-            classes=['Druid', 'Sorcerer', 'Wizard'],
+            classes=["Druid", "Sorcerer", "Wizard"],
             casting_time="Action",
             range="120 feet",
             components="V, S, M (a piece of charcoal)",
@@ -9373,13 +9792,14 @@ class WallOfFire(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class WallOfForce(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Wall of Force",
             level=5,
             school="Evocation",
-            classes=['Wizard'],
+            classes=["Wizard"],
             casting_time="Action",
             range="120 feet",
             components="V, S, M (a shard of glass)",
@@ -9401,13 +9821,14 @@ class WallOfForce(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class WallOfIce(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Wall of Ice",
             level=6,
             school="Evocation",
-            classes=['Wizard'],
+            classes=["Wizard"],
             casting_time="Action",
             range="120 feet",
             components="V, S, M (a piece of quartz)",
@@ -9429,13 +9850,14 @@ class WallOfIce(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class WallOfStone(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Wall of Stone",
             level=5,
             school="Evocation",
-            classes=['Artificer', 'Druid', 'Sorcerer', 'Wizard'],
+            classes=["Artificer", "Druid", "Sorcerer", "Wizard"],
             casting_time="Action",
             range="120 feet",
             components="V, S, M (a cube of granite)",
@@ -9464,13 +9886,14 @@ class WallOfStone(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class WallOfThorns(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Wall of Thorns",
             level=6,
             school="Conjuration",
-            classes=['Druid'],
+            classes=["Druid"],
             casting_time="Action",
             range="120 feet",
             components="V, S, M (a handful of thorns)",
@@ -9492,13 +9915,14 @@ class WallOfThorns(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class Wardaway(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Wardaway",
             level=1,
             school="Abjuration",
-            classes=['Bard', 'Cleric', 'Paladin', 'Wizard'],
+            classes=["Bard", "Cleric", "Paladin", "Wizard"],
             casting_time="Action",
             range="60 feet",
             components="V, S, M (a miniature clay hand)",
@@ -9515,13 +9939,14 @@ class Wardaway(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class WardingBond(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Warding Bond",
             level=2,
             school="Abjuration",
-            classes=['Cleric', 'Paladin'],
+            classes=["Cleric", "Paladin"],
             casting_time="Action",
             range="Touch",
             components="V, S, M (a pair of platinum rings worth 50+ GP each, which you and the target must wear for the duration)",
@@ -9537,13 +9962,14 @@ class WardingBond(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class WaterBreathing(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Water Breathing",
             level=3,
             school="Transmutation",
-            classes=['Artificer', 'Druid', 'Ranger', 'Sorcerer', 'Wizard'],
+            classes=["Artificer", "Druid", "Ranger", "Sorcerer", "Wizard"],
             casting_time="Action or Ritual",
             range="30 feet",
             components="V, S, M (a short reed)",
@@ -9556,13 +9982,14 @@ class WaterBreathing(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class WaterWalk(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Water Walk",
             level=3,
             school="Transmutation",
-            classes=['Artificer', 'Cleric', 'Druid', 'Ranger', 'Sorcerer'],
+            classes=["Artificer", "Cleric", "Druid", "Ranger", "Sorcerer"],
             casting_time="Action or Ritual",
             range="30 feet",
             components="V, S, M (a piece of cork)",
@@ -9576,13 +10003,14 @@ class WaterWalk(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class Web(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Web",
             level=2,
             school="Conjuration",
-            classes=['Artificer', 'Sorcerer', 'Wizard'],
+            classes=["Artificer", "Sorcerer", "Wizard"],
             casting_time="Action",
             range="60 feet",
             components="V, S, M (a bit of spiderweb)",
@@ -9603,13 +10031,14 @@ class Web(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class Weird(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Weird",
             level=9,
             school="Illusion",
-            classes=['Warlock', 'Wizard'],
+            classes=["Warlock", "Wizard"],
             casting_time="Action",
             range="120 feet",
             components="V, S",
@@ -9627,13 +10056,14 @@ class Weird(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class WindWalk(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Wind Walk",
             level=6,
             school="Transmutation",
-            classes=['Druid'],
+            classes=["Druid"],
             casting_time="1 minute",
             range="30 feet",
             components="V, S, M (a candle)",
@@ -9651,13 +10081,14 @@ class WindWalk(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class WindWall(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Wind Wall",
             level=3,
             school="Evocation",
-            classes=['Druid', 'Ranger'],
+            classes=["Druid", "Ranger"],
             casting_time="Action",
             range="120 feet",
             components="V, S, M (a fan and a feather)",
@@ -9679,13 +10110,14 @@ class WindWall(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class Wish(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Wish",
             level=9,
             school="Conjuration",
-            classes=['Sorcerer', 'Wizard'],
+            classes=["Sorcerer", "Wizard"],
             casting_time="Action",
             range="Self",
             components="V",
@@ -9707,13 +10139,14 @@ class Wish(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class WitchBolt(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Witch Bolt",
             level=1,
             school="Evocation",
-            classes=['Sorcerer', 'Warlock', 'Wizard'],
+            classes=["Sorcerer", "Warlock", "Wizard"],
             casting_time="Action",
             range="60 feet",
             components="V, S, M (a twig struck by lightning)",
@@ -9731,13 +10164,14 @@ class WitchBolt(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class WordOfRadiance(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Word of Radiance",
             level=0,
             school="Evocation",
-            classes=['Cleric'],
+            classes=["Cleric"],
             casting_time="Action",
             range="Self",
             components="V, M (a sunburst token)",
@@ -9752,13 +10186,14 @@ class WordOfRadiance(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class WordOfRecall(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Word of Recall",
             level=6,
             school="Conjuration",
-            classes=['Cleric'],
+            classes=["Cleric"],
             casting_time="Action",
             range="5 feet",
             components="V",
@@ -9773,13 +10208,14 @@ class WordOfRecall(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class WrathfulSmite(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Wrathful Smite",
             level=1,
             school="Necromancy",
-            classes=['Paladin'],
+            classes=["Paladin"],
             casting_time="Bonus Action, which you take immediately after hitting a creature with a Melee weapon or an Unarmed Strike",
             range="Self",
             components="V",
@@ -9794,13 +10230,14 @@ class WrathfulSmite(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class YolandesRegalPresence(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Yolande's Regal Presence",
             level=5,
             school="Enchantment",
-            classes=['Bard', 'Wizard'],
+            classes=["Bard", "Wizard"],
             casting_time="Action",
             range="Self",
             components="Component: V, S, M (a miniature tiara)",
@@ -9816,13 +10253,14 @@ class YolandesRegalPresence(ExplicitSpell):
             spell_casting_ability=spell_casting_ability,
         )
 
+
 class ZoneOfTruth(ExplicitSpell):
     def __init__(self, spell_casting_ability: Optional[Ability] = None):
         super().__init__(
             name="Zone of Truth",
             level=2,
             school="Enchantment",
-            classes=['Bard', 'Cleric', 'Paladin'],
+            classes=["Bard", "Cleric", "Paladin"],
             casting_time="Action",
             range="60 feet",
             components="V, S",
@@ -9838,6 +10276,7 @@ class ZoneOfTruth(ExplicitSpell):
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
         )
+
 
 SpellSet = {
     "Acid Splash": AcidSplash,

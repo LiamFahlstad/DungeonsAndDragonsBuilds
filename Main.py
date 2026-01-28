@@ -1,7 +1,15 @@
-from Builds import (Greta, JanHeting, OptimizedBardLore,
-                    OptimizedBerserkerBarbarian, OptimizedClericLight,
-                    OptimizedDruidMoon, OptimizedMonkShadow,
-                    OptimizedPaladinGlory, OptimizedRogueAssassin, Sten)
+from Builds import (
+    Greta,
+    JanHeting,
+    OptimizedBardLore,
+    OptimizedBerserkerBarbarian,
+    OptimizedClericLight,
+    OptimizedDruidMoon,
+    OptimizedMonkShadow,
+    OptimizedPaladinGlory,
+    OptimizedRogueAssassin,
+    Sten,
+)
 from Builds.CharacterBuilder import CharacterBuilder
 
 

@@ -1899,7 +1899,6 @@ class TransmutationLevel9Spells(str, Enum):
     TRUE_POLYMORPH = "True Polymorph"
 
 
-
 class Spell(ABC):
     """Abstract base spell interface."""
 
@@ -2118,4 +2117,3 @@ class ExplicitSpell(Spell):
     @property
     def source(self) -> str:
         return self._source
-
