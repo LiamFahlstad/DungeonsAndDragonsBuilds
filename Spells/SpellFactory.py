@@ -2,100 +2,8 @@ import json
 from typing import Optional
 
 import Definitions
-
-
-class Spell:
-    """Spell object that wraps JSON spell data."""
-
-    def __init__(
-        self,
-        spell_data: dict,
-        spell_casting_ability: Optional[Definitions.Ability] = None,
-    ):
-        self._data = spell_data
-        self.spell_casting_ability = spell_casting_ability
-
-    # ---------- Property Accessors ---------- #
-    @property
-    def name(self):
-        return self._data.get("name")
-
-    @property
-    def level(self):
-        return self._data.get("level")
-
-    @property
-    def school(self):
-        return self._data.get("school")
-
-    @property
-    def classes(self):
-        return self._data.get("classes", [])
-
-    @property
-    def casting_time(self):
-        return self._data.get("casting_time")
-
-    @property
-    def range(self):
-        return self._data.get("range")
-
-    @property
-    def components(self):
-        return self._data.get("components")
-
-    @property
-    def duration(self):
-        return self._data.get("duration")
-
-    @property
-    def description(self):
-        text = self._data.get("description")
-
-        def replace_last(text, old, new):
-            parts = text.rsplit(old, 1)  # split from the right, max 1 split
-            return new.join(parts)
-
-        def inject_newline(text):
-            go = True
-            while go:
-                try:
-                    index = text.index(" . ")
-                    text = replace_last(text[:index], ". ", ".\n") + text[index:]
-                    text = text.replace(" . ", ":\n")
-                    pass
-                except ValueError:
-                    go = False
-            return text
-
-        return inject_newline(text)
-
-    @property
-    def source(self):
-        return self._data.get("source")
-
-    def to_dict(self):
-        """Return a full dict copy of spell data."""
-        return self._data.copy()
-
-    def __repr__(self):
-        return f"<Spell {self.name!r}, level {self.level}>"
-
-    def write_to_file(self, file):
-        """Write all spell info in a readable format to a file."""
-
-        file.write(f"Name: {self.name}\n")
-        file.write(f"Level: {self.level}\n")
-        file.write(f"School: {self.school}\n")
-        file.write(f"Classes: {', '.join(self.classes)}\n")
-        file.write(f"Casting Time: {self.casting_time}\n")
-        file.write(f"Range: {self.range}\n")
-        file.write(f"Components: {self.components}\n")
-        file.write(f"Duration: {self.duration}\n")
-        file.write(f"Description:\n{self.description}\n")
-        file.write(f"Source: {self.source}\n")
-        if self.spell_casting_ability is not None:
-            file.write(f"Spellcasting Ability: {self.spell_casting_ability.value}\n")
+from Spells.Definitions import DataSpell, Spell
+from Spells.GeneratedSpells import SpellSet
 
 
 class SpellFactory:
@@ -118,20 +26,23 @@ class SpellFactory:
         spell_casting_ability: Optional[Definitions.Ability] = None,
     ) -> Spell:
         """Create a Spell object from the name."""
+
+        if spell_name in SpellSet:
+            spell_class = SpellSet[spell_name]
+            return spell_class(spell_casting_ability)
+
         data = cls._load_json()
-
-        if spell_name not in data:
-            raise ValueError(f"Spell '{spell_name}' not found in JSON file.")
-
-        return Spell(
-            spell_data=data[spell_name], spell_casting_ability=spell_casting_ability
-        )
+        if spell_name in data:
+            return DataSpell(
+                spell_data=data[spell_name], spell_casting_ability=spell_casting_ability
+            )
+        raise ValueError(f"Spell '{spell_name}' not found in JSON file.")
 
     @classmethod
     def all_spells(cls):
         """Return all Spell objects."""
         data = cls._load_json()
-        return [Spell(info) for info in data.values()]
+        return [DataSpell(info) for info in data.values()]
 
     @classmethod
     def spell_names(cls):

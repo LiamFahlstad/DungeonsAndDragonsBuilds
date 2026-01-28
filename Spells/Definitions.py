@@ -1,4 +1,8 @@
+from abc import ABC, abstractmethod
 from enum import Enum
+from typing import Any, List, Optional
+
+import Definitions
 
 
 class SorcererLevel0Spells(str, Enum):
@@ -1893,3 +1897,225 @@ class TransmutationLevel9Spells(str, Enum):
     SHAPECHANGE = "Shapechange"
     TIME_STOP = "Time Stop"
     TRUE_POLYMORPH = "True Polymorph"
+
+
+
+class Spell(ABC):
+    """Abstract base spell interface."""
+
+    def __init__(self, spell_casting_ability: Optional[Definitions.Ability] = None):
+        self.spell_casting_ability = spell_casting_ability
+
+    # ---------- Required properties ---------- #
+
+    @property
+    @abstractmethod
+    def name(self) -> str:
+        pass
+
+    @property
+    @abstractmethod
+    def level(self) -> int:
+        pass
+
+    @property
+    @abstractmethod
+    def school(self) -> str:
+        pass
+
+    @property
+    @abstractmethod
+    def classes(self) -> List[str]:
+        pass
+
+    @property
+    @abstractmethod
+    def casting_time(self) -> str:
+        pass
+
+    @property
+    @abstractmethod
+    def range(self) -> str:
+        pass
+
+    @property
+    @abstractmethod
+    def components(self) -> str:
+        pass
+
+    @property
+    @abstractmethod
+    def duration(self) -> str:
+        pass
+
+    @property
+    @abstractmethod
+    def description(self) -> str:
+        pass
+
+    @property
+    @abstractmethod
+    def source(self) -> str:
+        pass
+
+    # ---------- Shared behavior ---------- #
+
+    def to_dict(self) -> dict:
+        return {
+            "name": self.name,
+            "level": self.level,
+            "school": self.school,
+            "classes": self.classes,
+            "casting_time": self.casting_time,
+            "range": self.range,
+            "components": self.components,
+            "duration": self.duration,
+            "description": self.description,
+            "source": self.source,
+        }
+
+    def write_to_file(self, file):
+        file.write(f"Name: {self.name}\n")
+        file.write(f"Level: {self.level}\n")
+        file.write(f"School: {self.school}\n")
+        file.write(f"Classes: {', '.join(self.classes)}\n")
+        file.write(f"Casting Time: {self.casting_time}\n")
+        file.write(f"Range: {self.range}\n")
+        file.write(f"Components: {self.components}\n")
+        file.write(f"Duration: {self.duration}\n")
+        file.write(f"Description:\n{self.description}\n")
+        file.write(f"Source: {self.source}\n")
+
+        if self.spell_casting_ability:
+            file.write(f"Spellcasting Ability: {self.spell_casting_ability.value}\n")
+
+    def __repr__(self):
+        return f"<Spell {self.name!r}, level {self.level}>"
+
+
+class DataSpell(Spell):
+    """Spell backed directly by JSON/dict data."""
+
+    def __init__(
+        self,
+        spell_data: dict[str, Any],
+        spell_casting_ability: Optional[Definitions.Ability] = None,
+    ):
+        super().__init__(spell_casting_ability)
+        self._data = spell_data
+
+    @property
+    def name(self) -> str:
+        return str(self._data.get("name"))
+
+    @property
+    def level(self) -> int:
+        value = self._data.get("level")
+        if not isinstance(value, int):
+            raise ValueError(f"Invalid level value: {value}")
+        return value
+
+    @property
+    def school(self) -> str:
+        return str(self._data.get("school"))
+
+    @property
+    def classes(self) -> List[str]:
+        return self._data.get("classes", [])
+
+    @property
+    def casting_time(self) -> str:
+        return str(self._data.get("casting_time"))
+
+    @property
+    def range(self) -> str:
+        return str(self._data.get("range"))
+
+    @property
+    def components(self) -> str:
+        return str(self._data.get("components"))
+
+    @property
+    def duration(self) -> str:
+        return str(self._data.get("duration"))
+
+    @property
+    def description(self) -> str:
+        return str(self._data.get("description"))
+
+    @property
+    def source(self) -> str:
+        return str(self._data.get("source"))
+
+
+class ExplicitSpell(Spell):
+    """Spell defined entirely by explicit fields."""
+
+    def __init__(
+        self,
+        *,
+        name: str,
+        level: int,
+        school: str,
+        classes: list[str],
+        casting_time: str,
+        range: str,
+        components: str,
+        duration: str,
+        description: str,
+        source: str,
+        spell_casting_ability: Optional[Definitions.Ability] = None,
+    ):
+        super().__init__(spell_casting_ability)
+
+        self._name = name
+        self._level = level
+        self._school = school
+        self._classes = classes
+        self._casting_time = casting_time
+        self._range = range
+        self._components = components
+        self._duration = duration
+        self._description = description
+        self._source = source
+
+    @property
+    def name(self) -> str:
+        return self._name
+
+    @property
+    def level(self) -> int:
+        return self._level
+
+    @property
+    def school(self) -> str:
+        return self._school
+
+    @property
+    def classes(self) -> list[str]:
+        return self._classes
+
+    @property
+    def casting_time(self) -> str:
+        return self._casting_time
+
+    @property
+    def range(self) -> str:
+        return self._range
+
+    @property
+    def components(self) -> str:
+        return self._components
+
+    @property
+    def duration(self) -> str:
+        return self._duration
+
+    @property
+    def description(self) -> str:
+        return self._description
+
+    @property
+    def source(self) -> str:
+        return self._source
+
