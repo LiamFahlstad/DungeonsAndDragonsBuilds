@@ -1,6 +1,7 @@
 from abc import abstractmethod
 from dataclasses import dataclass, field
 from enum import Enum
+from typing import TextIO
 
 import DamageCalculator
 from Definitions import Ability, Die
@@ -282,7 +283,7 @@ class AbstractWeapon(TextFeature):
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         pass
 
-    def write_to_file(self, character_stat_block: CharacterStatBlock, file):
+    def write_to_file(self, character_stat_block: CharacterStatBlock, file: TextIO):
         headers = self.get_headers()
         rows = self.get_rows(character_stat_block)
         write_table(headers, rows, file)
@@ -855,7 +856,9 @@ class Pistol(AbstractWeapon):
 
 
 def write_weapons_to_file(
-    weapons: list[AbstractWeapon], character_stat_block: CharacterStatBlock, file
+    weapons: list[AbstractWeapon],
+    character_stat_block: CharacterStatBlock,
+    file: TextIO,
 ):
     if not weapons:
         return

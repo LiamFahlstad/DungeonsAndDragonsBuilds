@@ -1,4 +1,5 @@
 import re
+from typing import TextIO
 
 import requests
 from bs4 import BeautifulSoup
@@ -141,7 +142,7 @@ class SpellParser:
         for key, value in data.items():
             print(f"{key.title().replace('_', ' ')}: {value}")
 
-    def write_to_file(self, file):
+    def write_to_file(self, file: TextIO):
         """Write all spell info in a readable format to a file."""
         data = self.to_dict()
         for key, value in data.items():

@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+from typing import TextIO
 
 from Definitions import Ability, Skill
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
@@ -8,7 +9,7 @@ class Feature(ABC):
     """A feature can be anything"""
 
     @abstractmethod
-    def write_to_file(self, character_stat_block: CharacterStatBlock, file):
+    def write_to_file(self, character_stat_block: CharacterStatBlock, file: TextIO):
         pass
 
     @abstractmethod
@@ -19,7 +20,7 @@ class Feature(ABC):
 class CharacterFeature(Feature):
     """A feature that can modify a character's stat block."""
 
-    def write_to_file(self, character_stat_block: CharacterStatBlock, file):
+    def write_to_file(self, character_stat_block: CharacterStatBlock, file: TextIO):
         pass
 
 
@@ -55,7 +56,7 @@ class TextFeature(Feature):
         text += indented + "\n"
         return text
 
-    def write_to_file(self, character_stat_block: CharacterStatBlock, file):
+    def write_to_file(self, character_stat_block: CharacterStatBlock, file: TextIO):
         file.write(f"Name: {self.name}\n")
         file.write(f"Origin: {self.origin}\n")
         description = self.get_description(character_stat_block)

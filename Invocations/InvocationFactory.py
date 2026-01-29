@@ -1,4 +1,5 @@
 import json
+from typing import TextIO
 
 
 class Invocation:
@@ -56,7 +57,7 @@ class Invocation:
     def __repr__(self):
         return f"<Invocation {self.name!r}, level {self.level}>"
 
-    def write_to_file(self, file):
+    def write_to_file(self, file: TextIO):
         """Write all invocation info in a readable format to a file."""
 
         file.write(f"Name: {self.name}\n")

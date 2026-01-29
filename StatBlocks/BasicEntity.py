@@ -1,7 +1,7 @@
 import pathlib
 from abc import abstractmethod
 from enum import Enum
-from typing import Optional, Sequence
+from typing import Optional, Sequence, TextIO
 
 import Definitions
 from StatBlocks.StatBlock import StatBlock
@@ -51,7 +51,7 @@ class TextFeature:
         text += indented + "\n"
         return text
 
-    def write_to_file(self, file):
+    def write_to_file(self, file: TextIO):
         file.write(f"Name: {self.name}\n")
         description = self.get_description()
         for addition in self.additional_features:
@@ -131,7 +131,7 @@ class BasicEntity(StatBlock):
         # Replace spaces with hyphens
         return cleaned.replace(" ", "_").replace("-", "_")
 
-    def _write_general_info(self, file):
+    def _write_general_info(self, file: TextIO):
         TableUtils.write_separator(file, self.name)
         TableUtils.write_table(
             headers=["Field", "Value"],
@@ -151,7 +151,7 @@ class BasicEntity(StatBlock):
         )
         file.write("\n")
 
-    def _write_combat_stats(self, file):
+    def _write_combat_stats(self, file: TextIO):
         TableUtils.write_separator(file, "Combat Stats")
         TableUtils.write_table(
             headers=["Field", "Value"],
@@ -174,7 +174,7 @@ class BasicEntity(StatBlock):
         )
         file.write("\n")
 
-    def _write_abilities(self, file):
+    def _write_abilities(self, file: TextIO):
         TableUtils.write_separator(file, "Abilities")
         headers = []
         row = []
@@ -197,7 +197,7 @@ class BasicEntity(StatBlock):
         )
         file.write("\n")
 
-    def _write_traits(self, file):
+    def _write_traits(self, file: TextIO):
         if not self.traits:
             return
         TableUtils.write_separator(file, "Traits")
@@ -206,7 +206,7 @@ class BasicEntity(StatBlock):
 
         file.write("\n")
 
-    def _write_actions(self, file):
+    def _write_actions(self, file: TextIO):
         if not self.actions:
             return
         TableUtils.write_separator(file, "Actions")

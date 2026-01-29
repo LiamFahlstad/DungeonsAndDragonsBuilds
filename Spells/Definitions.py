@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 from enum import Enum
-from typing import Any, List, Optional
+from typing import Any, List, Optional, TextIO
 
 import Definitions
 
@@ -1973,7 +1973,7 @@ class Spell(ABC):
             "source": self.source,
         }
 
-    def write_to_file(self, file):
+    def write_to_file(self, file: TextIO):
         lines = [line.strip() + "." for line in self.description.strip().split(".")]
         lines = lines if len(lines) <= 1 else lines[:-1]
         description = "\n".join(lines)

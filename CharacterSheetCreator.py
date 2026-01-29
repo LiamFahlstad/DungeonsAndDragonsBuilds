@@ -1,5 +1,5 @@
 import pathlib
-from typing import Any, Optional
+from typing import Any, Optional, TextIO
 
 import attr
 
@@ -207,7 +207,7 @@ class CharacterSheetData:
     def get_file_path(self) -> str:
         return f"Output/{slugify(self.character_name)}_{self.character_subclass.lower()}_level_{self.character_level}_character_sheet.txt"
 
-    def _write_general_info(self, character: CharacterStatBlock, file):
+    def _write_general_info(self, character: CharacterStatBlock, file: TextIO):
         TableUtils.write_separator(file, "General Info")
         TableUtils.write_table(
             headers=["Field", "Value"],
@@ -230,7 +230,7 @@ class CharacterSheetData:
         )
         file.write("\n")
 
-    def _write_combat_stats(self, character: CharacterStatBlock, file):
+    def _write_combat_stats(self, character: CharacterStatBlock, file: TextIO):
         TableUtils.write_separator(file, "Combat Stats")
         ac = character.calculate_armor_class()
         if Armor.ShieldArmor in [type(armor) for armor in self.armors]:
@@ -254,7 +254,7 @@ class CharacterSheetData:
         )
         file.write("\n")
 
-    def _write_abilities(self, character: CharacterStatBlock, file):
+    def _write_abilities(self, character: CharacterStatBlock, file: TextIO):
         TableUtils.write_separator(file, "Abilities")
         headers = [
             "Ability",
@@ -293,7 +293,7 @@ class CharacterSheetData:
         )
         file.write("\n")
 
-    def _write_skills(self, character: CharacterStatBlock, file):
+    def _write_skills(self, character: CharacterStatBlock, file: TextIO):
         TableUtils.write_separator(file, "Skills")
         headers = [
             "Skill",
@@ -320,7 +320,7 @@ class CharacterSheetData:
         )
         file.write("\n")
 
-    def _write_features(self, character: CharacterStatBlock, file):
+    def _write_features(self, character: CharacterStatBlock, file: TextIO):
         def sort_features(feat: Feature):
             if isinstance(feat, CharacterFeature):
                 return (0, 0, feat.__class__.__name__)
@@ -340,7 +340,7 @@ class CharacterSheetData:
                 feature.write_to_file(character, file)
             file.write("\n")
 
-    def _write_weapons(self, character: CharacterStatBlock, file):
+    def _write_weapons(self, character: CharacterStatBlock, file: TextIO):
         if not self.weapons:
             return
 
@@ -353,7 +353,7 @@ class CharacterSheetData:
         write_weapons_to_file(self.weapons, character, file)
         file.write("\n")
 
-    def _write_fighting_styles(self, character: CharacterStatBlock, file):
+    def _write_fighting_styles(self, character: CharacterStatBlock, file: TextIO):
         if not self.fighting_styles:
             return
 
@@ -362,7 +362,7 @@ class CharacterSheetData:
             fighting_style.write_to_file(file)
         file.write("\n")
 
-    def _write_invocations(self, character: CharacterStatBlock, file):
+    def _write_invocations(self, character: CharacterStatBlock, file: TextIO):
         if not self.invocations:
             return
 
@@ -380,7 +380,7 @@ class CharacterSheetData:
                 file.write("-" * 40 + "\n")
         file.write("\n")
 
-    def _write_spell_slots(self, character: CharacterStatBlock, file):
+    def _write_spell_slots(self, character: CharacterStatBlock, file: TextIO):
         if not character.spell_slots:
             return
 
@@ -394,7 +394,7 @@ class CharacterSheetData:
         TableUtils.write_table(headers, [row], file)
         file.write("\n")
 
-    def _write_spells(self, character: CharacterStatBlock, file):
+    def _write_spells(self, character: CharacterStatBlock, file: TextIO):
         if not self.spells:
             return
 
