@@ -1,0 +1,536 @@
+################################################################################
+# =============================== General Info =============================== #
+################################################################################
+Field              | Value                    
+-------------------+--------------------------
+Name               | Optimized Warlock Archfey
+Level              | 6                        
+Starter Class      | Fighter                  
+Level per Class    | Fighter: 1, Warlock: 5   
+Character Subclass | The Archfey              
+Proficiency Bonus  | 3                        
+
+################################################################################
+# =============================== Combat Stats =============================== #
+################################################################################
+Field               | Value                                   
+--------------------+-----------------------------------------
+Max Hit Points      | 65                                      
+Armor Class         | 19 (with Shield) and 17 (without Shield)
+Armor Proficiencies | Heavy, Light, Medium                    
+Initiative          | d20 + 1                                 
+Speed (ft)          | 30                                      
+Size                | Medium                                  
+
+################################################################################
+# ================================ Abilities ================================= #
+################################################################################
+Ability | Score | Mod | Saving Throw        | DC | ATK Bonus
+--------+-------+-----+---------------------+----+----------
+STR     | 14    | +2  | +2 + 3 (Proficient) | 13 | +5       
+DEX     | 12    | +1  | +1                  | 12 | +4       
+CON     | 16    | +3  | +3 + 3 (Proficient) | 14 | +6       
+INT     | 8     | -1  | -1                  | 10 | +2       
+WIS     | 10    | +0  | +0                  | 11 | +3       
+CHA     | 16    | +3  | +3                  | 14 | +6       
+
+################################################################################
+# ================================== Skills ================================== #
+################################################################################
+Skill           | Modifier | Proficient | Ability      | Roll Condition | Bonus (already included)
+----------------+----------+------------+--------------+----------------+-------------------------
+Acrobatics      | +4       | Yes        | Dexterity    | Neutral        | +0                      
+Animal Handling | +3       | Yes        | Wisdom       | Neutral        | +0                      
+Arcana          | -1       | No         | Intelligence | Neutral        | +0                      
+Athletics       | +5       | Yes        | Strength     | Neutral        | +0                      
+Deception       | +6       | Yes        | Charisma     | Neutral        | +0                      
+History         | -1       | No         | Intelligence | Neutral        | +0                      
+Insight         | +0       | No         | Wisdom       | Neutral        | +0                      
+Intimidation    | +6       | Yes        | Charisma     | Neutral        | +0                      
+Investigation   | -1       | No         | Intelligence | Neutral        | +0                      
+Medicine        | +3       | Yes        | Wisdom       | Neutral        | +0                      
+Nature          | +2       | Yes        | Intelligence | Neutral        | +0                      
+Perception      | +0       | No         | Wisdom       | Neutral        | +0                      
+Performance     | +3       | No         | Charisma     | Neutral        | +0                      
+Persuasion      | +6       | Yes        | Charisma     | Neutral        | +0                      
+Religion        | -1       | No         | Intelligence | Neutral        | +0                      
+Sleight of Hand | +1       | No         | Dexterity    | Neutral        | +0                      
+Stealth         | +1       | No         | Dexterity    | Disadvantage   | +0                      
+Survival        | +0       | No         | Wisdom       | Neutral        | +0                      
+
+################################################################################
+# ================================= Features ================================= #
+################################################################################
+Name: Resourceful
+Origin: Human Trait
+Description: You gain Heroic Inspiration whenever you finish a Long Rest.
+
+Name: Versatile
+Origin: Human Trait
+Description: You gain an Origin feat of your choice (see 'Feats'). Skilled is recommended.
+
+Name: Great Weapon Master
+Origin: General Feat Level 4+
+Description: You gain the following benefits.
+Ability Score Increase. Increase your Strength score by 1, to a maximum of 20.
+Heavy Weapon Mastery. When you hit a creature with a weapon that has the Heavy property as part of the Attack action on your turn, you can cause the weapon to deal extra damage to the target. The extra damage equals your Proficiency Bonus.
+Hew. Immediately after you score a Critical Hit with a Melee weapon or reduce a creature to 0 Hit Points with one, you can make one attack with the same weapon as a Bonus Action.
+
+Name: Fighting Style
+Origin: Fighter Level 1
+Description: You gain a Fighting Style feat of your choice (see chapter 5). Defense is recommended.
+Whenever you gain a Fighter level, you can replace the feat you chose with a different Fighting Style feat.
+
+Name: Regaining Spell Slots
+Origin: Warlock Level 1
+Description: You regain all expended Pact Magic spell slots when you finish a Short or Long Rest.
+
+Name: Replacing Cantrips and Spells
+Origin: Warlock Level 1
+Description: Whenever you gain a Warlock level, you can replace one of your cantrips from this feature with another Warlock cantrip of your choice.
+Whenever you gain a Warlock level, you can replace one spell on your list with another Warlock spell of an eligible level.
+
+Name: Replacing Eldritch Invocations
+Origin: Warlock Level 1
+Description: Replacing and Gaining Invocations. Whenever you gain a Warlock level, you can replace one of your invocations with another one for which you qualify. You can't replace an invocation if it's a prerequisite for another invocation that you have.
+When you gain certain Warlock levels, you gain more invocations of your choice, as shown in the Invocations column of the Warlock Features table.
+You can't pick the same invocation more than once unless its description says otherwise.
+
+Name: Second Wind
+Origin: Fighter Level 1
+Description: You have a limited well of physical and mental stamina that you can draw on. As a Bonus Action, you can use it to regain Hit Points equal to 1d10 plus your Fighter level.
+You can use this feature 3 time(s). You regain one expended use when you finish a Short Rest, and you regain all expended uses when you finish a Long Rest.
+
+Name: Weapon Mastery
+Origin: Fighter Level 1
+Description: Your training with weapons allows you to use the mastery properties of three kinds of Simple or Martial weapons of your choice. Whenever you finish a Long Rest, you can practice weapon drills and change one of those weapon choices.
+When you reach certain Fighter levels, you gain the ability to use the mastery properties of more kinds of weapons, as shown in the Weapon Mastery column of the Fighter Features table.
+
+Name: Magical Cunning
+Origin: Warlock Level 2
+Description: You can perform an esoteric rite for 1 minute. At the end of it, you regain expended Pact Magic spell slots but no more than a number equal to half your maximum (round up). Once you use this feature, you can't do so again until you finish a Long Rest.
+
+Name: Steps of the Fey
+Origin: Archfey Patron Warlock Level 3
+Description: Your patron grants you the ability to move between the boundaries of the planes. You can cast Misty Step without expending a spell slot a number of times equal to your Charisma modifier (minimum of once), and you regain all expended uses when you finish a Long Rest.
+In addition, whenever you cast that spell, you can choose one of the following additional effects.
+ * Refreshing Step: Immediately after you teleport, you or one creature you can see within 10 feet of yourself gains 1d10 Temporary Hit Points.
+ * Taunting Step: Creatures within 5 feet of the space you left must succeed on a Wisdom saving throw against your spell save DC or have Disadvantage on attack rolls against creatures other than you until the start of your next turn.
+
+
+################################################################################
+# ================================= Weapons ================================== #
+################################################################################
+Field                       | Value                                                                                                        
+----------------------------+--------------------------------------------------------------------------------------------------------------
+Name                        | Greatsword                                                                                                   
+Type                        | Martial Melee                                                                                                
+DamageType                  | Slashing                                                                                                     
+Property 'Heavy'            | Disadvantage if Melee + Str < 13 or Ranged + Dex < 13.                                                       
+Property 'Two-handed'       | Requires two hands to attack.                                                                                
+Proficient                  | Yes                                                                                                          
+AttackRoll                  | 1d20 + 2 (ability mod: Strength) + 3 (Proficient)                                                            
+DamageRoll                  | 2d6 + 2 (ability mod: Strength)                                                                              
+Mastery 'Graze'             | If you miss with an attack, deal damage equal to the ability modifier used for the attack (same damage type).
+AC: 10                      | Prob of Hit: 0.80, Avg Dmg: 7.20                                                                             
+AC: 11                      | Prob of Hit: 0.75, Avg Dmg: 6.75                                                                             
+AC: 12                      | Prob of Hit: 0.70, Avg Dmg: 6.30                                                                             
+AC: 13                      | Prob of Hit: 0.65, Avg Dmg: 5.85                                                                             
+AC: 14                      | Prob of Hit: 0.60, Avg Dmg: 5.40                                                                             
+AC: 15                      | Prob of Hit: 0.55, Avg Dmg: 4.95                                                                             
+AC: 16                      | Prob of Hit: 0.50, Avg Dmg: 4.50                                                                             
+AC: 17                      | Prob of Hit: 0.45, Avg Dmg: 4.05                                                                             
+AC: 18                      | Prob of Hit: 0.40, Avg Dmg: 3.60                                                                             
+AC: 19                      | Prob of Hit: 0.35, Avg Dmg: 3.15                                                                             
+AC: 20                      | Prob of Hit: 0.30, Avg Dmg: 2.70                                                                             
+----------------------------+--------------------------------------------------------------------------------------------------------------
+Name                        | Longsword                                                                                                    
+Type                        | Martial Melee                                                                                                
+DamageType                  | Slashing                                                                                                     
+Property 'Versatile (1d10)' | Can use one or two hands; if two-handed, use damage die shown in parentheses.                                
+Proficient                  | Yes                                                                                                          
+AttackRoll                  | 1d20 + 2 (ability mod: Strength) + 3 (Proficient)                                                            
+DamageRoll                  | 1d8 + 2 (ability mod: Strength)                                                                              
+Mastery 'Sap'               | On a hit, the target has Disadvantage on its next attack before your next turn starts.                       
+AC: 10                      | Prob of Hit: 0.80, Avg Dmg: 5.20                                                                             
+AC: 11                      | Prob of Hit: 0.75, Avg Dmg: 4.88                                                                             
+AC: 12                      | Prob of Hit: 0.70, Avg Dmg: 4.55                                                                             
+AC: 13                      | Prob of Hit: 0.65, Avg Dmg: 4.23                                                                             
+AC: 14                      | Prob of Hit: 0.60, Avg Dmg: 3.90                                                                             
+AC: 15                      | Prob of Hit: 0.55, Avg Dmg: 3.58                                                                             
+AC: 16                      | Prob of Hit: 0.50, Avg Dmg: 3.25                                                                             
+AC: 17                      | Prob of Hit: 0.45, Avg Dmg: 2.93                                                                             
+AC: 18                      | Prob of Hit: 0.40, Avg Dmg: 2.60                                                                             
+AC: 19                      | Prob of Hit: 0.35, Avg Dmg: 2.27                                                                             
+AC: 20                      | Prob of Hit: 0.30, Avg Dmg: 1.95                                                                             
+----------------------------+--------------------------------------------------------------------------------------------------------------
+Name                        | Flail                                                                                                        
+Type                        | Martial Melee                                                                                                
+DamageType                  | Bludgeoning                                                                                                  
+Proficient                  | Yes                                                                                                          
+AttackRoll                  | 1d20 + 2 (ability mod: Strength) + 3 (Proficient)                                                            
+DamageRoll                  | 1d8 + 2 (ability mod: Strength)                                                                              
+Mastery 'Sap'               | On a hit, the target has Disadvantage on its next attack before your next turn starts.                       
+AC: 10                      | Prob of Hit: 0.80, Avg Dmg: 5.20                                                                             
+AC: 11                      | Prob of Hit: 0.75, Avg Dmg: 4.88                                                                             
+AC: 12                      | Prob of Hit: 0.70, Avg Dmg: 4.55                                                                             
+AC: 13                      | Prob of Hit: 0.65, Avg Dmg: 4.23                                                                             
+AC: 14                      | Prob of Hit: 0.60, Avg Dmg: 3.90                                                                             
+AC: 15                      | Prob of Hit: 0.55, Avg Dmg: 3.58                                                                             
+AC: 16                      | Prob of Hit: 0.50, Avg Dmg: 3.25                                                                             
+AC: 17                      | Prob of Hit: 0.45, Avg Dmg: 2.93                                                                             
+AC: 18                      | Prob of Hit: 0.40, Avg Dmg: 2.60                                                                             
+AC: 19                      | Prob of Hit: 0.35, Avg Dmg: 2.27                                                                             
+AC: 20                      | Prob of Hit: 0.30, Avg Dmg: 1.95                                                                             
+----------------------------+--------------------------------------------------------------------------------------------------------------
+Name                        | Greatsword                                                                                                   
+Type                        | Martial Melee                                                                                                
+DamageType                  | Slashing                                                                                                     
+Property 'Heavy'            | Disadvantage if Melee + Str < 13 or Ranged + Dex < 13.                                                       
+Property 'Two-handed'       | Requires two hands to attack.                                                                                
+Proficient                  | Yes                                                                                                          
+AttackRoll                  | 1d20 + 3 (ability mod: Charisma) + 3 (Proficient)                                                            
+DamageRoll                  | 2d6 + 3 (ability mod: Charisma)                                                                              
+Mastery 'Graze'             | If you miss with an attack, deal damage equal to the ability modifier used for the attack (same damage type).
+AC: 10                      | Prob of Hit: 0.85, Avg Dmg: 8.50                                                                             
+AC: 11                      | Prob of Hit: 0.80, Avg Dmg: 8.00                                                                             
+AC: 12                      | Prob of Hit: 0.75, Avg Dmg: 7.50                                                                             
+AC: 13                      | Prob of Hit: 0.70, Avg Dmg: 7.00                                                                             
+AC: 14                      | Prob of Hit: 0.65, Avg Dmg: 6.50                                                                             
+AC: 15                      | Prob of Hit: 0.60, Avg Dmg: 6.00                                                                             
+AC: 16                      | Prob of Hit: 0.55, Avg Dmg: 5.50                                                                             
+AC: 17                      | Prob of Hit: 0.50, Avg Dmg: 5.00                                                                             
+AC: 18                      | Prob of Hit: 0.45, Avg Dmg: 4.50                                                                             
+AC: 19                      | Prob of Hit: 0.40, Avg Dmg: 4.00                                                                             
+AC: 20                      | Prob of Hit: 0.35, Avg Dmg: 3.50                                                                             
+
+################################################################################
+# ============================= Fighting Styles ============================== #
+################################################################################
+Defense: While you're wearing Light, Medium, or Heavy armor, you gain a +1 bonus to Armor Class. (calculated automatically)
+
+################################################################################
+# =============================== Invocations ================================ #
+################################################################################
+Name: Pact of the Blade
+Level: 0
+Description:
+As a Bonus Action, you can conjure a pact weapon in your hand—a Simple or Martial Melee weapon of your choice with which you bond—or create a bond with a magic weapon you touch; you can't bond with a magic weapon if someone else is attuned to it or another Warlock is bonded with it. Until the bond ends, you have proficiency with the weapon, and you can use it as a Spellcasting Focus. Whenever you attack with the bonded weapon, you can use your Charisma modifier for the attack and damage rolls instead of using Strength or Dexterity; and you can cause the weapon to deal Necrotic, Psychic, or Radiant damage or its normal damage type. Your bond with the weapon ends if you use this feature's Bonus Action again, if the weapon is more than 5 feet away from you for 1 minute or more, or if you die. A conjured weapon disappears when the bond ends.
+Source: Player's Handbook 2024 (BR)
+----------------------------------------
+Name: Agonizing Blast
+Level: 2
+Description:
+Choose one of your known Warlock cantrips that deals damage. You can add your Charisma modifier to that spell's damage rolls.
+Repeatable:
+You can gain this invocation more than once. Each time you do so, choose a different eligible cantrip.
+Source: Player's Handbook 2024 (BR)
+----------------------------------------
+Name: Repelling Blast
+Level: 2
+Description:
+Choose one of your known Warlock cantrips that requires an attack roll. When you hit a Large or smaller creature with that cantrip, you can push the creature up to 10 feet straight away from you.
+Repeatable:
+You can gain this invocation more than once. Each time you do so, choose a different eligible cantrip.
+Source: Player's Handbook 2024 (BR)
+----------------------------------------
+Name: Gaze of Two Minds
+Level: 5
+Description:
+You can use a Bonus Action to touch a willing creature and perceive through its senses until the end of your next turn. As long as the creature is on the same plane of existence as you, you can use a Bonus Action on subsequent turns to maintain this connection, extending the duration until the end of your next turn. The connection ends if you don't maintain it in this way. While perceiving through the other creature's senses, you benefit from any special senses possessed by that creature, and you can cast spells as if you were in your space or the other creature's space if the two of you are within 60 feet of each other.
+Source: Player's Handbook 2024 (BR)
+----------------------------------------
+Name: One with Shadows
+Level: 5
+Description:
+While you're in an area of Dim Light or Darkness, you can cast Invisibility on yourself without expending a spell slot.
+Source: Player's Handbook 2024 (BR)
+
+################################################################################
+# ================================== Spells ================================== #
+################################################################################
+Name: Mage Hand
+Level: 0
+School: Conjuration
+Classes: Artificer, Bard, Sorcerer, Warlock, Wizard
+Casting Time: Action
+Range: 30 feet
+Components: V, S
+Duration: 1 minute
+Description:
+A spectral, floating hand appears at a point you choose within range.
+The hand lasts for the duration.
+The hand vanishes if it is ever more than 30 feet away from you or if you cast this spell again.
+When you cast the spell, you can use the hand to manipulate an object, open an unlocked door or container, stow or retrieve an item from an open container, or pour the contents out of a vial.
+As a Magic action on your later turns, you can control the hand thus again.
+As part of that action, you can move the hand up to 30 feet.
+The hand can’t attack, activate magic items, or carry more than 10 pounds.
+Source: Player's Handbook
+Spellcasting Ability: Charisma
+----------------------------------------
+Name: Minor Illusion
+Level: 0
+School: Illusion
+Classes: Bard, Sorcerer, Warlock, Wizard
+Casting Time: Action
+Range: 30 feet
+Components: S, M (a bit of fleece)
+Duration: 1 minute
+Description:
+You create a sound or an image of an object within range that lasts for the duration.
+See the descriptions below for the effects of each.
+The illusion ends if you cast this spell again.
+If a creature takes a Study action to examine the sound or image, the creature can determine that it is an illusion with a successful Intelligence (Investigation) check against your spell save DC.
+If a creature discerns the illusion for what it is, the illusion becomes faint to the creature.
+Sound.
+If you create a sound, its volume can range from a whisper to a scream.
+It can be your voice, someone else’s voice, a lion’s roar, a beating of drums, or any other sound you choose.
+The sound continues unabated throughout the duration, or you can make discrete sounds at different times before the spell ends.
+Image.
+If you create an image of an object—such as a chair, muddy footprints, or a small chest—it must be no larger than a 5-foot Cube.
+The image can’t create sound, light, smell, or any other sensory effect.
+Physical interaction with the image reveals it to be an illusion, since things can pass through it.
+Source: Player's Handbook
+Spellcasting Ability: Charisma
+----------------------------------------
+Name: True Strike
+Level: 0
+School: Divination
+Classes: Artificer, Bard, Sorcerer, Warlock, Wizard
+Casting Time: Action
+Range: Self
+Components: S, M (a weapon with which you have proficiency and that is worth 1+ CP)
+Duration: Instantaneous
+Description:
+Guided by a flash of magical insight, you make one attack with the weapon used in the spell’s casting.
+The attack uses your spellcasting ability for the attack and damage rolls instead of using Strength or Dexterity.
+If the attack deals damage, it can be Radiant damage or the weapon’s normal damage type (your choice).
+Cantrip Upgrade.
+Whether you deal Radiant damage or the weapon’s normal damage type, the attack deals extra Radiant damage when you reach levels 5 (1d6), 11 (2d6), and 17 (3d6).
+Source: Player's Handbook
+Spellcasting Ability: Charisma
+----------------------------------------
+Name: Hex
+Level: 1
+School: Enchantment
+Classes: Warlock
+Casting Time: Bonus Action
+Range: 90 feet
+Components: V, S, M (the petrified eye of a newt)
+Duration: Concentration, up to 1 hour
+Description:
+You place a curse on a creature that you can see within range.
+Until the spell ends, you deal an extra 1d6 Necrotic damage to the target whenever you hit it with an attack roll.
+Also, choose one ability when you cast the spell.
+The target has Disadvantage on ability checks made with the chosen ability.
+If the target drops to 0 Hit Points before this spell ends, you can take a Bonus Action on a later turn to curse a new creature.
+Using a Higher-Level Spell Slot.
+Your Concentration can last longer with a spell slot of level 2 (up to 4 hours), 3–4 (up to 8 hours), or 5+ (24 hours).
+Source: Player's Handbook
+Spellcasting Ability: Charisma
+----------------------------------------
+Name: Sleep
+Level: 1
+School: Enchantment
+Classes: Bard, Sorcerer, Wizard
+Casting Time: Action
+Range: 60 feet
+Components: V, S, M (a pinch of sand or rose petals)
+Duration: Concentration, up to 1 minute
+Description:
+Each creature of your choice in a 5-foot-radius Sphere centered on a point within range must succeed on a Wisdom saving throw or have the Incapacitated condition until the end of its next turn, at which point it must repeat the save.
+If the target fails the second save, the target has the Unconscious condition for the duration.
+The spell ends on a target if it takes damage or someone within 5 feet of it takes an action to shake it out of the spell’s effect.
+Creatures that don’t sleep, such as elves, or that have Immunity to the Exhaustion condition automatically succeed on saves against this spell.
+Source: Player's Handbook
+Spellcasting Ability: Charisma
+----------------------------------------
+Name: Calm Emotions
+Level: 2
+School: Enchantment
+Classes: Bard, Cleric
+Casting Time: Action
+Range: 60 feet
+Components: V, S
+Duration: Concentration, up to 1 minute
+Description:
+Each Humanoid in a 20-foot-radius Sphere centered on a point you choose within range must succeed on a Charisma saving throw or be affected by one of the following effects (choose for each creature):.
+Source: Player's Handbook
+Spellcasting Ability: Charisma
+----------------------------------------
+Name: Mirror Image
+Level: 2
+School: Illusion
+Classes: Bard, Sorcerer, Warlock, Wizard
+Casting Time: Action
+Range: Self
+Components: V, S
+Duration: 1 minute
+Description:
+Three illusory duplicates of yourself appear in your space.
+Until the spell ends, the duplicates move with you and mimic your actions, shifting position so it’s impossible to track which image is real.
+Each time a creature hits you with an attack roll during the spell’s duration, roll a d6 for each of your remaining duplicates.
+If any of the d6s rolls a 3 or higher, one of the duplicates is hit instead of you, and the duplicate is destroyed.
+The duplicates otherwise ignore all other damage and effects.
+The spell ends when all three duplicates are destroyed.
+A creature is unaffected by this spell if it has the Blinded condition, Blindsight, or Truesight.
+Source: Player's Handbook
+Spellcasting Ability: Charisma
+----------------------------------------
+Name: Misty Step
+Level: 2
+School: Conjuration
+Classes: Sorcerer, Warlock, Wizard
+Casting Time: Bonus Action
+Range: Self
+Components: V
+Duration: Instantaneous
+Description:
+Briefly surrounded by silvery mist, you teleport up to 30 feet to an unoccupied space you can see.
+Source: Player's Handbook
+Spellcasting Ability: Charisma
+----------------------------------------
+Name: Phantasmal Force
+Level: 2
+School: Illusion
+Classes: Bard, Sorcerer, Wizard
+Casting Time: Action
+Range: 60 feet
+Components: V, S, M (a bit of fleece)
+Duration: Concentration, up to 1 minute
+Description:
+You attempt to craft an illusion in the mind of a creature you can see within range.
+The target makes an Intelligence saving throw.
+On a failed save, you create a phantasmal object, creature, or other phenomenon that is no larger than a 10-foot Cube and that is perceivable only to the target for the duration.
+The phantasm includes sound, temperature, and other stimuli.
+The target can take a Study action to examine the phantasm with an Intelligence (Investigation) check against your spell save DC.
+If the check succeeds, the target realizes that the phantasm is an illusion, and the spell ends.
+While affected by the spell, the target treats the phantasm as if it were real and rationalizes any illogical outcomes from interacting with it.
+For example, if the target steps through a phantasmal bridge and survives the fall, it believes the bridge exists and something else caused it to fall.
+An affected target can even take damage from the illusion if the phantasm represents a dangerous creature or hazard.
+On each of your turns, such a phantasm can deal 2d8 Psychic damage to the target if it is in the phantasm’s area or within 5 feet of the phantasm.
+The target perceives the damage as a type appropriate to the illusion.
+Source: Player's Handbook
+Spellcasting Ability: Charisma
+----------------------------------------
+Name: Spider Climb
+Level: 2
+School: Transmutation
+Classes: Artificer, Sorcerer, Warlock, Wizard
+Casting Time: Action
+Range: Touch
+Components: V, S, M (a drop of bitumen and a spider)
+Duration: Concentration, up to 1 hour
+Description:
+Until the spell ends, one willing creature you touch gains the ability to move up, down, and across vertical surfaces and along ceilings, while leaving its hands free.
+The target also gains a Climb Speed equal to its Speed.
+Using a Higher-Level Spell Slot.
+You can target one additional creature for each spell slot level above 2.
+Source: Player's Handbook
+Spellcasting Ability: Charisma
+----------------------------------------
+Name: Suggestion
+Level: 2
+School: Enchantment
+Classes: Bard, Sorcerer, Warlock, Wizard
+Casting Time: Action
+Range: 30 feet
+Components: V, M (a drop of honey)
+Duration: Concentration, up to 8 hours
+Description:
+You suggest a course of activity—described in no more than 25 words—to one creature you can see within range that can hear and understand you.
+The suggestion must sound achievable and not involve anything that would obviously deal damage to the target or its allies.
+For example, you could say, “Fetch the key to the cult’s treasure vault, and give the key to me.
+” Or you could say, “Stop fighting, leave this library peacefully, and don’t return.
+” The target must succeed on a Wisdom saving throw or have the Charmed condition for the duration or until you or your allies deal damage to the target.
+The Charmed target pursues the suggestion to the best of its ability.
+The suggested activity can continue for the entire duration, but if the suggested activity can be completed in a shorter time, the spell ends for the target upon completing it.
+Source: Player's Handbook
+Spellcasting Ability: Charisma
+----------------------------------------
+Name: Blink
+Level: 3
+School: Transmutation
+Classes: Artificer, Sorcerer, Wizard
+Casting Time: Action
+Range: Self
+Components: V, S
+Duration: 1 minute
+Description:
+Roll 1d6 at the end of each of your turns for the duration.
+On a roll of 4–6, you vanish from your current plane of existence and appear in the Ethereal Plane (the spell ends instantly if you are already on that plane).
+While on the Ethereal Plane, you can perceive the plane you left, which is cast in shades of gray, but you can’t see anything there more than 60 feet away.
+You can affect and be affected only by other creatures on the Ethereal Plane, and creatures on the other plane can’t perceive you unless they have a special ability that lets them perceive things on the Ethereal Plane.
+You return to the other plane at the start of your next turn and when the spell ends if you are on the Ethereal Plane.
+You return to an unoccupied space of your choice that you can see within 10 feet of the space you left.
+If no unoccupied space is available within that range, you appear in the nearest unoccupied space.
+Source: Player's Handbook
+Spellcasting Ability: Charisma
+----------------------------------------
+Name: Hunger of Hadar
+Level: 3
+School: Conjuration
+Classes: Warlock
+Casting Time: Action
+Range: 150 feet
+Components: V, S, M (a pickled tentacle)
+Duration: Concentration, up to 1 minute
+Description:
+You open a gateway to the Far Realm, a region infested with unspeakable horrors.
+A 20-foot-radius Sphere of Darkness appears, centered on a point with range and lasting for the duration.
+The Sphere is Difficult Terrain, and it is filled with strange whispers and slurping noises, which can be heard up to 30 feet away.
+No light, magical or otherwise, can illuminate the area, and creatures fully within it have the Blinded condition.
+Any creature that starts its turn in the area takes 2d6 Cold damage.
+Any creature that ends its turn there must succeed on a Dexterity saving throw or take 2d6 Acid damage from otherworldly tentacles.
+Using a Higher-Level Spell Slot.
+The Cold or Acid damage (your choice) increases by 1d6 for each spell slot level above 3.
+Source: Player's Handbook
+Spellcasting Ability: Charisma
+----------------------------------------
+Name: Major Image
+Level: 3
+School: Illusion
+Classes: Bard, Sorcerer, Warlock, Wizard
+Casting Time: Action
+Range: 120 feet
+Components: V, S, M (a bit of fleece)
+Duration: Concentration, up to 10 minutes
+Description:
+You create the image of an object, a creature, or some other visible phenomenon that is no larger than a 20-foot Cube.
+The image appears at a spot that you can see within range and lasts for the duration.
+It seems real, including sounds, smells, and temperature appropriate to the thing depicted, but it can’t deal damage or cause conditions.
+If you are within range of the illusion, you can take a Magic action to cause the image to move to any other spot within range.
+As the image changes location, you can alter its appearance so that its movements appear natural for the image.
+For example, if you create an image of a creature and move it, you can alter the image so that it appears to be walking.
+Similarly, you can cause the illusion to make different sounds at different times, even making it carry on a conversation, for example.
+Physical interaction with the image reveals it to be an illusion, for things can pass through it.
+A creature that takes a Study action to examine the image can determine that it is an illusion with a successful Intelligence (Investigation) check against your spell save DC.
+If a creature discerns the illusion for what it is, the creature can see through the image, and its other sensory qualities become faint to the creature.
+Using a Higher-Level Spell Slot.
+The spell lasts until dispelled, without requiring Concentration, if cast with a level 4+ spell slot.
+Source: Player's Handbook
+Spellcasting Ability: Charisma
+----------------------------------------
+Name: Plant Growth
+Level: 3
+School: Transmutation
+Classes: Bard, Druid, Ranger
+Casting Time: Action (Overgrowth) or 8 hours (Enrichment)
+Range: 150 feet
+Components: V, S
+Duration: Instantaneous
+Description:
+This spell channels vitality into plants.
+The casting time you use determines whether the spell has the Overgrowth or the Enrichment effect below.
+Overgrowth.
+Choose a point within range.
+All normal plants in a 100-foot-radius Sphere centered on that point become thick and overgrown.
+A creature moving through that area must spend 4 feet of movement for every 1 foot it moves.
+You can exclude one or more areas of any size within the spell’s area from being affected.
+Enrichment.
+All plants in a half-mile radius centered on a point within range become enriched for 365 days.
+The plants yield twice the normal amount of food when harvested.
+They can benefit from only one Plant Growth per year.
+Source: Player's Handbook
+Spellcasting Ability: Charisma
+

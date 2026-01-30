@@ -81,3 +81,26 @@ class Sentinel(GeneralFeatTextFeature):
             "Halt. When you hit a creature with an Opportunity Attack, the creature’s Speed becomes 0 for the rest of the current turn."
         )
         return text
+
+
+class GreatWeaponMaster(GeneralFeatTextFeature):
+    def __init__(self, character_level: int):
+        if character_level < 4:
+            raise ValueError(
+                "Great Weapon Master requires character level 4 or higher."
+            )
+        super().__init__(
+            name="Great Weapon Master",
+            origin=f"General Feat Level 4+",
+        )
+
+    def modify(self, character_stat_block: CharacterStatBlock):
+        character_stat_block.abilities.add_bonus(Ability.STRENGTH, 1)
+
+    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+        return (
+            "You gain the following benefits.\n"
+            "Ability Score Increase. Increase your Strength score by 1, to a maximum of 20.\n"
+            "Heavy Weapon Mastery. When you hit a creature with a weapon that has the Heavy property as part of the Attack action on your turn, you can cause the weapon to deal extra damage to the target. The extra damage equals your Proficiency Bonus.\n"
+            "Hew. Immediately after you score a Critical Hit with a Melee weapon or reduce a creature to 0 Hit Points with one, you can make one attack with the same weapon as a Bonus Action.\n"
+        )

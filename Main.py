@@ -8,6 +8,7 @@ from Builds import (
     OptimizedMonkShadow,
     OptimizedPaladinGlory,
     OptimizedRogueAssassin,
+    OptimizedWarlockArchfey,
     Sten,
 )
 from Builds.CharacterBuilder import CharacterBuilder
@@ -26,13 +27,27 @@ class BuildSelector:
             "OptimizedMonkShadow": OptimizedMonkShadow.OptimizedShadowMonkCharacterBuilder(),
             "OptimizedPaladinGlory": OptimizedPaladinGlory.OptimizedGloryPaladinCharacterBuilder(),
             "OptimizedRogueAssassin": OptimizedRogueAssassin.OptimizedAssassinRogueCharacterBuilder(),
+            "OptimizedWarlockArchfey": OptimizedWarlockArchfey.OptimizedWarlockArchfeyCharacterBuilder(),
             "Sten": Sten.StenCharacterBuilder(),
         }
         return builds[build_name]
 
 
 if __name__ == "__main__":
-    build_name = "Greta"
-    build_class = BuildSelector.get_build(build_name)
-    character_sheet_data = build_class.build()
-    character_sheet_data.create_character_sheet()
+    build_names = [
+        # "Greta",
+        # "JanHeting",
+        # "OptimizedBardLore",
+        # "OptimizedBerserkerBarbarian",
+        # "OptimizedClericLight",
+        # "OptimizedDruidMoon",
+        # "OptimizedMonkShadow",
+        # "OptimizedPaladinGlory",
+        # "OptimizedRogueAssassin",
+        "OptimizedWarlockArchfey",
+        # "Sten",
+    ]
+    for build_name in build_names:
+        build_class = BuildSelector.get_build(build_name)
+        character_sheet_data = build_class.build()
+        character_sheet_data.create_character_sheet()

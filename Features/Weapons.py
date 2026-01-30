@@ -1,7 +1,7 @@
 from abc import abstractmethod
 from dataclasses import dataclass, field
 from enum import Enum
-from typing import TextIO
+from typing import Optional, TextIO
 
 import DamageCalculator
 from Definitions import Ability, Die
@@ -139,6 +139,7 @@ class AbstractWeapon(TextFeature):
     player_is_proficient: bool = False
     player_has_mastery: bool = False
     attack_roll_bonuses: list[tuple[int, str]] = field(default_factory=list)
+    ability: Optional[Ability] = None
 
     @abstractmethod
     def stats(self) -> WeaponsStats:
@@ -147,21 +148,24 @@ class AbstractWeapon(TextFeature):
     def _calculate_ability_modifier_bonus(
         self, character_stat_block: CharacterStatBlock
     ) -> tuple[int, str]:
+        abilities_to_consider = set()
+        abilities_to_consider.add(self.stats().ability)
+        if self.ability:
+            abilities_to_consider.add(self.ability)
+
         if WeaponProperty.FINESSE in self.stats().properties:
-            str_mod = character_stat_block.get_ability_modifier(Ability.STRENGTH)
-            dex_mod = character_stat_block.get_ability_modifier(Ability.DEXTERITY)
-            ability = (
-                Ability.STRENGTH.value
-                if str_mod >= dex_mod
-                else Ability.DEXTERITY.value
-            )
-            ability_modifier = max(str_mod, dex_mod)
-        else:
-            ability_modifier = character_stat_block.get_ability_modifier(
-                self.stats().ability
-            )
-            ability = self.stats().ability.value
-        return ability_modifier, ability
+            abilities_to_consider.add(Ability.STRENGTH)
+            abilities_to_consider.add(Ability.DEXTERITY)
+
+        best_ability_modifier = -9999
+        best_ability = None
+        for ability in abilities_to_consider:
+            ability_modifier = character_stat_block.get_ability_modifier(ability)
+            if ability_modifier > best_ability_modifier:
+                best_ability_modifier = ability_modifier
+                best_ability = ability.value
+
+        return best_ability_modifier, best_ability
 
     def calculate_ability_modifier_bonus(
         self, character_stat_block: CharacterStatBlock
