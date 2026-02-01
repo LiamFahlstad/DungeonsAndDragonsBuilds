@@ -180,3 +180,104 @@ class Tough(OriginCharacterFeat):
     def modify(self, character_stat_block: CharacterStatBlock):
         character_level = character_stat_block.character_level
         character_stat_block.combat.hit_points_bonus += 2 * character_level
+
+
+class CultOfTheDragonInitiate(OriginTextFeat):
+    def __init__(self):
+        super().__init__(name="Cult of the Dragon Initiate", origin="Origin Feat")
+
+    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+        return (
+            "You gain the following benefits.\n"
+            "Dragon’s Tongue. You know Draconic. If you already know Draconic when you select this feat, you instead learn one language of your choice from the language tables in the Player’s Handbook or chapter 2 of this book.\n"
+            "Dragon’s Terror. You can take a Magic action to instill terror in a creature you can see within 30 feet of yourself. The target must succeed on a Wisdom saving throw (DC 8 plus your Wisdom modifier and Proficiency Bonus) or have the Frightened condition until the end of your next turn. If the target succeeds on the save or when the effect ends for a target, the target is immune to this effect for 24 hours.\n"
+            "Inspired by Fear. When you cause a creature to have the Frightened condition and you are the source of its fear, you can gain Heroic Inspiration if you lack it. Once you use this benefit, you can’t use it again until you finish a Short or Long Rest.\n"
+        )
+
+
+class EmeraldEnclaveFledgling(OriginTextFeat):
+    def __init__(self):
+        super().__init__(name="Emerald Enclave Fledgling", origin="Origin Feat")
+
+    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+        return (
+            "You gain the following benefits.\n"
+            "Speak with Animals. You always have the Speak with Animals spell prepared and can cast it with any spell slots you have. Intelligence, Wisdom, or Charisma is your spellcasting ability for this spell (choose when you select this feat). When you cast this spell as a Ritual, its duration is 8 hours.\n"
+            "\n"
+            "Tag Team. When you take the Help action, you can switch places with a willing ally within 5 feet of yourself as part of that same action. This movement doesn’t provoke Opportunity Attacks. You can’t use this benefit if the ally has the Incapacitated condition.\n"
+        )
+
+
+class HarperAgent(OriginTextFeat):
+    def __init__(self):
+        super().__init__(name="Harper Agent", origin="Origin Feat")
+
+    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+        return (
+            "You gain the following benefits.\n"
+            "Thieves’ Cant. You know Thieves’ Cant.\n"
+            "Instrument Training. You gain proficiency with a Musical Instrument of your choice.\n"
+            "Distracting Melody. When you take the Help action to assist an ally’s attack roll, the enemy you’re distracting can be within 30 feet of you, rather than within 5 feet of you, provided the enemy can see or hear you.        )\n"
+        )
+
+
+class LordsAllianceAgent(OriginTextFeat):
+    def __init__(self):
+        super().__init__(name="Lords' Alliance Agent", origin="Origin Feat")
+
+    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+        return (
+            "You gain the following benefits.\n"
+            "Inspiring Strike. Once per turn when you score a Critical Hit against a creature, you can choose an ally within 30 feet of yourself who can see or hear you and who lacks Heroic Inspiration. That ally gains Heroic Inspiration.\n"
+            "Reassert Honor. When an enemy you can see deals damage to an ally of yours that is within 5 feet of you, you have Advantage on your next attack roll against that enemy before the end of your next turn.\n"
+        )
+
+
+class PurpleDragonRook(OriginTextFeat):
+    def __init__(self):
+        super().__init__(name="Lords' Alliance Agent", origin="Origin Feat")
+
+    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+        return (
+            "You gain the following benefits.\n"
+            "Entreat. You gain proficiency in one of the following skills: Insight, Performance, or Persuasion.\n"
+            "Rallying Cry. When you roll Initiative and don’t have the Incapacitated condition, you can choose a number of creatures equal to your Proficiency Bonus that you can see within 30 feet of yourself. Those creatures gain Heroic Inspiration.\n"
+            "Once you use this benefit, you can’t do so again until you finish a Long Rest.\n"
+        )
+
+
+class SpellfireSpark(OriginTextFeat):
+    def __init__(self):
+        super().__init__(name="Lords' Alliance Agent", origin="Origin Feat")
+
+    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+        return (
+            "You gain the following benefits.\n"
+            "Magic Absorption. Once per turn, when you take damage from a spell or magical effect, you reduce the total damage taken by 1d4. You can’t use this benefit if you have the Incapacitated condition.\n"
+            "\n"
+            "Spellfire Flame. You learn the Sacred Flame cantrip. Intelligence, Wisdom, or Charisma is your spellcasting ability for this spell (choose when you select this feat). You can also cast this cantrip as a Bonus Action a number of times equal to your Proficiency Bonus, and you regain all expended uses when you finish a Long Rest.\n"
+        )
+
+
+class TyroOfThaGauntlet(OriginTextFeat):
+    def __init__(self):
+        super().__init__(name="Lords' Alliance Agent", origin="Origin Feat")
+
+    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+        return (
+            "You gain the following benefits.\n"
+            "Stand as One. When an ally within 5 feet of you is subjected to an effect that would push or pull it, you can take a Reaction to prevent that ally from being pushed or pulled. To receive this benefit, the ally can’t have the Incapacitated condition.\n"
+            "Vigilant. When you take the Ready action, the next attack roll made against you has Disadvantage before the start of your next turn.\n"
+        )
+
+
+class ZhentarimRuffian(OriginTextFeat):
+    def __init__(self):
+        super().__init__(name="Lords' Alliance Agent", origin="Origin Feat")
+
+    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+        return (
+            "You gain the following benefits.\n"
+            "Exploit Opening. When you roll damage for an Opportunity Attack, you can roll the damage dice twice and use either roll against the target.\n"
+            "Family First. If you have Heroic Inspiration when you roll Initiative, you can expend it to give yourself and your allies Advantage on that Initiative roll.        \n"
+        )
