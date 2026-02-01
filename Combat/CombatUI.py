@@ -1,95 +1,32 @@
 import json
 import tkinter as tk
-from enum import Enum
 from pathlib import Path
 
 import CharacterSheetCreator
 import Definitions
+from Combat.Definitions import Action, BasicCombatantData, Condition
 from Features import Armor
-
-
-class Action(str, Enum):
-    HEAL = "heal"
-    DAMAGE = "damage"
-    ADD_CONDITION = "add_condition"
-    REMOVE_CONDITION = "remove_condition"
-    REMOVE_SPELL_SLOT = "remove_spell_slot"
-
-
-class Condition(str, Enum):
-    BLINDED = "Blinded"
-    CHARMED = "Charmed"
-    CONCENTRATING = "Concentrating"
-    FRIGHTENED = "Frightened"
-    GRAPPLED = "Grappled"
-    PARALYZED = "Paralyzed"
-    POISONED = "Poisoned"
-    PRONE = "Prone"
-    STUNNED = "Stunned"
-
-    @staticmethod
-    def list_all():
-        return [cond.value for cond in Condition]
-
-
-PELLE = {
-    "name": "Pelle",
-    "hp": 20,
-    "ac": 15,
-    "temp_hp": 0,
-    "conditions": [],
-}
 
 
 class CombatApp:
     def __init__(
-        self, root, character_sheets: list[CharacterSheetCreator.CharacterSheetData]
+        self,
+        root,
+        combatants: list[BasicCombatantData],
+        character_sheets: list[CharacterSheetCreator.CharacterSheetData],
     ):
         self.root = root
         self.root.title("DnD Combat Engine")
 
         # -------- DATA --------
-        self.characters = [
-            {
-                "name": "Hero",
-                "hp": 20,
-                "ac": 15,
-                "temp_hp": 0,
-                "conditions": [],
-            },
-        ]
+        self.characters = []
         for character_sheet in character_sheets:
-            character = character_sheet.setup_character_stat_block()
-            ac = character.calculate_armor_class()
-            if Armor.ShieldArmor in [type(armor) for armor in character_sheet.armors]:
-                ac = f"{ac} (with Shield) and {ac - 2} (without Shield)"
-            else:
-                ac = f"{ac} (no Shield)"
-            try:
-                character_spell_slots = character.get_spell_slots()
-            except ValueError:
-                character_spell_slots = {}
-            self.characters.append(
-                {
-                    "name": character_sheet.character_name,
-                    "hp": character.calculate_hit_points(),  # Placeholder HP
-                    "ac": ac,  # Placeholder AC
-                    "temp_hp": 0,
-                    "conditions": [],
-                    "spell_slots": character_spell_slots,
-                    "Ability Scores": {
-                        ability.name: character.get_ability_score(ability)
-                        for ability in Definitions.Ability
-                    },
-                    "Saving Throws": {
-                        ability.name: character.get_saving_throw_modifier(ability)
-                        for ability in Definitions.Ability
-                    },
-                }
-            )
+            self.add_character_from_character_sheet(character_sheet)
+
+        for combatant in combatants:
+            self.add_basic_combatant(combatant)
 
         self.conditions = Condition.list_all()
-
         self.selected_character = None
         self.round_number = 1
         self.history: list[tuple[Action, str | int]] = []
@@ -99,6 +36,53 @@ class CombatApp:
         # -------- UI --------
         self.build_ui()
         self.refresh_ui()
+
+    # -------- CHARACTERS --------
+    def add_character_from_character_sheet(
+        self, character_sheet: CharacterSheetCreator.CharacterSheetData
+    ):
+        character = character_sheet.setup_character_stat_block()
+        ac = character.calculate_armor_class()
+        if Armor.ShieldArmor in [type(armor) for armor in character_sheet.armors]:
+            ac = f"{ac} (with Shield) and {ac - 2} (without Shield)"
+        else:
+            ac = f"{ac} (no Shield)"
+        try:
+            character_spell_slots = character.get_spell_slots()
+        except ValueError:
+            character_spell_slots = {}
+        self.characters.append(
+            {
+                "name": character_sheet.character_name,
+                "hp": character.calculate_hit_points(),  # Placeholder HP
+                "ac": ac,  # Placeholder AC
+                "temp_hp": 0,
+                "conditions": [],
+                "spell_slots": character_spell_slots,
+                "Ability Scores": {
+                    ability.name: character.get_ability_score(ability)
+                    for ability in Definitions.Ability
+                },
+                "Saving Throws": {
+                    ability.name: character.get_saving_throw_modifier(ability)
+                    for ability in Definitions.Ability
+                },
+            }
+        )
+
+    def add_basic_combatant(self, combatant: BasicCombatantData):
+        self.characters.append(
+            {
+                "name": combatant.name,
+                "hp": combatant.hp,
+                "ac": combatant.ac,
+                "temp_hp": combatant.temp_hp,
+                "conditions": [cond.value for cond in combatant.conditions],
+                "spell_slots": combatant.spell_slots,
+                "Ability Scores": combatant.ability_scores,
+                "Saving Throws": combatant.saving_throws,
+            }
+        )
 
     # -------- LOGGING --------
     def log_event(self, text):
@@ -286,7 +270,7 @@ class CombatApp:
                     anchor="w"
                 )
 
-            if "Ability Scores" in char:
+            if "Ability Scores" in char and char["Ability Scores"]:
                 text = ", ".join(
                     f"{ability[:3]} {modifier:02}"
                     for ability, modifier in char["Ability Scores"].items()
@@ -294,7 +278,7 @@ class CombatApp:
                 tk.Label(frame, text="Ability Scores:").pack(anchor="w")
                 tk.Label(frame, text=text).pack(anchor="w")
 
-            if "Saving Throws" in char:
+            if "Saving Throws" in char and char["Saving Throws"]:
                 text = ", ".join(
                     f"{ability[:3]} {modifier:02}"
                     for ability, modifier in char["Saving Throws"].items()
@@ -307,18 +291,3 @@ class CombatApp:
                 child.bind("<Button-1>", lambda e, c=char: self.select_character(c))
 
             self.char_widgets.append(frame)
-
-
-if __name__ == "__main__":
-    import Greta
-    import JanHeting
-    import Sten
-
-    character_sheets = [
-        JanHeting.get_data(),
-        Sten.get_data(),
-        Greta.get_data(),
-    ]
-    root = tk.Tk()
-    app = CombatApp(root, character_sheets)
-    root.mainloop()
