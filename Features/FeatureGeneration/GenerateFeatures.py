@@ -1,6 +1,6 @@
-ADDITIONAL = "Psi Warrior Fighter"
+ADDITIONAL = "Wild Magic Sorcerer"
 
-with open("temp.txt", "r", encoding="utf-8") as f:
+with open("Features/FeatureGeneration/Input.txt", "r", encoding="utf-8") as f:
     lines = f.readlines()
 
 content = []
@@ -23,7 +23,7 @@ for line in lines:
 content.append(local_content)
 
 
-with open("temp2.py", "w", encoding="utf-8") as f:
+with open("Features/FeatureGeneration/Output.py", "w", encoding="utf-8") as f:
     for (level, name, class_name), local_content in zip(other, content):
         f.write(f"class {class_name}(TextFeature):\n")
         f.write("    def __init__(self):\n")

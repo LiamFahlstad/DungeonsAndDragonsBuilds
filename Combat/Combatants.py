@@ -189,3 +189,32 @@ class Rhinoceros(BasicCombatantData):
                 "Cha": -2,
             },
         )
+
+
+class Player1(BasicCombatantData):
+
+    def __init__(self):
+        super().__init__(
+            name="Player 1",
+            hp=45,
+            ac=13,
+            temp_hp=0,
+            conditions=[],
+            ability_scores={
+                "Str": 21,
+                "Dex": 8,
+                "Con": 15,
+                "Int": 2,
+                "Wis": 12,
+                "Cha": 6,
+            },
+            spell_slots={},
+            saving_throws={
+                "Str": 5,
+                "Dex": -1,
+                "Con": 2,
+                "Int": -4,
+                "Wis": 1,
+                "Cha": -2,
+            },
+        )

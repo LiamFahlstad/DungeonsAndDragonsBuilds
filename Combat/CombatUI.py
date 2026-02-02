@@ -14,9 +14,11 @@ class CombatApp:
         root,
         combatants: list[BasicCombatantData],
         character_sheets: list[CharacterSheetCreator.CharacterSheetData],
+        combatants_per_column: int = 4,
     ):
         self.root = root
         self.root.title("DnD Combat Engine")
+        self.combatants_per_column = combatants_per_column
 
         # -------- DATA --------
         self.characters = []
@@ -160,6 +162,21 @@ class CombatApp:
         self.log_event(f"{self.selected_character['name']} uses a {slot}")
         self.refresh_ui()
 
+    def add_spell_slot(self):
+        if not self.selected_character:
+            return
+
+        slot = self.spell_slot_var.get()
+        level = int(slot.split()[1])
+
+        old_value = self.selected_character["spell_slots"].get(level, 0)
+        self.selected_character["spell_slots"][level] = old_value + 1
+        self.history.append((Action.ADD_SPELL_SLOT, level))
+        self.log_event(
+            f"{self.selected_character['name']} regains a Level {level} spell slot"
+        )
+        self.refresh_ui()
+
     def undo_last_action(self):
         if not self.selected_character:
             return
@@ -184,6 +201,11 @@ class CombatApp:
             elif action == Action.REMOVE_SPELL_SLOT:
                 level = value
                 self.selected_character["spell_slots"][level] += 1
+            elif action == Action.ADD_SPELL_SLOT:
+                level = value
+                self.selected_character["spell_slots"][level] = max(
+                    self.selected_character["spell_slots"][level] - 1, 0
+                )
 
             last_event = data[key].pop()
             self.log_file.write_text(json.dumps(data, indent=2))
@@ -232,6 +254,9 @@ class CombatApp:
         tk.Button(control, text="Cast spell", command=self.remove_spell_slot).pack(
             fill="x"
         )
+        tk.Button(control, text="Regain spell slot", command=self.add_spell_slot).pack(
+            fill="x"
+        )
         tk.Button(control, text="Undo Last Action", command=self.undo_last_action).pack(
             fill="x"
         )
@@ -245,8 +270,8 @@ class CombatApp:
         self.char_widgets.clear()
 
         for index, char in enumerate(self.characters):
-            row = index % 3
-            column = index // 3
+            row = index % self.combatants_per_column
+            column = index // self.combatants_per_column
 
             frame = tk.Frame(self.char_frame, bd=2, relief="ridge", padx=6, pady=4)
             frame.grid(row=row, column=column, padx=6, pady=4, sticky="nw")
@@ -265,11 +290,14 @@ class CombatApp:
                 text=f"Conditions: {', '.join(char['conditions']) or 'None'}",
             ).pack(anchor="w")
 
-            for level, slots in char.get("spell_slots", {}).items():
-                tk.Label(frame, text=f"Level {level} Spell Slots: {slots}").pack(
-                    anchor="w"
+            if "spell_slots" in char and char["spell_slots"]:
+                text = ", ".join(
+                    f"LV{level} ({slots})"
+                    for level, slots in char["spell_slots"].items()
+                    if slots > 0
                 )
-
+                tk.Label(frame, text="Spell Slots:").pack(anchor="w")
+                tk.Label(frame, text=text).pack(anchor="w")
             if "Ability Scores" in char and char["Ability Scores"]:
                 text = ", ".join(
                     f"{ability[:3]} {modifier:02}"

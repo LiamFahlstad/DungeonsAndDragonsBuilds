@@ -9,6 +9,7 @@ class Action(str, Enum):
     DAMAGE = "damage"
     ADD_CONDITION = "add_condition"
     REMOVE_CONDITION = "remove_condition"
+    ADD_SPELL_SLOT = "add_spell_slot"
     REMOVE_SPELL_SLOT = "remove_spell_slot"
 
 
@@ -38,6 +39,14 @@ class BasicCombatantData:
     spell_slots: Optional[dict[int, int]] = None
     ability_scores: Optional[dict[str, int]] = None
     saving_throws: Optional[dict[str, int]] = None
+
+    def __attrs_post_init__(self):
+        if self.spell_slots is None:
+            self.spell_slots = {}
+        if self.ability_scores is None:
+            self.ability_scores = {}
+        if self.saving_throws is None:
+            self.saving_throws = {}
 
     def as_dict(self, character=None):
         return {
