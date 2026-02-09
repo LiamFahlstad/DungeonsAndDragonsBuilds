@@ -83,8 +83,7 @@ class Mage(BasicCombatantData):
 
 
 class Vrock(BasicCombatantData):
-    # Vrock Stat Block
-    # Source: D&D 5e Monster Manual
+    # https://www.aidedd.org/monster/vrock
     def __init__(self):
         super().__init__(
             name="Vrock",
@@ -216,5 +215,34 @@ class Player1(BasicCombatantData):
                 "Int": -4,
                 "Wis": 1,
                 "Cha": -2,
+            },
+        )
+
+
+class Bull(BasicCombatantData):
+
+    def __init__(self):
+        super().__init__(
+            name="Bull",
+            hp=126,
+            ac=15,
+            temp_hp=0,
+            conditions=[],
+            ability_scores={
+                "Str": 20,
+                "Dex": 18,
+                "Con": 20,
+                "Int": 12,
+                "Wis": 12,
+                "Cha": 8,
+            },
+            spell_slots={},
+            saving_throws={
+                "Str": 5,
+                "Dex": 5,
+                "Con": 5,
+                "Int": 1,
+                "Wis": 3,
+                "Cha": -1,
             },
         )
