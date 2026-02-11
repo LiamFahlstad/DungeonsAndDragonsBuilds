@@ -1,0 +1,295 @@
+################################################################################
+# =============================== General Info =============================== #
+################################################################################
+Field              | Value         
+-------------------+---------------
+Name               | Roderic Ashelm
+Level              | 3             
+Starter Class      | Paladin       
+Level per Class    | Paladin: 3    
+Character Subclass | Oath of Glory 
+Proficiency Bonus  | 2             
+
+################################################################################
+# =============================== Combat Stats =============================== #
+################################################################################
+Field               | Value                                   
+--------------------+-----------------------------------------
+Max Hit Points      | 37                                      
+Armor Class         | 19 (with Shield) and 17 (without Shield)
+Armor Proficiencies |                                         
+Initiative          | d20 + 0                                 
+Speed (ft)          | 30                                      
+Size                | Medium                                  
+
+################################################################################
+# ================================ Abilities ================================= #
+################################################################################
+Ability | Score | Mod | Saving Throw        | DC | ATK Bonus
+--------+-------+-----+---------------------+----+----------
+STR     | 13    | +1  | +1                  | 11 | +3       
+DEX     | 10    | +0  | +0                  | 10 | +2       
+CON     | 16    | +3  | +3                  | 13 | +5       
+INT     | 12    | +1  | +1                  | 11 | +3       
+WIS     | 8     | -1  | -1 + 2 (Proficient) | 9  | +1       
+CHA     | 16    | +3  | +3 + 2 (Proficient) | 13 | +5       
+
+################################################################################
+# ================================== Skills ================================== #
+################################################################################
+Skill           | Modifier | Proficient | Ability      | Roll Condition | Bonus (already included)
+----------------+----------+------------+--------------+----------------+-------------------------
+Acrobatics      | +0       | No         | Dexterity    | Neutral        | +0                      
+Animal Handling | -1       | No         | Wisdom       | Neutral        | +0                      
+Arcana          | +1       | No         | Intelligence | Neutral        | +0                      
+Athletics       | +3       | Yes        | Strength     | Neutral        | +0                      
+Deception       | +3       | No         | Charisma     | Neutral        | +0                      
+History         | +1       | No         | Intelligence | Neutral        | +0                      
+Insight         | -1       | No         | Wisdom       | Neutral        | +0                      
+Intimidation    | +5       | Yes        | Charisma     | Neutral        | +0                      
+Investigation   | +1       | No         | Intelligence | Neutral        | +0                      
+Medicine        | +1       | Yes        | Wisdom       | Neutral        | +0                      
+Nature          | +1       | No         | Intelligence | Neutral        | +0                      
+Perception      | -1       | No         | Wisdom       | Neutral        | +0                      
+Performance     | +3       | No         | Charisma     | Neutral        | +0                      
+Persuasion      | +5       | Yes        | Charisma     | Neutral        | +0                      
+Religion        | +1       | No         | Intelligence | Neutral        | +0                      
+Sleight of Hand | +0       | No         | Dexterity    | Neutral        | +0                      
+Stealth         | +0       | No         | Dexterity    | Disadvantage   | +0                      
+Survival        | +1       | Yes        | Wisdom       | Neutral        | +0                      
+
+################################################################################
+# ================================= Features ================================= #
+################################################################################
+Name: Lucky
+Origin: Origin Feat
+Description: Luck Points. You have a number of Luck Points equal to your Proficiency Bonus and can spend the points on the benefits below. You regain your expended Luck Points when you finish a Long Rest.
+Advantage. When you roll a d20 for a D20 Test, you can spend 1 Luck Point to give yourself Advantage on the roll.
+Disadvantage. When a creature rolls a d20 for an attack roll against you, you can spend 1 Luck Point to impose Disadvantage on that roll.
+
+Name: Resourceful
+Origin: Human Trait
+Description: You gain Heroic Inspiration whenever you finish a Long Rest.
+
+Name: Versatile
+Origin: Human Trait
+Description: You gain an Origin feat of your choice (see 'Feats'). Skilled is recommended.
+
+Name: Lay on Hands
+Origin: Paladin Level 1
+Description: Your blessed touch can heal wounds. You have a pool of healing power that replenishes when you take a Long Rest. With that pool, you can restore a total number of Hit Points equal to five times your Paladin level.
+As a Bonus Action, you can touch a creature (which could be yourself) and draw power from the pool of healing to restore a number of Hit Points to that creature, up to the maximum amount remaining in the pool.
+You can also expend 5 Hit Points from the pool of healing power to remove the Poisoned condition from the creature; those points don't also restore Hit Points to the creature.
+
+Name: Paladin's Smite
+Origin: Paladin Level 2
+Description: You always have the Divine Smite spell prepared. In addition, you can cast it without expending a spell slot, but you must finish a Long Rest before you can cast it in this way again.
+
+Name: Channel Divinity
+Origin: Paladin Level 3
+Description: Each time you use this class's Channel Divinity, you choose which effect from this class to create.
+Usage: 2.
+You regain one after a Short Rest, all after a Long Rest.
+DC: class's Spellcasting feature.
+
+    Divine Sense:
+    Unlocked: Paladin level 3:
+    Range: 60 ft radius;
+    Casting Time: Bonus Action;
+    Duration: 10 minutes.
+    Detects Celestials, Fiends, and Undead (location and creature type), and senses consecrated/desecrated places/objects within range.
+
+    Inspiring Smite Oath of Glory Paladin Level 3:
+    Immediately after you cast Divine Smite, you can expend one use of your Channel Divinity and distribute Temporary Hit Points to creatures of your choice within 30 feet of yourself, which can include you. The total number of Temporary Hit Points equals 2d8 plus your Paladin level, divided among the chosen creatures however you like.
+
+    Peerless Athlete Oath of Glory Paladin Level 3:
+    As a Bonus Action, you can expend one use of your Channel Divinity to augment your athleticism. For 1 hour, you have Advantage on Strength (Athletics) and Dexterity (Acrobatics) checks, and the distance of your Long and High jumps increases by 10 feet (this extra distance costs movement as normal).
+
+
+################################################################################
+# ================================= Weapons ================================== #
+################################################################################
+Field                       | Value                                                                                 
+----------------------------+---------------------------------------------------------------------------------------
+Name                        | Longsword                                                                             
+Type                        | Martial Melee                                                                         
+DamageType                  | Slashing                                                                              
+Property 'Versatile (1d10)' | Can use one or two hands; if two-handed, use damage die shown in parentheses.         
+Proficient                  | Yes                                                                                   
+AttackRoll                  | 1d20 + 1 (ability mod: Strength) + 2 (Proficient)                                     
+DamageRoll                  | 1d8 + 1 (ability mod: Strength)                                                       
+AC: 10                      | Prob of Hit: 0.70, Avg Dmg: 3.85                                                      
+AC: 11                      | Prob of Hit: 0.65, Avg Dmg: 3.58                                                      
+AC: 12                      | Prob of Hit: 0.60, Avg Dmg: 3.30                                                      
+AC: 13                      | Prob of Hit: 0.55, Avg Dmg: 3.03                                                      
+AC: 14                      | Prob of Hit: 0.50, Avg Dmg: 2.75                                                      
+AC: 15                      | Prob of Hit: 0.45, Avg Dmg: 2.48                                                      
+AC: 16                      | Prob of Hit: 0.40, Avg Dmg: 2.20                                                      
+AC: 17                      | Prob of Hit: 0.35, Avg Dmg: 1.92                                                      
+AC: 18                      | Prob of Hit: 0.30, Avg Dmg: 1.65                                                      
+AC: 19                      | Prob of Hit: 0.25, Avg Dmg: 1.38                                                      
+AC: 20                      | Prob of Hit: 0.20, Avg Dmg: 1.10                                                      
+----------------------------+---------------------------------------------------------------------------------------
+Name                        | Javelin                                                                               
+Type                        | Simple Melee                                                                          
+DamageType                  | Piercing                                                                              
+Property 'Thrown'           | Can throw weapon for ranged attack; use same ability mod as melee version.            
+Proficient                  | Yes                                                                                   
+AttackRoll                  | 1d20 + 1 (ability mod: Strength) + 2 (Proficient)                                     
+DamageRoll                  | 1d6 + 1 (ability mod: Strength)                                                       
+AC: 10                      | Prob of Hit: 0.70, Avg Dmg: 3.15                                                      
+AC: 11                      | Prob of Hit: 0.65, Avg Dmg: 2.93                                                      
+AC: 12                      | Prob of Hit: 0.60, Avg Dmg: 2.70                                                      
+AC: 13                      | Prob of Hit: 0.55, Avg Dmg: 2.48                                                      
+AC: 14                      | Prob of Hit: 0.50, Avg Dmg: 2.25                                                      
+AC: 15                      | Prob of Hit: 0.45, Avg Dmg: 2.02                                                      
+AC: 16                      | Prob of Hit: 0.40, Avg Dmg: 1.80                                                      
+AC: 17                      | Prob of Hit: 0.35, Avg Dmg: 1.57                                                      
+AC: 18                      | Prob of Hit: 0.30, Avg Dmg: 1.35                                                      
+AC: 19                      | Prob of Hit: 0.25, Avg Dmg: 1.12                                                      
+AC: 20                      | Prob of Hit: 0.20, Avg Dmg: 0.90                                                      
+----------------------------+---------------------------------------------------------------------------------------
+Name                        | Morningstar                                                                           
+Type                        | Martial Melee                                                                         
+DamageType                  | Piercing                                                                              
+Proficient                  | Yes                                                                                   
+AttackRoll                  | 1d20 + 1 (ability mod: Strength) + 2 (Proficient)                                     
+DamageRoll                  | 1d8 + 1 (ability mod: Strength)                                                       
+Mastery 'Sap'               | On a hit, the target has Disadvantage on its next attack before your next turn starts.
+AC: 10                      | Prob of Hit: 0.70, Avg Dmg: 3.85                                                      
+AC: 11                      | Prob of Hit: 0.65, Avg Dmg: 3.58                                                      
+AC: 12                      | Prob of Hit: 0.60, Avg Dmg: 3.30                                                      
+AC: 13                      | Prob of Hit: 0.55, Avg Dmg: 3.03                                                      
+AC: 14                      | Prob of Hit: 0.50, Avg Dmg: 2.75                                                      
+AC: 15                      | Prob of Hit: 0.45, Avg Dmg: 2.48                                                      
+AC: 16                      | Prob of Hit: 0.40, Avg Dmg: 2.20                                                      
+AC: 17                      | Prob of Hit: 0.35, Avg Dmg: 1.92                                                      
+AC: 18                      | Prob of Hit: 0.30, Avg Dmg: 1.65                                                      
+AC: 19                      | Prob of Hit: 0.25, Avg Dmg: 1.38                                                      
+AC: 20                      | Prob of Hit: 0.20, Avg Dmg: 1.10                                                      
+
+################################################################################
+# ============================= Fighting Styles ============================== #
+################################################################################
+Defense: While you're wearing Light, Medium, or Heavy armor, you gain a +1 bonus to Armor Class. (calculated automatically)
+
+################################################################################
+# =============================== Spell Slots ================================ #
+################################################################################
+Level 1
+-------
+3      
+
+################################################################################
+# ================================== Spells ================================== #
+################################################################################
+Name: Bless
+Level: 1
+School: Enchantment
+Classes: Cleric, Paladin
+Casting Time: Action
+Range: 30 feet
+Components: V, S, M (a Holy Symbol worth 5+ GP)
+Duration: Concentration, up to 1 minute
+Description:
+You bless up to three creatures within range.
+Whenever a target makes an attack roll or a saving throw before the spell ends, the target adds 1d4 to the attack roll or save.
+Using a Higher-Level Spell Slot.
+You can target one additional creature for each spell slot level above 1.
+Source: Player's Handbook
+Spellcasting Ability: Charisma
+----------------------------------------
+Name: Compelled Duel
+Level: 1
+School: Enchantment
+Classes: Paladin
+Casting Time: Bonus Action
+Range: 30 feet
+Components: V
+Duration: Concentration, up to 1 minute
+Description:
+You try to compel a creature into a duel.
+One creature that you can see within range makes a Wisdom saving throw.
+On a failed save, the target has Disadvantage on attack rolls against creatures other than you, and it can't willingly move to a space that is more than 30 feet away from you.
+The spell ends if you make an attack roll against a creature other than the target, if you cast a spell on an enemy other than the target, if an ally of yours damages the target, or if you end your turn more than 30 feet away from the target.
+Source: Player's Handbook
+Spellcasting Ability: Charisma
+----------------------------------------
+Name: Divine Smite
+Level: 1
+School: Evocation
+Classes: Paladin
+Casting Time: Bonus Action, which you take immediately after hitting a target with a Melee weapon or an Unarmed Strike
+Range: Self
+Components: V
+Duration: Instantaneous
+Description:
+The target takes an extra 2d8 Radiant damage from the attack.
+The damage increases by 1d8 if the target is a Fiend or an Undead.
+Using a Higher-Level Spell Slot.
+The damage increases by 1d8 for each spell slot level above 1.
+Source: Player's Handbook
+Spellcasting Ability: Charisma
+----------------------------------------
+Name: Guiding Bolt
+Level: 1
+School: Evocation
+Classes: Cleric
+Casting Time: Action
+Range: 120 feet
+Components: V, S
+Duration: 1 round
+Description:
+You hurl a bolt of light toward a creature within range.
+Make a ranged spell attack against the target.
+On a hit, it takes 4d6 Radiant damage, and the next attack roll made against it before the end of your next turn has Advantage.
+Using a Higher-Level Spell Slot.
+The damage increases by 1d6 for each spell slot level above 1.
+Source: Player's Handbook
+Spellcasting Ability: Charisma
+----------------------------------------
+Name: Heroism
+Level: 1
+School: Enchantment
+Classes: Bard, Paladin
+Casting Time: Action
+Range: Touch
+Components: V, S
+Duration: Concentration, up to 1 minute
+Description:
+A willing creature you touch is imbued with bravery.
+Until the spell ends, the creature is immune to the Frightened condition and gains Temporary Hit Points equal to your spellcasting ability modifier at the start of each of its turns.
+Using a Higher-Level Spell Slot.
+You can target one additional creature for each spell slot level above 1.
+Source: Player's Handbook
+Spellcasting Ability: Charisma
+----------------------------------------
+Name: Shield of Faith
+Level: 1
+School: Abjuration
+Classes: Cleric, Paladin
+Casting Time: Bonus Action
+Range: 60 feet
+Components: V, S, M (a prayer scroll)
+Duration: Concentration, up to 10 minutes
+Description:
+A shimmering field surrounds a creature of your choice within range, granting it a +2 bonus to AC for the duration.
+Source: Player's Handbook
+Spellcasting Ability: Charisma
+----------------------------------------
+Name: Thunderous Smite
+Level: 1
+School: Evocation
+Classes: Paladin
+Casting Time: Bonus Action, which you take immediately after hitting a target with a Melee weapon or an Unarmed Strike
+Range: Self
+Components: V
+Duration: Instantaneous
+Description:
+Your strike rings with thunder that is audible within 300 feet of you, and the target takes an extra 2d6 Thunder damage from the attack.
+Additionally, if the target is a creature, it must succeed on a Strength saving throw or be pushed 10 feet away from you and have the Prone condition.
+Using a Higher-Level Spell Slot.
+The damage increases by 1d6 for each spell slot level above 1.
+Source: Player's Handbook
+Spellcasting Ability: Charisma
+

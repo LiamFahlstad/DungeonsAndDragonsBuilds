@@ -13,11 +13,11 @@ from Features import Armor, Backgrounds, OriginFeats, Weapons
 from Features.ClassFeatures import PaladinFeatures
 from Spells.Definitions import (
     BardLevel4Spells,
+    ClericLevel1Spells,
     ClericLevel2Spells,
     ClericLevel4Spells,
-    EvocationLevel1Spells,
     PaladinLevel2Spells,
-    TransmutationLevel0Spells,
+    RangerLevel1Spells,
     WizardLevel3Spells,
     WizardLevel5Spells,
 )
@@ -26,24 +26,20 @@ from StatBlocks.SkillsStatBlock import PaladinSkillsStatBlock
 
 
 @attr.dataclass
-class GeniesPaladinLevel3(ClassBuilder.SubclassLevel3):
+class VengeancePaladinLevel3(ClassBuilder.SubclassLevel3):
 
     def add_features(
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        channel_divinity_feature: PaladinFeatures.ChannelDivinity = (
-            data.get_features_by_type(PaladinFeatures.ChannelDivinity)[0]
-        )
-        channel_divinity_feature.add_feature(PaladinFeatures.ElementalSmite())
-        data.add_spell(EvocationLevel1Spells.CHROMATIC_ORB)
-        data.add_spell(TransmutationLevel0Spells.ELEMENTALISM)
-        data.add_spell(EvocationLevel1Spells.THUNDEROUS_SMITE)
+        data.add_feature(PaladinFeatures.VowOfEnmity())
+        data.add_spell(ClericLevel1Spells.BANE)
+        data.add_spell(RangerLevel1Spells.HUNTERS_MARK)
         return data
 
 
 @attr.dataclass
-class GeniesPaladinLevel5(ClassBuilder.SubclassLevel5):
+class VengeancePaladinLevel5(ClassBuilder.SubclassLevel5):
 
     def add_features(
         self,
@@ -55,7 +51,7 @@ class GeniesPaladinLevel5(ClassBuilder.SubclassLevel5):
 
 
 @attr.dataclass
-class GeniesPaladinLevel7(ClassBuilder.SubclassLevel7):
+class VengeancePaladinLevel7(ClassBuilder.SubclassLevel7):
 
     def add_features(
         self,
@@ -69,7 +65,7 @@ class GeniesPaladinLevel7(ClassBuilder.SubclassLevel7):
 
 
 @attr.dataclass
-class GeniesPaladinLevel9(ClassBuilder.SubclassLevel9):
+class VengeancePaladinLevel9(ClassBuilder.SubclassLevel9):
 
     def add_features(
         self,
@@ -81,7 +77,7 @@ class GeniesPaladinLevel9(ClassBuilder.SubclassLevel9):
 
 
 @attr.dataclass
-class GeniesPaladinLevel13(ClassBuilder.SubclassLevel13):
+class VengeancePaladinLevel13(ClassBuilder.SubclassLevel13):
 
     def add_features(
         self,
@@ -93,7 +89,7 @@ class GeniesPaladinLevel13(ClassBuilder.SubclassLevel13):
 
 
 @attr.dataclass
-class GeniesPaladinLevel15(ClassBuilder.SubclassLevel15):
+class VengeancePaladinLevel15(ClassBuilder.SubclassLevel15):
 
     def add_features(
         self,
@@ -104,7 +100,7 @@ class GeniesPaladinLevel15(ClassBuilder.SubclassLevel15):
 
 
 @attr.dataclass
-class GeniesPaladinLevel17(ClassBuilder.SubclassLevel17):
+class VengeancePaladinLevel17(ClassBuilder.SubclassLevel17):
 
     def add_features(
         self,
@@ -116,7 +112,7 @@ class GeniesPaladinLevel17(ClassBuilder.SubclassLevel17):
 
 
 @attr.dataclass
-class GeniesPaladinLevel20(ClassBuilder.SubclassLevel20):
+class VengeancePaladinLevel20(ClassBuilder.SubclassLevel20):
 
     def add_features(
         self,
@@ -126,7 +122,7 @@ class GeniesPaladinLevel20(ClassBuilder.SubclassLevel20):
         return data
 
 
-class GeniesPaladinStarterClassBuilder(PaladinStarterClassBuilder):
+class VengeancePaladinStarterClassBuilder(PaladinStarterClassBuilder):
 
     def __init__(
         self,
@@ -145,7 +141,7 @@ class GeniesPaladinStarterClassBuilder(PaladinStarterClassBuilder):
         super().__init__(
             paladin_level_features=paladin_level_features,
             paladin_level=paladin_level,
-            subclass=PaladinSubclass.OATH_OF_THE_GENIES.value,
+            subclass=PaladinSubclass.OATH_OF_VENGEANCE.value,
             abilities=abilities,
             paladin_skills=paladin_skills,
             background_ability_bonuses=background_ability_bonuses,
@@ -158,7 +154,7 @@ class GeniesPaladinStarterClassBuilder(PaladinStarterClassBuilder):
         )
 
 
-class GeniesPaladinMulticlassBuilder(PaladinMulticlassBuilder):
+class VengeancePaladinMulticlassBuilder(PaladinMulticlassBuilder):
 
     def __init__(
         self,
@@ -169,6 +165,6 @@ class GeniesPaladinMulticlassBuilder(PaladinMulticlassBuilder):
         super().__init__(
             paladin_level_features=paladin_level_features,
             paladin_level=paladin_level,
-            subclass=PaladinSubclass.OATH_OF_THE_GENIES.value,
+            subclass=PaladinSubclass.OATH_OF_VENGEANCE.value,
             replace_spells=replace_spells,
         )

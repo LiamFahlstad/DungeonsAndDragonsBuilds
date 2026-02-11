@@ -9,6 +9,7 @@ from Builds import (
     OptimizedPaladinGlory,
     OptimizedRogueAssassin,
     OptimizedWarlockArchfey,
+    RodericAshelm,
     Sten,
 )
 from Builds.CharacterBuilder import CharacterBuilder
@@ -29,6 +30,7 @@ class BuildSelector:
             "OptimizedRogueAssassin": OptimizedRogueAssassin.OptimizedAssassinRogueCharacterBuilder(),
             "OptimizedWarlockArchfey": OptimizedWarlockArchfey.OptimizedWarlockArchfeyCharacterBuilder(),
             "Sten": Sten.StenCharacterBuilder(),
+            "RodericAshelm": RodericAshelm.RodericAshelmCharacterBuilder(),
         }
         return builds[build_name]
 
@@ -45,6 +47,7 @@ if __name__ == "__main__":
         # "OptimizedPaladinGlory",
         # "OptimizedRogueAssassin",
         "OptimizedWarlockArchfey",
+        "RodericAshelm",
         # "Sten",
     ]
     for build_name in build_names:

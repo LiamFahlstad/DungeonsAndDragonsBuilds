@@ -216,34 +216,6 @@ class Chef(GeneralFeatTextFeature):
         return text
 
 
-class Sentinel(GeneralFeatTextFeature):
-
-    def __init__(self, character_level: int, ability: Ability):
-        if character_level < 4:
-            raise ValueError("Sentinel requires character level 4 or higher.")
-        if ability not in [Ability.DEXTERITY]:
-            raise ValueError("Sentinel ability increase must be Dexterity.")
-        self.ability = ability
-        super().__init__(
-            name="Sentinel",
-            origin="General Feat Level 4+",
-        )
-
-    def modify(self, character_stat_block: CharacterStatBlock):
-        character_stat_block.abilities.add_bonus(self.ability, 1)
-
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        text = (
-            "Prerequisite: Level 4+, Dexterity 13+\n"
-            "You gain the following benefits.\n"
-            "Ability Score Increase. Increase your Dexterity score by 1, to a maximum of 20.\n"
-            "Ignore Loading. You ignore the Loading property of the Hand Crossbow, Heavy Crossbow, and Light Crossbow (all called crossbows elsewhere in this feat). If you're holding one of them, you can load a piece of ammunition into it even if you lack a free hand.\n"
-            "Firing in Melee. Being within 5 feet of an enemy doesn't impose Disadvantage on your attack rolls with crossbows.\n"
-            "Dual Wielding. When you make the extra attack of the Light property, you can add your ability modifier to the damage of the extra attack if that attack is with a crossbow that has the Light property and you aren't already adding that modifier to the damage.\n"
-        )
-        return text
-
-
 class Crusher(GeneralFeatTextFeature):
 
     def __init__(self, character_level: int, ability: Ability):
