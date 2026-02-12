@@ -1,14 +1,25 @@
-from Definitions import Skill
+from typing import Optional
+
+from Definitions import Ability, CharacterClass, Skill
 from Features.BaseFeatures import CharacterFeature, TextFeature
+from Spells.Definitions import ClericLevel0Spells, ClericLevel1Spells
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
 class OriginCharacterFeat(CharacterFeature):
-    pass
+    def get_spellcasting_ability(self) -> Optional[Ability]:
+        return None
+
+    def get_spells(self) -> list[str]:
+        return []
 
 
 class OriginTextFeat(TextFeature):
-    pass
+    def get_spellcasting_ability(self) -> Optional[Ability]:
+        return None
+
+    def get_spells(self) -> list[str]:
+        return []
 
 
 OriginFeat = OriginCharacterFeat | OriginTextFeat
@@ -118,22 +129,66 @@ class Lucky(OriginTextFeat):
 
 
 class MagicInitiate(OriginTextFeat):
-    def __init__(self, spell_list: str):
-        self.spell_list = spell_list
+    def __init__(
+        self,
+        cantrip_1: str,
+        cantrip_2: str,
+        spell: str,
+        spell_casting_ability: Ability,
+        character_class: CharacterClass,
+    ):
+        if character_class not in [
+            CharacterClass.CLERIC,
+            CharacterClass.DRUID,
+            CharacterClass.WIZARD,
+        ]:
+            raise ValueError("Character class must be Cleric, Druid, or Wizard.")
+        self.character_class = character_class
+        self.cantrip_1 = cantrip_1
+        self.cantrip_2 = cantrip_2
+        self.spell = spell
+        self.spell_casting_ability = spell_casting_ability
         super().__init__(name="Magic Initiate", origin="Origin Feat")
+
+    def get_spells(self) -> list[str]:
+        return [self.cantrip_1, self.cantrip_2, self.spell]
+
+    def get_spellcasting_ability(self) -> Ability:
+        return self.spell_casting_ability
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         return (
-            f"Spell List: {self.spell_list}\n"
-            "Two Cantrips. You learn two cantrips of your choice from the Cleric, Druid, or Wizard spell list.\n"
-            "Intelligence, Wisdom, or Charisma is your spellcasting ability for this feat's spells (choose when you select this feat).\n"
-            "\n"
-            "Level 1 Spell. Choose a level 1 spell from the same list you selected for this feat's cantrips. You always have that spell prepared.\n"
-            "You can cast it once without a spell slot, and you regain the ability to cast it in that way when you finish a Long Rest.\n"
-            "You can also cast the spell using any spell slots you have.\n"
+            f"Magic Initiate {self.character_class.name.title()} Spellcasting)\n"
+            "Spell List (always prepared):\n"
+            f" * Cantrip 1: {self.cantrip_1}\n"
+            f" * Cantrip 2: {self.cantrip_2}\n"
+            f" * Level 1 Spell: {self.spell} (Cast once per long rest without a spell slot)\n"
             "\n"
             "Spell Change. Whenever you gain a new level, you can replace one of the spells you chose for this feat with a different spell of the same level from the chosen spell list.\n\n"
             "Repeatable. You can take this feat more than once, but you must choose a different spell list each time."
+        )
+
+
+class MagicInitiateCleric(MagicInitiate):
+    def __init__(
+        self,
+        cantrip_1: str,
+        cantrip_2: str,
+        spell: str,
+        spell_casting_ability: Ability,
+    ):
+        if cantrip_1 not in ClericLevel0Spells:
+            raise ValueError(f"Cantrip 1 must be a valid Cleric cantrip. ({cantrip_1})")
+        if cantrip_2 not in ClericLevel0Spells:
+            raise ValueError(f"Cantrip 2 must be a valid Cleric cantrip. ({cantrip_2})")
+        if spell not in ClericLevel1Spells:
+            raise ValueError(f"Spell must be a valid Cleric level 1 spell. ({spell})")
+        super().__init__(
+            cantrip_1,
+            cantrip_2,
+            spell,
+            spell_casting_ability,
+            character_class=CharacterClass.CLERIC,
         )
 
 

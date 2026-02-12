@@ -1,7 +1,6 @@
 from enum import Enum
 
 import CharacterSheetCreator
-from Features import OriginFeats
 from Features.SpeciesFeatures import TieflingFeatures
 from SpeciesConfigs.SpeciesBuilder import SpeciesBuilder
 from Spells.Definitions import (
@@ -22,11 +21,9 @@ class FiendishLineage(str, Enum):
 class TieflingSpeciesBuilder(SpeciesBuilder):
     def __init__(
         self,
-        origin_feat: OriginFeats.OriginFeat,
         character_level: int,
         fiendish_lineage: FiendishLineage,
     ):
-        self.origin_feat = origin_feat
         self.character_level = character_level
         self.fiendish_lineage = fiendish_lineage
         super().__init__(
@@ -38,14 +35,10 @@ class TieflingSpeciesBuilder(SpeciesBuilder):
 
         data.speed = TieflingFeatures.SPEED  # Given by your species
         data.size = TieflingFeatures.SIZE  # Given by your species
-        data.add_feature(self.origin_feat)
 
         data.add_feature(TieflingFeatures.Darkvision(60))
         data.add_feature(TieflingFeatures.OtherworldlyPresence())
 
-        cantrip = ""
-        spell_1 = ""
-        spell_2 = ""
         if self.fiendish_lineage == FiendishLineage.ABYSSAL:
             cantrip = SorcererLevel0Spells.POISON_SPRAY
             if self.character_level >= 3:
@@ -66,6 +59,9 @@ class TieflingSpeciesBuilder(SpeciesBuilder):
                 spell_1 = WarlockLevel1Spells.HELLISH_REBUKE
             if self.character_level >= 5:
                 spell_2 = WizardLevel2Spells.DARKNESS
+
+        else:
+            raise ValueError(f"Invalid fiendish lineage: {self.fiendish_lineage}")
 
         data.add_cantrip(cantrip)
         data.add_spell(spell_1)

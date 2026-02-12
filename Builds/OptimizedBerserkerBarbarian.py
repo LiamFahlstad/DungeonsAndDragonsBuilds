@@ -80,7 +80,5 @@ class OptimizedBerserkerBarbarianCharacterBuilder(CharacterBuilder):
         super().__init__(
             name="Olga",
             starter_class_builder=get_starter_class_builder(),
-            species_builder=Orc.OrcSpeciesBuilder(
-                origin_feat=OriginFeats.SavageAttacker(),
-            ),
+            species_builder=Orc.OrcSpeciesBuilder(),
         )

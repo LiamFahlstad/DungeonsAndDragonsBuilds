@@ -6,7 +6,7 @@ import attr
 import Definitions
 import Utils.TableUtils as TableUtils
 from Definitions import Ability, ApplyWhen, CharacterClass, Skill
-from Features import Armor
+from Features import Armor, OriginFeats
 from Features.Armor import AbstractArmor
 from Features.BaseFeatures import CharacterFeature, Feature
 from Features.FightingStyles import (
@@ -63,6 +63,11 @@ class CharacterSheetData:
             self.features.append(feature)
         else:
             raise ValueError(f"Unknown ApplyWhen value: {apply_when}")
+
+    def add_origin_feat(self, origin_feat: OriginFeats.OriginFeat):
+        self.add_feature(origin_feat)
+        for spell in origin_feat.get_spells():
+            self.add_spell(spell, origin_feat.get_spellcasting_ability())
 
     def get_features_by_type(self, feature_type: type) -> list[Any]:
         return [

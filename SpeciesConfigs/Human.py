@@ -27,6 +27,6 @@ class HumanSpeciesBuilder(SpeciesBuilder):
         data.add_feature(HumanFeatures.Skillful(self.skill_proficiency))
         data.add_feature(HumanFeatures.Versatile())
 
-        data.add_feature(self.origin_feat)
+        self.add_origin_feat(data, self.origin_feat)
 
         return data

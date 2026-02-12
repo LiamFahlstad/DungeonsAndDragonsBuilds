@@ -296,7 +296,7 @@ class StarterClassBuilder(ClassBuilder):
         saving_throws: SavingThrowsStatBlock,
         add_default_equipment: bool,
         default_equipment: list[Weapons.AbstractWeapon | Armor.AbstractArmor],
-        origin_feat: OriginFeats.OriginCharacterFeat | OriginFeats.OriginTextFeat,
+        origin_feat: OriginFeats.OriginFeat,
         armor_proficiencies: Optional[list[Definitions.ArmorType]] = None,
         armor: Optional[list[Armor.AbstractArmor]] = None,
         weapons: Optional[list[Weapons.AbstractWeapon]] = None,

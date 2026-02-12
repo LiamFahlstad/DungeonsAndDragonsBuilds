@@ -61,11 +61,17 @@ Survival        | +1       | Yes        | Wisdom       | Neutral        | +0
 ################################################################################
 # ================================= Features ================================= #
 ################################################################################
-Name: Lucky
+Name: Magic Initiate
 Origin: Origin Feat
-Description: Luck Points. You have a number of Luck Points equal to your Proficiency Bonus and can spend the points on the benefits below. You regain your expended Luck Points when you finish a Long Rest.
-Advantage. When you roll a d20 for a D20 Test, you can spend 1 Luck Point to give yourself Advantage on the roll.
-Disadvantage. When a creature rolls a d20 for an attack roll against you, you can spend 1 Luck Point to impose Disadvantage on that roll.
+Description: Magic Initiate Cleric Spellcasting)
+Spell List (always prepared):
+ * Cantrip 1: ClericLevel0Spells.GUIDANCE
+ * Cantrip 2: ClericLevel0Spells.LIGHT
+ * Level 1 Spell: ClericLevel1Spells.CURE_WOUNDS (Cast once per long rest without a spell slot)
+
+Spell Change. Whenever you gain a new level, you can replace one of the spells you chose for this feat with a different spell of the same level from the chosen spell list.
+
+Repeatable. You can take this feat more than once, but you must choose a different spell list each time.
 
 Name: Resourceful
 Origin: Human Trait
@@ -183,6 +189,37 @@ Level 1
 ################################################################################
 # ================================== Spells ================================== #
 ################################################################################
+Name: Guidance
+Level: 0
+School: Divination
+Classes: Artificer, Cleric, Druid
+Casting Time: Action
+Range: Touch
+Components: V, S
+Duration: Concentration, up to 1 minute
+Description:
+You touch a willing creature and choose a skill.
+Until the spell ends, the creature adds 1d4 to any ability check using the chosen skill.
+Source: Player's Handbook
+Spellcasting Ability: Charisma
+----------------------------------------
+Name: Light
+Level: 0
+School: Evocation
+Classes: Artificer, Bard, Cleric, Sorcerer, Wizard
+Casting Time: Action
+Range: Touch
+Components: V, M (a firefly or phosphorescent moss)
+Duration: 1 hour
+Description:
+You touch one Large or smaller object that isn’t being worn or carried by someone else.
+Until the spell ends, the object sheds Bright Light in a 20-foot radius and Dim Light for an additional 20 feet.
+The light can be colored as you like.
+Covering the object with something opaque blocks the light.
+The spell ends if you cast it again.
+Source: Player's Handbook
+Spellcasting Ability: Charisma
+----------------------------------------
 Name: Bless
 Level: 1
 School: Enchantment
@@ -212,6 +249,21 @@ You try to compel a creature into a duel.
 One creature that you can see within range makes a Wisdom saving throw.
 On a failed save, the target has Disadvantage on attack rolls against creatures other than you, and it can't willingly move to a space that is more than 30 feet away from you.
 The spell ends if you make an attack roll against a creature other than the target, if you cast a spell on an enemy other than the target, if an ally of yours damages the target, or if you end your turn more than 30 feet away from the target.
+Source: Player's Handbook
+Spellcasting Ability: Charisma
+----------------------------------------
+Name: Cure Wounds
+Level: 1
+School: Abjuration
+Classes: Artificer, Bard, Cleric, Druid, Paladin, Ranger
+Casting Time: Action
+Range: Touch
+Components: V, S
+Duration: Instantaneous
+Description:
+A creature you touch regains a number of Hit Points equal to 2d8 plus your spellcasting ability modifier.
+Using a Higher-Level Spell Slot.
+The healing increases by 2d8 for each spell slot level above 1.
 Source: Player's Handbook
 Spellcasting Ability: Charisma
 ----------------------------------------

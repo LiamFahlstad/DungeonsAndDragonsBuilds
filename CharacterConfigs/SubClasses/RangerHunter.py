@@ -134,7 +134,7 @@ class HHunterRangerStarterClassBuilder(RangerStarterClassBuilder):
         background_ability_bonuses: Backgrounds.FreeBackgroundAbilityBonus,
         background_skill_proficiencies: Backgrounds.FreeBackgroundSkillProficiency,
         add_default_equipment: bool,
-        origin_feat: OriginFeats.OriginCharacterFeat | OriginFeats.OriginTextFeat,
+        origin_feat: OriginFeats.OriginFeat,
         armor: Optional[list[Armor.AbstractArmor]] = None,
         weapons: Optional[list[Weapons.AbstractWeapon]] = None,
         replace_spells: Optional[dict[str, str]] = None,

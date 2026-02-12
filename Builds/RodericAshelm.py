@@ -12,7 +12,11 @@ from CharacterConfigs.SubClasses.PaladinGlory import (
 from Definitions import Ability, Skill
 from Features import Backgrounds, FightingStyles, OriginFeats, Weapons
 from SpeciesConfigs import Human
-from Spells.Definitions import PaladinLevel1Spells
+from Spells.Definitions import (
+    ClericLevel0Spells,
+    ClericLevel1Spells,
+    PaladinLevel1Spells,
+)
 from StatBlocks.AbilitiesStatBlock import StandardArrayAbilitiesStatBlock
 from StatBlocks.SkillsStatBlock import PaladinSkillsStatBlock
 
@@ -89,6 +93,11 @@ class RodericAshelmCharacterBuilder(CharacterBuilder):
             starter_class_builder=get_starter_class_builder(),
             species_builder=Human.HumanSpeciesBuilder(
                 skill_proficiency=Skill.SURVIVAL,
-                origin_feat=OriginFeats.Lucky(),
+                origin_feat=OriginFeats.MagicInitiateCleric(
+                    cantrip_1=ClericLevel0Spells.GUIDANCE,
+                    cantrip_2=ClericLevel0Spells.LIGHT,
+                    spell=ClericLevel1Spells.CURE_WOUNDS,
+                    spell_casting_ability=Ability.CHARISMA,
+                ),
             ),
         )
