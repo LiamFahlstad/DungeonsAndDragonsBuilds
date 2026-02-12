@@ -37,18 +37,18 @@ class BuildSelector:
 
 if __name__ == "__main__":
     build_names = [
-        # "Greta",
-        # "JanHeting",
-        # "OptimizedBardLore",
-        # "OptimizedBerserkerBarbarian",
-        # "OptimizedClericLight",
-        # "OptimizedDruidMoon",
-        # "OptimizedMonkShadow",
-        # "OptimizedPaladinGlory",
-        # "OptimizedRogueAssassin",
+        "Greta",
+        "JanHeting",
+        "OptimizedBardLore",
+        "OptimizedBerserkerBarbarian",
+        "OptimizedClericLight",
+        "OptimizedDruidMoon",
+        "OptimizedMonkShadow",
+        "OptimizedPaladinGlory",
+        "OptimizedRogueAssassin",
         "OptimizedWarlockArchfey",
         "RodericAshelm",
-        # "Sten",
+        "Sten",
     ]
     for build_name in build_names:
         build_class = BuildSelector.get_build(build_name)

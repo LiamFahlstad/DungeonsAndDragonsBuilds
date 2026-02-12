@@ -148,17 +148,17 @@ Proficient                  | Yes
 AttackRoll                  | 1d20 + 3 (ability mod: Strength) + 3 (Proficient)                                                                                         
 DamageRoll                  | 2d6 + 3 (ability mod: Strength)                                                                                                           
 Mastery 'Graze'             | If you miss with an attack, deal damage equal to the ability modifier used for the attack (same damage type).                             
-AC: 10                      | Prob of Hit: 0.85, Avg Dmg: 11.05                                                                                                         
-AC: 11                      | Prob of Hit: 0.80, Avg Dmg: 10.40                                                                                                         
-AC: 12                      | Prob of Hit: 0.75, Avg Dmg: 9.75                                                                                                          
-AC: 13                      | Prob of Hit: 0.70, Avg Dmg: 9.10                                                                                                          
-AC: 14                      | Prob of Hit: 0.65, Avg Dmg: 8.45                                                                                                          
-AC: 15                      | Prob of Hit: 0.60, Avg Dmg: 7.80                                                                                                          
-AC: 16                      | Prob of Hit: 0.55, Avg Dmg: 7.15                                                                                                          
-AC: 17                      | Prob of Hit: 0.50, Avg Dmg: 6.50                                                                                                          
-AC: 18                      | Prob of Hit: 0.45, Avg Dmg: 5.85                                                                                                          
-AC: 19                      | Prob of Hit: 0.40, Avg Dmg: 5.20                                                                                                          
-AC: 20                      | Prob of Hit: 0.35, Avg Dmg: 4.55                                                                                                          
+AC: 10                      | Prob of Hit: 0.85, Avg Dmg: 8.50                                                                                                          
+AC: 11                      | Prob of Hit: 0.80, Avg Dmg: 8.00                                                                                                          
+AC: 12                      | Prob of Hit: 0.75, Avg Dmg: 7.50                                                                                                          
+AC: 13                      | Prob of Hit: 0.70, Avg Dmg: 7.00                                                                                                          
+AC: 14                      | Prob of Hit: 0.65, Avg Dmg: 6.50                                                                                                          
+AC: 15                      | Prob of Hit: 0.60, Avg Dmg: 6.00                                                                                                          
+AC: 16                      | Prob of Hit: 0.55, Avg Dmg: 5.50                                                                                                          
+AC: 17                      | Prob of Hit: 0.50, Avg Dmg: 5.00                                                                                                          
+AC: 18                      | Prob of Hit: 0.45, Avg Dmg: 4.50                                                                                                          
+AC: 19                      | Prob of Hit: 0.40, Avg Dmg: 4.00                                                                                                          
+AC: 20                      | Prob of Hit: 0.35, Avg Dmg: 3.50                                                                                                          
 ----------------------------+-------------------------------------------------------------------------------------------------------------------------------------------
 Name                        | Longsword                                                                                                                                 
 Type                        | Martial Melee                                                                                                                             
