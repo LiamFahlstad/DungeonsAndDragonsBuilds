@@ -2,7 +2,11 @@ from typing import Optional
 
 import attr
 
-from CharacterConfigs.BaseClasses.RangerBase import RangerStarterClassBuilder, RangerMulticlassBuilder
+from CharacterConfigs.BaseClasses import ClassBuilder
+from CharacterConfigs.BaseClasses.RangerBase import (
+    RangerMulticlassBuilder,
+    RangerStarterClassBuilder,
+)
 from CharacterSheetCreator import CharacterSheetData
 from Definitions import RangerSubclass
 from Features import Armor, Backgrounds, OriginFeats, Weapons
@@ -15,7 +19,6 @@ from Spells.Definitions import (
     WizardLevel3Spells,
     WizardLevel5Spells,
 )
-from CharacterConfigs.BaseClasses import ClassBuilder
 from StatBlocks.AbilitiesStatBlock import AbilitiesStatBlock
 from StatBlocks.SkillsStatBlock import RangerSkillsStatBlock
 
@@ -75,7 +78,7 @@ class HunterRangerLevel9(ClassBuilder.SubclassLevel9):
 
 
 @attr.dataclass
-class HunterRangerLevel13(ClassBuilder.1SubclassLevel13):
+class HunterRangerLevel13(ClassBuilder.SubclassLevel13):
     level: int = attr.field(init=False, default=13)
 
     def add_features(
@@ -88,7 +91,7 @@ class HunterRangerLevel13(ClassBuilder.1SubclassLevel13):
 
 
 @attr.dataclass
-class HunterRangerLevel15(ClassBuilder.1SubclassLevel15):
+class HunterRangerLevel15(ClassBuilder.SubclassLevel15):
     level: int = attr.field(init=False, default=15)
 
     def add_features(
@@ -100,7 +103,7 @@ class HunterRangerLevel15(ClassBuilder.1SubclassLevel15):
 
 
 @attr.dataclass
-class HunterRangerLevel17(ClassBuilder.1SubclassLevel17):
+class HunterRangerLevel17(ClassBuilder.SubclassLevel17):
     level: int = attr.field(init=False, default=17)
 
     def add_features(
@@ -113,7 +116,7 @@ class HunterRangerLevel17(ClassBuilder.1SubclassLevel17):
 
 
 @attr.dataclass
-class HunterRangerLevel20(ClassBuilder.2SubclassLevel20):
+class HunterRangerLevel20(ClassBuilder.SubclassLevel20):
     level: int = attr.field(init=False, default=20)
 
     def add_features(
@@ -123,7 +126,8 @@ class HunterRangerLevel20(ClassBuilder.2SubclassLevel20):
         data.add_feature(RangerFeatures.LivingLegend())
         return data
 
-class HHunterRangerStarterClassBuilder(RangerStarterClassBuilder):
+
+class HunterRangerStarterClassBuilder(RangerStarterClassBuilder):
 
     def __init__(
         self,
@@ -155,7 +159,7 @@ class HHunterRangerStarterClassBuilder(RangerStarterClassBuilder):
         )
 
 
-class HHunterRangerMulticlassBuilder(RangerMulticlassBuilder):
+class HunterRangerMulticlassBuilder(RangerMulticlassBuilder):
 
     def __init__(
         self,

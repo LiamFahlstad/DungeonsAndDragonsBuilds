@@ -31,6 +31,7 @@ class GloomStalkerRangerLevel3(ClassBuilder.SubclassLevel3):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
+        data.add_feature(RangerFeatures.DreadAmbusher())
         data.add_feature(RangerFeatures.UmbralSight())
         data.add_spell(IllusionLevel1Spells.DISGUISE_SELF)
         return data

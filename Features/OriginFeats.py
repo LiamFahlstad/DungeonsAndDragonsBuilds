@@ -2,7 +2,14 @@ from typing import Optional
 
 from Definitions import Ability, CharacterClass, Skill
 from Features.BaseFeatures import CharacterFeature, TextFeature
-from Spells.Definitions import ClericLevel0Spells, ClericLevel1Spells
+from Spells.Definitions import (
+    ClericLevel0Spells,
+    ClericLevel1Spells,
+    DruidLevel0Spells,
+    DruidLevel1Spells,
+    WizardLevel0Spells,
+    WizardLevel1Spells,
+)
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
@@ -143,12 +150,40 @@ class MagicInitiate(OriginTextFeat):
             CharacterClass.WIZARD,
         ]:
             raise ValueError("Character class must be Cleric, Druid, or Wizard.")
+
+        cantrips_map = {
+            CharacterClass.CLERIC: ClericLevel0Spells,
+            CharacterClass.DRUID: DruidLevel0Spells,
+            CharacterClass.WIZARD: WizardLevel0Spells,
+        }
+        spells_map = {
+            CharacterClass.CLERIC: ClericLevel1Spells,
+            CharacterClass.DRUID: DruidLevel1Spells,
+            CharacterClass.WIZARD: WizardLevel1Spells,
+        }
+
+        if cantrip_1 not in cantrips_map[character_class]:
+            raise ValueError(
+                f"Cantrip 1 must be a valid {character_class.name.title()} cantrip. ({cantrip_1})"
+            )
+        if cantrip_2 not in cantrips_map[character_class]:
+            raise ValueError(
+                f"Cantrip 2 must be a valid {character_class.name.title()} cantrip. ({cantrip_2})"
+            )
+        if spell not in spells_map[character_class]:
+            raise ValueError(
+                f"Spell must be a valid {character_class.name.title()} level 1 spell. ({spell})"
+            )
+
         self.character_class = character_class
         self.cantrip_1 = cantrip_1
         self.cantrip_2 = cantrip_2
         self.spell = spell
         self.spell_casting_ability = spell_casting_ability
-        super().__init__(name="Magic Initiate", origin="Origin Feat")
+        super().__init__(
+            name=f"Magic Initiate ({self.character_class.value})",
+            origin="Origin Feat",
+        )
 
     def get_spells(self) -> list[str]:
         return [self.cantrip_1, self.cantrip_2, self.spell]
@@ -158,12 +193,11 @@ class MagicInitiate(OriginTextFeat):
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         return (
-            f"Magic Initiate {self.character_class.name.title()} Spellcasting)\n"
+            f"Magic Initiate {self.character_class.name.title()} Spellcasting\n"
             "Spell List (always prepared):\n"
             f" * Cantrip 1: {self.cantrip_1}\n"
             f" * Cantrip 2: {self.cantrip_2}\n"
             f" * Level 1 Spell: {self.spell} (Cast once per long rest without a spell slot)\n"
-            "\n"
             "Spell Change. Whenever you gain a new level, you can replace one of the spells you chose for this feat with a different spell of the same level from the chosen spell list.\n\n"
             "Repeatable. You can take this feat more than once, but you must choose a different spell list each time."
         )
@@ -177,18 +211,46 @@ class MagicInitiateCleric(MagicInitiate):
         spell: str,
         spell_casting_ability: Ability,
     ):
-        if cantrip_1 not in ClericLevel0Spells:
-            raise ValueError(f"Cantrip 1 must be a valid Cleric cantrip. ({cantrip_1})")
-        if cantrip_2 not in ClericLevel0Spells:
-            raise ValueError(f"Cantrip 2 must be a valid Cleric cantrip. ({cantrip_2})")
-        if spell not in ClericLevel1Spells:
-            raise ValueError(f"Spell must be a valid Cleric level 1 spell. ({spell})")
         super().__init__(
             cantrip_1,
             cantrip_2,
             spell,
             spell_casting_ability,
             character_class=CharacterClass.CLERIC,
+        )
+
+
+class MagicInitiateDruid(MagicInitiate):
+    def __init__(
+        self,
+        cantrip_1: str,
+        cantrip_2: str,
+        spell: str,
+        spell_casting_ability: Ability,
+    ):
+        super().__init__(
+            cantrip_1,
+            cantrip_2,
+            spell,
+            spell_casting_ability,
+            character_class=CharacterClass.DRUID,
+        )
+
+
+class MagicInitiateWizard(MagicInitiate):
+    def __init__(
+        self,
+        cantrip_1: str,
+        cantrip_2: str,
+        spell: str,
+        spell_casting_ability: Ability,
+    ):
+        super().__init__(
+            cantrip_1,
+            cantrip_2,
+            spell,
+            spell_casting_ability,
+            character_class=CharacterClass.WIZARD,
         )
 
 

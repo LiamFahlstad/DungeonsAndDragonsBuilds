@@ -5,41 +5,41 @@ from CharacterConfigs.BaseClasses.PaladinBase import (
     PaladinLevel2,
     PaladinLevel3,
 )
-from CharacterConfigs.SubClasses.PaladinGlory import (
-    GloryPaladinLevel3,
-    GloryPaladinStarterClassBuilder,
+from CharacterConfigs.SubClasses.PaladinVengeance import (
+    VengeancePaladinLevel3,
+    VengeancePaladinStarterClassBuilder,
 )
 from Definitions import Ability, Skill
 from Features import Backgrounds, FightingStyles, OriginFeats, Weapons
 from SpeciesConfigs import Human
 from Spells.Definitions import (
-    ClericLevel0Spells,
-    ClericLevel1Spells,
     PaladinLevel1Spells,
+    WizardLevel0Spells,
+    WizardLevel1Spells,
 )
 from StatBlocks.AbilitiesStatBlock import StandardArrayAbilitiesStatBlock
 from StatBlocks.SkillsStatBlock import PaladinSkillsStatBlock
 
 
 def get_starter_class_builder():
-    return GloryPaladinStarterClassBuilder(
+    return VengeancePaladinStarterClassBuilder(
         paladin_level=3,
         # Distribute 15, 14, 13, 12, 10, 8 among your abilities.
         abilities=StandardArrayAbilitiesStatBlock(
             strength=13,
-            dexterity=10,
+            dexterity=8,
             constitution=15,
-            intelligence=12,
-            wisdom=8,
+            intelligence=10,
+            wisdom=12,
             charisma=14,
         ),
         # Choose two skills to be proficient in
         paladin_skills=PaladinSkillsStatBlock(
             proficiencies={
                 Skill.ATHLETICS: True,
-                Skill.INSIGHT: False,
+                Skill.INSIGHT: True,
                 Skill.INTIMIDATION: False,
-                Skill.MEDICINE: True,
+                Skill.MEDICINE: False,
                 Skill.PERSUASION: False,
                 Skill.RELIGION: False,
             }
@@ -60,7 +60,7 @@ def get_starter_class_builder():
         origin_feat=OriginFeats.Tough(),
         armor=[],
         weapons=[
-            Weapons.Morningstar(player_is_proficient=True),
+            Weapons.Morningstar(player_is_proficient=True, ability=Ability.CHARISMA),
         ],
         paladin_level_features=ClassBuilder.BaseClassLevelFeatures(
             base_class_features_by_level={
@@ -79,7 +79,7 @@ def get_starter_class_builder():
                 ),
             },
             subclass_features_by_level={
-                3: GloryPaladinLevel3(),
+                3: VengeancePaladinLevel3(),
             },
         ),
         replace_spells={},
@@ -92,11 +92,11 @@ class RodericAshelmCharacterBuilder(CharacterBuilder):
             name="Roderic Ashelm",
             starter_class_builder=get_starter_class_builder(),
             species_builder=Human.HumanSpeciesBuilder(
-                skill_proficiency=Skill.SURVIVAL,
-                origin_feat=OriginFeats.MagicInitiateCleric(
-                    cantrip_1=ClericLevel0Spells.GUIDANCE,
-                    cantrip_2=ClericLevel0Spells.LIGHT,
-                    spell=ClericLevel1Spells.CURE_WOUNDS,
+                skill_proficiency=Skill.DECEPTION,
+                origin_feat=OriginFeats.MagicInitiateWizard(
+                    cantrip_1=WizardLevel0Spells.TRUE_STRIKE,
+                    cantrip_2=WizardLevel0Spells.BLADE_WARD,
+                    spell=WizardLevel1Spells.SHIELD,
                     spell_casting_ability=Ability.CHARISMA,
                 ),
             ),
