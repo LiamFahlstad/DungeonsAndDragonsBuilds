@@ -3,6 +3,7 @@ from enum import Enum
 from typing import Any, List, Optional, TextIO
 
 import Definitions
+from Utils import StringUtils
 
 
 class SorcererLevel0Spells(str, Enum):
@@ -1986,7 +1987,7 @@ class Spell(ABC):
         file.write(f"Range: {self.range}\n")
         file.write(f"Components: {self.components}\n")
         file.write(f"Duration: {self.duration}\n")
-        file.write(f"Description:\n{description}\n")
+        file.write(f"Description:\n{StringUtils.wrap_text(description, 80)}\n")
         file.write(f"Source: {self.source}\n")
 
         if self.spell_casting_ability:

@@ -7,6 +7,7 @@ import DamageCalculator
 from Definitions import Ability, Die
 from Features.BaseFeatures import TextFeature
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
+from Utils import StringUtils
 from Utils.TableUtils import write_table
 
 
@@ -230,7 +231,10 @@ class AbstractWeapon(TextFeature):
         rows.append(["DamageType", stats.damage_type.value])
 
         for prop in stats.properties:
-            rows.append([f"Property '{prop.value}'", prop.description])
+            description = StringUtils.wrap_text(
+                prop.description, max_sentence_length=80
+            )
+            rows.append([f"Property '{prop.value}'", description])
 
         rows.append(["Proficient", "Yes" if self.player_is_proficient else "No"])
 
@@ -245,7 +249,11 @@ class AbstractWeapon(TextFeature):
         )
 
         if self.player_has_mastery:
-            rows.append([f"Mastery '{stats.mastery.value}'", stats.mastery.description])
+            mastery_description = stats.mastery.description
+            mastery_description = StringUtils.wrap_text(
+                mastery_description, max_sentence_length=80
+            )
+            rows.append([f"Mastery '{stats.mastery.value}'", mastery_description])
 
         attack_roll_die = DamageCalculator.Die.D20
         attack_roll_condition = DamageCalculator.DiceRollCondition.NEUTRAL
