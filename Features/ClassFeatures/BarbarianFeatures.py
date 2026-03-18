@@ -57,7 +57,7 @@ class UnarmoredDefenseText(TextFeature):
             Definitions.Ability.CONSTITUTION
         )
         armor_class = 10 + dexterity_modifier + constitution_modifier
-        description = f"While you aren't wearing any armor, your base Armor Class equals 10 plus your Dexterity and Constitution modifiers (total {armor_class}). You can use a Shield and still gain this benefit."
+        description = f"While you aren't wearing any armor, your base Armor Class equals 10 plus your Dexterity and Constitution modifiers (total {dexterity_modifier} + {constitution_modifier} = {armor_class}). You can use a Shield and still gain this benefit."
         return description
 
 

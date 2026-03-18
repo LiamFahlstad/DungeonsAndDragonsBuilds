@@ -1,0 +1,343 @@
+################################################################################
+# =============================== General Info =============================== #
+################################################################################
+Field              | Value                 
+-------------------+-----------------------
+Name               | Optimized Glamour Bard
+Level              | 3                     
+Starter Class      | Bard                  
+Level per Class    | Bard: 3               
+Character Subclass | College of Glamour    
+Proficiency Bonus  | 2                     
+
+################################################################################
+# =============================== Combat Stats =============================== #
+################################################################################
+Field               | Value  
+--------------------+--------
+Max Hit Points      | 30     
+Armor Class         | 13     
+Armor Proficiencies | Light  
+Initiative          | d20 + 2
+Speed (ft)          | 30     
+Size                | Medium 
+
+################################################################################
+# ================================ Abilities ================================= #
+################################################################################
+Ability | Score | Mod | Saving Throw        | DC | ATK Bonus
+--------+-------+-----+---------------------+----+----------
+STR     | 8     | -1  | -1                  | 9  | +1       
+DEX     | 14    | +2  | +2 + 2 (Proficient) | 12 | +4       
+CON     | 14    | +2  | +2                  | 12 | +4       
+INT     | 10    | +0  | +0                  | 10 | +2       
+WIS     | 12    | +1  | +1                  | 11 | +3       
+CHA     | 17    | +3  | +3 + 2 (Proficient) | 13 | +5       
+
+################################################################################
+# ================================== Skills ================================== #
+################################################################################
+Skill           | Modifier | Proficient | Ability      | Roll Condition | Bonus (already included)
+----------------+----------+------------+--------------+----------------+-------------------------
+Acrobatics      | +3       | No         | Dexterity    | Neutral        | +1                      
+Animal Handling | +2       | No         | Wisdom       | Neutral        | +1                      
+Arcana          | +1       | No         | Intelligence | Neutral        | +1                      
+Athletics       | +0       | No         | Strength     | Neutral        | +1                      
+Deception       | +5       | Yes        | Charisma     | Neutral        | +0                      
+History         | +1       | No         | Intelligence | Neutral        | +1                      
+Insight         | +3       | Yes        | Wisdom       | Neutral        | +0                      
+Intimidation    | +4       | No         | Charisma     | Neutral        | +1                      
+Investigation   | +1       | No         | Intelligence | Neutral        | +1                      
+Medicine        | +2       | No         | Wisdom       | Neutral        | +1                      
+Nature          | +1       | No         | Intelligence | Neutral        | +1                      
+Perception      | +3       | Yes        | Wisdom       | Neutral        | +0                      
+Performance     | +7       | Yes        | Charisma     | Neutral        | +0                      
+Persuasion      | +7       | Yes        | Charisma     | Neutral        | +0                      
+Religion        | +1       | No         | Intelligence | Neutral        | +1                      
+Sleight of Hand | +3       | No         | Dexterity    | Neutral        | +1                      
+Stealth         | +3       | No         | Dexterity    | Neutral        | +1                      
+Survival        | +2       | No         | Wisdom       | Neutral        | +1                      
+
+################################################################################
+# ================================= Features ================================= #
+################################################################################
+Name: Celestial Resistance
+Origin: Aasimar Trait
+Description: You have Resistance to Necrotic damage and Radiant damage.
+
+Name: Celestial Revelation
+Origin: Aasimar Trait
+Description: Celestial Revelation. When you reach character level 3, you can transform as a Bonus Action using one of the options below (choose the option each time you transform). The transformation lasts for 1 minute or until you end it (no action required). Once you transform, you can’t do so again until you finish a Long Rest.
+Once on each of your turns before the transformation ends, you can deal extra damage to one target when you deal damage to it with an attack or a spell. The extra damage equals your Proficiency Bonus (2), and the extra damage’s type is either Necrotic for Necrotic Shroud or Radiant for Heavenly Wings and Inner Radiance.
+Here are the transformation options:
+ * Heavenly Wings. Two spectral wings sprout from your back temporarily. Until the transformation ends, you have a Fly Speed equal to your Speed.
+ * Inner Radiance. Searing light temporarily radiates from your eyes and mouth. For the duration, you shed Bright Light in a 10-foot radius and Dim Light for an additional 10 feet, and at the end of each of your turns, each creature within 10 feet of you takes Radiant damage equal to your Proficiency Bonus.
+ * Necrotic Shroud. Your eyes briefly become pools of darkness, and flightless wings sprout from your back temporarily. Creatures other than your allies within 10 feet of you must succeed on a Charisma saving throw (DC 8 plus your Charisma modifier and Proficiency Bonus) or have the Frightened condition until the end of your next turn.
+
+Name: Darkvision
+Origin: Aasimar Trait
+Description: You have Darkvision with a range of 60 feet.
+
+Name: Healing Hands
+Origin: Aasimar Trait
+Description: As a Magic action, you touch a creature and roll a number of d4s equal to your Proficiency Bonus (2). The creature regains a number of Hit Points equal to the total rolled. Once you use this trait, you can't use it again until you finish a Long Rest.
+
+Name: Light Bearer
+Origin: Aasimar Trait
+Description: You know the Light cantrip. Charisma is your spellcasting ability for it.
+
+Name: Bardic Inspiration
+Origin: Bard Level 1
+Description: You can supernaturally inspire others through words, music, or dance. This inspiration is represented by your Bardic Inspiration die, which is a d6.
+ * Using Bardic Inspiration: As a Bonus Action, you can inspire another creature within 60 feet of yourself who can see or hear you. That creature gains one of your Bardic Inspiration dice. A creature can have only one Bardic Inspiration die at a time.
+   Once within the next hour when the creature fails a D20 Test, the creature can roll the Bardic Inspiration die and add the number rolled to the d20, potentially turning the failure into a success. A Bardic Inspiration die is expended when it's rolled.
+ * Number of Uses. You can confer a Bardic Inspiration die a number of times equal to your Charisma modifier (minimum of once), and you regain all expended uses when you finish a Long Rest.
+ * At Higher Levels. Your Bardic Inspiration die changes when you reach certain Bard levels, as shown in the Bardic Die column of the Bard Features table. The die becomes a d8 at level 5, a d10 at level 10, and a d12 at level 15.
+
+Name: Spellcasting
+Origin: Bard Level 1
+Description: Spellcasting:
+ * Replacing cantrips: Whenever you gain a Bard level
+ * Replacing prepared spells: Whenever you gain a Bard level
+ * Spellcasting Ability: Charisma
+ * Regaining Spell Slots: You regain all expended spell slots when you finish a Long Rest.
+
+Name: Beguiling Magic
+Origin: College of Glamour Bard Level 3
+Description: You always have the Charm Person and Mirror Image spells prepared.
+In addition, immediately after you cast an Enchantment or Illusion spell using a spell slot, you can cause a creature you can see within 60 feet of yourself to make a Wisdom saving throw against your spell save DC. On a failed save, the target has the Charmed or Frightened condition (your choice) for 1 minute. The target repeats the save at the end of each of its turns, ending the effect on itself on a success.
+Once you use this benefit, you can't use it again until you finish a Long Rest. You can also restore your use of it by expending one use of your Bardic Inspiration (no action required).
+
+Name: Mantle of Inspiration
+Origin: College of Glamour Bard Level 3
+Description: You can weave fey magic into a song or dance to fill others with vigor. As a Bonus Action, you can expend a use of Bardic Inspiration, rolling a Bardic Inspiration die. When you do so, choose a number of other creatures within 60 feet of yourself, up to a number equal to your Charisma modifier (minimum of one creature). Each of those creatures gains a number of Temporary Hit Points equal to two times the number rolled on the Bardic Inspiration die, and then each can use its Reaction to move up to its Speed without provoking Opportunity Attacks.
+
+
+################################################################################
+# ================================= Weapons ================================== #
+################################################################################
+Field              | Value                                                                                                                                     
+-------------------+-------------------------------------------------------------------------------------------------------------------------------------------
+Name               | Dagger                                                                                                                                    
+Type               | Simple Melee                                                                                                                              
+DamageType         | Piercing                                                                                                                                  
+Property 'Finesse' | Use Str or Dex (your choice) for attack and damage rolls; same mod for both.                                                              
+Property 'Light'   | When you Attack with a Light weapon, you can Bonus Action attack with another Light weapon; no ability mod to that damage unless negative.
+Property 'Thrown'  | Can throw weapon for ranged attack; use same ability mod as melee version.                                                                
+Proficient         | Yes                                                                                                                                       
+AttackRoll         | 1d20 + 2 (ability mod: Dexterity) + 2 (Proficient)                                                                                        
+DamageRoll         | 1d4 + 2 (ability mod: Dexterity)                                                                                                          
+AC: 10             | Prob of Hit: 0.75, Avg Dmg: 3.38                                                                                                          
+AC: 11             | Prob of Hit: 0.70, Avg Dmg: 3.15                                                                                                          
+AC: 12             | Prob of Hit: 0.65, Avg Dmg: 2.93                                                                                                          
+AC: 13             | Prob of Hit: 0.60, Avg Dmg: 2.70                                                                                                          
+AC: 14             | Prob of Hit: 0.55, Avg Dmg: 2.48                                                                                                          
+AC: 15             | Prob of Hit: 0.50, Avg Dmg: 2.25                                                                                                          
+AC: 16             | Prob of Hit: 0.45, Avg Dmg: 2.02                                                                                                          
+AC: 17             | Prob of Hit: 0.40, Avg Dmg: 1.80                                                                                                          
+AC: 18             | Prob of Hit: 0.35, Avg Dmg: 1.57                                                                                                          
+AC: 19             | Prob of Hit: 0.30, Avg Dmg: 1.35                                                                                                          
+AC: 20             | Prob of Hit: 0.25, Avg Dmg: 1.12                                                                                                          
+
+################################################################################
+# =============================== Spell Slots ================================ #
+################################################################################
+Level 1 | Level 2
+--------+--------
+4       | 2      
+
+################################################################################
+# ================================== Spells ================================== #
+################################################################################
+Name: Light
+Level: 0
+School: Evocation
+Classes: Artificer, Bard, Cleric, Sorcerer, Wizard
+Casting Time: Action
+Range: Touch
+Components: V, M (a firefly or phosphorescent moss)
+Duration: 1 hour
+Description:
+You touch one Large or smaller object that isn’t being worn or carried by someone else.
+Until the spell ends, the object sheds Bright Light in a 20-foot radius and Dim Light for an additional 20 feet.
+The light can be colored as you like.
+Covering the object with something opaque blocks the light.
+The spell ends if you cast it again.
+Source: Player's Handbook
+Spellcasting Ability: Charisma
+----------------------------------------
+Name: Mage Hand
+Level: 0
+School: Conjuration
+Classes: Artificer, Bard, Sorcerer, Warlock, Wizard
+Casting Time: Action
+Range: 30 feet
+Components: V, S
+Duration: 1 minute
+Description:
+A spectral, floating hand appears at a point you choose within range.
+The hand lasts for the duration.
+The hand vanishes if it is ever more than 30 feet away from you or if you cast this spell again.
+When you cast the spell, you can use the hand to manipulate an object, open an unlocked door or container, stow or retrieve an item from an open container, or pour the contents out of a vial.
+As a Magic action on your later turns, you can control the hand thus again.
+As part of that action, you can move the hand up to 30 feet.
+The hand can’t attack, activate magic items, or carry more than 10 pounds.
+Source: Player's Handbook
+Spellcasting Ability: Charisma
+----------------------------------------
+Name: Vicious Mockery
+Level: 0
+School: Enchantment
+Classes: Bard
+Casting Time: Action
+Range: 60 feet
+Components: V
+Duration: Instantaneous
+Description:
+You unleash a string of insults laced with subtle enchantments at one creature you can see or hear within range.
+The target must succeed on a Wisdom saving throw or take 1d6 Psychic damage and have Disadvantage on the next attack roll it makes before the end of its next turn.
+Cantrip Upgrade.
+The damage increases by 1d6 when you reach levels 5 (2d6), 11 (3d6), and 17 (4d6).
+Source: Player's Handbook
+Spellcasting Ability: Charisma
+----------------------------------------
+Name: Charm Person
+Level: 1
+School: Enchantment
+Classes: Bard, Druid, Sorcerer, Warlock, Wizard
+Casting Time: Action
+Range: 30 feet
+Components: V, S
+Duration: 1 hour
+Description:
+One Humanoid you can see within range makes a Wisdom saving throw.
+It does so with Advantage if you or your allies are fighting it.
+On a failed save, the target has the Charmed condition until the spell ends or until you or your allies damage it.
+The Charmed creature is Friendly to you.
+When the spell ends, the target knows it was Charmed by you.
+Using a Higher-Level Spell Slot.
+You can target one additional creature for each spell slot level above 1.
+Source: Player's Handbook
+Spellcasting Ability: Charisma
+----------------------------------------
+Name: Dissonant Whispers
+Level: 1
+School: Enchantment
+Classes: Bard
+Casting Time: Action
+Range: 60 feet
+Components: V
+Duration: Instantaneous
+Description:
+One creature of your choice that you can see within range hears a discordant melody in its mind.
+The target makes a Wisdom saving throw.
+On a failed save, it takes 3d6 Psychic damage and must immediately use its Reaction, if available, to move as far away from you as it can, using the safest route.
+On a successful save, the target takes half as much damage only.
+Using a Higher-Level Spell Slot.
+The damage increases by 1d6 for each spell slot level above 1.
+Source: Player's Handbook
+Spellcasting Ability: Charisma
+----------------------------------------
+Name: Faerie Fire
+Level: 1
+School: Evocation
+Classes: Artificer, Bard, Druid
+Casting Time: Action
+Range: 60 feet
+Components: V
+Duration: Concentration, up to 1 minute
+Description:
+Objects in a 20-foot Cube within range are outlined in blue, green, or violet light (your choice).
+Each creature in the Cube is also outlined if it fails a Dexterity saving throw.
+For the duration, objects and affected creatures shed Dim Light in a 10-foot radius and can’t benefit from the Invisible condition.
+Attack rolls against an affected creature or object have Advantage if the attacker can see it.
+Source: Player's Handbook
+Spellcasting Ability: Charisma
+----------------------------------------
+Name: Healing Word
+Level: 1
+School: Abjuration
+Classes: Bard, Cleric, Druid
+Casting Time: Bonus Action
+Range: 60 feet
+Components: V
+Duration: Instantaneous
+Description:
+A creature of your choice that you can see within range regains Hit Points equal to 2d4 plus your spellcasting ability modifier.
+Using a Higher-Level Spell Slot.
+The healing increases by 2d4 for each spell slot level above 1.
+Source: Player's Handbook
+Spellcasting Ability: Charisma
+----------------------------------------
+Name: Tasha's Hideous Laughter
+Level: 1
+School: Enchantment
+Classes: Bard, Warlock, Wizard
+Casting Time: Action
+Range: 30 feet
+Components: V, S, M (a tart and a feather)
+Duration: Concentration, up to 1 minute
+Description:
+One creature of your choice that you can see within range makes a Wisdom saving throw.
+On a failed save, it has the Prone and Incapacitated conditions for the duration.
+During that time, it laughs uncontrollably if it’s capable of laughter, and it can’t end the Prone condition on itself.
+At the end of each of its turns and each time it takes damage, it makes another Wisdom saving throw.
+The target has Advantage on the save if the save is triggered by damage.
+On a successful save, the spell ends.
+Using a Higher-Level Spell Slot.
+You can target one additional creature for each spell slot level about 1.
+Source: Player's Handbook
+Spellcasting Ability: Charisma
+----------------------------------------
+Name: Aid
+Level: 2
+School: Abjuration
+Classes: Artificer, Bard, Cleric, Druid, Paladin, Ranger
+Casting Time: Action
+Range: 30 feet
+Components: V, S, M (a strip of white cloth)
+Duration: 8 hours
+Description:
+Choose up to three creatures within range.
+Each target’s Hit Point maximum and current Hit Points increase by 5 for the duration.
+Using a Higher-Level Spell Slot.
+Each target’s Hit Points increase by 5 for each spell slot level above 2.
+Source: Player's Handbook
+Spellcasting Ability: Charisma
+----------------------------------------
+Name: Enhance Ability
+Level: 2
+School: Transmutation
+Classes: Artificer, Bard, Cleric, Druid, Ranger, Sorcerer, Wizard
+Casting Time: Action
+Range: Touch
+Components: V, S, M (fur or a feather)
+Duration: Concentration, up to 1 hour
+Description:
+You touch a creature and choose Strength, Dexterity, Intelligence, Wisdom, or Charisma.
+For the duration, the target has Advantage on ability checks using the chosen ability.
+Using a Higher-Level Spell Slot.
+You can target one additional creature for each spell slot level above 2.
+You can choose a different ability for each target.
+Source: Player's Handbook
+Spellcasting Ability: Charisma
+----------------------------------------
+Name: Mirror Image
+Level: 2
+School: Illusion
+Classes: Bard, Sorcerer, Warlock, Wizard
+Casting Time: Action
+Range: Self
+Components: V, S
+Duration: 1 minute
+Description:
+Three illusory duplicates of yourself appear in your space.
+Until the spell ends, the duplicates move with you and mimic your actions, shifting position so it’s impossible to track which image is real.
+Each time a creature hits you with an attack roll during the spell’s duration, roll a d6 for each of your remaining duplicates.
+If any of the d6s rolls a 3 or higher, one of the duplicates is hit instead of you, and the duplicate is destroyed.
+The duplicates otherwise ignore all other damage and effects.
+The spell ends when all three duplicates are destroyed.
+A creature is unaffected by this spell if it has the Blinded condition, Blindsight, or Truesight.
+Source: Player's Handbook
+Spellcasting Ability: Charisma
+

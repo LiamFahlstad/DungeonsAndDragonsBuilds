@@ -16,7 +16,7 @@ from StatBlocks.SkillsStatBlock import BarbarianSkillsStatBlock
 
 
 @attr.dataclass
-class BerserkerBarbarianLevel3(ClassBuilder.SubclassLevel3):
+class WorldTreeBarbarianLevel3(ClassBuilder.SubclassLevel3):
 
     def add_features(
         self,
@@ -25,12 +25,12 @@ class BerserkerBarbarianLevel3(ClassBuilder.SubclassLevel3):
         rage: BarbarianFeatures.Rage = data.get_features_by_type(
             BarbarianFeatures.Rage
         )[0]
-        rage.add_feature(BarbarianFeatures.Frenzy())
+        rage.add_feature(BarbarianFeatures.VitalityOfTheTree())
         return data
 
 
 @attr.dataclass
-class BerserkerBarbarianLevel6(ClassBuilder.SubclassLevel6):
+class WorldTreeBarbarianLevel6(ClassBuilder.SubclassLevel6):
 
     def add_features(
         self,
@@ -39,23 +39,23 @@ class BerserkerBarbarianLevel6(ClassBuilder.SubclassLevel6):
         rage: BarbarianFeatures.Rage = data.get_features_by_type(
             BarbarianFeatures.Rage
         )[0]
-        rage.add_feature(BarbarianFeatures.MindlessRage())
+        rage.add_feature(BarbarianFeatures.BranchesOfTheTree())
         return data
 
 
 @attr.dataclass
-class BerserkerBarbarianLevel10(ClassBuilder.SubclassLevel10):
+class WorldTreeBarbarianLevel10(ClassBuilder.SubclassLevel10):
 
     def add_features(
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(BarbarianFeatures.Retaliation())
+        data.add_feature(BarbarianFeatures.BatteringRoots())
         return data
 
 
 @attr.dataclass
-class BerserkerBarbarianLevel14(ClassBuilder.SubclassLevel14):
+class WorldTreeBarbarianLevel14(ClassBuilder.SubclassLevel14):
 
     def add_features(
         self,
@@ -64,11 +64,11 @@ class BerserkerBarbarianLevel14(ClassBuilder.SubclassLevel14):
         rage: BarbarianFeatures.Rage = data.get_features_by_type(
             BarbarianFeatures.Rage
         )[0]
-        rage.add_feature(BarbarianFeatures.IntimidatingPresence())
+        rage.add_feature(BarbarianFeatures.BranchesOfTheTree())
         return data
 
 
-class BerserkerBarbarianStarterClassBuilder(BarbarianStarterClassBuilder):
+class WorldTreeBarbarianStarterClassBuilder(BarbarianStarterClassBuilder):
 
     def __init__(
         self,
@@ -87,7 +87,7 @@ class BerserkerBarbarianStarterClassBuilder(BarbarianStarterClassBuilder):
         super().__init__(
             barbarian_level_features=barbarian_level_features,
             barbarian_level=barbarian_level,
-            subclass=BarbarianSubclass.PATH_OF_THE_BERSERKER.value,
+            subclass=BarbarianSubclass.PATH_OF_THE_WORLD_TREE.value,
             abilities=abilities,
             barbarian_skills=barbarian_skills,
             background_ability_bonuses=background_ability_bonuses,
@@ -100,7 +100,7 @@ class BerserkerBarbarianStarterClassBuilder(BarbarianStarterClassBuilder):
         )
 
 
-class BerserkerBarbarianMulticlassBuilder(BarbarianMulticlassBuilder):
+class WorldTreeBarbarianMulticlassBuilder(BarbarianMulticlassBuilder):
 
     def __init__(
         self,
@@ -111,6 +111,6 @@ class BerserkerBarbarianMulticlassBuilder(BarbarianMulticlassBuilder):
         super().__init__(
             barbarian_level_features=barbarian_level_features,
             barbarian_level=barbarian_level,
-            subclass=BarbarianSubclass.PATH_OF_THE_BERSERKER.value,
+            subclass=BarbarianSubclass.PATH_OF_THE_WORLD_TREE.value,
             replace_spells=replace_spells,
         )

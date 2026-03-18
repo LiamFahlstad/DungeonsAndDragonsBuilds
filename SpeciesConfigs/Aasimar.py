@@ -1,4 +1,5 @@
 import CharacterSheetCreator
+from Definitions import Ability
 from Features.SpeciesFeatures import AasimarFeatures
 from SpeciesConfigs.SpeciesBuilder import SpeciesBuilder
 from Spells.Definitions import SorcererLevel0Spells
@@ -20,7 +21,7 @@ class AasimarSpeciesBuilder(SpeciesBuilder):
         data.add_feature(AasimarFeatures.Darkvision())
         data.add_feature(AasimarFeatures.CelestialResistance())
         data.add_feature(AasimarFeatures.LightBearer())
-        data.add_cantrip(SorcererLevel0Spells.LIGHT)
+        data.add_cantrip(SorcererLevel0Spells.LIGHT, Ability.CHARISMA)
         data.add_feature(AasimarFeatures.HealingHands())
         if self.character_level >= 3:
             data.add_feature(AasimarFeatures.CelestialRevelation())
