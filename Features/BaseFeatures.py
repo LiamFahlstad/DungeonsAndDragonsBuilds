@@ -26,7 +26,9 @@ class CharacterFeature(Feature):
     def write_to_file(
         self, character_stat_block: CharacterStatBlock, file: TextIO, html: bool = False
     ):
-        pass
+        raise NotImplementedError(
+            "CharacterFeature must implement write_to_file method."
+        )
 
 
 class TextFeature(Feature):
@@ -68,7 +70,15 @@ class TextFeature(Feature):
 
         description = self.get_description(character_stat_block)
         for addition in self.additional_features:
-            description += self.add_feature_effects(character_stat_block, addition)
+            new_line = "\n" if not html else "<br>\n"
+            description += new_line + self.add_feature_effects(
+                character_stat_block, addition
+            )
+
+        if html:
+            description = description.replace("\n", "<br>\n").replace(
+                "    ", "&nbsp;&nbsp;&nbsp;&nbsp;"
+            )
 
         # Ensure description is not too long without newlines
         description = StringUtils.wrap_text(description, max_sentence_length)
@@ -78,10 +88,10 @@ class TextFeature(Feature):
 
         if html:
             file.write(f"<h3>{self.name}</h3>\n")
-            file.write(f"<strong>Origin:</strong> {self.origin}\n")
+            file.write(f"<strong>Origin:</strong> {self.origin}\n<br>\n")
             file.write("<strong>Description:</strong>\n")
             file.write(f"{description}\n")
-            file.write("\n")
+            # file.write("\n")
         else:
             file.write(f"Name: {self.name}\n")
             file.write(f"Origin: {self.origin}\n")

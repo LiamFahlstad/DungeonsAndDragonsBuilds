@@ -232,7 +232,7 @@ class AbstractWeapon(TextFeature):
 
         for prop in stats.properties:
             description = StringUtils.wrap_text(
-                prop.description, max_sentence_length=80
+                prop.description, max_sentence_length=280
             )
             rows.append([f"Property '{prop.value}'", description])
 
@@ -251,7 +251,7 @@ class AbstractWeapon(TextFeature):
         if self.player_has_mastery:
             mastery_description = stats.mastery.description
             mastery_description = StringUtils.wrap_text(
-                mastery_description, max_sentence_length=80
+                mastery_description, max_sentence_length=280
             )
             rows.append([f"Mastery '{stats.mastery.value}'", mastery_description])
 
@@ -265,30 +265,30 @@ class AbstractWeapon(TextFeature):
         damage_condition = DamageCalculator.DiceRollCondition.NEUTRAL
         damage_bonus, _ = self._calculate_ability_modifier_bonus(character_stat_block)
 
-        for ac in range(10, 21):
-            probability_of_hit = DamageCalculator.probability_of_success(
-                difficulty_class=ac,
-                die=attack_roll_die,
-                condition=attack_roll_condition,
-                bonus=attack_roll_bonus,
-            )
+        # for ac in range(10, 21):
+        #     probability_of_hit = DamageCalculator.probability_of_success(
+        #         difficulty_class=ac,
+        #         die=attack_roll_die,
+        #         condition=attack_roll_condition,
+        #         bonus=attack_roll_bonus,
+        #     )
 
-            avg_damage = DamageCalculator.calculate_average_damage(
-                armor_class=ac,
-                attack_roll_die=attack_roll_die,
-                attack_roll_condition=attack_roll_condition,
-                attack_roll_bonus=attack_roll_bonus,
-                damage_die=damage_die,
-                number_of_damage_dice=number_of_damage_dice,
-                damage_condition=damage_condition,
-                damage_bonus=damage_bonus,
-            )
-            rows.append(
-                [
-                    f"AC: {ac}",
-                    f"Prob of Hit: {probability_of_hit:.2f}, Avg Dmg: {avg_damage:.2f}",
-                ]
-            )
+        #     avg_damage = DamageCalculator.calculate_average_damage(
+        #         armor_class=ac,
+        #         attack_roll_die=attack_roll_die,
+        #         attack_roll_condition=attack_roll_condition,
+        #         attack_roll_bonus=attack_roll_bonus,
+        #         damage_die=damage_die,
+        #         number_of_damage_dice=number_of_damage_dice,
+        #         damage_condition=damage_condition,
+        #         damage_bonus=damage_bonus,
+        #     )
+        #     rows.append(
+        #         [
+        #             f"AC: {ac}",
+        #             f"Prob of Hit: {probability_of_hit:.2f}, Avg Dmg: {avg_damage:.2f}",
+        #         ]
+        #     )
 
         return rows
 

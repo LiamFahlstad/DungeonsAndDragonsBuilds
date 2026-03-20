@@ -1,13 +1,20 @@
 import Definitions
 from Builds.CharacterBuilder import CharacterBuilder
 from CharacterConfigs.BaseClasses import ClassBuilder
-from CharacterConfigs.BaseClasses.RogueBase import RogueLevel1, RogueLevel2, RogueLevel3
+from CharacterConfigs.BaseClasses.RogueBase import (
+    RogueLevel1,
+    RogueLevel2,
+    RogueLevel3,
+    RogueLevel4,
+    RogueLevel5,
+    RogueLevel6,
+)
 from CharacterConfigs.SubClasses.RogueAssassin import (
     AssassinRogueLevel3,
     AssassinRogueStarterClassBuilder,
 )
 from Definitions import Ability, Skill
-from Features import Backgrounds, OriginFeats, Weapons
+from Features import Backgrounds, GeneralFeats, OriginFeats, Weapons
 from SpeciesConfigs import Elf
 from StatBlocks.AbilitiesStatBlock import StandardArrayAbilitiesStatBlock
 from StatBlocks.SkillsStatBlock import RogueSkillsStatBlock
@@ -15,7 +22,7 @@ from StatBlocks.SkillsStatBlock import RogueSkillsStatBlock
 
 def get_starter_class_builder():
     return AssassinRogueStarterClassBuilder(
-        rogue_level=3,
+        rogue_level=4,
         # Distribute 15, 14, 13, 12, 10, 8 among your abilities.
         abilities=StandardArrayAbilitiesStatBlock(
             strength=8,
@@ -41,13 +48,13 @@ def get_starter_class_builder():
         ),
         background_ability_bonuses=Backgrounds.FreeBackgroundAbilityBonus(
             [
-                (Ability.CONSTITUTION, 2),
-                (Ability.DEXTERITY, 1),
+                (Ability.INTELLIGENCE, 1),
+                (Ability.DEXTERITY, 2),
             ]
         ),
         background_skill_proficiencies=Backgrounds.FreeBackgroundSkillProficiency(
             [
-                Skill.NATURE,
+                Skill.ARCANA,
                 Skill.DECEPTION,
             ]
         ),
@@ -65,6 +72,13 @@ def get_starter_class_builder():
                 ),
                 2: RogueLevel2(),
                 3: RogueLevel3(),
+                4: RogueLevel4(
+                    general_feat=GeneralFeats.DualWielder(
+                        character_level=4, ability=Ability.DEXTERITY
+                    ),
+                ),
+                5: RogueLevel5(),
+                6: RogueLevel6(),
             },
             subclass_features_by_level={
                 3: AssassinRogueLevel3(),

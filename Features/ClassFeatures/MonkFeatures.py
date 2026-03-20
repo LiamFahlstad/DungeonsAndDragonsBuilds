@@ -62,12 +62,12 @@ class MartialArts(TextFeature):
         martial_arts_die = LEVEL_TO_MARTIAL_ARTS_DIE.get(monk_level, "1d6")
         description = (
             "Your practice of martial arts gives you mastery of combat styles that use your Unarmed Strike and Monk weapons, which are the following:\n"
-            " * Simple Melee weapons\n"
-            " * Martial Melee weapons that have the Light property\n"
+            "    * Simple Melee weapons\n"
+            "    * Martial Melee weapons that have the Light property\n"
             "You gain the following benefits while you are unarmed or wielding only Monk weapons and you aren't wearing armor or wielding a Shield.\n"
-            " * Bonus Unarmed Strike. You can make an Unarmed Strike as a Bonus Action.\n"
-            f" * Martial Arts Die. You can roll {martial_arts_die} in place of the normal damage of your Unarmed Strike or Monk weapons. This die changes as you gain Monk levels, as shown in the Martial Arts column of the Monk Features table.\n"
-            " * Dexterous Attacks. You can use your Dexterity modifier instead of your Strength modifier for the attack and damage rolls of your Unarmed Strikes and Monk weapons. In addition, when you use the Grapple or Shove option of your Unarmed Strike, you can use your Dexterity modifier instead of your Strength modifier to determine the save DC."
+            "    * Bonus Unarmed Strike. You can make an Unarmed Strike as a Bonus Action.\n"
+            f"    * Martial Arts Die. You can roll {martial_arts_die} in place of the normal damage of your Unarmed Strike or Monk weapons. This die changes as you gain Monk levels, as shown in the Martial Arts column of the Monk Features table.\n"
+            "    * Dexterous Attacks. You can use your Dexterity modifier instead of your Strength modifier for the attack and damage rolls of your Unarmed Strikes and Monk weapons. In addition, when you use the Grapple or Shove option of your Unarmed Strike, you can use your Dexterity modifier instead of your Strength modifier to determine the save DC."
         )
         return description
 
@@ -108,8 +108,8 @@ class MonksFocus(TextFeature):
         dc = 8 + wisdom_modifier + character_stat_block.get_proficiency_bonus()
         description = (
             "Rules for Focus Points:\n"
-            " * Regaining: You regain all expended Focus Points when you finish a Short or Long Rest.\n"
-            f" * DC: {dc}\n"
+            "    * Regaining: You regain all expended Focus Points when you finish a Short or Long Rest.\n"
+            f"    * DC: {dc}\n"
             "Known features:\n"
         )
         return description

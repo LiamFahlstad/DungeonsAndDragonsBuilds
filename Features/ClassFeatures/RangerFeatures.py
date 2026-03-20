@@ -14,9 +14,9 @@ class SpellCasting(TextFeature):
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
             "Spellcasting:\n"
-            " * Whenever you finish a Long Rest, you can replace one spell on your list with another Ranger spell for which you have spell slots.\n"
-            " * You regain all expended slots when you finish a Long Rest.\n"
-            " * Wisdom is your spellcasting ability for your Ranger spells."
+            "    * Whenever you finish a Long Rest, you can replace one spell on your list with another Ranger spell for which you have spell slots.\n"
+            "    * You regain all expended slots when you finish a Long Rest.\n"
+            "    * Wisdom is your spellcasting ability for your Ranger spells."
         )
         return description
 
@@ -108,9 +108,9 @@ class Tireless(TextFeature):
         wis_mod = character_stat_block.get_ability_modifier(Ability.WISDOM)
         description = (
             "Primal forces now help fuel you on your journeys, granting you the following benefits.\n"
-            f" * Temporary Hit Points: As a Magic Action, you can give yourself a number of Temporary Hit Points equal to 1d8 plus your Wisdom modifier (minimum of 1) ({max(1, wis_mod)}).\n"
+            f"    * Temporary Hit Points: As a Magic Action, you can give yourself a number of Temporary Hit Points equal to 1d8 plus your Wisdom modifier (minimum of 1) ({max(1, wis_mod)}).\n"
             f"   You can use this action a number of times equal to your Wisdom modifier (minimum of once) ({max(1, wis_mod)}), and you regain all expended uses when you finish a Long Rest.\n"
-            " * Decrease Exhaustion: Whenever you finish a Short Rest, your Exhaustion level, if any, decreases by 1."
+            "    * Decrease Exhaustion: Whenever you finish a Short Rest, your Exhaustion level, if any, decreases by 1."
         )
         return description
 
@@ -181,8 +181,8 @@ class PrimalCompanion(TextFeature):
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
             "You magically summon a primal beast, which draws strength from your bond with nature. Choose its stat block: Beast of the Land, Beast of the Sea or Beast of the Sky. You also determine the kind of animal it is, choosing a kind appropriate for the stat block. Whatever beast you choose, it bears primal markings indicating its supernatural origin.\n"
-            " * The Beast in Combat: In Combat, the beast acts during your turn. It can move and use its Reaction on its own, but the only action it takes is the Dodge action unless you take a Bonus Action to command it to take an action in its stat block or some other action. You can also sacrifice one of your attacks when you take the Attack action to command the beast to take the Beast's Strike action. If you have the Incapacitated condition, the beast acts on its own and isn't limited to the dodge action.\n"
-            " * Restoring or Replacing the Beast: If the beast has died within the last hour, you can take a Magic action to touch it and expend a spell slot. The beast returns to life after 1 minute with all its Hit Points restored.\n"
+            "    * The Beast in Combat: In Combat, the beast acts during your turn. It can move and use its Reaction on its own, but the only action it takes is the Dodge action unless you take a Bonus Action to command it to take an action in its stat block or some other action. You can also sacrifice one of your attacks when you take the Attack action to command the beast to take the Beast's Strike action. If you have the Incapacitated condition, the beast acts on its own and isn't limited to the dodge action.\n"
+            "    * Restoring or Replacing the Beast: If the beast has died within the last hour, you can take a Magic action to touch it and expend a spell slot. The beast returns to life after 1 minute with all its Hit Points restored.\n"
             "   Whenever you finish a Long Rest, you can summon a different primal beast, which appears in an unoccupied space within 5 feet of you. You choose its stat block and appearance. If you already have a beast from this feature, the old one vanishes when the new one appears."
         )
         return description
@@ -390,8 +390,8 @@ class HuntersPrey(TextFeature):
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
             "You gain one of the following feature options of your choice. Whenever you finish a Short or Long Rest, you can replace the chosen option with the other one.\n"
-            " * Colossus Slayer: Your tenacity can wear down even the most resilient foes. When you hit a creature with a weapon, the weapon deals an extra 1d8 damage to the target if it's missing any of its Hit Points. You can deal this extra damage only once per turn.\n"
-            " * Horde Breaker: Once on each of your turns when you make an attack with a weapon, you can make another attack with the same weapon against a different creature that is within 5 feet of the original target, that is within the weapon's range, and that you haven't attacked this turn."
+            "    * Colossus Slayer: Your tenacity can wear down even the most resilient foes. When you hit a creature with a weapon, the weapon deals an extra 1d8 damage to the target if it's missing any of its Hit Points. You can deal this extra damage only once per turn.\n"
+            "    * Horde Breaker: Once on each of your turns when you make an attack with a weapon, you can make another attack with the same weapon against a different creature that is within 5 feet of the original target, that is within the weapon's range, and that you haven't attacked this turn."
         )
         return description
 

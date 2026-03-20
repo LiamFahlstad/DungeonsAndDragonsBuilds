@@ -27,19 +27,19 @@ class Rage(TextFeature):
         rage_damage_bonus = get_rage_damage_bonus(barbarian_level)
         description = (
             "You can imbue yourself with a primal power called Rage, a force that grants you extraordinary might and resilience.\n"
-            " * Casting Time: Bonus Action\n"
-            " * Condition: Not wearing Heavy armor\n"
-            f" * Number of usages: You can enter your Rage {rage_usages} times.\n"
-            " * Regaining: You regain one expended use when you finish a Short Rest, and you regain all expended uses when you finish a Long Rest.\n"
-            " * While active, your Rage follows the rules below.\n"
+            "    * Casting Time: Bonus Action\n"
+            "    * Condition: Not wearing Heavy armor\n"
+            f"    * Number of usages: You can enter your Rage {rage_usages} times.\n"
+            "    * Regaining: You regain one expended use when you finish a Short Rest, and you regain all expended uses when you finish a Long Rest.\n"
+            "    * While active, your Rage follows the rules below.\n"
             "    - Damage Resistance: You have Resistance to Bludgeoning, Piercing, and Slashing damage.\n"
             f"    - Rage Damage: When you make an attack using Strength—with either a weapon or an Unarmed Strike—and deal damage to the target, you gain +{rage_damage_bonus} bonus to the damage.\n"
             "    - Strength Advantage: You have Advantage on Strength checks and Strength saving throws.\n"
             "    - No Concentration or Spells: You can't maintain Concentration, and you can't cast spells.\n"
             "    - Duration: The Rage lasts until the end of your next turn, and it ends early if you don Heavy armor or have the Incapacitated condition. If your Rage is still active on your next turn, you can extend the Rage for another round by doing one of the following:\n"
-            "       > Make an attack roll against an enemy.\n"
-            "       > Force an enemy to make a saving throw.\n"
-            "       > Take a Bonus Action to extend your Rage.\n"
+            "        > Make an attack roll against an enemy.\n"
+            "        > Force an enemy to make a saving throw.\n"
+            "        > Take a Bonus Action to extend your Rage.\n"
             "Each time the Rage is extended, it lasts until the end of your next turn. You can maintain a Rage for up to 10 minutes."
         )
         return description
@@ -178,8 +178,8 @@ class BrutalStrike(TextFeature):
         description = (
             "If you use Reckless Attack, you can forgo any Advantage on one Strength-based attack roll of your choice on your turn. The chosen attack roll mustn't have Disadvantage. If the chosen attack roll hits, the target takes an extra 1d10 damage of the same type dealt by the weapon or Unarmed Strike, and you can cause one Brutal Strike effect of your choice.\n"
             "You have the following effect options.\n"
-            " * Forceful Blow. The target is pushed 15 feet straight away from you. You can then move up to half your Speed straight toward the target without provoking Opportunity Attacks.\n"
-            " * Hamstring Blow. The target’s Speed is reduced by 15 feet until the start of your next turn. A target can be affected by only one Hamstring Blow at a time— the most recent one."
+            "    * Forceful Blow. The target is pushed 15 feet straight away from you. You can then move up to half your Speed straight toward the target without provoking Opportunity Attacks.\n"
+            "    * Hamstring Blow. The target’s Speed is reduced by 15 feet until the start of your next turn. A target can be affected by only one Hamstring Blow at a time— the most recent one."
         )
         return description
 

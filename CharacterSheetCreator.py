@@ -506,11 +506,14 @@ class CharacterSheetData:
 
             file.write("<div>\n")
             for i, feature in enumerate(sorted_features):
-                file.write("<pre>\n")  # preserves existing formatting
-                feature.write_to_file(character, file, html=True)
-                file.write("</pre>\n")
-                if i < len(sorted_features) - 1:
-                    file.write("<hr>\n")
+                try:
+                    # file.write("<pre>\n")  # preserves existing formatting
+                    feature.write_to_file(character, file, html=True)
+                    # file.write("</pre>\n")
+                    if i < len(sorted_features) - 1:
+                        file.write("<hr>\n")
+                except NotImplementedError as e:
+                    continue
 
             file.write("</div>\n<br>\n")
 

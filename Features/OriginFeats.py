@@ -94,7 +94,7 @@ class Crater(OriginTextFeat):
                 f"Valid choices are: {', '.join(tool_map.keys())}."
             )
 
-        return "\n".join(f" * {tool_map[t]}" for t in self.artisans_tools)
+        return "\n".join(f"    * {tool_map[t]}" for t in self.artisans_tools)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         return (
@@ -195,9 +195,9 @@ class MagicInitiate(OriginTextFeat):
         return (
             f"Magic Initiate {self.character_class.name.title()} Spellcasting\n"
             "Spell List (always prepared):\n"
-            f" * Cantrip 1: {self.cantrip_1}\n"
-            f" * Cantrip 2: {self.cantrip_2}\n"
-            f" * Level 1 Spell: {self.spell} (Cast once per long rest without a spell slot)\n"
+            f"    * Cantrip 1: {self.cantrip_1}\n"
+            f"    * Cantrip 2: {self.cantrip_2}\n"
+            f"    * Level 1 Spell: {self.spell} (Cast once per long rest without a spell slot)\n"
             "Spell Change. Whenever you gain a new level, you can replace one of the spells you chose for this feat with a different spell of the same level from the chosen spell list.\n\n"
             "Repeatable. You can take this feat more than once, but you must choose a different spell list each time."
         )

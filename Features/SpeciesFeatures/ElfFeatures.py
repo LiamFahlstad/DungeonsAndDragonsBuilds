@@ -9,7 +9,7 @@ SIZE = CreatureSize.MEDIUM  # Given by your species
 class Darkvision(TextFeature):
     def __init__(self, distance: int):
         self.distance = distance
-        super().__init__(name="Darkvision", origin="Orc Trait")
+        super().__init__(name="Darkvision", origin="Elf Trait")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         return f"You have Darkvision with a range of {self.distance} feet."

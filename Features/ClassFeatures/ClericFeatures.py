@@ -11,10 +11,10 @@ class Spellcasting(TextFeature):
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
             "Spellcasting:\n"
-            " * Replacing cantrips: Whenever you gain a Bard level\n"
-            " * Replacing prepared spells: Whenever you finish a Long Rest\n"
-            " * Spellcasting Ability: Wisdom\n"
-            " * Regaining Spell Slots: You regain all expended spell slots when you finish a Long Rest.\n"
+            "    * Replacing cantrips: Whenever you gain a Bard level\n"
+            "    * Replacing prepared spells: Whenever you finish a Long Rest\n"
+            "    * Spellcasting Ability: Wisdom\n"
+            "    * Regaining Spell Slots: You regain all expended spell slots when you finish a Long Rest.\n"
         )
         return description
 

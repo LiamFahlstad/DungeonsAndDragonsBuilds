@@ -12,10 +12,10 @@ class Spellcasting(TextFeature):
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
             "Spellcasting\n"
-            " * Replacing Cantrips: Change one when you gain a Sorcerer level.\n"
-            " * Replacing Spells: Change one whenever you gain a Sorcerer level.\n"
-            " * Regaining Spell Slots: You regain all expended spell slots when you finish a Long Rest.\n"
-            " * Spellcasting Ability: Charisma"
+            "    * Replacing Cantrips: Change one when you gain a Sorcerer level.\n"
+            "    * Replacing Spells: Change one whenever you gain a Sorcerer level.\n"
+            "    * Regaining Spell Slots: You regain all expended spell slots when you finish a Long Rest.\n"
+            "    * Spellcasting Ability: Charisma"
         )
         return description
 
@@ -41,10 +41,10 @@ class FontOfMagic(TextFeature):
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
             "Rules for Sorcery Points:\n"
-            " * You regain all expended Sorcery Points when you finish a Long Rest.\n"
-            " * Using Sorcery Points: You can use your Sorcery Points to fuel the options below, along with other features, such as Metamagic, that use those points.\n"
-            " * Converting Spell Slots to Sorcery Points: You can expend a spell slot to gain a number of Sorcery Points equal to the slot's level (no action required).\n"
-            " * Creating Spell Slots: As a Bonus Action, you can transform unexpended Sorcery Points into one spell slot. The Creating Spell Slots table shows the cost of creating a spell slot of a given level, and it lists the minimum Sorcerer level you must be to create a slot. Any spell slot you create with this feature vanishes when you finish a Long Rest.\n"
+            "    * You regain all expended Sorcery Points when you finish a Long Rest.\n"
+            "    * Using Sorcery Points: You can use your Sorcery Points to fuel the options below, along with other features, such as Metamagic, that use those points.\n"
+            "    * Converting Spell Slots to Sorcery Points: You can expend a spell slot to gain a number of Sorcery Points equal to the slot's level (no action required).\n"
+            "    * Creating Spell Slots: As a Bonus Action, you can transform unexpended Sorcery Points into one spell slot. The Creating Spell Slots table shows the cost of creating a spell slot of a given level, and it lists the minimum Sorcerer level you must be to create a slot. Any spell slot you create with this feature vanishes when you finish a Long Rest.\n"
             "   Spell Slot Level | Sorcery Point Cost | Minimum Sorcerer Level\n"
             "   -----------------|--------------------|-----------------------\n"
             "           1        |         2          |           2           \n"

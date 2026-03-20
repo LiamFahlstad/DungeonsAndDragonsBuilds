@@ -49,7 +49,7 @@ from StatBlocks.SkillsStatBlock import BardSkillsStatBlock
 
 def get_starter_class_builder():
     return GlamourBardStarterClassBuilder(
-        bard_level=3,
+        bard_level=5,
         # Distribute 15, 14, 13, 12, 10, 8 among your abilities.
         abilities=StandardArrayAbilitiesStatBlock(
             strength=8,
@@ -106,8 +106,8 @@ def get_starter_class_builder():
                         character_level=4,
                         ability=Ability.CHARISMA,
                     ),
-                    cantrip=BardLevel0Spells.BLADE_WARD,
-                    spell=BardLevel2Spells.AID,
+                    cantrip=BardLevel0Spells.MINOR_ILLUSION,
+                    spell=BardLevel2Spells.ENHANCE_ABILITY,
                 ),
                 5: BardLevel5(
                     spell_1=BardLevel3Spells.BESTOW_CURSE,

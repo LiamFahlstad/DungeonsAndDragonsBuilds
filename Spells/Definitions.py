@@ -1989,7 +1989,7 @@ class Spell(ABC):
             file.write(f"<strong>Components:</strong> {self.components}\n")
             file.write(f"<strong>Duration:</strong> {self.duration}\n")
             file.write(
-                f"<strong>Description:</strong>\n{StringUtils.wrap_text(description, 80)}\n"
+                f"<strong>Description:</strong>\n{StringUtils.wrap_text(description, 280)}\n"
             )
             file.write(f"<strong>Source:</strong> {self.source}\n")
 
