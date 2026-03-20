@@ -63,7 +63,7 @@ def get_starter_class_builder():
         ),
         background_ability_bonuses=Backgrounds.FreeBackgroundAbilityBonus(
             [
-                (Ability.CONSTITUTION, 1),
+                (Ability.DEXTERITY, 1),
                 (Ability.STRENGTH, 2),
             ]
         ),

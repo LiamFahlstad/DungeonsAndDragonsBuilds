@@ -505,10 +505,13 @@ class CharacterSheetData:
             sorted_features = sorted(self.features, key=sort_features)
 
             file.write("<div>\n")
-            for feature in sorted_features:
+            for i, feature in enumerate(sorted_features):
                 file.write("<pre>\n")  # preserves existing formatting
-                feature.write_to_file(character, file)
+                feature.write_to_file(character, file, html=True)
                 file.write("</pre>\n")
+                if i < len(sorted_features) - 1:
+                    file.write("<hr>\n")
+
             file.write("</div>\n<br>\n")
 
     def _write_weapons(self, character: CharacterStatBlock, file: TextIO):
@@ -669,7 +672,7 @@ class CharacterSheetData:
 
         for i, spell in enumerate(sorted_spells):
             file.write("<pre>\n")
-            spell.write_to_file(file)
+            spell.write_to_file(file, html=True)
             file.write("</pre>\n")
 
             if i < len(sorted_spells) - 1:

@@ -10,7 +10,9 @@ class Feature(ABC):
     """A feature can be anything"""
 
     @abstractmethod
-    def write_to_file(self, character_stat_block: CharacterStatBlock, file: TextIO):
+    def write_to_file(
+        self, character_stat_block: CharacterStatBlock, file: TextIO, html: bool = False
+    ):
         pass
 
     @abstractmethod
@@ -21,7 +23,9 @@ class Feature(ABC):
 class CharacterFeature(Feature):
     """A feature that can modify a character's stat block."""
 
-    def write_to_file(self, character_stat_block: CharacterStatBlock, file: TextIO):
+    def write_to_file(
+        self, character_stat_block: CharacterStatBlock, file: TextIO, html: bool = False
+    ):
         pass
 
 
@@ -57,10 +61,11 @@ class TextFeature(Feature):
         text += indented + "\n"
         return text
 
-    def write_to_file(self, character_stat_block: CharacterStatBlock, file: TextIO):
+    def write_to_file(
+        self, character_stat_block: CharacterStatBlock, file: TextIO, html: bool = False
+    ):
         max_sentence_length = 100
-        file.write(f"Name: {self.name}\n")
-        file.write(f"Origin: {self.origin}\n")
+
         description = self.get_description(character_stat_block)
         for addition in self.additional_features:
             description += self.add_feature_effects(character_stat_block, addition)
@@ -68,9 +73,19 @@ class TextFeature(Feature):
         # Ensure description is not too long without newlines
         description = StringUtils.wrap_text(description, max_sentence_length)
 
-        if description[-1] != "\n":
-            description += "\n"  # Ensure newline at end
-        file.write(f"Description: {description}\n")
+        if not description.endswith("\n"):
+            description += "\n"
+
+        if html:
+            file.write(f"<h3>{self.name}</h3>\n")
+            file.write(f"<strong>Origin:</strong> {self.origin}\n")
+            file.write("<strong>Description:</strong>\n")
+            file.write(f"{description}\n")
+            file.write("\n")
+        else:
+            file.write(f"Name: {self.name}\n")
+            file.write(f"Origin: {self.origin}\n")
+            file.write(f"Description: {description}\n")
 
 
 class MagicianDruidFeature(CharacterFeature):

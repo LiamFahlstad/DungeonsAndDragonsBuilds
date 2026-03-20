@@ -1974,24 +1974,46 @@ class Spell(ABC):
             "source": self.source,
         }
 
-    def write_to_file(self, file: TextIO):
+    def write_to_file(self, file: TextIO, html: bool = False):
         lines = [line.strip() + "." for line in self.description.strip().split(".")]
         lines = lines if len(lines) <= 1 else lines[:-1]
         description = "\n".join(lines)
 
-        file.write(f"Name: {self.name}\n")
-        file.write(f"Level: {self.level}\n")
-        file.write(f"School: {self.school}\n")
-        file.write(f"Classes: {', '.join(self.classes)}\n")
-        file.write(f"Casting Time: {self.casting_time}\n")
-        file.write(f"Range: {self.range}\n")
-        file.write(f"Components: {self.components}\n")
-        file.write(f"Duration: {self.duration}\n")
-        file.write(f"Description:\n{StringUtils.wrap_text(description, 80)}\n")
-        file.write(f"Source: {self.source}\n")
+        if html:
+            file.write(f"<h3>{self.name}</h3>\n")
+            file.write(f"<strong>Level:</strong> {self.level}\n")
+            file.write(f"<strong>School:</strong> {self.school}\n")
+            file.write(f"<strong>Classes:</strong> {', '.join(self.classes)}\n")
+            file.write(f"<strong>Casting Time:</strong> {self.casting_time}\n")
+            file.write(f"<strong>Range:</strong> {self.range}\n")
+            file.write(f"<strong>Components:</strong> {self.components}\n")
+            file.write(f"<strong>Duration:</strong> {self.duration}\n")
+            file.write(
+                f"<strong>Description:</strong>\n{StringUtils.wrap_text(description, 80)}\n"
+            )
+            file.write(f"<strong>Source:</strong> {self.source}\n")
 
-        if self.spell_casting_ability:
-            file.write(f"Spellcasting Ability: {self.spell_casting_ability.value}\n")
+            if self.spell_casting_ability:
+                file.write(
+                    f"<strong>Spellcasting Ability:</strong> {self.spell_casting_ability.value}\n"
+                )
+
+        else:
+            file.write(f"Name: {self.name}\n")
+            file.write(f"Level: {self.level}\n")
+            file.write(f"School: {self.school}\n")
+            file.write(f"Classes: {', '.join(self.classes)}\n")
+            file.write(f"Casting Time: {self.casting_time}\n")
+            file.write(f"Range: {self.range}\n")
+            file.write(f"Components: {self.components}\n")
+            file.write(f"Duration: {self.duration}\n")
+            file.write(f"Description:\n{StringUtils.wrap_text(description, 80)}\n")
+            file.write(f"Source: {self.source}\n")
+
+            if self.spell_casting_ability:
+                file.write(
+                    f"Spellcasting Ability: {self.spell_casting_ability.value}\n"
+                )
 
     def __repr__(self):
         return f"<Spell {self.name!r}, level {self.level}>"
