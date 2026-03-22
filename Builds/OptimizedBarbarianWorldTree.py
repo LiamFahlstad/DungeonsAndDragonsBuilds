@@ -40,7 +40,7 @@ from StatBlocks.SkillsStatBlock import BarbarianSkillsStatBlock
 
 def get_starter_class_builder():
     return WorldTreeBarbarianStarterClassBuilder(
-        barbarian_level=3,
+        barbarian_level=4,
         # Distribute 15, 14, 13, 12, 10, 8 among your abilities.
         abilities=StandardArrayAbilitiesStatBlock(
             strength=15,

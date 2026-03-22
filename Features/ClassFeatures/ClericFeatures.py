@@ -1,4 +1,5 @@
-from Features.BaseFeatures import TextFeature
+from Definitions import Skill
+from Features.BaseFeatures import CharacterFeature, TextFeature
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 BARBARIAN_HIT_DIE = 8
@@ -107,15 +108,25 @@ class GreaterDivineIntervention(TextFeature):
 ### Knowledge Domain Cleric Features ###
 
 
-class BlessingsofKnowledge(TextFeature):
-    def __init__(self):
-        super().__init__(
-            name="Blessings of Knowledge", origin="Knowledge Domain Cleric Level 3"
-        )
+class BlessingsOfKnowledge(CharacterFeature):
+    def __init__(self, skill_1: Skill, skill_2: Skill):
+        allowed_skills = [
+            Skill.ARCANA,
+            Skill.HISTORY,
+            Skill.NATURE,
+            Skill.RELIGION,
+        ]
+        for skill in [skill_1, skill_2]:
+            if skill not in allowed_skills:
+                raise ValueError(
+                    f"Invalid skill choice for Knowledge Cleric subclass: {skill}"
+                )
+        self.skill_1 = skill_1
+        self.skill_2 = skill_2
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        description = "You gain proficiency with one type of Artisan's Tools of your choice and in two of the following skills of your choice: Arcana, History, Nature, or Religion. You have Expertise in those two skills."
-        return description
+    def modify(self, character_stat_block: CharacterStatBlock):
+        character_stat_block.skills.add_skill_proficiency(self.skill_1)
+        character_stat_block.skills.add_skill_proficiency(self.skill_2)
 
 
 class KnowledgeDomainSpells(TextFeature):
