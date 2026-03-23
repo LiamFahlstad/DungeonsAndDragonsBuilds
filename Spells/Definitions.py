@@ -1903,8 +1903,13 @@ class TransmutationLevel9Spells(str, Enum):
 class Spell(ABC):
     """Abstract base spell interface."""
 
-    def __init__(self, spell_casting_ability: Optional[Definitions.Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Definitions.Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         self.spell_casting_ability = spell_casting_ability
+        self._additional_ruling = additional_ruling
 
     # ---------- Required properties ---------- #
 
@@ -1998,6 +2003,11 @@ class Spell(ABC):
                     f"<strong>Spellcasting Ability:</strong> {self.spell_casting_ability.value}\n"
                 )
 
+            if self._additional_ruling:
+                file.write(
+                    f"<strong>Additional Ruling:</strong> {self._additional_ruling}\n"
+                )
+
         else:
             file.write(f"Name: {self.name}\n")
             file.write(f"Level: {self.level}\n")
@@ -2015,6 +2025,9 @@ class Spell(ABC):
                     f"Spellcasting Ability: {self.spell_casting_ability.value}\n"
                 )
 
+            if self._additional_ruling:
+                file.write(f"Additional Ruling: {self._additional_ruling}\n")
+
     def __repr__(self):
         return f"<Spell {self.name!r}, level {self.level}>"
 
@@ -2026,8 +2039,9 @@ class DataSpell(Spell):
         self,
         spell_data: dict[str, Any],
         spell_casting_ability: Optional[Definitions.Ability] = None,
+        additional_ruling: Optional[str] = None,
     ):
-        super().__init__(spell_casting_ability)
+        super().__init__(spell_casting_ability, additional_ruling)
         self._data = spell_data
 
     @property
@@ -2091,8 +2105,9 @@ class ExplicitSpell(Spell):
         description: str,
         source: str,
         spell_casting_ability: Optional[Definitions.Ability] = None,
+        additional_ruling: Optional[str] = None,
     ):
-        super().__init__(spell_casting_ability)
+        super().__init__(spell_casting_ability, additional_ruling)
 
         self._name = name
         self._level = level

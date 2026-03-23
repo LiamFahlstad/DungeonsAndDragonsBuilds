@@ -24,17 +24,20 @@ class SpellFactory:
         cls,
         spell_name: str,
         spell_casting_ability: Optional[Definitions.Ability] = None,
+        additional_ruling: Optional[str] = None,
     ) -> Spell:
         """Create a Spell object from the name."""
 
         if spell_name in SpellSet:
             spell_class = SpellSet[spell_name]
-            return spell_class(spell_casting_ability)
+            return spell_class(spell_casting_ability, additional_ruling)
 
         data = cls._load_json()
         if spell_name in data:
             return DataSpell(
-                spell_data=data[spell_name], spell_casting_ability=spell_casting_ability
+                spell_data=data[spell_name],
+                spell_casting_ability=spell_casting_ability,
+                additional_ruling=additional_ruling,
             )
         raise ValueError(f"Spell '{spell_name}' not found in JSON file.")
 

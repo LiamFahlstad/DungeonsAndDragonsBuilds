@@ -38,7 +38,7 @@ class CharacterSheetData:
 
     features: list[Feature] = attr.Factory(list)
     invocations: list[str] = attr.Factory(list)
-    spells: list[tuple[str, Ability]] = attr.Factory(list)
+    spells: list[tuple[str, Ability, Optional[str]]] = attr.Factory(list)
     spell_casting_ability: Optional[Ability] = None
 
     spell_slots: dict[int, int] = attr.Factory(dict)
@@ -92,7 +92,12 @@ class CharacterSheetData:
     def add_fighting_style(self, fighting_style: FightingStyle):
         self.fighting_styles.append(fighting_style)
 
-    def add_spell(self, spell: str, spell_casting_ability: Optional[Ability] = None):
+    def add_spell(
+        self,
+        spell: str,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         if spell_casting_ability is None:
             if self.spell_casting_ability is None:
                 raise ValueError(
@@ -102,10 +107,13 @@ class CharacterSheetData:
 
         if spell in [s[0] for s in self.spells]:
             raise ValueError(f"Spell {spell} already added.")
-        self.spells.append((spell, spell_casting_ability))
+        self.spells.append((spell, spell_casting_ability, additional_ruling))
 
     def add_cantrip(
-        self, cantrip: str, spell_casting_ability: Optional[Ability] = None
+        self,
+        cantrip: str,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
     ):
         if spell_casting_ability is None:
             if self.spell_casting_ability is None:
@@ -113,7 +121,7 @@ class CharacterSheetData:
                     "Spell casting ability must be provided if not already set."
                 )
             spell_casting_ability = self.spell_casting_ability
-        self.spells.append((cantrip, spell_casting_ability))
+        self.spells.append((cantrip, spell_casting_ability, additional_ruling))
 
     def replace_spells(self, replace_spells: dict[str, str]):
         for old_spell, new_spell in replace_spells.items():
@@ -124,10 +132,11 @@ class CharacterSheetData:
         old_spell: str,
         new_spell: str,
         new_spell_ability: Optional[Ability] = None,
+        new_additional_ruling: Optional[str] = None,
     ):
         new_spells = []
         success = False
-        for spell_name, spell_ability in self.spells:
+        for spell_name, spell_ability, _ in self.spells:
 
             if spell_name == old_spell:
                 new_spell_ability = (
@@ -135,10 +144,10 @@ class CharacterSheetData:
                     if new_spell_ability is not None
                     else spell_ability
                 )
-                new_spells.append((new_spell, new_spell_ability))
+                new_spells.append((new_spell, new_spell_ability, new_additional_ruling))
                 success = True
             else:
-                new_spells.append((spell_name, spell_ability))
+                new_spells.append((spell_name, spell_ability, new_additional_ruling))
         if not success:
             raise ValueError(f"Spell {old_spell} not found to replace.")
         self.spells = new_spells
@@ -650,8 +659,8 @@ class CharacterSheetData:
         TableUtils.write_separator(file, "Spells")
 
         spells = [
-            SpellFactory.create(spell_name, spell_casting_ability)
-            for spell_name, spell_casting_ability in self.spells
+            SpellFactory.create(spell_name, spell_casting_ability, additional_ruling)
+            for spell_name, spell_casting_ability, additional_ruling in self.spells
         ]
         sorted_spells = sorted(spells, key=lambda s: (s.level, s.name))
 
@@ -668,8 +677,8 @@ class CharacterSheetData:
         file.write("<h2>Spells</h2>\n")
 
         spells = [
-            SpellFactory.create(spell_name, spell_casting_ability)
-            for spell_name, spell_casting_ability in self.spells
+            SpellFactory.create(spell_name, spell_casting_ability, additional_ruling)
+            for spell_name, spell_casting_ability, additional_ruling in self.spells
         ]
         sorted_spells = sorted(spells, key=lambda s: (s.level, s.name))
 

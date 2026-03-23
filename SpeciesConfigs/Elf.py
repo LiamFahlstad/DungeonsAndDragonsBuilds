@@ -61,6 +61,8 @@ class ElfSpeciesBuilder(SpeciesBuilder):
         data.add_feature(ElfFeatures.KeenSenses(self.skill_proficiency))
         data.add_feature(ElfFeatures.Trance())
 
+        additional_ruling = "Spell can be cast once per Long Rest."
+
         if self.elven_lineage == ElvenLineage.DROW:
             data.add_feature(ElfFeatures.Darkvision(120))
             data.add_cantrip(
@@ -68,23 +70,34 @@ class ElfSpeciesBuilder(SpeciesBuilder):
             )
             if self.character_level >= 3:
                 data.add_spell(
-                    DruidLevel1Spells.FAERIE_FIRE, self.spell_casting_ability
+                    DruidLevel1Spells.FAERIE_FIRE,
+                    self.spell_casting_ability,
+                    additional_ruling,
                 )
             if self.character_level >= 5:
-                data.add_spell(WarlockLevel2Spells.DARKNESS, self.spell_casting_ability)
+                data.add_spell(
+                    WarlockLevel2Spells.DARKNESS,
+                    self.spell_casting_ability,
+                    additional_ruling,
+                )
 
         elif self.elven_lineage == ElvenLineage.HIGH_ELF:
             data.add_feature(ElfFeatures.Darkvision(60))
             data.add_cantrip(
                 SorcererLevel0Spells.PRESTIDIGITATION, self.spell_casting_ability
             )
+
             if self.character_level >= 3:
                 data.add_spell(
-                    ClericLevel1Spells.DETECT_MAGIC, self.spell_casting_ability
+                    ClericLevel1Spells.DETECT_MAGIC,
+                    self.spell_casting_ability,
+                    additional_ruling,
                 )
             if self.character_level >= 5:
                 data.add_spell(
-                    WarlockLevel2Spells.MISTY_STEP, self.spell_casting_ability
+                    WarlockLevel2Spells.MISTY_STEP,
+                    self.spell_casting_ability,
+                    additional_ruling,
                 )
 
         elif self.elven_lineage == ElvenLineage.WOOD_ELF:
@@ -93,28 +106,46 @@ class ElfSpeciesBuilder(SpeciesBuilder):
             data.speed = 35
             if self.character_level >= 3:
                 data.add_spell(
-                    WizardLevel1Spells.LONGSTRIDER, self.spell_casting_ability
+                    WizardLevel1Spells.LONGSTRIDER,
+                    self.spell_casting_ability,
+                    additional_ruling,
                 )
             if self.character_level >= 5:
                 data.add_spell(
-                    DruidLevel2Spells.PASS_WITHOUT_TRACE, self.spell_casting_ability
+                    DruidLevel2Spells.PASS_WITHOUT_TRACE,
+                    self.spell_casting_ability,
+                    additional_ruling,
                 )
 
         elif self.elven_lineage == ElvenLineage.LORWYN_ELF:
             data.add_feature(ElfFeatures.Darkvision(60))
             data.add_cantrip(DruidLevel0Spells.THORN_WHIP, self.spell_casting_ability)
             if self.character_level >= 3:
-                data.add_spell(ClericLevel1Spells.COMMAND, self.spell_casting_ability)
+                data.add_spell(
+                    ClericLevel1Spells.COMMAND,
+                    self.spell_casting_ability,
+                    additional_ruling,
+                )
             if self.character_level >= 5:
-                data.add_spell(ClericLevel2Spells.SILENCE, self.spell_casting_ability)
+                data.add_spell(
+                    ClericLevel2Spells.SILENCE,
+                    self.spell_casting_ability,
+                    additional_ruling,
+                )
 
         elif self.elven_lineage == ElvenLineage.SHADOWMOOR_ELF:
             data.add_feature(ElfFeatures.Darkvision(120))
             data.add_cantrip(DruidLevel0Spells.STARRY_WISP, self.spell_casting_ability)
             if self.character_level >= 3:
-                data.add_spell(BardLevel1Spells.HEROISM, self.spell_casting_ability)
+                data.add_spell(
+                    BardLevel1Spells.HEROISM,
+                    self.spell_casting_ability,
+                    additional_ruling,
+                )
             if self.character_level >= 5:
                 data.add_spell(
-                    WizardLevel2Spells.GENTLE_REPOSE, self.spell_casting_ability
+                    WizardLevel2Spells.GENTLE_REPOSE,
+                    self.spell_casting_ability,
+                    additional_ruling,
                 )
         return data

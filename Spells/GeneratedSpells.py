@@ -3063,7 +3063,11 @@ class Dream(ExplicitSpell):
 
 
 class Druidcraft(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Druidcraft",
             level=0,
@@ -3089,6 +3093,7 @@ class Druidcraft(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
@@ -5697,7 +5702,11 @@ class LocateObject(ExplicitSpell):
 
 
 class Longstrider(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Longstrider",
             level=1,
@@ -5715,6 +5724,7 @@ class Longstrider(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
