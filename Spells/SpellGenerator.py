@@ -50,7 +50,11 @@ def generate_spell_class(spell: dict) -> str:
 
     return f"""
 class {class_name}(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="{spell['name']}",
             level={spell['level']},
@@ -63,6 +67,7 @@ class {class_name}(ExplicitSpell):
             description={description},
             source="{spell['source']}",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 """.lstrip()
 

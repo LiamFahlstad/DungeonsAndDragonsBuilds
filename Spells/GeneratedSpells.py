@@ -5,7 +5,11 @@ from Spells.Definitions import ExplicitSpell
 
 
 class AcidSplash(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Acid Splash",
             level=0,
@@ -23,11 +27,16 @@ class AcidSplash(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class Aid(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Aid",
             level=2,
@@ -45,11 +54,16 @@ class Aid(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class Alarm(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Alarm",
             level=1,
@@ -72,11 +86,16 @@ class Alarm(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class AlterSelf(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Alter Self",
             level=2,
@@ -105,11 +124,16 @@ class AlterSelf(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class AlustrielsMooncloak(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Alustriel's Mooncloak",
             level=5,
@@ -129,11 +153,16 @@ class AlustrielsMooncloak(ExplicitSpell):
             ),
             source="Forgotten Realms - Heroes of Faerun",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class AnimalFriendship(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Animal Friendship",
             level=1,
@@ -152,11 +181,16 @@ class AnimalFriendship(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class AnimalMessenger(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Animal Messenger",
             level=2,
@@ -178,11 +212,16 @@ class AnimalMessenger(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class AnimalShapes(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Animal Shapes",
             level=8,
@@ -206,11 +245,16 @@ class AnimalShapes(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class AnimateDead(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Animate Dead",
             level=3,
@@ -236,11 +280,16 @@ class AnimateDead(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class AnimateObjects(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Animate Objects",
             level=5,
@@ -265,11 +314,16 @@ class AnimateObjects(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class AntilifeShell(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Antilife Shell",
             level=5,
@@ -287,11 +341,16 @@ class AntilifeShell(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class AntimagicField(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Antimagic Field",
             level=8,
@@ -313,11 +372,16 @@ class AntimagicField(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class Antipathysympathy(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Antipathy/Sympathy",
             level=8,
@@ -346,11 +410,16 @@ class Antipathysympathy(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class ArcaneEye(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Arcane Eye",
             level=4,
@@ -369,11 +438,16 @@ class ArcaneEye(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class ArcaneGate(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Arcane Gate",
             level=6,
@@ -395,11 +469,16 @@ class ArcaneGate(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class ArcaneLock(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Arcane Lock",
             level=2,
@@ -417,11 +496,16 @@ class ArcaneLock(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class ArcaneVigor(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Arcane Vigor",
             level=2,
@@ -440,11 +524,16 @@ class ArcaneVigor(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class ArmorOfAgathys(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Armor of Agathys",
             level=1,
@@ -464,11 +553,16 @@ class ArmorOfAgathys(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class ArmsOfHadar(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Arms of Hadar",
             level=1,
@@ -488,11 +582,16 @@ class ArmsOfHadar(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class AstralProjection(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Astral Projection",
             level=9,
@@ -518,11 +617,16 @@ class AstralProjection(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class Augury(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Augury",
             level=2,
@@ -540,11 +644,16 @@ class Augury(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class AuraOfLife(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Aura of Life",
             level=4,
@@ -561,11 +670,16 @@ class AuraOfLife(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class AuraOfPurity(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Aura of Purity",
             level=4,
@@ -581,11 +695,16 @@ class AuraOfPurity(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class AuraOfVitality(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Aura of Vitality",
             level=3,
@@ -601,11 +720,16 @@ class AuraOfVitality(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class Awaken(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Awaken",
             level=5,
@@ -626,11 +750,16 @@ class Awaken(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class Backlash(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Backlash",
             level=4,
@@ -649,11 +778,16 @@ class Backlash(ExplicitSpell):
             ),
             source="Forgotten Realms - Heroes of Faerun",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class Bane(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Bane",
             level=1,
@@ -671,11 +805,16 @@ class Bane(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class BanishingSmite(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Banishing Smite",
             level=5,
@@ -693,11 +832,16 @@ class BanishingSmite(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class Banishment(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Banishment",
             level=4,
@@ -718,11 +862,16 @@ class Banishment(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class Barkskin(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Barkskin",
             level=2,
@@ -738,11 +887,16 @@ class Barkskin(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class BeaconOfHope(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Beacon Of Hope",
             level=3,
@@ -758,11 +912,16 @@ class BeaconOfHope(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class BeastSense(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Beast Sense",
             level=2,
@@ -779,11 +938,16 @@ class BeastSense(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class Befuddlement(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Befuddlement",
             level=8,
@@ -803,11 +967,16 @@ class Befuddlement(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class BestowCurse(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Bestow Curse",
             level=3,
@@ -826,11 +995,16 @@ class BestowCurse(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class BigbysHand(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Bigby's Hand",
             level=5,
@@ -866,11 +1040,16 @@ class BigbysHand(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class BladeBarrier(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Blade Barrier",
             level=6,
@@ -891,11 +1070,16 @@ class BladeBarrier(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class BladeOfDisaster(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Blade Of Disaster",
             level=9,
@@ -916,11 +1100,16 @@ class BladeOfDisaster(ExplicitSpell):
             ),
             source="Forgotten Realms - Heroes of Faerun",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class BladeWard(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Blade Ward",
             level=0,
@@ -933,11 +1122,16 @@ class BladeWard(ExplicitSpell):
             description="Whenever a creature makes an attack roll against you before the spell ends, the attacker subtracts 1d4 from the attack roll.",
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class Bless(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Bless",
             level=1,
@@ -955,11 +1149,16 @@ class Bless(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class Blight(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Blight",
             level=4,
@@ -979,11 +1178,16 @@ class Blight(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class BlindingSmite(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Blinding Smite",
             level=3,
@@ -1001,11 +1205,16 @@ class BlindingSmite(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class Blindnessdeafness(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Blindness/Deafness",
             level=2,
@@ -1023,11 +1232,16 @@ class Blindnessdeafness(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class Blink(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Blink",
             level=3,
@@ -1048,11 +1262,16 @@ class Blink(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class Blur(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Blur",
             level=2,
@@ -1069,11 +1288,16 @@ class Blur(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class BurningHands(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Burning Hands",
             level=1,
@@ -1092,11 +1316,16 @@ class BurningHands(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class CacophonicShield(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Cacophonic Shield",
             level=3,
@@ -1119,11 +1348,16 @@ class CacophonicShield(ExplicitSpell):
             ),
             source="Forgotten Realms - Heroes of Faerun",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class CallLightning(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Call Lightning",
             level=3,
@@ -1147,11 +1381,16 @@ class CallLightning(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class CalmEmotions(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Calm Emotions",
             level=2,
@@ -1164,11 +1403,16 @@ class CalmEmotions(ExplicitSpell):
             description="Each Humanoid in a 20-foot-radius Sphere centered on a point you choose within range must succeed on a Charisma saving throw or be affected by one of the following effects (choose for each creature):.",
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class ChainLightning(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Chain Lightning",
             level=6,
@@ -1188,11 +1432,16 @@ class ChainLightning(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class CharmMonster(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Charm Monster",
             level=4,
@@ -1213,11 +1462,16 @@ class CharmMonster(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class CharmPerson(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Charm Person",
             level=1,
@@ -1238,11 +1492,16 @@ class CharmPerson(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class ChillTouch(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Chill Touch",
             level=0,
@@ -1260,11 +1519,16 @@ class ChillTouch(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class ChromaticOrb(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Chromatic Orb",
             level=1,
@@ -1287,11 +1551,16 @@ class ChromaticOrb(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class CircleOfDeath(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Circle Of Death",
             level=6,
@@ -1309,11 +1578,16 @@ class CircleOfDeath(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class CircleOfPower(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Circle Of Power",
             level=5,
@@ -1330,11 +1604,16 @@ class CircleOfPower(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class Clairvoyance(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Clairvoyance",
             level=3,
@@ -1354,11 +1633,16 @@ class Clairvoyance(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class Clone(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Clone",
             level=8,
@@ -1378,11 +1662,16 @@ class Clone(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class CloudOfDaggers(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Cloud Of Daggers",
             level=2,
@@ -1403,11 +1692,16 @@ class CloudOfDaggers(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class Cloudkill(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Cloudkill",
             level=5,
@@ -1430,11 +1724,16 @@ class Cloudkill(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class ColorSpray(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Color Spray",
             level=1,
@@ -1450,11 +1749,16 @@ class ColorSpray(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class Command(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Command",
             level=1,
@@ -1482,11 +1786,16 @@ class Command(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class Commune(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Commune",
             level=5,
@@ -1506,11 +1815,16 @@ class Commune(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class CommuneWithNature(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Commune With Nature",
             level=5,
@@ -1529,11 +1843,16 @@ class CommuneWithNature(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class CompelledDuel(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Compelled Duel",
             level=1,
@@ -1551,11 +1870,16 @@ class CompelledDuel(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class ComprehendLanguages(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Comprehend Languages",
             level=1,
@@ -1573,11 +1897,16 @@ class ComprehendLanguages(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class Compulsion(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Compulsion",
             level=4,
@@ -1595,11 +1924,16 @@ class Compulsion(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class ConeOfCold(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Cone Of Cold",
             level=5,
@@ -1618,11 +1952,16 @@ class ConeOfCold(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class Confusion(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Confusion",
             level=4,
@@ -1640,11 +1979,16 @@ class Confusion(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class ConjureAnimals(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Conjure Animals",
             level=3,
@@ -1666,11 +2010,16 @@ class ConjureAnimals(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class ConjureBarrage(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Conjure Barrage",
             level=3,
@@ -1688,11 +2037,16 @@ class ConjureBarrage(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class ConjureCelestial(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Conjure Celestial",
             level=7,
@@ -1716,11 +2070,16 @@ class ConjureCelestial(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class ConjureConstructs(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Conjure Constructs",
             level=3,
@@ -1743,11 +2102,16 @@ class ConjureConstructs(ExplicitSpell):
             ),
             source="Forgotten Realms - Heroes of Faerun",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class ConjureElemental(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Conjure Elemental",
             level=5,
@@ -1771,11 +2135,16 @@ class ConjureElemental(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class ConjureFey(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Conjure Fey",
             level=6,
@@ -1796,11 +2165,16 @@ class ConjureFey(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class ConjureMinorElementals(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Conjure Minor Elementals",
             level=4,
@@ -1820,11 +2194,16 @@ class ConjureMinorElementals(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class ConjureVolley(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Conjure Volley",
             level=5,
@@ -1842,11 +2221,16 @@ class ConjureVolley(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class ConjureWoodlandBeings(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Conjure Woodland Beings",
             level=4,
@@ -1867,11 +2251,16 @@ class ConjureWoodlandBeings(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class ContactOtherPlane(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Contact Other Plane",
             level=5,
@@ -1894,11 +2283,16 @@ class ContactOtherPlane(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class Contagion(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Contagion",
             level=5,
@@ -1920,11 +2314,16 @@ class Contagion(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class Contingency(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Contingency",
             level=6,
@@ -1948,11 +2347,16 @@ class Contingency(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class ContinualFlame(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Continual Flame",
             level=2,
@@ -1970,11 +2374,16 @@ class ContinualFlame(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class ControlWater(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Control Water",
             level=4,
@@ -2015,11 +2424,16 @@ class ControlWater(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class ControlWeather(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Control Weather",
             level=8,
@@ -2042,11 +2456,16 @@ class ControlWeather(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class CordonOfArrows(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Cordon Of Arrows",
             level=2,
@@ -2068,11 +2487,16 @@ class CordonOfArrows(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class Counterspell(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Counterspell",
             level=3,
@@ -2090,11 +2514,16 @@ class Counterspell(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class CreateFoodAndWater(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Create Food And Water",
             level=3,
@@ -2111,11 +2540,16 @@ class CreateFoodAndWater(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class CreateUndead(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Create Undead",
             level=6,
@@ -2144,11 +2578,16 @@ class CreateUndead(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class CreateOrDestroyWater(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Create or Destroy Water",
             level=1,
@@ -2170,11 +2609,16 @@ class CreateOrDestroyWater(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class Creation(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Creation",
             level=5,
@@ -2196,11 +2640,16 @@ class Creation(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class CrownOfMadness(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Crown Of Madness",
             level=2,
@@ -2220,11 +2669,16 @@ class CrownOfMadness(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class CrusadersMantle(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Crusader's Mantle",
             level=3,
@@ -2240,11 +2694,16 @@ class CrusadersMantle(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class CureWounds(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Cure Wounds",
             level=1,
@@ -2261,11 +2720,16 @@ class CureWounds(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class DancingLights(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Dancing Lights",
             level=0,
@@ -2284,11 +2748,16 @@ class DancingLights(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class Darkness(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Darkness",
             level=2,
@@ -2307,11 +2776,16 @@ class Darkness(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class Darkvision(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Darkvision",
             level=2,
@@ -2324,11 +2798,16 @@ class Darkvision(ExplicitSpell):
             description="For the duration, a willing creature you touch has Darkvision with a range of 150 feet.",
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class Daylight(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Daylight",
             level=3,
@@ -2347,11 +2826,16 @@ class Daylight(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class DeathArmor(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Death Armor",
             level=2,
@@ -2367,11 +2851,16 @@ class DeathArmor(ExplicitSpell):
             ),
             source="Forgotten Realms - Heroes of Faerun",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class DeathWard(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Death Ward",
             level=4,
@@ -2388,11 +2877,16 @@ class DeathWard(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class DelayedBlastFireball(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Delayed Blast Fireball",
             level=7,
@@ -2417,11 +2911,16 @@ class DelayedBlastFireball(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class Demiplane(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Demiplane",
             level=8,
@@ -2441,11 +2940,16 @@ class Demiplane(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class DeryansHelpfulHomunculi(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Deryan's Helpful Homunculi",
             level=2,
@@ -2462,11 +2966,16 @@ class DeryansHelpfulHomunculi(ExplicitSpell):
             ),
             source="Forgotten Realms - Heroes of Faerun",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class DestructiveWave(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Destructive Wave",
             level=5,
@@ -2484,11 +2993,16 @@ class DestructiveWave(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class DetectEvilAndGood(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Detect Evil and Good",
             level=1,
@@ -2505,11 +3019,16 @@ class DetectEvilAndGood(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class DetectMagic(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Detect Magic",
             level=1,
@@ -2536,11 +3055,16 @@ class DetectMagic(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class DetectPoisonAndDisease(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Detect Poison and Disease",
             level=1,
@@ -2557,11 +3081,16 @@ class DetectPoisonAndDisease(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class DetectThoughts(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Detect Thoughts",
             level=2,
@@ -2590,11 +3119,16 @@ class DetectThoughts(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class DimensionDoor(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Dimension Door",
             level=4,
@@ -2614,11 +3148,16 @@ class DimensionDoor(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class Dirge(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Dirge",
             level=6,
@@ -2645,11 +3184,16 @@ class Dirge(ExplicitSpell):
             ),
             source="Forgotten Realms - Heroes of Faerun",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class DisguiseSelf(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Disguise Self",
             level=1,
@@ -2670,11 +3214,16 @@ class DisguiseSelf(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class Disintegrate(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Disintegrate",
             level=6,
@@ -2698,11 +3247,16 @@ class Disintegrate(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class DispelEvilAndGood(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Dispel Evil and Good",
             level=5,
@@ -2725,11 +3279,16 @@ class DispelEvilAndGood(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class DispelMagic(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Dispel Magic",
             level=3,
@@ -2759,11 +3318,16 @@ class DispelMagic(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class DissonantWhispers(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Dissonant Whispers",
             level=1,
@@ -2783,11 +3347,16 @@ class DissonantWhispers(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class Divination(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Divination",
             level=4,
@@ -2806,11 +3375,16 @@ class Divination(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class DivineFavor(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Divine Favor",
             level=1,
@@ -2823,11 +3397,16 @@ class DivineFavor(ExplicitSpell):
             description="Until the spell ends, your attacks with weapons deal an extra 1d4 Radiant damage on a hit.",
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class DivineSmite(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Divine Smite",
             level=1,
@@ -2845,11 +3424,16 @@ class DivineSmite(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class DivineWord(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Divine Word",
             level=7,
@@ -2867,11 +3451,16 @@ class DivineWord(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class DominateBeast(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Dominate Beast",
             level=4,
@@ -2895,11 +3484,16 @@ class DominateBeast(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class DominateMonster(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Dominate Monster",
             level=8,
@@ -2923,11 +3517,16 @@ class DominateMonster(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class DominatePerson(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Dominate Person",
             level=5,
@@ -2951,11 +3550,16 @@ class DominatePerson(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class Doomtide(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Doomtide",
             level=4,
@@ -2983,11 +3587,16 @@ class Doomtide(ExplicitSpell):
             ),
             source="Forgotten Realms - Heroes of Faerun",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class DragonsBreath(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Dragon's Breath",
             level=2,
@@ -3006,11 +3615,16 @@ class DragonsBreath(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class DrawmijsInstantSummons(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Drawmij's Instant Summons",
             level=6,
@@ -3030,11 +3644,16 @@ class DrawmijsInstantSummons(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class Dream(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Dream",
             level=5,
@@ -3059,6 +3678,7 @@ class Dream(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
@@ -3098,7 +3718,11 @@ class Druidcraft(ExplicitSpell):
 
 
 class Earthquake(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Earthquake",
             level=8,
@@ -3130,11 +3754,16 @@ class Earthquake(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class EldritchBlast(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Eldritch Blast",
             level=0,
@@ -3155,11 +3784,16 @@ class EldritchBlast(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class ElementalWeapon(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Elemental Weapon",
             level=3,
@@ -3179,11 +3813,16 @@ class ElementalWeapon(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class Elementalism(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Elementalism",
             level=0,
@@ -3212,11 +3851,16 @@ class Elementalism(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class ElminstersEffulgentSpheres(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Elminster's Effulgent Spheres",
             level=6,
@@ -3241,11 +3885,16 @@ class ElminstersEffulgentSpheres(ExplicitSpell):
             ),
             source="Forgotten Realms - Heroes of Faerun",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class ElminstersElusion(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Elminster's Elusion",
             level=2,
@@ -3262,11 +3911,16 @@ class ElminstersElusion(ExplicitSpell):
             ),
             source="Forgotten Realms - Heroes of Faerun",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class EnhanceAbility(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Enhance Ability",
             level=2,
@@ -3293,11 +3947,16 @@ class EnhanceAbility(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class Enlargereduce(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Enlarge/Reduce",
             level=2,
@@ -3326,11 +3985,16 @@ class Enlargereduce(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class EnsnaringStrike(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Ensnaring Strike",
             level=1,
@@ -3353,11 +4017,16 @@ class EnsnaringStrike(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class Entangle(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Entangle",
             level=1,
@@ -3377,11 +4046,16 @@ class Entangle(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class Enthrall(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Enthrall",
             level=2,
@@ -3398,11 +4072,16 @@ class Enthrall(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class Etherealness(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Etherealness",
             level=7,
@@ -3429,11 +4108,16 @@ class Etherealness(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class EvardsBlackTentacles(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Evard's Black Tentacles",
             level=4,
@@ -3454,11 +4138,16 @@ class EvardsBlackTentacles(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class ExpeditiousRetreat(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Expeditious Retreat",
             level=1,
@@ -3471,11 +4160,16 @@ class ExpeditiousRetreat(ExplicitSpell):
             description="You take the Dash action, and until the spell ends, you can take that action again as a Bonus Action.",
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class Eyebite(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Eyebite",
             level=6,
@@ -3501,11 +4195,16 @@ class Eyebite(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class Fabricate(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Fabricate",
             level=4,
@@ -3527,11 +4226,16 @@ class Fabricate(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class FaerieFire(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Faerie Fire",
             level=1,
@@ -3549,11 +4253,16 @@ class FaerieFire(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class FalseLife(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="False Life",
             level=1,
@@ -3570,11 +4279,16 @@ class FalseLife(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class Fear(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Fear",
             level=3,
@@ -3592,11 +4306,16 @@ class Fear(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class FeatherFall(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Feather Fall",
             level=1,
@@ -3613,11 +4332,16 @@ class FeatherFall(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class FeignDeath(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Feign Death",
             level=3,
@@ -3635,11 +4359,16 @@ class FeignDeath(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class FindFamiliar(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Find Familiar",
             level=1,
@@ -3675,11 +4404,16 @@ class FindFamiliar(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class FindSteed(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Find Steed",
             level=2,
@@ -3708,11 +4442,16 @@ class FindSteed(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class FindTraps(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Find Traps",
             level=2,
@@ -3731,11 +4470,16 @@ class FindTraps(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class FindThePath(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Find the Path",
             level=6,
@@ -3753,11 +4497,16 @@ class FindThePath(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class FingerOfDeath(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Finger of Death",
             level=7,
@@ -3774,11 +4523,16 @@ class FingerOfDeath(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class FireBolt(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Fire Bolt",
             level=0,
@@ -3798,11 +4552,16 @@ class FireBolt(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class FireShield(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Fire Shield",
             level=4,
@@ -3821,11 +4580,16 @@ class FireShield(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class FireStorm(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Fire Storm",
             level=7,
@@ -3844,11 +4608,16 @@ class FireStorm(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class Fireball(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Fireball",
             level=3,
@@ -3867,11 +4636,16 @@ class Fireball(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class FlameBlade(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Flame Blade",
             level=2,
@@ -3893,11 +4667,16 @@ class FlameBlade(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class FlameStrike(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Flame Strike",
             level=5,
@@ -3915,11 +4694,16 @@ class FlameStrike(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class FlamingSphere(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Flaming Sphere",
             level=2,
@@ -3942,11 +4726,16 @@ class FlamingSphere(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class FleshToStone(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Flesh to Stone",
             level=6,
@@ -3970,11 +4759,16 @@ class FleshToStone(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class Fly(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Fly",
             level=3,
@@ -3993,11 +4787,16 @@ class Fly(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class FogCloud(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Fog Cloud",
             level=1,
@@ -4016,11 +4815,16 @@ class FogCloud(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class Forbiddance(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Forbiddance",
             level=6,
@@ -4044,11 +4848,16 @@ class Forbiddance(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class Forcecage(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Forcecage",
             level=7,
@@ -4074,11 +4883,16 @@ class Forcecage(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class Foresight(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Foresight",
             level=9,
@@ -4095,11 +4909,16 @@ class Foresight(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class FountOfMoonlight(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Fount of Moonlight",
             level=4,
@@ -4117,11 +4936,16 @@ class FountOfMoonlight(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class FreedomOfMovement(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Freedom of Movement",
             level=4,
@@ -4141,11 +4965,16 @@ class FreedomOfMovement(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class Friends(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Friends",
             level=0,
@@ -4164,11 +4993,16 @@ class Friends(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class GaseousForm(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Gaseous Form",
             level=3,
@@ -4192,11 +5026,16 @@ class GaseousForm(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class Gate(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Gate",
             level=9,
@@ -4222,11 +5061,16 @@ class Gate(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class Geas(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Geas",
             level=5,
@@ -4251,11 +5095,16 @@ class Geas(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class GentleRepose(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Gentle Repose",
             level=2,
@@ -4272,11 +5121,16 @@ class GentleRepose(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class GiantInsect(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Giant Insect",
             level=4,
@@ -4300,11 +5154,16 @@ class GiantInsect(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class Glibness(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Glibness",
             level=8,
@@ -4320,11 +5179,16 @@ class Glibness(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class GlobeOfInvulnerability(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Globe of Invulnerability",
             level=6,
@@ -4344,11 +5208,16 @@ class GlobeOfInvulnerability(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class GlyphOfWarding(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Glyph of Warding",
             level=3,
@@ -4391,11 +5260,16 @@ class GlyphOfWarding(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class Goodberry(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Goodberry",
             level=1,
@@ -4413,11 +5287,16 @@ class Goodberry(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class GraspingVine(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Grasping Vine",
             level=4,
@@ -4439,11 +5318,16 @@ class GraspingVine(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class Grease(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Grease",
             level=1,
@@ -4460,11 +5344,16 @@ class Grease(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class GreaterInvisibility(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Greater Invisibility",
             level=4,
@@ -4477,11 +5366,16 @@ class GreaterInvisibility(ExplicitSpell):
             description="A creature you touch has the Invisible condition until the spell ends.",
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class GreaterRestoration(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Greater Restoration",
             level=5,
@@ -4494,11 +5388,16 @@ class GreaterRestoration(ExplicitSpell):
             description="You touch a creature and magically remove one of the following effects from it:.",
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class GuardianOfFaith(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Guardian of Faith",
             level=4,
@@ -4516,11 +5415,16 @@ class GuardianOfFaith(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class GuardsAndWards(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Guards and Wards",
             level=6,
@@ -4552,11 +5456,16 @@ class GuardsAndWards(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class Guidance(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Guidance",
             level=0,
@@ -4572,11 +5481,16 @@ class Guidance(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class GuidingBolt(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Guiding Bolt",
             level=1,
@@ -4595,11 +5509,16 @@ class GuidingBolt(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class GustOfWind(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Gust of Wind",
             level=2,
@@ -4620,11 +5539,16 @@ class GustOfWind(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class HailOfThorns(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Hail of Thorns",
             level=1,
@@ -4642,11 +5566,16 @@ class HailOfThorns(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class Hallow(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Hallow",
             level=5,
@@ -4689,11 +5618,16 @@ class Hallow(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class HallucinatoryTerrain(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Hallucinatory Terrain",
             level=4,
@@ -4714,11 +5648,16 @@ class HallucinatoryTerrain(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class Harm(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Harm",
             level=6,
@@ -4737,11 +5676,16 @@ class Harm(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class Haste(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Haste",
             level=3,
@@ -4759,11 +5703,16 @@ class Haste(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class Heal(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Heal",
             level=6,
@@ -4782,11 +5731,16 @@ class Heal(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class HealingWord(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Healing Word",
             level=1,
@@ -4803,11 +5757,16 @@ class HealingWord(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class HeatMetal(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Heat Metal",
             level=2,
@@ -4829,11 +5788,16 @@ class HeatMetal(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class HellishRebuke(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Hellish Rebuke",
             level=1,
@@ -4851,11 +5815,16 @@ class HellishRebuke(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class HeroesFeast(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Heroes' Feast",
             level=6,
@@ -4875,11 +5844,16 @@ class HeroesFeast(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class Heroism(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Heroism",
             level=1,
@@ -4897,11 +5871,16 @@ class Heroism(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class Hex(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Hex",
             level=1,
@@ -4922,11 +5901,16 @@ class Hex(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class HoldMonster(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Hold Monster",
             level=5,
@@ -4945,11 +5929,16 @@ class HoldMonster(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class HoldPerson(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Hold Person",
             level=2,
@@ -4968,11 +5957,16 @@ class HoldPerson(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class HolyAura(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Holy Aura",
             level=8,
@@ -4989,11 +5983,16 @@ class HolyAura(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class HolyStarOfMystra(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Holy Star of Mystra",
             level=8,
@@ -5013,11 +6012,16 @@ class HolyStarOfMystra(ExplicitSpell):
             ),
             source="Forgotten Realms - Heroes of Faerun",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class HomunculusServant(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Homunculus Servant",
             level=2,
@@ -5040,11 +6044,16 @@ class HomunculusServant(ExplicitSpell):
             ),
             source="Eberron - Forge of the Artificer",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class HungerOfHadar(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Hunger of Hadar",
             level=3,
@@ -5066,11 +6075,16 @@ class HungerOfHadar(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class HuntersMark(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Hunter's Mark",
             level=1,
@@ -5090,11 +6104,16 @@ class HuntersMark(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class HypnoticPattern(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Hypnotic Pattern",
             level=3,
@@ -5113,11 +6132,16 @@ class HypnoticPattern(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class IceKnife(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Ice Knife",
             level=1,
@@ -5138,11 +6162,16 @@ class IceKnife(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class IceStorm(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Ice Storm",
             level=4,
@@ -5162,11 +6191,16 @@ class IceStorm(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class Identify(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Identify",
             level=1,
@@ -5185,11 +6219,16 @@ class Identify(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class IllusoryScript(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Illusory Script",
             level=1,
@@ -5209,11 +6248,16 @@ class IllusoryScript(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class Imprisonment(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Imprisonment",
             level=9,
@@ -5252,11 +6296,16 @@ class Imprisonment(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class IncendiaryCloud(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Incendiary Cloud",
             level=8,
@@ -5277,11 +6326,16 @@ class IncendiaryCloud(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class InflictWounds(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Inflict Wounds",
             level=1,
@@ -5298,11 +6352,16 @@ class InflictWounds(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class InsectPlague(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Insect Plague",
             level=5,
@@ -5323,11 +6382,16 @@ class InsectPlague(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class Invisibility(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Invisibility",
             level=2,
@@ -5345,11 +6409,16 @@ class Invisibility(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class JallarzisStormOfRadiance(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Jallarzi's Storm of Radiance",
             level=5,
@@ -5370,11 +6439,16 @@ class JallarzisStormOfRadiance(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class Jump(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Jump",
             level=1,
@@ -5392,11 +6466,16 @@ class Jump(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class Knock(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Knock",
             level=2,
@@ -5416,11 +6495,16 @@ class Knock(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class LaeralsSilverLance(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Laeral's Silver Lance",
             level=3,
@@ -5440,11 +6524,16 @@ class LaeralsSilverLance(ExplicitSpell):
             ),
             source="Forgotten Realms - Heroes of Faerun",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class LegendLore(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Legend Lore",
             level=5,
@@ -5464,11 +6553,16 @@ class LegendLore(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class LeomundsSecretChest(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Leomund's Secret Chest",
             level=4,
@@ -5491,11 +6585,16 @@ class LeomundsSecretChest(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class LeomundsTinyHut(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Leomund's Tiny Hut",
             level=3,
@@ -5518,11 +6617,16 @@ class LeomundsTinyHut(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class LesserRestoration(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Lesser Restoration",
             level=2,
@@ -5535,11 +6639,16 @@ class LesserRestoration(ExplicitSpell):
             description="You touch a creature and end one condition on it: Blinded, Deafened, Paralyzed, or Poisoned.",
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class Levitate(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Levitate",
             level=2,
@@ -5561,11 +6670,16 @@ class Levitate(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class Light(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Light",
             level=0,
@@ -5584,11 +6698,16 @@ class Light(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class LightningArrow(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Lightning Arrow",
             level=3,
@@ -5608,11 +6727,16 @@ class LightningArrow(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class LightningBolt(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Lightning Bolt",
             level=3,
@@ -5630,11 +6754,16 @@ class LightningBolt(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class LocateAnimalsOrPlants(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Locate Animals or Plants",
             level=2,
@@ -5650,11 +6779,16 @@ class LocateAnimalsOrPlants(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class LocateCreature(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Locate Creature",
             level=4,
@@ -5674,11 +6808,16 @@ class LocateCreature(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class LocateObject(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Locate Object",
             level=2,
@@ -5698,6 +6837,7 @@ class LocateObject(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
@@ -5729,7 +6869,11 @@ class Longstrider(ExplicitSpell):
 
 
 class MageArmor(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Mage Armor",
             level=1,
@@ -5746,11 +6890,16 @@ class MageArmor(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class MageHand(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Mage Hand",
             level=0,
@@ -5771,11 +6920,16 @@ class MageHand(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class MagicCircle(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Magic Circle",
             level=3,
@@ -5795,11 +6949,16 @@ class MagicCircle(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class MagicJar(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Magic Jar",
             level=6,
@@ -5834,11 +6993,16 @@ class MagicJar(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class MagicMissile(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Magic Missile",
             level=1,
@@ -5858,11 +7022,16 @@ class MagicMissile(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class MagicMouth(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Magic Mouth",
             level=2,
@@ -5885,11 +7054,16 @@ class MagicMouth(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class MagicWeapon(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Magic Weapon",
             level=2,
@@ -5909,11 +7083,16 @@ class MagicWeapon(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class MajorImage(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Major Image",
             level=3,
@@ -5939,11 +7118,16 @@ class MajorImage(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class MassCureWounds(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Mass Cure Wounds",
             level=5,
@@ -5962,11 +7146,16 @@ class MassCureWounds(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class MassHeal(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Mass Heal",
             level=9,
@@ -5983,11 +7172,16 @@ class MassHeal(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class MassHealingWord(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Mass Healing Word",
             level=3,
@@ -6004,11 +7198,16 @@ class MassHealingWord(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class MassSuggestion(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Mass Suggestion",
             level=6,
@@ -6032,11 +7231,16 @@ class MassSuggestion(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class Maze(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Maze",
             level=8,
@@ -6056,11 +7260,16 @@ class Maze(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class MeldIntoStone(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Meld into Stone",
             level=3,
@@ -6084,11 +7293,16 @@ class MeldIntoStone(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class MelfsAcidArrow(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Melf's Acid Arrow",
             level=2,
@@ -6108,11 +7322,16 @@ class MelfsAcidArrow(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class Mending(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Mending",
             level=0,
@@ -6129,11 +7348,16 @@ class Mending(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class Message(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Message",
             level=0,
@@ -6151,11 +7375,16 @@ class Message(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class MeteorSwarm(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Meteor Swarm",
             level=9,
@@ -6174,11 +7403,16 @@ class MeteorSwarm(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class MindBlank(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Mind Blank",
             level=8,
@@ -6194,11 +7428,16 @@ class MindBlank(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class MindSliver(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Mind Sliver",
             level=0,
@@ -6216,11 +7455,16 @@ class MindSliver(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class MindSpike(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Mind Spike",
             level=2,
@@ -6240,11 +7484,16 @@ class MindSpike(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class MinorIllusion(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Minor Illusion",
             level=0,
@@ -6271,11 +7520,16 @@ class MinorIllusion(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class MirageArcane(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Mirage Arcane",
             level=7,
@@ -6297,11 +7551,16 @@ class MirageArcane(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class MirrorImage(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Mirror Image",
             level=2,
@@ -6322,11 +7581,16 @@ class MirrorImage(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class Mislead(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Mislead",
             level=5,
@@ -6345,11 +7609,16 @@ class Mislead(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class MistyStep(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Misty Step",
             level=2,
@@ -6362,11 +7631,16 @@ class MistyStep(ExplicitSpell):
             description="Briefly surrounded by silvery mist, you teleport up to 30 feet to an unoccupied space you can see.",
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class ModifyMemory(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Modify Memory",
             level=5,
@@ -6398,11 +7672,16 @@ class ModifyMemory(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class Moonbeam(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Moonbeam",
             level=2,
@@ -6425,11 +7704,16 @@ class Moonbeam(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class MordenkainensFaithfulHound(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Mordenkainen's Faithful Hound",
             level=4,
@@ -6451,11 +7735,16 @@ class MordenkainensFaithfulHound(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class MordenkainensMagnificentMansion(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Mordenkainen's Magnificent Mansion",
             level=7,
@@ -6487,11 +7776,16 @@ class MordenkainensMagnificentMansion(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class MordenkainensPrivateSanctum(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Mordenkainen's Private Sanctum",
             level=4,
@@ -6511,11 +7805,16 @@ class MordenkainensPrivateSanctum(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class MordenkainensSword(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Mordenkainen's Sword",
             level=7,
@@ -6534,11 +7833,16 @@ class MordenkainensSword(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class MoveEarth(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Move Earth",
             level=6,
@@ -6565,11 +7869,16 @@ class MoveEarth(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class Nondetection(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Nondetection",
             level=3,
@@ -6586,11 +7895,16 @@ class Nondetection(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class NystulsMagicAura(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Nystul's Magic Aura",
             level=2,
@@ -6614,11 +7928,16 @@ class NystulsMagicAura(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class OtilukesFreezingSphere(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Otiluke's Freezing Sphere",
             level=6,
@@ -6646,11 +7965,16 @@ class OtilukesFreezingSphere(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class OtilukesResilientSphere(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Otiluke's Resilient Sphere",
             level=4,
@@ -6672,11 +7996,16 @@ class OtilukesResilientSphere(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class OttosIrresistibleDance(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Otto's Irresistible Dance",
             level=6,
@@ -6695,11 +8024,16 @@ class OttosIrresistibleDance(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class PassWithoutTrace(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Pass without Trace",
             level=2,
@@ -6715,11 +8049,16 @@ class PassWithoutTrace(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class Passwall(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Passwall",
             level=5,
@@ -6737,11 +8076,16 @@ class Passwall(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class PhantasmalForce(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Phantasmal Force",
             level=2,
@@ -6766,11 +8110,16 @@ class PhantasmalForce(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class PhantasmalKiller(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Phantasmal Killer",
             level=4,
@@ -6793,11 +8142,16 @@ class PhantasmalKiller(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class PhantomSteed(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Phantom Steed",
             level=3,
@@ -6818,11 +8172,16 @@ class PhantomSteed(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class PlanarAlly(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Planar Ally",
             level=6,
@@ -6856,11 +8215,16 @@ class PlanarAlly(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class PlanarBinding(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Planar Binding",
             level=5,
@@ -6886,11 +8250,16 @@ class PlanarBinding(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class PlaneShift(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Plane Shift",
             level=7,
@@ -6908,11 +8277,16 @@ class PlaneShift(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class PlantGrowth(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Plant Growth",
             level=3,
@@ -6937,11 +8311,16 @@ class PlantGrowth(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class PoisonSpray(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Poison Spray",
             level=0,
@@ -6960,11 +8339,16 @@ class PoisonSpray(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class Polymorph(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Polymorph",
             level=4,
@@ -6989,11 +8373,16 @@ class Polymorph(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class PowerWordFortify(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Power Word Fortify",
             level=7,
@@ -7009,11 +8398,16 @@ class PowerWordFortify(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class PowerWordHeal(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Power Word Heal",
             level=9,
@@ -7031,11 +8425,16 @@ class PowerWordHeal(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class PowerWordKill(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Power Word Kill",
             level=9,
@@ -7052,11 +8451,16 @@ class PowerWordKill(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class PowerWordStun(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Power Word Stun",
             level=8,
@@ -7074,11 +8478,16 @@ class PowerWordStun(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class PrayerOfHealing(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Prayer of Healing",
             level=2,
@@ -7096,11 +8505,16 @@ class PrayerOfHealing(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class Prestidigitation(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Prestidigitation",
             level=0,
@@ -7131,11 +8545,16 @@ class Prestidigitation(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class PrismaticSpray(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Prismatic Spray",
             level=7,
@@ -7152,11 +8571,16 @@ class PrismaticSpray(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class PrismaticWall(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Prismatic Wall",
             level=9,
@@ -7183,11 +8607,16 @@ class PrismaticWall(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class ProduceFlame(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Produce Flame",
             level=0,
@@ -7209,11 +8638,16 @@ class ProduceFlame(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class ProgrammedIllusion(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Programmed Illusion",
             level=6,
@@ -7238,11 +8672,16 @@ class ProgrammedIllusion(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class ProjectImage(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Project Image",
             level=7,
@@ -7266,11 +8705,16 @@ class ProjectImage(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class ProtectionFromEnergy(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Protection from Energy",
             level=3,
@@ -7283,11 +8727,16 @@ class ProtectionFromEnergy(ExplicitSpell):
             description="For the duration, the willing creature you touch has Resistance to one damage type of your choice: Acid, Cold, Fire, Lightning, or Thunder.",
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class ProtectionFromEvilAndGood(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Protection from Evil and Good",
             level=1,
@@ -7306,11 +8755,16 @@ class ProtectionFromEvilAndGood(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class ProtectionFromPoison(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Protection from Poison",
             level=2,
@@ -7326,11 +8780,16 @@ class ProtectionFromPoison(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class PurifyFoodAndDrink(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Purify Food and Drink",
             level=1,
@@ -7343,11 +8802,16 @@ class PurifyFoodAndDrink(ExplicitSpell):
             description="You remove poison and rot from nonmagical food and drink in a 5-foot-radius Sphere centered on a point within range.",
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class RaiseDead(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Raise Dead",
             level=5,
@@ -7369,11 +8833,16 @@ class RaiseDead(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class RarysTelepathicBond(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Rary's Telepathic Bond",
             level=5,
@@ -7391,11 +8860,16 @@ class RarysTelepathicBond(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class RayOfEnfeeblement(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Ray of Enfeeblement",
             level=2,
@@ -7415,11 +8889,16 @@ class RayOfEnfeeblement(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class RayOfFrost(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Ray of Frost",
             level=0,
@@ -7438,11 +8917,16 @@ class RayOfFrost(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class RayOfSickness(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Ray of Sickness",
             level=1,
@@ -7461,11 +8945,16 @@ class RayOfSickness(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class Regenerate(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Regenerate",
             level=7,
@@ -7481,11 +8970,16 @@ class Regenerate(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class Reincarnate(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Reincarnate",
             level=5,
@@ -7504,11 +8998,16 @@ class Reincarnate(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class RemoveCurse(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Remove Curse",
             level=3,
@@ -7524,11 +9023,16 @@ class RemoveCurse(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class Resistance(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Resistance",
             level=0,
@@ -7545,11 +9049,16 @@ class Resistance(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class Resurrection(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Resurrection",
             level=7,
@@ -7572,11 +9081,16 @@ class Resurrection(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class ReverseGravity(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Reverse Gravity",
             level=7,
@@ -7596,11 +9110,16 @@ class ReverseGravity(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class Revivify(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Revivify",
             level=3,
@@ -7617,11 +9136,16 @@ class Revivify(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class RopeTrick(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Rope Trick",
             level=2,
@@ -7642,11 +9166,16 @@ class RopeTrick(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class SacredFlame(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Sacred Flame",
             level=0,
@@ -7665,11 +9194,16 @@ class SacredFlame(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class Sanctuary(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Sanctuary",
             level=1,
@@ -7687,11 +9221,16 @@ class Sanctuary(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class ScorchingRay(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Scorching Ray",
             level=2,
@@ -7711,11 +9250,16 @@ class ScorchingRay(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class Scrying(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Scrying",
             level=5,
@@ -7739,11 +9283,16 @@ class Scrying(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class SearingSmite(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Searing Smite",
             level=1,
@@ -7763,11 +9312,16 @@ class SearingSmite(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class SeeInvisibility(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="See Invisibility",
             level=2,
@@ -7783,11 +9337,16 @@ class SeeInvisibility(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class Seeming(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Seeming",
             level=5,
@@ -7812,11 +9371,16 @@ class Seeming(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class Sending(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Sending",
             level=3,
@@ -7837,11 +9401,16 @@ class Sending(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class Sequester(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Sequester",
             level=7,
@@ -7862,11 +9431,16 @@ class Sequester(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class Shapechange(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Shapechange",
             level=9,
@@ -7888,11 +9462,16 @@ class Shapechange(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class Shatter(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Shatter",
             level=2,
@@ -7912,11 +9491,16 @@ class Shatter(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class Shield(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Shield",
             level=1,
@@ -7932,11 +9516,16 @@ class Shield(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class ShieldOfFaith(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Shield of Faith",
             level=1,
@@ -7949,11 +9538,16 @@ class ShieldOfFaith(ExplicitSpell):
             description="A shimmering field surrounds a creature of your choice within range, granting it a +2 bonus to AC for the duration.",
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class Shillelagh(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Shillelagh",
             level=0,
@@ -7973,11 +9567,16 @@ class Shillelagh(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class ShiningSmite(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Shining Smite",
             level=2,
@@ -7995,11 +9594,16 @@ class ShiningSmite(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class ShockingGrasp(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Shocking Grasp",
             level=0,
@@ -8018,11 +9622,16 @@ class ShockingGrasp(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class Silence(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Silence",
             level=2,
@@ -8039,11 +9648,16 @@ class Silence(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class SilentImage(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Silent Image",
             level=1,
@@ -8066,11 +9680,16 @@ class SilentImage(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class SimbulsSynostodweomer(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Simbul's Synostodweomer",
             level=7,
@@ -8086,11 +9705,16 @@ class SimbulsSynostodweomer(ExplicitSpell):
             ),
             source="Forgotten Realms - Heroes of Faerun",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class Simulacrum(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Simulacrum",
             level=7,
@@ -8114,11 +9738,16 @@ class Simulacrum(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class Sleep(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Sleep",
             level=1,
@@ -8136,11 +9765,16 @@ class Sleep(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class SleetStorm(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Sleet Storm",
             level=3,
@@ -8158,11 +9792,16 @@ class SleetStorm(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class Slow(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Slow",
             level=3,
@@ -8182,11 +9821,16 @@ class Slow(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class SongalsElementalSuffusion(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Songal's Elemental Suffusion",
             level=5,
@@ -8216,11 +9860,16 @@ class SongalsElementalSuffusion(ExplicitSpell):
             ),
             source="Forgotten Realms - Heroes of Faerun",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class SorcerousBurst(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Sorcerous Burst",
             level=0,
@@ -8241,11 +9890,16 @@ class SorcerousBurst(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class SpareTheDying(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Spare the Dying",
             level=0,
@@ -8263,11 +9917,16 @@ class SpareTheDying(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class SpeakWithAnimals(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Speak with Animals",
             level=1,
@@ -8283,11 +9942,16 @@ class SpeakWithAnimals(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class SpeakWithDead(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Speak with Dead",
             level=3,
@@ -8309,11 +9973,16 @@ class SpeakWithDead(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class SpeakWithPlants(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Speak with Plants",
             level=3,
@@ -8333,11 +10002,16 @@ class SpeakWithPlants(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class SpellfireFlare(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Spellfire Flare",
             level=1,
@@ -8358,11 +10032,16 @@ class SpellfireFlare(ExplicitSpell):
             ),
             source="Forgotten Realms - Heroes of Faerun",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class SpellfireStorm(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Spellfire Storm",
             level=4,
@@ -8392,11 +10071,16 @@ class SpellfireStorm(ExplicitSpell):
             ),
             source="Forgotten Realms - Heroes of Faerun",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class SpiderClimb(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Spider Climb",
             level=2,
@@ -8414,11 +10098,16 @@ class SpiderClimb(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class SpikeGrowth(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Spike Growth",
             level=2,
@@ -8437,11 +10126,16 @@ class SpikeGrowth(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class SpiritGuardians(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Spirit Guardians",
             level=3,
@@ -8465,11 +10159,16 @@ class SpiritGuardians(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class SpiritualWeapon(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Spiritual Weapon",
             level=2,
@@ -8489,11 +10188,16 @@ class SpiritualWeapon(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class StaggeringSmite(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Staggering Smite",
             level=4,
@@ -8510,11 +10214,16 @@ class StaggeringSmite(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class StarryWisp(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Starry Wisp",
             level=0,
@@ -8533,11 +10242,16 @@ class StarryWisp(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class SteelWindStrike(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Steel Wind Strike",
             level=5,
@@ -8556,11 +10270,16 @@ class SteelWindStrike(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class StinkingCloud(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Stinking Cloud",
             level=3,
@@ -8579,11 +10298,16 @@ class StinkingCloud(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class StoneShape(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Stone Shape",
             level=4,
@@ -8601,11 +10325,16 @@ class StoneShape(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class Stoneskin(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Stoneskin",
             level=4,
@@ -8618,11 +10347,16 @@ class Stoneskin(ExplicitSpell):
             description="Until the spell ends, one willing creature you touch has Resistance to Bludgeoning, Piercing, and Slashing damage.",
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class StormOfVengeance(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Storm of Vengeance",
             level=9,
@@ -8652,11 +10386,16 @@ class StormOfVengeance(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class Suggestion(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Suggestion",
             level=2,
@@ -8677,11 +10416,16 @@ class Suggestion(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class SummonAberration(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Summon Aberration",
             level=4,
@@ -8706,11 +10450,16 @@ class SummonAberration(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class SummonBeast(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Summon Beast",
             level=2,
@@ -8735,11 +10484,16 @@ class SummonBeast(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class SummonCelestial(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Summon Celestial",
             level=5,
@@ -8764,11 +10518,16 @@ class SummonCelestial(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class SummonConstruct(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Summon Construct",
             level=4,
@@ -8793,11 +10552,16 @@ class SummonConstruct(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class SummonDragon(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Summon Dragon",
             level=5,
@@ -8820,11 +10584,16 @@ class SummonDragon(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class SummonElemental(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Summon Elemental",
             level=4,
@@ -8849,11 +10618,16 @@ class SummonElemental(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class SummonFey(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Summon Fey",
             level=3,
@@ -8878,11 +10652,16 @@ class SummonFey(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class SummonFiend(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Summon Fiend",
             level=6,
@@ -8907,11 +10686,16 @@ class SummonFiend(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class SummonUndead(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Summon Undead",
             level=3,
@@ -8936,11 +10720,16 @@ class SummonUndead(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class Sunbeam(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Sunbeam",
             level=6,
@@ -8962,11 +10751,16 @@ class Sunbeam(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class Sunburst(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Sunburst",
             level=8,
@@ -8986,11 +10780,16 @@ class Sunburst(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class SwiftQuiver(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Swift Quiver",
             level=5,
@@ -9007,11 +10806,16 @@ class SwiftQuiver(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class SylunesViper(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Sylune's Viper",
             level=3,
@@ -9035,11 +10839,16 @@ class SylunesViper(ExplicitSpell):
             ),
             source="Forgotten Realms - Heroes of Faerun",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class Symbol(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Symbol",
             level=7,
@@ -9084,11 +10893,16 @@ class Symbol(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class SynapticStatic(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Synaptic Static",
             level=5,
@@ -9107,11 +10921,16 @@ class SynapticStatic(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class TashasBubblingCauldron(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Tasha's Bubbling Cauldron",
             level=6,
@@ -9134,11 +10953,16 @@ class TashasBubblingCauldron(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class TashasHideousLaughter(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Tasha's Hideous Laughter",
             level=1,
@@ -9160,11 +10984,16 @@ class TashasHideousLaughter(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class Telekinesis(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Telekinesis",
             level=5,
@@ -9192,11 +11021,16 @@ class Telekinesis(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class Telepathy(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Telepathy",
             level=8,
@@ -9215,11 +11049,16 @@ class Telepathy(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class Teleport(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Teleport",
             level=7,
@@ -9251,11 +11090,16 @@ class Teleport(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class TeleportationCircle(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Teleportation Circle",
             level=5,
@@ -9278,11 +11122,16 @@ class TeleportationCircle(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class TensersFloatingDisk(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Tenser's Floating Disk",
             level=1,
@@ -9304,11 +11153,16 @@ class TensersFloatingDisk(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class Thaumaturgy(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Thaumaturgy",
             level=0,
@@ -9338,11 +11192,16 @@ class Thaumaturgy(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class ThornWhip(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Thorn Whip",
             level=0,
@@ -9361,11 +11220,16 @@ class ThornWhip(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class Thunderclap(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Thunderclap",
             level=0,
@@ -9383,11 +11247,16 @@ class Thunderclap(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class ThunderousSmite(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Thunderous Smite",
             level=1,
@@ -9405,11 +11274,16 @@ class ThunderousSmite(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class Thunderwave(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Thunderwave",
             level=1,
@@ -9430,11 +11304,16 @@ class Thunderwave(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class TimeStop(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Time Stop",
             level=9,
@@ -9452,11 +11331,16 @@ class TimeStop(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class TollTheDead(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Toll the Dead",
             level=0,
@@ -9475,11 +11359,16 @@ class TollTheDead(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class Tongues(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Tongues",
             level=3,
@@ -9495,11 +11384,16 @@ class Tongues(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class TransportViaPlants(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Transport via Plants",
             level=6,
@@ -9516,11 +11410,16 @@ class TransportViaPlants(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class TreeStride(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Tree Stride",
             level=5,
@@ -9542,11 +11441,16 @@ class TreeStride(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class TruePolymorph(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="True Polymorph",
             level=9,
@@ -9581,11 +11485,16 @@ class TruePolymorph(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class TrueResurrection(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="True Resurrection",
             level=9,
@@ -9606,11 +11515,16 @@ class TrueResurrection(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class TrueSeeing(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="True Seeing",
             level=6,
@@ -9623,11 +11537,16 @@ class TrueSeeing(ExplicitSpell):
             description="For the duration, the willing creature you touch has Truesight with a range of 120 feet.",
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class TrueStrike(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="True Strike",
             level=0,
@@ -9646,11 +11565,16 @@ class TrueStrike(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class Tsunami(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Tsunami",
             level=8,
@@ -9677,11 +11601,16 @@ class Tsunami(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class UnseenServant(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Unseen Servant",
             level=1,
@@ -9703,11 +11632,16 @@ class UnseenServant(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class VampiricTouch(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Vampiric Touch",
             level=3,
@@ -9727,11 +11661,16 @@ class VampiricTouch(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class ViciousMockery(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Vicious Mockery",
             level=0,
@@ -9749,11 +11688,16 @@ class ViciousMockery(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class VitriolicSphere(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Vitriolic Sphere",
             level=4,
@@ -9773,11 +11717,16 @@ class VitriolicSphere(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class WallOfFire(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Wall of Fire",
             level=4,
@@ -9800,11 +11749,16 @@ class WallOfFire(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class WallOfForce(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Wall of Force",
             level=5,
@@ -9829,11 +11783,16 @@ class WallOfForce(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class WallOfIce(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Wall of Ice",
             level=6,
@@ -9858,11 +11817,16 @@ class WallOfIce(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class WallOfStone(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Wall of Stone",
             level=5,
@@ -9894,11 +11858,16 @@ class WallOfStone(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class WallOfThorns(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Wall of Thorns",
             level=6,
@@ -9923,11 +11892,16 @@ class WallOfThorns(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class Wardaway(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Wardaway",
             level=1,
@@ -9947,11 +11921,16 @@ class Wardaway(ExplicitSpell):
             ),
             source="Forgotten Realms - Heroes of Faerun",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class WardingBond(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Warding Bond",
             level=2,
@@ -9970,11 +11949,16 @@ class WardingBond(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class WaterBreathing(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Water Breathing",
             level=3,
@@ -9990,11 +11974,16 @@ class WaterBreathing(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class WaterWalk(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Water Walk",
             level=3,
@@ -10011,11 +12000,16 @@ class WaterWalk(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class Web(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Web",
             level=2,
@@ -10039,11 +12033,16 @@ class Web(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class Weird(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Weird",
             level=9,
@@ -10064,11 +12063,16 @@ class Weird(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class WindWalk(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Wind Walk",
             level=6,
@@ -10089,11 +12093,16 @@ class WindWalk(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class WindWall(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Wind Wall",
             level=3,
@@ -10118,11 +12127,16 @@ class WindWall(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class Wish(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Wish",
             level=9,
@@ -10147,11 +12161,16 @@ class Wish(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class WitchBolt(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Witch Bolt",
             level=1,
@@ -10172,11 +12191,16 @@ class WitchBolt(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class WordOfRadiance(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Word of Radiance",
             level=0,
@@ -10194,11 +12218,16 @@ class WordOfRadiance(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class WordOfRecall(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Word of Recall",
             level=6,
@@ -10216,11 +12245,16 @@ class WordOfRecall(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class WrathfulSmite(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Wrathful Smite",
             level=1,
@@ -10238,11 +12272,16 @@ class WrathfulSmite(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class YolandesRegalPresence(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Yolande's Regal Presence",
             level=5,
@@ -10261,11 +12300,16 @@ class YolandesRegalPresence(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
 class ZoneOfTruth(ExplicitSpell):
-    def __init__(self, spell_casting_ability: Optional[Ability] = None):
+    def __init__(
+        self,
+        spell_casting_ability: Optional[Ability] = None,
+        additional_ruling: Optional[str] = None,
+    ):
         super().__init__(
             name="Zone of Truth",
             level=2,
@@ -10285,6 +12329,7 @@ class ZoneOfTruth(ExplicitSpell):
             ),
             source="Player's Handbook",
             spell_casting_ability=spell_casting_ability,
+            additional_ruling=additional_ruling,
         )
 
 
