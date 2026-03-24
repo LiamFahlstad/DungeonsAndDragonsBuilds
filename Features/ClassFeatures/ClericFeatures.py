@@ -7,12 +7,12 @@ BARBARIAN_HIT_DIE = 8
 
 class Spellcasting(TextFeature):
     def __init__(self):
-        super().__init__(name="Spellcasting", origin="Bard Level 1")
+        super().__init__(name="Spellcasting", origin="Cleric Level 1")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
             "Spellcasting:\n"
-            "    * Replacing cantrips: Whenever you gain a Bard level\n"
+            "    * Replacing cantrips: Whenever you gain a Cleric level\n"
             "    * Replacing prepared spells: Whenever you finish a Long Rest\n"
             "    * Spellcasting Ability: Wisdom\n"
             "    * Regaining Spell Slots: You regain all expended spell slots when you finish a Long Rest.\n"
@@ -31,6 +31,12 @@ class DivineOrder(TextFeature):
             "Thaumaturge: You know one extra cantrip from the Cleric spell list. In addition, your mystical connection to the divine gives you a bonus to your Intelligence (Arcana or Religion) checks. The bonus equals your Wisdom modifier (minimum of +1)."
         )
         return description
+
+
+class DivineOrderSkillProficiency(CharacterFeature):
+    def modify(self, character_stat_block: CharacterStatBlock):
+        character_stat_block.skills.add_skill_proficiency(Skill.ARCANA)
+        character_stat_block.skills.add_skill_proficiency(Skill.RELIGION)
 
 
 class ChannelDivinity(TextFeature):

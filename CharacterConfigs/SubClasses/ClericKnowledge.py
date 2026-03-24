@@ -30,12 +30,25 @@ class KnowledgeClericLevel3(ClassBuilder.SubclassLevel3):
         data: CharacterSheetData,
     ) -> CharacterSheetData:
 
+        additional_ruling = "As a Magic action, you can expend one use of your Channel Divinity to cast this spell. As part of that action, you cast that spell without expending a spell slot or needing Material components."
+
         data.add_spell(ClericLevel1Spells.COMMAND)
-        data.add_spell(DivinationLevel1Spells.COMPREHEND_LANGUAGES)
-        data.add_spell(DivinationLevel1Spells.DETECT_MAGIC)
-        data.add_spell(DivinationLevel2Spells.DETECT_THOUGHTS)
-        data.add_spell(DivinationLevel1Spells.IDENTIFY)
-        data.add_spell(DivinationLevel2Spells.MIND_SPIKE)
+        data.add_spell(
+            DivinationLevel1Spells.COMPREHEND_LANGUAGES,
+            additional_ruling=additional_ruling,
+        )
+        data.add_spell(
+            DivinationLevel1Spells.DETECT_MAGIC, additional_ruling=additional_ruling
+        )
+        data.add_spell(
+            DivinationLevel2Spells.DETECT_THOUGHTS, additional_ruling=additional_ruling
+        )
+        data.add_spell(
+            DivinationLevel1Spells.IDENTIFY, additional_ruling=additional_ruling
+        )
+        data.add_spell(
+            DivinationLevel2Spells.MIND_SPIKE, additional_ruling=additional_ruling
+        )
 
         channel_divinity: ClericFeatures.ChannelDivinity = data.get_features_by_type(
             ClericFeatures.ChannelDivinity

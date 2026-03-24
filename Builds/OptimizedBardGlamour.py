@@ -49,7 +49,7 @@ from StatBlocks.SkillsStatBlock import BardSkillsStatBlock
 
 def get_starter_class_builder():
     return GlamourBardStarterClassBuilder(
-        bard_level=5,
+        bard_level=3,
         # Distribute 15, 14, 13, 12, 10, 8 among your abilities.
         abilities=StandardArrayAbilitiesStatBlock(
             strength=8,

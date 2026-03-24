@@ -22,7 +22,7 @@ from StatBlocks.SkillsStatBlock import RogueSkillsStatBlock
 
 def get_starter_class_builder():
     return AssassinRogueStarterClassBuilder(
-        rogue_level=4,
+        rogue_level=3,
         # Distribute 15, 14, 13, 12, 10, 8 among your abilities.
         abilities=StandardArrayAbilitiesStatBlock(
             strength=8,

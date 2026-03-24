@@ -136,7 +136,7 @@ class CharacterSheetData:
     ):
         new_spells = []
         success = False
-        for spell_name, spell_ability, _ in self.spells:
+        for spell_name, spell_ability, additional_ruling in self.spells:
 
             if spell_name == old_spell:
                 new_spell_ability = (
@@ -147,7 +147,7 @@ class CharacterSheetData:
                 new_spells.append((new_spell, new_spell_ability, new_additional_ruling))
                 success = True
             else:
-                new_spells.append((spell_name, spell_ability, new_additional_ruling))
+                new_spells.append((spell_name, spell_ability, additional_ruling))
         if not success:
             raise ValueError(f"Spell {old_spell} not found to replace.")
         self.spells = new_spells
@@ -552,7 +552,7 @@ class CharacterSheetData:
                         weapon.player_has_mastery = True
 
         file.write("<pre>\n")
-        write_weapons_to_file(self.weapons, character, file)
+        write_weapons_to_file(self.weapons, character, file, html=False)
         file.write("</pre>\n<br>\n")
 
     def _write_fighting_styles(self, character: CharacterStatBlock, file: TextIO):

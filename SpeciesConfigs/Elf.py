@@ -61,7 +61,7 @@ class ElfSpeciesBuilder(SpeciesBuilder):
         data.add_feature(ElfFeatures.KeenSenses(self.skill_proficiency))
         data.add_feature(ElfFeatures.Trance())
 
-        additional_ruling = "Spell can be cast once per Long Rest."
+        additional_ruling = "You always have that spell prepared. You can cast it once without a spell slot, and you regain the ability to cast it in that way when you finish a Long Rest. You can also cast the spell using any spell slots you have of the appropriate level."
 
         if self.elven_lineage == ElvenLineage.DROW:
             data.add_feature(ElfFeatures.Darkvision(120))

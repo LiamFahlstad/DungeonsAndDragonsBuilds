@@ -1994,7 +1994,7 @@ class Spell(ABC):
             file.write(f"<strong>Components:</strong> {self.components}\n")
             file.write(f"<strong>Duration:</strong> {self.duration}\n")
             file.write(
-                f"<strong>Description:</strong>\n{StringUtils.wrap_text(description, 280)}\n"
+                f"<strong>Description:</strong>\n{StringUtils.wrap_text(description, 150)}\n"
             )
             file.write(f"<strong>Source:</strong> {self.source}\n")
 
@@ -2004,9 +2004,11 @@ class Spell(ABC):
                 )
 
             if self._additional_ruling:
-                file.write(
+                additional_ruling = (
                     f"<strong>Additional Ruling:</strong> {self._additional_ruling}\n"
                 )
+                additional_ruling = StringUtils.wrap_text(additional_ruling, 150)
+                file.write(additional_ruling)
 
         else:
             file.write(f"Name: {self.name}\n")

@@ -29,8 +29,8 @@ from CharacterConfigs.SubClasses.ClericKnowledge import (
     KnowledgeClericStarterClassBuilder,
 )
 from Definitions import Ability, Skill
-from Features import Backgrounds, EpicBoon, GeneralFeats, OriginFeats
-from SpeciesConfigs import Gnome
+from Features import Armor, Backgrounds, EpicBoon, GeneralFeats, OriginFeats, Weapons
+from SpeciesConfigs import Warforged
 from Spells.Definitions import (
     ClericLevel0Spells,
     ClericLevel1Spells,
@@ -51,8 +51,8 @@ def get_starter_class_builder():
         cleric_level=3,
         # Distribute 15, 14, 13, 12, 10, 8 among your abilities.
         abilities=StandardArrayAbilitiesStatBlock(
-            strength=8,
-            dexterity=13,
+            strength=13,
+            dexterity=8,
             constitution=14,
             intelligence=10,
             wisdom=15,
@@ -61,45 +61,50 @@ def get_starter_class_builder():
         # Choose two skills to be proficient in
         cleric_skills=ClericSkillsStatBlock(
             proficiencies={
-                Skill.HISTORY: False,
+                Skill.HISTORY: True,
                 Skill.INSIGHT: True,
                 Skill.MEDICINE: False,
-                Skill.PERSUASION: True,
+                Skill.PERSUASION: False,
                 Skill.RELIGION: False,
             }
         ),
         background_ability_bonuses=Backgrounds.FreeBackgroundAbilityBonus(
             [
                 (Ability.WISDOM, 2),
-                (Ability.CONSTITUTION, 1),
+                (Ability.STRENGTH, 1),
             ]
         ),
         background_skill_proficiencies=Backgrounds.FreeBackgroundSkillProficiency(
             [
-                Skill.MEDICINE,
+                Skill.SURVIVAL,
                 Skill.PERCEPTION,
             ]
         ),
         add_default_equipment=True,
         origin_feat=OriginFeats.Tough(),
-        armor=[],
-        weapons=[],
+        armor=[
+            Armor.ChainMailArmor(),
+        ],
+        weapons=[
+            Weapons.Warhammer(player_is_proficient=True, player_has_mastery=False),
+            Weapons.Maul(player_is_proficient=True, player_has_mastery=False),
+        ],
         cleric_level_features=ClassBuilder.BaseClassLevelFeatures(
             base_class_features_by_level={
                 1: ClericLevel1(
                     cantrip_1=ClericLevel0Spells.GUIDANCE,
-                    cantrip_2=ClericLevel0Spells.LIGHT,
-                    cantrip_3=ClericLevel0Spells.RESISTANCE,
+                    cantrip_2=ClericLevel0Spells.TOLL_THE_DEAD,
+                    cantrip_3=ClericLevel0Spells.SACRED_FLAME,
                     spell_1=ClericLevel1Spells.HEALING_WORD,
-                    spell_2=ClericLevel1Spells.BANE,
-                    spell_3=ClericLevel1Spells.CREATE_OR_DESTROY_WATER,
+                    spell_2=ClericLevel1Spells.BLESS,
+                    spell_3=ClericLevel1Spells.CURE_WOUNDS,
                     spell_4=ClericLevel1Spells.GUIDING_BOLT,
                 ),
                 2: ClericLevel2(
-                    spell=ClericLevel1Spells.BLESS,
+                    spell=ClericLevel1Spells.SANCTUARY,
                 ),
                 3: ClericLevel3(
-                    spell=ClericLevel1Spells.CURE_WOUNDS,
+                    spell=ClericLevel2Spells.SPIRITUAL_WEAPON,
                 ),
                 4: ClericLevel4(
                     general_feat=GeneralFeats.AbilityScoreImprovement(
@@ -184,7 +189,7 @@ def get_starter_class_builder():
                 17: KnowledgeClericLevel17(),
             },
         ),
-        replace_spells={},
+        replace_spells={ClericLevel1Spells.HEALING_WORD: ClericLevel2Spells.AUGURY},
     )
 
 
@@ -193,7 +198,7 @@ class OptimizedKnowledgeClericCharacterBuilder(CharacterBuilder):
         super().__init__(
             name="Optimized Knowledge Cleric",
             starter_class_builder=get_starter_class_builder(),
-            species_builder=Gnome.ForestGnomeSpeciesBuilder(
-                spell_casting_ability=Ability.WISDOM
+            species_builder=Warforged.WarForgedSpeciesBuilder(
+                skill=Skill.MEDICINE,
             ),
         )

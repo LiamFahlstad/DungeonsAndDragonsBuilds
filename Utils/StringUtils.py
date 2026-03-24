@@ -1,4 +1,4 @@
-def wrap_text(description: str, max_sentence_length: int) -> str:
+def wrap_text(description: str, max_sentence_length: int, html: bool = False) -> str:
     """
     Wraps text so that no line exceeds max_sentence_length.
     Breaks at the last space before the limit when possible,
@@ -22,5 +22,8 @@ def wrap_text(description: str, max_sentence_length: int) -> str:
             line = line[last_space:].lstrip()
 
         new_parts.append(line)
+
+    if html:
+        return "<br>\n".join(new_parts)
 
     return "\n".join(new_parts)

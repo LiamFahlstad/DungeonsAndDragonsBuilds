@@ -166,6 +166,9 @@ class AbstractWeapon(TextFeature):
                 best_ability_modifier = ability_modifier
                 best_ability = ability.value
 
+        if best_ability is None:
+            raise ValueError("No valid ability found for weapon damage calculation.")
+
         return best_ability_modifier, best_ability
 
     def calculate_ability_modifier_bonus(
@@ -232,7 +235,7 @@ class AbstractWeapon(TextFeature):
 
         for prop in stats.properties:
             description = StringUtils.wrap_text(
-                prop.description, max_sentence_length=280
+                prop.description, max_sentence_length=100
             )
             rows.append([f"Property '{prop.value}'", description])
 
@@ -251,7 +254,7 @@ class AbstractWeapon(TextFeature):
         if self.player_has_mastery:
             mastery_description = stats.mastery.description
             mastery_description = StringUtils.wrap_text(
-                mastery_description, max_sentence_length=280
+                mastery_description, max_sentence_length=100
             )
             rows.append([f"Mastery '{stats.mastery.value}'", mastery_description])
 
@@ -295,7 +298,9 @@ class AbstractWeapon(TextFeature):
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         pass
 
-    def write_to_file(self, character_stat_block: CharacterStatBlock, file: TextIO):
+    def write_to_file(
+        self, character_stat_block: CharacterStatBlock, file: TextIO, html: bool = False
+    ):
         headers = self.get_headers()
         rows = self.get_rows(character_stat_block)
         write_table(headers, rows, file)
@@ -871,11 +876,12 @@ def write_weapons_to_file(
     weapons: list[AbstractWeapon],
     character_stat_block: CharacterStatBlock,
     file: TextIO,
+    html: bool = False,
 ):
     if not weapons:
         return
-    headers = weapons[0].get_headers()
-    rows = []
+    headers: list[str] = weapons[0].get_headers()
+    rows: list[list[str]] = []
     for i, weapon in enumerate(weapons):
         rows.extend(weapon.get_rows(character_stat_block))
         if i < len(weapons) - 1:

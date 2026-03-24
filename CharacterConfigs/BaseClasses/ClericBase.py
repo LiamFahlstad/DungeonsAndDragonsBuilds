@@ -57,6 +57,7 @@ class ClericLevel1(ClassBuilder.BaseClassLevel1):
     ) -> CharacterSheetData:
         data.add_feature(ClericFeatures.Spellcasting())
         data.add_feature(ClericFeatures.DivineOrder())
+        data.add_feature(ClericFeatures.DivineOrderSkillProficiency())
         data.add_cantrip(self.cantrip_1)
         data.add_cantrip(self.cantrip_2)
         data.add_cantrip(self.cantrip_3)

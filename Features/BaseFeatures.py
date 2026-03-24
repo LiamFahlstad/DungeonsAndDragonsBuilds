@@ -66,7 +66,7 @@ class TextFeature(Feature):
     def write_to_file(
         self, character_stat_block: CharacterStatBlock, file: TextIO, html: bool = False
     ):
-        max_sentence_length = 100
+        max_sentence_length = 150
 
         description = self.get_description(character_stat_block)
         for addition in self.additional_features:
@@ -80,8 +80,8 @@ class TextFeature(Feature):
                 "    ", "&nbsp;&nbsp;&nbsp;&nbsp;"
             )
 
-        # Ensure description is not too long without newlines
-        description = StringUtils.wrap_text(description, max_sentence_length)
+            # Ensure description is not too long without newlines
+            description = StringUtils.wrap_text(description, max_sentence_length, html)
 
         if not description.endswith("\n"):
             description += "\n"
