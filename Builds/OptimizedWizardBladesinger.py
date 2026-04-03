@@ -1,106 +1,70 @@
 import Definitions
 from Builds.CharacterBuilder import CharacterBuilder
 from CharacterConfigs.BaseClasses import ClassBuilder
-from CharacterConfigs.BaseClasses.FighterBase import FighterLevel1
 from CharacterConfigs.BaseClasses.WizardBase import (
     WizardLevel1,
     WizardLevel2,
     WizardLevel3,
     WizardLevel4,
 )
-from CharacterConfigs.SubClasses.FighterBattleMaster import (
-    FighterBattleMasterStarterClassBuilder,
-)
 from CharacterConfigs.SubClasses.WizardBladesinger import (
     WizardBladesingerLevel3,
-    WizardBladesingerMulticlassBuilder,
+    WizardBladesingerStarterClassBuilder,
 )
 from Definitions import Ability, Skill
-from Features import Backgrounds, FightingStyles, GeneralFeats, OriginFeats, Weapons
+from Features import Backgrounds, GeneralFeats, OriginFeats, Weapons
 from SpeciesConfigs import Elf
 from Spells import Definitions as SpellDefinitions
 from StatBlocks.AbilitiesStatBlock import StandardArrayAbilitiesStatBlock
-from StatBlocks.SkillsStatBlock import FighterSkillsStatBlock
+from StatBlocks.SkillsStatBlock import WizardSkillsStatBlock
 
 
 def get_starter_class_builder():
-    return FighterBattleMasterStarterClassBuilder(
-        fighter_level=1,
+    return WizardBladesingerStarterClassBuilder(
+        wizard_level=4,
         # Distribute 15, 14, 13, 12, 10, 8 among your abilities.
         abilities=StandardArrayAbilitiesStatBlock(
             strength=8,
-            dexterity=14,
-            constitution=13,
-            intelligence=15,
-            wisdom=10,
-            charisma=12,
+            dexterity=15,
+            constitution=14,
+            intelligence=13,
+            wisdom=12,
+            charisma=10,
         ),
         # Choose two skills to be proficient in
-        fighter_skills=FighterSkillsStatBlock(
+        wizard_skills=WizardSkillsStatBlock(
             proficiencies={
-                Skill.ACROBATICS: True,
-                Skill.ANIMAL_HANDLING: False,
-                Skill.ATHLETICS: False,
+                Skill.ARCANA: True,
                 Skill.HISTORY: True,
                 Skill.INSIGHT: False,
-                Skill.INTIMIDATION: False,
-                Skill.PERCEPTION: False,
-                Skill.SURVIVAL: False,
+                Skill.INVESTIGATION: False,
+                Skill.MEDICINE: False,
+                Skill.NATURE: False,
+                Skill.RELIGION: False,
             }
         ),
         background_ability_bonuses=Backgrounds.FreeBackgroundAbilityBonus(
             [
-                (Ability.INTELLIGENCE, 2),
-                (Ability.DEXTERITY, 1),
+                (Ability.INTELLIGENCE, 1),
+                (Ability.DEXTERITY, 2),
             ]
         ),
         background_skill_proficiencies=Backgrounds.FreeBackgroundSkillProficiency(
             [
-                Skill.ARCANA,
+                Skill.ACROBATICS,
                 Skill.STEALTH,
             ]
         ),
-        add_default_equipment=False,
-        origin_feat=OriginFeats.Tough(),
+        add_default_equipment=True,
+        origin_feat=OriginFeats.Alert(),
         armor=[],
         weapons=[
-            Weapons.Longsword(
-                player_is_proficient=True,
-                player_has_mastery=True,
-                ability=Ability.INTELLIGENCE,
-            ),
-            Weapons.Shortsword(
-                player_is_proficient=True,
-                player_has_mastery=True,
-                ability=Ability.INTELLIGENCE,
-            ),
-            Weapons.Scimitar(
-                player_is_proficient=True,
-                player_has_mastery=True,
-                ability=Ability.INTELLIGENCE,
-            ),
+            Weapons.Longsword(player_is_proficient=True, ability=Ability.INTELLIGENCE),
         ],
-        fighter_level_features=ClassBuilder.BaseClassLevelFeatures(
-            base_class_features_by_level={
-                1: FighterLevel1(
-                    weapon_mastery_1=Weapons.Longsword(),
-                    weapon_mastery_2=Weapons.Scimitar(),
-                    weapon_mastery_3=Weapons.Shortsword(),
-                    fighting_style=FightingStyles.TwoWeaponFighting(),
-                ),
-            },
-            subclass_features_by_level={},
-        ),
-    )
-
-
-def get_multiclass_builder():
-    return WizardBladesingerMulticlassBuilder(
-        wizard_level=3,
         wizard_level_features=ClassBuilder.BaseClassLevelFeatures(
             base_class_features_by_level={
                 1: WizardLevel1(
-                    cantrip_1=SpellDefinitions.WizardLevel0Spells.MINOR_ILLUSION,
+                    cantrip_1=SpellDefinitions.WizardLevel0Spells.TRUE_STRIKE,
                     cantrip_2=SpellDefinitions.WizardLevel0Spells.MAGE_HAND,
                     cantrip_3=SpellDefinitions.WizardLevel0Spells.PRESTIDIGITATION,
                     spell_1=SpellDefinitions.WizardLevel1Spells.MAGE_ARMOR,
@@ -130,12 +94,11 @@ def get_multiclass_builder():
     )
 
 
-class MutliclassTestCharacterBuilder(CharacterBuilder):
+class OptimizedWizardBladesingerCharacterBuilder(CharacterBuilder):
     def __init__(self):
         super().__init__(
-            name="Multiclass Test",
+            name="Optimized Wizard Bladesinger",
             starter_class_builder=get_starter_class_builder(),
-            multiclass_builders=[get_multiclass_builder()],
             species_builder=Elf.ElfSpeciesBuilder(
                 elven_lineage=Elf.ElvenLineage.WOOD_ELF,
                 skill_proficiency=Definitions.Skill.PERCEPTION,

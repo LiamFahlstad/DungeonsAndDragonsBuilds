@@ -1,65 +1,36 @@
-from typing import Optional, TypeAlias
+from typing import Optional
 
 import attr
 
-from CharacterSheetCreator import CharacterSheetData
-from Features.ClassFeatures import WizardFeatures
-from Spells.Definitions import (
-    AbjurationLevel1Spells,
-    AbjurationLevel2Spells,
-    AbjurationLevel3Spells,
-    AbjurationLevel4Spells,
-    AbjurationLevel5Spells,
-    AbjurationLevel6Spells,
-    AbjurationLevel7Spells,
-    AbjurationLevel8Spells,
-    AbjurationLevel9Spells,
+from CharacterConfigs.BaseClasses import ClassBuilder
+from CharacterConfigs.BaseClasses.WizardBase import (
+    WizardMulticlassBuilder,
+    WizardStarterClassBuilder,
 )
-
-AbjurationSpellsUpTo2: TypeAlias = AbjurationLevel1Spells | AbjurationLevel2Spells
-
-AbjurationSpellsUpTo3: TypeAlias = AbjurationSpellsUpTo2 | AbjurationLevel3Spells
-
-AbjurationSpellsUpTo4: TypeAlias = AbjurationSpellsUpTo3 | AbjurationLevel4Spells
-
-AbjurationSpellsUpTo5: TypeAlias = AbjurationSpellsUpTo4 | AbjurationLevel5Spells
-
-AbjurationSpellsUpTo6: TypeAlias = AbjurationSpellsUpTo5 | AbjurationLevel6Spells
-
-AbjurationSpellsUpTo7: TypeAlias = AbjurationSpellsUpTo6 | AbjurationLevel7Spells
-
-AbjurationSpellsUpTo8: TypeAlias = AbjurationSpellsUpTo7 | AbjurationLevel8Spells
-
-AbjurationSpellsUpTo9: TypeAlias = AbjurationSpellsUpTo8 | AbjurationLevel9Spells
+from CharacterSheetCreator import CharacterSheetData
+from Definitions import Skill, WizardSubclass
+from Features import Armor, Backgrounds, OriginFeats, Weapons
+from Features.ClassFeatures import WizardFeatures
+from StatBlocks.AbilitiesStatBlock import AbilitiesStatBlock
+from StatBlocks.SkillsStatBlock import WizardSkillsStatBlock
 
 
 @attr.dataclass
-class BladesingerWizardLevel3(WizardSubclassLevel3):
-    level: int = attr.field(init=False, default=3)
+class WizardBladesingerLevel3(ClassBuilder.SubclassLevel3):
 
     def add_features(
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(WizardFeatures.Bladesong())
-        data.add_feature(WizardFeatures.ArcaneWard())
+        if data.armors:
+            raise ValueError("Bladesong cannot be used while wearing armor.")
+        data.add_feature(WizardFeatures.BladesongText())
+        data.add_feature(WizardFeatures.TrainingInWarAndSong(Skill.ATHLETICS))
         return data
 
 
 @attr.dataclass
-class BladesingerWizardLevel5(WizardSubclassLevel5):
-    level: int = attr.field(init=False, default=5)
-
-    def add_features(
-        self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
-        return data
-
-
-@attr.dataclass
-class BladesingerWizardLevel6(WizardSubclassLevel6):
-    level: int = attr.field(init=False, default=6)
+class WizardBladesingerLevel6(ClassBuilder.SubclassLevel6):
 
     def add_features(
         self,
@@ -70,30 +41,7 @@ class BladesingerWizardLevel6(WizardSubclassLevel6):
 
 
 @attr.dataclass
-class BladesingerWizardLevel7(WizardSubclassLevel7):
-    level: int = attr.field(init=False, default=7)
-
-    def add_features(
-        self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
-        return data
-
-
-@attr.dataclass
-class BladesingerWizardLevel9(WizardSubclassLevel9):
-    level: int = attr.field(init=False, default=9)
-
-    def add_features(
-        self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
-        return data
-
-
-@attr.dataclass
-class BladesingerWizardLevel10(WizardSubclassLevel10):
-    level: int = attr.field(init=False, default=10)
+class WizardBladesingerLevel10(ClassBuilder.SubclassLevel10):
 
     def add_features(
         self,
@@ -104,30 +52,7 @@ class BladesingerWizardLevel10(WizardSubclassLevel10):
 
 
 @attr.dataclass
-class BladesingerWizardLevel11(WizardSubclassLevel11):
-    level: int = attr.field(init=False, default=11)
-
-    def add_features(
-        self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
-        return data
-
-
-@attr.dataclass
-class BladesingerWizardLevel13(WizardSubclassLevel13):
-    level: int = attr.field(init=False, default=13)
-
-    def add_features(
-        self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
-        return data
-
-
-@attr.dataclass
-class BladesingerWizardLevel14(WizardSubclassLevel14):
-    level: int = attr.field(init=False, default=14)
+class WizardBladesingerLevel14(ClassBuilder.SubclassLevel14):
 
     def add_features(
         self,
@@ -137,38 +62,49 @@ class BladesingerWizardLevel14(WizardSubclassLevel14):
         return data
 
 
-@attr.dataclass
-class BladesingerWizardLevel15(WizardSubclassLevel15):
-    level: int = attr.field(init=False, default=15)
+class WizardBladesingerStarterClassBuilder(WizardStarterClassBuilder):
 
-    def add_features(
+    def __init__(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
-        return data
+        wizard_level_features: ClassBuilder.BaseClassLevelFeatures,
+        wizard_level: int,
+        abilities: AbilitiesStatBlock,
+        wizard_skills: WizardSkillsStatBlock,
+        background_ability_bonuses: Backgrounds.FreeBackgroundAbilityBonus,
+        background_skill_proficiencies: Backgrounds.FreeBackgroundSkillProficiency,
+        add_default_equipment: bool,
+        origin_feat: OriginFeats.OriginFeat,
+        armor: Optional[list[Armor.AbstractArmor]] = None,
+        weapons: Optional[list[Weapons.AbstractWeapon]] = None,
+        replace_spells: Optional[dict[str, str]] = None,
+    ):
+        super().__init__(
+            wizard_level_features=wizard_level_features,
+            wizard_level=wizard_level,
+            subclass=WizardSubclass.BLADESINGER.value,
+            abilities=abilities,
+            wizard_skills=wizard_skills,
+            background_ability_bonuses=background_ability_bonuses,
+            background_skill_proficiencies=background_skill_proficiencies,
+            add_default_equipment=add_default_equipment,
+            origin_feat=origin_feat,
+            armor=armor,
+            weapons=weapons,
+            replace_spells=replace_spells,
+        )
 
 
-@attr.dataclass
-class BladesingerWizardLevel17(WizardSubclassLevel17):
-    level: int = attr.field(init=False, default=17)
+class WizardBladesingerMulticlassBuilder(WizardMulticlassBuilder):
 
-    def add_features(
+    def __init__(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
-        return data
-
-
-@attr.dataclass
-class BladesingerWizardFeaturePerLevel(WizardFeaturePerLevel):
-    subclass_level_3: Optional[BladesingerWizardLevel3] = None
-    subclass_level_5: Optional[BladesingerWizardLevel5] = None
-    subclass_level_6: Optional[BladesingerWizardLevel6] = None
-    subclass_level_7: Optional[BladesingerWizardLevel7] = None
-    subclass_level_9: Optional[BladesingerWizardLevel9] = None
-    subclass_level_10: Optional[BladesingerWizardLevel10] = None
-    subclass_level_11: Optional[BladesingerWizardLevel11] = None
-    subclass_level_13: Optional[BladesingerWizardLevel13] = None
-    subclass_level_14: Optional[BladesingerWizardLevel14] = None
-    subclass_level_15: Optional[BladesingerWizardLevel15] = None
-    subclass_level_17: Optional[BladesingerWizardLevel17] = None
+        wizard_level_features: ClassBuilder.BaseClassLevelFeatures,
+        wizard_level: int,
+        replace_spells: Optional[dict[str, str]] = None,
+    ):
+        super().__init__(
+            wizard_level_features=wizard_level_features,
+            wizard_level=wizard_level,
+            subclass=WizardSubclass.BLADESINGER.value,
+            replace_spells=replace_spells,
+        )

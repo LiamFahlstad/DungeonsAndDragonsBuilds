@@ -137,7 +137,7 @@ class SpellResistance(TextFeature):
 ### Bladesinger Subclass Features ###
 
 
-class Bladesong(TextFeature):
+class BladesongText(TextFeature):
     def __init__(self):
         super().__init__(name="Bladesong", origin="Bladesinger Wizard Level 3")
 

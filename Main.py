@@ -1,4 +1,5 @@
 from Builds import (
+    MutliclassTest,
     OptimizedBarbarianBerserker,
     OptimizedBarbarianWorldTree,
     OptimizedBardGlamour,
@@ -14,6 +15,7 @@ from Builds import (
     OptimizedRangerGloomStalker,
     OptimizedRogueAssassin,
     OptimizedWarlockArchfey,
+    OptimizedWizardBladesinger,
 )
 from Builds.CharacterBuilder import CharacterBuilder
 
@@ -22,6 +24,7 @@ class BuildSelector:
     @staticmethod
     def get_build(build_name: str) -> CharacterBuilder:
         builds = {
+            "MulticlassTest": MutliclassTest.MutliclassTestCharacterBuilder(),
             "OptimizedBarbarianBerserker": OptimizedBarbarianBerserker.OptimizedBarbarianBerserkerCharacterBuilder(),
             "OptimizedBarbarianWorldTree": OptimizedBarbarianWorldTree.OptimizedBarbarianWorldTreeCharacterBuilder(),
             "OptimizedBardGlamour": OptimizedBardGlamour.OptimizedBardGlamourCharacterBuilder(),
@@ -37,12 +40,14 @@ class BuildSelector:
             "OptimizedRangerGloomStalker": OptimizedRangerGloomStalker.OptimizedRangerGloomStalkerCharacterBuilder(),
             "OptimizedRogueAssassin": OptimizedRogueAssassin.OptimizedRogueAssassinCharacterBuilder(),
             "OptimizedWarlockArchfey": OptimizedWarlockArchfey.OptimizedWarlockArchfeyCharacterBuilder(),
+            "OptimizedWizardBladesinger": OptimizedWizardBladesinger.OptimizedWizardBladesingerCharacterBuilder(),
         }
         return builds[build_name]
 
 
 if __name__ == "__main__":
     build_names = [
+        "MulticlassTest",
         "OptimizedBarbarianBerserker",
         "OptimizedBarbarianWorldTree",
         "OptimizedBardGlamour",
@@ -58,6 +63,7 @@ if __name__ == "__main__":
         "OptimizedRangerGloomStalker",
         "OptimizedRogueAssassin",
         "OptimizedWarlockArchfey",
+        "OptimizedWizardBladesinger",
     ]
     for build_name in build_names:
         build_class = BuildSelector.get_build(build_name)
