@@ -16,7 +16,7 @@ from StatBlocks.SkillsStatBlock import MonkSkillsStatBlock
 
 
 @attr.dataclass
-class ShadowMonkLevel3(ClassBuilder.SubclassLevel3):
+class MonkShadowLevel3(ClassBuilder.SubclassLevel3):
     def add_features(
         self,
         data: CharacterSheetData,
@@ -29,7 +29,7 @@ class ShadowMonkLevel3(ClassBuilder.SubclassLevel3):
 
 
 @attr.dataclass
-class ShadowMonkLevel6(ClassBuilder.SubclassLevel6):
+class MonkShadowLevel6(ClassBuilder.SubclassLevel6):
     def add_features(
         self,
         data: CharacterSheetData,
@@ -39,7 +39,7 @@ class ShadowMonkLevel6(ClassBuilder.SubclassLevel6):
 
 
 @attr.dataclass
-class ShadowMonkLevel11(ClassBuilder.SubclassLevel11):
+class MonkShadowLevel11(ClassBuilder.SubclassLevel11):
 
     def add_features(
         self,
@@ -53,7 +53,7 @@ class ShadowMonkLevel11(ClassBuilder.SubclassLevel11):
 
 
 @attr.dataclass
-class ShadowMonkLevel17(ClassBuilder.SubclassLevel17):
+class MonkShadowLevel17(ClassBuilder.SubclassLevel17):
 
     def add_features(
         self,
@@ -66,7 +66,7 @@ class ShadowMonkLevel17(ClassBuilder.SubclassLevel17):
         return data
 
 
-class ShadowMonkStarterClassBuilder(MonkStarterClassBuilder):
+class MonkShadowStarterClassBuilder(MonkStarterClassBuilder):
 
     def __init__(
         self,
@@ -98,7 +98,7 @@ class ShadowMonkStarterClassBuilder(MonkStarterClassBuilder):
         )
 
 
-class ShadowMonkMulticlassBuilder(MonkMulticlassBuilder):
+class MonkShadowMulticlassBuilder(MonkMulticlassBuilder):
 
     def __init__(
         self,

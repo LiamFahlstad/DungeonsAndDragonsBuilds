@@ -26,7 +26,7 @@ from StatBlocks.SkillsStatBlock import PaladinSkillsStatBlock
 
 
 @attr.dataclass
-class GloryPaladinLevel3(ClassBuilder.SubclassLevel3):
+class PaladinGloryLevel3(ClassBuilder.SubclassLevel3):
     level: int = attr.field(init=False, default=3)
 
     def add_features(
@@ -44,7 +44,7 @@ class GloryPaladinLevel3(ClassBuilder.SubclassLevel3):
 
 
 @attr.dataclass
-class GloryPaladinLevel5(ClassBuilder.SubclassLevel5):
+class PaladinGloryLevel5(ClassBuilder.SubclassLevel5):
     level: int = attr.field(init=False, default=5)
 
     def add_features(
@@ -57,7 +57,7 @@ class GloryPaladinLevel5(ClassBuilder.SubclassLevel5):
 
 
 @attr.dataclass
-class GloryPaladinLevel7(ClassBuilder.SubclassLevel7):
+class PaladinGloryLevel7(ClassBuilder.SubclassLevel7):
     level: int = attr.field(init=False, default=7)
 
     def add_features(
@@ -72,7 +72,7 @@ class GloryPaladinLevel7(ClassBuilder.SubclassLevel7):
 
 
 @attr.dataclass
-class GloryPaladinLevel9(ClassBuilder.SubclassLevel9):
+class PaladinGloryLevel9(ClassBuilder.SubclassLevel9):
     level: int = attr.field(init=False, default=9)
 
     def add_features(
@@ -85,7 +85,7 @@ class GloryPaladinLevel9(ClassBuilder.SubclassLevel9):
 
 
 @attr.dataclass
-class GloryPaladinLevel13(ClassBuilder.SubclassLevel13):
+class PaladinGloryLevel13(ClassBuilder.SubclassLevel13):
     level: int = attr.field(init=False, default=13)
 
     def add_features(
@@ -98,7 +98,7 @@ class GloryPaladinLevel13(ClassBuilder.SubclassLevel13):
 
 
 @attr.dataclass
-class GloryPaladinLevel15(ClassBuilder.SubclassLevel15):
+class PaladinGloryLevel15(ClassBuilder.SubclassLevel15):
     level: int = attr.field(init=False, default=15)
 
     def add_features(
@@ -110,7 +110,7 @@ class GloryPaladinLevel15(ClassBuilder.SubclassLevel15):
 
 
 @attr.dataclass
-class GloryPaladinLevel17(ClassBuilder.SubclassLevel17):
+class PaladinGloryLevel17(ClassBuilder.SubclassLevel17):
     level: int = attr.field(init=False, default=17)
 
     def add_features(
@@ -123,7 +123,7 @@ class GloryPaladinLevel17(ClassBuilder.SubclassLevel17):
 
 
 @attr.dataclass
-class GloryPaladinLevel20(ClassBuilder.SubclassLevel20):
+class PaladinGloryLevel20(ClassBuilder.SubclassLevel20):
     level: int = attr.field(init=False, default=20)
 
     def add_features(
@@ -134,7 +134,7 @@ class GloryPaladinLevel20(ClassBuilder.SubclassLevel20):
         return data
 
 
-class GloryPaladinStarterClassBuilder(PaladinStarterClassBuilder):
+class PaladinGloryStarterClassBuilder(PaladinStarterClassBuilder):
 
     def __init__(
         self,
@@ -166,7 +166,7 @@ class GloryPaladinStarterClassBuilder(PaladinStarterClassBuilder):
         )
 
 
-class GloryPaladinMulticlassBuilder(PaladinMulticlassBuilder):
+class PaladinGloryMulticlassBuilder(PaladinMulticlassBuilder):
 
     def __init__(
         self,

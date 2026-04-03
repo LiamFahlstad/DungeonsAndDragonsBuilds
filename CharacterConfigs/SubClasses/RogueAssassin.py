@@ -16,7 +16,7 @@ from StatBlocks.SkillsStatBlock import RogueSkillsStatBlock
 
 
 @attr.dataclass
-class AssassinRogueLevel3(ClassBuilder.SubclassLevel3):
+class RogueAssassinLevel3(ClassBuilder.SubclassLevel3):
     level: int = attr.field(init=False, default=3)
 
     def add_features(
@@ -29,7 +29,7 @@ class AssassinRogueLevel3(ClassBuilder.SubclassLevel3):
 
 
 @attr.dataclass
-class AssassinRogueLevel9(ClassBuilder.SubclassLevel9):
+class RogueAssassinLevel9(ClassBuilder.SubclassLevel9):
     level: int = attr.field(init=False, default=9)
 
     def add_features(
@@ -41,7 +41,7 @@ class AssassinRogueLevel9(ClassBuilder.SubclassLevel9):
 
 
 @attr.dataclass
-class AssassinRogueLevel13(ClassBuilder.SubclassLevel13):
+class RogueAssassinLevel13(ClassBuilder.SubclassLevel13):
     level: int = attr.field(init=False, default=13)
 
     def add_features(
@@ -57,7 +57,7 @@ class AssassinRogueLevel13(ClassBuilder.SubclassLevel13):
 
 
 @attr.dataclass
-class AssassinRogueLevel17(ClassBuilder.SubclassLevel17):
+class RogueAssassinLevel17(ClassBuilder.SubclassLevel17):
     level: int = attr.field(init=False, default=17)
 
     def add_features(
@@ -72,7 +72,7 @@ class AssassinRogueLevel17(ClassBuilder.SubclassLevel17):
         return data
 
 
-class AssassinRogueStarterClassBuilder(RogueStarterClassBuilder):
+class RogueAssassinStarterClassBuilder(RogueStarterClassBuilder):
 
     def __init__(
         self,
@@ -104,7 +104,7 @@ class AssassinRogueStarterClassBuilder(RogueStarterClassBuilder):
         )
 
 
-class AssassinRogueMulticlassBuilder(RogueMulticlassBuilder):
+class RogueAssassinMulticlassBuilder(RogueMulticlassBuilder):
 
     def __init__(
         self,

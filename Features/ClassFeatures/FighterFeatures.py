@@ -222,9 +222,7 @@ class InspiringCommander(TextFeature):
 class SuperiorityDice(TextFeature):
     def __init__(self):
         self.maneuvers = []
-        super().__init__(
-            name="Superiority Dice", origin="Fighter Battle Master Level 3"
-        )
+        super().__init__(name="Superiority Dice", origin="Battle Master FighterLevel 3")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         if character_stat_block.character_level < 7:

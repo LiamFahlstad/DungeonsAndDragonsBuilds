@@ -10,8 +10,8 @@ from CharacterConfigs.BaseClasses.RogueBase import (
     RogueLevel6,
 )
 from CharacterConfigs.SubClasses.RogueAssassin import (
-    AssassinRogueLevel3,
-    AssassinRogueStarterClassBuilder,
+    RogueAssassinLevel3,
+    RogueAssassinStarterClassBuilder,
 )
 from Definitions import Ability, Skill
 from Features import Backgrounds, GeneralFeats, OriginFeats, Weapons
@@ -21,7 +21,7 @@ from StatBlocks.SkillsStatBlock import RogueSkillsStatBlock
 
 
 def get_starter_class_builder():
-    return AssassinRogueStarterClassBuilder(
+    return RogueAssassinStarterClassBuilder(
         rogue_level=3,
         # Distribute 15, 14, 13, 12, 10, 8 among your abilities.
         abilities=StandardArrayAbilitiesStatBlock(
@@ -81,13 +81,13 @@ def get_starter_class_builder():
                 6: RogueLevel6(),
             },
             subclass_features_by_level={
-                3: AssassinRogueLevel3(),
+                3: RogueAssassinLevel3(),
             },
         ),
     )
 
 
-class OptimizedAssassinRogueCharacterBuilder(CharacterBuilder):
+class OptimizedRogueAssassinCharacterBuilder(CharacterBuilder):
     def __init__(self):
         super().__init__(
             name="Optimized Rogue Assassin",

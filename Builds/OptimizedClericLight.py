@@ -23,10 +23,10 @@ from CharacterConfigs.BaseClasses.ClericBase import (
     ClericLevel20,
 )
 from CharacterConfigs.SubClasses.ClericLight import (
-    LightClericLevel3,
-    LightClericLevel6,
-    LightClericLevel17,
-    LightClericStarterClassBuilder,
+    ClericLightLevel3,
+    ClericLightLevel6,
+    ClericLightLevel17,
+    ClericLightStarterClassBuilder,
 )
 from Definitions import Ability, Skill
 from Features import Backgrounds, EpicBoon, GeneralFeats, OriginFeats
@@ -47,7 +47,7 @@ from StatBlocks.SkillsStatBlock import ClericSkillsStatBlock
 
 
 def get_starter_class_builder():
-    return LightClericStarterClassBuilder(
+    return ClericLightStarterClassBuilder(
         cleric_level=20,
         # Distribute 15, 14, 13, 12, 10, 8 among your abilities.
         abilities=StandardArrayAbilitiesStatBlock(
@@ -176,16 +176,16 @@ def get_starter_class_builder():
                 ),
             },
             subclass_features_by_level={
-                3: LightClericLevel3(),
-                6: LightClericLevel6(),
-                17: LightClericLevel17(),
+                3: ClericLightLevel3(),
+                6: ClericLightLevel6(),
+                17: ClericLightLevel17(),
             },
         ),
         replace_spells={},
     )
 
 
-class OptimizedLightClericCharacterBuilder(CharacterBuilder):
+class OptimizedClericLightCharacterBuilder(CharacterBuilder):
     def __init__(self):
         super().__init__(
             name="Optimized Light Cleric",

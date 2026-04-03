@@ -9,7 +9,7 @@ from CharacterConfigs.BaseClasses.WarlockBase import (
     WarlockLevel5,
 )
 from CharacterConfigs.SubClasses.FighterBattleMaster import (
-    BattleMasterFighterStarterClassBuilder,
+    FighterBattleMasterStarterClassBuilder,
 )
 from CharacterConfigs.SubClasses.WarlockArchfey import (
     ArchfeyWarlockLevel3,
@@ -35,7 +35,7 @@ from StatBlocks.SkillsStatBlock import FighterSkillsStatBlock
 
 
 def get_starter_class_builder():
-    return BattleMasterFighterStarterClassBuilder(
+    return FighterBattleMasterStarterClassBuilder(
         fighter_level=1,
         # Distribute 15, 14, 13, 12, 10, 8 among your abilities.
         abilities=StandardArrayAbilitiesStatBlock(

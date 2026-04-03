@@ -16,7 +16,7 @@ from StatBlocks.SkillsStatBlock import BarbarianSkillsStatBlock
 
 
 @attr.dataclass
-class BerserkerBarbarianLevel3(ClassBuilder.SubclassLevel3):
+class BarbarianBerserkerLevel3(ClassBuilder.SubclassLevel3):
 
     def add_features(
         self,
@@ -30,7 +30,7 @@ class BerserkerBarbarianLevel3(ClassBuilder.SubclassLevel3):
 
 
 @attr.dataclass
-class BerserkerBarbarianLevel6(ClassBuilder.SubclassLevel6):
+class BarbarianBerserkerLevel6(ClassBuilder.SubclassLevel6):
 
     def add_features(
         self,
@@ -44,7 +44,7 @@ class BerserkerBarbarianLevel6(ClassBuilder.SubclassLevel6):
 
 
 @attr.dataclass
-class BerserkerBarbarianLevel10(ClassBuilder.SubclassLevel10):
+class BarbarianBerserkerLevel10(ClassBuilder.SubclassLevel10):
 
     def add_features(
         self,
@@ -55,7 +55,7 @@ class BerserkerBarbarianLevel10(ClassBuilder.SubclassLevel10):
 
 
 @attr.dataclass
-class BerserkerBarbarianLevel14(ClassBuilder.SubclassLevel14):
+class BarbarianBerserkerLevel14(ClassBuilder.SubclassLevel14):
 
     def add_features(
         self,
@@ -68,7 +68,7 @@ class BerserkerBarbarianLevel14(ClassBuilder.SubclassLevel14):
         return data
 
 
-class BerserkerBarbarianStarterClassBuilder(BarbarianStarterClassBuilder):
+class BarbarianBerserkerStarterClassBuilder(BarbarianStarterClassBuilder):
 
     def __init__(
         self,
@@ -100,7 +100,7 @@ class BerserkerBarbarianStarterClassBuilder(BarbarianStarterClassBuilder):
         )
 
 
-class BerserkerBarbarianMulticlassBuilder(BarbarianMulticlassBuilder):
+class BarbarianBerserkerMulticlassBuilder(BarbarianMulticlassBuilder):
 
     def __init__(
         self,

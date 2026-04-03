@@ -12,7 +12,7 @@ from StatBlocks.SkillsStatBlock import RogueSkillsStatBlock
 
 
 def _get_starter_data() -> CharacterSheetCreator.CharacterSheetData:
-    rogue_assassin = RogueAssassin.AssassinRogueStarterClassBuilder(
+    rogue_assassin = RogueAssassin.RogueAssassinStarterClassBuilder(
         rogue_level=3,
         # Distribute 15, 14, 13, 12, 10, 8 among your abilities.
         abilities=StandardArrayAbilitiesStatBlock(

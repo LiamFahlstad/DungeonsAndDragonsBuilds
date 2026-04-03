@@ -21,7 +21,7 @@ from StatBlocks.SkillsStatBlock import ClericSkillsStatBlock
 
 
 @attr.dataclass
-class KnowledgeClericLevel3(ClassBuilder.SubclassLevel3):
+class ClericKnowledgeLevel3(ClassBuilder.SubclassLevel3):
     skill_1: Skill
     skill_2: Skill
 
@@ -61,7 +61,7 @@ class KnowledgeClericLevel3(ClassBuilder.SubclassLevel3):
 
 
 @attr.dataclass
-class KnowledgeClericLevel6(ClassBuilder.SubclassLevel6):
+class ClericKnowledgeLevel6(ClassBuilder.SubclassLevel6):
 
     def add_features(
         self,
@@ -72,7 +72,7 @@ class KnowledgeClericLevel6(ClassBuilder.SubclassLevel6):
 
 
 @attr.dataclass
-class KnowledgeClericLevel17(ClassBuilder.SubclassLevel17):
+class ClericKnowledgeLevel17(ClassBuilder.SubclassLevel17):
 
     def add_features(
         self,
@@ -82,7 +82,7 @@ class KnowledgeClericLevel17(ClassBuilder.SubclassLevel17):
         return data
 
 
-class KnowledgeClericStarterClassBuilder(ClericStarterClassBuilder):
+class ClericKnowledgeStarterClassBuilder(ClericStarterClassBuilder):
 
     def __init__(
         self,
@@ -114,7 +114,7 @@ class KnowledgeClericStarterClassBuilder(ClericStarterClassBuilder):
         )
 
 
-class KnowledgeClericMulticlassBuilder(ClericMulticlassBuilder):
+class ClericKnowledgeMulticlassBuilder(ClericMulticlassBuilder):
 
     def __init__(
         self,

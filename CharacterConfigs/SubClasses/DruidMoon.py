@@ -24,7 +24,7 @@ from StatBlocks.SkillsStatBlock import DruidSkillsStatBlock
 
 
 @attr.dataclass
-class MoonDruidLevel3(ClassBuilder.SubclassLevel3):
+class DruidMoonLevel3(ClassBuilder.SubclassLevel3):
 
     def add_features(
         self,
@@ -39,7 +39,7 @@ class MoonDruidLevel3(ClassBuilder.SubclassLevel3):
 
 
 @attr.dataclass
-class MoonDruidLevel5(ClassBuilder.SubclassLevel5):
+class DruidMoonLevel5(ClassBuilder.SubclassLevel5):
 
     def add_features(
         self,
@@ -50,7 +50,7 @@ class MoonDruidLevel5(ClassBuilder.SubclassLevel5):
 
 
 @attr.dataclass
-class MoonDruidLevel6(ClassBuilder.SubclassLevel6):
+class DruidMoonLevel6(ClassBuilder.SubclassLevel6):
 
     def add_features(
         self,
@@ -61,7 +61,7 @@ class MoonDruidLevel6(ClassBuilder.SubclassLevel6):
 
 
 @attr.dataclass
-class MoonDruidLevel7(ClassBuilder.SubclassLevel7):
+class DruidMoonLevel7(ClassBuilder.SubclassLevel7):
 
     def add_features(
         self,
@@ -72,7 +72,7 @@ class MoonDruidLevel7(ClassBuilder.SubclassLevel7):
 
 
 @attr.dataclass
-class MoonDruidLevel9(ClassBuilder.SubclassLevel9):
+class DruidMoonLevel9(ClassBuilder.SubclassLevel9):
 
     def add_features(
         self,
@@ -83,7 +83,7 @@ class MoonDruidLevel9(ClassBuilder.SubclassLevel9):
 
 
 @attr.dataclass
-class MoonDruidLevel10(ClassBuilder.SubclassLevel10):
+class DruidMoonLevel10(ClassBuilder.SubclassLevel10):
 
     def add_features(
         self,
@@ -94,7 +94,7 @@ class MoonDruidLevel10(ClassBuilder.SubclassLevel10):
 
 
 @attr.dataclass
-class MoonDruidLevel14(ClassBuilder.SubclassLevel14):
+class DruidMoonLevel14(ClassBuilder.SubclassLevel14):
 
     def add_features(
         self,
@@ -104,7 +104,7 @@ class MoonDruidLevel14(ClassBuilder.SubclassLevel14):
         return data
 
 
-class MoonDruidStarterClassBuilder(DruidStarterClassBuilder):
+class DruidMoonStarterClassBuilder(DruidStarterClassBuilder):
 
     def __init__(
         self,
@@ -136,7 +136,7 @@ class MoonDruidStarterClassBuilder(DruidStarterClassBuilder):
         )
 
 
-class MoonDruidMulticlassBuilder(DruidMulticlassBuilder):
+class DruidMoonMulticlassBuilder(DruidMulticlassBuilder):
 
     def __init__(
         self,

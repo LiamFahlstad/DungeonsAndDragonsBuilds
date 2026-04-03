@@ -23,10 +23,10 @@ from CharacterConfigs.BaseClasses.BardBase import (
     BardLevel20,
 )
 from CharacterConfigs.SubClasses.BardGlamour import (
-    GlamourBardLevel3,
-    GlamourBardLevel6,
-    GlamourBardLevel14,
-    GlamourBardStarterClassBuilder,
+    BardGlamourLevel3,
+    BardGlamourLevel6,
+    BardGlamourLevel14,
+    BardGlamourStarterClassBuilder,
 )
 from Definitions import Ability, Skill
 from Features import Backgrounds, EpicBoon, GeneralFeats, OriginFeats
@@ -48,7 +48,7 @@ from StatBlocks.SkillsStatBlock import BardSkillsStatBlock
 
 
 def get_starter_class_builder():
-    return GlamourBardStarterClassBuilder(
+    return BardGlamourStarterClassBuilder(
         bard_level=3,
         # Distribute 15, 14, 13, 12, 10, 8 among your abilities.
         abilities=StandardArrayAbilitiesStatBlock(
@@ -176,9 +176,9 @@ def get_starter_class_builder():
                 ),
             },
             subclass_features_by_level={
-                3: GlamourBardLevel3(),
-                6: GlamourBardLevel6(),
-                14: GlamourBardLevel14(),
+                3: BardGlamourLevel3(),
+                6: BardGlamourLevel6(),
+                14: BardGlamourLevel14(),
             },
         ),
         replace_spells={

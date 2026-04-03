@@ -6,8 +6,8 @@ from CharacterConfigs.BaseClasses.PaladinBase import (
     PaladinLevel3,
 )
 from CharacterConfigs.SubClasses.PaladinVengeance import (
-    VengeancePaladinLevel3,
-    VengeancePaladinStarterClassBuilder,
+    PaladinVengeanceLevel3,
+    PaladinVengeanceStarterClassBuilder,
 )
 from Definitions import Ability, Skill
 from Features import Backgrounds, FightingStyles, OriginFeats, Weapons
@@ -22,7 +22,7 @@ from StatBlocks.SkillsStatBlock import PaladinSkillsStatBlock
 
 
 def get_starter_class_builder():
-    return VengeancePaladinStarterClassBuilder(
+    return PaladinVengeanceStarterClassBuilder(
         paladin_level=3,
         # Distribute 15, 14, 13, 12, 10, 8 among your abilities.
         abilities=StandardArrayAbilitiesStatBlock(
@@ -79,17 +79,17 @@ def get_starter_class_builder():
                 ),
             },
             subclass_features_by_level={
-                3: VengeancePaladinLevel3(),
+                3: PaladinVengeanceLevel3(),
             },
         ),
         replace_spells={},
     )
 
 
-class RodericAshelmCharacterBuilder(CharacterBuilder):
+class OptimizedPaladinVengeanceCharacterBuilder(CharacterBuilder):
     def __init__(self):
         super().__init__(
-            name="Roderic Ashelm",
+            name="Optimized Paladin Vengeance",
             starter_class_builder=get_starter_class_builder(),
             species_builder=Human.HumanSpeciesBuilder(
                 skill_proficiency=Skill.DECEPTION,

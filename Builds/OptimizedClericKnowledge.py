@@ -23,10 +23,10 @@ from CharacterConfigs.BaseClasses.ClericBase import (
     ClericLevel20,
 )
 from CharacterConfigs.SubClasses.ClericKnowledge import (
-    KnowledgeClericLevel3,
-    KnowledgeClericLevel6,
-    KnowledgeClericLevel17,
-    KnowledgeClericStarterClassBuilder,
+    ClericKnowledgeLevel3,
+    ClericKnowledgeLevel6,
+    ClericKnowledgeLevel17,
+    ClericKnowledgeStarterClassBuilder,
 )
 from Definitions import Ability, Skill
 from Features import Armor, Backgrounds, EpicBoon, GeneralFeats, OriginFeats, Weapons
@@ -47,7 +47,7 @@ from StatBlocks.SkillsStatBlock import ClericSkillsStatBlock
 
 
 def get_starter_class_builder():
-    return KnowledgeClericStarterClassBuilder(
+    return ClericKnowledgeStarterClassBuilder(
         cleric_level=3,
         # Distribute 15, 14, 13, 12, 10, 8 among your abilities.
         abilities=StandardArrayAbilitiesStatBlock(
@@ -181,19 +181,19 @@ def get_starter_class_builder():
                 ),
             },
             subclass_features_by_level={
-                3: KnowledgeClericLevel3(
+                3: ClericKnowledgeLevel3(
                     skill_1=Skill.HISTORY,
                     skill_2=Skill.RELIGION,
                 ),
-                6: KnowledgeClericLevel6(),
-                17: KnowledgeClericLevel17(),
+                6: ClericKnowledgeLevel6(),
+                17: ClericKnowledgeLevel17(),
             },
         ),
         replace_spells={ClericLevel1Spells.HEALING_WORD: ClericLevel2Spells.AUGURY},
     )
 
 
-class OptimizedKnowledgeClericCharacterBuilder(CharacterBuilder):
+class OptimizedClericKnowledgeCharacterBuilder(CharacterBuilder):
     def __init__(self):
         super().__init__(
             name="Optimized Knowledge Cleric",

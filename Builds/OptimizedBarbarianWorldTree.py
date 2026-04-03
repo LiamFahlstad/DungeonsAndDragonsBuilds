@@ -24,11 +24,11 @@ from CharacterConfigs.BaseClasses.BarbarianBase import (
     BarbarianLevel20,
 )
 from CharacterConfigs.SubClasses.BarbarianPathOfTheWorldTree import (
-    WorldTreeBarbarianLevel3,
-    WorldTreeBarbarianLevel6,
-    WorldTreeBarbarianLevel10,
-    WorldTreeBarbarianLevel14,
-    WorldTreeBarbarianStarterClassBuilder,
+    BarbarianWorldTreeLevel3,
+    BarbarianWorldTreeLevel6,
+    BarbarianWorldTreeLevel10,
+    BarbarianWorldTreeLevel14,
+    BarbarianWorldTreeStarterClassBuilder,
 )
 from Definitions import Ability, Skill
 from Features import Armor, Backgrounds, EpicBoon, GeneralFeats, OriginFeats, Weapons
@@ -39,7 +39,7 @@ from StatBlocks.SkillsStatBlock import BarbarianSkillsStatBlock
 
 
 def get_starter_class_builder():
-    return WorldTreeBarbarianStarterClassBuilder(
+    return BarbarianWorldTreeStarterClassBuilder(
         barbarian_level=4,
         # Distribute 15, 14, 13, 12, 10, 8 among your abilities.
         abilities=StandardArrayAbilitiesStatBlock(
@@ -134,16 +134,16 @@ def get_starter_class_builder():
                 20: BarbarianLevel20(),
             },
             subclass_features_by_level={
-                3: WorldTreeBarbarianLevel3(),
-                6: WorldTreeBarbarianLevel6(),
-                10: WorldTreeBarbarianLevel10(),
-                14: WorldTreeBarbarianLevel14(),
+                3: BarbarianWorldTreeLevel3(),
+                6: BarbarianWorldTreeLevel6(),
+                10: BarbarianWorldTreeLevel10(),
+                14: BarbarianWorldTreeLevel14(),
             },
         ),
     )
 
 
-class OptimizedWorldTreeBarbarianCharacterBuilder(CharacterBuilder):
+class OptimizedBarbarianWorldTreeCharacterBuilder(CharacterBuilder):
     def __init__(self):
         super().__init__(
             name="Optimized World Tree Barbarian",

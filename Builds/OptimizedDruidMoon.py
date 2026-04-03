@@ -23,14 +23,14 @@ from CharacterConfigs.BaseClasses.DruidBase import (
     DruidLevel20,
 )
 from CharacterConfigs.SubClasses.DruidMoon import (
-    MoonDruidLevel3,
-    MoonDruidLevel5,
-    MoonDruidLevel6,
-    MoonDruidLevel7,
-    MoonDruidLevel9,
-    MoonDruidLevel10,
-    MoonDruidLevel14,
-    MoonDruidStarterClassBuilder,
+    DruidMoonLevel3,
+    DruidMoonLevel5,
+    DruidMoonLevel6,
+    DruidMoonLevel7,
+    DruidMoonLevel9,
+    DruidMoonLevel10,
+    DruidMoonLevel14,
+    DruidMoonStarterClassBuilder,
 )
 from Definitions import Ability, Skill
 from Features import Backgrounds, EpicBoon, GeneralFeats, OriginFeats
@@ -52,7 +52,7 @@ from StatBlocks.SkillsStatBlock import DruidSkillsStatBlock
 
 
 def get_starter_class_builder():
-    return MoonDruidStarterClassBuilder(
+    return DruidMoonStarterClassBuilder(
         druid_level=20,
         # Distribute 15, 14, 13, 12, 10, 8 among your abilities.
         abilities=StandardArrayAbilitiesStatBlock(
@@ -182,20 +182,20 @@ def get_starter_class_builder():
                 ),
             },
             subclass_features_by_level={
-                3: MoonDruidLevel3(),
-                5: MoonDruidLevel5(),
-                6: MoonDruidLevel6(),
-                7: MoonDruidLevel7(),
-                9: MoonDruidLevel9(),
-                10: MoonDruidLevel10(),
-                14: MoonDruidLevel14(),
+                3: DruidMoonLevel3(),
+                5: DruidMoonLevel5(),
+                6: DruidMoonLevel6(),
+                7: DruidMoonLevel7(),
+                9: DruidMoonLevel9(),
+                10: DruidMoonLevel10(),
+                14: DruidMoonLevel14(),
             },
         ),
         replace_spells={},
     )
 
 
-class OptimizedMoonDruidCharacterBuilder(CharacterBuilder):
+class OptimizedDruidMoonCharacterBuilder(CharacterBuilder):
     def __init__(self):
         super().__init__(
             name="Optimized Moon Druid",

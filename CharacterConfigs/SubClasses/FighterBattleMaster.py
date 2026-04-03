@@ -16,7 +16,7 @@ from StatBlocks.SkillsStatBlock import FighterSkillsStatBlock
 
 
 @attr.dataclass
-class BattleMasterFighterLevel3(ClassBuilder.SubclassLevel3):
+class FighterBattleMasterLevel3(ClassBuilder.SubclassLevel3):
     maneuver_1: Maneuvers.Maneuver
     maneuver_2: Maneuvers.Maneuver
     maneuver_3: Maneuvers.Maneuver
@@ -35,7 +35,7 @@ class BattleMasterFighterLevel3(ClassBuilder.SubclassLevel3):
 
 
 @attr.dataclass
-class BattleMasterFighterLevel7(ClassBuilder.SubclassLevel7):
+class FighterBattleMasterLevel7(ClassBuilder.SubclassLevel7):
     maneuver_1: Maneuvers.Maneuver
     maneuver_2: Maneuvers.Maneuver
 
@@ -53,7 +53,7 @@ class BattleMasterFighterLevel7(ClassBuilder.SubclassLevel7):
 
 
 @attr.dataclass
-class BattleMasterFighterLevel10(ClassBuilder.SubclassLevel10):
+class FighterBattleMasterLevel10(ClassBuilder.SubclassLevel10):
     maneuver_1: Maneuvers.Maneuver
     maneuver_2: Maneuvers.Maneuver
 
@@ -70,7 +70,7 @@ class BattleMasterFighterLevel10(ClassBuilder.SubclassLevel10):
 
 
 @attr.dataclass
-class BattleMasterFighterLevel15(ClassBuilder.SubclassLevel15):
+class FighterBattleMasterLevel15(ClassBuilder.SubclassLevel15):
     maneuver_1: Maneuvers.Maneuver
     maneuver_2: Maneuvers.Maneuver
 
@@ -88,7 +88,7 @@ class BattleMasterFighterLevel15(ClassBuilder.SubclassLevel15):
 
 
 @attr.dataclass
-class BattleMasterFighterLevel18(ClassBuilder.SubclassLevel18):
+class FighterBattleMasterLevel18(ClassBuilder.SubclassLevel18):
 
     def add_features(
         self,
@@ -97,7 +97,7 @@ class BattleMasterFighterLevel18(ClassBuilder.SubclassLevel18):
         return data
 
 
-class BattleMasterFighterStarterClassBuilder(FighterStarterClassBuilder):
+class FighterBattleMasterStarterClassBuilder(FighterStarterClassBuilder):
 
     def __init__(
         self,
@@ -129,7 +129,7 @@ class BattleMasterFighterStarterClassBuilder(FighterStarterClassBuilder):
         )
 
 
-class BattleMasterFighterMulticlassBuilder(FighterMulticlassBuilder):
+class FighterBattleMasterMulticlassBuilder(FighterMulticlassBuilder):
 
     def __init__(
         self,

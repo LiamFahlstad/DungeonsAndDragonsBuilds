@@ -24,7 +24,7 @@ from StatBlocks.SkillsStatBlock import RangerSkillsStatBlock
 
 
 @attr.dataclass
-class GloomStalkerRangerLevel3(ClassBuilder.SubclassLevel3):
+class RangerGloomStalkerLevel3(ClassBuilder.SubclassLevel3):
     level: int = attr.field(init=False, default=3)
 
     def add_features(
@@ -38,7 +38,7 @@ class GloomStalkerRangerLevel3(ClassBuilder.SubclassLevel3):
 
 
 @attr.dataclass
-class GloomStalkerRangerLevel5(ClassBuilder.SubclassLevel5):
+class RangerGloomStalkerLevel5(ClassBuilder.SubclassLevel5):
     level: int = attr.field(init=False, default=5)
 
     def add_features(
@@ -50,7 +50,7 @@ class GloomStalkerRangerLevel5(ClassBuilder.SubclassLevel5):
 
 
 @attr.dataclass
-class GloomStalkerRangerLevel7(ClassBuilder.SubclassLevel7):
+class RangerGloomStalkerLevel7(ClassBuilder.SubclassLevel7):
     level: int = attr.field(init=False, default=7)
 
     def add_features(
@@ -65,7 +65,7 @@ class GloomStalkerRangerLevel7(ClassBuilder.SubclassLevel7):
 
 
 @attr.dataclass
-class GloomStalkerRangerLevel9(ClassBuilder.SubclassLevel9):
+class RangerGloomStalkerLevel9(ClassBuilder.SubclassLevel9):
     level: int = attr.field(init=False, default=9)
 
     def add_features(
@@ -78,7 +78,7 @@ class GloomStalkerRangerLevel9(ClassBuilder.SubclassLevel9):
 
 
 @attr.dataclass
-class GloomStalkerRangerLevel13(ClassBuilder.SubclassLevel13):
+class RangerGloomStalkerLevel13(ClassBuilder.SubclassLevel13):
     level: int = attr.field(init=False, default=13)
 
     def add_features(
@@ -91,7 +91,7 @@ class GloomStalkerRangerLevel13(ClassBuilder.SubclassLevel13):
 
 
 @attr.dataclass
-class GloomStalkerRangerLevel15(ClassBuilder.SubclassLevel15):
+class RangerGloomStalkerLevel15(ClassBuilder.SubclassLevel15):
     level: int = attr.field(init=False, default=15)
 
     def add_features(
@@ -103,7 +103,7 @@ class GloomStalkerRangerLevel15(ClassBuilder.SubclassLevel15):
 
 
 @attr.dataclass
-class GloomStalkerRangerLevel17(ClassBuilder.SubclassLevel17):
+class RangerGloomStalkerLevel17(ClassBuilder.SubclassLevel17):
     level: int = attr.field(init=False, default=17)
 
     def add_features(
@@ -116,7 +116,7 @@ class GloomStalkerRangerLevel17(ClassBuilder.SubclassLevel17):
 
 
 @attr.dataclass
-class GloomStalkerRangerLevel20(ClassBuilder.SubclassLevel20):
+class RangerGloomStalkerLevel20(ClassBuilder.SubclassLevel20):
     level: int = attr.field(init=False, default=20)
 
     def add_features(
@@ -127,7 +127,7 @@ class GloomStalkerRangerLevel20(ClassBuilder.SubclassLevel20):
         return data
 
 
-class GloomStalkerRangerStarterClassBuilder(RangerStarterClassBuilder):
+class RangerGloomStalkerStarterClassBuilder(RangerStarterClassBuilder):
 
     def __init__(
         self,
@@ -159,7 +159,7 @@ class GloomStalkerRangerStarterClassBuilder(RangerStarterClassBuilder):
         )
 
 
-class GloomStalkerRangerMulticlassBuilder(RangerMulticlassBuilder):
+class RangerGloomStalkerMulticlassBuilder(RangerMulticlassBuilder):
 
     def __init__(
         self,

@@ -8,8 +8,8 @@ from CharacterConfigs.BaseClasses.FighterBase import (
     FighterLevel5,
 )
 from CharacterConfigs.SubClasses.FighterBattleMaster import (
-    BattleMasterFighterLevel3,
-    BattleMasterFighterStarterClassBuilder,
+    FighterBattleMasterLevel3,
+    FighterBattleMasterStarterClassBuilder,
 )
 from Definitions import Ability, Skill
 from Features import (
@@ -26,7 +26,7 @@ from StatBlocks.SkillsStatBlock import FighterSkillsStatBlock
 
 
 def get_starter_class_builder():
-    return BattleMasterFighterStarterClassBuilder(
+    return FighterBattleMasterStarterClassBuilder(
         fighter_level=5,
         # Distribute 15, 14, 13, 12, 10, 8 among your abilities.
         abilities=StandardArrayAbilitiesStatBlock(
@@ -86,7 +86,7 @@ def get_starter_class_builder():
                 5: FighterLevel5(),
             },
             subclass_features_by_level={
-                3: BattleMasterFighterLevel3(
+                3: FighterBattleMasterLevel3(
                     maneuver_1=Maneuvers.GoadingAttack(),
                     maneuver_2=Maneuvers.PushingAttack(),
                     maneuver_3=Maneuvers.Riposte(),
@@ -96,10 +96,10 @@ def get_starter_class_builder():
     )
 
 
-class StenCharacterBuilder(CharacterBuilder):
+class OptimizedFighterBattleMasterCharacterBuilder(CharacterBuilder):
     def __init__(self):
         super().__init__(
-            name="Sten",
+            name="OptimizedFighterBattleMaster",
             starter_class_builder=get_starter_class_builder(),
             species_builder=Human.HumanSpeciesBuilder(
                 skill_proficiency=Skill.SURVIVAL,

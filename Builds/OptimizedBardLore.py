@@ -23,10 +23,10 @@ from CharacterConfigs.BaseClasses.BardBase import (
     BardLevel20,
 )
 from CharacterConfigs.SubClasses.BardLore import (
-    LoreBardLevel3,
-    LoreBardLevel6,
-    LoreBardLevel14,
-    LoreBardStarterClassBuilder,
+    BardLoreLevel3,
+    BardLoreLevel6,
+    BardLoreLevel14,
+    BardLoreStarterClassBuilder,
 )
 from Definitions import Ability, Skill
 from Features import Backgrounds, EpicBoon, GeneralFeats, OriginFeats
@@ -49,7 +49,7 @@ from StatBlocks.SkillsStatBlock import BardSkillsStatBlock
 
 
 def get_starter_class_builder():
-    return LoreBardStarterClassBuilder(
+    return BardLoreStarterClassBuilder(
         bard_level=20,
         # Distribute 15, 14, 13, 12, 10, 8 among your abilities.
         abilities=StandardArrayAbilitiesStatBlock(
@@ -179,15 +179,15 @@ def get_starter_class_builder():
                 ),
             },
             subclass_features_by_level={
-                3: LoreBardLevel3(
+                3: BardLoreLevel3(
                     skill_1=Skill.STEALTH,
                     skill_2=Skill.SLEIGHT_OF_HAND,
                     skill_3=Skill.ACROBATICS,
                 ),
-                6: LoreBardLevel6(
+                6: BardLoreLevel6(
                     spell=WizardLevel3Spells.FIREBALL,
                 ),
-                14: LoreBardLevel14(),
+                14: BardLoreLevel14(),
             },
         ),
         replace_spells={},

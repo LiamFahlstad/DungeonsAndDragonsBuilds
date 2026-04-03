@@ -26,7 +26,7 @@ from StatBlocks.SkillsStatBlock import PaladinSkillsStatBlock
 
 
 @attr.dataclass
-class VengeancePaladinLevel3(ClassBuilder.SubclassLevel3):
+class PaladinVengeanceLevel3(ClassBuilder.SubclassLevel3):
 
     def add_features(
         self,
@@ -39,7 +39,7 @@ class VengeancePaladinLevel3(ClassBuilder.SubclassLevel3):
 
 
 @attr.dataclass
-class VengeancePaladinLevel5(ClassBuilder.SubclassLevel5):
+class PaladinVengeanceLevel5(ClassBuilder.SubclassLevel5):
 
     def add_features(
         self,
@@ -51,7 +51,7 @@ class VengeancePaladinLevel5(ClassBuilder.SubclassLevel5):
 
 
 @attr.dataclass
-class VengeancePaladinLevel7(ClassBuilder.SubclassLevel7):
+class PaladinVengeanceLevel7(ClassBuilder.SubclassLevel7):
 
     def add_features(
         self,
@@ -65,7 +65,7 @@ class VengeancePaladinLevel7(ClassBuilder.SubclassLevel7):
 
 
 @attr.dataclass
-class VengeancePaladinLevel9(ClassBuilder.SubclassLevel9):
+class PaladinVengeanceLevel9(ClassBuilder.SubclassLevel9):
 
     def add_features(
         self,
@@ -77,7 +77,7 @@ class VengeancePaladinLevel9(ClassBuilder.SubclassLevel9):
 
 
 @attr.dataclass
-class VengeancePaladinLevel13(ClassBuilder.SubclassLevel13):
+class PaladinVengeanceLevel13(ClassBuilder.SubclassLevel13):
 
     def add_features(
         self,
@@ -89,7 +89,7 @@ class VengeancePaladinLevel13(ClassBuilder.SubclassLevel13):
 
 
 @attr.dataclass
-class VengeancePaladinLevel15(ClassBuilder.SubclassLevel15):
+class PaladinVengeanceLevel15(ClassBuilder.SubclassLevel15):
 
     def add_features(
         self,
@@ -100,7 +100,7 @@ class VengeancePaladinLevel15(ClassBuilder.SubclassLevel15):
 
 
 @attr.dataclass
-class VengeancePaladinLevel17(ClassBuilder.SubclassLevel17):
+class PaladinVengeanceLevel17(ClassBuilder.SubclassLevel17):
 
     def add_features(
         self,
@@ -112,7 +112,7 @@ class VengeancePaladinLevel17(ClassBuilder.SubclassLevel17):
 
 
 @attr.dataclass
-class VengeancePaladinLevel20(ClassBuilder.SubclassLevel20):
+class PaladinVengeanceLevel20(ClassBuilder.SubclassLevel20):
 
     def add_features(
         self,
@@ -122,7 +122,7 @@ class VengeancePaladinLevel20(ClassBuilder.SubclassLevel20):
         return data
 
 
-class VengeancePaladinStarterClassBuilder(PaladinStarterClassBuilder):
+class PaladinVengeanceStarterClassBuilder(PaladinStarterClassBuilder):
 
     def __init__(
         self,
@@ -154,7 +154,7 @@ class VengeancePaladinStarterClassBuilder(PaladinStarterClassBuilder):
         )
 
 
-class VengeancePaladinMulticlassBuilder(PaladinMulticlassBuilder):
+class PaladinVengeanceMulticlassBuilder(PaladinMulticlassBuilder):
 
     def __init__(
         self,

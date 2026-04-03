@@ -17,7 +17,7 @@ from StatBlocks.SkillsStatBlock import BardSkillsStatBlock
 
 
 @attr.dataclass
-class GlamourBardLevel3(ClassBuilder.SubclassLevel3):
+class BardGlamourLevel3(ClassBuilder.SubclassLevel3):
     def add_features(
         self,
         data: CharacterSheetData,
@@ -30,7 +30,7 @@ class GlamourBardLevel3(ClassBuilder.SubclassLevel3):
 
 
 @attr.dataclass
-class GlamourBardLevel6(ClassBuilder.SubclassLevel6):
+class BardGlamourLevel6(ClassBuilder.SubclassLevel6):
     def add_features(
         self,
         data: CharacterSheetData,
@@ -44,7 +44,7 @@ class GlamourBardLevel6(ClassBuilder.SubclassLevel6):
 
 
 @attr.dataclass
-class GlamourBardLevel14(ClassBuilder.SubclassLevel14):
+class BardGlamourLevel14(ClassBuilder.SubclassLevel14):
 
     def add_features(
         self,
@@ -54,7 +54,7 @@ class GlamourBardLevel14(ClassBuilder.SubclassLevel14):
         return data
 
 
-class GlamourBardStarterClassBuilder(BardStarterClassBuilder):
+class BardGlamourStarterClassBuilder(BardStarterClassBuilder):
 
     def __init__(
         self,
@@ -86,7 +86,7 @@ class GlamourBardStarterClassBuilder(BardStarterClassBuilder):
         )
 
 
-class GlamourBardMulticlassBuilder(BardMulticlassBuilder):
+class BardGlamourMulticlassBuilder(BardMulticlassBuilder):
 
     def __init__(
         self,

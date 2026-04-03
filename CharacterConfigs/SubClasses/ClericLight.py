@@ -16,7 +16,7 @@ from StatBlocks.SkillsStatBlock import ClericSkillsStatBlock
 
 
 @attr.dataclass
-class LightClericLevel3(ClassBuilder.SubclassLevel3):
+class ClericLightLevel3(ClassBuilder.SubclassLevel3):
 
     def add_features(
         self,
@@ -31,7 +31,7 @@ class LightClericLevel3(ClassBuilder.SubclassLevel3):
 
 
 @attr.dataclass
-class LightClericLevel6(ClassBuilder.SubclassLevel6):
+class ClericLightLevel6(ClassBuilder.SubclassLevel6):
 
     def add_features(
         self,
@@ -42,7 +42,7 @@ class LightClericLevel6(ClassBuilder.SubclassLevel6):
 
 
 @attr.dataclass
-class LightClericLevel17(ClassBuilder.SubclassLevel17):
+class ClericLightLevel17(ClassBuilder.SubclassLevel17):
 
     def add_features(
         self,
@@ -52,7 +52,7 @@ class LightClericLevel17(ClassBuilder.SubclassLevel17):
         return data
 
 
-class LightClericStarterClassBuilder(ClericStarterClassBuilder):
+class ClericLightStarterClassBuilder(ClericStarterClassBuilder):
 
     def __init__(
         self,
@@ -84,7 +84,7 @@ class LightClericStarterClassBuilder(ClericStarterClassBuilder):
         )
 
 
-class LightClericMulticlassBuilder(ClericMulticlassBuilder):
+class ClericLightMulticlassBuilder(ClericMulticlassBuilder):
 
     def __init__(
         self,

@@ -17,7 +17,7 @@ from StatBlocks.SkillsStatBlock import BardSkillsStatBlock
 
 
 @attr.dataclass
-class LoreBardLevel3(ClassBuilder.SubclassLevel3):
+class BardLoreLevel3(ClassBuilder.SubclassLevel3):
     skill_1: Skill
     skill_2: Skill
     skill_3: Skill
@@ -34,7 +34,7 @@ class LoreBardLevel3(ClassBuilder.SubclassLevel3):
 
 
 @attr.dataclass
-class LoreBardLevel6(ClassBuilder.SubclassLevel6):
+class BardLoreLevel6(ClassBuilder.SubclassLevel6):
     spell: (
         SpellDefinitions.ClericLevel1Spells
         | SpellDefinitions.ClericLevel2Spells
@@ -57,7 +57,7 @@ class LoreBardLevel6(ClassBuilder.SubclassLevel6):
 
 
 @attr.dataclass
-class LoreBardLevel14(ClassBuilder.SubclassLevel14):
+class BardLoreLevel14(ClassBuilder.SubclassLevel14):
 
     def add_features(
         self,
@@ -70,7 +70,7 @@ class LoreBardLevel14(ClassBuilder.SubclassLevel14):
         return data
 
 
-class LoreBardStarterClassBuilder(BardStarterClassBuilder):
+class BardLoreStarterClassBuilder(BardStarterClassBuilder):
 
     def __init__(
         self,
@@ -102,7 +102,7 @@ class LoreBardStarterClassBuilder(BardStarterClassBuilder):
         )
 
 
-class LoreBardMulticlassBuilder(BardMulticlassBuilder):
+class BardLoreMulticlassBuilder(BardMulticlassBuilder):
 
     def __init__(
         self,

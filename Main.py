@@ -1,10 +1,20 @@
-from Builds import (Aska, OptimizedBarbarianBerserker,
-                    OptimizedBarbarianWorldTree, OptimizedBardGlamour,
-                    OptimizedBardLore, OptimizedClericKnowledge,
-                    OptimizedClericLight, OptimizedDruidMoon,
-                    OptimizedMonkShadow, OptimizedPaladinGlory,
-                    OptimizedRangerBeastMaster, OptimizedRogueAssassin,
-                    OptimizedWarlockArchfey, RodericAshelm, Sten)
+from Builds import (
+    OptimizedBarbarianBerserker,
+    OptimizedBarbarianWorldTree,
+    OptimizedBardGlamour,
+    OptimizedBardLore,
+    OptimizedClericKnowledge,
+    OptimizedClericLight,
+    OptimizedDruidMoon,
+    OptimizedFighterBattleMaster,
+    OptimizedMonkShadow,
+    OptimizedPaladinGlory,
+    OptimizedPaladinVengeance,
+    OptimizedRangerBeastMaster,
+    OptimizedRangerGloomStalker,
+    OptimizedRogueAssassin,
+    OptimizedWarlockArchfey,
+)
 from Builds.CharacterBuilder import CharacterBuilder
 
 
@@ -12,44 +22,42 @@ class BuildSelector:
     @staticmethod
     def get_build(build_name: str) -> CharacterBuilder:
         builds = {
-            "Aska": Aska.AskaCharacterBuilder(),
+            "OptimizedBarbarianBerserker": OptimizedBarbarianBerserker.OptimizedBarbarianBerserkerCharacterBuilder(),
+            "OptimizedBarbarianWorldTree": OptimizedBarbarianWorldTree.OptimizedBarbarianWorldTreeCharacterBuilder(),
             "OptimizedBardGlamour": OptimizedBardGlamour.OptimizedBardGlamourCharacterBuilder(),
             "OptimizedBardLore": OptimizedBardLore.OptimizedLoreBardCharacterBuilder(),
             "OptimizedBeastMaster": OptimizedRangerBeastMaster.OptimizedRangerBeastMasterCharacterBuilder(),
-            "OptimizedBerserkerBarbarian": OptimizedBarbarianBerserker.OptimizedBerserkerBarbarianCharacterBuilder(),
-            "OptimizedClericKnowledge": OptimizedClericKnowledge.OptimizedKnowledgeClericCharacterBuilder(),
-            "OptimizedClericLight": OptimizedClericLight.OptimizedLightClericCharacterBuilder(),
-            "OptimizedDruidMoon": OptimizedDruidMoon.OptimizedMoonDruidCharacterBuilder(),
-            "OptimizedMonkShadow": OptimizedMonkShadow.OptimizedShadowMonkCharacterBuilder(),
-            "OptimizedPaladinGlory": OptimizedPaladinGlory.OptimizedGloryPaladinCharacterBuilder(),
-            "OptimizedRogueAssassin": OptimizedRogueAssassin.OptimizedAssassinRogueCharacterBuilder(),
+            "OptimizedClericKnowledge": OptimizedClericKnowledge.OptimizedClericKnowledgeCharacterBuilder(),
+            "OptimizedClericLight": OptimizedClericLight.OptimizedClericLightCharacterBuilder(),
+            "OptimizedDruidMoon": OptimizedDruidMoon.OptimizedDruidMoonCharacterBuilder(),
+            "OptimizedFighterBattleMaster": OptimizedFighterBattleMaster.OptimizedFighterBattleMasterCharacterBuilder(),
+            "OptimizedMonkShadow": OptimizedMonkShadow.OptimizedMonkShadowCharacterBuilder(),
+            "OptimizedPaladinGlory": OptimizedPaladinGlory.OptimizedPaladinGloryCharacterBuilder(),
+            "OptimizedPaladinVengeance": OptimizedPaladinVengeance.OptimizedPaladinVengeanceCharacterBuilder(),
+            "OptimizedRangerGloomStalker": OptimizedRangerGloomStalker.OptimizedRangerGloomStalkerCharacterBuilder(),
+            "OptimizedRogueAssassin": OptimizedRogueAssassin.OptimizedRogueAssassinCharacterBuilder(),
             "OptimizedWarlockArchfey": OptimizedWarlockArchfey.OptimizedWarlockArchfeyCharacterBuilder(),
-            "OptimizedWarlockArchfey": OptimizedWarlockArchfey.OptimizedWarlockArchfeyCharacterBuilder(),
-            "OptimizedWorldTreeBarbarian": OptimizedBarbarianWorldTree.OptimizedWorldTreeBarbarianCharacterBuilder(),
-            "RodericAshelm": RodericAshelm.RodericAshelmCharacterBuilder(),
-            "Sten": Sten.StenCharacterBuilder(),
         }
         return builds[build_name]
 
 
 if __name__ == "__main__":
     build_names = [
-        "Aska",
+        "OptimizedBarbarianBerserker",
+        "OptimizedBarbarianWorldTree",
         "OptimizedBardGlamour",
         "OptimizedBardLore",
         "OptimizedBeastMaster",
-        "OptimizedBerserkerBarbarian",
         "OptimizedClericKnowledge",
         "OptimizedClericLight",
         "OptimizedDruidMoon",
+        "OptimizedFighterBattleMaster",
         "OptimizedMonkShadow",
         "OptimizedPaladinGlory",
+        "OptimizedPaladinVengeance",
+        "OptimizedRangerGloomStalker",
         "OptimizedRogueAssassin",
         "OptimizedWarlockArchfey",
-        "OptimizedWarlockArchfey",
-        "OptimizedWorldTreeBarbarian",
-        "RodericAshelm",
-        "Sten",
     ]
     for build_name in build_names:
         build_class = BuildSelector.get_build(build_name)

@@ -24,11 +24,11 @@ from CharacterConfigs.BaseClasses.BarbarianBase import (
     BarbarianLevel20,
 )
 from CharacterConfigs.SubClasses.BarbarianPathOfTheBerserker import (
-    BerserkerBarbarianLevel3,
-    BerserkerBarbarianLevel6,
-    BerserkerBarbarianLevel10,
-    BerserkerBarbarianLevel14,
-    BerserkerBarbarianStarterClassBuilder,
+    BarbarianBerserkerLevel3,
+    BarbarianBerserkerLevel6,
+    BarbarianBerserkerLevel10,
+    BarbarianBerserkerLevel14,
+    BarbarianBerserkerStarterClassBuilder,
 )
 from Definitions import Ability, Skill
 from Features import Backgrounds, EpicBoon, GeneralFeats, OriginFeats, Weapons
@@ -38,7 +38,7 @@ from StatBlocks.SkillsStatBlock import BarbarianSkillsStatBlock
 
 
 def get_starter_class_builder():
-    return BerserkerBarbarianStarterClassBuilder(
+    return BarbarianBerserkerStarterClassBuilder(
         barbarian_level=3,
         # Distribute 15, 14, 13, 12, 10, 8 among your abilities.
         abilities=StandardArrayAbilitiesStatBlock(
@@ -131,16 +131,16 @@ def get_starter_class_builder():
                 20: BarbarianLevel20(),
             },
             subclass_features_by_level={
-                3: BerserkerBarbarianLevel3(),
-                6: BerserkerBarbarianLevel6(),
-                10: BerserkerBarbarianLevel10(),
-                14: BerserkerBarbarianLevel14(),
+                3: BarbarianBerserkerLevel3(),
+                6: BarbarianBerserkerLevel6(),
+                10: BarbarianBerserkerLevel10(),
+                14: BarbarianBerserkerLevel14(),
             },
         ),
     )
 
 
-class OptimizedBerserkerBarbarianCharacterBuilder(CharacterBuilder):
+class OptimizedBarbarianBerserkerCharacterBuilder(CharacterBuilder):
     def __init__(self):
         super().__init__(
             name="Optimized Berserker Barbarian",

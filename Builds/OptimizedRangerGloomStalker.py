@@ -6,8 +6,8 @@ from CharacterConfigs.BaseClasses.RangerBase import (
     RangerLevel3,
 )
 from CharacterConfigs.SubClasses.RangerGloomStalker import (
-    GloomStalkerRangerLevel3,
-    GloomStalkerRangerStarterClassBuilder,
+    RangerGloomStalkerLevel3,
+    RangerGloomStalkerStarterClassBuilder,
 )
 from Definitions import Ability, Skill
 from Features import Backgrounds, FightingStyles, OriginFeats, Weapons
@@ -19,7 +19,7 @@ from StatBlocks.SkillsStatBlock import RangerSkillsStatBlock
 
 
 def get_starter_class_builder():
-    return GloomStalkerRangerStarterClassBuilder(
+    return RangerGloomStalkerStarterClassBuilder(
         ranger_level=3,
         # Distribute 15, 14, 13, 12, 10, 8 among your abilities.
         abilities=StandardArrayAbilitiesStatBlock(
@@ -77,17 +77,17 @@ def get_starter_class_builder():
                 ),
             },
             subclass_features_by_level={
-                3: GloomStalkerRangerLevel3(),
+                3: RangerGloomStalkerLevel3(),
             },
         ),
         replace_spells={},
     )
 
 
-class AskaCharacterBuilder(CharacterBuilder):
+class OptimizedRangerGloomStalkerCharacterBuilder(CharacterBuilder):
     def __init__(self):
         super().__init__(
-            name="Aska",
+            name="Optimized Ranger Gloom Stalker",
             starter_class_builder=get_starter_class_builder(),
             species_builder=Dragonborn.DragonbornSpeciesBuilder(
                 DragonbornFeatures.DragonColor.RED

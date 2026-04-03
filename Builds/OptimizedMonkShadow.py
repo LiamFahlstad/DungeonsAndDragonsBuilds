@@ -3,8 +3,8 @@ from Builds.CharacterBuilder import CharacterBuilder
 from CharacterConfigs.BaseClasses import ClassBuilder
 from CharacterConfigs.BaseClasses.MonkBase import MonkLevel1, MonkLevel2, MonkLevel3
 from CharacterConfigs.SubClasses.MonkShadow import (
-    ShadowMonkLevel3,
-    ShadowMonkStarterClassBuilder,
+    MonkShadowLevel3,
+    MonkShadowStarterClassBuilder,
 )
 from Definitions import Ability, Skill
 from Features import Backgrounds, OriginFeats
@@ -14,7 +14,7 @@ from StatBlocks.SkillsStatBlock import MonkSkillsStatBlock
 
 
 def get_starter_class_builder():
-    return ShadowMonkStarterClassBuilder(
+    return MonkShadowStarterClassBuilder(
         monk_level=3,
         # Distribute 15, 14, 13, 12, 10, 8 among your abilities.
         abilities=StandardArrayAbilitiesStatBlock(
@@ -59,13 +59,13 @@ def get_starter_class_builder():
                 3: MonkLevel3(),
             },
             subclass_features_by_level={
-                3: ShadowMonkLevel3(),
+                3: MonkShadowLevel3(),
             },
         ),
     )
 
 
-class OptimizedShadowMonkCharacterBuilder(CharacterBuilder):
+class OptimizedMonkShadowCharacterBuilder(CharacterBuilder):
     def __init__(self):
         super().__init__(
             name="Optimized Shadow Monk",

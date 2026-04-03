@@ -24,7 +24,7 @@ from StatBlocks.SkillsStatBlock import RangerSkillsStatBlock
 
 
 @attr.dataclass
-class BeastMasterRangerLevel3(ClassBuilder.SubclassLevel3):
+class RangerBeastMasterLevel3(ClassBuilder.SubclassLevel3):
     level: int = attr.field(init=False, default=3)
 
     def add_features(
@@ -40,7 +40,7 @@ class BeastMasterRangerLevel3(ClassBuilder.SubclassLevel3):
 
 
 @attr.dataclass
-class BeastMasterRangerLevel5(ClassBuilder.SubclassLevel5):
+class RangerBeastMasterLevel5(ClassBuilder.SubclassLevel5):
     level: int = attr.field(init=False, default=5)
 
     def add_features(
@@ -53,7 +53,7 @@ class BeastMasterRangerLevel5(ClassBuilder.SubclassLevel5):
 
 
 @attr.dataclass
-class BeastMasterRangerLevel7(ClassBuilder.SubclassLevel7):
+class RangerBeastMasterLevel7(ClassBuilder.SubclassLevel7):
     level: int = attr.field(init=False, default=7)
 
     def add_features(
@@ -68,7 +68,7 @@ class BeastMasterRangerLevel7(ClassBuilder.SubclassLevel7):
 
 
 @attr.dataclass
-class BeastMasterRangerLevel9(ClassBuilder.SubclassLevel9):
+class RangerBeastMasterLevel9(ClassBuilder.SubclassLevel9):
     level: int = attr.field(init=False, default=9)
 
     def add_features(
@@ -81,7 +81,7 @@ class BeastMasterRangerLevel9(ClassBuilder.SubclassLevel9):
 
 
 @attr.dataclass
-class BeastMasterRangerLevel13(ClassBuilder.SubclassLevel13):
+class RangerBeastMasterLevel13(ClassBuilder.SubclassLevel13):
     level: int = attr.field(init=False, default=13)
 
     def add_features(
@@ -94,7 +94,7 @@ class BeastMasterRangerLevel13(ClassBuilder.SubclassLevel13):
 
 
 @attr.dataclass
-class BeastMasterRangerLevel15(ClassBuilder.SubclassLevel15):
+class RangerBeastMasterLevel15(ClassBuilder.SubclassLevel15):
     level: int = attr.field(init=False, default=15)
 
     def add_features(
@@ -106,7 +106,7 @@ class BeastMasterRangerLevel15(ClassBuilder.SubclassLevel15):
 
 
 @attr.dataclass
-class BeastMasterRangerLevel17(ClassBuilder.SubclassLevel17):
+class RangerBeastMasterLevel17(ClassBuilder.SubclassLevel17):
     level: int = attr.field(init=False, default=17)
 
     def add_features(
@@ -119,7 +119,7 @@ class BeastMasterRangerLevel17(ClassBuilder.SubclassLevel17):
 
 
 @attr.dataclass
-class BeastMasterRangerLevel20(ClassBuilder.SubclassLevel20):
+class RangerBeastMasterLevel20(ClassBuilder.SubclassLevel20):
     level: int = attr.field(init=False, default=20)
 
     def add_features(
@@ -130,7 +130,7 @@ class BeastMasterRangerLevel20(ClassBuilder.SubclassLevel20):
         return data
 
 
-class BeastMasterRangerStarterClassBuilder(RangerStarterClassBuilder):
+class RangerBeastMasterStarterClassBuilder(RangerStarterClassBuilder):
 
     def __init__(
         self,
@@ -162,7 +162,7 @@ class BeastMasterRangerStarterClassBuilder(RangerStarterClassBuilder):
         )
 
 
-class BeastMasterRangerMulticlassBuilder(RangerMulticlassBuilder):
+class RangerBeastMasterMulticlassBuilder(RangerMulticlassBuilder):
 
     def __init__(
         self,

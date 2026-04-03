@@ -23,15 +23,15 @@ from CharacterConfigs.BaseClasses.PaladinBase import (
     PaladinLevel20,
 )
 from CharacterConfigs.SubClasses.PaladinGlory import (
-    GloryPaladinLevel3,
-    GloryPaladinLevel5,
-    GloryPaladinLevel7,
-    GloryPaladinLevel9,
-    GloryPaladinLevel13,
-    GloryPaladinLevel15,
-    GloryPaladinLevel17,
-    GloryPaladinLevel20,
-    GloryPaladinStarterClassBuilder,
+    PaladinGloryLevel3,
+    PaladinGloryLevel5,
+    PaladinGloryLevel7,
+    PaladinGloryLevel9,
+    PaladinGloryLevel13,
+    PaladinGloryLevel15,
+    PaladinGloryLevel17,
+    PaladinGloryLevel20,
+    PaladinGloryStarterClassBuilder,
 )
 from Definitions import Ability, Skill
 from Features import Backgrounds, FightingStyles, GeneralFeats, OriginFeats, Weapons
@@ -48,7 +48,7 @@ from StatBlocks.SkillsStatBlock import PaladinSkillsStatBlock
 
 
 def get_starter_class_builder():
-    return GloryPaladinStarterClassBuilder(
+    return PaladinGloryStarterClassBuilder(
         paladin_level=20,
         # Distribute 15, 14, 13, 12, 10, 8 among your abilities.
         abilities=StandardArrayAbilitiesStatBlock(
@@ -162,14 +162,14 @@ def get_starter_class_builder():
                 20: PaladinLevel20(),
             },
             subclass_features_by_level={
-                3: GloryPaladinLevel3(),
-                5: GloryPaladinLevel5(),
-                7: GloryPaladinLevel7(),
-                9: GloryPaladinLevel9(),
-                13: GloryPaladinLevel13(),
-                15: GloryPaladinLevel15(),
-                17: GloryPaladinLevel17(),
-                20: GloryPaladinLevel20(),
+                3: PaladinGloryLevel3(),
+                5: PaladinGloryLevel5(),
+                7: PaladinGloryLevel7(),
+                9: PaladinGloryLevel9(),
+                13: PaladinGloryLevel13(),
+                15: PaladinGloryLevel15(),
+                17: PaladinGloryLevel17(),
+                20: PaladinGloryLevel20(),
             },
         ),
         replace_spells={
@@ -178,7 +178,7 @@ def get_starter_class_builder():
     )
 
 
-class OptimizedGloryPaladinCharacterBuilder(CharacterBuilder):
+class OptimizedPaladinGloryCharacterBuilder(CharacterBuilder):
     def __init__(self):
         super().__init__(
             name="Optimized Paladin Glory",

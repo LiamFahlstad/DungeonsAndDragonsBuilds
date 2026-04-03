@@ -8,8 +8,8 @@ from CharacterConfigs.BaseClasses.RangerBase import (
     RangerLevel5,
 )
 from CharacterConfigs.SubClasses.RangerBeastMaster import (
-    BeastMasterRangerLevel3,
-    BeastMasterRangerStarterClassBuilder,
+    RangerBeastMasterLevel3,
+    RangerBeastMasterStarterClassBuilder,
 )
 from Definitions import Ability, Skill
 from Features import Backgrounds, FightingStyles, GeneralFeats, OriginFeats, Weapons
@@ -20,7 +20,7 @@ from StatBlocks.SkillsStatBlock import RangerSkillsStatBlock
 
 
 def get_starter_class_builder():
-    return BeastMasterRangerStarterClassBuilder(
+    return RangerBeastMasterStarterClassBuilder(
         ranger_level=5,
         # Distribute 15, 14, 13, 12, 10, 8 among your abilities.
         abilities=StandardArrayAbilitiesStatBlock(
@@ -90,7 +90,7 @@ def get_starter_class_builder():
                 ),
             },
             subclass_features_by_level={
-                3: BeastMasterRangerLevel3(),
+                3: RangerBeastMasterLevel3(),
             },
         ),
         replace_spells={
