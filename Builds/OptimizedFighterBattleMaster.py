@@ -99,7 +99,7 @@ def get_starter_class_builder():
 class OptimizedFighterBattleMasterCharacterBuilder(CharacterBuilder):
     def __init__(self):
         super().__init__(
-            name="OptimizedFighterBattleMaster",
+            name="Optimized Fighter Battle Master",
             starter_class_builder=get_starter_class_builder(),
             species_builder=Human.HumanSpeciesBuilder(
                 skill_proficiency=Skill.SURVIVAL,

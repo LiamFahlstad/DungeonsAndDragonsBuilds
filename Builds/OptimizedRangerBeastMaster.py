@@ -115,7 +115,7 @@ def get_starter_class_builder():
 class OptimizedRangerBeastMasterCharacterBuilder(CharacterBuilder):
     def __init__(self):
         super().__init__(
-            name="Jan Heting",
+            name="Optimized Ranger Beast Master",
             starter_class_builder=get_starter_class_builder(),
             species_builder=Gnome.RockGnomeSpeciesBuilder(),
         )
