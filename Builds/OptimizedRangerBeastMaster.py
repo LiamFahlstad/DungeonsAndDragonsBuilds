@@ -112,7 +112,7 @@ def get_starter_class_builder():
 #     ).write_to_file(output_path, mode="a")
 
 
-class JanHetingCharacterBuilder(CharacterBuilder):
+class OptimizedRangerBeastMasterCharacterBuilder(CharacterBuilder):
     def __init__(self):
         super().__init__(
             name="Jan Heting",

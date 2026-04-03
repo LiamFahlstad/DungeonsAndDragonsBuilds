@@ -19,6 +19,7 @@ class SkillsStatBlock(StatBlock):
         self.dice_roll_conditions = (
             dice_roll_conditions if dice_roll_conditions is not None else {}
         )
+        self.skill_to_ability = self.get_default_skill_to_ability_mapping()
 
     def add_skill_proficiency(self, skill: Skill):
         self.proficiencies[skill] = True
@@ -42,7 +43,20 @@ class SkillsStatBlock(StatBlock):
         return self.dice_roll_conditions.get(skill, DiceRollCondition.NEUTRAL)
 
     def get_skill_ability(self, skill: Skill) -> Ability:
-        skill_to_ability = {
+        return self.skill_to_ability[skill]
+
+    def update_skill_to_ability(self, skill: Skill, ability: Ability):
+        self.skill_to_ability[skill] = ability
+
+    def reset_skill_to_ability(self, skill: Skill):
+        default_mapping = self.get_default_skill_to_ability_mapping()
+        self.skill_to_ability[skill] = default_mapping[skill]
+
+    def reset_all_skill_to_ability(self):
+        self.skill_to_ability = self.get_default_skill_to_ability_mapping()
+
+    def get_default_skill_to_ability_mapping(self) -> dict[Skill, Ability]:
+        return {
             Skill.ACROBATICS: Ability.DEXTERITY,
             Skill.ANIMAL_HANDLING: Ability.WISDOM,
             Skill.ARCANA: Ability.INTELLIGENCE,
@@ -62,7 +76,6 @@ class SkillsStatBlock(StatBlock):
             Skill.STEALTH: Ability.DEXTERITY,
             Skill.SURVIVAL: Ability.WISDOM,
         }
-        return skill_to_ability[skill]
 
 
 class ClassSkillsStatBlock(SkillsStatBlock):

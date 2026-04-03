@@ -24,6 +24,7 @@ def wrap_text(description: str, max_sentence_length: int, html: bool = False) ->
         new_parts.append(line)
 
     if html:
-        return "<br>\n".join(new_parts)
+        # return "<br>\n".join(new_parts)
+        return "\n".join(new_parts)
 
     return "\n".join(new_parts)

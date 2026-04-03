@@ -40,7 +40,7 @@ from StatBlocks.SkillsStatBlock import BarbarianSkillsStatBlock
 
 def get_starter_class_builder():
     return WorldTreeBarbarianStarterClassBuilder(
-        barbarian_level=3,
+        barbarian_level=4,
         # Distribute 15, 14, 13, 12, 10, 8 among your abilities.
         abilities=StandardArrayAbilitiesStatBlock(
             strength=15,
@@ -80,8 +80,8 @@ def get_starter_class_builder():
             Armor.ShieldArmor(),
         ],
         weapons=[
-            Weapons.WarPick(),
-            Weapons.LightCrossbow(),
+            Weapons.WarPick(player_is_proficient=True),
+            Weapons.LightCrossbow(player_is_proficient=True),
         ],
         barbarian_level_features=ClassBuilder.BaseClassLevelFeatures(
             base_class_features_by_level={

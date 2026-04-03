@@ -110,10 +110,10 @@ def get_starter_class_builder():
     )
 
 
-class GretaCharacterBuilder(CharacterBuilder):
+class OptimizedWarlockArchfeyCharacterBuilder(CharacterBuilder):
     def __init__(self):
         super().__init__(
-            name="Greta",
+            name="Optimized Warlock Archfey",
             starter_class_builder=get_starter_class_builder(),
             species_builder=Human.HumanSpeciesBuilder(
                 skill_proficiency=Skill.DECEPTION,

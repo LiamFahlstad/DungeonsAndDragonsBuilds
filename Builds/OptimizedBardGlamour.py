@@ -80,7 +80,7 @@ def get_starter_class_builder():
             ]
         ),
         add_default_equipment=True,
-        origin_feat=OriginFeats.Tough(),
+        origin_feat=OriginFeats.Musician(),
         armor=[],
         weapons=[],
         bard_level_features=ClassBuilder.BaseClassLevelFeatures(
@@ -188,7 +188,7 @@ def get_starter_class_builder():
     )
 
 
-class OptimizedGlamourBardCharacterBuilder(CharacterBuilder.CharacterBuilder):
+class OptimizedBardGlamourCharacterBuilder(CharacterBuilder.CharacterBuilder):
     def __init__(self):
         super().__init__(
             name="Optimized Glamour Bard",

@@ -32,14 +32,14 @@ class Rage(TextFeature):
             f"    * Number of usages: You can enter your Rage {rage_usages} times.\n"
             "    * Regaining: You regain one expended use when you finish a Short Rest, and you regain all expended uses when you finish a Long Rest.\n"
             "    * While active, your Rage follows the rules below.\n"
-            "    - Damage Resistance: You have Resistance to Bludgeoning, Piercing, and Slashing damage.\n"
-            f"    - Rage Damage: When you make an attack using Strength—with either a weapon or an Unarmed Strike—and deal damage to the target, you gain +{rage_damage_bonus} bonus to the damage.\n"
-            "    - Strength Advantage: You have Advantage on Strength checks and Strength saving throws.\n"
-            "    - No Concentration or Spells: You can't maintain Concentration, and you can't cast spells.\n"
-            "    - Duration: The Rage lasts until the end of your next turn, and it ends early if you don Heavy armor or have the Incapacitated condition. If your Rage is still active on your next turn, you can extend the Rage for another round by doing one of the following:\n"
-            "        > Make an attack roll against an enemy.\n"
-            "        > Force an enemy to make a saving throw.\n"
-            "        > Take a Bonus Action to extend your Rage.\n"
+            "        - Damage Resistance: You have Resistance to Bludgeoning, Piercing, and Slashing damage.\n"
+            f"        - Rage Damage: When you make an attack using Strength—with either a weapon or an Unarmed Strike—and deal damage to the target, you gain +{rage_damage_bonus} bonus to the damage.\n"
+            "        - Strength Advantage: You have Advantage on Strength checks and Strength saving throws.\n"
+            "        - No Concentration or Spells: You can't maintain Concentration, and you can't cast spells.\n"
+            "        - Duration: The Rage lasts until the end of your next turn, and it ends early if you don Heavy armor or have the Incapacitated condition. If your Rage is still active on your next turn, you can extend the Rage for another round by doing one of the following:\n"
+            "            > Make an attack roll against an enemy.\n"
+            "            > Force an enemy to make a saving throw.\n"
+            "            > Take a Bonus Action to extend your Rage.\n"
             "Each time the Rage is extended, it lasts until the end of your next turn. You can maintain a Rage for up to 10 minutes."
         )
         return description
@@ -106,18 +106,23 @@ class RecklessAttack(TextFeature):
 
 class PrimalKnowledgeSkillProficiency(CharacterFeature):
     def __init__(self, skill: Skill):
-        if skill not in [
+        if skill not in self.skill_options():
+            raise ValueError(f"Invalid skill for Primal Knowledge: {skill}")
+        self.skill = skill
+
+    def skill_options(self):
+        return [
             Skill.ANIMAL_HANDLING,
             Skill.ATHLETICS,
             Skill.INTIMIDATION,
             Skill.NATURE,
             Skill.PERCEPTION,
             Skill.SURVIVAL,
-        ]:
-            raise ValueError(f"Invalid skill for Primal Knowledge: {skill}")
-        self.skill = skill
+        ]
 
     def modify(self, character_stat_block: CharacterStatBlock):
+        for skill in self.skill_options():
+            character_stat_block.skills.update_skill_to_ability(skill, Ability.STRENGTH)
         character_stat_block.skills.add_skill_proficiency(self.skill)
 
 
