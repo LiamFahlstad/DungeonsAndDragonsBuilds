@@ -12,7 +12,7 @@ class FightingStyle(ABC):
     def write_to_file(self, file: TextIO):
         description = self.description()
         wrapped_description = StringUtils.wrap_text(
-            description, max_sentence_length=100, html=False
+            description, max_sentence_length=280, html=False
         )
         if wrapped_description[-1] != "\n":
             wrapped_description += "\n"

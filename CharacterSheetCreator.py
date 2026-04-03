@@ -155,7 +155,9 @@ class CharacterSheetData:
     def add_invocation(self, invocation: str):
         self.invocations.append(invocation)
 
-    def create_character_sheet(self):
+    def create_character_sheet(
+        self, skill_config: Definitions.SkillConfig = Definitions.SkillConfig.DEFAULT
+    ):
         if any(
             field is None
             for field in [
@@ -172,7 +174,7 @@ class CharacterSheetData:
             raise ValueError(
                 "All fields except weapon_masteries and fighting_styles must be set."
             )
-        self._create_character_sheet()
+        self._create_character_sheet(skill_config)
 
     def setup_character_stat_block(self) -> CharacterStatBlock:
         if self._character_cached is not None:
@@ -438,7 +440,12 @@ class CharacterSheetData:
         )
         file.write("\n")
 
-    def _write_skills_html(self, character: CharacterStatBlock, file: TextIO):
+    def _write_skills_html(
+        self,
+        character: CharacterStatBlock,
+        file: TextIO,
+        skill_config: Definitions.SkillConfig,
+    ):
         file.write("<h2>Skills</h2>\n")
 
         headers = [
@@ -458,20 +465,54 @@ class CharacterSheetData:
             file.write(f"<th>{header}</th>")
         file.write("</tr>\n")
 
-        for skill in Skill:
-            row = [
-                skill.value,
-                f"{character.get_skill_modifier(skill):+}",
-                "Yes" if character.is_proficient_in_skill(skill) else "No",
-                character.get_skill_ability(skill).value,
-                character.get_skill_roll_condition(skill).value,
-                f"{character.get_skill_bonus(skill):+}",
-            ]
+        if skill_config == Definitions.SkillConfig.DEFAULT:
+            for skill in Definitions.Skill.list_sorted():
+                row = [
+                    skill.value,
+                    f"{character.get_skill_modifier(skill):+}",
+                    "Yes" if character.is_proficient_in_skill(skill) else "No",
+                    character.get_skill_ability(skill).value,
+                    character.get_skill_roll_condition(skill).value,
+                    f"{character.get_skill_bonus(skill):+}",
+                ]
 
-            file.write("<tr>")
-            for cell in row:
-                file.write(f"<td>{cell}</td>")
-            file.write("</tr>\n")
+                file.write("<tr>")
+                for cell in row:
+                    file.write(f"<td>{cell}</td>")
+                file.write("</tr>\n")
+
+        if skill_config == Definitions.SkillConfig.HOMEBREW:
+            for skill in Definitions.HomeBrewSkill.list_sorted():
+                possible_skills = Definitions.SkillConfig.map_homebrew_to_default(skill)
+                skill_modifier = max(
+                    character.get_skill_modifier(s) for s in possible_skills
+                )
+                proficient = any(
+                    character.is_proficient_in_skill(s) for s in possible_skills
+                )
+                roll_conditions = set(
+                    character.get_skill_roll_condition(s) for s in possible_skills
+                )
+                if Definitions.DiceRollCondition.ADVANTAGE in roll_conditions:
+                    roll_condition = Definitions.DiceRollCondition.ADVANTAGE
+                elif Definitions.DiceRollCondition.NEUTRAL in roll_conditions:
+                    roll_condition = Definitions.DiceRollCondition.NEUTRAL
+                else:
+                    roll_condition = Definitions.DiceRollCondition.DISADVANTAGE
+                skill_bonus = max(character.get_skill_bonus(s) for s in possible_skills)
+                row = [
+                    skill.value,
+                    f"{skill_modifier:+}",
+                    "Yes" if proficient else "No",
+                    character.get_skill_ability(possible_skills[0]).value,
+                    roll_condition.value,
+                    f"{skill_bonus:+}",
+                ]
+
+                file.write("<tr>")
+                for cell in row:
+                    file.write(f"<td>{cell}</td>")
+                file.write("</tr>\n")
 
         file.write("</table>\n<br>\n")
 
@@ -692,7 +733,7 @@ class CharacterSheetData:
 
         file.write("<br>\n")
 
-    def _create_character_sheet(self):
+    def _create_character_sheet(self, skill_config: Definitions.SkillConfig):
         character = self.setup_character_stat_block()
         output_path = self.get_file_path()
 
@@ -702,7 +743,7 @@ class CharacterSheetData:
                 self._write_general_info_html(character, file)
                 self._write_combat_stats_html(character, file)
                 self._write_abilities_html(character, file)
-                self._write_skills_html(character, file)
+                self._write_skills_html(character, file, skill_config)
                 self._write_features_html(character, file)
                 self._write_weapons_html(character, file)
                 self._write_fighting_styles_html(character, file)

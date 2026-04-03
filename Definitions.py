@@ -95,6 +95,62 @@ class Skill(str, Enum):
     STEALTH = "Stealth"  # Dexterity
     SURVIVAL = "Survival"  # Wisdom
 
+    @staticmethod
+    def list_sorted() -> list["Skill"]:
+        return sorted(list(Skill), key=lambda skill: skill.value)
+
+
+class HomeBrewSkill(str, Enum):
+    ACROBATICS = "Acrobatics"  # Dexterity
+    SPIRIT = "Spirit"  # Wisdom
+    ARCANA = "Arcana"  # Intelligence
+    ATHLETICS = "Athletics"  # Strength
+    DECEPTION = "Deception"  # Charisma
+    LORE = "Lore"  # Intelligence
+    INSIGHT = "Insight"  # Wisdom
+    INTIMIDATION = "Intimidation"  # Charisma
+    INVESTIGATION = "Investigation"  # Intelligence
+    MEDICINE = "Medicine"  # Wisdom
+    NATURE = "Nature"  # Intelligence
+    PERCEPTION = "Perception"  # Wisdom
+    PERFORMANCE = "Performance"  # Charisma
+    PERSUASION = "Persuasion"  # Charisma
+    SLEIGHT_OF_HAND = "Sleight of Hand"  # Dexterity
+    STEALTH = "Stealth"  # Dexterity
+
+    @staticmethod
+    def list_sorted() -> list["HomeBrewSkill"]:
+        return sorted(list(HomeBrewSkill), key=lambda skill: skill.value)
+
+
+class SkillConfig(str, Enum):
+    DEFAULT = "Default"
+    HOMEBREW = "Homebrew"
+
+    @staticmethod
+    def map_homebrew_to_default(skill: HomeBrewSkill) -> list[Skill]:
+        default_mapping = {
+            HomeBrewSkill.ACROBATICS: [Skill.ACROBATICS],
+            HomeBrewSkill.SPIRIT: [Skill.ANIMAL_HANDLING],
+            HomeBrewSkill.ARCANA: [Skill.ARCANA],
+            HomeBrewSkill.ATHLETICS: [Skill.ATHLETICS],
+            HomeBrewSkill.DECEPTION: [Skill.DECEPTION],
+            HomeBrewSkill.LORE: [Skill.HISTORY, Skill.RELIGION],
+            HomeBrewSkill.INSIGHT: [Skill.INSIGHT],
+            HomeBrewSkill.INTIMIDATION: [Skill.INTIMIDATION],
+            HomeBrewSkill.INVESTIGATION: [Skill.INVESTIGATION],
+            HomeBrewSkill.MEDICINE: [Skill.MEDICINE],
+            HomeBrewSkill.NATURE: [Skill.NATURE, Skill.SURVIVAL],
+            HomeBrewSkill.PERCEPTION: [Skill.PERCEPTION],
+            HomeBrewSkill.PERFORMANCE: [Skill.PERFORMANCE],
+            HomeBrewSkill.PERSUASION: [Skill.PERSUASION],
+            HomeBrewSkill.SLEIGHT_OF_HAND: [Skill.SLEIGHT_OF_HAND],
+            HomeBrewSkill.STEALTH: [Skill.STEALTH],
+        }
+        if skill not in default_mapping:
+            raise ValueError(f"Unknown homebrew skill: {skill}")
+        return default_mapping[skill]
+
 
 class DiceRollCondition(str, Enum):
     ADVANTAGE = "Advantage"

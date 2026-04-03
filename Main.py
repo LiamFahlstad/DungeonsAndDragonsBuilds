@@ -1,3 +1,4 @@
+import Definitions
 from Builds import (
     MutliclassTest,
     OptimizedBarbarianBerserker,
@@ -46,6 +47,7 @@ class BuildSelector:
 
 
 if __name__ == "__main__":
+    skill_config = Definitions.SkillConfig.HOMEBREW
     build_names = [
         "MulticlassTest",
         "OptimizedBarbarianBerserker",
@@ -68,4 +70,4 @@ if __name__ == "__main__":
     for build_name in build_names:
         build_class = BuildSelector.get_build(build_name)
         character_sheet_data = build_class.build()
-        character_sheet_data.create_character_sheet()
+        character_sheet_data.create_character_sheet(skill_config=skill_config)
