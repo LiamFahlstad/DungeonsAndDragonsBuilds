@@ -892,6 +892,55 @@ def write_weapons_to_file(
         write_table(headers, rows, file)
 
 
+# def write_weapons_to_file_html(
+#     weapons: list[AbstractWeapon],
+#     character_stat_block: CharacterStatBlock,
+#     file: TextIO,
+# ):
+#     if not weapons:
+#         return
+
+#     headers: list[str] = weapons[0].get_headers()
+#     rows: list[list[str]] = []
+
+#     for i, weapon in enumerate(weapons):
+#         rows.extend(weapon.get_rows(character_stat_block))
+#         if i < len(weapons) - 1:
+#             rows.append([])  # separator row
+
+#     # --- Start wrapper div ---
+#     file.write("<div class='weapons'>\n")
+
+#     file.write("<h2>Weapons</h2>\n")
+#     file.write("<table border='1' cellspacing='0' cellpadding='5'>\n")
+
+#     # Header row
+#     file.write("<tr>")
+#     for header in headers:
+#         file.write(f"<th>{header}</th>")
+#     file.write("</tr>\n")
+
+#     # Data rows
+#     for row in rows:
+#         if not row:
+#             # Separator row
+#             file.write(f"<tr><td colspan='{len(headers)}'><hr></td></tr>\n")
+#             continue
+
+#         file.write("<tr>")
+#         for i, cell in enumerate(row):
+#             if i == 0:
+#                 file.write(f"<td><b>{cell}</b></td>")
+#             else:
+#                 file.write(f"<td>{cell}</td>")
+#         file.write("</tr>\n")
+
+#     file.write("</table>\n<br>\n")
+
+#     # --- End wrapper div ---
+#     file.write("</div>\n")
+
+
 def write_weapons_to_file_html(
     weapons: list[AbstractWeapon],
     character_stat_block: CharacterStatBlock,
@@ -908,34 +957,92 @@ def write_weapons_to_file_html(
         if i < len(weapons) - 1:
             rows.append([])  # separator row
 
-    # --- Start wrapper div ---
-    file.write("<div class='weapons'>\n")
+    # --- Styling aligned with spells ---
+    file.write(
+        """
+    <style>
+    .weapons {
+        max-width: 100%;
+    }
 
+    .weapon-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.85rem;
+        margin: 0.25rem 0 0.75rem 0;
+        table-layout: auto;
+    }
+
+    .weapon-table th,
+    .weapon-table td {
+        border: 1px solid #ddd;
+        padding: 3px 5px;
+        vertical-align: top;
+    }
+
+    .weapon-title {
+        font-size: 1rem;
+        text-align: left;
+        background: #f5f5f5;
+        font-weight: 600;
+        padding: 4px 6px;
+    }
+
+    /* FIRST COLUMN = as tight as possible */
+    .weapon-first-col {
+        font-weight: 600;
+        white-space: nowrap;
+        background: #fafafa;
+        width: 1%;
+        padding: 2px 4px;
+    }
+
+    .weapon-cell {
+        padding: 2px 5px;
+    }
+
+    .weapon-separator td {
+        border: none;
+        padding: 2px 0;
+        height: 6px;
+    }
+
+    .weapon-separator hr {
+        border: none;
+        border-top: 1px solid #ddd;
+        margin: 2px 0;
+    }
+    </style>
+    """
+    )
+
+    file.write("<div class='weapons'>\n")
     file.write("<h2>Weapons</h2>\n")
-    file.write("<table border='1' cellspacing='0' cellpadding='5'>\n")
+
+    file.write("<table class='weapon-table'>\n")
 
     # Header row
     file.write("<tr>")
-    for header in headers:
-        file.write(f"<th>{header}</th>")
+    for i, header in enumerate(headers):
+        cls = "weapon-first-col" if i == 0 else "weapon-cell"
+        file.write(f"<th class='{cls}'>{header}</th>")
     file.write("</tr>\n")
 
     # Data rows
     for row in rows:
         if not row:
-            # Separator row
-            file.write(f"<tr><td colspan='{len(headers)}'><hr></td></tr>\n")
+            file.write(
+                "<tr class='weapon-separator'><td colspan='999'><hr></td></tr>\n"
+            )
             continue
 
         file.write("<tr>")
         for i, cell in enumerate(row):
             if i == 0:
-                file.write(f"<td><b>{cell}</b></td>")
+                file.write(f"<td class='weapon-first-col'>{cell}</td>")
             else:
-                file.write(f"<td>{cell}</td>")
+                file.write(f"<td class='weapon-cell'>{cell}</td>")
         file.write("</tr>\n")
 
-    file.write("</table>\n<br>\n")
-
-    # --- End wrapper div ---
+    file.write("</table>\n")
     file.write("</div>\n")

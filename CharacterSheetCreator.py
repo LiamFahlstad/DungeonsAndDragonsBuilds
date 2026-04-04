@@ -590,9 +590,9 @@ class CharacterSheetData:
                     if isinstance(weapon, type(mastery)):
                         weapon.player_has_mastery = True
 
-        file.write("<pre>\n")
+        # file.write("<pre>\n")
         write_weapons_to_file(self.weapons, character, file, html=True)
-        file.write("</pre>\n<br>\n")
+        # file.write("</pre>\n<br>\n")
 
     def _write_fighting_styles(self, character: CharacterStatBlock, file: TextIO):
         if not self.fighting_styles:
@@ -610,9 +610,9 @@ class CharacterSheetData:
         file.write("<h2>Fighting Styles</h2>\n")
 
         for style in self.fighting_styles:
-            file.write("<pre>\n")
+            # file.write("<pre>\n")
             style.write_to_file(file)
-            file.write("</pre>\n")
+            # file.write("</pre>\n")
 
         file.write("<br>\n")
 
@@ -714,7 +714,7 @@ class CharacterSheetData:
             return
 
         # --- Start wrapper div ---
-        file.write("<div class='spells'>\n")
+        # file.write("<div class='spells'>\n")
 
         file.write("<h2>Spells</h2>\n")
 
@@ -725,9 +725,9 @@ class CharacterSheetData:
         sorted_spells = sorted(spells, key=lambda s: (s.level, s.name))
 
         for i, spell in enumerate(sorted_spells):
-            file.write("<pre>\n")
+            # file.write("<pre>\n")
             spell.write_to_file(file, html=True)
-            file.write("</pre>\n")
+            # file.write("</pre>\n")
 
             if i < len(sorted_spells) - 1:
                 file.write("<hr>\n")
@@ -735,7 +735,7 @@ class CharacterSheetData:
         file.write("<br>\n")
 
         # --- End wrapper div ---
-        file.write("</div>\n")
+        # file.write("</div>\n")
 
     # def get_css_style(self) -> str:
     #     return """
@@ -782,28 +782,7 @@ class CharacterSheetData:
         div {
             max-width: 700px;
             margin: 0 auto;
-        }
-
-        /* Headings - toned down */
-        h1, h2, h3 {
-            font-weight: 500;
-            line-height: 1.3;
-            margin-top: 1.2em;
-            margin-bottom: 0.4em;
-        }
-
-        h1 {
-            font-size: 1.6rem;
-            border-bottom: 1px solid var(--border-color);
-            padding-bottom: 0.2em;
-        }
-
-        h2 {
-            font-size: 1.3rem;
-        }
-
-        h3 {
-            font-size: 1.1rem;
+            padding: 0 0.5rem;
         }
 
         p {
