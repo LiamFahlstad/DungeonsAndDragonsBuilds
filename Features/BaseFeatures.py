@@ -81,15 +81,16 @@ class TextFeature(Feature):
             )
 
             # Ensure description is not too long without newlines
-            description = StringUtils.wrap_text(description, max_sentence_length, html)
+            # description = StringUtils.wrap_text(description, max_sentence_length, html)
 
         if not description.endswith("\n"):
             description += "\n"
 
         if html:
+            description = StringUtils.bolden_text_html(description)
             file.write(f"<h3>{self.name}</h3>\n")
             file.write(f"<strong>Origin:</strong> {self.origin}\n<br>\n")
-            file.write("<strong>Description:</strong>\n")
+            file.write("<strong>Description:</strong><br>\n")
             file.write(f"{description}\n")
             # file.write("\n")
         else:

@@ -1985,30 +1985,43 @@ class Spell(ABC):
         description = "\n".join(lines)
 
         if html:
-            file.write(f"<h3>{self.name}</h3>\n")
-            file.write(f"<strong>Level:</strong> {self.level}\n")
-            file.write(f"<strong>School:</strong> {self.school}\n")
-            file.write(f"<strong>Classes:</strong> {', '.join(self.classes)}\n")
-            file.write(f"<strong>Casting Time:</strong> {self.casting_time}\n")
-            file.write(f"<strong>Range:</strong> {self.range}\n")
-            file.write(f"<strong>Components:</strong> {self.components}\n")
-            file.write(f"<strong>Duration:</strong> {self.duration}\n")
-            file.write(
-                f"<strong>Description:</strong>\n{StringUtils.wrap_text(description, 150)}\n"
+            description = description.replace(
+                "Using a Higher-Level Spell Slot.",
+                "<strong>Using a Higher-Level Spell Slot.</strong>",
             )
-            file.write(f"<strong>Source:</strong> {self.source}\n")
+            description = StringUtils.bolden_text_html(description).replace(
+                "\n", "<br>"
+            )
+
+            file.write(f"<h3>{self.name}</h3>\n")
+            file.write("<table border='1' cellspacing='0' cellpadding='5'>\n")
+
+            def row(label, value):
+                file.write("<tr>")
+                file.write(f"<td><b>{label}</b></td>")
+                file.write(f"<td>{value}</td>")
+                file.write("</tr>\n")
+
+            row("Level", self.level)
+            row("School", self.school)
+            row("Classes", ", ".join(self.classes))
+            row("Casting Time", self.casting_time)
+            row("Range", self.range)
+            row("Components", self.components)
+            row("Duration", self.duration)
+            row("Description", description)
+            row("Source", self.source)
 
             if self.spell_casting_ability:
-                file.write(
-                    f"<strong>Spellcasting Ability:</strong> {self.spell_casting_ability.value}\n"
-                )
+                row("Spellcasting Ability", self.spell_casting_ability.value)
 
             if self._additional_ruling:
-                additional_ruling = (
-                    f"<strong>Additional Ruling:</strong> {self._additional_ruling}\n"
-                )
-                additional_ruling = StringUtils.wrap_text(additional_ruling, 150)
-                file.write(additional_ruling)
+                additional = StringUtils.bolden_text_html(
+                    self._additional_ruling
+                ).replace("\n", "<br>")
+                row("Additional Ruling", additional)
+
+            file.write("</table>\n")
 
         else:
             file.write(f"Name: {self.name}\n")

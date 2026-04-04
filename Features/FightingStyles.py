@@ -3,7 +3,6 @@ from typing import TextIO
 
 from Features.Weapons import AbstractWeapon, WeaponProperty, WeaponType
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
-from Utils import StringUtils
 
 
 class FightingStyle(ABC):
@@ -11,12 +10,12 @@ class FightingStyle(ABC):
 
     def write_to_file(self, file: TextIO):
         description = self.description()
-        wrapped_description = StringUtils.wrap_text(
-            description, max_sentence_length=280, html=False
-        )
-        if wrapped_description[-1] != "\n":
-            wrapped_description += "\n"
-        file.write(wrapped_description)
+        # description = StringUtils.wrap_text(
+        #     description, max_sentence_length=280, html=False
+        # )
+        if description[-1] != "\n":
+            description += "\n"
+        file.write(description)
 
     @abstractmethod
     def description(self) -> str:

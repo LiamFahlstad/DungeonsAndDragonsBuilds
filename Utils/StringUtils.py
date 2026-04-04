@@ -28,3 +28,36 @@ def wrap_text(description: str, max_sentence_length: int, html: bool = False) ->
         return "\n".join(new_parts)
 
     return "\n".join(new_parts)
+
+
+def bolden_text_html(text: str) -> str:
+    new_lines = []
+
+    for line in text.split("\n"):
+        stripped = line.strip()
+
+        if not stripped:
+            continue
+
+        if stripped == "<br>":
+            new_lines.append(line)
+            continue
+
+        # --- Check for short first sentence (period) ---
+        if "." in stripped:
+            first, rest = stripped.split(".", 1)
+            if len(first.split()) < 5:  # and rest.strip():
+                new_lines.append(f"<strong>{first.strip()}.</strong> {rest.strip()}")
+                continue
+
+        # --- Check for short label (colon) ---
+        if ":" in stripped:
+            first, rest = stripped.split(":", 1)
+            if len(first.split()) < 10 and rest.strip():
+                new_lines.append(f"<strong>{first.strip()}:</strong> {rest.strip()}")
+                continue
+
+        # --- Default ---
+        new_lines.append(line)
+
+    return "\n".join(new_lines)

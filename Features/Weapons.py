@@ -7,7 +7,6 @@ import DamageCalculator
 from Definitions import Ability, Die
 from Features.BaseFeatures import TextFeature
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
-from Utils import StringUtils
 from Utils.TableUtils import write_table
 
 
@@ -234,9 +233,10 @@ class AbstractWeapon(TextFeature):
         rows.append(["DamageType", stats.damage_type.value])
 
         for prop in stats.properties:
-            description = StringUtils.wrap_text(
-                prop.description, max_sentence_length=100
-            )
+            description = prop.description
+            # description = StringUtils.wrap_text(
+            #     prop.description, max_sentence_length=100
+            # )
             rows.append([f"Property '{prop.value}'", description])
 
         rows.append(["Proficient", "Yes" if self.player_is_proficient else "No"])
@@ -253,9 +253,9 @@ class AbstractWeapon(TextFeature):
 
         if self.player_has_mastery:
             mastery_description = stats.mastery.description
-            mastery_description = StringUtils.wrap_text(
-                mastery_description, max_sentence_length=100
-            )
+            # mastery_description = StringUtils.wrap_text(
+            #     mastery_description, max_sentence_length=100
+            # )
             rows.append([f"Mastery '{stats.mastery.value}'", mastery_description])
 
         attack_roll_die = DamageCalculator.Die.D20
@@ -886,4 +886,56 @@ def write_weapons_to_file(
         rows.extend(weapon.get_rows(character_stat_block))
         if i < len(weapons) - 1:
             rows.append([])  # Add a separator row between weapons
-    write_table(headers, rows, file)
+    if html:
+        write_weapons_to_file_html(weapons, character_stat_block, file)
+    else:
+        write_table(headers, rows, file)
+
+
+def write_weapons_to_file_html(
+    weapons: list[AbstractWeapon],
+    character_stat_block: CharacterStatBlock,
+    file: TextIO,
+):
+    if not weapons:
+        return
+
+    headers: list[str] = weapons[0].get_headers()
+    rows: list[list[str]] = []
+
+    for i, weapon in enumerate(weapons):
+        rows.extend(weapon.get_rows(character_stat_block))
+        if i < len(weapons) - 1:
+            rows.append([])  # separator row
+
+    # --- Start wrapper div ---
+    file.write("<div class='weapons'>\n")
+
+    file.write("<h2>Weapons</h2>\n")
+    file.write("<table border='1' cellspacing='0' cellpadding='5'>\n")
+
+    # Header row
+    file.write("<tr>")
+    for header in headers:
+        file.write(f"<th>{header}</th>")
+    file.write("</tr>\n")
+
+    # Data rows
+    for row in rows:
+        if not row:
+            # Separator row
+            file.write(f"<tr><td colspan='{len(headers)}'><hr></td></tr>\n")
+            continue
+
+        file.write("<tr>")
+        for i, cell in enumerate(row):
+            if i == 0:
+                file.write(f"<td><b>{cell}</b></td>")
+            else:
+                file.write(f"<td>{cell}</td>")
+        file.write("</tr>\n")
+
+    file.write("</table>\n<br>\n")
+
+    # --- End wrapper div ---
+    file.write("</div>\n")

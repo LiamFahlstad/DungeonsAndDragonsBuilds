@@ -584,8 +584,6 @@ class CharacterSheetData:
         if not self.weapons:
             return
 
-        file.write("<h2>Weapons</h2>\n")
-
         for weapon in self.weapons:
             if self.weapon_masteries:
                 for mastery in self.weapon_masteries:
@@ -593,7 +591,7 @@ class CharacterSheetData:
                         weapon.player_has_mastery = True
 
         file.write("<pre>\n")
-        write_weapons_to_file(self.weapons, character, file, html=False)
+        write_weapons_to_file(self.weapons, character, file, html=True)
         file.write("</pre>\n<br>\n")
 
     def _write_fighting_styles(self, character: CharacterStatBlock, file: TextIO):
@@ -715,6 +713,9 @@ class CharacterSheetData:
         if not self.spells:
             return
 
+        # --- Start wrapper div ---
+        file.write("<div class='spells'>\n")
+
         file.write("<h2>Spells</h2>\n")
 
         spells = [
@@ -733,6 +734,127 @@ class CharacterSheetData:
 
         file.write("<br>\n")
 
+        # --- End wrapper div ---
+        file.write("</div>\n")
+
+    # def get_css_style(self) -> str:
+    #     return """
+    #     <style>
+    #     body {
+    #         font-family: Arial, Helvetica, sans-serif;
+    #         line-height: 1.5;
+    #     }
+
+    #     div {
+    #         max-width: 800px;
+    #     }
+
+    #     pre {
+    #         white-space: pre-wrap; /* allows wrapping */
+    #         font-family: inherit;  /* removes monospace look */
+    #     }
+    #     </style>
+    #     """
+
+    def get_css_style(self) -> str:
+        return """
+        <style>
+        @import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap');
+
+        :root {
+            --text-color: #222;
+            --muted-color: #555;
+            --border-color: #ddd;
+        }
+
+        html {
+            font-size: 14px; /* ↓ smaller base size */
+        }
+
+        body {
+            font-family: "EB Garamond", Garamond, "Times New Roman", serif;
+            line-height: 1.5;
+            color: var(--text-color);
+            margin: 0;
+            padding: 1.5rem;
+        }
+
+        div {
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        /* Headings - toned down */
+        h1, h2, h3 {
+            font-weight: 500;
+            line-height: 1.3;
+            margin-top: 1.2em;
+            margin-bottom: 0.4em;
+        }
+
+        h1 {
+            font-size: 1.6rem;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 0.2em;
+        }
+
+        h2 {
+            font-size: 1.3rem;
+        }
+
+        h3 {
+            font-size: 1.1rem;
+        }
+
+        p {
+            margin: 0.5em 0;
+        }
+
+        /* Pre blocks - lighter + tighter */
+        pre {
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            font-family: inherit;
+            background: #fafafa;
+            padding: 0.5rem;
+            border: 1px solid var(--border-color);
+            border-radius: 3px;
+            font-size: 0.9rem;
+        }
+
+        ul, ol {
+            margin: 0.5em 0 0.5em 1.2em;
+        }
+
+        /* Print tweaks (LESS aggressive) */
+        @media print {
+            body {
+                padding: 0;
+                font-size: 10pt; /* ↓ smaller print size */
+            }
+
+            div {
+                max-width: 100%;
+            }
+
+            /* Only avoid breaking headings from next line */
+            h1, h2, h3 {
+                page-break-after: avoid;
+            }
+
+            /* Allow content to flow naturally */
+            p, pre, ul, ol {
+                page-break-inside: auto;
+            }
+
+            /* Remove forced page breaks entirely */
+            .page-break {
+                display: none;
+            }
+        }
+        </style>
+        """
+
     def _create_character_sheet(self, skill_config: Definitions.SkillConfig):
         character = self.setup_character_stat_block()
         output_path = self.get_file_path()
@@ -740,6 +862,10 @@ class CharacterSheetData:
         pathlib.Path(output_path).parent.mkdir(parents=True, exist_ok=True)
         with open(output_path, "w", encoding="utf-8") as file:
             if output_path.endswith(".html"):
+                file.write(self.get_css_style())
+                # file.write(
+                #     f"<h1>{character.name} - Level {character.character_level} {character.character_subclass}</h1>\n"
+                # )
                 self._write_general_info_html(character, file)
                 self._write_combat_stats_html(character, file)
                 self._write_abilities_html(character, file)
