@@ -5,13 +5,11 @@ import attr
 from CharacterConfigs.BaseClasses import ClassBuilder
 from CharacterConfigs.BaseClasses.PaladinBase import (
     PaladinMulticlassBuilder,
-    PaladinStarterClassBuilder,
+    PaladinNonGenericStarterClassArgs,
 )
 from CharacterSheetCreator import CharacterSheetData
 from Definitions import PaladinSubclass
-from Features import Armor, Backgrounds, OriginFeats, Weapons
 from Features.ClassFeatures import PaladinFeatures
-from Items import Items
 from Spells.Definitions import (
     BardLevel4Spells,
     ClericLevel1Spells,
@@ -22,7 +20,6 @@ from Spells.Definitions import (
     WizardLevel3Spells,
     WizardLevel5Spells,
 )
-from StatBlocks.AbilitiesStatBlock import AbilitiesStatBlock
 from StatBlocks.SkillsStatBlock import PaladinSkillsStatBlock
 
 
@@ -123,37 +120,14 @@ class PaladinVengeanceLevel20(ClassBuilder.SubclassLevel20):
         return data
 
 
-class PaladinVengeanceStarterClassBuilder(PaladinStarterClassBuilder):
-
+class PaladinVengeanceNonGenericStarterClassArgs(PaladinNonGenericStarterClassArgs):
     def __init__(
         self,
-        paladin_level_features: ClassBuilder.BaseClassLevelFeatures,
-        paladin_level: int,
-        abilities: AbilitiesStatBlock,
-        paladin_skills: PaladinSkillsStatBlock,
-        background_ability_bonuses: Backgrounds.FreeBackgroundAbilityBonus,
-        background_skill_proficiencies: Backgrounds.FreeBackgroundSkillProficiency,
-        add_default_equipment: bool,
-        origin_feat: OriginFeats.OriginFeat,
-        armor: Optional[list[Armor.AbstractArmor]] = None,
-        weapons: Optional[list[Weapons.AbstractWeapon]] = None,
-        replace_spells: Optional[dict[str, str]] = None,
-        items: Optional[list[tuple[Items.Item, int]]] = None,
+        skills: PaladinSkillsStatBlock,
     ):
         super().__init__(
-            paladin_level_features=paladin_level_features,
-            paladin_level=paladin_level,
             subclass=PaladinSubclass.OATH_OF_VENGEANCE.value,
-            abilities=abilities,
-            paladin_skills=paladin_skills,
-            background_ability_bonuses=background_ability_bonuses,
-            background_skill_proficiencies=background_skill_proficiencies,
-            add_default_equipment=add_default_equipment,
-            origin_feat=origin_feat,
-            armor=armor,
-            weapons=weapons,
-            replace_spells=replace_spells,
-            items=items,
+            skills=skills,
         )
 
 

@@ -1,6 +1,7 @@
 import Definitions
 from Builds.CharacterBuilder import CharacterBuilder
 from CharacterConfigs.BaseClasses import ClassBuilder
+from CharacterConfigs.BaseClasses.ClassBuilder import StarterClassBuilder
 from CharacterConfigs.BaseClasses.RogueBase import (
     RogueLevel1,
     RogueLevel2,
@@ -11,7 +12,7 @@ from CharacterConfigs.BaseClasses.RogueBase import (
 )
 from CharacterConfigs.SubClasses.RogueAssassin import (
     RogueAssassinLevel3,
-    RogueAssassinStarterClassBuilder,
+    RogueAssassinNonGenericStarterClassArgs,
 )
 from Definitions import Ability, Skill
 from Features import Backgrounds, GeneralFeats, OriginFeats, Weapons
@@ -22,8 +23,23 @@ from StatBlocks.SkillsStatBlock import RogueSkillsStatBlock
 
 
 def get_starter_class_builder():
-    return RogueAssassinStarterClassBuilder(
-        rogue_level=3,
+    return StarterClassBuilder(
+        non_generic_arguments=RogueAssassinNonGenericStarterClassArgs(
+            skills=RogueSkillsStatBlock(
+                proficiencies={
+                    Skill.ACROBATICS: True,
+                    Skill.ATHLETICS: False,
+                    Skill.DECEPTION: False,
+                    Skill.INSIGHT: False,
+                    Skill.INTIMIDATION: False,
+                    Skill.INVESTIGATION: True,
+                    Skill.PERCEPTION: False,
+                    Skill.SLEIGHT_OF_HAND: True,
+                    Skill.STEALTH: True,
+                }
+            ),
+        ),
+        base_class_level=3,
         # Distribute 15, 14, 13, 12, 10, 8 among your abilities.
         abilities=StandardArrayAbilitiesStatBlock(
             strength=8,
@@ -32,20 +48,6 @@ def get_starter_class_builder():
             intelligence=13,
             wisdom=12,
             charisma=10,
-        ),
-        # Choose two skills to be proficient in
-        rogue_skills=RogueSkillsStatBlock(
-            proficiencies={
-                Skill.ACROBATICS: True,
-                Skill.ATHLETICS: False,
-                Skill.DECEPTION: False,
-                Skill.INSIGHT: False,
-                Skill.INTIMIDATION: False,
-                Skill.INVESTIGATION: True,
-                Skill.PERCEPTION: False,
-                Skill.SLEIGHT_OF_HAND: True,
-                Skill.STEALTH: True,
-            }
         ),
         background_ability_bonuses=Backgrounds.FreeBackgroundAbilityBonus(
             [
@@ -72,7 +74,7 @@ def get_starter_class_builder():
             (Items.Quiver(), 1),
             (Items.ThievesTools(), 1),
         ],
-        rogue_level_features=ClassBuilder.BaseClassLevelFeatures(
+        base_class_level_features=ClassBuilder.BaseClassLevelFeatures(
             base_class_features_by_level={
                 1: RogueLevel1(
                     skill_1=Definitions.Skill.STEALTH,

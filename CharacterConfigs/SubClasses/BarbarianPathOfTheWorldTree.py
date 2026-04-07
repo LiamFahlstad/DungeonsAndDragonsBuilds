@@ -5,14 +5,11 @@ import attr
 from CharacterConfigs.BaseClasses import ClassBuilder
 from CharacterConfigs.BaseClasses.BarbarianBase import (
     BarbarianMulticlassBuilder,
-    BarbarianStarterClassBuilder,
+    BarbarianNonGenericStarterClassArgs,
 )
 from CharacterSheetCreator import CharacterSheetData
 from Definitions import BarbarianSubclass
-from Features import Armor, Backgrounds, OriginFeats, Weapons
 from Features.ClassFeatures import BarbarianFeatures
-from Items import Items
-from StatBlocks.AbilitiesStatBlock import AbilitiesStatBlock
 from StatBlocks.SkillsStatBlock import BarbarianSkillsStatBlock
 
 
@@ -69,37 +66,14 @@ class BarbarianWorldTreeLevel14(ClassBuilder.SubclassLevel14):
         return data
 
 
-class BarbarianWorldTreeStarterClassBuilder(BarbarianStarterClassBuilder):
-
+class BarbarianWorldTreeNonGenericStarterClassArgs(BarbarianNonGenericStarterClassArgs):
     def __init__(
         self,
-        barbarian_level_features: ClassBuilder.BaseClassLevelFeatures,
-        barbarian_level: int,
-        abilities: AbilitiesStatBlock,
-        barbarian_skills: BarbarianSkillsStatBlock,
-        background_ability_bonuses: Backgrounds.FreeBackgroundAbilityBonus,
-        background_skill_proficiencies: Backgrounds.FreeBackgroundSkillProficiency,
-        add_default_equipment: bool,
-        origin_feat: OriginFeats.OriginFeat,
-        armor: Optional[list[Armor.AbstractArmor]] = None,
-        weapons: Optional[list[Weapons.AbstractWeapon]] = None,
-        replace_spells: Optional[dict[str, str]] = None,
-        items: Optional[list[tuple[Items.Item, int]]] = None,
+        skills: BarbarianSkillsStatBlock,
     ):
         super().__init__(
-            barbarian_level_features=barbarian_level_features,
-            barbarian_level=barbarian_level,
             subclass=BarbarianSubclass.PATH_OF_THE_WORLD_TREE.value,
-            abilities=abilities,
-            barbarian_skills=barbarian_skills,
-            background_ability_bonuses=background_ability_bonuses,
-            background_skill_proficiencies=background_skill_proficiencies,
-            add_default_equipment=add_default_equipment,
-            origin_feat=origin_feat,
-            armor=armor,
-            weapons=weapons,
-            replace_spells=replace_spells,
-            items=items,
+            skills=skills,
         )
 
 

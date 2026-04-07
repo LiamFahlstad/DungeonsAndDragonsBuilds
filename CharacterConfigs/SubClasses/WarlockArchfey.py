@@ -5,13 +5,11 @@ import attr
 from CharacterConfigs.BaseClasses import ClassBuilder
 from CharacterConfigs.BaseClasses.WarlockBase import (
     WarlockMulticlassBuilder,
-    WarlockStarterClassBuilder,
+    WarlockNonGenericStarterClassArgs,
 )
 from CharacterSheetCreator import CharacterSheetData
 from Definitions import WarlockSubclass
-from Features import Armor, Backgrounds, OriginFeats, Weapons
 from Features.ClassFeatures import WarlockFeatures
-from Items import Items
 from Spells.Definitions import (
     BardLevel1Spells,
     BardLevel2Spells,
@@ -19,7 +17,6 @@ from Spells.Definitions import (
     SorcererLevel3Spells,
     WarlockLevel2Spells,
 )
-from StatBlocks.AbilitiesStatBlock import AbilitiesStatBlock
 from StatBlocks.SkillsStatBlock import WarlockSkillsStatBlock
 
 
@@ -111,37 +108,14 @@ class ArchfeyWarlockLevel17(ClassBuilder.SubclassLevel17):
         return data
 
 
-class ArchfeyWarlockStarterClassBuilder(WarlockStarterClassBuilder):
-
+class WarlockArchfeyNonGenericStarterClassArgs(WarlockNonGenericStarterClassArgs):
     def __init__(
         self,
-        warlock_level_features: ClassBuilder.BaseClassLevelFeatures,
-        warlock_level: int,
-        abilities: AbilitiesStatBlock,
-        warlock_skills: WarlockSkillsStatBlock,
-        background_ability_bonuses: Backgrounds.FreeBackgroundAbilityBonus,
-        background_skill_proficiencies: Backgrounds.FreeBackgroundSkillProficiency,
-        add_default_equipment: bool,
-        origin_feat: OriginFeats.OriginFeat,
-        armor: Optional[list[Armor.AbstractArmor]] = None,
-        weapons: Optional[list[Weapons.AbstractWeapon]] = None,
-        replace_spells: Optional[dict[str, str]] = None,
-        items: Optional[list[tuple[Items.Item, int]]] = None,
+        skills: WarlockSkillsStatBlock,
     ):
         super().__init__(
-            warlock_level_features=warlock_level_features,
-            warlock_level=warlock_level,
             subclass=WarlockSubclass.THE_ARCHFEY.value,
-            abilities=abilities,
-            warlock_skills=warlock_skills,
-            background_ability_bonuses=background_ability_bonuses,
-            background_skill_proficiencies=background_skill_proficiencies,
-            add_default_equipment=add_default_equipment,
-            origin_feat=origin_feat,
-            armor=armor,
-            weapons=weapons,
-            replace_spells=replace_spells,
-            items=items,
+            skills=skills,
         )
 
 

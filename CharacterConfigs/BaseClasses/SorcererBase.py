@@ -6,9 +6,8 @@ import Definitions
 from CharacterConfigs.BaseClasses import ClassBuilder
 from CharacterSheetCreator import CharacterSheetData
 from Definitions import Ability, CharacterClass
-from Features import Armor, Backgrounds, EpicBoon, GeneralFeats, OriginFeats, Weapons
+from Features import Armor, EpicBoon, GeneralFeats, Weapons
 from Features.ClassFeatures import SorcererFeatures, SpellSlots
-from Items import Items
 from Spells.Definitions import (
     SorcererLevel0Spells,
     SorcererLevel1Spells,
@@ -21,7 +20,6 @@ from Spells.Definitions import (
     SorcererLevel8Spells,
     SorcererLevel9Spells,
 )
-from StatBlocks.AbilitiesStatBlock import AbilitiesStatBlock
 from StatBlocks.SavingThrowsStatBlock import SorcererSavingThrowsStatBlock
 from StatBlocks.SkillsStatBlock import SorcererSkillsStatBlock
 
@@ -313,53 +311,29 @@ class SorcererLevel20(ClassBuilder.BaseClassLevel20):
         return data
 
 
-class SorcererStarterClassBuilder(ClassBuilder.StarterClassBuilder):
-
+class SorcererNonGenericStarterClassArgs(ClassBuilder.NonGenericStarterClassArgs):
     def __init__(
         self,
-        sorcerer_level_features: ClassBuilder.BaseClassLevelFeatures,
-        sorcerer_level: int,
         subclass: str,
-        abilities: AbilitiesStatBlock,
-        sorcerer_skills: SorcererSkillsStatBlock,
-        background_ability_bonuses: Backgrounds.FreeBackgroundAbilityBonus,
-        background_skill_proficiencies: Backgrounds.FreeBackgroundSkillProficiency,
-        add_default_equipment: bool,
-        origin_feat: OriginFeats.OriginFeat,
-        armor: Optional[list[Armor.AbstractArmor]] = None,
-        weapons: Optional[list[Weapons.AbstractWeapon]] = None,
-        replace_spells: Optional[dict[str, str]] = None,
-        items: Optional[list[tuple[Items.Item, int]]] = None,
+        skills: SorcererSkillsStatBlock,
     ):
-        default_equipment = [
-            Armor.LeatherArmor(),
-            Armor.ShieldArmor(),
-            Weapons.Sickle(player_is_proficient=True),
-            Weapons.Quarterstaff(player_is_proficient=True),
-        ]
         super().__init__(
             base_class=CharacterClass.SORCERER,
-            base_class_level_features=sorcerer_level_features,
-            base_class_level=sorcerer_level,
             subclass=subclass,
-            abilities=abilities,
-            skills=sorcerer_skills,
-            background_ability_bonuses=background_ability_bonuses,
-            background_skill_proficiencies=background_skill_proficiencies,
             saving_throws=SorcererSavingThrowsStatBlock(),
-            add_default_equipment=add_default_equipment,
-            default_equipment=default_equipment,
-            origin_feat=origin_feat,
+            default_equipment=[
+                Armor.LeatherArmor(),
+                Armor.ShieldArmor(),
+                Weapons.Sickle(player_is_proficient=True),
+                Weapons.Quarterstaff(player_is_proficient=True),
+            ],
+            skills=skills,
             armor_proficiencies=[
                 Definitions.ArmorType.LIGHT,
                 Definitions.ArmorType.SHIELD,
             ],
-            armor=armor,
-            weapons=weapons,
-            replace_spells=replace_spells,
-            spell_casting_ability=Ability.WISDOM,
+            spell_casting_ability=Ability.CHARISMA,
             caster_type=SpellSlots.CasterType.FULL_CASTER,
-            items=items,
         )
 
 

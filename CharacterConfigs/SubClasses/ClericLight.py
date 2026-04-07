@@ -5,14 +5,11 @@ import attr
 from CharacterConfigs.BaseClasses import ClassBuilder
 from CharacterConfigs.BaseClasses.ClericBase import (
     ClericMulticlassBuilder,
-    ClericStarterClassBuilder,
+    ClericNonGenericStarterClassArgs,
 )
 from CharacterSheetCreator import CharacterSheetData
 from Definitions import ClericSubclass
-from Features import Armor, Backgrounds, OriginFeats, Weapons
 from Features.ClassFeatures import ClericFeatures
-from Items import Items
-from StatBlocks.AbilitiesStatBlock import AbilitiesStatBlock
 from StatBlocks.SkillsStatBlock import ClericSkillsStatBlock
 
 
@@ -53,37 +50,14 @@ class ClericLightLevel17(ClassBuilder.SubclassLevel17):
         return data
 
 
-class ClericLightStarterClassBuilder(ClericStarterClassBuilder):
-
+class ClericLightNonGenericStarterClassArgs(ClericNonGenericStarterClassArgs):
     def __init__(
         self,
-        cleric_level_features: ClassBuilder.BaseClassLevelFeatures,
-        cleric_level: int,
-        abilities: AbilitiesStatBlock,
-        cleric_skills: ClericSkillsStatBlock,
-        background_ability_bonuses: Backgrounds.FreeBackgroundAbilityBonus,
-        background_skill_proficiencies: Backgrounds.FreeBackgroundSkillProficiency,
-        add_default_equipment: bool,
-        origin_feat: OriginFeats.OriginFeat,
-        armor: Optional[list[Armor.AbstractArmor]] = None,
-        weapons: Optional[list[Weapons.AbstractWeapon]] = None,
-        replace_spells: Optional[dict[str, str]] = None,
-        items: Optional[list[tuple[Items.Item, int]]] = None,
+        skills: ClericSkillsStatBlock,
     ):
         super().__init__(
-            cleric_level_features=cleric_level_features,
-            cleric_level=cleric_level,
             subclass=ClericSubclass.LIGHT.value,
-            abilities=abilities,
-            cleric_skills=cleric_skills,
-            background_ability_bonuses=background_ability_bonuses,
-            background_skill_proficiencies=background_skill_proficiencies,
-            add_default_equipment=add_default_equipment,
-            origin_feat=origin_feat,
-            armor=armor,
-            weapons=weapons,
-            replace_spells=replace_spells,
-            items=items,
+            skills=skills,
         )
 
 

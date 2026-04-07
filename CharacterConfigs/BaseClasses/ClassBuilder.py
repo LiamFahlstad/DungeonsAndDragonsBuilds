@@ -5,7 +5,7 @@ import attr
 
 import Definitions
 from CharacterSheetCreator import CharacterSheetData
-from Definitions import CharacterClass
+from Definitions import Ability, CharacterClass
 from Features import Armor, Backgrounds, OriginFeats, Weapons
 from Features.ClassFeatures import SpellSlots
 from Items import Items
@@ -259,15 +259,11 @@ class ClassBuilder(ABC):
         base_class_level_features: BaseClassLevelFeatures,
         base_class_level: int,
         replace_spells: Optional[dict[str, str]] = None,
-        spell_casting_ability: Optional[Definitions.Ability] = None,
-        caster_type: Optional[SpellSlots.CasterType] = None,
     ):
         self.base_class = base_class
         self.base_class_level_features = base_class_level_features
         self.base_class_level = base_class_level
         self.replace_spells = replace_spells
-        self.spell_casting_ability = spell_casting_ability
-        self.caster_type = caster_type
 
     @abstractmethod
     def _get_character_sheet_creator_base(self) -> CharacterSheetData:
@@ -282,52 +278,89 @@ class ClassBuilder(ABC):
         return data
 
 
+class NonGenericStarterClassArgs:
+    def __init__(
+        self,
+        base_class: CharacterClass,
+        default_equipment: list[Weapons.AbstractWeapon | Armor.AbstractArmor],
+        saving_throws: SavingThrowsStatBlock,
+        skills: ClassSkillsStatBlock,
+        subclass: str,
+        spell_casting_ability: Optional[Ability] = None,
+        caster_type: Optional[SpellSlots.CasterType] = None,
+        armor_proficiencies: Optional[list[Definitions.ArmorType]] = None,
+    ):
+        self.base_class = base_class
+        self.default_equipment = default_equipment
+        self.saving_throws = saving_throws
+        self.skills = skills
+        self.subclass = subclass
+        self.spell_casting_ability = spell_casting_ability
+        self.caster_type = caster_type
+        self.armor_proficiencies = armor_proficiencies
+
+
 class StarterClassBuilder(ClassBuilder):
 
     def __init__(
         self,
-        base_class: CharacterClass,
+        non_generic_arguments: NonGenericStarterClassArgs,
         base_class_level_features: BaseClassLevelFeatures,
         base_class_level: int,
-        subclass: str,
         abilities: AbilitiesStatBlock,
-        skills: ClassSkillsStatBlock,
         background_ability_bonuses: Backgrounds.FreeBackgroundAbilityBonus,
         background_skill_proficiencies: Backgrounds.FreeBackgroundSkillProficiency,
-        saving_throws: SavingThrowsStatBlock,
         add_default_equipment: bool,
-        default_equipment: list[Weapons.AbstractWeapon | Armor.AbstractArmor],
         origin_feat: OriginFeats.OriginFeat,
-        armor_proficiencies: Optional[list[Definitions.ArmorType]] = None,
         armor: Optional[list[Armor.AbstractArmor]] = None,
         weapons: Optional[list[Weapons.AbstractWeapon]] = None,
         replace_spells: Optional[dict[str, str]] = None,
-        spell_casting_ability: Optional[Definitions.Ability] = None,
-        caster_type: Optional[SpellSlots.CasterType] = None,
         items: Optional[list[tuple[Items.Item, int]]] = None,
     ):
-        self.subclass = subclass
+        self.non_generic_arguments = non_generic_arguments
         self.abilities = abilities
-        self.skills = skills
         self.background_ability_bonuses = background_ability_bonuses
         self.background_skill_proficiencies = background_skill_proficiencies
-        self.saving_throws = saving_throws
         self.add_default_equipment = add_default_equipment
-        self.default_equipment = default_equipment
         self.origin_feat = origin_feat
-        self.armor_proficiencies = armor_proficiencies
         self.armor = armor
         self.weapons = weapons
         self.items = items
 
         super().__init__(
-            base_class=base_class,
+            base_class=non_generic_arguments.base_class,
             base_class_level_features=base_class_level_features,
             base_class_level=base_class_level,
             replace_spells=replace_spells,
-            spell_casting_ability=spell_casting_ability,
-            caster_type=caster_type,
         )
+
+    @property
+    def saving_throws(self) -> SavingThrowsStatBlock:
+        return self.non_generic_arguments.saving_throws
+
+    @property
+    def subclass(self) -> str:
+        return self.non_generic_arguments.subclass
+
+    @property
+    def skills(self) -> ClassSkillsStatBlock:
+        return self.non_generic_arguments.skills
+
+    @property
+    def default_equipment(self) -> list[Weapons.AbstractWeapon | Armor.AbstractArmor]:
+        return self.non_generic_arguments.default_equipment
+
+    @property
+    def spell_casting_ability(self) -> Optional[Ability]:
+        return self.non_generic_arguments.spell_casting_ability
+
+    @property
+    def caster_type(self) -> Optional[SpellSlots.CasterType]:
+        return self.non_generic_arguments.caster_type
+
+    @property
+    def armor_proficiencies(self) -> Optional[list[Definitions.ArmorType]]:
+        return self.non_generic_arguments.armor_proficiencies
 
     def _get_character_sheet_creator_base(self) -> CharacterSheetData:
         data = CharacterSheetData(
@@ -394,9 +427,9 @@ class MulticlassBuilder(ClassBuilder):
             base_class_level_features=base_class_level_features,
             base_class_level=base_class_level,
             replace_spells=replace_spells,
-            spell_casting_ability=spell_casting_ability,
-            caster_type=caster_type,
         )
+        self.spell_casting_ability = spell_casting_ability
+        self.caster_type = caster_type
 
     def _get_character_sheet_creator_base(self) -> CharacterSheetData:
         data = CharacterSheetData(

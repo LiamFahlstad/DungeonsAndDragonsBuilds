@@ -1,6 +1,4 @@
-import Definitions
 from Builds.CharacterBuilder import CharacterBuilder
-from CharacterConfigs.BaseClasses import ClassBuilder
 from CharacterConfigs.BaseClasses.BarbarianBase import (
     BarbarianLevel1,
     BarbarianLevel2,
@@ -23,12 +21,16 @@ from CharacterConfigs.BaseClasses.BarbarianBase import (
     BarbarianLevel19,
     BarbarianLevel20,
 )
+from CharacterConfigs.BaseClasses.ClassBuilder import (
+    BaseClassLevelFeatures,
+    StarterClassBuilder,
+)
 from CharacterConfigs.SubClasses.BarbarianPathOfTheBerserker import (
     BarbarianBerserkerLevel3,
     BarbarianBerserkerLevel6,
     BarbarianBerserkerLevel10,
     BarbarianBerserkerLevel14,
-    BarbarianBerserkerStarterClassBuilder,
+    BarbarianBerserkerNonGenericStarterClassArgs,
 )
 from Definitions import Ability, Skill
 from Features import Backgrounds, EpicBoon, GeneralFeats, OriginFeats, Weapons
@@ -38,8 +40,21 @@ from StatBlocks.SkillsStatBlock import BarbarianSkillsStatBlock
 
 
 def get_starter_class_builder():
-    return BarbarianBerserkerStarterClassBuilder(
-        barbarian_level=3,
+    return StarterClassBuilder(
+        non_generic_arguments=BarbarianBerserkerNonGenericStarterClassArgs(
+            skills=BarbarianSkillsStatBlock(
+                proficiencies={
+                    Skill.ANIMAL_HANDLING: False,
+                    Skill.ATHLETICS: True,
+                    Skill.INSIGHT: True,
+                    Skill.INTIMIDATION: False,
+                    Skill.NATURE: False,
+                    Skill.PERCEPTION: False,
+                    Skill.SURVIVAL: False,
+                }
+            ),
+        ),
+        base_class_level=3,
         # Distribute 15, 14, 13, 12, 10, 8 among your abilities.
         abilities=StandardArrayAbilitiesStatBlock(
             strength=15,
@@ -48,18 +63,6 @@ def get_starter_class_builder():
             intelligence=8,
             wisdom=12,
             charisma=10,
-        ),
-        # Choose two skills to be proficient in
-        barbarian_skills=BarbarianSkillsStatBlock(
-            proficiencies={
-                Skill.ANIMAL_HANDLING: False,
-                Skill.ATHLETICS: True,
-                Skill.INSIGHT: True,
-                Skill.INTIMIDATION: False,
-                Skill.NATURE: False,
-                Skill.PERCEPTION: False,
-                Skill.SURVIVAL: False,
-            }
         ),
         background_ability_bonuses=Backgrounds.FreeBackgroundAbilityBonus(
             [
@@ -79,7 +82,7 @@ def get_starter_class_builder():
         weapons=[
             Weapons.Maul(player_is_proficient=True, player_has_mastery=True),
         ],
-        barbarian_level_features=ClassBuilder.BaseClassLevelFeatures(
+        base_class_level_features=BaseClassLevelFeatures(
             base_class_features_by_level={
                 1: BarbarianLevel1(
                     weapon_mastery_1=Weapons.LightCrossbow(),
@@ -87,7 +90,7 @@ def get_starter_class_builder():
                 ),
                 2: BarbarianLevel2(),
                 3: BarbarianLevel3(
-                    skill=Definitions.Skill.PERCEPTION,
+                    skill=Skill.PERCEPTION,
                 ),
                 4: BarbarianLevel4(
                     general_feat=GeneralFeats.Sentinel(

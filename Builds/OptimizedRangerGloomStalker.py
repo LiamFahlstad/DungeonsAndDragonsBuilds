@@ -1,5 +1,6 @@
 from Builds.CharacterBuilder import CharacterBuilder
 from CharacterConfigs.BaseClasses import ClassBuilder
+from CharacterConfigs.BaseClasses.ClassBuilder import StarterClassBuilder
 from CharacterConfigs.BaseClasses.RangerBase import (
     RangerLevel1,
     RangerLevel2,
@@ -7,7 +8,7 @@ from CharacterConfigs.BaseClasses.RangerBase import (
 )
 from CharacterConfigs.SubClasses.RangerGloomStalker import (
     RangerGloomStalkerLevel3,
-    RangerGloomStalkerStarterClassBuilder,
+    RangerGloomStalkerNonGenericStarterClassArgs,
 )
 from Definitions import Ability, Skill
 from Features import Backgrounds, FightingStyles, OriginFeats, Weapons
@@ -19,8 +20,22 @@ from StatBlocks.SkillsStatBlock import RangerSkillsStatBlock
 
 
 def get_starter_class_builder():
-    return RangerGloomStalkerStarterClassBuilder(
-        ranger_level=3,
+    return StarterClassBuilder(
+        non_generic_arguments=RangerGloomStalkerNonGenericStarterClassArgs(
+            skills=RangerSkillsStatBlock(
+                proficiencies={
+                    Skill.ANIMAL_HANDLING: False,
+                    Skill.ATHLETICS: False,
+                    Skill.INSIGHT: False,
+                    Skill.INVESTIGATION: True,
+                    Skill.NATURE: False,
+                    Skill.PERCEPTION: True,
+                    Skill.STEALTH: True,
+                    Skill.SURVIVAL: False,
+                }
+            ),
+        ),
+        base_class_level=3,
         # Distribute 15, 14, 13, 12, 10, 8 among your abilities.
         abilities=StandardArrayAbilitiesStatBlock(
             strength=8,
@@ -29,19 +44,6 @@ def get_starter_class_builder():
             intelligence=12,
             wisdom=14,
             charisma=10,
-        ),
-        # Choose two skills to be proficient in
-        ranger_skills=RangerSkillsStatBlock(
-            proficiencies={
-                Skill.ANIMAL_HANDLING: False,
-                Skill.ATHLETICS: False,
-                Skill.INSIGHT: False,
-                Skill.INVESTIGATION: True,
-                Skill.NATURE: False,
-                Skill.PERCEPTION: True,
-                Skill.STEALTH: True,
-                Skill.SURVIVAL: False,
-            }
         ),
         background_ability_bonuses=Backgrounds.FreeBackgroundAbilityBonus(
             [
@@ -59,7 +61,7 @@ def get_starter_class_builder():
         origin_feat=OriginFeats.Alert(),
         armor=[],
         weapons=[],
-        ranger_level_features=ClassBuilder.BaseClassLevelFeatures(
+        base_class_level_features=ClassBuilder.BaseClassLevelFeatures(
             base_class_features_by_level={
                 1: RangerLevel1(
                     weapon_mastery_1=Weapons.Longbow(),

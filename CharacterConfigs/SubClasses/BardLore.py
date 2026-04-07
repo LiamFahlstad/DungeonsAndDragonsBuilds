@@ -6,14 +6,11 @@ import Spells.Definitions as SpellDefinitions
 from CharacterConfigs.BaseClasses import ClassBuilder
 from CharacterConfigs.BaseClasses.BardBase import (
     BardMulticlassBuilder,
-    BardStarterClassBuilder,
+    BardNonGenericStarterClassArgs,
 )
 from CharacterSheetCreator import CharacterSheetData
 from Definitions import BardSubclass, Skill
-from Features import Armor, Backgrounds, OriginFeats, Weapons
 from Features.ClassFeatures import BardFeatures
-from Items import Items
-from StatBlocks.AbilitiesStatBlock import AbilitiesStatBlock
 from StatBlocks.SkillsStatBlock import BardSkillsStatBlock
 
 
@@ -71,37 +68,14 @@ class BardLoreLevel14(ClassBuilder.SubclassLevel14):
         return data
 
 
-class BardLoreStarterClassBuilder(BardStarterClassBuilder):
-
+class BardLoreNonGenericStarterClassArgs(BardNonGenericStarterClassArgs):
     def __init__(
         self,
-        bard_level_features: ClassBuilder.BaseClassLevelFeatures,
-        bard_level: int,
-        abilities: AbilitiesStatBlock,
-        bard_skills: BardSkillsStatBlock,
-        background_ability_bonuses: Backgrounds.FreeBackgroundAbilityBonus,
-        background_skill_proficiencies: Backgrounds.FreeBackgroundSkillProficiency,
-        add_default_equipment: bool,
-        origin_feat: OriginFeats.OriginFeat,
-        armor: Optional[list[Armor.AbstractArmor]] = None,
-        weapons: Optional[list[Weapons.AbstractWeapon]] = None,
-        replace_spells: Optional[dict[str, str]] = None,
-        items: Optional[list[tuple[Items.Item, int]]] = None,
+        skills: BardSkillsStatBlock,
     ):
         super().__init__(
-            bard_level_features=bard_level_features,
-            bard_level=bard_level,
             subclass=BardSubclass.LORE.value,
-            abilities=abilities,
-            bard_skills=bard_skills,
-            background_ability_bonuses=background_ability_bonuses,
-            background_skill_proficiencies=background_skill_proficiencies,
-            add_default_equipment=add_default_equipment,
-            origin_feat=origin_feat,
-            armor=armor,
-            weapons=weapons,
-            replace_spells=replace_spells,
-            items=items,
+            skills=skills,
         )
 
 

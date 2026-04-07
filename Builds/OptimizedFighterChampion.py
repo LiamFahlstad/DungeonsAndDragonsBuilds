@@ -1,5 +1,6 @@
 from Builds.CharacterBuilder import CharacterBuilder
 from CharacterConfigs.BaseClasses import ClassBuilder
+from CharacterConfigs.BaseClasses.ClassBuilder import StarterClassBuilder
 from CharacterConfigs.BaseClasses.FighterBase import (
     FighterLevel1,
     FighterLevel2,
@@ -9,7 +10,7 @@ from CharacterConfigs.BaseClasses.FighterBase import (
 )
 from CharacterConfigs.SubClasses.FighterChampion import (
     FighterChampionLevel3,
-    FighterChampionStarterClassBuilder,
+    FighterChampionNonGenericStarterClassArgs,
 )
 from Definitions import Ability, Skill
 from Features import (
@@ -28,8 +29,22 @@ from StatBlocks.SkillsStatBlock import FighterSkillsStatBlock
 
 
 def get_starter_class_builder():
-    return FighterChampionStarterClassBuilder(
-        fighter_level=3,
+    return StarterClassBuilder(
+        non_generic_arguments=FighterChampionNonGenericStarterClassArgs(
+            skills=FighterSkillsStatBlock(
+                proficiencies={
+                    Skill.ACROBATICS: True,
+                    Skill.ANIMAL_HANDLING: True,
+                    Skill.ATHLETICS: False,
+                    Skill.HISTORY: False,
+                    Skill.INSIGHT: False,
+                    Skill.INTIMIDATION: False,
+                    Skill.PERCEPTION: False,
+                    Skill.SURVIVAL: False,
+                }
+            ),
+        ),
+        base_class_level=3,
         # Distribute 15, 14, 13, 12, 10, 8 among your abilities.
         abilities=StandardArrayAbilitiesStatBlock(
             strength=15,
@@ -38,19 +53,6 @@ def get_starter_class_builder():
             intelligence=8,
             wisdom=12,
             charisma=10,
-        ),
-        # Choose two skills to be proficient in
-        fighter_skills=FighterSkillsStatBlock(
-            proficiencies={
-                Skill.ACROBATICS: True,
-                Skill.ANIMAL_HANDLING: True,
-                Skill.ATHLETICS: False,
-                Skill.HISTORY: False,
-                Skill.INSIGHT: False,
-                Skill.INTIMIDATION: False,
-                Skill.PERCEPTION: False,
-                Skill.SURVIVAL: False,
-            }
         ),
         background_ability_bonuses=Backgrounds.FreeBackgroundAbilityBonus(
             [
@@ -76,7 +78,7 @@ def get_starter_class_builder():
         ],
         items=Packs.DungeoneersPack().get_items()
         + [(Items.RobeOfLevitation(), 1), (Items.HobbyHorse(), 1)],
-        fighter_level_features=ClassBuilder.BaseClassLevelFeatures(
+        base_class_level_features=ClassBuilder.BaseClassLevelFeatures(
             base_class_features_by_level={
                 1: FighterLevel1(
                     weapon_mastery_1=Weapons.Shortsword(),

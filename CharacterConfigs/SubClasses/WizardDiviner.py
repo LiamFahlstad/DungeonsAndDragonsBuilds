@@ -5,13 +5,11 @@ import attr
 from CharacterConfigs.BaseClasses import ClassBuilder
 from CharacterConfigs.BaseClasses.WizardBase import (
     WizardMulticlassBuilder,
-    WizardStarterClassBuilder,
+    WizardNonGenericStarterClassArgs,
 )
 from CharacterSheetCreator import CharacterSheetData
 from Definitions import WizardSubclass
-from Features import Armor, Backgrounds, OriginFeats, Weapons
 from Features.ClassFeatures import WizardFeatures
-from Items import Items
 from Spells.Definitions import (
     DivinationLevel1Spells,
     DivinationLevel2Spells,
@@ -23,7 +21,6 @@ from Spells.Definitions import (
     DivinationLevel8Spells,
     DivinationLevel9Spells,
 )
-from StatBlocks.AbilitiesStatBlock import AbilitiesStatBlock
 from StatBlocks.SkillsStatBlock import WizardSkillsStatBlock
 
 DivinationSpellsUpTo2: TypeAlias = DivinationLevel1Spells | DivinationLevel2Spells
@@ -176,37 +173,14 @@ class WizardDivinerLevel17(ClassBuilder.SubclassLevel17):
         return data
 
 
-class WizardDivinerStarterClassBuilder(WizardStarterClassBuilder):
-
+class WizardDivinerNonGenericStarterClassArgs(WizardNonGenericStarterClassArgs):
     def __init__(
         self,
-        wizard_level_features: ClassBuilder.BaseClassLevelFeatures,
-        wizard_level: int,
-        abilities: AbilitiesStatBlock,
-        wizard_skills: WizardSkillsStatBlock,
-        background_ability_bonuses: Backgrounds.FreeBackgroundAbilityBonus,
-        background_skill_proficiencies: Backgrounds.FreeBackgroundSkillProficiency,
-        add_default_equipment: bool,
-        origin_feat: OriginFeats.OriginFeat,
-        armor: Optional[list[Armor.AbstractArmor]] = None,
-        weapons: Optional[list[Weapons.AbstractWeapon]] = None,
-        replace_spells: Optional[dict[str, str]] = None,
-        items: Optional[list[tuple[Items.Item, int]]] = None,
+        skills: WizardSkillsStatBlock,
     ):
         super().__init__(
-            wizard_level_features=wizard_level_features,
-            wizard_level=wizard_level,
-            subclass=WizardSubclass.BLADESINGER.value,
-            abilities=abilities,
-            wizard_skills=wizard_skills,
-            background_ability_bonuses=background_ability_bonuses,
-            background_skill_proficiencies=background_skill_proficiencies,
-            add_default_equipment=add_default_equipment,
-            origin_feat=origin_feat,
-            armor=armor,
-            weapons=weapons,
-            replace_spells=replace_spells,
-            items=items,
+            subclass=WizardSubclass.DIVINER.value,
+            skills=skills,
         )
 
 

@@ -165,6 +165,7 @@ class PaladinSubclass(str, Enum):
     OATH_OF_VENGEANCE = "Oath of Vengeance"
     OATH_OF_CONQUEST = "Oath of Conquest"
     OATH_OF_REDEMPTION = "Oath of Redemption"
+    OATH_OF_GENIES = "Oath of Genies"
 
 
 class ClericSubclass(str, Enum):
@@ -225,6 +226,8 @@ class FighterSubclass(str, Enum):
 class RangerSubclass(str, Enum):
     BEAST_MASTER = "Beast Master"
     HUNTER = "Hunter"
+    FEY_WANDERER = "Fey Wanderer"
+    GLOOM_STALKER = "Gloom Stalker"
 
 
 class MonkSubclass(str, Enum):

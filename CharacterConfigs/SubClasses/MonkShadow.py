@@ -5,14 +5,11 @@ import attr
 from CharacterConfigs.BaseClasses import ClassBuilder
 from CharacterConfigs.BaseClasses.MonkBase import (
     MonkMulticlassBuilder,
-    MonkStarterClassBuilder,
+    MonkNonGenericStarterClassArgs,
 )
 from CharacterSheetCreator import CharacterSheetData
 from Definitions import MonkSubclass
-from Features import Armor, Backgrounds, OriginFeats, Weapons
 from Features.ClassFeatures import MonkFeatures
-from Items import Items
-from StatBlocks.AbilitiesStatBlock import AbilitiesStatBlock
 from StatBlocks.SkillsStatBlock import MonkSkillsStatBlock
 
 
@@ -67,37 +64,14 @@ class MonkShadowLevel17(ClassBuilder.SubclassLevel17):
         return data
 
 
-class MonkShadowStarterClassBuilder(MonkStarterClassBuilder):
-
+class MonkShadowNonGenericStarterClassArgs(MonkNonGenericStarterClassArgs):
     def __init__(
         self,
-        monk_level_features: ClassBuilder.BaseClassLevelFeatures,
-        monk_level: int,
-        abilities: AbilitiesStatBlock,
-        monk_skills: MonkSkillsStatBlock,
-        background_ability_bonuses: Backgrounds.FreeBackgroundAbilityBonus,
-        background_skill_proficiencies: Backgrounds.FreeBackgroundSkillProficiency,
-        add_default_equipment: bool,
-        origin_feat: OriginFeats.OriginFeat,
-        armor: Optional[list[Armor.AbstractArmor]] = None,
-        weapons: Optional[list[Weapons.AbstractWeapon]] = None,
-        replace_spells: Optional[dict[str, str]] = None,
-        items: Optional[list[tuple[Items.Item, int]]] = None,
+        skills: MonkSkillsStatBlock,
     ):
         super().__init__(
-            monk_level_features=monk_level_features,
-            monk_level=monk_level,
             subclass=MonkSubclass.SHADOW.value,
-            abilities=abilities,
-            monk_skills=monk_skills,
-            background_ability_bonuses=background_ability_bonuses,
-            background_skill_proficiencies=background_skill_proficiencies,
-            add_default_equipment=add_default_equipment,
-            origin_feat=origin_feat,
-            armor=armor,
-            weapons=weapons,
-            replace_spells=replace_spells,
-            items=items,
+            skills=skills,
         )
 
 

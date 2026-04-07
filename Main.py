@@ -1,6 +1,5 @@
 import Definitions
 from Builds import (
-    MutliclassTest,
     OptimizedBarbarianBerserker,
     OptimizedBarbarianWorldTree,
     OptimizedBardGlamour,
@@ -28,12 +27,11 @@ class BuildSelector:
     @staticmethod
     def get_build(build_name: str) -> CharacterBuilder:
         builds = {
-            "MulticlassTest": MutliclassTest.MutliclassTestCharacterBuilder(),
+            # "MulticlassTest": MutliclassTest.MutliclassTestCharacterBuilder(),
             "OptimizedBarbarianBerserker": OptimizedBarbarianBerserker.OptimizedBarbarianBerserkerCharacterBuilder(),
             "OptimizedBarbarianWorldTree": OptimizedBarbarianWorldTree.OptimizedBarbarianWorldTreeCharacterBuilder(),
             "OptimizedBardGlamour": OptimizedBardGlamour.OptimizedBardGlamourCharacterBuilder(),
             "OptimizedBardLore": OptimizedBardLore.OptimizedLoreBardCharacterBuilder(),
-            "OptimizedBeastMaster": OptimizedRangerBeastMaster.OptimizedRangerBeastMasterCharacterBuilder(),
             "OptimizedClericKnowledge": OptimizedClericKnowledge.OptimizedClericKnowledgeCharacterBuilder(),
             "OptimizedClericLight": OptimizedClericLight.OptimizedClericLightCharacterBuilder(),
             "OptimizedDruidMoon": OptimizedDruidMoon.OptimizedDruidMoonCharacterBuilder(),
@@ -42,10 +40,11 @@ class BuildSelector:
             "OptimizedMonkShadow": OptimizedMonkShadow.OptimizedMonkShadowCharacterBuilder(),
             "OptimizedPaladinGlory": OptimizedPaladinGlory.OptimizedPaladinGloryCharacterBuilder(),
             "OptimizedPaladinVengeance": OptimizedPaladinVengeance.OptimizedPaladinVengeanceCharacterBuilder(),
+            "OptimizedRangerBeastMaster": OptimizedRangerBeastMaster.OptimizedRangerBeastMasterCharacterBuilder(),
             "OptimizedRangerGloomStalker": OptimizedRangerGloomStalker.OptimizedRangerGloomStalkerCharacterBuilder(),
             "OptimizedRogueAssassin": OptimizedRogueAssassin.OptimizedRogueAssassinCharacterBuilder(),
-            "OptimizedWarlockGishArchfey": OptimizedWarlockGishArchfey.OptimizedWarlockArchfeyCharacterBuilder(),
             "OptimizedWarlockArchfey": OptimizedWarlockArchfey.OptimizedWarlockArchfeyCharacterBuilder(),
+            "OptimizedWarlockGishArchfey": OptimizedWarlockGishArchfey.OptimizedWarlockArchfeyCharacterBuilder(),
             "OptimizedWizardBladesinger": OptimizedWizardBladesinger.OptimizedWizardBladesingerCharacterBuilder(),
             "OptimizedWizardDiviner": OptimizedWizardDiviner.OptimizedWizardDivinerCharacterBuilder(),
         }
@@ -55,12 +54,11 @@ class BuildSelector:
 if __name__ == "__main__":
     skill_config = Definitions.SkillConfig.DEFAULT
     build_names = [
-        "MulticlassTest",
+        # "MulticlassTest",
         "OptimizedBarbarianBerserker",
         "OptimizedBarbarianWorldTree",
         "OptimizedBardGlamour",
         "OptimizedBardLore",
-        "OptimizedBeastMaster",
         "OptimizedClericKnowledge",
         "OptimizedClericLight",
         "OptimizedDruidMoon",
@@ -69,10 +67,11 @@ if __name__ == "__main__":
         "OptimizedMonkShadow",
         "OptimizedPaladinGlory",
         "OptimizedPaladinVengeance",
+        "OptimizedRangerBeastMaster",
         "OptimizedRangerGloomStalker",
         "OptimizedRogueAssassin",
-        "OptimizedWarlockGishArchfey",
         "OptimizedWarlockArchfey",
+        "OptimizedWarlockGishArchfey",
         "OptimizedWizardBladesinger",
         "OptimizedWizardDiviner",
     ]

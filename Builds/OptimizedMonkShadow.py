@@ -1,10 +1,11 @@
 import Definitions
 from Builds.CharacterBuilder import CharacterBuilder
 from CharacterConfigs.BaseClasses import ClassBuilder
+from CharacterConfigs.BaseClasses.ClassBuilder import StarterClassBuilder
 from CharacterConfigs.BaseClasses.MonkBase import MonkLevel1, MonkLevel2, MonkLevel3
 from CharacterConfigs.SubClasses.MonkShadow import (
     MonkShadowLevel3,
-    MonkShadowStarterClassBuilder,
+    MonkShadowNonGenericStarterClassArgs,
 )
 from Definitions import Ability, Skill
 from Features import Backgrounds, OriginFeats
@@ -14,8 +15,20 @@ from StatBlocks.SkillsStatBlock import MonkSkillsStatBlock
 
 
 def get_starter_class_builder():
-    return MonkShadowStarterClassBuilder(
-        monk_level=3,
+    return StarterClassBuilder(
+        non_generic_arguments=MonkShadowNonGenericStarterClassArgs(
+            skills=MonkSkillsStatBlock(
+                proficiencies={
+                    Skill.ACROBATICS: True,
+                    Skill.ATHLETICS: False,
+                    Skill.HISTORY: False,
+                    Skill.INSIGHT: False,
+                    Skill.RELIGION: False,
+                    Skill.STEALTH: True,
+                }
+            ),
+        ),
+        base_class_level=3,
         # Distribute 15, 14, 13, 12, 10, 8 among your abilities.
         abilities=StandardArrayAbilitiesStatBlock(
             strength=8,
@@ -24,17 +37,6 @@ def get_starter_class_builder():
             intelligence=12,
             wisdom=14,
             charisma=10,
-        ),
-        # Choose two skills to be proficient in
-        monk_skills=MonkSkillsStatBlock(
-            proficiencies={
-                Skill.ACROBATICS: True,
-                Skill.ATHLETICS: False,
-                Skill.HISTORY: False,
-                Skill.INSIGHT: False,
-                Skill.RELIGION: False,
-                Skill.STEALTH: True,
-            }
         ),
         background_ability_bonuses=Backgrounds.FreeBackgroundAbilityBonus(
             [
@@ -52,7 +54,7 @@ def get_starter_class_builder():
         origin_feat=OriginFeats.Alert(),
         armor=[],
         weapons=[],
-        monk_level_features=ClassBuilder.BaseClassLevelFeatures(
+        base_class_level_features=ClassBuilder.BaseClassLevelFeatures(
             base_class_features_by_level={
                 1: MonkLevel1(),
                 2: MonkLevel2(),

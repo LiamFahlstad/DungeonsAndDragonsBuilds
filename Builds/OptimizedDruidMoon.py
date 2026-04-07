@@ -1,5 +1,6 @@
 from Builds.CharacterBuilder import CharacterBuilder
 from CharacterConfigs.BaseClasses import ClassBuilder
+from CharacterConfigs.BaseClasses.ClassBuilder import StarterClassBuilder
 from CharacterConfigs.BaseClasses.DruidBase import (
     DruidLevel1,
     DruidLevel2,
@@ -30,7 +31,7 @@ from CharacterConfigs.SubClasses.DruidMoon import (
     DruidMoonLevel9,
     DruidMoonLevel10,
     DruidMoonLevel14,
-    DruidMoonStarterClassBuilder,
+    DruidMoonNonGenericStarterClassArgs,
 )
 from Definitions import Ability, Skill
 from Features import Backgrounds, EpicBoon, GeneralFeats, OriginFeats
@@ -52,8 +53,22 @@ from StatBlocks.SkillsStatBlock import DruidSkillsStatBlock
 
 
 def get_starter_class_builder():
-    return DruidMoonStarterClassBuilder(
-        druid_level=3,
+    return StarterClassBuilder(
+        non_generic_arguments=DruidMoonNonGenericStarterClassArgs(
+            skills=DruidSkillsStatBlock(
+                proficiencies={
+                    Skill.ARCANA: True,
+                    Skill.ANIMAL_HANDLING: False,
+                    Skill.INSIGHT: False,
+                    Skill.MEDICINE: False,
+                    Skill.NATURE: False,
+                    Skill.PERCEPTION: True,
+                    Skill.RELIGION: False,
+                    Skill.SURVIVAL: False,
+                }
+            ),
+        ),
+        base_class_level=3,
         # Distribute 15, 14, 13, 12, 10, 8 among your abilities.
         abilities=StandardArrayAbilitiesStatBlock(
             strength=8,
@@ -62,19 +77,6 @@ def get_starter_class_builder():
             intelligence=10,
             wisdom=15,
             charisma=12,
-        ),
-        # Choose two skills to be proficient in
-        druid_skills=DruidSkillsStatBlock(
-            proficiencies={
-                Skill.ARCANA: True,
-                Skill.ANIMAL_HANDLING: False,
-                Skill.INSIGHT: False,
-                Skill.MEDICINE: False,
-                Skill.NATURE: False,
-                Skill.PERCEPTION: True,
-                Skill.RELIGION: False,
-                Skill.SURVIVAL: False,
-            }
         ),
         background_ability_bonuses=Backgrounds.FreeBackgroundAbilityBonus(
             [
@@ -92,7 +94,7 @@ def get_starter_class_builder():
         origin_feat=OriginFeats.Tough(),
         armor=[],
         weapons=[],
-        druid_level_features=ClassBuilder.BaseClassLevelFeatures(
+        base_class_level_features=ClassBuilder.BaseClassLevelFeatures(
             base_class_features_by_level={
                 1: DruidLevel1(
                     cantrip_1=DruidLevel0Spells.THUNDERCLAP,

@@ -1,5 +1,6 @@
 from Builds.CharacterBuilder import CharacterBuilder
 from CharacterConfigs.BaseClasses import ClassBuilder
+from CharacterConfigs.BaseClasses.ClassBuilder import StarterClassBuilder
 from CharacterConfigs.BaseClasses.WarlockBase import (
     WarlockLevel1,
     WarlockLevel2,
@@ -10,7 +11,7 @@ from CharacterConfigs.BaseClasses.WarlockBase import (
 from CharacterConfigs.SubClasses.WarlockArchfey import (
     ArchfeyWarlockLevel3,
     ArchfeyWarlockLevel5,
-    ArchfeyWarlockStarterClassBuilder,
+    WarlockArchfeyNonGenericStarterClassArgs,
 )
 from Definitions import Ability, Skill
 from Features import Backgrounds, GeneralFeats, OriginFeats
@@ -31,8 +32,21 @@ from StatBlocks.SkillsStatBlock import WarlockSkillsStatBlock
 
 
 def get_starter_class_builder():
-    return ArchfeyWarlockStarterClassBuilder(
-        warlock_level=3,
+    return StarterClassBuilder(
+        non_generic_arguments=WarlockArchfeyNonGenericStarterClassArgs(
+            skills=WarlockSkillsStatBlock(
+                proficiencies={
+                    Skill.ARCANA: True,
+                    Skill.DECEPTION: False,
+                    Skill.HISTORY: True,
+                    Skill.INTIMIDATION: False,
+                    Skill.INVESTIGATION: False,
+                    Skill.NATURE: False,
+                    Skill.RELIGION: False,
+                }
+            ),
+        ),
+        base_class_level=3,
         # Distribute 15, 14, 13, 12, 10, 8 among your abilities.
         abilities=StandardArrayAbilitiesStatBlock(
             strength=8,
@@ -41,18 +55,6 @@ def get_starter_class_builder():
             intelligence=12,
             wisdom=13,
             charisma=15,
-        ),
-        # Choose two skills to be proficient in
-        warlock_skills=WarlockSkillsStatBlock(
-            proficiencies={
-                Skill.ARCANA: True,
-                Skill.DECEPTION: False,
-                Skill.HISTORY: True,
-                Skill.INTIMIDATION: False,
-                Skill.INVESTIGATION: False,
-                Skill.NATURE: False,
-                Skill.RELIGION: False,
-            }
         ),
         background_ability_bonuses=Backgrounds.FreeBackgroundAbilityBonus(
             [
@@ -70,7 +72,7 @@ def get_starter_class_builder():
         origin_feat=OriginFeats.Lucky(),
         armor=[],
         weapons=[],
-        warlock_level_features=ClassBuilder.BaseClassLevelFeatures(
+        base_class_level_features=ClassBuilder.BaseClassLevelFeatures(
             base_class_features_by_level={
                 1: WarlockLevel1(
                     cantrip_1=WarlockLevel0Spells.ELDRITCH_BLAST,

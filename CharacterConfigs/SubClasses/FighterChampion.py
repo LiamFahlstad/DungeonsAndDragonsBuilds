@@ -5,14 +5,12 @@ import attr
 from CharacterConfigs.BaseClasses import ClassBuilder
 from CharacterConfigs.BaseClasses.FighterBase import (
     FighterMulticlassBuilder,
-    FighterStarterClassBuilder,
+    FighterNonGenericStarterClassArgs,
 )
 from CharacterSheetCreator import CharacterSheetData
 from Definitions import FighterSubclass
-from Features import Armor, Backgrounds, Maneuvers, OriginFeats, Weapons
+from Features import Maneuvers
 from Features.ClassFeatures import FighterFeatures
-from Items import Items
-from StatBlocks.AbilitiesStatBlock import AbilitiesStatBlock
 from StatBlocks.SkillsStatBlock import FighterSkillsStatBlock
 
 
@@ -95,37 +93,14 @@ class FighterChampionLevel18(ClassBuilder.SubclassLevel18):
         return data
 
 
-class FighterChampionStarterClassBuilder(FighterStarterClassBuilder):
-
+class FighterChampionNonGenericStarterClassArgs(FighterNonGenericStarterClassArgs):
     def __init__(
         self,
-        fighter_level_features: ClassBuilder.BaseClassLevelFeatures,
-        fighter_level: int,
-        abilities: AbilitiesStatBlock,
-        fighter_skills: FighterSkillsStatBlock,
-        background_ability_bonuses: Backgrounds.FreeBackgroundAbilityBonus,
-        background_skill_proficiencies: Backgrounds.FreeBackgroundSkillProficiency,
-        add_default_equipment: bool,
-        origin_feat: OriginFeats.OriginFeat,
-        armor: Optional[list[Armor.AbstractArmor]] = None,
-        weapons: Optional[list[Weapons.AbstractWeapon]] = None,
-        replace_spells: Optional[dict[str, str]] = None,
-        items: Optional[list[tuple[Items.Item, int]]] = None,
+        skills: FighterSkillsStatBlock,
     ):
         super().__init__(
-            fighter_level_features=fighter_level_features,
-            fighter_level=fighter_level,
             subclass=FighterSubclass.CHAMPION.value,
-            abilities=abilities,
-            fighter_skills=fighter_skills,
-            background_ability_bonuses=background_ability_bonuses,
-            background_skill_proficiencies=background_skill_proficiencies,
-            add_default_equipment=add_default_equipment,
-            origin_feat=origin_feat,
-            armor=armor,
-            weapons=weapons,
-            replace_spells=replace_spells,
-            items=items,
+            skills=skills,
         )
 
 

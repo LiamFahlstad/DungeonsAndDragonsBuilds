@@ -1,5 +1,6 @@
 from Builds.CharacterBuilder import CharacterBuilder
 from CharacterConfigs.BaseClasses import ClassBuilder
+from CharacterConfigs.BaseClasses.ClassBuilder import StarterClassBuilder
 from CharacterConfigs.BaseClasses.RangerBase import (
     RangerLevel1,
     RangerLevel2,
@@ -9,7 +10,7 @@ from CharacterConfigs.BaseClasses.RangerBase import (
 )
 from CharacterConfigs.SubClasses.RangerBeastMaster import (
     RangerBeastMasterLevel3,
-    RangerBeastMasterStarterClassBuilder,
+    RangerBeastMasterNonGenericStarterClassArgs,
 )
 from Definitions import Ability, Skill
 from Features import Backgrounds, FightingStyles, GeneralFeats, OriginFeats, Weapons
@@ -20,8 +21,22 @@ from StatBlocks.SkillsStatBlock import RangerSkillsStatBlock
 
 
 def get_starter_class_builder():
-    return RangerBeastMasterStarterClassBuilder(
-        ranger_level=5,
+    return StarterClassBuilder(
+        non_generic_arguments=RangerBeastMasterNonGenericStarterClassArgs(
+            skills=RangerSkillsStatBlock(
+                proficiencies={
+                    Skill.ANIMAL_HANDLING: False,
+                    Skill.ATHLETICS: True,
+                    Skill.INSIGHT: False,
+                    Skill.INVESTIGATION: True,
+                    Skill.NATURE: False,
+                    Skill.PERCEPTION: True,
+                    Skill.STEALTH: False,
+                    Skill.SURVIVAL: False,
+                }
+            ),
+        ),
+        base_class_level=3,
         # Distribute 15, 14, 13, 12, 10, 8 among your abilities.
         abilities=StandardArrayAbilitiesStatBlock(
             strength=10,
@@ -30,19 +45,6 @@ def get_starter_class_builder():
             intelligence=14,
             wisdom=13,
             charisma=8,
-        ),
-        # Choose two skills to be proficient in
-        ranger_skills=RangerSkillsStatBlock(
-            proficiencies={
-                Skill.ANIMAL_HANDLING: False,
-                Skill.ATHLETICS: True,
-                Skill.INSIGHT: False,
-                Skill.INVESTIGATION: True,
-                Skill.NATURE: False,
-                Skill.PERCEPTION: True,
-                Skill.STEALTH: False,
-                Skill.SURVIVAL: False,
-            }
         ),
         background_ability_bonuses=Backgrounds.FreeBackgroundAbilityBonus(
             [
@@ -60,7 +62,7 @@ def get_starter_class_builder():
         origin_feat=OriginFeats.Crater(artisans_tools=[]),
         armor=[],
         weapons=[],
-        ranger_level_features=ClassBuilder.BaseClassLevelFeatures(
+        base_class_level_features=ClassBuilder.BaseClassLevelFeatures(
             base_class_features_by_level={
                 1: RangerLevel1(
                     weapon_mastery_1=Weapons.Longbow(),
@@ -95,7 +97,6 @@ def get_starter_class_builder():
         ),
         replace_spells={
             RangerLevel1Spells.ALARM: RangerLevel2Spells.SILENCE,
-            RangerLevel1Spells.LONGSTRIDER: RangerLevel2Spells.BEAST_SENSE,
         },
     )
 
@@ -104,7 +105,7 @@ def get_starter_class_builder():
 
 #     BeastMasterBeastOfTheSky(
 #         wisdom_modifier=character_sheet_data.get_ability_modifier(Ability.WISDOM),
-#         ranger_level=character_sheet_data.get_level_for_class(CharacterClass.RANGER),
+#         base_class_level=character_sheet_data.get_level_for_class(CharacterClass.RANGER),
 #         proficiency_bonus=character_sheet_data.character_level // 4 + 2,
 #         spell_attack_modifier=character_sheet_data.calculate_attack_bonus_for_ability(
 #             Ability.WISDOM

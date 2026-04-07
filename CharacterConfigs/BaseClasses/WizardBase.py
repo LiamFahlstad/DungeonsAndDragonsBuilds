@@ -5,9 +5,8 @@ import attr
 from CharacterConfigs.BaseClasses import ClassBuilder
 from CharacterSheetCreator import CharacterSheetData
 from Definitions import Ability, CharacterClass, Skill
-from Features import Armor, Backgrounds, GeneralFeats, OriginFeats, Weapons
+from Features import GeneralFeats, Weapons
 from Features.ClassFeatures import SpellSlots, WizardFeatures
-from Items import Items
 from Spells.Definitions import (
     WizardLevel0Spells,
     WizardLevel1Spells,
@@ -20,7 +19,6 @@ from Spells.Definitions import (
     WizardLevel8Spells,
     WizardLevel9Spells,
 )
-from StatBlocks.AbilitiesStatBlock import AbilitiesStatBlock
 from StatBlocks.SavingThrowsStatBlock import WizardSavingThrowsStatBlock
 from StatBlocks.SkillsStatBlock import WizardSkillsStatBlock
 
@@ -309,47 +307,24 @@ class WizardLevel20(ClassBuilder.BaseClassLevel20):
         return data
 
 
-class WizardStarterClassBuilder(ClassBuilder.StarterClassBuilder):
-
+class WizardNonGenericStarterClassArgs(ClassBuilder.NonGenericStarterClassArgs):
     def __init__(
         self,
-        wizard_level_features: ClassBuilder.BaseClassLevelFeatures,
-        wizard_level: int,
         subclass: str,
-        abilities: AbilitiesStatBlock,
-        wizard_skills: WizardSkillsStatBlock,
-        background_ability_bonuses: Backgrounds.FreeBackgroundAbilityBonus,
-        background_skill_proficiencies: Backgrounds.FreeBackgroundSkillProficiency,
-        add_default_equipment: bool,
-        origin_feat: OriginFeats.OriginFeat,
-        armor: Optional[list[Armor.AbstractArmor]] = None,
-        weapons: Optional[list[Weapons.AbstractWeapon]] = None,
-        replace_spells: Optional[dict[str, str]] = None,
-        items: Optional[list[tuple[Items.Item, int]]] = None,
+        skills: WizardSkillsStatBlock,
     ):
-        default_equipment = [
-            Weapons.Dagger(player_is_proficient=True),
-            Weapons.Quarterstaff(player_is_proficient=True),
-        ]
         super().__init__(
             base_class=CharacterClass.WIZARD,
-            base_class_level_features=wizard_level_features,
-            base_class_level=wizard_level,
             subclass=subclass,
-            abilities=abilities,
-            skills=wizard_skills,
-            background_ability_bonuses=background_ability_bonuses,
-            background_skill_proficiencies=background_skill_proficiencies,
             saving_throws=WizardSavingThrowsStatBlock(),
-            add_default_equipment=add_default_equipment,
-            default_equipment=default_equipment,
-            origin_feat=origin_feat,
-            armor=armor,
-            weapons=weapons,
-            replace_spells=replace_spells,
+            default_equipment=[
+                Weapons.Dagger(player_is_proficient=True),
+                Weapons.Quarterstaff(player_is_proficient=True),
+            ],
+            skills=skills,
+            armor_proficiencies=None,
             spell_casting_ability=Ability.INTELLIGENCE,
             caster_type=SpellSlots.CasterType.FULL_CASTER,
-            items=items,
         )
 
 

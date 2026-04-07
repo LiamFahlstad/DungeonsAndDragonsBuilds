@@ -3,15 +3,10 @@ from typing import Optional
 import attr
 
 from CharacterConfigs.BaseClasses import ClassBuilder
-from CharacterConfigs.BaseClasses.RangerBase import (
-    RangerMulticlassBuilder,
-    RangerStarterClassBuilder,
-)
+from CharacterConfigs.BaseClasses.RangerBase import RangerMulticlassBuilder
 from CharacterSheetCreator import CharacterSheetData
 from Definitions import RangerSubclass
-from Features import Armor, Backgrounds, OriginFeats, Weapons
 from Features.ClassFeatures import RangerFeatures
-from Items import Items
 from Spells.Definitions import (
     BardLevel4Spells,
     ClericLevel2Spells,
@@ -20,7 +15,6 @@ from Spells.Definitions import (
     WizardLevel3Spells,
     WizardLevel5Spells,
 )
-from StatBlocks.AbilitiesStatBlock import AbilitiesStatBlock
 from StatBlocks.SkillsStatBlock import RangerSkillsStatBlock
 
 
@@ -128,37 +122,14 @@ class HunterRangerLevel20(ClassBuilder.SubclassLevel20):
         return data
 
 
-class HunterRangerStarterClassBuilder(RangerStarterClassBuilder):
-
+class RangerHunterNonGenericStarterClassArgs(RangerNonGenericStarterClassArgs):
     def __init__(
         self,
-        ranger_level_features: ClassBuilder.BaseClassLevelFeatures,
-        ranger_level: int,
-        abilities: AbilitiesStatBlock,
-        ranger_skills: RangerSkillsStatBlock,
-        background_ability_bonuses: Backgrounds.FreeBackgroundAbilityBonus,
-        background_skill_proficiencies: Backgrounds.FreeBackgroundSkillProficiency,
-        add_default_equipment: bool,
-        origin_feat: OriginFeats.OriginFeat,
-        armor: Optional[list[Armor.AbstractArmor]] = None,
-        weapons: Optional[list[Weapons.AbstractWeapon]] = None,
-        replace_spells: Optional[dict[str, str]] = None,
-        items: Optional[list[tuple[Items.Item, int]]] = None,
+        skills: RangerSkillsStatBlock,
     ):
         super().__init__(
-            ranger_level_features=ranger_level_features,
-            ranger_level=ranger_level,
             subclass=RangerSubclass.HUNTER.value,
-            abilities=abilities,
-            ranger_skills=ranger_skills,
-            background_ability_bonuses=background_ability_bonuses,
-            background_skill_proficiencies=background_skill_proficiencies,
-            add_default_equipment=add_default_equipment,
-            origin_feat=origin_feat,
-            armor=armor,
-            weapons=weapons,
-            replace_spells=replace_spells,
-            items=items,
+            skills=skills,
         )
 
 

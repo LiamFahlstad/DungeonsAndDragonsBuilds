@@ -2,20 +2,12 @@ from typing import Optional
 
 import attr
 
+import Definitions
 from CharacterConfigs.BaseClasses import ClassBuilder
 from CharacterSheetCreator import CharacterSheetData
 from Definitions import Ability, ApplyWhen, CharacterClass, Skill
-from Features import (
-    Armor,
-    Backgrounds,
-    EpicBoon,
-    FightingStyles,
-    GeneralFeats,
-    OriginFeats,
-    Weapons,
-)
+from Features import Armor, EpicBoon, FightingStyles, GeneralFeats, Weapons
 from Features.ClassFeatures import RangerFeatures, SpellSlots
-from Items import Items
 from Spells.Definitions import (
     RangerLevel1Spells,
     RangerLevel2Spells,
@@ -23,7 +15,6 @@ from Spells.Definitions import (
     RangerLevel4Spells,
     RangerLevel5Spells,
 )
-from StatBlocks.AbilitiesStatBlock import AbilitiesStatBlock
 from StatBlocks.SavingThrowsStatBlock import RangerSavingThrowsStatBlock
 from StatBlocks.SkillsStatBlock import RangerSkillsStatBlock
 
@@ -285,49 +276,29 @@ class RangerLevel20(ClassBuilder.BaseClassLevel20):
         return data
 
 
-class RangerStarterClassBuilder(ClassBuilder.StarterClassBuilder):
-
+class RangerNonGenericStarterClassArgs(ClassBuilder.NonGenericStarterClassArgs):
     def __init__(
         self,
-        ranger_level_features: ClassBuilder.BaseClassLevelFeatures,
-        ranger_level: int,
         subclass: str,
-        abilities: AbilitiesStatBlock,
-        ranger_skills: RangerSkillsStatBlock,
-        background_ability_bonuses: Backgrounds.FreeBackgroundAbilityBonus,
-        background_skill_proficiencies: Backgrounds.FreeBackgroundSkillProficiency,
-        add_default_equipment: bool,
-        origin_feat: OriginFeats.OriginFeat,
-        armor: Optional[list[Armor.AbstractArmor]] = None,
-        weapons: Optional[list[Weapons.AbstractWeapon]] = None,
-        replace_spells: Optional[dict[str, str]] = None,
-        items: Optional[list[tuple[Items.Item, int]]] = None,
+        skills: RangerSkillsStatBlock,
     ):
-        default_equipment = [
-            Armor.StuddedLeatherArmor(),
-            Weapons.Scimitar(player_is_proficient=True),
-            Weapons.Shortsword(player_is_proficient=True),
-            Weapons.Longbow(player_is_proficient=True),
-        ]
         super().__init__(
             base_class=CharacterClass.RANGER,
-            base_class_level_features=ranger_level_features,
-            base_class_level=ranger_level,
             subclass=subclass,
-            abilities=abilities,
-            skills=ranger_skills,
-            background_ability_bonuses=background_ability_bonuses,
-            background_skill_proficiencies=background_skill_proficiencies,
             saving_throws=RangerSavingThrowsStatBlock(),
-            add_default_equipment=add_default_equipment,
-            default_equipment=default_equipment,
-            origin_feat=origin_feat,
-            armor=armor,
-            weapons=weapons,
-            replace_spells=replace_spells,
+            default_equipment=[
+                Armor.StuddedLeatherArmor(),
+                Weapons.Scimitar(player_is_proficient=True),
+                Weapons.Shortsword(player_is_proficient=True),
+                Weapons.Longbow(player_is_proficient=True),
+            ],
+            skills=skills,
+            armor_proficiencies=[
+                Definitions.ArmorType.LIGHT,
+                Definitions.ArmorType.MEDIUM,
+            ],
             spell_casting_ability=Ability.WISDOM,
             caster_type=SpellSlots.CasterType.HALF_CASTER,
-            items=items,
         )
 
 

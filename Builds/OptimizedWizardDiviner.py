@@ -1,6 +1,7 @@
 import Definitions
 from Builds.CharacterBuilder import CharacterBuilder
 from CharacterConfigs.BaseClasses import ClassBuilder
+from CharacterConfigs.BaseClasses.ClassBuilder import StarterClassBuilder
 from CharacterConfigs.BaseClasses.WizardBase import (
     WizardLevel1,
     WizardLevel2,
@@ -9,7 +10,7 @@ from CharacterConfigs.BaseClasses.WizardBase import (
 )
 from CharacterConfigs.SubClasses.WizardDiviner import (
     WizardDivinerLevel3,
-    WizardDivinerStarterClassBuilder,
+    WizardDivinerNonGenericStarterClassArgs,
 )
 from Definitions import Ability, Skill
 from Features import Backgrounds, GeneralFeats, OriginFeats, Weapons
@@ -20,8 +21,21 @@ from StatBlocks.SkillsStatBlock import WizardSkillsStatBlock
 
 
 def get_starter_class_builder():
-    return WizardDivinerStarterClassBuilder(
-        wizard_level=3,
+    return StarterClassBuilder(
+        non_generic_arguments=WizardDivinerNonGenericStarterClassArgs(
+            skills=WizardSkillsStatBlock(
+                proficiencies={
+                    Skill.ARCANA: True,
+                    Skill.HISTORY: True,
+                    Skill.INSIGHT: False,
+                    Skill.INVESTIGATION: False,
+                    Skill.MEDICINE: False,
+                    Skill.NATURE: False,
+                    Skill.RELIGION: False,
+                }
+            ),
+        ),
+        base_class_level=3,
         # Distribute 15, 14, 13, 12, 10, 8 among your abilities.
         abilities=StandardArrayAbilitiesStatBlock(
             strength=8,
@@ -30,18 +44,6 @@ def get_starter_class_builder():
             intelligence=15,
             wisdom=12,
             charisma=10,
-        ),
-        # Choose two skills to be proficient in
-        wizard_skills=WizardSkillsStatBlock(
-            proficiencies={
-                Skill.ARCANA: True,
-                Skill.HISTORY: True,
-                Skill.INSIGHT: False,
-                Skill.INVESTIGATION: False,
-                Skill.MEDICINE: False,
-                Skill.NATURE: False,
-                Skill.RELIGION: False,
-            }
         ),
         background_ability_bonuses=Backgrounds.FreeBackgroundAbilityBonus(
             [
@@ -63,7 +65,7 @@ def get_starter_class_builder():
                 player_is_proficient=True, ability=Ability.INTELLIGENCE
             ),
         ],
-        wizard_level_features=ClassBuilder.BaseClassLevelFeatures(
+        base_class_level_features=ClassBuilder.BaseClassLevelFeatures(
             base_class_features_by_level={
                 1: WizardLevel1(
                     cantrip_1=SpellDefinitions.WizardLevel0Spells.TRUE_STRIKE,

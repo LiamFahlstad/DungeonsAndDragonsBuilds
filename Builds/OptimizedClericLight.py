@@ -1,5 +1,6 @@
 from Builds.CharacterBuilder import CharacterBuilder
 from CharacterConfigs.BaseClasses import ClassBuilder
+from CharacterConfigs.BaseClasses.ClassBuilder import StarterClassBuilder
 from CharacterConfigs.BaseClasses.ClericBase import (
     ClericLevel1,
     ClericLevel2,
@@ -26,7 +27,7 @@ from CharacterConfigs.SubClasses.ClericLight import (
     ClericLightLevel3,
     ClericLightLevel6,
     ClericLightLevel17,
-    ClericLightStarterClassBuilder,
+    ClericLightNonGenericStarterClassArgs,
 )
 from Definitions import Ability, Skill
 from Features import Backgrounds, EpicBoon, GeneralFeats, OriginFeats
@@ -47,8 +48,19 @@ from StatBlocks.SkillsStatBlock import ClericSkillsStatBlock
 
 
 def get_starter_class_builder():
-    return ClericLightStarterClassBuilder(
-        cleric_level=3,
+    return StarterClassBuilder(
+        non_generic_arguments=ClericLightNonGenericStarterClassArgs(
+            skills=ClericSkillsStatBlock(
+                proficiencies={
+                    Skill.HISTORY: False,
+                    Skill.INSIGHT: False,
+                    Skill.MEDICINE: True,
+                    Skill.PERSUASION: True,
+                    Skill.RELIGION: False,
+                }
+            ),
+        ),
+        base_class_level=3,
         # Distribute 15, 14, 13, 12, 10, 8 among your abilities.
         abilities=StandardArrayAbilitiesStatBlock(
             strength=8,
@@ -57,16 +69,6 @@ def get_starter_class_builder():
             intelligence=10,
             wisdom=15,
             charisma=12,
-        ),
-        # Choose two skills to be proficient in
-        cleric_skills=ClericSkillsStatBlock(
-            proficiencies={
-                Skill.HISTORY: False,
-                Skill.INSIGHT: False,
-                Skill.MEDICINE: True,
-                Skill.PERSUASION: True,
-                Skill.RELIGION: False,
-            }
         ),
         background_ability_bonuses=Backgrounds.FreeBackgroundAbilityBonus(
             [
@@ -84,7 +86,7 @@ def get_starter_class_builder():
         origin_feat=OriginFeats.Tough(),
         armor=[],
         weapons=[],
-        cleric_level_features=ClassBuilder.BaseClassLevelFeatures(
+        base_class_level_features=ClassBuilder.BaseClassLevelFeatures(
             base_class_features_by_level={
                 1: ClericLevel1(
                     cantrip_1=ClericLevel0Spells.GUIDANCE,

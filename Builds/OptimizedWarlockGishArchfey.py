@@ -1,5 +1,6 @@
 from Builds.CharacterBuilder import CharacterBuilder
 from CharacterConfigs.BaseClasses import ClassBuilder
+from CharacterConfigs.BaseClasses.ClassBuilder import StarterClassBuilder
 from CharacterConfigs.BaseClasses.FighterBase import FighterLevel1
 from CharacterConfigs.BaseClasses.WarlockBase import (
     WarlockLevel1,
@@ -9,7 +10,7 @@ from CharacterConfigs.BaseClasses.WarlockBase import (
     WarlockLevel5,
 )
 from CharacterConfigs.SubClasses.FighterBattleMaster import (
-    FighterBattleMasterStarterClassBuilder,
+    FighterBattleMasterNonGenericStarterClassArgs,
 )
 from CharacterConfigs.SubClasses.WarlockArchfey import (
     ArchfeyWarlockLevel3,
@@ -35,8 +36,22 @@ from StatBlocks.SkillsStatBlock import FighterSkillsStatBlock
 
 
 def get_starter_class_builder():
-    return FighterBattleMasterStarterClassBuilder(
-        fighter_level=1,
+    return StarterClassBuilder(
+        non_generic_arguments=FighterBattleMasterNonGenericStarterClassArgs(
+            skills=FighterSkillsStatBlock(
+                proficiencies={
+                    Skill.ACROBATICS: True,
+                    Skill.ANIMAL_HANDLING: False,
+                    Skill.ATHLETICS: True,
+                    Skill.HISTORY: False,
+                    Skill.INSIGHT: False,
+                    Skill.INTIMIDATION: False,
+                    Skill.PERCEPTION: False,
+                    Skill.SURVIVAL: False,
+                }
+            ),
+        ),
+        base_class_level=1,
         # Distribute 15, 14, 13, 12, 10, 8 among your abilities.
         abilities=StandardArrayAbilitiesStatBlock(
             strength=13,
@@ -45,19 +60,6 @@ def get_starter_class_builder():
             intelligence=8,
             wisdom=10,
             charisma=15,
-        ),
-        # Choose two skills to be proficient in
-        fighter_skills=FighterSkillsStatBlock(
-            proficiencies={
-                Skill.ACROBATICS: True,
-                Skill.ANIMAL_HANDLING: False,
-                Skill.ATHLETICS: True,
-                Skill.HISTORY: False,
-                Skill.INSIGHT: False,
-                Skill.INTIMIDATION: False,
-                Skill.PERCEPTION: False,
-                Skill.SURVIVAL: False,
-            }
         ),
         background_ability_bonuses=Backgrounds.FreeBackgroundAbilityBonus(
             [
@@ -80,7 +82,7 @@ def get_starter_class_builder():
                 ability=Ability.CHARISMA,
             ),
         ],
-        fighter_level_features=ClassBuilder.BaseClassLevelFeatures(
+        base_class_level_features=ClassBuilder.BaseClassLevelFeatures(
             base_class_features_by_level={
                 1: FighterLevel1(
                     weapon_mastery_1=Weapons.Longsword(),

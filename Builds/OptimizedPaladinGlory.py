@@ -1,5 +1,6 @@
 from Builds.CharacterBuilder import CharacterBuilder
 from CharacterConfigs.BaseClasses import ClassBuilder
+from CharacterConfigs.BaseClasses.ClassBuilder import StarterClassBuilder
 from CharacterConfigs.BaseClasses.PaladinBase import (
     PaladinLevel1,
     PaladinLevel2,
@@ -31,7 +32,7 @@ from CharacterConfigs.SubClasses.PaladinGlory import (
     PaladinGloryLevel15,
     PaladinGloryLevel17,
     PaladinGloryLevel20,
-    PaladinGloryStarterClassBuilder,
+    PaladinGloryNonGenericStarterClassArgs,
 )
 from Definitions import Ability, Skill
 from Features import Backgrounds, FightingStyles, GeneralFeats, OriginFeats, Weapons
@@ -48,8 +49,20 @@ from StatBlocks.SkillsStatBlock import PaladinSkillsStatBlock
 
 
 def get_starter_class_builder():
-    return PaladinGloryStarterClassBuilder(
-        paladin_level=20,
+    return StarterClassBuilder(
+        non_generic_arguments=PaladinGloryNonGenericStarterClassArgs(
+            skills=PaladinSkillsStatBlock(
+                proficiencies={
+                    Skill.ATHLETICS: True,
+                    Skill.INSIGHT: False,
+                    Skill.INTIMIDATION: False,
+                    Skill.MEDICINE: True,
+                    Skill.PERSUASION: False,
+                    Skill.RELIGION: False,
+                }
+            ),
+        ),
+        base_class_level=20,
         # Distribute 15, 14, 13, 12, 10, 8 among your abilities.
         abilities=StandardArrayAbilitiesStatBlock(
             strength=13,
@@ -58,17 +71,6 @@ def get_starter_class_builder():
             intelligence=12,
             wisdom=8,
             charisma=14,
-        ),
-        # Choose two skills to be proficient in
-        paladin_skills=PaladinSkillsStatBlock(
-            proficiencies={
-                Skill.ATHLETICS: True,
-                Skill.INSIGHT: False,
-                Skill.INTIMIDATION: False,
-                Skill.MEDICINE: True,
-                Skill.PERSUASION: False,
-                Skill.RELIGION: False,
-            }
         ),
         background_ability_bonuses=Backgrounds.FreeBackgroundAbilityBonus(
             [
@@ -86,7 +88,7 @@ def get_starter_class_builder():
         origin_feat=OriginFeats.Tough(),
         armor=[],
         weapons=[],
-        paladin_level_features=ClassBuilder.BaseClassLevelFeatures(
+        base_class_level_features=ClassBuilder.BaseClassLevelFeatures(
             base_class_features_by_level={
                 1: PaladinLevel1(
                     weapon_mastery_1=Weapons.Handaxe(),

@@ -22,11 +22,12 @@ from CharacterConfigs.BaseClasses.BardBase import (
     BardLevel19,
     BardLevel20,
 )
+from CharacterConfigs.BaseClasses.ClassBuilder import StarterClassBuilder
 from CharacterConfigs.SubClasses.BardLore import (
     BardLoreLevel3,
     BardLoreLevel6,
     BardLoreLevel14,
-    BardLoreStarterClassBuilder,
+    BardLoreNonGenericStarterClassArgs,
 )
 from Definitions import Ability, Skill
 from Features import Backgrounds, EpicBoon, GeneralFeats, OriginFeats
@@ -49,8 +50,17 @@ from StatBlocks.SkillsStatBlock import BardSkillsStatBlock
 
 
 def get_starter_class_builder():
-    return BardLoreStarterClassBuilder(
-        bard_level=20,
+    return StarterClassBuilder(
+        non_generic_arguments=BardLoreNonGenericStarterClassArgs(
+            skills=BardSkillsStatBlock(
+                proficiencies={
+                    Skill.PERFORMANCE: True,
+                    Skill.PERSUASION: True,
+                    Skill.DECEPTION: True,
+                }
+            ),
+        ),
+        base_class_level=20,
         # Distribute 15, 14, 13, 12, 10, 8 among your abilities.
         abilities=StandardArrayAbilitiesStatBlock(
             strength=8,
@@ -59,14 +69,6 @@ def get_starter_class_builder():
             intelligence=10,
             wisdom=12,
             charisma=15,
-        ),
-        # Choose two skills to be proficient in
-        bard_skills=BardSkillsStatBlock(
-            proficiencies={
-                Skill.PERFORMANCE: True,
-                Skill.PERSUASION: True,
-                Skill.DECEPTION: True,
-            }
         ),
         background_ability_bonuses=Backgrounds.FreeBackgroundAbilityBonus(
             [
@@ -84,7 +86,7 @@ def get_starter_class_builder():
         origin_feat=OriginFeats.Tough(),
         armor=[],
         weapons=[],
-        bard_level_features=ClassBuilder.BaseClassLevelFeatures(
+        base_class_level_features=ClassBuilder.BaseClassLevelFeatures(
             base_class_features_by_level={
                 1: BardLevel1(
                     cantrip_1=BardLevel0Spells.THUNDERCLAP,

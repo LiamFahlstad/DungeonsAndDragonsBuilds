@@ -5,10 +5,8 @@ import attr
 from CharacterConfigs.BaseClasses import ClassBuilder
 from CharacterSheetCreator import CharacterSheetData
 from Definitions import Ability, CharacterClass
-from Features import Armor, Backgrounds, EpicBoon, GeneralFeats, OriginFeats, Weapons
+from Features import EpicBoon, GeneralFeats, Weapons
 from Features.ClassFeatures import MonkFeatures
-from Items import Items
-from StatBlocks.AbilitiesStatBlock import AbilitiesStatBlock
 from StatBlocks.SavingThrowsStatBlock import MonkSavingThrowsStatBlock
 from StatBlocks.SkillsStatBlock import MonkSkillsStatBlock
 
@@ -238,46 +236,22 @@ class MonkLevel20(ClassBuilder.BaseClassLevel20):
         return data
 
 
-class MonkStarterClassBuilder(ClassBuilder.StarterClassBuilder):
-
+class MonkNonGenericStarterClassArgs(ClassBuilder.NonGenericStarterClassArgs):
     def __init__(
         self,
-        monk_level_features: ClassBuilder.BaseClassLevelFeatures,
-        monk_level: int,
         subclass: str,
-        abilities: AbilitiesStatBlock,
-        monk_skills: MonkSkillsStatBlock,
-        background_ability_bonuses: Backgrounds.FreeBackgroundAbilityBonus,
-        background_skill_proficiencies: Backgrounds.FreeBackgroundSkillProficiency,
-        add_default_equipment: bool,
-        origin_feat: OriginFeats.OriginFeat,
-        armor: Optional[list[Armor.AbstractArmor]] = None,
-        weapons: Optional[list[Weapons.AbstractWeapon]] = None,
-        replace_spells: Optional[dict[str, str]] = None,
-        items: Optional[list[tuple[Items.Item, int]]] = None,
+        skills: MonkSkillsStatBlock,
     ):
-        default_equipment = [
-            Weapons.Spear(player_is_proficient=True),
-            Weapons.Dagger(player_is_proficient=True),
-        ]
         super().__init__(
             base_class=CharacterClass.MONK,
-            base_class_level_features=monk_level_features,
-            base_class_level=monk_level,
             subclass=subclass,
-            abilities=abilities,
-            skills=monk_skills,
-            background_ability_bonuses=background_ability_bonuses,
-            background_skill_proficiencies=background_skill_proficiencies,
             saving_throws=MonkSavingThrowsStatBlock(),
-            add_default_equipment=add_default_equipment,
-            default_equipment=default_equipment,
-            origin_feat=origin_feat,
-            armor_proficiencies=[],
-            armor=armor,
-            weapons=weapons,
-            replace_spells=replace_spells,
-            spell_casting_ability=Ability.WISDOM,
+            default_equipment=[
+                Weapons.Spear(player_is_proficient=True),
+                Weapons.Dagger(player_is_proficient=True),
+            ],
+            skills=skills,
+            armor_proficiencies=None,
         )
 
 

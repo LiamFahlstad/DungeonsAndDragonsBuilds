@@ -6,9 +6,8 @@ import Definitions
 from CharacterConfigs.BaseClasses import ClassBuilder
 from CharacterSheetCreator import CharacterSheetData
 from Definitions import Ability, CharacterClass
-from Features import Armor, Backgrounds, EpicBoon, GeneralFeats, OriginFeats, Weapons
+from Features import Armor, EpicBoon, GeneralFeats, Weapons
 from Features.ClassFeatures import DruidFeatures, SpellSlots
-from Items import Items
 from Spells.Definitions import (
     DruidLevel0Spells,
     DruidLevel1Spells,
@@ -21,7 +20,6 @@ from Spells.Definitions import (
     DruidLevel8Spells,
     DruidLevel9Spells,
 )
-from StatBlocks.AbilitiesStatBlock import AbilitiesStatBlock
 from StatBlocks.SavingThrowsStatBlock import DruidSavingThrowsStatBlock
 from StatBlocks.SkillsStatBlock import DruidSkillsStatBlock
 
@@ -312,53 +310,29 @@ class DruidLevel20(ClassBuilder.BaseClassLevel20):
         return data
 
 
-class DruidStarterClassBuilder(ClassBuilder.StarterClassBuilder):
-
+class DruidNonGenericStarterClassArgs(ClassBuilder.NonGenericStarterClassArgs):
     def __init__(
         self,
-        druid_level_features: ClassBuilder.BaseClassLevelFeatures,
-        druid_level: int,
         subclass: str,
-        abilities: AbilitiesStatBlock,
-        druid_skills: DruidSkillsStatBlock,
-        background_ability_bonuses: Backgrounds.FreeBackgroundAbilityBonus,
-        background_skill_proficiencies: Backgrounds.FreeBackgroundSkillProficiency,
-        add_default_equipment: bool,
-        origin_feat: OriginFeats.OriginFeat,
-        armor: Optional[list[Armor.AbstractArmor]] = None,
-        weapons: Optional[list[Weapons.AbstractWeapon]] = None,
-        replace_spells: Optional[dict[str, str]] = None,
-        items: Optional[list[tuple[Items.Item, int]]] = None,
+        skills: DruidSkillsStatBlock,
     ):
-        default_equipment = [
-            Armor.LeatherArmor(),
-            Armor.ShieldArmor(),
-            Weapons.Sickle(player_is_proficient=True),
-            Weapons.Quarterstaff(player_is_proficient=True),
-        ]
         super().__init__(
             base_class=CharacterClass.DRUID,
-            base_class_level_features=druid_level_features,
-            base_class_level=druid_level,
             subclass=subclass,
-            abilities=abilities,
-            skills=druid_skills,
-            background_ability_bonuses=background_ability_bonuses,
-            background_skill_proficiencies=background_skill_proficiencies,
             saving_throws=DruidSavingThrowsStatBlock(),
-            add_default_equipment=add_default_equipment,
-            default_equipment=default_equipment,
-            origin_feat=origin_feat,
+            default_equipment=[
+                Armor.LeatherArmor(),
+                Armor.ShieldArmor(),
+                Weapons.Sickle(player_is_proficient=True),
+                Weapons.Quarterstaff(player_is_proficient=True),
+            ],
+            skills=skills,
             armor_proficiencies=[
                 Definitions.ArmorType.LIGHT,
                 Definitions.ArmorType.SHIELD,
             ],
-            armor=armor,
-            weapons=weapons,
-            replace_spells=replace_spells,
             spell_casting_ability=Ability.WISDOM,
             caster_type=SpellSlots.CasterType.FULL_CASTER,
-            items=items,
         )
 
 
