@@ -30,6 +30,7 @@ from CharacterConfigs.SubClasses.BardGlamour import (
 )
 from Definitions import Ability, Skill
 from Features import Backgrounds, EpicBoon, GeneralFeats, OriginFeats
+from Items import Items, Packs
 from SpeciesConfigs import Aasimar
 from Spells.Definitions import (
     BardLevel0Spells,
@@ -83,6 +84,7 @@ def get_starter_class_builder():
         origin_feat=OriginFeats.Musician(),
         armor=[],
         weapons=[],
+        items=Packs.Entertainers().get_items() + [(Items.Typewriter(), 1)],
         bard_level_features=ClassBuilder.BaseClassLevelFeatures(
             base_class_features_by_level={
                 1: BardLevel1(

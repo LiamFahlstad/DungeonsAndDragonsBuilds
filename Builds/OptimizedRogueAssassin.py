@@ -15,6 +15,7 @@ from CharacterConfigs.SubClasses.RogueAssassin import (
 )
 from Definitions import Ability, Skill
 from Features import Backgrounds, GeneralFeats, OriginFeats, Weapons
+from Items import Items, Packs
 from SpeciesConfigs import Elf
 from StatBlocks.AbilitiesStatBlock import StandardArrayAbilitiesStatBlock
 from StatBlocks.SkillsStatBlock import RogueSkillsStatBlock
@@ -62,6 +63,15 @@ def get_starter_class_builder():
         origin_feat=OriginFeats.Alert(),
         armor=[],
         weapons=[],
+        items=Packs.BurglarsPack().get_items()
+        + [
+            (Items.Makarov(), 1),
+            (Items.NightVisionGoggles(), 2),
+            (Items.ButterflyKnife(), 2),
+            (Items.Arrows(), 20),
+            (Items.Quiver(), 1),
+            (Items.ThievesTools(), 1),
+        ],
         rogue_level_features=ClassBuilder.BaseClassLevelFeatures(
             base_class_features_by_level={
                 1: RogueLevel1(

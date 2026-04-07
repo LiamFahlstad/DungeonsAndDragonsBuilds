@@ -22,6 +22,292 @@ class Item(ABC):
         pass
 
 
+class Gold(Item):
+    def __init__(self):
+        super().__init__(f"Gold Pieces", "common", False, "currency", None)
+
+    def description(self) -> str:
+        return f"(value=1GP) A stack of gold pieces."
+
+
+class Silver(Item):
+    def __init__(self):
+        super().__init__(f"Silver Pieces", "common", False, "currency", None)
+
+    def description(self) -> str:
+        return f"(value=0.1GP) A stack of silver pieces."
+
+
+class Quiver(Item):
+    def __init__(self):
+        super().__init__(f"Quiver", "uncommon", False, "common", None)
+
+    def description(self) -> str:
+        return "A regular quiver"
+
+
+class ThievesTools(Item):
+    def __init__(self):
+        super().__init__(f"Thieves' Tools", "uncommon", False, "common", None)
+
+    def description(self) -> str:
+        return "Utilize: Pick a lock, or disarm a trap (DEX DC 15)"
+
+
+class Backpack(Item):
+    def __init__(self):
+        super().__init__("Backpack", "common", False, "container", None)
+
+    def description(self) -> str:
+        return (
+            "A backpack that can hold up to 30 pounds of gear within 1 cubic foot. "
+            "It can also be strapped to a mount as a saddlebag."
+        )
+
+
+class Caltrops(Item):
+    def __init__(self):
+        super().__init__("Caltrops", "common", False, "utility", None)
+
+    def description(self) -> str:
+        return (
+            "As an action, you can spread caltrops to cover a 5-foot-square area within 5 feet. "
+            "A creature entering the area must succeed on a DC 15 Dexterity saving throw or take "
+            "1 piercing damage and have its speed reduced to 0 until the start of its next turn. "
+            "Recovering the caltrops takes 10 minutes."
+        )
+
+
+class Crowbar(Item):
+    def __init__(self):
+        super().__init__("Crowbar", "common", False, "tool", None)
+
+    def description(self) -> str:
+        return "Using a crowbar grants advantage on Strength checks where leverage can be applied."
+
+
+class Candle(Item):
+    def __init__(self):
+        super().__init__("Candle", "common", False, "utility", None)
+
+    def description(self) -> str:
+        return "For 1 hour, a lit Candle sheds Bright Light in a 5-foot radius and Dim Light for an additional 5 feet."
+
+
+class BallBearings(Item):
+    def __init__(self):
+        super().__init__("Ball Bearings", "common", False, "utility", None)
+
+    def description(self) -> str:
+        return "As a Utilize action, you can spill Ball Bearings from their pouch. They spread to cover a level, 10-foot-square area within 10 feet of yourself. A creature that enters this area for the first time on a turn must succeed on a DC 10 Dexterity saving throw or have the Prone condition. It takes 10 minutes to recover the Ball Bearings."
+
+
+class HoodedLantern(Item):
+    def __init__(self):
+        super().__init__("Hooded Lantern", "common", False, "utility", None)
+
+    def description(self) -> str:
+        return "A Hooded Lantern burns Oil as fuel to cast Bright Light in a 30-foot radius and Dim Light for an additional 30 feet. As a Bonus Action, you can lower the hood, reducing the light to Dim Light in a 5-foot radius, or raise it again."
+
+
+class FlasksOfOil(Item):
+    def __init__(self):
+        super().__init__("Flask of Oil", "common", False, "utility", None)
+
+    def description(self) -> str:
+        return (
+            "You can throw this flask (range 20 ft) to coat a creature or object. "
+            "On a failed Dexterity save (DC = 8 + Dex mod + proficiency bonus), the target is covered in oil. "
+            "If it takes fire damage within 1 minute, it takes an extra 5 fire damage.\n\n"
+            "Alternatively, you can pour it on the ground (5-foot-square). If ignited, it burns for 2 rounds, "
+            "dealing 5 fire damage to creatures entering or ending their turn in the area (once per turn).\n\n"
+            "Oil can also be used as fuel, burning for up to 6 hours in a lamp or lantern."
+        )
+
+
+class Rations(Item):
+    def __init__(self):
+        super().__init__("Rations", "common", False, "consumable", None)
+
+    def description(self) -> str:
+        return (
+            "Travel-ready food such as jerky, dried fruit, hardtack, and nuts. "
+            "Essential for long journeys; lack of food can lead to malnutrition."
+        )
+
+
+class Rope(Item):
+    def __init__(self):
+        super().__init__("Rope (50 ft)", "common", False, "utility", None)
+
+    def description(self) -> str:
+        return (
+            "As an action, you can tie a knot with a successful DC 10 Dexterity (Sleight of Hand) check. "
+            "The rope can be burst with a DC 20 Strength (Athletics) check.\n\n"
+            "You can bind a creature only if it is grappled, incapacitated, or restrained. "
+            "If its legs are bound, it becomes restrained. Escaping requires a DC 15 Dexterity "
+            "(Acrobatics) check as an action."
+        )
+
+
+class Tinderbox(Item):
+    def __init__(self):
+        super().__init__("Tinderbox", "common", False, "tool", None)
+
+    def description(self) -> str:
+        return (
+            "A small container with flint, fire steel, and tinder used to start fires. "
+            "Lighting a torch, lamp, lantern, or similar exposed fuel takes a bonus action. "
+            "Lighting other fires takes 1 minute."
+        )
+
+
+class Torch(Item):
+    def __init__(self):
+        super().__init__("Torch", "common", False, "utility", None)
+
+    def description(self) -> str:
+        return (
+            "Burns for 1 hour, providing bright light in a 20-foot radius and dim light for another 20 feet.\n\n"
+            "It can be used as a simple melee weapon. On a hit, it deals 1 fire damage."
+        )
+
+
+class BullseyeLantern(Item):
+    def __init__(self):
+        super().__init__("Bullseye Lantern", "common", False, "utility", None)
+
+    def description(self) -> str:
+        return (
+            "Consumes oil as fuel to cast bright light in a 60-foot cone and dim light "
+            "for an additional 60 feet. The lantern can be shuttered to block the light."
+        )
+
+
+class Costume(Item):
+    def __init__(self):
+        super().__init__("Costume", "common", False, "adventuring gear", None)
+
+    def description(self) -> str:
+        return (
+            "While wearing this costume, you have advantage on ability checks made to "
+            "impersonate the person or type of person it represents."
+        )
+
+
+class Mirror(Item):
+    def __init__(self):
+        super().__init__("Steel Mirror", "common", False, "tool", None)
+
+    def description(self) -> str:
+        return (
+            "A small handheld mirror useful for personal grooming. It can also be used "
+            "to peek around corners without exposing yourself or to reflect light as a signal."
+        )
+
+
+class Typewriter(Item):
+    def __init__(self):
+        super().__init__("Typewriter", "common", False, "musical instrument", None)
+
+    def description(self) -> str:
+        return (
+            "A mechanical typewriter that can also be used as a musical instrument, "
+            "producing rhythmic clacking sounds."
+        )
+
+
+class NightVisionGoggles(Item):
+    def __init__(self):
+        super().__init__(
+            "Nightvision Goggles", "uncommon", False, "wondrous item", None
+        )
+
+    def description(self) -> str:
+        return "While wearing these goggles, you gain darkvision out to 120 feet."
+
+
+class ButterflyKnife(Item):
+    def __init__(self):
+        super().__init__("Butterfly Knife", "common", False, "weapon", None)
+
+    def description(self) -> str:
+        return (
+            "A small folding knife that can be quickly deployed. "
+            "Functions as a light melee weapon."
+        )
+
+
+class Beans(Item):
+    def __init__(self):
+        super().__init__("Can of Beans", "common", False, "consumable", None)
+
+    def description(self) -> str:
+        return "A simple can of preserved beans. Provides a basic meal when consumed."
+
+
+class Makarov(Item):
+    def __init__(self):
+        super().__init__("Makarov", "uncommon", False, "weapon", None)
+
+    def description(self) -> str:
+        return (
+            "In a fantasy realm, this pistol becomes a magical ranged weapon.\n\n"
+            "It has 4 charges. Each shot deals 2d6 + your Dexterity modifier damage. "
+            "The weapon regains all charges after a long rest."
+        )
+
+
+class Bedroll(Item):
+    def __init__(self):
+        super().__init__("Bedroll", "common", False, "adventuring gear", None)
+
+    def description(self) -> str:
+        return (
+            "A bedroll provides basic sleeping comfort for one Small or Medium creature.\n\n"
+            "While resting in a bedroll, you automatically succeed on saving throws "
+            "against extreme cold."
+        )
+
+
+class Bell(Item):
+    def __init__(self):
+        super().__init__("Bell", "common", False, "utility", None)
+
+    def description(self) -> str:
+        return "When rung as an action, the bell produces a clear sound audible up to 60 feet away."
+
+
+class Waterskin(Item):
+    def __init__(self):
+        super().__init__("Waterskin", "common", False, "container", None)
+
+    def description(self) -> str:
+        return "Holds up to 4 pints of liquid. Essential for survival, as insufficient water can lead to dehydration."
+
+
+class Arrows(Item):
+    def __init__(self):
+        super().__init__("Arrows", "common", False, "ammunition", None)
+
+    def description(self) -> str:
+        return f"A bundle of arrows."
+
+
+class HobbyHorse(Item):
+    def __init__(self):
+        super().__init__("Käpphäst", "uncommon", False, "wondrous item", None)
+
+    def description(self) -> str:
+        return (
+            "A simple hobby horse that transforms into a real mount when brought into a fantasy realm.\n"
+            "While mounted, mounting or dismounting the käpphäst costs half your movement.\n"
+            "If you take damage while mounted, you must succeed on a Strength or Dexterity saving throw "
+            "(your choice). The DC equals the higher of 10 or half the damage taken rounded down. On a failure, you fall "
+            "from the mount and are knocked prone."
+        )
+
+
 class DramaticRainBottle(Item):
     def __init__(self):
         super().__init__("Dramatic Rain in a Bottle", "common", False, "wondrous", None)
