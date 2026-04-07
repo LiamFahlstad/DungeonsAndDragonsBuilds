@@ -136,6 +136,33 @@ class Rations(Item):
         )
 
 
+class Antitoxin(Item):
+    def __init__(self):
+        super().__init__("Antitoxin", "common", False, "consumable", None)
+
+    def description(self) -> str:
+        return "As a Bonus Action, you can drink a vial of Antitoxin to gain Advantage on saving throws to avoid or end the Poisoned condition for 1 hour."
+
+
+class HealersKit(Item):
+    def __init__(self):
+        super().__init__("Healer's Kit", "common", False, "consumable", None)
+
+    def description(self) -> str:
+        return "A Healer's Kit has ten uses. As a Utilize action, you can expend one of its uses to stabilize an Unconscious creature that has 0 Hit Points without needing to make a Wisdom (Medicine) check."
+
+
+class PotionOfHealing(Item):
+    def __init__(self):
+        super().__init__("Potion of Healing", "common", False, "consumable", None)
+
+    def description(self) -> str:
+        return (
+            "You regain 2d4 + 2 Hit Points when you drink this potion.\n"
+            "Whatever its potency, the potion's red liquid glimmers when agitated."
+        )
+
+
 class Rope(Item):
     def __init__(self):
         super().__init__("Rope (50 ft)", "common", False, "utility", None)
