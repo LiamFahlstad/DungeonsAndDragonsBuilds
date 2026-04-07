@@ -1,0 +1,111 @@
+import Definitions
+from Builds.CharacterBuilder import CharacterBuilder
+from CharacterConfigs.BaseClasses import ClassBuilder
+from CharacterConfigs.BaseClasses.WizardBase import (
+    WizardLevel1,
+    WizardLevel2,
+    WizardLevel3,
+    WizardLevel4,
+)
+from CharacterConfigs.SubClasses.WizardDiviner import (
+    WizardDivinerLevel3,
+    WizardDivinerStarterClassBuilder,
+)
+from Definitions import Ability, Skill
+from Features import Backgrounds, GeneralFeats, OriginFeats, Weapons
+from SpeciesConfigs import Elf
+from Spells import Definitions as SpellDefinitions
+from StatBlocks.AbilitiesStatBlock import StandardArrayAbilitiesStatBlock
+from StatBlocks.SkillsStatBlock import WizardSkillsStatBlock
+
+
+def get_starter_class_builder():
+    return WizardDivinerStarterClassBuilder(
+        wizard_level=3,
+        # Distribute 15, 14, 13, 12, 10, 8 among your abilities.
+        abilities=StandardArrayAbilitiesStatBlock(
+            strength=8,
+            dexterity=13,
+            constitution=14,
+            intelligence=15,
+            wisdom=12,
+            charisma=10,
+        ),
+        # Choose two skills to be proficient in
+        wizard_skills=WizardSkillsStatBlock(
+            proficiencies={
+                Skill.ARCANA: True,
+                Skill.HISTORY: True,
+                Skill.INSIGHT: False,
+                Skill.INVESTIGATION: False,
+                Skill.MEDICINE: False,
+                Skill.NATURE: False,
+                Skill.RELIGION: False,
+            }
+        ),
+        background_ability_bonuses=Backgrounds.FreeBackgroundAbilityBonus(
+            [
+                (Ability.INTELLIGENCE, 2),
+                (Ability.DEXTERITY, 1),
+            ]
+        ),
+        background_skill_proficiencies=Backgrounds.FreeBackgroundSkillProficiency(
+            [
+                Skill.ACROBATICS,
+                Skill.STEALTH,
+            ]
+        ),
+        add_default_equipment=True,
+        origin_feat=OriginFeats.Alert(),
+        armor=[],
+        weapons=[
+            Weapons.LightCrossbow(
+                player_is_proficient=True, ability=Ability.INTELLIGENCE
+            ),
+        ],
+        wizard_level_features=ClassBuilder.BaseClassLevelFeatures(
+            base_class_features_by_level={
+                1: WizardLevel1(
+                    cantrip_1=SpellDefinitions.WizardLevel0Spells.TRUE_STRIKE,
+                    cantrip_2=SpellDefinitions.WizardLevel0Spells.MAGE_HAND,
+                    cantrip_3=SpellDefinitions.WizardLevel0Spells.PRESTIDIGITATION,
+                    spell_1=SpellDefinitions.WizardLevel1Spells.MAGE_ARMOR,
+                    spell_2=SpellDefinitions.WizardLevel1Spells.SHIELD,
+                    spell_3=SpellDefinitions.WizardLevel1Spells.MAGIC_MISSILE,
+                    spell_4=SpellDefinitions.WizardLevel1Spells.SLEEP,
+                ),
+                2: WizardLevel2(
+                    skill_to_expertise_in=Skill.ARCANA,
+                    spell=SpellDefinitions.WizardLevel1Spells.FIND_FAMILIAR,
+                ),
+                3: WizardLevel3(
+                    spell=SpellDefinitions.WizardLevel2Spells.MIRROR_IMAGE,
+                ),
+                4: WizardLevel4(
+                    general_feat=GeneralFeats.DualWielder(
+                        character_level=4, ability=Ability.DEXTERITY
+                    ),
+                    cantrip=SpellDefinitions.WizardLevel0Spells.TOLL_THE_DEAD,
+                    spell=SpellDefinitions.WizardLevel2Spells.ROPE_TRICK,
+                ),
+            },
+            subclass_features_by_level={
+                3: WizardDivinerLevel3(
+                    spell_1=SpellDefinitions.DivinationLevel2Spells.LOCATE_OBJECT,
+                    spell_2=SpellDefinitions.DivinationLevel2Spells.DETECT_THOUGHTS,
+                ),
+            },
+        ),
+    )
+
+
+class OptimizedWizardDivinerCharacterBuilder(CharacterBuilder):
+    def __init__(self):
+        super().__init__(
+            name="Optimized Wizard Diviner",
+            starter_class_builder=get_starter_class_builder(),
+            species_builder=Elf.ElfSpeciesBuilder(
+                elven_lineage=Elf.ElvenLineage.HIGH_ELF,
+                skill_proficiency=Definitions.Skill.PERCEPTION,
+            ),
+        )

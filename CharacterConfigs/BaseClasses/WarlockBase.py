@@ -17,6 +17,7 @@ from Invocations.Definitions import (
     InvocationsLevel12,
     InvocationsLevel15,
 )
+from Items import Items
 from Spells.Definitions import (
     WarlockLevel0Spells,
     WarlockLevel1Spells,
@@ -343,6 +344,7 @@ class WarlockStarterClassBuilder(ClassBuilder.StarterClassBuilder):
         armor: Optional[list[Armor.AbstractArmor]] = None,
         weapons: Optional[list[Weapons.AbstractWeapon]] = None,
         replace_spells: Optional[dict[str, str]] = None,
+        items: Optional[list[tuple[Items.Item, int]]] = None,
     ):
         default_equipment = [
             Weapons.Sickle(player_is_proficient=True),
@@ -368,6 +370,7 @@ class WarlockStarterClassBuilder(ClassBuilder.StarterClassBuilder):
             replace_spells=replace_spells,
             spell_casting_ability=Ability.CHARISMA,
             caster_type=SpellSlots.CasterType.WARLOCK_CASTER,
+            items=items,
         )
 
 

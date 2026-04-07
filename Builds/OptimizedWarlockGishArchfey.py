@@ -1,5 +1,6 @@
 from Builds.CharacterBuilder import CharacterBuilder
 from CharacterConfigs.BaseClasses import ClassBuilder
+from CharacterConfigs.BaseClasses.FighterBase import FighterLevel1
 from CharacterConfigs.BaseClasses.WarlockBase import (
     WarlockLevel1,
     WarlockLevel2,
@@ -7,14 +8,21 @@ from CharacterConfigs.BaseClasses.WarlockBase import (
     WarlockLevel4,
     WarlockLevel5,
 )
+from CharacterConfigs.SubClasses.FighterBattleMaster import (
+    FighterBattleMasterStarterClassBuilder,
+)
 from CharacterConfigs.SubClasses.WarlockArchfey import (
     ArchfeyWarlockLevel3,
     ArchfeyWarlockLevel5,
-    ArchfeyWarlockStarterClassBuilder,
+    ArchfeyWarlockMulticlassBuilder,
 )
 from Definitions import Ability, Skill
-from Features import Backgrounds, GeneralFeats, OriginFeats
-from Invocations.Definitions import InvocationsLevel2, InvocationsLevel5
+from Features import Backgrounds, FightingStyles, GeneralFeats, OriginFeats, Weapons
+from Invocations.Definitions import (
+    InvocationsLevel0,
+    InvocationsLevel2,
+    InvocationsLevel5,
+)
 from SpeciesConfigs import Human
 from Spells.Definitions import (
     WarlockLevel0Spells,
@@ -23,57 +31,80 @@ from Spells.Definitions import (
     WarlockLevel3Spells,
 )
 from StatBlocks.AbilitiesStatBlock import StandardArrayAbilitiesStatBlock
-from StatBlocks.SkillsStatBlock import WarlockSkillsStatBlock
+from StatBlocks.SkillsStatBlock import FighterSkillsStatBlock
 
 
 def get_starter_class_builder():
-    return ArchfeyWarlockStarterClassBuilder(
-        warlock_level=5,
+    return FighterBattleMasterStarterClassBuilder(
+        fighter_level=1,
         # Distribute 15, 14, 13, 12, 10, 8 among your abilities.
         abilities=StandardArrayAbilitiesStatBlock(
-            strength=8,
-            dexterity=10,
+            strength=13,
+            dexterity=12,
             constitution=14,
-            intelligence=12,
-            wisdom=13,
+            intelligence=8,
+            wisdom=10,
             charisma=15,
         ),
         # Choose two skills to be proficient in
-        warlock_skills=WarlockSkillsStatBlock(
+        fighter_skills=FighterSkillsStatBlock(
             proficiencies={
-                Skill.ARCANA: True,
-                Skill.DECEPTION: False,
-                Skill.HISTORY: True,
+                Skill.ACROBATICS: True,
+                Skill.ANIMAL_HANDLING: False,
+                Skill.ATHLETICS: True,
+                Skill.HISTORY: False,
+                Skill.INSIGHT: False,
                 Skill.INTIMIDATION: False,
-                Skill.INVESTIGATION: False,
-                Skill.NATURE: False,
-                Skill.RELIGION: False,
+                Skill.PERCEPTION: False,
+                Skill.SURVIVAL: False,
             }
         ),
         background_ability_bonuses=Backgrounds.FreeBackgroundAbilityBonus(
             [
-                (Ability.CONSTITUTION, 1),
-                (Ability.CHARISMA, 2),
+                (Ability.CONSTITUTION, 2),
+                (Ability.CHARISMA, 1),
             ]
         ),
         background_skill_proficiencies=Backgrounds.FreeBackgroundSkillProficiency(
             [
-                Skill.SURVIVAL,
-                Skill.RELIGION,
+                Skill.INTIMIDATION,
+                Skill.PERSUASION,
             ]
         ),
         add_default_equipment=True,
-        origin_feat=OriginFeats.Lucky(),
+        origin_feat=OriginFeats.Tough(),
         armor=[],
-        weapons=[],
+        weapons=[
+            Weapons.Greatsword(
+                player_is_proficient=True,
+                ability=Ability.CHARISMA,
+            ),
+        ],
+        fighter_level_features=ClassBuilder.BaseClassLevelFeatures(
+            base_class_features_by_level={
+                1: FighterLevel1(
+                    weapon_mastery_1=Weapons.Longsword(),
+                    weapon_mastery_2=Weapons.Flail(),
+                    weapon_mastery_3=Weapons.Greatsword(),
+                    fighting_style=FightingStyles.Defense(),
+                ),
+            },
+            subclass_features_by_level={},
+        ),
+    )
+
+
+def get_multiclass_builder():
+    return ArchfeyWarlockMulticlassBuilder(
+        warlock_level=5,
         warlock_level_features=ClassBuilder.BaseClassLevelFeatures(
             base_class_features_by_level={
                 1: WarlockLevel1(
-                    cantrip_1=WarlockLevel0Spells.ELDRITCH_BLAST,
+                    cantrip_1=WarlockLevel0Spells.TRUE_STRIKE,
                     cantrip_2=WarlockLevel0Spells.MAGE_HAND,
                     spell_1=WarlockLevel1Spells.CHARM_PERSON,
                     spell_2=WarlockLevel1Spells.HEX,
-                    eldritch_invocation=InvocationsLevel2.DEVILS_SIGHT,  # InvocationsLevel0.ELDRITCH_MIND,
+                    eldritch_invocation=InvocationsLevel0.PACT_OF_THE_BLADE,  # InvocationsLevel0.ELDRITCH_MIND,
                 ),
                 2: WarlockLevel2(
                     spell=WarlockLevel1Spells.TASHAS_HIDEOUS_LAUGHTER,
@@ -84,9 +115,8 @@ def get_starter_class_builder():
                     spell=WarlockLevel2Spells.MIRROR_IMAGE,
                 ),
                 4: WarlockLevel4(
-                    general_feat=GeneralFeats.WarCaster(
+                    general_feat=GeneralFeats.GreatWeaponMaster(
                         character_level=4,
-                        ability=Ability.CHARISMA,
                     ),
                     cantrip=WarlockLevel0Spells.MINOR_ILLUSION,
                     spell=WarlockLevel2Spells.SPIDER_CLIMB,
@@ -105,7 +135,6 @@ def get_starter_class_builder():
         replace_spells={
             WarlockLevel1Spells.TASHAS_HIDEOUS_LAUGHTER: WarlockLevel3Spells.HUNGER_OF_HADAR,
             WarlockLevel1Spells.CHARM_PERSON: WarlockLevel2Spells.SUGGESTION,
-            WarlockLevel1Spells.HEX: WarlockLevel2Spells.DARKNESS,
         },
     )
 
@@ -121,8 +150,9 @@ class OptimizedWarlockArchfeyCharacterBuilder(CharacterBuilder):
                     skills=[
                         Skill.ANIMAL_HANDLING,
                         Skill.MEDICINE,
-                        Skill.PERSUASION,
+                        Skill.NATURE,
                     ]
                 ),
             ),
+            multiclass_builders=[get_multiclass_builder()],
         )

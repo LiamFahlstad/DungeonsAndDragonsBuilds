@@ -11,6 +11,7 @@ from CharacterSheetCreator import CharacterSheetData
 from Definitions import ClericSubclass, Skill
 from Features import Armor, Backgrounds, OriginFeats, Weapons
 from Features.ClassFeatures import ClericFeatures
+from Items import Items
 from Spells.Definitions import (
     ClericLevel1Spells,
     DivinationLevel1Spells,
@@ -97,6 +98,7 @@ class ClericKnowledgeStarterClassBuilder(ClericStarterClassBuilder):
         armor: Optional[list[Armor.AbstractArmor]] = None,
         weapons: Optional[list[Weapons.AbstractWeapon]] = None,
         replace_spells: Optional[dict[str, str]] = None,
+        items: Optional[list[tuple[Items.Item, int]]] = None,
     ):
         super().__init__(
             cleric_level_features=cleric_level_features,
@@ -111,6 +113,7 @@ class ClericKnowledgeStarterClassBuilder(ClericStarterClassBuilder):
             armor=armor,
             weapons=weapons,
             replace_spells=replace_spells,
+            items=items,
         )
 
 

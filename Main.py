@@ -9,6 +9,7 @@ from Builds import (
     OptimizedClericLight,
     OptimizedDruidMoon,
     OptimizedFighterBattleMaster,
+    OptimizedFighterChampion,
     OptimizedMonkShadow,
     OptimizedPaladinGlory,
     OptimizedPaladinVengeance,
@@ -16,7 +17,9 @@ from Builds import (
     OptimizedRangerGloomStalker,
     OptimizedRogueAssassin,
     OptimizedWarlockArchfey,
+    OptimizedWarlockGishArchfey,
     OptimizedWizardBladesinger,
+    OptimizedWizardDiviner,
 )
 from Builds.CharacterBuilder import CharacterBuilder
 
@@ -35,19 +38,22 @@ class BuildSelector:
             "OptimizedClericLight": OptimizedClericLight.OptimizedClericLightCharacterBuilder(),
             "OptimizedDruidMoon": OptimizedDruidMoon.OptimizedDruidMoonCharacterBuilder(),
             "OptimizedFighterBattleMaster": OptimizedFighterBattleMaster.OptimizedFighterBattleMasterCharacterBuilder(),
+            "OptimizedFighterChampion": OptimizedFighterChampion.OptimizedFighterChampionCharacterBuilder(),
             "OptimizedMonkShadow": OptimizedMonkShadow.OptimizedMonkShadowCharacterBuilder(),
             "OptimizedPaladinGlory": OptimizedPaladinGlory.OptimizedPaladinGloryCharacterBuilder(),
             "OptimizedPaladinVengeance": OptimizedPaladinVengeance.OptimizedPaladinVengeanceCharacterBuilder(),
             "OptimizedRangerGloomStalker": OptimizedRangerGloomStalker.OptimizedRangerGloomStalkerCharacterBuilder(),
             "OptimizedRogueAssassin": OptimizedRogueAssassin.OptimizedRogueAssassinCharacterBuilder(),
+            "OptimizedWarlockGishArchfey": OptimizedWarlockGishArchfey.OptimizedWarlockArchfeyCharacterBuilder(),
             "OptimizedWarlockArchfey": OptimizedWarlockArchfey.OptimizedWarlockArchfeyCharacterBuilder(),
             "OptimizedWizardBladesinger": OptimizedWizardBladesinger.OptimizedWizardBladesingerCharacterBuilder(),
+            "OptimizedWizardDiviner": OptimizedWizardDiviner.OptimizedWizardDivinerCharacterBuilder(),
         }
         return builds[build_name]
 
 
 if __name__ == "__main__":
-    skill_config = Definitions.SkillConfig.HOMEBREW
+    skill_config = Definitions.SkillConfig.DEFAULT
     build_names = [
         "MulticlassTest",
         "OptimizedBarbarianBerserker",
@@ -59,13 +65,16 @@ if __name__ == "__main__":
         "OptimizedClericLight",
         "OptimizedDruidMoon",
         "OptimizedFighterBattleMaster",
+        "OptimizedFighterChampion",
         "OptimizedMonkShadow",
         "OptimizedPaladinGlory",
         "OptimizedPaladinVengeance",
         "OptimizedRangerGloomStalker",
         "OptimizedRogueAssassin",
+        "OptimizedWarlockGishArchfey",
         "OptimizedWarlockArchfey",
         "OptimizedWizardBladesinger",
+        "OptimizedWizardDiviner",
     ]
     for build_name in build_names:
         build_class = BuildSelector.get_build(build_name)

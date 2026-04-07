@@ -1,5 +1,5 @@
-from Definitions import Ability
-from Features.BaseFeatures import TextFeature
+from Definitions import Ability, DiceRollCondition, Skill
+from Features.BaseFeatures import CharacterFeature, TextFeature
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 FIGHTER_HIT_DIE = 10
@@ -347,6 +347,15 @@ class RemarkableAthlete(TextFeature):
             "In addition, immediately after you score a Critical Hit, you can move up to half your Speed without provoking Opportunity Attacks."
         )
         return description
+
+
+class RemarkableAthleteCharacterFeature(CharacterFeature):
+
+    def modify(self, character_stat_block: CharacterStatBlock) -> None:
+        character_stat_block.add_initiative_roll_condition(DiceRollCondition.ADVANTAGE)
+        character_stat_block.set_skill_roll_condition(
+            Skill.ATHLETICS, DiceRollCondition.ADVANTAGE
+        )
 
 
 class AdditionalFightingStyle(TextFeature):

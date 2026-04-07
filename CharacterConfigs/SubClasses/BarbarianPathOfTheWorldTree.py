@@ -11,6 +11,7 @@ from CharacterSheetCreator import CharacterSheetData
 from Definitions import BarbarianSubclass
 from Features import Armor, Backgrounds, OriginFeats, Weapons
 from Features.ClassFeatures import BarbarianFeatures
+from Items import Items
 from StatBlocks.AbilitiesStatBlock import AbilitiesStatBlock
 from StatBlocks.SkillsStatBlock import BarbarianSkillsStatBlock
 
@@ -83,6 +84,7 @@ class BarbarianWorldTreeStarterClassBuilder(BarbarianStarterClassBuilder):
         armor: Optional[list[Armor.AbstractArmor]] = None,
         weapons: Optional[list[Weapons.AbstractWeapon]] = None,
         replace_spells: Optional[dict[str, str]] = None,
+        items: Optional[list[tuple[Items.Item, int]]] = None,
     ):
         super().__init__(
             barbarian_level_features=barbarian_level_features,
@@ -97,6 +99,7 @@ class BarbarianWorldTreeStarterClassBuilder(BarbarianStarterClassBuilder):
             armor=armor,
             weapons=weapons,
             replace_spells=replace_spells,
+            items=items,
         )
 
 

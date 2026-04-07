@@ -8,6 +8,7 @@ from CharacterSheetCreator import CharacterSheetData
 from Definitions import Ability, CharacterClass
 from Features import Armor, Backgrounds, EpicBoon, GeneralFeats, OriginFeats, Weapons
 from Features.ClassFeatures import ArtificerFeatures, SpellSlots
+from Items import Items
 from Spells.Definitions import (
     ArtificerLevel0Spells,
     ArtificerLevel1Spells,
@@ -327,6 +328,7 @@ class ArtificerStarterClassBuilder(ClassBuilder.StarterClassBuilder):
         armor: Optional[list[Armor.AbstractArmor]] = None,
         weapons: Optional[list[Weapons.AbstractWeapon]] = None,
         replace_spells: Optional[dict[str, str]] = None,
+        items: Optional[list[tuple[Items.Item, int]]] = None,
     ):
         default_equipment = [
             Armor.LeatherArmor(),
@@ -356,6 +358,7 @@ class ArtificerStarterClassBuilder(ClassBuilder.StarterClassBuilder):
             replace_spells=replace_spells,
             spell_casting_ability=Ability.WISDOM,
             caster_type=SpellSlots.CasterType.FULL_CASTER,
+            items=items,
         )
 
 

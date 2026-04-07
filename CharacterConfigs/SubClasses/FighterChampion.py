@@ -17,7 +17,7 @@ from StatBlocks.SkillsStatBlock import FighterSkillsStatBlock
 
 
 @attr.dataclass
-class FighterBattleMasterLevel3(ClassBuilder.SubclassLevel3):
+class FighterChampionLevel3(ClassBuilder.SubclassLevel3):
     maneuver_1: Maneuvers.Maneuver
     maneuver_2: Maneuvers.Maneuver
     maneuver_3: Maneuvers.Maneuver
@@ -26,17 +26,14 @@ class FighterBattleMasterLevel3(ClassBuilder.SubclassLevel3):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        superiority_dice = FighterFeatures.SuperiorityDice()
-        superiority_dice.add_feature(self.maneuver_1)
-        superiority_dice.add_feature(self.maneuver_2)
-        superiority_dice.add_feature(self.maneuver_3)
-        data.add_feature(superiority_dice)
-        data.add_feature(FighterFeatures.StudentOfWar())
+        data.add_feature(FighterFeatures.ImprovedCritical())
+        data.add_feature(FighterFeatures.RemarkableAthlete())
+        data.add_feature(FighterFeatures.RemarkableAthleteCharacterFeature())
         return data
 
 
 @attr.dataclass
-class FighterBattleMasterLevel7(ClassBuilder.SubclassLevel7):
+class FighterChampionLevel7(ClassBuilder.SubclassLevel7):
     maneuver_1: Maneuvers.Maneuver
     maneuver_2: Maneuvers.Maneuver
 
@@ -54,7 +51,7 @@ class FighterBattleMasterLevel7(ClassBuilder.SubclassLevel7):
 
 
 @attr.dataclass
-class FighterBattleMasterLevel10(ClassBuilder.SubclassLevel10):
+class FighterChampionLevel10(ClassBuilder.SubclassLevel10):
     maneuver_1: Maneuvers.Maneuver
     maneuver_2: Maneuvers.Maneuver
 
@@ -71,7 +68,7 @@ class FighterBattleMasterLevel10(ClassBuilder.SubclassLevel10):
 
 
 @attr.dataclass
-class FighterBattleMasterLevel15(ClassBuilder.SubclassLevel15):
+class FighterChampionLevel15(ClassBuilder.SubclassLevel15):
     maneuver_1: Maneuvers.Maneuver
     maneuver_2: Maneuvers.Maneuver
 
@@ -89,7 +86,7 @@ class FighterBattleMasterLevel15(ClassBuilder.SubclassLevel15):
 
 
 @attr.dataclass
-class FighterBattleMasterLevel18(ClassBuilder.SubclassLevel18):
+class FighterChampionLevel18(ClassBuilder.SubclassLevel18):
 
     def add_features(
         self,
@@ -98,7 +95,7 @@ class FighterBattleMasterLevel18(ClassBuilder.SubclassLevel18):
         return data
 
 
-class FighterBattleMasterStarterClassBuilder(FighterStarterClassBuilder):
+class FighterChampionStarterClassBuilder(FighterStarterClassBuilder):
 
     def __init__(
         self,
@@ -118,7 +115,7 @@ class FighterBattleMasterStarterClassBuilder(FighterStarterClassBuilder):
         super().__init__(
             fighter_level_features=fighter_level_features,
             fighter_level=fighter_level,
-            subclass=FighterSubclass.BATTLE_MASTER.value,
+            subclass=FighterSubclass.CHAMPION.value,
             abilities=abilities,
             fighter_skills=fighter_skills,
             background_ability_bonuses=background_ability_bonuses,
@@ -132,7 +129,7 @@ class FighterBattleMasterStarterClassBuilder(FighterStarterClassBuilder):
         )
 
 
-class FighterBattleMasterMulticlassBuilder(FighterMulticlassBuilder):
+class FighterChampionMulticlassBuilder(FighterMulticlassBuilder):
 
     def __init__(
         self,
@@ -143,6 +140,6 @@ class FighterBattleMasterMulticlassBuilder(FighterMulticlassBuilder):
         super().__init__(
             fighter_level_features=fighter_level_features,
             fighter_level=fighter_level,
-            subclass=FighterSubclass.BATTLE_MASTER.value,
+            subclass=FighterSubclass.CHAMPION.value,
             replace_spells=replace_spells,
         )

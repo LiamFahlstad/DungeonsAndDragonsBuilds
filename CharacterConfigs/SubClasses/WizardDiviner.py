@@ -2,8 +2,16 @@ from typing import Optional, TypeAlias
 
 import attr
 
+from CharacterConfigs.BaseClasses import ClassBuilder
+from CharacterConfigs.BaseClasses.WizardBase import (
+    WizardMulticlassBuilder,
+    WizardStarterClassBuilder,
+)
 from CharacterSheetCreator import CharacterSheetData
+from Definitions import WizardSubclass
+from Features import Armor, Backgrounds, OriginFeats, Weapons
 from Features.ClassFeatures import WizardFeatures
+from Items import Items
 from Spells.Definitions import (
     DivinationLevel1Spells,
     DivinationLevel2Spells,
@@ -15,6 +23,8 @@ from Spells.Definitions import (
     DivinationLevel8Spells,
     DivinationLevel9Spells,
 )
+from StatBlocks.AbilitiesStatBlock import AbilitiesStatBlock
+from StatBlocks.SkillsStatBlock import WizardSkillsStatBlock
 
 DivinationSpellsUpTo2: TypeAlias = DivinationLevel1Spells | DivinationLevel2Spells
 
@@ -34,8 +44,7 @@ DivinationSpellsUpTo9: TypeAlias = DivinationSpellsUpTo8 | DivinationLevel9Spell
 
 
 @attr.dataclass
-class DivinerWizardLevel3(WizardSubclassLevel3):
-    level: int = attr.field(init=False, default=3)
+class WizardDivinerLevel3(ClassBuilder.SubclassLevel3):
     spell_1: DivinationSpellsUpTo2
     spell_2: DivinationSpellsUpTo2
 
@@ -51,8 +60,7 @@ class DivinerWizardLevel3(WizardSubclassLevel3):
 
 
 @attr.dataclass
-class DivinerWizardLevel5(WizardSubclassLevel5):
-    level: int = attr.field(init=False, default=5)
+class WizardDivinerLevel5(ClassBuilder.SubclassLevel5):
     spell: DivinationSpellsUpTo3
 
     def add_features(
@@ -64,8 +72,7 @@ class DivinerWizardLevel5(WizardSubclassLevel5):
 
 
 @attr.dataclass
-class DivinerWizardLevel6(WizardSubclassLevel6):
-    level: int = attr.field(init=False, default=6)
+class WizardDivinerLevel6(ClassBuilder.SubclassLevel6):
 
     def add_features(
         self,
@@ -76,8 +83,7 @@ class DivinerWizardLevel6(WizardSubclassLevel6):
 
 
 @attr.dataclass
-class DivinerWizardLevel7(WizardSubclassLevel7):
-    level: int = attr.field(init=False, default=7)
+class WizardDivinerLevel7(ClassBuilder.SubclassLevel7):
     spell: DivinationSpellsUpTo4
 
     def add_features(
@@ -89,8 +95,7 @@ class DivinerWizardLevel7(WizardSubclassLevel7):
 
 
 @attr.dataclass
-class DivinerWizardLevel9(WizardSubclassLevel9):
-    level: int = attr.field(init=False, default=9)
+class WizardDivinerLevel9(ClassBuilder.SubclassLevel9):
     spell: DivinationSpellsUpTo5
 
     def add_features(
@@ -102,8 +107,7 @@ class DivinerWizardLevel9(WizardSubclassLevel9):
 
 
 @attr.dataclass
-class DivinerWizardLevel10(WizardSubclassLevel10):
-    level: int = attr.field(init=False, default=10)
+class WizardDivinerLevel10(ClassBuilder.SubclassLevel10):
 
     def add_features(
         self,
@@ -114,8 +118,7 @@ class DivinerWizardLevel10(WizardSubclassLevel10):
 
 
 @attr.dataclass
-class DivinerWizardLevel11(WizardSubclassLevel11):
-    level: int = attr.field(init=False, default=11)
+class WizardDivinerLevel11(ClassBuilder.SubclassLevel11):
     spell: DivinationSpellsUpTo6
 
     def add_features(
@@ -127,8 +130,7 @@ class DivinerWizardLevel11(WizardSubclassLevel11):
 
 
 @attr.dataclass
-class DivinerWizardLevel13(WizardSubclassLevel13):
-    level: int = attr.field(init=False, default=13)
+class WizardDivinerLevel13(ClassBuilder.SubclassLevel13):
     spell: DivinationSpellsUpTo7
 
     def add_features(
@@ -140,8 +142,7 @@ class DivinerWizardLevel13(WizardSubclassLevel13):
 
 
 @attr.dataclass
-class DivinerWizardLevel14(WizardSubclassLevel14):
-    level: int = attr.field(init=False, default=14)
+class WizardDivinerLevel14(ClassBuilder.SubclassLevel14):
 
     def add_features(
         self,
@@ -152,8 +153,7 @@ class DivinerWizardLevel14(WizardSubclassLevel14):
 
 
 @attr.dataclass
-class DivinerWizardLevel15(WizardSubclassLevel15):
-    level: int = attr.field(init=False, default=15)
+class WizardDivinerLevel15(ClassBuilder.SubclassLevel15):
     spell: DivinationSpellsUpTo8
 
     def add_features(
@@ -165,8 +165,7 @@ class DivinerWizardLevel15(WizardSubclassLevel15):
 
 
 @attr.dataclass
-class DivinerWizardLevel17(WizardSubclassLevel17):
-    level: int = attr.field(init=False, default=17)
+class WizardDivinerLevel17(ClassBuilder.SubclassLevel17):
     spell: DivinationSpellsUpTo8
 
     def add_features(
@@ -177,16 +176,51 @@ class DivinerWizardLevel17(WizardSubclassLevel17):
         return data
 
 
-@attr.dataclass
-class DivinerWizardFeaturePerLevel(WizardFeaturePerLevel):
-    subclass_level_3: Optional[DivinerWizardLevel3] = None
-    subclass_level_5: Optional[DivinerWizardLevel5] = None
-    subclass_level_6: Optional[DivinerWizardLevel6] = None
-    subclass_level_7: Optional[DivinerWizardLevel7] = None
-    subclass_level_9: Optional[DivinerWizardLevel9] = None
-    subclass_level_10: Optional[DivinerWizardLevel10] = None
-    subclass_level_11: Optional[DivinerWizardLevel11] = None
-    subclass_level_13: Optional[DivinerWizardLevel13] = None
-    subclass_level_14: Optional[DivinerWizardLevel14] = None
-    subclass_level_15: Optional[DivinerWizardLevel15] = None
-    subclass_level_17: Optional[DivinerWizardLevel17] = None
+class WizardDivinerStarterClassBuilder(WizardStarterClassBuilder):
+
+    def __init__(
+        self,
+        wizard_level_features: ClassBuilder.BaseClassLevelFeatures,
+        wizard_level: int,
+        abilities: AbilitiesStatBlock,
+        wizard_skills: WizardSkillsStatBlock,
+        background_ability_bonuses: Backgrounds.FreeBackgroundAbilityBonus,
+        background_skill_proficiencies: Backgrounds.FreeBackgroundSkillProficiency,
+        add_default_equipment: bool,
+        origin_feat: OriginFeats.OriginFeat,
+        armor: Optional[list[Armor.AbstractArmor]] = None,
+        weapons: Optional[list[Weapons.AbstractWeapon]] = None,
+        replace_spells: Optional[dict[str, str]] = None,
+        items: Optional[list[tuple[Items.Item, int]]] = None,
+    ):
+        super().__init__(
+            wizard_level_features=wizard_level_features,
+            wizard_level=wizard_level,
+            subclass=WizardSubclass.BLADESINGER.value,
+            abilities=abilities,
+            wizard_skills=wizard_skills,
+            background_ability_bonuses=background_ability_bonuses,
+            background_skill_proficiencies=background_skill_proficiencies,
+            add_default_equipment=add_default_equipment,
+            origin_feat=origin_feat,
+            armor=armor,
+            weapons=weapons,
+            replace_spells=replace_spells,
+            items=items,
+        )
+
+
+class WizardDivinerMulticlassBuilder(WizardMulticlassBuilder):
+
+    def __init__(
+        self,
+        wizard_level_features: ClassBuilder.BaseClassLevelFeatures,
+        wizard_level: int,
+        replace_spells: Optional[dict[str, str]] = None,
+    ):
+        super().__init__(
+            wizard_level_features=wizard_level_features,
+            wizard_level=wizard_level,
+            subclass=WizardSubclass.BLADESINGER.value,
+            replace_spells=replace_spells,
+        )

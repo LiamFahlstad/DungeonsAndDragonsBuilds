@@ -73,12 +73,11 @@ def get_starter_class_builder():
                 Skill.PERSUASION,
             ]
         ),
-        add_default_equipment=True,
+        add_default_equipment=False,
         origin_feat=OriginFeats.Tough(),
         armor=[],
         weapons=[
-            Weapons.Maul(),
-            Weapons.LightCrossbow(),
+            Weapons.Maul(player_is_proficient=True, player_has_mastery=True),
         ],
         barbarian_level_features=ClassBuilder.BaseClassLevelFeatures(
             base_class_features_by_level={

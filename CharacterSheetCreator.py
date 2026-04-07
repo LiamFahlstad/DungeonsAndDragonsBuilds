@@ -13,6 +13,7 @@ from Features.FightingStyles import (
     FightStyleWeaponFeature,
 )
 from Features.Weapons import AbstractWeapon
+from Items import Items
 from StatBlocks.AbilitiesStatBlock import AbilitiesStatBlock
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from StatBlocks.CombatStatBlock import CombatStatBlock
@@ -45,6 +46,7 @@ class CharacterSheetData:
     weapon_masteries: list[AbstractWeapon] = attr.Factory(list)
     fighting_styles: list[FightingStyle] = attr.Factory(list)
     armor_proficiencies: set[Definitions.ArmorType] = attr.Factory(set)
+    items: list[tuple[Items.Item, int]] = attr.Factory(list)  # (item_name, quantity)
     _character_cached: Optional[CharacterStatBlock] = None
 
     @property
@@ -152,6 +154,15 @@ class CharacterSheetData:
     def add_invocation(self, invocation: str):
         self.invocations.append(invocation)
 
+    def add_item(self, item: Items.Item, quantity: int = 1):
+        for existing_item, existing_quantity in self.items:
+            # if the type is the same, add to the quantity
+            if type(existing_item) == type(item):
+                existing_quantity += quantity
+                return
+        # otherwise, add a new entry
+        self.items.append((item, quantity))
+
     def create_character_sheet(
         self, skill_config: Definitions.SkillConfig = Definitions.SkillConfig.DEFAULT
     ):
@@ -184,6 +195,7 @@ class CharacterSheetData:
             fighting_styles=self.fighting_styles,
             invocations=self.invocations,
             spells=self.spells,
+            items=self.items,
         )
 
     def setup_character_stat_block(self) -> CharacterStatBlock:

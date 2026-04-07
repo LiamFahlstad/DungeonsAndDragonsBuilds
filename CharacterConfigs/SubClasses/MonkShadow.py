@@ -11,6 +11,7 @@ from CharacterSheetCreator import CharacterSheetData
 from Definitions import MonkSubclass
 from Features import Armor, Backgrounds, OriginFeats, Weapons
 from Features.ClassFeatures import MonkFeatures
+from Items import Items
 from StatBlocks.AbilitiesStatBlock import AbilitiesStatBlock
 from StatBlocks.SkillsStatBlock import MonkSkillsStatBlock
 
@@ -81,6 +82,7 @@ class MonkShadowStarterClassBuilder(MonkStarterClassBuilder):
         armor: Optional[list[Armor.AbstractArmor]] = None,
         weapons: Optional[list[Weapons.AbstractWeapon]] = None,
         replace_spells: Optional[dict[str, str]] = None,
+        items: Optional[list[tuple[Items.Item, int]]] = None,
     ):
         super().__init__(
             monk_level_features=monk_level_features,
@@ -95,6 +97,7 @@ class MonkShadowStarterClassBuilder(MonkStarterClassBuilder):
             armor=armor,
             weapons=weapons,
             replace_spells=replace_spells,
+            items=items,
         )
 
 

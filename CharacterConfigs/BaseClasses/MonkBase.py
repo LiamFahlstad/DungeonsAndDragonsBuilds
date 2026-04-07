@@ -7,6 +7,7 @@ from CharacterSheetCreator import CharacterSheetData
 from Definitions import Ability, CharacterClass
 from Features import Armor, Backgrounds, EpicBoon, GeneralFeats, OriginFeats, Weapons
 from Features.ClassFeatures import MonkFeatures
+from Items import Items
 from StatBlocks.AbilitiesStatBlock import AbilitiesStatBlock
 from StatBlocks.SavingThrowsStatBlock import MonkSavingThrowsStatBlock
 from StatBlocks.SkillsStatBlock import MonkSkillsStatBlock
@@ -253,6 +254,7 @@ class MonkStarterClassBuilder(ClassBuilder.StarterClassBuilder):
         armor: Optional[list[Armor.AbstractArmor]] = None,
         weapons: Optional[list[Weapons.AbstractWeapon]] = None,
         replace_spells: Optional[dict[str, str]] = None,
+        items: Optional[list[tuple[Items.Item, int]]] = None,
     ):
         default_equipment = [
             Weapons.Spear(player_is_proficient=True),

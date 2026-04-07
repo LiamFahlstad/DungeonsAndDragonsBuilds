@@ -11,6 +11,7 @@ from CharacterSheetCreator import CharacterSheetData
 from Definitions import RangerSubclass
 from Features import Armor, Backgrounds, OriginFeats, Weapons
 from Features.ClassFeatures import RangerFeatures
+from Items import Items
 from Spells.Definitions import (
     BardLevel4Spells,
     ClericLevel2Spells,
@@ -145,6 +146,7 @@ class RangerBeastMasterStarterClassBuilder(RangerStarterClassBuilder):
         armor: Optional[list[Armor.AbstractArmor]] = None,
         weapons: Optional[list[Weapons.AbstractWeapon]] = None,
         replace_spells: Optional[dict[str, str]] = None,
+        items: Optional[list[tuple[Items.Item, int]]] = None,
     ):
         super().__init__(
             ranger_level_features=ranger_level_features,
@@ -159,6 +161,7 @@ class RangerBeastMasterStarterClassBuilder(RangerStarterClassBuilder):
             armor=armor,
             weapons=weapons,
             replace_spells=replace_spells,
+            items=items,
         )
 
 

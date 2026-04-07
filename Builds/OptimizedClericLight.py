@@ -30,7 +30,7 @@ from CharacterConfigs.SubClasses.ClericLight import (
 )
 from Definitions import Ability, Skill
 from Features import Backgrounds, EpicBoon, GeneralFeats, OriginFeats
-from SpeciesConfigs import Gnome
+from SpeciesConfigs import Elf
 from Spells.Definitions import (
     ClericLevel0Spells,
     ClericLevel1Spells,
@@ -48,7 +48,7 @@ from StatBlocks.SkillsStatBlock import ClericSkillsStatBlock
 
 def get_starter_class_builder():
     return ClericLightStarterClassBuilder(
-        cleric_level=20,
+        cleric_level=3,
         # Distribute 15, 14, 13, 12, 10, 8 among your abilities.
         abilities=StandardArrayAbilitiesStatBlock(
             strength=8,
@@ -62,8 +62,8 @@ def get_starter_class_builder():
         cleric_skills=ClericSkillsStatBlock(
             proficiencies={
                 Skill.HISTORY: False,
-                Skill.INSIGHT: True,
-                Skill.MEDICINE: False,
+                Skill.INSIGHT: False,
+                Skill.MEDICINE: True,
                 Skill.PERSUASION: True,
                 Skill.RELIGION: False,
             }
@@ -76,7 +76,7 @@ def get_starter_class_builder():
         ),
         background_skill_proficiencies=Backgrounds.FreeBackgroundSkillProficiency(
             [
-                Skill.MEDICINE,
+                Skill.ANIMAL_HANDLING,
                 Skill.PERCEPTION,
             ]
         ),
@@ -88,8 +88,8 @@ def get_starter_class_builder():
             base_class_features_by_level={
                 1: ClericLevel1(
                     cantrip_1=ClericLevel0Spells.GUIDANCE,
-                    cantrip_2=ClericLevel0Spells.LIGHT,
-                    cantrip_3=ClericLevel0Spells.RESISTANCE,
+                    cantrip_2=ClericLevel0Spells.TOLL_THE_DEAD,
+                    cantrip_3=ClericLevel0Spells.SACRED_FLAME,
                     spell_1=ClericLevel1Spells.HEALING_WORD,
                     spell_2=ClericLevel1Spells.BANE,
                     spell_3=ClericLevel1Spells.CREATE_OR_DESTROY_WATER,
@@ -99,7 +99,7 @@ def get_starter_class_builder():
                     spell=ClericLevel1Spells.BLESS,
                 ),
                 3: ClericLevel3(
-                    spell=ClericLevel1Spells.COMMAND,
+                    spell=ClericLevel2Spells.ENHANCE_ABILITY,
                 ),
                 4: ClericLevel4(
                     general_feat=GeneralFeats.AbilityScoreImprovement(
@@ -190,7 +190,8 @@ class OptimizedClericLightCharacterBuilder(CharacterBuilder):
         super().__init__(
             name="Optimized Light Cleric",
             starter_class_builder=get_starter_class_builder(),
-            species_builder=Gnome.ForestGnomeSpeciesBuilder(
-                spell_casting_ability=Ability.WISDOM
+            species_builder=Elf.ElfSpeciesBuilder(
+                elven_lineage=Elf.ElvenLineage.HIGH_ELF,
+                skill_proficiency=Skill.INSIGHT,
             ),
         )

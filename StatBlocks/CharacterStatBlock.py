@@ -1,5 +1,6 @@
 from typing import Optional
 
+import Definitions
 from Definitions import Ability, CharacterClass, Skill
 from StatBlocks.AbilitiesStatBlock import AbilitiesStatBlock
 from StatBlocks.CombatStatBlock import CombatStatBlock
@@ -31,6 +32,8 @@ class CharacterStatBlock:
         self.saving_throws = saving_throws
         self.spell_casting_ability = spell_casting_ability
         self.spell_slots = spell_slots
+        self.initiative_proficiency = False
+        self.initiative_roll_condition = Definitions.DiceRollCondition.NEUTRAL
 
     @property
     def character_level(self) -> int:
@@ -38,7 +41,16 @@ class CharacterStatBlock:
 
     @property
     def initiative(self) -> int:
-        return self.abilities.get_modifier(Ability.DEXTERITY)
+        modifier = self.abilities.get_modifier(Ability.DEXTERITY)
+        if self.initiative_proficiency:
+            modifier += self.get_proficiency_bonus()
+        return modifier
+
+    def add_initiative_proficiency(self):
+        self.initiative_proficiency = True
+
+    def add_initiative_roll_condition(self, condition: Definitions.DiceRollCondition):
+        self.initiative_roll_condition = condition
 
     def get_class_level(self, character_class: CharacterClass) -> int:
         return self.level_per_class.get(character_class, 0)
@@ -89,6 +101,11 @@ class CharacterStatBlock:
 
     def get_skill_roll_condition(self, skill: Skill):
         return self.skills.get_roll_condition(skill)
+
+    def set_skill_roll_condition(
+        self, skill: Skill, condition: Definitions.DiceRollCondition
+    ):
+        self.skills.set_roll_condition(skill, condition)
 
     def get_saving_throw_modifier(self, ability: Ability) -> int:
         base_modifier = self.get_ability_modifier(ability)

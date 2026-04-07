@@ -11,6 +11,7 @@ from CharacterSheetCreator import CharacterSheetData
 from Definitions import WarlockSubclass
 from Features import Armor, Backgrounds, OriginFeats, Weapons
 from Features.ClassFeatures import WarlockFeatures
+from Items import Items
 from Spells.Definitions import (
     BardLevel1Spells,
     BardLevel2Spells,
@@ -125,6 +126,7 @@ class ArchfeyWarlockStarterClassBuilder(WarlockStarterClassBuilder):
         armor: Optional[list[Armor.AbstractArmor]] = None,
         weapons: Optional[list[Weapons.AbstractWeapon]] = None,
         replace_spells: Optional[dict[str, str]] = None,
+        items: Optional[list[tuple[Items.Item, int]]] = None,
     ):
         super().__init__(
             warlock_level_features=warlock_level_features,
@@ -139,6 +141,7 @@ class ArchfeyWarlockStarterClassBuilder(WarlockStarterClassBuilder):
             armor=armor,
             weapons=weapons,
             replace_spells=replace_spells,
+            items=items,
         )
 
 

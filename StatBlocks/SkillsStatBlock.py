@@ -42,6 +42,9 @@ class SkillsStatBlock(StatBlock):
     def get_roll_condition(self, skill: Skill) -> DiceRollCondition:
         return self.dice_roll_conditions.get(skill, DiceRollCondition.NEUTRAL)
 
+    def set_roll_condition(self, skill: Skill, condition: DiceRollCondition):
+        self.dice_roll_conditions[skill] = condition
+
     def get_skill_ability(self, skill: Skill) -> Ability:
         return self.skill_to_ability[skill]
 

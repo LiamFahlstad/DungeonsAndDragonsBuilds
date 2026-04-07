@@ -130,6 +130,7 @@ class WeaponsStats:
     weapon_type: WeaponType
     damage_type: WeaponsDamageTypes
     damage_roll: WeaponsDamageRolls
+    additional_description: Optional[str] = None
 
 
 @dataclass
@@ -140,6 +141,14 @@ class AbstractWeapon(TextFeature):
     player_has_mastery: bool = False
     attack_roll_bonuses: list[tuple[int, str]] = field(default_factory=list)
     ability: Optional[Ability] = None
+
+    @property
+    def name(self):
+        return self.stats().name
+
+    @property
+    def description(self):
+        return self.stats().additional_description
 
     @abstractmethod
     def stats(self) -> WeaponsStats:
@@ -257,6 +266,12 @@ class AbstractWeapon(TextFeature):
             #     mastery_description, max_sentence_length=100
             # )
             rows.append([f"Mastery '{stats.mastery.value}'", mastery_description])
+
+        if stats.additional_description:
+            # additional_description = StringUtils.wrap_text(
+            #     stats.additional_description, max_sentence_length=100
+            # )
+            rows.append(["Additional Description", stats.additional_description])
 
         attack_roll_die = DamageCalculator.Die.D20
         attack_roll_condition = DamageCalculator.DiceRollCondition.NEUTRAL
@@ -872,6 +887,204 @@ class Pistol(AbstractWeapon):
         )
 
 
+### HOMEBREW WEAPONS
+
+
+class Nullblade(AbstractWeapon):
+    def stats(self) -> WeaponsStats:
+        description = (
+            "Antimagic Edge. When you attack with this weapon:\n"
+            "    * Ignore AC bonuses granted by spells or magical effects.\n"
+            "    * Ignore magical effects that cause attacks to miss (illusions, duplicates, displacement).\n"
+            "    * Ignore disadvantage imposed by magical effects.\n"
+            "The Nullblade counts as nonmagical for interactions with magical effects."
+        )
+        return WeaponsStats(
+            name="Nullblade",
+            ability=Ability.STRENGTH,
+            properties=[WeaponProperty.VERSATILE_10],
+            mastery=WeaponMastery.GRAZE,
+            weapon_type=WeaponType.MARTIAL_MELEE,
+            damage_type=WeaponsDamageTypes.SLASHING,
+            damage_roll=WeaponsDamageRolls.D8,
+            additional_description=description,
+        )
+
+
+class Bloodletter(AbstractWeapon):
+    def stats(self) -> WeaponsStats:
+        description = (
+            "Wounds from this blade refuse to close.\n"
+            "On hit, the target must succeed on a CON save "
+            "(DC = 8 + Proficiency Bonus + STR/DEX mod) or begin bleeding.\n"
+            "A bleeding creature takes 1d4 damage at the start of each turn.\n"
+            "It can repeat the save at the end of its turn, or the effect ends "
+            "if it receives magical healing or an ally uses an action to staunch the wound."
+        )
+        return WeaponsStats(
+            name="Bloodletter",
+            ability=Ability.STRENGTH,
+            properties=[],
+            mastery=WeaponMastery.GRAZE,
+            weapon_type=WeaponType.MARTIAL_MELEE,
+            damage_type=WeaponsDamageTypes.SLASHING,
+            damage_roll=WeaponsDamageRolls.D8,
+            additional_description=description,
+        )
+
+
+class HuntersHarpoon(AbstractWeapon):
+    def stats(self) -> WeaponsStats:
+        description = (
+            "On hit, you may tether the target (DEX save).\n"
+            "While tethered, you may use a bonus action to pull the target 10 ft toward you."
+        )
+        return WeaponsStats(
+            name="Hunter’s Harpoon",
+            ability=Ability.STRENGTH,
+            properties=[WeaponProperty.THROWN],
+            mastery=WeaponMastery.SLOW,
+            weapon_type=WeaponType.MARTIAL_MELEE,
+            damage_type=WeaponsDamageTypes.PIERCING,
+            damage_roll=WeaponsDamageRolls.D10,
+            additional_description=description,
+        )
+
+
+class RicochetBlade(AbstractWeapon):
+    def stats(self) -> WeaponsStats:
+        description = (
+            "On hit, you may bounce the attack to another creature within 5 ft.\n"
+            "Make a new attack roll. The new target takes half damage (rounded down).\n"
+            "The attack can bounce up to two times."
+        )
+        return WeaponsStats(
+            name="Ricochet Blade",
+            ability=Ability.DEXTERITY,
+            properties=[WeaponProperty.FINESSE],
+            mastery=WeaponMastery.NICK,
+            weapon_type=WeaponType.MARTIAL_MELEE,
+            damage_type=WeaponsDamageTypes.SLASHING,
+            damage_roll=WeaponsDamageRolls.D6,
+            additional_description=description,
+        )
+
+
+class RampagingBlade(AbstractWeapon):
+    def stats(self) -> WeaponsStats:
+        description = (
+            "Momentum. Each time you hit without missing since your last turn, gain a stack.\n"
+            "Each stack grants +1d4 damage (max 5 stacks).\n"
+            "Stacks reset if you miss, go a full turn without hitting, or combat ends."
+        )
+        return WeaponsStats(
+            name="Rampaging Blade",
+            ability=Ability.STRENGTH,
+            properties=[],
+            mastery=WeaponMastery.CLEAVE,
+            weapon_type=WeaponType.MARTIAL_MELEE,
+            damage_type=WeaponsDamageTypes.SLASHING,
+            damage_roll=WeaponsDamageRolls.D8,
+            additional_description=description,
+        )
+
+
+class ElementalSword(AbstractWeapon):
+    def stats(self) -> WeaponsStats:
+        description = (
+            "As a bonus action, choose acid, cold, fire, lightning, or thunder.\n"
+            "The weapon deals an extra 1d6 damage of the chosen type on hit."
+        )
+        return WeaponsStats(
+            name="Elemental Sword",
+            ability=Ability.STRENGTH,
+            properties=[WeaponProperty.VERSATILE_10],
+            mastery=WeaponMastery.GRAZE,
+            weapon_type=WeaponType.MARTIAL_MELEE,
+            damage_type=WeaponsDamageTypes.SLASHING,
+            damage_roll=WeaponsDamageRolls.D8,
+            additional_description=description,
+        )
+
+
+class BloodlustBlade(AbstractWeapon):
+    def stats(self) -> WeaponsStats:
+        description = (
+            "Predator’s Instinct. You have advantage on attack rolls against bloodied creatures.\n"
+            "If a bloodied creature is visible and you attack another target, you have disadvantage.\n"
+            "This never applies when targeting allies.\n"
+            "A creature is bloodied when at half HP or lower."
+        )
+        return WeaponsStats(
+            name="Bloodlust Blade",
+            ability=Ability.STRENGTH,
+            properties=[],
+            mastery=WeaponMastery.GRAZE,
+            weapon_type=WeaponType.MARTIAL_MELEE,
+            damage_type=WeaponsDamageTypes.SLASHING,
+            damage_roll=WeaponsDamageRolls.D8,
+            additional_description=description,
+        )
+
+
+class CoinflipCutBlade(AbstractWeapon):
+    def stats(self) -> WeaponsStats:
+        description = (
+            "After you hit, flip a coin:\n"
+            "Heads — deal +2d6 force damage.\n"
+            "Tails — you take 1d6 force damage."
+        )
+        return WeaponsStats(
+            name="Coinflip Cut",
+            ability=Ability.DEXTERITY,
+            properties=[WeaponProperty.FINESSE],
+            mastery=WeaponMastery.NICK,
+            weapon_type=WeaponType.MARTIAL_MELEE,
+            damage_type=WeaponsDamageTypes.SLASHING,
+            damage_roll=WeaponsDamageRolls.D6,
+            additional_description=description,
+        )
+
+
+class Sundersteel(AbstractWeapon):
+    def stats(self) -> WeaponsStats:
+        description = (
+            "Damage ignores resistance.\n"
+            "Creatures immune to this damage instead take damage as if resistant."
+        )
+        return WeaponsStats(
+            name="Sundersteel",
+            ability=Ability.STRENGTH,
+            properties=[WeaponProperty.HEAVY],
+            mastery=WeaponMastery.CLEAVE,
+            weapon_type=WeaponType.MARTIAL_MELEE,
+            damage_type=WeaponsDamageTypes.SLASHING,
+            damage_roll=WeaponsDamageRolls.D12,
+            additional_description=description,
+        )
+
+
+class VampiricEdge(AbstractWeapon):
+    def stats(self) -> WeaponsStats:
+        description = (
+            "When you hit a creature, regain 1d4 hit points.\n"
+            "You cannot regain more HP than the damage dealt."
+        )
+        return WeaponsStats(
+            name="Vampiric Edge",
+            ability=Ability.STRENGTH,
+            properties=[],
+            mastery=WeaponMastery.GRAZE,
+            weapon_type=WeaponType.MARTIAL_MELEE,
+            damage_type=WeaponsDamageTypes.SLASHING,
+            damage_roll=WeaponsDamageRolls.D8,
+            additional_description=description,
+        )
+
+
+### Utility functions
+
+
 def write_weapons_to_file(
     weapons: list[AbstractWeapon],
     character_stat_block: CharacterStatBlock,
@@ -890,55 +1103,6 @@ def write_weapons_to_file(
         write_weapons_to_file_html(weapons, character_stat_block, file)
     else:
         write_table(headers, rows, file)
-
-
-# def write_weapons_to_file_html(
-#     weapons: list[AbstractWeapon],
-#     character_stat_block: CharacterStatBlock,
-#     file: TextIO,
-# ):
-#     if not weapons:
-#         return
-
-#     headers: list[str] = weapons[0].get_headers()
-#     rows: list[list[str]] = []
-
-#     for i, weapon in enumerate(weapons):
-#         rows.extend(weapon.get_rows(character_stat_block))
-#         if i < len(weapons) - 1:
-#             rows.append([])  # separator row
-
-#     # --- Start wrapper div ---
-#     file.write("<div class='weapons'>\n")
-
-#     file.write("<h2>Weapons</h2>\n")
-#     file.write("<table border='1' cellspacing='0' cellpadding='5'>\n")
-
-#     # Header row
-#     file.write("<tr>")
-#     for header in headers:
-#         file.write(f"<th>{header}</th>")
-#     file.write("</tr>\n")
-
-#     # Data rows
-#     for row in rows:
-#         if not row:
-#             # Separator row
-#             file.write(f"<tr><td colspan='{len(headers)}'><hr></td></tr>\n")
-#             continue
-
-#         file.write("<tr>")
-#         for i, cell in enumerate(row):
-#             if i == 0:
-#                 file.write(f"<td><b>{cell}</b></td>")
-#             else:
-#                 file.write(f"<td>{cell}</td>")
-#         file.write("</tr>\n")
-
-#     file.write("</table>\n<br>\n")
-
-#     # --- End wrapper div ---
-#     file.write("</div>\n")
 
 
 def write_weapons_to_file_html(

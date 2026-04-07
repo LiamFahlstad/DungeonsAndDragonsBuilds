@@ -1,7 +1,6 @@
 from abc import ABC, abstractmethod
 from typing import TextIO
 
-from Definitions import Ability, Skill
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
@@ -54,23 +53,16 @@ class TextFeature(Feature):
         self, character_stat_block: CharacterStatBlock, text_feature: "TextFeature"
     ):
         description = text_feature.get_description(character_stat_block)
-        indent = "    "
-        indented = "\n".join(
-            (indent + line) if line.strip() else "" for line in description.splitlines()
-        )
-        text = "\n"  # Separate the sections
-        text += f"    {text_feature.name} {text_feature.origin}:\n"  # Indent first line
-        text += indented + "\n"
+        text = f"(Upgrade) {text_feature.name} - {text_feature.origin}:\n"  # Indent first line
+        text += description + "\n"
         return text
 
     def write_to_file(
         self, character_stat_block: CharacterStatBlock, file: TextIO, html: bool = False
     ):
-        max_sentence_length = 150
-
         description = self.get_description(character_stat_block)
         for addition in self.additional_features:
-            new_line = "\n" if not html else "<br>\n"
+            new_line = "\n"  # if not html else "<br>\n"
             description += new_line + self.add_feature_effects(
                 character_stat_block, addition
             )
@@ -97,30 +89,3 @@ class TextFeature(Feature):
             file.write(f"Name: {self.name}\n")
             file.write(f"Origin: {self.origin}\n")
             file.write(f"Description: {description}\n")
-
-
-class MagicianDruidFeature(CharacterFeature):
-    """Add WIS modifier in either arcana or nature (Magician druid)"""
-
-    def __init__(self, skill: Skill):
-        self.skill = skill
-        # Validate
-        if self.skill not in (Skill.ARCANA, Skill.NATURE):
-            raise ValueError(
-                "MagicianDruidFeature can only be applied to Arcana or Nature skills."
-            )
-
-    def modify(self, character_stat_block: CharacterStatBlock):
-        character_stat_block.skills.bonuses[self.skill] = (
-            character_stat_block.get_ability_modifier(Ability.WISDOM)
-        )
-
-
-class SkillfulFeature(CharacterFeature):
-    """Add proficiency in a skill of your choice."""
-
-    def __init__(self, skill: Skill):
-        self.skill = skill
-
-    def modify(self, character_stat_block: CharacterStatBlock):
-        character_stat_block.skills.proficiencies[self.skill] = True

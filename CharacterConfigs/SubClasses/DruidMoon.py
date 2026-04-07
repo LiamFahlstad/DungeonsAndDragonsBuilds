@@ -11,6 +11,7 @@ from CharacterSheetCreator import CharacterSheetData
 from Definitions import DruidSubclass
 from Features import Armor, Backgrounds, OriginFeats, Weapons
 from Features.ClassFeatures import DruidFeatures
+from Items import Items
 from Spells.Definitions import (
     DruidLevel0Spells,
     DruidLevel1Spells,
@@ -119,6 +120,7 @@ class DruidMoonStarterClassBuilder(DruidStarterClassBuilder):
         armor: Optional[list[Armor.AbstractArmor]] = None,
         weapons: Optional[list[Weapons.AbstractWeapon]] = None,
         replace_spells: Optional[dict[str, str]] = None,
+        items: Optional[list[tuple[Items.Item, int]]] = None,
     ):
         super().__init__(
             druid_level_features=druid_level_features,
@@ -133,6 +135,7 @@ class DruidMoonStarterClassBuilder(DruidStarterClassBuilder):
             armor=armor,
             weapons=weapons,
             replace_spells=replace_spells,
+            items=items,
         )
 
 

@@ -14,6 +14,7 @@ from Features import (
     Weapons,
 )
 from Features.ClassFeatures import PaladinFeatures, SpellSlots
+from Items import Items
 from Spells.Definitions import (
     PaladinLevel1Spells,
     PaladinLevel2Spells,
@@ -315,6 +316,7 @@ class PaladinStarterClassBuilder(ClassBuilder.StarterClassBuilder):
         armor: Optional[list[Armor.AbstractArmor]] = None,
         weapons: Optional[list[Weapons.AbstractWeapon]] = None,
         replace_spells: Optional[dict[str, str]] = None,
+        items: Optional[list[tuple[Items.Item, int]]] = None,
     ):
         default_equipment = [
             Armor.ChainMailArmor(),
@@ -340,6 +342,7 @@ class PaladinStarterClassBuilder(ClassBuilder.StarterClassBuilder):
             replace_spells=replace_spells,
             spell_casting_ability=Ability.CHARISMA,
             caster_type=SpellSlots.CasterType.HALF_CASTER,
+            items=items,
         )
 
 

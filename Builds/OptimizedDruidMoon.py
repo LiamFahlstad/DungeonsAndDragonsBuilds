@@ -53,7 +53,7 @@ from StatBlocks.SkillsStatBlock import DruidSkillsStatBlock
 
 def get_starter_class_builder():
     return DruidMoonStarterClassBuilder(
-        druid_level=20,
+        druid_level=3,
         # Distribute 15, 14, 13, 12, 10, 8 among your abilities.
         abilities=StandardArrayAbilitiesStatBlock(
             strength=8,
@@ -106,7 +106,7 @@ def get_starter_class_builder():
                     spell=DruidLevel1Spells.HEALING_WORD,
                 ),
                 3: DruidLevel3(
-                    spell=DruidLevel1Spells.CHARM_PERSON,
+                    spell=DruidLevel2Spells.SPIKE_GROWTH,
                 ),
                 4: DruidLevel4(
                     general_feat=GeneralFeats.WarCaster(

@@ -11,6 +11,7 @@ from CharacterSheetCreator import CharacterSheetData
 from Definitions import PaladinSubclass
 from Features import Armor, Backgrounds, OriginFeats, Weapons
 from Features.ClassFeatures import PaladinFeatures
+from Items import Items
 from Spells.Definitions import (
     BardLevel4Spells,
     ClericLevel2Spells,
@@ -148,6 +149,7 @@ class AncientsPaladinStarterClassBuilder(PaladinStarterClassBuilder):
         armor: Optional[list[Armor.AbstractArmor]] = None,
         weapons: Optional[list[Weapons.AbstractWeapon]] = None,
         replace_spells: Optional[dict[str, str]] = None,
+        items: Optional[list[tuple[Items.Item, int]]] = None,
     ):
         super().__init__(
             paladin_level_features=paladin_level_features,
@@ -162,6 +164,7 @@ class AncientsPaladinStarterClassBuilder(PaladinStarterClassBuilder):
             armor=armor,
             weapons=weapons,
             replace_spells=replace_spells,
+            items=items,
         )
 
 

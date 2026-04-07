@@ -7,6 +7,7 @@ from CharacterSheetCreator import CharacterSheetData
 from Definitions import Ability, CharacterClass, Skill
 from Features import Armor, Backgrounds, GeneralFeats, OriginFeats, Weapons
 from Features.ClassFeatures import SpellSlots, WizardFeatures
+from Items import Items
 from Spells.Definitions import (
     WizardLevel0Spells,
     WizardLevel1Spells,
@@ -324,6 +325,7 @@ class WizardStarterClassBuilder(ClassBuilder.StarterClassBuilder):
         armor: Optional[list[Armor.AbstractArmor]] = None,
         weapons: Optional[list[Weapons.AbstractWeapon]] = None,
         replace_spells: Optional[dict[str, str]] = None,
+        items: Optional[list[tuple[Items.Item, int]]] = None,
     ):
         default_equipment = [
             Weapons.Dagger(player_is_proficient=True),
@@ -347,6 +349,7 @@ class WizardStarterClassBuilder(ClassBuilder.StarterClassBuilder):
             replace_spells=replace_spells,
             spell_casting_ability=Ability.INTELLIGENCE,
             caster_type=SpellSlots.CasterType.FULL_CASTER,
+            items=items,
         )
 
 

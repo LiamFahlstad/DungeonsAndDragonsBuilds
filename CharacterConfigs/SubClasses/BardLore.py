@@ -12,6 +12,7 @@ from CharacterSheetCreator import CharacterSheetData
 from Definitions import BardSubclass, Skill
 from Features import Armor, Backgrounds, OriginFeats, Weapons
 from Features.ClassFeatures import BardFeatures
+from Items import Items
 from StatBlocks.AbilitiesStatBlock import AbilitiesStatBlock
 from StatBlocks.SkillsStatBlock import BardSkillsStatBlock
 
@@ -85,6 +86,7 @@ class BardLoreStarterClassBuilder(BardStarterClassBuilder):
         armor: Optional[list[Armor.AbstractArmor]] = None,
         weapons: Optional[list[Weapons.AbstractWeapon]] = None,
         replace_spells: Optional[dict[str, str]] = None,
+        items: Optional[list[tuple[Items.Item, int]]] = None,
     ):
         super().__init__(
             bard_level_features=bard_level_features,
@@ -99,6 +101,7 @@ class BardLoreStarterClassBuilder(BardStarterClassBuilder):
             armor=armor,
             weapons=weapons,
             replace_spells=replace_spells,
+            items=items,
         )
 
 

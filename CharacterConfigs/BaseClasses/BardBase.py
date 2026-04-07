@@ -8,6 +8,7 @@ from CharacterSheetCreator import CharacterSheetData
 from Definitions import Ability, ApplyWhen, CharacterClass, Skill
 from Features import Armor, Backgrounds, EpicBoon, GeneralFeats, OriginFeats, Weapons
 from Features.ClassFeatures import BardFeatures, SpellSlots
+from Items import Items
 from Spells.Definitions import (
     BardLevel0Spells,
     BardLevel1Spells,
@@ -341,6 +342,7 @@ class BardStarterClassBuilder(ClassBuilder.StarterClassBuilder):
         armor: Optional[list[Armor.AbstractArmor]] = None,
         weapons: Optional[list[Weapons.AbstractWeapon]] = None,
         replace_spells: Optional[dict[str, str]] = None,
+        items: Optional[list[tuple[Items.Item, int]]] = None,
     ):
         default_equipment = [
             Armor.LeatherArmor(),
@@ -367,6 +369,7 @@ class BardStarterClassBuilder(ClassBuilder.StarterClassBuilder):
             replace_spells=replace_spells,
             spell_casting_ability=Ability.CHARISMA,
             caster_type=SpellSlots.CasterType.FULL_CASTER,
+            items=items,
         )
 
 

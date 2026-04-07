@@ -8,6 +8,7 @@ from CharacterSheetCreator import CharacterSheetData
 from Definitions import CharacterClass
 from Features import Armor, Backgrounds, OriginFeats, Weapons
 from Features.ClassFeatures import SpellSlots
+from Items import Items
 from StatBlocks.AbilitiesStatBlock import AbilitiesStatBlock
 from StatBlocks.SavingThrowsStatBlock import SavingThrowsStatBlock
 from StatBlocks.SkillsStatBlock import ClassSkillsStatBlock
@@ -303,6 +304,7 @@ class StarterClassBuilder(ClassBuilder):
         replace_spells: Optional[dict[str, str]] = None,
         spell_casting_ability: Optional[Definitions.Ability] = None,
         caster_type: Optional[SpellSlots.CasterType] = None,
+        items: Optional[list[tuple[Items.Item, int]]] = None,
     ):
         self.subclass = subclass
         self.abilities = abilities
@@ -316,6 +318,8 @@ class StarterClassBuilder(ClassBuilder):
         self.armor_proficiencies = armor_proficiencies
         self.armor = armor
         self.weapons = weapons
+        self.items = items
+
         super().__init__(
             base_class=base_class,
             base_class_level_features=base_class_level_features,
@@ -363,6 +367,11 @@ class StarterClassBuilder(ClassBuilder):
 
         # Origin feat
         data.add_feature(self.origin_feat)
+
+        # Items
+        if self.items is not None:
+            for item, quantity in self.items:
+                data.add_item(item, quantity)
 
         return data
 

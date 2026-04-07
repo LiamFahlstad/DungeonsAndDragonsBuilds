@@ -8,6 +8,7 @@ from CharacterSheetCreator import CharacterSheetData
 from Definitions import CharacterClass
 from Features import Armor, Backgrounds, GeneralFeats, OriginFeats, Weapons
 from Features.ClassFeatures import RogueFeatures
+from Items import Items
 from StatBlocks.AbilitiesStatBlock import AbilitiesStatBlock
 from StatBlocks.SavingThrowsStatBlock import RogueSavingThrowsStatBlock
 from StatBlocks.SkillsStatBlock import RogueSkillsStatBlock
@@ -224,6 +225,7 @@ class RogueStarterClassBuilder(ClassBuilder.StarterClassBuilder):
         armor: Optional[list[Armor.AbstractArmor]] = None,
         weapons: Optional[list[Weapons.AbstractWeapon]] = None,
         replace_spells: Optional[dict[str, str]] = None,
+        items: Optional[list[tuple[Items.Item, int]]] = None,
     ):
         default_equipment = [
             Weapons.Shortsword(player_is_proficient=True),
@@ -248,6 +250,7 @@ class RogueStarterClassBuilder(ClassBuilder.StarterClassBuilder):
             armor=armor,
             weapons=weapons,
             replace_spells=replace_spells,
+            items=items,
         )
 
 

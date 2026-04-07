@@ -10,6 +10,7 @@ from Features.BaseFeatures import CharacterFeature, Feature
 from Features.FightingStyles import FightingStyle
 from Features.Weapons import AbstractWeapon, write_weapons_to_file
 from Invocations.InvocationFactory import InvocationFactory
+from Items import Items
 from Spells.SpellFactory import SpellFactory
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
@@ -370,6 +371,16 @@ class HtmlCharacterSheetWriter(CharacterSheetWriter):
         file.write("<table border='1' cellspacing='0' cellpadding='5'>\n")
         file.write("<tr><th>Field</th><th>Value</th></tr>\n")
 
+        initiative = f"d20 + {character.initiative}"
+        if character.initiative_proficiency:
+            initiative += f" ({character.abilities.get_modifier(Ability.DEXTERITY)} dex modifier + {character.get_proficiency_bonus()} Proficiency Bonus)"
+
+        if character.initiative_roll_condition in (
+            Definitions.DiceRollCondition.ADVANTAGE,
+            Definitions.DiceRollCondition.DISADVANTAGE,
+        ):
+            initiative += f" ({character.initiative_roll_condition.value})"
+
         rows = [
             ("Max Hit Points", character.calculate_hit_points()),
             ("Armor Class", ac),
@@ -377,7 +388,7 @@ class HtmlCharacterSheetWriter(CharacterSheetWriter):
                 "Armor Proficiencies",
                 ", ".join(sorted([atype.value for atype in armor_proficiencies])),
             ),
-            ("Initiative", f"d20 + {character.initiative}"),
+            ("Initiative", initiative),
             ("Speed (ft)", character.combat.speed),
             ("Size", character.combat.size.value),
         ]
@@ -655,6 +666,105 @@ class HtmlCharacterSheetWriter(CharacterSheetWriter):
 
         file.write("<br>\n")
 
+    def _write_items(
+        self,
+        character: CharacterStatBlock,
+        file: TextIO,
+        armors: list[Armor.AbstractArmor],
+        weapons: list[AbstractWeapon],
+        items: list[tuple[Items.Item, int]],
+    ):
+        if not items and not armors and not weapons:
+            return
+
+        file.write("<h2>Items</h2>\n")
+
+        # Reuse spell table styling
+        file.write(
+            """
+        <style>
+        .item-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+            margin: 0.25rem 0;
+        }
+
+        .item-table td, .item-table th {
+            border: 1px solid #ddd;
+            padding: 3px 5px;
+            vertical-align: top;
+        }
+
+        .item-title {
+            font-size: 1rem;
+            text-align: left;
+            background: #f5f5f5;
+            font-weight: 600;
+        }
+
+        .item-label {
+            font-weight: 600;
+            white-space: nowrap;
+            background: #fafafa;
+            width: 1%;
+        }
+
+        .item-value {
+            width: auto;
+        }
+        </style>
+        """
+        )
+
+        def start_table(title: str):
+            file.write("<table class='item-table'>\n")
+            file.write(
+                f"""
+            <tr>
+                <th class='item-title' colspan='2'>{title}</th>
+            </tr>
+            """
+            )
+
+        def end_table():
+            file.write("</table>\n")
+
+        def row(label, value):
+            file.write("<tr>")
+            file.write(f"<td class='item-label'>{label}</td>")
+            file.write(f"<td class='item-value'>{value}</td>")
+            file.write("</tr>\n")
+
+        # --- Armors ---
+        if armors:
+            start_table("Weapons")
+            for armor in armors:
+                description = armor.description if armor.description else "-"
+                row(armor.name, description)
+            end_table()
+
+        # --- Weapons ---
+        file.write("<hr>")
+        if weapons:
+            start_table("Armors")
+            for weapon in weapons:
+                description = weapon.description if weapon.description else "-"
+                row(weapon.name, description)
+            end_table()
+
+        # --- Other Items ---
+        file.write("<hr>")
+        if items:
+            sorted_items = sorted(items, key=lambda x: x[0].name)
+
+            start_table("Other items")
+            for item, quantity in sorted_items:
+                row(f"{item.name} ({quantity})", item.description())
+            end_table()
+
+        file.write("<br>\n")
+
     def _get_css_style(self) -> str:
         return """
         <style>
@@ -746,11 +856,15 @@ class HtmlCharacterSheetWriter(CharacterSheetWriter):
         fighting_styles: list[FightingStyle],
         invocations: list[str],
         spells: list[tuple[str, Ability, Optional[str]]],
+        items: list[tuple[Items.Item, int]],  # (item_name, quantity)
     ):
         output_path_obj = pathlib.Path(output_path)
         output_path_obj.parent.mkdir(parents=True, exist_ok=True)
         with open(output_path_obj.with_suffix(".html"), "w", encoding="utf-8") as file:
             file.write(self._get_css_style())
+            file.write(
+                f"<h1>{character.name} - Level {character.character_level} {character.starter_class.value}</h1>\n"
+            )
             self._write_general_info(character, file)
             self._write_combat_stats(character, file, armors, armor_proficiencies)
             self._write_abilities(character, file)
@@ -761,3 +875,4 @@ class HtmlCharacterSheetWriter(CharacterSheetWriter):
             self._write_invocations(character, file, invocations)
             self._write_spell_slots(character, file)
             self._write_spells(character, file, spells)
+            self._write_items(character, file, armors, weapons, items)

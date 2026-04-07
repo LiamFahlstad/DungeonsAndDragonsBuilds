@@ -9,6 +9,7 @@ from Definitions import CharacterClass
 from Features import Armor, Backgrounds, EpicBoon, GeneralFeats, OriginFeats, Weapons
 from Features.ClassFeatures import FighterFeatures
 from Features.FightingStyles import FightingStyle
+from Items import Items
 from StatBlocks.AbilitiesStatBlock import AbilitiesStatBlock
 from StatBlocks.SavingThrowsStatBlock import FighterSavingThrowsStatBlock
 from StatBlocks.SkillsStatBlock import FighterSkillsStatBlock
@@ -240,6 +241,7 @@ class FighterStarterClassBuilder(ClassBuilder.StarterClassBuilder):
         armor: Optional[list[Armor.AbstractArmor]] = None,
         weapons: Optional[list[Weapons.AbstractWeapon]] = None,
         replace_spells: Optional[dict[str, str]] = None,
+        items: Optional[list[tuple[Items.Item, int]]] = None,
     ):
         default_equipment = [
             Weapons.Greatsword(player_is_proficient=True),
@@ -269,6 +271,7 @@ class FighterStarterClassBuilder(ClassBuilder.StarterClassBuilder):
             armor=armor,
             weapons=weapons,
             replace_spells=replace_spells,
+            items=items,
         )
 
 
