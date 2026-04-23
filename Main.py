@@ -9,6 +9,7 @@ from Builds import (
     OptimizedDruidMoon,
     OptimizedFighterBattleMaster,
     OptimizedFighterChampion,
+    OptimizedFighterChampion2,
     OptimizedMonkShadow,
     OptimizedPaladinGlory,
     OptimizedPaladinVengeance,
@@ -27,7 +28,6 @@ class BuildSelector:
     @staticmethod
     def get_build(build_name: str) -> CharacterBuilder:
         builds = {
-            # "MulticlassTest": MutliclassTest.MutliclassTestCharacterBuilder(),
             "OptimizedBarbarianBerserker": OptimizedBarbarianBerserker.OptimizedBarbarianBerserkerCharacterBuilder(),
             "OptimizedBarbarianWorldTree": OptimizedBarbarianWorldTree.OptimizedBarbarianWorldTreeCharacterBuilder(),
             "OptimizedBardGlamour": OptimizedBardGlamour.OptimizedBardGlamourCharacterBuilder(),
@@ -37,6 +37,7 @@ class BuildSelector:
             "OptimizedDruidMoon": OptimizedDruidMoon.OptimizedDruidMoonCharacterBuilder(),
             "OptimizedFighterBattleMaster": OptimizedFighterBattleMaster.OptimizedFighterBattleMasterCharacterBuilder(),
             "OptimizedFighterChampion": OptimizedFighterChampion.OptimizedFighterChampionCharacterBuilder(),
+            "OptimizedFighterChampion2": OptimizedFighterChampion2.OptimizedFighterChampionCharacterBuilder(),
             "OptimizedMonkShadow": OptimizedMonkShadow.OptimizedMonkShadowCharacterBuilder(),
             "OptimizedPaladinGlory": OptimizedPaladinGlory.OptimizedPaladinGloryCharacterBuilder(),
             "OptimizedPaladinVengeance": OptimizedPaladinVengeance.OptimizedPaladinVengeanceCharacterBuilder(),
@@ -54,7 +55,6 @@ class BuildSelector:
 if __name__ == "__main__":
     skill_config = Definitions.SkillConfig.DEFAULT
     build_names = [
-        # "MulticlassTest",
         "OptimizedBarbarianBerserker",
         "OptimizedBarbarianWorldTree",
         "OptimizedBardGlamour",
@@ -64,6 +64,7 @@ if __name__ == "__main__":
         "OptimizedDruidMoon",
         "OptimizedFighterBattleMaster",
         "OptimizedFighterChampion",
+        "OptimizedFighterChampion2",
         "OptimizedMonkShadow",
         "OptimizedPaladinGlory",
         "OptimizedPaladinVengeance",

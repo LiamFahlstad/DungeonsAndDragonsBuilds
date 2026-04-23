@@ -21,8 +21,9 @@ from Features import (
     OriginFeats,
     Weapons,
 )
-from Items import Items, Packs
+from Items import Packs
 from SpeciesConfigs import Dwarf
+from Spells import Definitions as SpellsDefinitions
 from StatBlocks.AbilitiesStatBlock import StandardArrayAbilitiesStatBlock
 from StatBlocks.SkillsStatBlock import FighterSkillsStatBlock
 
@@ -32,9 +33,9 @@ def get_starter_class_builder():
         non_generic_arguments=FighterChampionNonGenericStarterClassArgs(
             skills=FighterSkillsStatBlock(
                 proficiencies={
-                    Skill.ACROBATICS: True,
+                    Skill.ACROBATICS: False,
                     Skill.ANIMAL_HANDLING: True,
-                    Skill.ATHLETICS: False,
+                    Skill.ATHLETICS: True,
                     Skill.HISTORY: False,
                     Skill.INSIGHT: False,
                     Skill.INTIMIDATION: False,
@@ -43,14 +44,14 @@ def get_starter_class_builder():
                 }
             ),
         ),
-        base_class_level=4,
+        base_class_level=3,
         # Distribute 15, 14, 13, 12, 10, 8 among your abilities.
         abilities=StandardArrayAbilitiesStatBlock(
             strength=15,
-            dexterity=14,
+            dexterity=12,
             constitution=13,
-            intelligence=8,
-            wisdom=12,
+            intelligence=14,
+            wisdom=8,
             charisma=10,
         ),
         background_ability_bonuses=Backgrounds.FreeBackgroundAbilityBonus(
@@ -61,29 +62,32 @@ def get_starter_class_builder():
         ),
         background_skill_proficiencies=Backgrounds.FreeBackgroundSkillProficiency(
             [
-                Skill.INTIMIDATION,
-                Skill.ATHLETICS,
+                Skill.INVESTIGATION,
+                Skill.ARCANA,
             ]
         ),
         add_default_equipment=False,
-        origin_feat=OriginFeats.SavageAttacker(),
+        origin_feat=OriginFeats.MagicInitiateWizard(
+            cantrip_1=SpellsDefinitions.WizardLevel0Spells.PRESTIDIGITATION,
+            cantrip_2=SpellsDefinitions.WizardLevel0Spells.MINOR_ILLUSION,
+            spell=SpellsDefinitions.WizardLevel1Spells.DISGUISE_SELF,
+            spell_casting_ability=Ability.INTELLIGENCE,
+        ),
         armor=[
-            Armor.LeatherArmor(),
+            Armor.ChainMailArmor(),
         ],
         weapons=[
-            Weapons.Shortsword(player_is_proficient=True),
-            Weapons.Scimitar(player_is_proficient=True),
+            Weapons.Maul(player_is_proficient=True),
             Weapons.Longbow(player_is_proficient=True),
         ],
-        items=Packs.DungeoneersPack().get_items()
-        + [(Items.RobeOfLevitation(), 1), (Items.HobbyHorse(), 1)],
+        items=Packs.DungeoneersPack().get_items(),
         base_class_level_features=ClassBuilder.BaseClassLevelFeatures(
             base_class_features_by_level={
                 1: FighterLevel1(
-                    weapon_mastery_1=Weapons.Shortsword(),
+                    weapon_mastery_1=Weapons.Maul(),
                     weapon_mastery_2=Weapons.Scimitar(),
                     weapon_mastery_3=Weapons.Longbow(),
-                    fighting_style=FightingStyles.Archery(),
+                    fighting_style=FightingStyles.GreatWeaponFighting(),
                 ),
                 2: FighterLevel2(),
                 3: FighterLevel3(),
@@ -106,7 +110,7 @@ def get_starter_class_builder():
 class OptimizedFighterChampionCharacterBuilder(CharacterBuilder):
     def __init__(self):
         super().__init__(
-            name="Optimized Fighter Champion",
+            name="Optimized Fighter Champion 2",
             starter_class_builder=get_starter_class_builder(),
             species_builder=Dwarf.DwarfSpeciesBuilder(),
         )

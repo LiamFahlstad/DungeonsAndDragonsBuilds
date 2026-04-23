@@ -19,6 +19,7 @@ from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from StatBlocks.CombatStatBlock import CombatStatBlock
 from StatBlocks.SavingThrowsStatBlock import SavingThrowsStatBlock
 from StatBlocks.SkillsStatBlock import SkillsStatBlock
+from ToolProficiencies.ToolProficiencies import ToolProficiency
 from Utils import CharaterSheetWriters
 
 
@@ -47,6 +48,7 @@ class CharacterSheetData:
     fighting_styles: list[FightingStyle] = attr.Factory(list)
     armor_proficiencies: set[Definitions.ArmorType] = attr.Factory(set)
     items: list[tuple[Items.Item, int]] = attr.Factory(list)  # (item_name, quantity)
+    tool_proficiencies: list[ToolProficiency] = attr.Factory(list)
     _character_cached: Optional[CharacterStatBlock] = None
 
     @property
@@ -163,6 +165,12 @@ class CharacterSheetData:
         # otherwise, add a new entry
         self.items.append((item, quantity))
 
+    def add_tool_proficiency(self, tool_proficiency: ToolProficiency):
+        if tool_proficiency not in self.tool_proficiencies:
+            self.tool_proficiencies.append(tool_proficiency)
+        else:
+            raise ValueError(f"Tool proficiency {tool_proficiency} already added.")
+
     def create_character_sheet(
         self, skill_config: Definitions.SkillConfig = Definitions.SkillConfig.DEFAULT
     ):
@@ -196,6 +204,7 @@ class CharacterSheetData:
             invocations=self.invocations,
             spells=self.spells,
             items=self.items,
+            tool_proficiencies=self.tool_proficiencies,
         )
 
     def setup_character_stat_block(self) -> CharacterStatBlock:

@@ -60,7 +60,7 @@ def get_starter_class_builder():
                 }
             ),
         ),
-        base_class_level=3,
+        base_class_level=4,
         # Distribute 15, 14, 13, 12, 10, 8 among your abilities.
         abilities=StandardArrayAbilitiesStatBlock(
             strength=13,
@@ -109,11 +109,9 @@ def get_starter_class_builder():
                     spell=ClericLevel2Spells.SPIRITUAL_WEAPON,
                 ),
                 4: ClericLevel4(
-                    general_feat=GeneralFeats.AbilityScoreImprovement(
-                        [
-                            (Ability.WISDOM, 1),
-                            (Ability.CONSTITUTION, 1),
-                        ]
+                    general_feat=GeneralFeats.WarCaster(
+                        character_level=4,
+                        ability=Ability.WISDOM,
                     ),
                     cantrip=ClericLevel0Spells.SPARE_THE_DYING,
                     spell=ClericLevel2Spells.AID,

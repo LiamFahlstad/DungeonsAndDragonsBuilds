@@ -16,9 +16,6 @@ from StatBlocks.SkillsStatBlock import FighterSkillsStatBlock
 
 @attr.dataclass
 class FighterChampionLevel3(ClassBuilder.SubclassLevel3):
-    maneuver_1: Maneuvers.Maneuver
-    maneuver_2: Maneuvers.Maneuver
-    maneuver_3: Maneuvers.Maneuver
 
     def add_features(
         self,

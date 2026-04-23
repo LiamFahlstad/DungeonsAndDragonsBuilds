@@ -15,7 +15,7 @@ from CharacterConfigs.SubClasses.RogueAssassin import (
     RogueAssassinNonGenericStarterClassArgs,
 )
 from Definitions import Ability, Skill
-from Features import Backgrounds, GeneralFeats, OriginFeats, Weapons
+from Features import Armor, Backgrounds, GeneralFeats, OriginFeats, Weapons
 from Items import Items, Packs
 from SpeciesConfigs import Elf
 from StatBlocks.AbilitiesStatBlock import StandardArrayAbilitiesStatBlock
@@ -39,7 +39,7 @@ def get_starter_class_builder():
                 }
             ),
         ),
-        base_class_level=3,
+        base_class_level=4,
         # Distribute 15, 14, 13, 12, 10, 8 among your abilities.
         abilities=StandardArrayAbilitiesStatBlock(
             strength=8,
@@ -61,10 +61,15 @@ def get_starter_class_builder():
                 Skill.DECEPTION,
             ]
         ),
-        add_default_equipment=True,
+        add_default_equipment=False,
         origin_feat=OriginFeats.Alert(),
-        armor=[],
-        weapons=[],
+        armor=[
+            Armor.LeatherArmor(),
+        ],
+        weapons=[
+            Weapons.Shortsword(player_is_proficient=True),
+            Weapons.Scimitar(player_is_proficient=True),
+        ],
         items=Packs.BurglarsPack().get_items()
         + [
             (Items.Makarov(), 1),

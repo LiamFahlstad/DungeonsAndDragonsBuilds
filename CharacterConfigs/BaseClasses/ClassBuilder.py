@@ -12,6 +12,7 @@ from Items import Items
 from StatBlocks.AbilitiesStatBlock import AbilitiesStatBlock
 from StatBlocks.SavingThrowsStatBlock import SavingThrowsStatBlock
 from StatBlocks.SkillsStatBlock import ClassSkillsStatBlock
+from ToolProficiencies.ToolProficiencies import ToolProficiency
 
 
 @attr.dataclass
@@ -316,6 +317,7 @@ class StarterClassBuilder(ClassBuilder):
         weapons: Optional[list[Weapons.AbstractWeapon]] = None,
         replace_spells: Optional[dict[str, str]] = None,
         items: Optional[list[tuple[Items.Item, int]]] = None,
+        tool_proficiencies: Optional[ToolProficiency] = None,
     ):
         self.non_generic_arguments = non_generic_arguments
         self.abilities = abilities
@@ -326,6 +328,7 @@ class StarterClassBuilder(ClassBuilder):
         self.armor = armor
         self.weapons = weapons
         self.items = items
+        self.tool_proficiencies = tool_proficiencies
 
         super().__init__(
             base_class=non_generic_arguments.base_class,
@@ -375,6 +378,7 @@ class StarterClassBuilder(ClassBuilder):
 
         data.add_feature(self.background_ability_bonuses)
         data.add_feature(self.background_skill_proficiencies)
+        data.add_origin_feat(self.origin_feat)
         if self.caster_type is not None:
             data.add_feature(SpellSlots.SpellSlots(self.caster_type))
 
@@ -397,9 +401,6 @@ class StarterClassBuilder(ClassBuilder):
         if self.weapons is not None:
             for w in self.weapons:
                 data.add_weapon(w)
-
-        # Origin feat
-        data.add_feature(self.origin_feat)
 
         # Items
         if self.items is not None:

@@ -13,6 +13,7 @@ from Invocations.InvocationFactory import InvocationFactory
 from Items import Items
 from Spells.SpellFactory import SpellFactory
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
+from ToolProficiencies.ToolProficiencies import ToolProficiency
 
 
 class CharacterSheetWriter(ABC):
@@ -738,7 +739,7 @@ class HtmlCharacterSheetWriter(CharacterSheetWriter):
 
         # --- Armors ---
         if armors:
-            start_table("Weapons")
+            start_table("Armor")
             for armor in armors:
                 description = armor.description if armor.description else "-"
                 row(armor.name, description)
@@ -747,7 +748,7 @@ class HtmlCharacterSheetWriter(CharacterSheetWriter):
         # --- Weapons ---
         file.write("<hr>")
         if weapons:
-            start_table("Armors")
+            start_table("Weapons")
             for weapon in weapons:
                 description = weapon.description if weapon.description else "-"
                 row(weapon.name, description)
@@ -761,6 +762,86 @@ class HtmlCharacterSheetWriter(CharacterSheetWriter):
             start_table("Other items")
             for item, quantity in sorted_items:
                 row(f"{item.name} ({quantity})", item.description())
+            end_table()
+
+        file.write("<br>\n")
+
+    def _write_tool_proficiencies(
+        self,
+        character: CharacterStatBlock,
+        file: TextIO,
+        tool_proficiencies: Optional[list[ToolProficiency]],
+    ):
+        if not tool_proficiencies:
+            return
+
+        file.write("<h2>Items</h2>\n")
+
+        # Reuse spell table styling
+        file.write(
+            """
+        <style>
+        .item-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+            margin: 0.25rem 0;
+        }
+
+        .item-table td, .item-table th {
+            border: 1px solid #ddd;
+            padding: 3px 5px;
+            vertical-align: top;
+        }
+
+        .item-title {
+            font-size: 1rem;
+            text-align: left;
+            background: #f5f5f5;
+            font-weight: 600;
+        }
+
+        .item-label {
+            font-weight: 600;
+            white-space: nowrap;
+            background: #fafafa;
+            width: 1%;
+        }
+
+        .item-value {
+            width: auto;
+        }
+        </style>
+        """
+        )
+
+        def start_table(title: str):
+            file.write("<table class='item-table'>\n")
+            file.write(
+                f"""
+            <tr>
+                <th class='item-title' colspan='2'>{title}</th>
+            </tr>
+            """
+            )
+
+        def end_table():
+            file.write("</table>\n")
+
+        def row(label, value):
+            file.write("<tr>")
+            file.write(f"<td class='item-label'>{label}</td>")
+            file.write(f"<td class='item-value'>{value}</td>")
+            file.write("</tr>\n")
+
+        # --- Other Items ---
+        file.write("<hr>")
+        if tool_proficiencies:
+            sorted_tool_proficiencies = sorted(tool_proficiencies, key=lambda x: x.name)
+
+            start_table("Other Tool Proficiencies")
+            for tool_proficiency in sorted_tool_proficiencies:
+                row(f"{tool_proficiency.name}", tool_proficiency.description())
             end_table()
 
         file.write("<br>\n")
@@ -857,6 +938,7 @@ class HtmlCharacterSheetWriter(CharacterSheetWriter):
         invocations: list[str],
         spells: list[tuple[str, Ability, Optional[str]]],
         items: list[tuple[Items.Item, int]],  # (item_name, quantity)
+        tool_proficiencies: list[ToolProficiency],
     ):
         output_path_obj = pathlib.Path(output_path)
         output_path_obj.parent.mkdir(parents=True, exist_ok=True)
@@ -876,3 +958,4 @@ class HtmlCharacterSheetWriter(CharacterSheetWriter):
             self._write_spell_slots(character, file)
             self._write_spells(character, file, spells)
             self._write_items(character, file, armors, weapons, items)
+            self._write_tool_proficiencies(character, file, tool_proficiencies)

@@ -106,6 +106,35 @@ class GreatWeaponMaster(GeneralFeatTextFeature):
         )
 
 
+class MountedCombatant(GeneralFeatTextFeature):
+    def __init__(self, character_level: int, ability: Ability):
+        if character_level < 4:
+            raise ValueError("Mounted Combatant requires character level 4 or higher.")
+        if ability not in [Ability.STRENGTH, Ability.DEXTERITY, Ability.WISDOM]:
+            raise ValueError(
+                "Mounted Combatant ability increase must be Strength, Dexterity, or Wisdom."
+            )
+        self.ability = ability
+        super().__init__(
+            name="Mounted Combatant",
+            origin="General Feat Level 4+",
+        )
+
+    def modify(self, character_stat_block: CharacterStatBlock):
+        # Player chooses one; here we assume a selection system exists.
+        # Replace with your actual choice handling if needed.
+        character_stat_block.abilities.add_bonus(self.ability, 1)
+
+    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+        return (
+            "You gain the following benefits.\n"
+            "Ability Score Increase. Increase your Strength, Dexterity, or Wisdom score by 1, to a maximum of 20.\n"
+            "Mounted Strike. While mounted, you have Advantage on attack rolls against any unmounted creature within 5 feet of your mount that is at least one size smaller than the mount.\n"
+            "Leap Aside. If your mount is subjected to an effect that allows it to make a Dexterity saving throw to take only half damage, it instead takes no damage if it succeeds on the saving throw and only half damage if it fails. For your mount to gain this benefit, you must be riding it, and neither of you can have the Incapacitated condition.\n"
+            "Veer. While mounted, you can force an attack that hits your mount to hit you instead if you don't have the Incapacitated condition.\n"
+        )
+
+
 class Actor(GeneralFeatTextFeature):
 
     def __init__(self, character_level: int, ability: Ability):
