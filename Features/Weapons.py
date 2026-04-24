@@ -126,10 +126,10 @@ class WeaponsStats:
     name: str
     ability: Ability
     properties: list[WeaponProperty]
-    mastery: WeaponMastery
     weapon_type: WeaponType
     damage_type: WeaponsDamageTypes
     damage_roll: WeaponsDamageRolls
+    mastery: Optional[WeaponMastery] = None
     additional_description: Optional[str] = None
 
 
@@ -349,6 +349,36 @@ class AbstractWeapon(TextFeature):
             number_of_damage_dice=number_of_damage_dice,
             damage_condition=damage_condition,
             damage_bonus=damage_bonus,
+        )
+
+
+@dataclass
+class UnarmedStrike(AbstractWeapon):
+    ability: Optional[Ability] = None
+    damage_roll: Optional[WeaponsDamageRolls] = None
+
+    def __post_init__(self):
+        if self.ability is not None and self.ability not in (
+            Ability.STRENGTH,
+            Ability.DEXTERITY,
+        ):
+            raise ValueError("Unarmed Strike ability must be STR or DEX.")
+        if self.player_has_mastery:
+            raise ValueError("Unarmed Strike cannot have weapon mastery.")
+
+    def stats(self) -> WeaponsStats:
+        return WeaponsStats(
+            name="Unarmed Strike",
+            ability=self.ability or Ability.STRENGTH,
+            properties=[],
+            mastery=None,
+            weapon_type=WeaponType.MARTIAL_MELEE,
+            damage_type=WeaponsDamageTypes.BLUDGEONING,
+            damage_roll=self.damage_roll or WeaponsDamageRolls.D1,
+            additional_description=(
+                "You can replace one attack with a grapple or shove. Grapple: target within reach and no more than one size larger, requires a free hand; make an Athletics check contested by Athletics or Acrobatics; on success, the target’s speed becomes 0, you can move it at half speed, and you can release it at any time; it can repeat the check to escape and automatically fails if incapacitated. "
+                "Shove: same limits and check; on success, either knock the target prone or push it 5 ft. "
+            ),
         )
 
 

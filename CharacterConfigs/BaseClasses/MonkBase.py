@@ -35,6 +35,7 @@ class MonkLevel2(ClassBuilder.BaseClassLevel2):
         data.add_feature(MonkFeatures.UnarmoredDefense())
         data.add_feature(MonkFeatures.UnarmoredDefenseText())
         data.add_feature(MonkFeatures.UncannyMetabolism())
+
         return data
 
 
@@ -241,12 +242,22 @@ class MonkNonGenericStarterClassArgs(ClassBuilder.NonGenericStarterClassArgs):
         self,
         subclass: str,
         skills: MonkSkillsStatBlock,
+        monk_level: int,
+        unarmed_strike: Ability,
     ):
+
+        martial_arts_die = MonkFeatures.LEVEL_TO_MARTIAL_ARTS_DIE[monk_level]
+
         super().__init__(
             base_class=CharacterClass.MONK,
             subclass=subclass,
             saving_throws=MonkSavingThrowsStatBlock(),
             default_equipment=[
+                Weapons.UnarmedStrike(
+                    player_is_proficient=True,
+                    ability=unarmed_strike,
+                    damage_roll=martial_arts_die,
+                ),
                 Weapons.Spear(player_is_proficient=True),
                 Weapons.Dagger(player_is_proficient=True),
             ],

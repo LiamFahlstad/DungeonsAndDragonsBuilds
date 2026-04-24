@@ -1,30 +1,31 @@
 import Definitions
 from Features.BaseFeatures import CharacterFeature, TextFeature
+from Features.Weapons import WeaponsDamageRolls
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 BARBARIAN_HIT_DIE = 8
 
 LEVEL_TO_MARTIAL_ARTS_DIE = {
-    1: "1d6",
-    2: "1d6",
-    3: "1d6",
-    4: "1d6",
-    5: "1d8",
-    6: "1d8",
-    7: "1d8",
-    8: "1d8",
-    9: "1d8",
-    10: "1d8",
-    11: "1d10",
-    12: "1d10",
-    13: "1d10",
-    14: "1d10",
-    15: "1d10",
-    16: "1d10",
-    17: "1d12",
-    18: "1d12",
-    19: "1d12",
-    20: "1d12",
+    1: WeaponsDamageRolls.D6,
+    2: WeaponsDamageRolls.D6,
+    3: WeaponsDamageRolls.D6,
+    4: WeaponsDamageRolls.D6,
+    5: WeaponsDamageRolls.D8,
+    6: WeaponsDamageRolls.D8,
+    7: WeaponsDamageRolls.D8,
+    8: WeaponsDamageRolls.D8,
+    9: WeaponsDamageRolls.D8,
+    10: WeaponsDamageRolls.D8,
+    11: WeaponsDamageRolls.D10,
+    12: WeaponsDamageRolls.D10,
+    13: WeaponsDamageRolls.D10,
+    14: WeaponsDamageRolls.D10,
+    15: WeaponsDamageRolls.D10,
+    16: WeaponsDamageRolls.D10,
+    17: WeaponsDamageRolls.D12,
+    18: WeaponsDamageRolls.D12,
+    19: WeaponsDamageRolls.D12,
+    20: WeaponsDamageRolls.D12,
 }
 
 LEVEL_TO_FOCUS_POINTS = {
@@ -59,14 +60,16 @@ class MartialArts(TextFeature):
         monk_level = character_stat_block.get_class_level(
             Definitions.CharacterClass.MONK
         )
-        martial_arts_die = LEVEL_TO_MARTIAL_ARTS_DIE.get(monk_level, "1d6")
+        martial_arts_die = LEVEL_TO_MARTIAL_ARTS_DIE.get(
+            monk_level, WeaponsDamageRolls.D6
+        )
         description = (
             "Your practice of martial arts gives you mastery of combat styles that use your Unarmed Strike and Monk weapons, which are the following:\n"
             "    * Simple Melee weapons\n"
             "    * Martial Melee weapons that have the Light property\n"
             "You gain the following benefits while you are unarmed or wielding only Monk weapons and you aren't wearing armor or wielding a Shield.\n"
             "    * Bonus Unarmed Strike. You can make an Unarmed Strike as a Bonus Action.\n"
-            f"    * Martial Arts Die. You can roll {martial_arts_die} in place of the normal damage of your Unarmed Strike or Monk weapons. This die changes as you gain Monk levels, as shown in the Martial Arts column of the Monk Features table.\n"
+            f"    * Martial Arts Die. You can roll {martial_arts_die.value} in place of the normal damage of your Unarmed Strike or Monk weapons. This die changes as you gain Monk levels, as shown in the Martial Arts column of the Monk Features table.\n"
             "    * Dexterous Attacks. You can use your Dexterity modifier instead of your Strength modifier for the attack and damage rolls of your Unarmed Strikes and Monk weapons. In addition, when you use the Grapple or Shove option of your Unarmed Strike, you can use your Dexterity modifier instead of your Strength modifier to determine the save DC."
         )
         return description

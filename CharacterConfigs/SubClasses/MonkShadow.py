@@ -8,7 +8,7 @@ from CharacterConfigs.BaseClasses.MonkBase import (
     MonkNonGenericStarterClassArgs,
 )
 from CharacterSheetCreator import CharacterSheetData
-from Definitions import MonkSubclass
+from Definitions import Ability, MonkSubclass
 from Features.ClassFeatures import MonkFeatures
 from StatBlocks.SkillsStatBlock import MonkSkillsStatBlock
 
@@ -68,10 +68,14 @@ class MonkShadowNonGenericStarterClassArgs(MonkNonGenericStarterClassArgs):
     def __init__(
         self,
         skills: MonkSkillsStatBlock,
+        monk_level: int,
+        unarmed_strike: Ability,
     ):
         super().__init__(
             subclass=MonkSubclass.SHADOW.value,
             skills=skills,
+            monk_level=monk_level,
+            unarmed_strike=unarmed_strike,
         )
 
 

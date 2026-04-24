@@ -15,6 +15,7 @@ from StatBlocks.SkillsStatBlock import MonkSkillsStatBlock
 
 
 def get_starter_class_builder():
+    monk_level = 3
     return StarterClassBuilder(
         non_generic_arguments=MonkShadowNonGenericStarterClassArgs(
             skills=MonkSkillsStatBlock(
@@ -27,8 +28,10 @@ def get_starter_class_builder():
                     Skill.STEALTH: True,
                 }
             ),
+            monk_level=monk_level,
+            unarmed_strike=Ability.DEXTERITY,
         ),
-        base_class_level=3,
+        base_class_level=monk_level,
         # Distribute 15, 14, 13, 12, 10, 8 among your abilities.
         abilities=StandardArrayAbilitiesStatBlock(
             strength=8,
@@ -40,8 +43,8 @@ def get_starter_class_builder():
         ),
         background_ability_bonuses=Backgrounds.FreeBackgroundAbilityBonus(
             [
-                (Ability.WISDOM, 1),
-                (Ability.DEXTERITY, 2),
+                (Ability.WISDOM, 2),
+                (Ability.DEXTERITY, 1),
             ]
         ),
         background_skill_proficiencies=Backgrounds.FreeBackgroundSkillProficiency(

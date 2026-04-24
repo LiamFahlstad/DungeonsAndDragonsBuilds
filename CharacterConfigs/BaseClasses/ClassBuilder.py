@@ -386,6 +386,13 @@ class StarterClassBuilder(ClassBuilder):
             data.add_armor_proficiency(armor_type)
 
         ### Equipment ###
+        add_unarmed_strike = False
+        for item in self.default_equipment:
+            if isinstance(item, Weapons.UnarmedStrike):
+                add_unarmed_strike = True
+                break
+        if not add_unarmed_strike:
+            data.add_weapon(Weapons.UnarmedStrike(player_is_proficient=True))
 
         if self.add_default_equipment:
             for item in self.default_equipment:

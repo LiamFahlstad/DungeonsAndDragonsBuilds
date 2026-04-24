@@ -241,6 +241,7 @@ class BarbarianNonGenericStarterClassArgs(ClassBuilder.NonGenericStarterClassArg
             subclass=subclass,
             saving_throws=BarbarianSavingThrowsStatBlock(),
             default_equipment=[
+                Weapons.UnarmedStrike(player_is_proficient=True),
                 Weapons.Greataxe(player_is_proficient=True),
             ],
             skills=skills,
