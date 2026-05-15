@@ -46,6 +46,11 @@ class CharacterStatBlock:
             modifier += self.get_proficiency_bonus()
         return modifier
 
+    def _require_spell_casting_ability(self) -> Ability:
+        if self.spell_casting_ability is None:
+            raise ValueError("Character does not have a spell casting ability.")
+        return self.spell_casting_ability
+
     def add_initiative_proficiency(self):
         self.initiative_proficiency = True
 
@@ -125,32 +130,32 @@ class CharacterStatBlock:
         )
 
     def calculate_armor_class(self) -> int:
-        ability_modifier = 0
-        for ability in self.combat.armor_class_abilities:
-            ability_modifier += self.get_ability_modifier(ability)
-
-        additional_modifier = self.combat.armor_class_modifier
-        ac_base = self.combat.armor_class_base
-        return ac_base + ability_modifier + additional_modifier
+        ability_modifier = sum(
+            self.get_ability_modifier(ability)
+            for ability in self.combat.armor_class_abilities
+        )
+        return (
+            self.combat.armor_class_base
+            + ability_modifier
+            + self.combat.armor_class_modifier
+        )
 
     def get_spell_casting_ability(self) -> Ability:
-        if self.spell_casting_ability is None:
-            raise ValueError("Character does not have a spell casting ability.")
-        return self.spell_casting_ability
+        return self._require_spell_casting_ability()
 
     def calculate_difficulty_class(self) -> int:
-        if self.spell_casting_ability is None:
-            raise ValueError("Character does not have a spell casting ability.")
-        return self.calculate_difficulty_class_for_ability(self.spell_casting_ability)
+        return self.calculate_difficulty_class_for_ability(
+            self._require_spell_casting_ability()
+        )
 
     def calculate_difficulty_class_for_ability(self, ability: Ability) -> int:
         modifier = self.get_ability_modifier(ability)
         return 8 + self.get_proficiency_bonus() + modifier
 
     def calculate_attack_bonus(self) -> int:
-        if self.spell_casting_ability is None:
-            raise ValueError("Character does not have a spell casting ability.")
-        return self.calculate_attack_bonus_for_ability(self.spell_casting_ability)
+        return self.calculate_attack_bonus_for_ability(
+            self._require_spell_casting_ability()
+        )
 
     def calculate_attack_bonus_for_ability(self, ability: Ability) -> int:
         ability_modifier = self.get_ability_modifier(ability)

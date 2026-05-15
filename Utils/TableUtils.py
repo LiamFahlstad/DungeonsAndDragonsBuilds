@@ -1,6 +1,52 @@
 from typing import Any, TextIO
 
 
+def _expand_multiline_rows(
+    headers: list[str], rows: list[list[Any]]
+) -> list[list[Any]]:
+    expanded_rows: list[list[Any]] = []
+
+    for row in rows:
+        multiline_index = None
+        split_values = None
+
+        for index, value in enumerate(row):
+            if isinstance(value, str) and "\n" in value:
+                if index != len(headers) - 1:
+                    raise ValueError(
+                        "Multi-line values are only supported in the last column"
+                    )
+                multiline_index = index
+                split_values = value.split("\n")
+                break
+
+        if multiline_index is None:
+            expanded_rows.append(row)
+            continue
+
+        first_row = row.copy()
+        first_row[multiline_index] = split_values[0]
+        expanded_rows.append(first_row)
+
+        for split_value in split_values[1:]:
+            expanded_rows.append([""] * (len(headers) - 1) + [split_value])
+
+    return expanded_rows
+
+
+def _column_widths(headers: list[str], rows: list[list[Any]]) -> list[int]:
+    return [
+        max(len(str(header)), *(len(str(row[index])) for row in rows if row))
+        for index, header in enumerate(headers)
+    ]
+
+
+def _format_row(row: list[Any], col_widths: list[int], separator: str) -> str:
+    return separator.join(
+        f"{str(row[index]):<{col_widths[index]}}" for index in range(len(col_widths))
+    )
+
+
 def write_table(headers: list[str], rows: list[list[Any]], file: TextIO):
     """
     Write a table with given headers and rows into a file.
@@ -9,48 +55,10 @@ def write_table(headers: list[str], rows: list[list[Any]], file: TextIO):
     :param rows: list of lists of values, e.g. [[183, 24, "Male"], [170, 30, "Female"]]
     :param file: an open file object (opened with 'w' mode)
     """
-    new_rows = []
+    rows = _expand_multiline_rows(headers, rows)
+    col_widths = _column_widths(headers, rows)
 
-    for row in rows:
-        # Find if there's a multiline cell
-        multiline_index = None
-        split_values = None
-
-        for i, value in enumerate(row):
-            if "\n" in value:
-                if i != len(headers) - 1:
-                    raise ValueError(
-                        "Multi-line values are only supported in the last column"
-                    )
-                multiline_index = i
-                split_values = value.split("\n")
-                break
-
-        # If no multiline cell → keep row as-is
-        if multiline_index is None:
-            new_rows.append(row)
-            continue
-
-        # First row: keep original values, but replace last column with first split
-        first_row = row.copy()
-        first_row[multiline_index] = split_values[0]
-        new_rows.append(first_row)
-
-        # Remaining rows: empty columns except last
-        for split_value in split_values[1:]:
-            new_rows.append([""] * (len(headers) - 1) + [split_value])
-
-    rows = new_rows
-    # Determine column widths (max length among header and each column's data)
-    col_widths = [
-        max(len(str(header)), *(len(str(row[i])) for row in rows if row))
-        for i, header in enumerate(headers)
-    ]
-
-    # Build the header row
-    header_line = " | ".join(
-        f"{header:<{col_widths[i]}}" for i, header in enumerate(headers)
-    )
+    header_line = _format_row(headers, col_widths, " | ")
     separator = "-+-".join("-" * col_widths[i] for i in range(len(headers)))
 
     # Write header and separator
@@ -62,27 +70,14 @@ def write_table(headers: list[str], rows: list[list[Any]], file: TextIO):
         if not row:
             file.write(separator + "\n")
             continue
-        row_line = " | ".join(
-            f"{str(row[i]):<{col_widths[i]}}" for i in range(len(headers))
-        )
-        file.write(row_line + "\n")
+        file.write(_format_row(row, col_widths, " | ") + "\n")
 
 
 def write_table_with_title(
     title: str, headers: list[str], rows: list[list[str]], file: TextIO
 ):
-    # Determine column widths (max length among header and each column's data)
-    col_widths = [
-        max(len(str(header)), *(len(str(row[i])) for row in rows if row))
-        for i, header in enumerate(headers)
-    ]
-
-    # Build the header row
-    header_line = (
-        "| "
-        + " | ".join(f"{header:<{col_widths[i]}}" for i, header in enumerate(headers))
-        + " |"
-    )
+    col_widths = _column_widths(headers, rows)
+    header_line = "| " + _format_row(headers, col_widths, " | ") + " |"
     separator = (
         "+-" + "-+-".join("-" * col_widths[i] for i in range(len(headers))) + "-+"
     )
@@ -97,10 +92,7 @@ def write_table_with_title(
         if not row:
             file.write(separator + "\n")
             continue
-        row_line = " | ".join(
-            f"{str(row[i]):<{col_widths[i]}}" for i in range(len(headers))
-        )
-        file.write("| " + row_line + " |\n")
+        file.write("| " + _format_row(row, col_widths, " | ") + " |\n")
     file.write(separator + "\n")
 
 

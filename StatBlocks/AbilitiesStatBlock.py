@@ -1,5 +1,3 @@
-import numpy as np
-
 import Definitions
 from Definitions import Ability
 from StatBlocks.StatBlock import StatBlock
@@ -67,7 +65,7 @@ class AbilitiesStatBlock(StatBlock):
         self, abilities: list[Definitions.Ability]
     ) -> Definitions.Ability:
         highest_ability = None
-        highest_modifier = -np.inf
+        highest_modifier = float("-inf")
         for ability in abilities:
             modifier = self.get_modifier(ability)
             if modifier > highest_modifier:

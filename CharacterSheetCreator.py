@@ -23,6 +23,9 @@ from ToolProficiencies.ToolProficiencies import ToolProficiency
 from Utils import CharaterSheetWriters
 
 
+_MERGE_EMPTY_VALUES = (None, [], {}, "")
+
+
 @attr.dataclass
 class CharacterSheetData:
     character_name: Optional[str] = None
@@ -99,12 +102,9 @@ class CharacterSheetData:
         spell_casting_ability: Optional[Ability] = None,
         additional_ruling: Optional[str] = None,
     ):
-        if spell_casting_ability is None:
-            if self.spell_casting_ability is None:
-                raise ValueError(
-                    "Spell casting ability must be provided if not already set."
-                )
-            spell_casting_ability = self.spell_casting_ability
+        spell_casting_ability = self._resolve_spell_casting_ability(
+            spell_casting_ability
+        )
 
         if spell in [s[0] for s in self.spells]:
             raise ValueError(f"Spell {spell} already added.")
@@ -116,12 +116,9 @@ class CharacterSheetData:
         spell_casting_ability: Optional[Ability] = None,
         additional_ruling: Optional[str] = None,
     ):
-        if spell_casting_ability is None:
-            if self.spell_casting_ability is None:
-                raise ValueError(
-                    "Spell casting ability must be provided if not already set."
-                )
-            spell_casting_ability = self.spell_casting_ability
+        spell_casting_ability = self._resolve_spell_casting_ability(
+            spell_casting_ability
+        )
         self.spells.append((cantrip, spell_casting_ability, additional_ruling))
 
     def replace_spells(self, replace_spells: dict[str, str]):
@@ -252,19 +249,10 @@ class CharacterSheetData:
         return character.calculate_attack_bonus_for_ability(ability)
 
     def get_file_path(self) -> str:
-        def slugify(name: str) -> str:
-            """Convert a spell name into the URL-friendly format used by AideDD (no regex)."""
-            # Lowercase and strip whitespace
-            name = name.lower().strip()
-
-            # Remove any non-alphanumeric characters except spaces and hyphens
-            allowed_chars = "abcdefghijklmnopqrstuvwxyz0123456789 -"
-            cleaned = "".join(ch for ch in name if ch in allowed_chars)
-
-            # Replace spaces with hyphens
-            return cleaned.replace(" ", "_")
-
-        return f"Output/{slugify(self.character_name)}_{self.character_subclass.lower()}_level_{self.character_level}_character_sheet.html"
+        return (
+            f"Output/{self._slugify_name(self.character_name)}_"
+            f"{self.character_subclass.lower()}_level_{self.character_level}_character_sheet.html"
+        )
 
     def merge_with(self, other: "CharacterSheetData"):
         """Merge this CharacterSheetData with another, with the other taking precedence."""
@@ -273,18 +261,38 @@ class CharacterSheetData:
             other_value = getattr(other, attr)
             my_value = getattr(self, attr)
 
-            if other_value not in (None, [], {}, ""):
-                setattr(self, attr, other_value)
-
             if isinstance(my_value, list) and isinstance(other_value, list):
-                combined_list = my_value + other_value
-                setattr(self, attr, combined_list)
+                setattr(self, attr, my_value + other_value)
+                continue
 
             if isinstance(my_value, dict) and isinstance(other_value, dict):
                 combined_dict = my_value.copy()
                 combined_dict.update(other_value)
                 setattr(self, attr, combined_dict)
+                continue
 
             if isinstance(my_value, set) and isinstance(other_value, set):
-                combined_set = my_value.union(other_value)
-                setattr(self, attr, combined_set)
+                setattr(self, attr, my_value.union(other_value))
+                continue
+
+            if other_value not in _MERGE_EMPTY_VALUES:
+                setattr(self, attr, other_value)
+
+    def _resolve_spell_casting_ability(
+        self, spell_casting_ability: Optional[Ability]
+    ) -> Ability:
+        if spell_casting_ability is not None:
+            return spell_casting_ability
+        if self.spell_casting_ability is None:
+            raise ValueError(
+                "Spell casting ability must be provided if not already set."
+            )
+        return self.spell_casting_ability
+
+    @staticmethod
+    def _slugify_name(name: str) -> str:
+        """Convert a character name into the filename format used for output sheets."""
+        name = name.lower().strip()
+        allowed_chars = "abcdefghijklmnopqrstuvwxyz0123456789 -"
+        cleaned = "".join(ch for ch in name if ch in allowed_chars)
+        return cleaned.replace(" ", "_")

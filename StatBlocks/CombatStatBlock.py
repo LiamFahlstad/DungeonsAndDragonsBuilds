@@ -38,12 +38,13 @@ class CombatStatBlock(StatBlock):
         level_per_class: dict[Definitions.CharacterClass, int],
         constitution_modifier: int,
     ) -> int:
-        # First level: max hit die + constitution modifier
-
+        # First level: max hit die + constitution modifier.
         hit_points = starter_class.hit_die + constitution_modifier
-        # Subsequent levels: average hit die + constitution modifier
         for character_class, level in level_per_class.items():
-            start = 1 if character_class == starter_class else 0
-            for _ in range(start, level):
-                hit_points += character_class.average_hit_die + constitution_modifier
+            levels_to_add = level - (1 if character_class == starter_class else 0)
+            if levels_to_add <= 0:
+                continue
+            hit_points += levels_to_add * (
+                character_class.average_hit_die + constitution_modifier
+            )
         return hit_points + self.hit_points_bonus
