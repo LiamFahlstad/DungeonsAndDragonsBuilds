@@ -431,3 +431,24 @@ class ZhentarimRuffian(OriginTextFeat):
             "Exploit Opening. When you roll damage for an Opportunity Attack, you can roll the damage dice twice and use either roll against the target.\n"
             "Family First. If you have Heroic Inspiration when you roll Initiative, you can expend it to give yourself and your allies Advantage on that Initiative roll.        \n"
         )
+
+
+class SharpEye(OriginTextFeat):
+    def __init__(self):
+        super().__init__(name="Sharp Eye", origin="Origin Feat")
+
+    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+        return "When you take the Search or Study action, you can give yourself Advantage on any ability check made as part of that action. You can use this feature a number of times equal to your Proficiency Bonus, and you regain all expended uses when you finish a Long Rest. If the check fails, the use of this feature isn't expended."
+
+
+class Survivor(OriginTextFeat):
+    def __init__(self):
+        super().__init__(name="Survivor", origin="Origin Feat")
+
+    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+        return (
+            "You gain the following benefits.\n"
+            "Hypervigilance. Whenever you roll Initiative, you can reroll the d20 if the number rolled is 9 or lower. You must use the new roll.\n"
+            "Steel Yourself. When you fail a saving throw to avoid or end the Charmed or Frightened condition, you can take a Reaction to add a bonus to the roll potentially causing it to succeed. The bonus is equal to your Proficiency Bonus.\n"
+            "Once you take this Reaction, you can't do so again until you finish a Long Rest.\n"
+        )
