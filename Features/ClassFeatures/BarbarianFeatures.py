@@ -93,7 +93,6 @@ class DangerSenseText(TextFeature):
 class DangerSense(CharacterFeature):
     def modify(self, character_stat_block: CharacterStatBlock):
         character_stat_block.saving_throws.add_advantage(Ability.DEXTERITY)
-        character_stat_block.saving_throws.add_advantage(Ability.STRENGTH)
 
 
 class RecklessAttack(TextFeature):

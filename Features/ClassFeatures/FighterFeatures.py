@@ -27,7 +27,7 @@ class SecondWind(TextFeature):
         if character_stat_block.character_level >= 4:
             uses = 3
         if character_stat_block.character_level >= 10:
-            uses = 3
+            uses = 4
 
         base_text = (
             f"You have a limited well of physical and mental stamina that you can draw on. "

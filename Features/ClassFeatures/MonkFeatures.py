@@ -403,12 +403,16 @@ class FlurryOfHealingAndHarm(TextFeature):
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+        wisdom_modifier = character_stat_block.get_ability_modifier(
+            Definitions.Ability.WISDOM
+        )
+        uses = max(1, wisdom_modifier)
         description = (
             "When you use Flurry of Blows, you can replace each of the Unarmed Strikes with a use of Hand of Healing without expending Focus Points for the healing.\n"
             "In addition, when you make an Unarmed Strike with Flurry of Blows and deal damage, you can use Hand of Harm with that strike without expending a Focus Point for Hand of Harm. You can still use Hand of Harm only once per turn.\n"
             "You can use these benefits a total number of times equal to your Wisdom modifier (minimum of once). You regain all expended uses when you finish a Long Rest."
         )
-        return description
+        return StringUtils.add_boxes(description, uses)
 
 
 class HandOfUltimateMercy(TextFeature):

@@ -112,8 +112,7 @@ class GreaterDivineIntervention(TextFeature):
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
-            "You can call on even more powerful divine intervention. When you use your Divine Intervention feature, you can choose Wish when you select a spell. If you do so, you can't use Divine Intervention again until you finish 2d4 Long Rests.\n"
-            "class"
+            "You can call on even more powerful divine intervention. When you use your Divine Intervention feature, you can choose Wish when you select a spell. If you do so, you can't use Divine Intervention again until you finish 2d4 Long Rests."
         )
         return description
 

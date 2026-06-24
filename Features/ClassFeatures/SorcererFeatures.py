@@ -70,9 +70,9 @@ class Metamagic(TextFeature):
         sorcerer_level = character_stat_block.get_class_level(
             Definitions.CharacterClass.SORCERER
         )
-        if sorcerer_level < 2:
+        if sorcerer_level < 10:
             metamaagic_options = 2
-        elif sorcerer_level < 10:
+        elif sorcerer_level < 20:
             metamaagic_options = 4
         else:
             metamaagic_options = 6

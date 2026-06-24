@@ -1,3 +1,4 @@
+import Definitions
 from Definitions import Ability
 from Features.BaseFeatures import TextFeature
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
@@ -51,7 +52,7 @@ class WildShape(TextFeature):
         super().__init__(name="Wild Shape", origin="Druid Level 2")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        druid_level = character_stat_block.character_level
+        druid_level = character_stat_block.get_class_level(Definitions.CharacterClass.DRUID)
         if druid_level >= 18:
             uses = 6
         elif druid_level >= 14:

@@ -136,11 +136,13 @@ class FlashofGenius(TextFeature):
         super().__init__(name="Flash of Genius", origin="Artificer Level 7")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+        intelligence_modifier = character_stat_block.get_ability_modifier(Ability.INTELLIGENCE)
+        uses = max(1, intelligence_modifier)
         description = (
             "When you or a creature you can see within 30 feet of you fails an ability check or a saving throw, you can take a Reaction to add a bonus to the roll, potentially causing it to succeed. The bonus equals your Intelligence modifier (minimum of +1).\n"
             "You can take this Reaction a number of times equal to your Intelligence modifier (minimum of once). You regain all expended uses when you finish a Long Rest."
         )
-        return description
+        return StringUtils.add_boxes(description, uses)
 
 
 class MagicItemAdept(TextFeature):
@@ -276,8 +278,10 @@ class RestorativeReagents(TextFeature):
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+        intelligence_modifier = character_stat_block.get_ability_modifier(Ability.INTELLIGENCE)
+        uses = max(1, intelligence_modifier)
         description = "You can cast Lesser Restoration without expending a spell slot and without preparing the spell, provided you use Alchemist's Supplies as the Spellcasting Focus. You can do so a number of times equal to your Intelligence modifier (minimum of once), and you regain all expended uses when you finish a Long Rest."
-        return description
+        return StringUtils.add_boxes(description, uses)
 
 
 class ChemicalMastery(TextFeature):
@@ -611,13 +615,15 @@ class ArcaneJolt(TextFeature):
         super().__init__(name="Arcane Jolt", origin="Battle Smith Artificer Level 9")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+        intelligence_modifier = character_stat_block.get_ability_modifier(Ability.INTELLIGENCE)
+        uses = max(1, intelligence_modifier)
         description = (
             "When either you hit a target with an attack roll using a magic weapon or your Steel Defender hits a target, you can channel magical energy through the strike to create one of the following effects:\n"
             "Destructive Energy. The target takes an extra 2d6 Force damage.\n"
             "Restorative Energy. Choose one creature or object you can see within 30 feet of the target. Healing energy flows into the chosen recipient, restoring 2d6 Hit Points to it.\n"
             "You can use this energy a number of times equal to your Intelligence modifier (minimum of once), but you can do so no more than once per turn. You regain all expended uses when you finish a Long Rest."
         )
-        return description
+        return StringUtils.add_boxes(description, uses)
 
 
 class ImprovedDefender(TextFeature):
@@ -694,12 +700,14 @@ class MappingMagic(TextFeature):
         super().__init__(name="Mapping Magic", origin="Cartographer Artificer Level 3")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+        intelligence_modifier = character_stat_block.get_ability_modifier(Ability.INTELLIGENCE)
+        uses = max(1, intelligence_modifier)
         description = (
             "You gain the following benefits.\n"
             "Illuminated Cartography. You can cast Faerie Fire without expending a spell slot, outlining the affected creatures as if in ink. You can do so a number of times equal to your Intelligence modifier (minimum of once), and you regain all expended uses when you finish a Long Rest.\n"
             "Portal Jump. On your turn, you can spend an amount of movement equal to half your Speed (round down) to teleport to an unoccupied space you can see within 10 feet of yourself or within 5 feet of a creature that is within 30 feet of you and holding one of your Adventurer's Atlas maps. You can't use this benefit if your Speed is 0."
         )
-        return description
+        return StringUtils.add_boxes(description, uses)
 
 
 class GuidedPrecision(TextFeature):
@@ -772,13 +780,15 @@ class ReanimatorsSkillSet(TextFeature):
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+        intelligence_modifier = character_stat_block.get_ability_modifier(Ability.INTELLIGENCE)
+        uses = max(1, intelligence_modifier)
         description = (
             "You gain the following benefits.\n"
             "Jolt to Life. When you cast Spare the Dying, you can modify the spell so that it sends a jolt of electricity through the target, reviving it. The target regains a number of Hit Points equal to your Artificer level, and each creature of your choice in a 10-foot Emanation originating from the target makes a Dexterity saving throw against your spell save DC, taking 2d4 Lightning damage on a failed save or half as much damage on a successful one.\n"
-            "You can modify the spell this way a number of times equal to your Intelligence modifier, and you regain all expended uses when you finish a Long Rest. The Lightning damage of this feature increases by 1d4 when you reach Artificer levels 11 (3d4) and 17 (4d4).\n"
+            "You can modify the spell this way a number of times equal to your Intelligence modifier (minimum of once), and you regain all expended uses when you finish a Long Rest. The Lightning damage of this feature increases by 1d4 when you reach Artificer levels 11 (3d4) and 17 (4d4).\n"
             "Reanimator's Tools. You gain proficiency with Alchemist's Supplies. If you already have this proficiency, you gain proficiency with one other type of Artisan's Tools of your choice."
         )
-        return description
+        return StringUtils.add_boxes(description, uses)
 
 
 class ReanimatedCompanion(TextFeature):
