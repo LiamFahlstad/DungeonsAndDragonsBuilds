@@ -1,5 +1,7 @@
+from Definitions import Ability
 from Features.BaseFeatures import TextFeature
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
+from Utils import StringUtils
 
 ARTIFICER_HIT_DIE = 8
 
@@ -9,6 +11,8 @@ class TinkersMagic(TextFeature):
         super().__init__(name="Tinker's Magic", origin="Artificer Level 1")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+        intelligence_modifier = character_stat_block.get_ability_modifier(Ability.INTELLIGENCE)
+        uses = max(1, intelligence_modifier)
         description = (
             "You know the Mending cantrip.\n"
             "As a Magic action while holding Tinker's Tools, you can create one item in an unoccupied space within 5 feet of yourself, choosing the item from the following list:\n"
@@ -26,7 +30,7 @@ class TinkersMagic(TextFeature):
             "See the rules for the item in the Player's Handbook. The item lasts until you finish a Long Rest, at which point it vanishes.\n"
             "You can use this feature a number of times equal to your Intelligence modifier (minimum of once), and you regain all expended uses when you finish a Long Rest."
         )
-        return description
+        return StringUtils.add_boxes(description, uses)
 
 
 class ReplicateMagicItem(TextFeature):

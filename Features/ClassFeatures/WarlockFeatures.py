@@ -1,5 +1,7 @@
+from Definitions import Ability
 from Features.BaseFeatures import TextFeature
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
+from Utils import StringUtils
 
 WARLOCK_HIT_DIE = 8
 
@@ -103,13 +105,15 @@ class StepsOfTheFey(TextFeature):
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+        charisma_modifier = character_stat_block.get_ability_modifier(Ability.CHARISMA)
+        uses = max(1, charisma_modifier)
         description = (
             "Your patron grants you the ability to move between the boundaries of the planes. You can cast Misty Step without expending a spell slot a number of times equal to your Charisma modifier (minimum of once), and you regain all expended uses when you finish a Long Rest.\n"
             "In addition, whenever you cast that spell, you can choose one of the following additional effects.\n"
             "    * Refreshing Step: Immediately after you teleport, you or one creature you can see within 10 feet of yourself gains 1d10 Temporary Hit Points.\n"
             "    * Taunting Step: Creatures within 5 feet of the space you left must succeed on a Wisdom saving throw against your spell save DC or have Disadvantage on attack rolls against creatures other than you until the start of your next turn."
         )
-        return description
+        return StringUtils.add_boxes(description, uses)
 
 
 class MistyEscape(TextFeature):
@@ -223,11 +227,13 @@ class DarkOnesOwnLuck(TextFeature):
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+        charisma_modifier = character_stat_block.get_ability_modifier(Ability.CHARISMA)
+        uses = max(1, charisma_modifier)
         description = (
             "You can call on your fiendish patron to alter fate in your favor. When you make an ability check or a saving throw, you can use this feature to add 1d10 to your roll. You can do so after seeing the roll but before any of the roll's effects occur.\n"
             "You can use this feature a number of times equal to your Charisma modifier (minimum of once), but you can use it no more than once per roll. You regain all expended uses when you finish a Long Rest."
         )
-        return description
+        return StringUtils.add_boxes(description, uses)
 
 
 class FiendishResilience(TextFeature):
@@ -341,13 +347,15 @@ class FormOfDread(TextFeature):
         super().__init__(name="Form of Dread", origin="Undead Patron Warlock Level 3")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+        charisma_modifier = character_stat_block.get_ability_modifier(Ability.CHARISMA)
+        uses = max(1, charisma_modifier)
         description = (
             "As a Bonus Action, you transform into an avatar of your patron's dreadful power, gaining the benefits below for 1 minute, until you have the Incapacitated condition, or until you end the form (no action required). You can transform a number of times equal to your Charisma modifier (minimum of once), and you regain all expended uses when you finish a Long Rest.\n"
             "Facsimile of Life. You gain Temporary Hit Points equal to 1d10 plus your Warlock level.\n"
             "Fearless Form. You have Immunity to the Frightened condition. If you are Frightened when you transform, the condition immediately ends for you.\n"
             "Frightful Avatar. Once per turn, when you hit a creature with an attack roll, you can force it to make a Wisdom saving throw against your spell save DC. On a failed save, the target has the Frightened condition until the end of your next turn."
         )
-        return description
+        return StringUtils.add_boxes(description, uses)
 
 
 class UndeadSpells(TextFeature):

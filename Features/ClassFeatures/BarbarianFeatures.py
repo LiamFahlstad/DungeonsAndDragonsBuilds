@@ -2,6 +2,7 @@ import Definitions
 from Definitions import Ability, Skill
 from Features.BaseFeatures import CharacterFeature, TextFeature
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
+from Utils import StringUtils
 
 BARBARIAN_HIT_DIE = 12
 
@@ -42,7 +43,7 @@ class Rage(TextFeature):
             "            > Take a Bonus Action to extend your Rage.\n"
             "Each time the Rage is extended, it lasts until the end of your next turn. You can maintain a Rage for up to 10 minutes."
         )
-        return description
+        return StringUtils.add_boxes(description, rage_usages)
 
 
 class UnarmoredDefenseText(TextFeature):

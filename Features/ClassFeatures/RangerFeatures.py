@@ -3,6 +3,7 @@ from enum import Enum
 from Definitions import Ability, Skill
 from Features.BaseFeatures import CharacterFeature, TextFeature
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
+from Utils import StringUtils
 
 RANGER_HIT_DIE = 10
 
@@ -50,7 +51,7 @@ class FavoredEnemy(TextFeature):
             "You always have the Hunter's Mark spell prepared.\n"
             f"You can cast it {free_hunters_mark_uses} times without expending a spell slot, and you regain all expended uses of this ability when you finish a Long Rest.\n"
         )
-        return description
+        return StringUtils.add_boxes(description, free_hunters_mark_uses)
 
 
 class DeftExplorerExpertise(CharacterFeature):
@@ -106,13 +107,14 @@ class Tireless(TextFeature):
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         wis_mod = character_stat_block.get_ability_modifier(Ability.WISDOM)
+        uses = max(1, wis_mod)
         description = (
             "Primal forces now help fuel you on your journeys, granting you the following benefits.\n"
-            f"    * Temporary Hit Points: As a Magic Action, you can give yourself a number of Temporary Hit Points equal to 1d8 plus your Wisdom modifier (minimum of 1) ({max(1, wis_mod)}).\n"
-            f"   You can use this action a number of times equal to your Wisdom modifier (minimum of once) ({max(1, wis_mod)}), and you regain all expended uses when you finish a Long Rest.\n"
+            f"    * Temporary Hit Points: As a Magic Action, you can give yourself a number of Temporary Hit Points equal to 1d8 plus your Wisdom modifier (minimum of 1) ({uses}).\n"
+            f"   You can use this action a number of times equal to your Wisdom modifier (minimum of once) ({uses}), and you regain all expended uses when you finish a Long Rest.\n"
             "    * Decrease Exhaustion: Whenever you finish a Short Rest, your Exhaustion level, if any, decreases by 1."
         )
-        return description
+        return StringUtils.add_boxes(description, uses)
 
 
 class RelentlessHunter(TextFeature):
@@ -130,11 +132,12 @@ class NaturesVeil(TextFeature):
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         wis_mod = character_stat_block.get_ability_modifier(Ability.WISDOM)
+        uses = max(1, wis_mod)
         description = (
             "You invoke spirits of nature to magically hide yourself. As a Bonus Action you can give yourself the Invisible condition until the end of your next turn.\n"
-            f"You can use this feature a number of times equal to your Wisdom modifier (minimum of once) ({max(1, wis_mod)}), and you regain all expended uses when you finish a Long Rest."
+            f"You can use this feature a number of times equal to your Wisdom modifier (minimum of once) ({uses}), and you regain all expended uses when you finish a Long Rest."
         )
-        return description
+        return StringUtils.add_boxes(description, uses)
 
 
 class PreciseHunter(TextFeature):
@@ -291,11 +294,13 @@ class MistyWanderer(TextFeature):
         super().__init__(name="Misty Wanderer", origin="Fey Wanderer Ranger Level 15")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+        wis_mod = character_stat_block.get_ability_modifier(Ability.WISDOM)
+        uses = max(1, wis_mod)
         description = (
             "You can cast Misty Step without expending a spell slot. You can do so a number of times equal to your Wisdom modifier (minimum of once), and you regain all expended uses when you finish a Long Rest.\n"
             "In addition, whenever you cast Misty Step, you can bring along one willing creature you can see within 5 feet of yourself. That creature teleports to an unoccupied space of your choice within 5 feet of your destination space."
         )
-        return description
+        return StringUtils.add_boxes(description, uses)
 
 
 ### Gloom Stalker Ranger Features ###
@@ -306,13 +311,15 @@ class DreadAmbusher(TextFeature):
         super().__init__(name="Dread Ambusher", origin="Gloom Stalker Ranger Level 3")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+        wis_mod = character_stat_block.get_ability_modifier(Ability.WISDOM)
+        uses = max(1, wis_mod)
         description = (
             "You have mastered the art of creating fearsome ambushes, granting you the following benefits.\n"
             "Ambusher's Leap. At the start of your first turn of each combat, your speed increases by 10 feet until the end of that turn.\n"
-            "Dreadful Strike. When you attack a creature and hit it with a weapon, you can deal an extra 2d6 Psychic damage. You can use this benefit only once per turn, you can use it a number of times equal to your Wisdom modifier (minimum of once), and you regain all expended uses when you finish a Long Rest.\n"
+            f"Dreadful Strike. When you attack a creature and hit it with a weapon, you can deal an extra 2d6 Psychic damage. You can use this benefit only once per turn, you can use it a number of times equal to your Wisdom modifier (minimum of once) ({uses}), and you regain all expended uses when you finish a Long Rest.\n"
             "Initiative Bonus. When you roll Initiative, you can add your Wisdom modifier to the roll."
         )
-        return description
+        return StringUtils.add_boxes(description, uses)
 
 
 class GloomStalkerSpells(TextFeature):
@@ -488,11 +495,13 @@ class ChillingRetribution(TextFeature):
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+        wis_mod = character_stat_block.get_ability_modifier(Ability.WISDOM)
+        uses = max(1, wis_mod)
         description = (
             "When a creature hits you with an attack roll, you can take a Reaction to force the creature to make a Wisdom saving throw against your spell save DC. On a failed save, the target has the Stunned condition until the end of your next turn. While the target is Stunned, its Speed is reduced to 0 feet.\n"
             "You can use this feature a number of times equal to your Wisdom modifier (minimum of once), and you regain all expended uses when you finish a Long Rest."
         )
-        return description
+        return StringUtils.add_boxes(description, uses)
 
 
 class FrozenHaunt(TextFeature):

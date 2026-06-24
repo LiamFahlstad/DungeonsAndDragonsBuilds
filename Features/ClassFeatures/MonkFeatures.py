@@ -2,6 +2,7 @@ import Definitions
 from Features.BaseFeatures import CharacterFeature, TextFeature
 from Features.Weapons import WeaponsDamageRolls
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
+from Utils import StringUtils
 
 BARBARIAN_HIT_DIE = 8
 
@@ -109,13 +110,17 @@ class MonksFocus(TextFeature):
             Definitions.Ability.WISDOM
         )
         dc = 8 + wisdom_modifier + character_stat_block.get_proficiency_bonus()
+        monk_level = character_stat_block.get_class_level(
+            Definitions.CharacterClass.MONK
+        )
+        focus_points = LEVEL_TO_FOCUS_POINTS.get(monk_level, 0)
         description = (
             "Rules for Focus Points:\n"
             "    * Regaining: You regain all expended Focus Points when you finish a Short or Long Rest.\n"
             f"    * DC: {dc}\n"
             "Known features:\n"
         )
-        return description
+        return StringUtils.add_boxes(description, focus_points)
 
 
 class FlurryOfBlows(TextFeature):
@@ -570,11 +575,15 @@ class WholenessOfBody(TextFeature):
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+        wisdom_modifier = character_stat_block.get_ability_modifier(
+            Definitions.Ability.WISDOM
+        )
+        uses = max(1, wisdom_modifier)
         description = (
             "You gain the ability to heal yourself. As a Bonus Action, you can roll your Martial Arts die. You regain a number of Hit Points equal to the number rolled plus your Wisdom modifier (minimum of 1 Hit Point regained).\n"
             "You can use this feature a number of times equal to your Wisdom modifier (minimum of once), and you regain all expended uses when you finish a Long Rest."
         )
-        return description
+        return StringUtils.add_boxes(description, uses)
 
 
 class FleetStep(TextFeature):

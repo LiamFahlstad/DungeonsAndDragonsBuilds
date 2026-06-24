@@ -1,5 +1,7 @@
+from Definitions import Ability
 from Features.BaseFeatures import TextFeature
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
+from Utils import StringUtils
 
 BARBARIAN_HIT_DIE = 8
 
@@ -49,6 +51,17 @@ class WildShape(TextFeature):
         super().__init__(name="Wild Shape", origin="Druid Level 2")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+        druid_level = character_stat_block.character_level
+        if druid_level >= 18:
+            uses = 6
+        elif druid_level >= 14:
+            uses = 5
+        elif druid_level >= 10:
+            uses = 4
+        elif druid_level >= 6:
+            uses = 3
+        else:
+            uses = 2
         description = (
             "The power of nature allows you to assume the form of an animal. As a Bonus Action, you shape-shift into a Beast form that you have learned for this feature (see “Known Forms” below). You stay in that form for a number of hours equal to half your Druid level or until you use Wild Shape again, have the Incapacitated condition, or die. You can also leave the form early as a Bonus Action.\n"
             "Number of Uses. You can use Wild Shape twice. You regain one expended use when you finish a Short Rest, and you regain all expended uses when you finish a Long Rest.\n"
@@ -62,7 +75,7 @@ class WildShape(TextFeature):
             "No Spellcasting. You can't cast spells, but shape-shifting doesn't break your Concentration or otherwise interfere with a spell you've already cast.\n"
             "Objects. Your ability to handle objects is determined by the form's limbs rather than your own. In addition, you choose whether your equipment falls in your space, merges into your new form, or is worn by it. Worn equipment functions as normal, but the DM decides whether it's practical for the new form to wear a piece of equipment based on the creature's size and shape. Your equipment doesn't change size or shape to match the new form, and any equipment that the new form can't wear must either fall to the ground or merge with the form. Equipment that merges with the form has no effect while you're in that form."
         )
-        return description
+        return StringUtils.add_boxes(description, uses)
 
 
 class WildCompanion(TextFeature):
@@ -245,11 +258,13 @@ class MoonlightStep(TextFeature):
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+        wisdom_modifier = character_stat_block.get_ability_modifier(Ability.WISDOM)
+        uses = max(1, wisdom_modifier)
         description = (
             "You magically transport yourself, reappearing amid a burst of moonlight. As a Bonus Action, you teleport up to 30 feet to an unoccupied space you can see, and you have Advantage on the next attack roll you make before the end of this turn.\n"
             "You can use this feature a number of times equal to your Wisdom modifier (minimum of once), and you regain all expended uses when you finish a Long Rest. You can also regain uses by expending a level 2+ spell slot for each use you want to restore (no action required)."
         )
-        return description
+        return StringUtils.add_boxes(description, uses)
 
 
 class LunarForm(TextFeature):
@@ -340,12 +355,14 @@ class StarMap(TextFeature):
         super().__init__(name="Star Map", origin="Circle of the Stars Druid Level 3")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+        wisdom_modifier = character_stat_block.get_ability_modifier(Ability.WISDOM)
+        uses = max(1, wisdom_modifier)
         description = (
             "You’ve created a star chart as part of your heavenly studies. It is a Tiny object, and you can use it as a Spellcasting Focus for your Druid spells. You determine its form by rolling on the Star Map table or by choosing one.\n"
             "While holding the map, you have the Guidance and Guiding Bolt spells prepared, and you can cast Guiding Bolt without expending a spell slot. You can cast it in that way a number of times equal to your Wisdom modifier (minimum of once), and you regain all expended uses when you finish a Long Rest.\n"
             "If you lose the map, you can perform a 1-hour ceremony to magically create a replacement. This ceremony can be performed during a Short or Long Rest, and it destroys the previous map."
         )
-        return description
+        return StringUtils.add_boxes(description, uses)
 
 
 class StarryForm(TextFeature):
@@ -369,13 +386,15 @@ class CosmicOmen(TextFeature):
         super().__init__(name="Cosmic Omen", origin="Circle of the Stars Druid Level 6")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+        wisdom_modifier = character_stat_block.get_ability_modifier(Ability.WISDOM)
+        uses = max(1, wisdom_modifier)
         description = (
             "Whenever you finish a Long Rest, you can consult your Star Map for omens and roll a die. Until you finish your next Long Rest, you gain access to a special Reaction based on whether you rolled an even or an odd number on the die:\n"
             "Weal (Even). Whenever a creature you can see within 30 feet of you is about to make a D20 Test, you can take a Reaction to roll 1d6 and add the number rolled to the total.\n"
             "Woe (Odd). Whenever a creature you can see within 30 feet of you is about to make a D20 Test, you can take a Reaction to roll 1d6 and subtract the number rolled from the total.\n"
             "You can use this Reaction a number of times equal to your Wisdom modifier (minimum of once), and you regain all expended uses when you finish a Long Rest."
         )
-        return description
+        return StringUtils.add_boxes(description, uses)
 
 
 class TwinklingConstellations(TextFeature):

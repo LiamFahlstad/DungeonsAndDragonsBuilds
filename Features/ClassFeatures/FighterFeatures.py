@@ -1,6 +1,7 @@
 from Definitions import Ability, DiceRollCondition, Skill
 from Features.BaseFeatures import CharacterFeature, TextFeature
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
+from Utils import StringUtils
 
 FIGHTER_HIT_DIE = 10
 
@@ -35,7 +36,7 @@ class SecondWind(TextFeature):
             f"and you regain all expended uses when you finish a Long Rest.\n"
         )
 
-        return base_text
+        return StringUtils.add_boxes(base_text, uses)
 
 
 class WeaponMastery(TextFeature):
@@ -55,11 +56,12 @@ class ActionSurge(TextFeature):
         super().__init__(name="Action Surge", origin="Fighter Level 2")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+        uses = 2 if character_stat_block.character_level >= 17 else 1
         description = (
             "You can push yourself beyond your normal limits for a moment. On your turn, you can take one additional action, except the Magic action.\n"
             "Once you use this feature, you can’t do so again until you finish a Short or Long Rest. Starting at level 17, you can use it twice before a rest but only once on a turn."
         )
-        return description
+        return StringUtils.add_boxes(description, uses)
 
 
 class TacticalMind(TextFeature):
@@ -94,11 +96,17 @@ class Indomitable(TextFeature):
         super().__init__(name="Indomitable", origin="Fighter Level 9")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+        if character_stat_block.character_level >= 17:
+            uses = 3
+        elif character_stat_block.character_level >= 13:
+            uses = 2
+        else:
+            uses = 1
         description = (
             "If you fail a saving throw, you can reroll it with a bonus equal to your Fighter level. You must use the new roll, and you can’t use this feature again until you finish a Long Rest.\n"
             "You can use this feature twice before a Long Rest starting at level 13 and three times before a Long Rest starting at level 17."
         )
-        return description
+        return StringUtils.add_boxes(description, uses)
 
 
 class TacticalMaster(TextFeature):
@@ -252,7 +260,7 @@ class SuperiorityDice(TextFeature):
             f"Maneuvers:"
         )
 
-        return base_text
+        return StringUtils.add_boxes(base_text, number_of_superiority_die)
 
 
 class CombatSuperiority(TextFeature):
