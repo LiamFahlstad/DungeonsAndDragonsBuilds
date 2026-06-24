@@ -119,6 +119,7 @@ def get_multiclass_builder():
                 4: WarlockLevel4(
                     general_feat=GeneralFeats.GreatWeaponMaster(
                         character_level=4,
+                        ability=Ability.STRENGTH,
                     ),
                     cantrip=WarlockLevel0Spells.MINOR_ILLUSION,
                     spell=WarlockLevel2Spells.SPIDER_CLIMB,
