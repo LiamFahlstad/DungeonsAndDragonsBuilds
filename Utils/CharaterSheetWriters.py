@@ -3,6 +3,7 @@ from abc import ABC, abstractmethod
 from typing import Optional, TextIO
 
 import Definitions
+import Utils.StringUtils as StringUtils
 import Utils.TableUtils as TableUtils
 from Definitions import Ability, Skill
 from Features import Armor
@@ -676,6 +677,10 @@ class HtmlCharacterSheetWriter(CharacterSheetWriter):
 
         character_spell_slots = character.get_spell_slots()
 
+        _BOX_SPAN = '<span style="display:inline-block;width:1.6em;height:1.6em;border:1px solid currentColor;box-sizing:border-box;border-radius:0.2em;vertical-align:middle;"></span>'
+        _BOX_WRAP_OPEN = '<div style="display:inline-flex;gap:0.5em;align-items:center;margin:0.35em 0;">'
+        _BOX_WRAP_CLOSE = "</div>"
+
         file.write("<table border='1' cellspacing='0' cellpadding='5'>\n")
         file.write("<tr>")
 
@@ -685,7 +690,8 @@ class HtmlCharacterSheetWriter(CharacterSheetWriter):
         file.write("</tr>\n<tr>")
 
         for slots in character_spell_slots.values():
-            file.write(f"<td>{slots}</td>")
+            boxes_html = _BOX_WRAP_OPEN + "".join([_BOX_SPAN] * slots) + _BOX_WRAP_CLOSE
+            file.write(f"<td>{boxes_html}</td>")
 
         file.write("</tr>\n</table>\n<br>\n")
 
