@@ -59,7 +59,7 @@ def get_starter_class_builder():
             ]
         ),
         add_default_equipment=True,
-        origin_feat=OriginFeats.Crater(artisans_tools=[]),
+        origin_feat=OriginFeats.Crafter(artisans_tools=[]),
         armor=[],
         weapons=[],
         base_class_level_features=ClassBuilder.BaseClassLevelFeatures(

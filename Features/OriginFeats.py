@@ -2,6 +2,7 @@ from typing import Optional
 
 from Definitions import Ability, CharacterClass, Skill
 from Features.BaseFeatures import CharacterFeature, TextFeature
+from Utils import StringUtils
 from Spells.Definitions import (
     ClericLevel0Spells,
     ClericLevel1Spells,
@@ -62,6 +63,9 @@ class Alert(OriginTextFeat):
     def __init__(self):
         super().__init__(name="Alert", origin="Origin Feat")
 
+    def modify(self, character_stat_block: CharacterStatBlock):
+        character_stat_block.add_initiative_proficiency()
+
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         return (
             "Initiative Proficiency. When you roll Initiative, you can add your Proficiency Bonus to the roll.\n"
@@ -69,10 +73,10 @@ class Alert(OriginTextFeat):
         )
 
 
-class Crater(OriginTextFeat):
+class Crafter(OriginTextFeat):
     def __init__(self, artisans_tools: list[str]):
         self.artisans_tools = artisans_tools
-        super().__init__(name="Alert", origin="Origin Feat")
+        super().__init__(name="Crafter", origin="Origin Feat")
 
     def get_tool_choices(self) -> str:
         tool_map = {
@@ -128,11 +132,13 @@ class Lucky(OriginTextFeat):
         super().__init__(name="Lucky", origin="Origin Feat")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        return (
+        proficiency_bonus = character_stat_block.get_proficiency_bonus()
+        description = (
             "Luck Points. You have a number of Luck Points equal to your Proficiency Bonus and can spend the points on the benefits below. You regain your expended Luck Points when you finish a Long Rest.\n"
             "Advantage. When you roll a d20 for a D20 Test, you can spend 1 Luck Point to give yourself Advantage on the roll.\n"
-            "Disadvantage. When a creature rolls a d20 for an attack roll against you, you can spend 1 Luck Point to impose Disadvantage on that roll.\n"
+            "Disadvantage. When a creature rolls a d20 for an attack roll against you, you can spend 1 Luck Point to impose Disadvantage on that roll."
         )
+        return StringUtils.add_boxes(description, proficiency_bonus)
 
 
 class MagicInitiate(OriginTextFeat):
@@ -367,7 +373,7 @@ class HarperAgent(OriginTextFeat):
             "You gain the following benefits.\n"
             "Thieves’ Cant. You know Thieves’ Cant.\n"
             "Instrument Training. You gain proficiency with a Musical Instrument of your choice.\n"
-            "Distracting Melody. When you take the Help action to assist an ally’s attack roll, the enemy you’re distracting can be within 30 feet of you, rather than within 5 feet of you, provided the enemy can see or hear you.        )\n"
+            "Distracting Melody. When you take the Help action to assist an ally’s attack roll, the enemy you’re distracting can be within 30 feet of you, rather than within 5 feet of you, provided the enemy can see or hear you.\n"
         )
 
 
@@ -384,8 +390,19 @@ class LordsAllianceAgent(OriginTextFeat):
 
 
 class PurpleDragonRook(OriginTextFeat):
-    def __init__(self):
-        super().__init__(name="Lords' Alliance Agent", origin="Origin Feat")
+    VALID_SKILLS = [Skill.INSIGHT, Skill.PERFORMANCE, Skill.PERSUASION]
+
+    def __init__(self, entreat_skill: Skill):
+        if entreat_skill not in self.VALID_SKILLS:
+            raise ValueError(
+                f"Entreat skill must be one of: Insight, Performance, or Persuasion. Got: {entreat_skill}"
+            )
+        self.entreat_skill = entreat_skill
+        super().__init__(name="Purple Dragon Rook", origin="Origin Feat")
+
+    def modify(self, character_stat_block: CharacterStatBlock):
+        if not character_stat_block.skills.is_proficient(self.entreat_skill):
+            character_stat_block.skills.add_skill_proficiency(self.entreat_skill)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         return (
@@ -398,20 +415,21 @@ class PurpleDragonRook(OriginTextFeat):
 
 class SpellfireSpark(OriginTextFeat):
     def __init__(self):
-        super().__init__(name="Lords' Alliance Agent", origin="Origin Feat")
+        super().__init__(name="Spellfire Spark", origin="Origin Feat")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        return (
+        proficiency_bonus = character_stat_block.get_proficiency_bonus()
+        description = (
             "You gain the following benefits.\n"
             "Magic Absorption. Once per turn, when you take damage from a spell or magical effect, you reduce the total damage taken by 1d4. You can’t use this benefit if you have the Incapacitated condition.\n"
-            "\n"
-            "Spellfire Flame. You learn the Sacred Flame cantrip. Intelligence, Wisdom, or Charisma is your spellcasting ability for this spell (choose when you select this feat). You can also cast this cantrip as a Bonus Action a number of times equal to your Proficiency Bonus, and you regain all expended uses when you finish a Long Rest.\n"
+            "Spellfire Flame. You learn the Sacred Flame cantrip. Intelligence, Wisdom, or Charisma is your spellcasting ability for this spell (choose when you select this feat). You can also cast this cantrip as a Bonus Action a number of times equal to your Proficiency Bonus, and you regain all expended uses when you finish a Long Rest."
         )
+        return StringUtils.add_boxes(description, proficiency_bonus)
 
 
-class TyroOfThaGauntlet(OriginTextFeat):
+class TyroOfTheGauntlet(OriginTextFeat):
     def __init__(self):
-        super().__init__(name="Lords' Alliance Agent", origin="Origin Feat")
+        super().__init__(name="Tyro of the Gauntlet", origin="Origin Feat")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         return (
@@ -423,13 +441,13 @@ class TyroOfThaGauntlet(OriginTextFeat):
 
 class ZhentarimRuffian(OriginTextFeat):
     def __init__(self):
-        super().__init__(name="Lords' Alliance Agent", origin="Origin Feat")
+        super().__init__(name="Zhentarim Ruffian", origin="Origin Feat")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         return (
             "You gain the following benefits.\n"
             "Exploit Opening. When you roll damage for an Opportunity Attack, you can roll the damage dice twice and use either roll against the target.\n"
-            "Family First. If you have Heroic Inspiration when you roll Initiative, you can expend it to give yourself and your allies Advantage on that Initiative roll.        \n"
+            "Family First. If you have Heroic Inspiration when you roll Initiative, you can expend it to give yourself and your allies Advantage on that Initiative roll.\n"
         )
 
 
@@ -438,7 +456,9 @@ class SharpEye(OriginTextFeat):
         super().__init__(name="Sharp Eye", origin="Origin Feat")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        return "When you take the Search or Study action, you can give yourself Advantage on any ability check made as part of that action. You can use this feature a number of times equal to your Proficiency Bonus, and you regain all expended uses when you finish a Long Rest. If the check fails, the use of this feature isn't expended."
+        proficiency_bonus = character_stat_block.get_proficiency_bonus()
+        description = "When you take the Search or Study action, you can give yourself Advantage on any ability check made as part of that action. You can use this feature a number of times equal to your Proficiency Bonus, and you regain all expended uses when you finish a Long Rest. If the check fails, the use of this feature isn't expended."
+        return StringUtils.add_boxes(description, proficiency_bonus)
 
 
 class Survivor(OriginTextFeat):
