@@ -19,7 +19,6 @@ class DragonbornSpeciesBuilder(SpeciesBuilder):
         data.speed = DragonbornFeatures.SPEED  # Given by your species
         data.size = DragonbornFeatures.SIZE  # Given by your species
 
-        data.add_feature(DragonbornFeatures.Darkvision())
         data.add_feature(DragonbornFeatures.BreathWeapon(self.dragon_ancestry_color))
         data.add_feature(
             DragonbornFeatures.DamageResistance(self.dragon_ancestry_color)

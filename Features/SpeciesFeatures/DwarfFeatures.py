@@ -1,6 +1,7 @@
 from Definitions import CreatureSize
 from Features.BaseFeatures import CharacterFeature, TextFeature
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
+from Utils import StringUtils
 
 SPEED = 30  # Given by your species
 SIZE = CreatureSize.MEDIUM  # Given by your species
@@ -38,4 +39,4 @@ class Stonecunning(TextFeature):
             "As a Bonus Action, you gain Tremorsense with a range of 60 feet for 10 minutes. You must be on a stone surface or touching a stone surface to use this Tremorsense. The stone can be natural or worked.\n"
             f"You can use this Bonus Action a number of times equal to your Proficiency Bonus ({proficiency_bonus}), and you regain all expended uses when you finish a Long Rest."
         )
-        return text
+        return StringUtils.add_boxes(text, proficiency_bonus)

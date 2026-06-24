@@ -9,7 +9,7 @@ SIZE = CreatureSize.MEDIUM  # Given by your species
 class Darkvision(TextFeature):
     def __init__(self, distance: int):
         self.distance = distance
-        super().__init__(name="Darkvision", origin="Shifter Trait")
+        super().__init__(name="Darkvision", origin="Khoravar Trait")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         return f"You have Darkvision with a range of {self.distance} feet."
@@ -28,10 +28,11 @@ class FeyGift(TextFeature):
         super().__init__(name="Fey Gift", origin="Khoravar Trait")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        raise NotImplementedError(
-            "Fey Gift is not implemented yet. Please choose a different trait."
+        return (
+            "You know the Friends cantrip. Whenever you finish a Long Rest, you can replace that cantrip with a different cantrip "
+            "from the Cleric, Druid, or Wizard spell list. Intelligence, Wisdom, or Charisma is your spellcasting ability for the "
+            "spell you cast with this trait (chosen when you select this species)."
         )
-        return "You can cast the Misty Step spell once per Long Rest. You regain the ability to do so when you finish a Long Rest."
 
 
 class SkillVersatility(CharacterFeature):

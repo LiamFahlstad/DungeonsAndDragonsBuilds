@@ -39,8 +39,12 @@ class TieflingSpeciesBuilder(SpeciesBuilder):
         data.add_feature(TieflingFeatures.Darkvision(60))
         data.add_feature(TieflingFeatures.OtherworldlyPresence())
 
+        spell_1 = None
+        spell_2 = None
+
         if self.fiendish_lineage == FiendishLineage.ABYSSAL:
             cantrip = SorcererLevel0Spells.POISON_SPRAY
+            data.add_feature(TieflingFeatures.FiendishResistance("Poison"))
             if self.character_level >= 3:
                 spell_1 = SorcererLevel1Spells.RAY_OF_SICKNESS
             if self.character_level >= 5:
@@ -48,6 +52,7 @@ class TieflingSpeciesBuilder(SpeciesBuilder):
 
         elif self.fiendish_lineage == FiendishLineage.Chthonic:
             cantrip = SorcererLevel0Spells.CHILL_TOUCH
+            data.add_feature(TieflingFeatures.FiendishResistance("Necrotic"))
             if self.character_level >= 3:
                 spell_1 = SorcererLevel1Spells.FALSE_LIFE
             if self.character_level >= 5:
@@ -55,6 +60,7 @@ class TieflingSpeciesBuilder(SpeciesBuilder):
 
         elif self.fiendish_lineage == FiendishLineage.Infernal:
             cantrip = SorcererLevel0Spells.FIRE_BOLT
+            data.add_feature(TieflingFeatures.FiendishResistance("Fire"))
             if self.character_level >= 3:
                 spell_1 = WarlockLevel1Spells.HELLISH_REBUKE
             if self.character_level >= 5:
@@ -64,8 +70,10 @@ class TieflingSpeciesBuilder(SpeciesBuilder):
             raise ValueError(f"Invalid fiendish lineage: {self.fiendish_lineage}")
 
         data.add_cantrip(cantrip)
-        data.add_spell(spell_1)
-        data.add_spell(spell_2)
+        if spell_1 is not None:
+            data.add_spell(spell_1)
+        if spell_2 is not None:
+            data.add_spell(spell_2)
         data.add_feature(
             TieflingFeatures.FiendishLegacy(
                 cantrip=cantrip, spell_1=spell_1, spell_2=spell_2

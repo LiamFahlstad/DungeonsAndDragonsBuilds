@@ -4,6 +4,7 @@ import Definitions
 from Definitions import Ability, CreatureSize
 from Features.BaseFeatures import TextFeature
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
+from Utils import StringUtils
 
 SPEED = 30  # Given by your species
 SIZE = CreatureSize.MEDIUM  # Given by your species
@@ -20,14 +21,6 @@ class DragonColor(str, Enum):
     RED = "Red"
     SILVER = "Silver"
     WHITE = "White"
-
-
-class Darkvision(TextFeature):
-    def __init__(self):
-        super().__init__(name="Darkvision", origin="Gnome Trait")
-
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        return "You have Darkvision with a range of 60 feet."
 
 
 class DamageResistance(TextFeature):
@@ -63,14 +56,15 @@ class BreathWeapon(TextFeature):
 
         text = (
             f"When you take the Attack action on your turn, you can replace one of your attacks with an exhalation of magical energy in either a 15-foot Cone or a 30-foot Line that is 5 feet wide (choose the shape each time). Each creature in that area must make a Dexterity saving throw (DC 8 plus your Constitution modifier and Proficiency Bonus = {8 + constitution_modifier + proficiency_bonus}).\n"
-            f"On a failed save, a creature takes {damage} {self.damage_type} damage because your Draconic Ancestry is {self.color.value} dragon."
+            f"On a failed save, a creature takes {damage} {self.damage_type} damage because your Draconic Ancestry is {self.color.value} dragon. On a successful save, a creature takes half as much damage.\n"
+            f"You can use this Breath Weapon a number of times equal to your Proficiency Bonus ({proficiency_bonus}), and you regain all expended uses when you finish a Long Rest."
         )
-        return text
+        return StringUtils.add_boxes(text, proficiency_bonus)
 
 
 class DraconicFlight(TextFeature):
     def __init__(self):
-        super().__init__(name="Dragonic Flight", origin="Dragonborn Trait")
+        super().__init__(name="Draconic Flight", origin="Dragonborn Trait")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         text = "When you reach character level 5, you can channel draconic magic to give yourself temporary flight. As a Bonus Action, you sprout spectral wings on your back that last for 10 minutes or until you retract the wings (no action required) or have the Incapacitated condition. During that time, you have a Fly Speed equal to your Speed. Your wings appear to be made of the same energy as your Breath Weapon. Once you use this trait, you can't use it again until you finish a Long Rest."

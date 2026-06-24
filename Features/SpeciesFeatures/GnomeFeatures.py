@@ -1,6 +1,7 @@
 from Definitions import Ability, CreatureSize
 from Features.BaseFeatures import CharacterFeature, TextFeature
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
+from Utils import StringUtils
 
 SPEED = 30  # Given by your species
 SIZE = CreatureSize.SMALL  # Given by your species
@@ -29,7 +30,9 @@ class ForestGnomeSpeakWithAnimals(TextFeature):
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        return "You also always have the Speak with Animals spell prepared. You can cast it without a spell slot a number of times equal to your Proficiency Bonus, and you regain all expended uses when you finish a Long Rest. You can also use any spell slots you have to cast the spell."
+        proficiency_bonus = character_stat_block.get_proficiency_bonus()
+        text = f"You also always have the Speak with Animals spell prepared. You can cast it without a spell slot a number of times equal to your Proficiency Bonus ({proficiency_bonus}), and you regain all expended uses when you finish a Long Rest. You can also use any spell slots you have to cast the spell."
+        return StringUtils.add_boxes(text, proficiency_bonus)
 
 
 class RockGnomePrestidigitation(TextFeature):

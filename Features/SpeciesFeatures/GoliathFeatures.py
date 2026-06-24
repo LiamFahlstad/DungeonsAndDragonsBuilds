@@ -3,6 +3,7 @@ from enum import Enum
 from Definitions import CreatureSize
 from Features.BaseFeatures import TextFeature
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
+from Utils import StringUtils
 
 SPEED = 35  # Given by your species
 SIZE = CreatureSize.MEDIUM  # Given by your species
@@ -52,5 +53,6 @@ class GiantAncestry(TextFeature):
             text += "When you take damage, you can take a Reaction to roll 1d12. Add your Constitution modifier to the number rolled and reduce the damage by that total.\n"
         if self.giant_ancestry_type == GiantAncestryType.STORM_GIANT:
             text += "When you take damage from a creature within 60 feet of you, you can take a Reaction to deal 1d8 Thunder damage to that creature.\n"
-        text += "You can use the benefit a number of times equal to your Proficiency Bonus, and you regain all expended uses when you finish a Long Rest"
-        return text
+        proficiency_bonus = character_stat_block.get_proficiency_bonus()
+        text += f"You can use the benefit a number of times equal to your Proficiency Bonus ({proficiency_bonus}), and you regain all expended uses when you finish a Long Rest"
+        return StringUtils.add_boxes(text, proficiency_bonus)

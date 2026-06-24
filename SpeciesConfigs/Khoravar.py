@@ -1,5 +1,5 @@
 import CharacterSheetCreator
-from Definitions import CreatureSize
+from Definitions import CreatureSize, Skill
 from Features.SpeciesFeatures import KhoravarFeatures
 from SpeciesConfigs.SpeciesBuilder import SpeciesBuilder
 
@@ -8,6 +8,7 @@ class KhoravarSpeciesBuilder(SpeciesBuilder):
     def __init__(
         self,
         size: CreatureSize,
+        skill_versatility: Skill,
     ):
         super().__init__(
             name="Khoravar",
@@ -17,6 +18,7 @@ class KhoravarSpeciesBuilder(SpeciesBuilder):
             CreatureSize.MEDIUM,
         ], "Khoravar can only be Small or Medium size."
         self.size = size
+        self.skill_versatility = skill_versatility
 
     def build(self) -> CharacterSheetCreator.CharacterSheetData:
         data = CharacterSheetCreator.CharacterSheetData()
@@ -25,8 +27,9 @@ class KhoravarSpeciesBuilder(SpeciesBuilder):
         data.size = self.size  # Given by your species
 
         data.add_feature(KhoravarFeatures.Darkvision(60))
-        data.add_feature(KhoravarFeatures.DwarvenResilience())
-        data.add_feature(KhoravarFeatures.DwarvenToughness())
-        data.add_feature(KhoravarFeatures.Stonecunning())
+        data.add_feature(KhoravarFeatures.FeyAncestry())
+        data.add_feature(KhoravarFeatures.FeyGift())
+        data.add_feature(KhoravarFeatures.LethargyResilience())
+        data.add_feature(KhoravarFeatures.SkillVersatility(self.skill_versatility))
 
         return data
