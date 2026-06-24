@@ -1,26 +1,14 @@
 import Definitions
-from Builds import (
-    OptimizedBarbarianBerserker,
-    OptimizedBarbarianWorldTree,
-    OptimizedBardGlamour,
-    OptimizedBardLore,
-    OptimizedClericKnowledge,
-    OptimizedClericLight,
-    OptimizedDruidMoon,
-    OptimizedFighterBattleMaster,
-    OptimizedFighterChampion,
-    OptimizedFighterChampion2,
-    OptimizedMonkShadow,
-    OptimizedPaladinGlory,
-    OptimizedPaladinVengeance,
-    OptimizedRangerBeastMaster,
-    OptimizedRangerGloomStalker,
-    OptimizedRogueAssassin,
-    OptimizedWarlockArchfey,
-    OptimizedWarlockGishArchfey,
-    OptimizedWizardBladesinger,
-    OptimizedWizardDiviner,
-)
+from Builds import (OptimizedBarbarianBerserker, OptimizedBarbarianWorldTree,
+                    OptimizedBardGlamour, OptimizedBardLore,
+                    OptimizedClericKnowledge, OptimizedClericLight,
+                    OptimizedDruidMoon, OptimizedFighterBattleMaster,
+                    OptimizedFighterChampion, OptimizedFighterChampion2,
+                    OptimizedMonkShadow, OptimizedPaladinGlory,
+                    OptimizedPaladinVengeance, OptimizedRangerBeastMaster,
+                    OptimizedRangerGloomStalker, OptimizedRogueAssassin,
+                    OptimizedWarlockArchfey, OptimizedWarlockGishArchfey,
+                    OptimizedWizardBladesinger, OptimizedWizardDiviner)
 from Builds.CharacterBuilder import CharacterBuilder
 
 

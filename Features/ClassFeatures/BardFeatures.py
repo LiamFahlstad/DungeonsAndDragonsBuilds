@@ -1,6 +1,7 @@
-from Definitions import Skill
+from Definitions import Ability, Skill
 from Features.BaseFeatures import CharacterFeature, TextFeature
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
+from Utils import StringUtils
 
 BARD_HIT_DIE = 8
 
@@ -25,13 +26,14 @@ class BardicInspiration(TextFeature):
         super().__init__(name="Bardic Inspiration", origin="Bard Level 1")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+        charisma_modifier = character_stat_block.get_ability_modifier(Ability.CHARISMA)
         description = (
             "You can supernaturally inspire others through words, music, or dance. This inspiration is represented by your Bardic Inspiration die, which is a d6.\n"
             "    * Using Bardic Inspiration: As a Bonus Action, you can inspire another creature within 60 feet of yourself who can see or hear you. That creature gains one of your Bardic Inspiration dice. A creature can have only one Bardic Inspiration die at a time. Once within the next hour when the creature fails a D20 Test, the creature can roll the Bardic Inspiration die and add the number rolled to the d20, potentially turning the failure into a success. A Bardic Inspiration die is expended when it's rolled.\n"
-            "    * Number of Uses. You can confer a Bardic Inspiration die a number of times equal to your Charisma modifier (minimum of once), and you regain all expended uses when you finish a Long Rest.\n"
-            "    * At Higher Levels. Your Bardic Inspiration die changes when you reach certain Bard levels, as shown in the Bardic Die column of the Bard Features table. The die becomes a d8 at level 5, a d10 at level 10, and a d12 at level 15."
+            f"    * Number of Uses. You can confer a Bardic Inspiration die a number of times equal to your Charisma modifier ({max(1, charisma_modifier)}), and you regain all expended uses when you finish a Long Rest.\n"
+            "    * At Higher Levels. Your Bardic Inspiration die changes when you reach certain Bard levels, as shown in the Bardic Die column of the Bard Features table. The die becomes a d8 at level 5, a d10 at level 10, and a d12 at level 15.\n"
         )
-        return description
+        return StringUtils.add_boxes(description, charisma_modifier)
 
 
 class Expertise1(CharacterFeature):

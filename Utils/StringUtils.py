@@ -37,6 +37,56 @@ def wrap_text(description: str, max_sentence_length: int, html: bool = False) ->
     return "\n".join(new_parts)
 
 
+def add_boxes(description: str, box_count: int) -> str:
+    box_symbol = "⬜"
+
+    boxes = " ".join([box_symbol] * box_count)
+
+    return f"{description}\n{boxes}\n"
+
+
+def boxes_to_html(description: str) -> str:
+    def normalize_box_line(line: str) -> str:
+        stripped = line.strip()
+        if stripped.endswith("<br>"):
+            stripped = stripped[:-4].rstrip()
+        return stripped
+
+    def box_count(line: str, token: str) -> int:
+        parts = line.split()
+        if parts and all(part == token for part in parts):
+            return len(parts)
+        return 0
+
+    lines = description.split("\n")
+    new_lines = []
+    index = 0
+
+    while index < len(lines):
+        top_line = normalize_box_line(lines[index])
+        top_count = box_count(top_line, "⬜")
+
+        if top_count:
+            boxes_html = "".join(
+                [
+                    '<span style="display:inline-block;width:1.6em;height:1.6em;border:1px solid currentColor;box-sizing:border-box;border-radius:0.2em;vertical-align:middle;"></span>'
+                    for _ in range(top_count)
+                ]
+            )
+            new_lines.append(
+                '<div style="display:inline-flex;gap:0.5em;align-items:center;margin:0.35em 0;">'
+                + boxes_html
+                + "</div>"
+            )
+            index += 1
+            continue
+
+        new_lines.append(lines[index])
+        index += 1
+
+    return "\n".join(new_lines)
+
+
 def bolden_text_html(text: str) -> str:
     new_lines = []
 

@@ -80,6 +80,7 @@ class TextFeature(Feature):
 
         if html:
             description = StringUtils.bolden_text_html(description)
+            description = StringUtils.boxes_to_html(description)
             file.write(f"<h3>{self.name}</h3>\n")
             file.write(f"<strong>Origin:</strong> {self.origin}\n<br>\n")
             file.write("<strong>Description:</strong><br>\n")
