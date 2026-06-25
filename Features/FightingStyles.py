@@ -10,9 +10,6 @@ class FightingStyle(ABC):
 
     def write_to_file(self, file: TextIO):
         description = self.description()
-        # description = StringUtils.wrap_text(
-        #     description, max_sentence_length=280, html=False
-        # )
         if description[-1] != "\n":
             description += "\n"
         file.write(description)

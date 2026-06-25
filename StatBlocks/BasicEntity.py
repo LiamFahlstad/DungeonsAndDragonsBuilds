@@ -226,7 +226,7 @@ class BasicEntity(StatBlock):
             self._write_actions(file)
 
     def create_character_sheet(self):
-        output_path = f"Output/{self.slugify(self.name)}.txt"
+        output_path = f"Output/{self.slugify(self.name)}.html"
 
         pathlib.Path(output_path).parent.mkdir(parents=True, exist_ok=True)
         self.write_to_file(output_path)

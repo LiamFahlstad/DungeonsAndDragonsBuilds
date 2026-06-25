@@ -10,7 +10,7 @@ class Feature(ABC):
 
     @abstractmethod
     def write_to_file(
-        self, character_stat_block: CharacterStatBlock, file: TextIO, html: bool = False
+        self, character_stat_block: CharacterStatBlock, file: TextIO
     ):
         pass
 
@@ -23,7 +23,7 @@ class CharacterFeature(Feature):
     """A feature that can modify a character's stat block."""
 
     def write_to_file(
-        self, character_stat_block: CharacterStatBlock, file: TextIO, html: bool = False
+        self, character_stat_block: CharacterStatBlock, file: TextIO
     ):
         raise NotImplementedError(
             "CharacterFeature must implement write_to_file method."
@@ -58,35 +58,24 @@ class TextFeature(Feature):
         return text
 
     def write_to_file(
-        self, character_stat_block: CharacterStatBlock, file: TextIO, html: bool = False
+        self, character_stat_block: CharacterStatBlock, file: TextIO
     ):
         description = self.get_description(character_stat_block)
         for addition in self.additional_features:
-            new_line = "\n"  # if not html else "<br>\n"
-            description += new_line + self.add_feature_effects(
+            description += "\n" + self.add_feature_effects(
                 character_stat_block, addition
             )
 
-        if html:
-            description = description.replace("\n", "<br>\n").replace(
-                "    ", "&nbsp;&nbsp;&nbsp;&nbsp;"
-            )
-
-            # Ensure description is not too long without newlines
-            # description = StringUtils.wrap_text(description, max_sentence_length, html)
+        description = description.replace("\n", "<br>\n").replace(
+            "    ", "&nbsp;&nbsp;&nbsp;&nbsp;"
+        )
 
         if not description.endswith("\n"):
             description += "\n"
 
-        if html:
-            description = StringUtils.bolden_text_html(description)
-            description = StringUtils.boxes_to_html(description)
-            file.write(f"<h3>{self.name}</h3>\n")
-            file.write(f"<strong>Origin:</strong> {self.origin}\n<br>\n")
-            file.write("<strong>Description:</strong><br>\n")
-            file.write(f"{description}\n")
-            # file.write("\n")
-        else:
-            file.write(f"Name: {self.name}\n")
-            file.write(f"Origin: {self.origin}\n")
-            file.write(f"Description: {description}\n")
+        description = StringUtils.bolden_text_html(description)
+        description = StringUtils.boxes_to_html(description)
+        file.write(f"<h3>{self.name}</h3>\n")
+        file.write(f"<strong>Origin:</strong> {self.origin}\n<br>\n")
+        file.write("<strong>Description:</strong><br>\n")
+        file.write(f"{description}\n")

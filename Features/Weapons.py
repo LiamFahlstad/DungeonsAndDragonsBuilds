@@ -314,7 +314,7 @@ class AbstractWeapon(TextFeature):
         pass
 
     def write_to_file(
-        self, character_stat_block: CharacterStatBlock, file: TextIO, html: bool = False
+        self, character_stat_block: CharacterStatBlock, file: TextIO
     ):
         headers = self.get_headers()
         rows = self.get_rows(character_stat_block)
@@ -1119,20 +1119,10 @@ def write_weapons_to_file(
     weapons: list[AbstractWeapon],
     character_stat_block: CharacterStatBlock,
     file: TextIO,
-    html: bool = False,
 ):
     if not weapons:
         return
-    headers: list[str] = weapons[0].get_headers()
-    rows: list[list[str]] = []
-    for i, weapon in enumerate(weapons):
-        rows.extend(weapon.get_rows(character_stat_block))
-        if i < len(weapons) - 1:
-            rows.append([])  # Add a separator row between weapons
-    if html:
-        write_weapons_to_file_html(weapons, character_stat_block, file)
-    else:
-        write_table(headers, rows, file)
+    write_weapons_to_file_html(weapons, character_stat_block, file)
 
 
 def write_weapons_to_file_html(

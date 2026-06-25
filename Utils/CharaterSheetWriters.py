@@ -1,11 +1,8 @@
 import pathlib
-from abc import ABC, abstractmethod
 from typing import Optional, TextIO
 
 import Definitions
-import Utils.StringUtils as StringUtils
-import Utils.TableUtils as TableUtils
-from Definitions import Ability, Skill
+from Definitions import Ability
 from Features import Armor
 from Features.BaseFeatures import CharacterFeature, Feature
 from Features.FightingStyles import FightingStyle
@@ -17,334 +14,7 @@ from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from ToolProficiencies.ToolProficiencies import ToolProficiency
 
 
-class CharacterSheetWriter(ABC):
-
-    @staticmethod
-    def _has_shield_armor(armors: list[Armor.AbstractArmor]) -> bool:
-        # Preserve exact previous behavior: only direct ShieldArmor type counts.
-        return any(type(armor) is Armor.ShieldArmor for armor in armors)
-
-    @staticmethod
-    def _sort_features_key(feat: Feature):
-        feat_name = getattr(feat, "name", feat.__class__.__name__)
-        feat_origin = getattr(feat, "origin", "")
-        if isinstance(feat, CharacterFeature):
-            return (0, 0, feat.__class__.__name__)
-        if "Level " in feat_origin:
-            parts = feat_origin.split("Level ")
-            try:
-                level_num = int(parts[1])
-            except ValueError:
-                level_num = 0
-            return (2, level_num, feat_name)
-        return (1, 0, feat_name)
-
-    @staticmethod
-    def _apply_weapon_masteries(
-        weapons: list[AbstractWeapon], weapon_masteries: list[AbstractWeapon]
-    ):
-        if not weapon_masteries:
-            return
-
-        mastery_types = {type(mastery) for mastery in weapon_masteries}
-        for weapon in weapons:
-            if type(weapon) in mastery_types:
-                weapon.player_has_mastery = True
-
-    @abstractmethod
-    def _write_general_info(self, character: CharacterStatBlock, file: TextIO):
-        pass
-
-    @abstractmethod
-    def _write_combat_stats(
-        self,
-        character: CharacterStatBlock,
-        file: TextIO,
-        armors: list[Armor.AbstractArmor],
-        armor_proficiencies: set[Definitions.ArmorType],
-    ):
-        pass
-
-    @abstractmethod
-    def _write_abilities(self, character: CharacterStatBlock, file: TextIO):
-        pass
-
-    @abstractmethod
-    def _write_skills(
-        self,
-        character: CharacterStatBlock,
-        file: TextIO,
-        skill_config: Definitions.SkillConfig,
-    ):
-        pass
-
-    @abstractmethod
-    def _write_features(
-        self, character: CharacterStatBlock, file: TextIO, features: list[Feature]
-    ):
-        pass
-
-    @abstractmethod
-    def _write_weapons(
-        self,
-        character: CharacterStatBlock,
-        file: TextIO,
-        weapons: list[AbstractWeapon],
-        weapon_masteries: list[AbstractWeapon],
-    ):
-        pass
-
-    @abstractmethod
-    def _write_fighting_styles(
-        self,
-        character: CharacterStatBlock,
-        file: TextIO,
-        fighting_styles: list[FightingStyle],
-    ):
-        pass
-
-    @abstractmethod
-    def _write_invocations(
-        self, character: CharacterStatBlock, file: TextIO, invocations: list[str]
-    ):
-        pass
-
-    @abstractmethod
-    def _write_spell_slots(self, character: CharacterStatBlock, file: TextIO):
-        pass
-
-    @abstractmethod
-    def _write_spells(
-        self,
-        character: CharacterStatBlock,
-        file: TextIO,
-        spells: list[tuple[str, Ability, Optional[str]]],
-    ):
-        pass
-
-
-class TextCharacterSheetWriter(CharacterSheetWriter):
-    def _write_general_info(self, character: CharacterStatBlock, file: TextIO):
-        TableUtils.write_separator(file, "General Info")
-        TableUtils.write_table(
-            headers=["Field", "Value"],
-            rows=[
-                ["Name", character.name],
-                ["Level", character.character_level],
-                ["Starter Class", character.starter_class.value],
-                [
-                    "Level per Class",
-                    ", ".join(
-                        f"{cls.value}: {lvl}"
-                        for cls, lvl in character.level_per_class.items()
-                        if lvl > 0
-                    ),
-                ],
-                ["Character Subclass", character.character_subclass],
-                ["Proficiency Bonus", character.get_proficiency_bonus()],
-            ],
-            file=file,
-        )
-        file.write("\n")
-
-    def _write_combat_stats(
-        self,
-        character: CharacterStatBlock,
-        file: TextIO,
-        armors: list[Armor.AbstractArmor],
-        armor_proficiencies: set[Definitions.ArmorType],
-    ):
-        TableUtils.write_separator(file, "Combat Stats")
-        ac = character.calculate_armor_class()
-        if self._has_shield_armor(armors):
-            ac = f"{ac} (with Shield) and {ac - 2} (without Shield)"
-        TableUtils.write_table(
-            headers=["Field", "Value"],
-            rows=[
-                ["Max Hit Points", character.calculate_hit_points()],
-                ["Armor Class", ac],
-                [
-                    "Armor Proficiencies",
-                    ", ".join(sorted([atype.value for atype in armor_proficiencies])),
-                ],
-                ["Initiative", f"d20 + {character.initiative}"],
-                ["Speed (ft)", character.combat.speed],
-                ["Size", character.combat.size.value],
-            ],
-            file=file,
-        )
-        file.write("\n")
-
-    def _write_abilities(self, character: CharacterStatBlock, file: TextIO):
-        TableUtils.write_separator(file, "Abilities")
-        headers = [
-            "Ability",
-            "Score",
-            "Mod",
-            "Saving Throw",
-            "DC",
-            "ATK Bonus",
-        ]
-        rows = []
-        proficiency_bonus = character.get_proficiency_bonus()
-        for ability in Ability:
-            ability_mod = character.get_ability_modifier(ability)
-            saving_throw_text = f"{ability_mod:+}"
-            if character.is_proficient_in_saving_throw(ability):
-                saving_throw_text += f" + {proficiency_bonus} (Proficient)"
-            if character.has_advantage_in_saving_throw(ability):
-                saving_throw_text += " (Advantage)"
-
-            ability_dc = character.calculate_difficulty_class_for_ability(ability)
-            ability_attack_bonus = character.calculate_attack_bonus_for_ability(ability)
-
-            row = [
-                ability.short_name,
-                character.get_ability_score(ability),
-                f"{ability_mod:+}",
-                saving_throw_text,
-                f"{ability_dc}",
-                f"{ability_attack_bonus:+}",
-            ]
-            rows.append(row)
-        TableUtils.write_table(
-            headers,
-            rows,
-            file,
-        )
-        file.write("\n")
-
-    def _write_skills(
-        self,
-        character: CharacterStatBlock,
-        file: TextIO,
-        skill_config: Definitions.SkillConfig,
-    ):
-        TableUtils.write_separator(file, "Skills")
-        headers = [
-            "Skill",
-            "Modifier",
-            "Proficient",
-            "Ability",
-            "Roll Condition",
-            "Bonus (already included)",
-        ]
-        TableUtils.write_table(
-            headers,
-            [
-                [
-                    skill.value,
-                    f"{character.get_skill_modifier(skill):+}",
-                    "Yes" if character.is_proficient_in_skill(skill) else "No",
-                    character.get_skill_ability(skill).value,
-                    character.get_skill_roll_condition(skill).value,
-                    f"{character.get_skill_bonus(skill):+}",
-                ]
-                for skill in Skill
-            ],
-            file,
-        )
-        file.write("\n")
-
-    def _write_features(
-        self, character: CharacterStatBlock, file: TextIO, features: list[Feature]
-    ):
-        if not all(isinstance(feat, CharacterFeature) for feat in features):
-            TableUtils.write_separator(file, "Features")
-            sorted_features = sorted(features, key=self._sort_features_key)
-            for feature in sorted_features:
-                feature.write_to_file(character, file)
-            file.write("\n")
-
-    def _write_weapons(
-        self,
-        character: CharacterStatBlock,
-        file: TextIO,
-        weapons: list[AbstractWeapon],
-        weapon_masteries: list[AbstractWeapon],
-    ):
-        if not weapons:
-            return
-
-        TableUtils.write_separator(file, "Weapons")
-        self._apply_weapon_masteries(weapons, weapon_masteries)
-        write_weapons_to_file(weapons, character, file)
-        file.write("\n")
-
-    def _write_fighting_styles(
-        self,
-        character: CharacterStatBlock,
-        file: TextIO,
-        fighting_styles: list[FightingStyle],
-    ):
-        if not fighting_styles:
-            return
-
-        TableUtils.write_separator(file, "Fighting Styles")
-        for fighting_style in fighting_styles:
-            fighting_style.write_to_file(file)
-        file.write("\n")
-
-    def _write_invocations(
-        self, character: CharacterStatBlock, file: TextIO, invocations: list[str]
-    ):
-        if not invocations:
-            return
-
-        TableUtils.write_separator(file, "Invocations")
-
-        created_invocations = [
-            InvocationFactory.create(invocation_name) for invocation_name in invocations
-        ]
-        sorted_invocations = sorted(
-            created_invocations, key=lambda s: (s.level, s.name)
-        )
-
-        for invocation_index, invocation in enumerate(sorted_invocations):
-            invocation.write_to_file(file)
-            if invocation_index < len(sorted_invocations) - 1:
-                file.write("-" * 40 + "\n")
-        file.write("\n")
-
-    def _write_spell_slots(self, character: CharacterStatBlock, file: TextIO):
-        if not character.spell_slots:
-            return
-
-        TableUtils.write_separator(file, "Spell Slots")
-        character_spell_slots = character.get_spell_slots()
-        headers = []
-        row = []
-        for level, slots in character_spell_slots.items():
-            headers.append(f"Level {level}")
-            row.append(slots)
-        TableUtils.write_table(headers, [row], file)
-        file.write("\n")
-
-    def _write_spells(
-        self,
-        character: CharacterStatBlock,
-        file: TextIO,
-        spells: list[tuple[str, Ability, Optional[str]]],
-    ):
-        if not spells:
-            return
-
-        TableUtils.write_separator(file, "Spells")
-
-        created_spells = [
-            SpellFactory.create(spell_name, spell_casting_ability, additional_ruling)
-            for spell_name, spell_casting_ability, additional_ruling in spells
-        ]
-        sorted_spells = sorted(created_spells, key=lambda s: (s.level, s.name))
-
-        for spell_index, spell in enumerate(sorted_spells):
-            spell.write_to_file(file)
-            if spell_index < len(created_spells) - 1:
-                file.write("-" * 40 + "\n")
-        file.write("\n")
-
-
-class HtmlCharacterSheetWriter(CharacterSheetWriter):
+class HtmlCharacterSheetWriter:
     _ITEM_TABLE_STYLE = """
         <style>
         .item-table {
@@ -379,6 +49,37 @@ class HtmlCharacterSheetWriter(CharacterSheetWriter):
         }
         </style>
         """
+
+    @staticmethod
+    def _has_shield_armor(armors: list[Armor.AbstractArmor]) -> bool:
+        return any(type(armor) is Armor.ShieldArmor for armor in armors)
+
+    @staticmethod
+    def _sort_features_key(feat: Feature):
+        feat_name = getattr(feat, "name", feat.__class__.__name__)
+        feat_origin = getattr(feat, "origin", "")
+        if isinstance(feat, CharacterFeature):
+            return (0, 0, feat.__class__.__name__)
+        if "Level " in feat_origin:
+            parts = feat_origin.split("Level ")
+            try:
+                level_num = int(parts[1])
+            except ValueError:
+                level_num = 0
+            return (2, level_num, feat_name)
+        return (1, 0, feat_name)
+
+    @staticmethod
+    def _apply_weapon_masteries(
+        weapons: list[AbstractWeapon], weapon_masteries: list[AbstractWeapon]
+    ):
+        if not weapon_masteries:
+            return
+
+        mastery_types = {type(mastery) for mastery in weapon_masteries}
+        for weapon in weapons:
+            if type(weapon) in mastery_types:
+                weapon.player_has_mastery = True
 
     @staticmethod
     def _write_item_table_style(file: TextIO):
@@ -483,7 +184,6 @@ class HtmlCharacterSheetWriter(CharacterSheetWriter):
 
         file.write("<table border='1' cellspacing='0' cellpadding='5'>\n")
 
-        # Header row
         file.write("<tr>")
         for header in headers:
             file.write(f"<th>{header}</th>")
@@ -538,7 +238,6 @@ class HtmlCharacterSheetWriter(CharacterSheetWriter):
 
         file.write("<table border='1' cellspacing='0' cellpadding='5'>\n")
 
-        # Header row
         file.write("<tr>")
         for header in headers:
             file.write(f"<th>{header}</th>")
@@ -606,9 +305,7 @@ class HtmlCharacterSheetWriter(CharacterSheetWriter):
             file.write("<div>\n")
             for i, feature in enumerate(sorted_features):
                 try:
-                    # file.write("<pre>\n")  # preserves existing formatting
-                    feature.write_to_file(character, file, html=True)
-                    # file.write("</pre>\n")
+                    feature.write_to_file(character, file)
                     if i < len(sorted_features) - 1:
                         file.write("<hr>\n")
                 except NotImplementedError:
@@ -627,7 +324,7 @@ class HtmlCharacterSheetWriter(CharacterSheetWriter):
             return
 
         self._apply_weapon_masteries(weapons, weapon_masteries)
-        write_weapons_to_file(weapons, character, file, html=True)
+        write_weapons_to_file(weapons, character, file)
 
     def _write_fighting_styles(
         self,
@@ -713,7 +410,7 @@ class HtmlCharacterSheetWriter(CharacterSheetWriter):
         sorted_spells = sorted(created_spells, key=lambda s: (s.level, s.name))
 
         for i, spell in enumerate(sorted_spells):
-            spell.write_to_file(file, html=True)
+            spell.write_to_file(file)
 
             if i < len(sorted_spells) - 1:
                 file.write("<hr>\n")
@@ -734,7 +431,6 @@ class HtmlCharacterSheetWriter(CharacterSheetWriter):
         file.write("<h2>Items</h2>\n")
         self._write_item_table_style(file)
 
-        # --- Armors ---
         if armors:
             armor_rows = [
                 (armor.name, armor.description if armor.description else "-")
@@ -742,7 +438,6 @@ class HtmlCharacterSheetWriter(CharacterSheetWriter):
             ]
             self._write_item_table(file, "Armor", armor_rows)
 
-        # --- Weapons ---
         file.write("<hr>")
         if weapons:
             weapon_rows = [
@@ -751,7 +446,6 @@ class HtmlCharacterSheetWriter(CharacterSheetWriter):
             ]
             self._write_item_table(file, "Weapons", weapon_rows)
 
-        # --- Other Items ---
         file.write("<hr>")
         if items:
             sorted_items = sorted(items, key=lambda x: x[0].name)
@@ -775,7 +469,6 @@ class HtmlCharacterSheetWriter(CharacterSheetWriter):
         file.write("<h2>Items</h2>\n")
         self._write_item_table_style(file)
 
-        # --- Other Items ---
         file.write("<hr>")
         sorted_tool_proficiencies = sorted(tool_proficiencies, key=lambda x: x.name)
         proficiency_rows = [
@@ -877,12 +570,12 @@ class HtmlCharacterSheetWriter(CharacterSheetWriter):
         fighting_styles: list[FightingStyle],
         invocations: list[str],
         spells: list[tuple[str, Ability, Optional[str]]],
-        items: list[tuple[Items.Item, int]],  # (item_name, quantity)
+        items: list[tuple[Items.Item, int]],
         tool_proficiencies: list[ToolProficiency],
     ):
         output_path_obj = pathlib.Path(output_path)
         output_path_obj.parent.mkdir(parents=True, exist_ok=True)
-        with open(output_path_obj.with_suffix(".html"), "w", encoding="utf-8") as file:
+        with open(output_path_obj, "w", encoding="utf-8") as file:
             file.write(self._get_css_style())
             file.write(
                 f"<h1>{character.name} - Level {character.character_level} {character.starter_class.value}</h1>\n"

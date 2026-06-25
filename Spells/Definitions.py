@@ -1979,115 +1979,94 @@ class Spell(ABC):
             "source": self.source,
         }
 
-    def write_to_file(self, file: TextIO, html: bool = False):
+    def write_to_file(self, file: TextIO):
         lines = [line.strip() + "." for line in self.description.strip().split(".")]
         lines = lines if len(lines) <= 1 else lines[:-1]
         description = "\n".join(lines)
 
-        if html:
-            description = description.replace(
-                "Using a Higher-Level Spell Slot.",
-                "<strong>Using a Higher-Level Spell Slot.</strong>",
-            )
-            description = StringUtils.bolden_text_html(description).replace(
-                "\n", "<br>"
-            )
+        description = description.replace(
+            "Using a Higher-Level Spell Slot.",
+            "<strong>Using a Higher-Level Spell Slot.</strong>",
+        )
+        description = StringUtils.bolden_text_html(description).replace(
+            "\n", "<br>"
+        )
 
-            file.write(
-                """
-            <style>
-            .spell-table {
-                width: 100%;
-                border-collapse: collapse;
-                font-size: 0.85rem;
-                margin: 0.25rem 0;
-            }
-
-            .spell-table td, .spell-table th {
-                border: 1px solid #ddd;
-                padding: 3px 5px;   /* ↓ tighter spacing */
-                vertical-align: top;
-            }
-
-            .spell-title {
-                font-size: 1rem;
-                text-align: left;
-                background: #f5f5f5;
-                font-weight: 600;
-            }
-
-            .spell-label {
-                font-weight: 600;
-                white-space: nowrap;
-                background: #fafafa;
-                padding: 2px 4px; /* tighter than value */
-                width: 1%; /* key trick: forces shrink-to-fit */
-            }
-
-            .spell-value {
-                width: auto;
-                padding: 2px 5px;
-            }
-
-            </style>
+        file.write(
             """
-            )
+        <style>
+        .spell-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+            margin: 0.25rem 0;
+        }
 
-            file.write("<table class='spell-table'>\n")
+        .spell-table td, .spell-table th {
+            border: 1px solid #ddd;
+            padding: 3px 5px;   /* ↓ tighter spacing */
+            vertical-align: top;
+        }
 
-            # --- Title INSIDE table ---
-            file.write(
-                f"""
-            <tr>
-                <th class='spell-title' colspan='2'>{self.name}</th>
-            </tr>
-            """
-            )
+        .spell-title {
+            font-size: 1rem;
+            text-align: left;
+            background: #f5f5f5;
+            font-weight: 600;
+        }
 
-            def row(label, value):
-                file.write("<tr>")
-                file.write(f"<td class='spell-label'>{label}</td>")
-                file.write(f"<td class='spell-value'>{value}</td>")
-                file.write("</tr>\n")
+        .spell-label {
+            font-weight: 600;
+            white-space: nowrap;
+            background: #fafafa;
+            padding: 2px 4px; /* tighter than value */
+            width: 1%; /* key trick: forces shrink-to-fit */
+        }
 
-            # --- Compact rows ---
-            row("Level / School", f"{self.level} / {self.school}")
-            row("Classes", ", ".join(self.classes))
-            row("Casting Time", self.casting_time)
-            row("Range", self.range)
-            row("Components", self.components)
-            row("Duration", self.duration)
+        .spell-value {
+            width: auto;
+            padding: 2px 5px;
+        }
 
-            if self.spell_casting_ability:
-                row("Ability", self.spell_casting_ability.value)
+        </style>
+        """
+        )
 
-            row("Source", self.source)
-            row("Description", description)
+        file.write("<table class='spell-table'>\n")
 
-            file.write("</table>\n")
+        # --- Title INSIDE table ---
+        file.write(
+            f"""
+        <tr>
+            <th class='spell-title' colspan='2'>{self.name}</th>
+        </tr>
+        """
+        )
 
-            # Description outside table (keeps layout clean)
-            # file.write(f"<div class='spell-description'>{description}</div>\n")
+        def row(label, value):
+            file.write("<tr>")
+            file.write(f"<td class='spell-label'>{label}</td>")
+            file.write(f"<td class='spell-value'>{value}</td>")
+            file.write("</tr>\n")
 
-        else:
-            file.write(f"Name: {self.name}\n")
-            file.write(f"Level: {self.level}\n")
-            file.write(f"School: {self.school}\n")
-            file.write(f"Classes: {', '.join(self.classes)}\n")
-            file.write(f"Casting Time: {self.casting_time}\n")
-            file.write(f"Range: {self.range}\n")
-            file.write(f"Components: {self.components}\n")
-            file.write(f"Duration: {self.duration}\n")
-            file.write(f"Description:\n{StringUtils.wrap_text(description, 80)}\n")
-            file.write(f"Source: {self.source}\n")
+        # --- Compact rows ---
+        row("Level / School", f"{self.level} / {self.school}")
+        row("Classes", ", ".join(self.classes))
+        row("Casting Time", self.casting_time)
+        row("Range", self.range)
+        row("Components", self.components)
+        row("Duration", self.duration)
 
-            if self.spell_casting_ability:
-                file.write(
-                    f"Spellcasting Ability: {self.spell_casting_ability.value}\n"
-                )
+        if self.spell_casting_ability:
+            row("Ability", self.spell_casting_ability.value)
 
-            if self._additional_ruling:
-                file.write(f"Additional Ruling: {self._additional_ruling}\n")
+        row("Source", self.source)
+        row("Description", description)
+
+        file.write("</table>\n")
+
+        # Description outside table (keeps layout clean)
+        # file.write(f"<div class='spell-description'>{description}</div>\n")
 
     def __repr__(self):
         return f"<Spell {self.name!r}, level {self.level}>"
