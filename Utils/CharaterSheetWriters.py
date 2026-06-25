@@ -369,6 +369,7 @@ class HtmlCharacterSheetWriter:
             return
 
         file.write("<h2>Spells</h2>\n")
+        file.write("<div class='spells'>\n")
 
         created_spells = [
             SpellFactory.create(spell_name, spell_casting_ability, additional_ruling)
@@ -376,10 +377,17 @@ class HtmlCharacterSheetWriter:
         ]
         sorted_spells = sorted(created_spells, key=lambda s: (s.level, s.name))
 
-        self._write_separated(
-            sorted_spells, lambda spell, f: spell.write_to_file(f), file
-        )
+        # Group by level and emit a level header before each group
+        from itertools import groupby
+        for level, group in groupby(sorted_spells, key=lambda s: s.level):
+            level_label = "Cantrips" if level == 0 else f"Level {level} Spells"
+            file.write(f"<h3 class='spell-level-header'>{level_label}</h3>\n")
+            for i, spell in enumerate(group):
+                if i > 0:
+                    file.write("<div class='spell-gap'></div>\n")
+                spell.write_to_file(file)
 
+        file.write("</div>\n")
         file.write("<br>\n")
 
     def _write_items(
@@ -630,38 +638,142 @@ class HtmlCharacterSheetWriter:
             width: auto;
         }
 
-        /* Spell tables */
-        .spell-table {
+        /* ── Spell cards ──────────────────────────────────────────────────── */
+        .spells {
+            max-width: 100%;
+        }
+
+        /* Level section header */
+        h3.spell-level-header {
+            font-size: 0.9rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: #4a5568;
+            margin: 0.8rem 0 0.3rem 0;
+            padding: 0;
+            border-bottom: 1px solid #c8ccd8;
+        }
+
+        /* Gap between consecutive spell cards */
+        .spell-gap {
+            height: 0.5rem;
+            max-width: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Each spell is its own bordered card table */
+        table.spell-card {
             width: 100%;
             border-collapse: collapse;
             font-size: 0.85rem;
-            margin: 0.25rem 0;
+            border: 1px solid #bbb;
+            border-radius: 3px;
+            margin: 0;
+            table-layout: auto;
         }
 
-        .spell-table td, .spell-table th {
+        table.spell-card td,
+        table.spell-card th {
             border: 1px solid var(--border-color);
-            padding: 3px 5px;
+            padding: 3px 7px;
             vertical-align: top;
         }
 
-        .spell-title {
+        /* Spell name — full-width header row */
+        .spell-name {
+            background: #ece8f5;
             font-size: 1rem;
+            font-weight: 700;
             text-align: left;
-            background: #f5f5f5;
-            font-weight: 600;
+            letter-spacing: 0.02em;
+            padding: 4px 7px;
+            border-bottom: 2px solid #b4aace;
         }
 
-        .spell-label {
+        /* Quick-stats row — two cells side by side */
+        tr.spell-quickstats td {
+            background: #f9f9fb;
+            font-size: 0.82rem;
+            white-space: normal;
+            padding: 3px 7px;
+        }
+
+        .sqs-left {
+            width: 35%;
+        }
+
+        .sqs-right {
+            width: 65%;
+        }
+
+        /* Inline label within quick-stats */
+        .slabel {
+            font-weight: 600;
+            color: var(--muted-color);
+            font-size: 0.78rem;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            margin-right: 2px;
+        }
+
+        /* Bullet separator between quick-stat items */
+        .ssep {
+            color: #aaa;
+            margin: 0 5px;
+        }
+
+        /* Description rows */
+        tr.spell-desc-row td,
+        tr.spell-higher-row td {
+            font-size: 0.8rem;
+            padding: 3px 7px;
+        }
+
+        .sdesc-label {
             font-weight: 600;
             white-space: nowrap;
             background: #fafafa;
-            padding: 2px 4px;
             width: 1%;
+            color: var(--muted-color);
+            font-size: 0.78rem;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
         }
 
-        .spell-value {
-            width: auto;
-            padding: 2px 5px;
+        .sdesc-text {
+            color: #333;
+        }
+
+        /* Higher-level row gets a subtle tint */
+        tr.spell-higher-row td {
+            background: #faf8ff;
+        }
+
+        /* Concentration chip — gold */
+        .stag {
+            display: inline-block;
+            border-radius: 3px;
+            padding: 1px 6px;
+            font-size: 0.72rem;
+            font-weight: 600;
+            margin-left: 5px;
+            vertical-align: middle;
+            white-space: nowrap;
+        }
+
+        .stag-concentration {
+            background: #fff3cd;
+            border: 1px solid #c8a227;
+            color: #7a5c00;
+        }
+
+        /* Ritual chip — teal */
+        .stag-ritual {
+            background: #d4f0ed;
+            border: 1px solid #2a9d8f;
+            color: #1a5f58;
         }
 
         /* ── Weapon cards ─────────────────────────────────────────────── */

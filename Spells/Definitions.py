@@ -1980,48 +1980,92 @@ class Spell(ABC):
         }
 
     def write_to_file(self, file: TextIO):  # writes HTML
+        # ── Detect special tags ──────────────────────────────────────────────
+        is_concentration = self.duration.lower().startswith("concentration")
+        is_ritual = "ritual" in self.casting_time.lower()
+
+        # ── Process description ──────────────────────────────────────────────
         lines = [line.strip() + "." for line in self.description.strip().split(".")]
         lines = lines if len(lines) <= 1 else lines[:-1]
         description = "\n".join(lines)
 
-        description = description.replace(
-            "Using a Higher-Level Spell Slot.",
-            "<strong>Using a Higher-Level Spell Slot.</strong>",
+        # Split off the higher-level note, if present
+        higher_level_marker = "Using a Higher-Level Spell Slot."
+        higher_level_html = ""
+        if higher_level_marker in description:
+            main_desc, higher_rest = description.split(higher_level_marker, 1)
+            main_desc = StringUtils.bolden_text_html(main_desc.strip()).replace("\n", "<br>")
+            higher_rest = StringUtils.bolden_text_html(higher_rest.strip()).replace("\n", "<br>")
+            higher_level_html = f"<strong>{higher_level_marker}</strong> {higher_rest}"
+        else:
+            main_desc = StringUtils.bolden_text_html(description).replace("\n", "<br>")
+
+        # ── Level label ──────────────────────────────────────────────────────
+        level_label = "Cantrip" if self.level == 0 else f"Level {self.level}"
+
+        # ── Build tag chips ──────────────────────────────────────────────────
+        tags_html = ""
+        if is_concentration:
+            tags_html += "<span class='stag stag-concentration'>Concentration</span> "
+        if is_ritual:
+            tags_html += "<span class='stag stag-ritual'>Ritual</span> "
+
+        # ── Quick-stats cells ────────────────────────────────────────────────
+        # Left ~35%: level, school, components
+        left_cell = (
+            f"<span class='slabel'>{level_label}</span>"
+            f"<span class='ssep'>·</span>"
+            f"<span class='slabel'>School</span> {self.school}"
+            f"<span class='ssep'>·</span>"
+            f"<span class='slabel'>Components</span> {self.components}"
         )
-        description = StringUtils.bolden_text_html(description).replace(
-            "\n", "<br>"
+        # Right ~65%: casting time, range, duration
+        duration_display = self.duration
+        if is_concentration:
+            # Strip the "Concentration, " prefix for display; the tag already shows it
+            duration_display = self.duration[len("Concentration, "):] if self.duration.lower().startswith("concentration, ") else self.duration
+        right_cell = (
+            f"<span class='slabel'>Cast</span> {self.casting_time}"
+            f"<span class='ssep'>·</span>"
+            f"<span class='slabel'>Range</span> {self.range}"
+            f"<span class='ssep'>·</span>"
+            f"<span class='slabel'>Duration</span> {duration_display}"
         )
 
-        file.write("<table class='spell-table'>\n")
+        # ── Write card ───────────────────────────────────────────────────────
+        file.write("<table class='spell-card'>\n")
 
-        # --- Title INSIDE table ---
+        # Name header row (full width)
         file.write(
-            f"""
-        <tr>
-            <th class='spell-title' colspan='2'>{self.name}</th>
-        </tr>
-        """
+            f"<tr><th class='spell-name' colspan='2'>{self.name}"
+            f"{(' ' + tags_html.strip()) if tags_html else ''}"
+            f"</th></tr>\n"
         )
 
-        def row(label, value):
-            file.write("<tr>")
-            file.write(f"<td class='spell-label'>{label}</td>")
-            file.write(f"<td class='spell-value'>{value}</td>")
-            file.write("</tr>\n")
+        # Quick-stats row
+        file.write(
+            f"<tr class='spell-quickstats'>"
+            f"<td class='sqs-left'>{left_cell}</td>"
+            f"<td class='sqs-right'>{right_cell}</td>"
+            f"</tr>\n"
+        )
 
-        # --- Compact rows ---
-        row("Level / School", f"{self.level} / {self.school}")
-        row("Classes", ", ".join(self.classes))
-        row("Casting Time", self.casting_time)
-        row("Range", self.range)
-        row("Components", self.components)
-        row("Duration", self.duration)
+        # Description row
+        file.write(
+            f"<tr class='spell-desc-row'>"
+            f"<td class='sdesc-label'>Description</td>"
+            f"<td class='sdesc-text'>{main_desc}</td>"
+            f"</tr>\n"
+        )
 
-        if self.spell_casting_ability:
-            row("Ability", self.spell_casting_ability.value)
-
-        row("Source", self.source)
-        row("Description", description)
+        # Higher-level row (if present)
+        if higher_level_html:
+            file.write(
+                f"<tr class='spell-higher-row'>"
+                f"<td class='sdesc-label'>Upcast</td>"
+                f"<td class='sdesc-text'>{higher_level_html}</td>"
+                f"</tr>\n"
+            )
 
         file.write("</table>\n")
 
