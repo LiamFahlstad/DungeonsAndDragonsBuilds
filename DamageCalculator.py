@@ -42,15 +42,14 @@ def calculate_average_damage(
         condition=attack_roll_condition,
         bonus=attack_roll_bonus,
     )
-    if damage_condition == DiceRollCondition.NEUTRAL:
-        average_damage = damage_die.average * number_of_damage_dice
-    elif damage_condition == DiceRollCondition.ADVANTAGE:
-        average_damage = damage_die.average_with_advantage() * number_of_damage_dice
+    if damage_condition == DiceRollCondition.ADVANTAGE:
+        base_damage = damage_die.average_with_advantage() * number_of_damage_dice
     elif damage_condition == DiceRollCondition.DISADVANTAGE:
-        average_damage = damage_die.average_with_disadvantage() * number_of_damage_dice
+        base_damage = damage_die.average_with_disadvantage() * number_of_damage_dice
+    else:
+        base_damage = damage_die.average * number_of_damage_dice
 
-    average_damage += damage_bonus
-    return p * average_damage
+    return p * (base_damage + damage_bonus)
 
 
 def damage_report(

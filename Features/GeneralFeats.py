@@ -15,6 +15,40 @@ class GeneralFeatTextFeature(TextFeature):
 GeneralFeat = GeneralFeatCharacterFeature | GeneralFeatTextFeature
 
 
+class _AbilityScoreFeat(GeneralFeatTextFeature):
+    """Base class for the common Level 4+ general feats that grant +1 to one ability.
+
+    Subclasses declare:
+        _NAME       – feat display name
+        _ORIGIN     – origin string (defaults to "General Feat Level 4+")
+        _ABILITIES  – tuple of allowed Ability values for the +1 bonus
+        _MIN_LEVEL  – minimum character level (defaults to 4)
+
+    They only need to implement ``get_description``.
+    """
+
+    _NAME: str
+    _ORIGIN: str = "General Feat Level 4+"
+    _ABILITIES: tuple
+    _MIN_LEVEL: int = 4
+
+    def __init__(self, character_level: int, ability: Ability):
+        if character_level < self._MIN_LEVEL:
+            raise ValueError(
+                f"{self._NAME} requires character level {self._MIN_LEVEL} or higher."
+            )
+        if ability not in self._ABILITIES:
+            allowed = " or ".join(a.value for a in self._ABILITIES)
+            raise ValueError(
+                f"{self._NAME} ability increase must be {allowed}."
+            )
+        self.ability = ability
+        super().__init__(name=self._NAME, origin=self._ORIGIN)
+
+    def modify(self, character_stat_block: CharacterStatBlock):
+        character_stat_block.abilities.add_bonus(self.ability, 1)
+
+
 # ---------------------------------------------------------------------------
 # Common General Feats (PHB)
 # ---------------------------------------------------------------------------
@@ -25,7 +59,6 @@ class AbilityScoreImprovement(GeneralFeatCharacterFeature):
 
     def __init__(self, bonuses: list[tuple[Ability, int]]):
         self.bonuses = bonuses
-        # Validate
         if sum(bonus[1] for bonus in self.bonuses) != 2:
             raise ValueError("Bonuses must sum to 2.")
 
@@ -34,21 +67,9 @@ class AbilityScoreImprovement(GeneralFeatCharacterFeature):
             character_stat_block.abilities.add_bonus(ability, bonus)
 
 
-class Actor(GeneralFeatTextFeature):
-
-    def __init__(self, character_level: int, ability: Ability):
-        if character_level < 4:
-            raise ValueError("Actor requires character level 4 or higher.")
-        if ability not in [Ability.CHARISMA]:
-            raise ValueError("Actor ability increase must be Charisma.")
-        self.ability = ability
-        super().__init__(
-            name="Actor",
-            origin="General Feat Level 4+",
-        )
-
-    def modify(self, character_stat_block: CharacterStatBlock):
-        character_stat_block.abilities.add_bonus(self.ability, 1)
+class Actor(_AbilityScoreFeat):
+    _NAME = "Actor"
+    _ABILITIES = (Ability.CHARISMA,)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         return (
@@ -60,21 +81,9 @@ class Actor(GeneralFeatTextFeature):
         )
 
 
-class Athlete(GeneralFeatTextFeature):
-
-    def __init__(self, character_level: int, ability: Ability):
-        if character_level < 4:
-            raise ValueError("Athlete requires character level 4 or higher.")
-        if ability not in [Ability.STRENGTH, Ability.DEXTERITY]:
-            raise ValueError("Athlete ability increase must be Strength or Dexterity.")
-        self.ability = ability
-        super().__init__(
-            name="Athlete",
-            origin="General Feat Level 4+",
-        )
-
-    def modify(self, character_stat_block: CharacterStatBlock):
-        character_stat_block.abilities.add_bonus(self.ability, 1)
+class Athlete(_AbilityScoreFeat):
+    _NAME = "Athlete"
+    _ABILITIES = (Ability.STRENGTH, Ability.DEXTERITY)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         return (
@@ -87,21 +96,9 @@ class Athlete(GeneralFeatTextFeature):
         )
 
 
-class Charger(GeneralFeatTextFeature):
-
-    def __init__(self, character_level: int, ability: Ability):
-        if character_level < 4:
-            raise ValueError("Charger requires character level 4 or higher.")
-        if ability not in [Ability.STRENGTH, Ability.DEXTERITY]:
-            raise ValueError("Charger ability increase must be Strength or Dexterity.")
-        self.ability = ability
-        super().__init__(
-            name="Charger",
-            origin="General Feat Level 4+",
-        )
-
-    def modify(self, character_stat_block: CharacterStatBlock):
-        character_stat_block.abilities.add_bonus(self.ability, 1)
+class Charger(_AbilityScoreFeat):
+    _NAME = "Charger"
+    _ABILITIES = (Ability.STRENGTH, Ability.DEXTERITY)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         return (
@@ -113,21 +110,9 @@ class Charger(GeneralFeatTextFeature):
         )
 
 
-class Chef(GeneralFeatTextFeature):
-
-    def __init__(self, character_level: int, ability: Ability):
-        if character_level < 4:
-            raise ValueError("Chef requires character level 4 or higher.")
-        if ability not in [Ability.WISDOM, Ability.CONSTITUTION]:
-            raise ValueError("Chef ability increase must be Wisdom or Constitution.")
-        self.ability = ability
-        super().__init__(
-            name="Chef",
-            origin="General Feat Level 4+",
-        )
-
-    def modify(self, character_stat_block: CharacterStatBlock):
-        character_stat_block.abilities.add_bonus(self.ability, 1)
+class Chef(_AbilityScoreFeat):
+    _NAME = "Chef"
+    _ABILITIES = (Ability.WISDOM, Ability.CONSTITUTION)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         return (
@@ -140,21 +125,9 @@ class Chef(GeneralFeatTextFeature):
         )
 
 
-class CrossbowExpert(GeneralFeatTextFeature):
-
-    def __init__(self, character_level: int, ability: Ability):
-        if character_level < 4:
-            raise ValueError("Crossbow Expert requires character level 4 or higher.")
-        if ability not in [Ability.DEXTERITY]:
-            raise ValueError("Crossbow Expert ability increase must be Dexterity.")
-        self.ability = ability
-        super().__init__(
-            name="Crossbow Expert",
-            origin="General Feat Level 4+",
-        )
-
-    def modify(self, character_stat_block: CharacterStatBlock):
-        character_stat_block.abilities.add_bonus(self.ability, 1)
+class CrossbowExpert(_AbilityScoreFeat):
+    _NAME = "Crossbow Expert"
+    _ABILITIES = (Ability.DEXTERITY,)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         return (
@@ -167,23 +140,9 @@ class CrossbowExpert(GeneralFeatTextFeature):
         )
 
 
-class Crusher(GeneralFeatTextFeature):
-
-    def __init__(self, character_level: int, ability: Ability):
-        if character_level < 4:
-            raise ValueError("Crusher requires character level 4 or higher.")
-        if ability not in [Ability.STRENGTH, Ability.CONSTITUTION]:
-            raise ValueError(
-                "Crusher ability increase must be Strength or Constitution."
-            )
-        self.ability = ability
-        super().__init__(
-            name="Crusher",
-            origin="General Feat Level 4+",
-        )
-
-    def modify(self, character_stat_block: CharacterStatBlock):
-        character_stat_block.abilities.add_bonus(self.ability, 1)
+class Crusher(_AbilityScoreFeat):
+    _NAME = "Crusher"
+    _ABILITIES = (Ability.STRENGTH, Ability.CONSTITUTION)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         return (
@@ -195,21 +154,9 @@ class Crusher(GeneralFeatTextFeature):
         )
 
 
-class DefensiveDuelist(GeneralFeatTextFeature):
-
-    def __init__(self, character_level: int, ability: Ability):
-        if character_level < 4:
-            raise ValueError("Defensive Duelist requires character level 4 or higher.")
-        if ability not in [Ability.DEXTERITY]:
-            raise ValueError("Defensive Duelist ability increase must be Dexterity.")
-        self.ability = ability
-        super().__init__(
-            name="Defensive Duelist",
-            origin="General Feat Level 4+",
-        )
-
-    def modify(self, character_stat_block: CharacterStatBlock):
-        character_stat_block.abilities.add_bonus(self.ability, 1)
+class DefensiveDuelist(_AbilityScoreFeat):
+    _NAME = "Defensive Duelist"
+    _ABILITIES = (Ability.DEXTERITY,)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         return (
@@ -220,23 +167,9 @@ class DefensiveDuelist(GeneralFeatTextFeature):
         )
 
 
-class DualWielder(GeneralFeatTextFeature):
-
-    def __init__(self, character_level: int, ability: Ability):
-        if character_level < 4:
-            raise ValueError("Dual Wielder requires character level 4 or higher.")
-        if ability not in [Ability.STRENGTH, Ability.DEXTERITY]:
-            raise ValueError(
-                "Dual Wielder ability increase must be Strength or Dexterity."
-            )
-        self.ability = ability
-        super().__init__(
-            name="Dual Wielder",
-            origin="General Feat Level 4+",
-        )
-
-    def modify(self, character_stat_block: CharacterStatBlock):
-        character_stat_block.abilities.add_bonus(self.ability, 1)
+class DualWielder(_AbilityScoreFeat):
+    _NAME = "Dual Wielder"
+    _ABILITIES = (Ability.STRENGTH, Ability.DEXTERITY)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         return (
@@ -248,21 +181,9 @@ class DualWielder(GeneralFeatTextFeature):
         )
 
 
-class Durable(GeneralFeatTextFeature):
-
-    def __init__(self, character_level: int, ability: Ability):
-        if character_level < 4:
-            raise ValueError("Durable requires character level 4 or higher.")
-        if ability not in [Ability.CONSTITUTION]:
-            raise ValueError("Durable ability increase must be Constitution.")
-        self.ability = ability
-        super().__init__(
-            name="Durable",
-            origin="General Feat Level 4+",
-        )
-
-    def modify(self, character_stat_block: CharacterStatBlock):
-        character_stat_block.abilities.add_bonus(self.ability, 1)
+class Durable(_AbilityScoreFeat):
+    _NAME = "Durable"
+    _ABILITIES = (Ability.CONSTITUTION,)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         return (
@@ -274,23 +195,9 @@ class Durable(GeneralFeatTextFeature):
         )
 
 
-class ElementalAdept(GeneralFeatTextFeature):
-
-    def __init__(self, character_level: int, ability: Ability):
-        if character_level < 4:
-            raise ValueError("Elemental Adept requires character level 4 or higher.")
-        if ability not in [Ability.INTELLIGENCE, Ability.WISDOM, Ability.CHARISMA]:
-            raise ValueError(
-                "Elemental Adept ability increase must be Intelligence, Wisdom, or Charisma."
-            )
-        self.ability = ability
-        super().__init__(
-            name="Elemental Adept",
-            origin="General Feat Level 4+",
-        )
-
-    def modify(self, character_stat_block: CharacterStatBlock):
-        character_stat_block.abilities.add_bonus(self.ability, 1)
+class ElementalAdept(_AbilityScoreFeat):
+    _NAME = "Elemental Adept"
+    _ABILITIES = (Ability.INTELLIGENCE, Ability.WISDOM, Ability.CHARISMA)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         return (
@@ -302,23 +209,9 @@ class ElementalAdept(GeneralFeatTextFeature):
         )
 
 
-class FeyTouched(GeneralFeatTextFeature):
-
-    def __init__(self, character_level: int, ability: Ability):
-        if character_level < 4:
-            raise ValueError("Fey Touched requires character level 4 or higher.")
-        if ability not in [Ability.INTELLIGENCE, Ability.WISDOM, Ability.CHARISMA]:
-            raise ValueError(
-                "Fey Touched ability increase must be Intelligence, Wisdom, or Charisma."
-            )
-        self.ability = ability
-        super().__init__(
-            name="Fey Touched",
-            origin="General Feat Level 4+",
-        )
-
-    def modify(self, character_stat_block: CharacterStatBlock):
-        character_stat_block.abilities.add_bonus(self.ability, 1)
+class FeyTouched(_AbilityScoreFeat):
+    _NAME = "Fey Touched"
+    _ABILITIES = (Ability.INTELLIGENCE, Ability.WISDOM, Ability.CHARISMA)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         return (
@@ -329,21 +222,9 @@ class FeyTouched(GeneralFeatTextFeature):
         )
 
 
-class Grappler(GeneralFeatTextFeature):
-
-    def __init__(self, character_level: int, ability: Ability):
-        if character_level < 4:
-            raise ValueError("Grappler requires character level 4 or higher.")
-        if ability not in [Ability.STRENGTH, Ability.DEXTERITY]:
-            raise ValueError("Grappler ability increase must be Strength or Dexterity.")
-        self.ability = ability
-        super().__init__(
-            name="Grappler",
-            origin="General Feat Level 4+",
-        )
-
-    def modify(self, character_stat_block: CharacterStatBlock):
-        character_stat_block.abilities.add_bonus(self.ability, 1)
+class Grappler(_AbilityScoreFeat):
+    _NAME = "Grappler"
+    _ABILITIES = (Ability.STRENGTH, Ability.DEXTERITY)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         return (
@@ -356,23 +237,9 @@ class Grappler(GeneralFeatTextFeature):
         )
 
 
-class GreatWeaponMaster(GeneralFeatTextFeature):
-
-    def __init__(self, character_level: int, ability: Ability):
-        if character_level < 4:
-            raise ValueError(
-                "Great Weapon Master requires character level 4 or higher."
-            )
-        if ability not in [Ability.STRENGTH]:
-            raise ValueError("Great Weapon Master ability increase must be Strength.")
-        self.ability = ability
-        super().__init__(
-            name="Great Weapon Master",
-            origin="General Feat Level 4+",
-        )
-
-    def modify(self, character_stat_block: CharacterStatBlock):
-        character_stat_block.abilities.add_bonus(self.ability, 1)
+class GreatWeaponMaster(_AbilityScoreFeat):
+    _NAME = "Great Weapon Master"
+    _ABILITIES = (Ability.STRENGTH,)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         return (
@@ -384,23 +251,9 @@ class GreatWeaponMaster(GeneralFeatTextFeature):
         )
 
 
-class HeavilyArmored(GeneralFeatTextFeature):
-
-    def __init__(self, character_level: int, ability: Ability):
-        if character_level < 4:
-            raise ValueError("Heavily Armored requires character level 4 or higher.")
-        if ability not in [Ability.CONSTITUTION, Ability.STRENGTH]:
-            raise ValueError(
-                "Heavily Armored ability increase must be Constitution or Strength."
-            )
-        self.ability = ability
-        super().__init__(
-            name="Heavily Armored",
-            origin="General Feat Level 4+",
-        )
-
-    def modify(self, character_stat_block: CharacterStatBlock):
-        character_stat_block.abilities.add_bonus(self.ability, 1)
+class HeavilyArmored(_AbilityScoreFeat):
+    _NAME = "Heavily Armored"
+    _ABILITIES = (Ability.CONSTITUTION, Ability.STRENGTH)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         return (
@@ -411,23 +264,9 @@ class HeavilyArmored(GeneralFeatTextFeature):
         )
 
 
-class HeavyArmorMaster(GeneralFeatTextFeature):
-
-    def __init__(self, character_level: int, ability: Ability):
-        if character_level < 4:
-            raise ValueError("Heavy Armor Master requires character level 4 or higher.")
-        if ability not in [Ability.CONSTITUTION, Ability.STRENGTH]:
-            raise ValueError(
-                "Heavy Armor Master ability increase must be Constitution or Strength."
-            )
-        self.ability = ability
-        super().__init__(
-            name="Heavy Armor Master",
-            origin="General Feat Level 4+",
-        )
-
-    def modify(self, character_stat_block: CharacterStatBlock):
-        character_stat_block.abilities.add_bonus(self.ability, 1)
+class HeavyArmorMaster(_AbilityScoreFeat):
+    _NAME = "Heavy Armor Master"
+    _ABILITIES = (Ability.CONSTITUTION, Ability.STRENGTH)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         return (
@@ -438,23 +277,9 @@ class HeavyArmorMaster(GeneralFeatTextFeature):
         )
 
 
-class InspiringLeader(GeneralFeatTextFeature):
-
-    def __init__(self, character_level: int, ability: Ability):
-        if character_level < 4:
-            raise ValueError("Inspiring Leader requires character level 4 or higher.")
-        if ability not in [Ability.WISDOM, Ability.CHARISMA]:
-            raise ValueError(
-                "Inspiring Leader ability increase must be Wisdom or Charisma."
-            )
-        self.ability = ability
-        super().__init__(
-            name="Inspiring Leader",
-            origin="General Feat Level 4+",
-        )
-
-    def modify(self, character_stat_block: CharacterStatBlock):
-        character_stat_block.abilities.add_bonus(self.ability, 1)
+class InspiringLeader(_AbilityScoreFeat):
+    _NAME = "Inspiring Leader"
+    _ABILITIES = (Ability.WISDOM, Ability.CHARISMA)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         return (
@@ -465,21 +290,9 @@ class InspiringLeader(GeneralFeatTextFeature):
         )
 
 
-class KeenMind(GeneralFeatTextFeature):
-
-    def __init__(self, character_level: int, ability: Ability):
-        if character_level < 4:
-            raise ValueError("Keen Mind requires character level 4 or higher.")
-        if ability not in [Ability.INTELLIGENCE]:
-            raise ValueError("Keen Mind ability increase must be Intelligence.")
-        self.ability = ability
-        super().__init__(
-            name="Keen Mind",
-            origin="General Feat Level 4+",
-        )
-
-    def modify(self, character_stat_block: CharacterStatBlock):
-        character_stat_block.abilities.add_bonus(self.ability, 1)
+class KeenMind(_AbilityScoreFeat):
+    _NAME = "Keen Mind"
+    _ABILITIES = (Ability.INTELLIGENCE,)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         return (
@@ -491,23 +304,9 @@ class KeenMind(GeneralFeatTextFeature):
         )
 
 
-class LightlyArmored(GeneralFeatTextFeature):
-
-    def __init__(self, character_level: int, ability: Ability):
-        if character_level < 4:
-            raise ValueError("Lightly Armored requires character level 4 or higher.")
-        if ability not in [Ability.STRENGTH, Ability.DEXTERITY]:
-            raise ValueError(
-                "Lightly Armored ability increase must be Strength or Dexterity."
-            )
-        self.ability = ability
-        super().__init__(
-            name="Lightly Armored",
-            origin="General Feat Level 4+",
-        )
-
-    def modify(self, character_stat_block: CharacterStatBlock):
-        character_stat_block.abilities.add_bonus(self.ability, 1)
+class LightlyArmored(_AbilityScoreFeat):
+    _NAME = "Lightly Armored"
+    _ABILITIES = (Ability.STRENGTH, Ability.DEXTERITY)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         return (
@@ -518,23 +317,9 @@ class LightlyArmored(GeneralFeatTextFeature):
         )
 
 
-class MageSlayer(GeneralFeatTextFeature):
-
-    def __init__(self, character_level: int, ability: Ability):
-        if character_level < 4:
-            raise ValueError("Mage Slayer requires character level 4 or higher.")
-        if ability not in [Ability.STRENGTH, Ability.DEXTERITY]:
-            raise ValueError(
-                "Mage Slayer ability increase must be Strength or Dexterity."
-            )
-        self.ability = ability
-        super().__init__(
-            name="Mage Slayer",
-            origin="General Feat Level 4+",
-        )
-
-    def modify(self, character_stat_block: CharacterStatBlock):
-        character_stat_block.abilities.add_bonus(self.ability, 1)
+class MageSlayer(_AbilityScoreFeat):
+    _NAME = "Mage Slayer"
+    _ABILITIES = (Ability.STRENGTH, Ability.DEXTERITY)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         return (
@@ -546,25 +331,9 @@ class MageSlayer(GeneralFeatTextFeature):
         )
 
 
-class MartialWeaponTraining(GeneralFeatTextFeature):
-
-    def __init__(self, character_level: int, ability: Ability):
-        if character_level < 4:
-            raise ValueError(
-                "Martial Weapon Training requires character level 4 or higher."
-            )
-        if ability not in [Ability.STRENGTH, Ability.DEXTERITY]:
-            raise ValueError(
-                "Martial Weapon Training ability increase must be Strength or Dexterity."
-            )
-        self.ability = ability
-        super().__init__(
-            name="Martial Weapon Training",
-            origin="General Feat Level 4+",
-        )
-
-    def modify(self, character_stat_block: CharacterStatBlock):
-        character_stat_block.abilities.add_bonus(self.ability, 1)
+class MartialWeaponTraining(_AbilityScoreFeat):
+    _NAME = "Martial Weapon Training"
+    _ABILITIES = (Ability.STRENGTH, Ability.DEXTERITY)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         return (
@@ -575,23 +344,9 @@ class MartialWeaponTraining(GeneralFeatTextFeature):
         )
 
 
-class MediumArmorMaster(GeneralFeatTextFeature):
-
-    def __init__(self, character_level: int, ability: Ability):
-        if character_level < 4:
-            raise ValueError("Medium Armor Master requires character level 4 or higher.")
-        if ability not in [Ability.STRENGTH, Ability.DEXTERITY]:
-            raise ValueError(
-                "Medium Armor Master ability increase must be Strength or Dexterity."
-            )
-        self.ability = ability
-        super().__init__(
-            name="Medium Armor Master",
-            origin="General Feat Level 4+",
-        )
-
-    def modify(self, character_stat_block: CharacterStatBlock):
-        character_stat_block.abilities.add_bonus(self.ability, 1)
+class MediumArmorMaster(_AbilityScoreFeat):
+    _NAME = "Medium Armor Master"
+    _ABILITIES = (Ability.STRENGTH, Ability.DEXTERITY)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         return (
@@ -602,23 +357,9 @@ class MediumArmorMaster(GeneralFeatTextFeature):
         )
 
 
-class ModeratelyArmored(GeneralFeatTextFeature):
-
-    def __init__(self, character_level: int, ability: Ability):
-        if character_level < 4:
-            raise ValueError("Moderately Armored requires character level 4 or higher.")
-        if ability not in [Ability.STRENGTH, Ability.DEXTERITY]:
-            raise ValueError(
-                "Moderately Armored ability increase must be Strength or Dexterity."
-            )
-        self.ability = ability
-        super().__init__(
-            name="Moderately Armored",
-            origin="General Feat Level 4+",
-        )
-
-    def modify(self, character_stat_block: CharacterStatBlock):
-        character_stat_block.abilities.add_bonus(self.ability, 1)
+class ModeratelyArmored(_AbilityScoreFeat):
+    _NAME = "Moderately Armored"
+    _ABILITIES = (Ability.STRENGTH, Ability.DEXTERITY)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         return (
@@ -629,23 +370,9 @@ class ModeratelyArmored(GeneralFeatTextFeature):
         )
 
 
-class MountedCombatant(GeneralFeatTextFeature):
-
-    def __init__(self, character_level: int, ability: Ability):
-        if character_level < 4:
-            raise ValueError("Mounted Combatant requires character level 4 or higher.")
-        if ability not in [Ability.STRENGTH, Ability.DEXTERITY, Ability.WISDOM]:
-            raise ValueError(
-                "Mounted Combatant ability increase must be Strength, Dexterity, or Wisdom."
-            )
-        self.ability = ability
-        super().__init__(
-            name="Mounted Combatant",
-            origin="General Feat Level 4+",
-        )
-
-    def modify(self, character_stat_block: CharacterStatBlock):
-        character_stat_block.abilities.add_bonus(self.ability, 1)
+class MountedCombatant(_AbilityScoreFeat):
+    _NAME = "Mounted Combatant"
+    _ABILITIES = (Ability.STRENGTH, Ability.DEXTERITY, Ability.WISDOM)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         return (
@@ -658,23 +385,9 @@ class MountedCombatant(GeneralFeatTextFeature):
         )
 
 
-class Observant(GeneralFeatTextFeature):
-
-    def __init__(self, character_level: int, ability: Ability):
-        if character_level < 4:
-            raise ValueError("Observant requires character level 4 or higher.")
-        if ability not in [Ability.INTELLIGENCE, Ability.WISDOM]:
-            raise ValueError(
-                "Observant ability increase must be Intelligence or Wisdom."
-            )
-        self.ability = ability
-        super().__init__(
-            name="Observant",
-            origin="General Feat Level 4+",
-        )
-
-    def modify(self, character_stat_block: CharacterStatBlock):
-        character_stat_block.abilities.add_bonus(self.ability, 1)
+class Observant(_AbilityScoreFeat):
+    _NAME = "Observant"
+    _ABILITIES = (Ability.INTELLIGENCE, Ability.WISDOM)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         return (
@@ -686,21 +399,9 @@ class Observant(GeneralFeatTextFeature):
         )
 
 
-class Piercer(GeneralFeatTextFeature):
-
-    def __init__(self, character_level: int, ability: Ability):
-        if character_level < 4:
-            raise ValueError("Piercer requires character level 4 or higher.")
-        if ability not in [Ability.STRENGTH, Ability.DEXTERITY]:
-            raise ValueError("Piercer ability increase must be Strength or Dexterity.")
-        self.ability = ability
-        super().__init__(
-            name="Piercer",
-            origin="General Feat Level 4+",
-        )
-
-    def modify(self, character_stat_block: CharacterStatBlock):
-        character_stat_block.abilities.add_bonus(self.ability, 1)
+class Piercer(_AbilityScoreFeat):
+    _NAME = "Piercer"
+    _ABILITIES = (Ability.STRENGTH, Ability.DEXTERITY)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         return (
@@ -712,23 +413,9 @@ class Piercer(GeneralFeatTextFeature):
         )
 
 
-class Poisoner(GeneralFeatTextFeature):
-
-    def __init__(self, character_level: int, ability: Ability):
-        if character_level < 4:
-            raise ValueError("Poisoner requires character level 4 or higher.")
-        if ability not in [Ability.DEXTERITY, Ability.INTELLIGENCE]:
-            raise ValueError(
-                "Poisoner ability increase must be Dexterity or Intelligence."
-            )
-        self.ability = ability
-        super().__init__(
-            name="Poisoner",
-            origin="General Feat Level 4+",
-        )
-
-    def modify(self, character_stat_block: CharacterStatBlock):
-        character_stat_block.abilities.add_bonus(self.ability, 1)
+class Poisoner(_AbilityScoreFeat):
+    _NAME = "Poisoner"
+    _ABILITIES = (Ability.DEXTERITY, Ability.INTELLIGENCE)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         return (
@@ -740,23 +427,9 @@ class Poisoner(GeneralFeatTextFeature):
         )
 
 
-class PolearmMaster(GeneralFeatTextFeature):
-
-    def __init__(self, character_level: int, ability: Ability):
-        if character_level < 4:
-            raise ValueError("Polearm Master requires character level 4 or higher.")
-        if ability not in [Ability.STRENGTH, Ability.DEXTERITY]:
-            raise ValueError(
-                "Polearm Master ability increase must be Strength or Dexterity."
-            )
-        self.ability = ability
-        super().__init__(
-            name="Polearm Master",
-            origin="General Feat Level 4+",
-        )
-
-    def modify(self, character_stat_block: CharacterStatBlock):
-        character_stat_block.abilities.add_bonus(self.ability, 1)
+class PolearmMaster(_AbilityScoreFeat):
+    _NAME = "Polearm Master"
+    _ABILITIES = (Ability.STRENGTH, Ability.DEXTERITY)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         return (
@@ -768,19 +441,12 @@ class PolearmMaster(GeneralFeatTextFeature):
         )
 
 
-class Resilient(GeneralFeatTextFeature):
-
-    def __init__(self, character_level: int, ability: Ability):
-        if character_level < 4:
-            raise ValueError("Resilient requires character level 4 or higher.")
-        self.ability = ability
-        super().__init__(
-            name="Resilient",
-            origin="General Feat Level 4+",
-        )
+class Resilient(_AbilityScoreFeat):
+    _NAME = "Resilient"
+    _ABILITIES = tuple(Ability)  # any ability is valid
 
     def modify(self, character_stat_block: CharacterStatBlock):
-        character_stat_block.abilities.add_bonus(self.ability, 1)
+        super().modify(character_stat_block)
         character_stat_block.add_proficiency_in_saving_throw(self.ability)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -792,23 +458,9 @@ class Resilient(GeneralFeatTextFeature):
         )
 
 
-class RitualCaster(GeneralFeatTextFeature):
-
-    def __init__(self, character_level: int, ability: Ability):
-        if character_level < 4:
-            raise ValueError("Ritual Caster requires character level 4 or higher.")
-        if ability not in [Ability.INTELLIGENCE, Ability.WISDOM, Ability.CHARISMA]:
-            raise ValueError(
-                "Ritual Caster ability increase must be Intelligence, Wisdom, or Charisma."
-            )
-        self.ability = ability
-        super().__init__(
-            name="Ritual Caster",
-            origin="General Feat Level 4+",
-        )
-
-    def modify(self, character_stat_block: CharacterStatBlock):
-        character_stat_block.abilities.add_bonus(self.ability, 1)
+class RitualCaster(_AbilityScoreFeat):
+    _NAME = "Ritual Caster"
+    _ABILITIES = (Ability.INTELLIGENCE, Ability.WISDOM, Ability.CHARISMA)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         return (
@@ -820,21 +472,9 @@ class RitualCaster(GeneralFeatTextFeature):
         )
 
 
-class Sentinel(GeneralFeatTextFeature):
-
-    def __init__(self, character_level: int, ability: Ability):
-        if character_level < 4:
-            raise ValueError("Sentinel requires character level 4 or higher.")
-        if ability not in [Ability.STRENGTH, Ability.DEXTERITY]:
-            raise ValueError("Sentinel ability increase must be Strength or Dexterity.")
-        self.ability = ability
-        super().__init__(
-            name="Sentinel",
-            origin="General Feat Level 4+",
-        )
-
-    def modify(self, character_stat_block: CharacterStatBlock):
-        character_stat_block.abilities.add_bonus(self.ability, 1)
+class Sentinel(_AbilityScoreFeat):
+    _NAME = "Sentinel"
+    _ABILITIES = (Ability.STRENGTH, Ability.DEXTERITY)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         return (
@@ -846,23 +486,9 @@ class Sentinel(GeneralFeatTextFeature):
         )
 
 
-class ShadowTouched(GeneralFeatTextFeature):
-
-    def __init__(self, character_level: int, ability: Ability):
-        if character_level < 4:
-            raise ValueError("Shadow Touched requires character level 4 or higher.")
-        if ability not in [Ability.INTELLIGENCE, Ability.WISDOM, Ability.CHARISMA]:
-            raise ValueError(
-                "Shadow Touched ability increase must be Intelligence, Wisdom, or Charisma."
-            )
-        self.ability = ability
-        super().__init__(
-            name="Shadow Touched",
-            origin="General Feat Level 4+",
-        )
-
-    def modify(self, character_stat_block: CharacterStatBlock):
-        character_stat_block.abilities.add_bonus(self.ability, 1)
+class ShadowTouched(_AbilityScoreFeat):
+    _NAME = "Shadow Touched"
+    _ABILITIES = (Ability.INTELLIGENCE, Ability.WISDOM, Ability.CHARISMA)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         return (
@@ -873,21 +499,9 @@ class ShadowTouched(GeneralFeatTextFeature):
         )
 
 
-class Sharpshooter(GeneralFeatTextFeature):
-
-    def __init__(self, character_level: int, ability: Ability):
-        if character_level < 4:
-            raise ValueError("Sharpshooter requires character level 4 or higher.")
-        if ability not in [Ability.DEXTERITY]:
-            raise ValueError("Sharpshooter ability increase must be Dexterity.")
-        self.ability = ability
-        super().__init__(
-            name="Sharpshooter",
-            origin="General Feat Level 4+",
-        )
-
-    def modify(self, character_stat_block: CharacterStatBlock):
-        character_stat_block.abilities.add_bonus(self.ability, 1)
+class Sharpshooter(_AbilityScoreFeat):
+    _NAME = "Sharpshooter"
+    _ABILITIES = (Ability.DEXTERITY,)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         return (
@@ -900,21 +514,9 @@ class Sharpshooter(GeneralFeatTextFeature):
         )
 
 
-class ShieldMaster(GeneralFeatTextFeature):
-
-    def __init__(self, character_level: int, ability: Ability):
-        if character_level < 4:
-            raise ValueError("Shield Master requires character level 4 or higher.")
-        if ability not in [Ability.STRENGTH]:
-            raise ValueError("Shield Master ability increase must be Strength.")
-        self.ability = ability
-        super().__init__(
-            name="Shield Master",
-            origin="General Feat Level 4+",
-        )
-
-    def modify(self, character_stat_block: CharacterStatBlock):
-        character_stat_block.abilities.add_bonus(self.ability, 1)
+class ShieldMaster(_AbilityScoreFeat):
+    _NAME = "Shield Master"
+    _ABILITIES = (Ability.STRENGTH,)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         return (
@@ -926,20 +528,16 @@ class ShieldMaster(GeneralFeatTextFeature):
         )
 
 
-class SkillExpert(GeneralFeatTextFeature):
+class SkillExpert(_AbilityScoreFeat):
+    _NAME = "Skill Expert"
+    _ABILITIES = tuple(Ability)  # any ability is valid
 
     def __init__(self, character_level: int, ability: Ability, skill: Skill):
-        if character_level < 4:
-            raise ValueError("Skill Expert requires character level 4 or higher.")
-        self.ability = ability
         self.skill = skill
-        super().__init__(
-            name="Skill Expert",
-            origin="General Feat Level 4+",
-        )
+        super().__init__(character_level, ability)
 
     def modify(self, character_stat_block: CharacterStatBlock):
-        character_stat_block.abilities.add_bonus(self.ability, 1)
+        super().modify(character_stat_block)
         if not character_stat_block.skills.is_proficient(self.skill):
             character_stat_block.skills.add_skill_proficiency(self.skill)
 
@@ -953,21 +551,9 @@ class SkillExpert(GeneralFeatTextFeature):
         )
 
 
-class Skulker(GeneralFeatTextFeature):
-
-    def __init__(self, character_level: int, ability: Ability):
-        if character_level < 4:
-            raise ValueError("Skulker requires character level 4 or higher.")
-        if ability not in [Ability.DEXTERITY]:
-            raise ValueError("Skulker ability increase must be Dexterity.")
-        self.ability = ability
-        super().__init__(
-            name="Skulker",
-            origin="General Feat Level 4+",
-        )
-
-    def modify(self, character_stat_block: CharacterStatBlock):
-        character_stat_block.abilities.add_bonus(self.ability, 1)
+class Skulker(_AbilityScoreFeat):
+    _NAME = "Skulker"
+    _ABILITIES = (Ability.DEXTERITY,)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         return (
@@ -980,21 +566,9 @@ class Skulker(GeneralFeatTextFeature):
         )
 
 
-class Slasher(GeneralFeatTextFeature):
-
-    def __init__(self, character_level: int, ability: Ability):
-        if character_level < 4:
-            raise ValueError("Slasher requires character level 4 or higher.")
-        if ability not in [Ability.STRENGTH, Ability.DEXTERITY]:
-            raise ValueError("Slasher ability increase must be Strength or Dexterity.")
-        self.ability = ability
-        super().__init__(
-            name="Slasher",
-            origin="General Feat Level 4+",
-        )
-
-    def modify(self, character_stat_block: CharacterStatBlock):
-        character_stat_block.abilities.add_bonus(self.ability, 1)
+class Slasher(_AbilityScoreFeat):
+    _NAME = "Slasher"
+    _ABILITIES = (Ability.STRENGTH, Ability.DEXTERITY)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         return (
@@ -1006,23 +580,9 @@ class Slasher(GeneralFeatTextFeature):
         )
 
 
-class Speedy(GeneralFeatTextFeature):
-
-    def __init__(self, character_level: int, ability: Ability):
-        if character_level < 4:
-            raise ValueError("Speedy requires character level 4 or higher.")
-        if ability not in [Ability.DEXTERITY, Ability.CONSTITUTION]:
-            raise ValueError(
-                "Speedy ability increase must be Dexterity or Constitution."
-            )
-        self.ability = ability
-        super().__init__(
-            name="Speedy",
-            origin="General Feat Level 4+",
-        )
-
-    def modify(self, character_stat_block: CharacterStatBlock):
-        character_stat_block.abilities.add_bonus(self.ability, 1)
+class Speedy(_AbilityScoreFeat):
+    _NAME = "Speedy"
+    _ABILITIES = (Ability.DEXTERITY, Ability.CONSTITUTION)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         return (
@@ -1035,23 +595,9 @@ class Speedy(GeneralFeatTextFeature):
         )
 
 
-class SpellSniper(GeneralFeatTextFeature):
-
-    def __init__(self, character_level: int, ability: Ability):
-        if character_level < 4:
-            raise ValueError("Spell Sniper requires character level 4 or higher.")
-        if ability not in [Ability.INTELLIGENCE, Ability.WISDOM, Ability.CHARISMA]:
-            raise ValueError(
-                "Spell Sniper ability increase must be Intelligence, Wisdom, or Charisma."
-            )
-        self.ability = ability
-        super().__init__(
-            name="Spell Sniper",
-            origin="General Feat Level 4+",
-        )
-
-    def modify(self, character_stat_block: CharacterStatBlock):
-        character_stat_block.abilities.add_bonus(self.ability, 1)
+class SpellSniper(_AbilityScoreFeat):
+    _NAME = "Spell Sniper"
+    _ABILITIES = (Ability.INTELLIGENCE, Ability.WISDOM, Ability.CHARISMA)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         return (
@@ -1064,23 +610,9 @@ class SpellSniper(GeneralFeatTextFeature):
         )
 
 
-class Telekinetic(GeneralFeatTextFeature):
-
-    def __init__(self, character_level: int, ability: Ability):
-        if character_level < 4:
-            raise ValueError("Telekinetic requires character level 4 or higher.")
-        if ability not in [Ability.INTELLIGENCE, Ability.WISDOM, Ability.CHARISMA]:
-            raise ValueError(
-                "Telekinetic ability increase must be Intelligence, Wisdom, or Charisma."
-            )
-        self.ability = ability
-        super().__init__(
-            name="Telekinetic",
-            origin="General Feat Level 4+",
-        )
-
-    def modify(self, character_stat_block: CharacterStatBlock):
-        character_stat_block.abilities.add_bonus(self.ability, 1)
+class Telekinetic(_AbilityScoreFeat):
+    _NAME = "Telekinetic"
+    _ABILITIES = (Ability.INTELLIGENCE, Ability.WISDOM, Ability.CHARISMA)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         return (
@@ -1092,23 +624,9 @@ class Telekinetic(GeneralFeatTextFeature):
         )
 
 
-class Telepathic(GeneralFeatTextFeature):
-
-    def __init__(self, character_level: int, ability: Ability):
-        if character_level < 4:
-            raise ValueError("Telepathic requires character level 4 or higher.")
-        if ability not in [Ability.INTELLIGENCE, Ability.WISDOM, Ability.CHARISMA]:
-            raise ValueError(
-                "Telepathic ability increase must be Intelligence, Wisdom, or Charisma."
-            )
-        self.ability = ability
-        super().__init__(
-            name="Telepathic",
-            origin="General Feat Level 4+",
-        )
-
-    def modify(self, character_stat_block: CharacterStatBlock):
-        character_stat_block.abilities.add_bonus(self.ability, 1)
+class Telepathic(_AbilityScoreFeat):
+    _NAME = "Telepathic"
+    _ABILITIES = (Ability.INTELLIGENCE, Ability.WISDOM, Ability.CHARISMA)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         return (
@@ -1120,23 +638,9 @@ class Telepathic(GeneralFeatTextFeature):
         )
 
 
-class WarCaster(GeneralFeatTextFeature):
-
-    def __init__(self, character_level: int, ability: Ability):
-        if character_level < 4:
-            raise ValueError("War Caster requires character level 4 or higher.")
-        if ability not in [Ability.INTELLIGENCE, Ability.WISDOM, Ability.CHARISMA]:
-            raise ValueError(
-                "War Caster ability increase must be Intelligence, Wisdom, or Charisma."
-            )
-        self.ability = ability
-        super().__init__(
-            name="War Caster",
-            origin="General Feat Level 4+",
-        )
-
-    def modify(self, character_stat_block: CharacterStatBlock):
-        character_stat_block.abilities.add_bonus(self.ability, 1)
+class WarCaster(_AbilityScoreFeat):
+    _NAME = "War Caster"
+    _ABILITIES = (Ability.INTELLIGENCE, Ability.WISDOM, Ability.CHARISMA)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         return (
@@ -1149,23 +653,9 @@ class WarCaster(GeneralFeatTextFeature):
         )
 
 
-class WeaponMaster(GeneralFeatTextFeature):
-
-    def __init__(self, character_level: int, ability: Ability):
-        if character_level < 4:
-            raise ValueError("Weapon Master requires character level 4 or higher.")
-        if ability not in [Ability.STRENGTH, Ability.DEXTERITY]:
-            raise ValueError(
-                "Weapon Master ability increase must be Strength or Dexterity."
-            )
-        self.ability = ability
-        super().__init__(
-            name="Weapon Master",
-            origin="General Feat Level 4+",
-        )
-
-    def modify(self, character_stat_block: CharacterStatBlock):
-        character_stat_block.abilities.add_bonus(self.ability, 1)
+class WeaponMaster(_AbilityScoreFeat):
+    _NAME = "Weapon Master"
+    _ABILITIES = (Ability.STRENGTH, Ability.DEXTERITY)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         return (
@@ -1181,23 +671,10 @@ class WeaponMaster(GeneralFeatTextFeature):
 # ---------------------------------------------------------------------------
 
 
-class ColdCaster(GeneralFeatTextFeature):
-
-    def __init__(self, character_level: int, ability: Ability):
-        if character_level < 4:
-            raise ValueError("Cold Caster requires character level 4 or higher.")
-        if ability not in [Ability.INTELLIGENCE, Ability.WISDOM, Ability.CHARISMA]:
-            raise ValueError(
-                "Cold Caster ability increase must be Intelligence, Wisdom, or Charisma."
-            )
-        self.ability = ability
-        super().__init__(
-            name="Cold Caster",
-            origin="General Feat Level 4+ (Faerun)",
-        )
-
-    def modify(self, character_stat_block: CharacterStatBlock):
-        character_stat_block.abilities.add_bonus(self.ability, 1)
+class ColdCaster(_AbilityScoreFeat):
+    _NAME = "Cold Caster"
+    _ORIGIN = "General Feat Level 4+ (Faerun)"
+    _ABILITIES = (Ability.INTELLIGENCE, Ability.WISDOM, Ability.CHARISMA)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         return (
@@ -1209,23 +686,10 @@ class ColdCaster(GeneralFeatTextFeature):
         )
 
 
-class Dragonscarred(GeneralFeatTextFeature):
-
-    def __init__(self, character_level: int, ability: Ability):
-        if character_level < 4:
-            raise ValueError("Dragonscarred requires character level 4 or higher.")
-        if ability not in [Ability.CONSTITUTION, Ability.CHARISMA]:
-            raise ValueError(
-                "Dragonscarred ability increase must be Constitution or Charisma."
-            )
-        self.ability = ability
-        super().__init__(
-            name="Dragonscarred",
-            origin="General Feat Level 4+ (Faerun)",
-        )
-
-    def modify(self, character_stat_block: CharacterStatBlock):
-        character_stat_block.abilities.add_bonus(self.ability, 1)
+class Dragonscarred(_AbilityScoreFeat):
+    _NAME = "Dragonscarred"
+    _ORIGIN = "General Feat Level 4+ (Faerun)"
+    _ABILITIES = (Ability.CONSTITUTION, Ability.CHARISMA)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         return (
@@ -1237,23 +701,10 @@ class Dragonscarred(GeneralFeatTextFeature):
         )
 
 
-class EnclaveMAGIC(GeneralFeatTextFeature):
-
-    def __init__(self, character_level: int, ability: Ability):
-        if character_level < 4:
-            raise ValueError("Enclave Magic requires character level 4 or higher.")
-        if ability not in [Ability.INTELLIGENCE, Ability.WISDOM, Ability.CHARISMA]:
-            raise ValueError(
-                "Enclave Magic ability increase must be Intelligence, Wisdom, or Charisma."
-            )
-        self.ability = ability
-        super().__init__(
-            name="Enclave Magic",
-            origin="General Feat Level 4+ (Faerun)",
-        )
-
-    def modify(self, character_stat_block: CharacterStatBlock):
-        character_stat_block.abilities.add_bonus(self.ability, 1)
+class EnclaveMAGIC(_AbilityScoreFeat):
+    _NAME = "Enclave Magic"
+    _ORIGIN = "General Feat Level 4+ (Faerun)"
+    _ABILITIES = (Ability.INTELLIGENCE, Ability.WISDOM, Ability.CHARISMA)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         return (
@@ -1265,23 +716,10 @@ class EnclaveMAGIC(GeneralFeatTextFeature):
         )
 
 
-class FairyTrickster(GeneralFeatTextFeature):
-
-    def __init__(self, character_level: int, ability: Ability):
-        if character_level < 4:
-            raise ValueError("Fairy Trickster requires character level 4 or higher.")
-        if ability not in [Ability.DEXTERITY, Ability.CHARISMA]:
-            raise ValueError(
-                "Fairy Trickster ability increase must be Dexterity or Charisma."
-            )
-        self.ability = ability
-        super().__init__(
-            name="Fairy Trickster",
-            origin="General Feat Level 4+ (Faerun)",
-        )
-
-    def modify(self, character_stat_block: CharacterStatBlock):
-        character_stat_block.abilities.add_bonus(self.ability, 1)
+class FairyTrickster(_AbilityScoreFeat):
+    _NAME = "Fairy Trickster"
+    _ORIGIN = "General Feat Level 4+ (Faerun)"
+    _ABILITIES = (Ability.DEXTERITY, Ability.CHARISMA)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         proficiency_bonus = character_stat_block.get_proficiency_bonus()
@@ -1296,23 +734,10 @@ class FairyTrickster(GeneralFeatTextFeature):
         return StringUtils.add_boxes(description, proficiency_bonus)
 
 
-class GenieMagic(GeneralFeatTextFeature):
-
-    def __init__(self, character_level: int, ability: Ability):
-        if character_level < 4:
-            raise ValueError("Genie Magic requires character level 4 or higher.")
-        if ability not in [Ability.INTELLIGENCE, Ability.WISDOM, Ability.CHARISMA]:
-            raise ValueError(
-                "Genie Magic ability increase must be Intelligence, Wisdom, or Charisma."
-            )
-        self.ability = ability
-        super().__init__(
-            name="Genie Magic",
-            origin="General Feat Level 4+ (Faerun)",
-        )
-
-    def modify(self, character_stat_block: CharacterStatBlock):
-        character_stat_block.abilities.add_bonus(self.ability, 1)
+class GenieMagic(_AbilityScoreFeat):
+    _NAME = "Genie Magic"
+    _ORIGIN = "General Feat Level 4+ (Faerun)"
+    _ABILITIES = (Ability.INTELLIGENCE, Ability.WISDOM, Ability.CHARISMA)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         return (
@@ -1324,23 +749,10 @@ class GenieMagic(GeneralFeatTextFeature):
         )
 
 
-class HarperTeamwork(GeneralFeatTextFeature):
-
-    def __init__(self, character_level: int, ability: Ability):
-        if character_level < 4:
-            raise ValueError("Harper Teamwork requires character level 4 or higher.")
-        if ability not in [Ability.DEXTERITY, Ability.CHARISMA]:
-            raise ValueError(
-                "Harper Teamwork ability increase must be Dexterity or Charisma."
-            )
-        self.ability = ability
-        super().__init__(
-            name="Harper Teamwork",
-            origin="General Feat Level 4+ (Faerun)",
-        )
-
-    def modify(self, character_stat_block: CharacterStatBlock):
-        character_stat_block.abilities.add_bonus(self.ability, 1)
+class HarperTeamwork(_AbilityScoreFeat):
+    _NAME = "Harper Teamwork"
+    _ORIGIN = "General Feat Level 4+ (Faerun)"
+    _ABILITIES = (Ability.DEXTERITY, Ability.CHARISMA)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         return (
@@ -1352,23 +764,10 @@ class HarperTeamwork(GeneralFeatTextFeature):
         )
 
 
-class LordlyResolve(GeneralFeatTextFeature):
-
-    def __init__(self, character_level: int, ability: Ability):
-        if character_level < 4:
-            raise ValueError("Lordly Resolve requires character level 4 or higher.")
-        if ability not in [Ability.STRENGTH, Ability.CHARISMA]:
-            raise ValueError(
-                "Lordly Resolve ability increase must be Strength or Charisma."
-            )
-        self.ability = ability
-        super().__init__(
-            name="Lordly Resolve",
-            origin="General Feat Level 4+ (Faerun)",
-        )
-
-    def modify(self, character_stat_block: CharacterStatBlock):
-        character_stat_block.abilities.add_bonus(self.ability, 1)
+class LordlyResolve(_AbilityScoreFeat):
+    _NAME = "Lordly Resolve"
+    _ORIGIN = "General Feat Level 4+ (Faerun)"
+    _ABILITIES = (Ability.STRENGTH, Ability.CHARISMA)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         return (
@@ -1381,23 +780,10 @@ class LordlyResolve(GeneralFeatTextFeature):
         )
 
 
-class MythalTouched(GeneralFeatTextFeature):
-
-    def __init__(self, character_level: int, ability: Ability):
-        if character_level < 4:
-            raise ValueError("Mythal Touched requires character level 4 or higher.")
-        if ability not in [Ability.INTELLIGENCE, Ability.WISDOM, Ability.CHARISMA]:
-            raise ValueError(
-                "Mythal Touched ability increase must be Intelligence, Wisdom, or Charisma."
-            )
-        self.ability = ability
-        super().__init__(
-            name="Mythal Touched",
-            origin="General Feat Level 4+ (Faerun)",
-        )
-
-    def modify(self, character_stat_block: CharacterStatBlock):
-        character_stat_block.abilities.add_bonus(self.ability, 1)
+class MythalTouched(_AbilityScoreFeat):
+    _NAME = "Mythal Touched"
+    _ORIGIN = "General Feat Level 4+ (Faerun)"
+    _ABILITIES = (Ability.INTELLIGENCE, Ability.WISDOM, Ability.CHARISMA)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         proficiency_bonus = character_stat_block.get_proficiency_bonus()
@@ -1419,23 +805,10 @@ class MythalTouched(GeneralFeatTextFeature):
         return StringUtils.add_boxes(description, proficiency_bonus)
 
 
-class OrdersResilience(GeneralFeatTextFeature):
-
-    def __init__(self, character_level: int, ability: Ability):
-        if character_level < 4:
-            raise ValueError("Order's Resilience requires character level 4 or higher.")
-        if ability not in [Ability.STRENGTH, Ability.WISDOM, Ability.CHARISMA]:
-            raise ValueError(
-                "Order's Resilience ability increase must be Strength, Wisdom, or Charisma."
-            )
-        self.ability = ability
-        super().__init__(
-            name="Order's Resilience",
-            origin="General Feat Level 4+ (Faerun)",
-        )
-
-    def modify(self, character_stat_block: CharacterStatBlock):
-        character_stat_block.abilities.add_bonus(self.ability, 1)
+class OrdersResilience(_AbilityScoreFeat):
+    _NAME = "Order's Resilience"
+    _ORIGIN = "General Feat Level 4+ (Faerun)"
+    _ABILITIES = (Ability.STRENGTH, Ability.WISDOM, Ability.CHARISMA)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         return (
@@ -1447,25 +820,10 @@ class OrdersResilience(GeneralFeatTextFeature):
         )
 
 
-class PurpleDragonCommandant(GeneralFeatTextFeature):
-
-    def __init__(self, character_level: int, ability: Ability):
-        if character_level < 4:
-            raise ValueError(
-                "Purple Dragon Commandant requires character level 4 or higher."
-            )
-        if ability not in [Ability.STRENGTH, Ability.DEXTERITY]:
-            raise ValueError(
-                "Purple Dragon Commandant ability increase must be Strength or Dexterity."
-            )
-        self.ability = ability
-        super().__init__(
-            name="Purple Dragon Commandant",
-            origin="General Feat Level 4+ (Faerun)",
-        )
-
-    def modify(self, character_stat_block: CharacterStatBlock):
-        character_stat_block.abilities.add_bonus(self.ability, 1)
+class PurpleDragonCommandant(_AbilityScoreFeat):
+    _NAME = "Purple Dragon Commandant"
+    _ORIGIN = "General Feat Level 4+ (Faerun)"
+    _ABILITIES = (Ability.STRENGTH, Ability.DEXTERITY)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         proficiency_bonus = character_stat_block.get_proficiency_bonus()
@@ -1479,23 +837,10 @@ class PurpleDragonCommandant(GeneralFeatTextFeature):
         return StringUtils.add_boxes(description, proficiency_bonus)
 
 
-class SpellfireAdept(GeneralFeatTextFeature):
-
-    def __init__(self, character_level: int, ability: Ability):
-        if character_level < 4:
-            raise ValueError("Spellfire Adept requires character level 4 or higher.")
-        if ability not in [Ability.INTELLIGENCE, Ability.WISDOM, Ability.CHARISMA]:
-            raise ValueError(
-                "Spellfire Adept ability increase must be Intelligence, Wisdom, or Charisma."
-            )
-        self.ability = ability
-        super().__init__(
-            name="Spellfire Adept",
-            origin="General Feat Level 4+ (Faerun)",
-        )
-
-    def modify(self, character_stat_block: CharacterStatBlock):
-        character_stat_block.abilities.add_bonus(self.ability, 1)
+class SpellfireAdept(_AbilityScoreFeat):
+    _NAME = "Spellfire Adept"
+    _ORIGIN = "General Feat Level 4+ (Faerun)"
+    _ABILITIES = (Ability.INTELLIGENCE, Ability.WISDOM, Ability.CHARISMA)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         return (
@@ -1507,23 +852,10 @@ class SpellfireAdept(GeneralFeatTextFeature):
         )
 
 
-class StreetJustice(GeneralFeatTextFeature):
-
-    def __init__(self, character_level: int, ability: Ability):
-        if character_level < 4:
-            raise ValueError("Street Justice requires character level 4 or higher.")
-        if ability not in [Ability.STRENGTH, Ability.DEXTERITY]:
-            raise ValueError(
-                "Street Justice ability increase must be Strength or Dexterity."
-            )
-        self.ability = ability
-        super().__init__(
-            name="Street Justice",
-            origin="General Feat Level 4+ (Faerun)",
-        )
-
-    def modify(self, character_stat_block: CharacterStatBlock):
-        character_stat_block.abilities.add_bonus(self.ability, 1)
+class StreetJustice(_AbilityScoreFeat):
+    _NAME = "Street Justice"
+    _ORIGIN = "General Feat Level 4+ (Faerun)"
+    _ABILITIES = (Ability.STRENGTH, Ability.DEXTERITY)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         return (
@@ -1536,23 +868,10 @@ class StreetJustice(GeneralFeatTextFeature):
         )
 
 
-class ZhentarimTactics(GeneralFeatTextFeature):
-
-    def __init__(self, character_level: int, ability: Ability):
-        if character_level < 4:
-            raise ValueError("Zhentarim Tactics requires character level 4 or higher.")
-        if ability not in [Ability.DEXTERITY, Ability.CHARISMA]:
-            raise ValueError(
-                "Zhentarim Tactics ability increase must be Dexterity or Charisma."
-            )
-        self.ability = ability
-        super().__init__(
-            name="Zhentarim Tactics",
-            origin="General Feat Level 4+ (Faerun)",
-        )
-
-    def modify(self, character_stat_block: CharacterStatBlock):
-        character_stat_block.abilities.add_bonus(self.ability, 1)
+class ZhentarimTactics(_AbilityScoreFeat):
+    _NAME = "Zhentarim Tactics"
+    _ORIGIN = "General Feat Level 4+ (Faerun)"
+    _ABILITIES = (Ability.DEXTERITY, Ability.CHARISMA)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         return (

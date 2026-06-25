@@ -9,9 +9,7 @@ class Feature(ABC):
     """A feature can be anything"""
 
     @abstractmethod
-    def write_to_file(
-        self, character_stat_block: CharacterStatBlock, file: TextIO
-    ):
+    def write_to_file(self, character_stat_block: CharacterStatBlock, file: TextIO):
         pass
 
     @abstractmethod
@@ -22,9 +20,7 @@ class Feature(ABC):
 class CharacterFeature(Feature):
     """A feature that can modify a character's stat block."""
 
-    def write_to_file(
-        self, character_stat_block: CharacterStatBlock, file: TextIO
-    ):
+    def write_to_file(self, character_stat_block: CharacterStatBlock, file: TextIO):
         raise NotImplementedError(
             "CharacterFeature must implement write_to_file method."
         )
@@ -57,9 +53,7 @@ class TextFeature(Feature):
         text += description + "\n"
         return text
 
-    def write_to_file(  # writes HTML
-        self, character_stat_block: CharacterStatBlock, file: TextIO
-    ):
+    def write_to_file(self, character_stat_block: CharacterStatBlock, file: TextIO):
         description = self.get_description(character_stat_block)
         for addition in self.additional_features:
             description += "\n" + self.add_feature_effects(

@@ -509,9 +509,7 @@ class RageOfTheGods(TextFeature):
 
 def get_rage_damage_bonus(barbarian_level: int) -> int:
     if barbarian_level <= 8:
-        rage_damage_bonus = 2
-    elif barbarian_level <= 15:
-        rage_damage_bonus = 3
-    else:
-        rage_damage_bonus = 4
-    return rage_damage_bonus
+        return 2
+    if barbarian_level <= 15:
+        return 3
+    return 4

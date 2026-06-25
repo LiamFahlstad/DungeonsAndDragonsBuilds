@@ -94,20 +94,16 @@ class Protection(FightingStyle):
 class ThrownWeaponFighting(FightStyleWeaponFeature):
     def modify(self, weapons: list[AbstractWeapon]):
         for weapon in weapons:
-            # Only apply to simple melee weapons
             if weapon.stats().weapon_type not in (
                 WeaponType.SIMPLE_RANGED,
                 WeaponType.MARTIAL_RANGED,
             ):
                 continue
 
-            # Only apply to weapons with the Thrown property
-            for prop in weapon.stats().properties:
-                if prop.name == WeaponProperty.THROWN:
-                    weapon.attack_roll_bonuses.append(
-                        (2, "2 (Thrown Weapon Fighting Style)")
-                    )
-                    break
+            if WeaponProperty.THROWN in weapon.stats().properties:
+                weapon.attack_roll_bonuses.append(
+                    (2, "2 (Thrown Weapon Fighting Style)")
+                )
 
     def description(self):
         return "Thrown Weapon Fighting: When you hit with a ranged attack roll using a weapon that has the Thrown property, you gain a +2 bonus to the damage roll. (calculate manually)"

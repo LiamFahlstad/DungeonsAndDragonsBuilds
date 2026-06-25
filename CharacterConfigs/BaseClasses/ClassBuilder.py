@@ -247,7 +247,6 @@ class BaseClassLevelFeatures:
                 assert features is not None, "Features for level cannot be None."
                 assert level == features.level, "Level mismatch in base class features."
 
-                # Add features for this level
                 data = features.add_features(data=data)
         return data
 
@@ -385,13 +384,7 @@ class StarterClassBuilder(ClassBuilder):
         for armor_type in self.armor_proficiencies or []:
             data.add_armor_proficiency(armor_type)
 
-        ### Equipment ###
-        add_unarmed_strike = False
-        for item in self.default_equipment:
-            if isinstance(item, Weapons.UnarmedStrike):
-                add_unarmed_strike = True
-                break
-        if not add_unarmed_strike:
+        if not any(isinstance(item, Weapons.UnarmedStrike) for item in self.default_equipment):
             data.add_weapon(Weapons.UnarmedStrike(player_is_proficient=True))
 
         if self.add_default_equipment:
@@ -409,7 +402,6 @@ class StarterClassBuilder(ClassBuilder):
             for w in self.weapons:
                 data.add_weapon(w)
 
-        # Items
         if self.items is not None:
             for item, quantity in self.items:
                 data.add_item(item, quantity)

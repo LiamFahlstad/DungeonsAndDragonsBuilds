@@ -27,6 +27,6 @@ class FreeBackgroundSkillProficiency(CharacterFeature):
 
     def modify(self, character_stat_block: CharacterStatBlock):
         for skill in self.skills:
-            if character_stat_block.skills.proficiencies.get(skill):
+            if character_stat_block.skills.is_proficient(skill):
                 raise ValueError(f"Character is already proficient in {skill}.")
-            character_stat_block.skills.proficiencies[skill] = True
+            character_stat_block.skills.add_skill_proficiency(skill)

@@ -96,10 +96,9 @@ class ClassSkillsStatBlock(SkillsStatBlock):
             if proficient and skill not in excepted_skills:
                 raise ValueError(f"Invalid skill for {character_class.value}: {skill}")
 
-        proficient_counter = 0
-        for skill in excepted_skills:
-            if proficiencies.get(skill, False):
-                proficient_counter += 1
+        proficient_counter = sum(
+            1 for skill in excepted_skills if proficiencies.get(skill, False)
+        )
         if proficient_counter != num_proficiencies:
             raise ValueError(
                 f"{character_class.value} must be proficient in exactly {num_proficiencies} skills."

@@ -64,16 +64,9 @@ class AbilitiesStatBlock(StatBlock):
     def _get_ability_with_highest_modifier(
         self, abilities: list[Definitions.Ability]
     ) -> Definitions.Ability:
-        highest_ability = None
-        highest_modifier = float("-inf")
-        for ability in abilities:
-            modifier = self.get_modifier(ability)
-            if modifier > highest_modifier:
-                highest_modifier = modifier
-                highest_ability = ability
-        if highest_ability is None:
+        if not abilities:
             raise ValueError("No abilities found.")
-        return highest_ability
+        return max(abilities, key=self.get_modifier)
 
 
 class StandardArrayAbilitiesStatBlock(AbilitiesStatBlock):

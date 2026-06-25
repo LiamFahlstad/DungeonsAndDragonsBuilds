@@ -24,8 +24,6 @@ def wrap_text(description: str, max_sentence_length: int, html: bool = False) ->
     for line in parts:
         while len(line) > max_sentence_length:
             last_space = line.rfind(" ", 0, max_sentence_length)
-
-            # If no space found, force break at max length
             if last_space == -1:
                 last_space = max_sentence_length
 
@@ -67,12 +65,8 @@ def boxes_to_html(description: str) -> str:
         top_count = box_count(top_line, "⬜")
 
         if top_count:
-            boxes_html = "".join(
-                [
-                    '<span style="display:inline-block;width:1.6em;height:1.6em;border:1px solid currentColor;box-sizing:border-box;border-radius:0.2em;vertical-align:middle;"></span>'
-                    for _ in range(top_count)
-                ]
-            )
+            box_span = '<span style="display:inline-block;width:1.6em;height:1.6em;border:1px solid currentColor;box-sizing:border-box;border-radius:0.2em;vertical-align:middle;"></span>'
+            boxes_html = box_span * top_count
             new_lines.append(
                 '<div style="display:inline-flex;gap:0.5em;align-items:center;margin:0.35em 0;">'
                 + boxes_html

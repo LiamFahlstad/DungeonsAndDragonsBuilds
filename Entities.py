@@ -16,7 +16,7 @@ class Flyby(BasicEntity.Trait):
         super().__init__(name="Flyby")
 
     def get_description(self) -> str:
-        return f"The beast doesn't provoke Opportunity Attacks when it flies out of an enemy's reach."
+        return "The beast doesn't provoke Opportunity Attacks when it flies out of an enemy's reach."
 
 
 class PrimalBond(BasicEntity.Trait):
@@ -24,7 +24,7 @@ class PrimalBond(BasicEntity.Trait):
         super().__init__(name="Primal Bond")
 
     def get_description(self) -> str:
-        return f"Add your Proficiency Bonus to any ability check or saving throw the beast makes."
+        return "Add your Proficiency Bonus to any ability check or saving throw the beast makes."
 
 
 class BeastsStrike(BasicEntity.Action):

@@ -53,21 +53,17 @@ class PaladinsSmite(TextFeature):
 
 
 class ChannelDivinity(TextFeature):
-    """Paladin Level 3: Channel Divinity"""
+    _INDENT = "    "
 
     def __init__(self):
         self.spells = []
         super().__init__(name="Channel Divinity", origin="Paladin Level 3")
 
-    @property
-    def indent(self):
-        return "    "
-
     def add_spell(self, spell: str):
         self.spells.append(spell)
 
     def get_divine_sense_description(self, character_stat_block: CharacterStatBlock):
-        indent = self.indent
+        indent = self._INDENT
         return (
             f"{indent}Divine Sense:\n"
             f"{indent}Unlocked: Paladin level 3:\n"
@@ -78,7 +74,7 @@ class ChannelDivinity(TextFeature):
         )
 
     def get_vow_of_enmity_description(self, character_stat_block: CharacterStatBlock):
-        indent = self.indent
+        indent = self._INDENT
         return (
             f"{indent}Vow of Enmity:\n"
             f"{indent}Unlocked: Oath of Vengeance Paladin level 3:\n"
@@ -90,7 +86,7 @@ class ChannelDivinity(TextFeature):
         )
 
     def get_sacred_weapon_description(self, character_stat_block: CharacterStatBlock):
-        indent = self.indent
+        indent = self._INDENT
         return (
             f"{indent}Sacred Weapon:\n"
             f"{indent}Unlocked: Oath of Devotion Paladin level 3:\n"

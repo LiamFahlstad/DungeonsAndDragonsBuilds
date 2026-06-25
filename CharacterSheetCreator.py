@@ -135,14 +135,8 @@ class CharacterSheetData:
         new_spells = []
         success = False
         for spell_name, spell_ability, additional_ruling in self.spells:
-
             if spell_name == old_spell:
-                new_spell_ability = (
-                    new_spell_ability
-                    if new_spell_ability is not None
-                    else spell_ability
-                )
-                new_spells.append((new_spell, new_spell_ability, new_additional_ruling))
+                new_spells.append((new_spell, new_spell_ability or spell_ability, new_additional_ruling))
                 success = True
             else:
                 new_spells.append((spell_name, spell_ability, additional_ruling))
@@ -154,12 +148,10 @@ class CharacterSheetData:
         self.invocations.append(invocation)
 
     def add_item(self, item: Items.Item, quantity: int = 1):
-        for existing_item, existing_quantity in self.items:
-            # if the type is the same, add to the quantity
+        for i, (existing_item, existing_quantity) in enumerate(self.items):
             if type(existing_item) is type(item):
-                existing_quantity += quantity
+                self.items[i] = (existing_item, existing_quantity + quantity)
                 return
-        # otherwise, add a new entry
         self.items.append((item, quantity))
 
     def add_tool_proficiency(self, tool_proficiency: ToolProficiency):

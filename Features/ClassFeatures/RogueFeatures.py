@@ -139,15 +139,18 @@ class DeviousStrikes(TextFeature):
         return description
 
 
+class SlipperyMindCharacterFeature(CharacterFeature):
+    def modify(self, character_stat_block: CharacterStatBlock):
+        character_stat_block.saving_throws.add_proficiency(Ability.WISDOM)
+        character_stat_block.saving_throws.add_proficiency(Ability.CHARISMA)
+
+
 class SlipperyMind(TextFeature):
     def __init__(self):
         super().__init__(name="Slippery Mind", origin="Rogue Level 15")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        character_stat_block.saving_throws.add_proficiency(Ability.WISDOM)
-        character_stat_block.saving_throws.add_proficiency(Ability.CHARISMA)
-        description = "Your mind is exceptionally difficult to control. You gain proficiency in Wisdom and Charisma saving throws."
-        return description
+        return "Your mind is exceptionally difficult to control. You gain proficiency in Wisdom and Charisma saving throws."
 
 
 class Elusive(TextFeature):
@@ -282,7 +285,9 @@ class Bloodthirst(TextFeature):
         super().__init__(name="Bloodthirst", origin="Scion of the Three Rogue Level 3")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        intelligence_modifier = character_stat_block.get_ability_modifier(Ability.INTELLIGENCE)
+        intelligence_modifier = character_stat_block.get_ability_modifier(
+            Ability.INTELLIGENCE
+        )
         uses = max(1, intelligence_modifier)
         description = "When an enemy you can see within 30 feet of yourself takes damage and is Bloodied after taking that damage but not killed outright, you can take a Reaction and teleport to an unoccupied space you can see within 5 feet of that enemy. You can then make one melee attack. You can use this feature a number of times equal to your Intelligence modifier (minimum of once), and you regain all expended uses when you finish a Long Rest."
         return StringUtils.add_boxes(description, uses)
@@ -482,7 +487,9 @@ class WailsFromTheGrave(TextFeature):
         super().__init__(name="Wails from the Grave", origin="Phantom Rogue Level 3")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        dexterity_modifier = character_stat_block.get_ability_modifier(Ability.DEXTERITY)
+        dexterity_modifier = character_stat_block.get_ability_modifier(
+            Ability.DEXTERITY
+        )
         uses = max(1, dexterity_modifier)
         description = (
             "Immediately after you deal Sneak Attack damage to a creature on your turn, you can target a second creature that you can see within 30 feet of the first creature. Roll half the number of Sneak Attack damage dice for your level (round up), and the second creature takes Necrotic damage equal to the roll's total as wails of the dead sound around it.\n"

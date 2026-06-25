@@ -160,6 +160,7 @@ class RogueLevel14(ClassBuilder.BaseClassLevel14):
 class RogueLevel15(ClassBuilder.BaseClassLevel15):
 
     def add_features(self, data: CharacterSheetData) -> CharacterSheetData:
+        data.add_feature(RogueFeatures.SlipperyMindCharacterFeature())
         data.add_feature(RogueFeatures.SlipperyMind())
         return data
 

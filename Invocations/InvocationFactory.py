@@ -33,15 +33,13 @@ class Invocation:
             return new.join(parts)
 
         def inject_newline(text):
-            go = True
-            while go:
+            while True:
                 try:
                     index = text.index(" . ")
                     text = replace_last(text[:index], ". ", ".\n") + text[index:]
                     text = text.replace(" . ", ":\n")
-                    pass
                 except ValueError:
-                    go = False
+                    break
             return text
 
         return inject_newline(text)

@@ -10,91 +10,64 @@ class CasterType(Enum):
     WARLOCK_CASTER = 3
 
 
+_FULL_CASTER_SLOTS = [
+    [2, 0, 0, 0, 0, 0, 0, 0, 0],  # level 1
+    [3, 0, 0, 0, 0, 0, 0, 0, 0],  # level 2
+    [4, 2, 0, 0, 0, 0, 0, 0, 0],  # level 3
+    [4, 3, 0, 0, 0, 0, 0, 0, 0],  # level 4
+    [4, 3, 2, 0, 0, 0, 0, 0, 0],  # level 5
+    [4, 3, 3, 0, 0, 0, 0, 0, 0],  # level 6
+    [4, 3, 3, 1, 0, 0, 0, 0, 0],  # level 7
+    [4, 3, 3, 2, 0, 0, 0, 0, 0],  # level 8
+    [4, 3, 3, 3, 1, 0, 0, 0, 0],  # level 9
+    [4, 3, 3, 3, 2, 0, 0, 0, 0],  # level 10
+    [4, 3, 3, 3, 2, 1, 0, 0, 0],  # level 11
+    [4, 3, 3, 3, 2, 1, 0, 0, 0],  # level 12
+    [4, 3, 3, 3, 2, 1, 1, 0, 0],  # level 13
+    [4, 3, 3, 3, 2, 1, 1, 0, 0],  # level 14
+    [4, 3, 3, 3, 2, 1, 1, 1, 0],  # level 15
+    [4, 3, 3, 3, 2, 1, 1, 1, 0],  # level 16
+    [4, 3, 3, 3, 2, 1, 1, 1, 1],  # level 17
+    [4, 3, 3, 3, 3, 1, 1, 1, 1],  # level 18
+    [4, 3, 3, 3, 3, 2, 1, 1, 1],  # level 19
+    [4, 3, 3, 3, 3, 2, 2, 1, 1],  # level 20
+]
+
+_WARLOCK_SLOTS = [
+    [1, 0, 0, 0, 0, 0, 0, 0, 0],  # level 1
+    [2, 0, 0, 0, 0, 0, 0, 0, 0],  # level 2
+    [0, 2, 0, 0, 0, 0, 0, 0, 0],  # level 3
+    [0, 2, 0, 0, 0, 0, 0, 0, 0],  # level 4
+    [0, 0, 2, 0, 0, 0, 0, 0, 0],  # level 5
+    [0, 0, 2, 0, 0, 0, 0, 0, 0],  # level 6
+    [0, 0, 0, 2, 0, 0, 0, 0, 0],  # level 7
+    [0, 0, 0, 2, 0, 0, 0, 0, 0],  # level 8
+    [0, 0, 0, 0, 2, 0, 0, 0, 0],  # level 9
+    [0, 0, 0, 0, 2, 0, 0, 0, 0],  # level 10
+    [0, 0, 0, 0, 3, 0, 0, 0, 0],  # level 11
+    [0, 0, 0, 0, 3, 0, 0, 0, 0],  # level 12
+    [0, 0, 0, 0, 3, 0, 0, 0, 0],  # level 13
+    [0, 0, 0, 0, 3, 0, 0, 0, 0],  # level 14
+    [0, 0, 0, 0, 3, 0, 0, 0, 0],  # level 15
+    [0, 0, 0, 0, 3, 0, 0, 0, 0],  # level 16
+    [0, 0, 0, 0, 4, 0, 0, 0, 0],  # level 17
+    [0, 0, 0, 0, 4, 0, 0, 0, 0],  # level 18
+    [0, 0, 0, 0, 4, 0, 0, 0, 0],  # level 19
+    [0, 0, 0, 0, 4, 0, 0, 0, 0],  # level 20
+]
+
+
 def get_spell_slots_for_level(level: int, caster_type: CasterType) -> list[int]:
-    if caster_type == CasterType.WARLOCK_CASTER:
-        if level == 1:
-            return [1, 0, 0, 0, 0, 0, 0, 0, 0]
-        elif level == 2:
-            return [2, 0, 0, 0, 0, 0, 0, 0, 0]
-        elif level == 3:
-            return [0, 2, 0, 0, 0, 0, 0, 0, 0]
-        elif level == 4:
-            return [0, 2, 0, 0, 0, 0, 0, 0, 0]
-        elif level == 5:
-            return [0, 0, 2, 0, 0, 0, 0, 0, 0]
-        elif level == 6:
-            return [0, 0, 2, 0, 0, 0, 0, 0, 0]
-        elif level == 7:
-            return [0, 0, 0, 2, 0, 0, 0, 0, 0]
-        elif level == 8:
-            return [0, 0, 0, 2, 0, 0, 0, 0, 0]
-        elif level == 9:
-            return [0, 0, 0, 0, 2, 0, 0, 0, 0]
-        elif level == 10:
-            return [0, 0, 0, 0, 2, 0, 0, 0, 0]
-        elif level == 11:
-            return [0, 0, 0, 0, 3, 0, 0, 0, 0]
-        elif level == 12:
-            return [0, 0, 0, 0, 3, 0, 0, 0, 0]
-        elif level == 13:
-            return [0, 0, 0, 0, 3, 0, 0, 0, 0]
-        elif level == 14:
-            return [0, 0, 0, 0, 3, 0, 0, 0, 0]
-        elif level == 15:
-            return [0, 0, 0, 0, 3, 0, 0, 0, 0]
-        elif level == 16:
-            return [0, 0, 0, 0, 3, 0, 0, 0, 0]
-        else:  # level 17->20
-            return [0, 0, 0, 0, 4, 0, 0, 0, 0]
-
-    if caster_type == CasterType.FULL_CASTER:
-        pass
-    if caster_type == CasterType.HALF_CASTER:
-        level = (level + 1) // 2
-
     if level < 1 or level > 20:
         raise ValueError("Level must be between 1 and 20")
 
-    if level == 1:
-        return [2, 0, 0, 0, 0, 0, 0, 0, 0]
-    elif level == 2:
-        return [3, 0, 0, 0, 0, 0, 0, 0, 0]
-    elif level == 3:
-        return [4, 2, 0, 0, 0, 0, 0, 0, 0]
-    elif level == 4:
-        return [4, 3, 0, 0, 0, 0, 0, 0, 0]
-    elif level == 5:
-        return [4, 3, 2, 0, 0, 0, 0, 0, 0]
-    elif level == 6:
-        return [4, 3, 3, 0, 0, 0, 0, 0, 0]
-    elif level == 7:
-        return [4, 3, 3, 1, 0, 0, 0, 0, 0]
-    elif level == 8:
-        return [4, 3, 3, 2, 0, 0, 0, 0, 0]
-    elif level == 9:
-        return [4, 3, 3, 3, 1, 0, 0, 0, 0]
-    elif level == 10:
-        return [4, 3, 3, 3, 2, 0, 0, 0, 0]
-    elif level == 11:
-        return [4, 3, 3, 3, 2, 1, 0, 0, 0]
-    elif level == 12:
-        return [4, 3, 3, 3, 2, 1, 0, 0, 0]
-    elif level == 13:
-        return [4, 3, 3, 3, 2, 1, 1, 0, 0]
-    elif level == 14:
-        return [4, 3, 3, 3, 2, 1, 1, 0, 0]
-    elif level == 15:
-        return [4, 3, 3, 3, 2, 1, 1, 1, 0]
-    elif level == 16:
-        return [4, 3, 3, 3, 2, 1, 1, 1, 0]
-    elif level == 17:
-        return [4, 3, 3, 3, 2, 1, 1, 1, 1]
-    elif level == 18:
-        return [4, 3, 3, 3, 3, 1, 1, 1, 1]
-    elif level == 19:
-        return [4, 3, 3, 3, 3, 2, 1, 1, 1]
-    else:  # level == 20
-        return [4, 3, 3, 3, 3, 2, 2, 1, 1]
+    if caster_type == CasterType.WARLOCK_CASTER:
+        return _WARLOCK_SLOTS[level - 1]
+
+    if caster_type == CasterType.HALF_CASTER:
+        level = (level + 1) // 2
+
+    return _FULL_CASTER_SLOTS[level - 1]
 
 
 class SpellSlots(CharacterFeature):
@@ -103,15 +76,13 @@ class SpellSlots(CharacterFeature):
         super().__init__()
 
     def modify(self, character_stat_block: CharacterStatBlock):
-
         spells_slots = get_spell_slots_for_level(
             character_stat_block.character_level, self.caster_type
         )
 
-        spells_slots_dict = {}
-        for i, slots in enumerate(spells_slots):
-            if slots <= 0:
-                continue
-            spell_level = i + 1
-            spells_slots_dict[spell_level] = slots
+        spells_slots_dict = {
+            i + 1: slots
+            for i, slots in enumerate(spells_slots)
+            if slots > 0
+        }
         character_stat_block.spell_slots = spells_slots_dict

@@ -209,6 +209,12 @@ class MagicInitiate(OriginTextFeat):
         )
 
 
+def _resolve_spell_enum(value, enum_type: type) -> str:
+    if isinstance(value, enum_type):
+        return value.value
+    return value
+
+
 class MagicInitiateCleric(MagicInitiate):
     def __init__(
         self,
@@ -217,21 +223,10 @@ class MagicInitiateCleric(MagicInitiate):
         spell: str,
         spell_casting_ability: Ability,
     ):
-        for spell in [cantrip_1, cantrip_2, spell]:
-            if not isinstance(spell, (ClericLevel0Spells, ClericLevel1Spells, str)):
-                raise ValueError(
-                    f"All spells must be from the Cleric spell list. Invalid spell: {spell}"
-                )
-        if isinstance(cantrip_1, ClericLevel0Spells):
-            cantrip_1 = cantrip_1.value
-        if isinstance(cantrip_2, ClericLevel0Spells):
-            cantrip_2 = cantrip_2.value
-        if isinstance(spell, ClericLevel1Spells):
-            spell = spell.value
         super().__init__(
-            cantrip_1,
-            cantrip_2,
-            spell,
+            _resolve_spell_enum(cantrip_1, ClericLevel0Spells),
+            _resolve_spell_enum(cantrip_2, ClericLevel0Spells),
+            _resolve_spell_enum(spell, ClericLevel1Spells),
             spell_casting_ability,
             character_class=CharacterClass.CLERIC,
         )
@@ -245,21 +240,10 @@ class MagicInitiateDruid(MagicInitiate):
         spell: str,
         spell_casting_ability: Ability,
     ):
-        for spell in [cantrip_1, cantrip_2, spell]:
-            if not isinstance(spell, (DruidLevel0Spells, DruidLevel1Spells, str)):
-                raise ValueError(
-                    f"All spells must be from the Druid spell list. Invalid spell: {spell}"
-                )
-        if isinstance(cantrip_1, DruidLevel0Spells):
-            cantrip_1 = cantrip_1.value
-        if isinstance(cantrip_2, DruidLevel0Spells):
-            cantrip_2 = cantrip_2.value
-        if isinstance(spell, DruidLevel1Spells):
-            spell = spell.value
         super().__init__(
-            cantrip_1,
-            cantrip_2,
-            spell,
+            _resolve_spell_enum(cantrip_1, DruidLevel0Spells),
+            _resolve_spell_enum(cantrip_2, DruidLevel0Spells),
+            _resolve_spell_enum(spell, DruidLevel1Spells),
             spell_casting_ability,
             character_class=CharacterClass.DRUID,
         )
@@ -273,21 +257,10 @@ class MagicInitiateWizard(MagicInitiate):
         spell: str,
         spell_casting_ability: Ability,
     ):
-        for spell in [cantrip_1, cantrip_2, spell]:
-            if not isinstance(spell, (WizardLevel0Spells, WizardLevel1Spells, str)):
-                raise ValueError(
-                    f"All spells must be from the Wizard spell list. Invalid spell: {spell}"
-                )
-        if isinstance(cantrip_1, WizardLevel0Spells):
-            cantrip_1 = cantrip_1.value
-        if isinstance(cantrip_2, WizardLevel0Spells):
-            cantrip_2 = cantrip_2.value
-        if isinstance(spell, WizardLevel1Spells):
-            spell = spell.value
         super().__init__(
-            cantrip_1,
-            cantrip_2,
-            spell,
+            _resolve_spell_enum(cantrip_1, WizardLevel0Spells),
+            _resolve_spell_enum(cantrip_2, WizardLevel0Spells),
+            _resolve_spell_enum(spell, WizardLevel1Spells),
             spell_casting_ability,
             character_class=CharacterClass.WIZARD,
         )

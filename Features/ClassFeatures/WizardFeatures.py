@@ -27,8 +27,6 @@ class ArcaneRecovery(TextFeature):
 
 
 class Scholar(CharacterFeature):
-    """While studying magic, you also specialized in another field of study. Choose one of the following skills in which you have proficiency: Arcana, History, Investigation, Medicine, Nature, or Religion. You have Expertise in the chosen skill."""
-
     def __init__(self, skill: Skill):
         if skill not in [
             Skill.ARCANA,

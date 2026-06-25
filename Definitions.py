@@ -147,8 +147,6 @@ class SkillConfig(str, Enum):
             HomeBrewSkill.SLEIGHT_OF_HAND: [Skill.SLEIGHT_OF_HAND],
             HomeBrewSkill.STEALTH: [Skill.STEALTH],
         }
-        if skill not in default_mapping:
-            raise ValueError(f"Unknown homebrew skill: {skill}")
         return default_mapping[skill]
 
 
@@ -299,21 +297,15 @@ class Die(int, Enum):
         raise ValueError(f"No Die found with value {value}")
 
     def average_with_advantage(self) -> float:
-        expected_value = 0.0
         sides = self.value
-        throws = 2
-        for k in range(1, sides + 1):
-            p_k = (k / sides) * throws - ((k - 1) / sides) * throws
-            expected_value += k * p_k
-
-        return expected_value
+        return sum(
+            k * ((k / sides) ** 2 - ((k - 1) / sides) ** 2)
+            for k in range(1, sides + 1)
+        )
 
     def average_with_disadvantage(self) -> float:
-        expected_value = 0.0
         sides = self.value
-        throws = 2
-        for k in range(1, sides + 1):
-            p_k = ((sides - k + 1) / sides) * throws - ((sides - k) / sides) * throws
-            expected_value += k * p_k
-
-        return expected_value
+        return sum(
+            k * (((sides - k + 1) / sides) ** 2 - ((sides - k) / sides) ** 2)
+            for k in range(1, sides + 1)
+        )

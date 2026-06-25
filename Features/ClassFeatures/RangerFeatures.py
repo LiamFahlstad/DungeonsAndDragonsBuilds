@@ -55,8 +55,6 @@ class FavoredEnemy(TextFeature):
 
 
 class DeftExplorerExpertise(CharacterFeature):
-    """While studying magic, you also specialized in another field of study. Choose one of the following skills in which you have proficiency: Arcana, History, Investigation, Medicine, Nature, or Religion. You have Expertise in the chosen skill."""
-
     def __init__(self, skill: Skill):
         self.skill = skill
 
@@ -252,7 +250,7 @@ class FeyWandererSpells(TextFeature):
 class OtherworldlyGlamour(TextFeature):
     def __init__(self):
         super().__init__(
-            name="Otherworldly Glamour.", origin="Fey Wanderer Ranger Level 3"
+            name="Otherworldly Glamour", origin="Fey Wanderer Ranger Level 3"
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:

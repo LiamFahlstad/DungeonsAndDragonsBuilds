@@ -10,15 +10,10 @@ class Maneuver(TextFeature):
 
 class ManeuverWithSavingThrow(Maneuver):
     def get_saving_throw_dc(self, character_stat_block: CharacterStatBlock) -> int:
-        """Calculates the saving throw DC for maneuvers that require one."""
         proficiency_bonus = character_stat_block.get_proficiency_bonus()
-        # Assuming the maneuver uses Strength or Dexterity for the saving throw; adjust as needed
-        strength_modifier = character_stat_block.get_ability_modifier(Ability.STRENGTH)
-        dexterity_modifier = character_stat_block.get_ability_modifier(
-            Ability.DEXTERITY
-        )
-        ability_modifier = max(strength_modifier, dexterity_modifier)
-        return 8 + proficiency_bonus + ability_modifier
+        str_mod = character_stat_block.get_ability_modifier(Ability.STRENGTH)
+        dex_mod = character_stat_block.get_ability_modifier(Ability.DEXTERITY)
+        return 8 + proficiency_bonus + max(str_mod, dex_mod)
 
 
 class Ambush(Maneuver):
@@ -138,7 +133,7 @@ class MenacingAttack(ManeuverWithSavingThrow):
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         dc = self.get_saving_throw_dc(character_stat_block)
-        return f"Menacing Attack: When you hit a creature with a weapon attack, you can expend one superiority die to attempt to frighten the target. You add the superiority die to the attack's damage roll, and the target must make a Wisdom saving throw (DC {dc}) . On a failed save, it is frightened of you until the end of your next turn."
+        return f"Menacing Attack: When you hit a creature with a weapon attack, you can expend one superiority die to attempt to frighten the target. You add the superiority die to the attack's damage roll, and the target must make a Wisdom saving throw (DC {dc}). On a failed save, it is frightened of you until the end of your next turn."
 
 
 class Parry(Maneuver):

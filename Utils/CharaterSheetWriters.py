@@ -58,16 +58,14 @@ class HtmlCharacterSheetWriter:
     def _sort_features_key(feat: Feature):
         feat_name = getattr(feat, "name", feat.__class__.__name__)
         feat_origin = getattr(feat, "origin", "")
-        if isinstance(feat, CharacterFeature):
-            return (0, 0, feat.__class__.__name__)
         if "Level " in feat_origin:
             parts = feat_origin.split("Level ")
             try:
                 level_num = int(parts[1])
             except ValueError:
                 level_num = 0
-            return (2, level_num, feat_name)
-        return (1, 0, feat_name)
+            return (1, level_num, feat_name)
+        return (0, 0, feat_name)
 
     @staticmethod
     def _apply_weapon_masteries(
@@ -83,7 +81,6 @@ class HtmlCharacterSheetWriter:
 
     @staticmethod
     def _write_table_row(file: TextIO, cells: list):
-        """Write a single <tr> with one <td> per cell."""
         file.write("<tr>")
         for cell in cells:
             file.write(f"<td>{cell}</td>")
@@ -91,14 +88,12 @@ class HtmlCharacterSheetWriter:
 
     @staticmethod
     def _description_or_dash(description: str | None) -> str:
-        """Return the description string, or '-' if it is absent."""
         return description if description else "-"
 
     @staticmethod
     def _resolve_homebrew_roll_condition(
         roll_conditions: set,
     ) -> "Definitions.DiceRollCondition":
-        """Pick the best roll condition from a set using the ADVANTAGE > NEUTRAL > DISADVANTAGE priority."""
         if Definitions.DiceRollCondition.ADVANTAGE in roll_conditions:
             return Definitions.DiceRollCondition.ADVANTAGE
         if Definitions.DiceRollCondition.NEUTRAL in roll_conditions:
@@ -107,7 +102,6 @@ class HtmlCharacterSheetWriter:
 
     @staticmethod
     def _write_separated(items: list, write_fn, file: TextIO):
-        """Call write_fn(item, file) for each item, inserting <hr> between entries."""
         for i, item in enumerate(items):
             write_fn(item, file)
             if i < len(items) - 1:
@@ -293,7 +287,13 @@ class HtmlCharacterSheetWriter:
                 row = [
                     skill.value,
                     f"{max(character.get_skill_modifier(s) for s in possible_skills):+}",
-                    "Yes" if any(character.is_proficient_in_skill(s) for s in possible_skills) else "No",
+                    (
+                        "Yes"
+                        if any(
+                            character.is_proficient_in_skill(s) for s in possible_skills
+                        )
+                        else "No"
+                    ),
                     character.get_skill_ability(possible_skills[0]).value,
                     self._resolve_homebrew_roll_condition(roll_conditions).value,
                     f"{max(character.get_skill_bonus(s) for s in possible_skills):+}",
@@ -305,21 +305,19 @@ class HtmlCharacterSheetWriter:
     def _write_features(
         self, character: CharacterStatBlock, file: TextIO, features: list[Feature]
     ):
-        if not all(isinstance(feat, CharacterFeature) for feat in features):
-            file.write("<h2>Features</h2>\n")
+        text_features = [f for f in features if not isinstance(f, CharacterFeature)]
+        if not text_features:
+            return
 
-            sorted_features = sorted(features, key=self._sort_features_key)
+        file.write("<h2>Features</h2>\n")
+        sorted_features = sorted(text_features, key=self._sort_features_key)
 
-            file.write("<div>\n")
-            for i, feature in enumerate(sorted_features):
-                try:
-                    feature.write_to_file(character, file)
-                    if i < len(sorted_features) - 1:
-                        file.write("<hr>\n")
-                except NotImplementedError:
-                    continue
-
-            file.write("</div>\n<br>\n")
+        file.write("<div>\n")
+        for i, feature in enumerate(sorted_features):
+            feature.write_to_file(character, file)
+            if i < len(sorted_features) - 1:
+                file.write("<hr>\n")
+        file.write("</div>\n<br>\n")
 
     def _write_weapons(
         self,
@@ -395,7 +393,7 @@ class HtmlCharacterSheetWriter:
         file.write("</tr>\n<tr>")
 
         for slots in character_spell_slots.values():
-            boxes_html = _BOX_WRAP_OPEN + "".join([_BOX_SPAN] * slots) + _BOX_WRAP_CLOSE
+            boxes_html = _BOX_WRAP_OPEN + _BOX_SPAN * slots + _BOX_WRAP_CLOSE
             file.write(f"<td>{boxes_html}</td>")
 
         file.write("</tr>\n</table>\n<br>\n")
@@ -417,7 +415,9 @@ class HtmlCharacterSheetWriter:
         ]
         sorted_spells = sorted(created_spells, key=lambda s: (s.level, s.name))
 
-        self._write_separated(sorted_spells, lambda spell, f: spell.write_to_file(f), file)
+        self._write_separated(
+            sorted_spells, lambda spell, f: spell.write_to_file(f), file
+        )
 
         file.write("<br>\n")
 

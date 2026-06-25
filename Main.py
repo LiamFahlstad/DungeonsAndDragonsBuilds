@@ -1,21 +1,33 @@
 import Definitions
-from Builds import (OptimizedBarbarianBerserker, OptimizedBarbarianWorldTree,
-                    OptimizedBardGlamour, OptimizedBardLore,
-                    OptimizedClericKnowledge, OptimizedClericLight,
-                    OptimizedDruidMoon, OptimizedFighterBattleMaster,
-                    OptimizedFighterChampion, OptimizedFighterChampion2,
-                    OptimizedMonkShadow, OptimizedPaladinGlory,
-                    OptimizedPaladinVengeance, OptimizedRangerBeastMaster,
-                    OptimizedRangerGloomStalker, OptimizedRogueAssassin,
-                    OptimizedWarlockArchfey, OptimizedWarlockGishArchfey,
-                    OptimizedWizardBladesinger, OptimizedWizardDiviner)
+from Builds import (
+    OptimizedBarbarianBerserker,
+    OptimizedBarbarianWorldTree,
+    OptimizedBardGlamour,
+    OptimizedBardLore,
+    OptimizedClericKnowledge,
+    OptimizedClericLight,
+    OptimizedDruidMoon,
+    OptimizedFighterBattleMaster,
+    OptimizedFighterChampion,
+    OptimizedFighterChampion2,
+    OptimizedMonkShadow,
+    OptimizedPaladinGlory,
+    OptimizedPaladinVengeance,
+    OptimizedRangerBeastMaster,
+    OptimizedRangerGloomStalker,
+    OptimizedRogueAssassin,
+    OptimizedWarlockArchfey,
+    OptimizedWarlockGishArchfey,
+    OptimizedWizardBladesinger,
+    OptimizedWizardDiviner,
+)
 from Builds.CharacterBuilder import CharacterBuilder
 
 
 class BuildSelector:
     @staticmethod
-    def get_build(build_name: str) -> CharacterBuilder:
-        builds = {
+    def builds() -> dict[str, CharacterBuilder]:
+        return {
             "OptimizedBarbarianBerserker": OptimizedBarbarianBerserker.OptimizedBarbarianBerserkerCharacterBuilder(),
             "OptimizedBarbarianWorldTree": OptimizedBarbarianWorldTree.OptimizedBarbarianWorldTreeCharacterBuilder(),
             "OptimizedBardGlamour": OptimizedBardGlamour.OptimizedBardGlamourCharacterBuilder(),
@@ -37,34 +49,14 @@ class BuildSelector:
             "OptimizedWizardBladesinger": OptimizedWizardBladesinger.OptimizedWizardBladesingerCharacterBuilder(),
             "OptimizedWizardDiviner": OptimizedWizardDiviner.OptimizedWizardDivinerCharacterBuilder(),
         }
-        return builds[build_name]
+
+    @staticmethod
+    def get_build(build_name: str) -> CharacterBuilder:
+        return BuildSelector.builds()[build_name]
 
 
 if __name__ == "__main__":
     skill_config = Definitions.SkillConfig.DEFAULT
-    build_names = [
-        "OptimizedBarbarianBerserker",
-        "OptimizedBarbarianWorldTree",
-        "OptimizedBardGlamour",
-        "OptimizedBardLore",
-        "OptimizedClericKnowledge",
-        "OptimizedClericLight",
-        "OptimizedDruidMoon",
-        "OptimizedFighterBattleMaster",
-        "OptimizedFighterChampion",
-        "OptimizedFighterChampion2",
-        "OptimizedMonkShadow",
-        "OptimizedPaladinGlory",
-        "OptimizedPaladinVengeance",
-        "OptimizedRangerBeastMaster",
-        "OptimizedRangerGloomStalker",
-        "OptimizedRogueAssassin",
-        "OptimizedWarlockArchfey",
-        "OptimizedWarlockGishArchfey",
-        "OptimizedWizardBladesinger",
-        "OptimizedWizardDiviner",
-    ]
-    for build_name in build_names:
-        build_class = BuildSelector.get_build(build_name)
+    for build_class in BuildSelector.builds().values():
         character_sheet_data = build_class.build()
         character_sheet_data.create_character_sheet(skill_config=skill_config)
