@@ -1094,19 +1094,21 @@ def _write_single_weapon(
 
     # ── Per-property descriptions ────────────────────────────────────────────
     for prop in stats.properties:
+        prop_desc_html = prop.description.replace("\n", "<br>")
         file.write(
             f"<tr class='weapon-prop-row'>"
             f"<td class='wprop-label'>{prop.value}</td>"
-            f"<td class='wprop-desc'>{prop.description}</td>"
+            f"<td class='wprop-desc'>{prop_desc_html}</td>"
             f"</tr>\n"
         )
 
     # ── Mastery description (only if the player has mastery) ────────────────
     if stats.mastery and weapon.player_has_mastery:
+        mastery_desc_html = stats.mastery.description.replace("\n", "<br>")
         file.write(
             f"<tr class='weapon-mastery-row'>"
             f"<td class='wmastery-label'>Mastery — {stats.mastery.value}</td>"
-            f"<td class='wmastery-desc'>{stats.mastery.description}</td>"
+            f"<td class='wmastery-desc'>{mastery_desc_html}</td>"
             f"</tr>\n"
         )
 

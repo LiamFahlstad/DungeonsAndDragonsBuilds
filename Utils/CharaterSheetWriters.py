@@ -528,10 +528,6 @@ class HtmlCharacterSheetWriter:
                 display: none;
             }
 
-            br {
-                display: none;
-            }
-
             h2 {
                 margin: 0.8em 0 0.15em;
             }
