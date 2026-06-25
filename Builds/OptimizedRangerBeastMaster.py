@@ -101,17 +101,6 @@ def get_starter_class_builder():
     )
 
 
-# if __name__ == "__main__":
-
-#     BeastMasterBeastOfTheSky(
-#         wisdom_modifier=character_sheet_data.get_ability_modifier(Ability.WISDOM),
-#         base_class_level=character_sheet_data.get_level_for_class(CharacterClass.RANGER),
-#         proficiency_bonus=character_sheet_data.character_level // 4 + 2,
-#         spell_attack_modifier=character_sheet_data.calculate_attack_bonus_for_ability(
-#             Ability.WISDOM
-#         ),
-#     ).write_to_file(output_path, mode="a")
-
 
 class OptimizedRangerBeastMasterCharacterBuilder(CharacterBuilder):
     def __init__(self):

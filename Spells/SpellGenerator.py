@@ -28,7 +28,6 @@ def format_multiline_string(text: str, width: int = 88) -> str:
             "sentence "
         )
     """
-    # lines = wrap(text, width)
     lines = [line.strip() + "." for line in text.strip().split(".")]
     lines = lines if len(lines) <= 1 else lines[:-1]
 

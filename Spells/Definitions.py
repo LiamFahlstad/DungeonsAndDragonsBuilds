@@ -1979,7 +1979,7 @@ class Spell(ABC):
             "source": self.source,
         }
 
-    def write_to_file(self, file: TextIO):
+    def write_to_file(self, file: TextIO):  # writes HTML
         lines = [line.strip() + "." for line in self.description.strip().split(".")]
         lines = lines if len(lines) <= 1 else lines[:-1]
         description = "\n".join(lines)
@@ -2064,9 +2064,6 @@ class Spell(ABC):
         row("Description", description)
 
         file.write("</table>\n")
-
-        # Description outside table (keeps layout clean)
-        # file.write(f"<div class='spell-description'>{description}</div>\n")
 
     def __repr__(self):
         return f"<Spell {self.name!r}, level {self.level}>"

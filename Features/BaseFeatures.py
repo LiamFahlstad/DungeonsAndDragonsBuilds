@@ -57,7 +57,7 @@ class TextFeature(Feature):
         text += description + "\n"
         return text
 
-    def write_to_file(
+    def write_to_file(  # writes HTML
         self, character_stat_block: CharacterStatBlock, file: TextIO
     ):
         description = self.get_description(character_stat_block)
@@ -66,16 +66,16 @@ class TextFeature(Feature):
                 character_stat_block, addition
             )
 
-        description = description.replace("\n", "<br>\n").replace(
+        html_description = description.replace("\n", "<br>\n").replace(
             "    ", "&nbsp;&nbsp;&nbsp;&nbsp;"
         )
 
-        if not description.endswith("\n"):
-            description += "\n"
+        if not html_description.endswith("\n"):
+            html_description += "\n"
 
-        description = StringUtils.bolden_text_html(description)
-        description = StringUtils.boxes_to_html(description)
+        html_description = StringUtils.bolden_text_html(html_description)
+        html_description = StringUtils.boxes_to_html(html_description)
         file.write(f"<h3>{self.name}</h3>\n")
         file.write(f"<strong>Origin:</strong> {self.origin}\n<br>\n")
         file.write("<strong>Description:</strong><br>\n")
-        file.write(f"{description}\n")
+        file.write(f"{html_description}\n")
