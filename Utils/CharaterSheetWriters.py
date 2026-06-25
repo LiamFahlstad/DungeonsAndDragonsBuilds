@@ -82,6 +82,38 @@ class HtmlCharacterSheetWriter:
                 weapon.player_has_mastery = True
 
     @staticmethod
+    def _write_table_row(file: TextIO, cells: list):
+        """Write a single <tr> with one <td> per cell."""
+        file.write("<tr>")
+        for cell in cells:
+            file.write(f"<td>{cell}</td>")
+        file.write("</tr>\n")
+
+    @staticmethod
+    def _description_or_dash(description: str | None) -> str:
+        """Return the description string, or '-' if it is absent."""
+        return description if description else "-"
+
+    @staticmethod
+    def _resolve_homebrew_roll_condition(
+        roll_conditions: set,
+    ) -> "Definitions.DiceRollCondition":
+        """Pick the best roll condition from a set using the ADVANTAGE > NEUTRAL > DISADVANTAGE priority."""
+        if Definitions.DiceRollCondition.ADVANTAGE in roll_conditions:
+            return Definitions.DiceRollCondition.ADVANTAGE
+        if Definitions.DiceRollCondition.NEUTRAL in roll_conditions:
+            return Definitions.DiceRollCondition.NEUTRAL
+        return Definitions.DiceRollCondition.DISADVANTAGE
+
+    @staticmethod
+    def _write_separated(items: list, write_fn, file: TextIO):
+        """Call write_fn(item, file) for each item, inserting <hr> between entries."""
+        for i, item in enumerate(items):
+            write_fn(item, file)
+            if i < len(items) - 1:
+                file.write("<hr>\n")
+
+    @staticmethod
     def _write_item_table_style(file: TextIO):
         file.write(HtmlCharacterSheetWriter._ITEM_TABLE_STYLE)
 
@@ -123,7 +155,7 @@ class HtmlCharacterSheetWriter:
         ]
 
         for field, value in rows:
-            file.write(f"<tr><td>{field}</td><td>{value}</td></tr>\n")
+            self._write_table_row(file, [field, value])
 
         file.write("</table>\n<br>\n")
 
@@ -166,7 +198,7 @@ class HtmlCharacterSheetWriter:
         ]
 
         for field, value in rows:
-            file.write(f"<tr><td>{field}</td><td>{value}</td></tr>\n")
+            self._write_table_row(file, [field, value])
 
         file.write("</table>\n<br>\n")
 
@@ -212,10 +244,7 @@ class HtmlCharacterSheetWriter:
                 f"{ability_attack_bonus:+}",
             ]
 
-            file.write("<tr>")
-            for cell in row:
-                file.write(f"<td>{cell}</td>")
-            file.write("</tr>\n")
+            self._write_table_row(file, row)
 
         file.write("</table>\n<br>\n")
 
@@ -253,44 +282,23 @@ class HtmlCharacterSheetWriter:
                     character.get_skill_roll_condition(skill).value,
                     f"{character.get_skill_bonus(skill):+}",
                 ]
-
-                file.write("<tr>")
-                for cell in row:
-                    file.write(f"<td>{cell}</td>")
-                file.write("</tr>\n")
+                self._write_table_row(file, row)
 
         if skill_config == Definitions.SkillConfig.HOMEBREW:
             for skill in Definitions.HomeBrewSkill.list_sorted():
                 possible_skills = Definitions.SkillConfig.map_homebrew_to_default(skill)
-                skill_modifier = max(
-                    character.get_skill_modifier(s) for s in possible_skills
-                )
-                proficient = any(
-                    character.is_proficient_in_skill(s) for s in possible_skills
-                )
                 roll_conditions = set(
                     character.get_skill_roll_condition(s) for s in possible_skills
                 )
-                if Definitions.DiceRollCondition.ADVANTAGE in roll_conditions:
-                    roll_condition = Definitions.DiceRollCondition.ADVANTAGE
-                elif Definitions.DiceRollCondition.NEUTRAL in roll_conditions:
-                    roll_condition = Definitions.DiceRollCondition.NEUTRAL
-                else:
-                    roll_condition = Definitions.DiceRollCondition.DISADVANTAGE
-                skill_bonus = max(character.get_skill_bonus(s) for s in possible_skills)
                 row = [
                     skill.value,
-                    f"{skill_modifier:+}",
-                    "Yes" if proficient else "No",
+                    f"{max(character.get_skill_modifier(s) for s in possible_skills):+}",
+                    "Yes" if any(character.is_proficient_in_skill(s) for s in possible_skills) else "No",
                     character.get_skill_ability(possible_skills[0]).value,
-                    roll_condition.value,
-                    f"{skill_bonus:+}",
+                    self._resolve_homebrew_roll_condition(roll_conditions).value,
+                    f"{max(character.get_skill_bonus(s) for s in possible_skills):+}",
                 ]
-
-                file.write("<tr>")
-                for cell in row:
-                    file.write(f"<td>{cell}</td>")
-                file.write("</tr>\n")
+                self._write_table_row(file, row)
 
         file.write("</table>\n<br>\n")
 
@@ -409,11 +417,7 @@ class HtmlCharacterSheetWriter:
         ]
         sorted_spells = sorted(created_spells, key=lambda s: (s.level, s.name))
 
-        for i, spell in enumerate(sorted_spells):
-            spell.write_to_file(file)
-
-            if i < len(sorted_spells) - 1:
-                file.write("<hr>\n")
+        self._write_separated(sorted_spells, lambda spell, f: spell.write_to_file(f), file)
 
         file.write("<br>\n")
 
@@ -431,31 +435,33 @@ class HtmlCharacterSheetWriter:
         file.write("<h2>Items</h2>\n")
         self._write_item_table_style(file)
 
+        sections = []
         if armors:
             armor_rows = [
-                (armor.name, armor.description if armor.description else "-")
+                (armor.name, self._description_or_dash(armor.description))
                 for armor in armors
             ]
-            self._write_item_table(file, "Armor", armor_rows)
+            sections.append(("Armor", armor_rows))
 
         if weapons:
-            if armors:
-                file.write("<hr>")
             weapon_rows = [
-                (weapon.name, weapon.description if weapon.description else "-")
+                (weapon.name, self._description_or_dash(weapon.description))
                 for weapon in weapons
             ]
-            self._write_item_table(file, "Weapons", weapon_rows)
+            sections.append(("Weapons", weapon_rows))
 
         if items:
-            if armors or weapons:
-                file.write("<hr>")
             sorted_items = sorted(items, key=lambda x: x[0].name)
             item_rows = [
                 (f"{item.name} ({quantity})", item.description())
                 for item, quantity in sorted_items
             ]
-            self._write_item_table(file, "Other items", item_rows)
+            sections.append(("Other items", item_rows))
+
+        for i, (title, rows) in enumerate(sections):
+            if i > 0:
+                file.write("<hr>")
+            self._write_item_table(file, title, rows)
 
         file.write("<br>\n")
 

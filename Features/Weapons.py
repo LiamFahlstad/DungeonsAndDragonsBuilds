@@ -26,32 +26,23 @@ class WeaponProperty(Enum):
 
     @property
     def description(self):
-        if self == WeaponProperty.AMMUNITION:
-            return "Use only with matching ammo; each attack expends 1. Drawing ammo is part of attack (need free hand for 1-handed). After combat, recover half (round down)."
-        if self == WeaponProperty.FINESSE:
-            return "Use Str or Dex (your choice) for attack and damage rolls; same mod for both."
-        if self == WeaponProperty.HEAVY:
-            return "Disadvantage if Melee + Str < 13 or Ranged + Dex < 13."
-        if self == WeaponProperty.LIGHT:
-            return "When you Attack with a Light weapon, you can Bonus Action attack with another Light weapon; no ability mod to that damage unless negative."
-        if self == WeaponProperty.LOADING:
-            return "Can fire only 1 piece of ammo per Action/Bonus/Reaction, regardless of Extra Attack."
-        if self == WeaponProperty.RANGE:
-            return "Range (normal/long). Attacks beyond normal = Disadvantage; beyond long = impossible."
-        if self == WeaponProperty.REACH:
-            return "Adds +5 ft to reach for attacks and opportunity attacks."
-        if self == WeaponProperty.THROWN:
-            return "Can throw weapon for ranged attack; use same ability mod as melee version."
-        if self == WeaponProperty.TWO_HANDED:
-            return "Requires two hands to attack."
-        if self in (
-            WeaponProperty.VERSATILE_8,
-            WeaponProperty.VERSATILE_10,
-            WeaponProperty.VERSATILE_12,
-        ):
-            return "Can use one or two hands; if two-handed, use damage die shown in parentheses."
-
-        raise ValueError(f"Weapon property '{self}' is not supported.")
+        _DESCRIPTIONS = {
+            WeaponProperty.AMMUNITION: "Use only with matching ammo; each attack expends 1. Drawing ammo is part of attack (need free hand for 1-handed). After combat, recover half (round down).",
+            WeaponProperty.FINESSE: "Use Str or Dex (your choice) for attack and damage rolls; same mod for both.",
+            WeaponProperty.HEAVY: "Disadvantage if Melee + Str < 13 or Ranged + Dex < 13.",
+            WeaponProperty.LIGHT: "When you Attack with a Light weapon, you can Bonus Action attack with another Light weapon; no ability mod to that damage unless negative.",
+            WeaponProperty.LOADING: "Can fire only 1 piece of ammo per Action/Bonus/Reaction, regardless of Extra Attack.",
+            WeaponProperty.RANGE: "Range (normal/long). Attacks beyond normal = Disadvantage; beyond long = impossible.",
+            WeaponProperty.REACH: "Adds +5 ft to reach for attacks and opportunity attacks.",
+            WeaponProperty.THROWN: "Can throw weapon for ranged attack; use same ability mod as melee version.",
+            WeaponProperty.TWO_HANDED: "Requires two hands to attack.",
+            WeaponProperty.VERSATILE_8: "Can use one or two hands; if two-handed, use damage die shown in parentheses.",
+            WeaponProperty.VERSATILE_10: "Can use one or two hands; if two-handed, use damage die shown in parentheses.",
+            WeaponProperty.VERSATILE_12: "Can use one or two hands; if two-handed, use damage die shown in parentheses.",
+        }
+        if self not in _DESCRIPTIONS:
+            raise ValueError(f"Weapon property '{self}' is not supported.")
+        return _DESCRIPTIONS[self]
 
 
 class WeaponMastery(Enum):
@@ -66,24 +57,19 @@ class WeaponMastery(Enum):
 
     @property
     def description(self):
-        if self == WeaponMastery.CLEAVE:
-            return "When you hit a creature with a melee attack, you can make one extra melee attack with the same weapon against another creature within 5 ft of the first and in your reach. On a hit, deal weapon damage only (no mod unless negative). Once per turn."
-        if self == WeaponMastery.GRAZE:
-            return "If you miss with an attack, deal damage equal to the ability modifier used for the attack (same damage type)."
-        if self == WeaponMastery.NICK:
-            return "When using a Light weapon's extra attack, you can make it during the Attack action instead of as a Bonus Action. Once per turn."
-        if self == WeaponMastery.PUSH:
-            return "On a hit, you can push a Large or smaller target up to 10 ft away."
-        if self == WeaponMastery.SAP:
-            return "On a hit, the target has Disadvantage on its next attack before your next turn starts."
-        if self == WeaponMastery.SLOW:
-            return "On a hit that deals damage, reduce the target's Speed by 10 ft until your next turn. Multiple hits don't stack."
-        if self == WeaponMastery.TOPPLE:
-            return "On a hit, the target makes a Con save (DC = 8 + attack mod + prof). Fail = Prone."
-        if self == WeaponMastery.VEX:
-            return "On a hit that deals damage, you gain Advantage on your next attack against that creature before your next turn ends."
-
-        raise ValueError(f"Weapon mastery '{self}' is not supported.")
+        _DESCRIPTIONS = {
+            WeaponMastery.CLEAVE: "When you hit a creature with a melee attack, you can make one extra melee attack with the same weapon against another creature within 5 ft of the first and in your reach. On a hit, deal weapon damage only (no mod unless negative). Once per turn.",
+            WeaponMastery.GRAZE: "If you miss with an attack, deal damage equal to the ability modifier used for the attack (same damage type).",
+            WeaponMastery.NICK: "When using a Light weapon's extra attack, you can make it during the Attack action instead of as a Bonus Action. Once per turn.",
+            WeaponMastery.PUSH: "On a hit, you can push a Large or smaller target up to 10 ft away.",
+            WeaponMastery.SAP: "On a hit, the target has Disadvantage on its next attack before your next turn starts.",
+            WeaponMastery.SLOW: "On a hit that deals damage, reduce the target's Speed by 10 ft until your next turn. Multiple hits don't stack.",
+            WeaponMastery.TOPPLE: "On a hit, the target makes a Con save (DC = 8 + attack mod + prof). Fail = Prone.",
+            WeaponMastery.VEX: "On a hit that deals damage, you gain Advantage on your next attack against that creature before your next turn ends.",
+        }
+        if self not in _DESCRIPTIONS:
+            raise ValueError(f"Weapon mastery '{self}' is not supported.")
+        return _DESCRIPTIONS[self]
 
 
 class WeaponType(Enum):
