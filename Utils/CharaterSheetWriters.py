@@ -664,56 +664,174 @@ class HtmlCharacterSheetWriter:
             padding: 2px 5px;
         }
 
-        /* Weapon tables */
+        /* ── Weapon cards ─────────────────────────────────────────────── */
         .weapons {
             max-width: 100%;
         }
 
-        .weapon-table {
+        /* Gap between consecutive weapon cards */
+        .weapon-gap {
+            height: 0.6rem;
+            max-width: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Each weapon is its own bordered card table */
+        table.weapon-card {
             width: 100%;
             border-collapse: collapse;
             font-size: 0.85rem;
-            margin: 0.25rem 0 0.75rem 0;
+            border: 1px solid #bbb;
+            border-radius: 3px;
+            margin: 0;
             table-layout: auto;
         }
 
-        .weapon-table th,
-        .weapon-table td {
+        table.weapon-card td,
+        table.weapon-card th {
             border: 1px solid var(--border-color);
-            padding: 3px 5px;
+            padding: 3px 7px;
             vertical-align: top;
         }
 
-        .weapon-title {
+        /* Weapon name — full-width header row */
+        .weapon-name {
+            background: #e8edf5;
             font-size: 1rem;
+            font-weight: 700;
             text-align: left;
-            background: #f5f5f5;
-            font-weight: 600;
-            padding: 4px 6px;
+            letter-spacing: 0.02em;
+            padding: 4px 7px;
+            border-bottom: 2px solid #aab4cc;
         }
 
-        .weapon-first-col {
+        /* Quick-stats row — two cells side by side */
+        tr.weapon-quickstats td {
+            background: #f9f9f9;
+            font-size: 0.82rem;
+            white-space: normal;
+            padding: 3px 7px;
+        }
+
+        .wqs-left {
+            width: 40%;
+        }
+
+        .wqs-right {
+            width: 60%;
+        }
+
+        /* Inline label within quick-stats */
+        .wlabel {
+            font-weight: 600;
+            color: var(--muted-color);
+            font-size: 0.78rem;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            margin-right: 2px;
+        }
+
+        /* Bullet separator between quick-stat items */
+        .wsep {
+            color: #aaa;
+            margin: 0 5px;
+        }
+
+        /* Properties tag row */
+        tr.weapon-tags-row td {
+            padding: 3px 7px;
+            font-size: 0.82rem;
+        }
+
+        .wlabel-col {
             font-weight: 600;
             white-space: nowrap;
             background: #fafafa;
             width: 1%;
-            padding: 2px 4px;
+            color: var(--muted-color);
+            font-size: 0.78rem;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
         }
 
-        .weapon-cell {
-            padding: 2px 5px;
+        .wtags-cell {
+            padding: 3px 7px;
         }
 
-        .weapon-separator td {
-            border: none;
-            padding: 2px 0;
-            height: 6px;
+        /* Individual property/tag chips */
+        .wtag {
+            display: inline-block;
+            background: #eef0f4;
+            border: 1px solid #c8ccd8;
+            border-radius: 3px;
+            padding: 1px 6px;
+            font-size: 0.78rem;
+            margin-right: 4px;
+            margin-bottom: 2px;
+            white-space: nowrap;
         }
 
-        .weapon-separator hr {
-            border: none;
-            border-top: 1px solid var(--border-color);
-            margin: 2px 0;
+        /* Mastery chip — active (player has it) */
+        .wtag-mastery {
+            background: #e8f0e8;
+            border-color: #9abb9a;
+            font-weight: 600;
+        }
+
+        /* Mastery chip — inactive (weapon has it but player doesn't) */
+        .wtag-mastery-inactive {
+            background: #f5f5f5;
+            border-color: #ccc;
+            color: #999;
+            font-style: italic;
+        }
+
+        /* Per-property description rows */
+        tr.weapon-prop-row td {
+            font-size: 0.8rem;
+            padding: 2px 7px;
+        }
+
+        .wprop-label {
+            font-weight: 600;
+            white-space: nowrap;
+            background: #fafafa;
+            width: 1%;
+            color: var(--muted-color);
+        }
+
+        .wprop-desc {
+            color: #444;
+        }
+
+        /* Mastery description row */
+        tr.weapon-mastery-row td {
+            font-size: 0.8rem;
+            padding: 2px 7px;
+            background: #f5faf5;
+        }
+
+        .wmastery-label {
+            font-weight: 600;
+            white-space: nowrap;
+            width: 1%;
+            color: #3a6e3a;
+        }
+
+        .wmastery-desc {
+            color: #3a3a3a;
+        }
+
+        /* Additional description row */
+        tr.weapon-addl-row td {
+            font-size: 0.82rem;
+            padding: 3px 7px;
+            background: #fffef5;
+        }
+
+        .waddl-desc {
+            color: #333;
         }
         </style>
         """

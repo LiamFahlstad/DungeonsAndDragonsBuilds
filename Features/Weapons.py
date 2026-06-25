@@ -7,8 +7,6 @@ import DamageCalculator
 from Definitions import Ability, Die
 from Features.BaseFeatures import TextFeature
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
-from Utils.TableUtils import write_table
-
 
 _WEAPON_PROPERTY_DESCRIPTIONS: dict = {}  # populated after class definition
 
@@ -221,54 +219,13 @@ class AbstractWeapon(TextFeature):
             attack_roll_bonus += bonus
         return attack_roll_bonus
 
-    def get_headers(self) -> list[str]:
-        return ["Field", "Value"]
-
-    def get_rows(self, character_stat_block: CharacterStatBlock) -> list[list[str]]:
-        stats = self.stats()
-        rows = []
-        rows.append(["Name", stats.name])
-        rows.append(["Type", stats.weapon_type.value])
-        rows.append(["DamageType", stats.damage_type.value])
-
-        for prop in stats.properties:
-            description = prop.description
-            rows.append([f"Property '{prop.value}'", description])
-
-        rows.append(["Proficient", "Yes" if self.player_is_proficient else "No"])
-
-        attack_roll_bonus = self.calculate_total_attack_roll_bonus(character_stat_block)
-        rows.append(["AttackRoll", f"1d20 + {attack_roll_bonus}"])
-
-        ability_modifier_bonus = self.calculate_ability_modifier_bonus(
-            character_stat_block
-        )
-        rows.append(
-            ["DamageRoll", f"{stats.damage_roll.value} + {ability_modifier_bonus}"]
-        )
-
-        if self.player_has_mastery:
-            mastery_description = stats.mastery.description
-            rows.append([f"Mastery '{stats.mastery.value}'", mastery_description])
-
-        if stats.additional_description:
-            rows.append(["Additional Description", stats.additional_description])
-
-        return rows
-
-    def get_description(self, character_stat_block: CharacterStatBlock) -> Optional[str]:
+    def get_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> Optional[str]:
         return None
 
-    def write_to_file(
-        self, character_stat_block: CharacterStatBlock, file: TextIO
-    ):
-        headers = self.get_headers()
-        rows = self.get_rows(character_stat_block)
-        write_table(headers, rows, file)
-        self.write_damage_report(
-            character_stat_block=character_stat_block,
-            file=file,
-        )
+    def write_to_file(self, character_stat_block: CharacterStatBlock, file: TextIO):
+        pass  # HTML rendering is handled by write_weapons_to_file
 
     def write_damage_report(
         self,
@@ -1061,6 +1018,112 @@ class VampiricEdge(AbstractWeapon):
 ### Utility functions
 
 
+def _write_single_weapon(
+    weapon: AbstractWeapon,
+    character_stat_block: CharacterStatBlock,
+    file: TextIO,
+):
+    stats = weapon.stats()
+
+    attack_bonus_int = weapon.calculate_total_attack_roll_bonus_int(
+        character_stat_block
+    )
+    attack_bonus_str = f"{attack_bonus_int:+}"
+
+    ability_mod, ability_name = weapon._calculate_ability_modifier_bonus(
+        character_stat_block
+    )
+    damage_roll_str = f"{stats.damage_roll.value} {ability_mod:+} ({ability_name})"
+
+    proficient_label = "Proficient" if weapon.player_is_proficient else "Not proficient"
+
+    prop_names = (
+        ", ".join(p.value for p in stats.properties) if stats.properties else "—"
+    )
+
+    mastery_label = ""
+    if stats.mastery:
+        mastery_label = stats.mastery.value
+        if weapon.player_has_mastery:
+            mastery_label += " ✓"
+
+    file.write("<table class='weapon-card'>\n")
+
+    # ── Weapon name header ──────────────────────────────────────────────────
+    file.write(f"<tr><th class='weapon-name' colspan='2'>{stats.name}</th></tr>\n")
+
+    # ── Quick-stats row ─────────────────────────────────────────────────────
+    # Two cells: left = type/category info, right = roll info
+    type_cell = (
+        f"<span class='wlabel'>Type</span> {stats.weapon_type.value}"
+        f"<span class='wsep'>·</span>"
+        f"<span class='wlabel'>Damage type</span> {stats.damage_type.value}"
+        f"<span class='wsep'>·</span>"
+        f"<span class='wlabel'>Prof.</span> {proficient_label}"
+    )
+    roll_cell = (
+        f"<span class='wlabel'>Attack</span> 1d20 {attack_bonus_str}"
+        f"<span class='wsep'>·</span>"
+        f"<span class='wlabel'>Damage</span> {damage_roll_str}"
+    )
+    file.write(
+        f"<tr class='weapon-quickstats'>"
+        f"<td class='wqs-left'>{type_cell}</td>"
+        f"<td class='wqs-right'>{roll_cell}</td>"
+        f"</tr>\n"
+    )
+
+    # ── Properties row ──────────────────────────────────────────────────────
+    if stats.properties or mastery_label:
+        tags_html = ""
+        for prop in stats.properties:
+            tags_html += f"<span class='wtag'>{prop.value}</span> "
+        if mastery_label:
+            mastery_cls = (
+                "wtag wtag-mastery"
+                if weapon.player_has_mastery
+                else "wtag wtag-mastery-inactive"
+            )
+            tags_html += f"<span class='{mastery_cls}'>Mastery: {mastery_label}</span>"
+        file.write(
+            f"<tr class='weapon-tags-row'>"
+            f"<td class='wlabel-col'>Properties</td>"
+            f"<td class='wtags-cell'>{tags_html.strip()}</td>"
+            f"</tr>\n"
+        )
+
+    # ── Per-property descriptions ────────────────────────────────────────────
+    for prop in stats.properties:
+        file.write(
+            f"<tr class='weapon-prop-row'>"
+            f"<td class='wprop-label'>{prop.value}</td>"
+            f"<td class='wprop-desc'>{prop.description}</td>"
+            f"</tr>\n"
+        )
+
+    # ── Mastery description (only if the player has mastery) ────────────────
+    if stats.mastery and weapon.player_has_mastery:
+        file.write(
+            f"<tr class='weapon-mastery-row'>"
+            f"<td class='wmastery-label'>Mastery — {stats.mastery.value}</td>"
+            f"<td class='wmastery-desc'>{stats.mastery.description}</td>"
+            f"</tr>\n"
+        )
+
+    # ── Additional description ───────────────────────────────────────────────
+    if stats.additional_description:
+        # Replace newlines with <br> for HTML display
+        desc_html = stats.additional_description.replace("\n", "<br>")
+        file.write(
+            f"<tr class='weapon-addl-row'>"
+            f"<td class='wlabel-col'>Notes</td>"
+            f"<td class='waddl-desc'>{desc_html}</td>"
+            f"</tr>\n"
+        )
+
+    file.write("</table>\n")
+
+
 def write_weapons_to_file(
     weapons: list[AbstractWeapon],
     character_stat_block: CharacterStatBlock,
@@ -1069,41 +1132,12 @@ def write_weapons_to_file(
     if not weapons:
         return
 
-    headers: list[str] = weapons[0].get_headers()
-    rows: list[list[str]] = []
-
-    for i, weapon in enumerate(weapons):
-        rows.extend(weapon.get_rows(character_stat_block))
-        if i < len(weapons) - 1:
-            rows.append([])  # separator row
-
     file.write("<div class='weapons'>\n")
     file.write("<h2>Weapons</h2>\n")
 
-    file.write("<table class='weapon-table'>\n")
+    for i, weapon in enumerate(weapons):
+        if i > 0:
+            file.write("<div class='weapon-gap'></div>\n")
+        _write_single_weapon(weapon, character_stat_block, file)
 
-    # Header row
-    file.write("<tr>")
-    for i, header in enumerate(headers):
-        cls = "weapon-first-col" if i == 0 else "weapon-cell"
-        file.write(f"<th class='{cls}'>{header}</th>")
-    file.write("</tr>\n")
-
-    # Data rows
-    for row in rows:
-        if not row:
-            file.write(
-                "<tr class='weapon-separator'><td colspan='999'><hr></td></tr>\n"
-            )
-            continue
-
-        file.write("<tr>")
-        for i, cell in enumerate(row):
-            if i == 0:
-                file.write(f"<td class='weapon-first-col'>{cell}</td>")
-            else:
-                file.write(f"<td class='weapon-cell'>{cell}</td>")
-        file.write("</tr>\n")
-
-    file.write("</table>\n")
     file.write("</div>\n")
