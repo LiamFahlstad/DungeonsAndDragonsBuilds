@@ -26,7 +26,7 @@ class AbilityScoreImprovement(GeneralFeatCharacterFeature):
     def __init__(self, bonuses: list[tuple[Ability, int]]):
         self.bonuses = bonuses
         # Validate
-        if not (sum([bonus[1] for bonus in self.bonuses]) == 2):
+        if sum(bonus[1] for bonus in self.bonuses) != 2:
             raise ValueError("Bonuses must sum to 2.")
 
     def modify(self, character_stat_block: CharacterStatBlock):

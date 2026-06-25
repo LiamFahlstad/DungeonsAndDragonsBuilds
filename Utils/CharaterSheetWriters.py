@@ -438,16 +438,18 @@ class HtmlCharacterSheetWriter:
             ]
             self._write_item_table(file, "Armor", armor_rows)
 
-        file.write("<hr>")
         if weapons:
+            if armors:
+                file.write("<hr>")
             weapon_rows = [
                 (weapon.name, weapon.description if weapon.description else "-")
                 for weapon in weapons
             ]
             self._write_item_table(file, "Weapons", weapon_rows)
 
-        file.write("<hr>")
         if items:
+            if armors or weapons:
+                file.write("<hr>")
             sorted_items = sorted(items, key=lambda x: x[0].name)
             item_rows = [
                 (f"{item.name} ({quantity})", item.description())
@@ -466,10 +468,9 @@ class HtmlCharacterSheetWriter:
         if not tool_proficiencies:
             return
 
-        file.write("<h2>Items</h2>\n")
+        file.write("<h2>Tool Proficiencies</h2>\n")
         self._write_item_table_style(file)
 
-        file.write("<hr>")
         sorted_tool_proficiencies = sorted(tool_proficiencies, key=lambda x: x.name)
         proficiency_rows = [
             (tool_proficiency.name, tool_proficiency.description())

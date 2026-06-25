@@ -178,14 +178,7 @@ class BasicEntity(StatBlock):
         TableUtils.write_separator(file, "Abilities")
         headers = []
         row = []
-        for ability in [
-            Definitions.Ability.STRENGTH,
-            Definitions.Ability.DEXTERITY,
-            Definitions.Ability.CONSTITUTION,
-            Definitions.Ability.INTELLIGENCE,
-            Definitions.Ability.WISDOM,
-            Definitions.Ability.CHARISMA,
-        ]:
+        for ability in Definitions.Ability:
             header_text = f"{ability.short_name} (Mod/Save)"
             headers.append(header_text)
             row_text = f"{self.get_ability_score(ability)} ({self.get_ability_modifier(ability):+}/{self.get_saving_throw_modifier(ability):+})"

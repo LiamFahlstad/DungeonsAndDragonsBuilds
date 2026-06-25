@@ -208,9 +208,7 @@ class AbstractWeapon(TextFeature):
     def calculate_total_attack_roll_bonus(
         self, character_stat_block: CharacterStatBlock
     ) -> str:
-        attack_roll_bonus = (
-            f"{self.calculate_ability_modifier_bonus(character_stat_block)}"
-        )
+        attack_roll_bonus = self.calculate_ability_modifier_bonus(character_stat_block)
         attack_roll_bonus += (
             f" + {self.calculate_proficiency_damage_bonus(character_stat_block)}"
         )
@@ -264,20 +262,10 @@ class AbstractWeapon(TextFeature):
         if stats.additional_description:
             rows.append(["Additional Description", stats.additional_description])
 
-        attack_roll_die = DamageCalculator.Die.D20
-        attack_roll_condition = DamageCalculator.DiceRollCondition.NEUTRAL
-        attack_roll_bonus = self.calculate_total_attack_roll_bonus_int(
-            character_stat_block
-        )
-        damage_die = Die.die_from_value(stats.damage_roll.die_size)
-        number_of_damage_dice = stats.damage_roll.number_of_dice
-        damage_condition = DamageCalculator.DiceRollCondition.NEUTRAL
-        damage_bonus, _ = self._calculate_ability_modifier_bonus(character_stat_block)
-
         return rows
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        pass
+    def get_description(self, character_stat_block: CharacterStatBlock) -> Optional[str]:
+        return None
 
     def write_to_file(
         self, character_stat_block: CharacterStatBlock, file: TextIO

@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 from enum import Enum
-from typing import Any, List, Optional, TextIO
+from typing import Any, Optional, TextIO
 
 import Definitions
 from Utils import StringUtils
@@ -1930,7 +1930,7 @@ class Spell(ABC):
 
     @property
     @abstractmethod
-    def classes(self) -> List[str]:
+    def classes(self) -> list[str]:
         pass
 
     @property
@@ -2097,7 +2097,7 @@ class DataSpell(Spell):
         return str(self._data.get("school"))
 
     @property
-    def classes(self) -> List[str]:
+    def classes(self) -> list[str]:
         return self._data.get("classes", [])
 
     @property

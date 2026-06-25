@@ -9,7 +9,7 @@ class FreeBackgroundAbilityBonus(CharacterFeature):
     def __init__(self, bonuses: list[tuple[Ability, int]]):
         self.bonuses = bonuses
         # Validate
-        if not (sum([bonus[1] for bonus in self.bonuses]) == 3):
+        if sum(bonus[1] for bonus in self.bonuses) != 3:
             raise ValueError("Bonuses must sum to 3.")
 
     def modify(self, character_stat_block: CharacterStatBlock):

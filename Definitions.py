@@ -97,7 +97,7 @@ class Skill(str, Enum):
 
     @staticmethod
     def list_sorted() -> list["Skill"]:
-        return sorted(list(Skill), key=lambda skill: skill.value)
+        return sorted(Skill, key=lambda skill: skill.value)
 
 
 class HomeBrewSkill(str, Enum):
@@ -120,7 +120,7 @@ class HomeBrewSkill(str, Enum):
 
     @staticmethod
     def list_sorted() -> list["HomeBrewSkill"]:
-        return sorted(list(HomeBrewSkill), key=lambda skill: skill.value)
+        return sorted(HomeBrewSkill, key=lambda skill: skill.value)
 
 
 class SkillConfig(str, Enum):

@@ -81,13 +81,13 @@ def main():
     output.append("from Definitions import Ability\n")
     output.append("from Spells.Definitions import ExplicitSpell\n\n")
 
-    for spell_name in sorted(list(spells.keys())):
+    for spell_name in sorted(spells):
         spell_data = spells[spell_name]
         output.append(generate_spell_class(spell_data))
         output.append("\n")
 
     output.append("SpellSet = {\n")
-    for spell_name in sorted(list(spells.keys())):
+    for spell_name in sorted(spells):
         class_name = spell_name_to_class(spell_name)
         output.append(f'    "{spell_name}": {class_name},\n')
     output.append("}\n")

@@ -156,7 +156,7 @@ class CharacterSheetData:
     def add_item(self, item: Items.Item, quantity: int = 1):
         for existing_item, existing_quantity in self.items:
             # if the type is the same, add to the quantity
-            if type(existing_item) == type(item):
+            if type(existing_item) is type(item):
                 existing_quantity += quantity
                 return
         # otherwise, add a new entry
@@ -257,26 +257,26 @@ class CharacterSheetData:
     def merge_with(self, other: "CharacterSheetData"):
         """Merge this CharacterSheetData with another, with the other taking precedence."""
 
-        for attr in vars(self):
-            other_value = getattr(other, attr)
-            my_value = getattr(self, attr)
+        for field_name in vars(self):
+            other_value = getattr(other, field_name)
+            my_value = getattr(self, field_name)
 
             if isinstance(my_value, list) and isinstance(other_value, list):
-                setattr(self, attr, my_value + other_value)
+                setattr(self, field_name, my_value + other_value)
                 continue
 
             if isinstance(my_value, dict) and isinstance(other_value, dict):
                 combined_dict = my_value.copy()
                 combined_dict.update(other_value)
-                setattr(self, attr, combined_dict)
+                setattr(self, field_name, combined_dict)
                 continue
 
             if isinstance(my_value, set) and isinstance(other_value, set):
-                setattr(self, attr, my_value.union(other_value))
+                setattr(self, field_name, my_value.union(other_value))
                 continue
 
             if other_value not in _MERGE_EMPTY_VALUES:
-                setattr(self, attr, other_value)
+                setattr(self, field_name, other_value)
 
     def _resolve_spell_casting_ability(
         self, spell_casting_ability: Optional[Ability]

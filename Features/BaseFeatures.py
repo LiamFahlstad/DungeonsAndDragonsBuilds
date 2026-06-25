@@ -53,7 +53,7 @@ class TextFeature(Feature):
         self, character_stat_block: CharacterStatBlock, text_feature: "TextFeature"
     ):
         description = text_feature.get_description(character_stat_block)
-        text = f"(Upgrade) {text_feature.name} - {text_feature.origin}:\n"  # Indent first line
+        text = f"(Upgrade) {text_feature.name} - {text_feature.origin}:\n"
         text += description + "\n"
         return text
 
