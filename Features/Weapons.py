@@ -1077,65 +1077,6 @@ def write_weapons_to_file(
         if i < len(weapons) - 1:
             rows.append([])  # separator row
 
-    # --- Styling aligned with spells ---
-    file.write(
-        """
-    <style>
-    .weapons {
-        max-width: 100%;
-    }
-
-    .weapon-table {
-        width: 100%;
-        border-collapse: collapse;
-        font-size: 0.85rem;
-        margin: 0.25rem 0 0.75rem 0;
-        table-layout: auto;
-    }
-
-    .weapon-table th,
-    .weapon-table td {
-        border: 1px solid #ddd;
-        padding: 3px 5px;
-        vertical-align: top;
-    }
-
-    .weapon-title {
-        font-size: 1rem;
-        text-align: left;
-        background: #f5f5f5;
-        font-weight: 600;
-        padding: 4px 6px;
-    }
-
-    /* FIRST COLUMN = as tight as possible */
-    .weapon-first-col {
-        font-weight: 600;
-        white-space: nowrap;
-        background: #fafafa;
-        width: 1%;
-        padding: 2px 4px;
-    }
-
-    .weapon-cell {
-        padding: 2px 5px;
-    }
-
-    .weapon-separator td {
-        border: none;
-        padding: 2px 0;
-        height: 6px;
-    }
-
-    .weapon-separator hr {
-        border: none;
-        border-top: 1px solid #ddd;
-        margin: 2px 0;
-    }
-    </style>
-    """
-    )
-
     file.write("<div class='weapons'>\n")
     file.write("<h2>Weapons</h2>\n")
 

@@ -15,41 +15,6 @@ from ToolProficiencies.ToolProficiencies import ToolProficiency
 
 
 class HtmlCharacterSheetWriter:
-    _ITEM_TABLE_STYLE = """
-        <style>
-        .item-table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 0.85rem;
-            margin: 0.25rem 0;
-        }
-
-        .item-table td, .item-table th {
-            border: 1px solid #ddd;
-            padding: 3px 5px;
-            vertical-align: top;
-        }
-
-        .item-title {
-            font-size: 1rem;
-            text-align: left;
-            background: #f5f5f5;
-            font-weight: 600;
-        }
-
-        .item-label {
-            font-weight: 600;
-            white-space: nowrap;
-            background: #fafafa;
-            width: 1%;
-        }
-
-        .item-value {
-            width: auto;
-        }
-        </style>
-        """
-
     @staticmethod
     def _has_shield_armor(armors: list[Armor.AbstractArmor]) -> bool:
         return any(type(armor) is Armor.ShieldArmor for armor in armors)
@@ -108,10 +73,6 @@ class HtmlCharacterSheetWriter:
                 file.write("<hr>\n")
 
     @staticmethod
-    def _write_item_table_style(file: TextIO):
-        file.write(HtmlCharacterSheetWriter._ITEM_TABLE_STYLE)
-
-    @staticmethod
     def _write_item_table(file: TextIO, title: str, rows: list[tuple[str, str]]):
         file.write("<table class='item-table'>\n")
         file.write("<tr>\n")
@@ -129,9 +90,6 @@ class HtmlCharacterSheetWriter:
     def _write_general_info(self, character: CharacterStatBlock, file: TextIO):
         file.write("<h2>General Info</h2>\n")
 
-        file.write("<table border='1' cellspacing='0' cellpadding='5'>\n")
-        file.write("<tr><th>Field</th><th>Value</th></tr>\n")
-
         rows = [
             ("Name", character.name),
             ("Level", character.character_level),
@@ -148,10 +106,13 @@ class HtmlCharacterSheetWriter:
             ("Proficiency Bonus", character.get_proficiency_bonus()),
         ]
 
-        for field, value in rows:
-            self._write_table_row(file, [field, value])
-
-        file.write("</table>\n<br>\n")
+        file.write("<table class='stat-table'>\n<tr>")
+        for field, _ in rows:
+            file.write(f"<th>{field}</th>")
+        file.write("</tr>\n<tr>")
+        for _, value in rows:
+            file.write(f"<td>{value}</td>")
+        file.write("</tr>\n</table>\n<br>\n")
 
     def _write_combat_stats(
         self,
@@ -165,9 +126,6 @@ class HtmlCharacterSheetWriter:
         ac = character.calculate_armor_class()
         if self._has_shield_armor(armors):
             ac = f"{ac} (with Shield) and {ac - 2} (without Shield)"
-
-        file.write("<table border='1' cellspacing='0' cellpadding='5'>\n")
-        file.write("<tr><th>Field</th><th>Value</th></tr>\n")
 
         initiative = f"d20 + {character.initiative}"
         if character.initiative_proficiency:
@@ -184,17 +142,20 @@ class HtmlCharacterSheetWriter:
             ("Armor Class", ac),
             (
                 "Armor Proficiencies",
-                ", ".join(sorted([atype.value for atype in armor_proficiencies])),
+                ", ".join(sorted([a.value for a in armor_proficiencies])),
             ),
             ("Initiative", initiative),
             ("Speed (ft)", character.combat.speed),
             ("Size", character.combat.size.value),
         ]
 
-        for field, value in rows:
-            self._write_table_row(file, [field, value])
-
-        file.write("</table>\n<br>\n")
+        file.write("<table class='stat-table'>\n<tr>")
+        for field, _ in rows:
+            file.write(f"<th>{field}</th>")
+        file.write("</tr>\n<tr>")
+        for _, value in rows:
+            file.write(f"<td>{value}</td>")
+        file.write("</tr>\n</table>\n<br>\n")
 
     def _write_abilities(self, character: CharacterStatBlock, file: TextIO):
         file.write("<h2>Abilities</h2>\n")
@@ -208,7 +169,7 @@ class HtmlCharacterSheetWriter:
             "ATK Bonus",
         ]
 
-        file.write("<table border='1' cellspacing='0' cellpadding='5'>\n")
+        file.write("<table class='stat-table'>\n")
 
         file.write("<tr>")
         for header in headers:
@@ -259,7 +220,7 @@ class HtmlCharacterSheetWriter:
             "Bonus (already included)",
         ]
 
-        file.write("<table border='1' cellspacing='0' cellpadding='5'>\n")
+        file.write("<table class='stat-table'>\n")
 
         file.write("<tr>")
         for header in headers:
@@ -380,11 +341,7 @@ class HtmlCharacterSheetWriter:
 
         character_spell_slots = character.get_spell_slots()
 
-        _BOX_SPAN = '<span style="display:inline-block;width:1.6em;height:1.6em;border:1px solid currentColor;box-sizing:border-box;border-radius:0.2em;vertical-align:middle;"></span>'
-        _BOX_WRAP_OPEN = '<div style="display:inline-flex;gap:0.5em;align-items:center;margin:0.35em 0;">'
-        _BOX_WRAP_CLOSE = "</div>"
-
-        file.write("<table border='1' cellspacing='0' cellpadding='5'>\n")
+        file.write("<table class='stat-table'>\n")
         file.write("<tr>")
 
         for level in character_spell_slots.keys():
@@ -393,7 +350,11 @@ class HtmlCharacterSheetWriter:
         file.write("</tr>\n<tr>")
 
         for slots in character_spell_slots.values():
-            boxes_html = _BOX_WRAP_OPEN + _BOX_SPAN * slots + _BOX_WRAP_CLOSE
+            boxes_html = (
+                '<div class="slot-box-group">'
+                + '<span class="slot-box"></span>' * slots
+                + "</div>"
+            )
             file.write(f"<td>{boxes_html}</td>")
 
         file.write("</tr>\n</table>\n<br>\n")
@@ -433,7 +394,6 @@ class HtmlCharacterSheetWriter:
             return
 
         file.write("<h2>Items</h2>\n")
-        self._write_item_table_style(file)
 
         sections = []
         if armors:
@@ -475,7 +435,6 @@ class HtmlCharacterSheetWriter:
             return
 
         file.write("<h2>Tool Proficiencies</h2>\n")
-        self._write_item_table_style(file)
 
         sorted_tool_proficiencies = sorted(tool_proficiencies, key=lambda x: x.name)
         proficiency_rows = [
@@ -560,6 +519,201 @@ class HtmlCharacterSheetWriter:
             .page-break {
                 display: none;
             }
+
+            br {
+                display: none;
+            }
+
+            h2 {
+                margin: 0.8em 0 0.15em;
+            }
+
+            table.stat-table {
+                margin-bottom: 0.8rem;
+            }
+        }
+
+        /* Forces a page break before the element in print/PDF */
+        .print-page-break {
+            break-before: page;
+        }
+
+        /* Side-by-side section layout — overrides the global div rule */
+        .section-row {
+            display: flex;
+            gap: 1.5rem;
+            align-items: flex-start;
+            max-width: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .section-col {
+            flex: 1;
+            min-width: 0;
+            max-width: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .section-col table.stat-table {
+            width: 100%;
+        }
+
+        /* Stat tables: general info, combat, abilities, skills, spell slots */
+        table.stat-table {
+            border-collapse: collapse;
+            font-size: 0.85rem;
+            margin: 0 0 0.5rem 0;
+        }
+
+        table.stat-table th,
+        table.stat-table td {
+            border: 1px solid var(--border-color);
+            padding: 3px 8px;
+            vertical-align: top;
+            text-align: left;
+        }
+
+        table.stat-table th {
+            background: #f5f5f5;
+            font-weight: 600;
+        }
+
+        /* Spell slot checkboxes */
+        .slot-box {
+            display: inline-block;
+            width: 1.6em;
+            height: 1.6em;
+            border: 1px solid currentColor;
+            box-sizing: border-box;
+            border-radius: 0.2em;
+            vertical-align: middle;
+        }
+
+        .slot-box-group {
+            display: inline-flex;
+            gap: 0.5em;
+            align-items: center;
+            margin: 0.35em 0;
+        }
+
+        /* Item and tool proficiency tables */
+        .item-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+            margin: 0.25rem 0;
+        }
+
+        .item-table td, .item-table th {
+            border: 1px solid var(--border-color);
+            padding: 3px 5px;
+            vertical-align: top;
+        }
+
+        .item-title {
+            font-size: 1rem;
+            text-align: left;
+            background: #f5f5f5;
+            font-weight: 600;
+        }
+
+        .item-label {
+            font-weight: 600;
+            white-space: nowrap;
+            background: #fafafa;
+            width: 1%;
+        }
+
+        .item-value {
+            width: auto;
+        }
+
+        /* Spell tables */
+        .spell-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+            margin: 0.25rem 0;
+        }
+
+        .spell-table td, .spell-table th {
+            border: 1px solid var(--border-color);
+            padding: 3px 5px;
+            vertical-align: top;
+        }
+
+        .spell-title {
+            font-size: 1rem;
+            text-align: left;
+            background: #f5f5f5;
+            font-weight: 600;
+        }
+
+        .spell-label {
+            font-weight: 600;
+            white-space: nowrap;
+            background: #fafafa;
+            padding: 2px 4px;
+            width: 1%;
+        }
+
+        .spell-value {
+            width: auto;
+            padding: 2px 5px;
+        }
+
+        /* Weapon tables */
+        .weapons {
+            max-width: 100%;
+        }
+
+        .weapon-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+            margin: 0.25rem 0 0.75rem 0;
+            table-layout: auto;
+        }
+
+        .weapon-table th,
+        .weapon-table td {
+            border: 1px solid var(--border-color);
+            padding: 3px 5px;
+            vertical-align: top;
+        }
+
+        .weapon-title {
+            font-size: 1rem;
+            text-align: left;
+            background: #f5f5f5;
+            font-weight: 600;
+            padding: 4px 6px;
+        }
+
+        .weapon-first-col {
+            font-weight: 600;
+            white-space: nowrap;
+            background: #fafafa;
+            width: 1%;
+            padding: 2px 4px;
+        }
+
+        .weapon-cell {
+            padding: 2px 5px;
+        }
+
+        .weapon-separator td {
+            border: none;
+            padding: 2px 0;
+            height: 6px;
+        }
+
+        .weapon-separator hr {
+            border: none;
+            border-top: 1px solid var(--border-color);
+            margin: 2px 0;
         }
         </style>
         """
@@ -591,6 +745,7 @@ class HtmlCharacterSheetWriter:
             self._write_combat_stats(character, file, armors, armor_proficiencies)
             self._write_abilities(character, file)
             self._write_skills(character, file, skill_config)
+            file.write("<div class='print-page-break'></div>\n")
             self._write_features(character, file, features)
             self._write_weapons(character, file, weapons, weapon_masteries)
             self._write_fighting_styles(character, file, fighting_styles)

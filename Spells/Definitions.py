@@ -1992,46 +1992,6 @@ class Spell(ABC):
             "\n", "<br>"
         )
 
-        file.write(
-            """
-        <style>
-        .spell-table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 0.85rem;
-            margin: 0.25rem 0;
-        }
-
-        .spell-table td, .spell-table th {
-            border: 1px solid #ddd;
-            padding: 3px 5px;   /* ↓ tighter spacing */
-            vertical-align: top;
-        }
-
-        .spell-title {
-            font-size: 1rem;
-            text-align: left;
-            background: #f5f5f5;
-            font-weight: 600;
-        }
-
-        .spell-label {
-            font-weight: 600;
-            white-space: nowrap;
-            background: #fafafa;
-            padding: 2px 4px; /* tighter than value */
-            width: 1%; /* key trick: forces shrink-to-fit */
-        }
-
-        .spell-value {
-            width: auto;
-            padding: 2px 5px;
-        }
-
-        </style>
-        """
-        )
-
         file.write("<table class='spell-table'>\n")
 
         # --- Title INSIDE table ---

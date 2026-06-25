@@ -65,13 +65,8 @@ def boxes_to_html(description: str) -> str:
         top_count = box_count(top_line, "⬜")
 
         if top_count:
-            box_span = '<span style="display:inline-block;width:1.6em;height:1.6em;border:1px solid currentColor;box-sizing:border-box;border-radius:0.2em;vertical-align:middle;"></span>'
-            boxes_html = box_span * top_count
-            new_lines.append(
-                '<div style="display:inline-flex;gap:0.5em;align-items:center;margin:0.35em 0;">'
-                + boxes_html
-                + "</div>"
-            )
+            boxes_html = '<span class="slot-box"></span>' * top_count
+            new_lines.append('<div class="slot-box-group">' + boxes_html + "</div>")
             index += 1
             continue
 
