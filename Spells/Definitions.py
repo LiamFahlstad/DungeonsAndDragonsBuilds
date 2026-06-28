@@ -2054,8 +2054,7 @@ class Spell(ABC):
         # Description row
         file.write(
             f"<tr class='spell-desc-row'>"
-            f"<td class='sdesc-label'>Description</td>"
-            f"<td class='sdesc-text'>{main_desc}</td>"
+            f"<td class='sdesc-text' colspan='2'>{main_desc}</td>"
             f"</tr>\n"
         )
 
@@ -2063,8 +2062,7 @@ class Spell(ABC):
         if higher_level_html:
             file.write(
                 f"<tr class='spell-higher-row'>"
-                f"<td class='sdesc-label'>Upcast</td>"
-                f"<td class='sdesc-text'>{higher_level_html}</td>"
+                f"<td class='sdesc-text' colspan='2'>{higher_level_html}</td>"
                 f"</tr>\n"
             )
 
