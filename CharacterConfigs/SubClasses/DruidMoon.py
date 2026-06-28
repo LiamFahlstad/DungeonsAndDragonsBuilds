@@ -54,7 +54,10 @@ class DruidMoonLevel6(ClassBuilder.SubclassLevel6):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(DruidFeatures.ImprovedCircleForms())
+        circle_forms: DruidFeatures.CircleForms = data.get_features_by_type(
+            DruidFeatures.CircleForms
+        )[0]
+        circle_forms.extend_feature(DruidFeatures.ImprovedCircleForms())
         return data
 
 

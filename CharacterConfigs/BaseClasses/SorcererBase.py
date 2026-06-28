@@ -244,7 +244,10 @@ class SorcererLevel15(ClassBuilder.BaseClassLevel15):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(SorcererFeatures.ImprovedElementalFury())
+        elemental_fury: SorcererFeatures.ElementalFury = data.get_features_by_type(
+            SorcererFeatures.ElementalFury
+        )[0]
+        elemental_fury.extend_feature(SorcererFeatures.ImprovedElementalFury())
         data.add_spell(self.spell)
         return data
 

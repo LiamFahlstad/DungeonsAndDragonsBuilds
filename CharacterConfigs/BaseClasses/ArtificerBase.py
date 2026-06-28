@@ -245,7 +245,10 @@ class ArtificerLevel15(ClassBuilder.BaseClassLevel15):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(ArtificerFeatures.ImprovedElementalFury())
+        elemental_fury: ArtificerFeatures.ElementalFury = data.get_features_by_type(
+            ArtificerFeatures.ElementalFury
+        )[0]
+        elemental_fury.extend_feature(ArtificerFeatures.ImprovedElementalFury())
         data.add_spell(self.spell)
         return data
 

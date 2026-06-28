@@ -304,7 +304,10 @@ class ClericLevel20(ClassBuilder.BaseClassLevel20):
     spell: ClericSpellsUpTo9
 
     def add_features(self, data: CharacterSheetData) -> CharacterSheetData:
-        data.add_feature(ClericFeatures.GreaterDivineIntervention())
+        divine_intervention: ClericFeatures.DivineIntervention = data.get_features_by_type(
+            ClericFeatures.DivineIntervention
+        )[0]
+        divine_intervention.extend_feature(ClericFeatures.GreaterDivineIntervention())
         data.add_spell(self.spell)
         return data
 

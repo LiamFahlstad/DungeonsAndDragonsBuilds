@@ -243,7 +243,10 @@ class DruidLevel15(ClassBuilder.BaseClassLevel15):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(DruidFeatures.ImprovedElementalFury())
+        elemental_fury: DruidFeatures.ElementalFury = data.get_features_by_type(
+            DruidFeatures.ElementalFury
+        )[0]
+        elemental_fury.extend_feature(DruidFeatures.ImprovedElementalFury())
         data.add_spell(self.spell)
         return data
 
