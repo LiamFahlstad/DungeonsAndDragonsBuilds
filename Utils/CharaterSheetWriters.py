@@ -45,8 +45,9 @@ class HtmlCharacterSheetWriter:
                 weapon.player_has_mastery = True
 
     @staticmethod
-    def _write_table_row(file: TextIO, cells: list):
-        file.write("<tr>")
+    def _write_table_row(file: TextIO, cells: list, tr_class: str = ""):
+        cls = f" class='{tr_class}'" if tr_class else ""
+        file.write(f"<tr{cls}>")
         for cell in cells:
             file.write(f"<td>{cell}</td>")
         file.write("</tr>\n")
@@ -199,7 +200,8 @@ class HtmlCharacterSheetWriter:
                 f"{ability_attack_bonus:+}",
             ]
 
-            self._write_table_row(file, row)
+            tr_class = "st-proficient" if character.is_proficient_in_saving_throw(ability) else ""
+            self._write_table_row(file, row, tr_class)
 
         file.write("</table>\n<br>\n")
 
@@ -229,15 +231,16 @@ class HtmlCharacterSheetWriter:
 
         if skill_config == Definitions.SkillConfig.DEFAULT:
             for skill in Definitions.Skill.list_sorted():
+                proficient = character.is_proficient_in_skill(skill)
                 row = [
                     skill.value,
                     f"{character.get_skill_modifier(skill):+}",
-                    "Yes" if character.is_proficient_in_skill(skill) else "No",
+                    "Yes" if proficient else "No",
                     character.get_skill_ability(skill).value,
                     character.get_skill_roll_condition(skill).value,
                     f"{character.get_skill_bonus(skill):+}",
                 ]
-                self._write_table_row(file, row)
+                self._write_table_row(file, row, "st-proficient" if proficient else "")
 
         if skill_config == Definitions.SkillConfig.HOMEBREW:
             for skill in Definitions.HomeBrewSkill.list_sorted():
@@ -245,21 +248,18 @@ class HtmlCharacterSheetWriter:
                 roll_conditions = set(
                     character.get_skill_roll_condition(s) for s in possible_skills
                 )
+                proficient = any(
+                    character.is_proficient_in_skill(s) for s in possible_skills
+                )
                 row = [
                     skill.value,
                     f"{max(character.get_skill_modifier(s) for s in possible_skills):+}",
-                    (
-                        "Yes"
-                        if any(
-                            character.is_proficient_in_skill(s) for s in possible_skills
-                        )
-                        else "No"
-                    ),
+                    "Yes" if proficient else "No",
                     character.get_skill_ability(possible_skills[0]).value,
                     self._resolve_homebrew_roll_condition(roll_conditions).value,
                     f"{max(character.get_skill_bonus(s) for s in possible_skills):+}",
                 ]
-                self._write_table_row(file, row)
+                self._write_table_row(file, row, "st-proficient" if proficient else "")
 
         file.write("</table>\n<br>\n")
 
@@ -578,20 +578,41 @@ class HtmlCharacterSheetWriter:
         table.stat-table {
             border-collapse: collapse;
             font-size: 0.85rem;
-            margin: 0 0 0.5rem 0;
+            margin: 0 0 0.75rem 0;
         }
 
         table.stat-table th,
         table.stat-table td {
-            border: 1px solid var(--border-color);
-            padding: 3px 8px;
-            vertical-align: top;
+            border: 1px solid #c4b49a;
+            padding: 5px 10px;
+            vertical-align: middle;
             text-align: left;
         }
 
         table.stat-table th {
-            background: #f5f5f5;
+            background: #3a2c1c;
+            color: #f2e8d8;
             font-weight: 600;
+            font-size: 0.78rem;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            white-space: nowrap;
+        }
+
+        table.stat-table tr:nth-child(even) td {
+            background: #faf7f2;
+        }
+
+        table.stat-table tr.st-proficient td {
+            background: #eef5ea;
+        }
+
+        table.stat-table tr.st-proficient:nth-child(even) td {
+            background: #e6f0e2;
+        }
+
+        table.stat-table tr.st-proficient td:first-child {
+            font-weight: 700;
         }
 
         /* Spell slot checkboxes */
