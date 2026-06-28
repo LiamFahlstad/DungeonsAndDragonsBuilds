@@ -39,23 +39,60 @@ _RESET_PREFIX = "[RESET:"
 _RESET_SUFFIX = "]"
 
 
-def add_boxes(description: str, box_count: int, reset: str = None) -> str:
+def add_boxes(
+    description: str,
+    box_count: int,
+    regain_all_on: str = None,
+    regain_x_on: tuple = None,
+) -> str:
     """Append box symbols to *description*.
 
     Args:
         description: The feature text to append boxes to.
         box_count: How many checkbox symbols to add.
-        reset: Optional reset cadence label, e.g. ``"long rest"``,
-            ``"short rest"``, or ``"dawn"``.  When supplied a small note is
-            rendered beneath the boxes in the HTML output.
+        regain_all_on: Optional reset cadence label for full recovery, e.g.
+            ``"long rest"``, ``"short rest"``, or ``"dawn"``. When supplied a
+            note is rendered beneath the boxes in the HTML output.
+        regain_x_on: Optional tuple of (count: int, cadence: str) for partial
+            recovery on a shorter rest, e.g. ``(2, "short rest")``. If both
+            this and ``regain_all_on`` are provided, the description will be
+            "Regain <N> on <cadence>, all on <regain_all_on>".
     """
     box_symbol = "⬜"
 
     boxes = " ".join([box_symbol] * box_count)
 
     result = f"{description}\n{boxes}\n"
-    if reset is not None:
-        result += f"{_RESET_PREFIX}{reset}{_RESET_SUFFIX}\n"
+
+    # Determine the reset label to append
+    reset_label = None
+
+    if regain_x_on is not None:
+        if not isinstance(regain_x_on, tuple) or len(regain_x_on) != 2:
+            raise ValueError(
+                "regain_x_on must be a tuple of (count: int, cadence: str)"
+            )
+        count, cadence = regain_x_on
+        if not isinstance(count, int) or count < 0:
+            raise ValueError("regain_x_on count must be a non-negative integer")
+        if count >= box_count:
+            raise ValueError(
+                f"regain_x_on count ({count}) must be less than box_count ({box_count})"
+            )
+        # Pluralize "box" or "boxes"
+        box_word = "box" if count == 1 else "boxes"
+        if regain_all_on is not None:
+            reset_label = (
+                f"regain {count} {box_word} on a {cadence}, all on a {regain_all_on}"
+            )
+        else:
+            reset_label = f"regain {count} {box_word} on a {cadence}"
+    elif regain_all_on is not None:
+        reset_label = f"regain all on a {regain_all_on}"
+
+    if reset_label is not None:
+        result += f"{_RESET_PREFIX}{reset_label}{_RESET_SUFFIX}\n"
+
     return result
 
 
@@ -96,7 +133,13 @@ def boxes_to_html(description: str) -> str:
                 reset_label = parse_reset_label(lines[index + 1])
 
             if reset_label is not None:
-                reset_html = f'<span class="slot-reset-label">Resets on {reset_label}</span>'
+                # Capitalize the reset label for proper sentence formatting
+                capitalized_label = (
+                    reset_label[0].upper() + reset_label[1:] if reset_label else ""
+                )
+                reset_html = (
+                    f'<span class="slot-reset-label">{capitalized_label}.</span>'
+                )
                 new_lines.append(
                     '<div class="slot-box-group">'
                     + boxes_html

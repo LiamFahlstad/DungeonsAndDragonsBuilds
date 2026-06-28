@@ -76,7 +76,7 @@ class WildShape(TextFeature):
             "No Spellcasting. You can't cast spells, but shape-shifting doesn't break your Concentration or otherwise interfere with a spell you've already cast.\n"
             "Objects. Your ability to handle objects is determined by the form's limbs rather than your own. In addition, you choose whether your equipment falls in your space, merges into your new form, or is worn by it. Worn equipment functions as normal, but the DM decides whether it's practical for the new form to wear a piece of equipment based on the creature's size and shape. Your equipment doesn't change size or shape to match the new form, and any equipment that the new form can't wear must either fall to the ground or merge with the form. Equipment that merges with the form has no effect while you're in that form."
         )
-        return StringUtils.add_boxes(description, uses, reset="short or long rest")
+        return StringUtils.add_boxes(description, uses, regain_x_on=(1, "short rest"), regain_all_on="long rest")
 
 
 class WildCompanion(TextFeature):
@@ -265,7 +265,7 @@ class MoonlightStep(TextFeature):
             "You magically transport yourself, reappearing amid a burst of moonlight. As a Bonus Action, you teleport up to 30 feet to an unoccupied space you can see, and you have Advantage on the next attack roll you make before the end of this turn.\n"
             "You can use this feature a number of times equal to your Wisdom modifier (minimum of once), and you regain all expended uses when you finish a Long Rest. You can also regain uses by expending a level 2+ spell slot for each use you want to restore (no action required)."
         )
-        return StringUtils.add_boxes(description, uses, reset="long rest")
+        return StringUtils.add_boxes(description, uses, regain_all_on="long rest")
 
 
 class LunarForm(TextFeature):
@@ -363,7 +363,7 @@ class StarMap(TextFeature):
             "While holding the map, you have the Guidance and Guiding Bolt spells prepared, and you can cast Guiding Bolt without expending a spell slot. You can cast it in that way a number of times equal to your Wisdom modifier (minimum of once), and you regain all expended uses when you finish a Long Rest.\n"
             "If you lose the map, you can perform a 1-hour ceremony to magically create a replacement. This ceremony can be performed during a Short or Long Rest, and it destroys the previous map."
         )
-        return StringUtils.add_boxes(description, uses, reset="long rest")
+        return StringUtils.add_boxes(description, uses, regain_all_on="long rest")
 
 
 class StarryForm(TextFeature):
@@ -395,7 +395,7 @@ class CosmicOmen(TextFeature):
             "Woe (Odd). Whenever a creature you can see within 30 feet of you is about to make a D20 Test, you can take a Reaction to roll 1d6 and subtract the number rolled from the total.\n"
             "You can use this Reaction a number of times equal to your Wisdom modifier (minimum of once), and you regain all expended uses when you finish a Long Rest."
         )
-        return StringUtils.add_boxes(description, uses, reset="long rest")
+        return StringUtils.add_boxes(description, uses, regain_all_on="long rest")
 
 
 class TwinklingConstellations(TextFeature):

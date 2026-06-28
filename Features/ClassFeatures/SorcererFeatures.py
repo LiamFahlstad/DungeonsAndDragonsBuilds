@@ -33,7 +33,7 @@ class InnateSorcery(TextFeature):
             "You have Advantage on the attack rolls of Sorcerer spells you cast.\n"
             "You can use this feature twice, and you regain all expended uses of it when you finish a Long Rest."
         )
-        return StringUtils.add_boxes(description, 2, reset="long rest")
+        return StringUtils.add_boxes(description, 2, regain_all_on="long rest")
 
 
 class FontOfMagic(TextFeature):
@@ -59,7 +59,7 @@ class FontOfMagic(TextFeature):
             "           4        |         6          |           7           \n"
             "           5        |         7          |           9           "
         )
-        return StringUtils.add_boxes(description, sorcery_points, reset="long rest")
+        return StringUtils.add_boxes(description, sorcery_points, regain_all_on="long rest")
 
 
 class Metamagic(TextFeature):
@@ -188,7 +188,7 @@ class RestoreBalance(TextFeature):
             "Your connection to the plane of absolute order allows you to equalize chaotic moments. When a creature you can see within 60 feet of yourself is about to roll a d20 with Advantage or Disadvantage, you can take a Reaction to prevent the roll from being affected by Advantage and Disadvantage.\n"
             "You can use this feature a number of times equal to your Charisma modifier (minimum of once), and you regain all expended uses when you finish a Long Rest."
         )
-        return StringUtils.add_boxes(description, uses, reset="long rest")
+        return StringUtils.add_boxes(description, uses, regain_all_on="long rest")
 
 
 class BastionOfLaw(TextFeature):

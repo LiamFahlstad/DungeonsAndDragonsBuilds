@@ -51,7 +51,7 @@ class FavoredEnemy(TextFeature):
             "You always have the Hunter's Mark spell prepared.\n"
             f"You can cast it {free_hunters_mark_uses} times without expending a spell slot, and you regain all expended uses of this ability when you finish a Long Rest.\n"
         )
-        return StringUtils.add_boxes(description, free_hunters_mark_uses, reset="long rest")
+        return StringUtils.add_boxes(description, free_hunters_mark_uses, regain_all_on="long rest")
 
 
 class DeftExplorerExpertise(CharacterFeature):
@@ -112,7 +112,7 @@ class Tireless(TextFeature):
             f"   You can use this action a number of times equal to your Wisdom modifier (minimum of once) ({uses}), and you regain all expended uses when you finish a Long Rest.\n"
             "    * Decrease Exhaustion: Whenever you finish a Short Rest, your Exhaustion level, if any, decreases by 1."
         )
-        return StringUtils.add_boxes(description, uses, reset="long rest")
+        return StringUtils.add_boxes(description, uses, regain_all_on="long rest")
 
 
 class RelentlessHunter(TextFeature):
@@ -135,7 +135,7 @@ class NaturesVeil(TextFeature):
             "You invoke spirits of nature to magically hide yourself. As a Bonus Action you can give yourself the Invisible condition until the end of your next turn.\n"
             f"You can use this feature a number of times equal to your Wisdom modifier (minimum of once) ({uses}), and you regain all expended uses when you finish a Long Rest."
         )
-        return StringUtils.add_boxes(description, uses, reset="long rest")
+        return StringUtils.add_boxes(description, uses, regain_all_on="long rest")
 
 
 class PreciseHunter(TextFeature):
@@ -298,7 +298,7 @@ class MistyWanderer(TextFeature):
             "You can cast Misty Step without expending a spell slot. You can do so a number of times equal to your Wisdom modifier (minimum of once), and you regain all expended uses when you finish a Long Rest.\n"
             "In addition, whenever you cast Misty Step, you can bring along one willing creature you can see within 5 feet of yourself. That creature teleports to an unoccupied space of your choice within 5 feet of your destination space."
         )
-        return StringUtils.add_boxes(description, uses, reset="long rest")
+        return StringUtils.add_boxes(description, uses, regain_all_on="long rest")
 
 
 ### Gloom Stalker Ranger Features ###
@@ -317,7 +317,7 @@ class DreadAmbusher(TextFeature):
             f"Dreadful Strike. When you attack a creature and hit it with a weapon, you can deal an extra 2d6 Psychic damage. You can use this benefit only once per turn, you can use it a number of times equal to your Wisdom modifier (minimum of once) ({uses}), and you regain all expended uses when you finish a Long Rest.\n"
             "Initiative Bonus. When you roll Initiative, you can add your Wisdom modifier to the roll."
         )
-        return StringUtils.add_boxes(description, uses, reset="long rest")
+        return StringUtils.add_boxes(description, uses, regain_all_on="long rest")
 
 
 class GloomStalkerSpells(TextFeature):
@@ -499,7 +499,7 @@ class ChillingRetribution(TextFeature):
             "When a creature hits you with an attack roll, you can take a Reaction to force the creature to make a Wisdom saving throw against your spell save DC. On a failed save, the target has the Stunned condition until the end of your next turn. While the target is Stunned, its Speed is reduced to 0 feet.\n"
             "You can use this feature a number of times equal to your Wisdom modifier (minimum of once), and you regain all expended uses when you finish a Long Rest."
         )
-        return StringUtils.add_boxes(description, uses, reset="long rest")
+        return StringUtils.add_boxes(description, uses, regain_all_on="long rest")
 
 
 class FrozenHaunt(TextFeature):

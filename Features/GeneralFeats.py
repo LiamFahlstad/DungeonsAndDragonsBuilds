@@ -733,7 +733,7 @@ class FairyTrickster(_AbilityScoreFeat):
             "Flustering Strike. When you hit a creature with an attack roll, you can attempt to fluster the target. The target must succeed on a Wisdom saving throw (DC 8 plus the ability modifier of the score increased by this feat and your Proficiency Bonus) or have Disadvantage on saving throws until the end of your next turn.\n"
             "You can use this benefit a number of times equal to your Proficiency Bonus, and you regain all expended uses when you finish a Long Rest."
         )
-        return StringUtils.add_boxes(description, proficiency_bonus, reset="long rest")
+        return StringUtils.add_boxes(description, proficiency_bonus, regain_all_on="long rest")
 
 
 class GenieMagic(_AbilityScoreFeat):
@@ -804,7 +804,7 @@ class MythalTouched(_AbilityScoreFeat):
             "18-19: Any flammable, nonmagical object within 10 feet of the triggering spell's caster bursts into flame, takes 1d4 Fire damage, and is burning.\n"
             "20: The triggering spell dissipates with no effect, and the action used to cast it is wasted. If cast with a spell slot, the slot isn't expended."
         )
-        return StringUtils.add_boxes(description, proficiency_bonus, reset="long rest")
+        return StringUtils.add_boxes(description, proficiency_bonus, regain_all_on="long rest")
 
 
 class OrdersResilience(_AbilityScoreFeat):
@@ -836,7 +836,7 @@ class PurpleDragonCommandant(_AbilityScoreFeat):
             "Encourage Ally. As a Bonus Action, you bolster one ally you can see within 30 feet. The ally gains Temporary Hit Points equal to 2d6 plus the modifier of the ability score increased by this feat. You can take this Bonus Action a number of times equal to your Proficiency Bonus, and you regain all uses when you finish a Long Rest.\n"
             "Last Stand. You have Advantage on attack rolls while Bloodied."
         )
-        return StringUtils.add_boxes(description, proficiency_bonus, reset="long rest")
+        return StringUtils.add_boxes(description, proficiency_bonus, regain_all_on="long rest")
 
 
 class SpellfireAdept(_AbilityScoreFeat):
@@ -948,7 +948,7 @@ class GatheredWhispers(GeneralFeatTextFeature):
             " * Unearthly Scream. When you are hit by an attack roll, you can take a Reaction to channel your haunting spirits into a protective, otherworldly scream. You can add your Proficiency Bonus to your AC against that attack, potentially causing it to miss. You can use this benefit a number of times equal to your Proficiency Bonus, and you regain all expended uses when you finish a Long Rest.\n"
             " * Voices from Beyond. Immediately after you make a D20 Test and roll a 1 on the d20, the haunting whispers rise to a ghastly volume. Make a Wisdom saving throw (DC 13 plus your Proficiency Bonus). On a failed save, you have the Deafened condition until the end of your next turn. While Deafened, you have Disadvantage on ability checks and attack rolls."
         )
-        return StringUtils.add_boxes(description, proficiency_bonus, reset="long rest")
+        return StringUtils.add_boxes(description, proficiency_bonus, regain_all_on="long rest")
 
 
 class LivingShadow(GeneralFeatTextFeature):
@@ -974,7 +974,7 @@ class LivingShadow(GeneralFeatTextFeature):
             "2-6\tYou don't move or take a Bonus Action, and you take the Attack action to make one melee attack against a random creature within reach. If none are within reach, you take no action.\n"
             "7-8\tYou have the Prone condition, and your turn ends."
         )
-        return StringUtils.add_boxes(description, proficiency_bonus, reset="long rest")
+        return StringUtils.add_boxes(description, proficiency_bonus, regain_all_on="long rest")
 
 
 class MistWalker(GeneralFeatTextFeature):
@@ -995,7 +995,7 @@ class MistWalker(GeneralFeatTextFeature):
             "Mist Walk. When you take damage or fail a saving throw to avoid or end the Grappled or Restrained condition, you can take a Reaction and teleport up to 15 feet to an unoccupied space you can see. You can use this feature a number of times equal to your Proficiency Bonus, and you regain all expended uses when you finish a Long Rest.\n"
             "Poisoned Roots. When you finish a Long Rest, the world around you in a 10-mile radius becomes a siphon that leeches away at your vitality. Whenever you finish a Short Rest in that area, make a Constitution saving throw (DC 13 plus your Proficiency Bonus). On a failed save, you get no benefits from finishing that rest."
         )
-        return StringUtils.add_boxes(description, proficiency_bonus, reset="long rest")
+        return StringUtils.add_boxes(description, proficiency_bonus, regain_all_on="long rest")
 
 
 class SecondSkin(GeneralFeatTextFeature):
@@ -1025,7 +1025,7 @@ class SecondSkin(GeneralFeatTextFeature):
             "5\tTouching pure silver with your bare skin\n"
             "6\tSeeing someone who resembles a specific individual\n"
         )
-        return StringUtils.add_boxes(description, proficiency_bonus, reset="long rest")
+        return StringUtils.add_boxes(description, proficiency_bonus, regain_all_on="long rest")
 
 
 class SymbioticBeing(GeneralFeatTextFeature):
@@ -1049,7 +1049,7 @@ class SymbioticBeing(GeneralFeatTextFeature):
             "Symbiotic Agenda. Immediately after you make a D20 Test and roll a 1 on the d20, your symbiote attempts to assert control. Make a Charisma saving throw (DC 13 plus your Proficiency Bonus). On a failed save, you have the Charmed condition for 1d12 hours. While Charmed, you must try to follow the symbiote's commands and further its goals, as determined by the DM. Whenever you take damage, you can repeat this save, ending the effect on a success.\n"
             "At the DM's discretion, you might make this saving throw whenever you act contrary to the symbiote's agenda."
         )
-        return StringUtils.add_boxes(description, proficiency_bonus, reset="long rest")
+        return StringUtils.add_boxes(description, proficiency_bonus, regain_all_on="long rest")
 
 
 class TouchOfDeath(GeneralFeatTextFeature):

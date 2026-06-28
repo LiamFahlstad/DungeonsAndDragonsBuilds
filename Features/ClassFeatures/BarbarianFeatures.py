@@ -44,7 +44,7 @@ class Rage(TextFeature):
             "Each time the Rage is extended, it lasts until the end of your next turn. You can maintain a Rage for up to 10 minutes."
         )
         return StringUtils.add_boxes(
-            description, rage_usages, reset="short or long rest"
+            description, rage_usages, regain_x_on=(1, "short rest"), regain_all_on="long rest"
         )
 
 

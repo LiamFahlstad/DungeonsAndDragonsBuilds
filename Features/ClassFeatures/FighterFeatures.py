@@ -36,7 +36,7 @@ class SecondWind(TextFeature):
             f"and you regain all expended uses when you finish a Long Rest.\n"
         )
 
-        return StringUtils.add_boxes(base_text, uses, reset="short or long rest")
+        return StringUtils.add_boxes(base_text, uses, regain_x_on=(1, "short rest"), regain_all_on="long rest")
 
 
 class WeaponMastery(TextFeature):
@@ -61,7 +61,7 @@ class ActionSurge(TextFeature):
             "You can push yourself beyond your normal limits for a moment. On your turn, you can take one additional action, except the Magic action.\n"
             "Once you use this feature, you can’t do so again until you finish a Short or Long Rest. Starting at level 17, you can use it twice before a rest but only once on a turn."
         )
-        return StringUtils.add_boxes(description, uses, reset="short or long rest")
+        return StringUtils.add_boxes(description, uses, regain_all_on="short or long rest")
 
 
 class TacticalMind(TextFeature):
@@ -106,7 +106,7 @@ class Indomitable(TextFeature):
             "If you fail a saving throw, you can reroll it with a bonus equal to your Fighter level. You must use the new roll, and you can’t use this feature again until you finish a Long Rest.\n"
             "You can use this feature twice before a Long Rest starting at level 13 and three times before a Long Rest starting at level 17."
         )
-        return StringUtils.add_boxes(description, uses, reset="long rest")
+        return StringUtils.add_boxes(description, uses, regain_all_on="long rest")
 
 
 class TacticalMaster(TextFeature):
@@ -260,7 +260,7 @@ class SuperiorityDice(TextFeature):
             f"Maneuvers:"
         )
 
-        return StringUtils.add_boxes(base_text, number_of_superiority_die, reset="short or long rest")
+        return StringUtils.add_boxes(base_text, number_of_superiority_die, regain_all_on="short or long rest")
 
 
 class CombatSuperiority(TextFeature):

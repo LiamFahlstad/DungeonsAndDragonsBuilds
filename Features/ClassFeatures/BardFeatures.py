@@ -33,7 +33,7 @@ class BardicInspiration(TextFeature):
             f"    * Number of Uses. You can confer a Bardic Inspiration die a number of times equal to your Charisma modifier ({max(1, charisma_modifier)}), and you regain all expended uses when you finish a Long Rest.\n"
             "    * At Higher Levels. Your Bardic Inspiration die changes when you reach certain Bard levels, as shown in the Bardic Die column of the Bard Features table. The die becomes a d8 at level 5, a d10 at level 10, and a d12 at level 15.\n"
         )
-        return StringUtils.add_boxes(description, max(1, charisma_modifier), reset="long rest")
+        return StringUtils.add_boxes(description, max(1, charisma_modifier), regain_all_on="long rest")
 
 
 class Expertise1(CharacterFeature):
