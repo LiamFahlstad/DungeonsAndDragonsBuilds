@@ -725,7 +725,8 @@ class HtmlCharacterSheetWriter:
         /* Item and tool proficiency tables */
         .item-table {
             width: 100%;
-            border-collapse: collapse;
+            border-collapse: separate;
+            border-spacing: 0 8px;
             font-size: 0.85rem;
             margin: 0.25rem 0;
         }
@@ -757,6 +758,21 @@ class HtmlCharacterSheetWriter:
             width: auto;
         }
 
+        /* Individual item rows styled as cards */
+        .item-table tr:not(:first-child) td {
+            border: 2px solid #555;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+            padding: 5px 7px;
+        }
+
+        .item-table tr:not(:first-child) td:first-child {
+            border-radius: 4px 0 0 4px;
+        }
+
+        .item-table tr:not(:first-child) td:last-child {
+            border-radius: 0 4px 4px 0;
+        }
+
         /* ── Spell cards ──────────────────────────────────────────────────── */
         .spells {
             max-width: 100%;
@@ -776,10 +792,12 @@ class HtmlCharacterSheetWriter:
 
         /* Gap between consecutive spell cards */
         .spell-gap {
-            height: 0.5rem;
+            height: 0;
             max-width: none;
             margin: 0;
             padding: 0;
+            border-bottom: none;
+            display: none;
         }
 
         /* Each spell is its own bordered card table */
@@ -787,10 +805,11 @@ class HtmlCharacterSheetWriter:
             width: 100%;
             border-collapse: collapse;
             font-size: 0.85rem;
-            border: 1px solid #bbb;
-            border-radius: 3px;
-            margin: 0;
+            border: 2px solid #555;
+            border-radius: 4px;
+            margin: 0 0 8px 0;
             table-layout: auto;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
         }
 
         table.spell-card td,
@@ -798,6 +817,15 @@ class HtmlCharacterSheetWriter:
             border: 1px solid var(--border-color);
             padding: 3px 7px;
             vertical-align: top;
+        }
+
+        /* Add bottom border to spell rows for clearer separation within card */
+        table.spell-card tr {
+            border-bottom: 1px solid #ddd;
+        }
+
+        table.spell-card tr:last-child {
+            border-bottom: none;
         }
 
         /* Spell name — full-width header row */
@@ -902,10 +930,7 @@ class HtmlCharacterSheetWriter:
 
         /* Gap between consecutive weapon cards */
         .weapon-gap {
-            height: 0.6rem;
-            max-width: none;
-            margin: 0;
-            padding: 0;
+            display: none;
         }
 
         /* Each weapon is its own bordered card table */
@@ -913,10 +938,11 @@ class HtmlCharacterSheetWriter:
             width: 100%;
             border-collapse: collapse;
             font-size: 0.85rem;
-            border: 1px solid #bbb;
-            border-radius: 3px;
-            margin: 0;
+            border: 2px solid #555;
+            border-radius: 4px;
+            margin: 0 0 8px 0;
             table-layout: auto;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
         }
 
         table.weapon-card td,
