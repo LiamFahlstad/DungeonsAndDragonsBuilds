@@ -738,8 +738,8 @@ class HtmlCharacterSheetWriter:
         }
 
         .item-title {
-            background: #3a2c1c;
-            color: #f2e8d8;
+            background: #2a5a38;
+            color: #ddf0e4;
             font-size: 0.78rem;
             font-weight: 600;
             text-align: left;
@@ -760,7 +760,7 @@ class HtmlCharacterSheetWriter:
 
         /* Individual item rows styled as cards */
         .item-table tr:not(:first-child) td {
-            border: 2px solid #555;
+            border: 2px solid #5a8a6a;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
             padding: 5px 7px;
         }
@@ -805,7 +805,7 @@ class HtmlCharacterSheetWriter:
             width: 100%;
             border-collapse: collapse;
             font-size: 0.85rem;
-            border: 2px solid #555;
+            border: 2px solid #5a7fa8;
             border-radius: 4px;
             margin: 0 0 8px 0;
             table-layout: auto;
@@ -830,13 +830,14 @@ class HtmlCharacterSheetWriter:
 
         /* Spell name — full-width header row */
         .spell-name {
-            background: #ece8f5;
+            background: #2a4a68;
+            color: #dce8f5;
             font-size: 1rem;
             font-weight: 700;
             text-align: left;
             letter-spacing: 0.02em;
             padding: 4px 7px;
-            border-bottom: 2px solid #b4aace;
+            border-bottom: 2px solid #5a7fa8;
         }
 
         /* Quick-stats row — two cells side by side */
@@ -938,7 +939,7 @@ class HtmlCharacterSheetWriter:
             width: 100%;
             border-collapse: collapse;
             font-size: 0.85rem;
-            border: 2px solid #555;
+            border: 2px solid #a85a5a;
             border-radius: 4px;
             margin: 0 0 8px 0;
             table-layout: auto;
@@ -954,13 +955,14 @@ class HtmlCharacterSheetWriter:
 
         /* Weapon name — full-width header row */
         .weapon-name {
-            background: #e8edf5;
+            background: #6a2a2a;
+            color: #f5dcdc;
             font-size: 1rem;
             font-weight: 700;
             text-align: left;
             letter-spacing: 0.02em;
             padding: 4px 7px;
-            border-bottom: 2px solid #aab4cc;
+            border-bottom: 2px solid #a85a5a;
         }
 
         /* Quick-stats row — two cells side by side */
