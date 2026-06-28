@@ -115,7 +115,7 @@ class HtmlCharacterSheetWriter:
         file.write("</tr>\n<tr>")
         for _, value in rows:
             file.write(f"<td>{value}</td>")
-        file.write("</tr>\n</table>\n<br>\n")
+        file.write("</tr>\n</table>\n<br class='section-gap'>\n")
 
     def _write_combat_stats(
         self,
@@ -158,7 +158,7 @@ class HtmlCharacterSheetWriter:
         file.write("</tr>\n<tr>")
         for _, value in rows:
             file.write(f"<td>{value}</td>")
-        file.write("</tr>\n</table>\n<br>\n")
+        file.write("</tr>\n</table>\n<br class='section-gap'>\n")
 
     def _write_abilities(self, character: CharacterStatBlock, file: TextIO):
         file.write("<h2>Abilities</h2>\n")
@@ -309,7 +309,7 @@ class HtmlCharacterSheetWriter:
         file.write("<div>\n")
         for feature in sorted_features:
             feature.write_to_file(character, file)
-        file.write("</div>\n<br>\n")
+        file.write("</div>\n<br class='section-gap'>\n")
 
     def _write_weapons(
         self,
@@ -351,7 +351,7 @@ class HtmlCharacterSheetWriter:
             file.write("</div>\n")
             file.write("</div>\n")
 
-        file.write("<br>\n")
+        file.write("<br class='section-gap'>\n")
 
     def _write_invocations(
         self, character: CharacterStatBlock, file: TextIO, invocations: list[str]
@@ -387,7 +387,7 @@ class HtmlCharacterSheetWriter:
             file.write("</div>\n")
             file.write("</div>\n")
 
-        file.write("<br>\n")
+        file.write("<br class='section-gap'>\n")
 
     @staticmethod
     def _write_slot_table(slots: dict[int, int], file: TextIO, reset_label: str):
@@ -413,7 +413,7 @@ class HtmlCharacterSheetWriter:
         self._write_slot_table(
             character.pact_magic_slots, file, "Regained on: Short Rest or Long Rest"
         )
-        file.write("<br>\n")
+        file.write("<br class='section-gap'>\n")
 
     def _write_spell_slots(self, character: CharacterStatBlock, file: TextIO):
         if not character.spell_slots:
@@ -423,7 +423,7 @@ class HtmlCharacterSheetWriter:
         self._write_slot_table(
             character.get_spell_slots(), file, "Regained on: Long Rest"
         )
-        file.write("<br>\n")
+        file.write("<br class='section-gap'>\n")
 
     def _write_spells(
         self,
@@ -462,7 +462,7 @@ class HtmlCharacterSheetWriter:
                 spell.write_to_file(file)
 
         file.write("</div>\n")
-        file.write("<br>\n")
+        file.write("<br class='section-gap'>\n")
 
     def _write_items(
         self,
@@ -505,7 +505,7 @@ class HtmlCharacterSheetWriter:
                 file.write("<hr>")
             self._write_item_table(file, title, rows)
 
-        file.write("<br>\n")
+        file.write("<br class='section-gap'>\n")
 
     def _write_tool_proficiencies(
         self,
@@ -525,7 +525,7 @@ class HtmlCharacterSheetWriter:
         ]
         self._write_item_table(file, "Other Tool Proficiencies", proficiency_rows)
 
-        file.write("<br>\n")
+        file.write("<br class='section-gap'>\n")
 
     def _get_css_style(self) -> str:
         return """
@@ -604,8 +604,8 @@ class HtmlCharacterSheetWriter:
                 display: none;
             }
 
-            /* Collapse inter-section <br> gaps */
-            br {
+            /* Collapse inter-section <br> gaps (but not content line breaks) */
+            br.section-gap {
                 display: none;
             }
 

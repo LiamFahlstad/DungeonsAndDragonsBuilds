@@ -180,6 +180,8 @@ def bolden_text_html(text: str) -> str:
         stripped = line.strip()
 
         if not stripped:
+            # Preserve empty lines to maintain paragraph breaks
+            new_lines.append(line)
             continue
 
         if stripped == "<br>":
