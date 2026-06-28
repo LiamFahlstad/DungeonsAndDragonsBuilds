@@ -47,15 +47,86 @@ class TextFeature(Feature):
         pass
 
     @staticmethod
+    def _bolden_line(text: str) -> str:
+        """Apply bold markup to a single plain-text string (no leading whitespace)."""
+        from Utils.StringUtils import _bold_prefix
+
+        bolded = _bold_prefix(text, ".", 5)
+        if bolded is not None:
+            return bolded
+        bolded = _bold_prefix(text, ":", 10)
+        if bolded is not None:
+            return bolded
+        return text
+
+    @staticmethod
     def _description_to_html(description: str) -> str:
-        html = description.replace("\n", "<br>\n").replace(
-            "    ", "&nbsp;&nbsp;&nbsp;&nbsp;"
-        )
-        if not html.endswith("\n"):
-            html += "\n"
-        html = StringUtils.bolden_text_html(html)
-        html = StringUtils.boxes_to_html(html)
-        return html
+        # Apply box substitution on the raw description before HTML structuring.
+        # bolden_text_html is applied per-line below so bullet prefixes are preserved.
+        processed = StringUtils.boxes_to_html(description)
+
+        # Bullet prefixes in order from most-indented to least, so nesting is detected
+        # correctly.  Each entry: (prefix_string, nesting_level).
+        BULLET_PREFIXES = [
+            ("            > ", 3),
+            ("        - ", 2),
+            ("    * ", 1),
+        ]
+
+        lines = processed.split("\n")
+        html_parts: list[str] = []
+        # Stack tracks open <ul> nesting depths (list of ints).
+        open_levels: list[int] = []
+
+        def close_levels_down_to(target_level: int):
+            """Close any open <ul> levels deeper than target_level."""
+            while open_levels and open_levels[-1] > target_level:
+                html_parts.append("</ul>")
+                open_levels.pop()
+
+        def close_all_levels():
+            while open_levels:
+                html_parts.append("</ul>")
+                open_levels.pop()
+
+        for line in lines:
+            # Detect bullet level by checking prefixes (most-indented first).
+            bullet_level = 0
+            bullet_text = None
+            for prefix, level in BULLET_PREFIXES:
+                if line.startswith(prefix):
+                    bullet_level = level
+                    bullet_text = line[len(prefix) :]
+                    break
+
+            if bullet_level > 0:
+                # Close any levels strictly deeper than this one (going back up).
+                close_levels_down_to(bullet_level)
+                # Open a new <ul> if we are not already at this level.
+                if not open_levels or open_levels[-1] < bullet_level:
+                    html_parts.append("<ul>")
+                    open_levels.append(bullet_level)
+                # Apply bold markup to the bullet text content only.
+                bolded_text = TextFeature._bolden_line(bullet_text)
+                html_parts.append(f"<li>{bolded_text}</li>")
+            else:
+                # Non-bullet line: close all open list levels first.
+                close_all_levels()
+                stripped = line.strip()
+                if stripped:
+                    # Preserve structural HTML emitted by boxes_to_html verbatim.
+                    if stripped.startswith("<"):
+                        html_parts.append(stripped)
+                    else:
+                        bolded = TextFeature._bolden_line(stripped)
+                        html_parts.append(f"<p>{bolded}</p>")
+
+        close_all_levels()
+
+        result = "\n".join(html_parts)
+        if result and not result.endswith("\n"):
+            result += "\n"
+        return result
 
     def write_to_file(self, character_stat_block: CharacterStatBlock, file: TextIO):
         description = self.get_description(character_stat_block)
