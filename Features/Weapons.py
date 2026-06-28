@@ -7,6 +7,7 @@ import DamageCalculator
 from Definitions import Ability, Die
 from Features.BaseFeatures import TextFeature
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
+from Utils import StringUtils
 
 _WEAPON_PROPERTY_DESCRIPTIONS: dict = {}  # populated after class definition
 
@@ -1134,7 +1135,8 @@ def _write_single_weapon(
 
     # ── Per-property descriptions ────────────────────────────────────────────
     for prop in stats.properties:
-        prop_desc_html = prop.description.replace("\n", "<br>")
+        prop_desc_processed = StringUtils.boxes_to_html(prop.description)
+        prop_desc_html = prop_desc_processed.replace("\n", "<br>")
         file.write(
             f"<tr class='weapon-prop-row'>"
             f"<td class='wprop-label'>{prop.value}</td>"
@@ -1144,7 +1146,8 @@ def _write_single_weapon(
 
     # ── Mastery description (only if the player has mastery) ────────────────
     if stats.mastery and weapon.player_has_mastery:
-        mastery_desc_html = stats.mastery.description.replace("\n", "<br>")
+        mastery_desc_processed = StringUtils.boxes_to_html(stats.mastery.description)
+        mastery_desc_html = mastery_desc_processed.replace("\n", "<br>")
         file.write(
             f"<tr class='weapon-mastery-row'>"
             f"<td class='wmastery-label'>Mastery — {stats.mastery.value}</td>"
@@ -1155,7 +1158,8 @@ def _write_single_weapon(
     # ── Additional description ───────────────────────────────────────────────
     if stats.additional_description:
         # Replace newlines with <br> for HTML display
-        desc_html = stats.additional_description.replace("\n", "<br>")
+        desc_processed = StringUtils.boxes_to_html(stats.additional_description)
+        desc_html = desc_processed.replace("\n", "<br>")
         file.write(
             f"<tr class='weapon-addl-row'>"
             f"<td class='wlabel-col'>Notes</td>"

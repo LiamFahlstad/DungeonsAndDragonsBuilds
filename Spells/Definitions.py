@@ -1992,11 +1992,14 @@ class Spell(ABC):
         higher_level_html = ""
         if higher_level_marker in description:
             main_desc, higher_rest = description.split(higher_level_marker, 1)
-            main_desc = StringUtils.bolden_text_html(main_desc.strip()).replace("\n", "<br>")
-            higher_rest = StringUtils.bolden_text_html(higher_rest.strip()).replace("\n", "<br>")
+            main_desc = StringUtils.boxes_to_html(main_desc.strip())
+            main_desc = StringUtils.bolden_text_html(main_desc).replace("\n", "<br>")
+            higher_rest = StringUtils.boxes_to_html(higher_rest.strip())
+            higher_rest = StringUtils.bolden_text_html(higher_rest).replace("\n", "<br>")
             higher_level_html = f"<strong>{higher_level_marker}</strong> {higher_rest}"
         else:
-            main_desc = StringUtils.bolden_text_html(description).replace("\n", "<br>")
+            main_desc = StringUtils.boxes_to_html(description)
+            main_desc = StringUtils.bolden_text_html(main_desc).replace("\n", "<br>")
 
         # ── Level label ──────────────────────────────────────────────────────
         level_label = "Cantrip" if self.level == 0 else f"Level {self.level}"

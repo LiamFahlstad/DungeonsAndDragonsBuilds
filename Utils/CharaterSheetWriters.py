@@ -12,6 +12,7 @@ from Items import Items
 from Spells.SpellFactory import SpellFactory
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from ToolProficiencies.ToolProficiencies import ToolProficiency
+from Utils import StringUtils
 
 
 class HtmlCharacterSheetWriter:
@@ -308,12 +309,13 @@ class HtmlCharacterSheetWriter:
                 name, body = desc.split(": ", 1)
             else:
                 name, body = "Fighting Style", desc
+            processed_body = StringUtils.boxes_to_html(body)
             file.write("<div class='feature-card'>\n")
             file.write("<div class='feature-header'>\n")
             file.write(f"<span class='feature-name'>{name}</span>\n")
             file.write("</div>\n")
             file.write("<div class='feature-body'>\n")
-            file.write(f"<p>{body}</p>\n")
+            file.write(f"<p>{processed_body}</p>\n")
             file.write("</div>\n")
             file.write("</div>\n")
 
@@ -344,7 +346,8 @@ class HtmlCharacterSheetWriter:
             file.write("<div class='feature-body'>\n")
             if invocation.prerequisite:
                 file.write(f"<p><strong>Prerequisite:</strong> {invocation.prerequisite}</p>\n")
-            for para in invocation.description.split("\n"):
+            processed_desc = StringUtils.boxes_to_html(invocation.description)
+            for para in processed_desc.split("\n"):
                 if para.strip():
                     file.write(f"<p>{para.strip()}</p>\n")
             if invocation.source:
