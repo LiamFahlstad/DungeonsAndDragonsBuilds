@@ -26,8 +26,8 @@ class HtmlCharacterSheetWriter:
         if "Level " in feat_origin:
             parts = feat_origin.split("Level ")
             try:
-                level_num = int(parts[1])
-            except ValueError:
+                level_num = int(parts[1].split()[0])
+            except (ValueError, IndexError):
                 level_num = 0
             return (1, level_num, feat_name)
         return (0, 0, feat_name)
@@ -333,31 +333,41 @@ class HtmlCharacterSheetWriter:
 
         file.write("<br>\n")
 
+    @staticmethod
+    def _write_slot_table(slots: dict[int, int], file: TextIO, reset_label: str):
+        file.write("<table class='stat-table'>\n")
+        file.write("<tr>")
+        for level in slots:
+            file.write(f"<th>Level {level}</th>")
+        file.write("</tr>\n<tr>")
+        for count in slots.values():
+            boxes_html = (
+                '<div class="slot-box-group">'
+                + '<span class="slot-box"></span>' * count
+                + "</div>"
+            )
+            file.write(f"<td>{boxes_html}</td>")
+        file.write("</tr>\n</table>\n")
+        file.write(f"<span class='slot-reset-label'>{reset_label}</span>\n")
+
+    def _write_pact_magic_slots(self, character: CharacterStatBlock, file: TextIO):
+        if not character.pact_magic_slots:
+            return
+        file.write("<h2>Pact Magic Slots</h2>\n")
+        self._write_slot_table(
+            character.pact_magic_slots, file, "Regained on: Short Rest or Long Rest"
+        )
+        file.write("<br>\n")
+
     def _write_spell_slots(self, character: CharacterStatBlock, file: TextIO):
         if not character.spell_slots:
             return
 
         file.write("<h2>Spell Slots</h2>\n")
-
-        character_spell_slots = character.get_spell_slots()
-
-        file.write("<table class='stat-table'>\n")
-        file.write("<tr>")
-
-        for level in character_spell_slots.keys():
-            file.write(f"<th>Level {level}</th>")
-
-        file.write("</tr>\n<tr>")
-
-        for slots in character_spell_slots.values():
-            boxes_html = (
-                '<div class="slot-box-group">'
-                + '<span class="slot-box"></span>' * slots
-                + "</div>"
-            )
-            file.write(f"<td>{boxes_html}</td>")
-
-        file.write("</tr>\n</table>\n<br>\n")
+        self._write_slot_table(
+            character.get_spell_slots(), file, "Regained on: Long Rest"
+        )
+        file.write("<br>\n")
 
     def _write_spells(
         self,
@@ -985,6 +995,7 @@ class HtmlCharacterSheetWriter:
             self._write_weapons(character, file, weapons, weapon_masteries)
             self._write_fighting_styles(character, file, fighting_styles)
             self._write_invocations(character, file, invocations)
+            self._write_pact_magic_slots(character, file)
             self._write_spell_slots(character, file)
             self._write_spells(character, file, spells)
             self._write_items(character, file, armors, weapons, items)

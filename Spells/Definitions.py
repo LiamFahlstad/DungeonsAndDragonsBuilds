@@ -1985,9 +1985,7 @@ class Spell(ABC):
         is_ritual = "ritual" in self.casting_time.lower()
 
         # ── Process description ──────────────────────────────────────────────
-        lines = [line.strip() + "." for line in self.description.strip().split(".")]
-        lines = lines if len(lines) <= 1 else lines[:-1]
-        description = "\n".join(lines)
+        description = self.description.strip()
 
         # Split off the higher-level note, if present
         higher_level_marker = "Using a Higher-Level Spell Slot."

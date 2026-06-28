@@ -94,12 +94,6 @@ class Protection(FightingStyle):
 class ThrownWeaponFighting(FightStyleWeaponFeature):
     def modify(self, weapons: list[AbstractWeapon]):
         for weapon in weapons:
-            if weapon.stats().weapon_type not in (
-                WeaponType.SIMPLE_RANGED,
-                WeaponType.MARTIAL_RANGED,
-            ):
-                continue
-
             if WeaponProperty.THROWN in weapon.stats().properties:
                 weapon.attack_roll_bonuses.append(
                     (2, "2 (Thrown Weapon Fighting Style)")

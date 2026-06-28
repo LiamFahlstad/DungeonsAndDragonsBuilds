@@ -119,6 +119,8 @@ class CharacterSheetData:
         spell_casting_ability = self._resolve_spell_casting_ability(
             spell_casting_ability
         )
+        if cantrip in [s[0] for s in self.spells]:
+            raise ValueError(f"Cantrip {cantrip} already added.")
         self.spells.append((cantrip, spell_casting_ability, additional_ruling))
 
     def replace_spells(self, replace_spells: dict[str, str]):
@@ -136,7 +138,7 @@ class CharacterSheetData:
         success = False
         for spell_name, spell_ability, additional_ruling in self.spells:
             if spell_name == old_spell:
-                new_spells.append((new_spell, new_spell_ability or spell_ability, new_additional_ruling))
+                new_spells.append((new_spell, new_spell_ability or spell_ability, new_additional_ruling if new_additional_ruling is not None else additional_ruling))
                 success = True
             else:
                 new_spells.append((spell_name, spell_ability, additional_ruling))
@@ -249,7 +251,11 @@ class CharacterSheetData:
     def merge_with(self, other: "CharacterSheetData"):
         """Merge this CharacterSheetData with another, with the other taking precedence."""
 
+        self._character_cached = None
+
         for field_name in vars(self):
+            if field_name.startswith("_"):
+                continue
             other_value = getattr(other, field_name)
             my_value = getattr(self, field_name)
 

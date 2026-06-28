@@ -379,7 +379,7 @@ class StarterClassBuilder(ClassBuilder):
         data.add_feature(self.background_skill_proficiencies)
         data.add_origin_feat(self.origin_feat)
         if self.caster_type is not None:
-            data.add_feature(SpellSlots.SpellSlots(self.caster_type))
+            data.add_feature(SpellSlots.SpellSlots(self.caster_type, self.base_class))
 
         for armor_type in self.armor_proficiencies or []:
             data.add_armor_proficiency(armor_type)
@@ -437,4 +437,6 @@ class MulticlassBuilder(ClassBuilder):
             level_per_class={self.base_class: self.base_class_level},
             spell_casting_ability=self.spell_casting_ability,
         )
+        if self.caster_type is not None:
+            data.add_feature(SpellSlots.SpellSlots(self.caster_type, self.base_class))
         return data

@@ -344,7 +344,7 @@ class WarlockNonGenericStarterClassArgs(ClassBuilder.NonGenericStarterClassArgs)
             skills=skills,
             armor_proficiencies=[Definitions.ArmorType.LIGHT],
             spell_casting_ability=Ability.CHARISMA,
-            caster_type=SpellSlots.CasterType.FULL_CASTER,
+            caster_type=SpellSlots.CasterType.WARLOCK_CASTER,
         )
 
 

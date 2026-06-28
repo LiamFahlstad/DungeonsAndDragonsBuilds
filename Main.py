@@ -20,6 +20,10 @@ from Builds import (
     OptimizedWarlockGishArchfey,
     OptimizedWizardBladesinger,
     OptimizedWizardDiviner,
+    SpellSlotTestWizard5,
+    SpellSlotTestPaladin5,
+    SpellSlotTestPaladin4Wizard3,
+    SpellSlotTestWizard3Warlock3,
 )
 from Builds.CharacterBuilder import CharacterBuilder
 
@@ -48,6 +52,10 @@ class BuildSelector:
             "OptimizedWarlockGishArchfey": OptimizedWarlockGishArchfey.OptimizedWarlockArchfeyCharacterBuilder(),
             "OptimizedWizardBladesinger": OptimizedWizardBladesinger.OptimizedWizardBladesingerCharacterBuilder(),
             "OptimizedWizardDiviner": OptimizedWizardDiviner.OptimizedWizardDivinerCharacterBuilder(),
+            "SpellSlotTestWizard5": SpellSlotTestWizard5.SpellSlotTestWizard5CharacterBuilder(),
+            "SpellSlotTestPaladin5": SpellSlotTestPaladin5.SpellSlotTestPaladin5CharacterBuilder(),
+            "SpellSlotTestPaladin4Wizard3": SpellSlotTestPaladin4Wizard3.SpellSlotTestPaladin4Wizard3CharacterBuilder(),
+            "SpellSlotTestWizard3Warlock3": SpellSlotTestWizard3Warlock3.SpellSlotTestWizard3Warlock3CharacterBuilder(),
         }
 
     @staticmethod

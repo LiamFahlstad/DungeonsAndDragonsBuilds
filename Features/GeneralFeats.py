@@ -540,6 +540,8 @@ class SkillExpert(_AbilityScoreFeat):
         super().modify(character_stat_block)
         if not character_stat_block.skills.is_proficient(self.skill):
             character_stat_block.skills.add_skill_proficiency(self.skill)
+        if not character_stat_block.skills.has_expertise(self.skill):
+            character_stat_block.skills.add_skill_expertise(self.skill)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         return (

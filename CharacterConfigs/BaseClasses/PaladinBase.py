@@ -320,7 +320,7 @@ class PaladinNonGenericStarterClassArgs(ClassBuilder.NonGenericStarterClassArgs)
         )
 
 
-class PaladinMulticlassBuilder(ClassBuilder.ClassBuilder):
+class PaladinMulticlassBuilder(ClassBuilder.MulticlassBuilder):
 
     def __init__(
         self,
@@ -329,11 +329,11 @@ class PaladinMulticlassBuilder(ClassBuilder.ClassBuilder):
         subclass: str,
         replace_spells: Optional[dict[str, str]] = None,
     ):
-        self.subclass = subclass
         super().__init__(
             base_class=CharacterClass.PALADIN,
             base_class_level_features=paladin_level_features,
             base_class_level=paladin_level,
+            subclass=subclass,
             replace_spells=replace_spells,
             spell_casting_ability=Ability.CHARISMA,
             caster_type=SpellSlots.CasterType.HALF_CASTER,

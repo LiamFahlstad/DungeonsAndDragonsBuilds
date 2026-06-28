@@ -1,5 +1,6 @@
 from enum import Enum
 
+import Definitions
 from Features.BaseFeatures import CharacterFeature
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
@@ -70,19 +71,56 @@ def get_spell_slots_for_level(level: int, caster_type: CasterType) -> list[int]:
     return _FULL_CASTER_SLOTS[level - 1]
 
 
+def _compute_effective_caster_level(registry: dict, level_per_class: dict) -> int:
+    non_warlock = {
+        cls: ct for cls, ct in registry.items()
+        if ct != CasterType.WARLOCK_CASTER
+    }
+    if not non_warlock:
+        return 0
+
+    # Single half-caster: use ceiling division to match the official half-caster table.
+    # Multiple casters: PHB multiclass rule says "half your levels (rounded down)".
+    single_half_caster = (
+        len(non_warlock) == 1
+        and next(iter(non_warlock.values())) == CasterType.HALF_CASTER
+    )
+
+    total = 0
+    for cls, ct in non_warlock.items():
+        level = level_per_class.get(cls, 0)
+        if ct == CasterType.FULL_CASTER:
+            total += level
+        elif ct == CasterType.HALF_CASTER:
+            total += (level + 1) // 2 if single_half_caster else level // 2
+    return total
+
+
 class SpellSlots(CharacterFeature):
-    def __init__(self, caster_type: CasterType) -> None:
+    def __init__(self, caster_type: CasterType, character_class: Definitions.CharacterClass) -> None:
         self.caster_type = caster_type
+        self.character_class = character_class
         super().__init__()
 
     def modify(self, character_stat_block: CharacterStatBlock):
-        spells_slots = get_spell_slots_for_level(
-            character_stat_block.character_level, self.caster_type
-        )
+        character_stat_block._caster_registry[self.character_class] = self.caster_type
 
-        spells_slots_dict = {
-            i + 1: slots
-            for i, slots in enumerate(spells_slots)
-            if slots > 0
+        if self.caster_type == CasterType.WARLOCK_CASTER:
+            warlock_level = character_stat_block.get_class_level(self.character_class)
+            warlock_slots = _WARLOCK_SLOTS[warlock_level - 1]
+            character_stat_block.pact_magic_slots = {
+                i + 1: count for i, count in enumerate(warlock_slots) if count > 0
+            }
+            return
+
+        effective_level = _compute_effective_caster_level(
+            character_stat_block._caster_registry,
+            character_stat_block.level_per_class,
+        )
+        if effective_level < 1:
+            return
+        character_stat_block.spell_slots = {
+            i + 1: count
+            for i, count in enumerate(_FULL_CASTER_SLOTS[effective_level - 1])
+            if count > 0
         }
-        character_stat_block.spell_slots = spells_slots_dict

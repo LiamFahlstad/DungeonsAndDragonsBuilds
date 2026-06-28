@@ -32,6 +32,8 @@ class CharacterStatBlock:
         self.saving_throws = saving_throws
         self.spell_casting_ability = spell_casting_ability
         self.spell_slots = spell_slots
+        self.pact_magic_slots: dict[int, int] = {}
+        self._caster_registry: dict = {}
         self.initiative_proficiency = False
         self.initiative_roll_condition = Definitions.DiceRollCondition.NEUTRAL
 
