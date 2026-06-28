@@ -1,8 +1,9 @@
 import pathlib
 from typing import Optional, TextIO
 
+import DamageCalculator
 import Definitions
-from Definitions import Ability
+from Definitions import Ability, Die, DiceRollCondition
 from Features import Armor
 from Features.BaseFeatures import CharacterFeature, Feature
 from Features.FightingStyles import FightingStyle
@@ -206,6 +207,37 @@ class HtmlCharacterSheetWriter:
 
         file.write("</table>\n<br>\n")
 
+    def _write_save_dc_probabilities(self, character: CharacterStatBlock, file: TextIO, spellcasting_abilities: list[Ability]):
+        save_bonuses = range(-3, 13)
+
+        dc_to_abilities: dict[int, list[str]] = {}
+        for ability in spellcasting_abilities:
+            dc = character.calculate_difficulty_class_for_ability(ability)
+            dc_to_abilities.setdefault(dc, []).append(ability.short_name)
+
+        file.write("<table class='dc-fail-table'>\n")
+        file.write("<tr><th class='dc-fail-dc-col'>DC (Fail %)</th>")
+        for bonus in save_bonuses:
+            sign = "+" if bonus >= 0 else ""
+            file.write(f"<th class='whit-ac'>{sign}{bonus}</th>")
+        file.write("</tr>\n")
+
+        for dc in sorted(dc_to_abilities.keys(), reverse=True):
+            abilities_label = "/".join(dc_to_abilities[dc])
+            file.write(f"<tr><th class='dc-fail-dc-col'>DC {dc} ({abilities_label})</th>")
+            for bonus in save_bonuses:
+                prob_success = DamageCalculator.probability_of_success(
+                    difficulty_class=dc,
+                    die=Die.D20,
+                    condition=DiceRollCondition.NEUTRAL,
+                    bonus=bonus,
+                )
+                pct = round((1 - prob_success) * 100)
+                file.write(f"<td class='whit-pct' data-pct='{pct}'>{pct}%</td>")
+            file.write("</tr>\n")
+
+        file.write("</table>\n")
+
     def _write_skills(
         self,
         character: CharacterStatBlock,
@@ -403,6 +435,14 @@ class HtmlCharacterSheetWriter:
             return
 
         file.write("<h2>Spells</h2>\n")
+        casting_abilities = sorted(
+            {ability for _, ability, _ in spells},
+            key=lambda a: a.value,
+        )
+        label = "Spellcasting Abilities" if len(casting_abilities) > 1 else "Spellcasting Ability"
+        abilities_str = ", ".join(a.value for a in casting_abilities)
+        file.write(f"<p><strong>{label}:</strong> {abilities_str}</p>\n")
+        self._write_save_dc_probabilities(character, file, casting_abilities)
         file.write("<div class='spells'>\n")
 
         created_spells = [
@@ -1127,7 +1167,7 @@ class HtmlCharacterSheetWriter:
             width: 100%;
         }
 
-        table.whit-inner th.whit-ac {
+        th.whit-ac {
             background: #3a2c1c;
             color: #f2e8d8;
             font-weight: 600;
@@ -1140,7 +1180,7 @@ class HtmlCharacterSheetWriter:
             letter-spacing: 0.03em;
         }
 
-        table.whit-inner td.whit-pct {
+        td.whit-pct {
             text-align: center;
             padding: 2px 5px;
             border: 1px solid #ddd;
@@ -1149,41 +1189,60 @@ class HtmlCharacterSheetWriter:
         }
 
         /* Colour-code the probability cells: green → yellow → red */
-        table.whit-inner td.whit-pct[data-pct="100"],
-        table.whit-inner td.whit-pct[data-pct="95"],
-        table.whit-inner td.whit-pct[data-pct="90"],
-        table.whit-inner td.whit-pct[data-pct="85"],
-        table.whit-inner td.whit-pct[data-pct="80"] {
+        td.whit-pct[data-pct="100"],
+        td.whit-pct[data-pct="95"],
+        td.whit-pct[data-pct="90"],
+        td.whit-pct[data-pct="85"],
+        td.whit-pct[data-pct="80"] {
             background: #d4edda;
             color: #155724;
         }
 
-        table.whit-inner td.whit-pct[data-pct="75"],
-        table.whit-inner td.whit-pct[data-pct="70"],
-        table.whit-inner td.whit-pct[data-pct="65"],
-        table.whit-inner td.whit-pct[data-pct="60"] {
+        td.whit-pct[data-pct="75"],
+        td.whit-pct[data-pct="70"],
+        td.whit-pct[data-pct="65"],
+        td.whit-pct[data-pct="60"] {
             background: #fff3cd;
             color: #856404;
         }
 
-        table.whit-inner td.whit-pct[data-pct="55"],
-        table.whit-inner td.whit-pct[data-pct="50"],
-        table.whit-inner td.whit-pct[data-pct="45"],
-        table.whit-inner td.whit-pct[data-pct="40"] {
+        td.whit-pct[data-pct="55"],
+        td.whit-pct[data-pct="50"],
+        td.whit-pct[data-pct="45"],
+        td.whit-pct[data-pct="40"] {
             background: #fde8c8;
             color: #6b3a00;
         }
 
-        table.whit-inner td.whit-pct[data-pct="35"],
-        table.whit-inner td.whit-pct[data-pct="30"],
-        table.whit-inner td.whit-pct[data-pct="25"],
-        table.whit-inner td.whit-pct[data-pct="20"],
-        table.whit-inner td.whit-pct[data-pct="15"],
-        table.whit-inner td.whit-pct[data-pct="10"],
-        table.whit-inner td.whit-pct[data-pct="5"],
-        table.whit-inner td.whit-pct[data-pct="0"] {
+        td.whit-pct[data-pct="35"],
+        td.whit-pct[data-pct="30"],
+        td.whit-pct[data-pct="25"],
+        td.whit-pct[data-pct="20"],
+        td.whit-pct[data-pct="15"],
+        td.whit-pct[data-pct="10"],
+        td.whit-pct[data-pct="5"],
+        td.whit-pct[data-pct="0"] {
             background: #f8d7da;
             color: #721c24;
+        }
+
+        /* ── Spell save DC fail-probability table ────────────────────────── */
+        table.dc-fail-table {
+            border-collapse: collapse;
+            font-size: 0.75rem;
+            margin: 0 0 0.75rem 0;
+        }
+
+        table.dc-fail-table th.dc-fail-dc-col {
+            background: #3a2c1c;
+            color: #f2e8d8;
+            font-weight: 600;
+            font-size: 0.72rem;
+            text-align: left;
+            padding: 2px 8px;
+            border: 1px solid #5a4030;
+            white-space: nowrap;
+            letter-spacing: 0.03em;
         }
         </style>
         """
