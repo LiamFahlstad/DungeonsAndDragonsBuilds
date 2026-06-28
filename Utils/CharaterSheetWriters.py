@@ -303,7 +303,19 @@ class HtmlCharacterSheetWriter:
         file.write("<h2>Fighting Styles</h2>\n")
 
         for style in fighting_styles:
-            style.write_to_file(file)
+            desc = style.description().strip()
+            if ": " in desc:
+                name, body = desc.split(": ", 1)
+            else:
+                name, body = "Fighting Style", desc
+            file.write("<div class='feature-card'>\n")
+            file.write("<div class='feature-header'>\n")
+            file.write(f"<span class='feature-name'>{name}</span>\n")
+            file.write("</div>\n")
+            file.write("<div class='feature-body'>\n")
+            file.write(f"<p>{body}</p>\n")
+            file.write("</div>\n")
+            file.write("</div>\n")
 
         file.write("<br>\n")
 
@@ -322,12 +334,23 @@ class HtmlCharacterSheetWriter:
             created_invocations, key=lambda s: (s.level, s.name)
         )
 
-        for i, invocation in enumerate(sorted_invocations):
-            file.write("<pre>\n")
-            invocation.write_to_file(file)
-            file.write("</pre>\n")
-            if i < len(sorted_invocations) - 1:
-                file.write("<hr>\n")
+        for invocation in sorted_invocations:
+            level_label = f"Level {invocation.level}" if invocation.level else "No level requirement"
+            file.write("<div class='feature-card'>\n")
+            file.write("<div class='feature-header'>\n")
+            file.write(f"<span class='feature-name'>{invocation.name}</span>\n")
+            file.write(f"<span class='feature-origin'>{level_label}</span>\n")
+            file.write("</div>\n")
+            file.write("<div class='feature-body'>\n")
+            if invocation.prerequisite:
+                file.write(f"<p><strong>Prerequisite:</strong> {invocation.prerequisite}</p>\n")
+            for para in invocation.description.split("\n"):
+                if para.strip():
+                    file.write(f"<p>{para.strip()}</p>\n")
+            if invocation.source:
+                file.write(f"<p class='inv-source'>{invocation.source}</p>\n")
+            file.write("</div>\n")
+            file.write("</div>\n")
 
         file.write("<br>\n")
 
@@ -473,7 +496,7 @@ class HtmlCharacterSheetWriter:
         }
 
         html {
-            font-size: 14px; /* ↓ smaller base size */
+            font-size: 14px;
         }
 
         body {
@@ -494,16 +517,22 @@ class HtmlCharacterSheetWriter:
             margin: 0.5em 0;
         }
 
-        /* Pre blocks - lighter + tighter */
-        pre {
-            white-space: pre-wrap;
-            word-wrap: break-word;
-            font-family: inherit;
-            background: #fafafa;
-            padding: 0.5rem;
-            border: 1px solid var(--border-color);
-            border-radius: 3px;
-            font-size: 0.9rem;
+        h1 {
+            color: #3a2c1c;
+            border-bottom: 3px solid #9a7040;
+            padding-bottom: 0.2em;
+            margin: 0 0 1rem 0;
+            font-size: 1.6rem;
+            letter-spacing: 0.02em;
+        }
+
+        h2 {
+            color: #3a2c1c;
+            border-bottom: 2px solid #9a7040;
+            padding-bottom: 0.12em;
+            margin: 1.1rem 0 0.4rem 0;
+            font-size: 1.2rem;
+            letter-spacing: 0.02em;
         }
 
         ul, ol {
@@ -537,7 +566,11 @@ class HtmlCharacterSheetWriter:
             }
 
             h2 {
-                margin: 0.8em 0 0.15em;
+                margin: 0.7em 0 0.2em;
+            }
+
+            h1 {
+                margin: 0 0 0.6rem 0;
             }
 
             table.stat-table {
@@ -655,10 +688,13 @@ class HtmlCharacterSheetWriter:
         }
 
         .item-title {
-            font-size: 1rem;
-            text-align: left;
-            background: #f5f5f5;
+            background: #3a2c1c;
+            color: #f2e8d8;
+            font-size: 0.78rem;
             font-weight: 600;
+            text-align: left;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
         }
 
         .item-label {
@@ -1060,6 +1096,13 @@ class HtmlCharacterSheetWriter:
             max-width: none;
             margin: 0;
             padding: 0;
+        }
+
+        .inv-source {
+            font-size: 0.75em;
+            color: #999;
+            font-style: italic;
+            margin-top: 0.35em;
         }
         </style>
         """
