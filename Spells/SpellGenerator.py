@@ -3,7 +3,7 @@ import re
 from pathlib import Path
 
 INPUT_JSON = "Spells/spells.json"
-OUTPUT_PY = "generated_spells.py"
+OUTPUT_PY = "Spells/GeneratedSpells.py"
 
 
 def spell_name_to_class(name: str) -> str:
@@ -20,25 +20,30 @@ def spell_name_to_class(name: str) -> str:
     return "".join(word.capitalize() for word in name.split())
 
 
-def format_multiline_string(text: str, width: int = 88) -> str:
+def format_multiline_string(text: str) -> str:
     """
-    Format long text into:
+    Format description text (paragraphs separated by \\n) into a Python string literal:
         (
-            "sentence "
-            "sentence "
+            "First paragraph.\\n"
+            "Second paragraph."
         )
+    or just "Single paragraph." when there is only one paragraph.
     """
-    lines = [line.strip() + "." for line in text.strip().split(".")]
-    lines = lines if len(lines) <= 1 else lines[:-1]
+    lines = [line.strip() for line in text.strip().split("\n") if line.strip()]
+
+    if not lines:
+        return '""'
 
     if len(lines) == 1:
         return f'"{lines[0]}"'
 
     formatted = "(\n"
-    for line in lines:
-        formatted += f'                "{line}"\n'
-    formatted += "            )"
-
+    for i, line in enumerate(lines):
+        escaped = line.replace("\\", "\\\\").replace('"', '\\"')
+        is_last = i == len(lines) - 1
+        suffix = "" if is_last else "\\n"
+        formatted += f'            "{escaped}{suffix}"\n'
+    formatted += "        )"
     return formatted
 
 

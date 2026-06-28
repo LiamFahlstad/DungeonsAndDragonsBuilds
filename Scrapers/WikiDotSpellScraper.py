@@ -1,11 +1,39 @@
 import json
 import re
+import time
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from typing import TextIO
 
 import requests
 from bs4 import BeautifulSoup
 from tqdm import tqdm
+
+BASE_URL = "https://dnd2024.wikidot.com/"
+
+
+def fetch_all_spell_names() -> list[str]:
+    """Fetch all spell names from http://dnd2024.wikidot.com/spell:all."""
+    url = f"{BASE_URL}spell:all"
+    response = requests.get(url)
+    response.raise_for_status()
+    soup = BeautifulSoup(response.text, "html.parser")
+
+    content = soup.find("div", id="page-content")
+    if not content:
+        raise ValueError("Could not find page content on spell:all page.")
+
+    spell_names = []
+    for link in content.find_all("a"):
+        href = link.get("href", "")
+        if not href.startswith("/spell:") or href in ("/spell:all",):
+            continue
+        name = link.get_text(strip=True)
+        # Skip category index links like "Abjuration Spells", "Conjuration Spells", …
+        if not name or name.endswith(" Spells"):
+            continue
+        spell_names.append(name)
+
+    return sorted(set(spell_names))
 
 
 class SpellNotFoundError(Exception):
@@ -15,8 +43,6 @@ class SpellNotFoundError(Exception):
 
 
 class SpellParser:
-    BASE_URL = "https://dnd2024.wikidot.com/"
-
     def __init__(self, spell_name: str):
         self.original_name = spell_name
         self.soup = None
@@ -61,15 +87,21 @@ class SpellParser:
     def fetch(self):
         """Download the spell page HTML and prepare the soup object."""
         slugygifies = [self._slugify1, self._slugify2]
+        last_status = None
         for slugify in slugygifies:
             spell_name_slug = slugify(self.original_name)
-            self.url = f"{self.BASE_URL}spell:{spell_name_slug}"
+            self.url = f"{BASE_URL}spell:{spell_name_slug}"
             response = requests.get(self.url)
+            last_status = response.status_code
             if response.status_code == 200:
                 self.soup = BeautifulSoup(response.text, "html.parser")
                 break
 
-            # response.raise_for_status()
+        if self.soup is None:
+            raise SpellNotFoundError(
+                f"Spell '{self.original_name}' not found (HTTP {last_status})."
+            )
+
         self.col1 = self.soup.find("div", id="page-content")
         if not self.col1:
             raise ValueError(
@@ -153,23 +185,42 @@ class SpellParser:
         return label.next_sibling.strip()
 
     def get_description(self):
-        paragraphs = self.col1.find_all("p")
+        elements = self.col1.find_all(["p", "ul"])
 
-        # description is the last paragraph
-        if not paragraphs:
+        if not elements:
             return None
 
-        texts = []
-        for p in reversed(paragraphs):
-            text = p.get_text(" ", strip=True)
-            if text.startswith("Casting Time:") or text.startswith("Level "):
-                break
-            texts.append(text)
-        text = " ".join(reversed(texts))
-        if "Faerun" in text:
-            pass
+        # Work backwards, collecting description elements until we hit metadata.
+        desc_elements = []
+        for elem in reversed(elements):
+            if elem.name == "p":
+                text = elem.get_text(" ", strip=True)
+                if (
+                    text.startswith("Casting Time:")
+                    or text.startswith("Source:")
+                    or text.startswith("Level ")
+                ):
+                    break
+                # The level/school line is wrapped in <em>
+                if elem.find("em"):
+                    break
+            desc_elements.append(elem)
 
-        return self.format_text(text)
+        desc_elements = list(reversed(desc_elements))
+
+        lines = []
+        for elem in desc_elements:
+            if elem.name == "ul":
+                for li in elem.find_all("li", recursive=False):
+                    li_text = li.get_text(" ", strip=True)
+                    if li_text:
+                        lines.append(li_text)
+            else:
+                text = elem.get_text(" ", strip=True)
+                if text:
+                    lines.append(text)
+
+        return self.format_text("\n".join(lines))
 
     def get_source(self) -> str | None:
         p = self.col1.find("p")
@@ -218,20 +269,29 @@ class SpellParser:
             file.write(f"{key.title().replace('_', ' ')}: {value}\n")
 
 
-def fetch_spell(spell_name: str):
-    spell = SpellParser(spell_name)
-    spell.fetch()
-    return spell_name, spell.to_dict()
+def fetch_spell(spell_name: str, max_retries: int = 3) -> tuple[str, dict]:
+    last_exc: Exception | None = None
+    for attempt in range(max_retries):
+        try:
+            spell = SpellParser(spell_name)
+            spell.fetch()
+            return spell_name, spell.to_dict()
+        except (requests.exceptions.ConnectionError, requests.exceptions.Timeout) as e:
+            last_exc = e
+            if attempt < max_retries - 1:
+                time.sleep(2**attempt)
+    raise last_exc or RuntimeError(f"fetch_spell({spell_name!r}) failed")
 
 
 if __name__ == "__main__":
-    with open("Scrapers/spells_list_eberron.txt", encoding="utf-8") as f:
-        spells = [line.strip() for line in f if line.strip()]
+    print("Fetching spell list from spell:all …")
+    spells = fetch_all_spell_names()
+    print(f"Found {len(spells)} spells.")
 
     results: dict[str, dict] = {}
+    failed: list[str] = []
 
-    # Adjust depending on site rate limits
-    MAX_WORKERS = 7
+    MAX_WORKERS = 4
 
     with ThreadPoolExecutor(max_workers=MAX_WORKERS) as executor:
         futures = {
@@ -249,10 +309,15 @@ if __name__ == "__main__":
                 name, data = future.result()
                 results[name] = data
             except Exception as e:
-                print(f"Failed to fetch {spell_name}: {e}")
+                print(f"  FAILED {spell_name}: {e}")
+                failed.append(spell_name)
 
-    # Sort alphabetically by spell name
     sorted_results = dict(sorted(results.items()))
 
-    with open("Scrapers/spells_data_eberron.json", "w", encoding="utf-8") as f:
+    out_path = "Spells/spells.json"
+    with open(out_path, "w", encoding="utf-8") as f:
         json.dump(sorted_results, f, indent=4, ensure_ascii=False)
+
+    print(f"\nWrote {len(sorted_results)} spells → {out_path}")
+    if failed:
+        print(f"Failed ({len(failed)}): {', '.join(failed)}")
