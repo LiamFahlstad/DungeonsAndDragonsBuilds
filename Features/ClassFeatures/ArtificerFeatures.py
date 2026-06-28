@@ -30,7 +30,7 @@ class TinkersMagic(TextFeature):
             "See the rules for the item in the Player's Handbook. The item lasts until you finish a Long Rest, at which point it vanishes.\n"
             "You can use this feature a number of times equal to your Intelligence modifier (minimum of once), and you regain all expended uses when you finish a Long Rest."
         )
-        return StringUtils.add_boxes(description, uses)
+        return StringUtils.add_boxes(description, uses, reset="long rest")
 
 
 class ReplicateMagicItem(TextFeature):
@@ -142,7 +142,7 @@ class FlashofGenius(TextFeature):
             "When you or a creature you can see within 30 feet of you fails an ability check or a saving throw, you can take a Reaction to add a bonus to the roll, potentially causing it to succeed. The bonus equals your Intelligence modifier (minimum of +1).\n"
             "You can take this Reaction a number of times equal to your Intelligence modifier (minimum of once). You regain all expended uses when you finish a Long Rest."
         )
-        return StringUtils.add_boxes(description, uses)
+        return StringUtils.add_boxes(description, uses, reset="long rest")
 
 
 class MagicItemAdept(TextFeature):
@@ -281,7 +281,7 @@ class RestorativeReagents(TextFeature):
         intelligence_modifier = character_stat_block.get_ability_modifier(Ability.INTELLIGENCE)
         uses = max(1, intelligence_modifier)
         description = "You can cast Lesser Restoration without expending a spell slot and without preparing the spell, provided you use Alchemist's Supplies as the Spellcasting Focus. You can do so a number of times equal to your Intelligence modifier (minimum of once), and you regain all expended uses when you finish a Long Rest."
-        return StringUtils.add_boxes(description, uses)
+        return StringUtils.add_boxes(description, uses, reset="long rest")
 
 
 class ChemicalMastery(TextFeature):
@@ -623,7 +623,7 @@ class ArcaneJolt(TextFeature):
             "Restorative Energy. Choose one creature or object you can see within 30 feet of the target. Healing energy flows into the chosen recipient, restoring 2d6 Hit Points to it.\n"
             "You can use this energy a number of times equal to your Intelligence modifier (minimum of once), but you can do so no more than once per turn. You regain all expended uses when you finish a Long Rest."
         )
-        return StringUtils.add_boxes(description, uses)
+        return StringUtils.add_boxes(description, uses, reset="long rest")
 
 
 class ImprovedDefender(TextFeature):
@@ -707,7 +707,7 @@ class MappingMagic(TextFeature):
             "Illuminated Cartography. You can cast Faerie Fire without expending a spell slot, outlining the affected creatures as if in ink. You can do so a number of times equal to your Intelligence modifier (minimum of once), and you regain all expended uses when you finish a Long Rest.\n"
             "Portal Jump. On your turn, you can spend an amount of movement equal to half your Speed (round down) to teleport to an unoccupied space you can see within 10 feet of yourself or within 5 feet of a creature that is within 30 feet of you and holding one of your Adventurer's Atlas maps. You can't use this benefit if your Speed is 0."
         )
-        return StringUtils.add_boxes(description, uses)
+        return StringUtils.add_boxes(description, uses, reset="long rest")
 
 
 class GuidedPrecision(TextFeature):
@@ -788,7 +788,7 @@ class ReanimatorsSkillSet(TextFeature):
             "You can modify the spell this way a number of times equal to your Intelligence modifier (minimum of once), and you regain all expended uses when you finish a Long Rest. The Lightning damage of this feature increases by 1d4 when you reach Artificer levels 11 (3d4) and 17 (4d4).\n"
             "Reanimator's Tools. You gain proficiency with Alchemist's Supplies. If you already have this proficiency, you gain proficiency with one other type of Artisan's Tools of your choice."
         )
-        return StringUtils.add_boxes(description, uses)
+        return StringUtils.add_boxes(description, uses, reset="long rest")
 
 
 class ReanimatedCompanion(TextFeature):

@@ -35,12 +35,28 @@ def wrap_text(description: str, max_sentence_length: int, html: bool = False) ->
     return "\n".join(new_parts)
 
 
-def add_boxes(description: str, box_count: int) -> str:
+_RESET_PREFIX = "[RESET:"
+_RESET_SUFFIX = "]"
+
+
+def add_boxes(description: str, box_count: int, reset: str = None) -> str:
+    """Append box symbols to *description*.
+
+    Args:
+        description: The feature text to append boxes to.
+        box_count: How many checkbox symbols to add.
+        reset: Optional reset cadence label, e.g. ``"long rest"``,
+            ``"short rest"``, or ``"dawn"``.  When supplied a small note is
+            rendered beneath the boxes in the HTML output.
+    """
     box_symbol = "⬜"
 
     boxes = " ".join([box_symbol] * box_count)
 
-    return f"{description}\n{boxes}\n"
+    result = f"{description}\n{boxes}\n"
+    if reset is not None:
+        result += f"{_RESET_PREFIX}{reset}{_RESET_SUFFIX}\n"
+    return result
 
 
 def boxes_to_html(description: str) -> str:
@@ -56,6 +72,13 @@ def boxes_to_html(description: str) -> str:
             return len(parts)
         return 0
 
+    def parse_reset_label(line: str) -> str | None:
+        """Return the reset label text if *line* is a reset sentinel, else None."""
+        normalized = normalize_box_line(line)
+        if normalized.startswith(_RESET_PREFIX) and normalized.endswith(_RESET_SUFFIX):
+            return normalized[len(_RESET_PREFIX) : -len(_RESET_SUFFIX)]
+        return None
+
     lines = description.split("\n")
     new_lines = []
     index = 0
@@ -66,7 +89,30 @@ def boxes_to_html(description: str) -> str:
 
         if top_count:
             boxes_html = '<span class="slot-box"></span>' * top_count
-            new_lines.append('<div class="slot-box-group">' + boxes_html + "</div>")
+
+            # Peek at the next line to see if it carries a reset label.
+            reset_label = None
+            if index + 1 < len(lines):
+                reset_label = parse_reset_label(lines[index + 1])
+
+            if reset_label is not None:
+                reset_html = f'<span class="slot-reset-label">Resets on {reset_label}</span>'
+                new_lines.append(
+                    '<div class="slot-box-group">'
+                    + boxes_html
+                    + "</div>"
+                    + "\n"
+                    + reset_html
+                )
+                index += 2  # consume both the box line and the reset sentinel
+            else:
+                new_lines.append('<div class="slot-box-group">' + boxes_html + "</div>")
+                index += 1
+            continue
+
+        # Skip bare reset sentinel lines that appear without a preceding box line
+        # (shouldn't normally happen, but guard against it).
+        if parse_reset_label(lines[index]) is not None:
             index += 1
             continue
 
@@ -74,6 +120,14 @@ def boxes_to_html(description: str) -> str:
         index += 1
 
     return "\n".join(new_lines)
+
+
+def _is_reset_sentinel_line(line: str) -> bool:
+    """Return True if *line* is (possibly followed by <br>) a reset sentinel."""
+    stripped = line.strip()
+    if stripped.endswith("<br>"):
+        stripped = stripped[:-4].rstrip()
+    return stripped.startswith(_RESET_PREFIX) and stripped.endswith(_RESET_SUFFIX)
 
 
 def bolden_text_html(text: str) -> str:
@@ -86,6 +140,11 @@ def bolden_text_html(text: str) -> str:
             continue
 
         if stripped == "<br>":
+            new_lines.append(line)
+            continue
+
+        # Preserve reset sentinel lines so that boxes_to_html can process them.
+        if _is_reset_sentinel_line(line):
             new_lines.append(line)
             continue
 

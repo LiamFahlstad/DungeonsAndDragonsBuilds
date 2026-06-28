@@ -108,7 +108,7 @@ class ChannelDivinity(TextFeature):
             "You regain one after a Short Rest, all after a Long Rest.\n"
             "DC: class's Spellcasting feature.\n"
         )
-        description = StringUtils.add_boxes(description, usages)
+        description = StringUtils.add_boxes(description, usages, reset="short or long rest")
 
         if "Divine Sense" in self.spells:
             description += "\n"
@@ -351,7 +351,7 @@ class GloriousDefense(TextFeature):
             "You can turn defense into a sudden strike. When you or another creature you can see within 10 feet of you is hit by an attack roll, you can take a Reaction to grant a bonus to the target's AC against that attack, potentially causing it to miss. The bonus equals your Charisma modifier (minimum of +1). If the attack misses, you can make one attack with a weapon against the attacker as part of this Reaction if the attacker is within your weapon's range.\n"
             "You can use this feature a number of times equal to your Charisma modifier (minimum of once), and you regain all expended uses when you finish a Long Rest."
         )
-        return StringUtils.add_boxes(description, uses)
+        return StringUtils.add_boxes(description, uses, reset="long rest")
 
 
 class LivingLegend(TextFeature):
@@ -601,7 +601,7 @@ class ElementalRebuke(TextFeature):
             "When you are hit by an attack roll, you can take a Reaction to halve the attack's damage against yourself (round down) and force the attacker to make a Dexterity saving throw against your spell save DC. On a failed save, the attacker takes damage equal to 2d10 plus your Charisma modifier of one of the following types (your choice): Acid, Cold, Fire, Lightning, or Thunder. On a successful save, the attacker takes half as much damage.\n"
             "You can use this feature a number of times equal to your Charisma modifier (minimum of once), and you regain all expended uses when you finish a Long Rest."
         )
-        return StringUtils.add_boxes(description, uses)
+        return StringUtils.add_boxes(description, uses, reset="long rest")
 
 
 class NobleScion(TextFeature):

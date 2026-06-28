@@ -602,6 +602,15 @@ class HtmlCharacterSheetWriter:
             margin: 0.35em 0;
         }
 
+        .slot-reset-label {
+            display: block;
+            font-size: 0.75em;
+            font-style: italic;
+            color: #666;
+            margin-top: 0.1em;
+            margin-bottom: 0.4em;
+        }
+
         /* Item and tool proficiency tables */
         .item-table {
             width: 100%;

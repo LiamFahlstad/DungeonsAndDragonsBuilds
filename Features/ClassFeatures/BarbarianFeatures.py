@@ -43,7 +43,9 @@ class Rage(TextFeature):
             "            > Take a Bonus Action to extend your Rage.\n"
             "Each time the Rage is extended, it lasts until the end of your next turn. You can maintain a Rage for up to 10 minutes."
         )
-        return StringUtils.add_boxes(description, rage_usages)
+        return StringUtils.add_boxes(
+            description, rage_usages, reset="short or long rest"
+        )
 
 
 class UnarmoredDefenseText(TextFeature):

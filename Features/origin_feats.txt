@@ -1,0 +1,236 @@
+Alert
+Home » Feats » Alert
+Source: Player's Handbook
+
+You gain the following benefits.
+
+Initiative Proficiency. When you roll Initiative, you can add your Proficiency Bonus to the roll.
+
+Initiative Swap. Immediately after you roll Initiative, you can swap your Initiative with the Initiative of one willing ally in the same combat. You can't make this swap if you or the ally has the Incapacitated condition.
+
+Source: Player's Handbook
+
+You gain the following benefits.
+
+Tool Proficiency. You gain proficiency with three different Artisan's Tools of your choice from the Fast Crafting table.
+
+Discount. Whenever you buy a nonmagical item, you receive a 20 percent discount on it.
+
+Fast Crafting. When you finish a Long Rest, you can craft one piece of gear from the Fast Crafting table, provided you have the Artisan's Tools associated with that item and have proficiency with those tools. The item lasts until you finish another Long Rest, at which point the item falls apart.
+
+Fast Crafting
+Artisan's Tools	Crafted Gear
+Carpenter's Tools	Ladder, Torch
+Leatherworker's Tools	Case, Pouch
+Mason's Tools	Block and Tackle
+Potter's Tools	Jug, Lamp
+Smith's Tools	Ball Bearings, Bucket, Caltrops, Grappling Hook, Iron Pot
+Tinker's Tools	Bell, Shovel, Tinder Box
+Weaver's Tools	Basket, Rope, Net, Tent
+Woodcarver's Tools	Club, Greatclub, Quarterstaff
+
+Healer
+Home » Feats » Healer
+Source: Player's Handbook
+
+You gain the following benefits.
+
+Battle Medic. If you have a Healer's Kit, you can expend one use of it and tend to a creature within 5 feet of yourself as a Utilize action. That creature can expend one of its Hit Point Dice, and you then roll that die. The creature regains a number of Hit Points equal to the roll plus your Proficiency Bonus.
+
+Healing Rerolls. Whenever you roll a die to determine the number of Hit Points you restore with a spell or with this feat's Battle Medic benefit, you can reroll the die if it rolls a 1, and you must use the new roll.
+
+Lucky
+Home » Feats » Lucky
+Source: Player's Handbook
+
+You gain the following benefits.
+
+Luck Points. You have a number of Luck Points equal to your Proficiency Bonus and can spend the points on the benefits below. You regain your expended Luck Points when you finish a Long Rest.
+
+Advantage. When you roll a d20 for a D20 Test, you can spend 1 Luck Point to give yourself Advantage on the roll.
+
+Disadvantage. When a creature rolls a d20 for an attack roll against you, you can spend 1 Luck Point to impose Disadvantage on that roll.
+
+
+Magic Initiate
+Home » Feats » Magic Initiate
+Source: Player's Handbook
+
+You gain the following benefits.
+
+Two Cantrips. You learn two cantrips of your choice from the Cleric, Druid, or Wizard spell list. Intelligence, Wisdom, or Charisma is your spellcasting ability for this feat's spells (choose when you select this feat).
+
+Level 1 Spell. Choose a level 1 spell from the same list you selected for this feat's cantrips. You always have that spell prepared. You can cast it once without a spell slot, and you regain the ability to cast it in that way when you finish a Long Rest. You can also cast the spell using any spell slots you have.
+
+Spell Change. Whenever you gain a new level, you can replace one of the spells you chose for this feat with a different spell of the same level from the chosen spell list.
+
+Repeatable. You can take this feat more than once, but you must choose a different spell list each time.
+
+Musician
+Home » Feats » Musician
+Source: Player's Handbook
+
+You gain the following benefits.
+
+Instrument Training. You gain proficiency with three Musical Instruments of your choice.
+
+Encouraging Song. As you finish a Short or Long Rest, you can play a song on a Musical Instrument with which you have proficiency and give Heroic Inspiration to allies who hear the song. The number of allies you can affect in this way equals your Proficiency Bonus.
+
+Savage Attacker
+Home » Feats » Savage Attacker
+Source: Player's Handbook
+
+You've trained to deal particularly damaging strikes. Once per turn when you hit a target with a weapon, you can roll the weapon's damage dice twice and use either roll against the target.
+
+Sharp Eye
+Home » Feats » Sharp Eye
+Source: Ravenloft - The Horrors Within
+
+Origin Feat
+
+When you take the Search or Study action, you can give yourself Advantage on any ability check made as part of that action. You can use this feature a number of times equal to your Proficiency Bonus, and you regain all expended uses when you finish a Long Rest. If the check fails, the use of this feature isn't expended.
+
+
+Skilled
+Home » Feats » Skilled
+Source: Player's Handbook
+
+You gain proficiency in any combination of three skills or tools of your choice.
+
+Repeatable. You can take this feat more than once.
+
+Survivor
+Home » Feats » Survivor
+Source: Ravenloft - The Horrors Within
+
+Origin Feat
+
+You gain the following benefits.
+Hypervigilance. Whenever you roll Initiative, you can reroll the d20 if the number rolled is 9 or lower. You must use the new roll.
+Steel Yourself. When you fail a saving throw to avoid or end the Charmed or Frightened condition, you can take a Reaction to add a bonus to the roll potentially causing it to succeed. The bonus is equal to your Proficiency Bonus.
+Once you take this Reaction, you can't do so again until you finish a Long Rest.
+
+
+Tavern Brawler
+Home » Feats » Tavern Brawler
+Source: Player's Handbook
+
+You gain the following benefits.
+
+Enhanced Unarmed Strike. When you hit with your Unarmed Strike and deal damage, you can deal Bludgeoning damage equal to 1d4 plus your Strength modifier instead of the normal damage of an Unarmed Strike.
+
+Damage Rerolls. Whenever you roll a damage die for your Unarmed Strike, you can reroll the die if it rolls a 1, and you must use the new roll.
+
+Improvised Weaponry. You have proficiency with improvised weapons.
+
+Push. When you hit a creature with an Unarmed Strike as part of the Attack action on your turn, you can deal damage to the target and also push it 5 feet away from you. You can use this benefit only once per turn.
+
+Tough
+Home » Feats » Tough
+Source: Player's Handbook
+
+Your Hit Point maximum increases by an amount equal to twice your character level when you gain this feat. Whenever you gain a character level thereafter, your Hit Point maximum increases by an additional 2 Hit Points.
+
+
+Cult of the Dragon Initiate
+Home » Feats » Cult of the Dragon Initiate
+Source: Forgotten Realms - Heroes of Faerun
+
+Origin Feat
+
+You gain the following benefits.
+
+Dragon’s Tongue. You know Draconic. If you already know Draconic when you select this feat, you instead learn one language of your choice from the language tables in the Player’s Handbook or chapter 2 of this book.
+
+Dragon’s Terror. You can take a Magic action to instill terror in a creature you can see within 30 feet of yourself. The target must succeed on a Wisdom saving throw (DC 8 plus your Wisdom modifier and Proficiency Bonus) or have the Frightened condition until the end of your next turn. If the target succeeds on the save or when the effect ends for a target, the target is immune to this effect for 24 hours.
+
+Inspired by Fear. When you cause a creature to have the Frightened condition and you are the source of its fear, you can gain Heroic Inspiration if you lack it. Once you use this benefit, you can’t use it again until you finish a Short or Long Rest.
+
+Emerald Enclave Fledgling
+Home » Feats » Emerald Enclave Fledgling
+Source: Forgotten Realms - Heroes of Faerun
+
+Origin Feat
+
+You gain the following benefits.
+
+Speak with Animals. You always have the Speak with Animals spell prepared and can cast it with any spell slots you have. Intelligence, Wisdom, or Charisma is your spellcasting ability for this spell (choose when you select this feat). When you cast this spell as a Ritual, its duration is 8 hours.
+
+Tag Team. When you take the Help action, you can switch places with a willing ally within 5 feet of yourself as part of that same action. This movement doesn’t provoke Opportunity Attacks. You can’t use this benefit if the ally has the Incapacitated condition.
+
+Harper Agent
+Home » Feats » Harper Agent
+Source: Forgotten Realms - Heroes of Faerun
+
+Origin Feat
+
+You gain the following benefits.
+
+Thieves’ Cant. You know Thieves’ Cant.
+
+Instrument Training. You gain proficiency with a Musical Instrument of your choice.
+
+Distracting Melody. When you take the Help action to assist an ally’s attack roll, the enemy you’re distracting can be within 30 feet of you, rather than within 5 feet of you, provided the enemy can see or hear you.
+
+
+Lords' Alliance Agent
+Home » Feats » Lords' Alliance Agent
+Source: Forgotten Realms - Heroes of Faerun
+
+Origin Feat
+
+You gain the following benefits.
+
+Inspiring Strike. Once per turn when you score a Critical Hit against a creature, you can choose an ally within 30 feet of yourself who can see or hear you and who lacks Heroic Inspiration. That ally gains Heroic Inspiration.
+
+Reassert Honor. When an enemy you can see deals damage to an ally of yours that is within 5 feet of you, you have Advantage on your next attack roll against that enemy before the end of your next turn.
+
+Purple Dragon Rook
+Home » Feats » Purple Dragon Rook
+Source: Forgotten Realms - Heroes of Faerun
+
+Origin Feat
+
+You gain the following benefits.
+
+Entreat. You gain proficiency in one of the following skills: Insight, Performance, or Persuasion.
+
+Rallying Cry. When you roll Initiative and don’t have the Incapacitated condition, you can choose a number of creatures equal to your Proficiency Bonus that you can see within 30 feet of yourself. Those creatures gain Heroic Inspiration.
+
+Once you use this benefit, you can’t do so again until you finish a Long Rest.
+
+Spellfire Spark
+Home » Feats » Spellfire Spark
+Source: Forgotten Realms - Heroes of Faerun
+
+Origin Feat
+
+You gain the following benefits.
+
+Magic Absorption. Once per turn, when you take damage from a spell or magical effect, you reduce the total damage taken by 1d4. You can’t use this benefit if you have the Incapacitated condition.
+
+Spellfire Flame. You learn the Sacred Flame cantrip. Intelligence, Wisdom, or Charisma is your spellcasting ability for this spell (choose when you select this feat). You can also cast this cantrip as a Bonus Action a number of times equal to your Proficiency Bonus, and you regain all expended uses when you finish a Long Rest.
+
+Tyro of the Gauntlet
+Home » Feats » Tyro of the Gauntlet
+Source: Forgotten Realms - Heroes of Faerun
+
+Origin Feat
+
+You gain the following benefits.
+
+Stand as One. When an ally within 5 feet of you is subjected to an effect that would push or pull it, you can take a Reaction to prevent that ally from being pushed or pulled. To receive this benefit, the ally can’t have the Incapacitated condition.
+
+Vigilant. When you take the Ready action, the next attack roll made against you has Disadvantage before the start of your next turn.
+
+Zhentarim Ruffian
+Home » Feats » Zhentarim Ruffian
+Source: Forgotten Realms - Heroes of Faerun
+
+Origin Feat
+
+You gain the following benefits.
+
+Exploit Opening. When you roll damage for an Opportunity Attack, you can roll the damage dice twice and use either roll against the target.
+
+Family First. If you have Heroic Inspiration when you roll Initiative, you can expend it to give yourself and your allies Advantage on that Initiative roll.

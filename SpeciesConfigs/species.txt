@@ -1,0 +1,725 @@
+======================================================================
+COMMON SPECIES (Player's Handbook)
+======================================================================
+
+Aasimar
+Home » Species » Aasimar
+Source: Player's Handbook
+
+Aasimar (pronounced AH-sih-mar) are mortals who carry a spark of the Upper Planes within their souls. Whether descended from an angelic being or infused with celestial power, they can fan that spark to bring light, healing, and heavenly fury. Aasimar can arise among any population of mortals. They resemble their parents, but they live for up to 160 years and have features that hint at their celestial heritage, such as metallic freckles, luminous eyes, a halo, or the skin color of an angel (silver, opalescent green, or coppery red). These features start subtle and become obvious when the aasimar learns to reveal their full celestial nature.
+
+Aasimar Traits
+
+Creature Type: Humanoid
+
+Size: Medium (about 4-7 feet tall) or Small (about 2-4 feet tall), chosen when you select this species
+
+Speed: 30 feet
+
+As an Aasimar, you have these special traits.
+
+Celestial Resistance. You have Resistance to Necrotic damage and Radiant damage.
+
+Darkvision. You have Darkvision with a range of 60 feet.
+
+Healing Hands. As a Magic action, you touch a creature and roll a number of d4s equal to your Proficiency Bonus. The creature regains a number of Hit Points equal to the total rolled. Once you use this trait, you can't use it again until you finish a Long Rest.
+
+Light Bearer. You know the Light cantrip. Charisma is your spellcasting ability for it.
+
+Celestial Revelation. When you reach character level 3, you can transform as a Bonus Action using one of the options below (choose the option each time you transform). The transformation lasts for 1 minute or until you end it (no action required). Once you transform, you can’t do so again until you finish a Long Rest.
+
+Once on each of your turns before the transformation ends, you can deal extra damage to one target when you deal damage to it with an attack or a spell. The extra damage equals your Proficiency Bonus, and the extra damage’s type is either Necrotic for Necrotic Shroud or Radiant for Heavenly Wings and Inner Radiance.
+
+Here are the transformation options:
+
+Heavenly Wings. Two spectral wings sprout from your back temporarily. Until the transformation ends, you have a Fly Speed equal to your Speed.
+
+Inner Radiance. Searing light temporarily radiates from your eyes and mouth. For the duration, you shed Bright Light in a 10-foot radius and Dim Light for an additional 10 feet, and at the end of each of your turns, each creature within 10 feet of you takes Radiant damage equal to your Proficiency Bonus.
+
+Necrotic Shroud. Your eyes briefly become pools of darkness, and flightless wings sprout from your back temporarily. Creatures other than your allies within 10 feet of you must succeed on a Charisma saving throw (DC 8 plus your Charisma modifier and Proficiency Bonus) or have the Frightened condition until the end of your next turn.
+
+Dragonborn
+Home » Species » Dragonborn
+Source: Player's Handbook
+
+The ancestors of dragonborn hatched from the eggs of chromatic and metallic dragons. One story holds that these eggs were blessed by the dragon gods Bahamut and Tiamat, who wanted to populate the multiverse with people created in their image. Another story claims that dragons created the first dragonborn without the gods’ blessings. Whatever their origin, dragonborn have made homes for themselves on the Material Plane.
+
+Dragonborn look like wingless, bipedal dragons - scaly, bright-eyed, and thick-boned with horns on their heads - and their coloration and other features are reminiscent of their draconic ancestors.
+
+Dragonborn Traits
+
+Creature Type: Humanoid
+
+Size: Medium (about 5-7 feet tall)
+
+Speed: 30 feet
+
+As a Dragonborn, you have these special traits.
+
+Draconic Ancestry. Your lineage stems from a dragon progenitor. Choose the kind of dragon from the Draconic Ancestors table. Your choice affects your Breath Weapon and Damage Resistance traits as well as your appearance.
+
+Draconic Ancestors
+
+Dragon
+Damage Type
+
+Black
+Acid
+
+Blue
+Lightning
+
+Brass
+Fire
+
+Bronze
+Lightning
+
+Copper
+Acid
+
+Gold
+Fire
+
+Green
+Poison
+
+Red
+Fire
+
+Silver
+Cold
+
+White
+Cold
+
+Breath Weapon. When you take the Attack action on your turn, you can replace one of your attacks with an exhalation of magical energy in either a 15-foot Cone or a 30-foot Line that is 5 feet wide (choose the shape each time). Each creature in that area must make a Dexterity saving throw (DC 8 plus your Constitution modifier and Proficiency Bonus). On a failed save, a creature takes 1d10 damage of the type determined by your Draconic Ancestry trait. On a successful save, a creature takes half as much damage. This damage increases by 1d10 when you reach character levels 5 (2d10), 11 (3d10), and 17 (4d10).
+
+You can use this Breath Weapon a number of times equal to your Proficiency Bonus, and you regain all expended uses when you finish a Long Rest.
+
+Damage Resistance. You have Resistance to the damage type determined by your Draconic Ancestry trait.
+
+Darkvision. You have Darkvision with a range of 60 feet.
+
+Draconic Flight. When you reach character level 5, you can channel draconic magic to give yourself temporary flight. As a Bonus Action, you sprout spectral wings on your back that last for 10 minutes or until you retract the wings (no action required) or have the Incapacitated condition. During that time, you have a Fly Speed equal to your Speed. Your wings appear to be made of the same energy as your Breath Weapon. Once you use this trait, you can't use it again until you finish a Long Rest.
+
+Dwarf
+Home » Species » Dwarf
+Source: Player's Handbook
+
+Dwarves were raised from the earth in the elder days by a deity of the forge. Called by various names on different worlds - Moradin, Reorx, and others - that god gave dwarves an affinity for stone and metal and for living underground. The god also made them resilient like the mountains, with a life span of about 350 years.
+
+Squat and often bearded, the original dwarves carved cities and strongholds into mountainsides and under the earth. Their oldest legends tell of conflicts with the monsters of mountaintops and the Underdark, whether those monsters were towering giants or subterranean horrors. Inspired by those tales, dwarves of any culture often sing of valorous deeds - especially of the little overcoming the mighty.
+
+On some worlds in the multiverse, the first settlements of dwarves were built in hills or mountains, and the families who trace their ancestry to those settlements call themselves hill dwarves or mountain dwarves, respectively. The Greyhawk and Dragonlance settings have such communities.
+
+Dwarf Traits
+
+Creature Type: Humanoid
+
+Size: Medium (about 4-5 feet tall)
+
+Speed: 30 feet
+
+As a Dwarf, you have these special traits.
+
+Darkvision. You have Darkvision with a range of 120 feet.
+
+Dwarven Resilience. You have Resistance to Poison damage. You also have Advantage on saving throws you make to avoid or end the Poisoned condition.
+
+Dwarven Toughness. Your Hit Point maximum increases by 1, and it increases by 1 again whenever you gain a level.
+
+Stonecunning. As a Bonus Action, you gain Tremorsense with a range of 60 feet for 10 minutes. You must be on a stone surface or touching a stone surface to use this Tremorsense. The stone can be natural or worked.
+
+You can use this Bonus Action a number of times equal to your Proficiency Bonus, and you regain all
+
+expended uses when you finish a Long Rest.
+
+Elf
+Home » Species » Elf
+Source: Player's Handbook
+
+Created by the god Corellon, the first elves could change their forms at will. They lost this ability when Corellon cursed them for plotting with the deity Lolth, who tried and failed to usurp Corellon's dominion. When Lolth was cast into the Abyss, most elves renounced her and earned Corellon’s forgiveness, but that which Corellon had taken from them was lost forever.
+
+No longer able to shape-shift at will, the elves retreated to the Feywild, where their sorrow was deepened by that plane’s influence. Over time, curiosity led many of them to explore other planes of existence, including worlds in the Material Plane.
+
+Elves have pointed ears and lack facial and body hair. They live for around 750 years, and they don't sleep but instead enter a trance when they need to rest. In that state, they remain aware of their surroundings while immersing themselves in memories and meditations.
+
+An environment subtly transforms elves after they inhabit it for a millennium or more, and it grants them certain kinds of magic. Drow, high elves, and wood elves are examples of elves who have been transformed thus.
+
+Drow
+Drow typically dwell in the Underdark and have been shaped by it. Some drow individuals and societies avoid the Underdark altogether yet carry its magic. In the Eberron setting, for example, drow dwell in rainforests and cyclopean ruins on the continent of Xen'drik.
+
+High Elves
+High elves have been infused with the magic of crossings between the Feywild and the Material Plane. On some worlds, high elves refer to themselves by other names. For example, they call themselves sun or moon elves in the Forgotten Realms setting, Silvanesti and Qualinesti in the Dragonlance setting, and Aereni in the Eberron setting.
+
+Wood Elves
+Wood elves carry the magic of primeval forests within themselves. They are known by many other names, including wild elves, green elves, and forest elves. Grugach are reclusive wood elves of the Greyhawk setting, while the Kagonesti and the Tairnadal are wood elves of the Dragonlance and Eberron settings, respectively.
+
+Lorwyn-Shadowmoor
+
+Source: Lorwyn - First Light
+
+Elves in the realm of Lorwyn-Shadowmoor possess black, pupilless eyes; curved horns; legs that end in cloven hooves; and pointed ears. The elves of Lorwyn exhibit stark differences physically as well as culturally from their Shadowmoor counterparts.
+
+In Lorwyn
+
+The horns of Lorwyn elves are stubby like a goat’s or curved like a ram’s, but always ridged. Their pointed ears are long and slender.
+
+In Lorwyn, elves value beauty above all, though what any given elf deems beautiful can seem arbitrary. Some Lorwyn elves assume authority over the land’s other peoples, using their fallen empire to support their claims.
+
+These elves blame the fall of their empire on outside threats, especially the Phyrexian invasion. Though the invasion was the empire’s death knell, its people’s self-importance and unwillingness to collaborate with other species had already led to the empire’s decline.
+
+In Shadowmoor
+
+Shadowmoor elves’ horns are long, wavy, and covered with a rough, thorny texture. Their pointed ears are usually longer than those of their Lorwyn counterparts.
+
+Like Lorwyn elves, Shadowmoor elves protect beauty, though a Shadowmoor elf’s definition of “beautiful” can be abstract. Many of their kind believe beauty is gained or lost in accordance with one’s actions; in particular, they consider heroism and self-sacrifice the highest forms of beauty.
+
+Bloomseekers are Shadowmoor elves who study and explore Lorwyn. Each one carries a Reliquary of Twilight. Alongside Safewrights - Shadowmoor elves who venture across their realm in search of beautiful things - Bloomseekers are among the most trusted and revered members of their society.
+
+Elf Traits
+
+Creature Type: Humanoid
+
+Size: Medium (about 5-6 feet tall)
+
+Speed: 30 feet
+
+As an Elf, you have these special traits.
+
+Darkvision. You have Darkvision with a range of 60 feet.
+
+Elven Lineage. You are part of a lineage that grants you supernatural abilities. Choose a lineage from the Elven Lineages table. You gain the level 1 benefit of that lineage.
+
+When you reach character levels 3 and 5, you learn a higher-level spell, as shown on the table. You always have that spell prepared. You can cast it once without a spell slot, and you regain the ability to cast it in that way when you finish a Long Rest. You can also cast the spell using any spell slots you have of the appropriate level.
+
+Intelligence, Wisdom, or Charisma is your spellcasting ability for the spells you cast with this trait (choose the ability when you select the lineage).
+
+Fey Ancestry. You have Advantage on saving throws you make to avoid or end the Charmed condition.
+
+Keen Senses. You have proficiency in the Insight, Perception, or Survival skill.
+
+Trance. You don't need to sleep, and magic can't put you to sleep. You can finish a Long Rest in 4 hours if you spend those hours in a trancelike meditation, during which you retain consciousness.
+
+Elven Lineages
+
+Lineage
+Level 1
+Level 3
+Level 5
+
+Drow
+The range of your Darkvision increases to 120 feet. You also know the Dancing Lights cantrip.
+Faerie Fire
+Darkness
+
+High Elf
+You know the Prestidigitation cantrip. Whenever you finish a Long Rest, you can replace that cantrip with a different cantrip from the Wizard spell list.
+Detect Magic
+Misty Step
+
+Wood Elf
+Your Speed increases to 35 feet. You also know the Druidcraft cantrip.
+Longstrider
+Pass without Trace
+
+Lorwyn Elf
+You know the Thorn Whip cantrip. Whenever you finish a Long Rest, you can replace that cantrip with a different cantrip from the Druid spell list.
+Command
+Silence
+
+Shadowmoor Elf
+The range of your Darkvision increases to 120 feet. You also know the Starry Wisp cantrip.
+Heroism
+Gentle Repose
+
+Gnome
+Home » Species » Gnome
+Source: Player's Handbook
+
+Gnomes are magical folk created by gods of invention, illusions, and life underground. The earliest gnomes were seldom seen by other folk due to the gnomes' secretive nature and their propensity for living in forests and burrows. What they lacked in size, they made up for in cleverness. They confounded predators with traps and labyrinthine tunnels. They also learned magic from gods like Garl Glittergold, Baervan Wildwanderer, and Baravar Cloakshadow, who visited them in disguise. That magic eventually created the lineages of forest gnomes and rock gnomes.
+
+Gnomes are petite folk with big eyes and pointed ears, who live around 425 years. Many gnomes like the feeling of a roof over their head, even if that “roof” is nothing more than a hat.
+
+Gnome Traits
+
+Creature Type: Humanoid
+
+Size: Small (about 3-4 feet tall)
+
+Speed: 30 feet
+
+As a Gnome, you have these special traits.
+
+Darkvision. You have Darkvision with a range of 60 feet.
+
+Gnomish Cunning. You have Advantage on Intelligence, Wisdom, and Charisma saving throws.
+
+Gnomish Lineage. You are part of a lineage that grants you supernatural abilities. Choose one of the following options; whichever one you choose, Intelligence, Wisdom, or Charisma is your spellcasting ability for the spells you cast with this trait (choose the ability when you select the lineage):
+
+Forest Gnome. You know the Minor Illusion cantrip.
+
+You also always have the Speak with Animals spell prepared. You can cast it without a spell slot a number of times equal to your Proficiency Bonus, and you regain all expended uses when you finish a Long Rest. You can also use any spell slots you have to cast the spell.
+
+Rock Gnome. You know the Mending and Prestidigitation cantrips. In addition, you can spend 10 minutes casting Prestidigitation to create a Tiny clockwork device (AC 5,1 HP), such as a toy, fire starter, or music box. When you create the device, you determine its function by choosing one effect from Prestidigitation; the device produces that effect whenever you or another creature takes a Bonus Action to activate it with a touch. If the chosen effect has options within it, you choose one of those options for the device when you create it. For example, if you choose the spell's ignite-extinguish effect, you determine whether the device ignites or extinguishes fire; the device doesn't do both. You can have three such devices in existence at a time, and each falls apart 8 hours after its creation or when you dismantle it with a touch as a Utilize action.
+
+Goliath
+Home » Species » Goliath
+Source: Player's Handbook
+
+Towering over most folk, goliaths are distant descendants of giants. Each goliath bears the favors of the first giants - favors that manifest in various supernatural boons, including the ability to quickly grow and temporarily approach the height of goliaths’ gigantic kin.
+
+Goliaths have physical characteristics that are reminiscent of the giants in their family lines. For example, some goliaths look like stone giants, while others resemble fire giants. Whatever giants they count as kin, goliaths have forged their own path in the multiverse - unencumbered by the internecine conflicts that have ravaged giantkind for ages - and seek heights above those reached by their ancestors.
+
+Goliath Traits
+
+Creature Type: Humanoid
+
+Size: Medium (about 7-8 feet tall)
+
+Speed: 35 feet
+
+As a Goliath, you have these special traits.
+
+Giant Ancestry. You are descended from Giants. Choose one of the following benefits - a supernatural boon from your ancestry; you can use the chosen benefit a number of times equal to your Proficiency Bonus, and you regain all expended uses when you finish a Long Rest:
+
+ * Cloud's Jaunt (Cloud Giant). As a Bonus Action, you magically teleport up to 30 feet to an unoccupied space you can see.
+ * Fire's Burn (Fire Giant). When you hit a target with an attack roll and deal damage to it, you can also deal 1d10 Fire damage to that target.
+ * Frost's Chill (Frost Giant). When you hit a target with an attack roll and deal damage to it, you can also deal 1d6 Cold damage to that target and reduce its Speed by 10 feet until the start of your next turn.
+ * Hill's Tumble (Hill Giant). When you hit a Large or smaller creature with an attack roll and deal damage to it, you can give that target the Prone condition.
+ * Stone's Endurance (Stone Giant). When you take damage, you can take a Reaction to roll 1d12. Add your Constitution modifier to the number rolled and reduce the damage by that total.
+ * Storm's Thunder (Storm Giant). When you take damage from a creature within 60 feet of you, you can take a Reaction to deal 1d8 Thunder damage to that creature.
+
+Large Form. Starting at character level 5, you can change your size to Large as a Bonus Action if you're in a big enough space. This transformation lasts for 10 minutes or until you end it (no action required). For that duration, you have Advantage on Strength checks, and your Speed increases by 10 feet. Once you use this trait, you can't use it again until you finish a Long Rest.
+
+Powerful Build. You have Advantage on any ability check you make to end the Grappled condition. You also count as one size larger when determining your carrying capacity.
+
+Halfling
+Home » Species » Halfling
+Source: Player's Handbook
+
+Cherished and guided by gods who value life, home, and hearth, halflings gravitate toward bucolic havens where family and community help shape their lives. That said, many halflings possess a brave and adventurous spirit that leads them on journeys of discovery, affording them the chance to explore a bigger world and make new friends along the way. Their size - similar to that of a human child -helps them pass through crowds unnoticed and slip through tight spaces.
+
+Anyone who has spent time around halflings, particularly halfling adventurers, has likely witnessed the storied “luck of the halflings” in action. When a halfling is in mortal danger, an unseen force seems to intervene on the halfling’s behalf. Many halflings believe in the power of luck, and they attribute their unusual gift to one or more of their benevolent gods, including Yondalla, Brandobaris, and Charmalaine. The same gift might contribute to their robust life spans (about 150 years).
+
+Halfling communities come in all varieties. For every sequestered shire tucked away in an unspoiled part of the world, there's a crime syndicate like the Boromar Clan in the Eberron setting or a territorial mob of halflings like those in the Dark Sun setting.
+
+Halflings who prefer to live underground are sometimes called strongheart halflings or stouts. Nomadic halflings, as well as those who live among humans and other tall folk, are sometimes called lightfoot halflings or tallfellows.
+
+Halfling Traits
+
+Creature Type: Humanoid
+
+Size: Small (about 2-3 feet tall)
+
+Speed: 30 feet
+
+As a Halfling, you have these special traits.
+
+Brave. You have Advantage on saving throws you make to avoid or end the Frightened condition.
+
+Halfling Nimbleness. You can move through the space of any creature that is a size larger than you, but you can't stop in the same space.
+
+Luck. When you roll a 1 on the d20 of a D20 Test, you can reroll the die, and you must use the new roll.
+
+Naturally Stealthy. You can take the Hide action even when you are obscured only by a creature that is at least one size larger than you.
+
+Kithkin
+
+Source: Lorwyn - First Light
+
+Kithkin are short folk with stout legs, long arms, and sturdy torsos. Their broad faces; round ears; and large, expressive eyes lend them a vaguely ursine appearance.
+
+Most kithkin are linked by an empathic web that lets them sense the feelings of nearby kithkin. Because of this connection, many kithkin trust each other implicitly.
+
+Some kithkin remove themselves from this empathic web temporarily or even permanently for a variety of reasons, often due to trauma suffered during the Phyrexian invasion. Regardless, kithkin typically believe that betraying their own is a heinous crime.
+
+In Lorwyn
+
+Lorwyn kithkin live in pastoral villages called clachans and welcome outsiders into their communities. These kithkin collect their cultural heritage in a tome called the Book of Kith and Kin. They also often entertain many superstitions, particularly related to Lorwyn’s incarnations of nature.
+
+In Shadowmoor
+
+Shadowmoor kithkin are more insular and xenophobic. They mostly live in fortified settlements called douns, where strict customs to preserve the social order. Shadowmoor kithkin leaders keep a close eye on their communities, monitoring for any sign of crime or treason.
+
+Playing a Kithkin
+
+Use the Halfling species when creating a kithkin player character. Shadowmoor kithkin have Darkvision with a range of 120 feet.
+
+Human
+Home » Species » Human
+Source: Player's Handbook
+
+Found throughout the multiverse, humans are as varied as they are numerous, and they endeavor to achieve as much as they can in the years they are given. Their ambition and resourcefulness are commended, respected, and feared on many worlds.
+
+Humans are as diverse in appearance as the people of Earth, and they have many gods. Scholars dispute the origin of humanity, but one of the earliest known human gatherings is said to have occurred in Sigil, the torus-shaped city at the center of the multiverse and the place where the Common language was born. From there, humans could have spread to every part of the multiverse, bringing the City of Doors' cosmopolitanism with them.
+
+Human Traits
+
+Creature Type: Humanoid
+
+Size: Medium (about 4-7 feet tall) or Small (about 2-4 feet tall), chosen when you select this species
+
+Speed: 30 feet
+
+As a Human, you have these special traits.
+
+Resourceful. You gain Heroic Inspiration whenever you finish a Long Rest.
+
+Skillful. You gain proficiency in one skill of your choice.
+
+Versatile. You gain an Origin feat of your choice. Skilled is recommended.
+
+Orc
+Home » Species » Orc
+Source: Player's Handbook
+
+Orcs trace their creation to Gruumsh, a powerful god who roamed the wide open spaces of the Material Plane. Gruumsh equipped his children with gifts to help them wander great plains, vast caverns, and churning seas and to face the monsters that lurk there. Even when they turn their devotion to other gods, orcs retain Gruumsh’s gifts: endurance, determination, and the ability to see in darkness.
+
+Orcs are, on average, tall and broad. They have gray skin, ears that are sharply pointed, and prominent lower canines that resemble small tusks. Orc youths on some worlds are told about their ancestors' great travels and travails. Inspired by those tales, many of those orcs wonder when Gruumsh will call on them to match the heroic deeds of old and if they will prove worthy of his favor. Other orcs are happy to leave old tales in the past and find their own way.
+
+Orc Traits
+
+Creature Type: Humanoid
+
+Size: Medium (about 6-7 feet tall)
+
+Speed: 30 feet
+
+As an Orc, you have these special traits.
+
+Adrenaline Rush. You can take the Dash action as a Bonus Action. When you do so, you gain a number of Temporary Hit Points equal to your Proficiency Bonus.
+
+You can use this trait a number of times equal to your Proficiency Bonus, and you regain all expended uses when you finish a Short or Long Rest.
+
+Darkvision. You have Darkvision with a range of 120 feet.
+
+Relentless Endurance. When you are reduced to 0 Hit Points but not killed outright, you can drop to 1 Hit Point instead. Once you use this trait, you can't do so again until you finish a Long Rest.
+
+Tiefling
+Home » Species » Tiefling
+Source: Player's Handbook
+
+Tieflings are either born in the Lower Planes or have fiendish ancestors who originated there. A tiefling (pronounced TEE-fling) is linked by blood to a devil, a demon, or some other Fiend. This connection to the Lower Planes is the tiefling's fiendish legacy, which comes with the promise of power yet has no effect on the tiefling's moral outlook.
+
+A tiefling chooses whether to embrace or lament their fiendish legacy. The three legacies are described below.
+
+Abyssal
+The entropy of the Abyss, the chaos of Pandemonium, and the despair of Carceri call to tieflings who have the abyssal legacy. Horns, fur, tusks, and peculiar scents are common physical features of such tieflings, most of whom have the blood of demons coursing through their veins.
+
+Chthonic
+Tieflings who have the chthonic legacy feel not only the tug of Carceri but also the greed of Gehenna and the gloom of Hades. Some of these tieflings look cadaverous. Others possess the unearthly beauty of a succubus, or they have physical features in common with a night hag, a yugoloth, or some other Neutral Evil fiendish ancestor.
+
+Infernal
+The infernal legacy connects tieflings not only to Gehenna but also the Nine Hells and the raging battlefields of Acheron. Horns, spines, tails, golden eyes, and a faint odor of sulfur or smoke are common physical features of such tieflings, most of whom trace their ancestry to devils.
+
+Tiefling Traits
+
+Creature Type: Humanoid
+
+Size: Medium (about 4-7 feet tall) or Small (about 3-4 feet tall), chosen when you select this species
+
+Speed: 30 feet
+
+As a Tiefling, you have the following special traits.
+
+Darkvision. You have Darkvision with a range of 60 feet.
+
+Fiendish Legacy. You are the recipient of a legacy that grants you supernatural abilities. Choose a legacy from the Fiendish Legacies table. You gain the level 1 benefit of the chosen legacy.
+
+When you reach character levels 3 and 5, you learn a higher-level spell, as shown on the table. You always have that spell prepared. You can cast it once without a spell slot, and you regain the ability to cast it in that way when you finish a Long Rest. You can also cast the spell using any spell slots you have of the appropriate level.
+
+Intelligence, Wisdom, or Charisma is your spellcasting ability for the spells you cast with this trait (choose the ability when you select the legacy).
+
+Otherworldly Presence. You know the Thaumaturgy cantrip. When you cast it with this trait, the spell uses the same spellcasting ability you use for your Fiendish Legacy trait.
+
+Fiendish Legacies
+
+Legacy
+Level 1
+Level 3
+Level 5
+
+Abyssal
+You have Resistance to Poison damage. You also know the Poison Spray cantrip.
+Ray of Sickness
+Hold Person
+
+Chthonic
+You have Resistance to Necrotic damage. You also know the Chill Touch cantrip.
+False Life
+Ray of Enfeeblement
+
+Infernal
+You have Resistance to Fire damage. You also know the Fire Bolt cantrip.
+Hellish Rebuke
+Darkness
+
+======================================================================
+EBERRON SPECIES (Heroes of Eberron)
+======================================================================
+
+Changeling
+Home » Species » Changeling
+Source: Eberron - Heroes of Eberron
+
+With ever-changing appearances, changelings reside in many societies undetected. Each changeling can supernaturally adopt any face they like. For some changelings, a new face may reveal an aspect of their soul.
+
+The first changelings in the multiverse appeared in the Feywild, and the wondrous, mutable essence of that plane lingers in changelings today - even in those who have never set foot in the fey realm.
+
+In their true form, changelings appear faded, their features almost devoid of detail. It is rare to see one in that form, for a typical changeling alters their shape the way others might change clothes. However, many changelings develop identities with more depth, crafting a persona complete with history and beliefs to go with each shape. A changeling adventurer might have personas for many situations, including negotiation, investigation, and combat.
+
+Multiple changelings can share a persona. Personas can even pass down through a family, allowing a younger changeling to take advantage of contacts established by the persona’s previous users.
+
+Changeling Traits
+
+Creature Type: Fey
+
+Size: Medium (about 4–7 feet tall) or Small (about 2–4 feet tall), chosen when you select this species
+
+Speed: 30 feet
+
+As a Changeling, you have these special traits.
+
+Changeling Instincts. Thanks to your connection to the fey realm, you gain proficiency in two of the following skills of your choice: Deception, Insight, Intimidation, Performance, or Persuasion.
+
+Shape-Shifter. As an action, you can shape-shift to change your appearance and your voice. You determine the specifics of the changes, including your coloration, hair length, and sex. You can also adjust your height and weight and can change your size between Medium and Small. You can make yourself appear as a member of another playable species, though none of your game statistics change. You can’t duplicate the appearance of an individual you’ve never seen, and you must adopt a form that has the same basic arrangement of limbs that you have. This trait doesn’t change your clothing and equipment.
+
+While shape-shifted with this trait, you have Advantage on Charisma checks.
+
+You stay in the new form until you take an action to revert to your true form.
+
+Kalashtar
+Home » Species » Kalashtar
+Source: Eberron - Heroes of Eberron
+
+Kalashtar (pronounced kal-ASH-tar) are created from the union of humanity and renegade spirits called quori from the plane of dreams. Kalashtar appear human, but their spiritual connection affects them in a variety of ways. They have symmetrical, slightly angular features, and their eyes often glow when they are concentrating or expressing strong emotions.
+
+Kalashtar can’t communicate directly with their quori spirits. Rather, kalashtar might experience them as a source of instinct and inspiration, drawing on the spirits’ memories when the kalashtar sleep. This connection grants kalashtar minor psionic abilities, as well as protection from psionic attacks.
+
+Kalashtar Traits
+
+Creature Type: Aberration
+
+Size: Medium (about 6–7 feet tall)
+
+Speed: 30 feet
+
+As a Kalashtar, you have these special traits.
+
+Dual Mind. You have Advantage on Wisdom and Charisma saving throws.
+
+Mental Discipline. You have Resistance to Psychic damage.
+
+Mind Link. You have telepathy with a range in feet equal to 10 times your level. When you’re using this trait to speak telepathically to a creature, you can take a Magic action to give that creature the ability to speak telepathically with you for 1 hour or until you take another Magic action to end this effect.
+
+Severed from Dreams. You can’t be the target of the Dream spell. In addition, when you finish a Long Rest, you gain proficiency in one skill of your choice. This proficiency lasts until you finish another Long Rest.
+
+Khoravar
+Home » Species » Khoravar
+Source: Eberron - Heroes of Eberron
+
+Over the course of centuries, those descended from both humans and elves have developed their own communities and traditions in Khorvaire. The rise of House Lyrandar and House Medani has strengthened this identity. Members of these communities call themselves Khoravar, an Elvish term meaning “children of Khorvaire,” as they dislike the term “half-elf.”
+
+Many Khoravar espouse the idea of being “the bridge between,” believing they are called to facilitate communication and cooperation between members of different cultures or species. Khoravar who follow this philosophy often become bards, diplomats, mediators, or translators. Others, fascinated by their distant connection to the Fey, seek to build bridges between the Material Plane and the Feywild of Thelanis. These Khoravar often become druids or warlocks with archfey patrons.
+
+Khoravar Traits
+
+Creature Type: Humanoid
+
+Size: Medium (about 4–6 feet tall) or Small (about 2–4 feet tall), chosen when you select this species
+
+Speed: 30 feet
+
+As a Khoravar, you have these special traits.
+
+Darkvision. You have Darkvision with a range of 60 feet.
+
+Fey Ancestry. You have Advantage on saving throws you make to avoid or end the Charmed condition.
+
+Fey Gift. You know the Friends cantrip. Whenever you finish a Long Rest, you can replace that cantrip with a different cantrip from the Cleric, Druid, or Wizard spell list. Intelligence, Wisdom, or Charisma is your spellcasting ability for the spell you cast with this trait (chosen when you select this species).
+
+Lethargy Resilience. When you fail a saving throw to avoid or end the Unconscious condition, you can succeed instead. Once you use this trait, you can’t do so again until you finish 1d4 Long Rests.
+
+Skill Versatility. You gain proficiency in one skill or with one tool of your choice. Whenever you finish a Long Rest, you can replace it with another skill or tool proficiency.
+
+Shifter
+Home » Species » Shifter
+Source: Eberron - Heroes of Eberron
+
+Shifters - sometimes called “weretouched” - descend from people who contracted full or partial lycanthropy. Humanoids with a bestial aspect, shifters can’t change shape fully, but they can enhance their animalistic features temporarily in a process they call “shifting.”
+
+Shifters resemble humans in height and build but are typically more lithe and flexible. Their facial features have a bestial cast, often with large eyes and pointed ears; most shifters also possess prominent canine teeth. They grow fur-like hair on nearly every part of their bodies. While a shifter’s appearance might remind an onlooker of an animal, the shifter remains clearly identifiable as a Humanoid even when at their most feral.
+
+Shifter Traits
+
+Creature Type: Humanoid
+
+Size: Medium (about 4–7 feet tall) or Small (about 2–4 feet tall), chosen when you select this species
+
+Speed: 30 feet
+
+As a Shifter, you have these special traits.
+
+Bestial Instincts. Channeling the beast within, you gain proficiency in one of the following skills of your choice: Acrobatics, Athletics, Intimidation, or Survival.
+
+Darkvision. You have Darkvision with a range of 60 feet.
+
+Shifting. As a Bonus Action, you can shape-shift to assume a more bestial appearance. This transformation lasts for 1 minute or until you revert to your normal appearance as a Bonus Action. When you shift, you gain Temporary Hit Points equal to 2 times your Proficiency Bonus. You can shift a number of times equal to your Proficiency Bonus, and you regain all expended uses when you finish a Long Rest.
+
+Whenever you shift, you gain the benefit of one of the following options (choose when you select this species):
+
+Beasthide. You gain 1d6 additional Temporary Hit Points. While shifted, you have a +1 bonus to your Armor Class.
+
+Longtooth. When you shift and as a Bonus Action on your other turns while shifted, you can use your elongated fangs to make an Unarmed Strike. If you hit with this Unarmed Strike and deal damage, you can deal Piercing damage equal to 1d6 plus your Strength modifier, instead of the normal damage of an Unarmed Strike.
+
+Swiftstride. While you are shifted, your Speed increases by 10 feet. Additionally, you can move up to 10 feet as a Reaction when a creature ends its turn within 5 feet of you. This reactive movement doesn’t provoke Opportunity Attack action.
+
+Wildhunt. While shifted, you have Advantage on Wisdom checks. Additionally, no creature within 30 feet of you can have Advantage on an attack roll against you unless you have the Incapacitated condition.
+
+Warforged
+Home » Species » Warforged
+Source: Eberron - Heroes of Eberron
+
+Warforged are mechanical beings built as weapons to fight in the Last War. An unexpected breakthrough produced sentient beings made from wood and metal that nevertheless can feel pain and emotion.
+
+Warforged comprise a blend of organic and inorganic materials. Rootlike cords infused with alchemical fluids serve as their muscles, wrapped around a framework of steel, darkwood, or stone. Armored plates form a protective outer shell and reinforce joints. The more a warforged cultivates their individuality, the more likely they are to modify their body, seeking out an artificer to customize the look of their face, limbs, and plating.
+
+Warforged Traits
+
+Creature Type: Construct
+
+Size: Medium (about 6–8 feet tall) or Small (about 3–4 feet tall), chosen when you select this species
+
+Speed: 30 feet
+
+As a Warforged, you have these special traits.
+
+Construct Resilience. You have Resistance to Poison damage. You also have Advantage on saving throws to avoid or end the Poisoned condition.
+
+Integrated Protection. You gain a +1 bonus to your Armor Class. In addition, armor you have donned can’t be removed against your will while you’re alive.
+
+Sentry’s Rest. You don’t need to sleep, and magic can’t put you to sleep. You can finish a Long Rest in 6 hours if you spend those hours in an inactive, motionless state. During this time, you appear inert but remain conscious.
+
+Specialized Design. You gain one skill proficiency and one tool proficiency of your choice.
+
+Tireless. You don’t gain Exhaustion levels from dehydration, malnutrition, or suffocation.
+
+======================================================================
+RAVENLOFT SPECIES (The Horrors Within)
+======================================================================
+
+Dhampir
+Home » Species » Dhampir
+Source: Ravenloft - The Horrors Within
+
+Dhampirs are living people who possess vampiric prowess but are cursed with macabre hunger. Most dhampirs thirst for blood, but some gain sustenance from dreams, life energy, or other vital sources. Dhampirs must choose whether to fight to control their hunger or give in to predatory urges.
+
+Dhampirs often arise from encounters with vampires; some are the descendants of a powerful vampire, while others are partially transformed by a vampire’s bite. All manner of macabre bargains and necromantic influences might also give rise to a dhampir. Regardless of their origins, dhampirs exhibit their vampiric nature in various ways, including increased speed and a life-draining bite.
+
+Dhampir Traits
+
+Creature Type: Humanoid
+
+Size: Medium (about 4–7 feet tall) or Small (about 2–4 feet tall), chosen when you select this species
+
+Speed: 35 feet
+
+As a Dhampir, you have these special traits.
+
+Darkvision. You have Darkvision with a range of 60 feet.
+
+Spider Climb. You have a Climb Speed equal to your Speed. When you reach character level 3, you can move up, down, and across vertical surfaces and along ceilings while leaving your hands free.
+
+Trace of Undeath. You have Resistance to Necrotic damage.
+
+Vampiric Bite. When you use your Unarmed Strike and deal damage, you can choose to bite with your fangs. You deal Piercing damage equal to 1d4 plus your Constitution modifier instead of the normal damage of an Unarmed Strike.
+
+In addition, when you deal this damage to a creature that isn’t a Construct or an Undead, you can empower yourself in one of the following ways:
+
+Drain. You regain Hit Points equal to the Piercing damage dealt.
+
+Strengthen. You gain a bonus to the next ability check or attack roll you make within the next minute; the bonus is equal to the Piercing damage dealt.
+
+You can empower yourself with this trait a number of times equal to your Proficiency Bonus, and you regain all expended uses when you finish a Long Rest.
+
+Hexblood
+Home » Species » Hexblood
+Source: Ravenloft - The Horrors Within
+
+Hexbloods are individuals infused with fey magic as a result of eldritch energy or mysterious witchcraft. Many hexbloods are transformed into such beings after making a deal with a powerful hag, but other strange forces can result in the birth of a hexblood. A hexblood’s strange fey power manifests as eerie clairvoyance and beguiling magic.
+
+Hexblood Traits
+
+Creature Type: Fey
+
+Size: Medium (about 4–7 feet tall) or Small (about 2–4 feet tall), chosen when you select this species
+
+Speed: 30 feet
+
+As a Hexblood, you have these special traits.
+
+Darkvision. You have Darkvision with a range of 60 feet.
+
+Eerie Token. As a Bonus Action, you can create a magical token by harmlessly removing a lock of hair, detaching a nail, or using some other method. While the token exists, you gain the following benefits:
+
+Distant Message. As a Magic action, you can send a telepathic message of 25 words or fewer to a creature holding or carrying the token, as long as you are within 10 miles of it.
+
+Remote Viewing. If you are within 10 miles of the token, you can take a Magic action to extend your senses through the token for 1 minute, until you have the Incapacitated condition, or until you end this state (no action required). During this state, you can see and hear from the token as if you were located where it is. When this state ends, the token is harmlessly destroyed.
+
+Unless the token is destroyed early, it lasts until you finish a Long Rest. Once you create a token using this feature, you can’t do so again until you finish a Long Rest.
+
+Hex Magic. You always have the Disguise Self and Hex spells prepared. You can cast each spell once without a spell slot, and you regain the ability to cast it in that way when you finish a Long Rest. You can also cast the spell using any spell slots you have of the appropriate level. Intelligence, Wisdom, or Charisma is your spellcasting ability for the spells you cast with this trait (choose the ability when you select this species).
+
+Lupin
+Home » Species » Lupin
+Source: Ravenloft - The Horrors Within
+
+With their bristling fur and snarling muzzles, lupins cast imposing shadows in the Mists. Lupins often arise from encounters with werewolves in which the curse of lycanthropy didn’t fully take hold. Unlike true werewolves, lupins can’t shift between wolf and humanoid form but are instead stuck as a hybrid transformation. This cursed wolflike physiology affords lupins bestial might, enhanced instincts, and a dread-inducing howl.
+
+Lupin Traits
+
+Creature Type: Humanoid
+
+Size: Medium (about 4–7 feet tall) or Small (about 2–4 feet tall), chosen when you select this species
+
+Speed: 30 feet
+
+As a Lupin, you have these special traits.
+
+Darkvision. You have Darkvision with a range of 60 feet.
+
+Feral Pounce. Your Unarmed Strikes deal Slashing damage instead of Bludgeoning damage. In addition, when you hit a creature with an Unarmed Strike as part of the Attack action on your turn, you can use both the Damage and the Shove options. You can use this benefit only once per turn.
+
+Howl. As a Bonus Action, you let out an unearthly howl. Each creature of your choice within 15 feet of you must succeed on a Wisdom saving throw (DC 8 plus your Constitution modifier and Proficiency Bonus) or have Disadvantage on attack rolls and saving throws until the start of your next turn.
+
+You can use this trait a number of times equal to your Proficiency Bonus, and you regain all expended uses when you finish a Long Rest.
+
+Werewolf Instincts. You have proficiency in the Perception, Stealth, or Survival skill.
+
+Reborn
+Home » Species » Reborn
+Source: Ravenloft - The Horrors Within
+
+Reborn are individuals who have died yet inexplicably still live. Some reborn exhibit the scars of fatal ends, their ashen flesh or bloodless veins making it clear that they’ve escaped death. Other reborn are marvels of magic or science, being stitched together from disparate beings or bearing mysterious minds in manufactured bodies. Whatever their origins, reborn know a new life and seek experiences and answers all their own.
+
+Reborn Traits
+
+Creature Type: Humanoid
+
+Size: Medium (about 4–7 feet tall) or Small (about 2–4 feet tall), chosen when you select this species
+
+Speed: 30 feet
+
+As a Reborn, you have these special traits.
+
+Escaped Death. You have Advantage on Death Saving Throws.
+
+Everlasting. You don’t gain Exhaustion levels from dehydration, malnutrition, or suffocation. You don’t need to sleep, and magic can’t put you to sleep. You can finish a Long Rest in 4 hours if you spend those hours in an inactive, motionless state, during which you retain consciousness.
+
+Knowledge from a Past Life. You gain proficiency in one skill of your choice.
+
+In addition, you can temporarily peer into the past to aid you in the present. When you fail an ability check, you can roll 1d6 and add the number rolled to the d20, potentially turning the failure into a success. You can do this a number of times equal to your Proficiency Bonus, and you regain all expended uses when you finish a Long Rest.
+
+Strange Endurance. You have Resistance to one of the following damage types of your choice: Cold, Necrotic, or Poison.

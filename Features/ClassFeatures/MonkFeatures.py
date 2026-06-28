@@ -120,7 +120,7 @@ class MonksFocus(TextFeature):
             f"    * DC: {dc}\n"
             "Known features:\n"
         )
-        return StringUtils.add_boxes(description, focus_points)
+        return StringUtils.add_boxes(description, focus_points, reset="short or long rest")
 
 
 class FlurryOfBlows(TextFeature):
@@ -412,7 +412,7 @@ class FlurryOfHealingAndHarm(TextFeature):
             "In addition, when you make an Unarmed Strike with Flurry of Blows and deal damage, you can use Hand of Harm with that strike without expending a Focus Point for Hand of Harm. You can still use Hand of Harm only once per turn.\n"
             "You can use these benefits a total number of times equal to your Wisdom modifier (minimum of once). You regain all expended uses when you finish a Long Rest."
         )
-        return StringUtils.add_boxes(description, uses)
+        return StringUtils.add_boxes(description, uses, reset="long rest")
 
 
 class HandOfUltimateMercy(TextFeature):
@@ -587,7 +587,7 @@ class WholenessOfBody(TextFeature):
             "You gain the ability to heal yourself. As a Bonus Action, you can roll your Martial Arts die. You regain a number of Hit Points equal to the number rolled plus your Wisdom modifier (minimum of 1 Hit Point regained).\n"
             "You can use this feature a number of times equal to your Wisdom modifier (minimum of once), and you regain all expended uses when you finish a Long Rest."
         )
-        return StringUtils.add_boxes(description, uses)
+        return StringUtils.add_boxes(description, uses, reset="long rest")
 
 
 class FleetStep(TextFeature):
