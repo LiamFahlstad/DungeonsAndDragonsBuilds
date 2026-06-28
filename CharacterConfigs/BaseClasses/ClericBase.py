@@ -236,7 +236,7 @@ class ClericLevel14(ClassBuilder.BaseClassLevel14):
         blessed_strikes: ClericFeatures.BlessedStrikes = data.get_features_by_type(
             ClericFeatures.BlessedStrikes
         )[0]
-        blessed_strikes.add_feature(ClericFeatures.ImprovedBlessedStrikes())
+        blessed_strikes.extend_feature(ClericFeatures.ImprovedBlessedStrikes())
         return data
 
 

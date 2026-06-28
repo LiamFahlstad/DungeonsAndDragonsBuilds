@@ -123,7 +123,7 @@ class BardLevel5(ClassBuilder.BaseClassLevel5):
         bardic_inspiration: BardFeatures.BardicInspiration = data.get_features_by_type(
             BardFeatures.BardicInspiration
         )[0]
-        bardic_inspiration.add_feature(BardFeatures.FontOfInspiration())
+        bardic_inspiration.extend_feature(BardFeatures.FontOfInspiration())
         data.add_spell(self.spell_1)
         data.add_spell(self.spell_2)
         return data
@@ -292,7 +292,7 @@ class BardLevel18(ClassBuilder.BaseClassLevel18):
         bardic_inspiration: BardFeatures.BardicInspiration = data.get_features_by_type(
             BardFeatures.BardicInspiration
         )[0]
-        bardic_inspiration.add_feature(BardFeatures.SuperiorInspiration())
+        bardic_inspiration.extend_feature(BardFeatures.SuperiorInspiration())
 
         data.add_spell(self.spell)
         return data

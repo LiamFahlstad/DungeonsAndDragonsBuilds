@@ -22,7 +22,7 @@ class MonkShadowLevel3(ClassBuilder.SubclassLevel3):
         monks_focus: MonkFeatures.MonksFocus = data.get_features_by_type(
             MonkFeatures.MonksFocus
         )[0]
-        monks_focus.add_feature(MonkFeatures.ShadowArts())
+        monks_focus.extend_feature(MonkFeatures.ShadowArts())
         return data
 
 
@@ -46,7 +46,7 @@ class MonkShadowLevel11(ClassBuilder.SubclassLevel11):
         shadow_step: MonkFeatures.ShadowStep = data.get_features_by_type(
             MonkFeatures.ShadowStep
         )[0]
-        shadow_step.add_feature(MonkFeatures.ImprovedShadowStep())
+        shadow_step.extend_feature(MonkFeatures.ImprovedShadowStep())
         return data
 
 
@@ -60,7 +60,7 @@ class MonkShadowLevel17(ClassBuilder.SubclassLevel17):
         monks_focus: MonkFeatures.MonksFocus = data.get_features_by_type(
             MonkFeatures.MonksFocus
         )[0]
-        monks_focus.add_feature(MonkFeatures.CloakOfShadows())
+        monks_focus.extend_feature(MonkFeatures.CloakOfShadows())
         return data
 
 

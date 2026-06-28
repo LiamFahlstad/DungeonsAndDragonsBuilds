@@ -64,7 +64,7 @@ class BardLoreLevel14(ClassBuilder.SubclassLevel14):
         bardic_inspiration: BardFeatures.BardicInspiration = data.get_features_by_type(
             BardFeatures.BardicInspiration
         )[0]
-        bardic_inspiration.add_feature(BardFeatures.PeerlessSkill())
+        bardic_inspiration.extend_feature(BardFeatures.PeerlessSkill())
         return data
 
 

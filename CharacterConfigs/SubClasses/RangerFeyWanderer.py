@@ -57,7 +57,7 @@ class FeyWandererRangerLevel7(ClassBuilder.SubclassLevel7):
         aura_of_protection: RangerFeatures.AuraOfProtection = data.get_features_by_type(
             RangerFeatures.AuraOfProtection
         )[0]
-        aura_of_protection.add_feature(RangerFeatures.AuraOfAlacrity())
+        aura_of_protection.extend_feature(RangerFeatures.AuraOfAlacrity())
         return data
 
 

@@ -156,7 +156,7 @@ class PaladinLevel10(ClassBuilder.BaseClassLevel10):
         aura_of_protection: PaladinFeatures.AuraOfProtection = (
             data.get_features_by_type(PaladinFeatures.AuraOfProtection)[0]
         )
-        aura_of_protection.add_feature(PaladinFeatures.AuraOfCourage())
+        aura_of_protection.extend_feature(PaladinFeatures.AuraOfCourage())
         return data
 
 
@@ -206,7 +206,7 @@ class PaladinLevel14(ClassBuilder.BaseClassLevel14):
         lay_on_hands: PaladinFeatures.LayOnHands = data.get_features_by_type(
             PaladinFeatures.LayOnHands
         )[0]
-        lay_on_hands.add_feature(PaladinFeatures.RestoringTouch())
+        lay_on_hands.extend_feature(PaladinFeatures.RestoringTouch())
         return data
 
 
@@ -266,7 +266,7 @@ class PaladinLevel18(ClassBuilder.BaseClassLevel18):
         aura_of_protection: PaladinFeatures.AuraOfProtection = (
             data.get_features_by_type(PaladinFeatures.AuraOfProtection)[0]
         )
-        aura_of_protection.add_feature(PaladinFeatures.AuraExpansion())
+        aura_of_protection.extend_feature(PaladinFeatures.AuraExpansion())
         return data
 
 

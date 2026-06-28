@@ -23,7 +23,7 @@ class ClericLightLevel3(ClassBuilder.SubclassLevel3):
         channel_divinity: ClericFeatures.ChannelDivinity = data.get_features_by_type(
             ClericFeatures.ChannelDivinity
         )[0]
-        channel_divinity.add_feature(ClericFeatures.RadianceOfTheDawn())
+        channel_divinity.extend_feature(ClericFeatures.RadianceOfTheDawn())
         data.add_feature(ClericFeatures.WardingFlare())
         return data
 

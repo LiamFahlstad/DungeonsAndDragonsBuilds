@@ -28,9 +28,9 @@ class MonkLevel2(ClassBuilder.BaseClassLevel2):
         data: CharacterSheetData,
     ) -> CharacterSheetData:
         monks_focus = MonkFeatures.MonksFocus()
-        monks_focus.add_feature(MonkFeatures.FlurryOfBlows())
-        monks_focus.add_feature(MonkFeatures.PatientDefense())
-        monks_focus.add_feature(MonkFeatures.StepOfTheWind())
+        monks_focus.extend_feature(MonkFeatures.FlurryOfBlows())
+        monks_focus.extend_feature(MonkFeatures.PatientDefense())
+        monks_focus.extend_feature(MonkFeatures.StepOfTheWind())
         data.add_feature(monks_focus)
         data.add_feature(MonkFeatures.UnarmoredDefense())
         data.add_feature(MonkFeatures.UnarmoredDefenseText())
@@ -48,7 +48,7 @@ class MonkLevel3(ClassBuilder.BaseClassLevel3):
         monks_focus: MonkFeatures.MonksFocus = data.get_features_by_type(
             MonkFeatures.MonksFocus
         )[0]
-        monks_focus.add_feature(MonkFeatures.DeflectAttacks())
+        monks_focus.extend_feature(MonkFeatures.DeflectAttacks())
         return data
 
 
@@ -74,7 +74,7 @@ class MonkLevel5(ClassBuilder.BaseClassLevel5):
         monks_focus: MonkFeatures.MonksFocus = data.get_features_by_type(
             MonkFeatures.MonksFocus
         )[0]
-        monks_focus.add_feature(MonkFeatures.StunningStrike())
+        monks_focus.extend_feature(MonkFeatures.StunningStrike())
         data.add_feature(MonkFeatures.ExtraAttack())
         return data
 
@@ -173,7 +173,7 @@ class MonkLevel14(ClassBuilder.BaseClassLevel14):
         monks_focus: MonkFeatures.MonksFocus = data.get_features_by_type(
             MonkFeatures.MonksFocus
         )[0]
-        monks_focus.add_feature(MonkFeatures.DisciplinedSurvivorMartialFocus())
+        monks_focus.extend_feature(MonkFeatures.DisciplinedSurvivorMartialFocus())
 
         return data
 
@@ -215,7 +215,7 @@ class MonkLevel18(ClassBuilder.BaseClassLevel18):
         monks_focus: MonkFeatures.MonksFocus = data.get_features_by_type(
             MonkFeatures.MonksFocus
         )[0]
-        monks_focus.add_feature(MonkFeatures.SuperiorDefense())
+        monks_focus.extend_feature(MonkFeatures.SuperiorDefense())
         return data
 
 

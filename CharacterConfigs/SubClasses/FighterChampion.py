@@ -39,8 +39,8 @@ class FighterChampionLevel7(ClassBuilder.SubclassLevel7):
         superiority_dice: FighterFeatures.SuperiorityDice = data.get_features_by_type(
             FighterFeatures.SuperiorityDice
         )[0]
-        superiority_dice.add_feature(self.maneuver_1)
-        superiority_dice.add_feature(self.maneuver_2)
+        superiority_dice.extend_feature(self.maneuver_1)
+        superiority_dice.extend_feature(self.maneuver_2)
         data.add_feature(FighterFeatures.KnowYourEnemy())
         return data
 
@@ -57,8 +57,8 @@ class FighterChampionLevel10(ClassBuilder.SubclassLevel10):
         superiority_dice: FighterFeatures.SuperiorityDice = data.get_features_by_type(
             FighterFeatures.SuperiorityDice
         )[0]
-        superiority_dice.add_feature(self.maneuver_1)
-        superiority_dice.add_feature(self.maneuver_2)
+        superiority_dice.extend_feature(self.maneuver_1)
+        superiority_dice.extend_feature(self.maneuver_2)
         return data
 
 
@@ -74,9 +74,9 @@ class FighterChampionLevel15(ClassBuilder.SubclassLevel15):
         superiority_dice: FighterFeatures.SuperiorityDice = data.get_features_by_type(
             FighterFeatures.SuperiorityDice
         )[0]
-        superiority_dice.add_feature(self.maneuver_1)
-        superiority_dice.add_feature(self.maneuver_2)
-        superiority_dice.add_feature(FighterFeatures.Relentless())
+        superiority_dice.extend_feature(self.maneuver_1)
+        superiority_dice.extend_feature(self.maneuver_2)
+        superiority_dice.extend_feature(FighterFeatures.Relentless())
         return data
 
 

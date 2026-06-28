@@ -34,8 +34,8 @@ class PaladinGloryLevel3(ClassBuilder.SubclassLevel3):
         channel_divinity_feature: PaladinFeatures.ChannelDivinity = (
             data.get_features_by_type(PaladinFeatures.ChannelDivinity)[0]
         )
-        channel_divinity_feature.add_feature(PaladinFeatures.InspiringSmite())
-        channel_divinity_feature.add_feature(PaladinFeatures.PeerlessAthlete())
+        channel_divinity_feature.extend_feature(PaladinFeatures.InspiringSmite())
+        channel_divinity_feature.extend_feature(PaladinFeatures.PeerlessAthlete())
         data.add_spell(ClericLevel1Spells.GUIDING_BOLT)
         data.add_spell(PaladinLevel1Spells.HEROISM)
         return data
@@ -65,7 +65,7 @@ class PaladinGloryLevel7(ClassBuilder.SubclassLevel7):
         aura_of_protection: PaladinFeatures.AuraOfProtection = (
             data.get_features_by_type(PaladinFeatures.AuraOfProtection)[0]
         )
-        aura_of_protection.add_feature(PaladinFeatures.AuraOfAlacrity())
+        aura_of_protection.extend_feature(PaladinFeatures.AuraOfAlacrity())
         return data
 
 

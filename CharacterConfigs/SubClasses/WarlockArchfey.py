@@ -57,7 +57,7 @@ class ArchfeyWarlockLevel7(ClassBuilder.SubclassLevel7):
         aura_of_protection: WarlockFeatures.AuraOfProtection = (
             data.get_features_by_type(WarlockFeatures.AuraOfProtection)[0]
         )
-        aura_of_protection.add_feature(WarlockFeatures.AuraOfAlacrity())
+        aura_of_protection.extend_feature(WarlockFeatures.AuraOfAlacrity())
         return data
 
 

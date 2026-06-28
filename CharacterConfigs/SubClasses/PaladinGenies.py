@@ -33,7 +33,7 @@ class GeniesPaladinLevel3(ClassBuilder.SubclassLevel3):
         channel_divinity_feature: PaladinFeatures.ChannelDivinity = (
             data.get_features_by_type(PaladinFeatures.ChannelDivinity)[0]
         )
-        channel_divinity_feature.add_feature(PaladinFeatures.ElementalSmite())
+        channel_divinity_feature.extend_feature(PaladinFeatures.ElementalSmite())
         data.add_spell(EvocationLevel1Spells.CHROMATIC_ORB)
         data.add_spell(TransmutationLevel0Spells.ELEMENTALISM)
         data.add_spell(EvocationLevel1Spells.THUNDEROUS_SMITE)
@@ -62,7 +62,7 @@ class GeniesPaladinLevel7(ClassBuilder.SubclassLevel7):
         aura_of_protection: PaladinFeatures.AuraOfProtection = (
             data.get_features_by_type(PaladinFeatures.AuraOfProtection)[0]
         )
-        aura_of_protection.add_feature(PaladinFeatures.AuraOfAlacrity())
+        aura_of_protection.extend_feature(PaladinFeatures.AuraOfAlacrity())
         return data
 
 

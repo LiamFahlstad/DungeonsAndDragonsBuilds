@@ -123,7 +123,8 @@ class ChannelDivinity(TextFeature):
             description += self.get_sacred_weapon_description(character_stat_block)
 
         if "Abjure Foes" in self.spells:
-            description += self.add_feature_effects(character_stat_block, AbjureFoes())
+            description += "\n"
+            description += AbjureFoes().get_description(character_stat_block) + "\n"
 
         return description
 

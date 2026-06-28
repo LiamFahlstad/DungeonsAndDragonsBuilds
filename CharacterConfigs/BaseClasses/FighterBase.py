@@ -43,7 +43,7 @@ class FighterLevel2(ClassBuilder.BaseClassLevel2):
         second_wind: FighterFeatures.SecondWind = data.get_features_by_type(
             FighterFeatures.SecondWind
         )[0]
-        second_wind.add_feature(FighterFeatures.TacticalMind())
+        second_wind.extend_feature(FighterFeatures.TacticalMind())
         return data
 
 
@@ -73,7 +73,7 @@ class FighterLevel5(ClassBuilder.BaseClassLevel5):
         second_wind: FighterFeatures.SecondWind = data.get_features_by_type(
             FighterFeatures.SecondWind
         )[0]
-        second_wind.add_feature(FighterFeatures.TacticalShift())
+        second_wind.extend_feature(FighterFeatures.TacticalShift())
         return data
 
 
@@ -135,7 +135,7 @@ class FighterLevel11(ClassBuilder.BaseClassLevel11):
         extra_attack: FighterFeatures.ExtraAttack = data.get_features_by_type(
             FighterFeatures.ExtraAttack
         )[0]
-        extra_attack.add_feature(FighterFeatures.TwoExtraAttacks())
+        extra_attack.extend_feature(FighterFeatures.TwoExtraAttacks())
         return data
 
 
@@ -219,7 +219,7 @@ class FighterLevel20(ClassBuilder.BaseClassLevel20):
         extra_attack: FighterFeatures.ExtraAttack = data.get_features_by_type(
             FighterFeatures.ExtraAttack
         )[0]
-        extra_attack.add_feature(FighterFeatures.ThreeExtraAttacks())
+        extra_attack.extend_feature(FighterFeatures.ThreeExtraAttacks())
         return data
 
 

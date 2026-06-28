@@ -51,7 +51,7 @@ class ClericKnowledgeLevel3(ClassBuilder.SubclassLevel3):
         channel_divinity: ClericFeatures.ChannelDivinity = data.get_features_by_type(
             ClericFeatures.ChannelDivinity
         )[0]
-        channel_divinity.add_feature(ClericFeatures.MindMagic())
+        channel_divinity.extend_feature(ClericFeatures.MindMagic())
         data.add_feature(
             ClericFeatures.BlessingsOfKnowledge(self.skill_1, self.skill_2)
         )

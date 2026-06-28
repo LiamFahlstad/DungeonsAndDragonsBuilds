@@ -171,7 +171,7 @@ class RangerLevel13(ClassBuilder.BaseClassLevel13):
         favored_enemy: RangerFeatures.FavoredEnemy = data.get_features_by_type(
             RangerFeatures.FavoredEnemy
         )[0]
-        favored_enemy.add_feature(RangerFeatures.RelentlessHunter())
+        favored_enemy.extend_feature(RangerFeatures.RelentlessHunter())
         return data
 
 
@@ -232,7 +232,7 @@ class RangerLevel17(ClassBuilder.BaseClassLevel17):
         favored_enemy: RangerFeatures.FavoredEnemy = data.get_features_by_type(
             RangerFeatures.FavoredEnemy
         )[0]
-        favored_enemy.add_feature(RangerFeatures.PreciseHunter())
+        favored_enemy.extend_feature(RangerFeatures.PreciseHunter())
 
         return data
 
@@ -272,7 +272,7 @@ class RangerLevel20(ClassBuilder.BaseClassLevel20):
         favored_enemy: RangerFeatures.FavoredEnemy = data.get_features_by_type(
             RangerFeatures.FavoredEnemy
         )[0]
-        favored_enemy.add_feature(RangerFeatures.FoeSlayer())
+        favored_enemy.extend_feature(RangerFeatures.FoeSlayer())
         return data
 
 

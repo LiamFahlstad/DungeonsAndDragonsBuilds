@@ -960,6 +960,34 @@ class HtmlCharacterSheetWriter:
         .waddl-desc {
             color: #333;
         }
+
+        /* ── Feature upgrade blocks ───────────────────────────────────────── */
+        .feature-upgrade {
+            margin-top: 0.6rem;
+            border-left: 3px solid #9abbe0;
+            background: #f4f8fd;
+            border-radius: 0 3px 3px 0;
+            padding: 0.35rem 0.6rem 0.35rem 0.6rem;
+            max-width: none;
+        }
+
+        .feature-upgrade-label {
+            display: block;
+            font-size: 0.78rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #3a6090;
+            margin-bottom: 0.2rem;
+        }
+
+        .feature-upgrade-body {
+            font-size: 0.88rem;
+            color: #333;
+            max-width: none;
+            margin: 0;
+            padding: 0;
+        }
         </style>
         """
 

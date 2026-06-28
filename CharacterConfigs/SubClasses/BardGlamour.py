@@ -37,7 +37,7 @@ class BardGlamourLevel6(ClassBuilder.SubclassLevel6):
         bardic_inspiration: BardFeatures.BardicInspiration = data.get_features_by_type(
             BardFeatures.BardicInspiration
         )[0]
-        bardic_inspiration.add_feature(BardFeatures.MantleOfMajesty())
+        bardic_inspiration.extend_feature(BardFeatures.MantleOfMajesty())
         return data
 
 

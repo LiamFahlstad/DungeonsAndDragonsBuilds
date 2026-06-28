@@ -49,7 +49,7 @@ class RogueAssassinLevel13(ClassBuilder.SubclassLevel13):
         sneak_attack_feature: RogueFeatures.SneakAttack = data.get_features_by_type(
             RogueFeatures.SneakAttack
         )[0]
-        sneak_attack_feature.add_feature(RogueFeatures.CunningStrike())
+        sneak_attack_feature.extend_feature(RogueFeatures.CunningStrike())
         data.add_feature(RogueFeatures.EnvenomWeapons())
         return data
 
@@ -65,7 +65,7 @@ class RogueAssassinLevel17(ClassBuilder.SubclassLevel17):
         sneak_attack_feature: RogueFeatures.SneakAttack = data.get_features_by_type(
             RogueFeatures.SneakAttack
         )[0]
-        sneak_attack_feature.add_feature(RogueFeatures.CunningStrike())
+        sneak_attack_feature.extend_feature(RogueFeatures.CunningStrike())
         data.add_feature(RogueFeatures.DeathStrike())
         return data
 
