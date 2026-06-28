@@ -130,7 +130,7 @@ class RangerWinterWalkerNonGenericStarterClassArgs(RangerNonGenericStarterClassA
         skills: RangerSkillsStatBlock,
     ):
         super().__init__(
-            subclass=RangerSubclass.HUNTER.value,
+            subclass=RangerSubclass.WINTER_WALKER.value,
             skills=skills,
         )
 
@@ -146,6 +146,6 @@ class WinterWalkerRangerMulticlassBuilder(RangerMulticlassBuilder):
         super().__init__(
             ranger_level_features=ranger_level_features,
             ranger_level=ranger_level,
-            subclass=RangerSubclass.HUNTER.value,
+            subclass=RangerSubclass.WINTER_WALKER.value,
             replace_spells=replace_spells,
         )

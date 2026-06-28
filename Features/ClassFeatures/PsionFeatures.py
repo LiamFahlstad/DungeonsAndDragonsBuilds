@@ -1,7 +1,7 @@
 from Features.BaseFeatures import TextFeature
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
-BARBARIAN_HIT_DIE = 6
+PSION_HIT_DIE = 6
 
 
 class PsionicPower(TextFeature):

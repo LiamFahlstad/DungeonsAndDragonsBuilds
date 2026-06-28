@@ -15,7 +15,7 @@ class RitualAdept(TextFeature):
 
 class ArcaneRecovery(TextFeature):
     def __init__(self):
-        super().__init__(name="Ritual Adept", origin="Wizard Level 1")
+        super().__init__(name="Arcane Recovery", origin="Wizard Level 1")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
 
@@ -168,8 +168,10 @@ class TrainingInWarAndSong(TextFeature):
             name="Training in War and Song", origin="Bladesinger Wizard Level 3"
         )
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def modify(self, character_stat_block: CharacterStatBlock):
         character_stat_block.skills.add_skill_proficiency(self.skill)
+
+    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
             "You gain proficiency with all Melee Martial weapons that don't have the Two-Handed or Heavy property. You can use a Melee weapon with which you have proficiency as a Spellcasting Focus for your Wizard spells.\n"
             "You also gain proficiency in one of the following skills of your choice: Acrobatics, Athletics, Performance, or Persuasion."

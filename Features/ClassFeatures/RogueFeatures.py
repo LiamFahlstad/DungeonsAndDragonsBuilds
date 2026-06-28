@@ -3,7 +3,7 @@ from Features.BaseFeatures import CharacterFeature, TextFeature
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
-RANGER_HIT_DIE = 8
+ROGUE_HIT_DIE = 8
 
 
 class Expertise(CharacterFeature):

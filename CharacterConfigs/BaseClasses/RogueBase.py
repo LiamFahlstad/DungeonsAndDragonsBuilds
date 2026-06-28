@@ -81,6 +81,7 @@ class RogueLevel6(ClassBuilder.BaseClassLevel6):
 class RogueLevel7(ClassBuilder.BaseClassLevel7):
 
     def add_features(self, data: CharacterSheetData) -> CharacterSheetData:
+        data.add_feature(RogueFeatures.Evasion())
         data.add_feature(RogueFeatures.ReliableTalent())
         return data
 
@@ -227,7 +228,6 @@ class RogueNonGenericStarterClassArgs(ClassBuilder.NonGenericStarterClassArgs):
             skills=skills,
             armor_proficiencies=[
                 Definitions.ArmorType.LIGHT,
-                Definitions.ArmorType.MEDIUM,
             ],
         )
 

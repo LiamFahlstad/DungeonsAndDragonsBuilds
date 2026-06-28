@@ -42,7 +42,7 @@ class FavoredEnemy(TextFeature):
             free_hunters_mark_uses = 3
         elif character_stat_block.character_level < 13:
             free_hunters_mark_uses = 4
-        elif character_stat_block.character_level < 16:
+        elif character_stat_block.character_level < 17:
             free_hunters_mark_uses = 5
         else:
             free_hunters_mark_uses = 6

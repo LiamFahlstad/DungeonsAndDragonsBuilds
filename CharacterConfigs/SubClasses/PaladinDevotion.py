@@ -126,7 +126,7 @@ class PaladinDevotionNonGenericStarterClassArgs(PaladinNonGenericStarterClassArg
         skills: PaladinSkillsStatBlock,
     ):
         super().__init__(
-            subclass=PaladinSubclass.OATH_OF_THE_ANCIENTS.value,
+            subclass=PaladinSubclass.OATH_OF_DEVOTION.value,
             skills=skills,
         )
 

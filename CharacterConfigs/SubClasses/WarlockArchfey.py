@@ -14,8 +14,12 @@ from Spells.Definitions import (
     BardLevel1Spells,
     BardLevel2Spells,
     BardLevel3Spells,
+    BardLevel4Spells,
+    ClericLevel4Spells,
     SorcererLevel3Spells,
     WarlockLevel2Spells,
+    WizardLevel3Spells,
+    WizardLevel5Spells,
 )
 from StatBlocks.SkillsStatBlock import WarlockSkillsStatBlock
 

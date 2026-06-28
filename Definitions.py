@@ -226,6 +226,7 @@ class RangerSubclass(str, Enum):
     HUNTER = "Hunter"
     FEY_WANDERER = "Fey Wanderer"
     GLOOM_STALKER = "Gloom Stalker"
+    WINTER_WALKER = "Winter Walker"
 
 
 class MonkSubclass(str, Enum):

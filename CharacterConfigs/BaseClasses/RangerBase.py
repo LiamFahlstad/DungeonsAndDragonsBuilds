@@ -124,6 +124,7 @@ class RangerLevel9(ClassBuilder.BaseClassLevel9):
 
     def add_features(self, data: CharacterSheetData) -> CharacterSheetData:
         data.add_feature(RangerFeatures.Expertise(self.skill_1, self.skill_2))
+        data.add_spell(self.spell)
         return data
 
 
@@ -146,6 +147,7 @@ class RangerLevel11(ClassBuilder.BaseClassLevel11):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
+        data.add_spell(self.spell)
         return data
 
 
@@ -172,6 +174,7 @@ class RangerLevel13(ClassBuilder.BaseClassLevel13):
             RangerFeatures.FavoredEnemy
         )[0]
         favored_enemy.extend_feature(RangerFeatures.RelentlessHunter())
+        data.add_spell(self.spell)
         return data
 
 

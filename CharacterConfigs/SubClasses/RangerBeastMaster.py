@@ -150,6 +150,6 @@ class RangerBeastMasterMulticlassBuilder(RangerMulticlassBuilder):
         super().__init__(
             ranger_level_features=ranger_level_features,
             ranger_level=ranger_level,
-            subclass=RangerSubclass.HUNTER.value,
+            subclass=RangerSubclass.BEAST_MASTER.value,
             replace_spells=replace_spells,
         )

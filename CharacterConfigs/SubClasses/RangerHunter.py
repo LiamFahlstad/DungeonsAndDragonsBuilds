@@ -3,7 +3,10 @@ from typing import Optional
 import attr
 
 from CharacterConfigs.BaseClasses import ClassBuilder
-from CharacterConfigs.BaseClasses.RangerBase import RangerMulticlassBuilder
+from CharacterConfigs.BaseClasses.RangerBase import (
+    RangerMulticlassBuilder,
+    RangerNonGenericStarterClassArgs,
+)
 from CharacterSheetCreator import CharacterSheetData
 from Definitions import RangerSubclass
 from Features.ClassFeatures import RangerFeatures

@@ -4,7 +4,7 @@ from Features.Weapons import WeaponsDamageRolls
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
-BARBARIAN_HIT_DIE = 8
+MONK_HIT_DIE = 8
 
 LEVEL_TO_MARTIAL_ARTS_DIE = {
     1: WeaponsDamageRolls.D6,

@@ -297,7 +297,7 @@ class ArtificerLevel19(ClassBuilder.BaseClassLevel19):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-
+        data.add_feature(self.epic_boon)
         data.add_spell(self.spell)
         return data
 

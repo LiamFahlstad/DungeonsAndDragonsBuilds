@@ -4,7 +4,7 @@ from Features.BaseFeatures import TextFeature
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
-BARBARIAN_HIT_DIE = 8
+DRUID_HIT_DIE = 8
 
 
 class Spellcasting(TextFeature):
