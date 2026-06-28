@@ -127,7 +127,7 @@ class HtmlCharacterSheetWriter:
 
         ac = character.calculate_armor_class()
         if self._has_shield_armor(armors):
-            ac = f"{ac} (with Shield) and {ac - 2} (without Shield)"
+            ac = f"{ac} (w/ Shield) / {ac - 2}"
 
         initiative = f"d20 + {character.initiative}"
         if character.initiative_proficiency:
@@ -542,42 +542,48 @@ class HtmlCharacterSheetWriter:
             margin: 0.5em 0 0.5em 1.2em;
         }
 
-        /* Print tweaks (LESS aggressive) */
         @media print {
             body {
                 padding: 0;
-                font-size: 10pt; /* ↓ smaller print size */
+                font-size: 10pt;
             }
 
             div {
                 max-width: 100%;
             }
 
-            /* Only avoid breaking headings from next line */
             h1, h2, h3 {
                 page-break-after: avoid;
             }
 
-            /* Allow content to flow naturally */
             p, pre, ul, ol {
                 page-break-inside: auto;
             }
 
-            /* Remove forced page breaks entirely */
             .page-break {
                 display: none;
             }
 
-            h2 {
-                margin: 0.7em 0 0.2em;
+            /* Collapse inter-section <br> gaps */
+            br {
+                display: none;
             }
 
             h1 {
-                margin: 0 0 0.6rem 0;
+                margin: 0 0 0.3rem 0;
+            }
+
+            h2 {
+                margin: 0.3em 0 0.1em;
             }
 
             table.stat-table {
-                margin-bottom: 0.8rem;
+                margin-bottom: 0.4rem;
+            }
+
+            table.stat-table th,
+            table.stat-table td {
+                padding: 3px 6px;
             }
         }
 

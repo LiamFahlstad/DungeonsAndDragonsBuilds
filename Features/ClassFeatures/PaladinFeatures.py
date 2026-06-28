@@ -108,7 +108,12 @@ class ChannelDivinity(TextFeature):
             "You regain one after a Short Rest, all after a Long Rest.\n"
             "DC: class's Spellcasting feature.\n"
         )
-        description = StringUtils.add_boxes(description, usages, regain_all_on="short or long rest")
+        description = StringUtils.add_boxes(
+            description,
+            usages,
+            regain_x_on=(1, "short rest"),
+            regain_all_on="long rest",
+        )
 
         if "Divine Sense" in self.spells:
             description += "\n"

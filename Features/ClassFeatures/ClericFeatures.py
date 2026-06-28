@@ -59,7 +59,9 @@ class ChannelDivinity(TextFeature):
             "You roll an additional d8 when you reach Cleric levels 7 (2d8), 13 (3d8), and 18 (4d8).\n"
             "Turn Undead. As a Magic action, you present your Holy Symbol and censure Undead creatures. Each Undead of your choice within 30 feet of you must make a Wisdom saving throw. If the creature fails its save, it has the Frightened and Incapacitated conditions for 1 minute. For that duration, it tries to move as far from you as it can on its turns. This effect ends early on the creature if it takes any damage, if you have the Incapacitated condition, or if you die."
         )
-        return StringUtils.add_boxes(description, uses, regain_all_on="short or long rest")
+        return StringUtils.add_boxes(
+            description, uses, regain_x_on=(1, "short rest"), regain_all_on="long rest"
+        )
 
 
 class SearUndead(TextFeature):
@@ -111,9 +113,7 @@ class GreaterDivineIntervention(TextFeature):
         super().__init__(name="Greater Divine Intervention", origin="Cleric Level 20")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        description = (
-            "You can call on even more powerful divine intervention. When you use your Divine Intervention feature, you can choose Wish when you select a spell. If you do so, you can't use Divine Intervention again until you finish 2d4 Long Rests."
-        )
+        description = "You can call on even more powerful divine intervention. When you use your Divine Intervention feature, you can choose Wish when you select a spell. If you do so, you can't use Divine Intervention again until you finish 2d4 Long Rests."
         return description
 
 
@@ -397,7 +397,9 @@ class WarPriest(TextFeature):
         wisdom_modifier = character_stat_block.get_ability_modifier(Ability.WISDOM)
         uses = max(1, wisdom_modifier)
         description = "As a Bonus Action, you can make one attack with a weapon or an Unarmed Strike. You can use this Bonus Action a number of times equal to your Wisdom modifier (minimum of once). You regain all expended uses when you finish a Short or Long Rest."
-        return StringUtils.add_boxes(description, uses, regain_all_on="short or long rest")
+        return StringUtils.add_boxes(
+            description, uses, regain_all_on="short or long rest"
+        )
 
 
 class WarGodsBlessing(TextFeature):
