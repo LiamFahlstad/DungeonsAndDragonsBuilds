@@ -1104,6 +1104,78 @@ class HtmlCharacterSheetWriter:
             font-style: italic;
             margin-top: 0.35em;
         }
+
+        /* ── Weapon hit-probability row ──────────────────────────────────── */
+        tr.weapon-hit-row td {
+            padding: 3px 7px;
+            vertical-align: middle;
+        }
+
+        /* Inner table that holds the AC columns */
+        table.whit-inner {
+            border-collapse: collapse;
+            font-size: 0.75rem;
+            width: 100%;
+        }
+
+        table.whit-inner th.whit-ac {
+            background: #3a2c1c;
+            color: #f2e8d8;
+            font-weight: 600;
+            text-align: center;
+            padding: 2px 5px;
+            border: 1px solid #5a4030;
+            white-space: nowrap;
+            min-width: 2.4em;
+            font-size: 0.72rem;
+            letter-spacing: 0.03em;
+        }
+
+        table.whit-inner td.whit-pct {
+            text-align: center;
+            padding: 2px 5px;
+            border: 1px solid #ddd;
+            white-space: nowrap;
+            font-variant-numeric: tabular-nums;
+        }
+
+        /* Colour-code the probability cells: green → yellow → red */
+        table.whit-inner td.whit-pct[data-pct="100"],
+        table.whit-inner td.whit-pct[data-pct="95"],
+        table.whit-inner td.whit-pct[data-pct="90"],
+        table.whit-inner td.whit-pct[data-pct="85"],
+        table.whit-inner td.whit-pct[data-pct="80"] {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        table.whit-inner td.whit-pct[data-pct="75"],
+        table.whit-inner td.whit-pct[data-pct="70"],
+        table.whit-inner td.whit-pct[data-pct="65"],
+        table.whit-inner td.whit-pct[data-pct="60"] {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        table.whit-inner td.whit-pct[data-pct="55"],
+        table.whit-inner td.whit-pct[data-pct="50"],
+        table.whit-inner td.whit-pct[data-pct="45"],
+        table.whit-inner td.whit-pct[data-pct="40"] {
+            background: #fde8c8;
+            color: #6b3a00;
+        }
+
+        table.whit-inner td.whit-pct[data-pct="35"],
+        table.whit-inner td.whit-pct[data-pct="30"],
+        table.whit-inner td.whit-pct[data-pct="25"],
+        table.whit-inner td.whit-pct[data-pct="20"],
+        table.whit-inner td.whit-pct[data-pct="15"],
+        table.whit-inner td.whit-pct[data-pct="10"],
+        table.whit-inner td.whit-pct[data-pct="5"],
+        table.whit-inner td.whit-pct[data-pct="0"] {
+            background: #f8d7da;
+            color: #721c24;
+        }
         </style>
         """
 

@@ -224,6 +224,24 @@ class AbstractWeapon(TextFeature):
     ) -> Optional[str]:
         return None
 
+    def calculate_hit_probabilities(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[int, float]]:
+        """Return hit probability for each AC from 10 to 25 (inclusive)."""
+        attack_roll_bonus = self.calculate_total_attack_roll_bonus_int(
+            character_stat_block
+        )
+        results = []
+        for ac in range(10, 26):
+            prob = DamageCalculator.probability_of_success(
+                difficulty_class=ac,
+                die=DamageCalculator.Die.D20,
+                condition=DamageCalculator.DiceRollCondition.NEUTRAL,
+                bonus=attack_roll_bonus,
+            )
+            results.append((ac, prob))
+        return results
+
     def write_to_file(self, character_stat_block: CharacterStatBlock, file: TextIO):
         pass  # HTML rendering is handled by write_weapons_to_file
 
@@ -1070,6 +1088,28 @@ def _write_single_weapon(
         f"<tr class='weapon-quickstats'>"
         f"<td class='wqs-left'>{type_cell}</td>"
         f"<td class='wqs-right'>{roll_cell}</td>"
+        f"</tr>\n"
+    )
+
+    # ── Hit probability row ─────────────────────────────────────────────────
+    hit_probs = weapon.calculate_hit_probabilities(character_stat_block)
+    inner_header = "".join(
+        f"<th class='whit-ac'>{ac}</th>" for ac, _ in hit_probs
+    )
+    inner_values = "".join(
+        f"<td class='whit-pct' data-pct='{prob * 100:.0f}'>{prob * 100:.0f}%</td>"
+        for _, prob in hit_probs
+    )
+    inner_table = (
+        f"<table class='whit-inner'>"
+        f"<tr>{inner_header}</tr>"
+        f"<tr>{inner_values}</tr>"
+        f"</table>"
+    )
+    file.write(
+        f"<tr class='weapon-hit-row'>"
+        f"<td class='wlabel-col'>Hit % by AC</td>"
+        f"<td class='whit-cell'>{inner_table}</td>"
         f"</tr>\n"
     )
 
