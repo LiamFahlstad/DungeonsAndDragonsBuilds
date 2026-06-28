@@ -274,10 +274,8 @@ class HtmlCharacterSheetWriter:
         sorted_features = sorted(text_features, key=self._sort_features_key)
 
         file.write("<div>\n")
-        for i, feature in enumerate(sorted_features):
+        for feature in sorted_features:
             feature.write_to_file(character, file)
-            if i < len(sorted_features) - 1:
-                file.write("<hr>\n")
         file.write("</div>\n<br>\n")
 
     def _write_weapons(
@@ -982,28 +980,82 @@ class HtmlCharacterSheetWriter:
             color: #333;
         }
 
-        /* ── Feature upgrade blocks ───────────────────────────────────────── */
+        /* ── Feature cards ───────────────────────────────────────────────── */
+        .feature-card {
+            border: 1px solid #b89060;
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 0 0 0.55rem 0;
+            max-width: none;
+            padding: 0;
+        }
+
+        .feature-header {
+            display: flex;
+            align-items: baseline;
+            justify-content: space-between;
+            gap: 0.8rem;
+            background: #4a3020;
+            padding: 5px 10px;
+            border-bottom: 2px solid #9a7040;
+            max-width: none;
+            margin: 0;
+        }
+
+        .feature-name {
+            font-size: 1rem;
+            font-weight: 700;
+            color: #f5e8d0;
+            letter-spacing: 0.02em;
+        }
+
+        .feature-origin {
+            font-size: 0.75rem;
+            color: #c8a870;
+            font-style: italic;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+
+        .feature-body {
+            padding: 0.4rem 0.7rem;
+            background: #fffcf7;
+            font-size: 0.88rem;
+            max-width: none;
+            margin: 0;
+        }
+
+        .feature-body p {
+            margin: 0.3em 0;
+        }
+
+        .feature-body ul,
+        .feature-body ol {
+            margin: 0.3em 0 0.3em 1.2em;
+        }
+
+        /* Feature upgrade blocks (nested inside .feature-body) */
         .feature-upgrade {
-            margin-top: 0.6rem;
+            margin-top: 0.5rem;
             border-left: 3px solid #9abbe0;
-            background: #f4f8fd;
+            background: #f0f6fd;
             border-radius: 0 3px 3px 0;
-            padding: 0.35rem 0.6rem 0.35rem 0.6rem;
+            padding: 0.3rem 0.6rem;
             max-width: none;
         }
 
         .feature-upgrade-label {
             display: block;
-            font-size: 0.78rem;
+            font-size: 0.75rem;
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 0.05em;
             color: #3a6090;
-            margin-bottom: 0.2rem;
+            margin-bottom: 0.15rem;
         }
 
         .feature-upgrade-body {
-            font-size: 0.88rem;
+            font-size: 0.85rem;
             color: #333;
             max-width: none;
             margin: 0;

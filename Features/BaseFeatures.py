@@ -132,9 +132,12 @@ class TextFeature(Feature):
         description = self.get_description(character_stat_block)
         html_description = self._description_to_html(description)
 
-        file.write(f"<h3>{self.name}</h3>\n")
-        file.write(f"<strong>Origin:</strong> {self.origin}\n<br>\n")
-        file.write("<strong>Description:</strong><br>\n")
+        file.write("<div class='feature-card'>\n")
+        file.write("<div class='feature-header'>\n")
+        file.write(f"<span class='feature-name'>{self.name}</span>\n")
+        file.write(f"<span class='feature-origin'>{self.origin}</span>\n")
+        file.write("</div>\n")
+        file.write("<div class='feature-body'>\n")
         file.write(f"{html_description}\n")
 
         for extension in self.extensions:
@@ -146,3 +149,6 @@ class TextFeature(Feature):
                 f"<div class='feature-upgrade-body'>{ext_html}</div>\n"
                 f"</div>\n"
             )
+
+        file.write("</div>\n")
+        file.write("</div>\n")
