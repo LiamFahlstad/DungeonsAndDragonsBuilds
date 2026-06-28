@@ -1244,6 +1244,12 @@ class HtmlCharacterSheetWriter:
             white-space: nowrap;
             letter-spacing: 0.03em;
         }
+
+        /* Spell school colors — preserved in print */
+        span[style*="color:"] {
+            print-color-adjust: exact;
+            -webkit-print-color-adjust: exact;
+        }
         </style>
         """
 

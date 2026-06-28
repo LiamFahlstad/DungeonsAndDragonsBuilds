@@ -1903,6 +1903,18 @@ class TransmutationLevel9Spells(str, Enum):
 class Spell(ABC):
     """Abstract base spell interface."""
 
+    # School of magic color mapping
+    SCHOOL_COLORS = {
+        "Abjuration": "#4a90d9",
+        "Conjuration": "#d4af37",
+        "Divination": "#a0a0a0",
+        "Enchantment": "#d44fa0",
+        "Evocation": "#d94a4a",
+        "Illusion": "#8b4ad9",
+        "Necromancy": "#4a8b4a",
+        "Transmutation": "#c87941",
+    }
+
     def __init__(
         self,
         spell_casting_ability: Optional[Definitions.Ability] = None,
@@ -1965,6 +1977,11 @@ class Spell(ABC):
 
     # ---------- Shared behavior ---------- #
 
+    @staticmethod
+    def get_school_color(school: str) -> str:
+        """Return the color hex code for a school of magic, or a default gray if unknown."""
+        return Spell.SCHOOL_COLORS.get(school, "#999999")
+
     def to_dict(self) -> dict:
         return {
             "name": self.name,
@@ -2013,10 +2030,11 @@ class Spell(ABC):
 
         # ── Quick-stats cells ────────────────────────────────────────────────
         # Left ~35%: level, school, components
+        school_color = Spell.get_school_color(self.school)
         left_cell = (
             f"<span class='slabel'>{level_label}</span>"
             f"<span class='ssep'>·</span>"
-            f"<span class='slabel'>School</span> {self.school}"
+            f"<span class='slabel'>School</span> <span style='color: {school_color}; print-color-adjust: exact; -webkit-print-color-adjust: exact;'>{self.school}</span>"
             f"<span class='ssep'>·</span>"
             f"<span class='slabel'>Components</span> {self.components}"
         )
