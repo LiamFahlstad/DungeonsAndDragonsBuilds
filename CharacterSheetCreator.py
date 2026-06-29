@@ -52,6 +52,7 @@ class CharacterSheetData:
     armor_proficiencies: set[Definitions.ArmorType] = attr.Factory(set)
     items: list[tuple[Items.Item, int]] = attr.Factory(list)  # (item_name, quantity)
     tool_proficiencies: list[ToolProficiency] = attr.Factory(list)
+    experience_points: int = 0
     _character_cached: Optional[CharacterStatBlock] = None
 
     @property
@@ -196,6 +197,7 @@ class CharacterSheetData:
             spells=self.spells,
             items=self.items,
             tool_proficiencies=self.tool_proficiencies,
+            experience_points=self.experience_points,
         )
 
     def setup_character_stat_block(self) -> CharacterStatBlock:

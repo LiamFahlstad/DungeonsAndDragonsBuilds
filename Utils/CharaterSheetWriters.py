@@ -90,23 +90,24 @@ class HtmlCharacterSheetWriter:
 
         file.write("</table>\n")
 
-    def _write_general_info(self, character: CharacterStatBlock, file: TextIO):
+    def _write_general_info(self, character: CharacterStatBlock, file: TextIO, experience_points: int = 0):
         file.write("<h2>General Info</h2>\n")
 
         rows = [
             ("Name", character.name),
             ("Level", character.character_level),
-            ("Starter Class", character.starter_class.value),
+            ("Class", character.starter_class.value),
             (
-                "Level per Class",
+                "Multiclass",
                 ", ".join(
                     f"{cls.value}: {lvl}"
                     for cls, lvl in character.level_per_class.items()
                     if lvl > 0
                 ),
             ),
-            ("Character Subclass", character.character_subclass),
-            ("Proficiency Bonus", character.get_proficiency_bonus()),
+            ("Subclass", character.character_subclass),
+            ("Prof. Bonus", character.get_proficiency_bonus()),
+            ("XP", experience_points),
         ]
 
         file.write("<table class='stat-table'>\n<tr>")
@@ -265,15 +266,28 @@ class HtmlCharacterSheetWriter:
         if skill_config == Definitions.SkillConfig.DEFAULT:
             for skill in Definitions.Skill.list_sorted():
                 proficient = character.is_proficient_in_skill(skill)
+                has_expertise = character.has_expertise_in_skill(skill)
+
+                # Determine proficiency display text
+                if has_expertise:
+                    prof_text = "<span class='skill-expertise'>Exp</span>"
+                    tr_class = "st-expertise"
+                elif proficient:
+                    prof_text = "Prof"
+                    tr_class = "st-proficient"
+                else:
+                    prof_text = "—"
+                    tr_class = ""
+
                 row = [
                     skill.value,
                     f"{character.get_skill_modifier(skill):+}",
-                    "Yes" if proficient else "No",
+                    prof_text,
                     character.get_skill_ability(skill).value,
                     character.get_skill_roll_condition(skill).value,
                     f"{character.get_skill_bonus(skill):+}",
                 ]
-                self._write_table_row(file, row, "st-proficient" if proficient else "")
+                self._write_table_row(file, row, tr_class)
 
         if skill_config == Definitions.SkillConfig.HOMEBREW:
             for skill in Definitions.HomeBrewSkill.list_sorted():
@@ -284,15 +298,30 @@ class HtmlCharacterSheetWriter:
                 proficient = any(
                     character.is_proficient_in_skill(s) for s in possible_skills
                 )
+                has_expertise = any(
+                    character.has_expertise_in_skill(s) for s in possible_skills
+                )
+
+                # Determine proficiency display text
+                if has_expertise:
+                    prof_text = "<span class='skill-expertise'>Exp</span>"
+                    tr_class = "st-expertise"
+                elif proficient:
+                    prof_text = "Prof"
+                    tr_class = "st-proficient"
+                else:
+                    prof_text = "—"
+                    tr_class = ""
+
                 row = [
                     skill.value,
                     f"{max(character.get_skill_modifier(s) for s in possible_skills):+}",
-                    "Yes" if proficient else "No",
+                    prof_text,
                     character.get_skill_ability(possible_skills[0]).value,
                     self._resolve_homebrew_roll_condition(roll_conditions).value,
                     f"{max(character.get_skill_bonus(s) for s in possible_skills):+}",
                 ]
-                self._write_table_row(file, row, "st-proficient" if proficient else "")
+                self._write_table_row(file, row, tr_class)
 
         file.write("</table>\n<br>\n")
 
@@ -451,6 +480,16 @@ class HtmlCharacterSheetWriter:
         ]
         sorted_spells = sorted(created_spells, key=lambda s: (s.level, s.name))
 
+        # Determine if character is a prepared-caster class
+        prepared_caster_classes = {
+            Definitions.CharacterClass.CLERIC,
+            Definitions.CharacterClass.DRUID,
+            Definitions.CharacterClass.WIZARD,
+            Definitions.CharacterClass.PALADIN,
+            Definitions.CharacterClass.ARTIFICER,
+        }
+        show_prep_checkbox = character.starter_class in prepared_caster_classes
+
         # Group by level and emit a level header before each group
         from itertools import groupby
         for level, group in groupby(sorted_spells, key=lambda s: s.level):
@@ -459,7 +498,7 @@ class HtmlCharacterSheetWriter:
             for i, spell in enumerate(group):
                 if i > 0:
                     file.write("<div class='spell-gap'></div>\n")
-                spell.write_to_file(file)
+                spell.write_to_file(file, show_preparation_checkbox=show_prep_checkbox)
 
         file.write("</div>\n")
         file.write("<br class='section-gap'>\n")
@@ -693,6 +732,29 @@ class HtmlCharacterSheetWriter:
 
         table.stat-table tr.st-proficient td:first-child {
             font-weight: 700;
+        }
+
+        table.stat-table tr.st-expertise td {
+            background: #fff8e6;
+        }
+
+        table.stat-table tr.st-expertise:nth-child(even) td {
+            background: #fff4cc;
+        }
+
+        table.stat-table tr.st-expertise td:first-child {
+            font-weight: 700;
+        }
+
+        /* Expertise badge styling */
+        .skill-expertise {
+            display: inline-block;
+            background: #d4a747;
+            color: #fff;
+            padding: 1px 6px;
+            border-radius: 3px;
+            font-weight: 700;
+            font-size: 0.85em;
         }
 
         /* Spell slot checkboxes */
@@ -1278,6 +1340,26 @@ class HtmlCharacterSheetWriter:
             print-color-adjust: exact;
             -webkit-print-color-adjust: exact;
         }
+
+        /* Spell preparation checkbox */
+        .spell-prep-checkbox {
+            display: inline-block;
+            width: 1.2em;
+            height: 1.2em;
+            border: 1.5px solid #f5e8d0;
+            box-sizing: border-box;
+            border-radius: 2px;
+            vertical-align: middle;
+            margin-right: 0.3em;
+            background: transparent;
+        }
+
+        @media print {
+            .spell-prep-checkbox {
+                border: 1px solid #333;
+                background: white;
+            }
+        }
         </style>
         """
 
@@ -1296,6 +1378,7 @@ class HtmlCharacterSheetWriter:
         spells: list[tuple[str, Ability, Optional[str]]],
         items: list[tuple[Items.Item, int]],
         tool_proficiencies: list[ToolProficiency],
+        experience_points: int = 0,
     ):
         output_path_obj = pathlib.Path(output_path)
         output_path_obj.parent.mkdir(parents=True, exist_ok=True)
@@ -1304,7 +1387,7 @@ class HtmlCharacterSheetWriter:
             file.write(
                 f"<h1>{character.name} - Level {character.character_level} {character.starter_class.value}</h1>\n"
             )
-            self._write_general_info(character, file)
+            self._write_general_info(character, file, experience_points)
             self._write_combat_stats(character, file, armors, armor_proficiencies)
             self._write_abilities(character, file)
             self._write_skills(character, file, skill_config)

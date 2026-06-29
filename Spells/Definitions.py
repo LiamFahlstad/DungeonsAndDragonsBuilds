@@ -1996,7 +1996,7 @@ class Spell(ABC):
             "source": self.source,
         }
 
-    def write_to_file(self, file: TextIO):  # writes HTML
+    def write_to_file(self, file: TextIO, show_preparation_checkbox: bool = False):  # writes HTML
         # ── Detect special tags ──────────────────────────────────────────────
         is_concentration = self.duration.lower().startswith("concentration")
         is_ritual = "ritual" in self.casting_time.lower()
@@ -2051,12 +2051,17 @@ class Spell(ABC):
             f"<span class='slabel'>Duration</span> {duration_display}"
         )
 
+        # ── Spell name with optional checkbox ─────────────────────────────────
+        spell_name_display = self.name
+        if show_preparation_checkbox and self.level > 0:  # Don't show checkbox for cantrips
+            spell_name_display = f"<span class='spell-prep-checkbox'></span> {self.name}"
+
         # ── Write card ───────────────────────────────────────────────────────
         file.write("<table class='spell-card'>\n")
 
         # Name header row (full width)
         file.write(
-            f"<tr><th class='spell-name' colspan='2'>{self.name}"
+            f"<tr><th class='spell-name' colspan='2'>{spell_name_display}"
             f"{(' ' + tags_html.strip()) if tags_html else ''}"
             f"</th></tr>\n"
         )
