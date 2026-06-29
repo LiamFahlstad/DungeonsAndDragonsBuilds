@@ -226,7 +226,9 @@ class AbstractWeapon(TextFeature):
         return None
 
     def calculate_hit_probabilities(
-        self, character_stat_block: CharacterStatBlock
+        self,
+        character_stat_block: CharacterStatBlock,
+        condition: DamageCalculator.DiceRollCondition = DamageCalculator.DiceRollCondition.NEUTRAL,
     ) -> list[tuple[int, float]]:
         """Return hit probability for each AC from 10 to 25 (inclusive)."""
         attack_roll_bonus = self.calculate_total_attack_roll_bonus_int(
@@ -237,7 +239,7 @@ class AbstractWeapon(TextFeature):
             prob = DamageCalculator.probability_of_success(
                 difficulty_class=ac,
                 die=DamageCalculator.Die.D20,
-                condition=DamageCalculator.DiceRollCondition.NEUTRAL,
+                condition=condition,
                 bonus=attack_roll_bonus,
             )
             results.append((ac, prob))
@@ -1093,18 +1095,27 @@ def _write_single_weapon(
     )
 
     # ── Hit probability row ─────────────────────────────────────────────────
-    hit_probs = weapon.calculate_hit_probabilities(character_stat_block)
+    conditions = [
+        ("Normal", DamageCalculator.DiceRollCondition.NEUTRAL),
+        ("Adv.", DamageCalculator.DiceRollCondition.ADVANTAGE),
+        ("Disadv.", DamageCalculator.DiceRollCondition.DISADVANTAGE),
+    ]
+    hit_probs_normal = weapon.calculate_hit_probabilities(character_stat_block)
     inner_header = "".join(
-        f"<th class='whit-ac'>{ac}</th>" for ac, _ in hit_probs
+        f"<th class='whit-ac'>{ac}</th>" for ac, _ in hit_probs_normal
     )
-    inner_values = "".join(
-        f"<td class='whit-pct' data-pct='{prob * 100:.0f}'>{prob * 100:.0f}%</td>"
-        for _, prob in hit_probs
-    )
+    inner_rows = ""
+    for label, cond in conditions:
+        hit_probs = weapon.calculate_hit_probabilities(character_stat_block, condition=cond)
+        cells = "".join(
+            f"<td class='whit-pct' data-pct='{round(round(prob * 100) / 5) * 5}'>{prob * 100:.0f}%</td>"
+            for _, prob in hit_probs
+        )
+        inner_rows += f"<tr><td class='whit-cond-label'>{label}</td>{cells}</tr>"
     inner_table = (
         f"<table class='whit-inner'>"
-        f"<tr>{inner_header}</tr>"
-        f"<tr>{inner_values}</tr>"
+        f"<tr><th class='whit-cond-label'></th>{inner_header}</tr>"
+        f"{inner_rows}"
         f"</table>"
     )
     file.write(

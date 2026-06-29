@@ -234,7 +234,8 @@ class HtmlCharacterSheetWriter:
                     bonus=bonus,
                 )
                 pct = round((1 - prob_success) * 100)
-                file.write(f"<td class='whit-pct' data-pct='{pct}'>{pct}%</td>")
+                pct_bucket = round(pct / 5) * 5
+                file.write(f"<td class='whit-pct' data-pct='{pct_bucket}'>{pct}%</td>")
             file.write("</tr>\n")
 
         file.write("</table>\n")
@@ -247,8 +248,14 @@ class HtmlCharacterSheetWriter:
             attack_bonus = character.calculate_attack_bonus_for_ability(ability)
             bonus_to_abilities.setdefault(attack_bonus, []).append(ability.short_name)
 
+        spell_attack_conditions = [
+            ("Normal", DiceRollCondition.NEUTRAL),
+            ("Adv.", DiceRollCondition.ADVANTAGE),
+            ("Disadv.", DiceRollCondition.DISADVANTAGE),
+        ]
+
         file.write("<table class='dc-fail-table'>\n")
-        file.write("<tr><th class='dc-fail-dc-col'>Spell Attack (Hit %)</th>")
+        file.write("<tr><th class='dc-fail-dc-col'>Spell Attack (Hit %)</th><th class='dc-fail-dc-col'></th>")
         for ac in ac_range:
             file.write(f"<th class='whit-ac'>AC {ac}</th>")
         file.write("</tr>\n")
@@ -256,17 +263,21 @@ class HtmlCharacterSheetWriter:
         for attack_bonus in sorted(bonus_to_abilities.keys(), reverse=True):
             abilities_label = "/".join(bonus_to_abilities[attack_bonus])
             sign = "+" if attack_bonus >= 0 else ""
-            file.write(f"<tr><th class='dc-fail-dc-col'>{sign}{attack_bonus} ({abilities_label})</th>")
-            for ac in ac_range:
-                prob = DamageCalculator.probability_of_success(
-                    difficulty_class=ac,
-                    die=Die.D20,
-                    condition=DiceRollCondition.NEUTRAL,
-                    bonus=attack_bonus,
-                )
-                pct = round(prob * 100)
-                file.write(f"<td class='whit-pct' data-pct='{pct}'>{pct}%</td>")
-            file.write("</tr>\n")
+            bonus_label = f"{sign}{attack_bonus} ({abilities_label})"
+            for i, (cond_label, condition) in enumerate(spell_attack_conditions):
+                row_header = f"<th class='dc-fail-dc-col'>{bonus_label if i == 0 else ''}</th>"
+                file.write(f"<tr>{row_header}<th class='dc-fail-dc-col'>{cond_label}</th>")
+                for ac in ac_range:
+                    prob = DamageCalculator.probability_of_success(
+                        difficulty_class=ac,
+                        die=Die.D20,
+                        condition=condition,
+                        bonus=attack_bonus,
+                    )
+                    pct = round(prob * 100)
+                    pct_bucket = round(pct / 5) * 5
+                    file.write(f"<td class='whit-pct' data-pct='{pct_bucket}'>{pct}%</td>")
+                file.write("</tr>\n")
 
         file.write("</table>\n")
 
@@ -1288,6 +1299,16 @@ class HtmlCharacterSheetWriter:
             border-collapse: collapse;
             font-size: 0.75rem;
             width: 100%;
+        }
+
+        td.whit-cond-label, th.whit-cond-label {
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: #555;
+            white-space: nowrap;
+            padding: 2px 5px;
+            text-align: right;
+            border: none;
         }
 
         th.whit-ac {
