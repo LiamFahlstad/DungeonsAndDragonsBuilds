@@ -1074,11 +1074,11 @@ def _write_single_weapon(
     # ── Quick-stats row ─────────────────────────────────────────────────────
     # Two cells: left = type/category info, right = roll info
     type_cell = (
-        f"<span class='wlabel'>Type</span> {stats.weapon_type.value}"
+        f"{stats.weapon_type.value}"
         f"<span class='wsep'>·</span>"
-        f"<span class='wlabel'>Damage type</span> {stats.damage_type.value}"
+        f"{stats.damage_type.value}"
         f"<span class='wsep'>·</span>"
-        f"<span class='wlabel'>Prof.</span> {proficient_label}"
+        f"{proficient_label}"
     )
     roll_cell = (
         f"<span class='wlabel'>Attack</span> 1d20 {attack_bonus_str}"

@@ -7,7 +7,7 @@ from Definitions import Ability, Die, DiceRollCondition
 from Features import Armor
 from Features.BaseFeatures import CharacterFeature, Feature
 from Features.FightingStyles import FightingStyle
-from Features.Weapons import AbstractWeapon, write_weapons_to_file
+from Features.Weapons import AbstractWeapon, UnarmedStrike, write_weapons_to_file
 from Invocations.InvocationFactory import InvocationFactory
 from Items import Items
 from Spells.SpellFactory import SpellFactory
@@ -234,6 +234,37 @@ class HtmlCharacterSheetWriter:
                     bonus=bonus,
                 )
                 pct = round((1 - prob_success) * 100)
+                file.write(f"<td class='whit-pct' data-pct='{pct}'>{pct}%</td>")
+            file.write("</tr>\n")
+
+        file.write("</table>\n")
+
+        # ── Spell attack hit % table ────────────────────────────────────────
+        ac_range = range(10, 26)
+
+        bonus_to_abilities: dict[int, list[str]] = {}
+        for ability in spellcasting_abilities:
+            attack_bonus = character.calculate_attack_bonus_for_ability(ability)
+            bonus_to_abilities.setdefault(attack_bonus, []).append(ability.short_name)
+
+        file.write("<table class='dc-fail-table'>\n")
+        file.write("<tr><th class='dc-fail-dc-col'>Spell Attack (Hit %)</th>")
+        for ac in ac_range:
+            file.write(f"<th class='whit-ac'>AC {ac}</th>")
+        file.write("</tr>\n")
+
+        for attack_bonus in sorted(bonus_to_abilities.keys(), reverse=True):
+            abilities_label = "/".join(bonus_to_abilities[attack_bonus])
+            sign = "+" if attack_bonus >= 0 else ""
+            file.write(f"<tr><th class='dc-fail-dc-col'>{sign}{attack_bonus} ({abilities_label})</th>")
+            for ac in ac_range:
+                prob = DamageCalculator.probability_of_success(
+                    difficulty_class=ac,
+                    die=Die.D20,
+                    condition=DiceRollCondition.NEUTRAL,
+                    bonus=attack_bonus,
+                )
+                pct = round(prob * 100)
                 file.write(f"<td class='whit-pct' data-pct='{pct}'>{pct}%</td>")
             file.write("</tr>\n")
 
@@ -528,8 +559,10 @@ class HtmlCharacterSheetWriter:
             weapon_rows = [
                 (weapon.name, self._description_or_dash(weapon.description))
                 for weapon in weapons
+                if not isinstance(weapon, UnarmedStrike)
             ]
-            sections.append(("Weapons", weapon_rows))
+            if weapon_rows:
+                sections.append(("Weapons", weapon_rows))
 
         if items:
             sorted_items = sorted(items, key=lambda x: x[0].name)
@@ -800,7 +833,7 @@ class HtmlCharacterSheetWriter:
         }
 
         .item-title {
-            background: #2a5a38;
+            background: #6a9a7a;
             color: #ddf0e4;
             font-size: 0.78rem;
             font-weight: 600;
@@ -822,7 +855,7 @@ class HtmlCharacterSheetWriter:
 
         /* Individual item rows styled as cards */
         .item-table tr:not(:first-child) td {
-            border: 2px solid #5a8a6a;
+            border: 2px solid #a4c8b0;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
             padding: 5px 7px;
         }
@@ -867,7 +900,7 @@ class HtmlCharacterSheetWriter:
             width: 100%;
             border-collapse: collapse;
             font-size: 0.85rem;
-            border: 2px solid #5a7fa8;
+            border: 2px solid #a8c4d8;
             border-radius: 4px;
             margin: 0 0 8px 0;
             table-layout: auto;
@@ -892,14 +925,14 @@ class HtmlCharacterSheetWriter:
 
         /* Spell name — full-width header row */
         .spell-name {
-            background: #2a4a68;
+            background: #6888a8;
             color: #dce8f5;
             font-size: 1rem;
             font-weight: 700;
             text-align: left;
             letter-spacing: 0.02em;
             padding: 4px 7px;
-            border-bottom: 2px solid #5a7fa8;
+            border-bottom: 2px solid #a8c4d8;
         }
 
         /* Quick-stats row — two cells side by side */
@@ -1001,7 +1034,7 @@ class HtmlCharacterSheetWriter:
             width: 100%;
             border-collapse: collapse;
             font-size: 0.85rem;
-            border: 2px solid #a85a5a;
+            border: 2px solid #d4a0a0;
             border-radius: 4px;
             margin: 0 0 8px 0;
             table-layout: auto;
@@ -1017,14 +1050,14 @@ class HtmlCharacterSheetWriter:
 
         /* Weapon name — full-width header row */
         .weapon-name {
-            background: #6a2a2a;
+            background: #a06060;
             color: #f5dcdc;
             font-size: 1rem;
             font-weight: 700;
             text-align: left;
             letter-spacing: 0.02em;
             padding: 4px 7px;
-            border-bottom: 2px solid #a85a5a;
+            border-bottom: 2px solid #d4a0a0;
         }
 
         /* Quick-stats row — two cells side by side */
