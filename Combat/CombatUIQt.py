@@ -180,7 +180,7 @@ QPushButton:disabled {
     border-color: #0a2540;
 }
 
-/* Primary buttons (damage / heal) */
+/* Primary buttons (damage) */
 QPushButton#primaryBtn {
     background-color: #3d1a2e;
     border: 1px solid #e94560;
@@ -192,6 +192,20 @@ QPushButton#primaryBtn:hover {
 }
 QPushButton#primaryBtn:pressed {
     background-color: #2a0f1e;
+}
+
+/* Heal button */
+QPushButton#healBtn {
+    background-color: #1a3d2e;
+    border: 1px solid #4caf82;
+    color: #4caf82;
+    font-weight: bold;
+}
+QPushButton#healBtn:hover {
+    background-color: #204d38;
+}
+QPushButton#healBtn:pressed {
+    background-color: #102a1e;
 }
 
 /* Scrollbar styling */
@@ -1416,7 +1430,7 @@ class CombatAppQt:
         panel_layout.addWidget(self.heal_input)
         self.heal_input.returnPressed.connect(self._apply_heal)
         heal_btn = QPushButton("Apply Heal")
-        heal_btn.setObjectName("primaryBtn")
+        heal_btn.setObjectName("healBtn")
         heal_btn.clicked.connect(self._apply_heal)
         panel_layout.addWidget(heal_btn)
 
