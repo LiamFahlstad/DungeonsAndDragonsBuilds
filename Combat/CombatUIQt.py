@@ -12,6 +12,7 @@ from Features import Armor
 from PyQt6.QtWidgets import (
     QApplication,
     QComboBox,
+    QDialog,
     QFrame,
     QGridLayout,
     QHBoxLayout,
@@ -341,6 +342,144 @@ class CombatAppQt:
         self._log_event(f"{self.selected_character['name']} takes {dmg} damage")
         self._refresh_selected_card()
 
+        if "Concentrating" in self.selected_character.get("conditions", []):
+            self._concentration_check_dialog(self.selected_character, dmg)
+
+    def _con_save_mod(self, char: dict) -> int:
+        """Return the CON saving throw modifier for a character."""
+        saving_throws = char.get("Saving Throws") or {}
+        for key in ("CONSTITUTION", "Con", "CON"):
+            if key in saving_throws:
+                return saving_throws[key]
+        ability_scores = char.get("Ability Scores") or {}
+        for key in ("Con", "CON", "CONSTITUTION"):
+            if key in ability_scores:
+                return (ability_scores[key] - 10) // 2
+        return 0
+
+    def _concentration_check_dialog(self, char: dict, dmg: int):
+        """Show a modal concentration saving throw dialog."""
+        dc = max(10, dmg // 2)
+        con_mod = self._con_save_mod(char)
+        name = char["name"]
+
+        dialog = QDialog(self._window)
+        dialog.setWindowTitle("Concentration Check")
+        dialog.setModal(True)
+        dialog.setStyleSheet(QSS)
+        dialog.setFixedWidth(320)
+
+        layout = QVBoxLayout(dialog)
+        layout.setContentsMargins(14, 14, 14, 14)
+        layout.setSpacing(8)
+
+        # Gold header
+        header_lbl = QLabel(f"{name} is concentrating!")
+        header_lbl.setStyleSheet(
+            "color: #c9a84c; font-weight: bold; font-size: 13px;"
+        )
+        header_lbl.setWordWrap(True)
+        layout.addWidget(header_lbl)
+
+        # DC info
+        dc_lbl = QLabel(f"Damage taken: {dmg}  →  DC {dc}")
+        dc_lbl.setObjectName("secondary")
+        layout.addWidget(dc_lbl)
+
+        mod_lbl = QLabel(f"CON save modifier: {con_mod:+d}")
+        mod_lbl.setObjectName("secondary")
+        layout.addWidget(mod_lbl)
+
+        layout.addWidget(self._make_divider())
+
+        # Roll input
+        roll_input = QLineEdit()
+        roll_input.setPlaceholderText("Enter roll total...")
+        layout.addWidget(roll_input)
+
+        # Result label (initially hidden)
+        result_lbl = QLabel("")
+        result_lbl.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        result_lbl.setStyleSheet("font-weight: bold; font-size: 12px;")
+        result_lbl.hide()
+        layout.addWidget(result_lbl)
+
+        def _update_result_label(text: str):
+            if not text:
+                result_lbl.hide()
+                return
+            try:
+                roll = int(text)
+            except ValueError:
+                result_lbl.hide()
+                return
+            if roll >= dc:
+                result_lbl.setStyleSheet(
+                    "font-weight: bold; font-size: 12px; color: #2ecc71;"
+                )
+                result_lbl.setText("✓ CONCENTRATION MAINTAINED")
+            else:
+                result_lbl.setStyleSheet(
+                    "font-weight: bold; font-size: 12px; color: #e74c3c;"
+                )
+                result_lbl.setText("✗ CONCENTRATION LOST")
+            result_lbl.show()
+
+        roll_input.textChanged.connect(_update_result_label)
+
+        # Roll d20 button
+        roll_btn = QPushButton("Roll d20")
+
+        def _auto_roll():
+            result = random.randint(1, 20) + con_mod
+            roll_input.setText(str(result))
+            if result >= dc:
+                roll_input.setStyleSheet(
+                    "background-color: #1a3a1a; border: 1px solid #2ecc71;"
+                )
+            else:
+                roll_input.setStyleSheet(
+                    "background-color: #3a1a1a; border: 1px solid #e74c3c;"
+                )
+
+        roll_btn.clicked.connect(_auto_roll)
+        layout.addWidget(roll_btn)
+
+        layout.addWidget(self._make_divider())
+
+        # Confirm / Cancel row
+        btn_row = QHBoxLayout()
+        confirm_btn = QPushButton("Confirm")
+        cancel_btn = QPushButton("Cancel")
+        btn_row.addWidget(confirm_btn)
+        btn_row.addWidget(cancel_btn)
+        layout.addLayout(btn_row)
+
+        def _confirm():
+            text = roll_input.text().strip()
+            if not text:
+                return
+            try:
+                roll = int(text)
+            except ValueError:
+                return
+            if roll < dc:
+                if "Concentrating" in char.get("conditions", []):
+                    char["conditions"].remove("Concentrating")
+                self._log_event(
+                    f"{name} loses concentration (DC {dc}, rolled {roll})"
+                )
+                self._refresh_selected_card()
+            dialog.accept()
+
+        def _cancel():
+            dialog.reject()
+
+        confirm_btn.clicked.connect(_confirm)
+        cancel_btn.clicked.connect(_cancel)
+
+        dialog.exec()
+
     def _apply_heal(self):
         if not self.selected_character:
             return
@@ -553,6 +692,26 @@ class CombatAppQt:
             self._initiative_inputs[id(char)] = init_input
 
         outer.addWidget(self._make_divider())
+
+        roll_all_btn = QPushButton("Roll for All")
+        roll_all_btn.setStyleSheet(
+            "background-color: #1a2a3a; border: 1px solid #5bc8f5;"
+            " color: #5bc8f5; font-weight: bold; min-height: 26px;"
+        )
+
+        def _roll_all():
+            for char, inp in (
+                (c, self._initiative_inputs[id(c)]) for c in self.characters
+            ):
+                result = random.randint(1, 20) + self._dex_mod(char)
+                inp.setText(str(result))
+                inp.setStyleSheet(
+                    "background-color: #1a3a1a; border: 1px solid #2ecc71;"
+                )
+            self._check_start_button()
+
+        roll_all_btn.clicked.connect(_roll_all)
+        outer.addWidget(roll_all_btn)
 
         self._start_combat_btn = QPushButton("Start Combat")
         self._start_combat_btn.setEnabled(False)
