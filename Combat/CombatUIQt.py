@@ -1,4 +1,5 @@
 import json
+import random
 import sys
 from datetime import datetime
 from pathlib import Path
@@ -49,6 +50,10 @@ QFrame#combatantCard {
 QFrame#combatantCard[selected="true"] {
     background-color: #1e2d5a;
     border: 2px solid #e94560;
+}
+QFrame#combatantCard[active="true"] {
+    background-color: #2a2010;
+    border: 2px solid #c9a84c;
 }
 
 /* Control panel */
@@ -162,6 +167,11 @@ QPushButton:hover {
 QPushButton:pressed {
     background-color: #0a2540;
 }
+QPushButton:disabled {
+    background-color: #0a1a30;
+    color: #555;
+    border-color: #0a2540;
+}
 
 /* Primary buttons (damage / heal) */
 QPushButton#primaryBtn {
@@ -217,6 +227,11 @@ class CombatAppQt:
         self.round_number = 1
         self.history: list[tuple[Action, str | int | tuple[int, int]]] = []
 
+        # --- Phase / initiative state ---
+        self.phase: str = "INITIATIVE"
+        self.initiative_order: list[dict] = []
+        self.current_turn_idx: int = 0
+
         log_dir = Path("CombatLogs")
         log_dir.mkdir(exist_ok=True)
         timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
@@ -225,6 +240,9 @@ class CombatAppQt:
 
         # card widget registry: maps id(char_dict) -> QFrame
         self._card_widgets: dict[int, QFrame] = {}
+
+        # initiative input registry: maps id(char_dict) -> QLineEdit
+        self._initiative_inputs: dict[int, QLineEdit] = {}
 
     # ------------------------------------------------------------------
     # Data helpers
@@ -419,10 +437,17 @@ class CombatAppQt:
         print(f"Undid action: {last_event}")
         self._refresh_selected_card()
 
-    def _next_round(self):
-        self.round_number += 1
-        self._log_event(f"--- Round {self.round_number} ---")
-        self.round_label.setText(f"Round {self.round_number}")
+    def _advance_turn(self):
+        """Combined Next Combatant / Next Round button handler."""
+        last_idx = len(self.initiative_order) - 1
+        if self.current_turn_idx < last_idx:
+            self.current_turn_idx += 1
+        else:
+            self.round_number += 1
+            self.current_turn_idx = 0
+            self._log_event(f"--- Round {self.round_number} ---")
+            self.round_label.setText(f"Round {self.round_number}")
+        self._refresh_turn()
 
     def _load_log(self):
         path, _ = QFileDialog.getOpenFileName(
@@ -444,7 +469,151 @@ class CombatAppQt:
         self.selected_label.setText("Selected: None")
         self.round_label.setText(f"Round {self.round_number}")
         self.log_file = Path(path)
+        # When loading a log we jump straight into COMBAT with the loaded order
+        self.phase = "COMBAT"
+        self.initiative_order = list(self.characters)
+        self.current_turn_idx = 0
+        self._switch_to_combat()
+
+    # ------------------------------------------------------------------
+    # Initiative phase
+    # ------------------------------------------------------------------
+    @staticmethod
+    def _dex_mod(char: dict) -> int:
+        ability_scores = char.get("Ability Scores") or {}
+        for key in ("DEXTERITY", "Dexterity", "Dex", "DEX"):
+            if key in ability_scores:
+                return (ability_scores[key] - 10) // 2
+        return 0
+
+    def _build_initiative_widget(self) -> QWidget:
+        """Build the initiative-entry screen."""
+        container = QWidget()
+        container.setObjectName("initiativeContainer")
+        outer = QVBoxLayout(container)
+        outer.setContentsMargins(12, 12, 12, 12)
+        outer.setSpacing(8)
+
+        header = QLabel("Roll Initiative")
+        header.setStyleSheet(
+            "color: #c9a84c; font-size: 16px; font-weight: bold;"
+        )
+        outer.addWidget(header)
+
+        outer.addWidget(self._make_divider())
+
+        self._initiative_inputs.clear()
+
+        for char in self.characters:
+            mod = self._dex_mod(char)
+
+            row_widget = QWidget()
+            row_layout = QHBoxLayout(row_widget)
+            row_layout.setContentsMargins(0, 0, 0, 0)
+            row_layout.setSpacing(8)
+
+            name_lbl = QLabel(char["name"])
+            name_lbl.setStyleSheet(
+                "color: #c9a84c; font-weight: bold;"
+            )
+            name_lbl.setFixedWidth(160)
+            row_layout.addWidget(name_lbl)
+
+            mod_lbl = QLabel(f"(mod {mod:+d})")
+            mod_lbl.setObjectName("secondary")
+            mod_lbl.setFixedWidth(60)
+            row_layout.addWidget(mod_lbl)
+
+            init_input = QLineEdit()
+            init_input.setPlaceholderText("Total...")
+            init_input.setFixedWidth(60)
+            init_input.textChanged.connect(self._check_start_button)
+            row_layout.addWidget(init_input)
+
+            roll_btn = QPushButton("Roll")
+            roll_btn.setFixedWidth(50)
+
+            def _roll(checked=False, inp=init_input, m=mod):
+                result = random.randint(1, 20) + m
+                inp.setText(str(result))
+                inp.setStyleSheet(
+                    "background-color: #1a3a1a; border: 1px solid #2ecc71;"
+                )
+
+            roll_btn.clicked.connect(_roll)
+            row_layout.addWidget(roll_btn)
+
+            row_layout.addStretch()
+            outer.addWidget(row_widget)
+
+            self._initiative_inputs[id(char)] = init_input
+
+        outer.addWidget(self._make_divider())
+
+        self._start_combat_btn = QPushButton("Start Combat")
+        self._start_combat_btn.setEnabled(False)
+        self._start_combat_btn.setStyleSheet(
+            "background-color: #1a3a1a; border: 1px solid #2ecc71;"
+            " color: #2ecc71; font-weight: bold; min-height: 30px;"
+        )
+        self._start_combat_btn.clicked.connect(self._start_combat)
+        outer.addWidget(self._start_combat_btn)
+
+        outer.addStretch()
+        return container
+
+    def _check_start_button(self):
+        """Enable Start Combat only when all fields have a numeric value."""
+        all_filled = True
+        for inp in self._initiative_inputs.values():
+            try:
+                int(inp.text())
+            except ValueError:
+                all_filled = False
+                break
+        self._start_combat_btn.setEnabled(all_filled)
+
+    def _start_combat(self):
+        """Parse initiatives, sort characters, and switch to combat phase."""
+        order_with_initiative = []
+        for char in self.characters:
+            inp = self._initiative_inputs[id(char)]
+            try:
+                value = int(inp.text())
+            except ValueError:
+                value = 0
+            order_with_initiative.append((value, char))
+
+        # Stable sort descending — ties preserve original order
+        order_with_initiative.sort(key=lambda x: x[0], reverse=True)
+        sorted_chars = [c for _, c in order_with_initiative]
+
+        # Re-order self.characters in-place to match initiative order
+        self.characters[:] = sorted_chars
+        self.initiative_order = list(sorted_chars)
+        self.current_turn_idx = 0
+        self.phase = "COMBAT"
+
+        self._switch_to_combat()
+
+    def _switch_to_combat(self):
+        """Replace the initiative widget with the card grid and update the panel."""
+        # Swap scroll area content
+        self._scroll_area.takeWidget()
+        if self._initiative_widget is not None:
+            self._initiative_widget.deleteLater()
+            self._initiative_widget = None
+
+        self._scroll_area.setWidget(self._cards_container)
+        self._cards_container.show()
+
+        # Show the combat-only panel widgets
+        self.turn_label.show()
+        self._turn_divider.show()
+        self._next_turn_btn.show()
+
         self._rebuild_cards()
+        self._refresh_turn()
 
     # ------------------------------------------------------------------
     # UI construction
@@ -460,18 +629,24 @@ class CombatAppQt:
         root_layout.setContentsMargins(10, 10, 10, 10)
         root_layout.setSpacing(10)
 
-        # --- Left: scrollable card grid ---
-        scroll = QScrollArea()
-        scroll.setWidgetResizable(True)
-        scroll.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
-        scroll.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAsNeeded)
+        # --- Left: scrollable area (initiative or card grid) ---
+        self._scroll_area = QScrollArea()
+        self._scroll_area.setWidgetResizable(True)
+        self._scroll_area.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+        self._scroll_area.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAsNeeded)
 
+        # Build the card grid container (hidden until combat starts)
         self._cards_container = QWidget()
         self._grid_layout = QGridLayout(self._cards_container)
         self._grid_layout.setSpacing(8)
         self._grid_layout.setAlignment(Qt.AlignmentFlag.AlignTop | Qt.AlignmentFlag.AlignLeft)
-        scroll.setWidget(self._cards_container)
-        root_layout.addWidget(scroll, stretch=1)
+        self._cards_container.hide()
+
+        # Build and show the initiative widget
+        self._initiative_widget = self._build_initiative_widget()
+        self._scroll_area.setWidget(self._initiative_widget)
+
+        root_layout.addWidget(self._scroll_area, stretch=1)
 
         # --- Right: control panel ---
         panel = QFrame()
@@ -491,6 +666,15 @@ class CombatAppQt:
         self.round_label = QLabel(f"Round {self.round_number}")
         self.round_label.setStyleSheet("color: #c9a84c; font-weight: bold; font-size: 12px;")
         panel_layout.addWidget(self.round_label)
+
+        # Current turn label (hidden during initiative phase)
+        self.turn_label = QLabel("Turn: —")
+        self.turn_label.setStyleSheet(
+            "color: #c9a84c; font-weight: bold; font-size: 12px;"
+        )
+        self.turn_label.setWordWrap(True)
+        self.turn_label.hide()
+        panel_layout.addWidget(self.turn_label)
 
         panel_layout.addWidget(self._make_divider())
 
@@ -552,13 +736,20 @@ class CombatAppQt:
 
         # Actions section
         panel_layout.addWidget(self._section_header("Actions"))
+
+        # Next turn button (hidden during initiative phase)
+        self._turn_divider = self._make_divider()
+        self._turn_divider.hide()
+        panel_layout.addWidget(self._turn_divider)
+
+        self._next_turn_btn = QPushButton("Next Combatant")
+        self._next_turn_btn.clicked.connect(self._advance_turn)
+        self._next_turn_btn.hide()
+        panel_layout.addWidget(self._next_turn_btn)
+
         undo_btn = QPushButton("Undo Last Action")
         undo_btn.clicked.connect(self._undo_last)
         panel_layout.addWidget(undo_btn)
-
-        next_btn = QPushButton("Next Round")
-        next_btn.clicked.connect(self._next_round)
-        panel_layout.addWidget(next_btn)
 
         load_btn = QPushButton("Load Combat Log")
         load_btn.clicked.connect(self._load_log)
@@ -585,7 +776,6 @@ class CombatAppQt:
     # ------------------------------------------------------------------
     def _rebuild_cards(self):
         """Remove all card widgets and recreate them from self.characters."""
-        # Clear existing cards
         while self._grid_layout.count():
             item = self._grid_layout.takeAt(0)
             if item.widget():
@@ -600,13 +790,20 @@ class CombatAppQt:
             self._card_widgets[id(char)] = card
 
     def _refresh_cards(self):
-        """Update border/background of all cards to reflect selection state."""
+        """Update border/background of all cards to reflect selection and active-turn state."""
         for char in self.characters:
             card = self._card_widgets.get(id(char))
             if card is None:
                 continue
             is_selected = char is self.selected_character
-            card.setProperty("selected", "true" if is_selected else "false")
+            is_active = (
+                self.phase == "COMBAT"
+                and self.initiative_order
+                and self.initiative_order[self.current_turn_idx] is char
+            )
+            # Active turn takes priority over selection border in QSS
+            card.setProperty("selected", "true" if is_selected and not is_active else "false")
+            card.setProperty("active", "true" if is_active else "false")
             card.style().unpolish(card)
             card.style().polish(card)
 
@@ -620,28 +817,44 @@ class CombatAppQt:
         if old_card is None:
             return
 
-        # Find its position in the grid
         idx = self._grid_layout.indexOf(old_card)
         if idx < 0:
             return
         pos = self._grid_layout.getItemPosition(idx)  # (row, col, rowSpan, colSpan)
         grid_row, grid_col = pos[0], pos[1]
 
-        # Remove old card
         self._grid_layout.removeWidget(old_card)
         old_card.deleteLater()
 
-        # Build new card and insert at same position
         new_card = self._make_card(char)
         self._grid_layout.addWidget(new_card, grid_row, grid_col)
         self._card_widgets[card_id] = new_card
 
+    def _refresh_turn(self):
+        """Update the active-turn highlight and the Next button label."""
+        self._refresh_cards()
+        if self.initiative_order:
+            active_char = self.initiative_order[self.current_turn_idx]
+            self.turn_label.setText(f"Turn: {active_char['name']}")
+            last_idx = len(self.initiative_order) - 1
+            if self.current_turn_idx < last_idx:
+                self._next_turn_btn.setText("Next Combatant")
+            else:
+                self._next_turn_btn.setText("Next Round")
+
     def _make_card(self, char: dict) -> QFrame:
         is_selected = char is self.selected_character
+        is_active = (
+            self.phase == "COMBAT"
+            and self.initiative_order
+            and self.initiative_order[self.current_turn_idx] is char
+        )
 
         card = QFrame()
         card.setObjectName("combatantCard")
-        card.setProperty("selected", "true" if is_selected else "false")
+        # Active turn takes visual priority; if active, don't also set selected
+        card.setProperty("selected", "true" if is_selected and not is_active else "false")
+        card.setProperty("active", "true" if is_active else "false")
         card.setFixedWidth(220)
         card.setSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Minimum)
         card.setCursor(Qt.CursorShape.PointingHandCursor)
@@ -670,7 +883,6 @@ class CombatAppQt:
         bar.setFormat(f"{hp} / {max_hp}")
         bar.setTextVisible(True)
 
-        # Determine color class
         if hp <= 0:
             chunk_name = "hp_dead"
         elif hp / max_hp <= 0.25:
@@ -753,9 +965,8 @@ class CombatAppQt:
                     row_lbl.setStyleSheet("font-family: monospace; font-size: 10px; color: #a0a0b0;")
                     layout.addWidget(row_lbl)
 
-        # --- Click to select (install event filter on all children) ---
+        # --- Click to select ---
         card.mousePressEvent = lambda event, c=char: self._select_character(c)
-        # Propagate clicks from child labels to card
         for child in card.findChildren(QWidget):
             child.setAttribute(Qt.WidgetAttribute.WA_TransparentForMouseEvents, True)
 
@@ -769,7 +980,6 @@ class CombatAppQt:
         app.setStyleSheet(QSS)
 
         self._build_window()
-        self._rebuild_cards()
 
         self._window.show()
         sys.exit(app.exec())
