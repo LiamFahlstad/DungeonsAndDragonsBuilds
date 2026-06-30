@@ -107,8 +107,9 @@ QProgressBar {
     border-radius: 3px;
     background-color: #555;
     text-align: center;
-    color: #eaeaea;
+    color: #1a1a2e;
     font-size: 10px;
+    font-weight: bold;
     min-height: 14px;
     max-height: 14px;
 }
@@ -720,42 +721,36 @@ class CombatAppQt:
         # --- Spell slots ---
         slots = {k: v for k, v in (char.get("spell_slots") or {}).items() if v > 0}
         if slots:
+            sep = QFrame()
+            sep.setFrameShape(QFrame.Shape.HLine)
+            sep.setStyleSheet("color: #0f3460;")
+            layout.addWidget(sep)
+            slots_header = QLabel("Slots:")
+            slots_header.setStyleSheet("color: #c9a84c; font-size: 10px; font-weight: bold;")
+            layout.addWidget(slots_header)
             slots_text = "  ".join(f"LV{lv}({cnt})" for lv, cnt in sorted(slots.items()))
             slots_lbl = QLabel(slots_text)
-            slots_lbl.setObjectName("secondary")
             slots_lbl.setStyleSheet("color: #a0c4ff; font-size: 11px;")
             layout.addWidget(slots_lbl)
 
-        # --- Ability Scores ---
+        # --- Ability Scores / Saving Throws combined as mod/save ---
         ability_scores = char.get("Ability Scores") or {}
+        saving_throws = char.get("Saving Throws") or {}
         if ability_scores:
             sep = QFrame()
             sep.setFrameShape(QFrame.Shape.HLine)
             sep.setStyleSheet("color: #0f3460;")
             layout.addWidget(sep)
-            scores_list = list(ability_scores.items())
+            entries = [
+                (name[:3], mod, saving_throws.get(name, mod))
+                for name, mod in ability_scores.items()
+            ]
             for row_idx in range(2):
-                chunk = scores_list[row_idx * 3: row_idx * 3 + 3]
+                chunk = entries[row_idx * 3: row_idx * 3 + 3]
                 if chunk:
-                    row_text = "  ".join(f"{a[:3]} {m:+d}" for a, m in chunk)
+                    row_text = "  ".join(f"{abbr} {m:+d}/{s:+d}" for abbr, m, s in chunk)
                     row_lbl = QLabel(row_text)
-                    row_lbl.setObjectName("secondary")
-                    row_lbl.setStyleSheet("font-family: monospace; font-size: 11px; color: #a0a0b0;")
-                    layout.addWidget(row_lbl)
-
-        # --- Saving Throws ---
-        saving_throws = char.get("Saving Throws") or {}
-        if saving_throws:
-            st_header = QLabel("Saves:")
-            st_header.setStyleSheet("color: #c9a84c; font-size: 10px; font-weight: bold;")
-            layout.addWidget(st_header)
-            throws_list = list(saving_throws.items())
-            for row_idx in range(2):
-                chunk = throws_list[row_idx * 3: row_idx * 3 + 3]
-                if chunk:
-                    row_text = "  ".join(f"{a[:3]} {m:+d}" for a, m in chunk)
-                    row_lbl = QLabel(row_text)
-                    row_lbl.setStyleSheet("font-family: monospace; font-size: 11px; color: #a0a0b0;")
+                    row_lbl.setStyleSheet("font-family: monospace; font-size: 10px; color: #a0a0b0;")
                     layout.addWidget(row_lbl)
 
         # --- Click to select (install event filter on all children) ---
