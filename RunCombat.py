@@ -2,6 +2,7 @@ import argparse
 
 import Combat.GrimsCastle.Encounters as GrimsCastleEncounters
 import Combat.TimeLoop.Encounters as TimeLoopEncounters
+from Combat.Monsters.CR_24 import AncientRedDragon
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="DnD Combat Engine")
@@ -17,6 +18,7 @@ if __name__ == "__main__":
         TimeLoopEncounters.get_players()
         + TimeLoopEncounters.get_square_combatants()
         + GrimsCastleEncounters.get_bull()
+        + [AncientRedDragon()]
     )
 
     if args.ui == "qt":

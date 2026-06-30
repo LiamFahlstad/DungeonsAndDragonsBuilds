@@ -6,7 +6,7 @@ from pathlib import Path
 
 import CharacterSheetCreator
 import Definitions
-from Combat.Definitions import Action, BasicCombatantData, Condition
+from Combat.Definitions import Action, BasicCombatantData, Condition, ExtendedCombatantData
 from Features import Armor
 
 from PyQt6.QtWidgets import (
@@ -285,19 +285,41 @@ class CombatAppQt:
         )
 
     def _add_basic_combatant(self, combatant: BasicCombatantData):
-        self.characters.append(
-            {
-                "name": combatant.name,
-                "hp": combatant.hp,
-                "max_hp": combatant.max_hp,
-                "ac": combatant.ac,
-                "temp_hp": combatant.temp_hp,
-                "conditions": [cond.value for cond in combatant.conditions],
-                "spell_slots": combatant.spell_slots,
-                "Ability Scores": combatant.ability_scores,
-                "Saving Throws": combatant.saving_throws,
-            }
-        )
+        char = {
+            "name": combatant.name,
+            "hp": combatant.hp,
+            "max_hp": combatant.max_hp,
+            "ac": combatant.ac,
+            "temp_hp": combatant.temp_hp,
+            "conditions": [cond.value for cond in combatant.conditions],
+            "spell_slots": combatant.spell_slots,
+            "Ability Scores": combatant.ability_scores,
+            "Saving Throws": combatant.saving_throws,
+        }
+        if isinstance(combatant, ExtendedCombatantData):
+            char.update({
+                "cr": combatant.cr,
+                "monster_type": combatant.monster_type,
+                "ac_note": combatant.ac_note,
+                "hp_formula": combatant.hp_formula,
+                "speed": combatant.speed,
+                "skills": combatant.skills,
+                "damage_vulnerabilities": combatant.damage_vulnerabilities,
+                "damage_resistances": combatant.damage_resistances,
+                "damage_immunities": combatant.damage_immunities,
+                "condition_immunities": combatant.condition_immunities,
+                "senses": combatant.senses,
+                "languages": combatant.languages,
+                "traits": combatant.traits,
+                "actions": combatant.actions,
+                "bonus_actions": combatant.bonus_actions,
+                "reactions": combatant.reactions,
+                "legendary_actions": combatant.legendary_actions,
+                "legendary_resistances": combatant.legendary_resistances,
+                "lair_actions": combatant.lair_actions,
+                "mythic_actions": combatant.mythic_actions,
+            })
+        self.characters.append(char)
 
     # ------------------------------------------------------------------
     # Logging
@@ -319,7 +341,146 @@ class CombatAppQt:
     def _select_character(self, char: dict):
         self.selected_character = char
         self.selected_label.setText(f"Selected: {char['name']}")
+        self._more_info_btn.setEnabled(True)
         self._refresh_cards()
+
+    def _show_more_info(self):
+        if not self.selected_character:
+            return
+        char = self.selected_character
+
+        dlg = QDialog(self._window)
+        dlg.setWindowTitle(char["name"])
+        dlg.setMinimumWidth(520)
+        dlg.resize(560, 660)
+
+        outer = QVBoxLayout(dlg)
+        outer.setContentsMargins(0, 0, 0, 8)
+        outer.setSpacing(0)
+
+        scroll = QScrollArea()
+        scroll.setWidgetResizable(True)
+        scroll.setFrameShape(QFrame.Shape.NoFrame)
+
+        content = QWidget()
+        lay = QVBoxLayout(content)
+        lay.setContentsMargins(14, 12, 14, 12)
+        lay.setSpacing(3)
+
+        def add_header(text: str):
+            lbl = QLabel(text.upper())
+            lbl.setObjectName("sectionHeader")
+            lay.addWidget(lbl)
+
+        def add_field(label: str, value: str):
+            lbl = QLabel(f"<b>{label}:</b> {value}")
+            lbl.setWordWrap(True)
+            lay.addWidget(lbl)
+
+        def add_ability(name: str, description: str):
+            lbl = QLabel(f"<b><i>{name}.</i></b> {description}")
+            lbl.setWordWrap(True)
+            lbl.setContentsMargins(0, 2, 0, 2)
+            lay.addWidget(lbl)
+
+        def add_divider():
+            lay.addWidget(self._make_divider())
+
+        # --- Basic stats ---
+        hp_str = f"{char['hp']} / {char['max_hp']}"
+        if char.get("temp_hp"):
+            hp_str += f"  (+{char['temp_hp']} temp)"
+        add_field("HP", hp_str)
+
+        ac_val = str(char["ac"])
+        if char.get("ac_note"):
+            ac_val = f"{ac_val} ({char['ac_note']})"
+        add_field("AC", ac_val)
+
+        if char.get("conditions"):
+            add_field("Conditions", ", ".join(char["conditions"]))
+
+        if char.get("spell_slots"):
+            active = {k: v for k, v in char["spell_slots"].items() if v > 0}
+            if active:
+                add_field("Spell Slots", "  ".join(f"L{k}×{v}" for k, v in active.items()))
+
+        scores = char.get("Ability Scores", {})
+        if scores:
+            add_divider()
+            add_header("Ability Scores")
+            parts = []
+            for stat, val in scores.items():
+                mod = (val - 10) // 2
+                parts.append(f"<b>{stat}</b> {val} ({'+' if mod >= 0 else ''}{mod})")
+            lbl = QLabel("  ".join(parts))
+            lbl.setWordWrap(True)
+            lay.addWidget(lbl)
+
+        saves = char.get("Saving Throws", {})
+        if saves:
+            add_field("Saving Throws", "  ".join(
+                f"{k} {'+' if v >= 0 else ''}{v}" for k, v in saves.items()
+            ))
+
+        # --- Extended stats (only present for ExtendedCombatantData) ---
+        if "cr" in char:
+            add_divider()
+            for key, label in [
+                ("monster_type", "Type"),
+                ("cr", "CR"),
+                ("speed", "Speed"),
+                ("hp_formula", "Hit Dice"),
+                ("senses", "Senses"),
+                ("languages", "Languages"),
+            ]:
+                if char.get(key):
+                    add_field(label, char[key])
+
+            if char.get("skills"):
+                add_field("Skills", "  ".join(
+                    f"{k} {'+' if v >= 0 else ''}{v}" for k, v in char["skills"].items()
+                ))
+
+            for key, label in [
+                ("damage_vulnerabilities", "Vulnerabilities"),
+                ("damage_resistances", "Resistances"),
+                ("damage_immunities", "Damage Immunities"),
+                ("condition_immunities", "Condition Immunities"),
+            ]:
+                val = char.get(key, [])
+                if val:
+                    add_field(label, ", ".join(val))
+
+            if char.get("legendary_resistances"):
+                add_field("Legendary Resistances", str(char["legendary_resistances"]))
+
+            for section_key, section_label in [
+                ("traits", "Traits"),
+                ("actions", "Actions"),
+                ("bonus_actions", "Bonus Actions"),
+                ("reactions", "Reactions"),
+                ("legendary_actions", "Legendary Actions"),
+                ("lair_actions", "Lair Actions"),
+                ("mythic_actions", "Mythic Actions"),
+            ]:
+                abilities = char.get(section_key, [])
+                if abilities:
+                    add_divider()
+                    add_header(section_label)
+                    for ab in abilities:
+                        add_ability(ab.get("name", ""), ab.get("description", ""))
+
+        lay.addStretch()
+        scroll.setWidget(content)
+        outer.addWidget(scroll)
+
+        close_btn = QPushButton("Close")
+        close_btn.setFixedHeight(30)
+        close_btn.clicked.connect(dlg.accept)
+        outer.addWidget(close_btn)
+
+        dlg.exec()
 
     def _apply_damage(self):
         if not self.selected_character:
@@ -824,6 +985,11 @@ class CombatAppQt:
         self.selected_label.setObjectName("selectedLabel")
         self.selected_label.setWordWrap(True)
         panel_layout.addWidget(self.selected_label)
+
+        self._more_info_btn = QPushButton("More Info")
+        self._more_info_btn.setEnabled(False)
+        self._more_info_btn.clicked.connect(self._show_more_info)
+        panel_layout.addWidget(self._more_info_btn)
 
         # Round indicator
         self.round_label = QLabel(f"Round {self.round_number}")
