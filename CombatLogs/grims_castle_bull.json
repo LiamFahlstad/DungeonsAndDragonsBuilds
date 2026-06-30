@@ -1,0 +1,145 @@
+{
+  "round_number": 3,
+  "combatants": [
+    {
+      "name": "Player 1",
+      "hp": 38,
+      "ac": "13 (no Shield)",
+      "temp_hp": 0,
+      "conditions": [
+        "Grappled"
+      ],
+      "spell_slots": {},
+      "Ability Scores": {
+        "Str": 21,
+        "Dex": 8,
+        "Con": 15,
+        "Int": 2,
+        "Wis": 12,
+        "Cha": 6
+      },
+      "Saving Throws": {
+        "Str": 5,
+        "Dex": -1,
+        "Con": 2,
+        "Int": -4,
+        "Wis": 1,
+        "Cha": -2
+      }
+    },
+    {
+      "name": "Player 2",
+      "hp": 45,
+      "ac": "13 (no Shield)",
+      "temp_hp": 0,
+      "conditions": [],
+      "spell_slots": {},
+      "Ability Scores": {
+        "Str": 21,
+        "Dex": 8,
+        "Con": 15,
+        "Int": 2,
+        "Wis": 12,
+        "Cha": 6
+      },
+      "Saving Throws": {
+        "Str": 5,
+        "Dex": -1,
+        "Con": 2,
+        "Int": -4,
+        "Wis": 1,
+        "Cha": -2
+      }
+    },
+    {
+      "name": "Player 3",
+      "hp": 33,
+      "ac": "13 (no Shield)",
+      "temp_hp": 0,
+      "conditions": [],
+      "spell_slots": {},
+      "Ability Scores": {
+        "Str": 21,
+        "Dex": 8,
+        "Con": 15,
+        "Int": 2,
+        "Wis": 12,
+        "Cha": 6
+      },
+      "Saving Throws": {
+        "Str": 5,
+        "Dex": -1,
+        "Con": 2,
+        "Int": -4,
+        "Wis": 1,
+        "Cha": -2
+      }
+    },
+    {
+      "name": "Player 4",
+      "hp": 45,
+      "ac": "13 (no Shield)",
+      "temp_hp": 8,
+      "conditions": [],
+      "spell_slots": {},
+      "Ability Scores": {
+        "Str": 21,
+        "Dex": 8,
+        "Con": 15,
+        "Int": 2,
+        "Wis": 12,
+        "Cha": 6
+      },
+      "Saving Throws": {
+        "Str": 5,
+        "Dex": -1,
+        "Con": 2,
+        "Int": -4,
+        "Wis": 1,
+        "Cha": -2
+      }
+    },
+    {
+      "name": "Bull",
+      "hp": 73,
+      "ac": "15 (no Shield)",
+      "temp_hp": 0,
+      "conditions": [
+        "Frightened"
+      ],
+      "spell_slots": {},
+      "Ability Scores": {
+        "Str": 20,
+        "Dex": 18,
+        "Con": 20,
+        "Int": 12,
+        "Wis": 12,
+        "Cha": 8
+      },
+      "Saving Throws": {
+        "Str": 5,
+        "Dex": 5,
+        "Con": 5,
+        "Int": 1,
+        "Wis": 3,
+        "Cha": -1
+      }
+    }
+  ],
+  "round_1": [
+    "Bull takes 14 damage",
+    "Player 1 takes 7 damage",
+    "Player 1 gains Grappled",
+    "Player 3 takes 12 damage",
+    "Bull takes 10 damage"
+  ],
+  "round_2": [
+    "Bull takes 20 damage",
+    "Bull gains Frightened",
+    "Player 4 gains 8 temp HP",
+    "Bull takes 14 damage"
+  ],
+  "round_3": [
+    "Bull takes 15 damage"
+  ]
+}

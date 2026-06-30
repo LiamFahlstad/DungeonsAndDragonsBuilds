@@ -1,6 +1,8 @@
 import json
 import tkinter as tk
+from datetime import datetime
 from pathlib import Path
+from tkinter import filedialog
 
 import CharacterSheetCreator
 import Definitions
@@ -32,8 +34,11 @@ class CombatApp:
         self.selected_character = None
         self.round_number = 1
         self.history: list[tuple[Action, str | int]] = []
-        self.log_file = Path("combat_log.json")
-        self.log_file.write_text("{}")
+        log_dir = Path("CombatLogs")
+        log_dir.mkdir(exist_ok=True)
+        timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+        self.log_file = log_dir / f"combat_log_{timestamp}.json"
+        self._write_log({})
 
         # -------- UI --------
         self.build_ui()
@@ -87,11 +92,35 @@ class CombatApp:
         )
 
     # -------- LOGGING --------
+    def _write_log(self, data: dict):
+        data["round_number"] = self.round_number
+        data["combatants"] = [dict(c) for c in self.characters]
+        self.log_file.write_text(json.dumps(data, indent=2))
+
     def log_event(self, text):
         data = json.loads(self.log_file.read_text())
         key = f"round_{self.round_number}"
         data.setdefault(key, []).append(text)
-        self.log_file.write_text(json.dumps(data, indent=2))
+        self._write_log(data)
+
+    def load_combat_log(self):
+        path = filedialog.askopenfilename(
+            initialdir="CombatLogs",
+            title="Load Combat Log",
+            filetypes=[("JSON files", "*.json")],
+        )
+        if not path:
+            return
+        data = json.loads(Path(path).read_text())
+        if "combatants" not in data:
+            return
+        self.characters = data["combatants"]
+        self.round_number = data.get("round_number", 1)
+        self.history = []
+        self.selected_character = None
+        self.selected_label.config(text="Selected: None")
+        self.log_file = Path(path)
+        self.refresh_ui()
 
     # -------- ACTIONS --------
     def select_character(self, char):
@@ -208,7 +237,7 @@ class CombatApp:
                 )
 
             last_event = data[key].pop()
-            self.log_file.write_text(json.dumps(data, indent=2))
+            self._write_log(data)
             # Note: Actual state reversal logic would be needed here
             print(f"Undid action: {last_event}")
             self.refresh_ui()
@@ -259,6 +288,9 @@ class CombatApp:
         )
         tk.Button(control, text="Undo Last Action", command=self.undo_last_action).pack(
             fill="x"
+        )
+        tk.Button(control, text="Load Combat Log", command=self.load_combat_log).pack(
+            fill="x", pady=(10, 0)
         )
 
         self.char_widgets = []

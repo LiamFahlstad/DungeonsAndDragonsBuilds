@@ -1,0 +1,106 @@
+{
+  "round_number": 4,
+  "combatants": [
+    {
+      "name": "Player 1",
+      "hp": 28,
+      "ac": "13 (no Shield)",
+      "temp_hp": 0,
+      "conditions": [],
+      "spell_slots": {},
+      "Ability Scores": {"Str": 21, "Dex": 8, "Con": 15, "Int": 2, "Wis": 12, "Cha": 6},
+      "Saving Throws": {"Str": 5, "Dex": -1, "Con": 2, "Int": -4, "Wis": 1, "Cha": -2}
+    },
+    {
+      "name": "Player 2",
+      "hp": 45,
+      "ac": "13 (no Shield)",
+      "temp_hp": 0,
+      "conditions": ["Concentrating"],
+      "spell_slots": {},
+      "Ability Scores": {"Str": 21, "Dex": 8, "Con": 15, "Int": 2, "Wis": 12, "Cha": 6},
+      "Saving Throws": {"Str": 5, "Dex": -1, "Con": 2, "Int": -4, "Wis": 1, "Cha": -2}
+    },
+    {
+      "name": "Player 3",
+      "hp": 40,
+      "ac": "13 (no Shield)",
+      "temp_hp": 5,
+      "conditions": [],
+      "spell_slots": {},
+      "Ability Scores": {"Str": 21, "Dex": 8, "Con": 15, "Int": 2, "Wis": 12, "Cha": 6},
+      "Saving Throws": {"Str": 5, "Dex": -1, "Con": 2, "Int": -4, "Wis": 1, "Cha": -2}
+    },
+    {
+      "name": "Player 4",
+      "hp": 12,
+      "ac": "13 (no Shield)",
+      "temp_hp": 0,
+      "conditions": ["Poisoned"],
+      "spell_slots": {},
+      "Ability Scores": {"Str": 21, "Dex": 8, "Con": 15, "Int": 2, "Wis": 12, "Cha": 6},
+      "Saving Throws": {"Str": 5, "Dex": -1, "Con": 2, "Int": -4, "Wis": 1, "Cha": -2}
+    },
+    {
+      "name": "Mirelle",
+      "hp": 95,
+      "ac": "15 (no Shield)",
+      "temp_hp": 0,
+      "conditions": ["Concentrating"],
+      "spell_slots": {},
+      "Ability Scores": {"Str": 17, "Dex": 15, "Con": 18, "Int": 8, "Wis": 13, "Cha": 8},
+      "Saving Throws": {"Str": 3, "Dex": 5, "Con": 4, "Int": -1, "Wis": 4, "Cha": 2}
+    },
+    {
+      "name": "Guard Priest 1",
+      "hp": 0,
+      "ac": "13 (no Shield)",
+      "temp_hp": 0,
+      "conditions": [],
+      "spell_slots": {1: 1, 2: 2},
+      "Ability Scores": {"Str": 16, "Dex": 10, "Con": 12, "Int": 13, "Wis": 16, "Cha": 13},
+      "Saving Throws": {}
+    },
+    {
+      "name": "Guard Rhinoceros 2",
+      "hp": 22,
+      "ac": "13 (no Shield)",
+      "temp_hp": 0,
+      "conditions": ["Prone"],
+      "spell_slots": {},
+      "Ability Scores": {"Str": 21, "Dex": 8, "Con": 15, "Int": 2, "Wis": 12, "Cha": 6},
+      "Saving Throws": {"Str": 5, "Dex": -1, "Con": 2, "Int": -4, "Wis": 1, "Cha": -2}
+    },
+    {
+      "name": "Guard Saber-Toothed Tiger 3",
+      "hp": 52,
+      "ac": "13 (no Shield)",
+      "temp_hp": 0,
+      "conditions": [],
+      "spell_slots": {},
+      "Ability Scores": {"Str": 18, "Dex": 17, "Con": 15, "Int": 3, "Wis": 12, "Cha": 8},
+      "Saving Throws": {"Str": 4, "Dex": 5, "Con": 2, "Int": -4, "Wis": 1, "Cha": -1}
+    }
+  ],
+  "round_1": [
+    "Player 1 takes 17 damage",
+    "Mirelle gains Concentrating",
+    "Guard Priest 1 heals 8 HP",
+    "Player 4 gains Poisoned",
+    "Guard Rhinoceros 2 takes 23 damage"
+  ],
+  "round_2": [
+    "Player 1 takes 0 damage",
+    "Player 3 takes 5 damage",
+    "Player 2 gains Concentrating",
+    "Guard Priest 1 takes 38 damage",
+    "Guard Rhinoceros 2 gains Prone"
+  ],
+  "round_3": [
+    "Mirelle takes 57 damage",
+    "Guard Priest 1 takes 0 damage",
+    "Player 3 heals 8 HP",
+    "Player 3 gains 5 temp HP"
+  ],
+  "round_4": []
+}
