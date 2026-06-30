@@ -208,6 +208,20 @@ QPushButton#healBtn:pressed {
     background-color: #102a1e;
 }
 
+/* Temp HP button */
+QPushButton#tempHpBtn {
+    background-color: #1a2e3d;
+    border: 1px solid #4a9fc4;
+    color: #4a9fc4;
+    font-weight: bold;
+}
+QPushButton#tempHpBtn:hover {
+    background-color: #20384d;
+}
+QPushButton#tempHpBtn:pressed {
+    background-color: #10202e;
+}
+
 /* Scrollbar styling */
 QScrollBar:vertical {
     background: #1a1a2e;
@@ -965,6 +979,22 @@ class CombatAppQt:
         self._log_event(f"{self.selected_character['name']} heals {heal} HP")
         self._refresh_selected_card()
 
+    def _apply_temp_hp(self):
+        if not self.selected_character:
+            return
+        try:
+            amount = int(self.temp_hp_input.text())
+        except ValueError:
+            return
+
+        old = self.selected_character.get("temp_hp", 0)
+        self.selected_character["temp_hp"] = old + amount
+        self._log_event(
+            f"{self.selected_character['name']} gains {amount} temp HP "
+            f"(total {self.selected_character['temp_hp']})"
+        )
+        self._refresh_selected_card()
+
     def _add_condition(self):
         if not self.selected_character:
             return
@@ -1433,6 +1463,19 @@ class CombatAppQt:
         heal_btn.setObjectName("healBtn")
         heal_btn.clicked.connect(self._apply_heal)
         panel_layout.addWidget(heal_btn)
+
+        panel_layout.addWidget(self._make_divider())
+
+        # Temp HP section
+        panel_layout.addWidget(self._section_header("Temp HP"))
+        self.temp_hp_input = QLineEdit()
+        self.temp_hp_input.setPlaceholderText("Amount...")
+        panel_layout.addWidget(self.temp_hp_input)
+        self.temp_hp_input.returnPressed.connect(self._apply_temp_hp)
+        temp_hp_btn = QPushButton("Add Temp HP")
+        temp_hp_btn.setObjectName("tempHpBtn")
+        temp_hp_btn.clicked.connect(self._apply_temp_hp)
+        panel_layout.addWidget(temp_hp_btn)
 
         panel_layout.addWidget(self._make_divider())
 
