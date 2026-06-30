@@ -47,6 +47,10 @@ QFrame#combatantCard {
     border: 2px solid #0f3460;
     border-radius: 6px;
 }
+QFrame#combatantCard[dead="true"] {
+    background-color: #0e0e18;
+    border: 2px solid #2a2a2a;
+}
 QFrame#combatantCard[selected="true"] {
     background-color: #1e2d5a;
     border: 2px solid #e94560;
@@ -608,7 +612,7 @@ class CombatAppQt:
         self._cards_container.show()
 
         # Show the combat-only panel widgets
-        self.turn_label.show()
+        self._init_tracker_container.show()
         self._turn_divider.show()
         self._next_turn_btn.show()
 
@@ -667,14 +671,25 @@ class CombatAppQt:
         self.round_label.setStyleSheet("color: #c9a84c; font-weight: bold; font-size: 12px;")
         panel_layout.addWidget(self.round_label)
 
-        # Current turn label (hidden during initiative phase)
-        self.turn_label = QLabel("Turn: —")
-        self.turn_label.setStyleSheet(
-            "color: #c9a84c; font-weight: bold; font-size: 12px;"
+        # Initiative tracker container (hidden during initiative phase, shown during combat)
+        self._init_tracker_container = QWidget()
+        self._init_tracker_container.hide()
+        tracker_outer = QVBoxLayout(self._init_tracker_container)
+        tracker_outer.setContentsMargins(0, 0, 0, 0)
+        tracker_outer.setSpacing(2)
+
+        self._turn_counter_label = QLabel("Turn 1 / 1")
+        self._turn_counter_label.setStyleSheet(
+            "color: #c9a84c; font-weight: bold; font-size: 11px;"
         )
-        self.turn_label.setWordWrap(True)
-        self.turn_label.hide()
-        panel_layout.addWidget(self.turn_label)
+        tracker_outer.addWidget(self._turn_counter_label)
+
+        self._init_tracker_layout = QVBoxLayout()
+        self._init_tracker_layout.setContentsMargins(0, 0, 0, 0)
+        self._init_tracker_layout.setSpacing(1)
+        tracker_outer.addLayout(self._init_tracker_layout)
+
+        panel_layout.addWidget(self._init_tracker_container)
 
         panel_layout.addWidget(self._make_divider())
 
@@ -683,6 +698,7 @@ class CombatAppQt:
         self.damage_input = QLineEdit()
         self.damage_input.setPlaceholderText("Amount...")
         panel_layout.addWidget(self.damage_input)
+        self.damage_input.returnPressed.connect(self._apply_damage)
         dmg_btn = QPushButton("Apply Damage")
         dmg_btn.setObjectName("primaryBtn")
         dmg_btn.clicked.connect(self._apply_damage)
@@ -695,6 +711,7 @@ class CombatAppQt:
         self.heal_input = QLineEdit()
         self.heal_input.setPlaceholderText("Amount...")
         panel_layout.addWidget(self.heal_input)
+        self.heal_input.returnPressed.connect(self._apply_heal)
         heal_btn = QPushButton("Apply Heal")
         heal_btn.setObjectName("primaryBtn")
         heal_btn.clicked.connect(self._apply_heal)
@@ -745,6 +762,10 @@ class CombatAppQt:
         self._next_turn_btn = QPushButton("Next Combatant")
         self._next_turn_btn.clicked.connect(self._advance_turn)
         self._next_turn_btn.hide()
+        self._next_turn_btn.setStyleSheet(
+            "background-color: #3a2e00; border: 1px solid #c9a84c;"
+            " color: #c9a84c; font-weight: bold; min-height: 28px;"
+        )
         panel_layout.addWidget(self._next_turn_btn)
 
         undo_btn = QPushButton("Undo Last Action")
@@ -789,19 +810,23 @@ class CombatAppQt:
             self._grid_layout.addWidget(card, row, col)
             self._card_widgets[id(char)] = card
 
+        self._refresh_initiative_tracker()
+
     def _refresh_cards(self):
-        """Update border/background of all cards to reflect selection and active-turn state."""
+        """Update border/background of all cards to reflect selection, active-turn, and dead state."""
         for char in self.characters:
             card = self._card_widgets.get(id(char))
             if card is None:
                 continue
+            is_dead = char["hp"] <= 0
             is_selected = char is self.selected_character
             is_active = (
                 self.phase == "COMBAT"
                 and self.initiative_order
                 and self.initiative_order[self.current_turn_idx] is char
             )
-            # Active turn takes priority over selection border in QSS
+            # QSS order: dead < selected < active — last matching rule wins
+            card.setProperty("dead", "true" if is_dead else "false")
             card.setProperty("selected", "true" if is_selected and not is_active else "false")
             card.setProperty("active", "true" if is_active else "false")
             card.style().unpolish(card)
@@ -830,19 +855,90 @@ class CombatAppQt:
         self._grid_layout.addWidget(new_card, grid_row, grid_col)
         self._card_widgets[card_id] = new_card
 
+    def _refresh_initiative_tracker(self):
+        """Rebuild the initiative order tracker widget rows."""
+        # Clear existing rows
+        while self._init_tracker_layout.count():
+            item = self._init_tracker_layout.takeAt(0)
+            if item is not None:
+                w = item.widget()
+                if w is not None:
+                    w.deleteLater()
+
+        if not self.initiative_order:
+            return
+
+        total = len(self.initiative_order)
+        current_idx = self.current_turn_idx
+        self._turn_counter_label.setText(f"Turn {current_idx + 1} / {total}")
+
+        for idx, char in enumerate(self.initiative_order):
+            is_active = idx == current_idx
+            is_dead = char["hp"] <= 0
+            already_gone = idx < current_idx
+
+            if is_active:
+                dot_color = "#c9a84c"
+                name_color = "#c9a84c"
+            elif is_dead:
+                dot_color = "#555"
+                name_color = "#555"
+            elif already_gone:
+                dot_color = "#a0c4ff"
+                name_color = "#a0c4ff"
+            else:
+                dot_color = "#eaeaea"
+                name_color = "#eaeaea"
+
+            row_w = QWidget()
+            row_layout = QHBoxLayout(row_w)
+            row_layout.setContentsMargins(0, 0, 0, 0)
+            row_layout.setSpacing(4)
+
+            dot = QLabel("●")
+            dot.setStyleSheet(f"color: {dot_color}; font-size: 8px;")
+            dot.setFixedWidth(12)
+            row_layout.addWidget(dot)
+
+            display_name = char["name"][:20] + ("…" if len(char["name"]) > 20 else "")
+            name_lbl = QLabel(display_name)
+            name_lbl.setStyleSheet(f"color: {name_color}; font-size: 10px;")
+            row_layout.addWidget(name_lbl, stretch=1)
+
+            self._init_tracker_layout.addWidget(row_w)
+
     def _refresh_turn(self):
-        """Update the active-turn highlight and the Next button label."""
+        """Update the active-turn highlight, tracker, and Next button label."""
         self._refresh_cards()
+        self._refresh_initiative_tracker()
         if self.initiative_order:
-            active_char = self.initiative_order[self.current_turn_idx]
-            self.turn_label.setText(f"Turn: {active_char['name']}")
             last_idx = len(self.initiative_order) - 1
             if self.current_turn_idx < last_idx:
                 self._next_turn_btn.setText("Next Combatant")
             else:
                 self._next_turn_btn.setText("Next Round")
+            # Auto-scroll to active card
+            active_char = self.initiative_order[self.current_turn_idx]
+            card = self._card_widgets.get(id(active_char))
+            if card:
+                self._scroll_area.ensureWidgetVisible(card)
+
+    # Condition badge color map
+    _CONDITION_COLORS: dict[str, str] = {
+        "Poisoned":      "#1a5c1a",
+        "Frightened":    "#7a3d00",
+        "Charmed":       "#5c1a7a",
+        "Blinded":       "#3a3a3a",
+        "Concentrating": "#1a3a7a",
+        "Paralyzed":     "#7a1a1a",
+        "Stunned":       "#7a1a1a",
+        "Grappled":      "#5c4a00",
+        "Prone":         "#5c4a00",
+    }
 
     def _make_card(self, char: dict) -> QFrame:
+        hp = char["hp"]
+        is_dead = hp <= 0
         is_selected = char is self.selected_character
         is_active = (
             self.phase == "COMBAT"
@@ -852,7 +948,8 @@ class CombatAppQt:
 
         card = QFrame()
         card.setObjectName("combatantCard")
-        # Active turn takes visual priority; if active, don't also set selected
+        # QSS priority: dead < selected < active (last rule wins at equal specificity)
+        card.setProperty("dead", "true" if is_dead else "false")
         card.setProperty("selected", "true" if is_selected and not is_active else "false")
         card.setProperty("active", "true" if is_active else "false")
         card.setFixedWidth(220)
@@ -864,12 +961,14 @@ class CombatAppQt:
         layout.setSpacing(3)
 
         # --- Name ---
-        name_lbl = QLabel(char["name"])
+        display_name = ("☠ " + char["name"]) if is_dead else char["name"]
+        name_lbl = QLabel(display_name)
         name_lbl.setObjectName("cardName")
+        if is_dead:
+            name_lbl.setStyleSheet("color: #555; font-weight: bold; font-size: 13px;")
         layout.addWidget(name_lbl)
 
         # --- HP bar ---
-        hp = char["hp"]
         max_hp = char["max_hp"]
         temp_hp = char.get("temp_hp", 0)
 
@@ -884,23 +983,16 @@ class CombatAppQt:
         bar.setTextVisible(True)
 
         if hp <= 0:
-            chunk_name = "hp_dead"
+            chunk_color = "#555"
         elif hp / max_hp <= 0.25:
-            chunk_name = "hp_red"
+            chunk_color = "#e74c3c"
         elif hp / max_hp <= 0.50:
-            chunk_name = "hp_orange"
+            chunk_color = "#e67e22"
         else:
-            chunk_name = "hp_green"
+            chunk_color = "#2ecc71"
 
         bar.setStyleSheet(
-            f"QProgressBar::chunk {{ background-color: "
-            + {
-                "hp_green": "#2ecc71",
-                "hp_orange": "#e67e22",
-                "hp_red": "#e74c3c",
-                "hp_dead": "#555",
-            }[chunk_name]
-            + "; border-radius: 3px; }"
+            f"QProgressBar::chunk {{ background-color: {chunk_color}; border-radius: 3px; }}"
         )
         hp_row.addWidget(bar, stretch=1)
 
@@ -925,7 +1017,11 @@ class CombatAppQt:
             cond_row.setAlignment(Qt.AlignmentFlag.AlignLeft)
             for cond in conditions:
                 badge = QLabel(cond)
-                badge.setObjectName("conditionBadge")
+                badge_color = self._CONDITION_COLORS.get(cond, "#7a5c00")
+                badge.setStyleSheet(
+                    f"background-color: {badge_color}; color: #ffffff;"
+                    " border-radius: 3px; padding: 1px 4px; font-size: 10px;"
+                )
                 cond_row.addWidget(badge)
             cond_row.addStretch()
             layout.addLayout(cond_row)
@@ -953,14 +1049,32 @@ class CombatAppQt:
             sep.setFrameShape(QFrame.Shape.HLine)
             sep.setStyleSheet("color: #0f3460;")
             layout.addWidget(sep)
-            entries = [
-                (name[:3], mod, saving_throws.get(name, mod))
-                for name, mod in ability_scores.items()
-            ]
+
+            # Detect raw scores (any value > 10 means raw, not modifier)
+            raw_values = list(ability_scores.values())
+            is_raw = any(v > 10 for v in raw_values)
+
+            def to_mod(v: int) -> int:
+                return (v - 10) // 2
+
+            entries = []
+            for name, val in ability_scores.items():
+                mod = to_mod(val) if is_raw else val
+                abbr = name[:3].upper()
+                # Saving throws are already modifiers — do not convert
+                if saving_throws:
+                    save = saving_throws.get(name, mod)
+                    entries.append((abbr, mod, save, True))
+                else:
+                    entries.append((abbr, mod, mod, False))
+
             for row_idx in range(2):
                 chunk = entries[row_idx * 3: row_idx * 3 + 3]
                 if chunk:
-                    row_text = "  ".join(f"{abbr} {m:+d}/{s:+d}" for abbr, m, s in chunk)
+                    if chunk[0][3]:  # has saving throws
+                        row_text = "  ".join(f"{abbr} {m:+d}/{s:+d}" for abbr, m, s, _ in chunk)
+                    else:
+                        row_text = "  ".join(f"{abbr} {m:+d}" for abbr, m, *_ in chunk)
                     row_lbl = QLabel(row_text)
                     row_lbl.setStyleSheet("font-family: monospace; font-size: 10px; color: #a0a0b0;")
                     layout.addWidget(row_lbl)
