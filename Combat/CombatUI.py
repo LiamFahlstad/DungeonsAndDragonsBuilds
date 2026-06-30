@@ -338,22 +338,47 @@ class CombatApp:
             row = index % self.combatants_per_column
             column = index // self.combatants_per_column
 
+            is_selected = char is self.selected_character
+            frame_bg = "#cce5ff" if is_selected else None
+
             frame = tk.Frame(self.char_frame, bd=2, relief="ridge", padx=6, pady=4)
+            if frame_bg:
+                frame.config(bg=frame_bg)
             frame.grid(row=row, column=column, padx=6, pady=4, sticky="nw")
 
-            if char is self.selected_character:
-                frame.config(bg="#cce5ff")
+            def lbl(parent, **kwargs):
+                """Create a label, injecting bg when the frame is selected."""
+                if frame_bg and "bg" not in kwargs:
+                    kwargs["bg"] = frame_bg
+                return tk.Label(parent, **kwargs)
 
-            tk.Label(frame, text=char["name"], font=("Arial", 11, "bold")).pack(
-                anchor="w"
-            )
-            tk.Label(frame, text=f"HP: {char['hp']}/{char['max_hp']}").pack(anchor="w")
-            tk.Label(frame, text=f"AC: {char['ac']}").pack(anchor="w")
+            lbl(frame, text=char["name"], font=("Arial", 11, "bold")).pack(anchor="w")
 
-            tk.Label(
-                frame,
-                text=f"Conditions: {', '.join(char['conditions']) or 'None'}",
-            ).pack(anchor="w")
+            # HP with optional temp HP and colour coding
+            hp = char["hp"]
+            max_hp = char["max_hp"]
+            temp_hp = char.get("temp_hp", 0)
+            hp_text = f"HP: {hp}/{max_hp}"
+            if temp_hp and temp_hp > 0:
+                hp_text += f" (+{temp_hp} temp)"
+            if hp <= 0:
+                hp_color = "#888888"
+            elif hp / max_hp <= 0.25:
+                hp_color = "#cc0000"
+            elif hp / max_hp <= 0.50:
+                hp_color = "#cc7700"
+            else:
+                hp_color = "#2d8a2d"
+            lbl(frame, text=hp_text, fg=hp_color).pack(anchor="w")
+
+            lbl(frame, text=f"AC: {char['ac']}").pack(anchor="w")
+
+            # Conditions — only shown when non-empty
+            if char["conditions"]:
+                lbl(
+                    frame,
+                    text=f"Conditions: {', '.join(char['conditions'])}",
+                ).pack(anchor="w")
 
             if "spell_slots" in char and char["spell_slots"]:
                 text = ", ".join(
@@ -361,26 +386,38 @@ class CombatApp:
                     for level, slots in char["spell_slots"].items()
                     if slots > 0
                 )
-                tk.Label(frame, text="Spell Slots:").pack(anchor="w")
-                tk.Label(frame, text=text).pack(anchor="w")
-            if "Ability Scores" in char and char["Ability Scores"]:
-                text = ", ".join(
-                    f"{ability[:3]} {modifier:02}"
-                    for ability, modifier in char["Ability Scores"].items()
-                )
-                tk.Label(frame, text="Ability Scores:").pack(anchor="w")
-                tk.Label(frame, text=text).pack(anchor="w")
+                lbl(frame, text="Spell Slots:").pack(anchor="w")
+                lbl(frame, text=text).pack(anchor="w")
 
+            # Ability Scores — split into two rows of 3 in a sub-frame
+            if "Ability Scores" in char and char["Ability Scores"]:
+                lbl(frame, text="Ability Scores:").pack(anchor="w")
+                scores = list(char["Ability Scores"].items())
+                sub = tk.Frame(frame, **({"bg": frame_bg} if frame_bg else {}))
+                sub.pack(anchor="w")
+                for row_idx in range(2):
+                    chunk = scores[row_idx * 3 : row_idx * 3 + 3]
+                    row_text = "  ".join(f"{a[:3]} {m:+d}" for a, m in chunk)
+                    lbl(sub, text=row_text).pack(anchor="w")
+
+            # Saving Throws — split into two rows of 3 in a sub-frame
             if "Saving Throws" in char and char["Saving Throws"]:
-                text = ", ".join(
-                    f"{ability[:3]} {modifier:02}"
-                    for ability, modifier in char["Saving Throws"].items()
-                )
-                tk.Label(frame, text="Saving Throws:").pack(anchor="w")
-                tk.Label(frame, text=text).pack(anchor="w")
+                lbl(frame, text="Saving Throws:").pack(anchor="w")
+                throws = list(char["Saving Throws"].items())
+                sub = tk.Frame(frame, **({"bg": frame_bg} if frame_bg else {}))
+                sub.pack(anchor="w")
+                for row_idx in range(2):
+                    chunk = throws[row_idx * 3 : row_idx * 3 + 3]
+                    if chunk:
+                        row_text = "  ".join(f"{a[:3]} {m:+d}" for a, m in chunk)
+                        lbl(sub, text=row_text).pack(anchor="w")
 
             frame.bind("<Button-1>", lambda e, c=char: self.select_character(c))
             for child in frame.winfo_children():
                 child.bind("<Button-1>", lambda e, c=char: self.select_character(c))
+                for grandchild in child.winfo_children():
+                    grandchild.bind(
+                        "<Button-1>", lambda e, c=char: self.select_character(c)
+                    )
 
             self.char_widgets.append(frame)
