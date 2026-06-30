@@ -33,7 +33,7 @@ class CombatApp:
         self.conditions = Condition.list_all()
         self.selected_character = None
         self.round_number = 1
-        self.history: list[tuple[Action, str | int]] = []
+        self.history: list[tuple[Action, str | int | tuple[int, int]]] = []
         log_dir = Path("CombatLogs")
         log_dir.mkdir(exist_ok=True)
         timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
@@ -136,8 +136,23 @@ class CombatApp:
         except ValueError:
             return
 
-        self.selected_character["hp"] -= dmg
-        self.history.append((Action.DAMAGE, dmg))
+        # Store pre-damage hp and temp_hp for undo
+        pre_hp = self.selected_character["hp"]
+        pre_temp_hp = self.selected_character["temp_hp"]
+
+        # Temp HP absorbs damage first
+        remaining_dmg = dmg
+        temp_hp_reduction = min(self.selected_character["temp_hp"], remaining_dmg)
+        self.selected_character["temp_hp"] -= temp_hp_reduction
+        remaining_dmg -= temp_hp_reduction
+
+        # Apply remaining damage to hp
+        self.selected_character["hp"] -= remaining_dmg
+
+        # Store both hp and temp_hp deltas for undo
+        hp_delta = self.selected_character["hp"] - pre_hp
+        temp_hp_delta = self.selected_character["temp_hp"] - pre_temp_hp
+        self.history.append((Action.DAMAGE, (hp_delta, temp_hp_delta)))
         self.log_event(f"{self.selected_character['name']} takes {dmg} damage")
         self.refresh_ui()
 
@@ -216,7 +231,14 @@ class CombatApp:
             action, value = self.history.pop()
 
             if action == Action.DAMAGE:
-                self.selected_character["hp"] += value
+                # value is (hp_delta, temp_hp_delta)
+                if isinstance(value, tuple):
+                    hp_delta, temp_hp_delta = value
+                    self.selected_character["hp"] -= hp_delta
+                    self.selected_character["temp_hp"] -= temp_hp_delta
+                else:
+                    # Legacy format: value is just damage amount
+                    self.selected_character["hp"] += value
             elif action == Action.HEAL:
                 self.selected_character["hp"] -= value
             elif action == Action.ADD_CONDITION:
@@ -241,6 +263,11 @@ class CombatApp:
             # Note: Actual state reversal logic would be needed here
             print(f"Undid action: {last_event}")
             self.refresh_ui()
+
+    def next_round(self):
+        self.round_number += 1
+        self.log_event(f"--- Round {self.round_number} ---")
+        self.refresh_ui()
 
     # -------- UI BUILD --------
     def build_ui(self):
@@ -287,6 +314,9 @@ class CombatApp:
             fill="x"
         )
         tk.Button(control, text="Undo Last Action", command=self.undo_last_action).pack(
+            fill="x"
+        )
+        tk.Button(control, text="Next Round", command=self.next_round).pack(
             fill="x"
         )
         tk.Button(control, text="Load Combat Log", command=self.load_combat_log).pack(
