@@ -39,6 +39,7 @@ class BasicCombatantData:
     spell_slots: Optional[dict[int, int]] = None
     ability_scores: Optional[dict[str, int]] = None
     saving_throws: Optional[dict[str, int]] = None
+    max_hp: Optional[int] = None
 
     def __attrs_post_init__(self):
         if self.spell_slots is None:
@@ -47,11 +48,14 @@ class BasicCombatantData:
             self.ability_scores = {}
         if self.saving_throws is None:
             self.saving_throws = {}
+        if self.max_hp is None:
+            self.max_hp = self.hp
 
     def as_dict(self, character=None):
         return {
             "name": self.name,
             "hp": self.hp,
+            "max_hp": self.max_hp,
             "ac": self.ac,
             "temp_hp": self.temp_hp,
             "conditions": self.conditions,

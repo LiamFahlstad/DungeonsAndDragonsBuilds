@@ -58,10 +58,12 @@ class CombatApp:
             character_spell_slots = character.get_spell_slots()
         except ValueError:
             character_spell_slots = {}
+        hp = character.calculate_hit_points()
         self.characters.append(
             {
                 "name": character_sheet.character_name,
-                "hp": character.calculate_hit_points(),  # Placeholder HP
+                "hp": hp,  # Placeholder HP
+                "max_hp": hp,
                 "ac": ac,  # Placeholder AC
                 "temp_hp": 0,
                 "conditions": [],
@@ -82,6 +84,7 @@ class CombatApp:
             {
                 "name": combatant.name,
                 "hp": combatant.hp,
+                "max_hp": combatant.max_hp,
                 "ac": combatant.ac,
                 "temp_hp": combatant.temp_hp,
                 "conditions": [cond.value for cond in combatant.conditions],
@@ -164,7 +167,7 @@ class CombatApp:
         except ValueError:
             return
 
-        self.selected_character["hp"] += heal
+        self.selected_character["hp"] = min(self.selected_character["hp"] + heal, self.selected_character["max_hp"])
         self.history.append((Action.HEAL, heal))
         self.log_event(f"{self.selected_character['name']} heals {heal} HP")
         self.refresh_ui()
@@ -344,7 +347,7 @@ class CombatApp:
             tk.Label(frame, text=char["name"], font=("Arial", 11, "bold")).pack(
                 anchor="w"
             )
-            tk.Label(frame, text=f"HP: {char['hp']}").pack(anchor="w")
+            tk.Label(frame, text=f"HP: {char['hp']}/{char['max_hp']}").pack(anchor="w")
             tk.Label(frame, text=f"AC: {char['ac']}").pack(anchor="w")
 
             tk.Label(
