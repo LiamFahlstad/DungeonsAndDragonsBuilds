@@ -54,6 +54,14 @@ QFrame#combatantCard[dead="true"] {
     background-color: #0e0e18;
     border: 2px solid #2a2a2a;
 }
+QFrame#combatantCard[dying="true"] {
+    background-color: #1a0e2e;
+    border: 2px solid #7a2fa0;
+}
+QFrame#combatantCard[stabilized="true"] {
+    background-color: #0e1a18;
+    border: 2px solid #2a6a5a;
+}
 QFrame#combatantCard[selected="true"] {
     background-color: #1e2d5a;
     border: 2px solid #e94560;
@@ -222,6 +230,28 @@ QPushButton#tempHpBtn:pressed {
     background-color: #10202e;
 }
 
+/* Death save — fail */
+QPushButton#deathFailBtn {
+    background-color: #3d1a1a;
+    border: 1px solid #c04040;
+    color: #c04040;
+    font-weight: bold;
+}
+QPushButton#deathFailBtn:hover { background-color: #4d2020; }
+QPushButton#deathFailBtn:pressed { background-color: #2a1010; }
+QPushButton#deathFailBtn:disabled { color: #555; border-color: #333; background: #1a1a1a; }
+
+/* Death save — success */
+QPushButton#deathSuccessBtn {
+    background-color: #1a3d1a;
+    border: 1px solid #40c040;
+    color: #40c040;
+    font-weight: bold;
+}
+QPushButton#deathSuccessBtn:hover { background-color: #204d20; }
+QPushButton#deathSuccessBtn:pressed { background-color: #102a10; }
+QPushButton#deathSuccessBtn:disabled { color: #555; border-color: #333; background: #1a1a1a; }
+
 /* Scrollbar styling */
 QScrollBar:vertical {
     background: #1a1a2e;
@@ -324,6 +354,8 @@ class CombatAppQt:
                 "ac": ac,
                 "temp_hp": 0,
                 "conditions": [],
+                "death_saves_fail": 0,
+                "death_saves_success": 0,
                 "spell_slots": spell_slots,
                 "Ability Scores": {
                     ability.short_name: character.get_ability_score(ability)
@@ -363,6 +395,8 @@ class CombatAppQt:
             "ac": combatant.ac,
             "temp_hp": combatant.temp_hp,
             "conditions": [cond.value for cond in combatant.conditions],
+            "death_saves_fail": 0,
+            "death_saves_success": 0,
             "spell_slots": combatant.spell_slots,
             "Ability Scores": combatant.ability_scores,
             "Saving Throws": combatant.saving_throws,
@@ -971,13 +1005,46 @@ class CombatAppQt:
         except ValueError:
             return
 
-        self.selected_character["hp"] = min(
-            self.selected_character["hp"] + heal,
-            self.selected_character["max_hp"],
-        )
+        char = self.selected_character
+        was_dying = self._char_death_state(char) in ("dying", "stabilized")
+
+        char["hp"] = min(char["hp"] + heal, char["max_hp"])
         self.history.append((Action.HEAL, heal))
-        self._log_event(f"{self.selected_character['name']} heals {heal} HP")
+
+        if was_dying and char["hp"] > 0:
+            char["death_saves_fail"] = 0
+            char["death_saves_success"] = 0
+            self._log_event(f"{char['name']} is resurrected with {char['hp']} HP")
+        else:
+            self._log_event(f"{char['name']} heals {heal} HP")
+
         self._refresh_selected_card()
+
+    def _apply_failed_death_save(self, char: dict):
+        if self._char_death_state(char) != "dying":
+            return
+        char["death_saves_fail"] = min(char.get("death_saves_fail", 0) + 1, 3)
+        if char["death_saves_fail"] >= 3:
+            self._log_event(f"{char['name']} has died (3 failed death saves)")
+        else:
+            self._log_event(
+                f"{char['name']} fails a death save "
+                f"({char['death_saves_fail']}/3 fails)"
+            )
+        self._rebuild_card(char)
+
+    def _apply_success_death_save(self, char: dict):
+        if self._char_death_state(char) != "dying":
+            return
+        char["death_saves_success"] = min(char.get("death_saves_success", 0) + 1, 3)
+        if char["death_saves_success"] >= 3:
+            self._log_event(f"{char['name']} stabilizes (3 successful death saves)")
+        else:
+            self._log_event(
+                f"{char['name']} succeeds a death save "
+                f"({char['death_saves_success']}/3 successes)"
+            )
+        self._rebuild_card(char)
 
     def _apply_temp_hp(self):
         if not self.selected_character:
@@ -1578,42 +1645,42 @@ class CombatAppQt:
             card = self._card_widgets.get(id(char))
             if card is None:
                 continue
-            is_dead = char["hp"] <= 0
+            death_state = self._char_death_state(char)
             is_selected = char is self.selected_character
             is_active = (
                 self.phase == "COMBAT"
                 and self.initiative_order
                 and self.initiative_order[self.current_turn_idx] is char
             )
-            # QSS order: dead < selected < active — last matching rule wins
-            card.setProperty("dead", "true" if is_dead else "false")
+            card.setProperty("dead",       "true" if death_state == "dead"       else "false")
+            card.setProperty("dying",      "true" if death_state == "dying"      else "false")
+            card.setProperty("stabilized", "true" if death_state == "stabilized" else "false")
             card.setProperty("selected", "true" if is_selected and not is_active else "false")
             card.setProperty("active", "true" if is_active else "false")
             card.style().unpolish(card)
             card.style().polish(card)
 
-    def _refresh_selected_card(self):
-        """Rebuild only the selected card in-place (after stat changes)."""
-        if self.selected_character is None:
-            return
-        char = self.selected_character
+    def _rebuild_card(self, char: dict):
+        """Rebuild a specific combatant card in-place (after stat changes)."""
         card_id = id(char)
         old_card = self._card_widgets.get(card_id)
         if old_card is None:
             return
-
         idx = self._grid_layout.indexOf(old_card)
         if idx < 0:
             return
-        pos = self._grid_layout.getItemPosition(idx)  # (row, col, rowSpan, colSpan)
+        pos = self._grid_layout.getItemPosition(idx)
         grid_row, grid_col = pos[0], pos[1]
-
         self._grid_layout.removeWidget(old_card)
         old_card.deleteLater()
-
         new_card = self._make_card(char)
         self._grid_layout.addWidget(new_card, grid_row, grid_col)
         self._card_widgets[card_id] = new_card
+
+    def _refresh_selected_card(self):
+        """Rebuild only the selected card in-place."""
+        if self.selected_character is not None:
+            self._rebuild_card(self.selected_character)
 
     def _refresh_initiative_tracker(self):
         """Rebuild the initiative order tracker widget rows."""
@@ -1634,13 +1701,13 @@ class CombatAppQt:
 
         for idx, char in enumerate(self.initiative_order):
             is_active = idx == current_idx
-            is_dead = char["hp"] <= 0
+            death_state = self._char_death_state(char)
             already_gone = idx < current_idx
 
             if is_active:
                 dot_color = "#c9a84c"
                 name_color = "#c9a84c"
-            elif is_dead:
+            elif death_state == "dead":
                 dot_color = "#555"
                 name_color = "#555"
             elif already_gone:
@@ -1696,9 +1763,23 @@ class CombatAppQt:
         "Prone":         "#5c4a00",
     }
 
+    @staticmethod
+    def _char_death_state(char: dict) -> str:
+        """Return 'alive', 'dying', 'stabilized', or 'dead'."""
+        if char["hp"] > 0:
+            return "alive"
+        if char.get("death_saves_fail", 0) >= 3:
+            return "dead"
+        if char.get("death_saves_success", 0) >= 3:
+            return "stabilized"
+        return "dying"
+
     def _make_card(self, char: dict) -> QFrame:
         hp = char["hp"]
-        is_dead = hp <= 0
+        death_state = self._char_death_state(char)
+        is_dead       = death_state == "dead"
+        is_dying      = death_state == "dying"
+        is_stabilized = death_state == "stabilized"
         is_selected = char is self.selected_character
         is_active = (
             self.phase == "COMBAT"
@@ -1708,8 +1789,9 @@ class CombatAppQt:
 
         card = QFrame()
         card.setObjectName("combatantCard")
-        # QSS priority: dead < selected < active (last rule wins at equal specificity)
-        card.setProperty("dead", "true" if is_dead else "false")
+        card.setProperty("dead",       "true" if is_dead       else "false")
+        card.setProperty("dying",      "true" if is_dying      else "false")
+        card.setProperty("stabilized", "true" if is_stabilized else "false")
         card.setProperty("selected", "true" if is_selected and not is_active else "false")
         card.setProperty("active", "true" if is_active else "false")
         card.setFixedWidth(220)
@@ -1721,12 +1803,51 @@ class CombatAppQt:
         layout.setSpacing(3)
 
         # --- Name ---
-        display_name = ("☠ " + char["name"]) if is_dead else char["name"]
+        if is_dead:
+            display_name = "☠ " + char["name"]
+            name_style = "color: #555; font-weight: bold; font-size: 13px;"
+        elif is_dying:
+            display_name = "💀 " + char["name"]
+            name_style = "color: #b070e0; font-weight: bold; font-size: 13px;"
+        elif is_stabilized:
+            display_name = "😴 " + char["name"]
+            name_style = "color: #4a9080; font-weight: bold; font-size: 13px;"
+        else:
+            display_name = char["name"]
+            name_style = ""
         name_lbl = QLabel(display_name)
         name_lbl.setObjectName("cardName")
-        if is_dead:
-            name_lbl.setStyleSheet("color: #555; font-weight: bold; font-size: 13px;")
+        if name_style:
+            name_lbl.setStyleSheet(name_style)
         layout.addWidget(name_lbl)
+
+        # --- Death save pips + buttons (dying / stabilized) ---
+        if is_dying or is_stabilized:
+            fail    = char.get("death_saves_fail", 0)
+            success = char.get("death_saves_success", 0)
+            pips_lbl = QLabel(
+                f"<span style='color:#c04040'>{'●' * fail}{'○' * (3 - fail)}</span>"
+                f"  "
+                f"<span style='color:#40c040'>{'●' * success}{'○' * (3 - success)}</span>"
+            )
+            pips_lbl.setTextFormat(Qt.TextFormat.RichText)
+            pips_lbl.setStyleSheet("font-size: 11px; letter-spacing: 2px;")
+            layout.addWidget(pips_lbl)
+
+        if is_dying:
+            btn_row = QHBoxLayout()
+            btn_row.setSpacing(4)
+            fail_btn = QPushButton("✗ Fail")
+            fail_btn.setObjectName("deathFailBtn")
+            fail_btn.setFixedHeight(24)
+            fail_btn.clicked.connect(lambda _=False, c=char: self._apply_failed_death_save(c))
+            save_btn = QPushButton("✓ Save")
+            save_btn.setObjectName("deathSuccessBtn")
+            save_btn.setFixedHeight(24)
+            save_btn.clicked.connect(lambda _=False, c=char: self._apply_success_death_save(c))
+            btn_row.addWidget(fail_btn)
+            btn_row.addWidget(save_btn)
+            layout.addLayout(btn_row)
 
         # --- HP bar ---
         max_hp = char["max_hp"]
@@ -1842,7 +1963,8 @@ class CombatAppQt:
         # --- Click to select ---
         card.mousePressEvent = lambda event, c=char: self._select_character(c)
         for child in card.findChildren(QWidget):
-            child.setAttribute(Qt.WidgetAttribute.WA_TransparentForMouseEvents, True)
+            if not isinstance(child, QPushButton):
+                child.setAttribute(Qt.WidgetAttribute.WA_TransparentForMouseEvents, True)
 
         return card
 
