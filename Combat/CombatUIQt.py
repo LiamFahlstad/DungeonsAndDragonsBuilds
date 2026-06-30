@@ -18,6 +18,8 @@ from PyQt6.QtWidgets import (
     QHBoxLayout,
     QLabel,
     QLineEdit,
+    QListWidget,
+    QListWidgetItem,
     QMainWindow,
     QProgressBar,
     QPushButton,
@@ -1202,6 +1204,24 @@ class CombatAppQt:
 
         # Stable sort descending — ties preserve original order
         order_with_initiative.sort(key=lambda x: x[0], reverse=True)
+
+        # Detect tie groups (contiguous runs with same initiative value)
+        tied_groups: list[tuple[int, int, int]] = []  # (init_val, start_idx, end_idx)
+        i = 0
+        while i < len(order_with_initiative):
+            j = i + 1
+            while j < len(order_with_initiative) and order_with_initiative[j][0] == order_with_initiative[i][0]:
+                j += 1
+            if j - i > 1:
+                tied_groups.append((order_with_initiative[i][0], i, j))
+            i = j
+
+        if tied_groups:
+            resolved = self._show_tie_break_dialog(order_with_initiative, tied_groups)
+            if resolved is None:
+                return  # user cancelled — stay on initiative screen
+            order_with_initiative = resolved
+
         sorted_chars = [c for _, c in order_with_initiative]
 
         # Re-order self.characters in-place to match initiative order
@@ -1211,6 +1231,72 @@ class CombatAppQt:
         self.phase = "COMBAT"
 
         self._switch_to_combat()
+
+    def _show_tie_break_dialog(
+        self,
+        order_with_initiative: list[tuple[int, dict]],
+        tied_groups: list[tuple[int, int, int]],
+    ) -> list[tuple[int, dict]] | None:
+        """Show a dialog to resolve initiative ties via drag-and-drop.
+        Returns the updated order list, or None if the user went back."""
+        dlg = QDialog(self._window)
+        dlg.setWindowTitle("Resolve Initiative Ties")
+        dlg.setMinimumWidth(360)
+        dlg.setStyleSheet(QSS)
+
+        layout = QVBoxLayout(dlg)
+        layout.setContentsMargins(14, 14, 14, 14)
+        layout.setSpacing(10)
+
+        info = QLabel("Some combatants tied on initiative.\nDrag rows to set the turn order within each tied group.")
+        info.setWordWrap(True)
+        info.setStyleSheet("color: #a0a0b0;")
+        layout.addWidget(info)
+
+        list_widgets: list[tuple[int, int, QListWidget]] = []
+
+        for init_val, start, end in tied_groups:
+            grp_label = QLabel(f"Initiative {init_val}")
+            grp_label.setStyleSheet("font-weight: bold; color: #c9a84c;")
+            layout.addWidget(grp_label)
+
+            lw = QListWidget()
+            lw.setDragDropMode(QListWidget.DragDropMode.InternalMove)
+            lw.setSelectionMode(QListWidget.SelectionMode.SingleSelection)
+            lw.setFixedHeight((end - start) * 32 + 4)
+            lw.setStyleSheet(
+                "QListWidget { background: #16213e; border: 1px solid #0f3460; }"
+                "QListWidget::item { padding: 5px 10px; }"
+                "QListWidget::item:selected { background: #1e2d5a; color: #eaeaea; }"
+            )
+            for _, char in order_with_initiative[start:end]:
+                item = QListWidgetItem(char["name"])
+                item.setData(Qt.ItemDataRole.UserRole, char)
+                lw.addItem(item)
+
+            layout.addWidget(lw)
+            list_widgets.append((start, end, lw))
+
+        btn_row = QHBoxLayout()
+        back_btn = QPushButton("Go Back")
+        ok_btn = QPushButton("Start Combat")
+        back_btn.clicked.connect(dlg.reject)
+        ok_btn.clicked.connect(dlg.accept)
+        btn_row.addWidget(back_btn)
+        btn_row.addWidget(ok_btn)
+        layout.addLayout(btn_row)
+
+        if dlg.exec() != QDialog.DialogCode.Accepted:
+            return None
+
+        result = list(order_with_initiative)
+        for start, end, lw in list_widgets:
+            init_val = result[start][0]
+            for i in range(lw.count()):
+                char = lw.item(i).data(Qt.ItemDataRole.UserRole)
+                result[start + i] = (init_val, char)
+
+        return result
 
     def _switch_to_combat(self):
         """Replace the initiative widget with the card grid and update the panel."""
