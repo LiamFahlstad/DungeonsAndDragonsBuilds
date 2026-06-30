@@ -253,6 +253,7 @@ class CombatAppQt:
     # Data helpers
     # ------------------------------------------------------------------
     def _add_from_character_sheet(self, character_sheet):
+        from Spells.SpellFactory import SpellFactory
         character = character_sheet.setup_character_stat_block()
         ac = character.calculate_armor_class()
         if Armor.ShieldArmor in [type(a) for a in character_sheet.armors]:
@@ -264,6 +265,25 @@ class CombatAppQt:
         except ValueError:
             spell_slots = {}
         hp = character.calculate_hit_points()
+
+        # Apply weapon masteries to live weapon objects
+        weapons = list(character_sheet.weapons)
+        if character_sheet.weapon_masteries:
+            mastery_types = {type(m) for m in character_sheet.weapon_masteries}
+            for w in weapons:
+                if type(w) in mastery_types:
+                    w.player_has_mastery = True
+
+        # Pre-compute spell levels (display_name, level, Ability enum)
+        spells_with_level = []
+        for spell_name, ability, ruling in character_sheet.spells:
+            display_name = getattr(spell_name, "value", str(spell_name))
+            try:
+                spell_obj = SpellFactory.create(spell_name, ability, ruling)
+                spells_with_level.append((display_name, spell_obj.level, ability))
+            except Exception:
+                spells_with_level.append((display_name, 0, ability))
+
         self.characters.append(
             {
                 "name": character_sheet.character_name,
@@ -274,13 +294,30 @@ class CombatAppQt:
                 "conditions": [],
                 "spell_slots": spell_slots,
                 "Ability Scores": {
-                    ability.name: character.get_ability_score(ability)
+                    ability.short_name: character.get_ability_score(ability)
                     for ability in Definitions.Ability
                 },
                 "Saving Throws": {
-                    ability.name: character.get_saving_throw_modifier(ability)
+                    ability.short_name: character.get_saving_throw_modifier(ability)
                     for ability in Definitions.Ability
                 },
+                "_is_player": True,
+                "_stat_block": character,
+                "_weapons_objects": weapons,
+                "class_levels": {
+                    cls.value: lvl
+                    for cls, lvl in character_sheet.level_per_class.items()
+                },
+                "subclass": character_sheet.character_subclass or "",
+                "proficiency_bonus": character.get_proficiency_bonus(),
+                "speed": character_sheet.speed or "",
+                "size": character_sheet.size.value if character_sheet.size else "",
+                "spells_with_level": spells_with_level,
+                "features": [
+                    getattr(f, "name", type(f).__name__)
+                    for f in character_sheet.features
+                ],
+                "invocations": list(character_sheet.invocations),
             }
         )
 
@@ -326,7 +363,7 @@ class CombatAppQt:
     # ------------------------------------------------------------------
     def _write_log(self, data: dict):
         data["round_number"] = self.round_number
-        data["combatants"] = [dict(c) for c in self.characters]
+        data["combatants"] = [{k: v for k, v in c.items() if not k.startswith("_")} for c in self.characters]
         self.log_file.write_text(json.dumps(data, indent=2))
 
     def _log_event(self, text: str):
@@ -409,12 +446,19 @@ class CombatAppQt:
         if scores:
             add_divider()
             add_header("Ability Scores")
-            parts = []
-            for stat, val in scores.items():
+            td = "border:1px solid #0f3460;text-align:center;padding:2px 7px;"
+            cells_h = "".join(f"<td style='{td}'><b>{s}</b></td>" for s in scores)
+            cells_v, cells_m = "", ""
+            for val in scores.values():
                 mod = (val - 10) // 2
-                parts.append(f"<b>{stat}</b> {val} ({'+' if mod >= 0 else ''}{mod})")
-            lbl = QLabel("  ".join(parts))
-            lbl.setWordWrap(True)
+                cells_v += f"<td style='{td}'>{val}</td>"
+                cells_m += f"<td style='{td}color:#a0a0b0;font-size:11px;'>{mod:+}</td>"
+            lbl = QLabel(
+                f"<table style='border-collapse:collapse'>"
+                f"<tr>{cells_h}</tr><tr>{cells_v}</tr><tr>{cells_m}</tr>"
+                f"</table>"
+            )
+            lbl.setTextFormat(Qt.TextFormat.RichText)
             lay.addWidget(lbl)
 
         saves = char.get("Saving Throws", {})
@@ -422,6 +466,130 @@ class CombatAppQt:
             add_field("Saving Throws", "  ".join(
                 f"{k} {'+' if v >= 0 else ''}{v}" for k, v in saves.items()
             ))
+
+        # --- Player stats (only present for character-sheet combatants) ---
+        if "_is_player" in char:
+            sb = char.get("_stat_block")
+
+            add_divider()
+            if char.get("class_levels"):
+                add_field("Class", ", ".join(
+                    f"{cls} {lvl}" for cls, lvl in char["class_levels"].items()
+                ))
+            if char.get("subclass"):
+                add_field("Subclass", char["subclass"])
+            if char.get("proficiency_bonus"):
+                add_field("Proficiency Bonus", f"+{char['proficiency_bonus']}")
+            if char.get("speed"):
+                add_field("Speed", f"{char['speed']} ft.")
+            if char.get("size"):
+                add_field("Size", char["size"])
+
+            # All skills table
+            if sb:
+                add_divider()
+                add_header("Skills")
+                grid_w = QWidget()
+                sg = QGridLayout(grid_w)
+                sg.setContentsMargins(0, 2, 0, 2)
+                sg.setSpacing(2)
+                sg.setColumnMinimumWidth(0, 130)
+                sg.setColumnMinimumWidth(1, 36)
+                for col, text in enumerate(["Skill", "Mod", ""]):
+                    h = QLabel(f"<b>{text}</b>")
+                    h.setStyleSheet("color: #c9a84c; font-size: 10px;")
+                    sg.addWidget(h, 0, col)
+                for row_i, skill in enumerate(Definitions.Skill, 1):
+                    mod = sb.get_skill_modifier(skill)
+                    has_exp = sb.has_expertise_in_skill(skill)
+                    is_prof = sb.is_proficient_in_skill(skill)
+                    name_lbl = QLabel(skill.value)
+                    mod_lbl = QLabel(f"{mod:+}")
+                    if has_exp:
+                        name_lbl.setStyleSheet("font-weight: bold;")
+                        prof_lbl = QLabel("Exp")
+                        prof_lbl.setStyleSheet("color: #d4a747; font-weight: bold; font-size: 10px;")
+                    elif is_prof:
+                        name_lbl.setStyleSheet("font-weight: bold;")
+                        prof_lbl = QLabel("Prof")
+                        prof_lbl.setStyleSheet("color: #7ecb7e; font-size: 10px;")
+                    else:
+                        prof_lbl = QLabel("—")
+                        prof_lbl.setStyleSheet("color: #555; font-size: 10px;")
+                    sg.addWidget(name_lbl, row_i, 0)
+                    sg.addWidget(mod_lbl, row_i, 1)
+                    sg.addWidget(prof_lbl, row_i, 2)
+                lay.addWidget(grid_w)
+
+            # Spell DC and spell attack bonus
+            spells_with_level = char.get("spells_with_level", [])
+            if spells_with_level and sb:
+                seen: dict = {}
+                for _, _, ability in spells_with_level:
+                    if ability not in seen:
+                        seen[ability] = (
+                            sb.calculate_difficulty_class_for_ability(ability),
+                            sb.calculate_attack_bonus_for_ability(ability),
+                        )
+                if seen:
+                    add_divider()
+                    add_field("Spell DC", "  ".join(
+                        f"DC {dc} ({ab.short_name})" for ab, (dc, _) in seen.items()
+                    ))
+                    add_field("Spell Attack", "  ".join(
+                        f"{atk:+} ({ab.short_name})" for ab, (_, atk) in seen.items()
+                    ))
+
+            # Spells as bullet list grouped by level
+            if spells_with_level:
+                add_divider()
+                add_header("Spells")
+                current_level = -1
+                for spell_name, level, _ in sorted(spells_with_level, key=lambda s: (s[1], s[0])):
+                    if level != current_level:
+                        current_level = level
+                        lvl_label = "Cantrips" if level == 0 else f"Level {level}"
+                        lbl = QLabel(f"<b style='color:#c9a84c'>{lvl_label}</b>")
+                        lbl.setTextFormat(Qt.TextFormat.RichText)
+                        lay.addWidget(lbl)
+                    lbl = QLabel(f"  • {spell_name}")
+                    lay.addWidget(lbl)
+
+            # Weapons with to-hit and damage
+            weapons_objs = char.get("_weapons_objects", [])
+            if weapons_objs and sb:
+                add_divider()
+                add_header("Weapons")
+                for weapon in weapons_objs:
+                    stats = weapon.stats()
+                    to_hit = weapon.calculate_total_attack_roll_bonus_int(sb)
+                    ab_mod, ab_name = weapon._calculate_ability_modifier_bonus(sb)
+                    dmg = f"{stats.damage_roll.value} {ab_mod:+} ({ab_name})"
+                    prof = "✓ proficient" if weapon.player_is_proficient else "✗ not proficient"
+                    lbl = QLabel(
+                        f"• <b>{stats.name}</b>  "
+                        f"<span style='color:#a0a0b0'>to-hit</span> 1d20{to_hit:+}  "
+                        f"<span style='color:#a0a0b0'>dmg</span> {dmg}  "
+                        f"<span style='color:#a0a0b0'>{prof}</span>"
+                    )
+                    lbl.setTextFormat(Qt.TextFormat.RichText)
+                    lbl.setWordWrap(True)
+                    lay.addWidget(lbl)
+
+            # Features
+            if char.get("features"):
+                add_divider()
+                add_header("Features")
+                for name in char["features"]:
+                    lbl = QLabel(f"• {name}")
+                    lay.addWidget(lbl)
+
+            if char.get("invocations"):
+                add_divider()
+                add_header("Invocations")
+                for inv in char["invocations"]:
+                    lbl = QLabel(f"• {inv}")
+                    lay.addWidget(lbl)
 
         # --- Extended stats (only present for ExtendedCombatantData) ---
         if "cr" in char:

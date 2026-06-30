@@ -2,6 +2,7 @@ import argparse
 
 import Combat.GrimsCastle.Encounters as GrimsCastleEncounters
 import Combat.TimeLoop.Encounters as TimeLoopEncounters
+from Builds.OptimizedPaladinVengeance import OptimizedPaladinVengeanceCharacterBuilder
 from Combat.Monsters.CR_24 import AncientRedDragon
 
 if __name__ == "__main__":
@@ -26,7 +27,7 @@ if __name__ == "__main__":
 
         app = CombatAppQt(
             combatants=combatants,
-            character_sheets=[],
+            character_sheets=[OptimizedPaladinVengeanceCharacterBuilder().build()],
             combatants_per_column=4,
         )
         app.run()
