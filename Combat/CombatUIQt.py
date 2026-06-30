@@ -529,37 +529,42 @@ class CombatAppQt:
             if sb:
                 add_divider()
                 add_header("Skills")
-                grid_w = QWidget()
-                sg = QGridLayout(grid_w)
-                sg.setContentsMargins(0, 2, 0, 2)
-                sg.setSpacing(2)
-                sg.setColumnMinimumWidth(0, 130)
-                sg.setColumnMinimumWidth(1, 36)
-                for col, text in enumerate(["Skill", "Mod", ""]):
-                    h = QLabel(f"<b>{text}</b>")
-                    h.setStyleSheet("color: #c9a84c; font-size: 10px;")
-                    sg.addWidget(h, 0, col)
-                for row_i, skill in enumerate(Definitions.Skill, 1):
-                    mod = sb.get_skill_modifier(skill)
+                td  = "border:1px solid #0f3460;padding:2px 7px;"
+                tdr = f"{td}text-align:right;"
+                tdc = f"{td}text-align:center;font-size:10px;"
+                header_row = (
+                    f"<tr>"
+                    f"<th style='{td}color:#c9a84c'>Skill</th>"
+                    f"<th style='{tdr}color:#c9a84c'>Mod</th>"
+                    f"<th style='{tdc}color:#c9a84c'></th>"
+                    f"</tr>"
+                )
+                skill_rows = ""
+                for skill in Definitions.Skill:
+                    mod    = sb.get_skill_modifier(skill)
                     has_exp = sb.has_expertise_in_skill(skill)
                     is_prof = sb.is_proficient_in_skill(skill)
-                    name_lbl = QLabel(skill.value)
-                    mod_lbl = QLabel(f"{mod:+}")
                     if has_exp:
-                        name_lbl.setStyleSheet("font-weight: bold;")
-                        prof_lbl = QLabel("Exp")
-                        prof_lbl.setStyleSheet("color: #d4a747; font-weight: bold; font-size: 10px;")
+                        name_html = f"<b>{skill.value}</b>"
+                        prof_html = f"<span style='color:#d4a747;font-weight:bold'>Exp</span>"
                     elif is_prof:
-                        name_lbl.setStyleSheet("font-weight: bold;")
-                        prof_lbl = QLabel("Prof")
-                        prof_lbl.setStyleSheet("color: #7ecb7e; font-size: 10px;")
+                        name_html = f"<b>{skill.value}</b>"
+                        prof_html = f"<span style='color:#7ecb7e'>Prof</span>"
                     else:
-                        prof_lbl = QLabel("—")
-                        prof_lbl.setStyleSheet("color: #555; font-size: 10px;")
-                    sg.addWidget(name_lbl, row_i, 0)
-                    sg.addWidget(mod_lbl, row_i, 1)
-                    sg.addWidget(prof_lbl, row_i, 2)
-                lay.addWidget(grid_w)
+                        name_html = skill.value
+                        prof_html = f"<span style='color:#555'>—</span>"
+                    skill_rows += (
+                        f"<tr>"
+                        f"<td style='{td}'>{name_html}</td>"
+                        f"<td style='{tdr}'>{mod:+}</td>"
+                        f"<td style='{tdc}'>{prof_html}</td>"
+                        f"</tr>"
+                    )
+                skills_lbl = QLabel(
+                    f"<table style='border-collapse:collapse'>{header_row}{skill_rows}</table>"
+                )
+                skills_lbl.setTextFormat(Qt.TextFormat.RichText)
+                lay.addWidget(skills_lbl)
 
             # Spell DC and spell attack bonus
             spells_with_level = char.get("spells_with_level", [])
@@ -716,9 +721,18 @@ class CombatAppQt:
                     add_field(label, char[key])
 
             if char.get("skills"):
-                add_field("Skills", "  ".join(
-                    f"{k} {'+' if v >= 0 else ''}{v}" for k, v in char["skills"].items()
-                ))
+                add_header("Skills")
+                td  = "border:1px solid #0f3460;padding:2px 8px;"
+                tdr = f"{td}text-align:right;"
+                rows = "".join(
+                    f"<tr><td style='{td}'>{k}</td><td style='{tdr}'>{v:+}</td></tr>"
+                    for k, v in char["skills"].items()
+                )
+                skills_lbl = QLabel(
+                    f"<table style='border-collapse:collapse'>{rows}</table>"
+                )
+                skills_lbl.setTextFormat(Qt.TextFormat.RichText)
+                lay.addWidget(skills_lbl)
 
             for key, label in [
                 ("damage_vulnerabilities", "Vulnerabilities"),
