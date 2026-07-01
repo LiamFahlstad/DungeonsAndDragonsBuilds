@@ -1,5 +1,6 @@
 from Definitions import CreatureSize, Skill
 from Features.BaseFeatures import CharacterFeature, TextFeature
+from Features.SubFeatures import SkillProficiencyChoice
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 SPEED = 30  # Given by your species
@@ -26,15 +27,15 @@ class FeyAncestry(TextFeature):
 
 class KeenSenses(CharacterFeature):
     def __init__(self, skill: Skill):
-        self.skill = skill
-
-    def validate(self, character_stat_block: CharacterStatBlock):
-        assert not character_stat_block.skills.is_proficient(self.skill)
-        assert self.skill in [Skill.SURVIVAL, Skill.PERCEPTION, Skill.INSIGHT]
+        self._choice = SkillProficiencyChoice(
+            [skill],
+            [Skill.SURVIVAL, Skill.PERCEPTION, Skill.INSIGHT],
+            count=1,
+            error_prefix="KeenSenses"
+        )
 
     def modify(self, character_stat_block: CharacterStatBlock):
-        self.validate(character_stat_block)
-        return character_stat_block.skills.add_skill_proficiency(self.skill)
+        self._choice.apply(character_stat_block)
 
 
 class Trance(TextFeature):

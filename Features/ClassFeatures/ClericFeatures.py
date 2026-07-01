@@ -1,5 +1,6 @@
 from Definitions import Ability, Skill
 from Features.BaseFeatures import CharacterFeature, TextFeature
+from Features.SubFeatures import SkillProficiencyChoice
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
@@ -128,17 +129,15 @@ class BlessingsOfKnowledge(CharacterFeature):
             Skill.NATURE,
             Skill.RELIGION,
         ]
-        for skill in [skill_1, skill_2]:
-            if skill not in allowed_skills:
-                raise ValueError(
-                    f"Invalid skill choice for Knowledge Cleric subclass: {skill}"
-                )
-        self.skill_1 = skill_1
-        self.skill_2 = skill_2
+        self._choice = SkillProficiencyChoice(
+            [skill_1, skill_2],
+            allowed_skills,
+            count=2,
+            error_prefix="Blessings of Knowledge"
+        )
 
     def modify(self, character_stat_block: CharacterStatBlock):
-        character_stat_block.skills.add_skill_proficiency(self.skill_1)
-        character_stat_block.skills.add_skill_proficiency(self.skill_2)
+        self._choice.apply(character_stat_block)
 
 
 class KnowledgeDomainSpells(TextFeature):

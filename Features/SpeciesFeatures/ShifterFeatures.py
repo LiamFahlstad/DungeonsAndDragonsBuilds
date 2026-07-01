@@ -2,6 +2,7 @@ from enum import Enum
 
 from Definitions import Skill
 from Features.BaseFeatures import CharacterFeature, TextFeature
+from Features.SubFeatures import SkillProficiencyChoice
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 SPEED = 30  # Given by your species
@@ -46,18 +47,20 @@ class Shifting(TextFeature):
 
 
 class BestialInstincts(CharacterFeature):
-    def __init__(self, skill: Skill):
-        self.skill = skill
+    VALID_SKILLS = [
+        Skill.ACROBATICS,
+        Skill.ATHLETICS,
+        Skill.INTIMIDATION,
+        Skill.SURVIVAL,
+    ]
 
-    def validate(self, character_stat_block: CharacterStatBlock):
-        assert not character_stat_block.skills.is_proficient(self.skill)
-        assert self.skill in [
-            Skill.ACROBATICS,
-            Skill.ATHLETICS,
-            Skill.INTIMIDATION,
-            Skill.SURVIVAL,
-        ]
+    def __init__(self, skill: Skill):
+        self._choice = SkillProficiencyChoice(
+            [skill],
+            self.VALID_SKILLS,
+            count=1,
+            error_prefix="Bestial Instincts"
+        )
 
     def modify(self, character_stat_block: CharacterStatBlock):
-        self.validate(character_stat_block)
-        return character_stat_block.skills.add_skill_proficiency(self.skill)
+        self._choice.apply(character_stat_block)

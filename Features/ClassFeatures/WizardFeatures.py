@@ -1,5 +1,6 @@
 from Definitions import Ability, Skill
 from Features.BaseFeatures import CharacterFeature, TextFeature
+from Features.SubFeatures import SkillExpertiseChoice, SkillProficiencyChoice
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 WIZARD_HIT_DIE = 6
@@ -27,22 +28,23 @@ class ArcaneRecovery(TextFeature):
 
 
 class Scholar(CharacterFeature):
+    SKILL_POOL = [
+        Skill.ARCANA,
+        Skill.HISTORY,
+        Skill.INVESTIGATION,
+        Skill.MEDICINE,
+        Skill.NATURE,
+        Skill.RELIGION,
+    ]
+
     def __init__(self, skill: Skill):
-        if skill not in [
-            Skill.ARCANA,
-            Skill.HISTORY,
-            Skill.INVESTIGATION,
-            Skill.MEDICINE,
-            Skill.NATURE,
-            Skill.RELIGION,
-        ]:
-            raise ValueError(
-                "Scholar skill must be one of: Arcana, History, Investigation, Medicine, Nature, Religion"
-            )
-        self.skill = skill
+        self._expertise = SkillExpertiseChoice(
+            skill, self.SKILL_POOL,
+            "Scholar skill must be one of: Arcana, History, Investigation, Medicine, Nature, Religion"
+        )
 
     def modify(self, character_stat_block: CharacterStatBlock):
-        character_stat_block.skills.add_skill_expertise(self.skill)
+        self._expertise.apply(character_stat_block)
 
 
 class MemorizeSpell(TextFeature):
@@ -153,23 +155,21 @@ class BladesongText(TextFeature):
 
 
 class TrainingInWarAndSong(TextFeature):
+    VALID_SKILLS = [Skill.ACROBATICS, Skill.ATHLETICS, Skill.PERFORMANCE, Skill.PERSUASION]
+
     def __init__(self, skill: Skill):
-        if skill not in [
-            Skill.ACROBATICS,
-            Skill.ATHLETICS,
-            Skill.PERFORMANCE,
-            Skill.PERSUASION,
-        ]:
-            raise ValueError(
-                "Training in War and Song skill must be one of: Acrobatics, Athletics, Performance, Persuasion"
-            )
-        self.skill = skill
+        self._choice = SkillProficiencyChoice(
+            [skill],
+            self.VALID_SKILLS,
+            count=1,
+            error_prefix="Training in War and Song"
+        )
         super().__init__(
             name="Training in War and Song", origin="Bladesinger Wizard Level 3"
         )
 
     def modify(self, character_stat_block: CharacterStatBlock):
-        character_stat_block.skills.add_skill_proficiency(self.skill)
+        self._choice.apply(character_stat_block)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

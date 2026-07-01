@@ -2,7 +2,7 @@ from typing import Optional
 
 from Definitions import Ability, CharacterClass, Skill
 from Features.BaseFeatures import CharacterFeature, TextFeature
-from Utils import StringUtils
+from Features.SubFeatures import SkillProficiencyChoice
 from Spells.Definitions import (
     ClericLevel0Spells,
     ClericLevel1Spells,
@@ -12,6 +12,7 @@ from Spells.Definitions import (
     WizardLevel1Spells,
 )
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
+from Utils import StringUtils
 
 
 class OriginCharacterFeat(CharacterFeature):
@@ -37,26 +38,15 @@ class Skilled(OriginCharacterFeat):
     """Also add proficiency in any combination of three skills or tools of your choice."""
 
     def __init__(self, skills: list[Skill]):
-        self.skills = skills
-        assert len(self.skills) == 3, "Must choose exactly three skills or tools."
-
-    def validate(self, character_stat_block: CharacterStatBlock) -> None:
-        if any(
-            character_stat_block.skills.is_proficient(skill) for skill in self.skills
-        ):
-            raise ValueError(
-                "Character already has proficiency with the following selected skills: "
-                + ", ".join(
-                    skill.name
-                    for skill in self.skills
-                    if character_stat_block.skills.is_proficient(skill)
-                )
-            )
+        self._choice = SkillProficiencyChoice(
+            skills,
+            list(Skill),
+            count=3,
+            error_prefix="Skilled"
+        )
 
     def modify(self, character_stat_block: CharacterStatBlock):
-        self.validate(character_stat_block)
-        for skill in self.skills:
-            character_stat_block.skills.add_skill_proficiency(skill)
+        self._choice.apply(character_stat_block)
 
 
 class Alert(OriginTextFeat):
@@ -138,7 +128,9 @@ class Lucky(OriginTextFeat):
             "Advantage. When you roll a d20 for a D20 Test, you can spend 1 Luck Point to give yourself Advantage on the roll.\n"
             "Disadvantage. When a creature rolls a d20 for an attack roll against you, you can spend 1 Luck Point to impose Disadvantage on that roll."
         )
-        return StringUtils.add_boxes(description, proficiency_bonus, regain_all_on="long rest")
+        return StringUtils.add_boxes(
+            description, proficiency_bonus, regain_all_on="long rest"
+        )
 
 
 class MagicInitiate(OriginTextFeat):
@@ -366,16 +358,16 @@ class PurpleDragonRook(OriginTextFeat):
     VALID_SKILLS = [Skill.INSIGHT, Skill.PERFORMANCE, Skill.PERSUASION]
 
     def __init__(self, entreat_skill: Skill):
-        if entreat_skill not in self.VALID_SKILLS:
-            raise ValueError(
-                f"Entreat skill must be one of: Insight, Performance, or Persuasion. Got: {entreat_skill}"
-            )
-        self.entreat_skill = entreat_skill
+        self._choice = SkillProficiencyChoice(
+            [entreat_skill],
+            self.VALID_SKILLS,
+            count=1,
+            error_prefix="Purple Dragon Rook"
+        )
         super().__init__(name="Purple Dragon Rook", origin="Origin Feat")
 
     def modify(self, character_stat_block: CharacterStatBlock):
-        if not character_stat_block.skills.is_proficient(self.entreat_skill):
-            character_stat_block.skills.add_skill_proficiency(self.entreat_skill)
+        self._choice.apply(character_stat_block)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         return (
@@ -397,7 +389,9 @@ class SpellfireSpark(OriginTextFeat):
             "Magic Absorption. Once per turn, when you take damage from a spell or magical effect, you reduce the total damage taken by 1d4. You can’t use this benefit if you have the Incapacitated condition.\n"
             "Spellfire Flame. You learn the Sacred Flame cantrip. Intelligence, Wisdom, or Charisma is your spellcasting ability for this spell (choose when you select this feat). You can also cast this cantrip as a Bonus Action a number of times equal to your Proficiency Bonus, and you regain all expended uses when you finish a Long Rest."
         )
-        return StringUtils.add_boxes(description, proficiency_bonus, regain_all_on="long rest")
+        return StringUtils.add_boxes(
+            description, proficiency_bonus, regain_all_on="long rest"
+        )
 
 
 class TyroOfTheGauntlet(OriginTextFeat):

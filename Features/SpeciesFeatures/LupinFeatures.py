@@ -1,5 +1,6 @@
 from Definitions import Skill
 from Features.BaseFeatures import CharacterFeature, TextFeature
+from Features.SubFeatures import SkillProficiencyChoice
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
@@ -47,17 +48,12 @@ class WerewolfInstincts(CharacterFeature):
     VALID_SKILLS = [Skill.PERCEPTION, Skill.STEALTH, Skill.SURVIVAL]
 
     def __init__(self, skill: Skill):
-        assert skill in self.VALID_SKILLS, (
-            f"Invalid skill for Werewolf Instincts: {skill}. "
-            f"Valid choices are: Perception, Stealth, or Survival."
-        )
-        self.skill = skill
-
-    def validate(self, character_stat_block: CharacterStatBlock):
-        assert not character_stat_block.skills.is_proficient(self.skill), (
-            f"Character already has proficiency in {self.skill}."
+        self._choice = SkillProficiencyChoice(
+            [skill],
+            self.VALID_SKILLS,
+            count=1,
+            error_prefix="Werewolf Instincts"
         )
 
     def modify(self, character_stat_block: CharacterStatBlock):
-        self.validate(character_stat_block)
-        character_stat_block.skills.add_skill_proficiency(self.skill)
+        self._choice.apply(character_stat_block)

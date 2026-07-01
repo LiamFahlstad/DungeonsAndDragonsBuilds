@@ -1,6 +1,7 @@
 import Definitions
 from Definitions import Ability, Skill
 from Features.BaseFeatures import CharacterFeature, TextFeature
+from Features.SubFeatures import SkillProficiencyChoice
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
@@ -44,7 +45,10 @@ class Rage(TextFeature):
             "Each time the Rage is extended, it lasts until the end of your next turn. You can maintain a Rage for up to 10 minutes."
         )
         return StringUtils.add_boxes(
-            description, rage_usages, regain_x_on=(1, "short rest"), regain_all_on="long rest"
+            description,
+            rage_usages,
+            regain_x_on=(1, "short rest"),
+            regain_all_on="long rest",
         )
 
 
@@ -107,25 +111,24 @@ class RecklessAttack(TextFeature):
 
 
 class PrimalKnowledgeSkillProficiency(CharacterFeature):
-    def __init__(self, skill: Skill):
-        if skill not in self.skill_options():
-            raise ValueError(f"Invalid skill for Primal Knowledge: {skill}")
-        self.skill = skill
+    SKILL_POOL = [
+        Skill.ANIMAL_HANDLING,
+        Skill.ATHLETICS,
+        Skill.INTIMIDATION,
+        Skill.NATURE,
+        Skill.PERCEPTION,
+        Skill.SURVIVAL,
+    ]
 
-    def skill_options(self):
-        return [
-            Skill.ANIMAL_HANDLING,
-            Skill.ATHLETICS,
-            Skill.INTIMIDATION,
-            Skill.NATURE,
-            Skill.PERCEPTION,
-            Skill.SURVIVAL,
-        ]
+    def __init__(self, skill: Skill):
+        self._proficiency = SkillProficiencyChoice(
+            [skill], self.SKILL_POOL, count=1, error_prefix="Invalid skill for Primal Knowledge"
+        )
 
     def modify(self, character_stat_block: CharacterStatBlock):
-        for skill in self.skill_options():
+        for skill in self.SKILL_POOL:
             character_stat_block.skills.update_skill_to_ability(skill, Ability.STRENGTH)
-        character_stat_block.skills.add_skill_proficiency(self.skill)
+        self._proficiency.apply(character_stat_block)
 
 
 class PrimalKnowledge(TextFeature):

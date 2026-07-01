@@ -1,5 +1,6 @@
 from Definitions import Ability, Skill
 from Features.BaseFeatures import CharacterFeature
+from Features.SubFeatures import SkillProficiencyChoice
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
@@ -21,12 +22,12 @@ class FreeBackgroundSkillProficiency(CharacterFeature):
     """Also add proficiency in two skills of your choice."""
 
     def __init__(self, skills: list[Skill]):
-        if len(skills) != 2:
-            raise ValueError("Must choose exactly two skills for proficiency.")
-        self.skills = skills
+        self._choice = SkillProficiencyChoice(
+            skills,
+            list(Skill),
+            count=2,
+            error_prefix="Free Background Skill Proficiency"
+        )
 
     def modify(self, character_stat_block: CharacterStatBlock):
-        for skill in self.skills:
-            if character_stat_block.skills.is_proficient(skill):
-                raise ValueError(f"Character is already proficient in {skill}.")
-            character_stat_block.skills.add_skill_proficiency(skill)
+        self._choice.apply(character_stat_block)

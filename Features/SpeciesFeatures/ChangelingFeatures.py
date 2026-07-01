@@ -1,5 +1,6 @@
 from Definitions import Skill
 from Features.BaseFeatures import CharacterFeature, TextFeature
+from Features.SubFeatures import SkillProficiencyChoice
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 SPEED = 30  # Given by your species
@@ -15,24 +16,15 @@ class ChangelingInstincts(CharacterFeature):
     ]
 
     def __init__(self, skills: list[Skill]):
-        assert len(skills) == 2, "Changeling Instincts requires exactly two skills."
-        for skill in skills:
-            assert skill in self.VALID_SKILLS, (
-                f"Invalid skill for Changeling Instincts: {skill}. "
-                f"Valid choices are: Deception, Insight, Intimidation, Performance, or Persuasion."
-            )
-        self.skills = skills
-
-    def validate(self, character_stat_block: CharacterStatBlock):
-        for skill in self.skills:
-            assert not character_stat_block.skills.is_proficient(skill), (
-                f"Character already has proficiency in {skill}."
-            )
+        self._choice = SkillProficiencyChoice(
+            skills,
+            self.VALID_SKILLS,
+            count=2,
+            error_prefix="Changeling Instincts"
+        )
 
     def modify(self, character_stat_block: CharacterStatBlock):
-        self.validate(character_stat_block)
-        for skill in self.skills:
-            character_stat_block.skills.add_skill_proficiency(skill)
+        self._choice.apply(character_stat_block)
 
 
 class ShapeShifter(TextFeature):

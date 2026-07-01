@@ -1,5 +1,6 @@
 from Definitions import Ability, Skill
 from Features.BaseFeatures import CharacterFeature, TextFeature
+from Features.SubFeatures import SkillProficiencyChoice
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
@@ -234,14 +235,12 @@ class UnbreakableMajesty(TextFeature):
 
 class BonusProficiencies(CharacterFeature):
     def __init__(self, skill_1: Skill, skill_2: Skill, skill_3: Skill):
-        self.skill_1 = skill_1
-        self.skill_2 = skill_2
-        self.skill_3 = skill_3
+        self._proficiency = SkillProficiencyChoice(
+            [skill_1, skill_2, skill_3], list(Skill), count=3
+        )
 
     def modify(self, character_stat_block: CharacterStatBlock):
-        character_stat_block.skills.add_skill_proficiency(self.skill_1)
-        character_stat_block.skills.add_skill_proficiency(self.skill_2)
-        character_stat_block.skills.add_skill_proficiency(self.skill_3)
+        self._proficiency.apply(character_stat_block)
 
 
 class CuttingWords(TextFeature):

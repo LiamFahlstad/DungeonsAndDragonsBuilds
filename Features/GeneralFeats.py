@@ -1,5 +1,6 @@
 from Definitions import Ability, Skill
 from Features.BaseFeatures import CharacterFeature, TextFeature
+from Features.SubFeatures import SkillProficiencyChoice, SkillExpertiseChoice
 from Utils import StringUtils
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
@@ -533,15 +534,25 @@ class SkillExpert(_AbilityScoreFeat):
     _ABILITIES = tuple(Ability)  # any ability is valid
 
     def __init__(self, character_level: int, ability: Ability, skill: Skill):
-        self.skill = skill
+        self._proficiency = SkillProficiencyChoice(
+            [skill],
+            list(Skill),
+            count=1,
+            error_prefix="Skill Expert"
+        )
+        self._expertise = SkillExpertiseChoice(
+            skill,
+            list(Skill),
+            error_prefix="Skill Expert"
+        )
         super().__init__(character_level, ability)
 
     def modify(self, character_stat_block: CharacterStatBlock):
         super().modify(character_stat_block)
-        if not character_stat_block.skills.is_proficient(self.skill):
-            character_stat_block.skills.add_skill_proficiency(self.skill)
-        if not character_stat_block.skills.has_expertise(self.skill):
-            character_stat_block.skills.add_skill_expertise(self.skill)
+        if not character_stat_block.skills.is_proficient(self._proficiency.skills[0]):
+            self._proficiency.apply(character_stat_block)
+        if not character_stat_block.skills.has_expertise(self._expertise.skill):
+            self._expertise.apply(character_stat_block)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         return (
