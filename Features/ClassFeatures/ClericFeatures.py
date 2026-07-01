@@ -36,7 +36,7 @@ class DivineOrder(TextFeature):
 
 
 class DivineOrderSkillProficiency(CharacterFeature):
-    def modify(self, character_stat_block: CharacterStatBlock):
+    def apply(self, character_stat_block: CharacterStatBlock):
         character_stat_block.skills.add_skill_proficiency(Skill.ARCANA)
         character_stat_block.skills.add_skill_proficiency(Skill.RELIGION)
 
@@ -133,10 +133,10 @@ class BlessingsOfKnowledge(CharacterFeature):
             [skill_1, skill_2],
             allowed_skills,
             count=2,
-            error_prefix="Blessings of Knowledge"
+            error_prefix="Blessings of Knowledge",
         )
 
-    def modify(self, character_stat_block: CharacterStatBlock):
+    def apply(self, character_stat_block: CharacterStatBlock):
         self._choice.apply(character_stat_block)
 
 

@@ -24,7 +24,7 @@ class DwarvenResilience(TextFeature):
 
 
 class DwarvenToughness(CharacterFeature):
-    def modify(self, character_stat_block: CharacterStatBlock):
+    def apply(self, character_stat_block: CharacterStatBlock):
         character_level = character_stat_block.character_level
         character_stat_block.combat.hit_points_bonus += character_level
 

@@ -50,7 +50,7 @@ def generate_feat_class(feat_name: str, feat_text: str) -> str:
         )
         ability_assign = "        self.ability = ability\n"
         ability_modify = (
-            "    def modify(self, character_stat_block: CharacterStatBlock):\n"
+            "    def apply(self, character_stat_block: CharacterStatBlock):\n"
             "        character_stat_block.abilities.add_bonus(self.ability, 1)\n\n"
         )
 

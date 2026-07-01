@@ -56,11 +56,8 @@ class BestialInstincts(CharacterFeature):
 
     def __init__(self, skill: Skill):
         self._choice = SkillProficiencyChoice(
-            [skill],
-            self.VALID_SKILLS,
-            count=1,
-            error_prefix="Bestial Instincts"
+            [skill], self.VALID_SKILLS, count=1, error_prefix="Bestial Instincts"
         )
 
-    def modify(self, character_stat_block: CharacterStatBlock):
+    def apply(self, character_stat_block: CharacterStatBlock):
         self._choice.apply(character_stat_block)

@@ -21,19 +21,19 @@ class FightingStyle(ABC):
 
 class FightStyleCharacterFeature(FightingStyle):
     @abstractmethod
-    def modify(self, character_stat_block: CharacterStatBlock):
+    def apply(self, character_stat_block: CharacterStatBlock):
         pass
 
 
 class FightStyleWeaponFeature(FightingStyle):
     @abstractmethod
-    def modify(self, weapons: list[AbstractWeapon]):
+    def apply(self, weapons: list[AbstractWeapon]):
         pass
 
 
 # Archery
 class Archery(FightStyleWeaponFeature):
-    def modify(self, weapons: list[AbstractWeapon]):
+    def apply(self, weapons: list[AbstractWeapon]):
         for weapon in weapons:
             if weapon.stats().weapon_type in (
                 WeaponType.MARTIAL_RANGED,
@@ -51,7 +51,7 @@ class BlindFighting(FightingStyle):
 
 
 class Defense(FightStyleCharacterFeature):
-    def modify(self, character_stat_block: CharacterStatBlock):
+    def apply(self, character_stat_block: CharacterStatBlock):
         character_stat_block.combat.increase_armor_class(1)
 
     def description(self):
@@ -59,7 +59,7 @@ class Defense(FightStyleCharacterFeature):
 
 
 class Dueling(FightStyleWeaponFeature):
-    def modify(self, weapons: list[AbstractWeapon]):
+    def apply(self, weapons: list[AbstractWeapon]):
         for weapon in weapons:
             if weapon.stats().weapon_type in (
                 WeaponType.MARTIAL_MELEE,
@@ -92,7 +92,7 @@ class Protection(FightingStyle):
 
 
 class ThrownWeaponFighting(FightStyleWeaponFeature):
-    def modify(self, weapons: list[AbstractWeapon]):
+    def apply(self, weapons: list[AbstractWeapon]):
         for weapon in weapons:
             if WeaponProperty.THROWN in weapon.stats().properties:
                 weapon.attack_roll_bonuses.append(

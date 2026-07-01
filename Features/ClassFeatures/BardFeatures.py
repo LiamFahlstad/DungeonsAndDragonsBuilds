@@ -34,27 +34,33 @@ class BardicInspiration(TextFeature):
             f"    * Number of Uses. You can confer a Bardic Inspiration die a number of times equal to your Charisma modifier ({max(1, charisma_modifier)}), and you regain all expended uses when you finish a Long Rest.\n"
             "    * At Higher Levels. Your Bardic Inspiration die changes when you reach certain Bard levels, as shown in the Bardic Die column of the Bard Features table. The die becomes a d8 at level 5, a d10 at level 10, and a d12 at level 15.\n"
         )
-        return StringUtils.add_boxes(description, max(1, charisma_modifier), regain_all_on="long rest")
+        return StringUtils.add_boxes(
+            description, max(1, charisma_modifier), regain_all_on="long rest"
+        )
 
 
 class Expertise1(CharacterFeature):
     def __init__(self, skill_1: Skill, skill_2: Skill):
-        self._choice = SkillExpertiseChoice([skill_1, skill_2], list(Skill), count=2, error_prefix="Bard Expertise")
+        self._choice = SkillExpertiseChoice(
+            [skill_1, skill_2], list(Skill), count=2, error_prefix="Bard Expertise"
+        )
 
-    def modify(self, character_stat_block: CharacterStatBlock):
+    def apply(self, character_stat_block: CharacterStatBlock):
         self._choice.apply(character_stat_block)
 
 
 class Expertise2(CharacterFeature):
     def __init__(self, skill_1: Skill, skill_2: Skill):
-        self._choice = SkillExpertiseChoice([skill_1, skill_2], list(Skill), count=2, error_prefix="Bard Expertise")
+        self._choice = SkillExpertiseChoice(
+            [skill_1, skill_2], list(Skill), count=2, error_prefix="Bard Expertise"
+        )
 
-    def modify(self, character_stat_block: CharacterStatBlock):
+    def apply(self, character_stat_block: CharacterStatBlock):
         self._choice.apply(character_stat_block)
 
 
 class JackOfAllTrades(CharacterFeature):
-    def modify(self, character_stat_block: CharacterStatBlock):
+    def apply(self, character_stat_block: CharacterStatBlock):
         for skill in Skill:
             if not character_stat_block.skills.is_proficient(skill):
                 character_stat_block.skills.add_skill_bonus(
@@ -235,7 +241,7 @@ class BonusProficiencies(CharacterFeature):
             [skill_1, skill_2, skill_3], list(Skill), count=3
         )
 
-    def modify(self, character_stat_block: CharacterStatBlock):
+    def apply(self, character_stat_block: CharacterStatBlock):
         self._proficiency.apply(character_stat_block)
 
 

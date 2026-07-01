@@ -16,7 +16,7 @@ class Darkvision(TextFeature):
 
 
 class GnomishCunning(CharacterFeature):
-    def modify(self, character_stat_block: CharacterStatBlock) -> None:
+    def apply(self, character_stat_block: CharacterStatBlock) -> None:
         character_stat_block.add_advantage_in_saving_throw(Ability.INTELLIGENCE)
         character_stat_block.add_advantage_in_saving_throw(Ability.WISDOM)
         character_stat_block.add_advantage_in_saving_throw(Ability.CHARISMA)

@@ -31,10 +31,10 @@ class KeenSenses(CharacterFeature):
             [skill],
             [Skill.SURVIVAL, Skill.PERCEPTION, Skill.INSIGHT],
             count=1,
-            error_prefix="KeenSenses"
+            error_prefix="KeenSenses",
         )
 
-    def modify(self, character_stat_block: CharacterStatBlock):
+    def apply(self, character_stat_block: CharacterStatBlock):
         self._choice.apply(character_stat_block)
 
 

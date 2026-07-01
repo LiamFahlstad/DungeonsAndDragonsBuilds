@@ -93,7 +93,7 @@ class UnarmoredDefenseText(TextFeature):
 
 
 class UnarmoredDefense(CharacterFeature):
-    def modify(self, character_stat_block: CharacterStatBlock):
+    def apply(self, character_stat_block: CharacterStatBlock):
         character_stat_block.combat.update_armor_class_base(10)
         character_stat_block.combat.add_armor_class_ability(
             Definitions.Ability.DEXTERITY
@@ -120,7 +120,9 @@ class MonksFocus(TextFeature):
             f"    * DC: {dc}\n"
             "Known features:\n"
         )
-        return StringUtils.add_boxes(description, focus_points, regain_all_on="short or long rest")
+        return StringUtils.add_boxes(
+            description, focus_points, regain_all_on="short or long rest"
+        )
 
 
 class FlurryOfBlows(TextFeature):

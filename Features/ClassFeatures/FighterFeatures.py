@@ -36,7 +36,9 @@ class SecondWind(TextFeature):
             f"and you regain all expended uses when you finish a Long Rest.\n"
         )
 
-        return StringUtils.add_boxes(base_text, uses, regain_x_on=(1, "short rest"), regain_all_on="long rest")
+        return StringUtils.add_boxes(
+            base_text, uses, regain_x_on=(1, "short rest"), regain_all_on="long rest"
+        )
 
 
 class WeaponMastery(TextFeature):
@@ -61,7 +63,9 @@ class ActionSurge(TextFeature):
             "You can push yourself beyond your normal limits for a moment. On your turn, you can take one additional action, except the Magic action.\n"
             "Once you use this feature, you can’t do so again until you finish a Short or Long Rest. Starting at level 17, you can use it twice before a rest but only once on a turn."
         )
-        return StringUtils.add_boxes(description, uses, regain_all_on="short or long rest")
+        return StringUtils.add_boxes(
+            description, uses, regain_all_on="short or long rest"
+        )
 
 
 class TacticalMind(TextFeature):
@@ -230,7 +234,9 @@ class InspiringCommander(TextFeature):
 class SuperiorityDice(TextFeature):
     def __init__(self):
         self.maneuvers = []
-        super().__init__(name="Superiority Dice", origin="Battle Master Fighter Level 3")
+        super().__init__(
+            name="Superiority Dice", origin="Battle Master Fighter Level 3"
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         if character_stat_block.character_level < 7:
@@ -260,7 +266,9 @@ class SuperiorityDice(TextFeature):
             f"Maneuvers:"
         )
 
-        return StringUtils.add_boxes(base_text, number_of_superiority_die, regain_all_on="short or long rest")
+        return StringUtils.add_boxes(
+            base_text, number_of_superiority_die, regain_all_on="short or long rest"
+        )
 
 
 class CombatSuperiority(TextFeature):
@@ -359,7 +367,7 @@ class RemarkableAthlete(TextFeature):
 
 class RemarkableAthleteCharacterFeature(CharacterFeature):
 
-    def modify(self, character_stat_block: CharacterStatBlock) -> None:
+    def apply(self, character_stat_block: CharacterStatBlock) -> None:
         character_stat_block.add_initiative_roll_condition(DiceRollCondition.ADVANTAGE)
         character_stat_block.set_skill_roll_condition(
             Skill.ATHLETICS, DiceRollCondition.ADVANTAGE

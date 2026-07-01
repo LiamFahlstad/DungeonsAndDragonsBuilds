@@ -18,13 +18,10 @@ class Resourceful(TextFeature):
 class Skillful(CharacterFeature):
     def __init__(self, skill: Skill):
         self._choice = SkillProficiencyChoice(
-            [skill],
-            list(Skill),
-            count=1,
-            error_prefix="Skillful"
+            [skill], list(Skill), count=1, error_prefix="Skillful"
         )
 
-    def modify(self, character_stat_block: CharacterStatBlock):
+    def apply(self, character_stat_block: CharacterStatBlock):
         self._choice.apply(character_stat_block)
 
 

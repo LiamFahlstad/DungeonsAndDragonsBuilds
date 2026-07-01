@@ -32,18 +32,15 @@ class Tireless(TextFeature):
 
 
 class IntegratedProtection(CharacterFeature):
-    def modify(self, character_stat_block: CharacterStatBlock):
+    def apply(self, character_stat_block: CharacterStatBlock):
         character_stat_block.combat.increase_armor_class(1)
 
 
 class SpecializedDesign(CharacterFeature):
     def __init__(self, skill: Skill):
         self._choice = SkillProficiencyChoice(
-            [skill],
-            list(Skill),
-            count=1,
-            error_prefix="SpecializedDesign"
+            [skill], list(Skill), count=1, error_prefix="SpecializedDesign"
         )
 
-    def modify(self, character_stat_block: CharacterStatBlock):
+    def apply(self, character_stat_block: CharacterStatBlock):
         self._choice.apply(character_stat_block)

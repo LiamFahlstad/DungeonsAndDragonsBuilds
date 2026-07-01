@@ -69,7 +69,7 @@ class UnarmoredDefenseText(TextFeature):
 
 
 class UnarmoredDefense(CharacterFeature):
-    def modify(self, character_stat_block: CharacterStatBlock):
+    def apply(self, character_stat_block: CharacterStatBlock):
         character_stat_block.combat.update_armor_class_base(10)
         character_stat_block.combat.add_armor_class_ability(Ability.DEXTERITY)
         character_stat_block.combat.add_armor_class_ability(Ability.CONSTITUTION)
@@ -97,7 +97,7 @@ class DangerSenseText(TextFeature):
 
 
 class DangerSense(CharacterFeature):
-    def modify(self, character_stat_block: CharacterStatBlock):
+    def apply(self, character_stat_block: CharacterStatBlock):
         character_stat_block.saving_throws.add_advantage(Ability.DEXTERITY)
 
 
@@ -122,10 +122,13 @@ class PrimalKnowledgeSkillProficiency(CharacterFeature):
 
     def __init__(self, skill: Skill):
         self._proficiency = SkillProficiencyChoice(
-            [skill], self.SKILL_POOL, count=1, error_prefix="Invalid skill for Primal Knowledge"
+            [skill],
+            self.SKILL_POOL,
+            count=1,
+            error_prefix="Invalid skill for Primal Knowledge",
         )
 
-    def modify(self, character_stat_block: CharacterStatBlock):
+    def apply(self, character_stat_block: CharacterStatBlock):
         for skill in self.SKILL_POOL:
             character_stat_block.skills.update_skill_to_ability(skill, Ability.STRENGTH)
         self._proficiency.apply(character_stat_block)

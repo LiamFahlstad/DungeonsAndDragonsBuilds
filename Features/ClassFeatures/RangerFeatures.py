@@ -52,14 +52,18 @@ class FavoredEnemy(TextFeature):
             "You always have the Hunter's Mark spell prepared.\n"
             f"You can cast it {free_hunters_mark_uses} times without expending a spell slot, and you regain all expended uses of this ability when you finish a Long Rest.\n"
         )
-        return StringUtils.add_boxes(description, free_hunters_mark_uses, regain_all_on="long rest")
+        return StringUtils.add_boxes(
+            description, free_hunters_mark_uses, regain_all_on="long rest"
+        )
 
 
 class DeftExplorerExpertise(CharacterFeature):
     def __init__(self, skill: Skill):
-        self._choice = SkillExpertiseChoice([skill], list(Skill), count=1, error_prefix="Deft Explorer Expertise")
+        self._choice = SkillExpertiseChoice(
+            [skill], list(Skill), count=1, error_prefix="Deft Explorer Expertise"
+        )
 
-    def modify(self, character_stat_block: CharacterStatBlock):
+    def apply(self, character_stat_block: CharacterStatBlock):
         self._choice.apply(character_stat_block)
 
 
@@ -92,9 +96,11 @@ class Roving(TextFeature):
 
 class Expertise(CharacterFeature):
     def __init__(self, skill_1: Skill, skill_2: Skill):
-        self._choice = SkillExpertiseChoice([skill_1, skill_2], list(Skill), count=2, error_prefix="Ranger Expertise")
+        self._choice = SkillExpertiseChoice(
+            [skill_1, skill_2], list(Skill), count=2, error_prefix="Ranger Expertise"
+        )
 
-    def modify(self, character_stat_block: CharacterStatBlock):
+    def apply(self, character_stat_block: CharacterStatBlock):
         self._choice.apply(character_stat_block)
 
 

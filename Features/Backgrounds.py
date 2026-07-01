@@ -13,7 +13,7 @@ class FreeBackgroundAbilityBonus(CharacterFeature):
         if sum(bonus[1] for bonus in self.bonuses) != 3:
             raise ValueError("Bonuses must sum to 3.")
 
-    def modify(self, character_stat_block: CharacterStatBlock):
+    def apply(self, character_stat_block: CharacterStatBlock):
         for ability, bonus in self.bonuses:
             character_stat_block.abilities.add_bonus(ability, bonus)
 
@@ -26,8 +26,8 @@ class FreeBackgroundSkillProficiency(CharacterFeature):
             skills,
             list(Skill),
             count=2,
-            error_prefix="Free Background Skill Proficiency"
+            error_prefix="Free Background Skill Proficiency",
         )
 
-    def modify(self, character_stat_block: CharacterStatBlock):
+    def apply(self, character_stat_block: CharacterStatBlock):
         self._choice.apply(character_stat_block)

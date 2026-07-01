@@ -17,13 +17,10 @@ class ChangelingInstincts(CharacterFeature):
 
     def __init__(self, skills: list[Skill]):
         self._choice = SkillProficiencyChoice(
-            skills,
-            self.VALID_SKILLS,
-            count=2,
-            error_prefix="Changeling Instincts"
+            skills, self.VALID_SKILLS, count=2, error_prefix="Changeling Instincts"
         )
 
-    def modify(self, character_stat_block: CharacterStatBlock):
+    def apply(self, character_stat_block: CharacterStatBlock):
         self._choice.apply(character_stat_block)
 
 

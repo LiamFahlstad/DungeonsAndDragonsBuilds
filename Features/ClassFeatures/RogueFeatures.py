@@ -9,9 +9,11 @@ ROGUE_HIT_DIE = 8
 
 class Expertise(CharacterFeature):
     def __init__(self, skill_1: Skill, skill_2: Skill):
-        self._choice = SkillExpertiseChoice([skill_1, skill_2], list(Skill), count=2, error_prefix="Rogue Expertise")
+        self._choice = SkillExpertiseChoice(
+            [skill_1, skill_2], list(Skill), count=2, error_prefix="Rogue Expertise"
+        )
 
-    def modify(self, character_stat_block: CharacterStatBlock):
+    def apply(self, character_stat_block: CharacterStatBlock):
         self._choice.apply(character_stat_block)
 
 
@@ -139,7 +141,7 @@ class DeviousStrikes(TextFeature):
 
 
 class SlipperyMindCharacterFeature(CharacterFeature):
-    def modify(self, character_stat_block: CharacterStatBlock):
+    def apply(self, character_stat_block: CharacterStatBlock):
         character_stat_block.saving_throws.add_proficiency(Ability.WISDOM)
         character_stat_block.saving_throws.add_proficiency(Ability.CHARISMA)
 

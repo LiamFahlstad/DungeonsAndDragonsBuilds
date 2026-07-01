@@ -22,7 +22,6 @@ from StatBlocks.SkillsStatBlock import SkillsStatBlock
 from ToolProficiencies.ToolProficiencies import ToolProficiency
 from Utils import CharaterSheetWriters
 
-
 _MERGE_EMPTY_VALUES = (None, [], {}, "")
 
 
@@ -139,7 +138,17 @@ class CharacterSheetData:
         success = False
         for spell_name, spell_ability, additional_ruling in self.spells:
             if spell_name == old_spell:
-                new_spells.append((new_spell, new_spell_ability or spell_ability, new_additional_ruling if new_additional_ruling is not None else additional_ruling))
+                new_spells.append(
+                    (
+                        new_spell,
+                        new_spell_ability or spell_ability,
+                        (
+                            new_additional_ruling
+                            if new_additional_ruling is not None
+                            else additional_ruling
+                        ),
+                    )
+                )
                 success = True
             else:
                 new_spells.append((spell_name, spell_ability, additional_ruling))
@@ -222,16 +231,16 @@ class CharacterSheetData:
         )
 
         for feature in self.features:
-            feature.modify(character)
+            feature.apply(character)
 
         for armor in self.armors:
-            armor.modify(character)
+            armor.apply(character)
 
         for fighting_style in self.fighting_styles:
             if isinstance(fighting_style, FightStyleCharacterFeature):
-                fighting_style.modify(character)
+                fighting_style.apply(character)
             elif isinstance(fighting_style, FightStyleWeaponFeature):
-                fighting_style.modify(self.weapons)
+                fighting_style.apply(self.weapons)
         self._character_cached = character
 
         return character

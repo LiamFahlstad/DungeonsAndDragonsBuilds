@@ -39,11 +39,13 @@ class Scholar(CharacterFeature):
 
     def __init__(self, skill: Skill):
         self._expertise = SkillExpertiseChoice(
-            [skill], self.SKILL_POOL, count=1,
-            error_prefix="Scholar skill must be one of: Arcana, History, Investigation, Medicine, Nature, Religion"
+            [skill],
+            self.SKILL_POOL,
+            count=1,
+            error_prefix="Scholar skill must be one of: Arcana, History, Investigation, Medicine, Nature, Religion",
         )
 
-    def modify(self, character_stat_block: CharacterStatBlock):
+    def apply(self, character_stat_block: CharacterStatBlock):
         self._expertise.apply(character_stat_block)
 
 
@@ -155,20 +157,22 @@ class BladesongText(TextFeature):
 
 
 class TrainingInWarAndSong(TextFeature):
-    VALID_SKILLS = [Skill.ACROBATICS, Skill.ATHLETICS, Skill.PERFORMANCE, Skill.PERSUASION]
+    VALID_SKILLS = [
+        Skill.ACROBATICS,
+        Skill.ATHLETICS,
+        Skill.PERFORMANCE,
+        Skill.PERSUASION,
+    ]
 
     def __init__(self, skill: Skill):
         self._choice = SkillProficiencyChoice(
-            [skill],
-            self.VALID_SKILLS,
-            count=1,
-            error_prefix="Training in War and Song"
+            [skill], self.VALID_SKILLS, count=1, error_prefix="Training in War and Song"
         )
         super().__init__(
             name="Training in War and Song", origin="Bladesinger Wizard Level 3"
         )
 
-    def modify(self, character_stat_block: CharacterStatBlock):
+    def apply(self, character_stat_block: CharacterStatBlock):
         self._choice.apply(character_stat_block)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:

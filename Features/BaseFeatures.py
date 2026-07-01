@@ -13,7 +13,7 @@ class Feature(ABC):
         pass
 
     @abstractmethod
-    def modify(self, character_stat_block: CharacterStatBlock):
+    def apply(self, character_stat_block: CharacterStatBlock):
         pass
 
 
@@ -43,7 +43,7 @@ class TextFeature(Feature):
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         pass
 
-    def modify(self, character_stat_block: CharacterStatBlock):
+    def apply(self, character_stat_block: CharacterStatBlock):
         pass
 
     @staticmethod

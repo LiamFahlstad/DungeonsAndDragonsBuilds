@@ -73,8 +73,7 @@ def get_spell_slots_for_level(level: int, caster_type: CasterType) -> list[int]:
 
 def _compute_effective_caster_level(registry: dict, level_per_class: dict) -> int:
     non_warlock = {
-        cls: ct for cls, ct in registry.items()
-        if ct != CasterType.WARLOCK_CASTER
+        cls: ct for cls, ct in registry.items() if ct != CasterType.WARLOCK_CASTER
     }
     if not non_warlock:
         return 0
@@ -97,12 +96,14 @@ def _compute_effective_caster_level(registry: dict, level_per_class: dict) -> in
 
 
 class SpellSlots(CharacterFeature):
-    def __init__(self, caster_type: CasterType, character_class: Definitions.CharacterClass) -> None:
+    def __init__(
+        self, caster_type: CasterType, character_class: Definitions.CharacterClass
+    ) -> None:
         self.caster_type = caster_type
         self.character_class = character_class
         super().__init__()
 
-    def modify(self, character_stat_block: CharacterStatBlock):
+    def apply(self, character_stat_block: CharacterStatBlock):
         character_stat_block._caster_registry[self.character_class] = self.caster_type
 
         if self.caster_type == CasterType.WARLOCK_CASTER:

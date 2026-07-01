@@ -39,13 +39,10 @@ class Skilled(OriginCharacterFeat):
 
     def __init__(self, skills: list[Skill]):
         self._choice = SkillProficiencyChoice(
-            skills,
-            list(Skill),
-            count=3,
-            error_prefix="Skilled"
+            skills, list(Skill), count=3, error_prefix="Skilled"
         )
 
-    def modify(self, character_stat_block: CharacterStatBlock):
+    def apply(self, character_stat_block: CharacterStatBlock):
         self._choice.apply(character_stat_block)
 
 
@@ -53,7 +50,7 @@ class Alert(OriginTextFeat):
     def __init__(self):
         super().__init__(name="Alert", origin="Origin Feat")
 
-    def modify(self, character_stat_block: CharacterStatBlock):
+    def apply(self, character_stat_block: CharacterStatBlock):
         character_stat_block.add_initiative_proficiency()
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -298,7 +295,7 @@ class TavernBrawler(OriginTextFeat):
 
 
 class Tough(OriginCharacterFeat):
-    def modify(self, character_stat_block: CharacterStatBlock):
+    def apply(self, character_stat_block: CharacterStatBlock):
         character_level = character_stat_block.character_level
         character_stat_block.combat.hit_points_bonus += 2 * character_level
 
@@ -362,11 +359,11 @@ class PurpleDragonRook(OriginTextFeat):
             [entreat_skill],
             self.VALID_SKILLS,
             count=1,
-            error_prefix="Purple Dragon Rook"
+            error_prefix="Purple Dragon Rook",
         )
         super().__init__(name="Purple Dragon Rook", origin="Origin Feat")
 
-    def modify(self, character_stat_block: CharacterStatBlock):
+    def apply(self, character_stat_block: CharacterStatBlock):
         self._choice.apply(character_stat_block)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:

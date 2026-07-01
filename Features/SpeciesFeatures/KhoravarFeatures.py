@@ -39,13 +39,10 @@ class FeyGift(TextFeature):
 class SkillVersatility(CharacterFeature):
     def __init__(self, skill: Skill):
         self._choice = SkillProficiencyChoice(
-            [skill],
-            list(Skill),
-            count=1,
-            error_prefix="SkillVersatility"
+            [skill], list(Skill), count=1, error_prefix="SkillVersatility"
         )
 
-    def modify(self, character_stat_block: CharacterStatBlock):
+    def apply(self, character_stat_block: CharacterStatBlock):
         self._choice.apply(character_stat_block)
 
 
