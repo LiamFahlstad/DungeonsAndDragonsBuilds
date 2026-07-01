@@ -1,5 +1,6 @@
 from Definitions import Ability, DiceRollCondition, Skill
 from Features.BaseFeatures import Feature
+from Features.SubFeatures import InitiativeRollCondition, SkillRollCondition
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
@@ -356,12 +357,12 @@ class ImprovedCritical(Feature):
 class RemarkableAthlete(Feature):
     def __init__(self):
         super().__init__(name="Remarkable Athlete", origin="Champion Fighter Level 3")
+        self._initiative = InitiativeRollCondition(DiceRollCondition.ADVANTAGE)
+        self._athletics = SkillRollCondition(Skill.ATHLETICS, DiceRollCondition.ADVANTAGE)
 
     def apply(self, character_stat_block: CharacterStatBlock) -> None:
-        character_stat_block.add_initiative_roll_condition(DiceRollCondition.ADVANTAGE)
-        character_stat_block.set_skill_roll_condition(
-            Skill.ATHLETICS, DiceRollCondition.ADVANTAGE
-        )
+        self._initiative.apply(character_stat_block)
+        self._athletics.apply(character_stat_block)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

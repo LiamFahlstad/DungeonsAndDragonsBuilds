@@ -1,5 +1,6 @@
 import Definitions
 from Features.BaseFeatures import Feature
+from Features.SubFeatures import MultiAbilityArmorClass
 from Features.Weapons import WeaponsDamageRolls
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
@@ -93,12 +94,11 @@ class UnarmoredDefenseText(Feature):
 
 
 class UnarmoredDefense(Feature):
+    def __init__(self):
+        self._ac = MultiAbilityArmorClass(10, [Definitions.Ability.DEXTERITY, Definitions.Ability.WISDOM])
+
     def apply(self, character_stat_block: CharacterStatBlock):
-        character_stat_block.combat.update_armor_class_base(10)
-        character_stat_block.combat.add_armor_class_ability(
-            Definitions.Ability.DEXTERITY
-        )
-        character_stat_block.combat.add_armor_class_ability(Definitions.Ability.WISDOM)
+        self._ac.apply(character_stat_block)
 
 
 class MonksFocus(Feature):

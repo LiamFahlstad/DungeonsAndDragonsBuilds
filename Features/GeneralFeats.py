@@ -1,6 +1,6 @@
 from Definitions import Ability, Skill
 from Features.BaseFeatures import Feature
-from Features.SubFeatures import SkillExpertiseChoice, SkillProficiencyChoice
+from Features.SubFeatures import AbilityScoreBonus, SkillExpertiseChoice, SkillProficiencyChoice
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
@@ -35,10 +35,11 @@ class _AbilityScoreFeat(GeneralFeat):
             allowed = " or ".join(a.value for a in self._ABILITIES)
             raise ValueError(f"{self._NAME} ability increase must be {allowed}.")
         self.ability = ability
+        self._bonus = AbilityScoreBonus([(ability, 1)], total=1, error_prefix=self._NAME)
         super().__init__(name=self._NAME, origin=self._ORIGIN)
 
     def apply(self, character_stat_block: CharacterStatBlock):
-        character_stat_block.abilities.add_bonus(self.ability, 1)
+        self._bonus.apply(character_stat_block)
 
 
 # ---------------------------------------------------------------------------
@@ -50,13 +51,10 @@ class AbilityScoreImprovement(GeneralFeat):
     """Also add either [+1, +1] OR [+2] to any abilities."""
 
     def __init__(self, bonuses: list[tuple[Ability, int]]):
-        self.bonuses = bonuses
-        if sum(bonus[1] for bonus in self.bonuses) != 2:
-            raise ValueError("Bonuses must sum to 2.")
+        self._bonus = AbilityScoreBonus(bonuses, total=2, error_prefix="Ability Score Improvement")
 
     def apply(self, character_stat_block: CharacterStatBlock):
-        for ability, bonus in self.bonuses:
-            character_stat_block.abilities.add_bonus(ability, bonus)
+        self._bonus.apply(character_stat_block)
 
 
 class Actor(_AbilityScoreFeat):
@@ -537,7 +535,7 @@ class SkillExpert(_AbilityScoreFeat):
         super().apply(character_stat_block)
         if not character_stat_block.skills.is_proficient(self._proficiency.skills[0]):
             self._proficiency.apply(character_stat_block)
-        if not character_stat_block.skills.has_expertise(self._expertise.skill):
+        if not character_stat_block.skills.has_expertise(self._expertise.skills[0]):
             self._expertise.apply(character_stat_block)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:

@@ -1,6 +1,6 @@
 from Definitions import CreatureSize, Skill
 from Features.BaseFeatures import Feature
-from Features.SubFeatures import SkillProficiencyChoice
+from Features.SubFeatures import ArmorClassBonus, SkillProficiencyChoice
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 SPEED = 30  # Given by your species
@@ -32,8 +32,11 @@ class Tireless(Feature):
 
 
 class IntegratedProtection(Feature):
+    def __init__(self):
+        self._bonus = ArmorClassBonus(1)
+
     def apply(self, character_stat_block: CharacterStatBlock):
-        character_stat_block.combat.increase_armor_class(1)
+        self._bonus.apply(character_stat_block)
 
 
 class SpecializedDesign(Feature):

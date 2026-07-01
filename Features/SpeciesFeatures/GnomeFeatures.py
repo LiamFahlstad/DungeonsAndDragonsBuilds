@@ -1,5 +1,6 @@
 from Definitions import Ability, CreatureSize
 from Features.BaseFeatures import Feature
+from Features.SubFeatures import SavingThrowAdvantage
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
@@ -16,10 +17,11 @@ class Darkvision(Feature):
 
 
 class GnomishCunning(Feature):
+    def __init__(self):
+        self._advantage = SavingThrowAdvantage([Ability.INTELLIGENCE, Ability.WISDOM, Ability.CHARISMA])
+
     def apply(self, character_stat_block: CharacterStatBlock) -> None:
-        character_stat_block.add_advantage_in_saving_throw(Ability.INTELLIGENCE)
-        character_stat_block.add_advantage_in_saving_throw(Ability.WISDOM)
-        character_stat_block.add_advantage_in_saving_throw(Ability.CHARISMA)
+        self._advantage.apply(character_stat_block)
 
 
 class ForestGnomeSpeakWithAnimals(Feature):

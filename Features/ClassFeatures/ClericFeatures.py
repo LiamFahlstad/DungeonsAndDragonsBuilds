@@ -36,9 +36,16 @@ class DivineOrder(Feature):
 
 
 class DivineOrderSkillProficiency(Feature):
+    def __init__(self):
+        self._choice = SkillProficiencyChoice(
+            [Skill.ARCANA, Skill.RELIGION],
+            [Skill.ARCANA, Skill.RELIGION],
+            count=2,
+            error_prefix="Divine Order Skill Proficiency",
+        )
+
     def apply(self, character_stat_block: CharacterStatBlock):
-        character_stat_block.skills.add_skill_proficiency(Skill.ARCANA)
-        character_stat_block.skills.add_skill_proficiency(Skill.RELIGION)
+        self._choice.apply(character_stat_block)
 
 
 class ChannelDivinity(Feature):

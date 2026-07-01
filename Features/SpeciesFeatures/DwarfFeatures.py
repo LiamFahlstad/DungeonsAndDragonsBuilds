@@ -1,5 +1,6 @@
 from Definitions import CreatureSize
 from Features.BaseFeatures import Feature
+from Features.SubFeatures import HitPointsPerLevelBonus
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
@@ -24,9 +25,11 @@ class DwarvenResilience(Feature):
 
 
 class DwarvenToughness(Feature):
+    def __init__(self):
+        self._hp = HitPointsPerLevelBonus(1)
+
     def apply(self, character_stat_block: CharacterStatBlock):
-        character_level = character_stat_block.character_level
-        character_stat_block.combat.hit_points_bonus += character_level
+        self._hp.apply(character_stat_block)
 
 
 class Stonecunning(Feature):

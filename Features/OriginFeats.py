@@ -2,7 +2,7 @@ from typing import Optional
 
 from Definitions import Ability, CharacterClass, Skill
 from Features.BaseFeatures import Feature
-from Features.SubFeatures import SkillProficiencyChoice
+from Features.SubFeatures import HitPointsPerLevelBonus, InitiativeProficiency, SkillProficiencyChoice
 from Spells.Definitions import (
     ClericLevel0Spells,
     ClericLevel1Spells,
@@ -49,9 +49,10 @@ class Skilled(OriginCharacterFeat):
 class Alert(OriginTextFeat):
     def __init__(self):
         super().__init__(name="Alert", origin="Origin Feat")
+        self._proficiency = InitiativeProficiency()
 
     def apply(self, character_stat_block: CharacterStatBlock):
-        character_stat_block.add_initiative_proficiency()
+        self._proficiency.apply(character_stat_block)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         return (
@@ -295,9 +296,11 @@ class TavernBrawler(OriginTextFeat):
 
 
 class Tough(OriginCharacterFeat):
+    def __init__(self):
+        self._hp = HitPointsPerLevelBonus(2)
+
     def apply(self, character_stat_block: CharacterStatBlock):
-        character_level = character_stat_block.character_level
-        character_stat_block.combat.hit_points_bonus += 2 * character_level
+        self._hp.apply(character_stat_block)
 
 
 class CultOfTheDragonInitiate(OriginTextFeat):

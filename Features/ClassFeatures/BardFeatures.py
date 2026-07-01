@@ -1,6 +1,6 @@
 from Definitions import Ability, Skill
 from Features.BaseFeatures import Feature
-from Features.SubFeatures import SkillExpertiseChoice, SkillProficiencyChoice
+from Features.SubFeatures import JackOfAllTradesBonus, SkillExpertiseChoice, SkillProficiencyChoice
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
@@ -60,12 +60,11 @@ class Expertise2(Feature):
 
 
 class JackOfAllTrades(Feature):
+    def __init__(self):
+        self._bonus = JackOfAllTradesBonus()
+
     def apply(self, character_stat_block: CharacterStatBlock):
-        for skill in Skill:
-            if not character_stat_block.skills.is_proficient(skill):
-                character_stat_block.skills.add_skill_bonus(
-                    skill, character_stat_block.get_proficiency_bonus() // 2
-                )
+        self._bonus.apply(character_stat_block)
 
 
 class FontOfInspiration(Feature):

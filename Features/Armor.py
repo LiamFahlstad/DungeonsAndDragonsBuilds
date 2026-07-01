@@ -1,7 +1,8 @@
 from typing import Optional
 
-from Definitions import Ability, DiceRollCondition, Skill
+from Definitions import Ability
 from Features.BaseFeatures import Feature
+from Features.SubFeatures import ArmorClassBonus, SetArmorClass, StealthDisadvantage, StrengthRequirement
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
@@ -16,40 +17,38 @@ class AbstractArmor(Feature):
 class LeatherArmor(AbstractArmor):
     def __init__(self):
         super().__init__("Leather Armor")
+        self._ac = SetArmorClass(11, Ability.DEXTERITY)
 
     def apply(self, character_stat_block: CharacterStatBlock):
-        character_stat_block.combat.update_armor_class_base(11)
-        character_stat_block.combat.change_armor_class_ability(Ability.DEXTERITY)
+        self._ac.apply(character_stat_block)
 
 
 class StuddedLeatherArmor(AbstractArmor):
     def __init__(self):
         super().__init__("Studded Leather Armor")
+        self._ac = SetArmorClass(12, Ability.DEXTERITY)
 
     def apply(self, character_stat_block: CharacterStatBlock):
-        character_stat_block.combat.update_armor_class_base(12)
-        character_stat_block.combat.change_armor_class_ability(Ability.DEXTERITY)
+        self._ac.apply(character_stat_block)
 
 
 class ChainMailArmor(AbstractArmor):
     def __init__(self):
         super().__init__("Chain Mail Armor")
+        self._str_req = StrengthRequirement(13)
+        self._stealth = StealthDisadvantage()
+        self._ac = SetArmorClass(16, ability=None)
 
     def apply(self, character_stat_block: CharacterStatBlock):
-        str_score = character_stat_block.get_ability_score(Ability.STRENGTH)
-        if str_score < 13:
-            raise ValueError("Strength ability score needs to be above 13")
-
-        character_stat_block.set_skill_roll_condition(
-            Skill.STEALTH, DiceRollCondition.DISADVANTAGE
-        )
-        character_stat_block.combat.update_armor_class_base(16)
-        character_stat_block.combat.change_armor_class_ability(None)
+        self._str_req.apply(character_stat_block)
+        self._stealth.apply(character_stat_block)
+        self._ac.apply(character_stat_block)
 
 
 class ShieldArmor(AbstractArmor):
     def __init__(self):
         super().__init__("Shield")
+        self._bonus = ArmorClassBonus(2)
 
     def apply(self, character_stat_block: CharacterStatBlock):
-        character_stat_block.combat.increase_armor_class(2)
+        self._bonus.apply(character_stat_block)

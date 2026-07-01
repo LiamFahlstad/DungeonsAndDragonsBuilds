@@ -1,7 +1,7 @@
 import Definitions
 from Definitions import Ability, Skill
 from Features.BaseFeatures import Feature
-from Features.SubFeatures import SkillProficiencyChoice
+from Features.SubFeatures import MultiAbilityArmorClass, SavingThrowAdvantage, SkillProficiencyChoice
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
@@ -69,10 +69,11 @@ class UnarmoredDefenseText(Feature):
 
 
 class UnarmoredDefense(Feature):
+    def __init__(self):
+        self._ac = MultiAbilityArmorClass(10, [Ability.DEXTERITY, Ability.CONSTITUTION])
+
     def apply(self, character_stat_block: CharacterStatBlock):
-        character_stat_block.combat.update_armor_class_base(10)
-        character_stat_block.combat.add_armor_class_ability(Ability.DEXTERITY)
-        character_stat_block.combat.add_armor_class_ability(Ability.CONSTITUTION)
+        self._ac.apply(character_stat_block)
 
 
 class WeaponMastery(Feature):
@@ -97,8 +98,11 @@ class DangerSenseText(Feature):
 
 
 class DangerSense(Feature):
+    def __init__(self):
+        self._advantage = SavingThrowAdvantage([Ability.DEXTERITY])
+
     def apply(self, character_stat_block: CharacterStatBlock):
-        character_stat_block.saving_throws.add_advantage(Ability.DEXTERITY)
+        self._advantage.apply(character_stat_block)
 
 
 class RecklessAttack(Feature):
