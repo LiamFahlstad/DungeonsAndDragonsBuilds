@@ -60,7 +60,7 @@ def generate_feat_class(feat_name: str, feat_text: str) -> str:
         + "\n)\n        return text"
     )
 
-    return f"""class {class_name}(GeneralFeatTextFeature):
+    return f"""class {class_name}(GeneralFeat):
 
     def __init__(self, character_level: int{ability_param}):
         if character_level < {level}:

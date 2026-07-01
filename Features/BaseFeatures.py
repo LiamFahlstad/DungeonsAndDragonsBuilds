@@ -1,4 +1,3 @@
-from abc import abstractmethod
 from typing import TextIO
 
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
@@ -120,19 +119,3 @@ class Feature:
         if result and not result.endswith("\n"):
             result += "\n"
         return result
-
-
-class CharacterFeature(Feature):
-    """Backward compat: a Feature that modifies the stat block and renders no card."""
-    pass
-
-
-class TextFeature(Feature):
-    """Backward compat: a Feature that renders a card on the character sheet."""
-
-    def __init__(self, name: str, origin: str):
-        super().__init__(name=name, origin=origin)
-
-    @abstractmethod
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        pass

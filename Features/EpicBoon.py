@@ -2,18 +2,11 @@ from Features.BaseFeatures import Feature
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
-class EpicBoonCharacterFeature(Feature):
+class EpicBoon(Feature):
     pass
 
 
-class EpicBoonTextFeature(Feature):
-    pass
-
-
-EpicBoon = EpicBoonCharacterFeature | EpicBoonTextFeature
-
-
-class DummyEpicBoon(EpicBoonTextFeature):
+class DummyEpicBoon(EpicBoon):
     def __init__(self):
         super().__init__(name="Epic Boon", origin="Epic Boon Feature")
 

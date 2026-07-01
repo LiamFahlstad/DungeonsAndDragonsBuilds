@@ -25,7 +25,7 @@ class EntityType(str, Enum):
     UNDEAD = "Undead"
 
 
-class TextFeature:
+class Trait:
     """A feature that doesn't change that stats of the character."""
 
     def __init__(self, name: str):
@@ -33,14 +33,14 @@ class TextFeature:
         self.additional_features = []
         super().__init__()
 
-    def add_feature(self, feature: "TextFeature"):
+    def add_feature(self, feature: "Trait"):
         self.additional_features.append(feature)
 
     @abstractmethod
     def get_description(self) -> str:
         pass
 
-    def add_feature_effects(self, text_feature: "TextFeature"):
+    def add_feature_effects(self, text_feature: "Trait"):
         description = text_feature.get_description()
         indent = "    "
         indented = "\n".join(
@@ -61,11 +61,7 @@ class TextFeature:
         file.write(f"Description: {description}\n")
 
 
-class Action(Feature):
-    pass
-
-
-class Trait(Feature):
+class Action(Trait):
     pass
 
 

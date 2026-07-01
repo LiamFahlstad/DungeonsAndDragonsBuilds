@@ -19,7 +19,7 @@ class FightingStyle(ABC):
         pass
 
 
-class FightStyleCharacterFeature(FightingStyle):
+class FightStyleModifier(FightingStyle):
     @abstractmethod
     def apply(self, character_stat_block: CharacterStatBlock):
         pass
@@ -50,7 +50,7 @@ class BlindFighting(FightingStyle):
         return "Blind Fighting: You have Blindsight with a range of 10 feet."
 
 
-class Defense(FightStyleCharacterFeature):
+class Defense(FightStyleModifier):
     def apply(self, character_stat_block: CharacterStatBlock):
         character_stat_block.combat.increase_armor_class(1)
 

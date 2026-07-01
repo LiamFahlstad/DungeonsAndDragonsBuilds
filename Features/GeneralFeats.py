@@ -5,18 +5,11 @@ from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
 
-class GeneralFeatCharacterFeature(Feature):
+class GeneralFeat(Feature):
     pass
 
 
-class GeneralFeatTextFeature(Feature):
-    pass
-
-
-GeneralFeat = GeneralFeatCharacterFeature | GeneralFeatTextFeature
-
-
-class _AbilityScoreFeat(GeneralFeatTextFeature):
+class _AbilityScoreFeat(GeneralFeat):
     """Base class for the common Level 4+ general feats that grant +1 to one ability.
 
     Subclasses declare:
@@ -53,7 +46,7 @@ class _AbilityScoreFeat(GeneralFeatTextFeature):
 # ---------------------------------------------------------------------------
 
 
-class AbilityScoreImprovement(GeneralFeatCharacterFeature):
+class AbilityScoreImprovement(GeneralFeat):
     """Also add either [+1, +1] OR [+2] to any abilities."""
 
     def __init__(self, bonuses: list[tuple[Ability, int]]):
@@ -900,7 +893,7 @@ class ZhentarimTactics(_AbilityScoreFeat):
 # ---------------------------------------------------------------------------
 
 
-class DarkGift(GeneralFeatTextFeature):
+class DarkGift(GeneralFeat):
 
     def __init__(self, character_level: int):
         if character_level < 1:
@@ -920,7 +913,7 @@ class DarkGift(GeneralFeatTextFeature):
         )
 
 
-class EchoingSoul(GeneralFeatTextFeature):
+class EchoingSoul(GeneralFeat):
 
     def __init__(self, character_level: int):
         if character_level < 1:
@@ -939,7 +932,7 @@ class EchoingSoul(GeneralFeatTextFeature):
         )
 
 
-class GatheredWhispers(GeneralFeatTextFeature):
+class GatheredWhispers(GeneralFeat):
 
     def __init__(self, character_level: int):
         if character_level < 1:
@@ -963,7 +956,7 @@ class GatheredWhispers(GeneralFeatTextFeature):
         )
 
 
-class LivingShadow(GeneralFeatTextFeature):
+class LivingShadow(GeneralFeat):
 
     def __init__(self, character_level: int):
         if character_level < 1:
@@ -991,7 +984,7 @@ class LivingShadow(GeneralFeatTextFeature):
         )
 
 
-class MistWalker(GeneralFeatTextFeature):
+class MistWalker(GeneralFeat):
 
     def __init__(self, character_level: int):
         if character_level < 1:
@@ -1014,7 +1007,7 @@ class MistWalker(GeneralFeatTextFeature):
         )
 
 
-class SecondSkin(GeneralFeatTextFeature):
+class SecondSkin(GeneralFeat):
 
     def __init__(self, character_level: int):
         if character_level < 1:
@@ -1046,7 +1039,7 @@ class SecondSkin(GeneralFeatTextFeature):
         )
 
 
-class SymbioticBeing(GeneralFeatTextFeature):
+class SymbioticBeing(GeneralFeat):
 
     def __init__(self, character_level: int):
         if character_level < 1:
@@ -1072,7 +1065,7 @@ class SymbioticBeing(GeneralFeatTextFeature):
         )
 
 
-class TouchOfDeath(GeneralFeatTextFeature):
+class TouchOfDeath(GeneralFeat):
 
     def __init__(self, character_level: int):
         if character_level < 1:
@@ -1090,7 +1083,7 @@ class TouchOfDeath(GeneralFeatTextFeature):
         )
 
 
-class Watchers(GeneralFeatTextFeature):
+class Watchers(GeneralFeat):
 
     def __init__(self, character_level: int):
         if character_level < 1:

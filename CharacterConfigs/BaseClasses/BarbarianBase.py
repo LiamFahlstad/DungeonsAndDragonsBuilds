@@ -215,7 +215,7 @@ class BarbarianLevel18(ClassBuilder.BaseClassLevel18):
 
 @attr.dataclass
 class BarbarianLevel19(ClassBuilder.BaseClassLevel19):
-    epic_boon: EpicBoon.EpicBoonCharacterFeature | EpicBoon.EpicBoonTextFeature
+    epic_boon: EpicBoon.EpicBoon
 
     def add_features(self, data: CharacterSheetData) -> CharacterSheetData:
         data.add_feature(self.epic_boon)

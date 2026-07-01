@@ -9,7 +9,7 @@ from Features.Armor import AbstractArmor
 from Features.BaseFeatures import Feature
 from Features.FightingStyles import (
     FightingStyle,
-    FightStyleCharacterFeature,
+    FightStyleModifier,
     FightStyleWeaponFeature,
 )
 from Features.Weapons import AbstractWeapon
@@ -237,7 +237,7 @@ class CharacterSheetData:
             armor.apply(character)
 
         for fighting_style in self.fighting_styles:
-            if isinstance(fighting_style, FightStyleCharacterFeature):
+            if isinstance(fighting_style, FightStyleModifier):
                 fighting_style.apply(character)
             elif isinstance(fighting_style, FightStyleWeaponFeature):
                 fighting_style.apply(self.weapons)

@@ -253,7 +253,7 @@ class RangerLevel18(ClassBuilder.BaseClassLevel18):
 
 @attr.dataclass
 class RangerLevel19(ClassBuilder.BaseClassLevel19):
-    epic_boon: EpicBoon.EpicBoonCharacterFeature | EpicBoon.EpicBoonTextFeature
+    epic_boon: EpicBoon.EpicBoon
     spell: (
         RangerLevel1Spells
         | RangerLevel2Spells
