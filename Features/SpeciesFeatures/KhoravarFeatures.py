@@ -1,5 +1,5 @@
 from Definitions import CreatureSize, Skill
-from Features.BaseFeatures import CharacterFeature, TextFeature
+from Features.BaseFeatures import Feature
 from Features.SubFeatures import SkillProficiencyChoice
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
@@ -7,7 +7,7 @@ SPEED = 30  # Given by your species
 SIZE = CreatureSize.MEDIUM  # Given by your species
 
 
-class Darkvision(TextFeature):
+class Darkvision(Feature):
     def __init__(self, distance: int):
         self.distance = distance
         super().__init__(name="Darkvision", origin="Khoravar Trait")
@@ -16,7 +16,7 @@ class Darkvision(TextFeature):
         return f"You have Darkvision with a range of {self.distance} feet."
 
 
-class FeyAncestry(TextFeature):
+class FeyAncestry(Feature):
     def __init__(self):
         super().__init__(name="Fey Ancestry", origin="Khoravar Trait")
 
@@ -24,7 +24,7 @@ class FeyAncestry(TextFeature):
         return "You have Advantage on saving throws you make to avoid or end the Charmed condition."
 
 
-class FeyGift(TextFeature):
+class FeyGift(Feature):
     def __init__(self):
         super().__init__(name="Fey Gift", origin="Khoravar Trait")
 
@@ -36,7 +36,7 @@ class FeyGift(TextFeature):
         )
 
 
-class SkillVersatility(CharacterFeature):
+class SkillVersatility(Feature):
     def __init__(self, skill: Skill):
         self._choice = SkillProficiencyChoice(
             [skill], list(Skill), count=1, error_prefix="SkillVersatility"
@@ -46,7 +46,7 @@ class SkillVersatility(CharacterFeature):
         self._choice.apply(character_stat_block)
 
 
-class LethargyResilience(TextFeature):
+class LethargyResilience(Feature):
     def __init__(self):
         super().__init__(name="Lethargy Resilience", origin="Khoravar Trait")
 

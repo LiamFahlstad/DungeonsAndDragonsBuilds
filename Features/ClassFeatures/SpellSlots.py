@@ -1,7 +1,7 @@
 from enum import Enum
 
 import Definitions
-from Features.BaseFeatures import CharacterFeature
+from Features.BaseFeatures import Feature
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
@@ -95,7 +95,7 @@ def _compute_effective_caster_level(registry: dict, level_per_class: dict) -> in
     return total
 
 
-class SpellSlots(CharacterFeature):
+class SpellSlots(Feature):
     def __init__(
         self, caster_type: CasterType, character_class: Definitions.CharacterClass
     ) -> None:

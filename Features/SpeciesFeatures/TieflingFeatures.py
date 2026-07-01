@@ -1,12 +1,12 @@
 from Definitions import CreatureSize
-from Features.BaseFeatures import TextFeature
+from Features.BaseFeatures import Feature
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 SPEED = 30  # Given by your species
 SIZE = CreatureSize.MEDIUM  # Given by your species
 
 
-class FiendishResistance(TextFeature):
+class FiendishResistance(Feature):
     def __init__(self, damage_type: str):
         self.damage_type = damage_type
         super().__init__(name="Fiendish Resistance", origin="Tiefling Trait")
@@ -15,7 +15,7 @@ class FiendishResistance(TextFeature):
         return f"You have Resistance to {self.damage_type} damage."
 
 
-class Darkvision(TextFeature):
+class Darkvision(Feature):
     def __init__(self, distance: int):
         self.distance = distance
         super().__init__(name="Darkvision", origin="Tiefling Trait")
@@ -24,7 +24,7 @@ class Darkvision(TextFeature):
         return f"You have Darkvision with a range of {self.distance} feet."
 
 
-class FiendishLegacy(TextFeature):
+class FiendishLegacy(Feature):
     def __init__(self, cantrip: str, spell_1: str | None, spell_2: str | None):
         self.cantrip = cantrip
         self.spell_1 = spell_1
@@ -40,7 +40,7 @@ class FiendishLegacy(TextFeature):
         return text
 
 
-class OtherworldlyPresence(TextFeature):
+class OtherworldlyPresence(Feature):
     def __init__(self):
         super().__init__(name="Otherworldly Presence", origin="Tiefling Trait")
 

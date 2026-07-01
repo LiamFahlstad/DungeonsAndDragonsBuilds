@@ -1,12 +1,12 @@
-from Features.BaseFeatures import CharacterFeature, TextFeature
+from Features.BaseFeatures import Feature
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
-class EpicBoonCharacterFeature(CharacterFeature):
+class EpicBoonCharacterFeature(Feature):
     pass
 
 
-class EpicBoonTextFeature(TextFeature):
+class EpicBoonTextFeature(Feature):
     pass
 
 

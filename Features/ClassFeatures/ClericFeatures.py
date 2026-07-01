@@ -1,5 +1,5 @@
 from Definitions import Ability, Skill
-from Features.BaseFeatures import CharacterFeature, TextFeature
+from Features.BaseFeatures import Feature
 from Features.SubFeatures import SkillProficiencyChoice
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
@@ -7,7 +7,7 @@ from Utils import StringUtils
 CLERIC_HIT_DIE = 8
 
 
-class Spellcasting(TextFeature):
+class Spellcasting(Feature):
     def __init__(self):
         super().__init__(name="Spellcasting", origin="Cleric Level 1")
 
@@ -22,7 +22,7 @@ class Spellcasting(TextFeature):
         return description
 
 
-class DivineOrder(TextFeature):
+class DivineOrder(Feature):
     def __init__(self):
         super().__init__(name="Divine Order", origin="Cleric Level 1")
 
@@ -35,13 +35,13 @@ class DivineOrder(TextFeature):
         return description
 
 
-class DivineOrderSkillProficiency(CharacterFeature):
+class DivineOrderSkillProficiency(Feature):
     def apply(self, character_stat_block: CharacterStatBlock):
         character_stat_block.skills.add_skill_proficiency(Skill.ARCANA)
         character_stat_block.skills.add_skill_proficiency(Skill.RELIGION)
 
 
-class ChannelDivinity(TextFeature):
+class ChannelDivinity(Feature):
     def __init__(self):
         super().__init__(name="Channel Divinity", origin="Cleric Level 2")
 
@@ -65,7 +65,7 @@ class ChannelDivinity(TextFeature):
         )
 
 
-class SearUndead(TextFeature):
+class SearUndead(Feature):
     def __init__(self):
         super().__init__(name="Sear Undead", origin="Cleric Level 5")
 
@@ -74,7 +74,7 @@ class SearUndead(TextFeature):
         return description
 
 
-class BlessedStrikes(TextFeature):
+class BlessedStrikes(Feature):
     def __init__(self):
         super().__init__(name="Blessed Strikes", origin="Cleric Level 7")
 
@@ -87,7 +87,7 @@ class BlessedStrikes(TextFeature):
         return description
 
 
-class DivineIntervention(TextFeature):
+class DivineIntervention(Feature):
     def __init__(self):
         super().__init__(name="Divine Intervention", origin="Cleric Level 10")
 
@@ -96,7 +96,7 @@ class DivineIntervention(TextFeature):
         return description
 
 
-class ImprovedBlessedStrikes(TextFeature):
+class ImprovedBlessedStrikes(Feature):
     def __init__(self):
         super().__init__(name="Improved Blessed Strikes", origin="Cleric Level 14")
 
@@ -109,7 +109,7 @@ class ImprovedBlessedStrikes(TextFeature):
         return description
 
 
-class GreaterDivineIntervention(TextFeature):
+class GreaterDivineIntervention(Feature):
     def __init__(self):
         super().__init__(name="Greater Divine Intervention", origin="Cleric Level 20")
 
@@ -121,7 +121,7 @@ class GreaterDivineIntervention(TextFeature):
 ### Knowledge Domain Cleric Features ###
 
 
-class BlessingsOfKnowledge(CharacterFeature):
+class BlessingsOfKnowledge(Feature):
     def __init__(self, skill_1: Skill, skill_2: Skill):
         allowed_skills = [
             Skill.ARCANA,
@@ -140,7 +140,7 @@ class BlessingsOfKnowledge(CharacterFeature):
         self._choice.apply(character_stat_block)
 
 
-class KnowledgeDomainSpells(TextFeature):
+class KnowledgeDomainSpells(Feature):
     def __init__(self):
         super().__init__(
             name="Knowledge Domain Spells", origin="Knowledge Domain Cleric Level 3"
@@ -151,7 +151,7 @@ class KnowledgeDomainSpells(TextFeature):
         return description
 
 
-class MindMagic(TextFeature):
+class MindMagic(Feature):
     def __init__(self):
         super().__init__(name="Mind Magic", origin="Knowledge Domain Cleric Level 3")
 
@@ -160,7 +160,7 @@ class MindMagic(TextFeature):
         return description
 
 
-class UnfetteredMind(TextFeature):
+class UnfetteredMind(Feature):
     def __init__(self):
         super().__init__(
             name="Unfettered Mind", origin="Knowledge Domain Cleric Level 6"
@@ -174,7 +174,7 @@ class UnfetteredMind(TextFeature):
         return description
 
 
-class DivineForeknowledge(TextFeature):
+class DivineForeknowledge(Feature):
     def __init__(self):
         super().__init__(
             name="Divine Foreknowledge", origin="Knowledge Domain Cleric Level 17"
@@ -188,7 +188,7 @@ class DivineForeknowledge(TextFeature):
 ### Life Domain Cleric Features ###
 
 
-class DiscipleofLife(TextFeature):
+class DiscipleofLife(Feature):
     def __init__(self):
         super().__init__(name="Disciple of Life", origin="Life Domain Cleric Level 3")
 
@@ -197,7 +197,7 @@ class DiscipleofLife(TextFeature):
         return description
 
 
-class LifeDomainSpells(TextFeature):
+class LifeDomainSpells(Feature):
     def __init__(self):
         super().__init__(name="Life Domain Spells", origin="Life Domain Cleric Level 3")
 
@@ -206,7 +206,7 @@ class LifeDomainSpells(TextFeature):
         return description
 
 
-class PreserveLife(TextFeature):
+class PreserveLife(Feature):
     def __init__(self):
         super().__init__(name="Preserve Life", origin="Life Domain Cleric Level 3")
 
@@ -215,7 +215,7 @@ class PreserveLife(TextFeature):
         return description
 
 
-class BlessedHealer(TextFeature):
+class BlessedHealer(Feature):
     def __init__(self):
         super().__init__(name="Blessed Healer", origin="Life Domain Cleric Level 6")
 
@@ -224,7 +224,7 @@ class BlessedHealer(TextFeature):
         return description
 
 
-class SupremeHealing(TextFeature):
+class SupremeHealing(Feature):
     def __init__(self):
         super().__init__(name="Supreme Healing", origin="Life Domain Cleric Level 17")
 
@@ -236,7 +236,7 @@ class SupremeHealing(TextFeature):
 ### Light Domain Cleric Features ###
 
 
-class LightDomainSpells(TextFeature):
+class LightDomainSpells(Feature):
     def __init__(self):
         super().__init__(
             name="Light Domain Spells", origin="Light Domain Cleric Level 3"
@@ -247,7 +247,7 @@ class LightDomainSpells(TextFeature):
         return description
 
 
-class RadianceOfTheDawn(TextFeature):
+class RadianceOfTheDawn(Feature):
     def __init__(self):
         super().__init__(
             name="Radiance of the Dawn", origin="Light Domain Cleric Level 3"
@@ -258,7 +258,7 @@ class RadianceOfTheDawn(TextFeature):
         return description
 
 
-class WardingFlare(TextFeature):
+class WardingFlare(Feature):
     def __init__(self):
         super().__init__(name="Warding Flare", origin="Light Domain Cleric Level 3")
 
@@ -272,7 +272,7 @@ class WardingFlare(TextFeature):
         return StringUtils.add_boxes(description, uses, regain_all_on="long rest")
 
 
-class ImprovedWardingFlare(TextFeature):
+class ImprovedWardingFlare(Feature):
     def __init__(self):
         super().__init__(
             name="Improved Warding Flare", origin="Light Domain Cleric Level 6"
@@ -286,7 +286,7 @@ class ImprovedWardingFlare(TextFeature):
         return description
 
 
-class CoronaOfLight(TextFeature):
+class CoronaOfLight(Feature):
     def __init__(self):
         super().__init__(name="Corona of Light", origin="Light Domain Cleric Level 17")
 
@@ -303,7 +303,7 @@ class CoronaOfLight(TextFeature):
 ### Trickery Domain Cleric Features ###
 
 
-class BlessingOfTheTrickster(TextFeature):
+class BlessingOfTheTrickster(Feature):
     def __init__(self):
         super().__init__(
             name="Blessing of the Trickster", origin="Trickery Domain Cleric Level 3"
@@ -314,7 +314,7 @@ class BlessingOfTheTrickster(TextFeature):
         return description
 
 
-class TrickeryDomainSpells(TextFeature):
+class TrickeryDomainSpells(Feature):
     def __init__(self):
         super().__init__(
             name="Trickery Domain Spells", origin="Trickery Domain Cleric Level 3"
@@ -325,7 +325,7 @@ class TrickeryDomainSpells(TextFeature):
         return description
 
 
-class InvokeDuplicity(TextFeature):
+class InvokeDuplicity(Feature):
     def __init__(self):
         super().__init__(
             name="Invoke Duplicity", origin="Trickery Domain Cleric Level 3"
@@ -341,7 +341,7 @@ class InvokeDuplicity(TextFeature):
         return description
 
 
-class TrickstersTransposition(TextFeature):
+class TrickstersTransposition(Feature):
     def __init__(self):
         super().__init__(
             name="Trickster's Transposition", origin="Trickery Domain Cleric Level 6"
@@ -352,7 +352,7 @@ class TrickstersTransposition(TextFeature):
         return description
 
 
-class ImprovedDuplicity(TextFeature):
+class ImprovedDuplicity(Feature):
     def __init__(self):
         super().__init__(
             name="Improved Duplicity", origin="Trickery Domain Cleric Level 17"
@@ -370,7 +370,7 @@ class ImprovedDuplicity(TextFeature):
 ### War Domain Cleric Features ###
 
 
-class GuidedStrike(TextFeature):
+class GuidedStrike(Feature):
     def __init__(self):
         super().__init__(name="Guided Strike", origin="War Domain Cleric Level 3")
 
@@ -379,7 +379,7 @@ class GuidedStrike(TextFeature):
         return description
 
 
-class WarDomainSpells(TextFeature):
+class WarDomainSpells(Feature):
     def __init__(self):
         super().__init__(name="War Domain Spells", origin="War Domain Cleric Level 3")
 
@@ -388,7 +388,7 @@ class WarDomainSpells(TextFeature):
         return description
 
 
-class WarPriest(TextFeature):
+class WarPriest(Feature):
     def __init__(self):
         super().__init__(name="War Priest", origin="War Domain Cleric Level 3")
 
@@ -401,7 +401,7 @@ class WarPriest(TextFeature):
         )
 
 
-class WarGodsBlessing(TextFeature):
+class WarGodsBlessing(Feature):
     def __init__(self):
         super().__init__(name="War God's Blessing", origin="War Domain Cleric Level 6")
 
@@ -410,7 +410,7 @@ class WarGodsBlessing(TextFeature):
         return description
 
 
-class AvatarOfBattle(TextFeature):
+class AvatarOfBattle(Feature):
     def __init__(self):
         super().__init__(name="Avatar of Battle", origin="War Domain Cleric Level 17")
 
@@ -424,7 +424,7 @@ class AvatarOfBattle(TextFeature):
 ### Grave Domain Cleric Features ###
 
 
-class GraveDomainSpells(TextFeature):
+class GraveDomainSpells(Feature):
     def __init__(self):
         super().__init__(
             name="Grave Domain Spells", origin="Grave Domain Cleric Level 3"
@@ -443,7 +443,7 @@ class GraveDomainSpells(TextFeature):
         return description
 
 
-class CircleOfMortality(TextFeature):
+class CircleOfMortality(Feature):
     def __init__(self):
         super().__init__(
             name="Circle of Mortality", origin="Grave Domain Cleric Level 3"
@@ -459,7 +459,7 @@ class CircleOfMortality(TextFeature):
         return description
 
 
-class PathToTheGrave(TextFeature):
+class PathToTheGrave(Feature):
     def __init__(self):
         super().__init__(name="Path to the Grave", origin="Grave Domain Cleric Level 3")
 
@@ -471,7 +471,7 @@ class PathToTheGrave(TextFeature):
         return description
 
 
-class SentinelAtDeathsDoor(TextFeature):
+class SentinelAtDeathsDoor(Feature):
     def __init__(self):
         super().__init__(
             name="Sentinel at Death's Door", origin="Grave Domain Cleric Level 6"
@@ -487,7 +487,7 @@ class SentinelAtDeathsDoor(TextFeature):
         return StringUtils.add_boxes(description, uses, regain_all_on="long rest")
 
 
-class DivineReaper(TextFeature):
+class DivineReaper(Feature):
     def __init__(self):
         super().__init__(name="Divine Reaper", origin="Grave Domain Cleric Level 17")
 

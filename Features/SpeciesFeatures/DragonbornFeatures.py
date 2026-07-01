@@ -2,7 +2,7 @@ from enum import Enum
 
 import Definitions
 from Definitions import Ability, CreatureSize
-from Features.BaseFeatures import TextFeature
+from Features.BaseFeatures import Feature
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
@@ -23,7 +23,7 @@ class DragonColor(str, Enum):
     WHITE = "White"
 
 
-class DamageResistance(TextFeature):
+class DamageResistance(Feature):
     def __init__(self, dragon_color: DragonColor):
         self.color = dragon_color
         self.damage_type = get_damage_type_from_color(dragon_color)
@@ -33,7 +33,7 @@ class DamageResistance(TextFeature):
         return f"You have Resistance against {self.damage_type.value} damage because your Draconic Ancestry is {self.color.value} dragon."
 
 
-class BreathWeapon(TextFeature):
+class BreathWeapon(Feature):
     def __init__(self, dragon_color: DragonColor):
         self.color = dragon_color
         self.damage_type = get_damage_type_from_color(dragon_color)
@@ -62,7 +62,7 @@ class BreathWeapon(TextFeature):
         return StringUtils.add_boxes(text, proficiency_bonus)
 
 
-class DraconicFlight(TextFeature):
+class DraconicFlight(Feature):
     def __init__(self):
         super().__init__(name="Draconic Flight", origin="Dragonborn Trait")
 

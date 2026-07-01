@@ -23,7 +23,6 @@ class FighterChampionLevel3(ClassBuilder.SubclassLevel3):
     ) -> CharacterSheetData:
         data.add_feature(FighterFeatures.ImprovedCritical())
         data.add_feature(FighterFeatures.RemarkableAthlete())
-        data.add_feature(FighterFeatures.RemarkableAthleteCharacterFeature())
         return data
 
 

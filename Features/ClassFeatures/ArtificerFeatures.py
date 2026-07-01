@@ -1,12 +1,12 @@
 from Definitions import Ability
-from Features.BaseFeatures import TextFeature
+from Features.BaseFeatures import Feature
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
 ARTIFICER_HIT_DIE = 8
 
 
-class TinkersMagic(TextFeature):
+class TinkersMagic(Feature):
     def __init__(self):
         super().__init__(name="Tinker's Magic", origin="Artificer Level 1")
 
@@ -33,7 +33,7 @@ class TinkersMagic(TextFeature):
         return StringUtils.add_boxes(description, uses, regain_all_on="long rest")
 
 
-class ReplicateMagicItem(TextFeature):
+class ReplicateMagicItem(Feature):
     def __init__(self):
         super().__init__(name="Replicate Magic Item", origin="Artificer Level 2")
 
@@ -117,7 +117,7 @@ class ReplicateMagicItem(TextFeature):
         return description
 
 
-class MagicItemTinker(TextFeature):
+class MagicItemTinker(Feature):
     def __init__(self):
         super().__init__(name="Magic Item Tinker", origin="Artificer Level 6")
 
@@ -131,7 +131,7 @@ class MagicItemTinker(TextFeature):
         return description
 
 
-class FlashofGenius(TextFeature):
+class FlashofGenius(Feature):
     def __init__(self):
         super().__init__(name="Flash of Genius", origin="Artificer Level 7")
 
@@ -145,7 +145,7 @@ class FlashofGenius(TextFeature):
         return StringUtils.add_boxes(description, uses, regain_all_on="long rest")
 
 
-class MagicItemAdept(TextFeature):
+class MagicItemAdept(Feature):
     def __init__(self):
         super().__init__(name="Magic Item Adept", origin="Artificer Level 10")
 
@@ -154,7 +154,7 @@ class MagicItemAdept(TextFeature):
         return description
 
 
-class SpellStoringItem(TextFeature):
+class SpellStoringItem(Feature):
     def __init__(self):
         super().__init__(name="Spell-storing Item", origin="Artificer Level 11")
 
@@ -167,7 +167,7 @@ class SpellStoringItem(TextFeature):
         return description
 
 
-class AdvancedArtifice(TextFeature):
+class AdvancedArtifice(Feature):
     def __init__(self):
         super().__init__(name="Advanced Artifice", origin="Artificer Level 14")
 
@@ -180,7 +180,7 @@ class AdvancedArtifice(TextFeature):
         return description
 
 
-class MagicItemMaster(TextFeature):
+class MagicItemMaster(Feature):
     def __init__(self):
         super().__init__(name="Magic Item Master", origin="Artificer Level 18")
 
@@ -189,7 +189,7 @@ class MagicItemMaster(TextFeature):
         return description
 
 
-class SoulOfArtifice(TextFeature):
+class SoulOfArtifice(Feature):
     def __init__(self):
         super().__init__(name="Soul of Artifice", origin="Artificer Level 20")
 
@@ -205,7 +205,7 @@ class SoulOfArtifice(TextFeature):
 ### Alchemist Artificer Features ###
 
 
-class AlchemistToolsOfTheTrade(TextFeature):
+class AlchemistToolsOfTheTrade(Feature):
     def __init__(self):
         super().__init__(
             name="Tools of the Trade", origin="Alchemist Artificer Level 3"
@@ -220,7 +220,7 @@ class AlchemistToolsOfTheTrade(TextFeature):
         return description
 
 
-class AlchemistSpells(TextFeature):
+class AlchemistSpells(Feature):
     def __init__(self):
         super().__init__(name="Alchemist Spells", origin="Alchemist Artificer Level 3")
 
@@ -238,7 +238,7 @@ class AlchemistSpells(TextFeature):
         return description
 
 
-class ExperimentalElixir(TextFeature):
+class ExperimentalElixir(Feature):
     def __init__(self):
         super().__init__(
             name="Experimental Elixir", origin="Alchemist Artificer Level 3"
@@ -262,7 +262,7 @@ class ExperimentalElixir(TextFeature):
         return description
 
 
-class AlchemicalSavant(TextFeature):
+class AlchemicalSavant(Feature):
     def __init__(self):
         super().__init__(name="Alchemical Savant", origin="Alchemist Artificer Level 5")
 
@@ -271,7 +271,7 @@ class AlchemicalSavant(TextFeature):
         return description
 
 
-class RestorativeReagents(TextFeature):
+class RestorativeReagents(Feature):
     def __init__(self):
         super().__init__(
             name="Restorative Reagents", origin="Alchemist Artificer Level 9"
@@ -284,7 +284,7 @@ class RestorativeReagents(TextFeature):
         return StringUtils.add_boxes(description, uses, regain_all_on="long rest")
 
 
-class ChemicalMastery(TextFeature):
+class ChemicalMastery(Feature):
     def __init__(self):
         super().__init__(name="Chemical Mastery", origin="Alchemist Artificer Level 15")
 
@@ -301,7 +301,7 @@ class ChemicalMastery(TextFeature):
 ### Armorer Artificer Features ###
 
 
-class ArmorerToolsOfTheTrade(TextFeature):
+class ArmorerToolsOfTheTrade(Feature):
     def __init__(self):
         super().__init__(name="Tools of the Trade", origin="Armorer Artificer Level 3")
 
@@ -315,7 +315,7 @@ class ArmorerToolsOfTheTrade(TextFeature):
         return description
 
 
-class ArmorerSpells(TextFeature):
+class ArmorerSpells(Feature):
     def __init__(self):
         super().__init__(name="Armorer Spells", origin="Armorer Artificer Level 3")
 
@@ -333,7 +333,7 @@ class ArmorerSpells(TextFeature):
         return description
 
 
-class ArcaneArmor(TextFeature):
+class ArcaneArmor(Feature):
     def __init__(self):
         super().__init__(name="Arcane Armor", origin="Armorer Artificer Level 3")
 
@@ -348,7 +348,7 @@ class ArcaneArmor(TextFeature):
         return description
 
 
-class ArmorModel(TextFeature):
+class ArmorModel(Feature):
     def __init__(self):
         super().__init__(name="Armor Model", origin="Armorer Artificer Level 3")
 
@@ -374,7 +374,7 @@ class ArmorModel(TextFeature):
         return description
 
 
-class ArmorerExtraAttack(TextFeature):
+class ArmorerExtraAttack(Feature):
     def __init__(self):
         super().__init__(name="Extra Attack", origin="Armorer Artificer Level 5")
 
@@ -383,7 +383,7 @@ class ArmorerExtraAttack(TextFeature):
         return description
 
 
-class ImprovedArmorer(TextFeature):
+class ImprovedArmorer(Feature):
     def __init__(self):
         super().__init__(name="Improved Armorer", origin="Armorer Artificer Level 9")
 
@@ -397,7 +397,7 @@ class ImprovedArmorer(TextFeature):
         return description
 
 
-class PerfectedArmor(TextFeature):
+class PerfectedArmor(Feature):
     def __init__(self):
         super().__init__(name="Perfected Armor", origin="Armorer Artificer Level 15")
 
@@ -418,7 +418,7 @@ class PerfectedArmor(TextFeature):
 ### Artillerist Artificer Features ###
 
 
-class ArtilleristToolsOfTheTrade(TextFeature):
+class ArtilleristToolsOfTheTrade(Feature):
     def __init__(self):
         super().__init__(
             name="Tools of the Trade", origin="Artillerist Artificer Level 3"
@@ -434,7 +434,7 @@ class ArtilleristToolsOfTheTrade(TextFeature):
         return description
 
 
-class ArtilleristSpells(TextFeature):
+class ArtilleristSpells(Feature):
     def __init__(self):
         super().__init__(
             name="Artillerist Spells", origin="Artillerist Artificer Level 3"
@@ -454,7 +454,7 @@ class ArtilleristSpells(TextFeature):
         return description
 
 
-class EldritchCannon(TextFeature):
+class EldritchCannon(Feature):
     def __init__(self):
         super().__init__(name="Eldritch Cannon", origin="Artillerist Artificer Level 3")
 
@@ -475,7 +475,7 @@ class EldritchCannon(TextFeature):
         return description
 
 
-class ArcaneFirearm(TextFeature):
+class ArcaneFirearm(Feature):
     def __init__(self):
         super().__init__(name="Arcane Firearm", origin="Artillerist Artificer Level 5")
 
@@ -487,7 +487,7 @@ class ArcaneFirearm(TextFeature):
         return description
 
 
-class ExplosiveCannon(TextFeature):
+class ExplosiveCannon(Feature):
     def __init__(self):
         super().__init__(
             name="Explosive Cannon", origin="Artillerist Artificer Level 9"
@@ -502,7 +502,7 @@ class ExplosiveCannon(TextFeature):
         return description
 
 
-class FortifiedPosition(TextFeature):
+class FortifiedPosition(Feature):
     def __init__(self):
         super().__init__(
             name="Fortified Position", origin="Artillerist Artificer Level 15"
@@ -520,7 +520,7 @@ class FortifiedPosition(TextFeature):
 ### Battle Smith Artificer Features ###
 
 
-class BattleSmithToolsOfTheTrade(TextFeature):
+class BattleSmithToolsOfTheTrade(Feature):
     def __init__(self):
         super().__init__(
             name="Tools of the Trade", origin="Battle Smith Artificer Level 3"
@@ -535,7 +535,7 @@ class BattleSmithToolsOfTheTrade(TextFeature):
         return description
 
 
-class BattleSmithSpells(TextFeature):
+class BattleSmithSpells(Feature):
     def __init__(self):
         super().__init__(
             name="Battle Smith spells", origin="Battle Smith Artificer Level 3"
@@ -555,7 +555,7 @@ class BattleSmithSpells(TextFeature):
         return description
 
 
-class BattleReady(TextFeature):
+class BattleReady(Feature):
     def __init__(self):
         super().__init__(name="Battle Ready", origin="Battle Smith Artificer Level 3")
 
@@ -568,7 +568,7 @@ class BattleReady(TextFeature):
         return description
 
 
-class SteelDefender(TextFeature):
+class SteelDefender(Feature):
     def __init__(self):
         super().__init__(name="Steel Defender", origin="Battle Smith Artificer Level 3")
 
@@ -601,7 +601,7 @@ class SteelDefender(TextFeature):
         return description
 
 
-class BattleSmithExtraAttack(TextFeature):
+class BattleSmithExtraAttack(Feature):
     def __init__(self):
         super().__init__(name="Extra Attack", origin="Battle Smith Artificer Level 5")
 
@@ -610,7 +610,7 @@ class BattleSmithExtraAttack(TextFeature):
         return description
 
 
-class ArcaneJolt(TextFeature):
+class ArcaneJolt(Feature):
     def __init__(self):
         super().__init__(name="Arcane Jolt", origin="Battle Smith Artificer Level 9")
 
@@ -626,7 +626,7 @@ class ArcaneJolt(TextFeature):
         return StringUtils.add_boxes(description, uses, regain_all_on="long rest")
 
 
-class ImprovedDefender(TextFeature):
+class ImprovedDefender(Feature):
     def __init__(self):
         super().__init__(
             name="Improved Defender", origin="Battle Smith Artificer Level 15"
@@ -644,7 +644,7 @@ class ImprovedDefender(TextFeature):
 ### Cartographer Artificer Features ###
 
 
-class CartographerToolsOfTheTrade(TextFeature):
+class CartographerToolsOfTheTrade(Feature):
     def __init__(self):
         super().__init__(
             name="Tools of the Trade", origin="Cartographer Artificer Level 3"
@@ -659,7 +659,7 @@ class CartographerToolsOfTheTrade(TextFeature):
         return description
 
 
-class CartographerSpells(TextFeature):
+class CartographerSpells(Feature):
     def __init__(self):
         super().__init__(
             name="Cartographer Spells", origin="Cartographer Artificer Level 3"
@@ -679,7 +679,7 @@ class CartographerSpells(TextFeature):
         return description
 
 
-class AdventurersAtlas(TextFeature):
+class AdventurersAtlas(Feature):
     def __init__(self):
         super().__init__(
             name="Adventurer's Atlas", origin="Cartographer Artificer Level 3"
@@ -695,7 +695,7 @@ class AdventurersAtlas(TextFeature):
         return description
 
 
-class MappingMagic(TextFeature):
+class MappingMagic(Feature):
     def __init__(self):
         super().__init__(name="Mapping Magic", origin="Cartographer Artificer Level 3")
 
@@ -710,7 +710,7 @@ class MappingMagic(TextFeature):
         return StringUtils.add_boxes(description, uses, regain_all_on="long rest")
 
 
-class GuidedPrecision(TextFeature):
+class GuidedPrecision(Feature):
     def __init__(self):
         super().__init__(
             name="Guided Precision", origin="Cartographer Artificer Level 5"
@@ -724,7 +724,7 @@ class GuidedPrecision(TextFeature):
         return description
 
 
-class IngeniousMovement(TextFeature):
+class IngeniousMovement(Feature):
     def __init__(self):
         super().__init__(
             name="Ingenious Movement", origin="Cartographer Artificer Level 9"
@@ -735,7 +735,7 @@ class IngeniousMovement(TextFeature):
         return description
 
 
-class SuperiorAtlas(TextFeature):
+class SuperiorAtlas(Feature):
     def __init__(self):
         super().__init__(
             name="Superior Atlas", origin="Cartographer Artificer Level 15"
@@ -753,7 +753,7 @@ class SuperiorAtlas(TextFeature):
 ### Reanimator Artificer Features ###
 
 
-class ReanimatorSpells(TextFeature):
+class ReanimatorSpells(Feature):
     def __init__(self):
         super().__init__(
             name="Reanimator Spells", origin="Reanimator Artificer Level 3"
@@ -773,7 +773,7 @@ class ReanimatorSpells(TextFeature):
         return description
 
 
-class ReanimatorsSkillSet(TextFeature):
+class ReanimatorsSkillSet(Feature):
     def __init__(self):
         super().__init__(
             name="Reanimator's Skill Set", origin="Reanimator Artificer Level 3"
@@ -791,7 +791,7 @@ class ReanimatorsSkillSet(TextFeature):
         return StringUtils.add_boxes(description, uses, regain_all_on="long rest")
 
 
-class ReanimatedCompanion(TextFeature):
+class ReanimatedCompanion(Feature):
     def __init__(self):
         super().__init__(
             name="Reanimated Companion", origin="Reanimator Artificer Level 3"
@@ -807,7 +807,7 @@ class ReanimatedCompanion(TextFeature):
         return description
 
 
-class StrangeModifications(TextFeature):
+class StrangeModifications(Feature):
     def __init__(self):
         super().__init__(
             name="Strange Modifications", origin="Reanimator Artificer Level 5"
@@ -822,7 +822,7 @@ class StrangeModifications(TextFeature):
         return description
 
 
-class ImprovedReanimation(TextFeature):
+class ImprovedReanimation(Feature):
     def __init__(self):
         super().__init__(
             name="Improved Reanimation", origin="Reanimator Artificer Level 9"
@@ -833,7 +833,7 @@ class ImprovedReanimation(TextFeature):
         return description
 
 
-class MacabreModifications(TextFeature):
+class MacabreModifications(Feature):
     def __init__(self):
         super().__init__(
             name="Macabre Modifications", origin="Reanimator Artificer Level 9"
@@ -849,7 +849,7 @@ class MacabreModifications(TextFeature):
         return description
 
 
-class RefinedReanimation(TextFeature):
+class RefinedReanimation(Feature):
     def __init__(self):
         super().__init__(
             name="Refined Reanimation", origin="Reanimator Artificer Level 15"

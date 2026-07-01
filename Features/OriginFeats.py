@@ -1,7 +1,7 @@
 from typing import Optional
 
 from Definitions import Ability, CharacterClass, Skill
-from Features.BaseFeatures import CharacterFeature, TextFeature
+from Features.BaseFeatures import Feature
 from Features.SubFeatures import SkillProficiencyChoice
 from Spells.Definitions import (
     ClericLevel0Spells,
@@ -15,7 +15,7 @@ from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
 
-class OriginCharacterFeat(CharacterFeature):
+class OriginCharacterFeat(Feature):
     def get_spellcasting_ability(self) -> Optional[Ability]:
         return None
 
@@ -23,7 +23,7 @@ class OriginCharacterFeat(CharacterFeature):
         return []
 
 
-class OriginTextFeat(TextFeature):
+class OriginTextFeat(Feature):
     def get_spellcasting_ability(self) -> Optional[Ability]:
         return None
 

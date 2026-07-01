@@ -1,10 +1,10 @@
-from Features.BaseFeatures import TextFeature
+from Features.BaseFeatures import Feature
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 PSION_HIT_DIE = 6
 
 
-class PsionicPower(TextFeature):
+class PsionicPower(Feature):
     def __init__(self):
         super().__init__(name="Psionic Power", origin="Psion Level 1")
 
@@ -52,7 +52,7 @@ class PsionicPower(TextFeature):
         return description
 
 
-class SubtleTelekinesis(TextFeature):
+class SubtleTelekinesis(Feature):
     def __init__(self):
         super().__init__(name="Subtle Telekinesis", origin="Psion Level 1")
 
@@ -65,7 +65,7 @@ class SubtleTelekinesis(TextFeature):
         return description
 
 
-class PsionicDiscipline(TextFeature):
+class PsionicDiscipline(Feature):
     def __init__(self):
         super().__init__(name="Psionic Discipline", origin="Psion Level 2")
 
@@ -88,7 +88,7 @@ class PsionicDiscipline(TextFeature):
         return description
 
 
-class PsionicRestoration(TextFeature):
+class PsionicRestoration(Feature):
     def __init__(self):
         super().__init__(name="Psionic Restoration", origin="Psion Level 5")
 
@@ -102,7 +102,7 @@ class PsionicRestoration(TextFeature):
         return description
 
 
-class PsionicSurge(TextFeature):
+class PsionicSurge(Feature):
     def __init__(self):
         super().__init__(name="Psionic Surge", origin="Psion Level 7")
 
@@ -117,7 +117,7 @@ class PsionicSurge(TextFeature):
         return description
 
 
-class PsionicReserves(TextFeature):
+class PsionicReserves(Feature):
     def __init__(self):
         super().__init__(name="Psionic Reserves", origin="Psion Level 18")
 
@@ -130,7 +130,7 @@ class PsionicReserves(TextFeature):
         return description
 
 
-class EpicBoon(TextFeature):
+class EpicBoon(Feature):
     def __init__(self):
         super().__init__(name="Epic Boon", origin="Psion Level 19")
 
@@ -143,7 +143,7 @@ class EpicBoon(TextFeature):
         return description
 
 
-class EnkindledLifeForce(TextFeature):
+class EnkindledLifeForce(Feature):
     def __init__(self):
         super().__init__(name="Enkindled Life Force", origin="Psion Level 20")
 
@@ -164,7 +164,7 @@ class EnkindledLifeForce(TextFeature):
 ### Metamorph subclass feature ###
 
 
-class MetamorphSpells(TextFeature):
+class MetamorphSpells(Feature):
     def __init__(self):
         super().__init__(name="Metamorph Spells", origin="Metamorph Psion Level 3")
 
@@ -177,7 +177,7 @@ class MetamorphSpells(TextFeature):
         return description
 
 
-class MutableForm(TextFeature):
+class MutableForm(Feature):
     def __init__(self):
         super().__init__(name="Mutable Form", origin="Metamorph Psion Level 3")
 
@@ -200,7 +200,7 @@ class MutableForm(TextFeature):
         return description
 
 
-class OrganicWeapons(TextFeature):
+class OrganicWeapons(Feature):
     def __init__(self):
         super().__init__(name="Organic Weapons", origin="Metamorph Psion Level 3")
 
@@ -247,7 +247,7 @@ class OrganicWeapons(TextFeature):
         return description
 
 
-class FleshWeaver(TextFeature):
+class FleshWeaver(Feature):
     def __init__(self):
         super().__init__(name="Flesh Weaver", origin="Metamorph Psion Level 6")
 
@@ -266,7 +266,7 @@ class FleshWeaver(TextFeature):
         return description
 
 
-class ImprovedMutableForm(TextFeature):
+class ImprovedMutableForm(Feature):
     def __init__(self):
         super().__init__(
             name="Improved Mutable Form", origin="Metamorph Psion Level 10"
@@ -300,7 +300,7 @@ class ImprovedMutableForm(TextFeature):
         return description
 
 
-class LifeBendingWeapons(TextFeature):
+class LifeBendingWeapons(Feature):
     def __init__(self):
         super().__init__(name="Life-bending Weapons", origin="Metamorph Psion Level 14")
 
@@ -328,7 +328,7 @@ class LifeBendingWeapons(TextFeature):
 ### Psykinetic subclass feature ###
 
 
-class StrongerTelekinesis(TextFeature):
+class StrongerTelekinesis(Feature):
     def __init__(self):
         super().__init__(name="Stronger Telekinesis", origin="Psykinetic Psion Level 3")
 
@@ -341,7 +341,7 @@ class StrongerTelekinesis(TextFeature):
         return description
 
 
-class TelekineticTechniques(TextFeature):
+class TelekineticTechniques(Feature):
     def __init__(self):
         super().__init__(
             name="Telekinetic Techniques", origin="Psykinetic Psion Level 3"
@@ -366,7 +366,7 @@ class TelekineticTechniques(TextFeature):
         return description
 
 
-class DestructiveTrance(TextFeature):
+class DestructiveTrance(Feature):
     def __init__(self):
         super().__init__(name="Destructive Trance", origin="Psykinetic Psion Level 6")
 
@@ -384,7 +384,7 @@ class DestructiveTrance(TextFeature):
         return description
 
 
-class ReboundingField(TextFeature):
+class ReboundingField(Feature):
     def __init__(self):
         super().__init__(name="Rebounding Field", origin="Psykinetic Psion Level 6")
 
@@ -406,7 +406,7 @@ class ReboundingField(TextFeature):
         return description
 
 
-class EnhancedTelekineticCrush(TextFeature):
+class EnhancedTelekineticCrush(Feature):
     def __init__(self):
         super().__init__(
             name="Enhanced Telekinetic Crush", origin="Psykinetic Psion Level 10"
@@ -425,7 +425,7 @@ class EnhancedTelekineticCrush(TextFeature):
         return description
 
 
-class HeightenedTelekinesis(TextFeature):
+class HeightenedTelekinesis(Feature):
     def __init__(self):
         super().__init__(
             name="Heightened Telekinesis", origin="Psykinetic Psion Level 14"
@@ -447,7 +447,7 @@ class HeightenedTelekinesis(TextFeature):
 ### Telepath subclass feature ###
 
 
-class MindInfiltrator(TextFeature):
+class MindInfiltrator(Feature):
     def __init__(self):
         super().__init__(name="Mind Infiltrator", origin="Telepath Psion Level 3")
 
@@ -464,7 +464,7 @@ class MindInfiltrator(TextFeature):
         return description
 
 
-class TelepathicDistraction(TextFeature):
+class TelepathicDistraction(Feature):
     def __init__(self):
         super().__init__(name="Telepathic Distraction", origin="Telepath Psion Level 3")
 
@@ -480,7 +480,7 @@ class TelepathicDistraction(TextFeature):
         return description
 
 
-class BulwarkMind(TextFeature):
+class BulwarkMind(Feature):
     def __init__(self):
         super().__init__(name="Bulwark Mind", origin="Telepath Psion Level 6")
 
@@ -499,7 +499,7 @@ class BulwarkMind(TextFeature):
         return description
 
 
-class PotentThoughts(TextFeature):
+class PotentThoughts(Feature):
     def __init__(self):
         super().__init__(name="Potent Thoughts", origin="Telepath Psion Level 6")
 
@@ -512,7 +512,7 @@ class PotentThoughts(TextFeature):
         return description
 
 
-class TelepathicBolstering(TextFeature):
+class TelepathicBolstering(Feature):
     def __init__(self):
         super().__init__(name="Telepathic Bolstering", origin="Telepath Psion Level 10")
 
@@ -530,7 +530,7 @@ class TelepathicBolstering(TextFeature):
         return description
 
 
-class ScrambleMinds(TextFeature):
+class ScrambleMinds(Feature):
     def __init__(self):
         super().__init__(name="Scramble Minds", origin="Telepath Psion Level 14")
 

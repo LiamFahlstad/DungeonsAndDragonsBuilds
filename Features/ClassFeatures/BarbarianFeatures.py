@@ -1,6 +1,6 @@
 import Definitions
 from Definitions import Ability, Skill
-from Features.BaseFeatures import CharacterFeature, TextFeature
+from Features.BaseFeatures import Feature
 from Features.SubFeatures import SkillProficiencyChoice
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
@@ -8,7 +8,7 @@ from Utils import StringUtils
 BARBARIAN_HIT_DIE = 12
 
 
-class Rage(TextFeature):
+class Rage(Feature):
     def __init__(self):
         super().__init__(name="Rage", origin="Barbarian Level 1")
 
@@ -52,7 +52,7 @@ class Rage(TextFeature):
         )
 
 
-class UnarmoredDefenseText(TextFeature):
+class UnarmoredDefenseText(Feature):
     def __init__(self):
         super().__init__(name="Unarmored Defense", origin="Barbarian Level 1")
 
@@ -68,14 +68,14 @@ class UnarmoredDefenseText(TextFeature):
         return description
 
 
-class UnarmoredDefense(CharacterFeature):
+class UnarmoredDefense(Feature):
     def apply(self, character_stat_block: CharacterStatBlock):
         character_stat_block.combat.update_armor_class_base(10)
         character_stat_block.combat.add_armor_class_ability(Ability.DEXTERITY)
         character_stat_block.combat.add_armor_class_ability(Ability.CONSTITUTION)
 
 
-class WeaponMastery(TextFeature):
+class WeaponMastery(Feature):
     def __init__(self):
         super().__init__(name="Weapon Mastery", origin="Barbarian Level 1")
 
@@ -87,7 +87,7 @@ class WeaponMastery(TextFeature):
         return description
 
 
-class DangerSenseText(TextFeature):
+class DangerSenseText(Feature):
     def __init__(self):
         super().__init__(name="Danger Sense", origin="Barbarian Level 2")
 
@@ -96,12 +96,12 @@ class DangerSenseText(TextFeature):
         return description
 
 
-class DangerSense(CharacterFeature):
+class DangerSense(Feature):
     def apply(self, character_stat_block: CharacterStatBlock):
         character_stat_block.saving_throws.add_advantage(Ability.DEXTERITY)
 
 
-class RecklessAttack(TextFeature):
+class RecklessAttack(Feature):
     def __init__(self):
         super().__init__(name="Reckless Attack", origin="Barbarian Level 2")
 
@@ -110,7 +110,7 @@ class RecklessAttack(TextFeature):
         return description
 
 
-class PrimalKnowledgeSkillProficiency(CharacterFeature):
+class PrimalKnowledgeSkillProficiency(Feature):
     SKILL_POOL = [
         Skill.ANIMAL_HANDLING,
         Skill.ATHLETICS,
@@ -134,7 +134,7 @@ class PrimalKnowledgeSkillProficiency(CharacterFeature):
         self._proficiency.apply(character_stat_block)
 
 
-class PrimalKnowledge(TextFeature):
+class PrimalKnowledge(Feature):
     def __init__(self):
         super().__init__(name="Primal Knowledge", origin="Barbarian Level 3")
 
@@ -143,7 +143,7 @@ class PrimalKnowledge(TextFeature):
         return description
 
 
-class ExtraAttack(TextFeature):
+class ExtraAttack(Feature):
     def __init__(self):
         super().__init__(name="Extra Attack", origin="Barbarian Level 5")
 
@@ -152,7 +152,7 @@ class ExtraAttack(TextFeature):
         return description
 
 
-class FastMovement(TextFeature):
+class FastMovement(Feature):
     def __init__(self):
         super().__init__(name="Fast Movement", origin="Barbarian Level 5")
 
@@ -163,7 +163,7 @@ class FastMovement(TextFeature):
         return description
 
 
-class FeralInstinct(TextFeature):
+class FeralInstinct(Feature):
     def __init__(self):
         super().__init__(name="Feral Instinct", origin="Barbarian Level 7")
 
@@ -174,7 +174,7 @@ class FeralInstinct(TextFeature):
         return description
 
 
-class InstinctivePounce(TextFeature):
+class InstinctivePounce(Feature):
     def __init__(self):
         super().__init__(name="Instinctive Pounce", origin="Barbarian Level 7")
 
@@ -183,7 +183,7 @@ class InstinctivePounce(TextFeature):
         return description
 
 
-class BrutalStrike(TextFeature):
+class BrutalStrike(Feature):
     def __init__(self):
         super().__init__(name="Brutal Strike", origin="Barbarian Level 9")
 
@@ -197,7 +197,7 @@ class BrutalStrike(TextFeature):
         return description
 
 
-class RelentlessRage(TextFeature):
+class RelentlessRage(Feature):
     def __init__(self):
         super().__init__(name="Relentless Rage", origin="Barbarian Level 11")
 
@@ -209,7 +209,7 @@ class RelentlessRage(TextFeature):
         return description
 
 
-class ImprovedBrutalStrike1(TextFeature):
+class ImprovedBrutalStrike1(Feature):
     def __init__(self):
         super().__init__(name="Improved Brutal Strike 1", origin="Barbarian Level 13")
 
@@ -222,7 +222,7 @@ class ImprovedBrutalStrike1(TextFeature):
         return description
 
 
-class PersistentRage(TextFeature):
+class PersistentRage(Feature):
     def __init__(self):
         super().__init__(name="Persistent Rage", origin="Barbarian Level 15")
 
@@ -234,7 +234,7 @@ class PersistentRage(TextFeature):
         return description
 
 
-class ImprovedBrutalStrike2(TextFeature):
+class ImprovedBrutalStrike2(Feature):
     def __init__(self):
         super().__init__(name="Improved Brutal Strike 2", origin="Barbarian Level 17")
 
@@ -243,7 +243,7 @@ class ImprovedBrutalStrike2(TextFeature):
         return description
 
 
-class IndomitableMight(TextFeature):
+class IndomitableMight(Feature):
     def __init__(self):
         super().__init__(name="Indomitable Might", origin="Barbarian Level 18")
 
@@ -252,7 +252,7 @@ class IndomitableMight(TextFeature):
         return description
 
 
-class PrimalChampion(TextFeature):
+class PrimalChampion(Feature):
     def __init__(self):
         super().__init__(name="Primal Champion", origin="Barbarian Level 20")
 
@@ -264,7 +264,7 @@ class PrimalChampion(TextFeature):
 ### Path of the Berserker Barbarian Features ###
 
 
-class Frenzy(TextFeature):
+class Frenzy(Feature):
     def __init__(self):
         super().__init__(
             name="Frenzy", origin="Path Of The Berserker Barbarian Level 3"
@@ -278,7 +278,7 @@ class Frenzy(TextFeature):
         return description
 
 
-class MindlessRage(TextFeature):
+class MindlessRage(Feature):
     def __init__(self):
         super().__init__(
             name="Mindless Rage", origin="Path Of The Berserker Barbarian Level 6"
@@ -289,7 +289,7 @@ class MindlessRage(TextFeature):
         return description
 
 
-class Retaliation(TextFeature):
+class Retaliation(Feature):
     def __init__(self):
         super().__init__(
             name="Retaliation", origin="Path Of The Berserker Barbarian Level 10"
@@ -300,7 +300,7 @@ class Retaliation(TextFeature):
         return description
 
 
-class IntimidatingPresence(TextFeature):
+class IntimidatingPresence(Feature):
     def __init__(self):
         super().__init__(
             name="Intimidating Presence",
@@ -318,7 +318,7 @@ class IntimidatingPresence(TextFeature):
 ### Path of the Wild Heart Barbarian Features ###
 
 
-class AnimalSpeaker(TextFeature):
+class AnimalSpeaker(Feature):
     def __init__(self):
         super().__init__(
             name="Animal Speaker", origin="Path Of The Wild Heart Barbarian Level 3"
@@ -329,7 +329,7 @@ class AnimalSpeaker(TextFeature):
         return description
 
 
-class RageOfTheWilds(TextFeature):
+class RageOfTheWilds(Feature):
     def __init__(self):
         super().__init__(
             name="Rage of the Wilds", origin="Path Of The Wild Heart Barbarian Level 3"
@@ -345,7 +345,7 @@ class RageOfTheWilds(TextFeature):
         return description
 
 
-class AspectOfTheWilds(TextFeature):
+class AspectOfTheWilds(Feature):
     def __init__(self):
         super().__init__(
             name="Aspect of the Wilds",
@@ -362,7 +362,7 @@ class AspectOfTheWilds(TextFeature):
         return description
 
 
-class NatureSpeaker(TextFeature):
+class NatureSpeaker(Feature):
     def __init__(self):
         super().__init__(
             name="Nature Speaker", origin="Path Of The Wild Heart Barbarian Level 10"
@@ -373,7 +373,7 @@ class NatureSpeaker(TextFeature):
         return description
 
 
-class PowerOfTheWilds(TextFeature):
+class PowerOfTheWilds(Feature):
     def __init__(self):
         super().__init__(
             name="Power of the Wilds",
@@ -393,7 +393,7 @@ class PowerOfTheWilds(TextFeature):
 ### Path of the World Tree Barbarian Features ###
 
 
-class VitalityOfTheTree(TextFeature):
+class VitalityOfTheTree(Feature):
     def __init__(self):
         super().__init__(
             name="Vitality of the Tree",
@@ -409,7 +409,7 @@ class VitalityOfTheTree(TextFeature):
         return description
 
 
-class BranchesOfTheTree(TextFeature):
+class BranchesOfTheTree(Feature):
     def __init__(self):
         super().__init__(
             name="Branches of the Tree",
@@ -421,7 +421,7 @@ class BranchesOfTheTree(TextFeature):
         return description
 
 
-class BatteringRoots(TextFeature):
+class BatteringRoots(Feature):
     def __init__(self):
         super().__init__(
             name="Battering Roots", origin="Path Of The World Tree Barbarian Level 10"
@@ -432,7 +432,7 @@ class BatteringRoots(TextFeature):
         return description
 
 
-class TravelAlongTheTree(TextFeature):
+class TravelAlongTheTree(Feature):
     def __init__(self):
         super().__init__(
             name="Travel along the Tree",
@@ -447,7 +447,7 @@ class TravelAlongTheTree(TextFeature):
 ### Path of the Zealot Barbarian Features ###
 
 
-class DivineFury(TextFeature):
+class DivineFury(Feature):
     def __init__(self):
         super().__init__(
             name="Divine Fury", origin="Path Of The Zealot Barbarian Level 3"
@@ -458,7 +458,7 @@ class DivineFury(TextFeature):
         return description
 
 
-class WarriorOfTheGods(TextFeature):
+class WarriorOfTheGods(Feature):
     def __init__(self):
         super().__init__(
             name="Warrior of the Gods", origin="Path Of The Zealot Barbarian Level 3"
@@ -473,7 +473,7 @@ class WarriorOfTheGods(TextFeature):
         return description
 
 
-class FanaticalFocus(TextFeature):
+class FanaticalFocus(Feature):
     def __init__(self):
         super().__init__(
             name="Fanatical Focus", origin="Path Of The Zealot Barbarian Level 6"
@@ -484,7 +484,7 @@ class FanaticalFocus(TextFeature):
         return description
 
 
-class ZealousPresence(TextFeature):
+class ZealousPresence(Feature):
     def __init__(self):
         super().__init__(
             name="Zealous Presence", origin="Path Of The Zealot Barbarian Level 10"
@@ -498,7 +498,7 @@ class ZealousPresence(TextFeature):
         return description
 
 
-class RageOfTheGods(TextFeature):
+class RageOfTheGods(Feature):
     def __init__(self):
         super().__init__(
             name="Rage of the Gods", origin="Path Of The Zealot Barbarian Level 14"

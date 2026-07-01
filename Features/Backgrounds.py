@@ -1,10 +1,10 @@
 from Definitions import Ability, Skill
-from Features.BaseFeatures import CharacterFeature
+from Features.BaseFeatures import Feature
 from Features.SubFeatures import SkillProficiencyChoice
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
-class FreeBackgroundAbilityBonus(CharacterFeature):
+class FreeBackgroundAbilityBonus(Feature):
     """Also add either [+1, +1, +1] OR [+2, +1] to any abilities."""
 
     def __init__(self, bonuses: list[tuple[Ability, int]]):
@@ -18,7 +18,7 @@ class FreeBackgroundAbilityBonus(CharacterFeature):
             character_stat_block.abilities.add_bonus(ability, bonus)
 
 
-class FreeBackgroundSkillProficiency(CharacterFeature):
+class FreeBackgroundSkillProficiency(Feature):
     """Also add proficiency in two skills of your choice."""
 
     def __init__(self, skills: list[Skill]):

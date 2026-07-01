@@ -1,5 +1,5 @@
 from Definitions import Ability, Skill
-from Features.BaseFeatures import Feature, TextFeature
+from Features.BaseFeatures import Feature
 from Features.SubFeatures import SavingThrowProficiencyChoice, SkillExpertiseChoice
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
@@ -31,7 +31,7 @@ class SneakAttack(Feature):
         return description
 
 
-class ThievesCant(TextFeature):
+class ThievesCant(Feature):
     def __init__(self):
         super().__init__(name="Thieves' Cant", origin="Rogue Level 1")
 
@@ -40,7 +40,7 @@ class ThievesCant(TextFeature):
         return description
 
 
-class WeaponMastery(TextFeature):
+class WeaponMastery(Feature):
     def __init__(self):
         super().__init__(name="Weapon Mastery", origin="Rogue Level 1")
 
@@ -52,7 +52,7 @@ class WeaponMastery(TextFeature):
         return description
 
 
-class CunningAction(TextFeature):
+class CunningAction(Feature):
     def __init__(self):
         super().__init__(name="Cunning Action", origin="Rogue Level 2")
 
@@ -61,7 +61,7 @@ class CunningAction(TextFeature):
         return description
 
 
-class SteadyAim(TextFeature):
+class SteadyAim(Feature):
     def __init__(self):
         super().__init__(name="Steady Aim", origin="Rogue Level 3")
 
@@ -70,7 +70,7 @@ class SteadyAim(TextFeature):
         return description
 
 
-class CunningStrike(TextFeature):
+class CunningStrike(Feature):
     def __init__(self):
         super().__init__(name="Cunning Strike", origin="Rogue Level 5")
 
@@ -91,7 +91,7 @@ class CunningStrike(TextFeature):
         return description
 
 
-class UncannyDodge(TextFeature):
+class UncannyDodge(Feature):
     def __init__(self):
         super().__init__(name="Uncanny Dodge", origin="Rogue Level 5")
 
@@ -100,7 +100,7 @@ class UncannyDodge(TextFeature):
         return description
 
 
-class Evasion(TextFeature):
+class Evasion(Feature):
     def __init__(self):
         super().__init__(name="Evasion", origin="Rogue Level 7")
 
@@ -109,7 +109,7 @@ class Evasion(TextFeature):
         return description
 
 
-class ReliableTalent(TextFeature):
+class ReliableTalent(Feature):
     def __init__(self):
         super().__init__(name="Reliable Talent", origin="Rogue Level 7")
 
@@ -118,7 +118,7 @@ class ReliableTalent(TextFeature):
         return description
 
 
-class ImprovedCunningStrike(TextFeature):
+class ImprovedCunningStrike(Feature):
     def __init__(self):
         super().__init__(name="Improved Cunning Strike", origin="Rogue Level 11")
 
@@ -127,7 +127,7 @@ class ImprovedCunningStrike(TextFeature):
         return description
 
 
-class DeviousStrikes(TextFeature):
+class DeviousStrikes(Feature):
     def __init__(self):
         super().__init__(name="Devious Strikes", origin="Rogue Level 14")
 
@@ -156,7 +156,7 @@ class SlipperyMind(Feature):
         return "Your mind is exceptionally difficult to control. You gain proficiency in Wisdom and Charisma saving throws."
 
 
-class Elusive(TextFeature):
+class Elusive(Feature):
     def __init__(self):
         super().__init__(name="Elusive", origin="Rogue Level 18")
 
@@ -165,7 +165,7 @@ class Elusive(TextFeature):
         return description
 
 
-class StrokeOfLuck(TextFeature):
+class StrokeOfLuck(Feature):
     def __init__(self):
         super().__init__(name="Stroke of Luck", origin="Rogue Level 20")
 
@@ -180,7 +180,7 @@ class StrokeOfLuck(TextFeature):
 ### Arcane Trickster Rogue Features ###
 
 
-class MageHandLegerdemain(TextFeature):
+class MageHandLegerdemain(Feature):
     def __init__(self):
         super().__init__(
             name="Mage Hand Legerdemain", origin="Arcane Trickster Rogue Level 3"
@@ -191,7 +191,7 @@ class MageHandLegerdemain(TextFeature):
         return description
 
 
-class MagicalAmbush(TextFeature):
+class MagicalAmbush(Feature):
     def __init__(self):
         super().__init__(name="Magical Ambush", origin="Arcane Trickster Rogue Level 9")
 
@@ -200,7 +200,7 @@ class MagicalAmbush(TextFeature):
         return description
 
 
-class VersatileTrickster(TextFeature):
+class VersatileTrickster(Feature):
     def __init__(self):
         super().__init__(
             name="Versatile Trickster", origin="Arcane Trickster Rogue Level 13"
@@ -211,7 +211,7 @@ class VersatileTrickster(TextFeature):
         return description
 
 
-class SpellThief(TextFeature):
+class SpellThief(Feature):
     def __init__(self):
         super().__init__(name="Spell Thief", origin="Arcane Trickster Rogue Level 17")
 
@@ -227,7 +227,7 @@ class SpellThief(TextFeature):
 ### Assassin Rogue Features ###
 
 
-class Assassinate(TextFeature):
+class Assassinate(Feature):
     def __init__(self):
         super().__init__(name="Assassinate", origin="Assassin Rogue Level 3")
 
@@ -240,7 +240,7 @@ class Assassinate(TextFeature):
         return description
 
 
-class AssassinsTools(TextFeature):
+class AssassinsTools(Feature):
     def __init__(self):
         super().__init__(name="Assassin's Tools", origin="Assassin Rogue Level 3")
 
@@ -249,7 +249,7 @@ class AssassinsTools(TextFeature):
         return description
 
 
-class InfiltrationExpertise(TextFeature):
+class InfiltrationExpertise(Feature):
     def __init__(self):
         super().__init__(name="Infiltration Expertise", origin="Assassin Rogue Level 9")
 
@@ -262,7 +262,7 @@ class InfiltrationExpertise(TextFeature):
         return description
 
 
-class EnvenomWeapons(TextFeature):
+class EnvenomWeapons(Feature):
     def __init__(self):
         super().__init__(name="Envenom Weapons", origin="Assassin Rogue Level 13")
 
@@ -271,7 +271,7 @@ class EnvenomWeapons(TextFeature):
         return description
 
 
-class DeathStrike(TextFeature):
+class DeathStrike(Feature):
     def __init__(self):
         super().__init__(name="Death Strike", origin="Assassin Rogue Level 17")
 
@@ -283,7 +283,7 @@ class DeathStrike(TextFeature):
 ### Scion of the Three Rogue Features ###
 
 
-class Bloodthirst(TextFeature):
+class Bloodthirst(Feature):
     def __init__(self):
         super().__init__(name="Bloodthirst", origin="Scion of the Three Rogue Level 3")
 
@@ -296,7 +296,7 @@ class Bloodthirst(TextFeature):
         return StringUtils.add_boxes(description, uses, regain_all_on="long rest")
 
 
-class DreadAllegiance(TextFeature):
+class DreadAllegiance(Feature):
     def __init__(self):
         super().__init__(
             name="Dread Allegiance", origin="Scion of the Three Rogue Level 3"
@@ -307,7 +307,7 @@ class DreadAllegiance(TextFeature):
         return description
 
 
-class StrikeFear(TextFeature):
+class StrikeFear(Feature):
     def __init__(self):
         super().__init__(name="Strike Fear", origin="Scion of the Three Rogue Level 9")
 
@@ -320,7 +320,7 @@ class StrikeFear(TextFeature):
         return description
 
 
-class AuraofMalevolence(TextFeature):
+class AuraofMalevolence(Feature):
     def __init__(self):
         super().__init__(
             name="Aura of Malevolence", origin="Scion of the Three Rogue Level 13"
@@ -331,7 +331,7 @@ class AuraofMalevolence(TextFeature):
         return description
 
 
-class DreadIncarnate(TextFeature):
+class DreadIncarnate(Feature):
     def __init__(self):
         super().__init__(
             name="Dread Incarnate", origin="Scion of the Three Rogue Level 17"
@@ -349,7 +349,7 @@ class DreadIncarnate(TextFeature):
 ### Soulknife Rogue Features ###
 
 
-class PsionicPower(TextFeature):
+class PsionicPower(Feature):
     def __init__(self):
         super().__init__(name="Psionic Power", origin="Soulknife Rogue Level 3")
 
@@ -364,7 +364,7 @@ class PsionicPower(TextFeature):
         return description
 
 
-class PsychicBlades(TextFeature):
+class PsychicBlades(Feature):
     def __init__(self):
         super().__init__(name="Psychic Blades", origin="Soulknife Rogue Level 3")
 
@@ -381,7 +381,7 @@ class PsychicBlades(TextFeature):
         return description
 
 
-class SoulBlades(TextFeature):
+class SoulBlades(Feature):
     def __init__(self):
         super().__init__(name="Soul Blades", origin="Soulknife Rogue Level 9")
 
@@ -394,7 +394,7 @@ class SoulBlades(TextFeature):
         return description
 
 
-class PsychicVeil(TextFeature):
+class PsychicVeil(Feature):
     def __init__(self):
         super().__init__(name="Psychic Veil", origin="Soulknife Rogue Level 13")
 
@@ -406,7 +406,7 @@ class PsychicVeil(TextFeature):
         return description
 
 
-class RendMind(TextFeature):
+class RendMind(Feature):
     def __init__(self):
         super().__init__(name="Rend Mind", origin="Soulknife Rogue Level 17")
 
@@ -421,7 +421,7 @@ class RendMind(TextFeature):
 ### Thief Rogue Features ###
 
 
-class FastHands(TextFeature):
+class FastHands(Feature):
     def __init__(self):
         super().__init__(name="Fast Hands", origin="Thief Rogue Level 3")
 
@@ -434,7 +434,7 @@ class FastHands(TextFeature):
         return description
 
 
-class SecondStoryWork(TextFeature):
+class SecondStoryWork(Feature):
     def __init__(self):
         super().__init__(name="Second Story Work", origin="Thief Rogue Level 3")
 
@@ -447,7 +447,7 @@ class SecondStoryWork(TextFeature):
         return description
 
 
-class SupremeSneak(TextFeature):
+class SupremeSneak(Feature):
     def __init__(self):
         super().__init__(name="Supreme Sneak", origin="Thief Rogue Level 9")
 
@@ -459,7 +459,7 @@ class SupremeSneak(TextFeature):
         return description
 
 
-class UseMagicDevice(TextFeature):
+class UseMagicDevice(Feature):
     def __init__(self):
         super().__init__(name="Use Magic Device", origin="Thief Rogue Level 13")
 
@@ -473,7 +473,7 @@ class UseMagicDevice(TextFeature):
         return description
 
 
-class ThiefsReflexes(TextFeature):
+class ThiefsReflexes(Feature):
     def __init__(self):
         super().__init__(name="Thief's Reflexes", origin="Thief Rogue Level 17")
 
@@ -485,7 +485,7 @@ class ThiefsReflexes(TextFeature):
 ### Phantom Rogue Features ###
 
 
-class WailsFromTheGrave(TextFeature):
+class WailsFromTheGrave(Feature):
     def __init__(self):
         super().__init__(name="Wails from the Grave", origin="Phantom Rogue Level 3")
 
@@ -501,7 +501,7 @@ class WailsFromTheGrave(TextFeature):
         return StringUtils.add_boxes(description, uses, regain_all_on="long rest")
 
 
-class WhispersOfTheDead(TextFeature):
+class WhispersOfTheDead(Feature):
     def __init__(self):
         super().__init__(name="Whispers of the Dead", origin="Phantom Rogue Level 3")
 
@@ -510,7 +510,7 @@ class WhispersOfTheDead(TextFeature):
         return description
 
 
-class TokensOfTheDeparted(TextFeature):
+class TokensOfTheDeparted(Feature):
     def __init__(self):
         super().__init__(name="Tokens of the Departed", origin="Phantom Rogue Level 9")
 
@@ -529,7 +529,7 @@ class TokensOfTheDeparted(TextFeature):
         return description
 
 
-class VoiceOfDeath(TextFeature):
+class VoiceOfDeath(Feature):
     def __init__(self):
         super().__init__(name="Voice of Death", origin="Phantom Rogue Level 9")
 
@@ -541,7 +541,7 @@ class VoiceOfDeath(TextFeature):
         return description
 
 
-class GhostWalk(TextFeature):
+class GhostWalk(Feature):
     def __init__(self):
         super().__init__(name="Ghost Walk", origin="Phantom Rogue Level 13")
 
@@ -555,7 +555,7 @@ class GhostWalk(TextFeature):
         return description
 
 
-class DeathsFriend(TextFeature):
+class DeathsFriend(Feature):
     def __init__(self):
         super().__init__(name="Death's Friend", origin="Phantom Rogue Level 17")
 

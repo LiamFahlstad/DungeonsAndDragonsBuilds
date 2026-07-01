@@ -1,11 +1,11 @@
 from typing import Optional
 
 from Definitions import Ability, DiceRollCondition, Skill
-from Features.BaseFeatures import CharacterFeature
+from Features.BaseFeatures import Feature
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
-class AbstractArmor(CharacterFeature):
+class AbstractArmor(Feature):
     """An abstract class for armor features."""
 
     def __init__(self, name: str, description: Optional[str] = None):

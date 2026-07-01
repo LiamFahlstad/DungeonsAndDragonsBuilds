@@ -1,7 +1,7 @@
 from enum import Enum
 
 from Definitions import CreatureSize
-from Features.BaseFeatures import TextFeature
+from Features.BaseFeatures import Feature
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
@@ -18,7 +18,7 @@ class GiantAncestryType(str, Enum):
     STORM_GIANT = "Storm Giant"
 
 
-class LargeForm(TextFeature):
+class LargeForm(Feature):
     def __init__(self):
         super().__init__(name="Large Form", origin="Goliath Trait")
 
@@ -26,7 +26,7 @@ class LargeForm(TextFeature):
         return "Starting at character level 5, you can change your size to Large as a Bonus Action if you're in a big enough space. This transformation lasts for 10 minutes or until you end it (no action required). For that duration, you have Advantage on Strength checks, and your Speed increases by 10 feet. Once you use this trait, you can't use it again until you finish a Long Rest."
 
 
-class PowerfulBuild(TextFeature):
+class PowerfulBuild(Feature):
     def __init__(self):
         super().__init__(name="Goliath Nimbleness", origin="Goliath Trait")
 
@@ -34,7 +34,7 @@ class PowerfulBuild(TextFeature):
         return "You have Advantage on any ability check you make to end the Grappled condition. You also count as one size larger when determining your carrying capacity."
 
 
-class GiantAncestry(TextFeature):
+class GiantAncestry(Feature):
     def __init__(self, giant_ancestry_type: GiantAncestryType):
         self.giant_ancestry_type = giant_ancestry_type
         super().__init__(name="Giant Ancestry", origin="Goliath Trait")

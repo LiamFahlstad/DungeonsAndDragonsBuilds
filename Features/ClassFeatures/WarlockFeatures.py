@@ -1,12 +1,12 @@
 from Definitions import Ability
-from Features.BaseFeatures import TextFeature
+from Features.BaseFeatures import Feature
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
 WARLOCK_HIT_DIE = 8
 
 
-class ReplacingEldritchInvocations(TextFeature):
+class ReplacingEldritchInvocations(Feature):
     def __init__(self):
         super().__init__(
             name="Replacing Eldritch Invocations", origin="Warlock Level 1"
@@ -21,7 +21,7 @@ class ReplacingEldritchInvocations(TextFeature):
         return description
 
 
-class ReplacingCantripsAndSpells(TextFeature):
+class ReplacingCantripsAndSpells(Feature):
     def __init__(self):
         super().__init__(name="Replacing Cantrips and Spells", origin="Warlock Level 1")
 
@@ -33,7 +33,7 @@ class ReplacingCantripsAndSpells(TextFeature):
         return description
 
 
-class RegainingSpellSlots(TextFeature):
+class RegainingSpellSlots(Feature):
     def __init__(self):
         super().__init__(name="Regaining Spell Slots", origin="Warlock Level 1")
 
@@ -42,7 +42,7 @@ class RegainingSpellSlots(TextFeature):
         return description
 
 
-class MagicalCunning(TextFeature):
+class MagicalCunning(Feature):
     def __init__(self):
         super().__init__(name="Magical Cunning", origin="Warlock Level 2")
 
@@ -51,7 +51,7 @@ class MagicalCunning(TextFeature):
         return description
 
 
-class ContactPatron(TextFeature):
+class ContactPatron(Feature):
     def __init__(self):
         super().__init__(name="Contact Patron", origin="Warlock Level 9")
 
@@ -63,7 +63,7 @@ class ContactPatron(TextFeature):
         return description
 
 
-class MysticArcanum(TextFeature):
+class MysticArcanum(Feature):
     def __init__(self):
         super().__init__(name="Mystic Arcanum", origin="Warlock Level 11")
 
@@ -77,7 +77,7 @@ class MysticArcanum(TextFeature):
         return description
 
 
-class EldritchMaster(TextFeature):
+class EldritchMaster(Feature):
     def __init__(self):
         super().__init__(name="Eldritch Master", origin="Warlock Level 20")
 
@@ -89,7 +89,7 @@ class EldritchMaster(TextFeature):
 ### Archfey Patron Features ###
 
 
-class ArchfeySpells(TextFeature):
+class ArchfeySpells(Feature):
     def __init__(self):
         super().__init__(name="Archfey Spells", origin="Archfey Patron Warlock Level 3")
 
@@ -98,7 +98,7 @@ class ArchfeySpells(TextFeature):
         return description
 
 
-class StepsOfTheFey(TextFeature):
+class StepsOfTheFey(Feature):
     def __init__(self):
         super().__init__(
             name="Steps of the Fey", origin="Archfey Patron Warlock Level 3"
@@ -116,7 +116,7 @@ class StepsOfTheFey(TextFeature):
         return StringUtils.add_boxes(description, uses, regain_all_on="long rest")
 
 
-class MistyEscape(TextFeature):
+class MistyEscape(Feature):
     def __init__(self):
         super().__init__(name="Misty Escape", origin="Archfey Patron Warlock Level 6")
 
@@ -130,7 +130,7 @@ class MistyEscape(TextFeature):
         return description
 
 
-class BeguilingDefenses(TextFeature):
+class BeguilingDefenses(Feature):
     def __init__(self):
         super().__init__(
             name="Beguiling Defenses", origin="Archfey Patron Warlock Level 10"
@@ -144,7 +144,7 @@ class BeguilingDefenses(TextFeature):
         return description
 
 
-class BewitchingMagic(TextFeature):
+class BewitchingMagic(Feature):
     def __init__(self):
         super().__init__(
             name="Bewitching Magic", origin="Archfey Patron Warlock Level 14"
@@ -158,7 +158,7 @@ class BewitchingMagic(TextFeature):
 ### Celestial Patron Features ###
 
 
-class HealingLight(TextFeature):
+class HealingLight(Feature):
     def __init__(self):
         super().__init__(
             name="Healing Light", origin="Celestial Patron Warlock Level 3"
@@ -172,7 +172,7 @@ class HealingLight(TextFeature):
         return description
 
 
-class RadiantSoul(TextFeature):
+class RadiantSoul(Feature):
     def __init__(self):
         super().__init__(name="Radiant Soul", origin="Celestial Patron Warlock Level 6")
 
@@ -181,7 +181,7 @@ class RadiantSoul(TextFeature):
         return description
 
 
-class CelestialResilience(TextFeature):
+class CelestialResilience(Feature):
     def __init__(self):
         super().__init__(
             name="Celestial Resilience", origin="Celestial Patron Warlock Level 10"
@@ -192,7 +192,7 @@ class CelestialResilience(TextFeature):
         return description
 
 
-class SearingVengeance(TextFeature):
+class SearingVengeance(Feature):
     def __init__(self):
         super().__init__(
             name="Searing Vengeance", origin="Celestial Patron Warlock Level 14"
@@ -209,7 +209,7 @@ class SearingVengeance(TextFeature):
 ### Fiend Patron Features ###
 
 
-class DarkOnesBlessing(TextFeature):
+class DarkOnesBlessing(Feature):
     def __init__(self):
         super().__init__(
             name="Dark One's Blessing", origin="Fiend Patron Warlock Level 3"
@@ -220,7 +220,7 @@ class DarkOnesBlessing(TextFeature):
         return description
 
 
-class DarkOnesOwnLuck(TextFeature):
+class DarkOnesOwnLuck(Feature):
     def __init__(self):
         super().__init__(
             name="Dark One's Own Luck", origin="Fiend Patron Warlock Level 6"
@@ -236,7 +236,7 @@ class DarkOnesOwnLuck(TextFeature):
         return StringUtils.add_boxes(description, uses, regain_all_on="long rest")
 
 
-class FiendishResilience(TextFeature):
+class FiendishResilience(Feature):
     def __init__(self):
         super().__init__(
             name="Fiendish Resilience", origin="Fiend Patron Warlock Level 10"
@@ -247,7 +247,7 @@ class FiendishResilience(TextFeature):
         return description
 
 
-class HurlThroughHell(TextFeature):
+class HurlThroughHell(Feature):
     def __init__(self):
         super().__init__(
             name="Hurl Through Hell", origin="Fiend Patron Warlock Level 14"
@@ -264,7 +264,7 @@ class HurlThroughHell(TextFeature):
 ### Great Old One Patron Features ###
 
 
-class AwakenedMind(TextFeature):
+class AwakenedMind(Feature):
     def __init__(self):
         super().__init__(
             name="Awakened Mind", origin="Great Old One Patron Warlock Level 3"
@@ -278,7 +278,7 @@ class AwakenedMind(TextFeature):
         return description
 
 
-class PsychicSpells(TextFeature):
+class PsychicSpells(Feature):
     def __init__(self):
         super().__init__(
             name="Psychic Spells", origin="Great Old One Patron Warlock Level 3"
@@ -289,7 +289,7 @@ class PsychicSpells(TextFeature):
         return description
 
 
-class ClairvoyantCombatant(TextFeature):
+class ClairvoyantCombatant(Feature):
     def __init__(self):
         super().__init__(
             name="Clairvoyant Combatant", origin="Great Old One Patron Warlock Level 6"
@@ -303,7 +303,7 @@ class ClairvoyantCombatant(TextFeature):
         return description
 
 
-class EldritchHex(TextFeature):
+class EldritchHex(Feature):
     def __init__(self):
         super().__init__(
             name="Eldritch Hex", origin="Great Old One Patron Warlock Level 10"
@@ -314,7 +314,7 @@ class EldritchHex(TextFeature):
         return description
 
 
-class ThoughtShield(TextFeature):
+class ThoughtShield(Feature):
     def __init__(self):
         super().__init__(
             name="Thought Shield", origin="Great Old One Patron Warlock Level 10"
@@ -325,7 +325,7 @@ class ThoughtShield(TextFeature):
         return description
 
 
-class CreateThrall(TextFeature):
+class CreateThrall(Feature):
     def __init__(self):
         super().__init__(
             name="Create Thrall", origin="Great Old One Patron Warlock Level 14"
@@ -342,7 +342,7 @@ class CreateThrall(TextFeature):
 ### Undead Patron Features ###
 
 
-class FormOfDread(TextFeature):
+class FormOfDread(Feature):
     def __init__(self):
         super().__init__(name="Form of Dread", origin="Undead Patron Warlock Level 3")
 
@@ -358,7 +358,7 @@ class FormOfDread(TextFeature):
         return StringUtils.add_boxes(description, uses, regain_all_on="long rest")
 
 
-class UndeadSpells(TextFeature):
+class UndeadSpells(Feature):
     def __init__(self):
         super().__init__(name="Undead Spells", origin="Undead Patron Warlock Level 3")
 
@@ -375,7 +375,7 @@ class UndeadSpells(TextFeature):
         return description
 
 
-class GraveTouched(TextFeature):
+class GraveTouched(Feature):
     def __init__(self):
         super().__init__(name="Grave Touched", origin="Undead Patron Warlock Level 6")
 
@@ -389,7 +389,7 @@ class GraveTouched(TextFeature):
         return description
 
 
-class NecroticHusk(TextFeature):
+class NecroticHusk(Feature):
     def __init__(self):
         super().__init__(name="Necrotic Husk", origin="Undead Patron Warlock Level 10")
 
@@ -403,7 +403,7 @@ class NecroticHusk(TextFeature):
         return description
 
 
-class SuperiorDread(TextFeature):
+class SuperiorDread(Feature):
     def __init__(self):
         super().__init__(name="Superior Dread", origin="Undead Patron Warlock Level 14")
 

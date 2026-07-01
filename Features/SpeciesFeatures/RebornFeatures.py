@@ -1,12 +1,12 @@
 from Definitions import Skill
-from Features.BaseFeatures import CharacterFeature, TextFeature
+from Features.BaseFeatures import Feature
 from Features.SubFeatures import SkillProficiencyChoice
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 SPEED = 30  # Given by your species
 
 
-class EscapedDeath(TextFeature):
+class EscapedDeath(Feature):
     def __init__(self):
         super().__init__(name="Escaped Death", origin="Reborn Trait")
 
@@ -14,7 +14,7 @@ class EscapedDeath(TextFeature):
         return "You have Advantage on Death Saving Throws."
 
 
-class Everlasting(TextFeature):
+class Everlasting(Feature):
     def __init__(self):
         super().__init__(name="Everlasting", origin="Reborn Trait")
 
@@ -23,7 +23,7 @@ class Everlasting(TextFeature):
         return description
 
 
-class RebornKnowledge(TextFeature):
+class RebornKnowledge(Feature):
     def __init__(self):
         super().__init__(name="Reborn Knowledge", origin="Reborn Trait")
 
@@ -35,7 +35,7 @@ class RebornKnowledge(TextFeature):
         return description
 
 
-class RebornKnowledgeSkill(CharacterFeature):
+class RebornKnowledgeSkill(Feature):
     def __init__(self, skill: Skill):
         self._choice = SkillProficiencyChoice(
             [skill], list(Skill), count=1, error_prefix="RebornKnowledgeSkill"
@@ -45,7 +45,7 @@ class RebornKnowledgeSkill(CharacterFeature):
         self._choice.apply(character_stat_block)
 
 
-class StrangeEndurance(TextFeature):
+class StrangeEndurance(Feature):
     def __init__(self):
         super().__init__(name="Strange Endurance", origin="Reborn Trait")
 

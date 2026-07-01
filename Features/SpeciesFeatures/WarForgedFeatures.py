@@ -1,5 +1,5 @@
 from Definitions import CreatureSize, Skill
-from Features.BaseFeatures import CharacterFeature, TextFeature
+from Features.BaseFeatures import Feature
 from Features.SubFeatures import SkillProficiencyChoice
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
@@ -7,7 +7,7 @@ SPEED = 30  # Given by your species
 SIZE = CreatureSize.MEDIUM  # Given by your species
 
 
-class ConstructResilience(TextFeature):
+class ConstructResilience(Feature):
     def __init__(self):
         super().__init__(name="Construct Resilience", origin="Warforged Trait")
 
@@ -15,7 +15,7 @@ class ConstructResilience(TextFeature):
         return "You have Resistance to Poison damage. You also have Advantage on saving throws to avoid or end the Poisoned condition."
 
 
-class SentrysRest(TextFeature):
+class SentrysRest(Feature):
     def __init__(self):
         super().__init__(name="Sentry's Rest", origin="Warforged Trait")
 
@@ -23,7 +23,7 @@ class SentrysRest(TextFeature):
         return "You don’t need to sleep, and magic can’t put you to sleep. You can finish a Long Rest in 6 hours if you spend those hours in an inactive, motionless state. During this time, you appear inert but remain conscious."
 
 
-class Tireless(TextFeature):
+class Tireless(Feature):
     def __init__(self):
         super().__init__(name="Tireless", origin="Warforged Trait")
 
@@ -31,12 +31,12 @@ class Tireless(TextFeature):
         return "You don’t gain Exhaustion levels from dehydration, malnutrition, or suffocation."
 
 
-class IntegratedProtection(CharacterFeature):
+class IntegratedProtection(Feature):
     def apply(self, character_stat_block: CharacterStatBlock):
         character_stat_block.combat.increase_armor_class(1)
 
 
-class SpecializedDesign(CharacterFeature):
+class SpecializedDesign(Feature):
     def __init__(self, skill: Skill):
         self._choice = SkillProficiencyChoice(
             [skill], list(Skill), count=1, error_prefix="SpecializedDesign"

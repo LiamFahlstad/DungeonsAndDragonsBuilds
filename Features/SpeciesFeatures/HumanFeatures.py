@@ -1,5 +1,5 @@
 from Definitions import CreatureSize, Skill
-from Features.BaseFeatures import CharacterFeature, TextFeature
+from Features.BaseFeatures import Feature
 from Features.SubFeatures import SkillProficiencyChoice
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
@@ -7,7 +7,7 @@ SPEED = 30  # Given by your species
 SIZE = CreatureSize.MEDIUM  # Given by your species
 
 
-class Resourceful(TextFeature):
+class Resourceful(Feature):
     def __init__(self):
         super().__init__(name="Resourceful", origin="Human Trait")
 
@@ -15,7 +15,7 @@ class Resourceful(TextFeature):
         return "You gain Heroic Inspiration whenever you finish a Long Rest.\n"
 
 
-class Skillful(CharacterFeature):
+class Skillful(Feature):
     def __init__(self, skill: Skill):
         self._choice = SkillProficiencyChoice(
             [skill], list(Skill), count=1, error_prefix="Skillful"
@@ -25,7 +25,7 @@ class Skillful(CharacterFeature):
         self._choice.apply(character_stat_block)
 
 
-class Versatile(TextFeature):
+class Versatile(Feature):
     def __init__(self):
         super().__init__(name="Versatile", origin="Human Trait")
 

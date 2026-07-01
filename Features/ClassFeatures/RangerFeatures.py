@@ -1,7 +1,7 @@
 from enum import Enum
 
 from Definitions import Ability, Skill
-from Features.BaseFeatures import CharacterFeature, TextFeature
+from Features.BaseFeatures import Feature
 from Features.SubFeatures import SkillExpertiseChoice
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
@@ -9,7 +9,7 @@ from Utils import StringUtils
 RANGER_HIT_DIE = 10
 
 
-class SpellCasting(TextFeature):
+class SpellCasting(Feature):
     def __init__(self):
         super().__init__(name="Spell Casting", origin="Ranger Level 1")
 
@@ -23,7 +23,7 @@ class SpellCasting(TextFeature):
         return description
 
 
-class ReplacingWeaponMasteries(TextFeature):
+class ReplacingWeaponMasteries(Feature):
     def __init__(self):
         super().__init__(name="Replacing Weapon Masteries", origin="Ranger Level 1")
 
@@ -32,7 +32,7 @@ class ReplacingWeaponMasteries(TextFeature):
         return description
 
 
-class FavoredEnemy(TextFeature):
+class FavoredEnemy(Feature):
     def __init__(self):
         super().__init__(name="Favored Enemy", origin="Ranger Level 1")
 
@@ -57,7 +57,7 @@ class FavoredEnemy(TextFeature):
         )
 
 
-class DeftExplorerExpertise(CharacterFeature):
+class DeftExplorerExpertise(Feature):
     def __init__(self, skill: Skill):
         self._choice = SkillExpertiseChoice(
             [skill], list(Skill), count=1, error_prefix="Deft Explorer Expertise"
@@ -67,7 +67,7 @@ class DeftExplorerExpertise(CharacterFeature):
         self._choice.apply(character_stat_block)
 
 
-class DeftExplorerLanguages(TextFeature):
+class DeftExplorerLanguages(Feature):
     def __init__(self):
         super().__init__(name="Deft Explorer", origin="Ranger Level 2")
 
@@ -76,7 +76,7 @@ class DeftExplorerLanguages(TextFeature):
         return description
 
 
-class ExtraAttack(TextFeature):
+class ExtraAttack(Feature):
     def __init__(self):
         super().__init__(name="Extra Attack", origin="Ranger Level 5")
 
@@ -85,7 +85,7 @@ class ExtraAttack(TextFeature):
         return description
 
 
-class Roving(TextFeature):
+class Roving(Feature):
     def __init__(self):
         super().__init__(name="Roving", origin="Ranger Level 6")
 
@@ -94,7 +94,7 @@ class Roving(TextFeature):
         return description
 
 
-class Expertise(CharacterFeature):
+class Expertise(Feature):
     def __init__(self, skill_1: Skill, skill_2: Skill):
         self._choice = SkillExpertiseChoice(
             [skill_1, skill_2], list(Skill), count=2, error_prefix="Ranger Expertise"
@@ -104,7 +104,7 @@ class Expertise(CharacterFeature):
         self._choice.apply(character_stat_block)
 
 
-class Tireless(TextFeature):
+class Tireless(Feature):
     def __init__(self):
         super().__init__(name="Tireless", origin="Ranger Level 10")
 
@@ -120,7 +120,7 @@ class Tireless(TextFeature):
         return StringUtils.add_boxes(description, uses, regain_all_on="long rest")
 
 
-class RelentlessHunter(TextFeature):
+class RelentlessHunter(Feature):
     def __init__(self):
         super().__init__(name="Relentless Hunter", origin="Ranger Level 13")
 
@@ -129,7 +129,7 @@ class RelentlessHunter(TextFeature):
         return description
 
 
-class NaturesVeil(TextFeature):
+class NaturesVeil(Feature):
     def __init__(self):
         super().__init__(name="Nature's Veil", origin="Ranger Level 14")
 
@@ -143,7 +143,7 @@ class NaturesVeil(TextFeature):
         return StringUtils.add_boxes(description, uses, regain_all_on="long rest")
 
 
-class PreciseHunter(TextFeature):
+class PreciseHunter(Feature):
     def __init__(self):
         super().__init__(name="Precise Hunter", origin="Ranger Level 17")
 
@@ -152,7 +152,7 @@ class PreciseHunter(TextFeature):
         return description
 
 
-class FeralSenses(TextFeature):
+class FeralSenses(Feature):
     def __init__(self):
         super().__init__(name="Feral Senses", origin="Ranger Level 18")
 
@@ -161,7 +161,7 @@ class FeralSenses(TextFeature):
         return description
 
 
-class FoeSlayer(TextFeature):
+class FoeSlayer(Feature):
     def __init__(self):
         super().__init__(name="Foe Slayer", origin="Ranger Level 20")
 
@@ -179,7 +179,7 @@ class CompanionType(str, Enum):
     BEAST_OF_THE_SKY = "Beast of the Sky"
 
 
-class PrimalCompanion(TextFeature):
+class PrimalCompanion(Feature):
     def __init__(self, companion_type: CompanionType):
         self.companion_type = companion_type
         super().__init__(name="Primal Companion", origin="Beast Master Ranger Level 3")
@@ -194,7 +194,7 @@ class PrimalCompanion(TextFeature):
         return description
 
 
-class ExceptionalTraining(TextFeature):
+class ExceptionalTraining(Feature):
     def __init__(self):
         super().__init__(
             name="Exceptional Training", origin="Beast Master Ranger Level 7"
@@ -208,7 +208,7 @@ class ExceptionalTraining(TextFeature):
         return description
 
 
-class BestialFury(TextFeature):
+class BestialFury(Feature):
     def __init__(self):
         super().__init__(name="Bestial Fury", origin="Beast Master Ranger Level 11")
 
@@ -220,7 +220,7 @@ class BestialFury(TextFeature):
         return description
 
 
-class ShareSpells(TextFeature):
+class ShareSpells(Feature):
     def __init__(self):
         super().__init__(name="Share Spells", origin="Beast Master Ranger Level 15")
 
@@ -232,7 +232,7 @@ class ShareSpells(TextFeature):
 ### Fey Wanderer Ranger Features ###
 
 
-class DreadfulStrikes(TextFeature):
+class DreadfulStrikes(Feature):
     def __init__(self):
         super().__init__(name="Dreadful Strikes", origin="Fey Wanderer Ranger Level 3")
 
@@ -241,7 +241,7 @@ class DreadfulStrikes(TextFeature):
         return description
 
 
-class FeyWandererSpells(TextFeature):
+class FeyWandererSpells(Feature):
     def __init__(self):
         super().__init__(
             name="Fey Wanderer Spells", origin="Fey Wanderer Ranger Level 3"
@@ -252,7 +252,7 @@ class FeyWandererSpells(TextFeature):
         return description
 
 
-class OtherworldlyGlamour(TextFeature):
+class OtherworldlyGlamour(Feature):
     def __init__(self):
         super().__init__(
             name="Otherworldly Glamour", origin="Fey Wanderer Ranger Level 3"
@@ -266,7 +266,7 @@ class OtherworldlyGlamour(TextFeature):
         return description
 
 
-class BeguilingTwist(TextFeature):
+class BeguilingTwist(Feature):
     def __init__(self):
         super().__init__(name="Beguiling Twist", origin="Fey Wanderer Ranger Level 7")
 
@@ -278,7 +278,7 @@ class BeguilingTwist(TextFeature):
         return description
 
 
-class FeyReinforcements(TextFeature):
+class FeyReinforcements(Feature):
     def __init__(self):
         super().__init__(
             name="Fey Reinforcements", origin="Fey Wanderer Ranger Level 11"
@@ -292,7 +292,7 @@ class FeyReinforcements(TextFeature):
         return description
 
 
-class MistyWanderer(TextFeature):
+class MistyWanderer(Feature):
     def __init__(self):
         super().__init__(name="Misty Wanderer", origin="Fey Wanderer Ranger Level 15")
 
@@ -309,7 +309,7 @@ class MistyWanderer(TextFeature):
 ### Gloom Stalker Ranger Features ###
 
 
-class DreadAmbusher(TextFeature):
+class DreadAmbusher(Feature):
     def __init__(self):
         super().__init__(name="Dread Ambusher", origin="Gloom Stalker Ranger Level 3")
 
@@ -325,7 +325,7 @@ class DreadAmbusher(TextFeature):
         return StringUtils.add_boxes(description, uses, regain_all_on="long rest")
 
 
-class GloomStalkerSpells(TextFeature):
+class GloomStalkerSpells(Feature):
     def __init__(self):
         super().__init__(
             name="Gloom Stalker Spells", origin="Gloom Stalker Ranger Level 3"
@@ -336,7 +336,7 @@ class GloomStalkerSpells(TextFeature):
         return description
 
 
-class UmbralSight(TextFeature):
+class UmbralSight(Feature):
     def __init__(self):
         super().__init__(name="Umbral Sight", origin="Gloom Stalker Ranger Level 3")
 
@@ -348,7 +348,7 @@ class UmbralSight(TextFeature):
         return description
 
 
-class IronMind(TextFeature):
+class IronMind(Feature):
     def __init__(self):
         super().__init__(name="Iron Mind", origin="Gloom Stalker Ranger Level 7")
 
@@ -357,7 +357,7 @@ class IronMind(TextFeature):
         return description
 
 
-class StalkersFlurry(TextFeature):
+class StalkersFlurry(Feature):
     def __init__(self):
         super().__init__(
             name="Stalker's Flurry", origin="Gloom Stalker Ranger Level 11"
@@ -372,7 +372,7 @@ class StalkersFlurry(TextFeature):
         return description
 
 
-class ShadowyDodge(TextFeature):
+class ShadowyDodge(Feature):
     def __init__(self):
         super().__init__(name="Shadowy Dodge", origin="Gloom Stalker Ranger Level 15")
 
@@ -384,7 +384,7 @@ class ShadowyDodge(TextFeature):
 ### Hunter Ranger Features ###
 
 
-class HuntersLore(TextFeature):
+class HuntersLore(Feature):
     def __init__(self):
         super().__init__(name="Hunter's Lore", origin="Hunter Ranger Level 3")
 
@@ -393,7 +393,7 @@ class HuntersLore(TextFeature):
         return description
 
 
-class HuntersPrey(TextFeature):
+class HuntersPrey(Feature):
     def __init__(self):
         super().__init__(name="Hunter's Prey", origin="Hunter Ranger Level 3")
 
@@ -406,7 +406,7 @@ class HuntersPrey(TextFeature):
         return description
 
 
-class DefensiveTactics(TextFeature):
+class DefensiveTactics(Feature):
     def __init__(self):
         super().__init__(name="Defensive Tactics", origin="Hunter Ranger Level 7")
 
@@ -419,7 +419,7 @@ class DefensiveTactics(TextFeature):
         return description
 
 
-class SuperiorHuntersPrey(TextFeature):
+class SuperiorHuntersPrey(Feature):
     def __init__(self):
         super().__init__(name="Superior Hunter's Prey", origin="Hunter Ranger Level 11")
 
@@ -428,7 +428,7 @@ class SuperiorHuntersPrey(TextFeature):
         return description
 
 
-class SuperiorHuntersDefense(TextFeature):
+class SuperiorHuntersDefense(Feature):
     def __init__(self):
         super().__init__(
             name="Superior Hunter's Defense", origin="Hunter Ranger Level 15"
@@ -442,7 +442,7 @@ class SuperiorHuntersDefense(TextFeature):
 ### Winter Walker Ranger Features ###
 
 
-class FrigidExplorer(TextFeature):
+class FrigidExplorer(Feature):
     def __init__(self):
         super().__init__(name="Frigid Explorer", origin="Winter Walker Ranger Level 3")
 
@@ -456,7 +456,7 @@ class FrigidExplorer(TextFeature):
         return description
 
 
-class HuntersRime(TextFeature):
+class HuntersRime(Feature):
     def __init__(self):
         super().__init__(name="Hunter's Rime", origin="Winter Walker Ranger Level 3")
 
@@ -468,7 +468,7 @@ class HuntersRime(TextFeature):
         return description
 
 
-class WinterWalkerSpells(TextFeature):
+class WinterWalkerSpells(Feature):
     def __init__(self):
         super().__init__(
             name="Winter Walker Spells", origin="Winter Walker Ranger Level 3"
@@ -479,7 +479,7 @@ class WinterWalkerSpells(TextFeature):
         return description
 
 
-class FortifyingSoul(TextFeature):
+class FortifyingSoul(Feature):
     def __init__(self):
         super().__init__(name="Fortifying Soul", origin="Winter Walker Ranger Level 7")
 
@@ -491,7 +491,7 @@ class FortifyingSoul(TextFeature):
         return description
 
 
-class ChillingRetribution(TextFeature):
+class ChillingRetribution(Feature):
     def __init__(self):
         super().__init__(
             name="Chilling Retribution", origin="Winter Walker Ranger Level 11"
@@ -507,7 +507,7 @@ class ChillingRetribution(TextFeature):
         return StringUtils.add_boxes(description, uses, regain_all_on="long rest")
 
 
-class FrozenHaunt(TextFeature):
+class FrozenHaunt(Feature):
     def __init__(self):
         super().__init__(name="Frozen Haunt", origin="Winter Walker Ranger Level 15")
 
@@ -523,7 +523,7 @@ class FrozenHaunt(TextFeature):
 ### Hollow Warden Ranger Features ###
 
 
-class HollowWardenSpells(TextFeature):
+class HollowWardenSpells(Feature):
     def __init__(self):
         super().__init__(
             name="Hollow Warden Spells", origin="Hollow Warden Ranger Level 3"
@@ -543,7 +543,7 @@ class HollowWardenSpells(TextFeature):
         return description
 
 
-class WrathOfTheWild(TextFeature):
+class WrathOfTheWild(Feature):
     def __init__(self):
         super().__init__(
             name="Wrath of the Wild", origin="Hollow Warden Ranger Level 3"
@@ -559,7 +559,7 @@ class WrathOfTheWild(TextFeature):
         return description
 
 
-class HungeringMight(TextFeature):
+class HungeringMight(Feature):
     def __init__(self):
         super().__init__(name="Hungering Might", origin="Hollow Warden Ranger Level 7")
 
@@ -571,7 +571,7 @@ class HungeringMight(TextFeature):
         return description
 
 
-class RotAndViolence(TextFeature):
+class RotAndViolence(Feature):
     def __init__(self):
         super().__init__(
             name="Rot and Violence", origin="Hollow Warden Ranger Level 11"
@@ -586,7 +586,7 @@ class RotAndViolence(TextFeature):
         return description
 
 
-class AncientMight(TextFeature):
+class AncientMight(Feature):
     def __init__(self):
         super().__init__(name="Ancient Might", origin="Hollow Warden Ranger Level 15")
 

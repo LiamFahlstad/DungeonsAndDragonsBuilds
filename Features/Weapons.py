@@ -5,7 +5,7 @@ from typing import Optional, TextIO
 
 import DamageCalculator
 from Definitions import Ability, Die
-from Features.BaseFeatures import TextFeature
+from Features.BaseFeatures import Feature
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
@@ -125,7 +125,7 @@ class WeaponsStats:
 
 
 @dataclass
-class AbstractWeapon(TextFeature):
+class AbstractWeapon(Feature):
     """An abstract class for armor features."""
 
     player_is_proficient: bool = False

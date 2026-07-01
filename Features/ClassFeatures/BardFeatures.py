@@ -1,5 +1,5 @@
 from Definitions import Ability, Skill
-from Features.BaseFeatures import CharacterFeature, TextFeature
+from Features.BaseFeatures import Feature
 from Features.SubFeatures import SkillExpertiseChoice, SkillProficiencyChoice
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
@@ -7,7 +7,7 @@ from Utils import StringUtils
 BARD_HIT_DIE = 8
 
 
-class Spellcasting(TextFeature):
+class Spellcasting(Feature):
     def __init__(self):
         super().__init__(name="Spellcasting", origin="Bard Level 1")
 
@@ -22,7 +22,7 @@ class Spellcasting(TextFeature):
         return description
 
 
-class BardicInspiration(TextFeature):
+class BardicInspiration(Feature):
     def __init__(self):
         super().__init__(name="Bardic Inspiration", origin="Bard Level 1")
 
@@ -39,7 +39,7 @@ class BardicInspiration(TextFeature):
         )
 
 
-class Expertise1(CharacterFeature):
+class Expertise1(Feature):
     def __init__(self, skill_1: Skill, skill_2: Skill):
         self._choice = SkillExpertiseChoice(
             [skill_1, skill_2], list(Skill), count=2, error_prefix="Bard Expertise"
@@ -49,7 +49,7 @@ class Expertise1(CharacterFeature):
         self._choice.apply(character_stat_block)
 
 
-class Expertise2(CharacterFeature):
+class Expertise2(Feature):
     def __init__(self, skill_1: Skill, skill_2: Skill):
         self._choice = SkillExpertiseChoice(
             [skill_1, skill_2], list(Skill), count=2, error_prefix="Bard Expertise"
@@ -59,7 +59,7 @@ class Expertise2(CharacterFeature):
         self._choice.apply(character_stat_block)
 
 
-class JackOfAllTrades(CharacterFeature):
+class JackOfAllTrades(Feature):
     def apply(self, character_stat_block: CharacterStatBlock):
         for skill in Skill:
             if not character_stat_block.skills.is_proficient(skill):
@@ -68,7 +68,7 @@ class JackOfAllTrades(CharacterFeature):
                 )
 
 
-class FontOfInspiration(TextFeature):
+class FontOfInspiration(Feature):
     def __init__(self):
         super().__init__(name="Font of Inspiration", origin="Bard Level 5")
 
@@ -80,7 +80,7 @@ class FontOfInspiration(TextFeature):
         return description
 
 
-class Countercharm(TextFeature):
+class Countercharm(Feature):
     def __init__(self):
         super().__init__(name="Countercharm", origin="Bard Level 7")
 
@@ -89,7 +89,7 @@ class Countercharm(TextFeature):
         return description
 
 
-class MagicalSecrets(TextFeature):
+class MagicalSecrets(Feature):
     def __init__(self):
         super().__init__(name="Magical Secrets", origin="Bard Level 10")
 
@@ -98,7 +98,7 @@ class MagicalSecrets(TextFeature):
         return description
 
 
-class SuperiorInspiration(TextFeature):
+class SuperiorInspiration(Feature):
     def __init__(self):
         super().__init__(name="Superior Inspiration", origin="Bard Level 18")
 
@@ -107,7 +107,7 @@ class SuperiorInspiration(TextFeature):
         return description
 
 
-class WordsOfCreation(TextFeature):
+class WordsOfCreation(Feature):
     def __init__(self):
         super().__init__(name="Words of Creation", origin="Bard Level 20")
 
@@ -119,7 +119,7 @@ class WordsOfCreation(TextFeature):
 ### College of Dance Bard Features ###
 
 
-class DazzlingFootwork(TextFeature):
+class DazzlingFootwork(Feature):
     def __init__(self):
         super().__init__(
             name="Dazzling Footwork", origin="College of Dance Bard Level 3"
@@ -136,7 +136,7 @@ class DazzlingFootwork(TextFeature):
         return description
 
 
-class InspiringMovement(TextFeature):
+class InspiringMovement(Feature):
     def __init__(self):
         super().__init__(
             name="Inspiring Movement", origin="College of Dance Bard Level 6"
@@ -150,7 +150,7 @@ class InspiringMovement(TextFeature):
         return description
 
 
-class TandemFootwork(TextFeature):
+class TandemFootwork(Feature):
     def __init__(self):
         super().__init__(name="Tandem Footwork", origin="College of Dance Bard Level 6")
 
@@ -159,7 +159,7 @@ class TandemFootwork(TextFeature):
         return description
 
 
-class LeadingEvasion(TextFeature):
+class LeadingEvasion(Feature):
     def __init__(self):
         super().__init__(
             name="Leading Evasion", origin="College of Dance Bard Level 14"
@@ -176,7 +176,7 @@ class LeadingEvasion(TextFeature):
 ### College of Glamour Bard Features ###
 
 
-class BeguilingMagic(TextFeature):
+class BeguilingMagic(Feature):
     def __init__(self):
         super().__init__(
             name="Beguiling Magic", origin="College of Glamour Bard Level 3"
@@ -191,7 +191,7 @@ class BeguilingMagic(TextFeature):
         return description
 
 
-class MantleOfInspiration(TextFeature):
+class MantleOfInspiration(Feature):
     def __init__(self):
         super().__init__(
             name="Mantle of Inspiration", origin="College of Glamour Bard Level 3"
@@ -202,7 +202,7 @@ class MantleOfInspiration(TextFeature):
         return description
 
 
-class MantleOfMajesty(TextFeature):
+class MantleOfMajesty(Feature):
     def __init__(self):
         super().__init__(
             name="Mantle of Majesty", origin="College of Glamour Bard Level 6"
@@ -218,7 +218,7 @@ class MantleOfMajesty(TextFeature):
         return description
 
 
-class UnbreakableMajesty(TextFeature):
+class UnbreakableMajesty(Feature):
     def __init__(self):
         super().__init__(
             name="Unbreakable Majesty", origin="College of Glamour Bard Level 14"
@@ -235,7 +235,7 @@ class UnbreakableMajesty(TextFeature):
 ### College of Lore Bard Features ###
 
 
-class BonusProficiencies(CharacterFeature):
+class BonusProficiencies(Feature):
     def __init__(self, skill_1: Skill, skill_2: Skill, skill_3: Skill):
         self._proficiency = SkillProficiencyChoice(
             [skill_1, skill_2, skill_3], list(Skill), count=3
@@ -245,7 +245,7 @@ class BonusProficiencies(CharacterFeature):
         self._proficiency.apply(character_stat_block)
 
 
-class CuttingWords(TextFeature):
+class CuttingWords(Feature):
     def __init__(self):
         super().__init__(name="Cutting Words", origin="College of Lore Bard Level 3")
 
@@ -254,7 +254,7 @@ class CuttingWords(TextFeature):
         return description
 
 
-class MagicalDiscoveries(TextFeature):
+class MagicalDiscoveries(Feature):
     def __init__(self):
         super().__init__(
             name="Magical Discoveries", origin="College of Lore Bard Level 6"
@@ -268,7 +268,7 @@ class MagicalDiscoveries(TextFeature):
         return description
 
 
-class PeerlessSkill(TextFeature):
+class PeerlessSkill(Feature):
     def __init__(self):
         super().__init__(name="Peerless Skill", origin="College of Lore Bard Level 14")
 
@@ -280,7 +280,7 @@ class PeerlessSkill(TextFeature):
 ### College of the Moon Bard Features ###
 
 
-class MoonsInspiration(TextFeature):
+class MoonsInspiration(Feature):
     def __init__(self):
         super().__init__(
             name="Moon's Inspiration", origin="College of the Moon Bard Level 3"
@@ -295,7 +295,7 @@ class MoonsInspiration(TextFeature):
         return description
 
 
-class PrimalLore(TextFeature):
+class PrimalLore(Feature):
     def __init__(self):
         super().__init__(name="Primal Lore", origin="College of the Moon Bard Level 3")
 
@@ -307,7 +307,7 @@ class PrimalLore(TextFeature):
         return description
 
 
-class BlessingOfMoonlight(TextFeature):
+class BlessingOfMoonlight(Feature):
     def __init__(self):
         super().__init__(
             name="Blessing of Moonlight", origin="College of the Moon Bard Level 6"
@@ -322,7 +322,7 @@ class BlessingOfMoonlight(TextFeature):
         return description
 
 
-class EventidesSplendor(TextFeature):
+class EventidesSplendor(Feature):
     def __init__(self):
         super().__init__(
             name="Eventide's Splendor", origin="College of the Moon Bard Level 14"
@@ -340,7 +340,7 @@ class EventidesSplendor(TextFeature):
 ### College of Valor Bard Features ###
 
 
-class CombatInspiration(TextFeature):
+class CombatInspiration(Feature):
     def __init__(self):
         super().__init__(
             name="Combat Inspiration", origin="College of Valor Bard Level 3"
@@ -355,7 +355,7 @@ class CombatInspiration(TextFeature):
         return description
 
 
-class MartialTraining(TextFeature):
+class MartialTraining(Feature):
     def __init__(self):
         super().__init__(
             name="Martial Training", origin="College of Valor Bard Level 3"
@@ -369,7 +369,7 @@ class MartialTraining(TextFeature):
         return description
 
 
-class ExtraAttack(TextFeature):
+class ExtraAttack(Feature):
     def __init__(self):
         super().__init__(name="Extra Attack", origin="College of Valor Bard Level 6")
 
@@ -381,7 +381,7 @@ class ExtraAttack(TextFeature):
         return description
 
 
-class BattleMagic(TextFeature):
+class BattleMagic(Feature):
     def __init__(self):
         super().__init__(name="Battle Magic", origin="College of Valor Bard Level 14")
 
@@ -393,7 +393,7 @@ class BattleMagic(TextFeature):
 ### College of Spirits Bard Features ###
 
 
-class Channeler(TextFeature):
+class Channeler(Feature):
     def __init__(self):
         super().__init__(name="Channeler", origin="College of Spirits Bard Level 3")
 
@@ -406,7 +406,7 @@ class Channeler(TextFeature):
         return description
 
 
-class SpiritsFromBeyond(TextFeature):
+class SpiritsFromBeyond(Feature):
     def __init__(self):
         super().__init__(
             name="Spirits from Beyond", origin="College of Spirits Bard Level 3"
@@ -435,7 +435,7 @@ class SpiritsFromBeyond(TextFeature):
         return description
 
 
-class EmpoweredChanneling(TextFeature):
+class EmpoweredChanneling(Feature):
     def __init__(self):
         super().__init__(
             name="Empowered Channeling", origin="College of Spirits Bard Level 6"
@@ -451,7 +451,7 @@ class EmpoweredChanneling(TextFeature):
         return description
 
 
-class MysticalConnection(TextFeature):
+class MysticalConnection(Feature):
     def __init__(self):
         super().__init__(
             name="Mystical Connection", origin="College of Spirits Bard Level 14"

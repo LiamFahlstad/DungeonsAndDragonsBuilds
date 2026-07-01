@@ -1,11 +1,11 @@
-from Features.BaseFeatures import TextFeature
+from Features.BaseFeatures import Feature
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
 SPEED = 30  # Given by your species
 
 
-class Darkvision(TextFeature):
+class Darkvision(Feature):
     def __init__(self):
         super().__init__(name="Darkvision", origin="Hexblood Trait")
 
@@ -13,7 +13,7 @@ class Darkvision(TextFeature):
         return "You have Darkvision with a range of 60 feet."
 
 
-class EerieToken(TextFeature):
+class EerieToken(Feature):
     def __init__(self):
         super().__init__(name="Eerie Token", origin="Hexblood Trait")
 
@@ -30,7 +30,7 @@ class EerieToken(TextFeature):
         return StringUtils.add_boxes(description, 1)
 
 
-class HexMagic(TextFeature):
+class HexMagic(Feature):
     def __init__(self):
         super().__init__(name="Hex Magic", origin="Hexblood Trait")
 

@@ -1,5 +1,5 @@
 import Definitions
-from Features.BaseFeatures import CharacterFeature, TextFeature
+from Features.BaseFeatures import Feature
 from Features.Weapons import WeaponsDamageRolls
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
@@ -53,7 +53,7 @@ LEVEL_TO_FOCUS_POINTS = {
 }
 
 
-class MartialArts(TextFeature):
+class MartialArts(Feature):
     def __init__(self):
         super().__init__(name="Martial Arts", origin="Monk Level 1")
 
@@ -76,7 +76,7 @@ class MartialArts(TextFeature):
         return description
 
 
-class UnarmoredDefenseText(TextFeature):
+class UnarmoredDefenseText(Feature):
     def __init__(self):
         super().__init__(name="Unarmored Defense", origin="Monk Level 1")
 
@@ -92,7 +92,7 @@ class UnarmoredDefenseText(TextFeature):
         return description
 
 
-class UnarmoredDefense(CharacterFeature):
+class UnarmoredDefense(Feature):
     def apply(self, character_stat_block: CharacterStatBlock):
         character_stat_block.combat.update_armor_class_base(10)
         character_stat_block.combat.add_armor_class_ability(
@@ -101,7 +101,7 @@ class UnarmoredDefense(CharacterFeature):
         character_stat_block.combat.add_armor_class_ability(Definitions.Ability.WISDOM)
 
 
-class MonksFocus(TextFeature):
+class MonksFocus(Feature):
     def __init__(self):
         super().__init__(name="Monk's Focus", origin="Monk Level 2")
 
@@ -125,7 +125,7 @@ class MonksFocus(TextFeature):
         )
 
 
-class FlurryOfBlows(TextFeature):
+class FlurryOfBlows(Feature):
     def __init__(self):
         super().__init__(name="Flurry of Blows", origin="Monk Level 2")
 
@@ -139,7 +139,7 @@ class FlurryOfBlows(TextFeature):
             return "You can expend 1 Focus Point to make three Unarmed Strikes as a Bonus Action."
 
 
-class PatientDefense(TextFeature):
+class PatientDefense(Feature):
     def __init__(self):
         super().__init__(name="Patient Defense", origin="Monk Level 2")
 
@@ -153,7 +153,7 @@ class PatientDefense(TextFeature):
             return "You can take the Disengage action as a Bonus Action. Alternatively, you can expend 1 Focus Point to take both the Disengage and the Dodge actions as a Bonus Action. When you expend a Focus Point to use Patient Defense, you gain a number of Temporary Hit Points equal to two rolls of your Martial Arts die."
 
 
-class StepOfTheWind(TextFeature):
+class StepOfTheWind(Feature):
     def __init__(self):
         super().__init__(name="Step of the Wind", origin="Monk Level 2")
 
@@ -167,7 +167,7 @@ class StepOfTheWind(TextFeature):
             return "You can take the Dash action as a Bonus Action. Alternatively, you can expend 1 Focus Point to take both the Disengage and Dash actions as a Bonus Action, and your jump distance is doubled for the turn. When you expend a Focus Point to use Step of the Wind, you can choose a willing creature within 5 feet of yourself that is Large or smaller. You move the creature with you until the end of your turn. The creature's movement doesn't provoke Opportunity Attacks."
 
 
-class UnarmoredMovement(TextFeature):
+class UnarmoredMovement(Feature):
     def __init__(self):
         super().__init__(name="Unarmored Movement", origin="Monk Level 2")
 
@@ -176,7 +176,7 @@ class UnarmoredMovement(TextFeature):
         return description
 
 
-class UncannyMetabolism(TextFeature):
+class UncannyMetabolism(Feature):
     def __init__(self):
         super().__init__(name="Uncanny Metabolism", origin="Monk Level 2")
 
@@ -188,7 +188,7 @@ class UncannyMetabolism(TextFeature):
         return description
 
 
-class DeflectAttacks(TextFeature):
+class DeflectAttacks(Feature):
     def __init__(self):
         super().__init__(name="Deflect Attacks", origin="Monk Level 3")
 
@@ -211,7 +211,7 @@ class DeflectAttacks(TextFeature):
             return description
 
 
-class SlowFall(TextFeature):
+class SlowFall(Feature):
     def __init__(self):
         super().__init__(name="Slow Fall", origin="Monk Level 4")
 
@@ -220,7 +220,7 @@ class SlowFall(TextFeature):
         return description
 
 
-class ExtraAttack(TextFeature):
+class ExtraAttack(Feature):
     def __init__(self):
         super().__init__(name="Extra Attack", origin="Monk Level 5")
 
@@ -229,7 +229,7 @@ class ExtraAttack(TextFeature):
         return description
 
 
-class StunningStrike(TextFeature):
+class StunningStrike(Feature):
     def __init__(self):
         super().__init__(name="Stunning Strike", origin="Monk Level 5")
 
@@ -238,7 +238,7 @@ class StunningStrike(TextFeature):
         return description
 
 
-class EmpoweredStrikes(TextFeature):
+class EmpoweredStrikes(Feature):
     def __init__(self):
         super().__init__(name="Empowered Strikes", origin="Monk Level 6")
 
@@ -247,7 +247,7 @@ class EmpoweredStrikes(TextFeature):
         return description
 
 
-class Evasion(TextFeature):
+class Evasion(Feature):
     def __init__(self):
         super().__init__(name="Evasion", origin="Monk Level 7")
 
@@ -259,7 +259,7 @@ class Evasion(TextFeature):
         return description
 
 
-class AcrobaticMovement(TextFeature):
+class AcrobaticMovement(Feature):
     def __init__(self):
         super().__init__(name="Acrobatic Movement", origin="Monk Level 9")
 
@@ -268,7 +268,7 @@ class AcrobaticMovement(TextFeature):
         return description
 
 
-class HeightenedFocus(TextFeature):
+class HeightenedFocus(Feature):
     def __init__(self):
         super().__init__(name="Heightened Focus", origin="Monk Level 10")
 
@@ -282,7 +282,7 @@ class HeightenedFocus(TextFeature):
         return description
 
 
-class SelfRestoration(TextFeature):
+class SelfRestoration(Feature):
     def __init__(self):
         super().__init__(name="Self-Restoration", origin="Monk Level 10")
 
@@ -294,7 +294,7 @@ class SelfRestoration(TextFeature):
         return description
 
 
-class DeflectEnergy(TextFeature):
+class DeflectEnergy(Feature):
     def __init__(self):
         super().__init__(name="Deflect Energy", origin="Monk Level 13")
 
@@ -303,7 +303,7 @@ class DeflectEnergy(TextFeature):
         return description
 
 
-class DisciplinedSurvivorSavingThrows(TextFeature):
+class DisciplinedSurvivorSavingThrows(Feature):
     def __init__(self):
         super().__init__(name="Disciplined Survivor", origin="Monk Level 14")
 
@@ -312,7 +312,7 @@ class DisciplinedSurvivorSavingThrows(TextFeature):
         return description
 
 
-class DisciplinedSurvivorMartialFocus(TextFeature):
+class DisciplinedSurvivorMartialFocus(Feature):
     def __init__(self):
         super().__init__(name="Disciplined Survivor", origin="Monk Level 14")
 
@@ -321,7 +321,7 @@ class DisciplinedSurvivorMartialFocus(TextFeature):
         return description
 
 
-class PerfectFocus(TextFeature):
+class PerfectFocus(Feature):
     def __init__(self):
         super().__init__(name="Perfect Focus", origin="Monk Level 15")
 
@@ -330,7 +330,7 @@ class PerfectFocus(TextFeature):
         return description
 
 
-class SuperiorDefense(TextFeature):
+class SuperiorDefense(Feature):
     def __init__(self):
         super().__init__(name="Superior Defense", origin="Monk Level 18")
 
@@ -339,7 +339,7 @@ class SuperiorDefense(TextFeature):
         return description
 
 
-class BodyAndMind(TextFeature):
+class BodyAndMind(Feature):
     def __init__(self):
         super().__init__(name="Body and Mind", origin="Monk Level 20")
 
@@ -351,7 +351,7 @@ class BodyAndMind(TextFeature):
 ### Warrior of Mercy Monk Features ###
 
 
-class HandofHarm(TextFeature):
+class HandofHarm(Feature):
     def __init__(self):
         super().__init__(name="Hand of Harm", origin="Warrior of Mercy Monk Level 3")
 
@@ -360,7 +360,7 @@ class HandofHarm(TextFeature):
         return description
 
 
-class HandOfHealing(TextFeature):
+class HandOfHealing(Feature):
     def __init__(self):
         super().__init__(name="Hand of Healing", origin="Warrior of Mercy Monk Level 3")
 
@@ -372,7 +372,7 @@ class HandOfHealing(TextFeature):
         return description
 
 
-class ImplementsOfMercy(TextFeature):
+class ImplementsOfMercy(Feature):
     def __init__(self):
         super().__init__(
             name="Implements of Mercy", origin="Warrior of Mercy Monk Level 3"
@@ -383,7 +383,7 @@ class ImplementsOfMercy(TextFeature):
         return description
 
 
-class PhysiciansTouch(TextFeature):
+class PhysiciansTouch(Feature):
     def __init__(self):
         super().__init__(
             name="Physician's Touch", origin="Warrior of Mercy Monk Level 6"
@@ -398,7 +398,7 @@ class PhysiciansTouch(TextFeature):
         return description
 
 
-class FlurryOfHealingAndHarm(TextFeature):
+class FlurryOfHealingAndHarm(Feature):
     def __init__(self):
         super().__init__(
             name="Flurry of Healing and Harm", origin="Warrior of Mercy Monk Level 11"
@@ -417,7 +417,7 @@ class FlurryOfHealingAndHarm(TextFeature):
         return StringUtils.add_boxes(description, uses, regain_all_on="long rest")
 
 
-class HandOfUltimateMercy(TextFeature):
+class HandOfUltimateMercy(Feature):
     def __init__(self):
         super().__init__(
             name="Hand of Ultimate Mercy", origin="Warrior of Mercy Monk Level 17"
@@ -434,7 +434,7 @@ class HandOfUltimateMercy(TextFeature):
 ### Warrior of Shadow Monk Features ###
 
 
-class ShadowArts(TextFeature):
+class ShadowArts(Feature):
     def __init__(self):
         super().__init__(name="Shadow Arts", origin="Warrior of Shadow Monk Level 3")
 
@@ -448,7 +448,7 @@ class ShadowArts(TextFeature):
         return description
 
 
-class ShadowStep(TextFeature):
+class ShadowStep(Feature):
     def __init__(self):
         super().__init__(name="Shadow Step", origin="Warrior of Shadow Monk Level 6")
 
@@ -457,7 +457,7 @@ class ShadowStep(TextFeature):
         return description
 
 
-class ImprovedShadowStep(TextFeature):
+class ImprovedShadowStep(Feature):
     def __init__(self):
         super().__init__(
             name="Improved Shadow Step", origin="Warrior of Shadow Monk Level 11"
@@ -468,7 +468,7 @@ class ImprovedShadowStep(TextFeature):
         return description
 
 
-class CloakOfShadows(TextFeature):
+class CloakOfShadows(Feature):
     def __init__(self):
         super().__init__(
             name="Cloak of Shadows", origin="Warrior of Shadow Monk Level 17"
@@ -487,7 +487,7 @@ class CloakOfShadows(TextFeature):
 ### Warrior of the Elements Monk Features ###
 
 
-class ElementalAttunement(TextFeature):
+class ElementalAttunement(Feature):
     def __init__(self):
         super().__init__(
             name="Elemental Attunement", origin="Warrior of the Elements Monk Level 3"
@@ -502,7 +502,7 @@ class ElementalAttunement(TextFeature):
         return description
 
 
-class ManipulateElements(TextFeature):
+class ManipulateElements(Feature):
     def __init__(self):
         super().__init__(
             name="Manipulate Elements", origin="Warrior of the Elements Monk Level 3"
@@ -513,7 +513,7 @@ class ManipulateElements(TextFeature):
         return description
 
 
-class ElementalBurst(TextFeature):
+class ElementalBurst(Feature):
     def __init__(self):
         super().__init__(
             name="Elemental Burst", origin="Warrior of the Elements Monk Level 6"
@@ -527,7 +527,7 @@ class ElementalBurst(TextFeature):
         return description
 
 
-class StrideOfTheElements(TextFeature):
+class StrideOfTheElements(Feature):
     def __init__(self):
         super().__init__(
             name="Stride of the Elements",
@@ -539,7 +539,7 @@ class StrideOfTheElements(TextFeature):
         return description
 
 
-class ElementalEpitome(TextFeature):
+class ElementalEpitome(Feature):
     def __init__(self):
         super().__init__(
             name="Elemental Epitome", origin="Warrior of the Elements Monk Level 17"
@@ -558,7 +558,7 @@ class ElementalEpitome(TextFeature):
 ### Warrior of the open Hand Monk Features ###
 
 
-class OpenHandTechnique(TextFeature):
+class OpenHandTechnique(Feature):
     def __init__(self):
         super().__init__(
             name="Open Hand Technique", origin="Warrior of the open Hand Monk Level 3"
@@ -574,7 +574,7 @@ class OpenHandTechnique(TextFeature):
         return description
 
 
-class WholenessOfBody(TextFeature):
+class WholenessOfBody(Feature):
     def __init__(self):
         super().__init__(
             name="Wholeness of Body", origin="Warrior of the open Hand Monk Level 6"
@@ -592,7 +592,7 @@ class WholenessOfBody(TextFeature):
         return StringUtils.add_boxes(description, uses, regain_all_on="long rest")
 
 
-class FleetStep(TextFeature):
+class FleetStep(Feature):
     def __init__(self):
         super().__init__(
             name="Fleet Step", origin="Warrior of the open Hand Monk Level 11"
@@ -603,7 +603,7 @@ class FleetStep(TextFeature):
         return description
 
 
-class QuiveringPalm(TextFeature):
+class QuiveringPalm(Feature):
     def __init__(self):
         super().__init__(
             name="Quivering Palm", origin="Warrior of the open Hand Monk Level 17"

@@ -1,15 +1,15 @@
 from Definitions import Ability, Skill
-from Features.BaseFeatures import CharacterFeature, TextFeature
+from Features.BaseFeatures import Feature
 from Features.SubFeatures import SkillExpertiseChoice, SkillProficiencyChoice
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
 
-class GeneralFeatCharacterFeature(CharacterFeature):
+class GeneralFeatCharacterFeature(Feature):
     pass
 
 
-class GeneralFeatTextFeature(TextFeature):
+class GeneralFeatTextFeature(Feature):
     pass
 
 

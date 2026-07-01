@@ -1,4 +1,4 @@
-class WildMagicSurge(TextFeature):
+class WildMagicSurge(Feature):
     def __init__(self):
         super().__init__(name="Wild Magic Surge", origin="Wild Magic Sorcerer Level 3")
 
@@ -10,7 +10,7 @@ class WildMagicSurge(TextFeature):
         return description
 
 
-class TidesofChaos(TextFeature):
+class TidesofChaos(Feature):
     def __init__(self):
         super().__init__(name="Tides of Chaos", origin="Wild Magic Sorcerer Level 3")
 
@@ -22,7 +22,7 @@ class TidesofChaos(TextFeature):
         return description
 
 
-class BendLuck(TextFeature):
+class BendLuck(Feature):
     def __init__(self):
         super().__init__(name="Bend Luck", origin="Wild Magic Sorcerer Level 6")
 
@@ -31,7 +31,7 @@ class BendLuck(TextFeature):
         return description
 
 
-class ControlledChaos(TextFeature):
+class ControlledChaos(Feature):
     def __init__(self):
         super().__init__(name="Controlled Chaos", origin="Wild Magic Sorcerer Level 14")
 
@@ -40,7 +40,7 @@ class ControlledChaos(TextFeature):
         return description
 
 
-class TamedSurge(TextFeature):
+class TamedSurge(Feature):
     def __init__(self):
         super().__init__(name="Tamed Surge", origin="Wild Magic Sorcerer Level 18")
 

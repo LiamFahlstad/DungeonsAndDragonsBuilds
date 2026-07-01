@@ -61,11 +61,11 @@ class TextFeature:
         file.write(f"Description: {description}\n")
 
 
-class Action(TextFeature):
+class Action(Feature):
     pass
 
 
-class Trait(TextFeature):
+class Trait(Feature):
     pass
 
 

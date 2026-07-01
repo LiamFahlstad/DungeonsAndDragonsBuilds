@@ -1,12 +1,12 @@
 from Definitions import Ability, Skill
-from Features.BaseFeatures import CharacterFeature, TextFeature
+from Features.BaseFeatures import Feature
 from Features.SubFeatures import SkillExpertiseChoice, SkillProficiencyChoice
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 WIZARD_HIT_DIE = 6
 
 
-class RitualAdept(TextFeature):
+class RitualAdept(Feature):
     def __init__(self):
         super().__init__(name="Ritual Adept", origin="Wizard Level 1")
 
@@ -14,7 +14,7 @@ class RitualAdept(TextFeature):
         return "You can cast any spell as a Ritual if that spell has the Ritual tag and the spell is in your spellbook. You needn't have the spell prepared, but you must read from the book to cast a spell in this way."
 
 
-class ArcaneRecovery(TextFeature):
+class ArcaneRecovery(Feature):
     def __init__(self):
         super().__init__(name="Arcane Recovery", origin="Wizard Level 1")
 
@@ -27,7 +27,7 @@ class ArcaneRecovery(TextFeature):
         return text
 
 
-class Scholar(CharacterFeature):
+class Scholar(Feature):
     SKILL_POOL = [
         Skill.ARCANA,
         Skill.HISTORY,
@@ -49,7 +49,7 @@ class Scholar(CharacterFeature):
         self._expertise.apply(character_stat_block)
 
 
-class MemorizeSpell(TextFeature):
+class MemorizeSpell(Feature):
     def __init__(self):
         super().__init__(name="Memorize Spell", origin="Wizard Level 5")
 
@@ -57,7 +57,7 @@ class MemorizeSpell(TextFeature):
         return "Whenever you finish a Short Rest, you can study your spellbook and replace one of the level 1+ Wizard spells you have prepared for your Spellcasting feature with another level 1+ spell from the book."
 
 
-class SpellMastery(TextFeature):
+class SpellMastery(Feature):
     def __init__(self):
         super().__init__(name="Spell Mastery", origin="Wizard Level 18")
 
@@ -69,7 +69,7 @@ class SpellMastery(TextFeature):
         return text
 
 
-class SignatureSpells(TextFeature):
+class SignatureSpells(Feature):
     def __init__(self):
         super().__init__(name="Signature Spells", origin="Wizard Level 20")
 
@@ -80,7 +80,7 @@ class SignatureSpells(TextFeature):
 ### Abjurer Subclass Features ###
 
 
-class AbjurationSavant(TextFeature):
+class AbjurationSavant(Feature):
     def __init__(self):
         super().__init__(name="Abjuration Savant", origin="Abjurer Wizard Level 3")
 
@@ -92,7 +92,7 @@ class AbjurationSavant(TextFeature):
         return description
 
 
-class ArcaneWard(TextFeature):
+class ArcaneWard(Feature):
     def __init__(self):
         super().__init__(name="Arcane Ward", origin="Abjurer Wizard Level 3")
 
@@ -106,7 +106,7 @@ class ArcaneWard(TextFeature):
         return description
 
 
-class ProjectedWard(TextFeature):
+class ProjectedWard(Feature):
     def __init__(self):
         super().__init__(name="Projected Ward", origin="Abjurer Wizard Level 6")
 
@@ -115,7 +115,7 @@ class ProjectedWard(TextFeature):
         return description
 
 
-class SpellBreaker(TextFeature):
+class SpellBreaker(Feature):
     def __init__(self):
         super().__init__(name="Spell Breaker", origin="Abjurer Wizard Level 10")
 
@@ -127,7 +127,7 @@ class SpellBreaker(TextFeature):
         return description
 
 
-class SpellResistance(TextFeature):
+class SpellResistance(Feature):
     def __init__(self):
         super().__init__(name="Spell Resistance", origin="Abjurer Wizard Level 14")
 
@@ -139,7 +139,7 @@ class SpellResistance(TextFeature):
 ### Bladesinger Subclass Features ###
 
 
-class BladesongText(TextFeature):
+class BladesongText(Feature):
     def __init__(self):
         super().__init__(name="Bladesong", origin="Bladesinger Wizard Level 3")
 
@@ -156,7 +156,7 @@ class BladesongText(TextFeature):
         return description
 
 
-class TrainingInWarAndSong(TextFeature):
+class TrainingInWarAndSong(Feature):
     VALID_SKILLS = [
         Skill.ACROBATICS,
         Skill.ATHLETICS,
@@ -183,7 +183,7 @@ class TrainingInWarAndSong(TextFeature):
         return description
 
 
-class ExtraAttack(TextFeature):
+class ExtraAttack(Feature):
     def __init__(self):
         super().__init__(name="Extra Attack", origin="Bladesinger Wizard Level 6")
 
@@ -192,7 +192,7 @@ class ExtraAttack(TextFeature):
         return description
 
 
-class SongOfDefense(TextFeature):
+class SongOfDefense(Feature):
     def __init__(self):
         super().__init__(name="Song of Defense", origin="Bladesinger Wizard Level 10")
 
@@ -201,7 +201,7 @@ class SongOfDefense(TextFeature):
         return description
 
 
-class SongOfVictory(TextFeature):
+class SongOfVictory(Feature):
     def __init__(self):
         super().__init__(name="Song of Victory", origin="Bladesinger Wizard Level 14")
 
@@ -213,7 +213,7 @@ class SongOfVictory(TextFeature):
 ### Diviner Subclass Features ###
 
 
-class DivinationSavant(TextFeature):
+class DivinationSavant(Feature):
     def __init__(self):
         super().__init__(name="Divination Savant", origin="Diviner Wizard Level 3")
 
@@ -225,7 +225,7 @@ class DivinationSavant(TextFeature):
         return description
 
 
-class Portent(TextFeature):
+class Portent(Feature):
     def __init__(self):
         super().__init__(name="Portent", origin="Diviner Wizard Level 3")
 
@@ -237,7 +237,7 @@ class Portent(TextFeature):
         return description
 
 
-class ExpertDivination(TextFeature):
+class ExpertDivination(Feature):
     def __init__(self):
         super().__init__(name="Expert Divination", origin="Diviner Wizard Level 6")
 
@@ -246,7 +246,7 @@ class ExpertDivination(TextFeature):
         return description
 
 
-class TheThirdEye(TextFeature):
+class TheThirdEye(Feature):
     def __init__(self):
         super().__init__(name="The Third Eye", origin="Diviner Wizard Level 10")
 
@@ -260,7 +260,7 @@ class TheThirdEye(TextFeature):
         return description
 
 
-class GreaterPortent(TextFeature):
+class GreaterPortent(Feature):
     def __init__(self):
         super().__init__(name="Greater Portent", origin="Diviner Wizard Level 14")
 
@@ -272,7 +272,7 @@ class GreaterPortent(TextFeature):
 ### Evoker Subclass Features ###
 
 
-class EvocationSavant(TextFeature):
+class EvocationSavant(Feature):
     def __init__(self):
         super().__init__(name="Evocation Savant", origin="Evoker Wizard Level 3")
 
@@ -284,7 +284,7 @@ class EvocationSavant(TextFeature):
         return description
 
 
-class PotentCantrip(TextFeature):
+class PotentCantrip(Feature):
     def __init__(self):
         super().__init__(name="Potent Cantrip", origin="Evoker Wizard Level 3")
 
@@ -293,7 +293,7 @@ class PotentCantrip(TextFeature):
         return description
 
 
-class SculptSpells(TextFeature):
+class SculptSpells(Feature):
     def __init__(self):
         super().__init__(name="Sculpt Spells", origin="Evoker Wizard Level 6")
 
@@ -302,7 +302,7 @@ class SculptSpells(TextFeature):
         return description
 
 
-class EmpoweredEvocation(TextFeature):
+class EmpoweredEvocation(Feature):
     def __init__(self):
         super().__init__(name="Empowered Evocation", origin="Evoker Wizard Level 10")
 
@@ -312,7 +312,7 @@ class EmpoweredEvocation(TextFeature):
         return description
 
 
-class Overchannel(TextFeature):
+class Overchannel(Feature):
     def __init__(self):
         super().__init__(name="Overchannel", origin="Evoker Wizard Level 14")
 
@@ -328,7 +328,7 @@ class Overchannel(TextFeature):
 ### Illusionist Subclass Features ###
 
 
-class IllusionSavant(TextFeature):
+class IllusionSavant(Feature):
     def __init__(self):
         super().__init__(name="Illusion Savant", origin="Illusionist Wizard Level 3")
 
@@ -340,7 +340,7 @@ class IllusionSavant(TextFeature):
         return description
 
 
-class ImprovedIllusions(TextFeature):
+class ImprovedIllusions(Feature):
     def __init__(self):
         super().__init__(name="Improved Illusions", origin="Illusionist Wizard Level 3")
 
@@ -352,7 +352,7 @@ class ImprovedIllusions(TextFeature):
         return description
 
 
-class PhantasmalCreatures(TextFeature):
+class PhantasmalCreatures(Feature):
     def __init__(self):
         super().__init__(
             name="Phantasmal Creatures", origin="Illusionist Wizard Level 6"
@@ -363,7 +363,7 @@ class PhantasmalCreatures(TextFeature):
         return description
 
 
-class IllusorySelf(TextFeature):
+class IllusorySelf(Feature):
     def __init__(self):
         super().__init__(name="Illusory Self", origin="Illusionist Wizard Level 10")
 
@@ -375,7 +375,7 @@ class IllusorySelf(TextFeature):
         return description
 
 
-class IllusoryReality(TextFeature):
+class IllusoryReality(Feature):
     def __init__(self):
         super().__init__(name="Illusory Reality", origin="Illusionist Wizard Level 14")
 

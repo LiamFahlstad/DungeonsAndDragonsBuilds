@@ -1,12 +1,12 @@
 from Definitions import CreatureSize
-from Features.BaseFeatures import TextFeature
+from Features.BaseFeatures import Feature
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 SPEED = 30  # Given by your species
 SIZE = CreatureSize.SMALL  # Given by your species
 
 
-class Brave(TextFeature):
+class Brave(Feature):
     def __init__(self):
         super().__init__(name="Brave", origin="Halfling Trait")
 
@@ -14,7 +14,7 @@ class Brave(TextFeature):
         return "You have Advantage on saving throws you make to avoid or end the Frightened condition."
 
 
-class HalflingNimbleness(TextFeature):
+class HalflingNimbleness(Feature):
     def __init__(self):
         super().__init__(name="Halfling Nimbleness", origin="Halfling Trait")
 
@@ -22,7 +22,7 @@ class HalflingNimbleness(TextFeature):
         return "You can move through the space of any creature that is a size larger than you, but you can't stop in the same space."
 
 
-class Luck(TextFeature):
+class Luck(Feature):
     def __init__(self):
         super().__init__(name="Luck", origin="Halfling Trait")
 
@@ -31,7 +31,7 @@ class Luck(TextFeature):
         return text
 
 
-class NaturallyStealthy(TextFeature):
+class NaturallyStealthy(Feature):
     def __init__(self):
         super().__init__(name="Naturally Stealthy", origin="Halfling Trait")
 

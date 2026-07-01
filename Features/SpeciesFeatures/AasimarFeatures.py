@@ -1,12 +1,12 @@
 from Definitions import CreatureSize
-from Features.BaseFeatures import TextFeature
+from Features.BaseFeatures import Feature
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 SPEED = 30  # Given by your species
 SIZE = CreatureSize.MEDIUM  # Given by your species
 
 
-class CelestialResistance(TextFeature):
+class CelestialResistance(Feature):
     def __init__(self):
         super().__init__(name="Celestial Resistance", origin="Aasimar Trait")
 
@@ -14,7 +14,7 @@ class CelestialResistance(TextFeature):
         return "You have Resistance to Necrotic damage and Radiant damage."
 
 
-class Darkvision(TextFeature):
+class Darkvision(Feature):
     def __init__(self):
         super().__init__(name="Darkvision", origin="Aasimar Trait")
 
@@ -22,7 +22,7 @@ class Darkvision(TextFeature):
         return "You have Darkvision with a range of 60 feet."
 
 
-class LightBearer(TextFeature):
+class LightBearer(Feature):
     def __init__(self):
         super().__init__(name="Light Bearer", origin="Aasimar Trait")
 
@@ -32,7 +32,7 @@ class LightBearer(TextFeature):
         )
 
 
-class HealingHands(TextFeature):
+class HealingHands(Feature):
     def __init__(self):
         super().__init__(
             name="Healing Hands",
@@ -44,7 +44,7 @@ class HealingHands(TextFeature):
         return f"As a Magic action, you touch a creature and roll a number of d4s equal to your Proficiency Bonus ({proficiency_bonus}). The creature regains a number of Hit Points equal to the total rolled. Once you use this trait, you can't use it again until you finish a Long Rest."
 
 
-class CelestialRevelation(TextFeature):
+class CelestialRevelation(Feature):
     def __init__(self):
         super().__init__(name="Celestial Revelation", origin="Aasimar Trait")
 

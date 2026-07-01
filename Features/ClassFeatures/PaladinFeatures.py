@@ -1,12 +1,12 @@
 from Definitions import Ability
-from Features.BaseFeatures import TextFeature
+from Features.BaseFeatures import Feature
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
 PALADIN_HIT_DIE = 10
 
 
-class LayOnHands(TextFeature):
+class LayOnHands(Feature):
     def __init__(self):
         super().__init__(name="Lay on Hands", origin="Paladin Level 1")
 
@@ -19,7 +19,7 @@ class LayOnHands(TextFeature):
         return description
 
 
-class WeaponMastery(TextFeature):
+class WeaponMastery(Feature):
     def __init__(self):
         super().__init__(name="Weapon Mastery", origin="Paladin Level 1")
 
@@ -31,7 +31,7 @@ class WeaponMastery(TextFeature):
         return description
 
 
-class FightingStyle(TextFeature):
+class FightingStyle(Feature):
     def __init__(self):
         super().__init__(name="Fighting Style", origin="Paladin Level 2")
 
@@ -43,7 +43,7 @@ class FightingStyle(TextFeature):
         return description
 
 
-class PaladinsSmite(TextFeature):
+class PaladinsSmite(Feature):
     def __init__(self):
         super().__init__(name="Paladin's Smite", origin="Paladin Level 2")
 
@@ -52,7 +52,7 @@ class PaladinsSmite(TextFeature):
         return description
 
 
-class ChannelDivinity(TextFeature):
+class ChannelDivinity(Feature):
     _INDENT = "    "
 
     def __init__(self):
@@ -134,7 +134,7 @@ class ChannelDivinity(TextFeature):
         return description
 
 
-class ExtraAttack(TextFeature):
+class ExtraAttack(Feature):
     def __init__(self):
         super().__init__(name="Extra Attack", origin="Paladin Level 5")
 
@@ -143,7 +143,7 @@ class ExtraAttack(TextFeature):
         return description
 
 
-class FaithfulSteed(TextFeature):
+class FaithfulSteed(Feature):
     def __init__(self):
         super().__init__(name="Faithful Steed", origin="Paladin Level 5")
 
@@ -155,7 +155,7 @@ class FaithfulSteed(TextFeature):
         return description
 
 
-class AuraOfProtection(TextFeature):
+class AuraOfProtection(Feature):
     def __init__(self):
         super().__init__(name="Aura of Protection", origin="Paladin Level 6")
 
@@ -168,7 +168,7 @@ class AuraOfProtection(TextFeature):
         return description
 
 
-class AbjureFoes(TextFeature):
+class AbjureFoes(Feature):
     def __init__(self):
         super().__init__(name="Abjure Foes", origin="Paladin Level 9")
 
@@ -177,7 +177,7 @@ class AbjureFoes(TextFeature):
         return description
 
 
-class AuraOfCourage(TextFeature):
+class AuraOfCourage(Feature):
     def __init__(self):
         super().__init__(name="Aura of Courage", origin="Paladin Level 10")
 
@@ -186,7 +186,7 @@ class AuraOfCourage(TextFeature):
         return description
 
 
-class RadiantStrikes(TextFeature):
+class RadiantStrikes(Feature):
     def __init__(self):
         super().__init__(name="Radiant Strikes", origin="Paladin Level 11")
 
@@ -195,7 +195,7 @@ class RadiantStrikes(TextFeature):
         return description
 
 
-class RestoringTouch(TextFeature):
+class RestoringTouch(Feature):
     def __init__(self):
         super().__init__(name="Restoring Touch", origin="Paladin Level 14")
 
@@ -204,7 +204,7 @@ class RestoringTouch(TextFeature):
         return description
 
 
-class AuraExpansion(TextFeature):
+class AuraExpansion(Feature):
     def __init__(self):
         super().__init__(name="Aura Expansion", origin="Paladin Level 18")
 
@@ -216,7 +216,7 @@ class AuraExpansion(TextFeature):
 ### Oath of Devotion Paladin Features ###
 
 
-class OathOfDevotionSpells(TextFeature):
+class OathOfDevotionSpells(Feature):
     def __init__(self):
         super().__init__(
             name="Oath of Devotion Spells", origin="Oath of Devotion Paladin Level 3"
@@ -236,7 +236,7 @@ class OathOfDevotionSpells(TextFeature):
         return description
 
 
-class SacredWeapon(TextFeature):
+class SacredWeapon(Feature):
     def __init__(self):
         super().__init__(
             name="Sacred Weapon", origin="Oath of Devotion Paladin Level 3"
@@ -251,7 +251,7 @@ class SacredWeapon(TextFeature):
         return description
 
 
-class AuraOfDevotion(TextFeature):
+class AuraOfDevotion(Feature):
     def __init__(self):
         super().__init__(
             name="Aura of Devotion", origin="Oath of Devotion Paladin Level 7"
@@ -262,7 +262,7 @@ class AuraOfDevotion(TextFeature):
         return description
 
 
-class SmiteOfProtection(TextFeature):
+class SmiteOfProtection(Feature):
     def __init__(self):
         super().__init__(
             name="Smite of Protection", origin="Oath of Devotion Paladin Level 15"
@@ -273,7 +273,7 @@ class SmiteOfProtection(TextFeature):
         return description
 
 
-class HolyNimbus(TextFeature):
+class HolyNimbus(Feature):
     def __init__(self):
         super().__init__(name="Holy Nimbus", origin="Oath of Devotion Paladin Level 20")
 
@@ -290,7 +290,7 @@ class HolyNimbus(TextFeature):
 ### Oath of Glory Paladin Features ###
 
 
-class InspiringSmite(TextFeature):
+class InspiringSmite(Feature):
     def __init__(self):
         super().__init__(name="Inspiring Smite", origin="Oath of Glory Paladin Level 3")
 
@@ -299,7 +299,7 @@ class InspiringSmite(TextFeature):
         return description
 
 
-class GlorySpells(TextFeature):
+class GlorySpells(Feature):
     def __init__(self):
         super().__init__(
             name="Oath of Glory Spells", origin="Oath of Glory Paladin Level 3"
@@ -319,7 +319,7 @@ class GlorySpells(TextFeature):
         return description
 
 
-class PeerlessAthlete(TextFeature):
+class PeerlessAthlete(Feature):
     def __init__(self):
         super().__init__(
             name="Peerless Athlete", origin="Oath of Glory Paladin Level 3"
@@ -330,7 +330,7 @@ class PeerlessAthlete(TextFeature):
         return description
 
 
-class AuraOfAlacrity(TextFeature):
+class AuraOfAlacrity(Feature):
     def __init__(self):
         super().__init__(
             name="Aura of Alacrity", origin="Oath of Glory Paladin Level 7"
@@ -344,7 +344,7 @@ class AuraOfAlacrity(TextFeature):
         return description
 
 
-class GloriousDefense(TextFeature):
+class GloriousDefense(Feature):
     def __init__(self):
         super().__init__(
             name="Glorious Defense", origin="Oath of Glory Paladin Level 15"
@@ -360,7 +360,7 @@ class GloriousDefense(TextFeature):
         return StringUtils.add_boxes(description, uses, regain_all_on="long rest")
 
 
-class LivingLegend(TextFeature):
+class LivingLegend(Feature):
     def __init__(self):
         super().__init__(name="Living Legend", origin="Oath of Glory Paladin Level 20")
 
@@ -377,7 +377,7 @@ class LivingLegend(TextFeature):
 ### Oath of the Ancients Paladin Features ###
 
 
-class NaturesWrath(TextFeature):
+class NaturesWrath(Feature):
     def __init__(self):
         super().__init__(
             name="Nature's Wrath", origin="Oath of the Ancients Paladin Level 3"
@@ -388,7 +388,7 @@ class NaturesWrath(TextFeature):
         return description
 
 
-class OathOfTheAncientsSpells(TextFeature):
+class OathOfTheAncientsSpells(Feature):
     def __init__(self):
         super().__init__(
             name="Oath of the Ancients Spells",
@@ -409,7 +409,7 @@ class OathOfTheAncientsSpells(TextFeature):
         return description
 
 
-class AuraOfWarding(TextFeature):
+class AuraOfWarding(Feature):
     def __init__(self):
         super().__init__(
             name="Aura of Warding", origin="Oath of the Ancients Paladin Level 7"
@@ -420,7 +420,7 @@ class AuraOfWarding(TextFeature):
         return description
 
 
-class UndyingSentinel(TextFeature):
+class UndyingSentinel(Feature):
     def __init__(self):
         super().__init__(
             name="Undying Sentinel", origin="Oath of the Ancients Paladin Level 15"
@@ -434,7 +434,7 @@ class UndyingSentinel(TextFeature):
         return description
 
 
-class ElderChampion(TextFeature):
+class ElderChampion(Feature):
     def __init__(self):
         super().__init__(
             name="Elder Champion", origin="Oath of the Ancients Paladin Level 20"
@@ -453,7 +453,7 @@ class ElderChampion(TextFeature):
 ### Oath of Vengeance Paladin Features ###
 
 
-class OathOfVengeanceSpells(TextFeature):
+class OathOfVengeanceSpells(Feature):
     def __init__(self):
         super().__init__(
             name="Oath of Vengeance Spells", origin="Oath of Vengeance Paladin Level 3"
@@ -473,7 +473,7 @@ class OathOfVengeanceSpells(TextFeature):
         return description
 
 
-class VowOfEnmity(TextFeature):
+class VowOfEnmity(Feature):
     def __init__(self):
         super().__init__(
             name="Vow of Enmity", origin="Oath of Vengeance Paladin Level 3"
@@ -487,7 +487,7 @@ class VowOfEnmity(TextFeature):
         return description
 
 
-class RelentlessAvenger(TextFeature):
+class RelentlessAvenger(Feature):
     def __init__(self):
         super().__init__(
             name="Relentless Avenger", origin="Oath of Vengeance Paladin Level 7"
@@ -498,7 +498,7 @@ class RelentlessAvenger(TextFeature):
         return description
 
 
-class SoulOfVengeance(TextFeature):
+class SoulOfVengeance(Feature):
     def __init__(self):
         super().__init__(
             name="Soul of Vengeance", origin="Oath of Vengeance Paladin Level 15"
@@ -509,7 +509,7 @@ class SoulOfVengeance(TextFeature):
         return description
 
 
-class AvengingAngel(TextFeature):
+class AvengingAngel(Feature):
     def __init__(self):
         super().__init__(
             name="Avenging Angel", origin="Oath of Vengeance Paladin Level 20"
@@ -528,7 +528,7 @@ class AvengingAngel(TextFeature):
 ### Oath of the Noble Genies Paladin Features ###
 
 
-class ElementalSmite(TextFeature):
+class ElementalSmite(Feature):
     def __init__(self):
         super().__init__(
             name="Elemental Smite", origin="Oath of the Noble Genies Paladin Level 3"
@@ -545,7 +545,7 @@ class ElementalSmite(TextFeature):
         return description
 
 
-class GenieSpells(TextFeature):
+class GenieSpells(Feature):
     def __init__(self):
         super().__init__(
             name="Genie Spells", origin="Oath of the Noble Genies Paladin Level 3"
@@ -565,7 +565,7 @@ class GenieSpells(TextFeature):
         return description
 
 
-class GeniesSplendor(TextFeature):
+class GeniesSplendor(Feature):
     def __init__(self):
         super().__init__(
             name="Genie's Splendor", origin="Oath of the Noble Genies Paladin Level 3"
@@ -579,7 +579,7 @@ class GeniesSplendor(TextFeature):
         return description
 
 
-class AuraOfElementalShielding(TextFeature):
+class AuraOfElementalShielding(Feature):
     def __init__(self):
         super().__init__(
             name="Aura of Elemental Shielding",
@@ -594,7 +594,7 @@ class AuraOfElementalShielding(TextFeature):
         return description
 
 
-class ElementalRebuke(TextFeature):
+class ElementalRebuke(Feature):
     def __init__(self):
         super().__init__(
             name="Elemental Rebuke", origin="Oath of the Noble Genies Paladin Level 15"
@@ -610,7 +610,7 @@ class ElementalRebuke(TextFeature):
         return StringUtils.add_boxes(description, uses, regain_all_on="long rest")
 
 
-class NobleScion(TextFeature):
+class NobleScion(Feature):
     def __init__(self):
         super().__init__(
             name="Noble Scion", origin="Oath of the Noble Genies Paladin Level 20"

@@ -25,7 +25,7 @@ content.append(local_content)
 
 with open("Features/FeatureGeneration/Output.py", "w", encoding="utf-8") as f:
     for (level, name, class_name), local_content in zip(other, content):
-        f.write(f"class {class_name}(TextFeature):\n")
+        f.write(f"class {class_name}(Feature):\n")
         f.write("    def __init__(self):\n")
         f.write(
             f'        super().__init__(name="{name}", origin="{ADDITIONAL} {level}")\n\n'

@@ -1,11 +1,11 @@
-from Features.BaseFeatures import TextFeature
+from Features.BaseFeatures import Feature
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
 SPEED = 35  # Given by your species
 
 
-class Darkvision(TextFeature):
+class Darkvision(Feature):
     def __init__(self):
         super().__init__(name="Darkvision", origin="Dhampir Trait")
 
@@ -13,7 +13,7 @@ class Darkvision(TextFeature):
         return "You have Darkvision with a range of 60 feet."
 
 
-class SpiderClimb(TextFeature):
+class SpiderClimb(Feature):
     def __init__(self, character_level: int):
         self.character_level = character_level
         super().__init__(name="Spider Climb", origin="Dhampir Trait")
@@ -30,7 +30,7 @@ class SpiderClimb(TextFeature):
         )
 
 
-class TraceOfUndeath(TextFeature):
+class TraceOfUndeath(Feature):
     def __init__(self):
         super().__init__(name="Trace of Undeath", origin="Dhampir Trait")
 
@@ -38,7 +38,7 @@ class TraceOfUndeath(TextFeature):
         return "You have Resistance to Necrotic damage."
 
 
-class VampiricBite(TextFeature):
+class VampiricBite(Feature):
     def __init__(self):
         super().__init__(name="Vampiric Bite", origin="Dhampir Trait")
 

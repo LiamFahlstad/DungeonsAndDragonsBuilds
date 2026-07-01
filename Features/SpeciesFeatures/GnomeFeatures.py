@@ -1,5 +1,5 @@
 from Definitions import Ability, CreatureSize
-from Features.BaseFeatures import CharacterFeature, TextFeature
+from Features.BaseFeatures import Feature
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
@@ -7,7 +7,7 @@ SPEED = 30  # Given by your species
 SIZE = CreatureSize.SMALL  # Given by your species
 
 
-class Darkvision(TextFeature):
+class Darkvision(Feature):
     def __init__(self):
         super().__init__(name="Darkvision", origin="Gnome Trait")
 
@@ -15,14 +15,14 @@ class Darkvision(TextFeature):
         return "You have Darkvision with a range of 60 feet."
 
 
-class GnomishCunning(CharacterFeature):
+class GnomishCunning(Feature):
     def apply(self, character_stat_block: CharacterStatBlock) -> None:
         character_stat_block.add_advantage_in_saving_throw(Ability.INTELLIGENCE)
         character_stat_block.add_advantage_in_saving_throw(Ability.WISDOM)
         character_stat_block.add_advantage_in_saving_throw(Ability.CHARISMA)
 
 
-class ForestGnomeSpeakWithAnimals(TextFeature):
+class ForestGnomeSpeakWithAnimals(Feature):
     def __init__(self):
         super().__init__(
             name="Forest Gnome Speak with Animals",
@@ -35,7 +35,7 @@ class ForestGnomeSpeakWithAnimals(TextFeature):
         return StringUtils.add_boxes(text, proficiency_bonus)
 
 
-class RockGnomePrestidigitation(TextFeature):
+class RockGnomePrestidigitation(Feature):
     def __init__(self):
         super().__init__(
             name="Rock Gnome Prestidigitation",

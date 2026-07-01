@@ -1,5 +1,5 @@
 from Definitions import CreatureSize
-from Features.BaseFeatures import CharacterFeature, TextFeature
+from Features.BaseFeatures import Feature
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
@@ -7,7 +7,7 @@ SPEED = 30  # Given by your species
 SIZE = CreatureSize.MEDIUM  # Given by your species
 
 
-class Darkvision(TextFeature):
+class Darkvision(Feature):
     def __init__(self):
         super().__init__(name="Darkvision", origin="Dwarf Trait")
 
@@ -15,7 +15,7 @@ class Darkvision(TextFeature):
         return "You have Darkvision with a range of 120 feet."
 
 
-class DwarvenResilience(TextFeature):
+class DwarvenResilience(Feature):
     def __init__(self):
         super().__init__(name="Dwarven Resilience", origin="Dwarf Trait")
 
@@ -23,13 +23,13 @@ class DwarvenResilience(TextFeature):
         return "You have Resistance to Poison damage. You also have Advantage on saving throws you make to avoid or end the Poisoned condition."
 
 
-class DwarvenToughness(CharacterFeature):
+class DwarvenToughness(Feature):
     def apply(self, character_stat_block: CharacterStatBlock):
         character_level = character_stat_block.character_level
         character_stat_block.combat.hit_points_bonus += character_level
 
 
-class Stonecunning(TextFeature):
+class Stonecunning(Feature):
     def __init__(self):
         super().__init__(name="Stonecunning", origin="Dwarf Trait")
 

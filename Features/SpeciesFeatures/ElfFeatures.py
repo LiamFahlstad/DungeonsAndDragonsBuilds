@@ -1,5 +1,5 @@
 from Definitions import CreatureSize, Skill
-from Features.BaseFeatures import CharacterFeature, TextFeature
+from Features.BaseFeatures import Feature
 from Features.SubFeatures import SkillProficiencyChoice
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
@@ -7,7 +7,7 @@ SPEED = 30  # Given by your species
 SIZE = CreatureSize.MEDIUM  # Given by your species
 
 
-class Darkvision(TextFeature):
+class Darkvision(Feature):
     def __init__(self, distance: int):
         self.distance = distance
         super().__init__(name="Darkvision", origin="Elf Trait")
@@ -16,7 +16,7 @@ class Darkvision(TextFeature):
         return f"You have Darkvision with a range of {self.distance} feet."
 
 
-class FeyAncestry(TextFeature):
+class FeyAncestry(Feature):
     def __init__(self):
         super().__init__(name="Fey Ancestry", origin="Elf Trait")
 
@@ -25,7 +25,7 @@ class FeyAncestry(TextFeature):
         return text
 
 
-class KeenSenses(CharacterFeature):
+class KeenSenses(Feature):
     def __init__(self, skill: Skill):
         self._choice = SkillProficiencyChoice(
             [skill],
@@ -38,7 +38,7 @@ class KeenSenses(CharacterFeature):
         self._choice.apply(character_stat_block)
 
 
-class Trance(TextFeature):
+class Trance(Feature):
     def __init__(self):
         super().__init__(name="Trance", origin="Elf Trait")
 

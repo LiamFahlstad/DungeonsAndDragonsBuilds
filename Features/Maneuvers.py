@@ -1,9 +1,9 @@
 from Definitions import Ability
-from Features.BaseFeatures import TextFeature
+from Features.BaseFeatures import Feature
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
-class Maneuver(TextFeature):
+class Maneuver(Feature):
     def __init__(self, name: str):
         super().__init__(name=name, origin="Maneuver")
 

@@ -1,12 +1,12 @@
 from Definitions import Ability, DiceRollCondition, Skill
-from Features.BaseFeatures import CharacterFeature, TextFeature
+from Features.BaseFeatures import Feature
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
 FIGHTER_HIT_DIE = 10
 
 
-class FightingStyle(TextFeature):
+class FightingStyle(Feature):
     def __init__(self):
         super().__init__(name="Fighting Style", origin="Fighter Level 1")
 
@@ -18,7 +18,7 @@ class FightingStyle(TextFeature):
         return description
 
 
-class SecondWind(TextFeature):
+class SecondWind(Feature):
     def __init__(self):
         super().__init__(name="Second Wind", origin="Fighter Level 1")
 
@@ -41,7 +41,7 @@ class SecondWind(TextFeature):
         )
 
 
-class WeaponMastery(TextFeature):
+class WeaponMastery(Feature):
     def __init__(self):
         super().__init__(name="Weapon Mastery", origin="Fighter Level 1")
 
@@ -53,7 +53,7 @@ class WeaponMastery(TextFeature):
         return description
 
 
-class ActionSurge(TextFeature):
+class ActionSurge(Feature):
     def __init__(self):
         super().__init__(name="Action Surge", origin="Fighter Level 2")
 
@@ -68,7 +68,7 @@ class ActionSurge(TextFeature):
         )
 
 
-class TacticalMind(TextFeature):
+class TacticalMind(Feature):
     def __init__(self):
         super().__init__(name="Tactical Mind", origin="Fighter Level 2")
 
@@ -77,7 +77,7 @@ class TacticalMind(TextFeature):
         return description
 
 
-class ExtraAttack(TextFeature):
+class ExtraAttack(Feature):
     def __init__(self):
         super().__init__(name="Extra Attack", origin="Fighter Level 5")
 
@@ -86,7 +86,7 @@ class ExtraAttack(TextFeature):
         return description
 
 
-class TacticalShift(TextFeature):
+class TacticalShift(Feature):
     def __init__(self):
         super().__init__(name="Tactical Shift", origin="Fighter Level 5")
 
@@ -95,7 +95,7 @@ class TacticalShift(TextFeature):
         return description
 
 
-class Indomitable(TextFeature):
+class Indomitable(Feature):
     def __init__(self):
         super().__init__(name="Indomitable", origin="Fighter Level 9")
 
@@ -113,7 +113,7 @@ class Indomitable(TextFeature):
         return StringUtils.add_boxes(description, uses, regain_all_on="long rest")
 
 
-class TacticalMaster(TextFeature):
+class TacticalMaster(Feature):
     def __init__(self):
         super().__init__(name="Tactical Master", origin="Fighter Level 9")
 
@@ -122,7 +122,7 @@ class TacticalMaster(TextFeature):
         return description
 
 
-class TwoExtraAttacks(TextFeature):
+class TwoExtraAttacks(Feature):
     def __init__(self):
         super().__init__(name="Two Extra Attacks", origin="Fighter Level 11")
 
@@ -131,7 +131,7 @@ class TwoExtraAttacks(TextFeature):
         return description
 
 
-class StudiedAttacks(TextFeature):
+class StudiedAttacks(Feature):
     def __init__(self):
         super().__init__(name="Studied Attacks", origin="Fighter Level 13")
 
@@ -140,7 +140,7 @@ class StudiedAttacks(TextFeature):
         return description
 
 
-class EpicBoon(TextFeature):
+class EpicBoon(Feature):
     def __init__(self):
         super().__init__(name="Epic Boon", origin="Fighter Level 19")
 
@@ -149,7 +149,7 @@ class EpicBoon(TextFeature):
         return description
 
 
-class ThreeExtraAttacks(TextFeature):
+class ThreeExtraAttacks(Feature):
     def __init__(self):
         super().__init__(name="Three Extra Attacks", origin="Fighter Level 20")
 
@@ -161,7 +161,7 @@ class ThreeExtraAttacks(TextFeature):
 ### Banneret Fighter Features ###
 
 
-class KnightlyEnvoy(TextFeature):
+class KnightlyEnvoy(Feature):
     def __init__(self):
         super().__init__(name="Knightly Envoy", origin="Banneret Fighter Level 3")
 
@@ -175,7 +175,7 @@ class KnightlyEnvoy(TextFeature):
         return description
 
 
-class GroupRecovery(TextFeature):
+class GroupRecovery(Feature):
     def __init__(self):
         super().__init__(name="Group Recovery", origin="Banneret Fighter Level 3")
 
@@ -184,7 +184,7 @@ class GroupRecovery(TextFeature):
         return description
 
 
-class TeamTactics(TextFeature):
+class TeamTactics(Feature):
     def __init__(self):
         super().__init__(name="Team Tactics", origin="Banneret Fighter Level 7")
 
@@ -193,7 +193,7 @@ class TeamTactics(TextFeature):
         return description
 
 
-class RallyingSurge(TextFeature):
+class RallyingSurge(Feature):
     def __init__(self):
         super().__init__(name="Rallying Surge", origin="Banneret Fighter Level 10")
 
@@ -206,7 +206,7 @@ class RallyingSurge(TextFeature):
         return description
 
 
-class SharedResilience(TextFeature):
+class SharedResilience(Feature):
     def __init__(self):
         super().__init__(name="Shared Resilience", origin="Banneret Fighter Level 15")
 
@@ -215,7 +215,7 @@ class SharedResilience(TextFeature):
         return description
 
 
-class InspiringCommander(TextFeature):
+class InspiringCommander(Feature):
     def __init__(self):
         super().__init__(name="Inspiring Commander", origin="Banneret Fighter Level 18")
 
@@ -231,7 +231,7 @@ class InspiringCommander(TextFeature):
 ### Battle Master Fighter Features ###
 
 
-class SuperiorityDice(TextFeature):
+class SuperiorityDice(Feature):
     def __init__(self):
         self.maneuvers = []
         super().__init__(
@@ -271,7 +271,7 @@ class SuperiorityDice(TextFeature):
         )
 
 
-class CombatSuperiority(TextFeature):
+class CombatSuperiority(Feature):
     def __init__(self):
         super().__init__(
             name="Combat Superiority", origin="Battle Master Fighter Level 3"
@@ -289,7 +289,7 @@ class CombatSuperiority(TextFeature):
         return description
 
 
-class StudentOfWar(TextFeature):
+class StudentOfWar(Feature):
     def __init__(self):
         super().__init__(name="Student of War", origin="Battle Master Fighter Level 3")
 
@@ -298,7 +298,7 @@ class StudentOfWar(TextFeature):
         return description
 
 
-class KnowYourEnemy(TextFeature):
+class KnowYourEnemy(Feature):
     def __init__(self):
         super().__init__(name="Know Your Enemy", origin="Battle Master Fighter Level 7")
 
@@ -310,7 +310,7 @@ class KnowYourEnemy(TextFeature):
         return description
 
 
-class ImprovedCombatSuperiority(TextFeature):
+class ImprovedCombatSuperiority(Feature):
     def __init__(self):
         super().__init__(
             name="Improved Combat Superiority", origin="Battle Master Fighter Level 10"
@@ -321,7 +321,7 @@ class ImprovedCombatSuperiority(TextFeature):
         return description
 
 
-class Relentless(TextFeature):
+class Relentless(Feature):
     def __init__(self):
         super().__init__(name="Relentless", origin="Battle Master Fighter Level 15")
 
@@ -330,7 +330,7 @@ class Relentless(TextFeature):
         return description
 
 
-class UltimateCombatSuperiority(TextFeature):
+class UltimateCombatSuperiority(Feature):
     def __init__(self):
         super().__init__(
             name="Ultimate Combat Superiority", origin="Battle Master Fighter Level 18"
@@ -344,7 +344,7 @@ class UltimateCombatSuperiority(TextFeature):
 ### Champion Fighter Features ###
 
 
-class ImprovedCritical(TextFeature):
+class ImprovedCritical(Feature):
     def __init__(self):
         super().__init__(name="Improved Critical", origin="Champion Fighter Level 3")
 
@@ -353,9 +353,15 @@ class ImprovedCritical(TextFeature):
         return description
 
 
-class RemarkableAthlete(TextFeature):
+class RemarkableAthlete(Feature):
     def __init__(self):
         super().__init__(name="Remarkable Athlete", origin="Champion Fighter Level 3")
+
+    def apply(self, character_stat_block: CharacterStatBlock) -> None:
+        character_stat_block.add_initiative_roll_condition(DiceRollCondition.ADVANTAGE)
+        character_stat_block.set_skill_roll_condition(
+            Skill.ATHLETICS, DiceRollCondition.ADVANTAGE
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -365,16 +371,7 @@ class RemarkableAthlete(TextFeature):
         return description
 
 
-class RemarkableAthleteCharacterFeature(CharacterFeature):
-
-    def apply(self, character_stat_block: CharacterStatBlock) -> None:
-        character_stat_block.add_initiative_roll_condition(DiceRollCondition.ADVANTAGE)
-        character_stat_block.set_skill_roll_condition(
-            Skill.ATHLETICS, DiceRollCondition.ADVANTAGE
-        )
-
-
-class AdditionalFightingStyle(TextFeature):
+class AdditionalFightingStyle(Feature):
     def __init__(self):
         super().__init__(
             name="Additional Fighting Style", origin="Champion Fighter Level 7"
@@ -385,7 +382,7 @@ class AdditionalFightingStyle(TextFeature):
         return description
 
 
-class HeroicWarrior(TextFeature):
+class HeroicWarrior(Feature):
     def __init__(self):
         super().__init__(name="Heroic Warrior", origin="Champion Fighter Level 10")
 
@@ -394,7 +391,7 @@ class HeroicWarrior(TextFeature):
         return description
 
 
-class SuperiorCritical(TextFeature):
+class SuperiorCritical(Feature):
     def __init__(self):
         super().__init__(name="Superior Critical", origin="Champion Fighter Level 15")
 
@@ -403,7 +400,7 @@ class SuperiorCritical(TextFeature):
         return description
 
 
-class Survivor(TextFeature):
+class Survivor(Feature):
     def __init__(self):
         super().__init__(name="Survivor", origin="Champion Fighter Level 18")
 
@@ -419,7 +416,7 @@ class Survivor(TextFeature):
 ### Eldritch Knight Fighter Features ###
 
 
-class Spellcasting(TextFeature):
+class Spellcasting(Feature):
     def __init__(self):
         super().__init__(name="Spellcasting", origin="Eldritch Knight Fighter Level 3")
 
@@ -458,7 +455,7 @@ class Spellcasting(TextFeature):
         return description
 
 
-class WarBond(TextFeature):
+class WarBond(Feature):
     def __init__(self):
         super().__init__(name="War Bond", origin="Eldritch Knight Fighter Level 3")
 
@@ -471,7 +468,7 @@ class WarBond(TextFeature):
         return description
 
 
-class WarMagic(TextFeature):
+class WarMagic(Feature):
     def __init__(self):
         super().__init__(name="War Magic", origin="Eldritch Knight Fighter Level 7")
 
@@ -480,7 +477,7 @@ class WarMagic(TextFeature):
         return description
 
 
-class EldritchStrike(TextFeature):
+class EldritchStrike(Feature):
     def __init__(self):
         super().__init__(
             name="Eldritch Strike", origin="Eldritch Knight Fighter Level 10"
@@ -491,7 +488,7 @@ class EldritchStrike(TextFeature):
         return description
 
 
-class ArcaneCharge(TextFeature):
+class ArcaneCharge(Feature):
     def __init__(self):
         super().__init__(
             name="Arcane Charge", origin="Eldritch Knight Fighter Level 15"
@@ -502,7 +499,7 @@ class ArcaneCharge(TextFeature):
         return description
 
 
-class ImprovedWarMagic(TextFeature):
+class ImprovedWarMagic(Feature):
     def __init__(self):
         super().__init__(
             name="Improved War Magic", origin="Eldritch Knight Fighter Level 18"
@@ -516,7 +513,7 @@ class ImprovedWarMagic(TextFeature):
 ### Psi Warrior Fighter Features ###
 
 
-class PsionicPower(TextFeature):
+class PsionicPower(Feature):
     def __init__(self):
         super().__init__(name="Psionic Power", origin="Psi Warrior Fighter Level 3")
 
@@ -541,7 +538,7 @@ class PsionicPower(TextFeature):
         return description
 
 
-class TelekineticAdept(TextFeature):
+class TelekineticAdept(Feature):
     def __init__(self):
         super().__init__(name="Telekinetic Adept", origin="Psi Warrior Fighter Level 7")
 
@@ -554,7 +551,7 @@ class TelekineticAdept(TextFeature):
         return description
 
 
-class GuardedMind(TextFeature):
+class GuardedMind(Feature):
     def __init__(self):
         super().__init__(name="Guarded Mind", origin="Psi Warrior Fighter Level 10")
 
@@ -563,7 +560,7 @@ class GuardedMind(TextFeature):
         return description
 
 
-class BulwarkofForce(TextFeature):
+class BulwarkofForce(Feature):
     def __init__(self):
         super().__init__(name="Bulwark of Force", origin="Psi Warrior Fighter Level 15")
 
@@ -575,7 +572,7 @@ class BulwarkofForce(TextFeature):
         return description
 
 
-class TelekineticMaster(TextFeature):
+class TelekineticMaster(Feature):
     def __init__(self):
         super().__init__(
             name="Telekinetic Master", origin="Psi Warrior Fighter Level 18"

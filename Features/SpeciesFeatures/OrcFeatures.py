@@ -1,5 +1,5 @@
 from Definitions import CreatureSize
-from Features.BaseFeatures import TextFeature
+from Features.BaseFeatures import Feature
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
@@ -7,7 +7,7 @@ SPEED = 30  # Given by your species
 SIZE = CreatureSize.MEDIUM  # Given by your species
 
 
-class Darkvision(TextFeature):
+class Darkvision(Feature):
     def __init__(self):
         super().__init__(name="Darkvision", origin="Orc Trait")
 
@@ -15,7 +15,7 @@ class Darkvision(TextFeature):
         return "You have Darkvision with a range of 120 feet."
 
 
-class AdrenalineRush(TextFeature):
+class AdrenalineRush(Feature):
     def __init__(self):
         super().__init__(
             name="Adrenaline Rush",
@@ -31,7 +31,7 @@ class AdrenalineRush(TextFeature):
         return StringUtils.add_boxes(text, proficiency_bonus)
 
 
-class RelentlessEndurance(TextFeature):
+class RelentlessEndurance(Feature):
     def __init__(self):
         super().__init__(
             name="Relentless Endurance",

@@ -1,13 +1,13 @@
 import Definitions
 from Definitions import Ability
-from Features.BaseFeatures import TextFeature
+from Features.BaseFeatures import Feature
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
 SORCERER_HIT_DIE = 6
 
 
-class Spellcasting(TextFeature):
+class Spellcasting(Feature):
     def __init__(self):
         super().__init__(name="Spellcasting", origin="Sorcerer Level 1")
 
@@ -22,7 +22,7 @@ class Spellcasting(TextFeature):
         return description
 
 
-class InnateSorcery(TextFeature):
+class InnateSorcery(Feature):
     def __init__(self):
         super().__init__(name="Innate Sorcery", origin="Sorcerer Level 1")
 
@@ -36,7 +36,7 @@ class InnateSorcery(TextFeature):
         return StringUtils.add_boxes(description, 2, regain_all_on="long rest")
 
 
-class FontOfMagic(TextFeature):
+class FontOfMagic(Feature):
     def __init__(self):
         super().__init__(name="Font of Magic", origin="Sorcerer Level 2")
 
@@ -62,7 +62,7 @@ class FontOfMagic(TextFeature):
         return StringUtils.add_boxes(description, sorcery_points, regain_all_on="long rest")
 
 
-class Metamagic(TextFeature):
+class Metamagic(Feature):
     def __init__(self):
         super().__init__(name="Metamagic", origin="Sorcerer Level 2")
 
@@ -84,7 +84,7 @@ class Metamagic(TextFeature):
         return description
 
 
-class SorcerousRestoration(TextFeature):
+class SorcerousRestoration(Feature):
     def __init__(self):
         super().__init__(name="Sorcerous Restoration", origin="Sorcerer Level 5")
 
@@ -93,7 +93,7 @@ class SorcerousRestoration(TextFeature):
         return description
 
 
-class SorceryIncarnate(TextFeature):
+class SorceryIncarnate(Feature):
     def __init__(self):
         super().__init__(name="Sorcery Incarnate", origin="Sorcerer Level 7")
 
@@ -105,7 +105,7 @@ class SorceryIncarnate(TextFeature):
         return description
 
 
-class ArcaneApotheosis(TextFeature):
+class ArcaneApotheosis(Feature):
     def __init__(self):
         super().__init__(name="Arcane Apotheosis", origin="Sorcerer Level 20")
 
@@ -117,7 +117,7 @@ class ArcaneApotheosis(TextFeature):
 ### Aberrant Sorcery Features Generated Below ###
 
 
-class TelepathicSpeech(TextFeature):
+class TelepathicSpeech(Feature):
     def __init__(self):
         super().__init__(name="Telepathic Speech", origin="Aberrant Sorcery Level 3")
 
@@ -129,7 +129,7 @@ class TelepathicSpeech(TextFeature):
         return description
 
 
-class PsionicSorcery(TextFeature):
+class PsionicSorcery(Feature):
     def __init__(self):
         super().__init__(name="Psionic Sorcery", origin="Aberrant Sorcery Level 6")
 
@@ -138,7 +138,7 @@ class PsionicSorcery(TextFeature):
         return description
 
 
-class PsychicDefenses(TextFeature):
+class PsychicDefenses(Feature):
     def __init__(self):
         super().__init__(name="Psychic Defenses", origin="Aberrant Sorcery Level 6")
 
@@ -147,7 +147,7 @@ class PsychicDefenses(TextFeature):
         return description
 
 
-class RevelationinFlesh(TextFeature):
+class RevelationinFlesh(Feature):
     def __init__(self):
         super().__init__(name="Revelation in Flesh", origin="Aberrant Sorcery Level 14")
 
@@ -162,7 +162,7 @@ class RevelationinFlesh(TextFeature):
         return description
 
 
-class WarpingImplosion(TextFeature):
+class WarpingImplosion(Feature):
     def __init__(self):
         super().__init__(name="Warping Implosion", origin="Aberrant Sorcery Level 18")
 
@@ -177,7 +177,7 @@ class WarpingImplosion(TextFeature):
 ### Clockwork Sorcery Features Generated Below ###
 
 
-class RestoreBalance(TextFeature):
+class RestoreBalance(Feature):
     def __init__(self):
         super().__init__(name="Restore Balance", origin="Clockwork Sorcery Level 3")
 
@@ -191,7 +191,7 @@ class RestoreBalance(TextFeature):
         return StringUtils.add_boxes(description, uses, regain_all_on="long rest")
 
 
-class BastionOfLaw(TextFeature):
+class BastionOfLaw(Feature):
     def __init__(self):
         super().__init__(name="Bastion of Law", origin="Clockwork Sorcery Level 6")
 
@@ -203,7 +203,7 @@ class BastionOfLaw(TextFeature):
         return description
 
 
-class TranceOfOrder(TextFeature):
+class TranceOfOrder(Feature):
     def __init__(self):
         super().__init__(name="Trance of Order", origin="Clockwork Sorcery Level 14")
 
@@ -215,7 +215,7 @@ class TranceOfOrder(TextFeature):
         return description
 
 
-class ClockworkCavalcade(TextFeature):
+class ClockworkCavalcade(Feature):
     def __init__(self):
         super().__init__(
             name="Clockwork Cavalcade", origin="Clockwork Sorcery Level 18"
@@ -234,7 +234,7 @@ class ClockworkCavalcade(TextFeature):
 ### Draconic Sorcery Features Generated Below ###
 
 
-class DraconicResilience(TextFeature):
+class DraconicResilience(Feature):
     def __init__(self):
         super().__init__(name="Draconic Resilience", origin="Draconic Sorcerer Level 3")
 
@@ -246,7 +246,7 @@ class DraconicResilience(TextFeature):
         return description
 
 
-class ElementalAffinity(TextFeature):
+class ElementalAffinity(Feature):
     def __init__(self):
         super().__init__(name="Elemental Affinity", origin="Draconic Sorcerer Level 6")
 
@@ -258,7 +258,7 @@ class ElementalAffinity(TextFeature):
         return description
 
 
-class DragonWings(TextFeature):
+class DragonWings(Feature):
     def __init__(self):
         super().__init__(name="Dragon Wings", origin="Draconic Sorcerer Level 14")
 
@@ -270,7 +270,7 @@ class DragonWings(TextFeature):
         return description
 
 
-class DragonCompanion(TextFeature):
+class DragonCompanion(Feature):
     def __init__(self):
         super().__init__(name="Dragon Companion", origin="Draconic Sorcerer Level 18")
 
@@ -285,7 +285,7 @@ class DragonCompanion(TextFeature):
 ### Spellfire Sorcerer Features Generated Below ###
 
 
-class SpellfireBurst(TextFeature):
+class SpellfireBurst(Feature):
     def __init__(self):
         super().__init__(name="Spellfire Burst", origin="Spellfire Sorcerer Level 3")
 
@@ -298,7 +298,7 @@ class SpellfireBurst(TextFeature):
         return description
 
 
-class AbsorbSpells(TextFeature):
+class AbsorbSpells(Feature):
     def __init__(self):
         super().__init__(name="Absorb Spells", origin="Spellfire Sorcerer Level 6")
 
@@ -310,7 +310,7 @@ class AbsorbSpells(TextFeature):
         return description
 
 
-class HonedSpellfire(TextFeature):
+class HonedSpellfire(Feature):
     def __init__(self):
         super().__init__(name="Honed Spellfire", origin="Spellfire Sorcerer Level 14")
 
@@ -319,7 +319,7 @@ class HonedSpellfire(TextFeature):
         return description
 
 
-class CrownOfSpellfire(TextFeature):
+class CrownOfSpellfire(Feature):
     def __init__(self):
         super().__init__(
             name="Crown of Spellfire", origin="Spellfire Sorcerer Level 18"
@@ -338,7 +338,7 @@ class CrownOfSpellfire(TextFeature):
 ### Wild Magic Sorcerer Features Generated Below ###
 
 
-class WildMagicSurge(TextFeature):
+class WildMagicSurge(Feature):
     def __init__(self):
         super().__init__(name="Wild Magic Surge", origin="Wild Magic Sorcerer Level 3")
 
@@ -350,7 +350,7 @@ class WildMagicSurge(TextFeature):
         return description
 
 
-class TidesOfChaos(TextFeature):
+class TidesOfChaos(Feature):
     def __init__(self):
         super().__init__(name="Tides of Chaos", origin="Wild Magic Sorcerer Level 3")
 
@@ -362,7 +362,7 @@ class TidesOfChaos(TextFeature):
         return description
 
 
-class BendLuck(TextFeature):
+class BendLuck(Feature):
     def __init__(self):
         super().__init__(name="Bend Luck", origin="Wild Magic Sorcerer Level 6")
 
@@ -371,7 +371,7 @@ class BendLuck(TextFeature):
         return description
 
 
-class ControlledChaos(TextFeature):
+class ControlledChaos(Feature):
     def __init__(self):
         super().__init__(name="Controlled Chaos", origin="Wild Magic Sorcerer Level 14")
 
@@ -380,7 +380,7 @@ class ControlledChaos(TextFeature):
         return description
 
 
-class TamedSurge(TextFeature):
+class TamedSurge(Feature):
     def __init__(self):
         super().__init__(name="Tamed Surge", origin="Wild Magic Sorcerer Level 18")
 
@@ -395,7 +395,7 @@ class TamedSurge(TextFeature):
 ### Shadow Sorcerer Features Generated Below ###
 
 
-class ShadowSpells(TextFeature):
+class ShadowSpells(Feature):
     def __init__(self):
         super().__init__(name="Shadow Spells", origin="Shadow Sorcerer Level 3")
 
@@ -412,7 +412,7 @@ class ShadowSpells(TextFeature):
         return description
 
 
-class PowerOfShadow(TextFeature):
+class PowerOfShadow(Feature):
     def __init__(self):
         super().__init__(name="Power of Shadow", origin="Shadow Sorcerer Level 3")
 
@@ -425,7 +425,7 @@ class PowerOfShadow(TextFeature):
         return description
 
 
-class BeastsOfIllOmen(TextFeature):
+class BeastsOfIllOmen(Feature):
     def __init__(self):
         super().__init__(name="Beasts of Ill Omen", origin="Shadow Sorcerer Level 6")
 
@@ -437,7 +437,7 @@ class BeastsOfIllOmen(TextFeature):
         return description
 
 
-class ShadowWalk(TextFeature):
+class ShadowWalk(Feature):
     def __init__(self):
         super().__init__(name="Shadow Walk", origin="Shadow Sorcerer Level 14")
 
@@ -446,7 +446,7 @@ class ShadowWalk(TextFeature):
         return description
 
 
-class UmbralForm(TextFeature):
+class UmbralForm(Feature):
     def __init__(self):
         super().__init__(name="Umbral Form", origin="Shadow Sorcerer Level 18")
 

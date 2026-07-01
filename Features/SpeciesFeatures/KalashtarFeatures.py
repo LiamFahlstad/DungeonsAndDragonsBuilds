@@ -1,12 +1,12 @@
 from Definitions import Skill
-from Features.BaseFeatures import CharacterFeature, TextFeature
+from Features.BaseFeatures import Feature
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
 SPEED = 30  # Given by your species
 
 
-class DualMind(TextFeature):
+class DualMind(Feature):
     def __init__(self):
         super().__init__(name="Dual Mind", origin="Kalashtar Trait")
 
@@ -14,7 +14,7 @@ class DualMind(TextFeature):
         return "You have Advantage on Wisdom and Charisma saving throws."
 
 
-class MentalDiscipline(TextFeature):
+class MentalDiscipline(Feature):
     def __init__(self):
         super().__init__(name="Mental Discipline", origin="Kalashtar Trait")
 
@@ -22,7 +22,7 @@ class MentalDiscipline(TextFeature):
         return "You have Resistance to Psychic damage."
 
 
-class MindLink(TextFeature):
+class MindLink(Feature):
     def __init__(self):
         super().__init__(name="Mind Link", origin="Kalashtar Trait")
 
@@ -37,7 +37,7 @@ class MindLink(TextFeature):
         )
 
 
-class SeveredFromDreams(TextFeature):
+class SeveredFromDreams(Feature):
     def __init__(self):
         super().__init__(name="Severed from Dreams", origin="Kalashtar Trait")
 

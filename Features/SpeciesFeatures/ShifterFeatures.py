@@ -1,7 +1,7 @@
 from enum import Enum
 
 from Definitions import Skill
-from Features.BaseFeatures import CharacterFeature, TextFeature
+from Features.BaseFeatures import Feature
 from Features.SubFeatures import SkillProficiencyChoice
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
@@ -15,7 +15,7 @@ class ShiftForm(str, Enum):
     WILD_HUNT = "Wild Hunt"
 
 
-class Darkvision(TextFeature):
+class Darkvision(Feature):
     def __init__(self, distance: int):
         self.distance = distance
         super().__init__(name="Darkvision", origin="Shifter Trait")
@@ -24,7 +24,7 @@ class Darkvision(TextFeature):
         return f"You have Darkvision with a range of {self.distance} feet."
 
 
-class Shifting(TextFeature):
+class Shifting(Feature):
     def __init__(self, shift_form: ShiftForm):
         self.shift_form = shift_form
         super().__init__(name="Shifting", origin="Shifter Trait")
@@ -46,7 +46,7 @@ class Shifting(TextFeature):
         return description
 
 
-class BestialInstincts(CharacterFeature):
+class BestialInstincts(Feature):
     VALID_SKILLS = [
         Skill.ACROBATICS,
         Skill.ATHLETICS,

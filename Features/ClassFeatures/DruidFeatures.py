@@ -1,13 +1,13 @@
 import Definitions
 from Definitions import Ability
-from Features.BaseFeatures import TextFeature
+from Features.BaseFeatures import Feature
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
 DRUID_HIT_DIE = 8
 
 
-class Spellcasting(TextFeature):
+class Spellcasting(Feature):
     def __init__(self):
         super().__init__(name="Spellcasting", origin="Druid Level 1")
 
@@ -22,7 +22,7 @@ class Spellcasting(TextFeature):
         return description
 
 
-class Druidic(TextFeature):
+class Druidic(Feature):
     def __init__(self):
         super().__init__(name="Druidic", origin="Druid Level 1")
 
@@ -34,7 +34,7 @@ class Druidic(TextFeature):
         return description
 
 
-class PrimalOrder(TextFeature):
+class PrimalOrder(Feature):
     def __init__(self):
         super().__init__(name="Primal Order", origin="Druid Level 1")
 
@@ -47,7 +47,7 @@ class PrimalOrder(TextFeature):
         return description
 
 
-class WildShape(TextFeature):
+class WildShape(Feature):
     def __init__(self):
         super().__init__(name="Wild Shape", origin="Druid Level 2")
 
@@ -79,7 +79,7 @@ class WildShape(TextFeature):
         return StringUtils.add_boxes(description, uses, regain_x_on=(1, "short rest"), regain_all_on="long rest")
 
 
-class WildCompanion(TextFeature):
+class WildCompanion(Feature):
     def __init__(self):
         super().__init__(name="Wild Companion", origin="Druid Level 2")
 
@@ -91,7 +91,7 @@ class WildCompanion(TextFeature):
         return description
 
 
-class WildResurgence(TextFeature):
+class WildResurgence(Feature):
     def __init__(self):
         super().__init__(name="Wild Resurgence", origin="Druid Level 5")
 
@@ -103,7 +103,7 @@ class WildResurgence(TextFeature):
         return description
 
 
-class ElementalFury(TextFeature):
+class ElementalFury(Feature):
     def __init__(self):
         super().__init__(name="Elemental Fury", origin="Druid Level 7")
 
@@ -116,7 +116,7 @@ class ElementalFury(TextFeature):
         return description
 
 
-class ImprovedElementalFury(TextFeature):
+class ImprovedElementalFury(Feature):
     def __init__(self):
         super().__init__(name="Improved Elemental Fury", origin="Druid Level 15")
 
@@ -129,7 +129,7 @@ class ImprovedElementalFury(TextFeature):
         return description
 
 
-class BeastSpells(TextFeature):
+class BeastSpells(Feature):
     def __init__(self):
         super().__init__(name="Beast Spells", origin="Druid Level 18")
 
@@ -138,7 +138,7 @@ class BeastSpells(TextFeature):
         return description
 
 
-class Archdruid(TextFeature):
+class Archdruid(Feature):
     def __init__(self):
         super().__init__(name="Archdruid", origin="Druid Level 20")
 
@@ -155,7 +155,7 @@ class Archdruid(TextFeature):
 ### Circle of the Land Druid Features ###
 
 
-class LandsAid(TextFeature):
+class LandsAid(Feature):
     def __init__(self):
         super().__init__(name="Land's Aid", origin="Circle of the Land Druid Level 3")
 
@@ -167,7 +167,7 @@ class LandsAid(TextFeature):
         return description
 
 
-class NaturalRecovery(TextFeature):
+class NaturalRecovery(Feature):
     def __init__(self):
         super().__init__(
             name="Natural Recovery", origin="Circle of the Land Druid Level 6"
@@ -181,7 +181,7 @@ class NaturalRecovery(TextFeature):
         return description
 
 
-class NaturesWard(TextFeature):
+class NaturesWard(Feature):
     def __init__(self):
         super().__init__(
             name="Nature's Ward", origin="Circle of the Land Druid Level 10"
@@ -192,7 +192,7 @@ class NaturesWard(TextFeature):
         return description
 
 
-class NaturesSanctuary(TextFeature):
+class NaturesSanctuary(Feature):
     def __init__(self):
         super().__init__(
             name="Nature's Sanctuary", origin="Circle of the Land Druid Level 14"
@@ -209,7 +209,7 @@ class NaturesSanctuary(TextFeature):
 ### Circle of the Moon Druid Features ###
 
 
-class CircleForms(TextFeature):
+class CircleForms(Feature):
     def __init__(self):
         super().__init__(name="Circle Forms", origin="Circle of the Moon Druid Level 3")
 
@@ -223,7 +223,7 @@ class CircleForms(TextFeature):
         return description
 
 
-class CircleoftheMoonSpells(TextFeature):
+class CircleoftheMoonSpells(Feature):
     def __init__(self):
         super().__init__(
             name="Circle of the Moon Spells", origin="Circle of the Moon Druid Level 3"
@@ -237,7 +237,7 @@ class CircleoftheMoonSpells(TextFeature):
         return description
 
 
-class ImprovedCircleForms(TextFeature):
+class ImprovedCircleForms(Feature):
     def __init__(self):
         super().__init__(
             name="Improved Circle Forms", origin="Circle of the Moon Druid Level 6"
@@ -252,7 +252,7 @@ class ImprovedCircleForms(TextFeature):
         return description
 
 
-class MoonlightStep(TextFeature):
+class MoonlightStep(Feature):
     def __init__(self):
         super().__init__(
             name="Moonlight Step", origin="Circle of the Moon Druid Level 10"
@@ -268,7 +268,7 @@ class MoonlightStep(TextFeature):
         return StringUtils.add_boxes(description, uses, regain_all_on="long rest")
 
 
-class LunarForm(TextFeature):
+class LunarForm(Feature):
     def __init__(self):
         super().__init__(name="Lunar Form", origin="Circle of the Moon Druid Level 14")
 
@@ -284,7 +284,7 @@ class LunarForm(TextFeature):
 ### Circle of the Sea Druid Features ###
 
 
-class CircleOfTheSeaSpells(TextFeature):
+class CircleOfTheSeaSpells(Feature):
     def __init__(self):
         super().__init__(
             name="Circle of the Sea Spells", origin="Circle of the Sea Druid Level 3"
@@ -295,7 +295,7 @@ class CircleOfTheSeaSpells(TextFeature):
         return description
 
 
-class WrathOfTheSea(TextFeature):
+class WrathOfTheSea(Feature):
     def __init__(self):
         super().__init__(
             name="Wrath of the Sea", origin="Circle of the Sea Druid Level 3"
@@ -309,7 +309,7 @@ class WrathOfTheSea(TextFeature):
         return description
 
 
-class AquaticAffinity(TextFeature):
+class AquaticAffinity(Feature):
     def __init__(self):
         super().__init__(
             name="Aquatic Affinity", origin="Circle of the Sea Druid Level 6"
@@ -323,7 +323,7 @@ class AquaticAffinity(TextFeature):
         return description
 
 
-class Stormborn(TextFeature):
+class Stormborn(Feature):
     def __init__(self):
         super().__init__(name="Stormborn", origin="Circle of the Sea Druid Level 10")
 
@@ -336,7 +336,7 @@ class Stormborn(TextFeature):
         return description
 
 
-class OceanicGift(TextFeature):
+class OceanicGift(Feature):
     def __init__(self):
         super().__init__(name="Oceanic Gift", origin="Circle of the Sea Druid Level 14")
 
@@ -351,7 +351,7 @@ class OceanicGift(TextFeature):
 ### Circle of the Stars Druid Features ###
 
 
-class StarMap(TextFeature):
+class StarMap(Feature):
     def __init__(self):
         super().__init__(name="Star Map", origin="Circle of the Stars Druid Level 3")
 
@@ -366,7 +366,7 @@ class StarMap(TextFeature):
         return StringUtils.add_boxes(description, uses, regain_all_on="long rest")
 
 
-class StarryForm(TextFeature):
+class StarryForm(Feature):
     def __init__(self):
         super().__init__(name="Starry Form", origin="Circle of the Stars Druid Level 3")
 
@@ -382,7 +382,7 @@ class StarryForm(TextFeature):
         return description
 
 
-class CosmicOmen(TextFeature):
+class CosmicOmen(Feature):
     def __init__(self):
         super().__init__(name="Cosmic Omen", origin="Circle of the Stars Druid Level 6")
 
@@ -398,7 +398,7 @@ class CosmicOmen(TextFeature):
         return StringUtils.add_boxes(description, uses, regain_all_on="long rest")
 
 
-class TwinklingConstellations(TextFeature):
+class TwinklingConstellations(Feature):
     def __init__(self):
         super().__init__(
             name="Twinkling Constellations", origin="Circle of the Stars Druid Level 10"
@@ -412,7 +412,7 @@ class TwinklingConstellations(TextFeature):
         return description
 
 
-class FullOfStars(TextFeature):
+class FullOfStars(Feature):
     def __init__(self):
         super().__init__(
             name="Full of Stars", origin="Circle of the Stars Druid Level 14"

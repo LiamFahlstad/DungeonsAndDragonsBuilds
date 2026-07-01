@@ -1,5 +1,5 @@
 from Definitions import Skill
-from Features.BaseFeatures import CharacterFeature, TextFeature
+from Features.BaseFeatures import Feature
 from Features.SubFeatures import SkillProficiencyChoice
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
@@ -7,7 +7,7 @@ from Utils import StringUtils
 SPEED = 30  # Given by your species
 
 
-class Darkvision(TextFeature):
+class Darkvision(Feature):
     def __init__(self):
         super().__init__(name="Darkvision", origin="Lupin Trait")
 
@@ -15,7 +15,7 @@ class Darkvision(TextFeature):
         return "You have Darkvision with a range of 60 feet."
 
 
-class FeralPounce(TextFeature):
+class FeralPounce(Feature):
     def __init__(self):
         super().__init__(name="Feral Pounce", origin="Lupin Trait")
 
@@ -27,7 +27,7 @@ class FeralPounce(TextFeature):
         )
 
 
-class Howl(TextFeature):
+class Howl(Feature):
     def __init__(self):
         super().__init__(name="Howl", origin="Lupin Trait")
 
@@ -44,7 +44,7 @@ class Howl(TextFeature):
         return StringUtils.add_boxes(description, proficiency_bonus)
 
 
-class WerewolfInstincts(CharacterFeature):
+class WerewolfInstincts(Feature):
     VALID_SKILLS = [Skill.PERCEPTION, Skill.STEALTH, Skill.SURVIVAL]
 
     def __init__(self, skill: Skill):

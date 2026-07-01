@@ -1,12 +1,12 @@
 from Definitions import Skill
-from Features.BaseFeatures import CharacterFeature, TextFeature
+from Features.BaseFeatures import Feature
 from Features.SubFeatures import SkillProficiencyChoice
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 SPEED = 30  # Given by your species
 
 
-class ChangelingInstincts(CharacterFeature):
+class ChangelingInstincts(Feature):
     VALID_SKILLS = [
         Skill.DECEPTION,
         Skill.INSIGHT,
@@ -24,7 +24,7 @@ class ChangelingInstincts(CharacterFeature):
         self._choice.apply(character_stat_block)
 
 
-class ShapeShifter(TextFeature):
+class ShapeShifter(Feature):
     def __init__(self):
         super().__init__(name="Shape-Shifter", origin="Changeling Trait")
 
