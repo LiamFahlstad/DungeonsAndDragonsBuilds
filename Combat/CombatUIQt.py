@@ -6,6 +6,7 @@ from pathlib import Path
 
 import CharacterSheetCreator
 import Definitions
+from Combat.ConditionRules import ConditionRule
 from Combat.Definitions import Action, BasicCombatantData, Condition, ExtendedCombatantData
 from Features import Armor
 
@@ -1763,6 +1764,41 @@ class CombatAppQt:
         "Prone":         "#5c4a00",
     }
 
+    def _show_condition_info(self, condition_name: str):
+        rule = ConditionRule.from_name(condition_name)
+        if rule is None:
+            return
+        heading, body = rule.heading, rule.description
+
+        dlg = QDialog(self._window)
+        dlg.setWindowTitle(condition_name)
+        dlg.setMinimumWidth(380)
+        dlg.setStyleSheet(QSS)
+
+        layout = QVBoxLayout(dlg)
+        layout.setContentsMargins(14, 14, 14, 14)
+        layout.setSpacing(8)
+
+        title_lbl = QLabel(heading)
+        title_lbl.setStyleSheet("font-weight: bold; color: #c9a84c; font-size: 13px;")
+        layout.addWidget(title_lbl)
+
+        divider = QFrame()
+        divider.setObjectName("divider")
+        layout.addWidget(divider)
+
+        body_lbl = QLabel(body)
+        body_lbl.setWordWrap(True)
+        body_lbl.setStyleSheet("color: #c0c0c0; font-size: 12px;")
+        layout.addWidget(body_lbl)
+
+        close_btn = QPushButton("Close")
+        close_btn.setFixedHeight(28)
+        close_btn.clicked.connect(dlg.accept)
+        layout.addWidget(close_btn)
+
+        dlg.exec()
+
     @staticmethod
     def _char_death_state(char: dict) -> str:
         """Return 'alive', 'dying', 'stabilized', or 'dead'."""
@@ -1897,12 +1933,27 @@ class CombatAppQt:
             cond_row.setSpacing(3)
             cond_row.setAlignment(Qt.AlignmentFlag.AlignLeft)
             for cond in conditions:
-                badge = QLabel(cond)
                 badge_color = self._CONDITION_COLORS.get(cond, "#7a5c00")
-                badge.setStyleSheet(
-                    f"background-color: {badge_color}; color: #ffffff;"
-                    " border-radius: 3px; padding: 1px 4px; font-size: 10px;"
-                )
+                has_rule = ConditionRule.from_name(cond) is not None
+                if has_rule:
+                    badge = QPushButton(cond)
+                    badge.setFlat(True)
+                    badge.setStyleSheet(
+                        f"QPushButton {{ background-color: {badge_color}; color: #ffffff;"
+                        " border-radius: 3px; padding: 1px 4px; font-size: 10px;"
+                        " border: none; cursor: pointer; }}"
+                        f"QPushButton:hover {{ background-color: {badge_color}cc; }}"
+                    )
+                    badge.setCursor(Qt.CursorShape.PointingHandCursor)
+                    badge.clicked.connect(
+                        lambda _=False, c=cond: self._show_condition_info(c)
+                    )
+                else:
+                    badge = QLabel(cond)
+                    badge.setStyleSheet(
+                        f"background-color: {badge_color}; color: #ffffff;"
+                        " border-radius: 3px; padding: 1px 4px; font-size: 10px;"
+                    )
                 cond_row.addWidget(badge)
             cond_row.addStretch()
             layout.addLayout(cond_row)
