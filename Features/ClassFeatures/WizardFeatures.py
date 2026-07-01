@@ -39,8 +39,8 @@ class Scholar(CharacterFeature):
 
     def __init__(self, skill: Skill):
         self._expertise = SkillExpertiseChoice(
-            skill, self.SKILL_POOL,
-            "Scholar skill must be one of: Arcana, History, Investigation, Medicine, Nature, Religion"
+            [skill], self.SKILL_POOL, count=1,
+            error_prefix="Scholar skill must be one of: Arcana, History, Investigation, Medicine, Nature, Religion"
         )
 
     def modify(self, character_stat_block: CharacterStatBlock):

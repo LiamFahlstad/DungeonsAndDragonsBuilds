@@ -2,6 +2,7 @@ from enum import Enum
 
 from Definitions import Ability, Skill
 from Features.BaseFeatures import CharacterFeature, TextFeature
+from Features.SubFeatures import SkillExpertiseChoice
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
@@ -56,10 +57,10 @@ class FavoredEnemy(TextFeature):
 
 class DeftExplorerExpertise(CharacterFeature):
     def __init__(self, skill: Skill):
-        self.skill = skill
+        self._choice = SkillExpertiseChoice([skill], list(Skill), count=1, error_prefix="Deft Explorer Expertise")
 
     def modify(self, character_stat_block: CharacterStatBlock):
-        character_stat_block.skills.add_skill_expertise(self.skill)
+        self._choice.apply(character_stat_block)
 
 
 class DeftExplorerLanguages(TextFeature):
@@ -91,12 +92,10 @@ class Roving(TextFeature):
 
 class Expertise(CharacterFeature):
     def __init__(self, skill_1: Skill, skill_2: Skill):
-        self.skill_1 = skill_1
-        self.skill_2 = skill_2
+        self._choice = SkillExpertiseChoice([skill_1, skill_2], list(Skill), count=2, error_prefix="Ranger Expertise")
 
     def modify(self, character_stat_block: CharacterStatBlock):
-        character_stat_block.skills.add_skill_expertise(self.skill_1)
-        character_stat_block.skills.add_skill_expertise(self.skill_2)
+        self._choice.apply(character_stat_block)
 
 
 class Tireless(TextFeature):

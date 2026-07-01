@@ -1,6 +1,6 @@
 from Definitions import Ability, Skill
 from Features.BaseFeatures import CharacterFeature, TextFeature
-from Features.SubFeatures import SkillProficiencyChoice
+from Features.SubFeatures import SkillExpertiseChoice, SkillProficiencyChoice
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
@@ -39,22 +39,18 @@ class BardicInspiration(TextFeature):
 
 class Expertise1(CharacterFeature):
     def __init__(self, skill_1: Skill, skill_2: Skill):
-        self.skill_1 = skill_1
-        self.skill_2 = skill_2
+        self._choice = SkillExpertiseChoice([skill_1, skill_2], list(Skill), count=2, error_prefix="Bard Expertise")
 
     def modify(self, character_stat_block: CharacterStatBlock):
-        character_stat_block.skills.add_skill_expertise(self.skill_1)
-        character_stat_block.skills.add_skill_expertise(self.skill_2)
+        self._choice.apply(character_stat_block)
 
 
 class Expertise2(CharacterFeature):
     def __init__(self, skill_1: Skill, skill_2: Skill):
-        self.skill_1 = skill_1
-        self.skill_2 = skill_2
+        self._choice = SkillExpertiseChoice([skill_1, skill_2], list(Skill), count=2, error_prefix="Bard Expertise")
 
     def modify(self, character_stat_block: CharacterStatBlock):
-        character_stat_block.skills.add_skill_expertise(self.skill_1)
-        character_stat_block.skills.add_skill_expertise(self.skill_2)
+        self._choice.apply(character_stat_block)
 
 
 class JackOfAllTrades(CharacterFeature):

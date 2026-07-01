@@ -541,8 +541,9 @@ class SkillExpert(_AbilityScoreFeat):
             error_prefix="Skill Expert"
         )
         self._expertise = SkillExpertiseChoice(
-            skill,
+            [skill],
             list(Skill),
+            count=1,
             error_prefix="Skill Expert"
         )
         super().__init__(character_level, ability)
