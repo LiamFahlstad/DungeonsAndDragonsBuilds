@@ -1,6 +1,6 @@
 from Definitions import Ability, Skill
 from Features.BaseFeatures import Feature
-from Features.SubFeatures import SkillProficiencyChoice
+from Features.SubFeatures import SkillProficiency, SkillProficiencyChoice
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
@@ -37,15 +37,10 @@ class DivineOrder(Feature):
 
 class DivineOrderSkillProficiency(Feature):
     def __init__(self):
-        self._choice = SkillProficiencyChoice(
-            [Skill.ARCANA, Skill.RELIGION],
-            [Skill.ARCANA, Skill.RELIGION],
-            count=2,
-            error_prefix="Divine Order Skill Proficiency",
-        )
+        self._proficiency = SkillProficiency([Skill.ARCANA, Skill.RELIGION])
 
     def apply(self, character_stat_block: CharacterStatBlock):
-        self._choice.apply(character_stat_block)
+        self._proficiency.apply(character_stat_block)
 
 
 class ChannelDivinity(Feature):
