@@ -1,6 +1,6 @@
 from Definitions import Ability, Skill
 from Features.BaseFeatures import CharacterFeature, TextFeature
-from Features.SubFeatures import SkillExpertiseChoice
+from Features.SubFeatures import SavingThrowProficiencyChoice, SkillExpertiseChoice
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
@@ -141,9 +141,14 @@ class DeviousStrikes(TextFeature):
 
 
 class SlipperyMindCharacterFeature(CharacterFeature):
+    def __init__(self):
+        self._choice = SavingThrowProficiencyChoice(
+            [Ability.WISDOM, Ability.CHARISMA], list(Ability), count=2,
+            error_prefix="Slippery Mind"
+        )
+
     def apply(self, character_stat_block: CharacterStatBlock):
-        character_stat_block.saving_throws.add_proficiency(Ability.WISDOM)
-        character_stat_block.saving_throws.add_proficiency(Ability.CHARISMA)
+        self._choice.apply(character_stat_block)
 
 
 class SlipperyMind(TextFeature):
