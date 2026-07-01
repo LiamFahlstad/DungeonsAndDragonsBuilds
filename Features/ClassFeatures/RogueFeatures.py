@@ -1,5 +1,5 @@
 from Definitions import Ability, Skill
-from Features.BaseFeatures import CharacterFeature, TextFeature
+from Features.BaseFeatures import Feature, TextFeature
 from Features.SubFeatures import SavingThrowProficiencyChoice, SkillExpertiseChoice
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
@@ -7,8 +7,9 @@ from Utils import StringUtils
 ROGUE_HIT_DIE = 8
 
 
-class Expertise(CharacterFeature):
+class Expertise(Feature):
     def __init__(self, skill_1: Skill, skill_2: Skill):
+        super().__init__()
         self._choice = SkillExpertiseChoice(
             [skill_1, skill_2], list(Skill), count=2, error_prefix="Rogue Expertise"
         )
@@ -17,7 +18,7 @@ class Expertise(CharacterFeature):
         self._choice.apply(character_stat_block)
 
 
-class SneakAttack(TextFeature):
+class SneakAttack(Feature):
     def __init__(self):
         super().__init__(name="Sneak Attack", origin="Rogue Level 1")
 
@@ -140,8 +141,9 @@ class DeviousStrikes(TextFeature):
         return description
 
 
-class SlipperyMindCharacterFeature(CharacterFeature):
+class SlipperyMind(Feature):
     def __init__(self):
+        super().__init__(name="Slippery Mind", origin="Rogue Level 15")
         self._choice = SavingThrowProficiencyChoice(
             [Ability.WISDOM, Ability.CHARISMA], list(Ability), count=2,
             error_prefix="Slippery Mind"
@@ -149,11 +151,6 @@ class SlipperyMindCharacterFeature(CharacterFeature):
 
     def apply(self, character_stat_block: CharacterStatBlock):
         self._choice.apply(character_stat_block)
-
-
-class SlipperyMind(TextFeature):
-    def __init__(self):
-        super().__init__(name="Slippery Mind", origin="Rogue Level 15")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         return "Your mind is exceptionally difficult to control. You gain proficiency in Wisdom and Charisma saving throws."

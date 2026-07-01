@@ -1,135 +1,31 @@
-from abc import ABC, abstractmethod
+from abc import abstractmethod
 from typing import TextIO
 
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
 
-class Feature(ABC):
-    """A feature can be anything"""
+class Feature:
+    """A single feature type. Override apply() to modify the stat block, get_description() to render a card, or both."""
 
-    @abstractmethod
-    def write_to_file(self, character_stat_block: CharacterStatBlock, file: TextIO):
-        pass
-
-    @abstractmethod
-    def apply(self, character_stat_block: CharacterStatBlock):
-        pass
-
-
-class CharacterFeature(Feature):
-    """A feature that can modify a character's stat block."""
-
-    def write_to_file(self, character_stat_block: CharacterStatBlock, file: TextIO):
-        raise NotImplementedError(
-            "CharacterFeature must implement write_to_file method."
-        )
-
-
-class TextFeature(Feature):
-    """A feature that doesn't change that stats of the character."""
-
-    def __init__(self, name: str, origin: str):
+    def __init__(self, name: str | None = None, origin: str | None = None):
         self.name = name
         self.origin = origin
-        self.extensions: list["TextFeature"] = []
-        super().__init__()
+        self.extensions: list["Feature"] = []
 
-    def extend_feature(self, feature: "TextFeature"):
-        """Attach an upgrade/expansion to this feature that will be rendered below it."""
+    def extend_feature(self, feature: "Feature"):
         self.extensions.append(feature)
-
-    @abstractmethod
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        pass
 
     def apply(self, character_stat_block: CharacterStatBlock):
         pass
 
-    @staticmethod
-    def _bolden_line(text: str) -> str:
-        """Apply bold markup to a single plain-text string (no leading whitespace)."""
-        from Utils.StringUtils import _bold_prefix
-
-        bolded = _bold_prefix(text, ".", 5)
-        if bolded is not None:
-            return bolded
-        bolded = _bold_prefix(text, ":", 10)
-        if bolded is not None:
-            return bolded
-        return text
-
-    @staticmethod
-    def _description_to_html(description: str) -> str:
-        # Apply box substitution on the raw description before HTML structuring.
-        # bolden_text_html is applied per-line below so bullet prefixes are preserved.
-        processed = StringUtils.boxes_to_html(description)
-
-        # Bullet prefixes in order from most-indented to least, so nesting is detected
-        # correctly.  Each entry: (prefix_string, nesting_level).
-        BULLET_PREFIXES = [
-            ("            > ", 3),
-            ("        - ", 2),
-            ("    * ", 1),
-        ]
-
-        lines = processed.split("\n")
-        html_parts: list[str] = []
-        # Stack tracks open <ul> nesting depths (list of ints).
-        open_levels: list[int] = []
-
-        def close_levels_down_to(target_level: int):
-            """Close any open <ul> levels deeper than target_level."""
-            while open_levels and open_levels[-1] > target_level:
-                html_parts.append("</ul>")
-                open_levels.pop()
-
-        def close_all_levels():
-            while open_levels:
-                html_parts.append("</ul>")
-                open_levels.pop()
-
-        for line in lines:
-            # Detect bullet level by checking prefixes (most-indented first).
-            bullet_level = 0
-            bullet_text = None
-            for prefix, level in BULLET_PREFIXES:
-                if line.startswith(prefix):
-                    bullet_level = level
-                    bullet_text = line[len(prefix) :]
-                    break
-
-            if bullet_level > 0:
-                # Close any levels strictly deeper than this one (going back up).
-                close_levels_down_to(bullet_level)
-                # Open a new <ul> if we are not already at this level.
-                if not open_levels or open_levels[-1] < bullet_level:
-                    html_parts.append("<ul>")
-                    open_levels.append(bullet_level)
-                # Apply bold markup to the bullet text content only.
-                bolded_text = TextFeature._bolden_line(bullet_text)
-                html_parts.append(f"<li>{bolded_text}</li>")
-            else:
-                # Non-bullet line: close all open list levels first.
-                close_all_levels()
-                stripped = line.strip()
-                if stripped:
-                    # Preserve structural HTML emitted by boxes_to_html verbatim.
-                    if stripped.startswith("<"):
-                        html_parts.append(stripped)
-                    else:
-                        bolded = TextFeature._bolden_line(stripped)
-                        html_parts.append(f"<p>{bolded}</p>")
-
-        close_all_levels()
-
-        result = "\n".join(html_parts)
-        if result and not result.endswith("\n"):
-            result += "\n"
-        return result
+    def get_description(self, character_stat_block: CharacterStatBlock) -> str | None:
+        return None
 
     def write_to_file(self, character_stat_block: CharacterStatBlock, file: TextIO):
         description = self.get_description(character_stat_block)
+        if description is None:
+            return
         html_description = self._description_to_html(description)
 
         file.write("<div class='feature-card'>\n")
@@ -142,6 +38,8 @@ class TextFeature(Feature):
 
         for extension in self.extensions:
             ext_description = extension.get_description(character_stat_block)
+            if ext_description is None:
+                continue
             ext_html = self._description_to_html(ext_description)
             file.write(
                 f"<div class='feature-upgrade'>\n"
@@ -152,3 +50,89 @@ class TextFeature(Feature):
 
         file.write("</div>\n")
         file.write("</div>\n")
+
+    @staticmethod
+    def _bolden_line(text: str) -> str:
+        from Utils.StringUtils import _bold_prefix
+
+        bolded = _bold_prefix(text, ".", 5)
+        if bolded is not None:
+            return bolded
+        bolded = _bold_prefix(text, ":", 10)
+        if bolded is not None:
+            return bolded
+        return text
+
+    @staticmethod
+    def _description_to_html(description: str) -> str:
+        processed = StringUtils.boxes_to_html(description)
+
+        BULLET_PREFIXES = [
+            ("            > ", 3),
+            ("        - ", 2),
+            ("    * ", 1),
+        ]
+
+        lines = processed.split("\n")
+        html_parts: list[str] = []
+        open_levels: list[int] = []
+
+        def close_levels_down_to(target_level: int):
+            while open_levels and open_levels[-1] > target_level:
+                html_parts.append("</ul>")
+                open_levels.pop()
+
+        def close_all_levels():
+            while open_levels:
+                html_parts.append("</ul>")
+                open_levels.pop()
+
+        for line in lines:
+            bullet_level = 0
+            bullet_text = None
+            for prefix, level in BULLET_PREFIXES:
+                if line.startswith(prefix):
+                    bullet_level = level
+                    bullet_text = line[len(prefix):]
+                    break
+
+            if bullet_level > 0:
+                assert bullet_text is not None
+                close_levels_down_to(bullet_level)
+                if not open_levels or open_levels[-1] < bullet_level:
+                    html_parts.append("<ul>")
+                    open_levels.append(bullet_level)
+                bolded_text = Feature._bolden_line(bullet_text)
+                html_parts.append(f"<li>{bolded_text}</li>")
+            else:
+                close_all_levels()
+                stripped = line.strip()
+                if stripped:
+                    if stripped.startswith("<"):
+                        html_parts.append(stripped)
+                    else:
+                        bolded = Feature._bolden_line(stripped)
+                        html_parts.append(f"<p>{bolded}</p>")
+
+        close_all_levels()
+
+        result = "\n".join(html_parts)
+        if result and not result.endswith("\n"):
+            result += "\n"
+        return result
+
+
+class CharacterFeature(Feature):
+    """Backward compat: a Feature that modifies the stat block and renders no card."""
+    pass
+
+
+class TextFeature(Feature):
+    """Backward compat: a Feature that renders a card on the character sheet."""
+
+    def __init__(self, name: str, origin: str):
+        super().__init__(name=name, origin=origin)
+
+    @abstractmethod
+    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+        pass

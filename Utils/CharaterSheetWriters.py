@@ -5,7 +5,7 @@ import DamageCalculator
 import Definitions
 from Definitions import Ability, Die, DiceRollCondition
 from Features import Armor
-from Features.BaseFeatures import CharacterFeature, Feature
+from Features.BaseFeatures import Feature
 from Features.FightingStyles import FightingStyle
 from Features.Weapons import AbstractWeapon, UnarmedStrike, write_weapons_to_file
 from Invocations.InvocationFactory import InvocationFactory
@@ -370,7 +370,7 @@ class HtmlCharacterSheetWriter:
     def _write_features(
         self, character: CharacterStatBlock, file: TextIO, features: list[Feature]
     ):
-        text_features = [f for f in features if not isinstance(f, CharacterFeature)]
+        text_features = [f for f in features if f.get_description(character) is not None]
         if not text_features:
             return
 
