@@ -1,9 +1,6 @@
 import argparse
 
-import Combat.GrimsCastle.Encounters as GrimsCastleEncounters
-import Combat.TimeLoop.Encounters as TimeLoopEncounters
-from Builds.OptimizedPaladinVengeance import OptimizedPaladinVengeanceCharacterBuilder
-from Combat.Monsters.CR_24 import AncientRedDragon
+import Combat.Scenarios as Scenarios
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="DnD Combat Engine")
@@ -13,22 +10,25 @@ if __name__ == "__main__":
         default="qt",
         help="UI backend to use (default: qt)",
     )
+    parser.add_argument(
+        "--scenario",
+        choices=sorted(Scenarios.SCENARIOS.keys()),
+        default="time_loop_square",
+        help="Combat scenario to run (default: time_loop_square)",
+    )
     args = parser.parse_args()
 
-    combatants = (
-        TimeLoopEncounters.get_players()
-        + TimeLoopEncounters.get_square_combatants()
-        + GrimsCastleEncounters.get_bull()
-        + [AncientRedDragon()]
-    )
+    scenario = Scenarios.SCENARIOS[args.scenario]
+    combatants = scenario.build_combatants()
+    character_sheets = scenario.build_character_sheets()
 
     if args.ui == "qt":
         from Combat.CombatUIQt import CombatAppQt
 
         app = CombatAppQt(
             combatants=combatants,
-            character_sheets=[OptimizedPaladinVengeanceCharacterBuilder().build()],
-            combatants_per_column=4,
+            character_sheets=character_sheets,
+            combatants_per_column=scenario.combatants_per_column,
         )
         app.run()
     else:
@@ -40,7 +40,7 @@ if __name__ == "__main__":
         app = CombatApp(
             root,
             combatants=combatants,
-            character_sheets=[],
-            combatants_per_column=4,
+            character_sheets=character_sheets,
+            combatants_per_column=scenario.combatants_per_column,
         )
         root.mainloop()
