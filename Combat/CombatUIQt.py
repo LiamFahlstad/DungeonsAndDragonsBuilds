@@ -8,6 +8,7 @@ import CharacterSheetCreator
 import Definitions
 from Combat.ConditionRules import ConditionRule
 from Combat.Definitions import Action, BasicCombatantData, Condition, ExtendedCombatantData
+from Combat.Rules import Rule, group_by_category, load_rules
 from Features import Armor
 
 from PyQt6.QtWidgets import (
@@ -27,6 +28,8 @@ from PyQt6.QtWidgets import (
     QScrollArea,
     QSizePolicy,
     QTextEdit,
+    QTreeWidget,
+    QTreeWidgetItem,
     QVBoxLayout,
     QWidget,
     QMessageBox,
@@ -1238,6 +1241,89 @@ class CombatAppQt:
 
         dlg.exec()
 
+    def _show_rules(self):
+        """Browse the rules glossary, grouped by category and searchable by name/text."""
+        if not hasattr(self, "_rules_cache"):
+            self._rules_cache: list[Rule] = load_rules()
+        rules = self._rules_cache
+
+        dlg = QDialog(self._window)
+        dlg.setWindowTitle("Rules")
+        dlg.setMinimumSize(760, 560)
+        dlg.setStyleSheet(QSS)
+
+        outer = QVBoxLayout(dlg)
+        outer.setContentsMargins(14, 14, 14, 14)
+        outer.setSpacing(8)
+
+        search_box = QLineEdit()
+        search_box.setPlaceholderText("Search rules…")
+        outer.addWidget(search_box)
+
+        body = QHBoxLayout()
+        body.setSpacing(10)
+        outer.addLayout(body)
+
+        tree = QTreeWidget()
+        tree.setHeaderHidden(True)
+        tree.setMinimumWidth(260)
+        body.addWidget(tree, stretch=1)
+
+        detail = QTextEdit()
+        detail.setReadOnly(True)
+        body.addWidget(detail, stretch=2)
+
+        category_items: dict[str, QTreeWidgetItem] = {}
+        for category, category_rules in group_by_category(rules).items():
+            cat_item = QTreeWidgetItem([category])
+            cat_item.setFirstColumnSpanned(True)
+            tree.addTopLevelItem(cat_item)
+            category_items[category] = cat_item
+            for rule in category_rules:
+                rule_item = QTreeWidgetItem([rule.name])
+                rule_item.setData(0, Qt.ItemDataRole.UserRole, rule)
+                cat_item.addChild(rule_item)
+        tree.expandAll()
+
+        def show_rule(rule: Rule):
+            detail.setHtml(
+                f"<b style='color:#c9a84c; font-size:14px;'>{rule.name}</b> "
+                f"<span style='color:#a0a0b0;'>[{rule.category}]</span>"
+                f"<br><br>{rule.body.replace(chr(10) + chr(10), '<br><br>')}"
+            )
+
+        def on_selection_changed():
+            items = tree.selectedItems()
+            if not items:
+                return
+            rule = items[0].data(0, Qt.ItemDataRole.UserRole)
+            if rule is not None:
+                show_rule(rule)
+
+        tree.itemSelectionChanged.connect(on_selection_changed)
+
+        def apply_filter(query: str):
+            query = query.strip().lower()
+            for category, cat_item in category_items.items():
+                any_visible = False
+                for i in range(cat_item.childCount()):
+                    child = cat_item.child(i)
+                    rule = child.data(0, Qt.ItemDataRole.UserRole)
+                    visible = rule.matches(query)
+                    child.setHidden(not visible)
+                    any_visible = any_visible or visible
+                cat_item.setHidden(not any_visible)
+                if query:
+                    cat_item.setExpanded(any_visible)
+
+        search_box.textChanged.connect(apply_filter)
+
+        close_btn = QPushButton("Close")
+        close_btn.clicked.connect(dlg.accept)
+        outer.addWidget(close_btn)
+
+        dlg.exec()
+
     def _load_log_from_path(self, path: str):
         data = json.loads(Path(path).read_text())
         if "combatants" not in data:
@@ -1674,6 +1760,10 @@ class CombatAppQt:
         log_btn = QPushButton("Open Current Log")
         log_btn.clicked.connect(self._show_current_log)
         panel_layout.addWidget(log_btn)
+
+        rules_btn = QPushButton("Rules")
+        rules_btn.clicked.connect(self._show_rules)
+        panel_layout.addWidget(rules_btn)
 
         panel_layout.addStretch()
         root_layout.addWidget(panel)
