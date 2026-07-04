@@ -278,8 +278,10 @@ class CombatAppQt:
         combatants: list[BasicCombatantData],
         character_sheets: list,
         combatants_per_column: int = 4,
+        resume_log_path: str | None = None,
     ):
         self.combatants_per_column = combatants_per_column
+        self._resume_log_path = resume_log_path
 
         # ---- data ----
         self.characters: list[dict] = []
@@ -1189,6 +1191,9 @@ class CombatAppQt:
         )
         if not path:
             return
+        self._load_log_from_path(path)
+
+    def _load_log_from_path(self, path: str):
         data = json.loads(Path(path).read_text())
         if "combatants" not in data:
             QMessageBox.warning(self._window, "Error", "No combatants key in log file.")
@@ -2048,6 +2053,9 @@ class CombatAppQt:
         app.setStyleSheet(QSS)
 
         self._build_window()
+
+        if self._resume_log_path:
+            self._load_log_from_path(self._resume_log_path)
 
         self._window.show()
         sys.exit(app.exec())

@@ -17,6 +17,7 @@ class CombatApp:
         combatants: list[BasicCombatantData],
         character_sheets: list[CharacterSheetCreator.CharacterSheetData],
         combatants_per_column: int = 4,
+        resume_log_path: str | None = None,
     ):
         self.root = root
         self.root.title("DnD Combat Engine")
@@ -43,6 +44,9 @@ class CombatApp:
         # -------- UI --------
         self.build_ui()
         self.refresh_ui()
+
+        if resume_log_path:
+            self.load_combat_log_from_path(resume_log_path)
 
     # -------- CHARACTERS --------
     def add_character_from_character_sheet(
@@ -114,6 +118,9 @@ class CombatApp:
         )
         if not path:
             return
+        self.load_combat_log_from_path(path)
+
+    def load_combat_log_from_path(self, path: str):
         data = json.loads(Path(path).read_text())
         if "combatants" not in data:
             return
