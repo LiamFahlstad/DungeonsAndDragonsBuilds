@@ -437,10 +437,17 @@ class CombatAppQt:
         data["combatants"] = [{k: v for k, v in c.items() if not k.startswith("_")} for c in self.characters]
         self.log_file.write_text(json.dumps(data, indent=2))
 
-    def _log_event(self, text: str):
+    def _current_turn_name(self) -> str | None:
+        if self.phase != "COMBAT" or not self.initiative_order:
+            return None
+        return self.initiative_order[self.current_turn_idx]["name"]
+
+    def _log_event(self, text: str, note_turn: bool = True):
         data = json.loads(self.log_file.read_text())
         key = f"round_{self.round_number}"
-        data.setdefault(key, []).append(text)
+        turn_name = self._current_turn_name() if note_turn else None
+        entry = f"[{turn_name}'s turn] {text}" if turn_name else text
+        data.setdefault(key, []).append(entry)
         self._write_log(data)
 
     # ------------------------------------------------------------------
@@ -1186,7 +1193,7 @@ class CombatAppQt:
         else:
             self.round_number += 1
             self.current_turn_idx = 0
-            self._log_event(f"--- Round {self.round_number} ---")
+            self._log_event(f"--- Round {self.round_number} ---", note_turn=False)
             self.round_label.setText(f"Round {self.round_number}")
         self._refresh_turn()
 
