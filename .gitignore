@@ -211,3 +211,6 @@ __marimo__/
 
 # Claude
 .claude/*
+
+# Combat logs
+CombatLogs/*
