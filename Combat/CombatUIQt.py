@@ -707,25 +707,46 @@ class CombatAppQt:
                     wwl.setSpacing(2)
 
                     prof_str = "Proficient" if weapon.player_is_proficient else "Not proficient"
-                    mastery_parts = []
-                    if stats.mastery:
-                        mv = stats.mastery.value
-                        mv += " ✓" if getattr(weapon, "player_has_mastery", False) else " ✗"
-                        mastery_parts = [f"Mastery: {mv}"]
                     type_line = "  ·  ".join(
-                        [stats.weapon_type.value, stats.damage_type.value, prof_str] + mastery_parts
+                        [stats.weapon_type.value, stats.damage_type.value, prof_str]
                     )
                     type_lbl = QLabel(f"<span style='color:#a0a0b0'>{type_line}</span>")
                     type_lbl.setTextFormat(Qt.TextFormat.RichText)
                     type_lbl.setWordWrap(True)
                     wwl.addWidget(type_lbl)
 
+                    if stats.additional_description:
+                        desc_lbl = QLabel(stats.additional_description)
+                        desc_lbl.setWordWrap(True)
+                        desc_lbl.setStyleSheet("color: #c0c0c0; font-size: 11px;")
+                        wwl.addWidget(desc_lbl)
+
+                    if stats.mastery:
+                        mark = "✓" if getattr(weapon, "player_has_mastery", False) else "✗"
+                        mastery_lbl = QLabel(
+                            f"<span style='color:#a0a0b0'>Mastery:</span> "
+                            f"<span style='color:#c9a84c'>{stats.mastery.value} {mark}</span> "
+                            f"<span style='color:#c0c0c0'>— {stats.mastery.description}</span>"
+                        )
+                        mastery_lbl.setTextFormat(Qt.TextFormat.RichText)
+                        mastery_lbl.setWordWrap(True)
+                        mastery_lbl.setStyleSheet("font-size: 11px;")
+                        wwl.addWidget(mastery_lbl)
+
                     if stats.properties:
-                        prop_str = ", ".join(p.value for p in stats.properties)
-                        prop_lbl = QLabel(f"Properties: {prop_str}")
-                        prop_lbl.setStyleSheet("color: #c0c0c0; font-size: 11px;")
-                        prop_lbl.setWordWrap(True)
-                        wwl.addWidget(prop_lbl)
+                        prop_header_lbl = QLabel("Properties:")
+                        prop_header_lbl.setStyleSheet("color: #a0a0b0; font-size: 11px;")
+                        wwl.addWidget(prop_header_lbl)
+                        for prop in stats.properties:
+                            prop_lbl = QLabel(
+                                f"<span style='color:#c9a84c'>{prop.value}</span> "
+                                f"<span style='color:#c0c0c0'>— {prop.description}</span>"
+                            )
+                            prop_lbl.setTextFormat(Qt.TextFormat.RichText)
+                            prop_lbl.setStyleSheet("font-size: 11px;")
+                            prop_lbl.setWordWrap(True)
+                            prop_lbl.setContentsMargins(10, 0, 0, 0)
+                            wwl.addWidget(prop_lbl)
 
                     lay.addWidget(make_expandable(header_text, ww))
 
