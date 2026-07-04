@@ -26,9 +26,9 @@ from PyQt6.QtWidgets import (
     QPushButton,
     QScrollArea,
     QSizePolicy,
+    QTextEdit,
     QVBoxLayout,
     QWidget,
-    QFileDialog,
     QMessageBox,
 )
 from PyQt6.QtCore import Qt, QSize
@@ -1030,12 +1030,12 @@ class CombatAppQt:
             return
 
         char = self.selected_character
-        was_dying = self._char_death_state(char) in ("dying", "stabilized")
+        was_downed = self._char_death_state(char) != "alive"
 
         char["hp"] = min(char["hp"] + heal, char["max_hp"])
         self.history.append((Action.HEAL, heal))
 
-        if was_dying and char["hp"] > 0:
+        if was_downed and char["hp"] > 0:
             char["death_saves_fail"] = 0
             char["death_saves_success"] = 0
             self._log_event(f"{char['name']} is resurrected with {char['hp']} HP")
@@ -1047,7 +1047,9 @@ class CombatAppQt:
     def _apply_failed_death_save(self, char: dict):
         if self._char_death_state(char) != "dying":
             return
+        self._select_character(char)
         char["death_saves_fail"] = min(char.get("death_saves_fail", 0) + 1, 3)
+        self.history.append((Action.DEATH_SAVE_FAIL, None))
         if char["death_saves_fail"] >= 3:
             self._log_event(f"{char['name']} has died (3 failed death saves)")
         else:
@@ -1055,12 +1057,14 @@ class CombatAppQt:
                 f"{char['name']} fails a death save "
                 f"({char['death_saves_fail']}/3 fails)"
             )
-        self._rebuild_card(char)
+        self._refresh_selected_card()
 
     def _apply_success_death_save(self, char: dict):
         if self._char_death_state(char) != "dying":
             return
+        self._select_character(char)
         char["death_saves_success"] = min(char.get("death_saves_success", 0) + 1, 3)
+        self.history.append((Action.DEATH_SAVE_SUCCESS, None))
         if char["death_saves_success"] >= 3:
             self._log_event(f"{char['name']} stabilizes (3 successful death saves)")
         else:
@@ -1068,7 +1072,7 @@ class CombatAppQt:
                 f"{char['name']} succeeds a death save "
                 f"({char['death_saves_success']}/3 successes)"
             )
-        self._rebuild_card(char)
+        self._refresh_selected_card()
 
     def _apply_temp_hp(self):
         if not self.selected_character:
@@ -1164,6 +1168,10 @@ class CombatAppQt:
             char["spell_slots"][value] = max(
                 char["spell_slots"].get(value, 0) - 1, 0
             )
+        elif action == Action.DEATH_SAVE_FAIL:
+            char["death_saves_fail"] = max(char.get("death_saves_fail", 0) - 1, 0)
+        elif action == Action.DEATH_SAVE_SUCCESS:
+            char["death_saves_success"] = max(char.get("death_saves_success", 0) - 1, 0)
 
         last_event = data[key].pop()
         self._write_log(data)
@@ -1182,16 +1190,46 @@ class CombatAppQt:
             self.round_label.setText(f"Round {self.round_number}")
         self._refresh_turn()
 
-    def _load_log(self):
-        path, _ = QFileDialog.getOpenFileName(
-            self._window,
-            "Load Combat Log",
-            str(Path("CombatLogs").resolve()),
-            "JSON files (*.json)",
-        )
-        if not path:
+    def _show_current_log(self):
+        """Display the round-by-round event history of the active log file."""
+        if not self.log_file.exists():
+            QMessageBox.information(self._window, "Combat Log", "No log data yet.")
             return
-        self._load_log_from_path(path)
+        data = json.loads(self.log_file.read_text())
+        round_keys = sorted(
+            (k for k in data if k.startswith("round_") and k.split("_", 1)[1].isdigit()),
+            key=lambda k: int(k.split("_", 1)[1]),
+        )
+
+        dlg = QDialog(self._window)
+        dlg.setWindowTitle(f"Combat Log — {self.log_file.name}")
+        dlg.setMinimumSize(480, 500)
+        dlg.setStyleSheet(QSS)
+
+        layout = QVBoxLayout(dlg)
+        layout.setContentsMargins(14, 14, 14, 14)
+        layout.setSpacing(10)
+
+        text = QTextEdit()
+        text.setReadOnly(True)
+        if not round_keys:
+            text.setPlainText("No events logged yet.")
+        else:
+            lines = []
+            for key in round_keys:
+                round_num = key.split("_", 1)[1]
+                lines.append(f"Round {round_num}")
+                for event in data[key]:
+                    lines.append(f"  • {event}")
+                lines.append("")
+            text.setPlainText("\n".join(lines).rstrip())
+        layout.addWidget(text)
+
+        close_btn = QPushButton("Close")
+        close_btn.clicked.connect(dlg.accept)
+        layout.addWidget(close_btn)
+
+        dlg.exec()
 
     def _load_log_from_path(self, path: str):
         data = json.loads(Path(path).read_text())
@@ -1626,9 +1664,9 @@ class CombatAppQt:
         undo_btn.clicked.connect(self._undo_last)
         panel_layout.addWidget(undo_btn)
 
-        load_btn = QPushButton("Load Combat Log")
-        load_btn.clicked.connect(self._load_log)
-        panel_layout.addWidget(load_btn)
+        log_btn = QPushButton("Open Current Log")
+        log_btn.clicked.connect(self._show_current_log)
+        panel_layout.addWidget(log_btn)
 
         panel_layout.addStretch()
         root_layout.addWidget(panel)
