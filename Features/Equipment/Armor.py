@@ -8,12 +8,13 @@ from Features.Core.SubFeatures import (
     StrengthRequirement,
     SubFeature,
 )
-from Features.Items.Items import Item
+from Features.Items.Items import WearableItem
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
-class AbstractArmor(Item):
-    """Base class for armor, inheriting from Item for shared inventory mechanics."""
+class AbstractArmor(WearableItem):
+    """Base class for armor. Armor is a wearable item: its effects (AC and
+    subfeatures) only apply while it is worn."""
 
     def __init__(
         self,
@@ -23,6 +24,7 @@ class AbstractArmor(Item):
         rarity: str = "common",
         subfeatures: Optional[list[SubFeature]] = None,
         is_shield: bool = False,
+        is_wearing: bool = True,
     ):
         super().__init__(
             name=name,
@@ -31,10 +33,19 @@ class AbstractArmor(Item):
             slots=slots,
             description_text=description or "",
             subfeatures=subfeatures or [],
+            is_wearing=is_wearing,
         )
         # Keep old interface for backward compatibility
         self.description = description or ""
         self.is_shield = is_shield
+
+    def apply(self, character_stat_block: CharacterStatBlock):
+        super().apply(character_stat_block)  # Subfeatures (gated on is_wearing)
+        if self.is_wearing:
+            self.apply_worn_effects(character_stat_block)
+
+    def apply_worn_effects(self, character_stat_block: CharacterStatBlock):
+        """Armor-specific effects (AC etc.) that only apply while worn."""
 
 
 class LeatherArmor(AbstractArmor):
@@ -42,8 +53,7 @@ class LeatherArmor(AbstractArmor):
         super().__init__("Leather Armor", slots=1)
         self._ac = SetArmorClass(11, Ability.DEXTERITY)
 
-    def apply(self, character_stat_block: CharacterStatBlock):
-        super().apply(character_stat_block)  # Apply Item subfeatures
+    def apply_worn_effects(self, character_stat_block: CharacterStatBlock):
         self._ac.apply(character_stat_block)
 
 
@@ -52,8 +62,7 @@ class StuddedLeatherArmor(AbstractArmor):
         super().__init__("Studded Leather Armor", slots=1)
         self._ac = SetArmorClass(12, Ability.DEXTERITY)
 
-    def apply(self, character_stat_block: CharacterStatBlock):
-        super().apply(character_stat_block)  # Apply Item subfeatures
+    def apply_worn_effects(self, character_stat_block: CharacterStatBlock):
         self._ac.apply(character_stat_block)
 
 
@@ -64,8 +73,7 @@ class ChainMailArmor(AbstractArmor):
         self._stealth = StealthDisadvantage()
         self._ac = SetArmorClass(16, ability=None)
 
-    def apply(self, character_stat_block: CharacterStatBlock):
-        super().apply(character_stat_block)  # Apply Item subfeatures
+    def apply_worn_effects(self, character_stat_block: CharacterStatBlock):
         self._str_req.apply(character_stat_block)
         self._stealth.apply(character_stat_block)
         self._ac.apply(character_stat_block)
@@ -76,8 +84,7 @@ class ShieldArmor(AbstractArmor):
         super().__init__("Shield", slots=1, is_shield=True)
         self._bonus = ArmorClassBonus(2)
 
-    def apply(self, character_stat_block: CharacterStatBlock):
-        super().apply(character_stat_block)  # Apply Item subfeatures
+    def apply_worn_effects(self, character_stat_block: CharacterStatBlock):
         self._bonus.apply(character_stat_block)
 
 
@@ -105,8 +112,7 @@ class ArmorOfProtection(AbstractArmor):
         self._ac = SetArmorClass(16, ability=None)
         self._ac_bonus = ArmorClassBonus(1)
 
-    def apply(self, character_stat_block: CharacterStatBlock):
-        super().apply(character_stat_block)  # Apply Item subfeatures
+    def apply_worn_effects(self, character_stat_block: CharacterStatBlock):
         self._str_req.apply(character_stat_block)
         self._stealth.apply(character_stat_block)
         self._ac.apply(character_stat_block)

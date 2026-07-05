@@ -1,4 +1,5 @@
 import pathlib
+import re
 from typing import Optional, TextIO
 
 import DamageCalculator
@@ -102,7 +103,9 @@ class HtmlCharacterSheetWriter:
         file.write("</tr>\n")
 
         for label, description, slots in rows:
-            leftbehind_id = label.replace(" ", "_").replace("(", "").replace(")", "") + "_leftbehind"
+            plain_label = re.sub(r"<span[^>]*>.*?</span>", "", label)
+            plain_label = re.sub(r"<[^>]*>", "", plain_label).strip()
+            leftbehind_id = plain_label.replace(" ", "_").replace("(", "").replace(")", "") + "_leftbehind"
             file.write("<tr>\n")
             file.write(f"<td class='item-entry'><strong>{label}</strong><br/>{description}</td>\n")
             file.write(f"<td style='text-align: center;'>{slots}</td>\n")
@@ -111,6 +114,15 @@ class HtmlCharacterSheetWriter:
             file.write("</tr>\n")
 
         file.write("</table>\n")
+
+    @staticmethod
+    def _worn_tag(item: Items.Item, worn_label: str = "Worn", not_worn_label: str = "Not worn") -> str:
+        """Chip showing worn state for wearable items; empty for everything else."""
+        if not isinstance(item, Items.WearableItem):
+            return ""
+        if item.is_wearing:
+            return f" <span class='wtag wtag-worn'>{worn_label}</span>"
+        return f" <span class='wtag wtag-not-worn'>{not_worn_label}</span>"
 
     def _write_general_info(self, character: CharacterStatBlock, file: TextIO, experience_points: int = 0):
         file.write("<h2>General Info</h2>\n")
@@ -601,14 +613,22 @@ class HtmlCharacterSheetWriter:
         sections = []
         if armors:
             armor_rows = [
-                (armor.name, self._description_or_dash(armor.description), armor.slots)
+                (
+                    f"{armor.name}{self._worn_tag(armor)}",
+                    self._description_or_dash(armor.description),
+                    armor.slots,
+                )
                 for armor in armors
             ]
             sections.append(("Armor", armor_rows))
 
         if weapons:
             weapon_rows = [
-                (weapon.name, self._description_or_dash(weapon.description), weapon.slots)
+                (
+                    f"{weapon.name}{self._worn_tag(weapon, 'Wielded', 'Not wielded')}",
+                    self._description_or_dash(weapon.description),
+                    weapon.slots,
+                )
                 for weapon in weapons
                 if not isinstance(weapon, UnarmedStrike)
             ]
@@ -618,7 +638,11 @@ class HtmlCharacterSheetWriter:
         if items:
             sorted_items = sorted(items, key=lambda x: x[0].name)
             item_rows = [
-                (f"{item.name} ({quantity})", item.description(), item.slots)
+                (
+                    f"{item.name} ({quantity}){self._worn_tag(item)}",
+                    item.description(),
+                    item.slots,
+                )
                 for item, quantity in sorted_items
             ]
             sections.append(("Other items", item_rows))
@@ -1208,6 +1232,20 @@ class HtmlCharacterSheetWriter:
 
         /* Mastery chip — inactive (weapon has it but player doesn't) */
         .wtag-mastery-inactive {
+            border-color: #ccc;
+            color: #999;
+            font-style: italic;
+        }
+
+        /* Wearable item chip — currently worn */
+        .wtag-worn {
+            border-color: #9abb9a;
+            color: #3a6e3a;
+            font-weight: 600;
+        }
+
+        /* Wearable item chip — carried but not worn */
+        .wtag-not-worn {
             border-color: #ccc;
             color: #999;
             font-style: italic;

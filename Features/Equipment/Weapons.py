@@ -5,7 +5,7 @@ from typing import Optional, TextIO
 
 import DamageCalculator
 from Definitions import Ability, Die
-from Features.Items.Items import Item
+from Features.Items.Items import WearableItem
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
@@ -148,13 +148,15 @@ class WeaponsStats:
 
 
 @dataclass
-class AbstractWeapon(Item):
-    """Abstract base class for weapons, inheriting from Item for shared inventory mechanics."""
+class AbstractWeapon(WearableItem):
+    """Abstract base class for weapons. Weapons are wearable items: their
+    subfeatures only apply while worn/wielded (is_wearing)."""
 
     player_is_proficient: bool = False
     player_has_mastery: bool = False
     attack_roll_bonuses: list[tuple[int, str]] = field(default_factory=list)
     ability: Optional[Ability] = None
+    is_wearing: bool = True
 
     def __post_init__(self):
         """Initialize Item base class fields when dataclass is instantiated."""
@@ -1173,7 +1175,13 @@ def _write_single_weapon(
     file.write("<table class='weapon-card'>\n")
 
     # ── Weapon name header ──────────────────────────────────────────────────
-    file.write(f"<tr><th class='weapon-name' colspan='2'>{stats.name}</th></tr>\n")
+    wielded_tag = ""
+    if not isinstance(weapon, UnarmedStrike):
+        if weapon.is_wearing:
+            wielded_tag = " <span class='wtag wtag-worn'>Wielded</span>"
+        else:
+            wielded_tag = " <span class='wtag wtag-not-worn'>Not wielded</span>"
+    file.write(f"<tr><th class='weapon-name' colspan='2'>{stats.name}{wielded_tag}</th></tr>\n")
 
     # ── Quick-stats row ─────────────────────────────────────────────────────
     # Two cells: left = type/category info, right = roll info

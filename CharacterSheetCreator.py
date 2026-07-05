@@ -5,13 +5,13 @@ import attr
 import Definitions
 from Definitions import Ability, ApplyWhen, CharacterClass
 from Features.CharacterFeats import OriginFeats
-from Features.Equipment.Armor import AbstractArmor
-from Features.Core.BaseFeatures import Feature
 from Features.Combat.FightingStyles import (
     FightingStyle,
     FightStyleModifier,
     FightStyleWeaponFeature,
 )
+from Features.Core.BaseFeatures import Feature
+from Features.Equipment.Armor import AbstractArmor
 from Features.Equipment.Weapons import AbstractWeapon
 from Features.Items import Items
 from StatBlocks.AbilitiesStatBlock import AbilitiesStatBlock
@@ -213,10 +213,12 @@ class CharacterSheetData:
         if self._character_cached is not None:
             return self._character_cached
 
-        # Validate one-armor rule: at most one non-shield armor
-        non_shield_armors = [armor for armor in self.armors if not armor.is_shield]
-        if len(non_shield_armors) > 1:
-            armor_names = ", ".join(armor.name for armor in non_shield_armors)
+        # Validate one-armor rule: at most one worn non-shield armor
+        worn_body_armors = [
+            armor for armor in self.armors if not armor.is_shield and armor.is_wearing
+        ]
+        if len(worn_body_armors) > 1:
+            armor_names = ", ".join(armor.name for armor in worn_body_armors)
             raise ValueError(
                 f"Character cannot wear multiple armors at once. "
                 f"Conflicting armors: {armor_names}. "

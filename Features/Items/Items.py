@@ -59,6 +59,83 @@ class Item(Feature):
 
 
 # ══════════════════════════════════════════════════════════════════════════════
+# WearableItem: Items that must be worn to apply their effects
+# ══════════════════════════════════════════════════════════════════════════════
+
+
+class WearableItem(Item):
+    """
+    An item that must be worn for its effects to apply.
+    Subfeatures only activate when is_wearing is True.
+    """
+
+    def __init__(
+        self,
+        name: str,
+        rarity: str = "common",
+        requires_attunement: bool = False,
+        category: str = "wondrous",
+        weight: Optional[float] = None,
+        slots: int = 1,
+        description_text: str = "",
+        subfeatures: Optional[list[SubFeature]] = None,
+        is_wearing: bool = True,
+    ):
+        super().__init__(
+            name=name,
+            rarity=rarity,
+            requires_attunement=requires_attunement,
+            category=category,
+            weight=weight,
+            slots=slots,
+            description_text=description_text,
+            subfeatures=subfeatures,
+        )
+        self.is_wearing = is_wearing
+
+    def apply(self, character_stat_block: CharacterStatBlock):
+        """Only apply subfeatures if the item is being worn."""
+        if self.is_wearing:
+            for subfeature in self.subfeatures:
+                subfeature.apply(character_stat_block)
+
+
+# ══════════════════════════════════════════════════════════════════════════════
+# ConsumableItem: Items consumed on use
+# ══════════════════════════════════════════════════════════════════════════════
+
+
+class ConsumableItem(Item):
+    """
+    An item consumed on use (potions, rations, torches, etc.).
+    These items track usage via checkboxes on the character sheet.
+    """
+
+    def __init__(
+        self,
+        name: str,
+        rarity: str = "common",
+        category: str = "consumable",
+        weight: Optional[float] = None,
+        slots: int = 1,
+        description_text: str = "",
+        subfeatures: Optional[list[SubFeature]] = None,
+    ):
+        super().__init__(
+            name=name,
+            rarity=rarity,
+            requires_attunement=False,
+            category=category,
+            weight=weight,
+            slots=slots,
+            description_text=description_text,
+            subfeatures=subfeatures,
+        )
+        # Consumables are typically never attuned
+        self.requires_attunement = False
+
+
+# ══════════════════════════════════════════════════════════════════════════════
 # Simple Description-Only Items
 # ══════════════════════════════════════════════════════════════════════════════
 
@@ -107,8 +184,8 @@ class ThievesTools(Item):
         )
 
 
-class Backpack(Item):
-    def __init__(self):
+class Backpack(WearableItem):
+    def __init__(self, is_wearing: bool = True):
         super().__init__(
             "Backpack",
             rarity="common",
@@ -119,6 +196,7 @@ class Backpack(Item):
                 "It can also be strapped to a mount as a saddlebag."
             ),
             subfeatures=[CarryingCapacityBonus(10, source="Backpack")],
+            is_wearing=is_wearing,
         )
 
 
@@ -149,7 +227,7 @@ class Crowbar(Item):
         )
 
 
-class Candle(Item):
+class Candle(ConsumableItem):
     def __init__(self):
         super().__init__(
             "Candle",
@@ -182,7 +260,7 @@ class HoodedLantern(Item):
         )
 
 
-class FlasksOfOil(Item):
+class FlasksOfOil(ConsumableItem):
     def __init__(self):
         super().__init__(
             "Flask of Oil",
@@ -200,7 +278,7 @@ class FlasksOfOil(Item):
         )
 
 
-class Rations(Item):
+class Rations(ConsumableItem):
     def __init__(self):
         super().__init__(
             "Rations",
@@ -214,7 +292,7 @@ class Rations(Item):
         )
 
 
-class Antitoxin(Item):
+class Antitoxin(ConsumableItem):
     def __init__(self):
         super().__init__(
             "Antitoxin",
@@ -225,7 +303,7 @@ class Antitoxin(Item):
         )
 
 
-class HealersKit(Item):
+class HealersKit(ConsumableItem):
     def __init__(self):
         super().__init__(
             "Healer's Kit",
@@ -236,7 +314,7 @@ class HealersKit(Item):
         )
 
 
-class PotionOfHealing(Item):
+class PotionOfHealing(ConsumableItem):
     def __init__(self):
         super().__init__(
             "Potion of Healing",
@@ -281,7 +359,7 @@ class Tinderbox(Item):
         )
 
 
-class Torch(Item):
+class Torch(ConsumableItem):
     def __init__(self):
         super().__init__(
             "Torch",
@@ -309,8 +387,8 @@ class BullseyeLantern(Item):
         )
 
 
-class Costume(Item):
-    def __init__(self):
+class Costume(WearableItem):
+    def __init__(self, is_wearing: bool = True):
         super().__init__(
             "Costume",
             rarity="common",
@@ -320,6 +398,7 @@ class Costume(Item):
                 "While wearing this costume, you have advantage on ability checks made to "
                 "impersonate the person or type of person it represents."
             ),
+            is_wearing=is_wearing,
         )
 
 
@@ -351,14 +430,15 @@ class Typewriter(Item):
         )
 
 
-class NightVisionGoggles(Item):
-    def __init__(self):
+class NightVisionGoggles(WearableItem):
+    def __init__(self, is_wearing: bool = True):
         super().__init__(
             "Nightvision Goggles",
             rarity="uncommon",
             category="wondrous item",
             slots=1,
             description_text="While wearing these goggles, you gain darkvision out to 120 feet.",
+            is_wearing=is_wearing,
         )
 
 
@@ -376,7 +456,7 @@ class ButterflyKnife(Item):
         )
 
 
-class Beans(Item):
+class Beans(ConsumableItem):
     def __init__(self):
         super().__init__(
             "Can of Beans",
@@ -483,8 +563,8 @@ class DramaticRainBottle(Item):
         )
 
 
-class RobeOfLevitation(Item):
-    def __init__(self):
+class RobeOfLevitation(WearableItem):
+    def __init__(self, is_wearing: bool = True):
         super().__init__(
             "Robe of Levitation",
             rarity="common",
@@ -497,6 +577,7 @@ class RobeOfLevitation(Item):
                 "You leave faint traces beneath you, and your movement produces a soft windy sound "
                 "as loud as footsteps. You always look slightly more epic than others."
             ),
+            is_wearing=is_wearing,
         )
 
 
@@ -605,8 +686,8 @@ class Kamikaze(Item):
         )
 
 
-class FingerGunRing(Item):
-    def __init__(self):
+class FingerGunRing(WearableItem):
+    def __init__(self, is_wearing: bool = True):
         super().__init__(
             "Ring of Finger Guns",
             rarity="common",
@@ -616,11 +697,12 @@ class FingerGunRing(Item):
                 "While wearing this ring, forming finger guns and saying 'pew' creates a tiny harmless spark "
                 "and sound effect. The spark can light candles but deals no damage."
             ),
+            is_wearing=is_wearing,
         )
 
 
-class BadFriendGlasses(Item):
-    def __init__(self):
+class BadFriendGlasses(WearableItem):
+    def __init__(self, is_wearing: bool = True):
         super().__init__(
             "A Bad Friend Glasses",
             rarity="uncommon",
@@ -630,6 +712,7 @@ class BadFriendGlasses(Item):
                 "While wearing these glasses, you may redirect damage you would take to another player character "
                 "with the lowest hit points. You are, objectively, a terrible friend."
             ),
+            is_wearing=is_wearing,
         )
 
 
@@ -638,10 +721,10 @@ class BadFriendGlasses(Item):
 # ══════════════════════════════════════════════════════════════════════════════
 
 
-class CloakOfProtection(Item):
+class CloakOfProtection(WearableItem):
     """A magical cloak that grants +1 AC."""
 
-    def __init__(self):
+    def __init__(self, is_wearing: bool = True):
         super().__init__(
             "Cloak of Protection",
             rarity="uncommon",
@@ -651,6 +734,7 @@ class CloakOfProtection(Item):
                 "You gain a +1 bonus to AC while wearing this cloak.\n\n"
                 "This silken cloak shimmers with protective magic and feels warm to the touch."
             ),
+            is_wearing=is_wearing,
             subfeatures=[ArmorClassBonus(1)],
         )
 
@@ -680,10 +764,10 @@ class PlusOneWeapon(Item):
         )
 
 
-class BracersOfArchery(Item):
+class BracersOfArchery(WearableItem):
     """Magical bracers that grant +2 Dexterity for ranged combat."""
 
-    def __init__(self):
+    def __init__(self, is_wearing: bool = True):
         super().__init__(
             "Bracers of Archery",
             rarity="uncommon",
@@ -693,6 +777,7 @@ class BracersOfArchery(Item):
                 "While wearing these bracers, you gain a +2 bonus to your Dexterity score.\n\n"
                 "These leather bracers are reinforced with magical sinew, enhancing the wielder's precision."
             ),
+            is_wearing=is_wearing,
             subfeatures=[
                 AbilityScoreBonus(
                     bonuses=[(Ability.DEXTERITY, 2)],
@@ -703,10 +788,10 @@ class BracersOfArchery(Item):
         )
 
 
-class GauntletsOfStrength(Item):
+class GauntletsOfStrength(WearableItem):
     """Magical gauntlets that increase Strength by 2."""
 
-    def __init__(self):
+    def __init__(self, is_wearing: bool = True):
         super().__init__(
             "Gauntlets of Strength",
             rarity="rare",
@@ -717,6 +802,7 @@ class GauntletsOfStrength(Item):
                 "While wearing these gauntlets, your Strength score increases by 2.\n\n"
                 "These steel gauntlets hum with raw, restrained power."
             ),
+            is_wearing=is_wearing,
             subfeatures=[
                 AbilityScoreBonus(
                     bonuses=[(Ability.STRENGTH, 2)],
@@ -727,10 +813,10 @@ class GauntletsOfStrength(Item):
         )
 
 
-class RingOfIntelligence(Item):
+class RingOfIntelligence(WearableItem):
     """A mystical ring that increases Intelligence by 2."""
 
-    def __init__(self):
+    def __init__(self, is_wearing: bool = True):
         super().__init__(
             "Ring of Intellect",
             rarity="rare",
@@ -740,6 +826,7 @@ class RingOfIntelligence(Item):
                 "While wearing this ring, your Intelligence score increases by 2, as does your Intelligence saving throw.\n\n"
                 "This silver ring is inscribed with arcane runes that glow faintly when worn."
             ),
+            is_wearing=is_wearing,
             subfeatures=[
                 AbilityScoreBonus(
                     bonuses=[(Ability.INTELLIGENCE, 2)],
