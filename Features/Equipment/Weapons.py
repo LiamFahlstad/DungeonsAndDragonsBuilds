@@ -88,6 +88,16 @@ class WeaponsDamageTypes(Enum):
     SLASHING = "Slashing"
     PIERCING = "Piercing"
     BLUDGEONING = "Bludgeoning"
+    ACID = "Acid"
+    COLD = "Cold"
+    FIRE = "Fire"
+    LIGHTNING = "Lightning"
+    THUNDER = "Thunder"
+    NECROTIC = "Necrotic"
+    RADIANT = "Radiant"
+    POISON = "Poison"
+    PSYCHIC = "Psychic"
+    FORCE = "Force"
 
 
 class WeaponsDamageRolls(Enum):
@@ -113,6 +123,18 @@ class WeaponsDamageRolls(Enum):
 
 
 @dataclass
+class ExtraDamage:
+    """Represents bonus damage added to a weapon attack."""
+    damage_roll: "WeaponsDamageRolls"
+    damage_type: WeaponsDamageTypes
+    note: Optional[str] = None  # e.g. "chosen type, activate as bonus action"
+
+    def format_damage(self) -> str:
+        """Format as '1d6 Fire' or similar."""
+        return f"{self.damage_roll.value} {self.damage_type.value}"
+
+
+@dataclass
 class WeaponsStats:
     name: str
     ability: Ability
@@ -122,6 +144,7 @@ class WeaponsStats:
     damage_roll: WeaponsDamageRolls
     mastery: Optional[WeaponMastery] = None
     additional_description: Optional[str] = None
+    extra_damage: Optional[list[ExtraDamage]] = None
 
 
 @dataclass
@@ -970,10 +993,6 @@ class RampagingBlade(AbstractWeapon):
 
 class ElementalSword(AbstractWeapon):
     def stats(self) -> WeaponsStats:
-        description = (
-            "As a bonus action, choose acid, cold, fire, lightning, or thunder.\n"
-            "The weapon deals an extra 1d6 damage of the chosen type on hit."
-        )
         return WeaponsStats(
             name="Elemental Sword",
             ability=Ability.STRENGTH,
@@ -982,7 +1001,17 @@ class ElementalSword(AbstractWeapon):
             weapon_type=WeaponType.MARTIAL_MELEE,
             damage_type=WeaponsDamageTypes.SLASHING,
             damage_roll=WeaponsDamageRolls.D8,
-            additional_description=description,
+            additional_description=(
+                "As a bonus action, choose acid, cold, fire, lightning, or thunder. "
+                "The weapon deals an extra 1d6 damage of the chosen type on hit."
+            ),
+            extra_damage=[
+                ExtraDamage(
+                    damage_roll=WeaponsDamageRolls.D6,
+                    damage_type=WeaponsDamageTypes.FIRE,
+                    note="chosen type, activate as bonus action"
+                )
+            ],
         )
 
 
@@ -1061,6 +1090,49 @@ class VampiricEdge(AbstractWeapon):
         )
 
 
+# ──────────────────────────────────────────────────────────────────────────────
+# Magical Weapons
+# ──────────────────────────────────────────────────────────────────────────────
+
+
+class FlameTongueSword(AbstractWeapon):
+    """A magical sword wreathed in flames, dealing extra fire damage on hit."""
+
+    def __post_init__(self):
+        super().__post_init__()
+        self.rarity = "rare"
+        self.requires_attunement = True
+        # Add +1 to ability scores (from SubFeature)
+        from Features.Core.SubFeatures import AbilityScoreBonus
+
+        self.subfeatures = [
+            AbilityScoreBonus([(Ability.STRENGTH, 1)], total=1, error_prefix="Flame Tongue Sword bonus")
+        ]
+
+    def stats(self) -> WeaponsStats:
+        return WeaponsStats(
+            name="Flame Tongue Sword",
+            ability=Ability.STRENGTH,
+            properties=[WeaponProperty.VERSATILE_10],
+            mastery=WeaponMastery.TOPPLE,
+            weapon_type=WeaponType.MARTIAL_MELEE,
+            damage_type=WeaponsDamageTypes.SLASHING,
+            damage_roll=WeaponsDamageRolls.D8,
+            additional_description=(
+                "This sword is wreathed in magical flames. "
+                "It deals an extra 2d6 fire damage on a hit. "
+                "Requires attunement (rare)."
+            ),
+            extra_damage=[
+                ExtraDamage(
+                    damage_roll=WeaponsDamageRolls.D6x2,
+                    damage_type=WeaponsDamageTypes.FIRE,
+                    note="magical flames"
+                )
+            ],
+        )
+
+
 ### Utility functions
 
 
@@ -1080,6 +1152,11 @@ def _write_single_weapon(
         character_stat_block
     )
     damage_roll_str = f"{stats.damage_roll.value} {ability_mod:+} ({ability_name})"
+
+    # Add extra damage if present
+    if stats.extra_damage:
+        extra_damages = " + ".join(ed.format_damage() for ed in stats.extra_damage)
+        damage_roll_str += f" + {extra_damages}"
 
     proficient_label = "Proficient" if weapon.player_is_proficient else "Not proficient"
 

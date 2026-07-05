@@ -69,17 +69,17 @@ def get_starter_class_builder():
             spell_casting_ability=Ability.INTELLIGENCE,
         ),
         armor=[
-            Armor.ChainMailArmor(),
+            Armor.ArmorOfProtection(),
         ],
         weapons=[
-            Weapons.Maul(player_is_proficient=True),
+            Weapons.FlameTongueSword(player_is_proficient=True),
             Weapons.Longbow(player_is_proficient=True),
         ],
         items=Packs.DungeoneersPack().get_items(),
         base_class_level_features=ClassBuilder.BaseClassLevelFeatures(
             base_class_features_by_level={
                 1: FighterLevel1(
-                    weapon_mastery_1=Weapons.Maul(),
+                    weapon_mastery_1=Weapons.FlameTongueSword(),
                     weapon_mastery_2=Weapons.Scimitar(),
                     weapon_mastery_3=Weapons.Longbow(),
                     fighting_style=FightingStyles.GreatWeaponFighting(),

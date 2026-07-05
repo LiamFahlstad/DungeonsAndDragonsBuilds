@@ -213,6 +213,16 @@ class CharacterSheetData:
         if self._character_cached is not None:
             return self._character_cached
 
+        # Validate one-armor rule: at most one non-shield armor
+        non_shield_armors = [armor for armor in self.armors if not armor.is_shield]
+        if len(non_shield_armors) > 1:
+            armor_names = ", ".join(armor.name for armor in non_shield_armors)
+            raise ValueError(
+                f"Character cannot wear multiple armors at once. "
+                f"Conflicting armors: {armor_names}. "
+                f"(Shields do not count toward this limit.)"
+            )
+
         combat = CombatStatBlock(
             speed=self.speed,
             size=self.size,
@@ -235,6 +245,9 @@ class CharacterSheetData:
 
         for armor in self.armors:
             armor.apply(character)
+
+        for weapon in self.weapons:
+            weapon.apply(character)
 
         for item, _quantity in self.items:
             item.apply(character)

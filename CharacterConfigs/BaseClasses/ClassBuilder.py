@@ -388,12 +388,16 @@ class StarterClassBuilder(ClassBuilder):
         if not any(isinstance(item, Weapons.UnarmedStrike) for item in self.default_equipment):
             data.add_weapon(Weapons.UnarmedStrike(player_is_proficient=True))
 
+        # Explicit body armor replaces the default one (a character can only
+        # wear one armor at a time); default shields still apply.
+        has_explicit_body_armor = any(not a.is_shield for a in (self.armor or []))
         if self.add_default_equipment:
             for item in self.default_equipment:
                 if isinstance(item, Weapons.AbstractWeapon):
                     data.add_weapon(item)
                 elif isinstance(item, Armor.AbstractArmor):
-                    data.add_armor(item)
+                    if item.is_shield or not has_explicit_body_armor:
+                        data.add_armor(item)
 
         if self.armor is not None:
             for a in self.armor:

@@ -703,6 +703,30 @@ class BracersOfArchery(Item):
         )
 
 
+class GauntletsOfStrength(Item):
+    """Magical gauntlets that increase Strength by 2."""
+
+    def __init__(self):
+        super().__init__(
+            "Gauntlets of Strength",
+            rarity="rare",
+            requires_attunement=True,
+            category="wondrous item",
+            slots=0,
+            description_text=(
+                "While wearing these gauntlets, your Strength score increases by 2.\n\n"
+                "These steel gauntlets hum with raw, restrained power."
+            ),
+            subfeatures=[
+                AbilityScoreBonus(
+                    bonuses=[(Ability.STRENGTH, 2)],
+                    total=2,
+                    error_prefix="Gauntlets of Strength bonus",
+                )
+            ],
+        )
+
+
 class RingOfIntelligence(Item):
     """A mystical ring that increases Intelligence by 2."""
 
