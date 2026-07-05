@@ -13,7 +13,23 @@ INDENT = "    "
 
 def generate(spec: BuildSpec) -> str:
     registry = registry_module.get_registry()
+    if spec.class_key not in registry.classes():
+        raise ValueError(f"Unknown class {spec.class_key!r}.")
     class_info = registry.classes()[spec.class_key]
+    if not spec.subclass_key:
+        available = sorted(registry.subclasses_for(spec.class_key))
+        if available:
+            raise ValueError(
+                f"No subclass selected for {spec.class_key}. "
+                f"Pick one of: {', '.join(available)}."
+            )
+        raise ValueError(
+            f"{spec.class_key} has no subclasses implemented yet "
+            f"(no CharacterConfigs/SubClasses module with a "
+            f"*CustomStarterClassArgs class), so a build cannot be generated."
+        )
+    if spec.subclass_key not in registry.subclasses():
+        raise ValueError(f"Unknown subclass {spec.subclass_key!r}.")
     subclass_info = registry.subclasses()[spec.subclass_key]
 
     body = _starter_builder_source(spec, class_info, subclass_info)

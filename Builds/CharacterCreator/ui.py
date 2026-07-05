@@ -295,7 +295,7 @@ class RawEditor(Editor):
 class EnumEditor(Editor):
     """Editable combobox with type-to-filter completion over enum members."""
 
-    def __init__(self, enum_classes, optional=False):
+    def __init__(self, enum_classes, optional=False, default_expr=None):
         super().__init__()
         layout = QHBoxLayout(self.widget)
         layout.setContentsMargins(0, 0, 0, 0)
@@ -315,6 +315,8 @@ class EnumEditor(Editor):
             completer.setCaseSensitivity(Qt.CaseSensitivity.CaseInsensitive)
         if optional:
             self.combo.setCurrentText("")
+        elif default_expr:
+            self.combo.setCurrentText(default_expr)
         layout.addWidget(self.combo)
 
     def get_expr(self):
@@ -681,6 +683,64 @@ def _dotted(node):
     return ""
 
 
+def _member_names_in_expr(expr) -> set:
+    """UPPER_CASE enum member names referenced in an expression string."""
+    names = set()
+    if not expr:
+        return names
+    try:
+        tree = ast.parse(expr, mode="eval")
+    except (SyntaxError, ValueError):
+        return names
+    for node in ast.walk(tree):
+        if isinstance(node, ast.Attribute) and node.attr.isupper():
+            names.add(node.attr)
+    return names
+
+
+def _default_enum_expr(enum_classes, context):
+    """Default expression for a required enum param.
+
+    context["enum_used"] is a set of member names already handed out as
+    defaults during one rebuild, so repeated spell/cantrip choices default to
+    distinct picks — the sheet rejects duplicates. Member *names* are
+    compared because overlapping enums (e.g. BardSpellsUpTo2 contains all of
+    BardLevel1Spells) repeat the same spell under different enum classes.
+    Skill params prefer the class' allowed skills
+    (context["preferred_skills"]): class features that grant a skill draw
+    their pools from the class skill list.
+    """
+    candidates = []  # (expression, member name)
+    for enum_class in enum_classes:
+        members = [
+            (f"{enum_class.__name__}.{member.name}", member.name)
+            for member in enum_class
+        ]
+        if enum_class.__name__ == "Skill":
+            preferred = [
+                expr.rsplit(".", 1)[-1]
+                for expr in context.get("preferred_skills", ())
+            ]
+            members.sort(
+                key=lambda item: (
+                    preferred.index(item[1])
+                    if item[1] in preferred
+                    else len(preferred)
+                )
+            )
+        candidates.extend(members)
+    if not candidates:
+        return None
+    used = context.get("enum_used")
+    if used is None:
+        return candidates[0][0]
+    for expr, member_name in candidates:
+        if member_name not in used:
+            used.add(member_name)
+            return expr
+    return candidates[0][0]
+
+
 def make_editor(annotation, context, param_name=None, required=True):
     """Choose an editor widget for a constructor parameter annotation."""
     resolved = resolve_annotation(annotation) if annotation is not None else None
@@ -690,9 +750,19 @@ def make_editor(annotation, context, param_name=None, required=True):
         if resolved is None:
             return RawEditor()
         if resolved.kind == EditorKind.ENUM:
-            return EnumEditor(resolved.payload, optional=False)
+            return EnumEditor(
+                resolved.payload,
+                optional=False,
+                default_expr=_default_enum_expr(resolved.payload, context),
+            )
         if resolved.kind == EditorKind.INT:
-            default = context.get("level", 1) if param_name == "character_level" else 0
+            # "*_level" params (character_level, monk_level, ...) default to
+            # the current level instead of 0.
+            default = (
+                context.get("level", 1)
+                if param_name and param_name.endswith("_level")
+                else 0
+            )
             return IntEditor(default=default)
         if resolved.kind == EditorKind.BOOL:
             return BoolEditor()
@@ -783,7 +853,14 @@ class CreatorApp(QMainWindow):
 
         add_label("CLASS", 1)
         self.class_combo = QComboBox()
-        self.class_combo.addItems(sorted(self.registry.classes()))
+        # Only offer classes that can actually be generated: codegen needs a
+        # <Subclass>CustomStarterClassArgs, so a class with no discovered
+        # subclasses (e.g. a *Base.py without any SubClasses module) would
+        # KeyError in generate.
+        self.class_combo.addItems(sorted(
+            key for key in self.registry.classes()
+            if self.registry.subclasses_for(key)
+        ))
         self.class_combo.setCurrentText("Fighter")
         self.class_combo.setFixedWidth(110)
         # `activated` fires only on user interaction, so programmatic
@@ -1014,7 +1091,12 @@ class CreatorApp(QMainWindow):
         grid.setVerticalSpacing(2)
         for index, skill in enumerate(info.allowed_skills):
             check = QCheckBox(skill.value)
-            check.setChecked(bool(keep and keep.get(skill.name)))
+            if keep is None:
+                # Fresh build: pre-check the first N allowed skills so the
+                # default UI state generates a valid build out of the box.
+                check.setChecked(index < info.num_proficiencies)
+            else:
+                check.setChecked(bool(keep.get(skill.name)))
             self.class_skill_checks[skill.name] = check
             grid.addWidget(check, index // 6, index % 6)
         self.class_skills_layout.addWidget(grid_widget)
@@ -1075,6 +1157,77 @@ class CreatorApp(QMainWindow):
         )
         level = self.current_level()
         context = self._context()
+        preferred_skills = []
+        if class_info.skills_block is not None:
+            preferred_skills = [
+                f"Skill.{skill.name}"
+                for skill in class_info.skills_block.allowed_skills
+            ]
+        # enum_used is shared by every editor built during this rebuild so
+        # repeated enum params get distinct defaults. It is seeded with the
+        # spells/cantrips the class and subclass grant unconditionally
+        # (data.add_spell(Enum.MEMBER) in their sources) because the sheet
+        # rejects duplicates.
+        enum_used = set(self.registry.granted_member_names(class_info.module))
+        if subclass_info is not None:
+            enum_used |= self.registry.granted_member_names(subclass_info.module)
+        # Cached exprs will be restored over the fresh editors below, so new
+        # editors' defaults must avoid the members those picks already use.
+        for cached_expr in self._level_cache.values():
+            enum_used |= _member_names_in_expr(cached_expr)
+        context = dict(
+            context, enum_used=enum_used, preferred_skills=preferred_skills
+        )
+
+        def add_param_rows(box_layout, params, kind, lvl, row_context, pools=None):
+            for name, annotation, required in params:
+                param_context = row_context
+                if pools and name in pools:
+                    # This param has a discoverable restricted skill pool
+                    # (e.g. Blessings of Knowledge) — default from it.
+                    param_context = dict(
+                        row_context,
+                        preferred_skills=[
+                            f"Skill.{member}" for member in pools[name]
+                        ],
+                    )
+                row = QWidget()
+                row_layout = QHBoxLayout(row)
+                row_layout.setContentsMargins(0, 0, 0, 0)
+                label = QLabel(name)
+                label.setObjectName("secondary")
+                label.setFixedWidth(160)
+                label.setAlignment(Qt.AlignmentFlag.AlignTop)
+                row_layout.addWidget(label)
+                editor = make_editor(
+                    annotation, param_context, param_name=name, required=required
+                )
+                row_layout.addWidget(editor.widget, stretch=1)
+                box_layout.addWidget(row)
+                key = (kind, lvl, name)
+                self.level_editors[key] = editor
+                if key in self._level_cache:
+                    editor.set_expr(self._level_cache[key])
+
+        # Required constructor args of <Subclass>CustomStarterClassArgs beyond
+        # `skills` (e.g. MonkShadow's monk_level / unarmed_strike) — without
+        # these the generated call would fail with a TypeError.
+        if subclass_info is not None:
+            args_params = [
+                (name, annotation, required)
+                for name, annotation, required in registry_module.signature_params(
+                    subclass_info.args_class
+                )
+                if name != "skills"
+            ]
+            if args_params:
+                box = QGroupBox(f"{subclass_info.key} starter arguments")
+                box_layout = QVBoxLayout(box)
+                box_layout.setSpacing(2)
+                add_param_rows(
+                    box_layout, args_params, "args", 0, dict(context, level=level)
+                )
+                _insert_before_stretch(self.levels_layout, box)
 
         sections = []
         for lvl, cls in sorted(class_info.level_classes.items()):
@@ -1103,27 +1256,14 @@ class CreatorApp(QMainWindow):
                 none_label = QLabel("(no choices at this level)")
                 none_label.setObjectName("secondary")
                 box_layout.addWidget(none_label)
-            for name, annotation, required in params:
-                row = QWidget()
-                row_layout = QHBoxLayout(row)
-                row_layout.setContentsMargins(0, 0, 0, 0)
-                label = QLabel(name)
-                label.setObjectName("secondary")
-                label.setFixedWidth(160)
-                label.setAlignment(Qt.AlignmentFlag.AlignTop)
-                row_layout.addWidget(label)
-                editor = make_editor(
-                    annotation,
-                    dict(context, level=lvl),
-                    param_name=name,
-                    required=required,
-                )
-                row_layout.addWidget(editor.widget, stretch=1)
-                box_layout.addWidget(row)
-                key = (kind, lvl, name)
-                self.level_editors[key] = editor
-                if key in self._level_cache:
-                    editor.set_expr(self._level_cache[key])
+            add_param_rows(
+                box_layout,
+                params,
+                kind,
+                lvl,
+                dict(context, level=lvl),
+                pools=self.registry.skill_pool_hints(cls),
+            )
             _insert_before_stretch(self.levels_layout, box)
 
     # ------------------------------------------------------------ spec <-> UI
@@ -1177,8 +1317,13 @@ class CreatorApp(QMainWindow):
 
         spec.base_level_params = {}
         spec.subclass_level_params = {}
+        spec.starter_args_extra = {}
         for (kind, level, name), editor in self.level_editors.items():
             expr = editor.get_expr()
+            if kind == "args":
+                if expr is not None:
+                    spec.starter_args_extra[name] = expr
+                continue
             target = (
                 spec.base_level_params if kind == "base" else spec.subclass_level_params
             )
@@ -1204,6 +1349,17 @@ class CreatorApp(QMainWindow):
                         problems.append(
                             f"{cls.__name__}: required choice {name!r} is empty."
                         )
+        if subclass_info is not None:
+            for name, _annotation, required in registry_module.signature_params(
+                subclass_info.args_class
+            ):
+                if name == "skills":
+                    continue
+                if required and not spec.starter_args_extra.get(name):
+                    problems.append(
+                        f"{subclass_info.args_class.__name__}: required argument "
+                        f"{name!r} is empty."
+                    )
 
         spec.species_class = self.species_combo.currentText()
         spec.species_params = {}
@@ -1215,7 +1371,9 @@ class CreatorApp(QMainWindow):
         spec.replace_spells_expr = self.replace_spells_editor.get_expr()
         spec.items_expr = self.items_editor.get_expr()
         spec.tool_proficiencies_expr = self.tools_editor.get_expr()
-        spec.starter_args_extra = _parse_kv_lines(self.starter_extra_editor)
+        # Raw lines from the Advanced tab override/extend the structured
+        # starter-arg editors collected above.
+        spec.starter_args_extra.update(_parse_kv_lines(self.starter_extra_editor))
         spec.extra_starter_kwargs = _parse_kv_lines(self.extra_kwargs_editor)
         spec.extra_imports = [
             line.strip()
@@ -1260,11 +1418,36 @@ class CreatorApp(QMainWindow):
             self.replace_spells_editor.set_expr(spec.replace_spells_expr or "")
             self.items_editor.set_expr(spec.items_expr or "")
             self.tools_editor.set_expr(spec.tool_proficiencies_expr or "")
-            _set_kv_lines(self.starter_extra_editor, spec.starter_args_extra)
+            # Args the subclass args class models structurally go to the
+            # starter-argument editors (via the level cache); anything else
+            # stays in the raw Advanced editor.
+            args_param_names = set()
+            subclass_info = self.registry.subclasses().get(
+                self.subclass_combo.currentText()
+            )
+            if subclass_info is not None:
+                args_param_names = {
+                    name
+                    for name, _annotation, _required in registry_module.signature_params(
+                        subclass_info.args_class
+                    )
+                    if name != "skills"
+                }
+            _set_kv_lines(
+                self.starter_extra_editor,
+                {
+                    name: expr
+                    for name, expr in spec.starter_args_extra.items()
+                    if name not in args_param_names
+                },
+            )
             _set_kv_lines(self.extra_kwargs_editor, spec.extra_starter_kwargs)
             self.extra_imports_editor.setPlainText("\n".join(spec.extra_imports))
 
             self._level_cache = {}
+            for name, expr in spec.starter_args_extra.items():
+                if name in args_param_names:
+                    self._level_cache[("args", 0, name)] = expr
             for level, params in spec.base_level_params.items():
                 for name, expr in params.items():
                     self._level_cache[("base", level, name)] = expr

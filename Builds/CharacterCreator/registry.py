@@ -90,6 +90,46 @@ def _collect_level_classes(module, base) -> dict:
     return result
 
 
+def _resolve_attr_chain(node, module):
+    """Resolve an ast.Name/ast.Attribute chain (e.g. Features.Foo.Bar)
+    against a module's namespace. Returns None when unresolvable."""
+    parts = []
+    while isinstance(node, ast.Attribute):
+        parts.append(node.attr)
+        node = node.value
+    if not isinstance(node, ast.Name) or module is None:
+        return None
+    obj = getattr(module, node.id, None)
+    for part in reversed(parts):
+        if obj is None:
+            return None
+        obj = getattr(obj, part, None)
+    return obj
+
+
+def _skill_constants_in_source(cls) -> list:
+    """Ordered, unique Skill member names written as Skill.X constants
+    anywhere in a class' source (a choice pool by convention)."""
+    try:
+        tree = ast.parse(textwrap.dedent(inspect.getsource(cls)))
+    except (OSError, TypeError, SyntaxError):
+        return []
+    nodes = [
+        node
+        for node in ast.walk(tree)
+        if isinstance(node, ast.Attribute)
+        and isinstance(node.value, ast.Name)
+        and node.value.id == "Skill"
+        and node.attr in Skill.__members__
+    ]
+    nodes.sort(key=lambda node: (node.lineno, node.col_offset))
+    found = []
+    for node in nodes:
+        if node.attr not in found:
+            found.append(node.attr)
+    return found
+
+
 def _base_level_bases():
     return tuple(
         getattr(ClassBuilder, f"BaseClassLevel{n}")
@@ -113,6 +153,87 @@ class Registry:
         self._species = None
         self._spell_enums = None
         self._name_to_import = None
+        self._granted_members = {}
+        self._skill_pools = {}
+
+    # --------------------------------------------------- unconditional grants
+
+    def granted_member_names(self, module) -> set:
+        """Enum member names a class/subclass module grants unconditionally:
+        constant Enum.MEMBER arguments to add_spell(...)/add_cantrip(...)
+        calls in the module source. Default spell/cantrip picks are seeded
+        away from these because the sheet rejects duplicates."""
+        if module is None:
+            return set()
+        cached = self._granted_members.get(module.__name__)
+        if cached is not None:
+            return cached
+        names = set()
+        try:
+            tree = ast.parse(inspect.getsource(module))
+        except (OSError, TypeError, SyntaxError):
+            tree = None
+        if tree is not None:
+            for node in ast.walk(tree):
+                if not isinstance(node, ast.Call):
+                    continue
+                func = node.func
+                if not (
+                    isinstance(func, ast.Attribute)
+                    and func.attr in ("add_spell", "add_cantrip")
+                ):
+                    continue
+                for arg in node.args:
+                    if not isinstance(arg, ast.Attribute) or not arg.attr.isupper():
+                        continue
+                    root = arg.value
+                    while isinstance(root, ast.Attribute):
+                        root = root.value
+                    if isinstance(root, ast.Name) and root.id != "self":
+                        names.add(arg.attr)
+        self._granted_members[module.__name__] = names
+        return names
+
+    def skill_pool_hints(self, cls) -> dict:
+        """param name -> ordered list of Skill member names allowed for a
+        level class' param. Derived by convention: add_features passes
+        self.<param> to a feature class whose source enumerates Skill.X
+        constants — its choice pool (e.g. BlessingsOfKnowledge, Primal
+        Knowledge). Used to pick valid default choices; empty when a param
+        has no discoverable restriction."""
+        cache_key = f"{cls.__module__}.{cls.__qualname__}"
+        cached = self._skill_pools.get(cache_key)
+        if cached is not None:
+            return cached
+        hints = {}
+        module = sys.modules.get(cls.__module__)
+        try:
+            tree = ast.parse(textwrap.dedent(inspect.getsource(cls)))
+        except (OSError, TypeError, SyntaxError):
+            tree = None
+        if tree is not None:
+            for node in ast.walk(tree):
+                if not isinstance(node, ast.Call):
+                    continue
+                args = list(node.args) + [kw.value for kw in node.keywords]
+                param_names = [
+                    arg.attr
+                    for arg in args
+                    if isinstance(arg, ast.Attribute)
+                    and isinstance(arg.value, ast.Name)
+                    and arg.value.id == "self"
+                ]
+                if not param_names:
+                    continue
+                feature_cls = _resolve_attr_chain(node.func, module)
+                if not inspect.isclass(feature_cls):
+                    continue
+                pool = _skill_constants_in_source(feature_cls)
+                if pool:
+                    for name in param_names:
+                        hints.setdefault(name, pool)
+        self._skill_pools[cache_key] = hints
+        return hints
 
     # ------------------------------------------------------------- classes
 
