@@ -9,7 +9,7 @@ from Features.Core.BaseFeatures import Feature
 from Features.Combat.FightingStyles import FightingStyle
 from Features.Equipment.Weapons import AbstractWeapon, UnarmedStrike, write_weapons_to_file
 from Invocations.InvocationFactory import InvocationFactory
-from Items import Items
+from Features.Items import Items
 from Spells.SpellFactory import SpellFactory
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from ToolProficiencies.ToolProficiencies import ToolProficiency

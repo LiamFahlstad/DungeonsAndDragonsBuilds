@@ -13,7 +13,7 @@ from Features.Combat.FightingStyles import (
     FightStyleWeaponFeature,
 )
 from Features.Equipment.Weapons import AbstractWeapon
-from Items import Items
+from Features.Items import Items
 from StatBlocks.AbilitiesStatBlock import AbilitiesStatBlock
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from StatBlocks.CombatStatBlock import CombatStatBlock

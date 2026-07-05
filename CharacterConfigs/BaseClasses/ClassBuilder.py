@@ -9,7 +9,7 @@ from Definitions import Ability, CharacterClass
 from Features.CharacterFeats import Backgrounds, OriginFeats
 from Features.Equipment import Armor, Weapons
 from Features.ClassFeatures import SpellSlots
-from Items import Items
+from Features.Items import Items
 from StatBlocks.AbilitiesStatBlock import AbilitiesStatBlock
 from StatBlocks.SavingThrowsStatBlock import SavingThrowsStatBlock
 from StatBlocks.SkillsStatBlock import ClassSkillsStatBlock

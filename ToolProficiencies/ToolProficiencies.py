@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from typing import Optional
 
-from Items import Items
+from Features.Items import Items
 
 
 class ToolProficiency(ABC):

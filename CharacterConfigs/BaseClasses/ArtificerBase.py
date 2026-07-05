@@ -9,7 +9,7 @@ from Definitions import Ability, CharacterClass
 from Features.CharacterFeats import Backgrounds, EpicBoon, GeneralFeats, OriginFeats
 from Features.Equipment import Armor, Weapons
 from Features.ClassFeatures import ArtificerFeatures, SpellSlots
-from Items import Items
+from Features.Items import Items
 from Spells.Definitions import (
     ArtificerLevel0Spells,
     ArtificerLevel1Spells,
