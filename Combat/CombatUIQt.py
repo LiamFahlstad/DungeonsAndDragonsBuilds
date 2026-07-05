@@ -1775,6 +1775,11 @@ class CombatAppQt:
         panel_layout.addWidget(self._section_header("Heal"))
         self.heal_input = QLineEdit()
         self.heal_input.setPlaceholderText("Amount...")
+        self.heal_input.setStyleSheet(
+            "QLineEdit { background-color: #0f3460; border: 1px solid #4caf82; "
+            "border-radius: 3px; color: #eaeaea; padding: 3px 5px; }"
+            "QLineEdit:focus { border: 1px solid #5cdf92; }"
+        )
         panel_layout.addWidget(self.heal_input)
         self.heal_input.returnPressed.connect(self._apply_heal)
         heal_btn = QPushButton("Apply Heal")
@@ -1788,6 +1793,11 @@ class CombatAppQt:
         panel_layout.addWidget(self._section_header("Temp HP"))
         self.temp_hp_input = QLineEdit()
         self.temp_hp_input.setPlaceholderText("Amount...")
+        self.temp_hp_input.setStyleSheet(
+            "QLineEdit { background-color: #0f3460; border: 1px solid #4a9fc4; "
+            "border-radius: 3px; color: #eaeaea; padding: 3px 5px; }"
+            "QLineEdit:focus { border: 1px solid #5ac8f5; }"
+        )
         panel_layout.addWidget(self.temp_hp_input)
         self.temp_hp_input.returnPressed.connect(self._apply_temp_hp)
         temp_hp_btn = QPushButton("Add Temp HP")
