@@ -787,25 +787,17 @@ class HtmlCharacterSheetWriter:
         }
 
         table.stat-table th {
-            background: #3a2c1c;
-            color: #f2e8d8;
-            font-weight: 600;
+            color: #3a2c1c;
+            font-weight: 700;
             font-size: 0.78rem;
             text-transform: uppercase;
             letter-spacing: 0.06em;
             white-space: nowrap;
-        }
-
-        table.stat-table tr:nth-child(even) td {
-            background: #faf7f2;
+            border-bottom: 2px solid #3a2c1c;
         }
 
         table.stat-table tr.st-proficient td {
-            background: #eef5ea;
-        }
-
-        table.stat-table tr.st-proficient:nth-child(even) td {
-            background: #e6f0e2;
+            color: #2e6e3e;
         }
 
         table.stat-table tr.st-proficient td:first-child {
@@ -813,11 +805,7 @@ class HtmlCharacterSheetWriter:
         }
 
         table.stat-table tr.st-expertise td {
-            background: #fff8e6;
-        }
-
-        table.stat-table tr.st-expertise:nth-child(even) td {
-            background: #fff4cc;
+            color: #8a6200;
         }
 
         table.stat-table tr.st-expertise td:first-child {
@@ -827,9 +815,9 @@ class HtmlCharacterSheetWriter:
         /* Expertise badge styling */
         .skill-expertise {
             display: inline-block;
-            background: #d4a747;
-            color: #fff;
-            padding: 1px 6px;
+            border: 1px solid #d4a747;
+            color: #8a6200;
+            padding: 0 5px;
             border-radius: 3px;
             font-weight: 700;
             font-size: 0.85em;
@@ -878,19 +866,18 @@ class HtmlCharacterSheetWriter:
         }
 
         .item-title {
-            background: #6a9a7a;
-            color: #ddf0e4;
+            color: #3a6e4a;
             font-size: 0.78rem;
-            font-weight: 600;
+            font-weight: 700;
             text-align: left;
             text-transform: uppercase;
             letter-spacing: 0.06em;
+            border-bottom: 2px solid #6a9a7a !important;
         }
 
         .item-label {
             font-weight: 600;
             white-space: nowrap;
-            background: #fafafa;
             width: 1%;
         }
 
@@ -919,8 +906,8 @@ class HtmlCharacterSheetWriter:
         }
 
         /* Item inventory rows: name + description, wraps normally */
-        .item-entry {
-            background: #fafafa;
+        .item-entry strong {
+            color: #3a6e4a;
         }
 
         .item-col-narrow {
@@ -1013,19 +1000,17 @@ class HtmlCharacterSheetWriter:
 
         /* Spell name — full-width header row */
         .spell-name {
-            background: #6888a8;
-            color: #dce8f5;
+            color: #3a5a7a;
             font-size: 1rem;
             font-weight: 700;
             text-align: left;
             letter-spacing: 0.02em;
             padding: 4px 7px;
-            border-bottom: 2px solid #a8c4d8;
+            border-bottom: 2px solid #6888a8;
         }
 
         /* Quick-stats row — two cells side by side */
         tr.spell-quickstats td {
-            background: #f9f9fb;
             font-size: 0.82rem;
             white-space: normal;
             padding: 3px 7px;
@@ -1065,7 +1050,6 @@ class HtmlCharacterSheetWriter:
         .sdesc-label {
             font-weight: 600;
             white-space: nowrap;
-            background: #fafafa;
             width: 1%;
             color: var(--muted-color);
             font-size: 0.78rem;
@@ -1077,9 +1061,10 @@ class HtmlCharacterSheetWriter:
             color: #333;
         }
 
-        /* Higher-level row gets a subtle tint */
+        /* Higher-level row gets a subtle accent */
         tr.spell-higher-row td {
-            background: #faf8ff;
+            font-style: italic;
+            color: #3a5a7a;
         }
 
         /* Concentration chip — gold */
@@ -1095,14 +1080,12 @@ class HtmlCharacterSheetWriter:
         }
 
         .stag-concentration {
-            background: #fff3cd;
             border: 1px solid #c8a227;
             color: #7a5c00;
         }
 
         /* Ritual chip — teal */
         .stag-ritual {
-            background: #d4f0ed;
             border: 1px solid #2a9d8f;
             color: #1a5f58;
         }
@@ -1138,19 +1121,17 @@ class HtmlCharacterSheetWriter:
 
         /* Weapon name — full-width header row */
         .weapon-name {
-            background: #a06060;
-            color: #f5dcdc;
+            color: #8a4a4a;
             font-size: 1rem;
             font-weight: 700;
             text-align: left;
             letter-spacing: 0.02em;
             padding: 4px 7px;
-            border-bottom: 2px solid #d4a0a0;
+            border-bottom: 2px solid #a06060;
         }
 
         /* Quick-stats row — two cells side by side */
         tr.weapon-quickstats td {
-            background: #f9f9f9;
             font-size: 0.82rem;
             white-space: normal;
             padding: 3px 7px;
@@ -1189,7 +1170,6 @@ class HtmlCharacterSheetWriter:
         .wlabel-col {
             font-weight: 600;
             white-space: nowrap;
-            background: #fafafa;
             width: 1%;
             color: var(--muted-color);
             font-size: 0.78rem;
@@ -1204,7 +1184,6 @@ class HtmlCharacterSheetWriter:
         /* Individual property/tag chips */
         .wtag {
             display: inline-block;
-            background: #eef0f4;
             border: 1px solid #c8ccd8;
             border-radius: 3px;
             padding: 1px 6px;
@@ -1216,14 +1195,13 @@ class HtmlCharacterSheetWriter:
 
         /* Mastery chip — active (player has it) */
         .wtag-mastery {
-            background: #e8f0e8;
             border-color: #9abb9a;
+            color: #3a6e3a;
             font-weight: 600;
         }
 
         /* Mastery chip — inactive (weapon has it but player doesn't) */
         .wtag-mastery-inactive {
-            background: #f5f5f5;
             border-color: #ccc;
             color: #999;
             font-style: italic;
@@ -1238,7 +1216,6 @@ class HtmlCharacterSheetWriter:
         .wprop-label {
             font-weight: 600;
             white-space: nowrap;
-            background: #fafafa;
             width: 1%;
             color: var(--muted-color);
         }
@@ -1251,7 +1228,6 @@ class HtmlCharacterSheetWriter:
         tr.weapon-mastery-row td {
             font-size: 0.8rem;
             padding: 2px 7px;
-            background: #f5faf5;
         }
 
         .wmastery-label {
@@ -1269,7 +1245,7 @@ class HtmlCharacterSheetWriter:
         tr.weapon-addl-row td {
             font-size: 0.82rem;
             padding: 3px 7px;
-            background: #fffef5;
+            font-style: italic;
         }
 
         .waddl-desc {
@@ -1291,7 +1267,6 @@ class HtmlCharacterSheetWriter:
             align-items: baseline;
             justify-content: space-between;
             gap: 0.8rem;
-            background: #4a3020;
             padding: 5px 10px;
             border-bottom: 2px solid #9a7040;
             max-width: none;
@@ -1301,13 +1276,13 @@ class HtmlCharacterSheetWriter:
         .feature-name {
             font-size: 1rem;
             font-weight: 700;
-            color: #f5e8d0;
+            color: #4a3020;
             letter-spacing: 0.02em;
         }
 
         .feature-origin {
             font-size: 0.75rem;
-            color: #c8a870;
+            color: #9a7040;
             font-style: italic;
             white-space: nowrap;
             flex-shrink: 0;
@@ -1315,7 +1290,6 @@ class HtmlCharacterSheetWriter:
 
         .feature-body {
             padding: 0.4rem 0.7rem;
-            background: #fffcf7;
             font-size: 0.88rem;
             max-width: none;
             margin: 0;
@@ -1334,7 +1308,6 @@ class HtmlCharacterSheetWriter:
         .feature-upgrade {
             margin-top: 0.5rem;
             border-left: 3px solid #9abbe0;
-            background: #f0f6fd;
             border-radius: 0 3px 3px 0;
             padding: 0.3rem 0.6rem;
             max-width: none;
@@ -1389,9 +1362,8 @@ class HtmlCharacterSheetWriter:
         }
 
         th.whit-ac {
-            background: #3a2c1c;
-            color: #f2e8d8;
-            font-weight: 600;
+            color: #3a2c1c;
+            font-weight: 700;
             text-align: center;
             padding: 2px 5px;
             border: 1px solid #5a4030;
@@ -1415,24 +1387,24 @@ class HtmlCharacterSheetWriter:
         td.whit-pct[data-pct="90"],
         td.whit-pct[data-pct="85"],
         td.whit-pct[data-pct="80"] {
-            background: #d4edda;
             color: #155724;
+            font-weight: 600;
         }
 
         td.whit-pct[data-pct="75"],
         td.whit-pct[data-pct="70"],
         td.whit-pct[data-pct="65"],
         td.whit-pct[data-pct="60"] {
-            background: #fff3cd;
             color: #856404;
+            font-weight: 600;
         }
 
         td.whit-pct[data-pct="55"],
         td.whit-pct[data-pct="50"],
         td.whit-pct[data-pct="45"],
         td.whit-pct[data-pct="40"] {
-            background: #fde8c8;
-            color: #6b3a00;
+            color: #b35900;
+            font-weight: 600;
         }
 
         td.whit-pct[data-pct="35"],
@@ -1443,8 +1415,8 @@ class HtmlCharacterSheetWriter:
         td.whit-pct[data-pct="10"],
         td.whit-pct[data-pct="5"],
         td.whit-pct[data-pct="0"] {
-            background: #f8d7da;
-            color: #721c24;
+            color: #b02a37;
+            font-weight: 600;
         }
 
         /* ── Spell save DC fail-probability table ────────────────────────── */
@@ -1455,9 +1427,8 @@ class HtmlCharacterSheetWriter:
         }
 
         table.dc-fail-table th.dc-fail-dc-col {
-            background: #3a2c1c;
-            color: #f2e8d8;
-            font-weight: 600;
+            color: #3a2c1c;
+            font-weight: 700;
             font-size: 0.72rem;
             text-align: left;
             padding: 2px 8px;
@@ -1477,19 +1448,11 @@ class HtmlCharacterSheetWriter:
             display: inline-block;
             width: 1.2em;
             height: 1.2em;
-            border: 1.5px solid #f5e8d0;
+            border: 1.5px solid #3a5a7a;
             box-sizing: border-box;
             border-radius: 2px;
             vertical-align: middle;
             margin-right: 0.3em;
-            background: transparent;
-        }
-
-        @media print {
-            .spell-prep-checkbox {
-                border: 1px solid #333;
-                background: white;
-            }
         }
         </style>
         """
