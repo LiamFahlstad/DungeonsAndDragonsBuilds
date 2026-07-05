@@ -2,7 +2,11 @@ from typing import Optional
 
 from Definitions import Ability, CharacterClass, Skill
 from Features.BaseFeatures import Feature
-from Features.SubFeatures import HitPointsPerLevelBonus, InitiativeProficiency, SkillProficiencyChoice
+from Features.SubFeatures import (
+    HitPointsPerLevelBonus,
+    InitiativeProficiency,
+    SkillProficiencyChoice,
+)
 from Spells.Definitions import (
     ClericLevel0Spells,
     ClericLevel1Spells,
@@ -15,7 +19,7 @@ from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
 
-class OriginCharacterFeat(Feature):
+class OriginFeat(Feature):
     def get_spell_casting_ability(self) -> Optional[Ability]:
         return None
 
@@ -23,18 +27,7 @@ class OriginCharacterFeat(Feature):
         return []
 
 
-class OriginTextFeat(Feature):
-    def get_spell_casting_ability(self) -> Optional[Ability]:
-        return None
-
-    def get_spells(self) -> list[str]:
-        return []
-
-
-OriginFeat = OriginCharacterFeat | OriginTextFeat
-
-
-class Skilled(OriginCharacterFeat):
+class Skilled(OriginFeat):
     """Also add proficiency in any combination of three skills or tools of your choice."""
 
     def __init__(self, skills: list[Skill]):
@@ -46,7 +39,7 @@ class Skilled(OriginCharacterFeat):
         self._choice.apply(character_stat_block)
 
 
-class Alert(OriginTextFeat):
+class Alert(OriginFeat):
     def __init__(self):
         super().__init__(name="Alert", origin="Origin Feat")
         self._proficiency = InitiativeProficiency()
@@ -61,7 +54,7 @@ class Alert(OriginTextFeat):
         )
 
 
-class Crafter(OriginTextFeat):
+class Crafter(OriginFeat):
     def __init__(self, artisans_tools: list[str]):
         self.artisans_tools = artisans_tools
         super().__init__(name="Crafter", origin="Origin Feat")
@@ -100,7 +93,7 @@ class Crafter(OriginTextFeat):
         )
 
 
-class Healer(OriginTextFeat):
+class Healer(OriginFeat):
     def __init__(self):
         super().__init__(name="Healer", origin="Origin Feat")
 
@@ -115,7 +108,7 @@ class Healer(OriginTextFeat):
         )
 
 
-class Lucky(OriginTextFeat):
+class Lucky(OriginFeat):
     def __init__(self):
         super().__init__(name="Lucky", origin="Origin Feat")
 
@@ -131,7 +124,7 @@ class Lucky(OriginTextFeat):
         )
 
 
-class MagicInitiate(OriginTextFeat):
+class MagicInitiate(OriginFeat):
     def __init__(
         self,
         cantrip_1: str,
@@ -256,7 +249,7 @@ class MagicInitiateWizard(MagicInitiate):
         )
 
 
-class Musician(OriginTextFeat):
+class Musician(OriginFeat):
     def __init__(self):
         super().__init__(name="Musician", origin="Origin Feat")
 
@@ -268,7 +261,7 @@ class Musician(OriginTextFeat):
         )
 
 
-class SavageAttacker(OriginTextFeat):
+class SavageAttacker(OriginFeat):
     def __init__(self):
         super().__init__(name="Savage Attacker", origin="Origin Feat")
 
@@ -279,7 +272,7 @@ class SavageAttacker(OriginTextFeat):
         )
 
 
-class TavernBrawler(OriginTextFeat):
+class TavernBrawler(OriginFeat):
     def __init__(self):
         super().__init__(name="Tavern Brawler", origin="Origin Feat")
 
@@ -295,7 +288,7 @@ class TavernBrawler(OriginTextFeat):
         )
 
 
-class Tough(OriginCharacterFeat):
+class Tough(OriginFeat):
     def __init__(self):
         self._hp = HitPointsPerLevelBonus(2)
 
@@ -303,7 +296,7 @@ class Tough(OriginCharacterFeat):
         self._hp.apply(character_stat_block)
 
 
-class CultOfTheDragonInitiate(OriginTextFeat):
+class CultOfTheDragonInitiate(OriginFeat):
     def __init__(self):
         super().__init__(name="Cult of the Dragon Initiate", origin="Origin Feat")
 
@@ -316,7 +309,7 @@ class CultOfTheDragonInitiate(OriginTextFeat):
         )
 
 
-class EmeraldEnclaveFledgling(OriginTextFeat):
+class EmeraldEnclaveFledgling(OriginFeat):
     def __init__(self):
         super().__init__(name="Emerald Enclave Fledgling", origin="Origin Feat")
 
@@ -329,7 +322,7 @@ class EmeraldEnclaveFledgling(OriginTextFeat):
         )
 
 
-class HarperAgent(OriginTextFeat):
+class HarperAgent(OriginFeat):
     def __init__(self):
         super().__init__(name="Harper Agent", origin="Origin Feat")
 
@@ -342,7 +335,7 @@ class HarperAgent(OriginTextFeat):
         )
 
 
-class LordsAllianceAgent(OriginTextFeat):
+class LordsAllianceAgent(OriginFeat):
     def __init__(self):
         super().__init__(name="Lords' Alliance Agent", origin="Origin Feat")
 
@@ -354,7 +347,7 @@ class LordsAllianceAgent(OriginTextFeat):
         )
 
 
-class PurpleDragonRook(OriginTextFeat):
+class PurpleDragonRook(OriginFeat):
     VALID_SKILLS = [Skill.INSIGHT, Skill.PERFORMANCE, Skill.PERSUASION]
 
     def __init__(self, entreat_skill: Skill):
@@ -378,7 +371,7 @@ class PurpleDragonRook(OriginTextFeat):
         )
 
 
-class SpellfireSpark(OriginTextFeat):
+class SpellfireSpark(OriginFeat):
     def __init__(self):
         super().__init__(name="Spellfire Spark", origin="Origin Feat")
 
@@ -394,7 +387,7 @@ class SpellfireSpark(OriginTextFeat):
         )
 
 
-class TyroOfTheGauntlet(OriginTextFeat):
+class TyroOfTheGauntlet(OriginFeat):
     def __init__(self):
         super().__init__(name="Tyro of the Gauntlet", origin="Origin Feat")
 
@@ -406,7 +399,7 @@ class TyroOfTheGauntlet(OriginTextFeat):
         )
 
 
-class ZhentarimRuffian(OriginTextFeat):
+class ZhentarimRuffian(OriginFeat):
     def __init__(self):
         super().__init__(name="Zhentarim Ruffian", origin="Origin Feat")
 
@@ -418,7 +411,7 @@ class ZhentarimRuffian(OriginTextFeat):
         )
 
 
-class SharpEye(OriginTextFeat):
+class SharpEye(OriginFeat):
     def __init__(self):
         super().__init__(name="Sharp Eye", origin="Origin Feat")
 
@@ -428,7 +421,7 @@ class SharpEye(OriginTextFeat):
         return StringUtils.add_boxes(description, proficiency_bonus)
 
 
-class Survivor(OriginTextFeat):
+class Survivor(OriginFeat):
     def __init__(self):
         super().__init__(name="Survivor", origin="Origin Feat")
 
