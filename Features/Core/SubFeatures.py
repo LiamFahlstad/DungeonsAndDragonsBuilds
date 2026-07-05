@@ -155,21 +155,24 @@ class ArmorClassBonus(SubFeature):
 # ── Skill roll conditions ─────────────────────────────────────────────────────
 
 class SkillRollCondition(SubFeature):
-    """Applies a roll condition (advantage/disadvantage/neutral) to a specific skill."""
+    """Applies a roll condition (advantage/disadvantage/neutral) to a specific skill.
+    `reason` names where the condition comes from (e.g. the item or feature name)
+    on the character sheet."""
 
-    def __init__(self, skill: Skill, condition: DiceRollCondition):
+    def __init__(self, skill: Skill, condition: DiceRollCondition, reason: Optional[str] = None):
         self.skill = skill
         self.condition = condition
+        self.reason = reason
 
     def apply(self, character_stat_block: CharacterStatBlock):
-        character_stat_block.set_skill_roll_condition(self.skill, self.condition)
+        character_stat_block.set_skill_roll_condition(self.skill, self.condition, self.reason)
 
 
 class StealthDisadvantage(SkillRollCondition):
     """Imposes disadvantage on Stealth checks."""
 
-    def __init__(self):
-        super().__init__(Skill.STEALTH, DiceRollCondition.DISADVANTAGE)
+    def __init__(self, reason: Optional[str] = None):
+        super().__init__(Skill.STEALTH, DiceRollCondition.DISADVANTAGE, reason)
 
 
 # ── Initiative ────────────────────────────────────────────────────────────────

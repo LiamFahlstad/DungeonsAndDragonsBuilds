@@ -119,9 +119,15 @@ class CharacterStatBlock:
         return self.skills.get_roll_condition(skill)
 
     def set_skill_roll_condition(
-        self, skill: Skill, condition: Definitions.DiceRollCondition
+        self,
+        skill: Skill,
+        condition: Definitions.DiceRollCondition,
+        reason: Optional[str] = None,
     ):
-        self.skills.set_roll_condition(skill, condition)
+        self.skills.set_roll_condition(skill, condition, reason)
+
+    def get_skill_roll_condition_reasons(self, skill: Skill) -> list[str]:
+        return self.skills.get_roll_condition_reasons(skill)
 
     def get_saving_throw_modifier(self, ability: Ability) -> int:
         base_modifier = self.get_ability_modifier(ability)

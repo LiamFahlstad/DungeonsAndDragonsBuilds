@@ -358,7 +358,9 @@ class RemarkableAthlete(Feature):
     def __init__(self):
         super().__init__(name="Remarkable Athlete", origin="Champion Fighter Level 3")
         self._initiative = InitiativeRollCondition(DiceRollCondition.ADVANTAGE)
-        self._athletics = SkillRollCondition(Skill.ATHLETICS, DiceRollCondition.ADVANTAGE)
+        self._athletics = SkillRollCondition(
+            Skill.ATHLETICS, DiceRollCondition.ADVANTAGE, reason="Remarkable Athlete"
+        )
 
     def apply(self, character_stat_block: CharacterStatBlock) -> None:
         self._initiative.apply(character_stat_block)

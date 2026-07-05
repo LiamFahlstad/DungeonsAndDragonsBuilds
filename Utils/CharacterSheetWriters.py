@@ -328,7 +328,6 @@ class HtmlCharacterSheetWriter:
             "Modifier",
             "Breakdown",
             "Ability",
-            "Roll Condition",
         ]
 
         file.write("<table class='stat-table'>\n")
@@ -350,12 +349,15 @@ class HtmlCharacterSheetWriter:
                 else:
                     tr_class = ""
 
+                condition = character.get_skill_roll_condition(skill)
+                reasons = character.get_skill_roll_condition_reasons(skill)
                 row = [
                     skill.value,
-                    f"{character.get_skill_modifier(skill):+}",
-                    self._skill_modifier_breakdown(character, skill),
+                    self._modifier_with_condition(
+                        character.get_skill_modifier(skill), condition
+                    ),
+                    self._skill_modifier_breakdown(character, skill, condition, reasons),
                     character.get_skill_ability(skill).value,
-                    character.get_skill_roll_condition(skill).value,
                 ]
                 self._write_table_row(file, row, tr_class)
 
@@ -381,20 +383,43 @@ class HtmlCharacterSheetWriter:
 
                 # Breakdown follows the default skill that yields the best modifier
                 best_skill = max(possible_skills, key=character.get_skill_modifier)
+                condition = self._resolve_homebrew_roll_condition(roll_conditions)
+                reasons = [
+                    reason
+                    for s in possible_skills
+                    if character.get_skill_roll_condition(s) == condition
+                    for reason in character.get_skill_roll_condition_reasons(s)
+                ]
                 row = [
                     skill.value,
-                    f"{character.get_skill_modifier(best_skill):+}",
-                    self._skill_modifier_breakdown(character, best_skill),
+                    self._modifier_with_condition(
+                        character.get_skill_modifier(best_skill), condition
+                    ),
+                    self._skill_modifier_breakdown(character, best_skill, condition, reasons),
                     character.get_skill_ability(possible_skills[0]).value,
-                    self._resolve_homebrew_roll_condition(roll_conditions).value,
                 ]
                 self._write_table_row(file, row, tr_class)
 
         file.write("</table>\n<br>\n")
 
     @staticmethod
-    def _skill_modifier_breakdown(character: CharacterStatBlock, skill: Definitions.Skill) -> str:
-        """Modifier as a sum of its parts, e.g. '2 + 3 (proficiency) + 1 (Ring of X)'."""
+    def _modifier_with_condition(
+        modifier: int, condition: Definitions.DiceRollCondition
+    ) -> str:
+        """Modifier with the roll condition in parentheses, e.g. '+5 (Advantage)'."""
+        if condition == Definitions.DiceRollCondition.NEUTRAL:
+            return f"{modifier:+}"
+        return f"{modifier:+} ({condition.value})"
+
+    @staticmethod
+    def _skill_modifier_breakdown(
+        character: CharacterStatBlock,
+        skill: Definitions.Skill,
+        condition: Definitions.DiceRollCondition = Definitions.DiceRollCondition.NEUTRAL,
+        condition_reasons: Optional[list[str]] = None,
+    ) -> str:
+        """Modifier as a sum of its parts, e.g. '2 + 3 (proficiency) + 1 (Ring of X)',
+        followed by the roll condition and its reason, e.g. 'Disadvantage (Chain Mail)'."""
         terms: list[tuple[int, str]] = []
         proficiency_bonus = character.get_proficiency_bonus()
         if character.has_expertise_in_skill(skill):
@@ -408,6 +433,12 @@ class HtmlCharacterSheetWriter:
         for value, label in terms:
             sign = "+" if value >= 0 else "-"
             breakdown += f" {sign} {abs(value)} ({label})"
+
+        if condition != Definitions.DiceRollCondition.NEUTRAL:
+            condition_text = condition.value
+            if condition_reasons:
+                condition_text += f" ({', '.join(condition_reasons)})"
+            breakdown += f", {condition_text}"
         return breakdown
 
     def _write_features(

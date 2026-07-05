@@ -70,7 +70,7 @@ class ChainMailArmor(AbstractArmor):
     def __init__(self):
         super().__init__("Chain Mail Armor", slots=2)  # Heavier armor takes more space
         self._str_req = StrengthRequirement(13)
-        self._stealth = StealthDisadvantage()
+        self._stealth = StealthDisadvantage(reason=self.name)
         self._ac = SetArmorClass(16, ability=None)
 
     def apply_worn_effects(self, character_stat_block: CharacterStatBlock):
@@ -108,7 +108,7 @@ class ArmorOfProtection(AbstractArmor):
         )
         self.requires_attunement = True
         self._str_req = StrengthRequirement(13)
-        self._stealth = StealthDisadvantage()
+        self._stealth = StealthDisadvantage(reason=self.name)
         self._ac = SetArmorClass(16, ability=None)
         self._ac_bonus = ArmorClassBonus(1)
 

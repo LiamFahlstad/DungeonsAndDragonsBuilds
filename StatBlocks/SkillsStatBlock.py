@@ -24,6 +24,8 @@ class SkillsStatBlock(StatBlock):
         self.dice_roll_conditions = (
             dice_roll_conditions if dice_roll_conditions is not None else {}
         )
+        # Per-skill list of reasons for the currently active roll condition
+        self.roll_condition_reasons: dict[Skill, list[str]] = {}
         self.skill_to_ability = self.get_default_skill_to_ability_mapping()
 
     def add_skill_proficiency(self, skill: Skill):
@@ -51,8 +53,18 @@ class SkillsStatBlock(StatBlock):
     def get_roll_condition(self, skill: Skill) -> DiceRollCondition:
         return self.dice_roll_conditions.get(skill, DiceRollCondition.NEUTRAL)
 
-    def set_roll_condition(self, skill: Skill, condition: DiceRollCondition):
+    def set_roll_condition(
+        self, skill: Skill, condition: DiceRollCondition, reason: Optional[str] = None
+    ):
+        # A new condition replaces the old one, so stale reasons are dropped
+        if self.dice_roll_conditions.get(skill) != condition:
+            self.roll_condition_reasons.pop(skill, None)
         self.dice_roll_conditions[skill] = condition
+        if reason is not None:
+            self.roll_condition_reasons.setdefault(skill, []).append(reason)
+
+    def get_roll_condition_reasons(self, skill: Skill) -> list[str]:
+        return self.roll_condition_reasons.get(skill, [])
 
     def get_skill_ability(self, skill: Skill) -> Ability:
         return self.skill_to_ability[skill]
