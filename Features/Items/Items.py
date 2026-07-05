@@ -1,11 +1,12 @@
 from typing import Optional
 
-from Definitions import Ability
+from Definitions import Ability, Skill
 from Features.Core.BaseFeatures import Feature
 from Features.Core.SubFeatures import (
     AbilityScoreBonus,
     ArmorClassBonus,
     CarryingCapacityBonus,
+    SkillBonus,
     SubFeature,
 )
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
@@ -833,5 +834,25 @@ class RingOfIntelligence(WearableItem):
                     total=2,
                     error_prefix="Ring of Intellect bonus",
                 )
+            ],
+        )
+
+
+class RingOfInvestigation(WearableItem):
+    """A ring that grants +1 to Investigation checks."""
+
+    def __init__(self, is_wearing: bool = True):
+        super().__init__(
+            "Ring of Investigation",
+            rarity="uncommon",
+            requires_attunement=False,
+            category="ring",
+            description_text=(
+                "While wearing this ring, you gain a +1 bonus to Intelligence (Investigation) checks.\n\n"
+                "A slender copper band set with a tiny magnifying lens that focuses the wearer's attention on overlooked details."
+            ),
+            is_wearing=is_wearing,
+            subfeatures=[
+                SkillBonus(Skill.INVESTIGATION, 1, source="Ring of Investigation")
             ],
         )

@@ -100,6 +100,9 @@ class CharacterStatBlock:
     def get_skill_bonus(self, skill: Skill) -> int:
         return self.skills.bonuses.get(skill, 0)
 
+    def get_skill_bonus_sources(self, skill: Skill) -> list[tuple[int, str]]:
+        return self.skills.get_bonus_sources(skill)
+
     def is_proficient_in_saving_throw(self, ability: Ability) -> bool:
         return self.saving_throws.is_proficient(ability)
 

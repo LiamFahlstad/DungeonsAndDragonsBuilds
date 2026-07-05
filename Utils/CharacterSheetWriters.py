@@ -326,10 +326,9 @@ class HtmlCharacterSheetWriter:
         headers = [
             "Skill",
             "Modifier",
-            "Proficient",
+            "Breakdown",
             "Ability",
             "Roll Condition",
-            "Bonus (already included)",
         ]
 
         file.write("<table class='stat-table'>\n")
@@ -344,24 +343,19 @@ class HtmlCharacterSheetWriter:
                 proficient = character.is_proficient_in_skill(skill)
                 has_expertise = character.has_expertise_in_skill(skill)
 
-                # Determine proficiency display text
                 if has_expertise:
-                    prof_text = "<span class='skill-expertise'>Exp</span>"
                     tr_class = "st-expertise"
                 elif proficient:
-                    prof_text = "Prof"
                     tr_class = "st-proficient"
                 else:
-                    prof_text = "—"
                     tr_class = ""
 
                 row = [
                     skill.value,
                     f"{character.get_skill_modifier(skill):+}",
-                    prof_text,
+                    self._skill_modifier_breakdown(character, skill),
                     character.get_skill_ability(skill).value,
                     character.get_skill_roll_condition(skill).value,
-                    f"{character.get_skill_bonus(skill):+}",
                 ]
                 self._write_table_row(file, row, tr_class)
 
@@ -378,28 +372,43 @@ class HtmlCharacterSheetWriter:
                     character.has_expertise_in_skill(s) for s in possible_skills
                 )
 
-                # Determine proficiency display text
                 if has_expertise:
-                    prof_text = "<span class='skill-expertise'>Exp</span>"
                     tr_class = "st-expertise"
                 elif proficient:
-                    prof_text = "Prof"
                     tr_class = "st-proficient"
                 else:
-                    prof_text = "—"
                     tr_class = ""
 
+                # Breakdown follows the default skill that yields the best modifier
+                best_skill = max(possible_skills, key=character.get_skill_modifier)
                 row = [
                     skill.value,
-                    f"{max(character.get_skill_modifier(s) for s in possible_skills):+}",
-                    prof_text,
+                    f"{character.get_skill_modifier(best_skill):+}",
+                    self._skill_modifier_breakdown(character, best_skill),
                     character.get_skill_ability(possible_skills[0]).value,
                     self._resolve_homebrew_roll_condition(roll_conditions).value,
-                    f"{max(character.get_skill_bonus(s) for s in possible_skills):+}",
                 ]
                 self._write_table_row(file, row, tr_class)
 
         file.write("</table>\n<br>\n")
+
+    @staticmethod
+    def _skill_modifier_breakdown(character: CharacterStatBlock, skill: Definitions.Skill) -> str:
+        """Modifier as a sum of its parts, e.g. '2 + 3 (proficiency) + 1 (Ring of X)'."""
+        terms: list[tuple[int, str]] = []
+        proficiency_bonus = character.get_proficiency_bonus()
+        if character.has_expertise_in_skill(skill):
+            terms.append((proficiency_bonus, "proficiency"))
+            terms.append((proficiency_bonus, "expertise"))
+        elif character.is_proficient_in_skill(skill):
+            terms.append((proficiency_bonus, "proficiency"))
+        terms.extend(character.get_skill_bonus_sources(skill))
+
+        breakdown = str(character.get_ability_modifier(character.get_skill_ability(skill)))
+        for value, label in terms:
+            sign = "+" if value >= 0 else "-"
+            breakdown += f" {sign} {abs(value)} ({label})"
+        return breakdown
 
     def _write_features(
         self, character: CharacterStatBlock, file: TextIO, features: list[Feature]

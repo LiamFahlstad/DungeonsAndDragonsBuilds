@@ -15,7 +15,12 @@ class SkillsStatBlock(StatBlock):
     ):
         self.proficiencies = proficiencies if proficiencies is not None else {}
         self.expertise = expertise if expertise is not None else {}
-        self.bonuses = bonuses if bonuses is not None else {}
+        self.bonuses = {}
+        # Per-skill list of (bonus, source) pairs, used to show where each bonus comes from
+        self.bonus_sources: dict[Skill, list[tuple[int, str]]] = {}
+        if bonuses:
+            for skill, bonus in bonuses.items():
+                self.add_skill_bonus(skill, bonus)
         self.dice_roll_conditions = (
             dice_roll_conditions if dice_roll_conditions is not None else {}
         )
@@ -24,9 +29,13 @@ class SkillsStatBlock(StatBlock):
     def add_skill_proficiency(self, skill: Skill):
         self.proficiencies[skill] = True
 
-    def add_skill_bonus(self, skill: Skill, bonus: int):
+    def add_skill_bonus(self, skill: Skill, bonus: int, source: str = "Other"):
         current_bonus = self.bonuses.get(skill, 0)
         self.bonuses[skill] = current_bonus + bonus
+        self.bonus_sources.setdefault(skill, []).append((bonus, source))
+
+    def get_bonus_sources(self, skill: Skill) -> list[tuple[int, str]]:
+        return self.bonus_sources.get(skill, [])
 
     def add_skill_expertise(self, skill: Skill):
         if not self.is_proficient(skill):

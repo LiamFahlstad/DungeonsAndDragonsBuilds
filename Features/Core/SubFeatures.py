@@ -206,14 +206,19 @@ class HitPointsPerLevelBonus(SubFeature):
 # ── Skill modifiers ───────────────────────────────────────────────────────────
 
 class SkillBonus(SubFeature):
-    """Adds a flat bonus to a specific skill."""
+    """Adds a flat bonus to a specific skill. `source` names where the bonus
+    comes from (e.g. the item or feature name) on the character sheet."""
 
-    def __init__(self, skill: Skill, bonus: int):
+    def __init__(self, skill: Skill, bonus: int, source: Optional[str] = None):
         self.skill = skill
         self.bonus = bonus
+        self.source = source
 
     def apply(self, character_stat_block: CharacterStatBlock):
-        character_stat_block.skills.add_skill_bonus(self.skill, self.bonus)
+        if self.source is not None:
+            character_stat_block.skills.add_skill_bonus(self.skill, self.bonus, self.source)
+        else:
+            character_stat_block.skills.add_skill_bonus(self.skill, self.bonus)
 
 
 class SkillToAbilityOverride(SubFeature):
@@ -235,7 +240,9 @@ class JackOfAllTradesBonus(SubFeature):
         half_proficiency = character_stat_block.get_proficiency_bonus() // 2
         for skill in Skill:
             if not character_stat_block.skills.is_proficient(skill):
-                character_stat_block.skills.add_skill_bonus(skill, half_proficiency)
+                character_stat_block.skills.add_skill_bonus(
+                    skill, half_proficiency, "Jack of All Trades"
+                )
 
 
 # ── Movement ──────────────────────────────────────────────────────────────────
