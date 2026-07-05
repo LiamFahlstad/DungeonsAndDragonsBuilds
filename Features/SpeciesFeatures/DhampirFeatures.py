@@ -1,4 +1,4 @@
-from Features.BaseFeatures import Feature
+from Features.Core.BaseFeatures import Feature
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 

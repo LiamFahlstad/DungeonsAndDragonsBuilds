@@ -4,10 +4,10 @@ from typing import Optional, TextIO
 import DamageCalculator
 import Definitions
 from Definitions import Ability, Die, DiceRollCondition
-from Features import Armor
-from Features.BaseFeatures import Feature
-from Features.FightingStyles import FightingStyle
-from Features.Weapons import AbstractWeapon, UnarmedStrike, write_weapons_to_file
+from Features.Equipment import Armor
+from Features.Core.BaseFeatures import Feature
+from Features.Combat.FightingStyles import FightingStyle
+from Features.Equipment.Weapons import AbstractWeapon, UnarmedStrike, write_weapons_to_file
 from Invocations.InvocationFactory import InvocationFactory
 from Items import Items
 from Spells.SpellFactory import SpellFactory

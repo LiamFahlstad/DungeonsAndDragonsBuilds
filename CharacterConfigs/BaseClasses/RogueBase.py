@@ -6,7 +6,8 @@ import Definitions
 from CharacterConfigs.BaseClasses import ClassBuilder
 from CharacterSheetCreator import CharacterSheetData
 from Definitions import CharacterClass
-from Features import Armor, GeneralFeats, Weapons
+from Features.CharacterFeats import GeneralFeats
+from Features.Equipment import Armor, Weapons
 from Features.ClassFeatures import RogueFeatures
 from StatBlocks.SavingThrowsStatBlock import RogueSavingThrowsStatBlock
 from StatBlocks.SkillsStatBlock import RogueSkillsStatBlock

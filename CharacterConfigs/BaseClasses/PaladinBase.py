@@ -6,7 +6,9 @@ import Definitions
 from CharacterConfigs.BaseClasses import ClassBuilder
 from CharacterSheetCreator import CharacterSheetData
 from Definitions import Ability, CharacterClass
-from Features import Armor, FightingStyles, GeneralFeats, Weapons
+from Features.CharacterFeats import GeneralFeats
+from Features.Combat import FightingStyles
+from Features.Equipment import Armor, Weapons
 from Features.ClassFeatures import PaladinFeatures, SpellSlots
 from Spells.Definitions import (
     PaladinLevel1Spells,

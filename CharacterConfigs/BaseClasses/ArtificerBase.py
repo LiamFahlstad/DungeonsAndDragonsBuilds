@@ -6,7 +6,8 @@ import Definitions
 from CharacterConfigs.BaseClasses import ClassBuilder
 from CharacterSheetCreator import CharacterSheetData
 from Definitions import Ability, CharacterClass
-from Features import Armor, Backgrounds, EpicBoon, GeneralFeats, OriginFeats, Weapons
+from Features.CharacterFeats import Backgrounds, EpicBoon, GeneralFeats, OriginFeats
+from Features.Equipment import Armor, Weapons
 from Features.ClassFeatures import ArtificerFeatures, SpellSlots
 from Items import Items
 from Spells.Definitions import (

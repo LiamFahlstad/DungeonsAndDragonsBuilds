@@ -6,7 +6,8 @@ import Definitions
 from CharacterConfigs.BaseClasses import ClassBuilder
 from CharacterSheetCreator import CharacterSheetData
 from Definitions import Ability, CharacterClass
-from Features import Armor, GeneralFeats, Weapons
+from Features.CharacterFeats import GeneralFeats
+from Features.Equipment import Armor, Weapons
 from Features.ClassFeatures import SpellSlots, WarlockFeatures
 from Invocations.Definitions import (
     InvocationsLevel0,

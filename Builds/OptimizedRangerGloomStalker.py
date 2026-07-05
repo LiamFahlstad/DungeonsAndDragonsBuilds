@@ -11,7 +11,9 @@ from CharacterConfigs.SubClasses.RangerGloomStalker import (
     RangerGloomStalkerCustomStarterClassArgs,
 )
 from Definitions import Ability, Skill
-from Features import Backgrounds, FightingStyles, OriginFeats, Weapons
+from Features.CharacterFeats import Backgrounds, OriginFeats
+from Features.Combat import FightingStyles
+from Features.Equipment import Weapons
 from Features.SpeciesFeatures import DragonbornFeatures
 from SpeciesConfigs import Dragonborn
 from Spells.Definitions import RangerLevel1Spells

@@ -30,7 +30,7 @@ from CharacterConfigs.SubClasses.BardGlamour import (
     BardGlamourCustomStarterClassArgs,
 )
 from Definitions import Ability, Skill
-from Features import Backgrounds, EpicBoon, GeneralFeats, OriginFeats
+from Features.CharacterFeats import Backgrounds, EpicBoon, GeneralFeats, OriginFeats
 from Items import Items, Packs
 from SpeciesConfigs import Aasimar
 from Spells.Definitions import (

@@ -1,6 +1,6 @@
 from Definitions import Ability, Skill
-from Features.BaseFeatures import Feature
-from Features.SubFeatures import JackOfAllTradesBonus, SkillExpertiseChoice, SkillProficiencyChoice
+from Features.Core.BaseFeatures import Feature
+from Features.Core.SubFeatures import JackOfAllTradesBonus, SkillExpertiseChoice, SkillProficiencyChoice
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 

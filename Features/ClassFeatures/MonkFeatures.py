@@ -1,7 +1,7 @@
 import Definitions
-from Features.BaseFeatures import Feature
-from Features.SubFeatures import MultiAbilityArmorClass
-from Features.Weapons import WeaponsDamageRolls
+from Features.Core.BaseFeatures import Feature
+from Features.Core.SubFeatures import MultiAbilityArmorClass
+from Features.Equipment.Weapons import WeaponsDamageRolls
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 

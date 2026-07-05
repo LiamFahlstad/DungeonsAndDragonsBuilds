@@ -1,7 +1,7 @@
 import Definitions
 from Definitions import Ability, Skill
-from Features.BaseFeatures import Feature
-from Features.SubFeatures import MultiAbilityArmorClass, SavingThrowAdvantage, SkillProficiencyChoice
+from Features.Core.BaseFeatures import Feature
+from Features.Core.SubFeatures import MultiAbilityArmorClass, SavingThrowAdvantage, SkillProficiencyChoice
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 

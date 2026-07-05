@@ -30,7 +30,7 @@ from CharacterConfigs.SubClasses.ClericLight import (
     ClericLightCustomStarterClassArgs,
 )
 from Definitions import Ability, Skill
-from Features import Backgrounds, EpicBoon, GeneralFeats, OriginFeats
+from Features.CharacterFeats import Backgrounds, EpicBoon, GeneralFeats, OriginFeats
 from SpeciesConfigs import Elf
 from Spells.Definitions import (
     ClericLevel0Spells,

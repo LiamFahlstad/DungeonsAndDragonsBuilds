@@ -1,8 +1,8 @@
 from typing import Optional
 
 from Definitions import Ability
-from Features.BaseFeatures import Feature
-from Features.SubFeatures import ArmorClassBonus, SetArmorClass, StealthDisadvantage, StrengthRequirement
+from Features.Core.BaseFeatures import Feature
+from Features.Core.SubFeatures import ArmorClassBonus, SetArmorClass, StealthDisadvantage, StrengthRequirement
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 

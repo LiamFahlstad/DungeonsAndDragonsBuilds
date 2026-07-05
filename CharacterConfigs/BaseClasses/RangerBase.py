@@ -6,7 +6,9 @@ import Definitions
 from CharacterConfigs.BaseClasses import ClassBuilder
 from CharacterSheetCreator import CharacterSheetData
 from Definitions import Ability, ApplyWhen, CharacterClass, Skill
-from Features import Armor, EpicBoon, FightingStyles, GeneralFeats, Weapons
+from Features.CharacterFeats import EpicBoon, GeneralFeats
+from Features.Combat import FightingStyles
+from Features.Equipment import Armor, Weapons
 from Features.ClassFeatures import RangerFeatures, SpellSlots
 from Spells.Definitions import (
     RangerLevel1Spells,

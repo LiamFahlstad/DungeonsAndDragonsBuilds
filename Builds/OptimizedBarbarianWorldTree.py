@@ -31,7 +31,8 @@ from CharacterConfigs.SubClasses.BarbarianPathOfTheWorldTree import (
     BarbarianWorldTreeCustomStarterClassArgs,
 )
 from Definitions import Ability, Skill
-from Features import Backgrounds, EpicBoon, GeneralFeats, OriginFeats, Weapons
+from Features.CharacterFeats import Backgrounds, EpicBoon, GeneralFeats, OriginFeats
+from Features.Equipment import Weapons
 from Features.SpeciesFeatures import GoliathFeatures
 from SpeciesConfigs import Goliath
 from StatBlocks.AbilitiesStatBlock import StandardArrayAbilitiesStatBlock

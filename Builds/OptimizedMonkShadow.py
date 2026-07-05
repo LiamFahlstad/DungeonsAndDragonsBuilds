@@ -8,7 +8,7 @@ from CharacterConfigs.SubClasses.MonkShadow import (
     MonkShadowCustomStarterClassArgs,
 )
 from Definitions import Ability, Skill
-from Features import Backgrounds, OriginFeats
+from Features.CharacterFeats import Backgrounds, OriginFeats
 from SpeciesConfigs import Elf
 from StatBlocks.AbilitiesStatBlock import StandardArrayAbilitiesStatBlock
 from StatBlocks.SkillsStatBlock import MonkSkillsStatBlock

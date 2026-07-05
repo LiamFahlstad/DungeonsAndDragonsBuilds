@@ -13,15 +13,9 @@ from CharacterConfigs.SubClasses.FighterBattleMaster import (
     FighterBattleMasterCustomStarterClassArgs,
 )
 from Definitions import Ability, Skill
-from Features import (
-    Armor,
-    Backgrounds,
-    FightingStyles,
-    GeneralFeats,
-    Maneuvers,
-    OriginFeats,
-    Weapons,
-)
+from Features.CharacterFeats import Backgrounds, GeneralFeats, OriginFeats
+from Features.Combat import FightingStyles, Maneuvers
+from Features.Equipment import Armor, Weapons
 from SpeciesConfigs import Human
 from StatBlocks.AbilitiesStatBlock import StandardArrayAbilitiesStatBlock
 from StatBlocks.SkillsStatBlock import FighterSkillsStatBlock

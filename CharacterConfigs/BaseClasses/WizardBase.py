@@ -5,7 +5,8 @@ import attr
 from CharacterConfigs.BaseClasses import ClassBuilder
 from CharacterSheetCreator import CharacterSheetData
 from Definitions import Ability, CharacterClass, Skill
-from Features import GeneralFeats, Weapons
+from Features.CharacterFeats import GeneralFeats
+from Features.Equipment import Weapons
 from Features.ClassFeatures import SpellSlots, WizardFeatures
 from Spells.Definitions import (
     WizardLevel0Spells,

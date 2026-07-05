@@ -6,7 +6,8 @@ import Definitions
 from CharacterConfigs.BaseClasses import ClassBuilder
 from CharacterSheetCreator import CharacterSheetData
 from Definitions import CharacterClass
-from Features import Armor, EpicBoon, GeneralFeats, Weapons
+from Features.CharacterFeats import EpicBoon, GeneralFeats
+from Features.Equipment import Armor, Weapons
 from Features.ClassFeatures import BarbarianFeatures
 from StatBlocks.SavingThrowsStatBlock import BarbarianSavingThrowsStatBlock
 from StatBlocks.SkillsStatBlock import BarbarianSkillsStatBlock

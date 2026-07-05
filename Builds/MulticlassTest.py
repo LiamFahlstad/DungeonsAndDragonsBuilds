@@ -17,7 +17,9 @@ from CharacterConfigs.SubClasses.WizardBladesinger import (
     WizardBladesingerMulticlassBuilder,
 )
 from Definitions import Ability, Skill
-from Features import Backgrounds, FightingStyles, GeneralFeats, OriginFeats, Weapons
+from Features.CharacterFeats import Backgrounds, GeneralFeats, OriginFeats
+from Features.Combat import FightingStyles
+from Features.Equipment import Weapons
 from SpeciesConfigs import Elf
 from Spells import Definitions as SpellDefinitions
 from StatBlocks.AbilitiesStatBlock import StandardArrayAbilitiesStatBlock

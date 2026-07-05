@@ -30,7 +30,7 @@ from CharacterConfigs.SubClasses.BardLore import (
     BardLoreCustomStarterClassArgs,
 )
 from Definitions import Ability, Skill
-from Features import Backgrounds, EpicBoon, GeneralFeats, OriginFeats
+from Features.CharacterFeats import Backgrounds, EpicBoon, GeneralFeats, OriginFeats
 from SpeciesConfigs import Gnome
 from Spells.Definitions import (
     BardLevel0Spells,

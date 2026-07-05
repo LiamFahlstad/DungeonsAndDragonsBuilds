@@ -11,7 +11,9 @@ from CharacterConfigs.SubClasses.PaladinVengeance import (
     PaladinVengeanceCustomStarterClassArgs,
 )
 from Definitions import Ability, Skill
-from Features import Backgrounds, FightingStyles, OriginFeats, Weapons
+from Features.CharacterFeats import Backgrounds, OriginFeats
+from Features.Combat import FightingStyles
+from Features.Equipment import Weapons
 from SpeciesConfigs import Human
 from Spells.Definitions import (
     PaladinLevel1Spells,

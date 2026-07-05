@@ -1,8 +1,8 @@
 from enum import Enum
 
 from Definitions import Ability, Skill
-from Features.BaseFeatures import Feature
-from Features.SubFeatures import SkillExpertiseChoice
+from Features.Core.BaseFeatures import Feature
+from Features.Core.SubFeatures import SkillExpertiseChoice
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 

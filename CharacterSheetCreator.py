@@ -4,15 +4,15 @@ import attr
 
 import Definitions
 from Definitions import Ability, ApplyWhen, CharacterClass
-from Features import OriginFeats
-from Features.Armor import AbstractArmor
-from Features.BaseFeatures import Feature
-from Features.FightingStyles import (
+from Features.CharacterFeats import OriginFeats
+from Features.Equipment.Armor import AbstractArmor
+from Features.Core.BaseFeatures import Feature
+from Features.Combat.FightingStyles import (
     FightingStyle,
     FightStyleModifier,
     FightStyleWeaponFeature,
 )
-from Features.Weapons import AbstractWeapon
+from Features.Equipment.Weapons import AbstractWeapon
 from Items import Items
 from StatBlocks.AbilitiesStatBlock import AbilitiesStatBlock
 from StatBlocks.CharacterStatBlock import CharacterStatBlock

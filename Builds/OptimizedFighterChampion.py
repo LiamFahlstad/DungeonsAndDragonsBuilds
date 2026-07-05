@@ -13,14 +13,9 @@ from CharacterConfigs.SubClasses.FighterChampion import (
     FighterChampionCustomStarterClassArgs,
 )
 from Definitions import Ability, Skill
-from Features import (
-    Armor,
-    Backgrounds,
-    FightingStyles,
-    GeneralFeats,
-    OriginFeats,
-    Weapons,
-)
+from Features.CharacterFeats import Backgrounds, GeneralFeats, OriginFeats
+from Features.Combat import FightingStyles
+from Features.Equipment import Armor, Weapons
 from Items import Items, Packs
 from SpeciesConfigs import Dwarf
 from StatBlocks.AbilitiesStatBlock import StandardArrayAbilitiesStatBlock

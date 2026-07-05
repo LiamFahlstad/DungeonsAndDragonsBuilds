@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from typing import TextIO
 
-from Features.Weapons import AbstractWeapon, WeaponProperty, WeaponType
+from Features.Equipment.Weapons import AbstractWeapon, WeaponProperty, WeaponType
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 

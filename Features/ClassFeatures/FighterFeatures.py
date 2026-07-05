@@ -1,6 +1,6 @@
 from Definitions import Ability, DiceRollCondition, Skill
-from Features.BaseFeatures import Feature
-from Features.SubFeatures import InitiativeRollCondition, SkillRollCondition
+from Features.Core.BaseFeatures import Feature
+from Features.Core.SubFeatures import InitiativeRollCondition, SkillRollCondition
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 

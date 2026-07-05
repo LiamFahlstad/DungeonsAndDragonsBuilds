@@ -6,7 +6,8 @@ import attr
 import Definitions
 from CharacterSheetCreator import CharacterSheetData
 from Definitions import Ability, CharacterClass
-from Features import Armor, Backgrounds, OriginFeats, Weapons
+from Features.CharacterFeats import Backgrounds, OriginFeats
+from Features.Equipment import Armor, Weapons
 from Features.ClassFeatures import SpellSlots
 from Items import Items
 from StatBlocks.AbilitiesStatBlock import AbilitiesStatBlock

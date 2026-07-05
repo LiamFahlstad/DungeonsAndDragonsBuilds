@@ -30,7 +30,8 @@ from CharacterConfigs.SubClasses.ClericKnowledge import (
     ClericKnowledgeCustomStarterClassArgs,
 )
 from Definitions import Ability, Skill
-from Features import Armor, Backgrounds, EpicBoon, GeneralFeats, OriginFeats, Weapons
+from Features.CharacterFeats import Backgrounds, EpicBoon, GeneralFeats, OriginFeats
+from Features.Equipment import Armor, Weapons
 from SpeciesConfigs import Warforged
 from Spells.Definitions import (
     ClericLevel0Spells,

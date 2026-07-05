@@ -6,7 +6,8 @@ import Definitions
 from CharacterConfigs.BaseClasses import ClassBuilder
 from CharacterSheetCreator import CharacterSheetData
 from Definitions import Ability, CharacterClass
-from Features import Armor, EpicBoon, GeneralFeats, Weapons
+from Features.CharacterFeats import EpicBoon, GeneralFeats
+from Features.Equipment import Armor, Weapons
 from Features.ClassFeatures import DruidFeatures, SpellSlots
 from Spells.Definitions import (
     DruidLevel0Spells,

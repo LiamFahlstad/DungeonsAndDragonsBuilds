@@ -5,7 +5,8 @@ import attr
 from CharacterConfigs.BaseClasses import ClassBuilder
 from CharacterSheetCreator import CharacterSheetData
 from Definitions import Ability, CharacterClass
-from Features import EpicBoon, GeneralFeats, Weapons
+from Features.CharacterFeats import EpicBoon, GeneralFeats
+from Features.Equipment import Weapons
 from Features.ClassFeatures import MonkFeatures
 from StatBlocks.SavingThrowsStatBlock import MonkSavingThrowsStatBlock
 from StatBlocks.SkillsStatBlock import MonkSkillsStatBlock

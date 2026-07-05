@@ -18,7 +18,9 @@ from CharacterConfigs.SubClasses.WarlockArchfey import (
     ArchfeyWarlockMulticlassBuilder,
 )
 from Definitions import Ability, Skill
-from Features import Backgrounds, FightingStyles, GeneralFeats, OriginFeats, Weapons
+from Features.CharacterFeats import Backgrounds, GeneralFeats, OriginFeats
+from Features.Combat import FightingStyles
+from Features.Equipment import Weapons
 from Invocations.Definitions import (
     InvocationsLevel0,
     InvocationsLevel2,

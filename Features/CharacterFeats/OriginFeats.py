@@ -1,8 +1,8 @@
 from typing import Optional
 
 from Definitions import Ability, CharacterClass, Skill
-from Features.BaseFeatures import Feature
-from Features.SubFeatures import (
+from Features.Core.BaseFeatures import Feature
+from Features.Core.SubFeatures import (
     HitPointsPerLevelBonus,
     InitiativeProficiency,
     SkillProficiencyChoice,

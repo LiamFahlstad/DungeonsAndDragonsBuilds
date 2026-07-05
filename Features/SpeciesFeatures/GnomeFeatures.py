@@ -1,6 +1,6 @@
 from Definitions import Ability, CreatureSize
-from Features.BaseFeatures import Feature
-from Features.SubFeatures import SavingThrowAdvantage
+from Features.Core.BaseFeatures import Feature
+from Features.Core.SubFeatures import SavingThrowAdvantage
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 

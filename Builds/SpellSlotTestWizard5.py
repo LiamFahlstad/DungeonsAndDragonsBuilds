@@ -13,7 +13,8 @@ from CharacterConfigs.SubClasses.WizardBladesinger import (
     WizardBladeSingerCustomStarterClassArgs,
 )
 from Definitions import Ability, Skill
-from Features import Backgrounds, GeneralFeats, OriginFeats, Weapons
+from Features.CharacterFeats import Backgrounds, GeneralFeats, OriginFeats
+from Features.Equipment import Weapons
 from SpeciesConfigs import Human
 from Spells import Definitions as SpellDefs
 from StatBlocks.AbilitiesStatBlock import StandardArrayAbilitiesStatBlock

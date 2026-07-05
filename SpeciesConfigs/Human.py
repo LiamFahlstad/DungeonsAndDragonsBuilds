@@ -1,6 +1,6 @@
 import CharacterSheetCreator
 import Definitions
-from Features import OriginFeats
+from Features.CharacterFeats import OriginFeats
 from Features.SpeciesFeatures import HumanFeatures
 from SpeciesConfigs.SpeciesBuilder import SpeciesBuilder
 

@@ -13,7 +13,9 @@ from CharacterConfigs.SubClasses.RangerBeastMaster import (
     RangerBeastMasterCustomStarterClassArgs,
 )
 from Definitions import Ability, Skill
-from Features import Backgrounds, FightingStyles, GeneralFeats, OriginFeats, Weapons
+from Features.CharacterFeats import Backgrounds, GeneralFeats, OriginFeats
+from Features.Combat import FightingStyles
+from Features.Equipment import Weapons
 from SpeciesConfigs import Gnome
 from Spells.Definitions import RangerLevel1Spells, RangerLevel2Spells
 from StatBlocks.AbilitiesStatBlock import StandardArrayAbilitiesStatBlock

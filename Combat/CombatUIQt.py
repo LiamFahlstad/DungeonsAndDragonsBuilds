@@ -9,7 +9,7 @@ import Definitions
 from Combat.ConditionRules import ConditionRule
 from Combat.Definitions import Action, BasicCombatantData, Condition, ExtendedCombatantData
 from Combat.Rules import Rule, group_by_category, load_rules
-from Features import Armor
+from Features.Equipment import Armor
 
 from PyQt6.QtWidgets import (
     QApplication,

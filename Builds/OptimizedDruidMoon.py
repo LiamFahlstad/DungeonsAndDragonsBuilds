@@ -34,7 +34,7 @@ from CharacterConfigs.SubClasses.DruidMoon import (
     DruidMoonCustomStarterClassArgs,
 )
 from Definitions import Ability, Skill
-from Features import Backgrounds, EpicBoon, GeneralFeats, OriginFeats
+from Features.CharacterFeats import Backgrounds, EpicBoon, GeneralFeats, OriginFeats
 from SpeciesConfigs import Gnome
 from Spells.Definitions import (
     DruidLevel0Spells,

@@ -1,6 +1,6 @@
 from Definitions import Ability, Skill
-from Features.BaseFeatures import Feature
-from Features.SubFeatures import SkillExpertiseChoice, SkillProficiencyChoice
+from Features.Core.BaseFeatures import Feature
+from Features.Core.SubFeatures import SkillExpertiseChoice, SkillProficiencyChoice
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 WIZARD_HIT_DIE = 6

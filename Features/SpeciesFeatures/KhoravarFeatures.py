@@ -1,6 +1,6 @@
 from Definitions import CreatureSize, Skill
-from Features.BaseFeatures import Feature
-from Features.SubFeatures import SkillProficiencyChoice
+from Features.Core.BaseFeatures import Feature
+from Features.Core.SubFeatures import SkillProficiencyChoice
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 SPEED = 30  # Given by your species
