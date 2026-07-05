@@ -1032,11 +1032,11 @@ class HtmlCharacterSheetWriter:
         }
 
         .sqs-left {
-            width: 35%;
+            width: 50%;
         }
 
         .sqs-right {
-            width: 65%;
+            width: 50%;
         }
 
         /* Inline label within quick-stats */
