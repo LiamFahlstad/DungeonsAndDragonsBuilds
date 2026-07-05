@@ -5,12 +5,19 @@ from Combat.Definitions import ExtendedCombatantData
 class BanditCrimeLord(ExtendedCombatantData):
     def __init__(self):
         super().__init__(
-            name="Bandit Crime Lord",
+            combatant_type="Bandit Crime Lord",
             hp=169,
             ac=17,
             temp_hp=0,
             conditions=[],
-            ability_scores={"Str": 10, "Dex": 20, "Con": 14, "Int": 18, "Wis": 14, "Cha": 15},
+            ability_scores={
+                "Str": 10,
+                "Dex": 20,
+                "Con": 14,
+                "Int": 18,
+                "Wis": 14,
+                "Cha": 15,
+            },
             saving_throws={},
             spell_slots={},
             cr="11",
@@ -26,16 +33,31 @@ class BanditCrimeLord(ExtendedCombatantData):
             senses="Passive Perception 20",
             languages="Common, Thieves' Cant",
             traits=[
-            {"name": "Evasion", "description": "If the bandit is subjected to an effect that allows it to make a Dexterity saving throw to take only half damage, the bandit instead takes no damage if it succeeds on the save and only half damage if it fails. It can't use this trait if it has the Incapacitated condition."},
-        ],
+                {
+                    "name": "Evasion",
+                    "description": "If the bandit is subjected to an effect that allows it to make a Dexterity saving throw to take only half damage, the bandit instead takes no damage if it succeeds on the save and only half damage if it fails. It can't use this trait if it has the Incapacitated condition.",
+                },
+            ],
             actions=[
-            {"name": "Multiattack", "description": "The bandit makes three attacks, using Scimitar or Pistol in any combination."},
-            {"name": "Scimitar", "description": "Melee Attack Roll: +9, reach 5 ft. Hit: 12 (2d6 + 5) Slashing damage plus 14 (4d6) Poison damage."},
-            {"name": "Pistol", "description": "Ranged Attack Roll: +9, range 30/90 ft. Hit: 10 (1d10 + 5) Piercing damage plus 14 (4d6) Poison damage."},
-        ],
+                {
+                    "name": "Multiattack",
+                    "description": "The bandit makes three attacks, using Scimitar or Pistol in any combination.",
+                },
+                {
+                    "name": "Scimitar",
+                    "description": "Melee Attack Roll: +9, reach 5 ft. Hit: 12 (2d6 + 5) Slashing damage plus 14 (4d6) Poison damage.",
+                },
+                {
+                    "name": "Pistol",
+                    "description": "Ranged Attack Roll: +9, range 30/90 ft. Hit: 10 (1d10 + 5) Piercing damage plus 14 (4d6) Poison damage.",
+                },
+            ],
             bonus_actions=[
-            {"name": "Deadly Aim", "description": "The bandit gives itself Advantage on the next attack roll it makes during the current turn. If that attack hits, the target takes an extra 28 (8d6) Poison damage."},
-        ],
+                {
+                    "name": "Deadly Aim",
+                    "description": "The bandit gives itself Advantage on the next attack roll it makes during the current turn. If that attack hits, the target takes an extra 28 (8d6) Poison damage.",
+                },
+            ],
             reactions=[],
             legendary_actions=[],
             legendary_resistances=0,
@@ -47,12 +69,19 @@ class BanditCrimeLord(ExtendedCombatantData):
 class Behir(ExtendedCombatantData):
     def __init__(self):
         super().__init__(
-            name="Behir",
+            combatant_type="Behir",
             hp=168,
             ac=17,
             temp_hp=0,
             conditions=[],
-            ability_scores={"Str": 23, "Dex": 16, "Con": 18, "Int": 7, "Wis": 14, "Cha": 12},
+            ability_scores={
+                "Str": 23,
+                "Dex": 16,
+                "Con": 18,
+                "Int": 7,
+                "Wis": 14,
+                "Cha": 12,
+            },
             saving_throws={},
             spell_slots={},
             cr="11",
@@ -69,14 +98,29 @@ class Behir(ExtendedCombatantData):
             languages="Draconic",
             traits=[],
             actions=[
-            {"name": "Multiattack", "description": "The behir makes one Bite attack and uses Constrict."},
-            {"name": "Bite", "description": "Melee Attack Roll: +10, reach 10 ft. Hit: 19 (2d12 + 6) Piercing damage plus 11 (2d10) Lightning damage."},
-            {"name": "Constrict", "description": "Strength Saving Throw: DC 18, one Large or smaller creature the behir can see within 5 feet. Failure: 28 (5d8 + 6) Bludgeoning damage. The target has the Grappled condition (escape DC 16), and it has the Restrained condition until the grapple ends."},
-            {"name": "Lightning Breath (Recharge 5–6)", "description": "Dexterity Saving Throw: DC 16, each creature in a 90-foot-long, 5-foot-wide Line. Failure: 66 (12d10) Lightning damage. Success: Half damage."},
-        ],
+                {
+                    "name": "Multiattack",
+                    "description": "The behir makes one Bite attack and uses Constrict.",
+                },
+                {
+                    "name": "Bite",
+                    "description": "Melee Attack Roll: +10, reach 10 ft. Hit: 19 (2d12 + 6) Piercing damage plus 11 (2d10) Lightning damage.",
+                },
+                {
+                    "name": "Constrict",
+                    "description": "Strength Saving Throw: DC 18, one Large or smaller creature the behir can see within 5 feet. Failure: 28 (5d8 + 6) Bludgeoning damage. The target has the Grappled condition (escape DC 16), and it has the Restrained condition until the grapple ends.",
+                },
+                {
+                    "name": "Lightning Breath (Recharge 5–6)",
+                    "description": "Dexterity Saving Throw: DC 16, each creature in a 90-foot-long, 5-foot-wide Line. Failure: 66 (12d10) Lightning damage. Success: Half damage.",
+                },
+            ],
             bonus_actions=[
-            {"name": "Swallow", "description": "Dexterity Saving Throw: DC 18, one Large or smaller creature Grappled by the behir (the behir can have only one creature swallowed at a time). Failure: The behir swallows the target, which is no longer Grappled. While swallowed, a creature has the Blinded and Restrained conditions, has Total Cover against attacks and other effects outside the behir, and takes 21 (6d6) Acid damage at the start of each of the behir's turns. If the behir takes 30 damage or more on a single turn from the swallowed creature, the behir must succeed on a DC 14 Constitution saving throw at the end of that turn or regurgitate the creature, which falls in a space within 10 feet of the behir and has the Prone condition. If the behir dies, a swallowed creature is no longer Restrained and can escape from the corpse by using 15 feet of movement, exiting Prone."},
-        ],
+                {
+                    "name": "Swallow",
+                    "description": "Dexterity Saving Throw: DC 18, one Large or smaller creature Grappled by the behir (the behir can have only one creature swallowed at a time). Failure: The behir swallows the target, which is no longer Grappled. While swallowed, a creature has the Blinded and Restrained conditions, has Total Cover against attacks and other effects outside the behir, and takes 21 (6d6) Acid damage at the start of each of the behir's turns. If the behir takes 30 damage or more on a single turn from the swallowed creature, the behir must succeed on a DC 14 Constitution saving throw at the end of that turn or regurgitate the creature, which falls in a space within 10 feet of the behir and has the Prone condition. If the behir dies, a swallowed creature is no longer Restrained and can escape from the corpse by using 15 feet of movement, exiting Prone.",
+                },
+            ],
             reactions=[],
             legendary_actions=[],
             legendary_resistances=0,
@@ -88,12 +132,19 @@ class Behir(ExtendedCombatantData):
 class Dao(ExtendedCombatantData):
     def __init__(self):
         super().__init__(
-            name="Dao",
+            combatant_type="Dao",
             hp=200,
             ac=18,
             temp_hp=0,
             conditions=[],
-            ability_scores={"Str": 23, "Dex": 12, "Con": 24, "Int": 12, "Wis": 13, "Cha": 18},
+            ability_scores={
+                "Str": 23,
+                "Dex": 12,
+                "Con": 24,
+                "Int": 12,
+                "Wis": 13,
+                "Cha": 18,
+            },
             saving_throws={},
             spell_slots={},
             cr="11",
@@ -109,17 +160,41 @@ class Dao(ExtendedCombatantData):
             senses="Darkvision 120 ft., Passive Perception 11",
             languages="Primordial (Terran)",
             traits=[
-            {"name": "Earth Glide", "description": "The dao can burrow through nonmagical, unworked earth and stone. While doing so, the dao doesn't disturb the material it moves through."},
-            {"name": "Elemental Restoration", "description": "If the dao dies outside the Elemental Plane of Earth, its body dissolves into dirt, and it gains a new body in 1d4 days, reviving with all its Hit Points somewhere on the Plane of Earth."},
-            {"name": "Magic Resistance", "description": "The dao has Advantage on saving throws against spells and other magical effects."},
-            {"name": "Wishes", "description": "The dao has a 30 percent chance of knowing the Wish spell. If the dao knows it, the dao can cast it only on behalf of a non-genie creature who communicates a wish in a way the dao can understand. If the dao casts the spell for the creature, the dao suffers none of the spell's stress. Once the dao has cast it three times, the dao can't do so again for 365 days."},
-        ],
+                {
+                    "name": "Earth Glide",
+                    "description": "The dao can burrow through nonmagical, unworked earth and stone. While doing so, the dao doesn't disturb the material it moves through.",
+                },
+                {
+                    "name": "Elemental Restoration",
+                    "description": "If the dao dies outside the Elemental Plane of Earth, its body dissolves into dirt, and it gains a new body in 1d4 days, reviving with all its Hit Points somewhere on the Plane of Earth.",
+                },
+                {
+                    "name": "Magic Resistance",
+                    "description": "The dao has Advantage on saving throws against spells and other magical effects.",
+                },
+                {
+                    "name": "Wishes",
+                    "description": "The dao has a 30 percent chance of knowing the Wish spell. If the dao knows it, the dao can cast it only on behalf of a non-genie creature who communicates a wish in a way the dao can understand. If the dao casts the spell for the creature, the dao suffers none of the spell's stress. Once the dao has cast it three times, the dao can't do so again for 365 days.",
+                },
+            ],
             actions=[
-            {"name": "Multiattack", "description": "The dao makes three Earthen Maul attacks or two Earth Burst attacks."},
-            {"name": "Earthen Maul", "description": "Melee Attack Roll: +10, reach 5 ft. Hit: 20 (4d6 + 6) Bludgeoning damage. If the target is a Large or smaller creature, it has the Prone condition."},
-            {"name": "Earth Burst", "description": "Ranged Attack Roll: +10, range 120 ft. Hit: 15 (2d8 + 6) Bludgeoning damage. Hit or Miss: Earth explodes from the target's space, creating the following effect. Dexterity Saving Throw: DC 16, each creature in a 10-foot Emanation originating from and including the target. Failure: 10 (3d6) Thunder damage."},
-            {"name": "Spellcasting", "description": "The dao casts one of the following spells, requiring no Material components and using Charisma as the spellcasting ability (spell save DC 16):"},
-        ],
+                {
+                    "name": "Multiattack",
+                    "description": "The dao makes three Earthen Maul attacks or two Earth Burst attacks.",
+                },
+                {
+                    "name": "Earthen Maul",
+                    "description": "Melee Attack Roll: +10, reach 5 ft. Hit: 20 (4d6 + 6) Bludgeoning damage. If the target is a Large or smaller creature, it has the Prone condition.",
+                },
+                {
+                    "name": "Earth Burst",
+                    "description": "Ranged Attack Roll: +10, range 120 ft. Hit: 15 (2d8 + 6) Bludgeoning damage. Hit or Miss: Earth explodes from the target's space, creating the following effect. Dexterity Saving Throw: DC 16, each creature in a 10-foot Emanation originating from and including the target. Failure: 10 (3d6) Thunder damage.",
+                },
+                {
+                    "name": "Spellcasting",
+                    "description": "The dao casts one of the following spells, requiring no Material components and using Charisma as the spellcasting ability (spell save DC 16):",
+                },
+            ],
             bonus_actions=[],
             reactions=[],
             legendary_actions=[],
@@ -132,12 +207,19 @@ class Dao(ExtendedCombatantData):
 class DeathKnightAspirant(ExtendedCombatantData):
     def __init__(self):
         super().__init__(
-            name="Death Knight Aspirant",
+            combatant_type="Death Knight Aspirant",
             hp=178,
             ac=20,
             temp_hp=0,
             conditions=[],
-            ability_scores={"Str": 20, "Dex": 10, "Con": 18, "Int": 10, "Wis": 12, "Cha": 16},
+            ability_scores={
+                "Str": 20,
+                "Dex": 10,
+                "Con": 18,
+                "Int": 10,
+                "Wis": 12,
+                "Cha": 16,
+            },
             saving_throws={},
             spell_slots={},
             cr="11",
@@ -153,16 +235,37 @@ class DeathKnightAspirant(ExtendedCombatantData):
             senses="Darkvision 120 ft., Passive Perception 11",
             languages="Abyssal, Common",
             traits=[
-            {"name": "Magic Resistance", "description": "The aspirant has Advantage on saving throws against spells and other magical effects."},
-            {"name": "Marshal Undead", "description": "Undead creatures of the aspirant's choice (excluding itself) in a 60-foot Emanation originating from it have Advantage on attack rolls and saving throws. It can't use this trait if it has the Incapacitated condition."},
-        ],
+                {
+                    "name": "Magic Resistance",
+                    "description": "The aspirant has Advantage on saving throws against spells and other magical effects.",
+                },
+                {
+                    "name": "Marshal Undead",
+                    "description": "Undead creatures of the aspirant's choice (excluding itself) in a 60-foot Emanation originating from it have Advantage on attack rolls and saving throws. It can't use this trait if it has the Incapacitated condition.",
+                },
+            ],
             actions=[
-            {"name": "Multiattack", "description": "The aspirant makes three Dread Blade attacks."},
-            {"name": "Dread Blade", "description": "Melee Attack Roll: +9, reach 5 ft. Hit: 14 (2d8 + 5) Slashing damage plus 10 (3d6) Necrotic damage."},
-            {"name": "Hellfire Orb (Recharge 5–6)", "description": "Dexterity Saving Throw: DC 15, each creature in a 20-foot-radius Sphere centered on a point the aspirant can see within 120 feet of itself. Failure: 21 (6d6) Fire damage plus 21 (6d6) Necrotic damage. Success: Half damage."},
-            {"name": "Spellcasting", "description": "The aspirant casts one of the following spells, using Charisma as the spellcasting ability (spell save DC 15):"},
-            {"name": "Parry", "description": "Trigger: The aspirant is hit by a melee attack roll while holding a weapon. Response: The aspirant adds 4 to its AC against that attack, possibly causing it to miss."},
-        ],
+                {
+                    "name": "Multiattack",
+                    "description": "The aspirant makes three Dread Blade attacks.",
+                },
+                {
+                    "name": "Dread Blade",
+                    "description": "Melee Attack Roll: +9, reach 5 ft. Hit: 14 (2d8 + 5) Slashing damage plus 10 (3d6) Necrotic damage.",
+                },
+                {
+                    "name": "Hellfire Orb (Recharge 5–6)",
+                    "description": "Dexterity Saving Throw: DC 15, each creature in a 20-foot-radius Sphere centered on a point the aspirant can see within 120 feet of itself. Failure: 21 (6d6) Fire damage plus 21 (6d6) Necrotic damage. Success: Half damage.",
+                },
+                {
+                    "name": "Spellcasting",
+                    "description": "The aspirant casts one of the following spells, using Charisma as the spellcasting ability (spell save DC 15):",
+                },
+                {
+                    "name": "Parry",
+                    "description": "Trigger: The aspirant is hit by a melee attack roll while holding a weapon. Response: The aspirant adds 4 to its AC against that attack, possibly causing it to miss.",
+                },
+            ],
             bonus_actions=[],
             reactions=[],
             legendary_actions=[],
@@ -175,12 +278,19 @@ class DeathKnightAspirant(ExtendedCombatantData):
 class Djinni(ExtendedCombatantData):
     def __init__(self):
         super().__init__(
-            name="Djinni",
+            combatant_type="Djinni",
             hp=218,
             ac=17,
             temp_hp=0,
             conditions=[],
-            ability_scores={"Str": 21, "Dex": 15, "Con": 22, "Int": 15, "Wis": 16, "Cha": 20},
+            ability_scores={
+                "Str": 21,
+                "Dex": 15,
+                "Con": 22,
+                "Int": 15,
+                "Wis": 16,
+                "Cha": 20,
+            },
             saving_throws={},
             spell_slots={},
             cr="11",
@@ -196,17 +306,41 @@ class Djinni(ExtendedCombatantData):
             senses="Darkvision 120 ft., Passive Perception 13",
             languages="Primordial (Auran)",
             traits=[
-            {"name": "Elemental Restoration", "description": "If the djinni dies outside the Elemental Plane of Air, its body dissolves into mist, and it gains a new body in 1d4 days, reviving with all its Hit Points somewhere on the Plane of Air."},
-            {"name": "Magic Resistance", "description": "The djinni has Advantage on saving throws against spells and other magical effects."},
-            {"name": "Wishes", "description": "The djinni has a 30 percent chance of knowing the Wish spell. If the djinni knows it, the djinni can cast it only on behalf of a non-genie creature who communicates a wish in a way the djinni can understand. If the djinni casts the spell for the creature, the djinni suffers none of the spell's stress. Once the djinni has cast it three times, the djinni can't do so again for 365 days."},
-        ],
+                {
+                    "name": "Elemental Restoration",
+                    "description": "If the djinni dies outside the Elemental Plane of Air, its body dissolves into mist, and it gains a new body in 1d4 days, reviving with all its Hit Points somewhere on the Plane of Air.",
+                },
+                {
+                    "name": "Magic Resistance",
+                    "description": "The djinni has Advantage on saving throws against spells and other magical effects.",
+                },
+                {
+                    "name": "Wishes",
+                    "description": "The djinni has a 30 percent chance of knowing the Wish spell. If the djinni knows it, the djinni can cast it only on behalf of a non-genie creature who communicates a wish in a way the djinni can understand. If the djinni casts the spell for the creature, the djinni suffers none of the spell's stress. Once the djinni has cast it three times, the djinni can't do so again for 365 days.",
+                },
+            ],
             actions=[
-            {"name": "Multiattack", "description": "The djinni makes three attacks, using Storm Blade or Storm Bolt in any combination."},
-            {"name": "Storm Blade", "description": "Melee Attack Roll: +9, reach 5 ft. Hit: 12 (2d6 + 5) Slashing damage plus 7 (2d6) Lightning damage."},
-            {"name": "Storm Bolt", "description": "Ranged Attack Roll: +9, range 120 ft. Hit: 13 (3d8) Thunder damage. If the target is a Large or smaller creature, it has the Prone condition."},
-            {"name": "Create Whirlwind", "description": "The djinni conjures a whirlwind at a point it can see within 120 feet. The whirlwind fills a 20-foot-radius, 60-foot-high Cylinder centered on that point. The whirlwind lasts until the djinni's Concentration on it ends. The djinni can move the whirlwind up to 20 feet at the start of each of its turns. Whenever the whirlwind enters a creature's space or a creature enters the whirlwind, that creature is subjected to the following effect. Strength Saving Throw: DC 17 (a creature makes this save only once per turn, and the djinni is unaffected). Failure: While in the whirlwind, the target has the Restrained condition and moves with the whirlwind. At the start of each of its turns, the Restrained target takes 21 (6d6) Thunder damage. At the end of each of its turns, the target repeats the save, ending the effect on itself on a success."},
-            {"name": "Spellcasting", "description": "The djinni casts one of the following spells, requiring no Material components and using Charisma as the spellcasting ability (spell save DC 17):"},
-        ],
+                {
+                    "name": "Multiattack",
+                    "description": "The djinni makes three attacks, using Storm Blade or Storm Bolt in any combination.",
+                },
+                {
+                    "name": "Storm Blade",
+                    "description": "Melee Attack Roll: +9, reach 5 ft. Hit: 12 (2d6 + 5) Slashing damage plus 7 (2d6) Lightning damage.",
+                },
+                {
+                    "name": "Storm Bolt",
+                    "description": "Ranged Attack Roll: +9, range 120 ft. Hit: 13 (3d8) Thunder damage. If the target is a Large or smaller creature, it has the Prone condition.",
+                },
+                {
+                    "name": "Create Whirlwind",
+                    "description": "The djinni conjures a whirlwind at a point it can see within 120 feet. The whirlwind fills a 20-foot-radius, 60-foot-high Cylinder centered on that point. The whirlwind lasts until the djinni's Concentration on it ends. The djinni can move the whirlwind up to 20 feet at the start of each of its turns. Whenever the whirlwind enters a creature's space or a creature enters the whirlwind, that creature is subjected to the following effect. Strength Saving Throw: DC 17 (a creature makes this save only once per turn, and the djinni is unaffected). Failure: While in the whirlwind, the target has the Restrained condition and moves with the whirlwind. At the start of each of its turns, the Restrained target takes 21 (6d6) Thunder damage. At the end of each of its turns, the target repeats the save, ending the effect on itself on a success.",
+                },
+                {
+                    "name": "Spellcasting",
+                    "description": "The djinni casts one of the following spells, requiring no Material components and using Charisma as the spellcasting ability (spell save DC 17):",
+                },
+            ],
             bonus_actions=[],
             reactions=[],
             legendary_actions=[],
@@ -219,12 +353,19 @@ class Djinni(ExtendedCombatantData):
 class Efreeti(ExtendedCombatantData):
     def __init__(self):
         super().__init__(
-            name="Efreeti",
+            combatant_type="Efreeti",
             hp=212,
             ac=17,
             temp_hp=0,
             conditions=[],
-            ability_scores={"Str": 22, "Dex": 12, "Con": 24, "Int": 16, "Wis": 15, "Cha": 19},
+            ability_scores={
+                "Str": 22,
+                "Dex": 12,
+                "Con": 24,
+                "Int": 16,
+                "Wis": 15,
+                "Cha": 19,
+            },
             saving_throws={},
             spell_slots={},
             cr="11",
@@ -240,16 +381,37 @@ class Efreeti(ExtendedCombatantData):
             senses="Darkvision 120 ft., Passive Perception 12",
             languages="Primordial (Ignan)",
             traits=[
-            {"name": "Elemental Restoration", "description": "If the efreeti dies outside the Elemental Plane of Fire, its body dissolves into ash, and it gains a new body in 1d4 days, reviving with all its Hit Points somewhere on the Plane of Fire."},
-            {"name": "Magic Resistance", "description": "The efreeti has Advantage on saving throws against spells and other magical effects."},
-            {"name": "Wishes", "description": "The efreeti has a 30 percent chance of knowing the Wish spell. If the efreeti knows it, the efreeti can cast it only on behalf of a non-genie creature who communicates a wish in a way the efreeti can understand. If the efreeti casts the spell for the creature, the efreeti suffers none of the spell's stress. Once the efreeti has cast it three times, the efreeti can't do so again for 365 days."},
-        ],
+                {
+                    "name": "Elemental Restoration",
+                    "description": "If the efreeti dies outside the Elemental Plane of Fire, its body dissolves into ash, and it gains a new body in 1d4 days, reviving with all its Hit Points somewhere on the Plane of Fire.",
+                },
+                {
+                    "name": "Magic Resistance",
+                    "description": "The efreeti has Advantage on saving throws against spells and other magical effects.",
+                },
+                {
+                    "name": "Wishes",
+                    "description": "The efreeti has a 30 percent chance of knowing the Wish spell. If the efreeti knows it, the efreeti can cast it only on behalf of a non-genie creature who communicates a wish in a way the efreeti can understand. If the efreeti casts the spell for the creature, the efreeti suffers none of the spell's stress. Once the efreeti has cast it three times, the efreeti can't do so again for 365 days.",
+                },
+            ],
             actions=[
-            {"name": "Multiattack", "description": "The efreeti makes three attacks, using Heated Blade or Hurl Flame in any combination."},
-            {"name": "Heated Blade", "description": "Melee Attack Roll: +10, reach 5 ft. Hit: 13 (2d6 + 6) Slashing damage plus 13 (2d12) Fire damage."},
-            {"name": "Hurl Flame", "description": "Ranged Attack Roll: +8, range 120 ft. Hit: 24 (7d6) Fire damage."},
-            {"name": "Spellcasting", "description": "The efreeti casts one of the following spells, requiring no Material components and using Charisma as the spellcasting ability (spell save DC 16):"},
-        ],
+                {
+                    "name": "Multiattack",
+                    "description": "The efreeti makes three attacks, using Heated Blade or Hurl Flame in any combination.",
+                },
+                {
+                    "name": "Heated Blade",
+                    "description": "Melee Attack Roll: +10, reach 5 ft. Hit: 13 (2d6 + 6) Slashing damage plus 13 (2d12) Fire damage.",
+                },
+                {
+                    "name": "Hurl Flame",
+                    "description": "Ranged Attack Roll: +8, range 120 ft. Hit: 24 (7d6) Fire damage.",
+                },
+                {
+                    "name": "Spellcasting",
+                    "description": "The efreeti casts one of the following spells, requiring no Material components and using Charisma as the spellcasting ability (spell save DC 16):",
+                },
+            ],
             bonus_actions=[],
             reactions=[],
             legendary_actions=[],
@@ -262,12 +424,19 @@ class Efreeti(ExtendedCombatantData):
 class HornedDevil(ExtendedCombatantData):
     def __init__(self):
         super().__init__(
-            name="Horned Devil",
+            combatant_type="Horned Devil",
             hp=199,
             ac=18,
             temp_hp=0,
             conditions=[],
-            ability_scores={"Str": 22, "Dex": 17, "Con": 21, "Int": 12, "Wis": 16, "Cha": 18},
+            ability_scores={
+                "Str": 22,
+                "Dex": 17,
+                "Con": 21,
+                "Int": 12,
+                "Wis": 16,
+                "Cha": 18,
+            },
             saving_throws={},
             spell_slots={},
             cr="11",
@@ -283,15 +452,33 @@ class HornedDevil(ExtendedCombatantData):
             senses="Darkvision 150 ft. (unimpeded by magical Darkness), Passive Perception 13",
             languages="Infernal; telepathy 120 ft.",
             traits=[
-            {"name": "Diabolical Restoration", "description": "If the devil dies outside the Nine Hells, its body disappears in sulfurous smoke, and it gains a new body instantly, reviving with all its Hit Points somewhere in the Nine Hells."},
-            {"name": "Magic Resistance", "description": "The devil has Advantage on saving throws against spells and other magical effects."},
-        ],
+                {
+                    "name": "Diabolical Restoration",
+                    "description": "If the devil dies outside the Nine Hells, its body disappears in sulfurous smoke, and it gains a new body instantly, reviving with all its Hit Points somewhere in the Nine Hells.",
+                },
+                {
+                    "name": "Magic Resistance",
+                    "description": "The devil has Advantage on saving throws against spells and other magical effects.",
+                },
+            ],
             actions=[
-            {"name": "Multiattack", "description": "The devil makes three attacks, using Searing Fork or Hurl Flame in any combination. It can replace one attack with a use of Infernal Tail."},
-            {"name": "Searing Fork", "description": "Melee Attack Roll: +10, reach 10 ft. Hit: 15 (2d8 + 6) Piercing damage plus 9 (2d8) Fire damage."},
-            {"name": "Hurl Flame", "description": "Ranged Attack Roll: +8, range 150 ft. Hit: 26 (5d8 + 4) Fire damage. If the target is a flammable object that isn't being worn or carried, it starts burning."},
-            {"name": "Infernal Tail", "description": "Dexterity Saving Throw: DC 17, one creature the devil can see within 10 feet. Failure: 10 (1d8 + 6) Necrotic damage, and the target receives an infernal wound if it doesn't have one. While wounded, the target loses 10 (3d6) Hit Points at the start of each of its turns. The wound closes after 1 minute, after a spell restores Hit Points to the target, or after the target or a creature within 5 feet of it takes an action to stanch the wound, doing so by succeeding on a DC 17 Wisdom (Medicine) check."},
-        ],
+                {
+                    "name": "Multiattack",
+                    "description": "The devil makes three attacks, using Searing Fork or Hurl Flame in any combination. It can replace one attack with a use of Infernal Tail.",
+                },
+                {
+                    "name": "Searing Fork",
+                    "description": "Melee Attack Roll: +10, reach 10 ft. Hit: 15 (2d8 + 6) Piercing damage plus 9 (2d8) Fire damage.",
+                },
+                {
+                    "name": "Hurl Flame",
+                    "description": "Ranged Attack Roll: +8, range 150 ft. Hit: 26 (5d8 + 4) Fire damage. If the target is a flammable object that isn't being worn or carried, it starts burning.",
+                },
+                {
+                    "name": "Infernal Tail",
+                    "description": "Dexterity Saving Throw: DC 17, one creature the devil can see within 10 feet. Failure: 10 (1d8 + 6) Necrotic damage, and the target receives an infernal wound if it doesn't have one. While wounded, the target loses 10 (3d6) Hit Points at the start of each of its turns. The wound closes after 1 minute, after a spell restores Hit Points to the target, or after the target or a creature within 5 feet of it takes an action to stanch the wound, doing so by succeeding on a DC 17 Wisdom (Medicine) check.",
+                },
+            ],
             bonus_actions=[],
             reactions=[],
             legendary_actions=[],
@@ -304,12 +491,19 @@ class HornedDevil(ExtendedCombatantData):
 class Marid(ExtendedCombatantData):
     def __init__(self):
         super().__init__(
-            name="Marid",
+            combatant_type="Marid",
             hp=229,
             ac=17,
             temp_hp=0,
             conditions=[],
-            ability_scores={"Str": 22, "Dex": 12, "Con": 26, "Int": 18, "Wis": 17, "Cha": 18},
+            ability_scores={
+                "Str": 22,
+                "Dex": 12,
+                "Con": 26,
+                "Int": 18,
+                "Wis": 17,
+                "Cha": 18,
+            },
             saving_throws={},
             spell_slots={},
             cr="11",
@@ -325,19 +519,43 @@ class Marid(ExtendedCombatantData):
             senses="Blindsight 30 ft., Darkvision 120 ft., Passive Perception 13",
             languages="Primordial (Aquan)",
             traits=[
-            {"name": "Amphibious", "description": "The marid can breathe air and water."},
-            {"name": "Elemental Restoration", "description": "If the marid dies outside the Elemental Plane of Water, its body dissolves into brine, and it gains a new body in 1d4 days, reviving with all its Hit Points somewhere on the Plane of Water."},
-            {"name": "Wishes", "description": "The marid has a 30 percent chance of knowing the Wish spell. If the marid knows it, the marid can cast it only on behalf of a non-genie creature who communicates a wish in a way the marid can understand. If the marid casts the spell for the creature, the marid suffers none of the spell's stress. Once the marid has cast it three times, the marid can't do so again for 365 days."},
-        ],
+                {
+                    "name": "Amphibious",
+                    "description": "The marid can breathe air and water.",
+                },
+                {
+                    "name": "Elemental Restoration",
+                    "description": "If the marid dies outside the Elemental Plane of Water, its body dissolves into brine, and it gains a new body in 1d4 days, reviving with all its Hit Points somewhere on the Plane of Water.",
+                },
+                {
+                    "name": "Wishes",
+                    "description": "The marid has a 30 percent chance of knowing the Wish spell. If the marid knows it, the marid can cast it only on behalf of a non-genie creature who communicates a wish in a way the marid can understand. If the marid casts the spell for the creature, the marid suffers none of the spell's stress. Once the marid has cast it three times, the marid can't do so again for 365 days.",
+                },
+            ],
             actions=[
-            {"name": "Multiattack", "description": "The marid makes three Aquatic Lash attacks."},
-            {"name": "Aquatic Lash", "description": "Melee Attack Roll: +10, reach 15 ft. Hit: 15 (2d8 + 6) Slashing damage plus 9 (2d8) Cold damage."},
-            {"name": "Spellcasting", "description": "The marid casts one of the following spells, requiring no Material components and using Charisma as the spellcasting ability (spell save DC 16):"},
-            {"name": "Water Jet", "description": "Dexterity Saving Throw: DC 18, each creature in a 60-foot-long, 10-foot-wide Line. Failure: 31 (9d6) Cold damage. If the target is a Huge or smaller creature, it is pushed up to 20 feet straight away from the marid and has the Prone condition. Success: Half damage only."},
-        ],
+                {
+                    "name": "Multiattack",
+                    "description": "The marid makes three Aquatic Lash attacks.",
+                },
+                {
+                    "name": "Aquatic Lash",
+                    "description": "Melee Attack Roll: +10, reach 15 ft. Hit: 15 (2d8 + 6) Slashing damage plus 9 (2d8) Cold damage.",
+                },
+                {
+                    "name": "Spellcasting",
+                    "description": "The marid casts one of the following spells, requiring no Material components and using Charisma as the spellcasting ability (spell save DC 16):",
+                },
+                {
+                    "name": "Water Jet",
+                    "description": "Dexterity Saving Throw: DC 18, each creature in a 60-foot-long, 10-foot-wide Line. Failure: 31 (9d6) Cold damage. If the target is a Huge or smaller creature, it is pushed up to 20 feet straight away from the marid and has the Prone condition. Success: Half damage only.",
+                },
+            ],
             bonus_actions=[
-            {"name": "Misty Veil (Recharge 5–6)", "description": "The marid casts Fog Cloud, using the same spellcasting ability as Spellcasting."},
-        ],
+                {
+                    "name": "Misty Veil (Recharge 5–6)",
+                    "description": "The marid casts Fog Cloud, using the same spellcasting ability as Spellcasting.",
+                },
+            ],
             reactions=[],
             legendary_actions=[],
             legendary_resistances=0,
@@ -349,12 +567,19 @@ class Marid(ExtendedCombatantData):
 class MindFlayerArcanist(ExtendedCombatantData):
     def __init__(self):
         super().__init__(
-            name="Mind Flayer Arcanist",
+            combatant_type="Mind Flayer Arcanist",
             hp=143,
             ac=16,
             temp_hp=0,
             conditions=[],
-            ability_scores={"Str": 11, "Dex": 14, "Con": 13, "Int": 20, "Wis": 17, "Cha": 17},
+            ability_scores={
+                "Str": 11,
+                "Dex": 14,
+                "Con": 13,
+                "Int": 20,
+                "Wis": 17,
+                "Cha": 17,
+            },
             saving_throws={},
             spell_slots={},
             cr="11",
@@ -370,15 +595,33 @@ class MindFlayerArcanist(ExtendedCombatantData):
             senses="Darkvision 120 ft., Passive Perception 17",
             languages="Deep Speech, Undercommon; telepathy 120 ft.",
             traits=[
-            {"name": "Magic Resistance", "description": "The mind flayer has Advantage on saving throws against spells and other magical effects."},
-        ],
+                {
+                    "name": "Magic Resistance",
+                    "description": "The mind flayer has Advantage on saving throws against spells and other magical effects.",
+                },
+            ],
             actions=[
-            {"name": "Multiattack", "description": "The mind flayer makes three Arcane Tentacles attacks."},
-            {"name": "Arcane Tentacles", "description": "Melee or Ranged Attack Roll: +9, reach 5 ft. or range 120 ft. Hit: 27 (4d10 + 5) Psychic damage, and the mind flayer can teleport the target up to 30 feet to an unoccupied space the mind flayer can see on a surface or liquid large enough to support the target. If this damage reduces the target to 0 Hit Points, the mind flayer kills it and magically devours its brain."},
-            {"name": "Mind Burst (Recharge 5–6)", "description": "Intelligence Saving Throw: DC 17, each creature in a 40-foot Emanation originating from the mind flayer. Failure: 41 (8d8 + 5) Psychic damage, and the target has the Stunned condition until the end of the mind flayer's next turn. Success: Half damage only."},
-            {"name": "Spellcasting", "description": "The mind flayer casts one of the following spells, requiring no spell components and using Intelligence as the spellcasting ability (spell save DC 17):"},
-            {"name": "Shield (2/Day)", "description": "The mind flayer casts Shield in response to that spell's trigger, using the same spellcasting ability as Spellcasting."},
-        ],
+                {
+                    "name": "Multiattack",
+                    "description": "The mind flayer makes three Arcane Tentacles attacks.",
+                },
+                {
+                    "name": "Arcane Tentacles",
+                    "description": "Melee or Ranged Attack Roll: +9, reach 5 ft. or range 120 ft. Hit: 27 (4d10 + 5) Psychic damage, and the mind flayer can teleport the target up to 30 feet to an unoccupied space the mind flayer can see on a surface or liquid large enough to support the target. If this damage reduces the target to 0 Hit Points, the mind flayer kills it and magically devours its brain.",
+                },
+                {
+                    "name": "Mind Burst (Recharge 5–6)",
+                    "description": "Intelligence Saving Throw: DC 17, each creature in a 40-foot Emanation originating from the mind flayer. Failure: 41 (8d8 + 5) Psychic damage, and the target has the Stunned condition until the end of the mind flayer's next turn. Success: Half damage only.",
+                },
+                {
+                    "name": "Spellcasting",
+                    "description": "The mind flayer casts one of the following spells, requiring no spell components and using Intelligence as the spellcasting ability (spell save DC 17):",
+                },
+                {
+                    "name": "Shield (2/Day)",
+                    "description": "The mind flayer casts Shield in response to that spell's trigger, using the same spellcasting ability as Spellcasting.",
+                },
+            ],
             bonus_actions=[],
             reactions=[],
             legendary_actions=[],
@@ -391,12 +634,19 @@ class MindFlayerArcanist(ExtendedCombatantData):
 class Remorhaz(ExtendedCombatantData):
     def __init__(self):
         super().__init__(
-            name="Remorhaz",
+            combatant_type="Remorhaz",
             hp=195,
             ac=17,
             temp_hp=0,
             conditions=[],
-            ability_scores={"Str": 24, "Dex": 13, "Con": 21, "Int": 4, "Wis": 10, "Cha": 5},
+            ability_scores={
+                "Str": 24,
+                "Dex": 13,
+                "Con": 21,
+                "Int": 4,
+                "Wis": 10,
+                "Cha": 5,
+            },
             saving_throws={},
             spell_slots={},
             cr="11",
@@ -412,14 +662,23 @@ class Remorhaz(ExtendedCombatantData):
             senses="Darkvision 60 ft., Tremorsense 60 ft., Passive Perception 10",
             languages="—",
             traits=[
-            {"name": "Heat Aura", "description": "At the end of each of the remorhaz's turns, each creature in a 5-foot Emanation originating from the remorhaz takes 16 (3d10) Fire damage."},
-        ],
+                {
+                    "name": "Heat Aura",
+                    "description": "At the end of each of the remorhaz's turns, each creature in a 5-foot Emanation originating from the remorhaz takes 16 (3d10) Fire damage.",
+                },
+            ],
             actions=[
-            {"name": "Bite", "description": "Melee Attack Roll: +11, reach 10 ft. Hit: 18 (2d10 + 7) Piercing damage plus 14 (4d6) Fire damage. If the target is a Large or smaller creature, it has the Grappled condition (escape DC 17), and it has the Restrained condition until the grapple ends."},
-        ],
+                {
+                    "name": "Bite",
+                    "description": "Melee Attack Roll: +11, reach 10 ft. Hit: 18 (2d10 + 7) Piercing damage plus 14 (4d6) Fire damage. If the target is a Large or smaller creature, it has the Grappled condition (escape DC 17), and it has the Restrained condition until the grapple ends.",
+                },
+            ],
             bonus_actions=[
-            {"name": "Swallow", "description": "Strength Saving Throw: DC 19, one Large or smaller creature Grappled by the remorhaz (it can have up to two creatures swallowed at a time). Failure: The target is swallowed by the remorhaz, and the Grappled condition ends. A swallowed creature has the Blinded and Restrained conditions, it has Total Cover against attacks and other effects outside the remorhaz, and it takes 10 (3d6) Acid damage plus 10 (3d6) Fire damage at the start of each of the remorhaz's turns. If the remorhaz takes 30 damage or more on a single turn from a creature inside it, the remorhaz must succeed on a DC 15 Constitution saving throw at the end of that turn or regurgitate all swallowed creatures, each of which falls in a space within 5 feet of the remorhaz and has the Prone condition. If the remorhaz dies, any swallowed creature no longer has the Restrained condition and can escape from the corpse by using 15 feet of movement, exiting Prone."},
-        ],
+                {
+                    "name": "Swallow",
+                    "description": "Strength Saving Throw: DC 19, one Large or smaller creature Grappled by the remorhaz (it can have up to two creatures swallowed at a time). Failure: The target is swallowed by the remorhaz, and the Grappled condition ends. A swallowed creature has the Blinded and Restrained conditions, it has Total Cover against attacks and other effects outside the remorhaz, and it takes 10 (3d6) Acid damage plus 10 (3d6) Fire damage at the start of each of the remorhaz's turns. If the remorhaz takes 30 damage or more on a single turn from a creature inside it, the remorhaz must succeed on a DC 15 Constitution saving throw at the end of that turn or regurgitate all swallowed creatures, each of which falls in a space within 5 feet of the remorhaz and has the Prone condition. If the remorhaz dies, any swallowed creature no longer has the Restrained condition and can escape from the corpse by using 15 feet of movement, exiting Prone.",
+                },
+            ],
             reactions=[],
             legendary_actions=[],
             legendary_resistances=0,
@@ -431,12 +690,19 @@ class Remorhaz(ExtendedCombatantData):
 class Roc(ExtendedCombatantData):
     def __init__(self):
         super().__init__(
-            name="Roc",
+            combatant_type="Roc",
             hp=248,
             ac=15,
             temp_hp=0,
             conditions=[],
-            ability_scores={"Str": 28, "Dex": 10, "Con": 20, "Int": 3, "Wis": 10, "Cha": 9},
+            ability_scores={
+                "Str": 28,
+                "Dex": 10,
+                "Con": 20,
+                "Int": 3,
+                "Wis": 10,
+                "Cha": 9,
+            },
             saving_throws={},
             spell_slots={},
             cr="11",
@@ -453,13 +719,25 @@ class Roc(ExtendedCombatantData):
             languages="—",
             traits=[],
             actions=[
-            {"name": "Multiattack", "description": "The roc makes two Beak attacks. It can replace one attack with a Talons attack."},
-            {"name": "Beak", "description": "Melee Attack Roll: +13, reach 10 ft. Hit: 28 (3d12 + 9) Piercing damage."},
-            {"name": "Talons", "description": "Melee Attack Roll: +13, reach 5 ft. Hit: 23 (4d6 + 9) Slashing damage. If the target is a Huge or smaller creature, it has the Grappled condition (escape DC 19) from both talons, and it has the Restrained condition until the grapple ends."},
-        ],
+                {
+                    "name": "Multiattack",
+                    "description": "The roc makes two Beak attacks. It can replace one attack with a Talons attack.",
+                },
+                {
+                    "name": "Beak",
+                    "description": "Melee Attack Roll: +13, reach 10 ft. Hit: 28 (3d12 + 9) Piercing damage.",
+                },
+                {
+                    "name": "Talons",
+                    "description": "Melee Attack Roll: +13, reach 5 ft. Hit: 23 (4d6 + 9) Slashing damage. If the target is a Huge or smaller creature, it has the Grappled condition (escape DC 19) from both talons, and it has the Restrained condition until the grapple ends.",
+                },
+            ],
             bonus_actions=[
-            {"name": "Swoop (Recharge 5–6)", "description": "If the roc has a creature Grappled, the roc flies up to half its Fly Speed without provoking Opportunity Attacks and drops that creature."},
-        ],
+                {
+                    "name": "Swoop (Recharge 5–6)",
+                    "description": "If the roc has a creature Grappled, the roc flies up to half its Fly Speed without provoking Opportunity Attacks and drops that creature.",
+                },
+            ],
             reactions=[],
             legendary_actions=[],
             legendary_resistances=0,
@@ -471,12 +749,19 @@ class Roc(ExtendedCombatantData):
 class SphinxOfLore(ExtendedCombatantData):
     def __init__(self):
         super().__init__(
-            name="Sphinx of Lore",
+            combatant_type="Sphinx of Lore",
             hp=170,
             ac=17,
             temp_hp=0,
             conditions=[],
-            ability_scores={"Str": 18, "Dex": 15, "Con": 16, "Int": 18, "Wis": 18, "Cha": 18},
+            ability_scores={
+                "Str": 18,
+                "Dex": 15,
+                "Con": 16,
+                "Int": 18,
+                "Wis": 18,
+                "Cha": 18,
+            },
             saving_throws={},
             spell_slots={},
             cr="11",
@@ -492,25 +777,62 @@ class SphinxOfLore(ExtendedCombatantData):
             senses="Truesight 120 ft., Passive Perception 18",
             languages="Celestial, Common",
             traits=[
-            {"name": "Inscrutable", "description": "No magic can observe the sphinx remotely or detect its thoughts without its permission. Wisdom (Insight) checks made to ascertain its intentions or sincerity are made with Disadvantage."},
-            {"name": "Legendary Resistance (3/Day, or 4/Day in Lair)", "description": "If the sphinx fails a saving throw, it can choose to succeed instead.r)."},
-        ],
+                {
+                    "name": "Inscrutable",
+                    "description": "No magic can observe the sphinx remotely or detect its thoughts without its permission. Wisdom (Insight) checks made to ascertain its intentions or sincerity are made with Disadvantage.",
+                },
+                {
+                    "name": "Legendary Resistance (3/Day, or 4/Day in Lair)",
+                    "description": "If the sphinx fails a saving throw, it can choose to succeed instead.r).",
+                },
+            ],
             actions=[
-            {"name": "Multiattack", "description": "The sphinx makes three Claw attacks."},
-            {"name": "Claw", "description": "Melee Attack Roll: +8, reach 5 ft. Hit: 14 (3d6 + 4) Slashing damage."},
-            {"name": "Mind-Rending Roar (Recharge 5–6)", "description": "Wisdom Saving Throw: DC 16, each enemy in a 300-foot Emanation originating from the sphinx. Failure: 35 (10d6) Psychic damage, and the target has the Incapacitated condition until the start of the sphinx's next turn."},
-            {"name": "Spellcasting", "description": "The sphinx casts one of the following spells, requiring no Material components and using Intelligence as the spellcasting ability (spell save DC 16):"},
-        ],
+                {
+                    "name": "Multiattack",
+                    "description": "The sphinx makes three Claw attacks.",
+                },
+                {
+                    "name": "Claw",
+                    "description": "Melee Attack Roll: +8, reach 5 ft. Hit: 14 (3d6 + 4) Slashing damage.",
+                },
+                {
+                    "name": "Mind-Rending Roar (Recharge 5–6)",
+                    "description": "Wisdom Saving Throw: DC 16, each enemy in a 300-foot Emanation originating from the sphinx. Failure: 35 (10d6) Psychic damage, and the target has the Incapacitated condition until the start of the sphinx's next turn.",
+                },
+                {
+                    "name": "Spellcasting",
+                    "description": "The sphinx casts one of the following spells, requiring no Material components and using Intelligence as the spellcasting ability (spell save DC 16):",
+                },
+            ],
             bonus_actions=[],
             reactions=[],
             legendary_actions=[
-            {"name": "Arcane Prowl", "description": "The sphinx can teleport up to 30 feet to an unoccupied space it can see, and it makes one Claw attack."},
-            {"name": "Weight of Years", "description": "Constitution Saving Throw: DC 16, one creature the sphinx can see within 120 feet. Failure: The target gains 1 Exhaustion level. While the target has any Exhaustion levels, it appears 3d10 years older. Failure or Success: The sphinx can't take this action again until the start of its next turn."},
-        ],
+                {
+                    "name": "Arcane Prowl",
+                    "description": "The sphinx can teleport up to 30 feet to an unoccupied space it can see, and it makes one Claw attack.",
+                },
+                {
+                    "name": "Weight of Years",
+                    "description": "Constitution Saving Throw: DC 16, one creature the sphinx can see within 120 feet. Failure: The target gains 1 Exhaustion level. While the target has any Exhaustion levels, it appears 3d10 years older. Failure or Success: The sphinx can't take this action again until the start of its next turn.",
+                },
+            ],
             legendary_resistances=3,
             lair_actions=[],
             mythic_actions=[],
         )
 
 
-__all__ = ['BanditCrimeLord', 'Behir', 'Dao', 'DeathKnightAspirant', 'Djinni', 'Efreeti', 'HornedDevil', 'Marid', 'MindFlayerArcanist', 'Remorhaz', 'Roc', 'SphinxOfLore']
+__all__ = [
+    "BanditCrimeLord",
+    "Behir",
+    "Dao",
+    "DeathKnightAspirant",
+    "Djinni",
+    "Efreeti",
+    "HornedDevil",
+    "Marid",
+    "MindFlayerArcanist",
+    "Remorhaz",
+    "Roc",
+    "SphinxOfLore",
+]

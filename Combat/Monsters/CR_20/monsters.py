@@ -5,12 +5,19 @@ from Combat.Definitions import ExtendedCombatantData
 class AncientBrassDragon(ExtendedCombatantData):
     def __init__(self):
         super().__init__(
-            name="Ancient Brass Dragon",
+            combatant_type="Ancient Brass Dragon",
             hp=332,
             ac=20,
             temp_hp=0,
             conditions=[],
-            ability_scores={"Str": 27, "Dex": 10, "Con": 25, "Int": 16, "Wis": 15, "Cha": 22},
+            ability_scores={
+                "Str": 27,
+                "Dex": 10,
+                "Con": 25,
+                "Int": 16,
+                "Wis": 15,
+                "Cha": 22,
+            },
             saving_throws={},
             spell_slots={},
             cr="20",
@@ -26,22 +33,49 @@ class AncientBrassDragon(ExtendedCombatantData):
             senses="Blindsight 60 ft., Darkvision 120 ft., Passive Perception 24",
             languages="Common, Draconic",
             traits=[
-            {"name": "Legendary Resistance (4/Day, or 5/Day in Lair)", "description": "If the dragon fails a saving throw, it can choose to succeed instead."},
-        ],
+                {
+                    "name": "Legendary Resistance (4/Day, or 5/Day in Lair)",
+                    "description": "If the dragon fails a saving throw, it can choose to succeed instead.",
+                },
+            ],
             actions=[
-            {"name": "Multiattack", "description": "The dragon makes three Rend attacks. It can replace one attack with a use of (A) Sleep Breath or (B) Spellcasting to cast Scorching Ray (level 3 version)."},
-            {"name": "Rend", "description": "Melee Attack Roll: +14, reach 15 ft. Hit: 19 (2d10 + 8) Slashing damage plus 7 (2d6) Fire damage."},
-            {"name": "Fire Breath (Recharge 5–6)", "description": "Dexterity Saving Throw: DC 21, each creature in a 90-foot-long, 5-foot-wide Line. Failure: 58 (13d8) Fire damage. Success: Half damage."},
-            {"name": "Sleep Breath", "description": "Constitution Saving Throw: DC 21, each creature in a 90-foot Cone. Failure: The target has the Incapacitated condition until the end of its next turn, at which point it repeats the save. Second Failure: The target has the Unconscious condition for 10 minutes. This effect ends for the target if it takes damage or a creature within 5 feet of it takes an action to wake it."},
-            {"name": "Spellcasting", "description": "The dragon casts one of the following spells, requiring no Material components and using Charisma as the spellcasting ability (spell save DC 20):"},
-        ],
+                {
+                    "name": "Multiattack",
+                    "description": "The dragon makes three Rend attacks. It can replace one attack with a use of (A) Sleep Breath or (B) Spellcasting to cast Scorching Ray (level 3 version).",
+                },
+                {
+                    "name": "Rend",
+                    "description": "Melee Attack Roll: +14, reach 15 ft. Hit: 19 (2d10 + 8) Slashing damage plus 7 (2d6) Fire damage.",
+                },
+                {
+                    "name": "Fire Breath (Recharge 5–6)",
+                    "description": "Dexterity Saving Throw: DC 21, each creature in a 90-foot-long, 5-foot-wide Line. Failure: 58 (13d8) Fire damage. Success: Half damage.",
+                },
+                {
+                    "name": "Sleep Breath",
+                    "description": "Constitution Saving Throw: DC 21, each creature in a 90-foot Cone. Failure: The target has the Incapacitated condition until the end of its next turn, at which point it repeats the save. Second Failure: The target has the Unconscious condition for 10 minutes. This effect ends for the target if it takes damage or a creature within 5 feet of it takes an action to wake it.",
+                },
+                {
+                    "name": "Spellcasting",
+                    "description": "The dragon casts one of the following spells, requiring no Material components and using Charisma as the spellcasting ability (spell save DC 20):",
+                },
+            ],
             bonus_actions=[],
             reactions=[],
             legendary_actions=[
-            {"name": "Blazing Light", "description": "The dragon uses Spellcasting to cast Scorching Ray (level 3 version)."},
-            {"name": "Pounce", "description": "The dragon moves up to half its Speed, and it makes one Rend attack."},
-            {"name": "Scorching Sands", "description": "Dexterity Saving Throw: DC 20, one creature the dragon can see within 120 feet. Failure: 36 (8d8) Fire damage, and the target's Speed is halved until the end of its next turn. Failure or Success: The dragon can't take this action again until the start of its next turn."},
-        ],
+                {
+                    "name": "Blazing Light",
+                    "description": "The dragon uses Spellcasting to cast Scorching Ray (level 3 version).",
+                },
+                {
+                    "name": "Pounce",
+                    "description": "The dragon moves up to half its Speed, and it makes one Rend attack.",
+                },
+                {
+                    "name": "Scorching Sands",
+                    "description": "Dexterity Saving Throw: DC 20, one creature the dragon can see within 120 feet. Failure: 36 (8d8) Fire damage, and the target's Speed is halved until the end of its next turn. Failure or Success: The dragon can't take this action again until the start of its next turn.",
+                },
+            ],
             legendary_resistances=4,
             lair_actions=[],
             mythic_actions=[],
@@ -51,12 +85,19 @@ class AncientBrassDragon(ExtendedCombatantData):
 class AncientWhiteDragon(ExtendedCombatantData):
     def __init__(self):
         super().__init__(
-            name="Ancient White Dragon",
+            combatant_type="Ancient White Dragon",
             hp=333,
             ac=20,
             temp_hp=0,
             conditions=[],
-            ability_scores={"Str": 26, "Dex": 10, "Con": 26, "Int": 10, "Wis": 13, "Cha": 18},
+            ability_scores={
+                "Str": 26,
+                "Dex": 10,
+                "Con": 26,
+                "Int": 10,
+                "Wis": 13,
+                "Cha": 18,
+            },
             saving_throws={},
             spell_slots={},
             cr="20",
@@ -72,21 +113,45 @@ class AncientWhiteDragon(ExtendedCombatantData):
             senses="Blindsight 60 ft., Darkvision 120 ft., Passive Perception 23",
             languages="Common, Draconic",
             traits=[
-            {"name": "Ice Walk", "description": "The dragon can move across and climb icy surfaces without needing to make an ability check. Additionally, Difficult Terrain composed of ice or snow doesn't cost it extra movement."},
-            {"name": "Legendary Resistance (4/Day, or 5/Day in Lair)", "description": "If the dragon fails a saving throw, it can choose to succeed instead."},
-        ],
+                {
+                    "name": "Ice Walk",
+                    "description": "The dragon can move across and climb icy surfaces without needing to make an ability check. Additionally, Difficult Terrain composed of ice or snow doesn't cost it extra movement.",
+                },
+                {
+                    "name": "Legendary Resistance (4/Day, or 5/Day in Lair)",
+                    "description": "If the dragon fails a saving throw, it can choose to succeed instead.",
+                },
+            ],
             actions=[
-            {"name": "Multiattack", "description": "The dragon makes three Rend attacks."},
-            {"name": "Rend", "description": "Melee Attack Roll: +14, reach 15 ft. Hit: 17 (2d8 + 8) Slashing damage plus 7 (2d6) Cold damage."},
-            {"name": "Cold Breath (Recharge 5–6)", "description": "Constitution Saving Throw: DC 22, each creature in a 90-foot Cone. Failure: 63 (14d8) Cold damage. Success: Half damage."},
-        ],
+                {
+                    "name": "Multiattack",
+                    "description": "The dragon makes three Rend attacks.",
+                },
+                {
+                    "name": "Rend",
+                    "description": "Melee Attack Roll: +14, reach 15 ft. Hit: 17 (2d8 + 8) Slashing damage plus 7 (2d6) Cold damage.",
+                },
+                {
+                    "name": "Cold Breath (Recharge 5–6)",
+                    "description": "Constitution Saving Throw: DC 22, each creature in a 90-foot Cone. Failure: 63 (14d8) Cold damage. Success: Half damage.",
+                },
+            ],
             bonus_actions=[],
             reactions=[],
             legendary_actions=[
-            {"name": "Freezing Burst", "description": "Constitution Saving Throw: DC 20, each creature in a 30-foot-radius Sphere centered on a point the dragon can see within 120 feet. Failure: 14 (4d6) Cold damage, and the target's Speed is 0 until the end of the target's next turn. Failure or Success: The dragon can't take this action again until the start of its next turn."},
-            {"name": "Frightful Presence", "description": "The dragon casts Fear, requiring no Material components and using Charisma as the spellcasting ability (spell save DC 18). The dragon can't take this action again until the start of its next turn."},
-            {"name": "Pounce", "description": "The dragon moves up to half its Speed, and it makes one Rend attack."},
-        ],
+                {
+                    "name": "Freezing Burst",
+                    "description": "Constitution Saving Throw: DC 20, each creature in a 30-foot-radius Sphere centered on a point the dragon can see within 120 feet. Failure: 14 (4d6) Cold damage, and the target's Speed is 0 until the end of the target's next turn. Failure or Success: The dragon can't take this action again until the start of its next turn.",
+                },
+                {
+                    "name": "Frightful Presence",
+                    "description": "The dragon casts Fear, requiring no Material components and using Charisma as the spellcasting ability (spell save DC 18). The dragon can't take this action again until the start of its next turn.",
+                },
+                {
+                    "name": "Pounce",
+                    "description": "The dragon moves up to half its Speed, and it makes one Rend attack.",
+                },
+            ],
             legendary_resistances=4,
             lair_actions=[],
             mythic_actions=[],
@@ -96,12 +161,19 @@ class AncientWhiteDragon(ExtendedCombatantData):
 class AnimalLord(ExtendedCombatantData):
     def __init__(self):
         super().__init__(
-            name="Animal Lord",
+            combatant_type="Animal Lord",
             hp=323,
             ac=19,
             temp_hp=0,
             conditions=[],
-            ability_scores={"Str": 24, "Dex": 25, "Con": 20, "Int": 19, "Wis": 23, "Cha": 22},
+            ability_scores={
+                "Str": 24,
+                "Dex": 25,
+                "Con": 20,
+                "Int": 19,
+                "Wis": 23,
+                "Cha": 22,
+            },
             saving_throws={},
             spell_slots={},
             cr="20",
@@ -130,12 +202,19 @@ class AnimalLord(ExtendedCombatantData):
 class PitFiend(ExtendedCombatantData):
     def __init__(self):
         super().__init__(
-            name="Pit Fiend",
+            combatant_type="Pit Fiend",
             hp=337,
             ac=21,
             temp_hp=0,
             conditions=[],
-            ability_scores={"Str": 26, "Dex": 14, "Con": 24, "Int": 22, "Wis": 18, "Cha": 24},
+            ability_scores={
+                "Str": 26,
+                "Dex": 14,
+                "Con": 24,
+                "Int": 22,
+                "Wis": 18,
+                "Cha": 24,
+            },
             saving_throws={},
             spell_slots={},
             cr="20",
@@ -151,18 +230,45 @@ class PitFiend(ExtendedCombatantData):
             senses="Truesight 120 ft., Passive Perception 20",
             languages="Infernal; telepathy 120 ft.",
             traits=[
-            {"name": "Diabolical Restoration", "description": "If the pit fiend dies outside the Nine Hells, its body disappears in sulfurous smoke, and it gains a new body instantly, reviving with all its Hit Points somewhere in the Nine Hells."},
-            {"name": "Fear Aura", "description": "The pit fiend emanates an aura in a 20-foot Emanation while it doesn't have the Incapacitated condition. Wisdom Saving Throw: DC 21, any enemy that starts its turn in the aura. Failure: The target has the Frightened condition until the start of its next turn. Success: The target is immune to this pit fiend's aura for 24 hours."},
-            {"name": "Legendary Resistance (4/Day)", "description": "If the pit fiend fails a saving throw, it can choose to succeed instead."},
-            {"name": "Magic Resistance", "description": "The pit fiend has Advantage on saving throws against spells and other magical effects."},
-        ],
+                {
+                    "name": "Diabolical Restoration",
+                    "description": "If the pit fiend dies outside the Nine Hells, its body disappears in sulfurous smoke, and it gains a new body instantly, reviving with all its Hit Points somewhere in the Nine Hells.",
+                },
+                {
+                    "name": "Fear Aura",
+                    "description": "The pit fiend emanates an aura in a 20-foot Emanation while it doesn't have the Incapacitated condition. Wisdom Saving Throw: DC 21, any enemy that starts its turn in the aura. Failure: The target has the Frightened condition until the start of its next turn. Success: The target is immune to this pit fiend's aura for 24 hours.",
+                },
+                {
+                    "name": "Legendary Resistance (4/Day)",
+                    "description": "If the pit fiend fails a saving throw, it can choose to succeed instead.",
+                },
+                {
+                    "name": "Magic Resistance",
+                    "description": "The pit fiend has Advantage on saving throws against spells and other magical effects.",
+                },
+            ],
             actions=[
-            {"name": "Multiattack", "description": "The pit fiend makes one Bite attack, two Devilish Claw attacks, and one Fiery Mace attack."},
-            {"name": "Bite", "description": "Melee Attack Roll: +14, reach 10 ft. Hit: 18 (3d6 + 8) Piercing damage. If the target is a creature, it must make the following saving throw. Constitution Saving Throw: DC 21. Failure: The target has the Poisoned condition. While Poisoned, the target can't regain Hit Points and takes 21 (6d6) Poison damage at the start of each of its turns, and it repeats the save at the end of each of its turns, ending the effect on itself on a success. After 1 minute, it succeeds automatically."},
-            {"name": "Devilish Claw", "description": "Melee Attack Roll: +14, reach 10 ft. Hit: 26 (4d8 + 8) Necrotic damage."},
-            {"name": "Fiery Mace", "description": "Melee Attack Roll: +14, reach 10 ft. Hit: 22 (4d6 + 8) Force damage plus 21 (6d6) Fire damage."},
-            {"name": "Hellfire Spellcasting (Recharge 4–6)", "description": "The pit fiend casts Fireball (level 5 version) twice, requiring no Material components and using Charisma as the spellcasting ability (spell save DC 21). It can replace one Fireball with Hold Monster (level 7 version) or Wall of Fire."},
-        ],
+                {
+                    "name": "Multiattack",
+                    "description": "The pit fiend makes one Bite attack, two Devilish Claw attacks, and one Fiery Mace attack.",
+                },
+                {
+                    "name": "Bite",
+                    "description": "Melee Attack Roll: +14, reach 10 ft. Hit: 18 (3d6 + 8) Piercing damage. If the target is a creature, it must make the following saving throw. Constitution Saving Throw: DC 21. Failure: The target has the Poisoned condition. While Poisoned, the target can't regain Hit Points and takes 21 (6d6) Poison damage at the start of each of its turns, and it repeats the save at the end of each of its turns, ending the effect on itself on a success. After 1 minute, it succeeds automatically.",
+                },
+                {
+                    "name": "Devilish Claw",
+                    "description": "Melee Attack Roll: +14, reach 10 ft. Hit: 26 (4d8 + 8) Necrotic damage.",
+                },
+                {
+                    "name": "Fiery Mace",
+                    "description": "Melee Attack Roll: +14, reach 10 ft. Hit: 22 (4d6 + 8) Force damage plus 21 (6d6) Fire damage.",
+                },
+                {
+                    "name": "Hellfire Spellcasting (Recharge 4–6)",
+                    "description": "The pit fiend casts Fireball (level 5 version) twice, requiring no Material components and using Charisma as the spellcasting ability (spell save DC 21). It can replace one Fireball with Hold Monster (level 7 version) or Wall of Fire.",
+                },
+            ],
             bonus_actions=[],
             reactions=[],
             legendary_actions=[],
@@ -172,4 +278,4 @@ class PitFiend(ExtendedCombatantData):
         )
 
 
-__all__ = ['AncientBrassDragon', 'AncientWhiteDragon', 'AnimalLord', 'PitFiend']
+__all__ = ["AncientBrassDragon", "AncientWhiteDragon", "AnimalLord", "PitFiend"]

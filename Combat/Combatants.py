@@ -4,7 +4,7 @@ from Combat.Definitions import BasicCombatantData
 class Pirate(BasicCombatantData):
     def __init__(self):
         super().__init__(
-            name="Pirate",
+            combatant_type="Pirate",
             hp=33,
             ac=14,
             temp_hp=0,
@@ -24,7 +24,7 @@ class Pirate(BasicCombatantData):
 class Tiger(BasicCombatantData):
     def __init__(self):
         super().__init__(
-            name="Tiger",
+            combatant_type="Tiger",
             hp=30,
             ac=13,
             temp_hp=0,
@@ -45,7 +45,7 @@ class BugbearWarrior(BasicCombatantData):
     # https://www.aidedd.org/monster/bugbear-warrior
     def __init__(self):
         super().__init__(
-            name="Bugbear Warrior",
+            combatant_type="Bugbear Warrior",
             hp=33,
             ac=14,
             temp_hp=0,
@@ -66,7 +66,7 @@ class Mage(BasicCombatantData):
     # https://www.aidedd.org/monster/mage
     def __init__(self):
         super().__init__(
-            name="Mage",
+            combatant_type="Mage",
             hp=81,
             ac=15,
             temp_hp=0,
@@ -86,7 +86,7 @@ class Vrock(BasicCombatantData):
     # https://www.aidedd.org/monster/vrock
     def __init__(self):
         super().__init__(
-            name="Vrock",
+            combatant_type="Vrock",
             hp=152,
             ac=15,
             temp_hp=0,
@@ -114,7 +114,7 @@ class SaberToothedTiger(BasicCombatantData):
     # https://www.aidedd.org/monster/saber-toothed-tiger
     def __init__(self):
         super().__init__(
-            name="Saber-Toothed Tiger",
+            combatant_type="Saber-Toothed Tiger",
             hp=52,
             ac=13,
             temp_hp=0,
@@ -143,7 +143,7 @@ class Priest(BasicCombatantData):
     # https://www.aidedd.org/monster/priest
     def __init__(self):
         super().__init__(
-            name="Priest",
+            combatant_type="Priest",
             hp=38,
             ac=13,
             temp_hp=0,
@@ -165,7 +165,7 @@ class Rhinoceros(BasicCombatantData):
 
     def __init__(self):
         super().__init__(
-            name="Rhinoceros",
+            combatant_type="Rhinoceros",
             hp=45,
             ac=13,
             temp_hp=0,
@@ -194,7 +194,7 @@ class Player1(BasicCombatantData):
 
     def __init__(self):
         super().__init__(
-            name="Player 1",
+            combatant_type="Player 1",
             hp=45,
             ac=13,
             temp_hp=0,
@@ -223,7 +223,7 @@ class Bull(BasicCombatantData):
 
     def __init__(self):
         super().__init__(
-            name="Bull",
+            combatant_type="Bull",
             hp=126,
             ac=15,
             temp_hp=0,

@@ -5,12 +5,19 @@ from Combat.Definitions import ExtendedCombatantData
 class Allosaurus(ExtendedCombatantData):
     def __init__(self):
         super().__init__(
-            name="Allosaurus",
+            combatant_type="Allosaurus",
             hp=51,
             ac=13,
             temp_hp=0,
             conditions=[],
-            ability_scores={"Str": 19, "Dex": 13, "Con": 17, "Int": 2, "Wis": 12, "Cha": 5},
+            ability_scores={
+                "Str": 19,
+                "Dex": 13,
+                "Con": 17,
+                "Int": 2,
+                "Wis": 12,
+                "Cha": 5,
+            },
             saving_throws={},
             spell_slots={},
             cr="2",
@@ -27,9 +34,15 @@ class Allosaurus(ExtendedCombatantData):
             languages="None",
             traits=[],
             actions=[
-            {"name": "Bite", "description": "Melee Attack Roll: +6, reach 5 ft. Hit: 15 (2d10 + 4) Piercing damage."},
-            {"name": "Claws", "description": "Melee Attack Roll: +6, reach 5 ft. Hit: 8 (1d8 + 4) Slashing damage. If the target is a Large or smaller creature and the allosaurus moved 30+ feet straight toward it immediately before the hit, the target has the Prone condition, and the allosaurus can make one Bite attack against it."},
-        ],
+                {
+                    "name": "Bite",
+                    "description": "Melee Attack Roll: +6, reach 5 ft. Hit: 15 (2d10 + 4) Piercing damage.",
+                },
+                {
+                    "name": "Claws",
+                    "description": "Melee Attack Roll: +6, reach 5 ft. Hit: 8 (1d8 + 4) Slashing damage. If the target is a Large or smaller creature and the allosaurus moved 30+ feet straight toward it immediately before the hit, the target has the Prone condition, and the allosaurus can make one Bite attack against it.",
+                },
+            ],
             bonus_actions=[],
             reactions=[],
             legendary_actions=[],
@@ -42,12 +55,19 @@ class Allosaurus(ExtendedCombatantData):
 class AnimatedRugOfSmothering(ExtendedCombatantData):
     def __init__(self):
         super().__init__(
-            name="Animated Rug of Smothering",
+            combatant_type="Animated Rug of Smothering",
             hp=27,
             ac=12,
             temp_hp=0,
             conditions=[],
-            ability_scores={"Str": 17, "Dex": 14, "Con": 10, "Int": 1, "Wis": 3, "Cha": 1},
+            ability_scores={
+                "Str": 17,
+                "Dex": 14,
+                "Con": 10,
+                "Int": 1,
+                "Wis": 3,
+                "Cha": 1,
+            },
             saving_throws={},
             spell_slots={},
             cr="2",
@@ -64,8 +84,11 @@ class AnimatedRugOfSmothering(ExtendedCombatantData):
             languages="—",
             traits=[],
             actions=[
-            {"name": "Smother", "description": "Melee Attack Roll: +5, reach 5 ft. Hit: 10 (2d6 + 3) Bludgeoning damage. If the target is a Medium or smaller creature, the rug can give it the Grappled condition (escape DC 13) instead of dealing damage. Until the grapple ends, the target has the Blinded and Restrained conditions, is suffocating, and takes 10 (2d6 + 3) Bludgeoning damage at the start of each of its turns. The rug can smother only one creature at a time. While grappling the target, the rug can't take this action, the rug halves the damage it takes (round down), and the target takes the same amount of damage."},
-        ],
+                {
+                    "name": "Smother",
+                    "description": "Melee Attack Roll: +5, reach 5 ft. Hit: 10 (2d6 + 3) Bludgeoning damage. If the target is a Medium or smaller creature, the rug can give it the Grappled condition (escape DC 13) instead of dealing damage. Until the grapple ends, the target has the Blinded and Restrained conditions, is suffocating, and takes 10 (2d6 + 3) Bludgeoning damage at the start of each of its turns. The rug can smother only one creature at a time. While grappling the target, the rug can't take this action, the rug halves the damage it takes (round down), and the target takes the same amount of damage.",
+                },
+            ],
             bonus_actions=[],
             reactions=[],
             legendary_actions=[],
@@ -78,12 +101,19 @@ class AnimatedRugOfSmothering(ExtendedCombatantData):
 class Ankheg(ExtendedCombatantData):
     def __init__(self):
         super().__init__(
-            name="Ankheg",
+            combatant_type="Ankheg",
             hp=45,
             ac=14,
             temp_hp=0,
             conditions=[],
-            ability_scores={"Str": 17, "Dex": 11, "Con": 14, "Int": 1, "Wis": 13, "Cha": 6},
+            ability_scores={
+                "Str": 17,
+                "Dex": 11,
+                "Con": 14,
+                "Int": 1,
+                "Wis": 13,
+                "Cha": 6,
+            },
             saving_throws={},
             spell_slots={},
             cr="2",
@@ -99,12 +129,21 @@ class Ankheg(ExtendedCombatantData):
             senses="Darkvision 60 ft., Tremorsense 60 ft., Passive Perception 11",
             languages="—",
             traits=[
-            {"name": "Tunneler", "description": "The ankheg can burrow through solid rock at half its Burrow Speed and leaves a 10-foot-diameter tunnel in its wake."},
-        ],
+                {
+                    "name": "Tunneler",
+                    "description": "The ankheg can burrow through solid rock at half its Burrow Speed and leaves a 10-foot-diameter tunnel in its wake.",
+                },
+            ],
             actions=[
-            {"name": "Bite", "description": "Melee Attack Roll: +5 (with Advantage if the target is Grappled by the ankheg), reach 5 ft. Hit: 10 (2d6 + 3) Slashing damage plus 3 (1d6) Acid damage. If the target is a Large or smaller creature, it has the Grappled condition (escape DC 13)."},
-            {"name": "Acid Spray (Recharge 6)", "description": "Dexterity Saving Throw: DC 12, each creature in a 30-foot-long, 5-foot-wide Line. Failure: 14 (4d6) Acid damage. Success: Half damage."},
-        ],
+                {
+                    "name": "Bite",
+                    "description": "Melee Attack Roll: +5 (with Advantage if the target is Grappled by the ankheg), reach 5 ft. Hit: 10 (2d6 + 3) Slashing damage plus 3 (1d6) Acid damage. If the target is a Large or smaller creature, it has the Grappled condition (escape DC 13).",
+                },
+                {
+                    "name": "Acid Spray (Recharge 6)",
+                    "description": "Dexterity Saving Throw: DC 12, each creature in a 30-foot-long, 5-foot-wide Line. Failure: 14 (4d6) Acid damage. Success: Half damage.",
+                },
+            ],
             bonus_actions=[],
             reactions=[],
             legendary_actions=[],
@@ -117,12 +156,19 @@ class Ankheg(ExtendedCombatantData):
 class AwakenedTree(ExtendedCombatantData):
     def __init__(self):
         super().__init__(
-            name="Awakened Tree",
+            combatant_type="Awakened Tree",
             hp=59,
             ac=13,
             temp_hp=0,
             conditions=[],
-            ability_scores={"Str": 19, "Dex": 6, "Con": 15, "Int": 10, "Wis": 10, "Cha": 7},
+            ability_scores={
+                "Str": 19,
+                "Dex": 6,
+                "Con": 15,
+                "Int": 10,
+                "Wis": 10,
+                "Cha": 7,
+            },
             saving_throws={},
             spell_slots={},
             cr="2",
@@ -139,8 +185,11 @@ class AwakenedTree(ExtendedCombatantData):
             languages="Common plus one other language",
             traits=[],
             actions=[
-            {"name": "Slam", "description": "Melee Attack Roll: +6, reach 10 ft. Hit: 14 (3d6 + 4) Bludgeoning damage."},
-        ],
+                {
+                    "name": "Slam",
+                    "description": "Melee Attack Roll: +6, reach 10 ft. Hit: 14 (3d6 + 4) Bludgeoning damage.",
+                },
+            ],
             bonus_actions=[],
             reactions=[],
             legendary_actions=[],
@@ -153,12 +202,19 @@ class AwakenedTree(ExtendedCombatantData):
 class AzerSentinel(ExtendedCombatantData):
     def __init__(self):
         super().__init__(
-            name="Azer Sentinel",
+            combatant_type="Azer Sentinel",
             hp=39,
             ac=17,
             temp_hp=0,
             conditions=[],
-            ability_scores={"Str": 17, "Dex": 12, "Con": 15, "Int": 12, "Wis": 13, "Cha": 10},
+            ability_scores={
+                "Str": 17,
+                "Dex": 12,
+                "Con": 15,
+                "Int": 12,
+                "Wis": 13,
+                "Cha": 10,
+            },
             saving_throws={},
             spell_slots={},
             cr="2",
@@ -174,12 +230,21 @@ class AzerSentinel(ExtendedCombatantData):
             senses="Passive Perception 11",
             languages="Primordial (Ignan)",
             traits=[
-            {"name": "Fire Aura", "description": "At the end of each of the azer's turns, each creature of the azer's choice in a 5-foot Emanation originating from the azer takes 5 (1d10) Fire damage unless the azer has the Incapacitated condition."},
-            {"name": "Illumination", "description": "The azer sheds Bright Light in a 10-foot radius and Dim Light for an additional 10 feet."},
-        ],
+                {
+                    "name": "Fire Aura",
+                    "description": "At the end of each of the azer's turns, each creature of the azer's choice in a 5-foot Emanation originating from the azer takes 5 (1d10) Fire damage unless the azer has the Incapacitated condition.",
+                },
+                {
+                    "name": "Illumination",
+                    "description": "The azer sheds Bright Light in a 10-foot radius and Dim Light for an additional 10 feet.",
+                },
+            ],
             actions=[
-            {"name": "Burning Hammer", "description": "Melee Attack Roll: +5, reach 5 ft. Hit: 8 (1d10 + 3) Bludgeoning damage plus 3 (1d6) Fire damage."},
-        ],
+                {
+                    "name": "Burning Hammer",
+                    "description": "Melee Attack Roll: +5, reach 5 ft. Hit: 8 (1d10 + 3) Bludgeoning damage plus 3 (1d6) Fire damage.",
+                },
+            ],
             bonus_actions=[],
             reactions=[],
             legendary_actions=[],
@@ -192,12 +257,19 @@ class AzerSentinel(ExtendedCombatantData):
 class BanditCaptain(ExtendedCombatantData):
     def __init__(self):
         super().__init__(
-            name="Bandit Captain",
+            combatant_type="Bandit Captain",
             hp=52,
             ac=15,
             temp_hp=0,
             conditions=[],
-            ability_scores={"Str": 15, "Dex": 16, "Con": 14, "Int": 14, "Wis": 11, "Cha": 14},
+            ability_scores={
+                "Str": 15,
+                "Dex": 16,
+                "Con": 14,
+                "Int": 14,
+                "Wis": 11,
+                "Cha": 14,
+            },
             saving_throws={},
             spell_slots={},
             cr="2",
@@ -214,11 +286,23 @@ class BanditCaptain(ExtendedCombatantData):
             languages="Common, Thieves' Cant",
             traits=[],
             actions=[
-            {"name": "Multiattack", "description": "The bandit makes two attacks, using Scimitar and Pistol in any combination."},
-            {"name": "Scimitar", "description": "Melee Attack Roll: +5, reach 5 ft. Hit: 6 (1d6 + 3) Slashing damage."},
-            {"name": "Pistol", "description": "Ranged Attack Roll: +5, range 30/90 ft. Hit: 8 (1d10 + 3) Piercing damage."},
-            {"name": "Parry", "description": "Trigger: The bandit is hit by a melee attack roll while holding a weapon. Response: The bandit adds 2 to its AC against that attack, possibly causing it to miss."},
-        ],
+                {
+                    "name": "Multiattack",
+                    "description": "The bandit makes two attacks, using Scimitar and Pistol in any combination.",
+                },
+                {
+                    "name": "Scimitar",
+                    "description": "Melee Attack Roll: +5, reach 5 ft. Hit: 6 (1d6 + 3) Slashing damage.",
+                },
+                {
+                    "name": "Pistol",
+                    "description": "Ranged Attack Roll: +5, range 30/90 ft. Hit: 8 (1d10 + 3) Piercing damage.",
+                },
+                {
+                    "name": "Parry",
+                    "description": "Trigger: The bandit is hit by a melee attack roll while holding a weapon. Response: The bandit adds 2 to its AC against that attack, possibly causing it to miss.",
+                },
+            ],
             bonus_actions=[],
             reactions=[],
             legendary_actions=[],
@@ -231,12 +315,19 @@ class BanditCaptain(ExtendedCombatantData):
 class Berserker(ExtendedCombatantData):
     def __init__(self):
         super().__init__(
-            name="Berserker",
+            combatant_type="Berserker",
             hp=67,
             ac=13,
             temp_hp=0,
             conditions=[],
-            ability_scores={"Str": 16, "Dex": 12, "Con": 17, "Int": 9, "Wis": 11, "Cha": 9},
+            ability_scores={
+                "Str": 16,
+                "Dex": 12,
+                "Con": 17,
+                "Int": 9,
+                "Wis": 11,
+                "Cha": 9,
+            },
             saving_throws={},
             spell_slots={},
             cr="2",
@@ -252,11 +343,17 @@ class Berserker(ExtendedCombatantData):
             senses="Passive Perception 10",
             languages="Common",
             traits=[
-            {"name": "Bloodied Frenzy", "description": "While Bloodied, the berserker has Advantage on attack rolls and saving throws."},
-        ],
+                {
+                    "name": "Bloodied Frenzy",
+                    "description": "While Bloodied, the berserker has Advantage on attack rolls and saving throws.",
+                },
+            ],
             actions=[
-            {"name": "Greataxe", "description": "Melee Attack Roll: +5, reach 5 ft. Hit: 9 (1d12 + 3) Slashing damage."},
-        ],
+                {
+                    "name": "Greataxe",
+                    "description": "Melee Attack Roll: +5, reach 5 ft. Hit: 9 (1d12 + 3) Slashing damage.",
+                },
+            ],
             bonus_actions=[],
             reactions=[],
             legendary_actions=[],
@@ -269,12 +366,19 @@ class Berserker(ExtendedCombatantData):
 class BlackDragonWyrmling(ExtendedCombatantData):
     def __init__(self):
         super().__init__(
-            name="Black Dragon Wyrmling",
+            combatant_type="Black Dragon Wyrmling",
             hp=33,
             ac=17,
             temp_hp=0,
             conditions=[],
-            ability_scores={"Str": 15, "Dex": 14, "Con": 13, "Int": 10, "Wis": 11, "Cha": 13},
+            ability_scores={
+                "Str": 15,
+                "Dex": 14,
+                "Con": 13,
+                "Int": 10,
+                "Wis": 11,
+                "Cha": 13,
+            },
             saving_throws={},
             spell_slots={},
             cr="2",
@@ -290,13 +394,25 @@ class BlackDragonWyrmling(ExtendedCombatantData):
             senses="Blindsight 10 ft., Darkvision 60 ft., Passive Perception 14",
             languages="Draconic",
             traits=[
-            {"name": "Amphibious", "description": "The dragon can breathe air and water."},
-        ],
+                {
+                    "name": "Amphibious",
+                    "description": "The dragon can breathe air and water.",
+                },
+            ],
             actions=[
-            {"name": "Multiattack", "description": "The dragon makes two Rend attacks."},
-            {"name": "Rend", "description": "Melee Attack Roll: +4, reach 5 ft. Hit: 5 (1d6 + 2) Slashing damage plus 2 (1d4) Acid damage."},
-            {"name": "Acid Breath (Recharge 5–6)", "description": "Dexterity Saving Throw: DC 11, each creature in a 15-foot-long, 5-foot-wide Line. Failure: 22 (5d8) Acid damage. Success: Half damage."},
-        ],
+                {
+                    "name": "Multiattack",
+                    "description": "The dragon makes two Rend attacks.",
+                },
+                {
+                    "name": "Rend",
+                    "description": "Melee Attack Roll: +4, reach 5 ft. Hit: 5 (1d6 + 2) Slashing damage plus 2 (1d4) Acid damage.",
+                },
+                {
+                    "name": "Acid Breath (Recharge 5–6)",
+                    "description": "Dexterity Saving Throw: DC 11, each creature in a 15-foot-long, 5-foot-wide Line. Failure: 22 (5d8) Acid damage. Success: Half damage.",
+                },
+            ],
             bonus_actions=[],
             reactions=[],
             legendary_actions=[],
@@ -309,12 +425,19 @@ class BlackDragonWyrmling(ExtendedCombatantData):
 class BronzeDragonWyrmling(ExtendedCombatantData):
     def __init__(self):
         super().__init__(
-            name="Bronze Dragon Wyrmling",
+            combatant_type="Bronze Dragon Wyrmling",
             hp=39,
             ac=15,
             temp_hp=0,
             conditions=[],
-            ability_scores={"Str": 17, "Dex": 10, "Con": 15, "Int": 12, "Wis": 11, "Cha": 15},
+            ability_scores={
+                "Str": 17,
+                "Dex": 10,
+                "Con": 15,
+                "Int": 12,
+                "Wis": 11,
+                "Cha": 15,
+            },
             saving_throws={},
             spell_slots={},
             cr="2",
@@ -330,14 +453,29 @@ class BronzeDragonWyrmling(ExtendedCombatantData):
             senses="Blindsight 10 ft., Darkvision 60 ft., Passive Perception 14",
             languages="Draconic",
             traits=[
-            {"name": "Amphibious", "description": "The dragon can breathe air and water."},
-        ],
+                {
+                    "name": "Amphibious",
+                    "description": "The dragon can breathe air and water.",
+                },
+            ],
             actions=[
-            {"name": "Multiattack", "description": "The dragon makes two Rend attacks."},
-            {"name": "Rend", "description": "Melee Attack Roll: +5, reach 5 ft. Hit: 8 (1d10 + 3) Slashing damage."},
-            {"name": "Lightning Breath (Recharge 5–6)", "description": "Dexterity Saving Throw: DC 12, each creature in a 40-foot-long, 5-foot-wide Line. Failure: 16 (3d10) Lightning damage. Success: Half damage."},
-            {"name": "Repulsion Breath", "description": "Strength Saving Throw: DC 12, each creature in a 30-foot Cone. Failure: The target is pushed up to 30 feet straight away from the dragon and has the Prone condition."},
-        ],
+                {
+                    "name": "Multiattack",
+                    "description": "The dragon makes two Rend attacks.",
+                },
+                {
+                    "name": "Rend",
+                    "description": "Melee Attack Roll: +5, reach 5 ft. Hit: 8 (1d10 + 3) Slashing damage.",
+                },
+                {
+                    "name": "Lightning Breath (Recharge 5–6)",
+                    "description": "Dexterity Saving Throw: DC 12, each creature in a 40-foot-long, 5-foot-wide Line. Failure: 16 (3d10) Lightning damage. Success: Half damage.",
+                },
+                {
+                    "name": "Repulsion Breath",
+                    "description": "Strength Saving Throw: DC 12, each creature in a 30-foot Cone. Failure: The target is pushed up to 30 feet straight away from the dragon and has the Prone condition.",
+                },
+            ],
             bonus_actions=[],
             reactions=[],
             legendary_actions=[],
@@ -350,12 +488,19 @@ class BronzeDragonWyrmling(ExtendedCombatantData):
 class BulettePup(ExtendedCombatantData):
     def __init__(self):
         super().__init__(
-            name="Bulette Pup",
+            combatant_type="Bulette Pup",
             hp=45,
             ac=16,
             temp_hp=0,
             conditions=[],
-            ability_scores={"Str": 16, "Dex": 8, "Con": 17, "Int": 2, "Wis": 10, "Cha": 4},
+            ability_scores={
+                "Str": 16,
+                "Dex": 8,
+                "Con": 17,
+                "Int": 2,
+                "Wis": 10,
+                "Cha": 4,
+            },
             saving_throws={},
             spell_slots={},
             cr="2",
@@ -384,12 +529,19 @@ class BulettePup(ExtendedCombatantData):
 class CarrionCrawler(ExtendedCombatantData):
     def __init__(self):
         super().__init__(
-            name="Carrion Crawler",
+            combatant_type="Carrion Crawler",
             hp=51,
             ac=13,
             temp_hp=0,
             conditions=[],
-            ability_scores={"Str": 14, "Dex": 13, "Con": 16, "Int": 1, "Wis": 12, "Cha": 5},
+            ability_scores={
+                "Str": 14,
+                "Dex": 13,
+                "Con": 16,
+                "Int": 1,
+                "Wis": 12,
+                "Cha": 5,
+            },
             saving_throws={},
             spell_slots={},
             cr="2",
@@ -405,13 +557,25 @@ class CarrionCrawler(ExtendedCombatantData):
             senses="Darkvision 60 ft., Passive Perception 15",
             languages="None",
             traits=[
-            {"name": "Spider Climb", "description": "The carrion crawler can climb difficult surfaces, including along ceilings, without needing to make an ability check."},
-        ],
+                {
+                    "name": "Spider Climb",
+                    "description": "The carrion crawler can climb difficult surfaces, including along ceilings, without needing to make an ability check.",
+                },
+            ],
             actions=[
-            {"name": "Multiattack", "description": "The carrion crawler uses Paralyzing Tentacles and makes one Bite attack."},
-            {"name": "Bite", "description": "Melee Attack Roll: +4, reach 5 ft. Hit: 7 (2d4 + 2) Piercing damage plus 3 (1d6) Poison damage."},
-            {"name": "Paralyzing Tentacles", "description": "Constitution Saving Throw: DC 12, one creature the carrion crawler can see within 10 feet. Failure: The target has the Poisoned condition and repeats the save at the end of each of its turns, ending the effect on itself on a success. After 1 minute, it succeeds automatically. While Poisoned, the target has the Paralyzed condition."},
-        ],
+                {
+                    "name": "Multiattack",
+                    "description": "The carrion crawler uses Paralyzing Tentacles and makes one Bite attack.",
+                },
+                {
+                    "name": "Bite",
+                    "description": "Melee Attack Roll: +4, reach 5 ft. Hit: 7 (2d4 + 2) Piercing damage plus 3 (1d6) Poison damage.",
+                },
+                {
+                    "name": "Paralyzing Tentacles",
+                    "description": "Constitution Saving Throw: DC 12, one creature the carrion crawler can see within 10 feet. Failure: The target has the Poisoned condition and repeats the save at the end of each of its turns, ending the effect on itself on a success. After 1 minute, it succeeds automatically. While Poisoned, the target has the Paralyzed condition.",
+                },
+            ],
             bonus_actions=[],
             reactions=[],
             legendary_actions=[],
@@ -424,12 +588,19 @@ class CarrionCrawler(ExtendedCombatantData):
 class CentaurTrooper(ExtendedCombatantData):
     def __init__(self):
         super().__init__(
-            name="Centaur Trooper",
+            combatant_type="Centaur Trooper",
             hp=45,
             ac=16,
             temp_hp=0,
             conditions=[],
-            ability_scores={"Str": 18, "Dex": 14, "Con": 14, "Int": 9, "Wis": 13, "Cha": 11},
+            ability_scores={
+                "Str": 18,
+                "Dex": 14,
+                "Con": 14,
+                "Int": 9,
+                "Wis": 13,
+                "Cha": 11,
+            },
             saving_throws={},
             spell_slots={},
             cr="2",
@@ -446,13 +617,25 @@ class CentaurTrooper(ExtendedCombatantData):
             languages="Elvish, Sylvan",
             traits=[],
             actions=[
-            {"name": "Multiattack", "description": "The centaur makes two attacks, using Pike or Longbow in any combination."},
-            {"name": "Pike", "description": "Melee Attack Roll: +6, reach 10 ft. Hit: 9 (1d10 + 4) Piercing damage."},
-            {"name": "Longbow", "description": "Ranged Attack Roll: +4, range 150/600 ft. Hit: 6 (1d8 + 2) Piercing damage."},
-        ],
+                {
+                    "name": "Multiattack",
+                    "description": "The centaur makes two attacks, using Pike or Longbow in any combination.",
+                },
+                {
+                    "name": "Pike",
+                    "description": "Melee Attack Roll: +6, reach 10 ft. Hit: 9 (1d10 + 4) Piercing damage.",
+                },
+                {
+                    "name": "Longbow",
+                    "description": "Ranged Attack Roll: +4, range 150/600 ft. Hit: 6 (1d8 + 2) Piercing damage.",
+                },
+            ],
             bonus_actions=[
-            {"name": "Trampling Charge (Recharge 5–6)", "description": "The centaur moves up to its Speed without provoking Opportunity Attacks and can move through the spaces of Medium or smaller creatures. Each creature whose space the centaur enters is targeted once by the following effect. Strength Saving Throw: DC 14. Failure: 7 (1d6 + 4) Bludgeoning damage, and the target has the Prone condition."},
-        ],
+                {
+                    "name": "Trampling Charge (Recharge 5–6)",
+                    "description": "The centaur moves up to its Speed without provoking Opportunity Attacks and can move through the spaces of Medium or smaller creatures. Each creature whose space the centaur enters is targeted once by the following effect. Strength Saving Throw: DC 14. Failure: 7 (1d6 + 4) Bludgeoning damage, and the target has the Prone condition.",
+                },
+            ],
             reactions=[],
             legendary_actions=[],
             legendary_resistances=0,
@@ -464,12 +647,19 @@ class CentaurTrooper(ExtendedCombatantData):
 class CultistFanatic(ExtendedCombatantData):
     def __init__(self):
         super().__init__(
-            name="Cultist Fanatic",
+            combatant_type="Cultist Fanatic",
             hp=44,
             ac=13,
             temp_hp=0,
             conditions=[],
-            ability_scores={"Str": 11, "Dex": 14, "Con": 12, "Int": 10, "Wis": 14, "Cha": 13},
+            ability_scores={
+                "Str": 11,
+                "Dex": 14,
+                "Con": 12,
+                "Int": 10,
+                "Wis": 14,
+                "Cha": 13,
+            },
             saving_throws={},
             spell_slots={},
             cr="2",
@@ -486,12 +676,21 @@ class CultistFanatic(ExtendedCombatantData):
             languages="Common",
             traits=[],
             actions=[
-            {"name": "Pact Blade", "description": "Melee Attack Roll: +4, reach 5 ft. Hit: 6 (1d8 + 2) Slashing damage plus 7 (2d6) Necrotic damage."},
-            {"name": "Spellcasting", "description": "The cultist casts one of the following spells, using Wisdom as the spellcasting ability (spell save DC 12, +4 to hit with spell attacks):"},
-        ],
+                {
+                    "name": "Pact Blade",
+                    "description": "Melee Attack Roll: +4, reach 5 ft. Hit: 6 (1d8 + 2) Slashing damage plus 7 (2d6) Necrotic damage.",
+                },
+                {
+                    "name": "Spellcasting",
+                    "description": "The cultist casts one of the following spells, using Wisdom as the spellcasting ability (spell save DC 12, +4 to hit with spell attacks):",
+                },
+            ],
             bonus_actions=[
-            {"name": "Spiritual Weapon (2/Day)", "description": "The cultist casts the Spiritual Weapon spell, using the same spellcasting ability as Spellcasting."},
-        ],
+                {
+                    "name": "Spiritual Weapon (2/Day)",
+                    "description": "The cultist casts the Spiritual Weapon spell, using the same spellcasting ability as Spellcasting.",
+                },
+            ],
             reactions=[],
             legendary_actions=[],
             legendary_resistances=0,
@@ -503,12 +702,19 @@ class CultistFanatic(ExtendedCombatantData):
 class Druid(ExtendedCombatantData):
     def __init__(self):
         super().__init__(
-            name="Druid",
+            combatant_type="Druid",
             hp=44,
             ac=13,
             temp_hp=0,
             conditions=[],
-            ability_scores={"Str": 10, "Dex": 12, "Con": 13, "Int": 12, "Wis": 16, "Cha": 11},
+            ability_scores={
+                "Str": 10,
+                "Dex": 12,
+                "Con": 13,
+                "Int": 12,
+                "Wis": 16,
+                "Cha": 11,
+            },
             saving_throws={},
             spell_slots={},
             cr="2",
@@ -525,11 +731,23 @@ class Druid(ExtendedCombatantData):
             languages="Common, Druidic, Sylvan",
             traits=[],
             actions=[
-            {"name": "Multiattack", "description": "The druid makes two attacks, using Vine Staff or Verdant Wisp in any combination."},
-            {"name": "Vine Staff", "description": "Melee Attack Roll: +5, reach 5 ft. Hit: 7 (1d8 + 3) Bludgeoning damage plus 2 (1d4) Poison damage."},
-            {"name": "Verdant Wisp", "description": "Ranged Attack Roll: +5, range 90 ft. Hit: 10 (3d6) Radiant damage."},
-            {"name": "Spellcasting", "description": "The druid casts one of the following spells, using Wisdom as the spellcasting ability (spell save DC 13):"},
-        ],
+                {
+                    "name": "Multiattack",
+                    "description": "The druid makes two attacks, using Vine Staff or Verdant Wisp in any combination.",
+                },
+                {
+                    "name": "Vine Staff",
+                    "description": "Melee Attack Roll: +5, reach 5 ft. Hit: 7 (1d8 + 3) Bludgeoning damage plus 2 (1d4) Poison damage.",
+                },
+                {
+                    "name": "Verdant Wisp",
+                    "description": "Ranged Attack Roll: +5, range 90 ft. Hit: 10 (3d6) Radiant damage.",
+                },
+                {
+                    "name": "Spellcasting",
+                    "description": "The druid casts one of the following spells, using Wisdom as the spellcasting ability (spell save DC 13):",
+                },
+            ],
             bonus_actions=[],
             reactions=[],
             legendary_actions=[],
@@ -542,12 +760,19 @@ class Druid(ExtendedCombatantData):
 class Ettercap(ExtendedCombatantData):
     def __init__(self):
         super().__init__(
-            name="Ettercap",
+            combatant_type="Ettercap",
             hp=44,
             ac=13,
             temp_hp=0,
             conditions=[],
-            ability_scores={"Str": 14, "Dex": 15, "Con": 13, "Int": 7, "Wis": 12, "Cha": 8},
+            ability_scores={
+                "Str": 14,
+                "Dex": 15,
+                "Con": 13,
+                "Int": 7,
+                "Wis": 12,
+                "Cha": 8,
+            },
             saving_throws={},
             spell_slots={},
             cr="2",
@@ -563,18 +788,39 @@ class Ettercap(ExtendedCombatantData):
             senses="Darkvision 60 ft., Passive Perception 13",
             languages="—",
             traits=[
-            {"name": "Spider Climb", "description": "The ettercap can climb difficult surfaces, including along ceilings, without needing to make an ability check."},
-            {"name": "Web Walker", "description": "The ettercap ignores movement restrictions caused by webs, and the ettercap knows the location of any other creature in contact with the same web."},
-        ],
+                {
+                    "name": "Spider Climb",
+                    "description": "The ettercap can climb difficult surfaces, including along ceilings, without needing to make an ability check.",
+                },
+                {
+                    "name": "Web Walker",
+                    "description": "The ettercap ignores movement restrictions caused by webs, and the ettercap knows the location of any other creature in contact with the same web.",
+                },
+            ],
             actions=[
-            {"name": "Multiattack", "description": "The ettercap makes one Bite attack and one Claw attack."},
-            {"name": "Bite", "description": "Melee Attack Roll: +4, reach 5 ft. Hit: 5 (1d6 + 2) Piercing damage plus 2 (1d4) Poison damage, and the target has the Poisoned condition until the start of the ettercap's next turn."},
-            {"name": "Claw", "description": "Melee Attack Roll: +4, reach 5 ft. Hit: 7 (2d4 + 2) Slashing damage."},
-            {"name": "Web Strand (Recharge 5–6)", "description": "Dexterity Saving Throw: DC 12, one Large or smaller creature the ettercap can see within 30 feet. Failure: The target has the Restrained condition until the web is destroyed (AC 10; HP 5; Vulnerability to Fire damage; Immunity to Bludgeoning, Poison, and Psychic damage)."},
-        ],
+                {
+                    "name": "Multiattack",
+                    "description": "The ettercap makes one Bite attack and one Claw attack.",
+                },
+                {
+                    "name": "Bite",
+                    "description": "Melee Attack Roll: +4, reach 5 ft. Hit: 5 (1d6 + 2) Piercing damage plus 2 (1d4) Poison damage, and the target has the Poisoned condition until the start of the ettercap's next turn.",
+                },
+                {
+                    "name": "Claw",
+                    "description": "Melee Attack Roll: +4, reach 5 ft. Hit: 7 (2d4 + 2) Slashing damage.",
+                },
+                {
+                    "name": "Web Strand (Recharge 5–6)",
+                    "description": "Dexterity Saving Throw: DC 12, one Large or smaller creature the ettercap can see within 30 feet. Failure: The target has the Restrained condition until the web is destroyed (AC 10; HP 5; Vulnerability to Fire damage; Immunity to Bludgeoning, Poison, and Psychic damage).",
+                },
+            ],
             bonus_actions=[
-            {"name": "Reel", "description": "The ettercap pulls one creature within 30 feet of itself that is Restrained by its Web Strand up to 25 feet straight toward itself."},
-        ],
+                {
+                    "name": "Reel",
+                    "description": "The ettercap pulls one creature within 30 feet of itself that is Restrained by its Web Strand up to 25 feet straight toward itself.",
+                },
+            ],
             reactions=[],
             legendary_actions=[],
             legendary_resistances=0,
@@ -586,12 +832,19 @@ class Ettercap(ExtendedCombatantData):
 class FaerieDragonAdult(ExtendedCombatantData):
     def __init__(self):
         super().__init__(
-            name="Faerie Dragon Adult",
+            combatant_type="Faerie Dragon Adult",
             hp=35,
             ac=15,
             temp_hp=0,
             conditions=[],
-            ability_scores={"Str": 3, "Dex": 20, "Con": 13, "Int": 12, "Wis": 12, "Cha": 14},
+            ability_scores={
+                "Str": 3,
+                "Dex": 20,
+                "Con": 13,
+                "Int": 12,
+                "Wis": 12,
+                "Cha": 14,
+            },
             saving_throws={},
             spell_slots={},
             cr="2",
@@ -607,16 +860,31 @@ class FaerieDragonAdult(ExtendedCombatantData):
             senses="Darkvision 60 ft., Passive Perception 13",
             languages="Draconic, Sylvan; telepathy 60 ft. (faerie dragons only)",
             traits=[
-            {"name": "Magic Resistance", "description": "The dragon has Advantage on saving throws against spells and other magical effects."},
-        ],
+                {
+                    "name": "Magic Resistance",
+                    "description": "The dragon has Advantage on saving throws against spells and other magical effects.",
+                },
+            ],
             actions=[
-            {"name": "Bite", "description": "Melee Attack Roll: +7, reach 5 ft. Hit: 7 (1d4 + 5) Piercing damage plus 3 (1d6) Psychic damage."},
-            {"name": "Euphoria Breath (Recharge 5–6)", "description": "Wisdom Saving Throw: DC 13, each creature in a 15-foot Cone. Failure: The target has the Incapacitated condition and repeats the save at the end of each of its turns, ending the effect on itself on a success. After 1 minute, it succeeds automatically. While Incapacitated, the target uses all its movement on each of its turns to move in a random direction."},
-            {"name": "Spellcasting", "description": "The dragon casts one of the following spells, requiring no Material components and using Charisma as the spellcasting ability (spell save DC 13):"},
-        ],
+                {
+                    "name": "Bite",
+                    "description": "Melee Attack Roll: +7, reach 5 ft. Hit: 7 (1d4 + 5) Piercing damage plus 3 (1d6) Psychic damage.",
+                },
+                {
+                    "name": "Euphoria Breath (Recharge 5–6)",
+                    "description": "Wisdom Saving Throw: DC 13, each creature in a 15-foot Cone. Failure: The target has the Incapacitated condition and repeats the save at the end of each of its turns, ending the effect on itself on a success. After 1 minute, it succeeds automatically. While Incapacitated, the target uses all its movement on each of its turns to move in a random direction.",
+                },
+                {
+                    "name": "Spellcasting",
+                    "description": "The dragon casts one of the following spells, requiring no Material components and using Charisma as the spellcasting ability (spell save DC 13):",
+                },
+            ],
             bonus_actions=[
-            {"name": "Superior Invisibility", "description": "The dragon casts Greater Invisibility on itself, requiring no spell components and using the same spellcasting ability as Spellcasting."},
-        ],
+                {
+                    "name": "Superior Invisibility",
+                    "description": "The dragon casts Greater Invisibility on itself, requiring no spell components and using the same spellcasting ability as Spellcasting.",
+                },
+            ],
             reactions=[],
             legendary_actions=[],
             legendary_resistances=0,
@@ -628,12 +896,19 @@ class FaerieDragonAdult(ExtendedCombatantData):
 class Gargoyle(ExtendedCombatantData):
     def __init__(self):
         super().__init__(
-            name="Gargoyle",
+            combatant_type="Gargoyle",
             hp=67,
             ac=15,
             temp_hp=0,
             conditions=[],
-            ability_scores={"Str": 15, "Dex": 11, "Con": 16, "Int": 6, "Wis": 11, "Cha": 7},
+            ability_scores={
+                "Str": 15,
+                "Dex": 11,
+                "Con": 16,
+                "Int": 6,
+                "Wis": 11,
+                "Cha": 7,
+            },
             saving_throws={},
             spell_slots={},
             cr="2",
@@ -649,12 +924,21 @@ class Gargoyle(ExtendedCombatantData):
             senses="Darkvision 60 ft., Passive Perception 10",
             languages="Primordial (Terran)",
             traits=[
-            {"name": "Flyby", "description": "The gargoyle doesn't provoke an Opportunity Attack when it flies out of an enemy's reach."},
-        ],
+                {
+                    "name": "Flyby",
+                    "description": "The gargoyle doesn't provoke an Opportunity Attack when it flies out of an enemy's reach.",
+                },
+            ],
             actions=[
-            {"name": "Multiattack", "description": "The gargoyle makes two Claw attacks."},
-            {"name": "Claw", "description": "Melee Attack Roll: +4, reach 5 ft. Hit: 7 (2d4 + 2) Slashing damage."},
-        ],
+                {
+                    "name": "Multiattack",
+                    "description": "The gargoyle makes two Claw attacks.",
+                },
+                {
+                    "name": "Claw",
+                    "description": "Melee Attack Roll: +4, reach 5 ft. Hit: 7 (2d4 + 2) Slashing damage.",
+                },
+            ],
             bonus_actions=[],
             reactions=[],
             legendary_actions=[],
@@ -667,12 +951,19 @@ class Gargoyle(ExtendedCombatantData):
 class GelatinousCube(ExtendedCombatantData):
     def __init__(self):
         super().__init__(
-            name="Gelatinous Cube",
+            combatant_type="Gelatinous Cube",
             hp=63,
             ac=6,
             temp_hp=0,
             conditions=[],
-            ability_scores={"Str": 14, "Dex": 3, "Con": 20, "Int": 1, "Wis": 6, "Cha": 1},
+            ability_scores={
+                "Str": 14,
+                "Dex": 3,
+                "Con": 20,
+                "Int": 1,
+                "Wis": 6,
+                "Cha": 1,
+            },
             saving_throws={},
             spell_slots={},
             cr="2",
@@ -688,13 +979,25 @@ class GelatinousCube(ExtendedCombatantData):
             senses="Blindsight 60 ft., Passive Perception 8",
             languages="None",
             traits=[
-            {"name": "Ooze Cube", "description": "The cube fills its entire space and is transparent. Other creatures can enter that space, but a creature that does so is subjected to the cube's Engulf and has Disadvantage on the saving throw. Creatures inside the cube have Total Cover, and the cube can hold one Large creature or up to four Medium or Small creatures inside itself at a time. As an action, a creature within 5 feet of the cube can pull a creature or an object out of the cube by succeeding on a DC 12 Strength (Athletics) check, and the puller takes 10 (3d6) Acid damage."},
-            {"name": "Transparent", "description": "Even when the cube is in plain sight, a creature must succeed on a DC 15 Wisdom (Perception) check to notice the cube if the creature hasn't witnessed the cube move or otherwise act."},
-        ],
+                {
+                    "name": "Ooze Cube",
+                    "description": "The cube fills its entire space and is transparent. Other creatures can enter that space, but a creature that does so is subjected to the cube's Engulf and has Disadvantage on the saving throw. Creatures inside the cube have Total Cover, and the cube can hold one Large creature or up to four Medium or Small creatures inside itself at a time. As an action, a creature within 5 feet of the cube can pull a creature or an object out of the cube by succeeding on a DC 12 Strength (Athletics) check, and the puller takes 10 (3d6) Acid damage.",
+                },
+                {
+                    "name": "Transparent",
+                    "description": "Even when the cube is in plain sight, a creature must succeed on a DC 15 Wisdom (Perception) check to notice the cube if the creature hasn't witnessed the cube move or otherwise act.",
+                },
+            ],
             actions=[
-            {"name": "Pseudopod", "description": "Melee Attack Roll: +4, reach 5 ft. Hit: 12 (3d6 + 2) Acid damage."},
-            {"name": "Engulf", "description": "The cube moves up to its Speed without provoking Opportunity Attacks. The cube can move through the spaces of Large or smaller creatures if it has room inside itself to contain them (see the Ooze Cube trait). Dexterity Saving Throw: DC 12, each creature whose space the cube enters for the first time during this move. Failure: 10 (3d6) Acid damage, and the target is engulfed. An engulfed target is suffocating, can't cast spells with a Verbal component, has the Restrained condition, and takes 10 (3d6) Acid damage at the start of each of the cube's turns. When the cube moves, the engulfed target moves with it. An engulfed target can try to escape by taking an action to make a DC 12 Strength (Athletics) check. On a successful check, the target escapes and enters the nearest unoccupied space. Success: Half damage, and the target moves to an unoccupied space within 5 feet of the cube. If there is no unoccupied space, the target fails the save instead."},
-        ],
+                {
+                    "name": "Pseudopod",
+                    "description": "Melee Attack Roll: +4, reach 5 ft. Hit: 12 (3d6 + 2) Acid damage.",
+                },
+                {
+                    "name": "Engulf",
+                    "description": "The cube moves up to its Speed without provoking Opportunity Attacks. The cube can move through the spaces of Large or smaller creatures if it has room inside itself to contain them (see the Ooze Cube trait). Dexterity Saving Throw: DC 12, each creature whose space the cube enters for the first time during this move. Failure: 10 (3d6) Acid damage, and the target is engulfed. An engulfed target is suffocating, can't cast spells with a Verbal component, has the Restrained condition, and takes 10 (3d6) Acid damage at the start of each of the cube's turns. When the cube moves, the engulfed target moves with it. An engulfed target can try to escape by taking an action to make a DC 12 Strength (Athletics) check. On a successful check, the target escapes and enters the nearest unoccupied space. Success: Half damage, and the target moves to an unoccupied space within 5 feet of the cube. If there is no unoccupied space, the target fails the save instead.",
+                },
+            ],
             bonus_actions=[],
             reactions=[],
             legendary_actions=[],
@@ -707,12 +1010,19 @@ class GelatinousCube(ExtendedCombatantData):
 class Ghast(ExtendedCombatantData):
     def __init__(self):
         super().__init__(
-            name="Ghast",
+            combatant_type="Ghast",
             hp=36,
             ac=13,
             temp_hp=0,
             conditions=[],
-            ability_scores={"Str": 16, "Dex": 17, "Con": 10, "Int": 11, "Wis": 10, "Cha": 8},
+            ability_scores={
+                "Str": 16,
+                "Dex": 17,
+                "Con": 10,
+                "Int": 11,
+                "Wis": 10,
+                "Cha": 8,
+            },
             saving_throws={},
             spell_slots={},
             cr="2",
@@ -728,12 +1038,21 @@ class Ghast(ExtendedCombatantData):
             senses="Darkvision 60 ft., Passive Perception 10",
             languages="Common",
             traits=[
-            {"name": "Stench", "description": "Constitution Saving Throw: DC 10, any creature that starts its turn in a 5-foot Emanation originating from the ghast. Failure: The target has the Poisoned condition until the start of its next turn. Success: The target is immune to this ghast's Stench for 24 hours."},
-        ],
+                {
+                    "name": "Stench",
+                    "description": "Constitution Saving Throw: DC 10, any creature that starts its turn in a 5-foot Emanation originating from the ghast. Failure: The target has the Poisoned condition until the start of its next turn. Success: The target is immune to this ghast's Stench for 24 hours.",
+                },
+            ],
             actions=[
-            {"name": "Bite", "description": "Melee Attack Roll: +5, reach 5 ft. Hit: 7 (1d8 + 3) Piercing damage plus 9 (2d8) Necrotic damage."},
-            {"name": "Claw", "description": "Melee Attack Roll: +5, reach 5 ft. Hit: 10 (2d6 + 3) Slashing damage. If the target is a non-Undead creature, it is subjected to the following effect. Constitution Saving Throw: DC 10. Failure: The target has the Paralyzed condition until the end of its next turn."},
-        ],
+                {
+                    "name": "Bite",
+                    "description": "Melee Attack Roll: +5, reach 5 ft. Hit: 7 (1d8 + 3) Piercing damage plus 9 (2d8) Necrotic damage.",
+                },
+                {
+                    "name": "Claw",
+                    "description": "Melee Attack Roll: +5, reach 5 ft. Hit: 10 (2d6 + 3) Slashing damage. If the target is a non-Undead creature, it is subjected to the following effect. Constitution Saving Throw: DC 10. Failure: The target has the Paralyzed condition until the end of its next turn.",
+                },
+            ],
             bonus_actions=[],
             reactions=[],
             legendary_actions=[],
@@ -746,12 +1065,19 @@ class Ghast(ExtendedCombatantData):
 class GiantBoar(ExtendedCombatantData):
     def __init__(self):
         super().__init__(
-            name="Giant Boar",
+            combatant_type="Giant Boar",
             hp=42,
             ac=13,
             temp_hp=0,
             conditions=[],
-            ability_scores={"Str": 17, "Dex": 10, "Con": 16, "Int": 2, "Wis": 7, "Cha": 5},
+            ability_scores={
+                "Str": 17,
+                "Dex": 10,
+                "Con": 16,
+                "Int": 2,
+                "Wis": 7,
+                "Cha": 5,
+            },
             saving_throws={},
             spell_slots={},
             cr="2",
@@ -767,11 +1093,17 @@ class GiantBoar(ExtendedCombatantData):
             senses="Passive Perception 8",
             languages="None",
             traits=[
-            {"name": "Bloodied Fury", "description": "The boar has Advantage on melee attack rolls while it is Bloodied."},
-        ],
+                {
+                    "name": "Bloodied Fury",
+                    "description": "The boar has Advantage on melee attack rolls while it is Bloodied.",
+                },
+            ],
             actions=[
-            {"name": "Gore", "description": "Melee Attack Roll: +5, reach 5 ft. Hit: 10 (2d6 + 3) Piercing damage. If the target is a Large or smaller creature and the boar moved 20+ feet straight toward it immediately before the hit, the target takes an extra 7 (2d6) Piercing damage and has the Prone condition."},
-        ],
+                {
+                    "name": "Gore",
+                    "description": "Melee Attack Roll: +5, reach 5 ft. Hit: 10 (2d6 + 3) Piercing damage. If the target is a Large or smaller creature and the boar moved 20+ feet straight toward it immediately before the hit, the target takes an extra 7 (2d6) Piercing damage and has the Prone condition.",
+                },
+            ],
             bonus_actions=[],
             reactions=[],
             legendary_actions=[],
@@ -784,12 +1116,19 @@ class GiantBoar(ExtendedCombatantData):
 class GiantConstrictorSnake(ExtendedCombatantData):
     def __init__(self):
         super().__init__(
-            name="Giant Constrictor Snake",
+            combatant_type="Giant Constrictor Snake",
             hp=60,
             ac=12,
             temp_hp=0,
             conditions=[],
-            ability_scores={"Str": 19, "Dex": 14, "Con": 12, "Int": 1, "Wis": 10, "Cha": 3},
+            ability_scores={
+                "Str": 19,
+                "Dex": 14,
+                "Con": 12,
+                "Int": 1,
+                "Wis": 10,
+                "Cha": 3,
+            },
             saving_throws={},
             spell_slots={},
             cr="2",
@@ -806,10 +1145,19 @@ class GiantConstrictorSnake(ExtendedCombatantData):
             languages="None",
             traits=[],
             actions=[
-            {"name": "Multiattack", "description": "The snake makes one Bite attack and uses Constrict."},
-            {"name": "Bite", "description": "Melee Attack Roll: +6, reach 10 ft. Hit: 11 (2d6 + 4) Piercing damage."},
-            {"name": "Constrict", "description": "Strength Saving Throw: DC 14, one Large or smaller creature the snake can see within 10 feet. Failure: 13 (2d8 + 4) Bludgeoning damage, and the target has the Grappled condition (escape DC 14)."},
-        ],
+                {
+                    "name": "Multiattack",
+                    "description": "The snake makes one Bite attack and uses Constrict.",
+                },
+                {
+                    "name": "Bite",
+                    "description": "Melee Attack Roll: +6, reach 10 ft. Hit: 11 (2d6 + 4) Piercing damage.",
+                },
+                {
+                    "name": "Constrict",
+                    "description": "Strength Saving Throw: DC 14, one Large or smaller creature the snake can see within 10 feet. Failure: 13 (2d8 + 4) Bludgeoning damage, and the target has the Grappled condition (escape DC 14).",
+                },
+            ],
             bonus_actions=[],
             reactions=[],
             legendary_actions=[],
@@ -822,12 +1170,19 @@ class GiantConstrictorSnake(ExtendedCombatantData):
 class GiantElk(ExtendedCombatantData):
     def __init__(self):
         super().__init__(
-            name="Giant Elk",
+            combatant_type="Giant Elk",
             hp=42,
             ac=14,
             temp_hp=0,
             conditions=[],
-            ability_scores={"Str": 19, "Dex": 18, "Con": 14, "Int": 7, "Wis": 14, "Cha": 10},
+            ability_scores={
+                "Str": 19,
+                "Dex": 18,
+                "Con": 14,
+                "Int": 7,
+                "Wis": 14,
+                "Cha": 10,
+            },
             saving_throws={},
             spell_slots={},
             cr="2",
@@ -844,8 +1199,11 @@ class GiantElk(ExtendedCombatantData):
             languages="Celestial; understands Common, Elvish, and Sylvan but can't speak them",
             traits=[],
             actions=[
-            {"name": "Ram", "description": "Melee Attack Roll: +6, reach 10 ft. Hit: 11 (2d6 + 4) Bludgeoning damage plus 5 (2d4) Radiant damage. If the target is a Huge or smaller creature and the elk moved 20+ feet straight toward it immediately before the hit, the target takes an extra 5 (2d4) Bludgeoning damage and has the Prone condition."},
-        ],
+                {
+                    "name": "Ram",
+                    "description": "Melee Attack Roll: +6, reach 10 ft. Hit: 11 (2d6 + 4) Bludgeoning damage plus 5 (2d4) Radiant damage. If the target is a Huge or smaller creature and the elk moved 20+ feet straight toward it immediately before the hit, the target takes an extra 5 (2d4) Bludgeoning damage and has the Prone condition.",
+                },
+            ],
             bonus_actions=[],
             reactions=[],
             legendary_actions=[],
@@ -858,12 +1216,19 @@ class GiantElk(ExtendedCombatantData):
 class GibberingMouther(ExtendedCombatantData):
     def __init__(self):
         super().__init__(
-            name="Gibbering Mouther",
+            combatant_type="Gibbering Mouther",
             hp=52,
             ac=9,
             temp_hp=0,
             conditions=[],
-            ability_scores={"Str": 10, "Dex": 8, "Con": 16, "Int": 3, "Wis": 10, "Cha": 6},
+            ability_scores={
+                "Str": 10,
+                "Dex": 8,
+                "Con": 16,
+                "Int": 3,
+                "Wis": 10,
+                "Cha": 6,
+            },
             saving_throws={},
             spell_slots={},
             cr="2",
@@ -879,16 +1244,34 @@ class GibberingMouther(ExtendedCombatantData):
             senses="Darkvision 60 ft., Passive Perception 10",
             languages="—",
             traits=[
-            {"name": "Aberrant Ground", "description": "The ground in a 10-foot Emanation originating from the mouther is Difficult Terrain."},
-            {"name": "Gibbering", "description": "The mouther babbles incoherently while it doesn't have the Incapacitated condition. Wisdom Saving Throw: DC 10, any creature that starts its turn within 20 feet of the mouther while it is babbling. Failure: The target rolls 1d8 to determine what it does during the current turn:"},
-            {"name": "1–4", "description": ". The target does nothing."},
-            {"name": "5–6", "description": ". The target takes no action or Bonus Action and uses all its movement to move in a random direction."},
-            {"name": "7–8", "description": ". The target makes a melee attack against a randomly determined creature within its reach or does nothing if it can't make such an attack."},
-        ],
+                {
+                    "name": "Aberrant Ground",
+                    "description": "The ground in a 10-foot Emanation originating from the mouther is Difficult Terrain.",
+                },
+                {
+                    "name": "Gibbering",
+                    "description": "The mouther babbles incoherently while it doesn't have the Incapacitated condition. Wisdom Saving Throw: DC 10, any creature that starts its turn within 20 feet of the mouther while it is babbling. Failure: The target rolls 1d8 to determine what it does during the current turn:",
+                },
+                {"name": "1–4", "description": ". The target does nothing."},
+                {
+                    "name": "5–6",
+                    "description": ". The target takes no action or Bonus Action and uses all its movement to move in a random direction.",
+                },
+                {
+                    "name": "7–8",
+                    "description": ". The target makes a melee attack against a randomly determined creature within its reach or does nothing if it can't make such an attack.",
+                },
+            ],
             actions=[
-            {"name": "Bite", "description": "Melee Attack Roll: +2, reach 5 ft. Hit: 7 (2d6) Piercing damage. If the target is a Medium or smaller creature, it has the Prone condition. The target dies if it is reduced to 0 Hit Points by this attack. Its body is then absorbed into the mouther, leaving only equipment behind."},
-            {"name": "Blinding Spittle (Recharge 5–6)", "description": "Dexterity Saving Throw: DC 10, each creature in a 10-foot-radius Sphere centered on a point within 30 feet. Failure: 7 (2d6) Radiant damage, and the target has the Blinded condition until the end of the mouther's next turn."},
-        ],
+                {
+                    "name": "Bite",
+                    "description": "Melee Attack Roll: +2, reach 5 ft. Hit: 7 (2d6) Piercing damage. If the target is a Medium or smaller creature, it has the Prone condition. The target dies if it is reduced to 0 Hit Points by this attack. Its body is then absorbed into the mouther, leaving only equipment behind.",
+                },
+                {
+                    "name": "Blinding Spittle (Recharge 5–6)",
+                    "description": "Dexterity Saving Throw: DC 10, each creature in a 10-foot-radius Sphere centered on a point within 30 feet. Failure: 7 (2d6) Radiant damage, and the target has the Blinded condition until the end of the mouther's next turn.",
+                },
+            ],
             bonus_actions=[],
             reactions=[],
             legendary_actions=[],
@@ -901,12 +1284,19 @@ class GibberingMouther(ExtendedCombatantData):
 class GithzeraiMonk(ExtendedCombatantData):
     def __init__(self):
         super().__init__(
-            name="Githzerai Monk",
+            combatant_type="Githzerai Monk",
             hp=38,
             ac=14,
             temp_hp=0,
             conditions=[],
-            ability_scores={"Str": 12, "Dex": 15, "Con": 12, "Int": 13, "Wis": 14, "Cha": 10},
+            ability_scores={
+                "Str": 12,
+                "Dex": 15,
+                "Con": 12,
+                "Int": 13,
+                "Wis": 14,
+                "Cha": 10,
+            },
             saving_throws={},
             spell_slots={},
             cr="2",
@@ -923,14 +1313,29 @@ class GithzeraiMonk(ExtendedCombatantData):
             languages="Common, Gith",
             traits=[],
             actions=[
-            {"name": "Multiattack", "description": "The githzerai makes two Psi Strike attacks."},
-            {"name": "Psi Strike", "description": "Melee Attack Roll: +4, reach 5 ft. Hit: 6 (1d8 + 2) Bludgeoning damage plus 9 (2d8) Psychic damage."},
-            {"name": "Spellcasting", "description": "The githzerai casts one of the following spells, requiring no spell components and using Wisdom as the spellcasting ability:"},
-            {"name": "Psionic Defense (2/Day)", "description": "The githzerai casts Feather Fall or Shield in response to the spell's trigger, requiring no spell components and using the same spellcasting ability as Spellcasting."},
-        ],
+                {
+                    "name": "Multiattack",
+                    "description": "The githzerai makes two Psi Strike attacks.",
+                },
+                {
+                    "name": "Psi Strike",
+                    "description": "Melee Attack Roll: +4, reach 5 ft. Hit: 6 (1d8 + 2) Bludgeoning damage plus 9 (2d8) Psychic damage.",
+                },
+                {
+                    "name": "Spellcasting",
+                    "description": "The githzerai casts one of the following spells, requiring no spell components and using Wisdom as the spellcasting ability:",
+                },
+                {
+                    "name": "Psionic Defense (2/Day)",
+                    "description": "The githzerai casts Feather Fall or Shield in response to the spell's trigger, requiring no spell components and using the same spellcasting ability as Spellcasting.",
+                },
+            ],
             bonus_actions=[
-            {"name": "Psi-Powered Leap (2/Day)", "description": "The githzerai casts Jump, requiring no spell components and using the same spellcasting ability as Spellcasting."},
-        ],
+                {
+                    "name": "Psi-Powered Leap (2/Day)",
+                    "description": "The githzerai casts Jump, requiring no spell components and using the same spellcasting ability as Spellcasting.",
+                },
+            ],
             reactions=[],
             legendary_actions=[],
             legendary_resistances=0,
@@ -942,12 +1347,19 @@ class GithzeraiMonk(ExtendedCombatantData):
 class GnollPackLord(ExtendedCombatantData):
     def __init__(self):
         super().__init__(
-            name="Gnoll Pack Lord",
+            combatant_type="Gnoll Pack Lord",
             hp=49,
             ac=15,
             temp_hp=0,
             conditions=[],
-            ability_scores={"Str": 16, "Dex": 14, "Con": 13, "Int": 8, "Wis": 11, "Cha": 9},
+            ability_scores={
+                "Str": 16,
+                "Dex": 14,
+                "Con": 13,
+                "Int": 8,
+                "Wis": 11,
+                "Cha": 9,
+            },
             saving_throws={},
             spell_slots={},
             cr="2",
@@ -964,14 +1376,29 @@ class GnollPackLord(ExtendedCombatantData):
             languages="Gnoll",
             traits=[],
             actions=[
-            {"name": "Multiattack", "description": "The gnoll makes two attacks, using Bone Whip or Bone Javelin in any combination, and it uses Incite Rampage if available."},
-            {"name": "Bone Whip", "description": "Melee Attack Roll: +5, reach 10 ft. Hit: 8 (2d4 + 3) Slashing damage."},
-            {"name": "Bone Javelin", "description": "Ranged Attack Roll: +5, range 30/120 ft. Hit: 7 (1d8 + 3) Piercing damage."},
-            {"name": "Incite Rampage (Recharge 5–6)", "description": "The gnoll targets another creature it can see within 60 feet of itself that has the Rampage Bonus Action. The target can take a Reaction to make one melee attack."},
-        ],
+                {
+                    "name": "Multiattack",
+                    "description": "The gnoll makes two attacks, using Bone Whip or Bone Javelin in any combination, and it uses Incite Rampage if available.",
+                },
+                {
+                    "name": "Bone Whip",
+                    "description": "Melee Attack Roll: +5, reach 10 ft. Hit: 8 (2d4 + 3) Slashing damage.",
+                },
+                {
+                    "name": "Bone Javelin",
+                    "description": "Ranged Attack Roll: +5, range 30/120 ft. Hit: 7 (1d8 + 3) Piercing damage.",
+                },
+                {
+                    "name": "Incite Rampage (Recharge 5–6)",
+                    "description": "The gnoll targets another creature it can see within 60 feet of itself that has the Rampage Bonus Action. The target can take a Reaction to make one melee attack.",
+                },
+            ],
             bonus_actions=[
-            {"name": "Rampage (2/Day)", "description": "Immediately after dealing damage to a creature that is already Bloodied, the gnoll moves up to half its Speed, and it makes one Bone Whip attack."},
-        ],
+                {
+                    "name": "Rampage (2/Day)",
+                    "description": "Immediately after dealing damage to a creature that is already Bloodied, the gnoll moves up to half its Speed, and it makes one Bone Whip attack.",
+                },
+            ],
             reactions=[],
             legendary_actions=[],
             legendary_resistances=0,
@@ -983,12 +1410,19 @@ class GnollPackLord(ExtendedCombatantData):
 class GreenDragonWyrmling(ExtendedCombatantData):
     def __init__(self):
         super().__init__(
-            name="Green Dragon Wyrmling",
+            combatant_type="Green Dragon Wyrmling",
             hp=38,
             ac=17,
             temp_hp=0,
             conditions=[],
-            ability_scores={"Str": 15, "Dex": 12, "Con": 13, "Int": 14, "Wis": 11, "Cha": 13},
+            ability_scores={
+                "Str": 15,
+                "Dex": 12,
+                "Con": 13,
+                "Int": 14,
+                "Wis": 11,
+                "Cha": 13,
+            },
             saving_throws={},
             spell_slots={},
             cr="2",
@@ -1004,13 +1438,25 @@ class GreenDragonWyrmling(ExtendedCombatantData):
             senses="Blindsight 10 ft., Darkvision 60 ft., Passive Perception 14",
             languages="Draconic",
             traits=[
-            {"name": "Amphibious", "description": "The dragon can breathe air and water."},
-        ],
+                {
+                    "name": "Amphibious",
+                    "description": "The dragon can breathe air and water.",
+                },
+            ],
             actions=[
-            {"name": "Multiattack", "description": "The dragon makes two Rend attacks."},
-            {"name": "Rend", "description": "Melee Attack Roll: +4, reach 5 ft. Hit: 7 (1d10 + 2) Slashing damage plus 3 (1d6) Poison damage."},
-            {"name": "Poison Breath (Recharge 5–6)", "description": "Constitution Saving Throw: DC 11, each creature in a 15-foot Cone. Failure: 21 (6d6) Poison damage. Success: Half damage."},
-        ],
+                {
+                    "name": "Multiattack",
+                    "description": "The dragon makes two Rend attacks.",
+                },
+                {
+                    "name": "Rend",
+                    "description": "Melee Attack Roll: +4, reach 5 ft. Hit: 7 (1d10 + 2) Slashing damage plus 3 (1d6) Poison damage.",
+                },
+                {
+                    "name": "Poison Breath (Recharge 5–6)",
+                    "description": "Constitution Saving Throw: DC 11, each creature in a 15-foot Cone. Failure: 21 (6d6) Poison damage. Success: Half damage.",
+                },
+            ],
             bonus_actions=[],
             reactions=[],
             legendary_actions=[],
@@ -1023,12 +1469,19 @@ class GreenDragonWyrmling(ExtendedCombatantData):
 class Grick(ExtendedCombatantData):
     def __init__(self):
         super().__init__(
-            name="Grick",
+            combatant_type="Grick",
             hp=54,
             ac=14,
             temp_hp=0,
             conditions=[],
-            ability_scores={"Str": 14, "Dex": 14, "Con": 11, "Int": 3, "Wis": 14, "Cha": 5},
+            ability_scores={
+                "Str": 14,
+                "Dex": 14,
+                "Con": 11,
+                "Int": 3,
+                "Wis": 14,
+                "Cha": 5,
+            },
             saving_throws={},
             spell_slots={},
             cr="2",
@@ -1045,10 +1498,19 @@ class Grick(ExtendedCombatantData):
             languages="—",
             traits=[],
             actions=[
-            {"name": "Multiattack", "description": "The grick makes one Beak attack and one Tentacles attack."},
-            {"name": "Beak", "description": "Melee Attack Roll: +4, reach 5 ft. Hit: 9 (2d6 + 2) Piercing damage."},
-            {"name": "Tentacles", "description": "Melee Attack Roll: +4, reach 5 ft. Hit: 7 (1d10 + 2) Slashing damage. If the target is a Medium or smaller creature, it has the Grappled condition (escape DC 12) from all four tentacles."},
-        ],
+                {
+                    "name": "Multiattack",
+                    "description": "The grick makes one Beak attack and one Tentacles attack.",
+                },
+                {
+                    "name": "Beak",
+                    "description": "Melee Attack Roll: +4, reach 5 ft. Hit: 9 (2d6 + 2) Piercing damage.",
+                },
+                {
+                    "name": "Tentacles",
+                    "description": "Melee Attack Roll: +4, reach 5 ft. Hit: 7 (1d10 + 2) Slashing damage. If the target is a Medium or smaller creature, it has the Grappled condition (escape DC 12) from all four tentacles.",
+                },
+            ],
             bonus_actions=[],
             reactions=[],
             legendary_actions=[],
@@ -1061,12 +1523,19 @@ class Grick(ExtendedCombatantData):
 class Griffon(ExtendedCombatantData):
     def __init__(self):
         super().__init__(
-            name="Griffon",
+            combatant_type="Griffon",
             hp=59,
             ac=12,
             temp_hp=0,
             conditions=[],
-            ability_scores={"Str": 18, "Dex": 15, "Con": 16, "Int": 2, "Wis": 13, "Cha": 8},
+            ability_scores={
+                "Str": 18,
+                "Dex": 15,
+                "Con": 16,
+                "Int": 2,
+                "Wis": 13,
+                "Cha": 8,
+            },
             saving_throws={},
             spell_slots={},
             cr="2",
@@ -1083,9 +1552,15 @@ class Griffon(ExtendedCombatantData):
             languages="—",
             traits=[],
             actions=[
-            {"name": "Multiattack", "description": "The griffon makes two Rend attacks."},
-            {"name": "Rend", "description": "Melee Attack Roll: +6, reach 5 ft. Hit: 8 (1d8 + 4) Piercing damage. If the target is a Medium or smaller creature, it has the Grappled condition (escape DC 14) from both of the griffon's front claws."},
-        ],
+                {
+                    "name": "Multiattack",
+                    "description": "The griffon makes two Rend attacks.",
+                },
+                {
+                    "name": "Rend",
+                    "description": "Melee Attack Roll: +6, reach 5 ft. Hit: 8 (1d8 + 4) Piercing damage. If the target is a Medium or smaller creature, it has the Grappled condition (escape DC 14) from both of the griffon's front claws.",
+                },
+            ],
             bonus_actions=[],
             reactions=[],
             legendary_actions=[],
@@ -1098,12 +1573,19 @@ class Griffon(ExtendedCombatantData):
 class HunterShark(ExtendedCombatantData):
     def __init__(self):
         super().__init__(
-            name="Hunter Shark",
+            combatant_type="Hunter Shark",
             hp=45,
             ac=12,
             temp_hp=0,
             conditions=[],
-            ability_scores={"Str": 18, "Dex": 14, "Con": 15, "Int": 1, "Wis": 10, "Cha": 4},
+            ability_scores={
+                "Str": 18,
+                "Dex": 14,
+                "Con": 15,
+                "Int": 1,
+                "Wis": 10,
+                "Cha": 4,
+            },
             saving_throws={},
             spell_slots={},
             cr="2",
@@ -1119,11 +1601,17 @@ class HunterShark(ExtendedCombatantData):
             senses="Blindsight 60 ft., Passive Perception 12",
             languages="None",
             traits=[
-            {"name": "Water Breathing", "description": "The shark can breathe only underwater."},
-        ],
+                {
+                    "name": "Water Breathing",
+                    "description": "The shark can breathe only underwater.",
+                },
+            ],
             actions=[
-            {"name": "Bite", "description": "Melee Attack Roll: +6 (with Advantage if the target doesn't have all its Hit Points), reach 5 ft. Hit: 14 (3d6 + 4) Piercing damage."},
-        ],
+                {
+                    "name": "Bite",
+                    "description": "Melee Attack Roll: +6 (with Advantage if the target doesn't have all its Hit Points), reach 5 ft. Hit: 14 (3d6 + 4) Piercing damage.",
+                },
+            ],
             bonus_actions=[],
             reactions=[],
             legendary_actions=[],
@@ -1136,12 +1624,19 @@ class HunterShark(ExtendedCombatantData):
 class IntellectDevourer(ExtendedCombatantData):
     def __init__(self):
         super().__init__(
-            name="Intellect Devourer",
+            combatant_type="Intellect Devourer",
             hp=28,
             ac=12,
             temp_hp=0,
             conditions=[],
-            ability_scores={"Str": 6, "Dex": 14, "Con": 13, "Int": 14, "Wis": 11, "Cha": 10},
+            ability_scores={
+                "Str": 6,
+                "Dex": 14,
+                "Con": 13,
+                "Int": 14,
+                "Wis": 11,
+                "Cha": 10,
+            },
             saving_throws={},
             spell_slots={},
             cr="2",
@@ -1157,14 +1652,29 @@ class IntellectDevourer(ExtendedCombatantData):
             senses="Blindsight 60 ft., Passive Perception 12",
             languages="Understands Deep Speech but can't speak; telepathy 60 ft.",
             traits=[
-            {"name": "Detect Intelligence", "description": "The intellect devourer magically senses the location of any creature within 300 feet of itself that has an Intelligence score of 3 or higher, regardless of interposing barriers."},
-        ],
+                {
+                    "name": "Detect Intelligence",
+                    "description": "The intellect devourer magically senses the location of any creature within 300 feet of itself that has an Intelligence score of 3 or higher, regardless of interposing barriers.",
+                },
+            ],
             actions=[
-            {"name": "Multiattack", "description": "The intellect devourer makes one Claw attack and uses Devour Intellect."},
-            {"name": "Claw", "description": "Melee Attack Roll: +4, reach 5 ft. Hit: 7 (2d4 + 2) Slashing damage."},
-            {"name": "Devour Intellect", "description": "Intelligence Saving Throw: DC 12, one creature the intellect devourer can see within 5 feet. Failure: 11 (2d10) Psychic damage, and the target has the Stunned condition until the end of the intellect devourer's next turn."},
-            {"name": "Steal Body", "description": "Intelligence Saving Throw: DC 12, one Small or Medium creature within 5 feet that has the Incapacitated condition, is a Humanoid or Beast, and has 10 Hit Points or fewer. Failure: The intellect devourer possesses the target, consumes its brain, and teleports inside its skull. While there, the intellect devourer has Total Cover against attacks and other effects originating outside its host. The intellect devourer retains its Intelligence, Wisdom, and Charisma scores; its understanding of Deep Speech; its telepathy; and its Detect Intelligence trait. It otherwise adopts the target's game statistics. It knows everything the target knew, including spells and languages. If the host body dies, the intellect devourer must leave it. The intellect devourer is also forced out if the target regains its devoured brain by means of a Wish spell. By spending 5 feet of its movement, the intellect devourer can voluntarily leave the body, teleporting to the nearest unoccupied space within 5 feet of it. The body then dies unless its brain is restored before the end of the intellect devourer's next turn."},
-        ],
+                {
+                    "name": "Multiattack",
+                    "description": "The intellect devourer makes one Claw attack and uses Devour Intellect.",
+                },
+                {
+                    "name": "Claw",
+                    "description": "Melee Attack Roll: +4, reach 5 ft. Hit: 7 (2d4 + 2) Slashing damage.",
+                },
+                {
+                    "name": "Devour Intellect",
+                    "description": "Intelligence Saving Throw: DC 12, one creature the intellect devourer can see within 5 feet. Failure: 11 (2d10) Psychic damage, and the target has the Stunned condition until the end of the intellect devourer's next turn.",
+                },
+                {
+                    "name": "Steal Body",
+                    "description": "Intelligence Saving Throw: DC 12, one Small or Medium creature within 5 feet that has the Incapacitated condition, is a Humanoid or Beast, and has 10 Hit Points or fewer. Failure: The intellect devourer possesses the target, consumes its brain, and teleports inside its skull. While there, the intellect devourer has Total Cover against attacks and other effects originating outside its host. The intellect devourer retains its Intelligence, Wisdom, and Charisma scores; its understanding of Deep Speech; its telepathy; and its Detect Intelligence trait. It otherwise adopts the target's game statistics. It knows everything the target knew, including spells and languages. If the host body dies, the intellect devourer must leave it. The intellect devourer is also forced out if the target regains its devoured brain by means of a Wish spell. By spending 5 feet of its movement, the intellect devourer can voluntarily leave the body, teleporting to the nearest unoccupied space within 5 feet of it. The body then dies unless its brain is restored before the end of the intellect devourer's next turn.",
+                },
+            ],
             bonus_actions=[],
             reactions=[],
             legendary_actions=[],
@@ -1177,12 +1687,19 @@ class IntellectDevourer(ExtendedCombatantData):
 class LizardfolkGeomancer(ExtendedCombatantData):
     def __init__(self):
         super().__init__(
-            name="Lizardfolk Geomancer",
+            combatant_type="Lizardfolk Geomancer",
             hp=33,
             ac=13,
             temp_hp=0,
             conditions=[],
-            ability_scores={"Str": 15, "Dex": 10, "Con": 13, "Int": 10, "Wis": 15, "Cha": 8},
+            ability_scores={
+                "Str": 15,
+                "Dex": 10,
+                "Con": 13,
+                "Int": 10,
+                "Wis": 15,
+                "Cha": 8,
+            },
             saving_throws={},
             spell_slots={},
             cr="2",
@@ -1199,11 +1716,23 @@ class LizardfolkGeomancer(ExtendedCombatantData):
             languages="Draconic, Primordial (Terran)",
             traits=[],
             actions=[
-            {"name": "Multiattack", "description": "The lizardfolk makes two Earth Burst attacks."},
-            {"name": "Earth Burst", "description": "Melee or Ranged Attack Roll: +4, reach 5 ft. or range 60 ft. Hit: 9 (2d6 + 2) Bludgeoning damage."},
-            {"name": "Hail of Stone (Recharge 5–6)", "description": "Constitution Saving Throw: DC 12, each creature in a 20-foot-radius, 40-foot-high Cylinder centered on a point the lizardfolk can see within 60 feet. Failure: 15 (6d4) Bludgeoning damage, and the target has the Prone condition. Success: Half damage only."},
-            {"name": "Spellcasting", "description": "The lizardfolk casts one of the following spells, requiring no Material components and using Wisdom as the spellcasting ability (spell save DC 12):"},
-        ],
+                {
+                    "name": "Multiattack",
+                    "description": "The lizardfolk makes two Earth Burst attacks.",
+                },
+                {
+                    "name": "Earth Burst",
+                    "description": "Melee or Ranged Attack Roll: +4, reach 5 ft. or range 60 ft. Hit: 9 (2d6 + 2) Bludgeoning damage.",
+                },
+                {
+                    "name": "Hail of Stone (Recharge 5–6)",
+                    "description": "Constitution Saving Throw: DC 12, each creature in a 20-foot-radius, 40-foot-high Cylinder centered on a point the lizardfolk can see within 60 feet. Failure: 15 (6d4) Bludgeoning damage, and the target has the Prone condition. Success: Half damage only.",
+                },
+                {
+                    "name": "Spellcasting",
+                    "description": "The lizardfolk casts one of the following spells, requiring no Material components and using Wisdom as the spellcasting ability (spell save DC 12):",
+                },
+            ],
             bonus_actions=[],
             reactions=[],
             legendary_actions=[],
@@ -1216,12 +1745,19 @@ class LizardfolkGeomancer(ExtendedCombatantData):
 class MageApprentice(ExtendedCombatantData):
     def __init__(self):
         super().__init__(
-            name="Mage Apprentice",
+            combatant_type="Mage Apprentice",
             hp=49,
             ac=15,
             temp_hp=0,
             conditions=[],
-            ability_scores={"Str": 8, "Dex": 14, "Con": 12, "Int": 16, "Wis": 13, "Cha": 10},
+            ability_scores={
+                "Str": 8,
+                "Dex": 14,
+                "Con": 12,
+                "Int": 16,
+                "Wis": 13,
+                "Cha": 10,
+            },
             saving_throws={},
             spell_slots={},
             cr="2",
@@ -1238,9 +1774,15 @@ class MageApprentice(ExtendedCombatantData):
             languages="Common plus one other language",
             traits=[],
             actions=[
-            {"name": "Arcane Burst", "description": "Melee or Ranged Attack Roll: +5, reach 5 ft. or range 120 ft. Hit: 14 (2d10 + 3) Force damage."},
-            {"name": "Spellcasting", "description": "The mage casts one of the following spells, using Intelligence as the spellcasting ability (spell save DC 13, +5 to hit with spell attacks):"},
-        ],
+                {
+                    "name": "Arcane Burst",
+                    "description": "Melee or Ranged Attack Roll: +5, reach 5 ft. or range 120 ft. Hit: 14 (2d10 + 3) Force damage.",
+                },
+                {
+                    "name": "Spellcasting",
+                    "description": "The mage casts one of the following spells, using Intelligence as the spellcasting ability (spell save DC 13, +5 to hit with spell attacks):",
+                },
+            ],
             bonus_actions=[],
             reactions=[],
             legendary_actions=[],
@@ -1253,12 +1795,19 @@ class MageApprentice(ExtendedCombatantData):
 class Merrow(ExtendedCombatantData):
     def __init__(self):
         super().__init__(
-            name="Merrow",
+            combatant_type="Merrow",
             hp=45,
             ac=13,
             temp_hp=0,
             conditions=[],
-            ability_scores={"Str": 18, "Dex": 15, "Con": 15, "Int": 8, "Wis": 10, "Cha": 9},
+            ability_scores={
+                "Str": 18,
+                "Dex": 15,
+                "Con": 15,
+                "Int": 8,
+                "Wis": 10,
+                "Cha": 9,
+            },
             saving_throws={},
             spell_slots={},
             cr="2",
@@ -1274,14 +1823,29 @@ class Merrow(ExtendedCombatantData):
             senses="Darkvision 60 ft., Passive Perception 10",
             languages="Abyssal, Primordial (Aquan)",
             traits=[
-            {"name": "Amphibious", "description": "The merrow can breathe air and water."},
-        ],
+                {
+                    "name": "Amphibious",
+                    "description": "The merrow can breathe air and water.",
+                },
+            ],
             actions=[
-            {"name": "Multiattack", "description": "The merrow makes two attacks, using Bite, Claw, or Harpoon in any combination."},
-            {"name": "Bite", "description": "Melee Attack Roll: +6, reach 5 ft. Hit: 6 (1d4 + 4) Piercing damage, and the target has the Poisoned condition until the end of the merrow's next turn."},
-            {"name": "Claw", "description": "Melee Attack Roll: +6, reach 5 ft. Hit: 9 (2d4 + 4) Slashing damage."},
-            {"name": "Harpoon", "description": "Melee or Ranged Attack Roll: +6, reach 5 ft. or range 20/60 ft. Hit: 11 (2d6 + 4) Piercing damage. If the target is a Large or smaller creature, the merrow pulls the target up to 15 feet straight toward itself."},
-        ],
+                {
+                    "name": "Multiattack",
+                    "description": "The merrow makes two attacks, using Bite, Claw, or Harpoon in any combination.",
+                },
+                {
+                    "name": "Bite",
+                    "description": "Melee Attack Roll: +6, reach 5 ft. Hit: 6 (1d4 + 4) Piercing damage, and the target has the Poisoned condition until the end of the merrow's next turn.",
+                },
+                {
+                    "name": "Claw",
+                    "description": "Melee Attack Roll: +6, reach 5 ft. Hit: 9 (2d4 + 4) Slashing damage.",
+                },
+                {
+                    "name": "Harpoon",
+                    "description": "Melee or Ranged Attack Roll: +6, reach 5 ft. or range 20/60 ft. Hit: 11 (2d6 + 4) Piercing damage. If the target is a Large or smaller creature, the merrow pulls the target up to 15 feet straight toward itself.",
+                },
+            ],
             bonus_actions=[],
             reactions=[],
             legendary_actions=[],
@@ -1294,12 +1858,19 @@ class Merrow(ExtendedCombatantData):
 class Mimic(ExtendedCombatantData):
     def __init__(self):
         super().__init__(
-            name="Mimic",
+            combatant_type="Mimic",
             hp=58,
             ac=12,
             temp_hp=0,
             conditions=[],
-            ability_scores={"Str": 17, "Dex": 12, "Con": 15, "Int": 5, "Wis": 13, "Cha": 8},
+            ability_scores={
+                "Str": 17,
+                "Dex": 12,
+                "Con": 15,
+                "Int": 5,
+                "Wis": 13,
+                "Cha": 8,
+            },
             saving_throws={},
             spell_slots={},
             cr="2",
@@ -1315,15 +1886,27 @@ class Mimic(ExtendedCombatantData):
             senses="Darkvision 60 ft., Passive Perception 11",
             languages="None",
             traits=[
-            {"name": "Adhesive (Object Form Only)", "description": "The mimic adheres to anything that touches it. A Huge or smaller creature adhered to the mimic has the Grappled condition (escape DC 13). Ability checks made to escape this grapple have Disadvantage."},
-        ],
+                {
+                    "name": "Adhesive (Object Form Only)",
+                    "description": "The mimic adheres to anything that touches it. A Huge or smaller creature adhered to the mimic has the Grappled condition (escape DC 13). Ability checks made to escape this grapple have Disadvantage.",
+                },
+            ],
             actions=[
-            {"name": "Bite", "description": "Melee Attack Roll: +5 (with Advantage if the target is Grappled by the mimic), reach 5 ft. Hit: 7 (1d8 + 3) Piercing damage—or 12 (2d8 + 3) Piercing damage if the target is Grappled by the mimic—plus 4 (1d8) Acid damage."},
-            {"name": "Pseudopod", "description": "Melee Attack Roll: +5, reach 5 ft. Hit: 7 (1d8 + 3) Bludgeoning damage plus 4 (1d8) Acid damage. If the target is a Large or smaller creature, it has the Grappled condition (escape DC 13). Ability checks made to escape this grapple have Disadvantage."},
-        ],
+                {
+                    "name": "Bite",
+                    "description": "Melee Attack Roll: +5 (with Advantage if the target is Grappled by the mimic), reach 5 ft. Hit: 7 (1d8 + 3) Piercing damage—or 12 (2d8 + 3) Piercing damage if the target is Grappled by the mimic—plus 4 (1d8) Acid damage.",
+                },
+                {
+                    "name": "Pseudopod",
+                    "description": "Melee Attack Roll: +5, reach 5 ft. Hit: 7 (1d8 + 3) Bludgeoning damage plus 4 (1d8) Acid damage. If the target is a Large or smaller creature, it has the Grappled condition (escape DC 13). Ability checks made to escape this grapple have Disadvantage.",
+                },
+            ],
             bonus_actions=[
-            {"name": "Shape-Shift", "description": "The mimic shape-shifts to resemble a Medium or Small object while retaining its game statistics, or it returns to its true blob form. Any equipment it is wearing or carrying isn't transformed."},
-        ],
+                {
+                    "name": "Shape-Shift",
+                    "description": "The mimic shape-shifts to resemble a Medium or Small object while retaining its game statistics, or it returns to its true blob form. Any equipment it is wearing or carrying isn't transformed.",
+                },
+            ],
             reactions=[],
             legendary_actions=[],
             legendary_resistances=0,
@@ -1335,12 +1918,19 @@ class Mimic(ExtendedCombatantData):
 class MinotaurSkeleton(ExtendedCombatantData):
     def __init__(self):
         super().__init__(
-            name="Minotaur Skeleton",
+            combatant_type="Minotaur Skeleton",
             hp=45,
             ac=12,
             temp_hp=0,
             conditions=[],
-            ability_scores={"Str": 18, "Dex": 11, "Con": 15, "Int": 6, "Wis": 8, "Cha": 5},
+            ability_scores={
+                "Str": 18,
+                "Dex": 11,
+                "Con": 15,
+                "Int": 6,
+                "Wis": 8,
+                "Cha": 5,
+            },
             saving_throws={},
             spell_slots={},
             cr="2",
@@ -1357,9 +1947,15 @@ class MinotaurSkeleton(ExtendedCombatantData):
             languages="Understands Abyssal but can't speak",
             traits=[],
             actions=[
-            {"name": "Gore", "description": "Melee Attack Roll: +6, reach 5 ft. Hit: 11 (2d6 + 4) Piercing damage. If the target is a Large or smaller creature and the skeleton moved 20+ feet straight toward it immediately before the hit, the target takes an extra 9 (2d8) Piercing damage and has the Prone condition."},
-            {"name": "Slam", "description": "Melee Attack Roll: +6, reach 5 ft. Hit: 15 (2d10 + 4) Bludgeoning damage."},
-        ],
+                {
+                    "name": "Gore",
+                    "description": "Melee Attack Roll: +6, reach 5 ft. Hit: 11 (2d6 + 4) Piercing damage. If the target is a Large or smaller creature and the skeleton moved 20+ feet straight toward it immediately before the hit, the target takes an extra 9 (2d8) Piercing damage and has the Prone condition.",
+                },
+                {
+                    "name": "Slam",
+                    "description": "Melee Attack Roll: +6, reach 5 ft. Hit: 15 (2d10 + 4) Bludgeoning damage.",
+                },
+            ],
             bonus_actions=[],
             reactions=[],
             legendary_actions=[],
@@ -1372,12 +1968,19 @@ class MinotaurSkeleton(ExtendedCombatantData):
 class MyconidSovereign(ExtendedCombatantData):
     def __init__(self):
         super().__init__(
-            name="Myconid Sovereign",
+            combatant_type="Myconid Sovereign",
             hp=45,
             ac=13,
             temp_hp=0,
             conditions=[],
-            ability_scores={"Str": 12, "Dex": 10, "Con": 14, "Int": 13, "Wis": 15, "Cha": 10},
+            ability_scores={
+                "Str": 12,
+                "Dex": 10,
+                "Con": 14,
+                "Int": 13,
+                "Wis": 15,
+                "Cha": 10,
+            },
             saving_throws={},
             spell_slots={},
             cr="2",
@@ -1393,15 +1996,33 @@ class MyconidSovereign(ExtendedCombatantData):
             senses="Darkvision 120 ft., Passive Perception 12",
             languages="Telepathy 240 ft.",
             traits=[
-            {"name": "Sun Sickness", "description": "While in sunlight, the myconid has Disadvantage on D20 Tests. The myconid dies if it spends more than 1 hour in sunlight."},
-        ],
+                {
+                    "name": "Sun Sickness",
+                    "description": "While in sunlight, the myconid has Disadvantage on D20 Tests. The myconid dies if it spends more than 1 hour in sunlight.",
+                },
+            ],
             actions=[
-            {"name": "Multiattack", "description": "The myconid makes one Slam attack and uses Pacifying Spores."},
-            {"name": "Slam", "description": "Melee Attack Roll: +3, reach 5 ft. Hit: 6 (2d4 + 1) Bludgeoning damage plus 5 (2d4) Poison damage."},
-            {"name": "Animating Spores (3/Day)", "description": "The myconid releases spores at a Medium or Small corpse within 5 feet of it that wasn't a Construct or an Undead. In 24 hours, the corpse rises as a Myconid Spore Servant. The corpse stays animate for 1d4 + 1 weeks or until destroyed, and it can't be animated again in this way."},
-            {"name": "Pacifying Spores", "description": "Constitution Saving Throw: DC 12, one creature the myconid can see within 10 feet. Failure: The target has the Stunned condition and repeats the save at the end of each of its turns, ending the effect on itself on a success. After 1 minute, it succeeds automatically."},
-            {"name": "Rapport Spores", "description": "The myconid expels spores in a 30-foot Emanation originating from itself. Creatures in that area with an Intelligence score of 2 or higher that aren't Constructs, Elementals, or Undead gain telepathy with a range of 30 feet for 1 hour."},
-        ],
+                {
+                    "name": "Multiattack",
+                    "description": "The myconid makes one Slam attack and uses Pacifying Spores.",
+                },
+                {
+                    "name": "Slam",
+                    "description": "Melee Attack Roll: +3, reach 5 ft. Hit: 6 (2d4 + 1) Bludgeoning damage plus 5 (2d4) Poison damage.",
+                },
+                {
+                    "name": "Animating Spores (3/Day)",
+                    "description": "The myconid releases spores at a Medium or Small corpse within 5 feet of it that wasn't a Construct or an Undead. In 24 hours, the corpse rises as a Myconid Spore Servant. The corpse stays animate for 1d4 + 1 weeks or until destroyed, and it can't be animated again in this way.",
+                },
+                {
+                    "name": "Pacifying Spores",
+                    "description": "Constitution Saving Throw: DC 12, one creature the myconid can see within 10 feet. Failure: The target has the Stunned condition and repeats the save at the end of each of its turns, ending the effect on itself on a success. After 1 minute, it succeeds automatically.",
+                },
+                {
+                    "name": "Rapport Spores",
+                    "description": "The myconid expels spores in a 30-foot Emanation originating from itself. Creatures in that area with an Intelligence score of 2 or higher that aren't Constructs, Elementals, or Undead gain telepathy with a range of 30 feet for 1 hour.",
+                },
+            ],
             bonus_actions=[],
             reactions=[],
             legendary_actions=[],
@@ -1414,12 +2035,19 @@ class MyconidSovereign(ExtendedCombatantData):
 class Nothic(ExtendedCombatantData):
     def __init__(self):
         super().__init__(
-            name="Nothic",
+            combatant_type="Nothic",
             hp=45,
             ac=15,
             temp_hp=0,
             conditions=[],
-            ability_scores={"Str": 14, "Dex": 16, "Con": 16, "Int": 13, "Wis": 10, "Cha": 8},
+            ability_scores={
+                "Str": 14,
+                "Dex": 16,
+                "Con": 16,
+                "Int": 13,
+                "Wis": 10,
+                "Cha": 8,
+            },
             saving_throws={},
             spell_slots={},
             cr="2",
@@ -1436,13 +2064,25 @@ class Nothic(ExtendedCombatantData):
             languages="Undercommon",
             traits=[],
             actions=[
-            {"name": "Multiattack", "description": "The nothic makes two Claw attacks."},
-            {"name": "Claw", "description": "Melee Attack Roll: +5, reach 5 ft. Hit: 8 (1d10 + 3) Slashing damage."},
-            {"name": "Rotting Gaze", "description": "Constitution Saving Throw: DC 13, one creature the nothic can see within 120 feet. Failure: 17 (5d6) Necrotic damage. Success: Half damage."},
-        ],
+                {
+                    "name": "Multiattack",
+                    "description": "The nothic makes two Claw attacks.",
+                },
+                {
+                    "name": "Claw",
+                    "description": "Melee Attack Roll: +5, reach 5 ft. Hit: 8 (1d10 + 3) Slashing damage.",
+                },
+                {
+                    "name": "Rotting Gaze",
+                    "description": "Constitution Saving Throw: DC 13, one creature the nothic can see within 120 feet. Failure: 17 (5d6) Necrotic damage. Success: Half damage.",
+                },
+            ],
             bonus_actions=[
-            {"name": "Weird Insight (Recharge 6)", "description": "Wisdom Saving Throw: DC 14, one creature the nothic can see within 120 feet. Failure: The nothic magically learns one fact or secret about the target."},
-        ],
+                {
+                    "name": "Weird Insight (Recharge 6)",
+                    "description": "Wisdom Saving Throw: DC 14, one creature the nothic can see within 120 feet. Failure: The nothic magically learns one fact or secret about the target.",
+                },
+            ],
             reactions=[],
             legendary_actions=[],
             legendary_resistances=0,
@@ -1454,12 +2094,19 @@ class Nothic(ExtendedCombatantData):
 class OchreJelly(ExtendedCombatantData):
     def __init__(self):
         super().__init__(
-            name="Ochre Jelly",
+            combatant_type="Ochre Jelly",
             hp=52,
             ac=8,
             temp_hp=0,
             conditions=[],
-            ability_scores={"Str": 15, "Dex": 6, "Con": 14, "Int": 2, "Wis": 6, "Cha": 1},
+            ability_scores={
+                "Str": 15,
+                "Dex": 6,
+                "Con": 14,
+                "Int": 2,
+                "Wis": 6,
+                "Cha": 1,
+            },
             saving_throws={},
             spell_slots={},
             cr="2",
@@ -1475,13 +2122,25 @@ class OchreJelly(ExtendedCombatantData):
             senses="Blindsight 60 ft., Passive Perception 8",
             languages="None",
             traits=[
-            {"name": "Amorphous", "description": "The jelly can move through a space as narrow as 1 inch without expending extra movement to do so."},
-            {"name": "Spider Climb", "description": "The jelly can climb difficult surfaces, including along ceilings, without needing to make an ability check."},
-        ],
+                {
+                    "name": "Amorphous",
+                    "description": "The jelly can move through a space as narrow as 1 inch without expending extra movement to do so.",
+                },
+                {
+                    "name": "Spider Climb",
+                    "description": "The jelly can climb difficult surfaces, including along ceilings, without needing to make an ability check.",
+                },
+            ],
             actions=[
-            {"name": "Pseudopod", "description": "Melee Attack Roll: +4, reach 5 ft. Hit: 12 (3d6 + 2) Acid damage."},
-            {"name": "Split", "description": "Trigger: While the jelly is Large or Medium and has 10+ Hit Points, it becomes Bloodied or is subjected to Lightning or Slashing damage. Response: The jelly splits into two new Ochre Jellies. Each new jelly is one size smaller than the original jelly and acts on its Initiative. The original jelly's Hit Points are divided evenly between the new jellies (round down)."},
-        ],
+                {
+                    "name": "Pseudopod",
+                    "description": "Melee Attack Roll: +4, reach 5 ft. Hit: 12 (3d6 + 2) Acid damage.",
+                },
+                {
+                    "name": "Split",
+                    "description": "Trigger: While the jelly is Large or Medium and has 10+ Hit Points, it becomes Bloodied or is subjected to Lightning or Slashing damage. Response: The jelly splits into two new Ochre Jellies. Each new jelly is one size smaller than the original jelly and acts on its Initiative. The original jelly's Hit Points are divided evenly between the new jellies (round down).",
+                },
+            ],
             bonus_actions=[],
             reactions=[],
             legendary_actions=[],
@@ -1494,12 +2153,19 @@ class OchreJelly(ExtendedCombatantData):
 class Ogre(ExtendedCombatantData):
     def __init__(self):
         super().__init__(
-            name="Ogre",
+            combatant_type="Ogre",
             hp=68,
             ac=11,
             temp_hp=0,
             conditions=[],
-            ability_scores={"Str": 19, "Dex": 8, "Con": 16, "Int": 5, "Wis": 7, "Cha": 7},
+            ability_scores={
+                "Str": 19,
+                "Dex": 8,
+                "Con": 16,
+                "Int": 5,
+                "Wis": 7,
+                "Cha": 7,
+            },
             saving_throws={},
             spell_slots={},
             cr="2",
@@ -1516,9 +2182,15 @@ class Ogre(ExtendedCombatantData):
             languages="Common, Giant",
             traits=[],
             actions=[
-            {"name": "Greatclub", "description": "Melee Attack Roll: +6, reach 5 ft. Hit: 13 (2d8 + 4) Bludgeoning damage."},
-            {"name": "Javelin", "description": "Melee or Ranged Attack Roll: +6, reach 5 ft. or range 30/120 ft. Hit: 11 (2d6 + 4) Piercing damage."},
-        ],
+                {
+                    "name": "Greatclub",
+                    "description": "Melee Attack Roll: +6, reach 5 ft. Hit: 13 (2d8 + 4) Bludgeoning damage.",
+                },
+                {
+                    "name": "Javelin",
+                    "description": "Melee or Ranged Attack Roll: +6, reach 5 ft. or range 30/120 ft. Hit: 11 (2d6 + 4) Piercing damage.",
+                },
+            ],
             bonus_actions=[],
             reactions=[],
             legendary_actions=[],
@@ -1531,12 +2203,19 @@ class Ogre(ExtendedCombatantData):
 class OgreZombie(ExtendedCombatantData):
     def __init__(self):
         super().__init__(
-            name="Ogre Zombie",
+            combatant_type="Ogre Zombie",
             hp=85,
             ac=8,
             temp_hp=0,
             conditions=[],
-            ability_scores={"Str": 19, "Dex": 6, "Con": 18, "Int": 3, "Wis": 6, "Cha": 5},
+            ability_scores={
+                "Str": 19,
+                "Dex": 6,
+                "Con": 18,
+                "Int": 3,
+                "Wis": 6,
+                "Cha": 5,
+            },
             saving_throws={},
             spell_slots={},
             cr="2",
@@ -1552,11 +2231,17 @@ class OgreZombie(ExtendedCombatantData):
             senses="Darkvision 60 ft., Passive Perception 8",
             languages="Understands Common and Giant but can't speak",
             traits=[
-            {"name": "Undead Fortitude", "description": "If damage reduces the zombie to 0 Hit Points, it makes a Constitution saving throw (DC 5 plus the damage taken) unless the damage is Radiant or from a Critical Hit. On a successful save, the zombie drops to 1 Hit Point instead."},
-        ],
+                {
+                    "name": "Undead Fortitude",
+                    "description": "If damage reduces the zombie to 0 Hit Points, it makes a Constitution saving throw (DC 5 plus the damage taken) unless the damage is Radiant or from a Critical Hit. On a successful save, the zombie drops to 1 Hit Point instead.",
+                },
+            ],
             actions=[
-            {"name": "Slam", "description": "Melee Attack Roll: +6, reach 5 ft. Hit: 13 (2d8 + 4) Bludgeoning damage."},
-        ],
+                {
+                    "name": "Slam",
+                    "description": "Melee Attack Roll: +6, reach 5 ft. Hit: 13 (2d8 + 4) Bludgeoning damage.",
+                },
+            ],
             bonus_actions=[],
             reactions=[],
             legendary_actions=[],
@@ -1569,12 +2254,19 @@ class OgreZombie(ExtendedCombatantData):
 class Pegasus(ExtendedCombatantData):
     def __init__(self):
         super().__init__(
-            name="Pegasus",
+            combatant_type="Pegasus",
             hp=59,
             ac=12,
             temp_hp=0,
             conditions=[],
-            ability_scores={"Str": 18, "Dex": 15, "Con": 16, "Int": 10, "Wis": 15, "Cha": 13},
+            ability_scores={
+                "Str": 18,
+                "Dex": 15,
+                "Con": 16,
+                "Int": 10,
+                "Wis": 15,
+                "Cha": 13,
+            },
             saving_throws={},
             spell_slots={},
             cr="2",
@@ -1591,8 +2283,11 @@ class Pegasus(ExtendedCombatantData):
             languages="Understands Celestial, Common, Elvish, and Sylvan but can't speak",
             traits=[],
             actions=[
-            {"name": "Hooves", "description": "Melee Attack Roll: +6, reach 5 ft. Hit: 7 (1d6 + 4) Bludgeoning damage plus 5 (2d4) Radiant damage."},
-        ],
+                {
+                    "name": "Hooves",
+                    "description": "Melee Attack Roll: +6, reach 5 ft. Hit: 7 (1d6 + 4) Bludgeoning damage plus 5 (2d4) Radiant damage.",
+                },
+            ],
             bonus_actions=[],
             reactions=[],
             legendary_actions=[],
@@ -1605,12 +2300,19 @@ class Pegasus(ExtendedCombatantData):
 class Peryton(ExtendedCombatantData):
     def __init__(self):
         super().__init__(
-            name="Peryton",
+            combatant_type="Peryton",
             hp=33,
             ac=13,
             temp_hp=0,
             conditions=[],
-            ability_scores={"Str": 16, "Dex": 12, "Con": 13, "Int": 9, "Wis": 12, "Cha": 10},
+            ability_scores={
+                "Str": 16,
+                "Dex": 12,
+                "Con": 13,
+                "Int": 9,
+                "Wis": 12,
+                "Cha": 10,
+            },
             saving_throws={},
             spell_slots={},
             cr="2",
@@ -1626,13 +2328,25 @@ class Peryton(ExtendedCombatantData):
             senses="Passive Perception 15",
             languages="Understands Common and Elvish but can't speak",
             traits=[
-            {"name": "Flyby", "description": "The peryton doesn't provoke an Opportunity Attack when it flies out of an enemy's reach."},
-        ],
+                {
+                    "name": "Flyby",
+                    "description": "The peryton doesn't provoke an Opportunity Attack when it flies out of an enemy's reach.",
+                },
+            ],
             actions=[
-            {"name": "Multiattack", "description": "The peryton makes one Gore attack and one Talons attack."},
-            {"name": "Gore", "description": "Melee Attack Roll: +5, reach 5 ft. Hit: 7 (1d8 + 3) Piercing damage. If the peryton moved 30+ feet straight toward the target immediately before the hit, the target takes an extra 9 (2d8) Piercing damage."},
-            {"name": "Talons", "description": "Melee Attack Roll: +5, reach 5 ft. Hit: 8 (2d4 + 3) Piercing damage. If the attack reduces a Humanoid target to 0 Hit Points, the peryton kills the target by removing its heart."},
-        ],
+                {
+                    "name": "Multiattack",
+                    "description": "The peryton makes one Gore attack and one Talons attack.",
+                },
+                {
+                    "name": "Gore",
+                    "description": "Melee Attack Roll: +5, reach 5 ft. Hit: 7 (1d8 + 3) Piercing damage. If the peryton moved 30+ feet straight toward the target immediately before the hit, the target takes an extra 9 (2d8) Piercing damage.",
+                },
+                {
+                    "name": "Talons",
+                    "description": "Melee Attack Roll: +5, reach 5 ft. Hit: 8 (2d4 + 3) Piercing damage. If the attack reduces a Humanoid target to 0 Hit Points, the peryton kills the target by removing its heart.",
+                },
+            ],
             bonus_actions=[],
             reactions=[],
             legendary_actions=[],
@@ -1645,12 +2359,19 @@ class Peryton(ExtendedCombatantData):
 class Plesiosaurus(ExtendedCombatantData):
     def __init__(self):
         super().__init__(
-            name="Plesiosaurus",
+            combatant_type="Plesiosaurus",
             hp=68,
             ac=13,
             temp_hp=0,
             conditions=[],
-            ability_scores={"Str": 18, "Dex": 15, "Con": 16, "Int": 2, "Wis": 12, "Cha": 5},
+            ability_scores={
+                "Str": 18,
+                "Dex": 15,
+                "Con": 16,
+                "Int": 2,
+                "Wis": 12,
+                "Cha": 5,
+            },
             saving_throws={},
             spell_slots={},
             cr="2",
@@ -1666,11 +2387,17 @@ class Plesiosaurus(ExtendedCombatantData):
             senses="Passive Perception 13",
             languages="None",
             traits=[
-            {"name": "Hold Breath", "description": "The plesiosaurus can hold its breath for 1 hour."},
-        ],
+                {
+                    "name": "Hold Breath",
+                    "description": "The plesiosaurus can hold its breath for 1 hour.",
+                },
+            ],
             actions=[
-            {"name": "Bite", "description": "Melee Attack Roll: +6, reach 10 ft. Hit: 11 (2d6 + 4) Piercing damage."},
-        ],
+                {
+                    "name": "Bite",
+                    "description": "Melee Attack Roll: +6, reach 10 ft. Hit: 11 (2d6 + 4) Piercing damage.",
+                },
+            ],
             bonus_actions=[],
             reactions=[],
             legendary_actions=[],
@@ -1683,12 +2410,19 @@ class Plesiosaurus(ExtendedCombatantData):
 class PolarBear(ExtendedCombatantData):
     def __init__(self):
         super().__init__(
-            name="Polar Bear",
+            combatant_type="Polar Bear",
             hp=42,
             ac=12,
             temp_hp=0,
             conditions=[],
-            ability_scores={"Str": 20, "Dex": 14, "Con": 16, "Int": 2, "Wis": 13, "Cha": 7},
+            ability_scores={
+                "Str": 20,
+                "Dex": 14,
+                "Con": 16,
+                "Int": 2,
+                "Wis": 13,
+                "Cha": 7,
+            },
             saving_throws={},
             spell_slots={},
             cr="2",
@@ -1705,9 +2439,15 @@ class PolarBear(ExtendedCombatantData):
             languages="None",
             traits=[],
             actions=[
-            {"name": "Multiattack", "description": "The bear makes two Rend attacks."},
-            {"name": "Rend", "description": "Melee Attack Roll: +7, reach 5 ft. Hit: 9 (1d8 + 5) Slashing damage."},
-        ],
+                {
+                    "name": "Multiattack",
+                    "description": "The bear makes two Rend attacks.",
+                },
+                {
+                    "name": "Rend",
+                    "description": "Melee Attack Roll: +7, reach 5 ft. Hit: 9 (1d8 + 5) Slashing damage.",
+                },
+            ],
             bonus_actions=[],
             reactions=[],
             legendary_actions=[],
@@ -1720,12 +2460,19 @@ class PolarBear(ExtendedCombatantData):
 class Poltergeist(ExtendedCombatantData):
     def __init__(self):
         super().__init__(
-            name="Poltergeist",
+            combatant_type="Poltergeist",
             hp=22,
             ac=12,
             temp_hp=0,
             conditions=[],
-            ability_scores={"Str": 1, "Dex": 14, "Con": 11, "Int": 10, "Wis": 10, "Cha": 14},
+            ability_scores={
+                "Str": 1,
+                "Dex": 14,
+                "Con": 11,
+                "Int": 10,
+                "Wis": 10,
+                "Cha": 14,
+            },
             saving_throws={},
             spell_slots={},
             cr="2",
@@ -1741,16 +2488,31 @@ class Poltergeist(ExtendedCombatantData):
             senses="Darkvision 60 ft., Passive Perception 10",
             languages="Common plus one other language",
             traits=[
-            {"name": "Incorporeal Movement", "description": "The poltergeist can move through other creatures and objects as if they were Difficult Terrain. It takes 5 (1d10) Force damage if it ends its turn inside an object."},
-        ],
+                {
+                    "name": "Incorporeal Movement",
+                    "description": "The poltergeist can move through other creatures and objects as if they were Difficult Terrain. It takes 5 (1d10) Force damage if it ends its turn inside an object.",
+                },
+            ],
             actions=[
-            {"name": "Multiattack", "description": "The poltergeist makes one Object Slam attack and uses Telekinetic Thrust."},
-            {"name": "Object Slam", "description": "Melee or Ranged Attack Roll: +4, reach 5 ft. or range 30 ft. Hit: 7 (2d4 + 2) Bludgeoning damage."},
-            {"name": "Telekinetic Thrust", "description": "Strength Saving Throw: DC 12, one creature the poltergeist can see within 30 feet. Failure: 9 (2d6 + 2) Force damage, and the target is pushed up to 30 feet straight away from the poltergeist."},
-        ],
+                {
+                    "name": "Multiattack",
+                    "description": "The poltergeist makes one Object Slam attack and uses Telekinetic Thrust.",
+                },
+                {
+                    "name": "Object Slam",
+                    "description": "Melee or Ranged Attack Roll: +4, reach 5 ft. or range 30 ft. Hit: 7 (2d4 + 2) Bludgeoning damage.",
+                },
+                {
+                    "name": "Telekinetic Thrust",
+                    "description": "Strength Saving Throw: DC 12, one creature the poltergeist can see within 30 feet. Failure: 9 (2d6 + 2) Force damage, and the target is pushed up to 30 feet straight away from the poltergeist.",
+                },
+            ],
             bonus_actions=[
-            {"name": "Vanish", "description": "The poltergeist gives itself the Invisible condition or ends that condition on itself."},
-        ],
+                {
+                    "name": "Vanish",
+                    "description": "The poltergeist gives itself the Invisible condition or ends that condition on itself.",
+                },
+            ],
             reactions=[],
             legendary_actions=[],
             legendary_resistances=0,
@@ -1762,12 +2524,19 @@ class Poltergeist(ExtendedCombatantData):
 class Priest(ExtendedCombatantData):
     def __init__(self):
         super().__init__(
-            name="Priest",
+            combatant_type="Priest",
             hp=38,
             ac=13,
             temp_hp=0,
             conditions=[],
-            ability_scores={"Str": 16, "Dex": 10, "Con": 12, "Int": 13, "Wis": 16, "Cha": 13},
+            ability_scores={
+                "Str": 16,
+                "Dex": 10,
+                "Con": 12,
+                "Int": 13,
+                "Wis": 16,
+                "Cha": 13,
+            },
             saving_throws={},
             spell_slots={},
             cr="2",
@@ -1784,14 +2553,29 @@ class Priest(ExtendedCombatantData):
             languages="Common plus one other language",
             traits=[],
             actions=[
-            {"name": "Multiattack", "description": "The priest makes two attacks, using Mace or Radiant Flame in any combination."},
-            {"name": "Mace", "description": "Melee Attack Roll: +5, reach 5 ft. Hit: 6 (1d6 + 3) Bludgeoning damage plus 5 (2d4) Radiant damage."},
-            {"name": "Radiant Flame", "description": "Ranged Attack Roll: +5, range 60 ft. Hit: 11 (2d10) Radiant damage."},
-            {"name": "Spellcasting", "description": "The priest casts one of the following spells, using Wisdom as the spellcasting ability:"},
-        ],
+                {
+                    "name": "Multiattack",
+                    "description": "The priest makes two attacks, using Mace or Radiant Flame in any combination.",
+                },
+                {
+                    "name": "Mace",
+                    "description": "Melee Attack Roll: +5, reach 5 ft. Hit: 6 (1d6 + 3) Bludgeoning damage plus 5 (2d4) Radiant damage.",
+                },
+                {
+                    "name": "Radiant Flame",
+                    "description": "Ranged Attack Roll: +5, range 60 ft. Hit: 11 (2d10) Radiant damage.",
+                },
+                {
+                    "name": "Spellcasting",
+                    "description": "The priest casts one of the following spells, using Wisdom as the spellcasting ability:",
+                },
+            ],
             bonus_actions=[
-            {"name": "Divine Aid (3/Day)", "description": "The priest casts Bless, Dispel Magic, Healing Word, or Lesser Restoration, using the same spellcasting ability as Spellcasting."},
-        ],
+                {
+                    "name": "Divine Aid (3/Day)",
+                    "description": "The priest casts Bless, Dispel Magic, Healing Word, or Lesser Restoration, using the same spellcasting ability as Spellcasting.",
+                },
+            ],
             reactions=[],
             legendary_actions=[],
             legendary_resistances=0,
@@ -1803,12 +2587,19 @@ class Priest(ExtendedCombatantData):
 class Quaggoth(ExtendedCombatantData):
     def __init__(self):
         super().__init__(
-            name="Quaggoth",
+            combatant_type="Quaggoth",
             hp=45,
             ac=13,
             temp_hp=0,
             conditions=[],
-            ability_scores={"Str": 17, "Dex": 12, "Con": 16, "Int": 6, "Wis": 12, "Cha": 7},
+            ability_scores={
+                "Str": 17,
+                "Dex": 12,
+                "Con": 16,
+                "Int": 6,
+                "Wis": 12,
+                "Cha": 7,
+            },
             saving_throws={},
             spell_slots={},
             cr="2",
@@ -1824,12 +2615,21 @@ class Quaggoth(ExtendedCombatantData):
             senses="Darkvision 120 ft., Passive Perception 11",
             languages="Undercommon",
             traits=[
-            {"name": "Bloodied Fury", "description": "While Bloodied, the quaggoth has Advantage on attack rolls."},
-        ],
+                {
+                    "name": "Bloodied Fury",
+                    "description": "While Bloodied, the quaggoth has Advantage on attack rolls.",
+                },
+            ],
             actions=[
-            {"name": "Multiattack", "description": "The quaggoth makes two Claw attacks."},
-            {"name": "Claw", "description": "Melee Attack Roll: +5, reach 5 ft. Hit: 6 (1d6 + 3) Slashing damage, or 13 (3d6 + 3) Slashing damage if the quaggoth is Bloodied."},
-        ],
+                {
+                    "name": "Multiattack",
+                    "description": "The quaggoth makes two Claw attacks.",
+                },
+                {
+                    "name": "Claw",
+                    "description": "Melee Attack Roll: +5, reach 5 ft. Hit: 6 (1d6 + 3) Slashing damage, or 13 (3d6 + 3) Slashing damage if the quaggoth is Bloodied.",
+                },
+            ],
             bonus_actions=[],
             reactions=[],
             legendary_actions=[],
@@ -1842,12 +2642,19 @@ class Quaggoth(ExtendedCombatantData):
 class Rhinoceros(ExtendedCombatantData):
     def __init__(self):
         super().__init__(
-            name="Rhinoceros",
+            combatant_type="Rhinoceros",
             hp=45,
             ac=13,
             temp_hp=0,
             conditions=[],
-            ability_scores={"Str": 21, "Dex": 8, "Con": 15, "Int": 2, "Wis": 12, "Cha": 6},
+            ability_scores={
+                "Str": 21,
+                "Dex": 8,
+                "Con": 15,
+                "Int": 2,
+                "Wis": 12,
+                "Cha": 6,
+            },
             saving_throws={},
             spell_slots={},
             cr="2",
@@ -1864,8 +2671,11 @@ class Rhinoceros(ExtendedCombatantData):
             languages="None",
             traits=[],
             actions=[
-            {"name": "Gore", "description": "Melee Attack Roll: +7, reach 5 ft. Hit: 14 (2d8 + 5) Piercing damage. If target is a Large or smaller creature and the rhinoceros moved 20+ feet straight toward it immediately before the hit, the target takes an extra 9 (2d8) Piercing damage and has the Prone condition."},
-        ],
+                {
+                    "name": "Gore",
+                    "description": "Melee Attack Roll: +7, reach 5 ft. Hit: 14 (2d8 + 5) Piercing damage. If target is a Large or smaller creature and the rhinoceros moved 20+ feet straight toward it immediately before the hit, the target takes an extra 9 (2d8) Piercing damage and has the Prone condition.",
+                },
+            ],
             bonus_actions=[],
             reactions=[],
             legendary_actions=[],
@@ -1878,12 +2688,19 @@ class Rhinoceros(ExtendedCombatantData):
 class SabertoothedTiger(ExtendedCombatantData):
     def __init__(self):
         super().__init__(
-            name="Saber-Toothed Tiger",
+            combatant_type="Saber-Toothed Tiger",
             hp=52,
             ac=13,
             temp_hp=0,
             conditions=[],
-            ability_scores={"Str": 18, "Dex": 17, "Con": 15, "Int": 3, "Wis": 12, "Cha": 8},
+            ability_scores={
+                "Str": 18,
+                "Dex": 17,
+                "Con": 15,
+                "Int": 3,
+                "Wis": 12,
+                "Cha": 8,
+            },
             saving_throws={},
             spell_slots={},
             cr="2",
@@ -1899,15 +2716,27 @@ class SabertoothedTiger(ExtendedCombatantData):
             senses="Darkvision 60 ft., Passive Perception 15",
             languages="None",
             traits=[
-            {"name": "Running Leap", "description": "With a 10-foot running start, the tiger can Long Jump up to 25 feet."},
-        ],
+                {
+                    "name": "Running Leap",
+                    "description": "With a 10-foot running start, the tiger can Long Jump up to 25 feet.",
+                },
+            ],
             actions=[
-            {"name": "Multiattack", "description": "The tiger makes two Rend attacks."},
-            {"name": "Rend", "description": "Melee Attack Roll: +6, reach 5 ft. Hit: 11 (2d6 + 4) Slashing damage."},
-        ],
+                {
+                    "name": "Multiattack",
+                    "description": "The tiger makes two Rend attacks.",
+                },
+                {
+                    "name": "Rend",
+                    "description": "Melee Attack Roll: +6, reach 5 ft. Hit: 11 (2d6 + 4) Slashing damage.",
+                },
+            ],
             bonus_actions=[
-            {"name": "Nimble Escape", "description": "The tiger takes the Disengage or Hide action."},
-        ],
+                {
+                    "name": "Nimble Escape",
+                    "description": "The tiger takes the Disengage or Hide action.",
+                },
+            ],
             reactions=[],
             legendary_actions=[],
             legendary_resistances=0,
@@ -1919,12 +2748,19 @@ class SabertoothedTiger(ExtendedCombatantData):
 class SahuaginPriest(ExtendedCombatantData):
     def __init__(self):
         super().__init__(
-            name="Sahuagin Priest",
+            combatant_type="Sahuagin Priest",
             hp=38,
             ac=12,
             temp_hp=0,
             conditions=[],
-            ability_scores={"Str": 13, "Dex": 11, "Con": 12, "Int": 12, "Wis": 14, "Cha": 13},
+            ability_scores={
+                "Str": 13,
+                "Dex": 11,
+                "Con": 12,
+                "Int": 12,
+                "Wis": 14,
+                "Cha": 13,
+            },
             saving_throws={},
             spell_slots={},
             cr="2",
@@ -1940,18 +2776,39 @@ class SahuaginPriest(ExtendedCombatantData):
             senses="Darkvision 120 ft., Passive Perception 16",
             languages="Sahuagin",
             traits=[
-            {"name": "Blood Frenzy", "description": "The sahuagin has Advantage on attack rolls against any creature that doesn't have all its Hit Points."},
-            {"name": "Limited Amphibiousness", "description": "The sahuagin can breathe air and water, but it must be submerged at least once every 4 hours to avoid suffocating outside water."},
-            {"name": "Shark Telepathy", "description": "The sahuagin can magically control sharks within 120 feet of itself, using a special telepathy."},
-        ],
+                {
+                    "name": "Blood Frenzy",
+                    "description": "The sahuagin has Advantage on attack rolls against any creature that doesn't have all its Hit Points.",
+                },
+                {
+                    "name": "Limited Amphibiousness",
+                    "description": "The sahuagin can breathe air and water, but it must be submerged at least once every 4 hours to avoid suffocating outside water.",
+                },
+                {
+                    "name": "Shark Telepathy",
+                    "description": "The sahuagin can magically control sharks within 120 feet of itself, using a special telepathy.",
+                },
+            ],
             actions=[
-            {"name": "Multiattack", "description": "The sahuagin makes two Spectral Jaws attacks."},
-            {"name": "Spectral Jaws", "description": "Melee or Ranged Attack Roll: +4, reach 5 ft. or range 120 ft. Hit: 11 (2d8 + 2) Force damage."},
-            {"name": "Spellcasting", "description": "The sahuagin casts one of the following spells, requiring no Material components and using Wisdom as the spellcasting ability (spell save DC 12):"},
-        ],
+                {
+                    "name": "Multiattack",
+                    "description": "The sahuagin makes two Spectral Jaws attacks.",
+                },
+                {
+                    "name": "Spectral Jaws",
+                    "description": "Melee or Ranged Attack Roll: +4, reach 5 ft. or range 120 ft. Hit: 11 (2d8 + 2) Force damage.",
+                },
+                {
+                    "name": "Spellcasting",
+                    "description": "The sahuagin casts one of the following spells, requiring no Material components and using Wisdom as the spellcasting ability (spell save DC 12):",
+                },
+            ],
             bonus_actions=[
-            {"name": "Fiendish Aid (2/Day)", "description": "The sahuagin casts Bless or Healing Word, using the same spellcasting ability as Spellcasting."},
-        ],
+                {
+                    "name": "Fiendish Aid (2/Day)",
+                    "description": "The sahuagin casts Bless or Healing Word, using the same spellcasting ability as Spellcasting.",
+                },
+            ],
             reactions=[],
             legendary_actions=[],
             legendary_resistances=0,
@@ -1963,12 +2820,19 @@ class SahuaginPriest(ExtendedCombatantData):
 class SeaHag(ExtendedCombatantData):
     def __init__(self):
         super().__init__(
-            name="Sea Hag",
+            combatant_type="Sea Hag",
             hp=52,
             ac=14,
             temp_hp=0,
             conditions=[],
-            ability_scores={"Str": 16, "Dex": 13, "Con": 16, "Int": 12, "Wis": 12, "Cha": 13},
+            ability_scores={
+                "Str": 16,
+                "Dex": 13,
+                "Con": 16,
+                "Int": 12,
+                "Wis": 12,
+                "Cha": 13,
+            },
             saving_throws={},
             spell_slots={},
             cr="2",
@@ -1984,15 +2848,33 @@ class SeaHag(ExtendedCombatantData):
             senses="Darkvision 60 ft., Passive Perception 11",
             languages="Common, Giant, Primordial (Aquan)",
             traits=[
-            {"name": "Amphibious", "description": "The hag can breathe air and water."},
-            {"name": "Coven Magic", "description": "While within 30 feet of at least two hag allies, the hag can cast one of the following spells, requiring no Material components, using the spell's normal casting time, and using Intelligence as the spellcasting ability (spell save DC 11): Augury, Find Familiar, Identify, Locate Object, Scrying, or Unseen Servant. The hag must finish a Long Rest before using this trait to cast that spell again."},
-            {"name": "Vile Appearance", "description": "Wisdom Saving Throw: DC 11, any Beast or Humanoid that starts its turn within 30 feet of the hag and can see the hag's true form. Failure: The target has the Frightened condition until the start of its next turn. Success: The target is immune to this hag's Vile Appearance for 24 hours."},
-        ],
+                {
+                    "name": "Amphibious",
+                    "description": "The hag can breathe air and water.",
+                },
+                {
+                    "name": "Coven Magic",
+                    "description": "While within 30 feet of at least two hag allies, the hag can cast one of the following spells, requiring no Material components, using the spell's normal casting time, and using Intelligence as the spellcasting ability (spell save DC 11): Augury, Find Familiar, Identify, Locate Object, Scrying, or Unseen Servant. The hag must finish a Long Rest before using this trait to cast that spell again.",
+                },
+                {
+                    "name": "Vile Appearance",
+                    "description": "Wisdom Saving Throw: DC 11, any Beast or Humanoid that starts its turn within 30 feet of the hag and can see the hag's true form. Failure: The target has the Frightened condition until the start of its next turn. Success: The target is immune to this hag's Vile Appearance for 24 hours.",
+                },
+            ],
             actions=[
-            {"name": "Claw", "description": "Melee Attack Roll: +5, reach 5 ft. Hit: 10 (2d6 + 3) Slashing damage."},
-            {"name": "Death Glare (Recharge 5–6)", "description": "Wisdom Saving Throw: DC 11, one Frightened creature the hag can see within 30 feet. Failure: If the target has 20 Hit Points or fewer, it drops to 0 Hit Points. Otherwise, the target takes 13 (3d8) Psychic damage."},
-            {"name": "Illusory Appearance", "description": "The hag casts Disguise Self, using Constitution as the spellcasting ability (spell save DC 13). The spell's duration is 24 hours."},
-        ],
+                {
+                    "name": "Claw",
+                    "description": "Melee Attack Roll: +5, reach 5 ft. Hit: 10 (2d6 + 3) Slashing damage.",
+                },
+                {
+                    "name": "Death Glare (Recharge 5–6)",
+                    "description": "Wisdom Saving Throw: DC 11, one Frightened creature the hag can see within 30 feet. Failure: If the target has 20 Hit Points or fewer, it drops to 0 Hit Points. Otherwise, the target takes 13 (3d8) Psychic damage.",
+                },
+                {
+                    "name": "Illusory Appearance",
+                    "description": "The hag casts Disguise Self, using Constitution as the spellcasting ability (spell save DC 13). The spell's duration is 24 hours.",
+                },
+            ],
             bonus_actions=[],
             reactions=[],
             legendary_actions=[],
@@ -2005,12 +2887,19 @@ class SeaHag(ExtendedCombatantData):
 class SilverDragonWyrmling(ExtendedCombatantData):
     def __init__(self):
         super().__init__(
-            name="Silver Dragon Wyrmling",
+            combatant_type="Silver Dragon Wyrmling",
             hp=45,
             ac=17,
             temp_hp=0,
             conditions=[],
-            ability_scores={"Str": 19, "Dex": 10, "Con": 17, "Int": 12, "Wis": 11, "Cha": 15},
+            ability_scores={
+                "Str": 19,
+                "Dex": 10,
+                "Con": 17,
+                "Int": 12,
+                "Wis": 11,
+                "Cha": 15,
+            },
             saving_throws={},
             spell_slots={},
             cr="2",
@@ -2027,11 +2916,23 @@ class SilverDragonWyrmling(ExtendedCombatantData):
             languages="Draconic",
             traits=[],
             actions=[
-            {"name": "Multiattack", "description": "The dragon makes two Rend attacks."},
-            {"name": "Rend", "description": "Melee Attack Roll: +6, reach 5 ft. Hit: 9 (1d10 + 4) Piercing damage."},
-            {"name": "Cold Breath (Recharge 5–6)", "description": "Constitution Saving Throw: DC 13, each creature in a 15-foot Cone. Failure: 18 (4d8) Cold damage. Success: Half damage."},
-            {"name": "Paralyzing Breath", "description": "Constitution Saving Throw: DC 13, each creature in a 15-foot Cone. First Failure: The target has the Incapacitated condition until the end of its next turn, when it repeats the save. Second Failure: The target has the Paralyzed condition, and it repeats the save at the end of each of its turns, ending the effect on itself on a success. After 1 minute, it succeeds automatically."},
-        ],
+                {
+                    "name": "Multiattack",
+                    "description": "The dragon makes two Rend attacks.",
+                },
+                {
+                    "name": "Rend",
+                    "description": "Melee Attack Roll: +6, reach 5 ft. Hit: 9 (1d10 + 4) Piercing damage.",
+                },
+                {
+                    "name": "Cold Breath (Recharge 5–6)",
+                    "description": "Constitution Saving Throw: DC 13, each creature in a 15-foot Cone. Failure: 18 (4d8) Cold damage. Success: Half damage.",
+                },
+                {
+                    "name": "Paralyzing Breath",
+                    "description": "Constitution Saving Throw: DC 13, each creature in a 15-foot Cone. First Failure: The target has the Incapacitated condition until the end of its next turn, when it repeats the save. Second Failure: The target has the Paralyzed condition, and it repeats the save at the end of each of its turns, ending the effect on itself on a success. After 1 minute, it succeeds automatically.",
+                },
+            ],
             bonus_actions=[],
             reactions=[],
             legendary_actions=[],
@@ -2044,12 +2945,19 @@ class SilverDragonWyrmling(ExtendedCombatantData):
 class SpinedDevil(ExtendedCombatantData):
     def __init__(self):
         super().__init__(
-            name="Spined Devil",
+            combatant_type="Spined Devil",
             hp=45,
             ac=13,
             temp_hp=0,
             conditions=[],
-            ability_scores={"Str": 10, "Dex": 15, "Con": 12, "Int": 11, "Wis": 14, "Cha": 8},
+            ability_scores={
+                "Str": 10,
+                "Dex": 15,
+                "Con": 12,
+                "Int": 11,
+                "Wis": 14,
+                "Cha": 8,
+            },
             saving_throws={},
             spell_slots={},
             cr="2",
@@ -2065,14 +2973,29 @@ class SpinedDevil(ExtendedCombatantData):
             senses="Darkvision 120 ft. (unimpeded by magical Darkness), Passive Perception 12",
             languages="Infernal; telepathy 120 ft.",
             traits=[
-            {"name": "Flyby", "description": "The devil doesn't provoke an Opportunity Attack when it flies out of an enemy's reach."},
-            {"name": "Magic Resistance", "description": "The devil has Advantage on saving throws against spells and other magical effects."},
-        ],
+                {
+                    "name": "Flyby",
+                    "description": "The devil doesn't provoke an Opportunity Attack when it flies out of an enemy's reach.",
+                },
+                {
+                    "name": "Magic Resistance",
+                    "description": "The devil has Advantage on saving throws against spells and other magical effects.",
+                },
+            ],
             actions=[
-            {"name": "Multiattack", "description": "The devil makes two attacks, using Infernal Fork and Tail Spine in any combination."},
-            {"name": "Infernal Fork", "description": "Melee Attack Roll: +4, reach 5 ft. Hit: 5 (1d6 + 2) Piercing damage plus 3 (1d6) Fire damage."},
-            {"name": "Tail Spine", "description": "Ranged Attack Roll: +4, range 20/80 ft. Hit: 4 (1d4 + 2) Piercing damage plus 3 (1d6) Fire damage."},
-        ],
+                {
+                    "name": "Multiattack",
+                    "description": "The devil makes two attacks, using Infernal Fork and Tail Spine in any combination.",
+                },
+                {
+                    "name": "Infernal Fork",
+                    "description": "Melee Attack Roll: +4, reach 5 ft. Hit: 5 (1d6 + 2) Piercing damage plus 3 (1d6) Fire damage.",
+                },
+                {
+                    "name": "Tail Spine",
+                    "description": "Ranged Attack Roll: +4, range 20/80 ft. Hit: 4 (1d4 + 2) Piercing damage plus 3 (1d6) Fire damage.",
+                },
+            ],
             bonus_actions=[],
             reactions=[],
             legendary_actions=[],
@@ -2085,12 +3008,19 @@ class SpinedDevil(ExtendedCombatantData):
 class SwarmOfStirges(ExtendedCombatantData):
     def __init__(self):
         super().__init__(
-            name="Swarm of Stirges",
+            combatant_type="Swarm of Stirges",
             hp=36,
             ac=14,
             temp_hp=0,
             conditions=[],
-            ability_scores={"Str": 4, "Dex": 16, "Con": 11, "Int": 2, "Wis": 8, "Cha": 6},
+            ability_scores={
+                "Str": 4,
+                "Dex": 16,
+                "Con": 11,
+                "Int": 2,
+                "Wis": 8,
+                "Cha": 6,
+            },
             saving_throws={},
             spell_slots={},
             cr="2",
@@ -2106,11 +3036,17 @@ class SwarmOfStirges(ExtendedCombatantData):
             senses="Darkvision 60 ft., Passive Perception 9",
             languages="—",
             traits=[
-            {"name": "Swarm", "description": "The swarm can occupy another creature's space and vice versa, and the swarm can move through any opening large enough for a Tiny creature. The swarm can't regain Hit Points or gain Temporary Hit Points."},
-        ],
+                {
+                    "name": "Swarm",
+                    "description": "The swarm can occupy another creature's space and vice versa, and the swarm can move through any opening large enough for a Tiny creature. The swarm can't regain Hit Points or gain Temporary Hit Points.",
+                },
+            ],
             actions=[
-            {"name": "Swarm of Proboscises", "description": "Melee Attack Roll: +5, reach 5 ft. Hit: 14 (2d10 + 3) Piercing damage, or 8 (1d10 + 3) Piercing damage if the swarm is Bloodied. If the target is a Medium or smaller creature in the swarm's space, the target has the Grappled condition (escape DC 13). Until the grapple ends, the target takes 7 (2d6) Necrotic damage at the end of each of its turns."},
-        ],
+                {
+                    "name": "Swarm of Proboscises",
+                    "description": "Melee Attack Roll: +5, reach 5 ft. Hit: 14 (2d10 + 3) Piercing damage, or 8 (1d10 + 3) Piercing damage if the swarm is Bloodied. If the target is a Medium or smaller creature in the swarm's space, the target has the Grappled condition (escape DC 13). Until the grapple ends, the target takes 7 (2d6) Necrotic damage at the end of each of its turns.",
+                },
+            ],
             bonus_actions=[],
             reactions=[],
             legendary_actions=[],
@@ -2123,12 +3059,19 @@ class SwarmOfStirges(ExtendedCombatantData):
 class SwarmOfVenomousSnakes(ExtendedCombatantData):
     def __init__(self):
         super().__init__(
-            name="Swarm of Venomous Snakes",
+            combatant_type="Swarm of Venomous Snakes",
             hp=36,
             ac=14,
             temp_hp=0,
             conditions=[],
-            ability_scores={"Str": 8, "Dex": 18, "Con": 11, "Int": 1, "Wis": 10, "Cha": 3},
+            ability_scores={
+                "Str": 8,
+                "Dex": 18,
+                "Con": 11,
+                "Int": 1,
+                "Wis": 10,
+                "Cha": 3,
+            },
             saving_throws={},
             spell_slots={},
             cr="2",
@@ -2144,11 +3087,17 @@ class SwarmOfVenomousSnakes(ExtendedCombatantData):
             senses="Blindsight 10 ft., Passive Perception 10",
             languages="None",
             traits=[
-            {"name": "Swarm", "description": "The swarm can occupy another creature's space and vice versa, and the swarm can move through any opening large enough for a Tiny snake. The swarm can't regain Hit Points or gain Temporary Hit Points."},
-        ],
+                {
+                    "name": "Swarm",
+                    "description": "The swarm can occupy another creature's space and vice versa, and the swarm can move through any opening large enough for a Tiny snake. The swarm can't regain Hit Points or gain Temporary Hit Points.",
+                },
+            ],
             actions=[
-            {"name": "Bites", "description": "Melee Attack Roll: +6, reach 5 ft. Hit: 8 (1d8 + 4) Piercing damage—or 6 (1d4 + 4) Piercing damage if the swarm is Bloodied—plus 10 (3d6) Poison damage."},
-        ],
+                {
+                    "name": "Bites",
+                    "description": "Melee Attack Roll: +6, reach 5 ft. Hit: 8 (1d8 + 4) Piercing damage—or 6 (1d4 + 4) Piercing damage if the swarm is Bloodied—plus 10 (3d6) Poison damage.",
+                },
+            ],
             bonus_actions=[],
             reactions=[],
             legendary_actions=[],
@@ -2161,12 +3110,19 @@ class SwarmOfVenomousSnakes(ExtendedCombatantData):
 class Wererat(ExtendedCombatantData):
     def __init__(self):
         super().__init__(
-            name="Wererat",
+            combatant_type="Wererat",
             hp=60,
             ac=13,
             temp_hp=0,
             conditions=[],
-            ability_scores={"Str": 10, "Dex": 16, "Con": 12, "Int": 11, "Wis": 10, "Cha": 8},
+            ability_scores={
+                "Str": 10,
+                "Dex": 16,
+                "Con": 12,
+                "Int": 11,
+                "Wis": 10,
+                "Cha": 8,
+            },
             saving_throws={},
             spell_slots={},
             cr="2",
@@ -2183,14 +3139,29 @@ class Wererat(ExtendedCombatantData):
             languages="Common (can't speak in rat form)",
             traits=[],
             actions=[
-            {"name": "Multiattack", "description": "The wererat makes two attacks, using Scratch or Hand Crossbow in any combination. It can replace one attack with a Bite attack."},
-            {"name": "Bite (Rat or Hybrid Form Only)", "description": "Melee Attack Roll: +5, reach 5 ft. Hit: 8 (2d4 + 3) Piercing damage. If the target is a Humanoid, it is subjected to the following effect. Constitution Saving Throw: DC 11. Failure: The target is cursed. If the cursed target drops to 0 Hit Points, it instead becomes a Wererat under the DM's control and has 10 Hit Points. Success: The target is immune to this wererat's curse for 24 hours."},
-            {"name": "Scratch", "description": "Melee Attack Roll: +5, reach 5 ft. Hit: 6 (1d6 + 3) Slashing damage."},
-            {"name": "Hand Crossbow (Humanoid or Hybrid Form Only)", "description": "Ranged Attack Roll: +5, range 30/120 ft. Hit: 6 (1d6 + 3) Piercing damage."},
-        ],
+                {
+                    "name": "Multiattack",
+                    "description": "The wererat makes two attacks, using Scratch or Hand Crossbow in any combination. It can replace one attack with a Bite attack.",
+                },
+                {
+                    "name": "Bite (Rat or Hybrid Form Only)",
+                    "description": "Melee Attack Roll: +5, reach 5 ft. Hit: 8 (2d4 + 3) Piercing damage. If the target is a Humanoid, it is subjected to the following effect. Constitution Saving Throw: DC 11. Failure: The target is cursed. If the cursed target drops to 0 Hit Points, it instead becomes a Wererat under the DM's control and has 10 Hit Points. Success: The target is immune to this wererat's curse for 24 hours.",
+                },
+                {
+                    "name": "Scratch",
+                    "description": "Melee Attack Roll: +5, reach 5 ft. Hit: 6 (1d6 + 3) Slashing damage.",
+                },
+                {
+                    "name": "Hand Crossbow (Humanoid or Hybrid Form Only)",
+                    "description": "Ranged Attack Roll: +5, range 30/120 ft. Hit: 6 (1d6 + 3) Piercing damage.",
+                },
+            ],
             bonus_actions=[
-            {"name": "Shape-Shift", "description": "The wererat shape-shifts into a Medium rat-humanoid hybrid or a Small rat, or it returns to its true humanoid form. Its game statistics, other than its size, are the same in each form. Any equipment it is wearing or carrying isn't transformed."},
-        ],
+                {
+                    "name": "Shape-Shift",
+                    "description": "The wererat shape-shifts into a Medium rat-humanoid hybrid or a Small rat, or it returns to its true humanoid form. Its game statistics, other than its size, are the same in each form. Any equipment it is wearing or carrying isn't transformed.",
+                },
+            ],
             reactions=[],
             legendary_actions=[],
             legendary_resistances=0,
@@ -2202,12 +3173,19 @@ class Wererat(ExtendedCombatantData):
 class WhiteDragonWyrmling(ExtendedCombatantData):
     def __init__(self):
         super().__init__(
-            name="White Dragon Wyrmling",
+            combatant_type="White Dragon Wyrmling",
             hp=32,
             ac=16,
             temp_hp=0,
             conditions=[],
-            ability_scores={"Str": 14, "Dex": 10, "Con": 14, "Int": 5, "Wis": 10, "Cha": 11},
+            ability_scores={
+                "Str": 14,
+                "Dex": 10,
+                "Con": 14,
+                "Int": 5,
+                "Wis": 10,
+                "Cha": 11,
+            },
             saving_throws={},
             spell_slots={},
             cr="2",
@@ -2223,13 +3201,25 @@ class WhiteDragonWyrmling(ExtendedCombatantData):
             senses="Blindsight 10 ft., Darkvision 60 ft., Passive Perception 14",
             languages="Draconic",
             traits=[
-            {"name": "Ice Walk", "description": "The dragon can move across and climb icy surfaces without needing to make an ability check. Additionally, Difficult Terrain composed of ice or snow doesn't cost it extra movement."},
-        ],
+                {
+                    "name": "Ice Walk",
+                    "description": "The dragon can move across and climb icy surfaces without needing to make an ability check. Additionally, Difficult Terrain composed of ice or snow doesn't cost it extra movement.",
+                },
+            ],
             actions=[
-            {"name": "Multiattack", "description": "The dragon makes two Rend attacks."},
-            {"name": "Rend", "description": "Melee Attack Roll: +4, reach 5 ft. Hit: 6 (1d8 + 2) Slashing damage plus 2 (1d4) Cold damage."},
-            {"name": "Cold Breath (Recharge 5–6)", "description": "Constitution Saving Throw: DC 12, each creature in a 15-foot Cone. Failure: 22 (5d8) Cold damage. Success: Half damage."},
-        ],
+                {
+                    "name": "Multiattack",
+                    "description": "The dragon makes two Rend attacks.",
+                },
+                {
+                    "name": "Rend",
+                    "description": "Melee Attack Roll: +4, reach 5 ft. Hit: 6 (1d8 + 2) Slashing damage plus 2 (1d4) Cold damage.",
+                },
+                {
+                    "name": "Cold Breath (Recharge 5–6)",
+                    "description": "Constitution Saving Throw: DC 12, each creature in a 15-foot Cone. Failure: 22 (5d8) Cold damage. Success: Half damage.",
+                },
+            ],
             bonus_actions=[],
             reactions=[],
             legendary_actions=[],
@@ -2242,12 +3232,19 @@ class WhiteDragonWyrmling(ExtendedCombatantData):
 class Willowisp(ExtendedCombatantData):
     def __init__(self):
         super().__init__(
-            name="Will-o'-Wisp",
+            combatant_type="Will-o'-Wisp",
             hp=27,
             ac=19,
             temp_hp=0,
             conditions=[],
-            ability_scores={"Str": 1, "Dex": 28, "Con": 10, "Int": 13, "Wis": 14, "Cha": 11},
+            ability_scores={
+                "Str": 1,
+                "Dex": 28,
+                "Con": 10,
+                "Int": 13,
+                "Wis": 14,
+                "Cha": 11,
+            },
             saving_throws={},
             spell_slots={},
             cr="2",
@@ -2263,17 +3260,35 @@ class Willowisp(ExtendedCombatantData):
             senses="Darkvision 120 ft., Passive Perception 12",
             languages="Common plus one other language",
             traits=[
-            {"name": "Ephemeral", "description": "The wisp can't wear or carry anything."},
-            {"name": "Illumination", "description": "The wisp sheds Bright Light in a 20-foot radius and Dim Light for an additional 20 feet."},
-            {"name": "Incorporeal Movement", "description": "The wisp can move through other creatures and objects as if they were Difficult Terrain. It takes 5 (1d10) Force damage if it ends its turn inside an object."},
-        ],
+                {
+                    "name": "Ephemeral",
+                    "description": "The wisp can't wear or carry anything.",
+                },
+                {
+                    "name": "Illumination",
+                    "description": "The wisp sheds Bright Light in a 20-foot radius and Dim Light for an additional 20 feet.",
+                },
+                {
+                    "name": "Incorporeal Movement",
+                    "description": "The wisp can move through other creatures and objects as if they were Difficult Terrain. It takes 5 (1d10) Force damage if it ends its turn inside an object.",
+                },
+            ],
             actions=[
-            {"name": "Shock", "description": "Melee Attack Roll: +4, reach 5 ft. Hit: 11 (2d8 + 2) Lightning damage."},
-        ],
+                {
+                    "name": "Shock",
+                    "description": "Melee Attack Roll: +4, reach 5 ft. Hit: 11 (2d8 + 2) Lightning damage.",
+                },
+            ],
             bonus_actions=[
-            {"name": "Consume Life", "description": "Constitution Saving Throw: DC 10, one living creature the wisp can see within 5 feet that has 0 Hit Points. Failure: The target dies, and the wisp regains 10 (3d6) Hit Points."},
-            {"name": "Vanish", "description": "The wisp and its light have the Invisible condition until the wisp's Concentration ends on this effect, which ends early immediately after the wisp makes an attack roll or uses Consume Life."},
-        ],
+                {
+                    "name": "Consume Life",
+                    "description": "Constitution Saving Throw: DC 10, one living creature the wisp can see within 5 feet that has 0 Hit Points. Failure: The target dies, and the wisp regains 10 (3d6) Hit Points.",
+                },
+                {
+                    "name": "Vanish",
+                    "description": "The wisp and its light have the Invisible condition until the wisp's Concentration ends on this effect, which ends early immediately after the wisp makes an attack roll or uses Consume Life.",
+                },
+            ],
             reactions=[],
             legendary_actions=[],
             legendary_resistances=0,
@@ -2282,4 +3297,63 @@ class Willowisp(ExtendedCombatantData):
         )
 
 
-__all__ = ['Allosaurus', 'AnimatedRugOfSmothering', 'Ankheg', 'AwakenedTree', 'AzerSentinel', 'BanditCaptain', 'Berserker', 'BlackDragonWyrmling', 'BronzeDragonWyrmling', 'BulettePup', 'CarrionCrawler', 'CentaurTrooper', 'CultistFanatic', 'Druid', 'Ettercap', 'FaerieDragonAdult', 'Gargoyle', 'GelatinousCube', 'Ghast', 'GiantBoar', 'GiantConstrictorSnake', 'GiantElk', 'GibberingMouther', 'GithzeraiMonk', 'GnollPackLord', 'GreenDragonWyrmling', 'Grick', 'Griffon', 'HunterShark', 'IntellectDevourer', 'LizardfolkGeomancer', 'MageApprentice', 'Merrow', 'Mimic', 'MinotaurSkeleton', 'MyconidSovereign', 'Nothic', 'OchreJelly', 'Ogre', 'OgreZombie', 'Pegasus', 'Peryton', 'Plesiosaurus', 'PolarBear', 'Poltergeist', 'Priest', 'Quaggoth', 'Rhinoceros', 'SabertoothedTiger', 'SahuaginPriest', 'SeaHag', 'SilverDragonWyrmling', 'SpinedDevil', 'SwarmOfStirges', 'SwarmOfVenomousSnakes', 'Wererat', 'WhiteDragonWyrmling', 'Willowisp']
+__all__ = [
+    "Allosaurus",
+    "AnimatedRugOfSmothering",
+    "Ankheg",
+    "AwakenedTree",
+    "AzerSentinel",
+    "BanditCaptain",
+    "Berserker",
+    "BlackDragonWyrmling",
+    "BronzeDragonWyrmling",
+    "BulettePup",
+    "CarrionCrawler",
+    "CentaurTrooper",
+    "CultistFanatic",
+    "Druid",
+    "Ettercap",
+    "FaerieDragonAdult",
+    "Gargoyle",
+    "GelatinousCube",
+    "Ghast",
+    "GiantBoar",
+    "GiantConstrictorSnake",
+    "GiantElk",
+    "GibberingMouther",
+    "GithzeraiMonk",
+    "GnollPackLord",
+    "GreenDragonWyrmling",
+    "Grick",
+    "Griffon",
+    "HunterShark",
+    "IntellectDevourer",
+    "LizardfolkGeomancer",
+    "MageApprentice",
+    "Merrow",
+    "Mimic",
+    "MinotaurSkeleton",
+    "MyconidSovereign",
+    "Nothic",
+    "OchreJelly",
+    "Ogre",
+    "OgreZombie",
+    "Pegasus",
+    "Peryton",
+    "Plesiosaurus",
+    "PolarBear",
+    "Poltergeist",
+    "Priest",
+    "Quaggoth",
+    "Rhinoceros",
+    "SabertoothedTiger",
+    "SahuaginPriest",
+    "SeaHag",
+    "SilverDragonWyrmling",
+    "SpinedDevil",
+    "SwarmOfStirges",
+    "SwarmOfVenomousSnakes",
+    "Wererat",
+    "WhiteDragonWyrmling",
+    "Willowisp",
+]

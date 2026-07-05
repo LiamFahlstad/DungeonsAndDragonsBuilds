@@ -5,12 +5,19 @@ from Combat.Definitions import ExtendedCombatantData
 class Colossus(ExtendedCombatantData):
     def __init__(self):
         super().__init__(
-            name="Colossus",
+            combatant_type="Colossus",
             hp=553,
             ac=23,
             temp_hp=0,
             conditions=[],
-            ability_scores={"Str": 30, "Dex": 11, "Con": 30, "Int": 3, "Wis": 11, "Cha": 8},
+            ability_scores={
+                "Str": 30,
+                "Dex": 11,
+                "Con": 30,
+                "Int": 3,
+                "Wis": 11,
+                "Cha": 8,
+            },
             saving_throws={},
             spell_slots={},
             cr="25",
@@ -26,27 +33,57 @@ class Colossus(ExtendedCombatantData):
             senses="Truesight 300 ft., Passive Perception 10",
             languages="Understands Celestial and Common but can't speak",
             traits=[
-            {"name": "Immutable Form", "description": "The colossus can't shape-shift."},
-            {"name": "Legendary Resistance (4/Day)", "description": "If the colossus fails a saving throw, it can choose to succeed instead."},
-            {"name": "Magic Resistance", "description": "The colossus has Advantage on saving throws against spells and other magical effects."},
-            {"name": "Siege Monster", "description": "The colossus deals double damage to objects and structures."},
-        ],
+                {
+                    "name": "Immutable Form",
+                    "description": "The colossus can't shape-shift.",
+                },
+                {
+                    "name": "Legendary Resistance (4/Day)",
+                    "description": "If the colossus fails a saving throw, it can choose to succeed instead.",
+                },
+                {
+                    "name": "Magic Resistance",
+                    "description": "The colossus has Advantage on saving throws against spells and other magical effects.",
+                },
+                {
+                    "name": "Siege Monster",
+                    "description": "The colossus deals double damage to objects and structures.",
+                },
+            ],
             actions=[
-            {"name": "Multiattack", "description": "The colossus makes three attacks, using Slam or Radiant Ray in any combination."},
-            {"name": "Slam", "description": "Melee Attack Roll: +18, reach 20 ft. Hit: 32 (4d10 + 10) Bludgeoning damage, and the colossus pushes the target up to 20 feet straight away from itself."},
-            {"name": "Radiant Ray", "description": "Ranged Attack Roll: +18, range 300 ft. Hit: 22 (4d10) Radiant damage. If the target is a Large or smaller creature, it has the Prone condition."},
-            {"name": "Divine Beam (Recharge 5–6)", "description": "Dexterity Saving Throw: DC 26, each creature in a 300-foot-long, 10-foot-wide Line. Failure: 65 (10d12) Radiant damage. Success: Half damage. Failure or Success: A creature reduced to 0 Hit Points by this beam disintegrates into dust, leaving behind any magic items it was wearing or carrying."},
-        ],
+                {
+                    "name": "Multiattack",
+                    "description": "The colossus makes three attacks, using Slam or Radiant Ray in any combination.",
+                },
+                {
+                    "name": "Slam",
+                    "description": "Melee Attack Roll: +18, reach 20 ft. Hit: 32 (4d10 + 10) Bludgeoning damage, and the colossus pushes the target up to 20 feet straight away from itself.",
+                },
+                {
+                    "name": "Radiant Ray",
+                    "description": "Ranged Attack Roll: +18, range 300 ft. Hit: 22 (4d10) Radiant damage. If the target is a Large or smaller creature, it has the Prone condition.",
+                },
+                {
+                    "name": "Divine Beam (Recharge 5–6)",
+                    "description": "Dexterity Saving Throw: DC 26, each creature in a 300-foot-long, 10-foot-wide Line. Failure: 65 (10d12) Radiant damage. Success: Half damage. Failure or Success: A creature reduced to 0 Hit Points by this beam disintegrates into dust, leaving behind any magic items it was wearing or carrying.",
+                },
+            ],
             bonus_actions=[],
             reactions=[],
             legendary_actions=[
-            {"name": "Smite", "description": "The colossus makes one Radiant Ray attack."},
-            {"name": "Stomp", "description": "The colossus moves up to half its Speed without provoking Opportunity Attacks, and it can make one Slam attack at any point during that move."},
-        ],
+                {
+                    "name": "Smite",
+                    "description": "The colossus makes one Radiant Ray attack.",
+                },
+                {
+                    "name": "Stomp",
+                    "description": "The colossus moves up to half its Speed without provoking Opportunity Attacks, and it can make one Slam attack at any point during that move.",
+                },
+            ],
             legendary_resistances=4,
             lair_actions=[],
             mythic_actions=[],
         )
 
 
-__all__ = ['Colossus']
+__all__ = ["Colossus"]

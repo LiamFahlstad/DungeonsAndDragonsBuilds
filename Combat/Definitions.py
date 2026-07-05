@@ -35,13 +35,14 @@ class Condition(str, Enum):
 @dataclass_decorator
 class MonsterAbility:
     """A single ability (trait, action, etc.) from a monster's stat block."""
+
     name: str
     description: str
 
 
 @dataclass
 class BasicCombatantData:
-    name: str
+    combatant_type: str
     hp: int
     ac: int
     temp_hp: int
@@ -50,6 +51,7 @@ class BasicCombatantData:
     ability_scores: Optional[dict[str, int]] = None
     saving_throws: Optional[dict[str, int]] = None
     max_hp: Optional[int] = None
+    name: Optional[str] = None  # Optional custom name for the combatant
 
     def __attrs_post_init__(self):
         if self.spell_slots is None:
@@ -63,7 +65,7 @@ class BasicCombatantData:
 
     def as_dict(self, character=None):
         return {
-            "name": self.name,
+            "name": self.name if self.name is not None else self.combatant_type,
             "hp": self.hp,
             "max_hp": self.max_hp,
             "ac": self.ac,
@@ -98,14 +100,14 @@ class ExtendedCombatantData(BasicCombatantData):
     condition_immunities: Optional[list[str]] = None
     senses: str = ""
     languages: str = ""
-    traits: Optional[list] = None               # special traits / passive abilities
-    actions: Optional[list] = None              # standard action entries
-    bonus_actions: Optional[list] = None        # bonus actions (some monsters)
-    reactions: Optional[list] = None            # reactions
-    legendary_actions: Optional[list] = None    # legendary actions
-    legendary_resistances: int = 0              # count of legendary resistances
-    lair_actions: Optional[list] = None         # lair actions
-    mythic_actions: Optional[list] = None       # mythic actions (some monsters)
+    traits: Optional[list] = None  # special traits / passive abilities
+    actions: Optional[list] = None  # standard action entries
+    bonus_actions: Optional[list] = None  # bonus actions (some monsters)
+    reactions: Optional[list] = None  # reactions
+    legendary_actions: Optional[list] = None  # legendary actions
+    legendary_resistances: int = 0  # count of legendary resistances
+    lair_actions: Optional[list] = None  # lair actions
+    mythic_actions: Optional[list] = None  # mythic actions (some monsters)
 
     def __attrs_post_init__(self):
         super().__attrs_post_init__()
@@ -119,8 +121,15 @@ class ExtendedCombatantData(BasicCombatantData):
             self.damage_immunities = []
         if self.condition_immunities is None:
             self.condition_immunities = []
-        for field in ("traits", "actions", "bonus_actions", "reactions",
-                      "legendary_actions", "lair_actions", "mythic_actions"):
+        for field in (
+            "traits",
+            "actions",
+            "bonus_actions",
+            "reactions",
+            "legendary_actions",
+            "lair_actions",
+            "mythic_actions",
+        ):
             if getattr(self, field) is None:
                 setattr(self, field, [])
         if self.legendary_resistances is None:

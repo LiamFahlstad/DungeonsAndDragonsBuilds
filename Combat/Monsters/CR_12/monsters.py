@@ -5,12 +5,19 @@ from Combat.Definitions import ExtendedCombatantData
 class Arcanaloth(ExtendedCombatantData):
     def __init__(self):
         super().__init__(
-            name="Arcanaloth",
+            combatant_type="Arcanaloth",
             hp=175,
             ac=18,
             temp_hp=0,
             conditions=[],
-            ability_scores={"Str": 17, "Dex": 12, "Con": 14, "Int": 20, "Wis": 16, "Cha": 17},
+            ability_scores={
+                "Str": 17,
+                "Dex": 12,
+                "Con": 14,
+                "Int": 20,
+                "Wis": 16,
+                "Cha": 17,
+            },
             saving_throws={},
             spell_slots={},
             cr="12",
@@ -26,20 +33,47 @@ class Arcanaloth(ExtendedCombatantData):
             senses="Truesight 120 ft., Passive Perception 17",
             languages="All; telepathy 120 ft.",
             traits=[
-            {"name": "Fiendish Restoration", "description": "If the arcanaloth dies outside Gehenna, its body dissolves into ichor, and it gains a new body instantly and revives with all its Hit Points in Gehenna."},
-            {"name": "Magic Resistance", "description": "The arcanaloth has Advantage on saving throws against spells and other magical effects."},
-            {"name": "Soul Tome", "description": "The arcanaloth has a magic tome. While holding or carrying the tome, the arcanaloth can use its Banishing Claw action. The tome has AC 17; HP 35; and Immunity to Necrotic, Poison, and Psychic damage. The tome regains all its Hit Points at the end of every turn, but it turns to dust if reduced to 0 Hit Points or when the arcanaloth dies. If the tome is destroyed, the arcanaloth can create a new one when it finishes a Short or Long Rest."},
-        ],
+                {
+                    "name": "Fiendish Restoration",
+                    "description": "If the arcanaloth dies outside Gehenna, its body dissolves into ichor, and it gains a new body instantly and revives with all its Hit Points in Gehenna.",
+                },
+                {
+                    "name": "Magic Resistance",
+                    "description": "The arcanaloth has Advantage on saving throws against spells and other magical effects.",
+                },
+                {
+                    "name": "Soul Tome",
+                    "description": "The arcanaloth has a magic tome. While holding or carrying the tome, the arcanaloth can use its Banishing Claw action. The tome has AC 17; HP 35; and Immunity to Necrotic, Poison, and Psychic damage. The tome regains all its Hit Points at the end of every turn, but it turns to dust if reduced to 0 Hit Points or when the arcanaloth dies. If the tome is destroyed, the arcanaloth can create a new one when it finishes a Short or Long Rest.",
+                },
+            ],
             actions=[
-            {"name": "Multiattack", "description": "The arcanaloth makes three Fiendish Burst attacks. It can replace one attack with a Banishing Claw attack."},
-            {"name": "Fiendish Burst", "description": "Melee or Ranged Attack Roll: +9, reach 5 ft. or range 120 ft. Hit: 31 (4d12 + 5) Necrotic damage."},
-            {"name": "Banishing Claw (Requires Soul Tome)", "description": "Melee Attack Roll: +9, reach 5 ft. Hit: 10 (2d4 + 5) Slashing damage plus 19 (3d12) Psychic damage. If the target is a creature, it is subjected to the following effect. Charisma Saving Throw: DC 17. Failure: The target is trapped in a demiplane inside the Soul Tome. While trapped there, the target has the Incapacitated condition. At the end of each of its turns, the target repeats the save, escaping the tome on a success. When the target escapes, it appears in the space it left or, if that space is occupied, the nearest unoccupied space. If the target fails three of these saves while in the demiplane, it becomes bound to the tome and can escape only if the tome is reduced to 0 Hit Points."},
-            {"name": "Spellcasting", "description": "The arcanaloth casts one of the following spells, requiring no Material components and using Intelligence as the spellcasting ability (spell save DC 17):"},
-            {"name": "Counterspell", "description": "The arcanaloth casts Counterspell in response to that spell's trigger, using the same spellcasting ability as Spellcasting."},
-        ],
+                {
+                    "name": "Multiattack",
+                    "description": "The arcanaloth makes three Fiendish Burst attacks. It can replace one attack with a Banishing Claw attack.",
+                },
+                {
+                    "name": "Fiendish Burst",
+                    "description": "Melee or Ranged Attack Roll: +9, reach 5 ft. or range 120 ft. Hit: 31 (4d12 + 5) Necrotic damage.",
+                },
+                {
+                    "name": "Banishing Claw (Requires Soul Tome)",
+                    "description": "Melee Attack Roll: +9, reach 5 ft. Hit: 10 (2d4 + 5) Slashing damage plus 19 (3d12) Psychic damage. If the target is a creature, it is subjected to the following effect. Charisma Saving Throw: DC 17. Failure: The target is trapped in a demiplane inside the Soul Tome. While trapped there, the target has the Incapacitated condition. At the end of each of its turns, the target repeats the save, escaping the tome on a success. When the target escapes, it appears in the space it left or, if that space is occupied, the nearest unoccupied space. If the target fails three of these saves while in the demiplane, it becomes bound to the tome and can escape only if the tome is reduced to 0 Hit Points.",
+                },
+                {
+                    "name": "Spellcasting",
+                    "description": "The arcanaloth casts one of the following spells, requiring no Material components and using Intelligence as the spellcasting ability (spell save DC 17):",
+                },
+                {
+                    "name": "Counterspell",
+                    "description": "The arcanaloth casts Counterspell in response to that spell's trigger, using the same spellcasting ability as Spellcasting.",
+                },
+            ],
             bonus_actions=[
-            {"name": "Teleport", "description": "The arcanaloth teleports up to 30 feet to an unoccupied space it can see."},
-        ],
+                {
+                    "name": "Teleport",
+                    "description": "The arcanaloth teleports up to 30 feet to an unoccupied space it can see.",
+                },
+            ],
             reactions=[],
             legendary_actions=[],
             legendary_resistances=0,
@@ -51,12 +85,19 @@ class Arcanaloth(ExtendedCombatantData):
 class Archmage(ExtendedCombatantData):
     def __init__(self):
         super().__init__(
-            name="Archmage",
+            combatant_type="Archmage",
             hp=170,
             ac=17,
             temp_hp=0,
             conditions=[],
-            ability_scores={"Str": 10, "Dex": 14, "Con": 12, "Int": 20, "Wis": 15, "Cha": 16},
+            ability_scores={
+                "Str": 10,
+                "Dex": 14,
+                "Con": 12,
+                "Int": 20,
+                "Wis": 15,
+                "Cha": 16,
+            },
             saving_throws={},
             spell_slots={},
             cr="12",
@@ -72,17 +113,35 @@ class Archmage(ExtendedCombatantData):
             senses="Passive Perception 16",
             languages="Common plus five other languages",
             traits=[
-            {"name": "Magic Resistance", "description": "The archmage has Advantage on saving throws against spells and other magical effects."},
-        ],
+                {
+                    "name": "Magic Resistance",
+                    "description": "The archmage has Advantage on saving throws against spells and other magical effects.",
+                },
+            ],
             actions=[
-            {"name": "Multiattack", "description": "The archmage makes four Arcane Burst attacks."},
-            {"name": "Arcane Burst", "description": "Melee or Ranged Attack Roll: +9, reach 5 ft. or range 150 ft. Hit: 27 (4d10 + 5) Force damage."},
-            {"name": "Spellcasting", "description": "The archmage casts one of the following spells, using Intelligence as the spellcasting ability (spell save DC 17):"},
-            {"name": "Protective Magic (3/Day)", "description": "The archmage casts Counterspell or Shield in response to the spell's trigger, using the same spellcasting ability as Spellcasting."},
-        ],
+                {
+                    "name": "Multiattack",
+                    "description": "The archmage makes four Arcane Burst attacks.",
+                },
+                {
+                    "name": "Arcane Burst",
+                    "description": "Melee or Ranged Attack Roll: +9, reach 5 ft. or range 150 ft. Hit: 27 (4d10 + 5) Force damage.",
+                },
+                {
+                    "name": "Spellcasting",
+                    "description": "The archmage casts one of the following spells, using Intelligence as the spellcasting ability (spell save DC 17):",
+                },
+                {
+                    "name": "Protective Magic (3/Day)",
+                    "description": "The archmage casts Counterspell or Shield in response to the spell's trigger, using the same spellcasting ability as Spellcasting.",
+                },
+            ],
             bonus_actions=[
-            {"name": "Misty Step (3/Day)", "description": "The mage casts Misty Step, using the same spellcasting ability as Spellcasting."},
-        ],
+                {
+                    "name": "Misty Step (3/Day)",
+                    "description": "The mage casts Misty Step, using the same spellcasting ability as Spellcasting.",
+                },
+            ],
             reactions=[],
             legendary_actions=[],
             legendary_resistances=0,
@@ -94,12 +153,19 @@ class Archmage(ExtendedCombatantData):
 class Archpriest(ExtendedCombatantData):
     def __init__(self):
         super().__init__(
-            name="Archpriest",
+            combatant_type="Archpriest",
             hp=240,
             ac=16,
             temp_hp=0,
             conditions=[],
-            ability_scores={"Str": 16, "Dex": 12, "Con": 17, "Int": 14, "Wis": 21, "Cha": 14},
+            ability_scores={
+                "Str": 16,
+                "Dex": 12,
+                "Con": 17,
+                "Int": 14,
+                "Wis": 21,
+                "Cha": 14,
+            },
             saving_throws={},
             spell_slots={},
             cr="12",
@@ -116,14 +182,29 @@ class Archpriest(ExtendedCombatantData):
             languages="Common plus two other languages",
             traits=[],
             actions=[
-            {"name": "Multiattack", "description": "The archpriest makes three Radiant Burst attacks."},
-            {"name": "Radiant Burst", "description": "Melee or Ranged Attack Roll: +9, reach 5 ft. or range 60 ft. Hit: 27 (4d10 + 5) Radiant damage."},
-            {"name": "Holy Word (Recharge 4–6)", "description": "Wisdom Saving Throw: DC 17, each enemy in a 20-foot Emanation originating from the archpriest. Failure: 21 (6d6) Radiant damage, and the target has the Stunned condition until the end of the archpriest's next turn. Success: Half damage only."},
-            {"name": "Spellcasting", "description": "The archpriest casts one of the following spells, requiring no Material components and using Wisdom as the spellcasting ability (spell save DC 17):"},
-        ],
+                {
+                    "name": "Multiattack",
+                    "description": "The archpriest makes three Radiant Burst attacks.",
+                },
+                {
+                    "name": "Radiant Burst",
+                    "description": "Melee or Ranged Attack Roll: +9, reach 5 ft. or range 60 ft. Hit: 27 (4d10 + 5) Radiant damage.",
+                },
+                {
+                    "name": "Holy Word (Recharge 4–6)",
+                    "description": "Wisdom Saving Throw: DC 17, each enemy in a 20-foot Emanation originating from the archpriest. Failure: 21 (6d6) Radiant damage, and the target has the Stunned condition until the end of the archpriest's next turn. Success: Half damage only.",
+                },
+                {
+                    "name": "Spellcasting",
+                    "description": "The archpriest casts one of the following spells, requiring no Material components and using Wisdom as the spellcasting ability (spell save DC 17):",
+                },
+            ],
             bonus_actions=[
-            {"name": "Divine Aid (3/Day)", "description": "The priest casts Bless, Dispel Magic, Healing Word, or Lesser Restoration, using the same spellcasting ability as Spellcasting."},
-        ],
+                {
+                    "name": "Divine Aid (3/Day)",
+                    "description": "The priest casts Bless, Dispel Magic, Healing Word, or Lesser Restoration, using the same spellcasting ability as Spellcasting.",
+                },
+            ],
             reactions=[],
             legendary_actions=[],
             legendary_resistances=0,
@@ -135,12 +216,19 @@ class Archpriest(ExtendedCombatantData):
 class Erinyes(ExtendedCombatantData):
     def __init__(self):
         super().__init__(
-            name="Erinyes",
+            combatant_type="Erinyes",
             hp=178,
             ac=18,
             temp_hp=0,
             conditions=[],
-            ability_scores={"Str": 18, "Dex": 16, "Con": 18, "Int": 14, "Wis": 14, "Cha": 18},
+            ability_scores={
+                "Str": 18,
+                "Dex": 16,
+                "Con": 18,
+                "Int": 14,
+                "Wis": 14,
+                "Cha": 18,
+            },
             saving_throws={},
             spell_slots={},
             cr="12",
@@ -156,16 +244,37 @@ class Erinyes(ExtendedCombatantData):
             senses="Truesight 120 ft., Passive Perception 16",
             languages="Infernal; telepathy 120 ft.",
             traits=[
-            {"name": "Diabolical Restoration", "description": "If the erinyes dies outside the Nine Hells, its body disappears in sulfurous smoke, and it gains a new body instantly, reviving with all its Hit Points somewhere in the Nine Hells."},
-            {"name": "Magic Resistance", "description": "The erinyes has Advantage on saving throws against spells and other magical effects."},
-            {"name": "Magic Rope", "description": "The erinyes has a magic rope. While bearing it, the erinyes can use the Entangling Rope action. The rope has AC 20, HP 90, and Immunity to Poison and Psychic damage. The rope turns to dust if reduced to 0 Hit Points, if it is 5+ feet away from the erinyes for 1 hour or more, or if the erinyes dies. If the rope is damaged or destroyed, the erinyes can fully restore it when finishing a Short or Long Rest."},
-        ],
+                {
+                    "name": "Diabolical Restoration",
+                    "description": "If the erinyes dies outside the Nine Hells, its body disappears in sulfurous smoke, and it gains a new body instantly, reviving with all its Hit Points somewhere in the Nine Hells.",
+                },
+                {
+                    "name": "Magic Resistance",
+                    "description": "The erinyes has Advantage on saving throws against spells and other magical effects.",
+                },
+                {
+                    "name": "Magic Rope",
+                    "description": "The erinyes has a magic rope. While bearing it, the erinyes can use the Entangling Rope action. The rope has AC 20, HP 90, and Immunity to Poison and Psychic damage. The rope turns to dust if reduced to 0 Hit Points, if it is 5+ feet away from the erinyes for 1 hour or more, or if the erinyes dies. If the rope is damaged or destroyed, the erinyes can fully restore it when finishing a Short or Long Rest.",
+                },
+            ],
             actions=[
-            {"name": "Multiattack", "description": "The erinyes makes three Withering Sword attacks and can use Entangling Rope."},
-            {"name": "Withering Sword", "description": "Melee Attack Roll: +8, reach 5 ft. Hit: 13 (2d8 + 4) Slashing damage plus 11 (2d10) Necrotic damage."},
-            {"name": "Entangling Rope (Requires Magic Rope)", "description": "Strength Saving Throw: DC 16, one creature the erinyes can see within 120 feet. Failure: 14 (4d6) Force damage, and the target has the Restrained condition until the rope is destroyed, the erinyes uses a Bonus Action to release the target, or the erinyes uses Entangling Rope again."},
-            {"name": "Parry", "description": "Trigger: The erinyes is hit by a melee attack roll while holding a weapon. Response: The erinyes adds 4 to its AC against that attack, possibly causing it to m"},
-        ],
+                {
+                    "name": "Multiattack",
+                    "description": "The erinyes makes three Withering Sword attacks and can use Entangling Rope.",
+                },
+                {
+                    "name": "Withering Sword",
+                    "description": "Melee Attack Roll: +8, reach 5 ft. Hit: 13 (2d8 + 4) Slashing damage plus 11 (2d10) Necrotic damage.",
+                },
+                {
+                    "name": "Entangling Rope (Requires Magic Rope)",
+                    "description": "Strength Saving Throw: DC 16, one creature the erinyes can see within 120 feet. Failure: 14 (4d6) Force damage, and the target has the Restrained condition until the rope is destroyed, the erinyes uses a Bonus Action to release the target, or the erinyes uses Entangling Rope again.",
+                },
+                {
+                    "name": "Parry",
+                    "description": "Trigger: The erinyes is hit by a melee attack roll while holding a weapon. Response: The erinyes adds 4 to its AC against that attack, possibly causing it to m",
+                },
+            ],
             bonus_actions=[],
             reactions=[],
             legendary_actions=[],
@@ -178,12 +287,19 @@ class Erinyes(ExtendedCombatantData):
 class GithzeraiPsion(ExtendedCombatantData):
     def __init__(self):
         super().__init__(
-            name="Githzerai Psion",
+            combatant_type="Githzerai Psion",
             hp=169,
             ac=18,
             temp_hp=0,
             conditions=[],
-            ability_scores={"Str": 12, "Dex": 18, "Con": 15, "Int": 19, "Wis": 18, "Cha": 14},
+            ability_scores={
+                "Str": 12,
+                "Dex": 18,
+                "Con": 15,
+                "Int": 19,
+                "Wis": 18,
+                "Cha": 14,
+            },
             saving_throws={},
             spell_slots={},
             cr="12",
@@ -200,11 +316,23 @@ class GithzeraiPsion(ExtendedCombatantData):
             languages="Common, Gith",
             traits=[],
             actions=[
-            {"name": "Multiattack", "description": "The githzerai makes three Psychic Warp attacks."},
-            {"name": "Psychic Warp", "description": "Melee or Ranged Attack Roll: +8, reach 5 ft. or range 120 ft. Hit: 26 (4d10 + 4) Psychic damage, and the target has the githzerai's choice of (A) the Charmed condition until the start of the githzerai's next turn or (B) the Prone condition, provided the target is a Large or smaller creature."},
-            {"name": "Spellcasting", "description": "The githzerai casts one of the following spells, requiring no spell components and using Intelligence as the spellcasting ability (spell save DC 16):"},
-            {"name": "Psionic Defense", "description": "The githzerai casts Feather Fall or Shield in response to the spell's trigger, requiring no spell components and using the same spellcasting ability as Spellcasting."},
-        ],
+                {
+                    "name": "Multiattack",
+                    "description": "The githzerai makes three Psychic Warp attacks.",
+                },
+                {
+                    "name": "Psychic Warp",
+                    "description": "Melee or Ranged Attack Roll: +8, reach 5 ft. or range 120 ft. Hit: 26 (4d10 + 4) Psychic damage, and the target has the githzerai's choice of (A) the Charmed condition until the start of the githzerai's next turn or (B) the Prone condition, provided the target is a Large or smaller creature.",
+                },
+                {
+                    "name": "Spellcasting",
+                    "description": "The githzerai casts one of the following spells, requiring no spell components and using Intelligence as the spellcasting ability (spell save DC 16):",
+                },
+                {
+                    "name": "Psionic Defense",
+                    "description": "The githzerai casts Feather Fall or Shield in response to the spell's trigger, requiring no spell components and using the same spellcasting ability as Spellcasting.",
+                },
+            ],
             bonus_actions=[],
             reactions=[],
             legendary_actions=[],
@@ -217,12 +345,19 @@ class GithzeraiPsion(ExtendedCombatantData):
 class PirateAdmiral(ExtendedCombatantData):
     def __init__(self):
         super().__init__(
-            name="Pirate Admiral",
+            combatant_type="Pirate Admiral",
             hp=182,
             ac=20,
             temp_hp=0,
             conditions=[],
-            ability_scores={"Str": 14, "Dex": 22, "Con": 14, "Int": 12, "Wis": 14, "Cha": 19},
+            ability_scores={
+                "Str": 14,
+                "Dex": 22,
+                "Con": 14,
+                "Int": 12,
+                "Wis": 14,
+                "Cha": 19,
+            },
             saving_throws={},
             spell_slots={},
             cr="12",
@@ -239,16 +374,37 @@ class PirateAdmiral(ExtendedCombatantData):
             languages="Common plus one other language",
             traits=[],
             actions=[
-            {"name": "Multiattack", "description": "The pirate makes three attacks, using Scimitar or Pistol in any combination."},
-            {"name": "Scimitar", "description": "Melee Attack Roll: +10, reach 5 ft. Hit: 16 (3d6 + 6) Slashing damage plus 7 (2d6) Poison damage, and the target suffers one of the following effects of the pirate's choice:"},
-            {"name": "Awestruck", "description": ". The target has the Charmed condition until the start of the pirate's next turn."},
-            {"name": "Poison", "description": ". The target has the Poisoned condition until the start of the pirate's next turn."},
-            {"name": "Pistol", "description": "Ranged Attack Roll: +10, range 30/90 ft. Hit: 28 (4d10 + 6) Piercing damage."},
-            {"name": "Defensive Stance", "description": "Trigger: The pirate is hit by a melee attack roll while holding a weapon. Response: The pirate adds 4 to its AC against melee attack rolls (including the triggering attack) until the start of its next turn, possibly causing the attacks to miss."},
-        ],
+                {
+                    "name": "Multiattack",
+                    "description": "The pirate makes three attacks, using Scimitar or Pistol in any combination.",
+                },
+                {
+                    "name": "Scimitar",
+                    "description": "Melee Attack Roll: +10, reach 5 ft. Hit: 16 (3d6 + 6) Slashing damage plus 7 (2d6) Poison damage, and the target suffers one of the following effects of the pirate's choice:",
+                },
+                {
+                    "name": "Awestruck",
+                    "description": ". The target has the Charmed condition until the start of the pirate's next turn.",
+                },
+                {
+                    "name": "Poison",
+                    "description": ". The target has the Poisoned condition until the start of the pirate's next turn.",
+                },
+                {
+                    "name": "Pistol",
+                    "description": "Ranged Attack Roll: +10, range 30/90 ft. Hit: 28 (4d10 + 6) Piercing damage.",
+                },
+                {
+                    "name": "Defensive Stance",
+                    "description": "Trigger: The pirate is hit by a melee attack roll while holding a weapon. Response: The pirate adds 4 to its AC against melee attack rolls (including the triggering attack) until the start of its next turn, possibly causing the attacks to miss.",
+                },
+            ],
             bonus_actions=[
-            {"name": "Rally (1/Day)", "description": "The pirate chooses up to three other creatures it can see within 30 feet. Until the start of the pirate's next turn, the targets have Advantage on attack rolls and saving throws."},
-        ],
+                {
+                    "name": "Rally (1/Day)",
+                    "description": "The pirate chooses up to three other creatures it can see within 30 feet. Until the start of the pirate's next turn, the targets have Advantage on attack rolls and saving throws.",
+                },
+            ],
             reactions=[],
             legendary_actions=[],
             legendary_resistances=0,
@@ -260,12 +416,19 @@ class PirateAdmiral(ExtendedCombatantData):
 class QuestingKnight(ExtendedCombatantData):
     def __init__(self):
         super().__init__(
-            name="Questing Knight",
+            combatant_type="Questing Knight",
             hp=202,
             ac=18,
             temp_hp=0,
             conditions=[],
-            ability_scores={"Str": 20, "Dex": 16, "Con": 16, "Int": 11, "Wis": 12, "Cha": 18},
+            ability_scores={
+                "Str": 20,
+                "Dex": 16,
+                "Con": 16,
+                "Int": 11,
+                "Wis": 12,
+                "Cha": 18,
+            },
             saving_throws={},
             spell_slots={},
             cr="12",
@@ -281,14 +444,29 @@ class QuestingKnight(ExtendedCombatantData):
             senses="Passive Perception 15",
             languages="Common plus one other language",
             traits=[
-            {"name": "Aura of Bravery", "description": "Creatures of the knight's choice in a 30-foot Emanation originating from it have Immunity to the Charmed and Frightened conditions while there."},
-        ],
+                {
+                    "name": "Aura of Bravery",
+                    "description": "Creatures of the knight's choice in a 30-foot Emanation originating from it have Immunity to the Charmed and Frightened conditions while there.",
+                },
+            ],
             actions=[
-            {"name": "Multiattack", "description": "The knight makes three attacks, using Greatsword or Longbow in any combination."},
-            {"name": "Greatsword", "description": "Melee Attack Roll: +9, reach 5 ft. Hit: 12 (2d6 + 5) Slashing damage plus 22 (5d8) Radiant damage."},
-            {"name": "Longbow", "description": "Ranged Attack Roll: +7, range 150/600 ft. Hit: 12 (2d8 + 3) Piercing damage plus 22 (5d8) Radiant damage."},
-            {"name": "Spellcasting", "description": "The knight casts one of the following spells, using Charisma as the spellcasting ability (spell save DC 16):"},
-        ],
+                {
+                    "name": "Multiattack",
+                    "description": "The knight makes three attacks, using Greatsword or Longbow in any combination.",
+                },
+                {
+                    "name": "Greatsword",
+                    "description": "Melee Attack Roll: +9, reach 5 ft. Hit: 12 (2d6 + 5) Slashing damage plus 22 (5d8) Radiant damage.",
+                },
+                {
+                    "name": "Longbow",
+                    "description": "Ranged Attack Roll: +7, range 150/600 ft. Hit: 12 (2d8 + 3) Piercing damage plus 22 (5d8) Radiant damage.",
+                },
+                {
+                    "name": "Spellcasting",
+                    "description": "The knight casts one of the following spells, using Charisma as the spellcasting ability (spell save DC 16):",
+                },
+            ],
             bonus_actions=[],
             reactions=[],
             legendary_actions=[],
@@ -298,4 +476,12 @@ class QuestingKnight(ExtendedCombatantData):
         )
 
 
-__all__ = ['Arcanaloth', 'Archmage', 'Archpriest', 'Erinyes', 'GithzeraiPsion', 'PirateAdmiral', 'QuestingKnight']
+__all__ = [
+    "Arcanaloth",
+    "Archmage",
+    "Archpriest",
+    "Erinyes",
+    "GithzeraiPsion",
+    "PirateAdmiral",
+    "QuestingKnight",
+]

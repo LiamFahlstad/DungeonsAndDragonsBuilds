@@ -5,12 +5,19 @@ from Combat.Definitions import ExtendedCombatantData
 class AncientBronzeDragon(ExtendedCombatantData):
     def __init__(self):
         super().__init__(
-            name="Ancient Bronze Dragon",
+            combatant_type="Ancient Bronze Dragon",
             hp=444,
             ac=22,
             temp_hp=0,
             conditions=[],
-            ability_scores={"Str": 29, "Dex": 10, "Con": 27, "Int": 18, "Wis": 17, "Cha": 25},
+            ability_scores={
+                "Str": 29,
+                "Dex": 10,
+                "Con": 27,
+                "Int": 18,
+                "Wis": 17,
+                "Cha": 25,
+            },
             saving_throws={},
             spell_slots={},
             cr="22",
@@ -26,23 +33,53 @@ class AncientBronzeDragon(ExtendedCombatantData):
             senses="Blindsight 60 ft., Darkvision 120 ft., Passive Perception 27",
             languages="Common, Draconic",
             traits=[
-            {"name": "Amphibious", "description": "The dragon can breathe air and water."},
-            {"name": "Legendary Resistance (4/Day, or 5/Day in Lair)", "description": "If the dragon fails a saving throw, it can choose to succeed instead."},
-        ],
+                {
+                    "name": "Amphibious",
+                    "description": "The dragon can breathe air and water.",
+                },
+                {
+                    "name": "Legendary Resistance (4/Day, or 5/Day in Lair)",
+                    "description": "If the dragon fails a saving throw, it can choose to succeed instead.",
+                },
+            ],
             actions=[
-            {"name": "Multiattack", "description": "The dragon makes three Rend attacks. It can replace one attack with a use of (A) Repulsion Breath or (B) Spellcasting to cast Guiding Bolt (level 2 version)."},
-            {"name": "Rend", "description": "Melee Attack Roll: +16, reach 15 ft. Hit: 18 (2d8 + 9) Slashing damage plus 9 (2d8) Lightning damage."},
-            {"name": "Lightning Breath (Recharge 5–6)", "description": "Dexterity Saving Throw: DC 23, each creature in a 120-foot-long, 10-foot-wide Line. Failure: 82 (15d10) Lightning damage. Success: Half damage."},
-            {"name": "Repulsion Breath", "description": "Strength Saving Throw: DC 23, each creature in a 30-foot Cone. Failure: The target is pushed up to 60 feet straight away from the dragon and has the Prone condition."},
-            {"name": "Spellcasting", "description": "The dragon casts one of the following spells, requiring no Material components and using Charisma as the spellcasting ability (spell save DC 22, +14 to hit with spell attacks):"},
-        ],
+                {
+                    "name": "Multiattack",
+                    "description": "The dragon makes three Rend attacks. It can replace one attack with a use of (A) Repulsion Breath or (B) Spellcasting to cast Guiding Bolt (level 2 version).",
+                },
+                {
+                    "name": "Rend",
+                    "description": "Melee Attack Roll: +16, reach 15 ft. Hit: 18 (2d8 + 9) Slashing damage plus 9 (2d8) Lightning damage.",
+                },
+                {
+                    "name": "Lightning Breath (Recharge 5–6)",
+                    "description": "Dexterity Saving Throw: DC 23, each creature in a 120-foot-long, 10-foot-wide Line. Failure: 82 (15d10) Lightning damage. Success: Half damage.",
+                },
+                {
+                    "name": "Repulsion Breath",
+                    "description": "Strength Saving Throw: DC 23, each creature in a 30-foot Cone. Failure: The target is pushed up to 60 feet straight away from the dragon and has the Prone condition.",
+                },
+                {
+                    "name": "Spellcasting",
+                    "description": "The dragon casts one of the following spells, requiring no Material components and using Charisma as the spellcasting ability (spell save DC 22, +14 to hit with spell attacks):",
+                },
+            ],
             bonus_actions=[],
             reactions=[],
             legendary_actions=[
-            {"name": "Guiding Light", "description": "The dragon uses Spellcasting to cast Guiding Bolt (level 2 version)."},
-            {"name": "Pounce", "description": "The dragon moves up to half its Speed, and it makes one Rend attack."},
-            {"name": "Thunderclap", "description": "Constitution Saving Throw: DC 22, each creature in a 20-foot-radius Sphere centered on a point the dragon can see within 120 feet. Failure: 13 (3d8) Thunder damage, and the target has the Deafened condition until the end of its next turn."},
-        ],
+                {
+                    "name": "Guiding Light",
+                    "description": "The dragon uses Spellcasting to cast Guiding Bolt (level 2 version).",
+                },
+                {
+                    "name": "Pounce",
+                    "description": "The dragon moves up to half its Speed, and it makes one Rend attack.",
+                },
+                {
+                    "name": "Thunderclap",
+                    "description": "Constitution Saving Throw: DC 22, each creature in a 20-foot-radius Sphere centered on a point the dragon can see within 120 feet. Failure: 13 (3d8) Thunder damage, and the target has the Deafened condition until the end of its next turn.",
+                },
+            ],
             legendary_resistances=4,
             lair_actions=[],
             mythic_actions=[],
@@ -52,12 +89,19 @@ class AncientBronzeDragon(ExtendedCombatantData):
 class AncientGreenDragon(ExtendedCombatantData):
     def __init__(self):
         super().__init__(
-            name="Ancient Green Dragon",
+            combatant_type="Ancient Green Dragon",
             hp=402,
             ac=21,
             temp_hp=0,
             conditions=[],
-            ability_scores={"Str": 27, "Dex": 12, "Con": 25, "Int": 20, "Wis": 17, "Cha": 22},
+            ability_scores={
+                "Str": 27,
+                "Dex": 12,
+                "Con": 25,
+                "Int": 20,
+                "Wis": 17,
+                "Cha": 22,
+            },
             saving_throws={},
             spell_slots={},
             cr="22",
@@ -73,22 +117,49 @@ class AncientGreenDragon(ExtendedCombatantData):
             senses="Blindsight 60 ft., Darkvision 120 ft., Passive Perception 27",
             languages="Common, Draconic",
             traits=[
-            {"name": "Amphibious", "description": "The dragon can breathe air and water."},
-            {"name": "Legendary Resistance (4/Day, or 5/Day in Lair)", "description": "If the dragon fails a saving throw, it can choose to succeed instead."},
-        ],
+                {
+                    "name": "Amphibious",
+                    "description": "The dragon can breathe air and water.",
+                },
+                {
+                    "name": "Legendary Resistance (4/Day, or 5/Day in Lair)",
+                    "description": "If the dragon fails a saving throw, it can choose to succeed instead.",
+                },
+            ],
             actions=[
-            {"name": "Multiattack", "description": "The dragon makes three Rend attacks. It can replace one attack with a use of Spellcasting to cast Mind Spike (level 5 version)."},
-            {"name": "Rend", "description": "Melee Attack Roll: +15, reach 15 ft. Hit: 17 (2d8 + 8) Slashing damage plus 10 (3d6) Poison damage."},
-            {"name": "Poison Breath (Recharge 5–6)", "description": "Constitution Saving Throw: DC 22, each creature in a 90-foot Cone. Failure: 77 (22d6) Poison damage. Success: Half damage."},
-            {"name": "Spellcasting", "description": "The dragon casts one of the following spells, requiring no Material components and using Charisma as the spellcasting ability (spell save DC 21):"},
-        ],
+                {
+                    "name": "Multiattack",
+                    "description": "The dragon makes three Rend attacks. It can replace one attack with a use of Spellcasting to cast Mind Spike (level 5 version).",
+                },
+                {
+                    "name": "Rend",
+                    "description": "Melee Attack Roll: +15, reach 15 ft. Hit: 17 (2d8 + 8) Slashing damage plus 10 (3d6) Poison damage.",
+                },
+                {
+                    "name": "Poison Breath (Recharge 5–6)",
+                    "description": "Constitution Saving Throw: DC 22, each creature in a 90-foot Cone. Failure: 77 (22d6) Poison damage. Success: Half damage.",
+                },
+                {
+                    "name": "Spellcasting",
+                    "description": "The dragon casts one of the following spells, requiring no Material components and using Charisma as the spellcasting ability (spell save DC 21):",
+                },
+            ],
             bonus_actions=[],
             reactions=[],
             legendary_actions=[
-            {"name": "Mind Invasion", "description": "The dragon uses Spellcasting to cast Mind Spike (level 5 version)."},
-            {"name": "Noxious Miasma", "description": "Constitution Saving Throw: DC 21, each creature in a 30-foot-radius Sphere centered on a point the dragon can see within 90 feet. Failure: 17 (5d6) Poison damage, and the target takes a -2 penalty to AC until the end of its next turn. Failure or Success: The dragon can't take this action again until the start of its next turn."},
-            {"name": "Pounce", "description": "The dragon moves up to half its Speed, and it makes one Rend attack."},
-        ],
+                {
+                    "name": "Mind Invasion",
+                    "description": "The dragon uses Spellcasting to cast Mind Spike (level 5 version).",
+                },
+                {
+                    "name": "Noxious Miasma",
+                    "description": "Constitution Saving Throw: DC 21, each creature in a 30-foot-radius Sphere centered on a point the dragon can see within 90 feet. Failure: 17 (5d6) Poison damage, and the target takes a -2 penalty to AC until the end of its next turn. Failure or Success: The dragon can't take this action again until the start of its next turn.",
+                },
+                {
+                    "name": "Pounce",
+                    "description": "The dragon moves up to half its Speed, and it makes one Rend attack.",
+                },
+            ],
             legendary_resistances=4,
             lair_actions=[],
             mythic_actions=[],
@@ -98,12 +169,19 @@ class AncientGreenDragon(ExtendedCombatantData):
 class ElementalCataclysm(ExtendedCombatantData):
     def __init__(self):
         super().__init__(
-            name="Elemental Cataclysm",
+            combatant_type="Elemental Cataclysm",
             hp=370,
             ac=20,
             temp_hp=0,
             conditions=[],
-            ability_scores={"Str": 26, "Dex": 19, "Con": 27, "Int": 9, "Wis": 14, "Cha": 9},
+            ability_scores={
+                "Str": 26,
+                "Dex": 19,
+                "Con": 27,
+                "Int": 9,
+                "Wis": 14,
+                "Cha": 9,
+            },
             saving_throws={},
             spell_slots={},
             cr="22",
@@ -129,4 +207,4 @@ class ElementalCataclysm(ExtendedCombatantData):
         )
 
 
-__all__ = ['AncientBronzeDragon', 'AncientGreenDragon', 'ElementalCataclysm']
+__all__ = ["AncientBronzeDragon", "AncientGreenDragon", "ElementalCataclysm"]

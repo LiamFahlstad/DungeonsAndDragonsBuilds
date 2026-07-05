@@ -5,12 +5,19 @@ from Combat.Definitions import ExtendedCombatantData
 class AncientGoldDragon(ExtendedCombatantData):
     def __init__(self):
         super().__init__(
-            name="Ancient Gold Dragon",
+            combatant_type="Ancient Gold Dragon",
             hp=546,
             ac=22,
             temp_hp=0,
             conditions=[],
-            ability_scores={"Str": 30, "Dex": 14, "Con": 29, "Int": 18, "Wis": 17, "Cha": 28},
+            ability_scores={
+                "Str": 30,
+                "Dex": 14,
+                "Con": 29,
+                "Int": 18,
+                "Wis": 17,
+                "Cha": 28,
+            },
             saving_throws={},
             spell_slots={},
             cr="24",
@@ -26,23 +33,53 @@ class AncientGoldDragon(ExtendedCombatantData):
             senses="Blindsight 60 ft., Darkvision 120 ft., Passive Perception 27",
             languages="Common, Draconic",
             traits=[
-            {"name": "Amphibious", "description": "The dragon can breathe air and water."},
-            {"name": "Legendary Resistance (4/Day, or 5/Day in Lair)", "description": "If the dragon fails a saving throw, it can choose to suc ceed instead."},
-        ],
+                {
+                    "name": "Amphibious",
+                    "description": "The dragon can breathe air and water.",
+                },
+                {
+                    "name": "Legendary Resistance (4/Day, or 5/Day in Lair)",
+                    "description": "If the dragon fails a saving throw, it can choose to suc ceed instead.",
+                },
+            ],
             actions=[
-            {"name": "Multiattack", "description": "The dragon makes three Rend attacks. It can replace one attack with a use of (A) Spellcasting to cast Guiding Bolt (level 4 version) or (B) Weakening Breath."},
-            {"name": "Rend", "description": "Melee Attack Roll: +17 to hit, reach 15 ft. Hit: 19 (2d8+ 10) Slashing damage plus 9 (2d8) Fire damage."},
-            {"name": "Fire Breath (Recharge 5-6)", "description": "Dexterity Saving Throw: DC 24, each creature in a 90-foot Cone. Failure: 71 (13d10) Fire damage. Success: Half damage."},
-            {"name": "Spellcasting", "description": "The dragon casts one of the following spells, requiring no Material components and using Charisma as the spellcasting ability (spell save DC 24):"},
-            {"name": "Weakening Breath", "description": "Strength Saving Throw: DC 24, each creature that isn't currently affected by this breath in a 90-foot Cone. Failure: The target has Disadvantage on Strength-based D20 Tests and subtracts 5 (1d10) from its damage rolls. It repeats the save at the end of each of its turns, ending the effect on itself on a success. After 1 minute, it succeeds automatically."},
-        ],
+                {
+                    "name": "Multiattack",
+                    "description": "The dragon makes three Rend attacks. It can replace one attack with a use of (A) Spellcasting to cast Guiding Bolt (level 4 version) or (B) Weakening Breath.",
+                },
+                {
+                    "name": "Rend",
+                    "description": "Melee Attack Roll: +17 to hit, reach 15 ft. Hit: 19 (2d8+ 10) Slashing damage plus 9 (2d8) Fire damage.",
+                },
+                {
+                    "name": "Fire Breath (Recharge 5-6)",
+                    "description": "Dexterity Saving Throw: DC 24, each creature in a 90-foot Cone. Failure: 71 (13d10) Fire damage. Success: Half damage.",
+                },
+                {
+                    "name": "Spellcasting",
+                    "description": "The dragon casts one of the following spells, requiring no Material components and using Charisma as the spellcasting ability (spell save DC 24):",
+                },
+                {
+                    "name": "Weakening Breath",
+                    "description": "Strength Saving Throw: DC 24, each creature that isn't currently affected by this breath in a 90-foot Cone. Failure: The target has Disadvantage on Strength-based D20 Tests and subtracts 5 (1d10) from its damage rolls. It repeats the save at the end of each of its turns, ending the effect on itself on a success. After 1 minute, it succeeds automatically.",
+                },
+            ],
             bonus_actions=[],
             reactions=[],
             legendary_actions=[
-            {"name": "Banish", "description": "Charisma Saving Throw: DC 24, one creature the dragon can see within 120 feet. Failure: 24 (7d6) Force damage, and the target has the Incapacitated condition and is transported to a harmless demiplane until the start of the dragon's next turn, at which point it reappears in an unoccupied space of the dragon's choice within 120 feet of the dragon. Failure or Success: The dragon can't take this action again until the start of its next turn."},
-            {"name": "Guiding Light", "description": "The dragon uses Spellcasting to cast Guiding Bolt (level 4 version)."},
-            {"name": "Pounce", "description": "The dragon moves up to half its Speed, and it makes one Rend attack."},
-        ],
+                {
+                    "name": "Banish",
+                    "description": "Charisma Saving Throw: DC 24, one creature the dragon can see within 120 feet. Failure: 24 (7d6) Force damage, and the target has the Incapacitated condition and is transported to a harmless demiplane until the start of the dragon's next turn, at which point it reappears in an unoccupied space of the dragon's choice within 120 feet of the dragon. Failure or Success: The dragon can't take this action again until the start of its next turn.",
+                },
+                {
+                    "name": "Guiding Light",
+                    "description": "The dragon uses Spellcasting to cast Guiding Bolt (level 4 version).",
+                },
+                {
+                    "name": "Pounce",
+                    "description": "The dragon moves up to half its Speed, and it makes one Rend attack.",
+                },
+            ],
             legendary_resistances=4,
             lair_actions=[],
             mythic_actions=[],
@@ -52,12 +89,19 @@ class AncientGoldDragon(ExtendedCombatantData):
 class AncientRedDragon(ExtendedCombatantData):
     def __init__(self):
         super().__init__(
-            name="Ancient Red Dragon",
+            combatant_type="Ancient Red Dragon",
             hp=507,
             ac=22,
             temp_hp=0,
             conditions=[],
-            ability_scores={"Str": 30, "Dex": 10, "Con": 29, "Int": 18, "Wis": 15, "Cha": 27},
+            ability_scores={
+                "Str": 30,
+                "Dex": 10,
+                "Con": 29,
+                "Int": 18,
+                "Wis": 15,
+                "Cha": 27,
+            },
             saving_throws={},
             spell_slots={},
             cr="24",
@@ -73,25 +117,49 @@ class AncientRedDragon(ExtendedCombatantData):
             senses="Blindsight 60 ft., Darkvision 120 ft., Passive Perception 26",
             languages="Common, Draconic",
             traits=[
-            {"name": "Legendary Resistance (4/Day, or 5/Day in Lair)", "description": "If the dragon fails a saving throw, it can choose to succeed instead."},
-        ],
+                {
+                    "name": "Legendary Resistance (4/Day, or 5/Day in Lair)",
+                    "description": "If the dragon fails a saving throw, it can choose to succeed instead.",
+                },
+            ],
             actions=[
-            {"name": "Multiattack", "description": "The dragon makes three Rend attacks. It can replace one attack with a use of Spellcasting to cast Scorching Ray (level 3 version)."},
-            {"name": "Rend", "description": "Melee Attack Roll: +17, reach 15 ft. Hit: 19 (2d8 + 10) Slashing damage plus 10 (3d6) Fire damage."},
-            {"name": "Fire Breath (Recharge 5–6)", "description": "Dexterity Saving Throw: DC 24, each creature in a 90-foot Cone. Failure: 91 (26d6) Fire damage. Success: Half damage."},
-            {"name": "Spellcasting", "description": "The dragon casts one of the following spells, requiring no Material components and using Charisma as the spellcasting ability (spell save DC 23, +15 to hit with spell attacks):"},
-        ],
+                {
+                    "name": "Multiattack",
+                    "description": "The dragon makes three Rend attacks. It can replace one attack with a use of Spellcasting to cast Scorching Ray (level 3 version).",
+                },
+                {
+                    "name": "Rend",
+                    "description": "Melee Attack Roll: +17, reach 15 ft. Hit: 19 (2d8 + 10) Slashing damage plus 10 (3d6) Fire damage.",
+                },
+                {
+                    "name": "Fire Breath (Recharge 5–6)",
+                    "description": "Dexterity Saving Throw: DC 24, each creature in a 90-foot Cone. Failure: 91 (26d6) Fire damage. Success: Half damage.",
+                },
+                {
+                    "name": "Spellcasting",
+                    "description": "The dragon casts one of the following spells, requiring no Material components and using Charisma as the spellcasting ability (spell save DC 23, +15 to hit with spell attacks):",
+                },
+            ],
             bonus_actions=[],
             reactions=[],
             legendary_actions=[
-            {"name": "Commanding Presence", "description": "The dragon uses Spellcasting to cast Command (level 2 version). The dragon can't take this action again until the start of its next turn."},
-            {"name": "Fiery Rays", "description": "The dragon uses Spellcasting to cast Scorching Ray (level 3 version). The dragon can't take this action again until the start of its next turn."},
-            {"name": "Pounce", "description": "The dragon moves up to half its Speed, and it makes one Rend attack."},
-        ],
+                {
+                    "name": "Commanding Presence",
+                    "description": "The dragon uses Spellcasting to cast Command (level 2 version). The dragon can't take this action again until the start of its next turn.",
+                },
+                {
+                    "name": "Fiery Rays",
+                    "description": "The dragon uses Spellcasting to cast Scorching Ray (level 3 version). The dragon can't take this action again until the start of its next turn.",
+                },
+                {
+                    "name": "Pounce",
+                    "description": "The dragon moves up to half its Speed, and it makes one Rend attack.",
+                },
+            ],
             legendary_resistances=4,
             lair_actions=[],
             mythic_actions=[],
         )
 
 
-__all__ = ['AncientGoldDragon', 'AncientRedDragon']
+__all__ = ["AncientGoldDragon", "AncientRedDragon"]

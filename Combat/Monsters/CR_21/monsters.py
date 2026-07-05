@@ -5,12 +5,19 @@ from Combat.Definitions import ExtendedCombatantData
 class AncientBlackDragon(ExtendedCombatantData):
     def __init__(self):
         super().__init__(
-            name="Ancient Black Dragon",
+            combatant_type="Ancient Black Dragon",
             hp=367,
             ac=22,
             temp_hp=0,
             conditions=[],
-            ability_scores={"Str": 27, "Dex": 14, "Con": 257, "Int": 16, "Wis": 15, "Cha": 22},
+            ability_scores={
+                "Str": 27,
+                "Dex": 14,
+                "Con": 257,
+                "Int": 16,
+                "Wis": 15,
+                "Cha": 22,
+            },
             saving_throws={},
             spell_slots={},
             cr="21",
@@ -26,22 +33,49 @@ class AncientBlackDragon(ExtendedCombatantData):
             senses="Blindsight 60 ft., Darkvision 120 ft., Passive Perception 26",
             languages="Common, Draconic",
             traits=[
-            {"name": "Amphibious", "description": "The dragon can breathe air and water."},
-            {"name": "Legendary Resistance (4/Day, or 5/Day in Lair)", "description": "If the dragon fails a saving throw, it can choose to succeed instead."},
-        ],
+                {
+                    "name": "Amphibious",
+                    "description": "The dragon can breathe air and water.",
+                },
+                {
+                    "name": "Legendary Resistance (4/Day, or 5/Day in Lair)",
+                    "description": "If the dragon fails a saving throw, it can choose to succeed instead.",
+                },
+            ],
             actions=[
-            {"name": "Multiattack", "description": "The dragon makes three Rend attacks. It can replace one attack with a use of Spellcasting to cast Melf's Acid Arrow (level 4 version)."},
-            {"name": "Rend", "description": "Melee Attack Roll: +15, reach 15 ft. Hit: 17 (2d8 + 8) Slashing damage plus 9 (2d8) Acid damage."},
-            {"name": "Acid Breath (Recharge 5–6)", "description": "Dexterity Saving Throw: DC 22, each creature in a 90-foot-long, 10-foot-wide Line. Failure: 67 (15d8) Acid damage. Success: Half damage."},
-            {"name": "Spellcasting", "description": "The dragon casts one of the following spells, requiring no Material components and using Charisma as the spellcasting ability (spell save DC 21, +13 to hit with spell attacks):"},
-        ],
+                {
+                    "name": "Multiattack",
+                    "description": "The dragon makes three Rend attacks. It can replace one attack with a use of Spellcasting to cast Melf's Acid Arrow (level 4 version).",
+                },
+                {
+                    "name": "Rend",
+                    "description": "Melee Attack Roll: +15, reach 15 ft. Hit: 17 (2d8 + 8) Slashing damage plus 9 (2d8) Acid damage.",
+                },
+                {
+                    "name": "Acid Breath (Recharge 5–6)",
+                    "description": "Dexterity Saving Throw: DC 22, each creature in a 90-foot-long, 10-foot-wide Line. Failure: 67 (15d8) Acid damage. Success: Half damage.",
+                },
+                {
+                    "name": "Spellcasting",
+                    "description": "The dragon casts one of the following spells, requiring no Material components and using Charisma as the spellcasting ability (spell save DC 21, +13 to hit with spell attacks):",
+                },
+            ],
             bonus_actions=[],
             reactions=[],
             legendary_actions=[
-            {"name": "Cloud of Insects", "description": "Dexterity Saving Throw: DC 21, one creature the dragon can see within 120 feet. Failure: 33 (6d10) Poison damage, and the target has Disadvantage on saving throws to maintain Concentration until the end of its next turn. Failure or Success: The dragon can't take this action again until the start of its next turn."},
-            {"name": "Frightful Presence", "description": "The dragon uses Spellcasting to cast Fear. The dragon can't take this action again until the start of its next turn."},
-            {"name": "Pounce", "description": "The dragon moves up to half its Speed, and it makes one Rend attack."},
-        ],
+                {
+                    "name": "Cloud of Insects",
+                    "description": "Dexterity Saving Throw: DC 21, one creature the dragon can see within 120 feet. Failure: 33 (6d10) Poison damage, and the target has Disadvantage on saving throws to maintain Concentration until the end of its next turn. Failure or Success: The dragon can't take this action again until the start of its next turn.",
+                },
+                {
+                    "name": "Frightful Presence",
+                    "description": "The dragon uses Spellcasting to cast Fear. The dragon can't take this action again until the start of its next turn.",
+                },
+                {
+                    "name": "Pounce",
+                    "description": "The dragon moves up to half its Speed, and it makes one Rend attack.",
+                },
+            ],
             legendary_resistances=4,
             lair_actions=[],
             mythic_actions=[],
@@ -51,12 +85,19 @@ class AncientBlackDragon(ExtendedCombatantData):
 class AncientCopperDragon(ExtendedCombatantData):
     def __init__(self):
         super().__init__(
-            name="Ancient Copper Dragon",
+            combatant_type="Ancient Copper Dragon",
             hp=367,
             ac=21,
             temp_hp=0,
             conditions=[],
-            ability_scores={"Str": 27, "Dex": 12, "Con": 25, "Int": 20, "Wis": 17, "Cha": 22},
+            ability_scores={
+                "Str": 27,
+                "Dex": 12,
+                "Con": 25,
+                "Int": 20,
+                "Wis": 17,
+                "Cha": 22,
+            },
             saving_throws={},
             spell_slots={},
             cr="21",
@@ -72,22 +113,49 @@ class AncientCopperDragon(ExtendedCombatantData):
             senses="Blindsight 60 ft., Darkvision 120 ft., Passive Perception 27",
             languages="Common, Draconic",
             traits=[
-            {"name": "Legendary Resistance (4/Day, or 5/Day in Lair)", "description": "If the dragon fails a saving throw, it can choose to succeed instead."},
-        ],
+                {
+                    "name": "Legendary Resistance (4/Day, or 5/Day in Lair)",
+                    "description": "If the dragon fails a saving throw, it can choose to succeed instead.",
+                },
+            ],
             actions=[
-            {"name": "Multiattack", "description": "The dragon makes three Rend attacks. It can replace one attack with a use of (A) Slowing Breath or (B) Spellcasting to cast Mind Spike (level 5 version)."},
-            {"name": "Rend", "description": "Melee Attack Roll: +15, reach 15 ft. Hit: 19 (2d10 + 8) Slashing damage plus 9 (2d8) Acid damage."},
-            {"name": "Acid Breath (Recharge 5–6)", "description": "Dexterity Saving Throw: DC 22, each creature in an 90-foot-long, 10-foot-wide Line. Failure: 63 (14d8) Acid damage. Success: Half damage."},
-            {"name": "Slowing Breath", "description": "Constitution Saving Throw: DC 22, each creature in a 90-foot Cone. Failure: The target can't take Reactions; its Speed is halved; and it can take either an action or a Bonus Action on its turn, not both. This effect lasts until the end of its next turn."},
-            {"name": "Spellcasting", "description": "The dragon casts one of the following spells, requiring no Material components and using Charisma as the spellcasting ability (spell save DC 21):"},
-        ],
+                {
+                    "name": "Multiattack",
+                    "description": "The dragon makes three Rend attacks. It can replace one attack with a use of (A) Slowing Breath or (B) Spellcasting to cast Mind Spike (level 5 version).",
+                },
+                {
+                    "name": "Rend",
+                    "description": "Melee Attack Roll: +15, reach 15 ft. Hit: 19 (2d10 + 8) Slashing damage plus 9 (2d8) Acid damage.",
+                },
+                {
+                    "name": "Acid Breath (Recharge 5–6)",
+                    "description": "Dexterity Saving Throw: DC 22, each creature in an 90-foot-long, 10-foot-wide Line. Failure: 63 (14d8) Acid damage. Success: Half damage.",
+                },
+                {
+                    "name": "Slowing Breath",
+                    "description": "Constitution Saving Throw: DC 22, each creature in a 90-foot Cone. Failure: The target can't take Reactions; its Speed is halved; and it can take either an action or a Bonus Action on its turn, not both. This effect lasts until the end of its next turn.",
+                },
+                {
+                    "name": "Spellcasting",
+                    "description": "The dragon casts one of the following spells, requiring no Material components and using Charisma as the spellcasting ability (spell save DC 21):",
+                },
+            ],
             bonus_actions=[],
             reactions=[],
             legendary_actions=[
-            {"name": "Giggling Magic", "description": "Charisma Saving Throw: DC 21, one creature the dragon can see within 120 feet. Failure: 31 (9d6) Psychic damage. Until the end of its next turn, the target rolls 1d8 whenever it makes an ability check or attack roll and subtracts the number rolled from the D20 Test. Failure or Success: The dragon can't take this action again until the start of its next turn."},
-            {"name": "Mind Jolt", "description": "The dragon uses Spellcasting to cast Mind Spike (level 5 version). The dragon can't take this action again until the start of its next turn."},
-            {"name": "Pounce", "description": "The dragon moves up to half its Speed, and it makes one Rend attack."},
-        ],
+                {
+                    "name": "Giggling Magic",
+                    "description": "Charisma Saving Throw: DC 21, one creature the dragon can see within 120 feet. Failure: 31 (9d6) Psychic damage. Until the end of its next turn, the target rolls 1d8 whenever it makes an ability check or attack roll and subtracts the number rolled from the D20 Test. Failure or Success: The dragon can't take this action again until the start of its next turn.",
+                },
+                {
+                    "name": "Mind Jolt",
+                    "description": "The dragon uses Spellcasting to cast Mind Spike (level 5 version). The dragon can't take this action again until the start of its next turn.",
+                },
+                {
+                    "name": "Pounce",
+                    "description": "The dragon moves up to half its Speed, and it makes one Rend attack.",
+                },
+            ],
             legendary_resistances=4,
             lair_actions=[],
             mythic_actions=[],
@@ -97,12 +165,19 @@ class AncientCopperDragon(ExtendedCombatantData):
 class Archhag(ExtendedCombatantData):
     def __init__(self):
         super().__init__(
-            name="Arch-hag",
+            combatant_type="Arch-hag",
             hp=333,
             ac=20,
             temp_hp=0,
             conditions=[],
-            ability_scores={"Str": 24, "Dex": 15, "Con": 23, "Int": 19, "Wis": 19, "Cha": 25},
+            ability_scores={
+                "Str": 24,
+                "Dex": 15,
+                "Con": 23,
+                "Int": 19,
+                "Wis": 19,
+                "Cha": 25,
+            },
             saving_throws={},
             spell_slots={},
             cr="21",
@@ -118,26 +193,62 @@ class Archhag(ExtendedCombatantData):
             senses="Truesight 60 ft., Passive Perception 21",
             languages="All",
             traits=[
-            {"name": "Coven Magic", "description": "While within 30 feet of at least two hag allies, the hag can cast one of the following spells, requiring no Material components, using the spell's normal casting time, and using Intelligence as the spellcasting ability (spell save DC 19): Augury, Find Familiar, Identify, Locate Object, Scrying, or Unseen Servant. The hag must finish a Long Rest before using this trait to cast that spell again."},
-            {"name": "Legendary Resistance (4/Day, or 5/Day in Lair)", "description": "If the hag fails a saving throw, it can choose to succeed instead."},
-            {"name": "Magic Resistance", "description": "The hag has Advantage on saving throws against spells and other magical effects."},
-            {"name": "Spiteful Escape", "description": "When the hag drops to 0 Hit Points, it dies only if it is within 30 feet of its anathema (a thing the DM chooses as the hag's most hated thing). Otherwise, the hag drops to 1 Hit Point and teleports to a harmless demiplane, and it can't return to the plane it left for 2d6 days. When the hag teleports away, each creature within 60 feet of the space it left is cursed. Until the curse ends, a creature has Disadvantage on ability checks and saving throws, and the hag knows its location anywhere in the multiverse."},
-        ],
+                {
+                    "name": "Coven Magic",
+                    "description": "While within 30 feet of at least two hag allies, the hag can cast one of the following spells, requiring no Material components, using the spell's normal casting time, and using Intelligence as the spellcasting ability (spell save DC 19): Augury, Find Familiar, Identify, Locate Object, Scrying, or Unseen Servant. The hag must finish a Long Rest before using this trait to cast that spell again.",
+                },
+                {
+                    "name": "Legendary Resistance (4/Day, or 5/Day in Lair)",
+                    "description": "If the hag fails a saving throw, it can choose to succeed instead.",
+                },
+                {
+                    "name": "Magic Resistance",
+                    "description": "The hag has Advantage on saving throws against spells and other magical effects.",
+                },
+                {
+                    "name": "Spiteful Escape",
+                    "description": "When the hag drops to 0 Hit Points, it dies only if it is within 30 feet of its anathema (a thing the DM chooses as the hag's most hated thing). Otherwise, the hag drops to 1 Hit Point and teleports to a harmless demiplane, and it can't return to the plane it left for 2d6 days. When the hag teleports away, each creature within 60 feet of the space it left is cursed. Until the curse ends, a creature has Disadvantage on ability checks and saving throws, and the hag knows its location anywhere in the multiverse.",
+                },
+            ],
             actions=[
-            {"name": "Multiattack", "description": "The hag makes two Spectral Claw attacks and uses Crackling Wave."},
-            {"name": "Spectral Claw", "description": "Melee or Ranged Attack Roll: +14, reach 10 ft. or range 60 ft. Hit: 17 (3d6 + 7) Force damage. If the target is a Large or smaller creature, it has the Prone condition."},
-            {"name": "Crackling Wave", "description": "Dexterity Saving Throw: DC 22, each creature in a 60-foot Cone. Failure: 32 (5d12) Lightning damage. Success: Half damage. Failure or Success: The target is cursed until the end of the hag's next turn. The target can't take Reactions until the curse ends."},
-            {"name": "Spellcasting", "description": "The hag casts one of the following spells, requiring no Material components and using Charisma as the spellcasting ability (spell save DC 22):"},
-            {"name": "Tongue Twister", "description": "The hag casts Counterspell in response to that spell's trigger, using the same spellcasting ability as Spellcasting. If the target fails its saving throw, it is cursed until the end of its next turn. Until the curse ends, the target can't cast spells with a Verbal component, and when it speaks, it says the opposite of what it means."},
-        ],
+                {
+                    "name": "Multiattack",
+                    "description": "The hag makes two Spectral Claw attacks and uses Crackling Wave.",
+                },
+                {
+                    "name": "Spectral Claw",
+                    "description": "Melee or Ranged Attack Roll: +14, reach 10 ft. or range 60 ft. Hit: 17 (3d6 + 7) Force damage. If the target is a Large or smaller creature, it has the Prone condition.",
+                },
+                {
+                    "name": "Crackling Wave",
+                    "description": "Dexterity Saving Throw: DC 22, each creature in a 60-foot Cone. Failure: 32 (5d12) Lightning damage. Success: Half damage. Failure or Success: The target is cursed until the end of the hag's next turn. The target can't take Reactions until the curse ends.",
+                },
+                {
+                    "name": "Spellcasting",
+                    "description": "The hag casts one of the following spells, requiring no Material components and using Charisma as the spellcasting ability (spell save DC 22):",
+                },
+                {
+                    "name": "Tongue Twister",
+                    "description": "The hag casts Counterspell in response to that spell's trigger, using the same spellcasting ability as Spellcasting. If the target fails its saving throw, it is cursed until the end of its next turn. Until the curse ends, the target can't cast spells with a Verbal component, and when it speaks, it says the opposite of what it means.",
+                },
+            ],
             bonus_actions=[
-            {"name": "Witch Strike", "description": "Each creature cursed by the hag and within 60 feet of it takes 14 (4d6) Lightning damage."},
-        ],
+                {
+                    "name": "Witch Strike",
+                    "description": "Each creature cursed by the hag and within 60 feet of it takes 14 (4d6) Lightning damage.",
+                },
+            ],
             reactions=[],
             legendary_actions=[
-            {"name": "Hag's Swipe", "description": "The hag makes one Spectral Claw attack."},
-            {"name": "Malicious Magic", "description": "The hag uses Spellcasting to cast Dimension Door or Hypnotic Pattern. The hag can't take this action again until the start of its next turn."},
-        ],
+                {
+                    "name": "Hag's Swipe",
+                    "description": "The hag makes one Spectral Claw attack.",
+                },
+                {
+                    "name": "Malicious Magic",
+                    "description": "The hag uses Spellcasting to cast Dimension Door or Hypnotic Pattern. The hag can't take this action again until the start of its next turn.",
+                },
+            ],
             legendary_resistances=4,
             lair_actions=[],
             mythic_actions=[],
@@ -147,12 +258,19 @@ class Archhag(ExtendedCombatantData):
 class Lich(ExtendedCombatantData):
     def __init__(self):
         super().__init__(
-            name="Lich",
+            combatant_type="Lich",
             hp=315,
             ac=20,
             temp_hp=0,
             conditions=[],
-            ability_scores={"Str": 11, "Dex": 16, "Con": 16, "Int": 21, "Wis": 14, "Cha": 16},
+            ability_scores={
+                "Str": 11,
+                "Dex": 16,
+                "Con": 16,
+                "Int": 21,
+                "Wis": 14,
+                "Cha": 16,
+            },
             saving_throws={},
             spell_slots={},
             cr="21",
@@ -168,23 +286,53 @@ class Lich(ExtendedCombatantData):
             senses="Truesight 120 ft., Passive Perception 19",
             languages="All",
             traits=[
-            {"name": "Legendary Resistance (4/Day, or 5/Day in Lair)", "description": "If the lich fails a saving throw, it can choose to succeed instead."},
-            {"name": "Spirit Jar", "description": "If destroyed, the lich reforms in 1d10 days if it has a spirit jar, reviving with all its Hit Points. The new body appears in an unoccupied space within the lich's lair."},
-        ],
+                {
+                    "name": "Legendary Resistance (4/Day, or 5/Day in Lair)",
+                    "description": "If the lich fails a saving throw, it can choose to succeed instead.",
+                },
+                {
+                    "name": "Spirit Jar",
+                    "description": "If destroyed, the lich reforms in 1d10 days if it has a spirit jar, reviving with all its Hit Points. The new body appears in an unoccupied space within the lich's lair.",
+                },
+            ],
             actions=[
-            {"name": "Multiattack", "description": "The lich makes three attacks, using Eldritch Burst or Paralyzing Touch in any combination."},
-            {"name": "Eldritch Burst", "description": "Melee or Ranged Attack Roll: +12, reach 5 ft. or range 120 ft. Hit: 31 (4d12 + 5) Force damage."},
-            {"name": "Paralyzing Touch", "description": "Melee Attack Roll: +12, reach 5 ft. Hit: 15 (3d6 + 5) Cold damage, and the target has the Paralyzed condition until the start of the lich's next turn."},
-            {"name": "Spellcasting", "description": "The lich casts one of the following spells, using Intelligence as the spellcasting ability (spell save DC 20):"},
-            {"name": "Protective Magic", "description": "The lich casts Counterspell or Shield in response to the spell's trigger, using the same spellcasting ability as Spellcasting."},
-        ],
+                {
+                    "name": "Multiattack",
+                    "description": "The lich makes three attacks, using Eldritch Burst or Paralyzing Touch in any combination.",
+                },
+                {
+                    "name": "Eldritch Burst",
+                    "description": "Melee or Ranged Attack Roll: +12, reach 5 ft. or range 120 ft. Hit: 31 (4d12 + 5) Force damage.",
+                },
+                {
+                    "name": "Paralyzing Touch",
+                    "description": "Melee Attack Roll: +12, reach 5 ft. Hit: 15 (3d6 + 5) Cold damage, and the target has the Paralyzed condition until the start of the lich's next turn.",
+                },
+                {
+                    "name": "Spellcasting",
+                    "description": "The lich casts one of the following spells, using Intelligence as the spellcasting ability (spell save DC 20):",
+                },
+                {
+                    "name": "Protective Magic",
+                    "description": "The lich casts Counterspell or Shield in response to the spell's trigger, using the same spellcasting ability as Spellcasting.",
+                },
+            ],
             bonus_actions=[],
             reactions=[],
             legendary_actions=[
-            {"name": "Deathly Teleport", "description": "The lich teleports up to 60 feet to an unoccupied space it can see, and each creature within 10 feet of the space it left takes 11 (2d10) Necrotic damage."},
-            {"name": "Disrupt Life", "description": "Constitution Saving Throw: DC 20, each creature that isn't an Undead in a 20-foot Emanation originating from the lich. Failure: 31 (9d6) Necrotic damage. Success: Half damage. Failure or Success: The lich can't take this action again until the start of its next turn."},
-            {"name": "Frightening Gaze", "description": "The lich casts Fear, using the same spellcasting ability as Spellcasting. The lich can't take this action again until the start of its next turn."},
-        ],
+                {
+                    "name": "Deathly Teleport",
+                    "description": "The lich teleports up to 60 feet to an unoccupied space it can see, and each creature within 10 feet of the space it left takes 11 (2d10) Necrotic damage.",
+                },
+                {
+                    "name": "Disrupt Life",
+                    "description": "Constitution Saving Throw: DC 20, each creature that isn't an Undead in a 20-foot Emanation originating from the lich. Failure: 31 (9d6) Necrotic damage. Success: Half damage. Failure or Success: The lich can't take this action again until the start of its next turn.",
+                },
+                {
+                    "name": "Frightening Gaze",
+                    "description": "The lich casts Fear, using the same spellcasting ability as Spellcasting. The lich can't take this action again until the start of its next turn.",
+                },
+            ],
             legendary_resistances=4,
             lair_actions=[],
             mythic_actions=[],
@@ -194,12 +342,19 @@ class Lich(ExtendedCombatantData):
 class Solar(ExtendedCombatantData):
     def __init__(self):
         super().__init__(
-            name="Solar",
+            combatant_type="Solar",
             hp=297,
             ac=21,
             temp_hp=0,
             conditions=[],
-            ability_scores={"Str": 26, "Dex": 22, "Con": 26, "Int": 25, "Wis": 25, "Cha": 30},
+            ability_scores={
+                "Str": 26,
+                "Dex": 22,
+                "Con": 26,
+                "Int": 25,
+                "Wis": 25,
+                "Cha": 30,
+            },
             saving_throws={},
             spell_slots={},
             cr="21",
@@ -215,29 +370,62 @@ class Solar(ExtendedCombatantData):
             senses="Truesight 120 ft., Passive Perception 24",
             languages="All; telepathy 120 ft.",
             traits=[
-            {"name": "Divine Awareness", "description": "The solar knows if it hears a lie."},
-            {"name": "Exalted Restoration", "description": "If the solar dies outside Mount Celestia, its body disappears, and it gains a new body instantly, reviving with all its Hit Points somewhere in Mount Celestia."},
-            {"name": "Legendary Resistance (4/Day)", "description": "If the solar fails a saving throw, it can choose to succeed instead."},
-            {"name": "Magic Resistance", "description": "The solar has Advantage on saving throws against spells and other magical effects."},
-        ],
+                {
+                    "name": "Divine Awareness",
+                    "description": "The solar knows if it hears a lie.",
+                },
+                {
+                    "name": "Exalted Restoration",
+                    "description": "If the solar dies outside Mount Celestia, its body disappears, and it gains a new body instantly, reviving with all its Hit Points somewhere in Mount Celestia.",
+                },
+                {
+                    "name": "Legendary Resistance (4/Day)",
+                    "description": "If the solar fails a saving throw, it can choose to succeed instead.",
+                },
+                {
+                    "name": "Magic Resistance",
+                    "description": "The solar has Advantage on saving throws against spells and other magical effects.",
+                },
+            ],
             actions=[
-            {"name": "Multiattack", "description": "The solar makes two Flying Sword attacks. It can replace one attack with a use of Slaying Bow."},
-            {"name": "Flying Sword", "description": "Melee or Ranged Attack Roll: +15, reach 10 ft. or range 120 ft. Hit: 22 (4d6 + 8) Slashing damage plus 36 (8d8) Radiant damage. Hit or Miss: The sword magically returns to the solar's hand or hovers within 5 feet of the solar immediately after a ranged attack."},
-            {"name": "Slaying Bow", "description": "Dexterity Saving Throw: DC 21, one creature the solar can see within 600 feet. Failure: If the creature has 100 Hit Points or fewer, it dies. It otherwise takes 24 (4d8 + 6) Piercing damage plus 36 (8d8) Radiant damage."},
-            {"name": "Spellcasting", "description": "The solar casts one of the following spells, requiring no Material components and using Charisma as the spellcasting ability (spell save DC 25):"},
-        ],
+                {
+                    "name": "Multiattack",
+                    "description": "The solar makes two Flying Sword attacks. It can replace one attack with a use of Slaying Bow.",
+                },
+                {
+                    "name": "Flying Sword",
+                    "description": "Melee or Ranged Attack Roll: +15, reach 10 ft. or range 120 ft. Hit: 22 (4d6 + 8) Slashing damage plus 36 (8d8) Radiant damage. Hit or Miss: The sword magically returns to the solar's hand or hovers within 5 feet of the solar immediately after a ranged attack.",
+                },
+                {
+                    "name": "Slaying Bow",
+                    "description": "Dexterity Saving Throw: DC 21, one creature the solar can see within 600 feet. Failure: If the creature has 100 Hit Points or fewer, it dies. It otherwise takes 24 (4d8 + 6) Piercing damage plus 36 (8d8) Radiant damage.",
+                },
+                {
+                    "name": "Spellcasting",
+                    "description": "The solar casts one of the following spells, requiring no Material components and using Charisma as the spellcasting ability (spell save DC 25):",
+                },
+            ],
             bonus_actions=[
-            {"name": "Divine Aid (3/Day)", "description": "The solar casts Cure Wounds (level 2 version), Lesser Restoration, or Remove Curse, using the same spellcasting ability as Spellcasting."},
-        ],
+                {
+                    "name": "Divine Aid (3/Day)",
+                    "description": "The solar casts Cure Wounds (level 2 version), Lesser Restoration, or Remove Curse, using the same spellcasting ability as Spellcasting.",
+                },
+            ],
             reactions=[],
             legendary_actions=[
-            {"name": "Blinding Gaze", "description": "Constitution Saving Throw: DC 25, one creature the solar can see within 120 feet. Failure: The target has the Blinded condition for 1 minute. Failure or Success: The solar can't take this action again until the start of its next turn."},
-            {"name": "Radiant Teleport", "description": "The solar teleports up to 60 feet to an unoccupied space it can see. Dexterity Saving Throw: DC 25, each creature in a 10-foot Emanation originating from the solar at its destination space. Failure: 11 (2d10) Radiant damage. Success: Half damage."},
-        ],
+                {
+                    "name": "Blinding Gaze",
+                    "description": "Constitution Saving Throw: DC 25, one creature the solar can see within 120 feet. Failure: The target has the Blinded condition for 1 minute. Failure or Success: The solar can't take this action again until the start of its next turn.",
+                },
+                {
+                    "name": "Radiant Teleport",
+                    "description": "The solar teleports up to 60 feet to an unoccupied space it can see. Dexterity Saving Throw: DC 25, each creature in a 10-foot Emanation originating from the solar at its destination space. Failure: 11 (2d10) Radiant damage. Success: Half damage.",
+                },
+            ],
             legendary_resistances=4,
             lair_actions=[],
             mythic_actions=[],
         )
 
 
-__all__ = ['AncientBlackDragon', 'AncientCopperDragon', 'Archhag', 'Lich', 'Solar']
+__all__ = ["AncientBlackDragon", "AncientCopperDragon", "Archhag", "Lich", "Solar"]

@@ -4,13 +4,7 @@ import sys
 from datetime import datetime
 from pathlib import Path
 
-import CharacterSheetCreator
-import Definitions
-from Combat.ConditionRules import ConditionRule
-from Combat.Definitions import Action, BasicCombatantData, Condition, ExtendedCombatantData
-from Combat.Rules import Rule, group_by_category, load_rules
-from Features.Equipment import Armor
-
+from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import (
     QApplication,
     QComboBox,
@@ -23,6 +17,7 @@ from PyQt6.QtWidgets import (
     QListWidget,
     QListWidgetItem,
     QMainWindow,
+    QMessageBox,
     QProgressBar,
     QPushButton,
     QScrollArea,
@@ -32,10 +27,18 @@ from PyQt6.QtWidgets import (
     QTreeWidgetItem,
     QVBoxLayout,
     QWidget,
-    QMessageBox,
 )
-from PyQt6.QtCore import Qt, QSize
-from PyQt6.QtGui import QFont, QColor
+
+import Definitions
+from Combat.ConditionRules import ConditionRule
+from Combat.Definitions import (
+    Action,
+    BasicCombatantData,
+    Condition,
+    ExtendedCombatantData,
+)
+from Combat.Rules import Rule, group_by_category, load_rules
+from Features.Equipment import Armor
 
 # ---------------------------------------------------------------------------
 # Global stylesheet — dark fantasy theme
@@ -320,6 +323,7 @@ class CombatAppQt:
     # ------------------------------------------------------------------
     def _add_from_character_sheet(self, character_sheet):
         from Spells.SpellFactory import SpellFactory
+
         character = character_sheet.setup_character_stat_block()
         ac = character.calculate_armor_class()
         if Armor.ShieldArmor in [type(a) for a in character_sheet.armors]:
@@ -395,7 +399,7 @@ class CombatAppQt:
 
     def _add_basic_combatant(self, combatant: BasicCombatantData):
         char = {
-            "name": combatant.name,
+            "name": combatant.combatant_type,
             "hp": combatant.hp,
             "max_hp": combatant.max_hp,
             "ac": combatant.ac,
@@ -408,28 +412,30 @@ class CombatAppQt:
             "Saving Throws": combatant.saving_throws,
         }
         if isinstance(combatant, ExtendedCombatantData):
-            char.update({
-                "cr": combatant.cr,
-                "monster_type": combatant.monster_type,
-                "ac_note": combatant.ac_note,
-                "hp_formula": combatant.hp_formula,
-                "speed": combatant.speed,
-                "skills": combatant.skills,
-                "damage_vulnerabilities": combatant.damage_vulnerabilities,
-                "damage_resistances": combatant.damage_resistances,
-                "damage_immunities": combatant.damage_immunities,
-                "condition_immunities": combatant.condition_immunities,
-                "senses": combatant.senses,
-                "languages": combatant.languages,
-                "traits": combatant.traits,
-                "actions": combatant.actions,
-                "bonus_actions": combatant.bonus_actions,
-                "reactions": combatant.reactions,
-                "legendary_actions": combatant.legendary_actions,
-                "legendary_resistances": combatant.legendary_resistances,
-                "lair_actions": combatant.lair_actions,
-                "mythic_actions": combatant.mythic_actions,
-            })
+            char.update(
+                {
+                    "cr": combatant.cr,
+                    "monster_type": combatant.monster_type,
+                    "ac_note": combatant.ac_note,
+                    "hp_formula": combatant.hp_formula,
+                    "speed": combatant.speed,
+                    "skills": combatant.skills,
+                    "damage_vulnerabilities": combatant.damage_vulnerabilities,
+                    "damage_resistances": combatant.damage_resistances,
+                    "damage_immunities": combatant.damage_immunities,
+                    "condition_immunities": combatant.condition_immunities,
+                    "senses": combatant.senses,
+                    "languages": combatant.languages,
+                    "traits": combatant.traits,
+                    "actions": combatant.actions,
+                    "bonus_actions": combatant.bonus_actions,
+                    "reactions": combatant.reactions,
+                    "legendary_actions": combatant.legendary_actions,
+                    "legendary_resistances": combatant.legendary_resistances,
+                    "lair_actions": combatant.lair_actions,
+                    "mythic_actions": combatant.mythic_actions,
+                }
+            )
         self.characters.append(char)
 
     # ------------------------------------------------------------------
@@ -437,7 +443,10 @@ class CombatAppQt:
     # ------------------------------------------------------------------
     def _write_log(self, data: dict):
         data["round_number"] = self.round_number
-        data["combatants"] = [{k: v for k, v in c.items() if not k.startswith("_")} for c in self.characters]
+        data["combatants"] = [
+            {k: v for k, v in c.items() if not k.startswith("_")}
+            for c in self.characters
+        ]
         self.log_file.write_text(json.dumps(data, indent=2))
 
     def _current_turn_name(self) -> str | None:
@@ -546,20 +555,22 @@ class CombatAppQt:
         if char.get("spell_slots"):
             active = {k: v for k, v in char["spell_slots"].items() if v > 0}
             if active:
-                add_field("Spell Slots", "  ".join(f"L{k}×{v}" for k, v in active.items()))
+                add_field(
+                    "Spell Slots", "  ".join(f"L{k}×{v}" for k, v in active.items())
+                )
 
         scores = char.get("Ability Scores", {})
         saves = char.get("Saving Throws", {})
         if scores:
             add_divider()
             add_header("Ability Scores")
-            td  = "border:1px solid #0f3460;text-align:center;padding:2px 7px;"
+            td = "border:1px solid #0f3460;text-align:center;padding:2px 7px;"
             tds = "border:1px solid #0f3460;text-align:center;padding:2px 7px;color:#a0a0b0;font-size:11px;"
             tdt = "border:1px solid #0f3460;border-top:2px solid #0f3460;text-align:center;padding:2px 7px;color:#a0a0b0;font-size:11px;"
             cells_h = cells_v = cells_m = cells_s = ""
             for key, val in scores.items():
                 mod = (val - 10) // 2
-                sv  = saves.get(key, mod)
+                sv = saves.get(key, mod)
                 cells_h += f"<td style='{td}'><b>{key}</b></td>"
                 cells_v += f"<td style='{td}'>{val}</td>"
                 cells_m += f"<td style='{tds}'>{mod:+}</td>"
@@ -590,9 +601,12 @@ class CombatAppQt:
 
             add_divider()
             if char.get("class_levels"):
-                add_field("Class", ", ".join(
-                    f"{cls} {lvl}" for cls, lvl in char["class_levels"].items()
-                ))
+                add_field(
+                    "Class",
+                    ", ".join(
+                        f"{cls} {lvl}" for cls, lvl in char["class_levels"].items()
+                    ),
+                )
             if char.get("subclass"):
                 add_field("Subclass", char["subclass"])
             if char.get("proficiency_bonus"):
@@ -606,7 +620,7 @@ class CombatAppQt:
             if sb:
                 add_divider()
                 add_header("Skills")
-                td  = "border:1px solid #0f3460;padding:2px 7px;"
+                td = "border:1px solid #0f3460;padding:2px 7px;"
                 tdr = f"{td}text-align:right;"
                 tdc = f"{td}text-align:center;font-size:10px;"
                 header_row = (
@@ -618,12 +632,14 @@ class CombatAppQt:
                 )
                 skill_rows = ""
                 for skill in Definitions.Skill:
-                    mod    = sb.get_skill_modifier(skill)
+                    mod = sb.get_skill_modifier(skill)
                     has_exp = sb.has_expertise_in_skill(skill)
                     is_prof = sb.is_proficient_in_skill(skill)
                     if has_exp:
                         name_html = f"<b>{skill.value}</b>"
-                        prof_html = f"<span style='color:#d4a747;font-weight:bold'>Exp</span>"
+                        prof_html = (
+                            f"<span style='color:#d4a747;font-weight:bold'>Exp</span>"
+                        )
                     elif is_prof:
                         name_html = f"<b>{skill.value}</b>"
                         prof_html = f"<span style='color:#7ecb7e'>Prof</span>"
@@ -655,12 +671,19 @@ class CombatAppQt:
                         )
                 if seen:
                     add_divider()
-                    add_field("Spell DC", "  ".join(
-                        f"DC {dc} ({ab.short_name})" for ab, (dc, _) in seen.items()
-                    ))
-                    add_field("Spell Attack", "  ".join(
-                        f"{atk:+} ({ab.short_name})" for ab, (_, atk) in seen.items()
-                    ))
+                    add_field(
+                        "Spell DC",
+                        "  ".join(
+                            f"DC {dc} ({ab.short_name})" for ab, (dc, _) in seen.items()
+                        ),
+                    )
+                    add_field(
+                        "Spell Attack",
+                        "  ".join(
+                            f"{atk:+} ({ab.short_name})"
+                            for ab, (_, atk) in seen.items()
+                        ),
+                    )
 
             # Spells as expandable items grouped by level
             spell_objects_map = char.get("_spell_objects", {})
@@ -668,7 +691,9 @@ class CombatAppQt:
                 add_divider()
                 add_header("Spells")
                 current_level = -1
-                for spell_name, level, _ in sorted(spells_with_level, key=lambda s: (s[1], s[0])):
+                for spell_name, level, _ in sorted(
+                    spells_with_level, key=lambda s: (s[1], s[0])
+                ):
                     if level != current_level:
                         current_level = level
                         lvl_label = "Cantrips" if level == 0 else f"Level {level}"
@@ -718,7 +743,11 @@ class CombatAppQt:
                     wwl.setContentsMargins(16, 2, 0, 4)
                     wwl.setSpacing(2)
 
-                    prof_str = "Proficient" if weapon.player_is_proficient else "Not proficient"
+                    prof_str = (
+                        "Proficient"
+                        if weapon.player_is_proficient
+                        else "Not proficient"
+                    )
                     type_line = "  ·  ".join(
                         [stats.weapon_type.value, stats.damage_type.value, prof_str]
                     )
@@ -734,7 +763,9 @@ class CombatAppQt:
                         wwl.addWidget(desc_lbl)
 
                     if stats.mastery:
-                        mark = "✓" if getattr(weapon, "player_has_mastery", False) else "✗"
+                        mark = (
+                            "✓" if getattr(weapon, "player_has_mastery", False) else "✗"
+                        )
                         mastery_lbl = QLabel(
                             f"<span style='color:#a0a0b0'>Mastery:</span> "
                             f"<span style='color:#c9a84c'>{stats.mastery.value} {mark}</span> "
@@ -747,7 +778,9 @@ class CombatAppQt:
 
                     if stats.properties:
                         prop_header_lbl = QLabel("Properties:")
-                        prop_header_lbl.setStyleSheet("color: #a0a0b0; font-size: 11px;")
+                        prop_header_lbl.setStyleSheet(
+                            "color: #a0a0b0; font-size: 11px;"
+                        )
                         wwl.addWidget(prop_header_lbl)
                         for prop in stats.properties:
                             prop_lbl = QLabel(
@@ -779,7 +812,9 @@ class CombatAppQt:
                             fwl.setSpacing(2)
                             origin = getattr(feat, "origin", "")
                             if origin:
-                                orig_lbl = QLabel(f"<i style='color:#a0a0b0'>{origin}</i>")
+                                orig_lbl = QLabel(
+                                    f"<i style='color:#a0a0b0'>{origin}</i>"
+                                )
                                 orig_lbl.setTextFormat(Qt.TextFormat.RichText)
                                 fwl.addWidget(orig_lbl)
                             desc_lbl = QLabel(desc_text)
@@ -820,7 +855,7 @@ class CombatAppQt:
 
             if char.get("skills"):
                 add_header("Skills")
-                td  = "border:1px solid #0f3460;padding:2px 8px;"
+                td = "border:1px solid #0f3460;padding:2px 8px;"
                 tdr = f"{td}text-align:right;"
                 rows = "".join(
                     f"<tr><td style='{td}'>{k}</td><td style='{tdr}'>{v:+}</td></tr>"
@@ -926,9 +961,7 @@ class CombatAppQt:
 
         # Gold header
         header_lbl = QLabel(f"{name} is concentrating!")
-        header_lbl.setStyleSheet(
-            "color: #c9a84c; font-weight: bold; font-size: 13px;"
-        )
+        header_lbl.setStyleSheet("color: #c9a84c; font-weight: bold; font-size: 13px;")
         header_lbl.setWordWrap(True)
         layout.addWidget(header_lbl)
 
@@ -1017,9 +1050,7 @@ class CombatAppQt:
             if roll < dc:
                 if "Concentrating" in char.get("conditions", []):
                     char["conditions"].remove("Concentrating")
-                self._log_event(
-                    f"{name} loses concentration (DC {dc}, rolled {roll})"
-                )
+                self._log_event(f"{name} loses concentration (DC {dc}, rolled {roll})")
                 self._refresh_selected_card()
             dialog.accept()
 
@@ -1175,9 +1206,7 @@ class CombatAppQt:
         elif action == Action.REMOVE_SPELL_SLOT:
             char["spell_slots"][value] = char["spell_slots"].get(value, 0) + 1
         elif action == Action.ADD_SPELL_SLOT:
-            char["spell_slots"][value] = max(
-                char["spell_slots"].get(value, 0) - 1, 0
-            )
+            char["spell_slots"][value] = max(char["spell_slots"].get(value, 0) - 1, 0)
         elif action == Action.DEATH_SAVE_FAIL:
             char["death_saves_fail"] = max(char.get("death_saves_fail", 0) - 1, 0)
         elif action == Action.DEATH_SAVE_SUCCESS:
@@ -1207,7 +1236,11 @@ class CombatAppQt:
             return
         data = json.loads(self.log_file.read_text())
         round_keys = sorted(
-            (k for k in data if k.startswith("round_") and k.split("_", 1)[1].isdigit()),
+            (
+                k
+                for k in data
+                if k.startswith("round_") and k.split("_", 1)[1].isdigit()
+            ),
             key=lambda k: int(k.split("_", 1)[1]),
         )
 
@@ -1362,9 +1395,7 @@ class CombatAppQt:
         outer.setSpacing(8)
 
         header = QLabel("Roll Initiative")
-        header.setStyleSheet(
-            "color: #c9a84c; font-size: 16px; font-weight: bold;"
-        )
+        header.setStyleSheet("color: #c9a84c; font-size: 16px; font-weight: bold;")
         outer.addWidget(header)
 
         outer.addWidget(self._make_divider())
@@ -1380,9 +1411,7 @@ class CombatAppQt:
             row_layout.setSpacing(8)
 
             name_lbl = QLabel(char["name"])
-            name_lbl.setStyleSheet(
-                "color: #c9a84c; font-weight: bold;"
-            )
+            name_lbl.setStyleSheet("color: #c9a84c; font-weight: bold;")
             name_lbl.setFixedWidth(160)
             row_layout.addWidget(name_lbl)
 
@@ -1479,7 +1508,10 @@ class CombatAppQt:
         i = 0
         while i < len(order_with_initiative):
             j = i + 1
-            while j < len(order_with_initiative) and order_with_initiative[j][0] == order_with_initiative[i][0]:
+            while (
+                j < len(order_with_initiative)
+                and order_with_initiative[j][0] == order_with_initiative[i][0]
+            ):
                 j += 1
             if j - i > 1:
                 tied_groups.append((order_with_initiative[i][0], i, j))
@@ -1517,7 +1549,9 @@ class CombatAppQt:
         layout.setContentsMargins(14, 14, 14, 14)
         layout.setSpacing(10)
 
-        info = QLabel("Some combatants tied on initiative.\nDrag rows to set the turn order within each tied group.")
+        info = QLabel(
+            "Some combatants tied on initiative.\nDrag rows to set the turn order within each tied group."
+        )
         info.setWordWrap(True)
         info.setStyleSheet("color: #a0a0b0;")
         layout.addWidget(info)
@@ -1603,14 +1637,20 @@ class CombatAppQt:
         # --- Left: scrollable area (initiative or card grid) ---
         self._scroll_area = QScrollArea()
         self._scroll_area.setWidgetResizable(True)
-        self._scroll_area.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
-        self._scroll_area.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAsNeeded)
+        self._scroll_area.setHorizontalScrollBarPolicy(
+            Qt.ScrollBarPolicy.ScrollBarAlwaysOff
+        )
+        self._scroll_area.setVerticalScrollBarPolicy(
+            Qt.ScrollBarPolicy.ScrollBarAsNeeded
+        )
 
         # Build the card grid container (hidden until combat starts)
         self._cards_container = QWidget()
         self._grid_layout = QGridLayout(self._cards_container)
         self._grid_layout.setSpacing(8)
-        self._grid_layout.setAlignment(Qt.AlignmentFlag.AlignTop | Qt.AlignmentFlag.AlignLeft)
+        self._grid_layout.setAlignment(
+            Qt.AlignmentFlag.AlignTop | Qt.AlignmentFlag.AlignLeft
+        )
         self._cards_container.hide()
 
         # Build and show the initiative widget
@@ -1640,7 +1680,9 @@ class CombatAppQt:
 
         # Round indicator
         self.round_label = QLabel(f"Round {self.round_number}")
-        self.round_label.setStyleSheet("color: #c9a84c; font-weight: bold; font-size: 12px;")
+        self.round_label.setStyleSheet(
+            "color: #c9a84c; font-weight: bold; font-size: 12px;"
+        )
         panel_layout.addWidget(self.round_label)
 
         # Initiative tracker container (hidden during initiative phase, shown during combat)
@@ -1814,10 +1856,14 @@ class CombatAppQt:
                 and self.initiative_order
                 and self.initiative_order[self.current_turn_idx] is char
             )
-            card.setProperty("dead",       "true" if death_state == "dead"       else "false")
-            card.setProperty("dying",      "true" if death_state == "dying"      else "false")
-            card.setProperty("stabilized", "true" if death_state == "stabilized" else "false")
-            card.setProperty("selected", "true" if is_selected and not is_active else "false")
+            card.setProperty("dead", "true" if death_state == "dead" else "false")
+            card.setProperty("dying", "true" if death_state == "dying" else "false")
+            card.setProperty(
+                "stabilized", "true" if death_state == "stabilized" else "false"
+            )
+            card.setProperty(
+                "selected", "true" if is_selected and not is_active else "false"
+            )
             card.setProperty("active", "true" if is_active else "false")
             card.style().unpolish(card)
             card.style().polish(card)
@@ -1914,15 +1960,15 @@ class CombatAppQt:
 
     # Condition badge color map
     _CONDITION_COLORS: dict[str, str] = {
-        "Poisoned":      "#1a5c1a",
-        "Frightened":    "#7a3d00",
-        "Charmed":       "#5c1a7a",
-        "Blinded":       "#3a3a3a",
+        "Poisoned": "#1a5c1a",
+        "Frightened": "#7a3d00",
+        "Charmed": "#5c1a7a",
+        "Blinded": "#3a3a3a",
         "Concentrating": "#1a3a7a",
-        "Paralyzed":     "#7a1a1a",
-        "Stunned":       "#7a1a1a",
-        "Grappled":      "#5c4a00",
-        "Prone":         "#5c4a00",
+        "Paralyzed": "#7a1a1a",
+        "Stunned": "#7a1a1a",
+        "Grappled": "#5c4a00",
+        "Prone": "#5c4a00",
     }
 
     def _show_condition_info(self, condition_name: str):
@@ -1974,8 +2020,8 @@ class CombatAppQt:
     def _make_card(self, char: dict) -> QFrame:
         hp = char["hp"]
         death_state = self._char_death_state(char)
-        is_dead       = death_state == "dead"
-        is_dying      = death_state == "dying"
+        is_dead = death_state == "dead"
+        is_dying = death_state == "dying"
         is_stabilized = death_state == "stabilized"
         is_selected = char is self.selected_character
         is_active = (
@@ -1986,10 +2032,12 @@ class CombatAppQt:
 
         card = QFrame()
         card.setObjectName("combatantCard")
-        card.setProperty("dead",       "true" if is_dead       else "false")
-        card.setProperty("dying",      "true" if is_dying      else "false")
+        card.setProperty("dead", "true" if is_dead else "false")
+        card.setProperty("dying", "true" if is_dying else "false")
         card.setProperty("stabilized", "true" if is_stabilized else "false")
-        card.setProperty("selected", "true" if is_selected and not is_active else "false")
+        card.setProperty(
+            "selected", "true" if is_selected and not is_active else "false"
+        )
         card.setProperty("active", "true" if is_active else "false")
         card.setFixedWidth(220)
         card.setSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Minimum)
@@ -2020,7 +2068,7 @@ class CombatAppQt:
 
         # --- Death save pips + buttons (dying / stabilized) ---
         if is_dying or is_stabilized:
-            fail    = char.get("death_saves_fail", 0)
+            fail = char.get("death_saves_fail", 0)
             success = char.get("death_saves_success", 0)
             pips_lbl = QLabel(
                 f"<span style='color:#c04040'>{'●' * fail}{'○' * (3 - fail)}</span>"
@@ -2037,11 +2085,15 @@ class CombatAppQt:
             fail_btn = QPushButton("✗ Fail")
             fail_btn.setObjectName("deathFailBtn")
             fail_btn.setFixedHeight(24)
-            fail_btn.clicked.connect(lambda _=False, c=char: self._apply_failed_death_save(c))
+            fail_btn.clicked.connect(
+                lambda _=False, c=char: self._apply_failed_death_save(c)
+            )
             save_btn = QPushButton("✓ Save")
             save_btn.setObjectName("deathSuccessBtn")
             save_btn.setFixedHeight(24)
-            save_btn.clicked.connect(lambda _=False, c=char: self._apply_success_death_save(c))
+            save_btn.clicked.connect(
+                lambda _=False, c=char: self._apply_success_death_save(c)
+            )
             btn_row.addWidget(fail_btn)
             btn_row.addWidget(save_btn)
             layout.addLayout(btn_row)
@@ -2127,9 +2179,13 @@ class CombatAppQt:
             sep.setStyleSheet("color: #0f3460;")
             layout.addWidget(sep)
             slots_header = QLabel("Slots:")
-            slots_header.setStyleSheet("color: #c9a84c; font-size: 10px; font-weight: bold;")
+            slots_header.setStyleSheet(
+                "color: #c9a84c; font-size: 10px; font-weight: bold;"
+            )
             layout.addWidget(slots_header)
-            slots_text = "  ".join(f"LV{lv}({cnt})" for lv, cnt in sorted(slots.items()))
+            slots_text = "  ".join(
+                f"LV{lv}({cnt})" for lv, cnt in sorted(slots.items())
+            )
             slots_lbl = QLabel(slots_text)
             slots_lbl.setStyleSheet("color: #a0c4ff; font-size: 11px;")
             layout.addWidget(slots_lbl)
@@ -2162,21 +2218,27 @@ class CombatAppQt:
                     entries.append((abbr, mod, mod, False))
 
             for row_idx in range(2):
-                chunk = entries[row_idx * 3: row_idx * 3 + 3]
+                chunk = entries[row_idx * 3 : row_idx * 3 + 3]
                 if chunk:
                     if chunk[0][3]:  # has saving throws
-                        row_text = "  ".join(f"{abbr} {m:+d}/{s:+d}" for abbr, m, s, _ in chunk)
+                        row_text = "  ".join(
+                            f"{abbr} {m:+d}/{s:+d}" for abbr, m, s, _ in chunk
+                        )
                     else:
                         row_text = "  ".join(f"{abbr} {m:+d}" for abbr, m, *_ in chunk)
                     row_lbl = QLabel(row_text)
-                    row_lbl.setStyleSheet("font-family: monospace; font-size: 10px; color: #a0a0b0;")
+                    row_lbl.setStyleSheet(
+                        "font-family: monospace; font-size: 10px; color: #a0a0b0;"
+                    )
                     layout.addWidget(row_lbl)
 
         # --- Click to select ---
         card.mousePressEvent = lambda event, c=char: self._select_character(c)
         for child in card.findChildren(QWidget):
             if not isinstance(child, QPushButton):
-                child.setAttribute(Qt.WidgetAttribute.WA_TransparentForMouseEvents, True)
+                child.setAttribute(
+                    Qt.WidgetAttribute.WA_TransparentForMouseEvents, True
+                )
 
         return card
 

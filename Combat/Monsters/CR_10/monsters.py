@@ -5,12 +5,19 @@ from Combat.Definitions import ExtendedCombatantData
 class Aboleth(ExtendedCombatantData):
     def __init__(self):
         super().__init__(
-            name="Aboleth",
+            combatant_type="Aboleth",
             hp=150,
             ac=17,
             temp_hp=0,
             conditions=[],
-            ability_scores={"Str": 21, "Dex": 9, "Con": 15, "Int": 18, "Wis": 15, "Cha": 18},
+            ability_scores={
+                "Str": 21,
+                "Dex": 9,
+                "Con": 15,
+                "Int": 18,
+                "Wis": 15,
+                "Cha": 18,
+            },
             saving_throws={},
             spell_slots={},
             cr="10",
@@ -26,24 +33,57 @@ class Aboleth(ExtendedCombatantData):
             senses="Darkvision 120 ft., Passive Perception 20",
             languages="Deep Speech; telepathy 120 ft.",
             traits=[
-            {"name": "Amphibious", "description": "The aboleth can breathe air and water."},
-            {"name": "Eldritch Restoration", "description": "If destroyed, the aboleth gains a new body in 5d10 days, reviving with all its Hit Points in the Far Realm or another location chosen by the DM."},
-            {"name": "Legendary Resistance (3/Day, or 4/Day in Lair)", "description": "If the aboleth fails a saving throw, it can choose to succeed instead."},
-            {"name": "Mucus Cloud", "description": "While underwater, the aboleth is surrounded by mucus. Constitution Saving Throw: DC 14, each creature in a 5-foot Emanation originating from the aboleth at the end of the aboleth's turn. Failure: The target is cursed. Until the curse ends, the target's skin becomes slimy, the target can breathe air and water, and it can't regain Hit Points unless it is underwater. While the cursed creature is outside a body of water, the creature takes 6 (1d12) Acid damage at the end of every 10 minutes unless moisture is applied to its skin before those minutes have passed."},
-            {"name": "Probing Telepathy", "description": "If a creature the aboleth can see communicates telepathically with the aboleth, the aboleth learns the creature's greatest desires."},
-        ],
+                {
+                    "name": "Amphibious",
+                    "description": "The aboleth can breathe air and water.",
+                },
+                {
+                    "name": "Eldritch Restoration",
+                    "description": "If destroyed, the aboleth gains a new body in 5d10 days, reviving with all its Hit Points in the Far Realm or another location chosen by the DM.",
+                },
+                {
+                    "name": "Legendary Resistance (3/Day, or 4/Day in Lair)",
+                    "description": "If the aboleth fails a saving throw, it can choose to succeed instead.",
+                },
+                {
+                    "name": "Mucus Cloud",
+                    "description": "While underwater, the aboleth is surrounded by mucus. Constitution Saving Throw: DC 14, each creature in a 5-foot Emanation originating from the aboleth at the end of the aboleth's turn. Failure: The target is cursed. Until the curse ends, the target's skin becomes slimy, the target can breathe air and water, and it can't regain Hit Points unless it is underwater. While the cursed creature is outside a body of water, the creature takes 6 (1d12) Acid damage at the end of every 10 minutes unless moisture is applied to its skin before those minutes have passed.",
+                },
+                {
+                    "name": "Probing Telepathy",
+                    "description": "If a creature the aboleth can see communicates telepathically with the aboleth, the aboleth learns the creature's greatest desires.",
+                },
+            ],
             actions=[
-            {"name": "Multiattack", "description": "The aboleth makes two Tentacle attacks and uses either Consume Memories or Dominate Mind if available."},
-            {"name": "Tentacle", "description": "Melee Attack Roll: +9, reach 15 ft. Hit: 12 (2d6 + 5) Bludgeoning damage. If the target is a Large or smaller creature, it has the Grappled condition (escape DC 14) from one of four tentacles."},
-            {"name": "Consume Memories", "description": "Intelligence Saving Throw: DC 16, one creature within 30 feet that is Charmed or Grappled by the aboleth. Failure: 10 (3d6) Psychic damage. Success: Half damage. Failure or Success: The aboleth gains the target's memories if the target is a Humanoid and is reduced to 0 Hit Points by this action."},
-            {"name": "Dominate Mind (2/Day)", "description": "Wisdom Saving Throw: DC 16, one creature the aboleth can see within 30 feet. Failure: The target has the Charmed condition until the aboleth dies or is on a different plane of existence from the target. While Charmed, the target acts as an ally to the aboleth and is under its control while within 60 feet of it. In addition, the aboleth and the target can communicate telepathically with each other over any distance. The target repeats the save whenever it takes damage as well as after every 24 hours it spends at least 1 mile away from the aboleth, ending the effect on itself on a success."},
-        ],
+                {
+                    "name": "Multiattack",
+                    "description": "The aboleth makes two Tentacle attacks and uses either Consume Memories or Dominate Mind if available.",
+                },
+                {
+                    "name": "Tentacle",
+                    "description": "Melee Attack Roll: +9, reach 15 ft. Hit: 12 (2d6 + 5) Bludgeoning damage. If the target is a Large or smaller creature, it has the Grappled condition (escape DC 14) from one of four tentacles.",
+                },
+                {
+                    "name": "Consume Memories",
+                    "description": "Intelligence Saving Throw: DC 16, one creature within 30 feet that is Charmed or Grappled by the aboleth. Failure: 10 (3d6) Psychic damage. Success: Half damage. Failure or Success: The aboleth gains the target's memories if the target is a Humanoid and is reduced to 0 Hit Points by this action.",
+                },
+                {
+                    "name": "Dominate Mind (2/Day)",
+                    "description": "Wisdom Saving Throw: DC 16, one creature the aboleth can see within 30 feet. Failure: The target has the Charmed condition until the aboleth dies or is on a different plane of existence from the target. While Charmed, the target acts as an ally to the aboleth and is under its control while within 60 feet of it. In addition, the aboleth and the target can communicate telepathically with each other over any distance. The target repeats the save whenever it takes damage as well as after every 24 hours it spends at least 1 mile away from the aboleth, ending the effect on itself on a success.",
+                },
+            ],
             bonus_actions=[],
             reactions=[],
             legendary_actions=[
-            {"name": "Lash", "description": "The aboleth makes one Tentacle attack."},
-            {"name": "Psychic Drain", "description": "If the aboleth has at least one creature Charmed or Grappled, it uses Consume Memories and regains 5 (1d10) Hit Points."},
-        ],
+                {
+                    "name": "Lash",
+                    "description": "The aboleth makes one Tentacle attack.",
+                },
+                {
+                    "name": "Psychic Drain",
+                    "description": "If the aboleth has at least one creature Charmed or Grappled, it uses Consume Memories and regains 5 (1d10) Hit Points.",
+                },
+            ],
             legendary_resistances=3,
             lair_actions=[],
             mythic_actions=[],
@@ -53,12 +93,19 @@ class Aboleth(ExtendedCombatantData):
 class CultistHierophant(ExtendedCombatantData):
     def __init__(self):
         super().__init__(
-            name="Cultist Hierophant",
+            combatant_type="Cultist Hierophant",
             hp=144,
             ac=16,
             temp_hp=0,
             conditions=[],
-            ability_scores={"Str": 14, "Dex": 18, "Con": 18, "Int": 13, "Wis": 16, "Cha": 20},
+            ability_scores={
+                "Str": 14,
+                "Dex": 18,
+                "Con": 18,
+                "Int": 13,
+                "Wis": 16,
+                "Cha": 20,
+            },
             saving_throws={},
             spell_slots={},
             cr="10",
@@ -75,11 +122,23 @@ class CultistHierophant(ExtendedCombatantData):
             languages="Celestial, Common",
             traits=[],
             actions=[
-            {"name": "Multiattack", "description": "The cultist makes three attacks, using Pact Blade or Radiant Ray in any combination."},
-            {"name": "Pact Blade", "description": "Melee Attack Roll: +9, reach 5 ft. Hit: 12 (2d6 + 5) Slashing damage plus 18 (4d8) Radiant damage."},
-            {"name": "Radiant Ray", "description": "Ranged Attack Roll: +9, range 120 ft. Hit: 31 (4d12 + 5) Radiant damage."},
-            {"name": "Spellcasting", "description": "The cultist casts one of the following spells, using Charisma as the spellcasting ability (spell save DC 17):"},
-        ],
+                {
+                    "name": "Multiattack",
+                    "description": "The cultist makes three attacks, using Pact Blade or Radiant Ray in any combination.",
+                },
+                {
+                    "name": "Pact Blade",
+                    "description": "Melee Attack Roll: +9, reach 5 ft. Hit: 12 (2d6 + 5) Slashing damage plus 18 (4d8) Radiant damage.",
+                },
+                {
+                    "name": "Radiant Ray",
+                    "description": "Ranged Attack Roll: +9, range 120 ft. Hit: 31 (4d12 + 5) Radiant damage.",
+                },
+                {
+                    "name": "Spellcasting",
+                    "description": "The cultist casts one of the following spells, using Charisma as the spellcasting ability (spell save DC 17):",
+                },
+            ],
             bonus_actions=[],
             reactions=[],
             legendary_actions=[],
@@ -92,12 +151,19 @@ class CultistHierophant(ExtendedCombatantData):
 class CyclopsOracle(ExtendedCombatantData):
     def __init__(self):
         super().__init__(
-            name="Cyclops Oracle",
+            combatant_type="Cyclops Oracle",
             hp=207,
             ac=16,
             temp_hp=0,
             conditions=[],
-            ability_scores={"Str": 22, "Dex": 11, "Con": 20, "Int": 16, "Wis": 18, "Cha": 10},
+            ability_scores={
+                "Str": 22,
+                "Dex": 11,
+                "Con": 20,
+                "Int": 16,
+                "Wis": 18,
+                "Cha": 10,
+            },
             saving_throws={},
             spell_slots={},
             cr="10",
@@ -114,12 +180,27 @@ class CyclopsOracle(ExtendedCombatantData):
             languages="Giant",
             traits=[],
             actions=[
-            {"name": "Multiattack", "description": "The cyclops makes three attacks, using Radiant Strike or Flash of Light in any combination."},
-            {"name": "Radiant Strike", "description": "Melee Attack Roll: +10, reach 10 ft. Hit: 22 (3d10 + 6) Radiant damage."},
-            {"name": "Flash of Light", "description": "Ranged Attack Roll: +10, range 120 ft. Hit: 17 (2d10 + 6) Radiant damage, and the target has Disadvantage on attack rolls until the end of the cyclops's next turn."},
-            {"name": "Spellcasting", "description": "The cyclops casts one of the following spells, requiring no Material components and using Wisdom as the spellcasting ability (spell save DC 16):"},
-            {"name": "Portent (Recharge 4–6)", "description": "Trigger: The cyclops or an ally it can see makes a D20 Test. Response: The cyclops rolls 1d20 and chooses whether to use that roll in place of the d20 rolled for the D20 Test."},
-        ],
+                {
+                    "name": "Multiattack",
+                    "description": "The cyclops makes three attacks, using Radiant Strike or Flash of Light in any combination.",
+                },
+                {
+                    "name": "Radiant Strike",
+                    "description": "Melee Attack Roll: +10, reach 10 ft. Hit: 22 (3d10 + 6) Radiant damage.",
+                },
+                {
+                    "name": "Flash of Light",
+                    "description": "Ranged Attack Roll: +10, range 120 ft. Hit: 17 (2d10 + 6) Radiant damage, and the target has Disadvantage on attack rolls until the end of the cyclops's next turn.",
+                },
+                {
+                    "name": "Spellcasting",
+                    "description": "The cyclops casts one of the following spells, requiring no Material components and using Wisdom as the spellcasting ability (spell save DC 16):",
+                },
+                {
+                    "name": "Portent (Recharge 4–6)",
+                    "description": "Trigger: The cyclops or an ally it can see makes a D20 Test. Response: The cyclops rolls 1d20 and chooses whether to use that roll in place of the d20 rolled for the D20 Test.",
+                },
+            ],
             bonus_actions=[],
             reactions=[],
             legendary_actions=[],
@@ -132,12 +213,19 @@ class CyclopsOracle(ExtendedCombatantData):
 class DeathSlaad(ExtendedCombatantData):
     def __init__(self):
         super().__init__(
-            name="Death Slaad",
+            combatant_type="Death Slaad",
             hp=178,
             ac=18,
             temp_hp=0,
             conditions=[],
-            ability_scores={"Str": 20, "Dex": 15, "Con": 19, "Int": 15, "Wis": 10, "Cha": 19},
+            ability_scores={
+                "Str": 20,
+                "Dex": 15,
+                "Con": 19,
+                "Int": 15,
+                "Wis": 10,
+                "Cha": 19,
+            },
             saving_throws={},
             spell_slots={},
             cr="10",
@@ -153,17 +241,35 @@ class DeathSlaad(ExtendedCombatantData):
             senses="Blindsight 60 ft., Darkvision 60 ft., Passive Perception 18",
             languages="Common, Slaad; telepathy 60 ft.",
             traits=[
-            {"name": "Magic Resistance", "description": "The slaad has Advantage on saving throws against spells and other magical effects."},
-            {"name": "Regeneration", "description": "The slaad regains 10 Hit Points at the start of each of its turns if it has at least 1 Hit Point."},
-        ],
+                {
+                    "name": "Magic Resistance",
+                    "description": "The slaad has Advantage on saving throws against spells and other magical effects.",
+                },
+                {
+                    "name": "Regeneration",
+                    "description": "The slaad regains 10 Hit Points at the start of each of its turns if it has at least 1 Hit Point.",
+                },
+            ],
             actions=[
-            {"name": "Multiattack", "description": "The slaad makes two Chaos Blade attacks."},
-            {"name": "Chaos Blade", "description": "Melee Attack Roll: +9, reach 10 ft. Hit: 11 (1d12 + 5) Slashing damage plus 10 (3d6) Necrotic damage. Until the start of the slaad's next turn, the target has a condition determined by rolling 1d4: on a 1, Charmed; on a 2, Frightened; on a 3, Poisoned; or on a 4, Incapacitated."},
-            {"name": "Spellcasting", "description": "The slaad casts one of the following spells, requiring no Material components and using Charisma as the spellcasting ability (spell save DC 16):"},
-        ],
+                {
+                    "name": "Multiattack",
+                    "description": "The slaad makes two Chaos Blade attacks.",
+                },
+                {
+                    "name": "Chaos Blade",
+                    "description": "Melee Attack Roll: +9, reach 10 ft. Hit: 11 (1d12 + 5) Slashing damage plus 10 (3d6) Necrotic damage. Until the start of the slaad's next turn, the target has a condition determined by rolling 1d4: on a 1, Charmed; on a 2, Frightened; on a 3, Poisoned; or on a 4, Incapacitated.",
+                },
+                {
+                    "name": "Spellcasting",
+                    "description": "The slaad casts one of the following spells, requiring no Material components and using Charisma as the spellcasting ability (spell save DC 16):",
+                },
+            ],
             bonus_actions=[
-            {"name": "Shape-Shift", "description": "The slaad shape-shifts into a Small or Medium Humanoid, or it returns to its true form. Other than its size, its game statistics are the same in each form. Any equipment it is wearing or carrying isn't transformed."},
-        ],
+                {
+                    "name": "Shape-Shift",
+                    "description": "The slaad shape-shifts into a Small or Medium Humanoid, or it returns to its true form. Other than its size, its game statistics are the same in each form. Any equipment it is wearing or carrying isn't transformed.",
+                },
+            ],
             reactions=[],
             legendary_actions=[],
             legendary_resistances=0,
@@ -175,12 +281,19 @@ class DeathSlaad(ExtendedCombatantData):
 class Deva(ExtendedCombatantData):
     def __init__(self):
         super().__init__(
-            name="Deva",
+            combatant_type="Deva",
             hp=229,
             ac=17,
             temp_hp=0,
             conditions=[],
-            ability_scores={"Str": 18, "Dex": 18, "Con": 18, "Int": 17, "Wis": 20, "Cha": 20},
+            ability_scores={
+                "Str": 18,
+                "Dex": 18,
+                "Con": 18,
+                "Int": 17,
+                "Wis": 20,
+                "Cha": 20,
+            },
             saving_throws={},
             spell_slots={},
             cr="10",
@@ -196,17 +309,35 @@ class Deva(ExtendedCombatantData):
             senses="Darkvision 120 ft., Passive Perception 19",
             languages="All; telepathy 120 ft.",
             traits=[
-            {"name": "Exalted Restoration", "description": "If the deva dies outside Mount Celestia, its body disappears, and it gains a new body instantly, reviving with all its Hit Points somewhere in Mount Celestia."},
-            {"name": "Magic Resistance", "description": "The deva has Advantage on saving throws against spells and other magical effects."},
-        ],
+                {
+                    "name": "Exalted Restoration",
+                    "description": "If the deva dies outside Mount Celestia, its body disappears, and it gains a new body instantly, reviving with all its Hit Points somewhere in Mount Celestia.",
+                },
+                {
+                    "name": "Magic Resistance",
+                    "description": "The deva has Advantage on saving throws against spells and other magical effects.",
+                },
+            ],
             actions=[
-            {"name": "Multiattack", "description": "The deva makes two Holy Mace attacks."},
-            {"name": "Holy Mace", "description": "Melee Attack Roll: +8, reach 5 ft. Hit: 7 (1d6 + 4) Bludgeoning damage plus 18 (4d8) Radiant damage."},
-            {"name": "Spellcasting", "description": "The deva casts one of the following spells, requiring no Material components and using Charisma as the spellcasting ability (spell save DC 17):"},
-        ],
+                {
+                    "name": "Multiattack",
+                    "description": "The deva makes two Holy Mace attacks.",
+                },
+                {
+                    "name": "Holy Mace",
+                    "description": "Melee Attack Roll: +8, reach 5 ft. Hit: 7 (1d6 + 4) Bludgeoning damage plus 18 (4d8) Radiant damage.",
+                },
+                {
+                    "name": "Spellcasting",
+                    "description": "The deva casts one of the following spells, requiring no Material components and using Charisma as the spellcasting ability (spell save DC 17):",
+                },
+            ],
             bonus_actions=[
-            {"name": "Divine Aid (2/Day)", "description": "The deva casts Cure Wounds, Lesser Restoration, or Remove Curse, using the same spellcasting ability as Spellcasting."},
-        ],
+                {
+                    "name": "Divine Aid (2/Day)",
+                    "description": "The deva casts Cure Wounds, Lesser Restoration, or Remove Curse, using the same spellcasting ability as Spellcasting.",
+                },
+            ],
             reactions=[],
             legendary_actions=[],
             legendary_resistances=0,
@@ -218,12 +349,19 @@ class Deva(ExtendedCombatantData):
 class DireWorg(ExtendedCombatantData):
     def __init__(self):
         super().__init__(
-            name="Dire Worg",
+            combatant_type="Dire Worg",
             hp=147,
             ac=16,
             temp_hp=0,
             conditions=[],
-            ability_scores={"Str": 22, "Dex": 14, "Con": 18, "Int": 7, "Wis": 16, "Cha": 8},
+            ability_scores={
+                "Str": 22,
+                "Dex": 14,
+                "Con": 18,
+                "Int": 7,
+                "Wis": 16,
+                "Cha": 8,
+            },
             saving_throws={},
             spell_slots={},
             cr="10",
@@ -239,16 +377,31 @@ class DireWorg(ExtendedCombatantData):
             senses="Darkvision 120 ft., Passive Perception 21",
             languages="Goblin, Sylvan, Worg",
             traits=[
-            {"name": "Magic Resistance", "description": "The worg has Advantage on saving throws against spells and other magical effects."},
-        ],
+                {
+                    "name": "Magic Resistance",
+                    "description": "The worg has Advantage on saving throws against spells and other magical effects.",
+                },
+            ],
             actions=[
-            {"name": "Multiattack", "description": "The worg makes three Bite attacks."},
-            {"name": "Bite", "description": "Melee Attack Roll: +10, reach 5 ft. Hit: 15 (2d8 + 6) Piercing damage plus 7 (2d6) Poison damage, and the target has the Poisoned condition until the start of the worg's next turn. While Poisoned, the target can't regain Hit Points."},
-            {"name": "Dreadful Howl (Recharge 5–6)", "description": "Wisdom Saving Throw: DC 16, each creature within 30 feet that isn't a worg. Failure: 36 (8d8) Psychic damage, and the target has the Frightened condition until the start of the worg's next turn. Success: Half damage only."},
-        ],
+                {
+                    "name": "Multiattack",
+                    "description": "The worg makes three Bite attacks.",
+                },
+                {
+                    "name": "Bite",
+                    "description": "Melee Attack Roll: +10, reach 5 ft. Hit: 15 (2d8 + 6) Piercing damage plus 7 (2d6) Poison damage, and the target has the Poisoned condition until the start of the worg's next turn. While Poisoned, the target can't regain Hit Points.",
+                },
+                {
+                    "name": "Dreadful Howl (Recharge 5–6)",
+                    "description": "Wisdom Saving Throw: DC 16, each creature within 30 feet that isn't a worg. Failure: 36 (8d8) Psychic damage, and the target has the Frightened condition until the start of the worg's next turn. Success: Half damage only.",
+                },
+            ],
             bonus_actions=[
-            {"name": "Warp Step", "description": "The worg teleports, along with a willing creature of its choice within 5 feet of it, up to 30 feet to an unoccupied space it can see."},
-        ],
+                {
+                    "name": "Warp Step",
+                    "description": "The worg teleports, along with a willing creature of its choice within 5 feet of it, up to 30 feet to an unoccupied space it can see.",
+                },
+            ],
             reactions=[],
             legendary_actions=[],
             legendary_resistances=0,
@@ -260,12 +413,19 @@ class DireWorg(ExtendedCombatantData):
 class GuardianNaga(ExtendedCombatantData):
     def __init__(self):
         super().__init__(
-            name="Guardian Naga",
+            combatant_type="Guardian Naga",
             hp=136,
             ac=18,
             temp_hp=0,
             conditions=[],
-            ability_scores={"Str": 19, "Dex": 18, "Con": 16, "Int": 16, "Wis": 19, "Cha": 18},
+            ability_scores={
+                "Str": 19,
+                "Dex": 18,
+                "Con": 16,
+                "Int": 16,
+                "Wis": 19,
+                "Cha": 18,
+            },
             saving_throws={},
             spell_slots={},
             cr="10",
@@ -281,14 +441,29 @@ class GuardianNaga(ExtendedCombatantData):
             senses="Darkvision 60 ft., Passive Perception 14",
             languages="Celestial, Common",
             traits=[
-            {"name": "Celestial Restoration", "description": "If the naga dies, it returns to life in 1d6 days and regains all its Hit Points unless Dispel Evil and Good is cast on its remains."},
-        ],
+                {
+                    "name": "Celestial Restoration",
+                    "description": "If the naga dies, it returns to life in 1d6 days and regains all its Hit Points unless Dispel Evil and Good is cast on its remains.",
+                },
+            ],
             actions=[
-            {"name": "Multiattack", "description": "The naga makes two Bite attacks. It can replace any attack with a use of Poisonous Spittle."},
-            {"name": "Bite", "description": "Melee Attack Roll: +8, reach 10 ft. Hit: 17 (2d12 + 4) Piercing damage plus 22 (4d10) Poison damage."},
-            {"name": "Poisonous Spittle", "description": "Constitution Saving Throw: DC 16, one creature the naga can see within 60 feet. Failure: 31 (7d8) Poison damage, and the target has the Blinded condition until the start of the naga's next turn. Success: Half damage only."},
-            {"name": "Spellcasting", "description": "The naga casts one of the following spells, requiring no Somatic or Material components and using Wisdom as the spellcasting ability (spell save DC 16):"},
-        ],
+                {
+                    "name": "Multiattack",
+                    "description": "The naga makes two Bite attacks. It can replace any attack with a use of Poisonous Spittle.",
+                },
+                {
+                    "name": "Bite",
+                    "description": "Melee Attack Roll: +8, reach 10 ft. Hit: 17 (2d12 + 4) Piercing damage plus 22 (4d10) Poison damage.",
+                },
+                {
+                    "name": "Poisonous Spittle",
+                    "description": "Constitution Saving Throw: DC 16, one creature the naga can see within 60 feet. Failure: 31 (7d8) Poison damage, and the target has the Blinded condition until the start of the naga's next turn. Success: Half damage only.",
+                },
+                {
+                    "name": "Spellcasting",
+                    "description": "The naga casts one of the following spells, requiring no Somatic or Material components and using Wisdom as the spellcasting ability (spell save DC 16):",
+                },
+            ],
             bonus_actions=[],
             reactions=[],
             legendary_actions=[],
@@ -301,12 +476,19 @@ class GuardianNaga(ExtendedCombatantData):
 class HauntingRevenant(ExtendedCombatantData):
     def __init__(self):
         super().__init__(
-            name="Haunting Revenant",
+            combatant_type="Haunting Revenant",
             hp=203,
             ac=20,
             temp_hp=0,
             conditions=[],
-            ability_scores={"Str": 20, "Dex": 12, "Con": 18, "Int": 16, "Wis": 18, "Cha": 20},
+            ability_scores={
+                "Str": 20,
+                "Dex": 12,
+                "Con": 18,
+                "Int": 16,
+                "Wis": 18,
+                "Cha": 20,
+            },
             saving_throws={},
             spell_slots={},
             cr="10",
@@ -322,14 +504,29 @@ class HauntingRevenant(ExtendedCombatantData):
             senses="Truesight 60 ft., Passive Perception 14",
             languages="Common plus two other languages",
             traits=[
-            {"name": "Haunted Zone", "description": "Constitution Saving Throw: DC 17, any creature that casts a spell while inside the revenant's space. Failure: The spell fails and is wasted."},
-            {"name": "Undead Restoration", "description": "If the revenant dies, it revives 24 hours later unless Dispel Evil and Good is cast on its remains. If it revives, it animates another Gargantuan object or structure elsewhere on the same plane of existence; it now looks different but uses the same stat block and returns with all its Hit Points."},
-        ],
+                {
+                    "name": "Haunted Zone",
+                    "description": "Constitution Saving Throw: DC 17, any creature that casts a spell while inside the revenant's space. Failure: The spell fails and is wasted.",
+                },
+                {
+                    "name": "Undead Restoration",
+                    "description": "If the revenant dies, it revives 24 hours later unless Dispel Evil and Good is cast on its remains. If it revives, it animates another Gargantuan object or structure elsewhere on the same plane of existence; it now looks different but uses the same stat block and returns with all its Hit Points.",
+                },
+            ],
             actions=[
-            {"name": "Multiattack", "description": "The revenant makes two Object Slam attacks and uses Invitation."},
-            {"name": "Object Slam", "description": "Melee or Ranged Attack Roll: +9 (with Advantage if the target is inside the revenant's space), reach 10 ft. or range 30/90 ft. Hit: 27 (5d8+ 5) Bludgeoning damage."},
-            {"name": "Invitation", "description": "Charisma Saving Throw: DC 17, each creature in a 60-foot Cone. Failure: The target is teleported inside the revenant's space and swallowed. A swallowed creature has Total Cover against attacks and other effects outside the revenant. While the revenant has Hit Points, a swallowed creature can leave the revenant's space only by using magic that enables planar travel, such as the Plane Shift spell."},
-        ],
+                {
+                    "name": "Multiattack",
+                    "description": "The revenant makes two Object Slam attacks and uses Invitation.",
+                },
+                {
+                    "name": "Object Slam",
+                    "description": "Melee or Ranged Attack Roll: +9 (with Advantage if the target is inside the revenant's space), reach 10 ft. or range 30/90 ft. Hit: 27 (5d8+ 5) Bludgeoning damage.",
+                },
+                {
+                    "name": "Invitation",
+                    "description": "Charisma Saving Throw: DC 17, each creature in a 60-foot Cone. Failure: The target is teleported inside the revenant's space and swallowed. A swallowed creature has Total Cover against attacks and other effects outside the revenant. While the revenant has Hit Points, a swallowed creature can leave the revenant's space only by using magic that enables planar travel, such as the Plane Shift spell.",
+                },
+            ],
             bonus_actions=[],
             reactions=[],
             legendary_actions=[],
@@ -342,12 +539,19 @@ class HauntingRevenant(ExtendedCombatantData):
 class NobleProdigy(ExtendedCombatantData):
     def __init__(self):
         super().__init__(
-            name="Noble Prodigy",
+            combatant_type="Noble Prodigy",
             hp=148,
             ac=16,
             temp_hp=0,
             conditions=[],
-            ability_scores={"Str": 8, "Dex": 16, "Con": 12, "Int": 15, "Wis": 14, "Cha": 19},
+            ability_scores={
+                "Str": 8,
+                "Dex": 16,
+                "Con": 12,
+                "Int": 15,
+                "Wis": 14,
+                "Cha": 19,
+            },
             saving_throws={},
             spell_slots={},
             cr="10",
@@ -364,11 +568,23 @@ class NobleProdigy(ExtendedCombatantData):
             languages="Common plus two other languages",
             traits=[],
             actions=[
-            {"name": "Multiattack", "description": "The noble makes three Beguiling Strike attacks."},
-            {"name": "Beguiling Strike", "description": "Melee or Ranged Attack Roll: +8, reach 5 ft. or range 60 ft. Hit: 18 (4d6 + 4) Psychic damage, and the target has the Charmed condition until the start of the noble's next turn."},
-            {"name": "Spellcasting", "description": "The noble casts one of the following spells, requiring no Material components and using Charisma as the spellcasting ability (spell save DC 16):"},
-            {"name": "Shield (2/Day)", "description": "The noble casts Shield in response to that spell's trigger, using the same spellcasting ability as Spellcasting."},
-        ],
+                {
+                    "name": "Multiattack",
+                    "description": "The noble makes three Beguiling Strike attacks.",
+                },
+                {
+                    "name": "Beguiling Strike",
+                    "description": "Melee or Ranged Attack Roll: +8, reach 5 ft. or range 60 ft. Hit: 18 (4d6 + 4) Psychic damage, and the target has the Charmed condition until the start of the noble's next turn.",
+                },
+                {
+                    "name": "Spellcasting",
+                    "description": "The noble casts one of the following spells, requiring no Material components and using Charisma as the spellcasting ability (spell save DC 16):",
+                },
+                {
+                    "name": "Shield (2/Day)",
+                    "description": "The noble casts Shield in response to that spell's trigger, using the same spellcasting ability as Spellcasting.",
+                },
+            ],
             bonus_actions=[],
             reactions=[],
             legendary_actions=[],
@@ -381,12 +597,19 @@ class NobleProdigy(ExtendedCombatantData):
 class PerformerLegend(ExtendedCombatantData):
     def __init__(self):
         super().__init__(
-            name="Performer Legend",
+            combatant_type="Performer Legend",
             hp=162,
             ac=20,
             temp_hp=0,
             conditions=[],
-            ability_scores={"Str": 12, "Dex": 20, "Con": 14, "Int": 15, "Wis": 16, "Cha": 20},
+            ability_scores={
+                "Str": 12,
+                "Dex": 20,
+                "Con": 14,
+                "Int": 15,
+                "Wis": 16,
+                "Cha": 20,
+            },
             saving_throws={},
             spell_slots={},
             cr="10",
@@ -394,7 +617,13 @@ class PerformerLegend(ExtendedCombatantData):
             ac_note="",
             hp_formula="25d8 + 50",
             speed="",
-            skills={"Acrobatics": 13, "Athletics": 5, "Perception": 7, "Performance": 13, "Stealth": 9},
+            skills={
+                "Acrobatics": 13,
+                "Athletics": 5,
+                "Perception": 7,
+                "Performance": 13,
+                "Stealth": 9,
+            },
             damage_vulnerabilities=[],
             damage_resistances=[],
             damage_immunities=[],
@@ -403,12 +632,27 @@ class PerformerLegend(ExtendedCombatantData):
             languages="Common plus two other languages",
             traits=[],
             actions=[
-            {"name": "Multiattack", "description": "The performer makes three Bejeweled Baton attacks."},
-            {"name": "Bejeweled Baton", "description": "Melee Attack Roll: +9, reach 5 ft. Hit: 10 (2d4 + 5) Bludgeoning damage plus 10 (3d6) Psychic damage."},
-            {"name": "Majestic Song", "description": "Wisdom Saving Throw: DC 17, each creature in a 20-foot-radius Sphere centered on a point within 120 feet. Failure: 22 (4d8 + 4) Psychic damage, and the target has the Charmed or Frightened condition (performer's choice) until the end of the performer's next turn. Success: Half damage only."},
-            {"name": "Spellcasting", "description": "The performer casts one of the following spells, requiring no Material components and using Charisma as the spellcasting ability (spell save DC 17):"},
-            {"name": "Warding Charm", "description": "Trigger: A creature hits the performer with an attack roll. Response—Wisdom Saving Throw: DC 17, the triggering creature. Failure: The attack roll misses the performer, and the target has the Charmed condition until the end of the performer's next turn."},
-        ],
+                {
+                    "name": "Multiattack",
+                    "description": "The performer makes three Bejeweled Baton attacks.",
+                },
+                {
+                    "name": "Bejeweled Baton",
+                    "description": "Melee Attack Roll: +9, reach 5 ft. Hit: 10 (2d4 + 5) Bludgeoning damage plus 10 (3d6) Psychic damage.",
+                },
+                {
+                    "name": "Majestic Song",
+                    "description": "Wisdom Saving Throw: DC 17, each creature in a 20-foot-radius Sphere centered on a point within 120 feet. Failure: 22 (4d8 + 4) Psychic damage, and the target has the Charmed or Frightened condition (performer's choice) until the end of the performer's next turn. Success: Half damage only.",
+                },
+                {
+                    "name": "Spellcasting",
+                    "description": "The performer casts one of the following spells, requiring no Material components and using Charisma as the spellcasting ability (spell save DC 17):",
+                },
+                {
+                    "name": "Warding Charm",
+                    "description": "Trigger: A creature hits the performer with an attack roll. Response—Wisdom Saving Throw: DC 17, the triggering creature. Failure: The attack roll misses the performer, and the target has the Charmed condition until the end of the performer's next turn.",
+                },
+            ],
             bonus_actions=[],
             reactions=[],
             legendary_actions=[],
@@ -421,12 +665,19 @@ class PerformerLegend(ExtendedCombatantData):
 class SpyMaster(ExtendedCombatantData):
     def __init__(self):
         super().__init__(
-            name="Spy Master",
+            combatant_type="Spy Master",
             hp=137,
             ac=19,
             temp_hp=0,
             conditions=[],
-            ability_scores={"Str": 10, "Dex": 20, "Con": 12, "Int": 18, "Wis": 16, "Cha": 16},
+            ability_scores={
+                "Str": 10,
+                "Dex": 20,
+                "Con": 12,
+                "Int": 18,
+                "Wis": 16,
+                "Cha": 16,
+            },
             saving_throws={},
             spell_slots={},
             cr="10",
@@ -443,14 +694,29 @@ class SpyMaster(ExtendedCombatantData):
             languages="Common plus two other languages",
             traits=[],
             actions=[
-            {"name": "Multiattack", "description": "The spy makes three attacks, using Rapier or Hand Crossbow in any combination."},
-            {"name": "Rapier", "description": "Melee Attack Roll: +9, reach 5 ft. Hit: 14 (2d8 + 5) Piercing damage plus 7 (2d6) Poison damage."},
-            {"name": "Hand Crossbow", "description": "Ranged Attack Roll: +9, range 30/120 ft. Hit: 12 (2d6 + 5) Piercing damage plus 9 (2d8) Poison damage."},
-            {"name": "Smoke Bomb (1/Day)", "description": "The spy throws a bomb to a point it can see within 30 feet of itself. Constitution Saving Throw: DC 16, each creature in a 20-foot-radius Sphere centered on that point. Failure: 28 (8d6) Poison damage, and the target has the Blinded condition until the end of the spy's next turn. Success: Half damage only."},
-        ],
+                {
+                    "name": "Multiattack",
+                    "description": "The spy makes three attacks, using Rapier or Hand Crossbow in any combination.",
+                },
+                {
+                    "name": "Rapier",
+                    "description": "Melee Attack Roll: +9, reach 5 ft. Hit: 14 (2d8 + 5) Piercing damage plus 7 (2d6) Poison damage.",
+                },
+                {
+                    "name": "Hand Crossbow",
+                    "description": "Ranged Attack Roll: +9, range 30/120 ft. Hit: 12 (2d6 + 5) Piercing damage plus 9 (2d8) Poison damage.",
+                },
+                {
+                    "name": "Smoke Bomb (1/Day)",
+                    "description": "The spy throws a bomb to a point it can see within 30 feet of itself. Constitution Saving Throw: DC 16, each creature in a 20-foot-radius Sphere centered on that point. Failure: 28 (8d6) Poison damage, and the target has the Blinded condition until the end of the spy's next turn. Success: Half damage only.",
+                },
+            ],
             bonus_actions=[
-            {"name": "Cunning Action", "description": "The spy takes the Dash, Disengage, or Hide action."},
-        ],
+                {
+                    "name": "Cunning Action",
+                    "description": "The spy takes the Dash, Disengage, or Hide action.",
+                },
+            ],
             reactions=[],
             legendary_actions=[],
             legendary_resistances=0,
@@ -462,12 +728,19 @@ class SpyMaster(ExtendedCombatantData):
 class StoneGolem(ExtendedCombatantData):
     def __init__(self):
         super().__init__(
-            name="Stone Golem",
+            combatant_type="Stone Golem",
             hp=220,
             ac=18,
             temp_hp=0,
             conditions=[],
-            ability_scores={"Str": 22, "Dex": 9, "Con": 20, "Int": 3, "Wis": 11, "Cha": 1},
+            ability_scores={
+                "Str": 22,
+                "Dex": 9,
+                "Con": 20,
+                "Int": 3,
+                "Wis": 11,
+                "Cha": 1,
+            },
             saving_throws={},
             spell_slots={},
             cr="10",
@@ -483,17 +756,35 @@ class StoneGolem(ExtendedCombatantData):
             senses="Darkvision 120 ft., Passive Perception 10",
             languages="Understands Common plus two other languages but can't speak",
             traits=[
-            {"name": "Immutable Form", "description": "The golem can't shape-shift."},
-            {"name": "Magic Resistance", "description": "The golem has Advantage on saving throws against spells and other magical effects."},
-        ],
+                {
+                    "name": "Immutable Form",
+                    "description": "The golem can't shape-shift.",
+                },
+                {
+                    "name": "Magic Resistance",
+                    "description": "The golem has Advantage on saving throws against spells and other magical effects.",
+                },
+            ],
             actions=[
-            {"name": "Multiattack", "description": "The golem makes two attacks, using Slam or Force Bolt in any combination."},
-            {"name": "Slam", "description": "Melee Attack Roll: +10, reach 5 ft. Hit: 15 (2d8 + 6) Bludgeoning damage plus 9 (2d8) Force damage."},
-            {"name": "Force Bolt", "description": "Ranged Attack Roll: +9, range 90 ft. Hit: 26 (4d12) Force damage."},
-        ],
+                {
+                    "name": "Multiattack",
+                    "description": "The golem makes two attacks, using Slam or Force Bolt in any combination.",
+                },
+                {
+                    "name": "Slam",
+                    "description": "Melee Attack Roll: +10, reach 5 ft. Hit: 15 (2d8 + 6) Bludgeoning damage plus 9 (2d8) Force damage.",
+                },
+                {
+                    "name": "Force Bolt",
+                    "description": "Ranged Attack Roll: +9, range 90 ft. Hit: 26 (4d12) Force damage.",
+                },
+            ],
             bonus_actions=[
-            {"name": "Slow (Recharge 5–6)", "description": "The golem casts the Slow spell, requiring no spell components and using Constitution as the spellcasting ability (spell save DC 17)."},
-        ],
+                {
+                    "name": "Slow (Recharge 5–6)",
+                    "description": "The golem casts the Slow spell, requiring no spell components and using Constitution as the spellcasting ability (spell save DC 17).",
+                },
+            ],
             reactions=[],
             legendary_actions=[],
             legendary_resistances=0,
@@ -505,12 +796,19 @@ class StoneGolem(ExtendedCombatantData):
 class WarriorCommander(ExtendedCombatantData):
     def __init__(self):
         super().__init__(
-            name="Warrior Commander",
+            combatant_type="Warrior Commander",
             hp=161,
             ac=18,
             temp_hp=0,
             conditions=[],
-            ability_scores={"Str": 21, "Dex": 20, "Con": 18, "Int": 14, "Wis": 16, "Cha": 14},
+            ability_scores={
+                "Str": 21,
+                "Dex": 20,
+                "Con": 18,
+                "Int": 14,
+                "Wis": 16,
+                "Cha": 14,
+            },
             saving_throws={},
             spell_slots={},
             cr="10",
@@ -527,16 +825,37 @@ class WarriorCommander(ExtendedCombatantData):
             languages="Common plus one other language",
             traits=[],
             actions=[
-            {"name": "Multiattack", "description": "The warrior makes three attacks, using Greatsword or Longbow in any combination."},
-            {"name": "Greatsword", "description": "Melee Attack Roll: +9, reach 5 ft. Hit: 19 (4d6 + 5) Slashing damage. The warrior also creates one of the following effects:"},
-            {"name": "Sap", "description": ". The target has Disadvantage on its next attack roll before the start of the warrior's next turn."},
-            {"name": "Maneuver", "description": ". One ally who can see or hear the warrior can take a Reaction to move up to half the ally's Speed without provoking Opportunity Attacks."},
-            {"name": "Longbow", "description": "Ranged Attack Roll: +9, range 150/600 ft. Hit: 18 (3d8 + 5) Piercing damage, and the target's Speed decreases by 10 feet until the end of the target's next turn."},
-            {"name": "Counterattack", "description": "Trigger: The warrior is hit by an attack roll. Response: The warrior adds 4 to its AC against that attack, possibly causing it to miss. On a miss, the warrior can make one Greatsword or Longbow attack against the attacker."},
-        ],
+                {
+                    "name": "Multiattack",
+                    "description": "The warrior makes three attacks, using Greatsword or Longbow in any combination.",
+                },
+                {
+                    "name": "Greatsword",
+                    "description": "Melee Attack Roll: +9, reach 5 ft. Hit: 19 (4d6 + 5) Slashing damage. The warrior also creates one of the following effects:",
+                },
+                {
+                    "name": "Sap",
+                    "description": ". The target has Disadvantage on its next attack roll before the start of the warrior's next turn.",
+                },
+                {
+                    "name": "Maneuver",
+                    "description": ". One ally who can see or hear the warrior can take a Reaction to move up to half the ally's Speed without provoking Opportunity Attacks.",
+                },
+                {
+                    "name": "Longbow",
+                    "description": "Ranged Attack Roll: +9, range 150/600 ft. Hit: 18 (3d8 + 5) Piercing damage, and the target's Speed decreases by 10 feet until the end of the target's next turn.",
+                },
+                {
+                    "name": "Counterattack",
+                    "description": "Trigger: The warrior is hit by an attack roll. Response: The warrior adds 4 to its AC against that attack, possibly causing it to miss. On a miss, the warrior can make one Greatsword or Longbow attack against the attacker.",
+                },
+            ],
             bonus_actions=[
-            {"name": "Tactical Charge", "description": "The warrior moves up to half its Speed straight toward an enemy it can see without provoking Opportunity Attacks."},
-        ],
+                {
+                    "name": "Tactical Charge",
+                    "description": "The warrior moves up to half its Speed straight toward an enemy it can see without provoking Opportunity Attacks.",
+                },
+            ],
             reactions=[],
             legendary_actions=[],
             legendary_resistances=0,
@@ -548,12 +867,19 @@ class WarriorCommander(ExtendedCombatantData):
 class Yochlol(ExtendedCombatantData):
     def __init__(self):
         super().__init__(
-            name="Yochlol",
+            combatant_type="Yochlol",
             hp=153,
             ac=15,
             temp_hp=0,
             conditions=[],
-            ability_scores={"Str": 15, "Dex": 19, "Con": 18, "Int": 13, "Wis": 15, "Cha": 17},
+            ability_scores={
+                "Str": 15,
+                "Dex": 19,
+                "Con": 18,
+                "Int": 13,
+                "Wis": 15,
+                "Cha": 17,
+            },
             saving_throws={},
             spell_slots={},
             cr="10",
@@ -569,20 +895,47 @@ class Yochlol(ExtendedCombatantData):
             senses="Darkvision 120 ft., Passive Perception 12",
             languages="Abyssal, Elvish, Undercommon",
             traits=[
-            {"name": "Demonic Restoration", "description": "If the yochlol dies outside the Abyss, its body dissolves, and it gains a new body instantly, reviving with all its Hit Points in the Abyss."},
-            {"name": "Magic Resistance", "description": "The yochlol has Advantage on saving throws against spells and other magical effects."},
-            {"name": "Spider Climb", "description": "The yochlol can climb difficult surfaces, including along ceilings, without needing to make an ability check."},
-            {"name": "Web Walker", "description": "The yochlol ignores movement restrictions caused by webs."},
-        ],
+                {
+                    "name": "Demonic Restoration",
+                    "description": "If the yochlol dies outside the Abyss, its body dissolves, and it gains a new body instantly, reviving with all its Hit Points in the Abyss.",
+                },
+                {
+                    "name": "Magic Resistance",
+                    "description": "The yochlol has Advantage on saving throws against spells and other magical effects.",
+                },
+                {
+                    "name": "Spider Climb",
+                    "description": "The yochlol can climb difficult surfaces, including along ceilings, without needing to make an ability check.",
+                },
+                {
+                    "name": "Web Walker",
+                    "description": "The yochlol ignores movement restrictions caused by webs.",
+                },
+            ],
             actions=[
-            {"name": "Multiattack", "description": "The yochlol makes two Caustic Lash attacks, and it can use Spellcasting to cast Web or Dominate Person if available."},
-            {"name": "Caustic Lash", "description": "Melee or Ranged Attack Roll: +8, reach 10 ft. or range 120 ft. Hit: 25 (6d6 + 4) Acid damage."},
-            {"name": "Spellcasting", "description": "The yochlol casts one of the following spells, requiring no Material components and using Charisma as the spellcasting ability (spell save DC 15):"},
-            {"name": "Toxic Escape", "description": "Trigger: The yochlol is hit by an attack roll. Response: The yochlol halves the attack's damage to itself (round down), and it teleports to an unoccupied space it can see within 30 feet of itself. Constitution Saving Throw: DC 15, each creature within 5 feet of the yochlol's destination space. Failure: The target has the Poisoned condition until the end of its next turn. While Poisoned, it has the Incapacitated condition."},
-        ],
+                {
+                    "name": "Multiattack",
+                    "description": "The yochlol makes two Caustic Lash attacks, and it can use Spellcasting to cast Web or Dominate Person if available.",
+                },
+                {
+                    "name": "Caustic Lash",
+                    "description": "Melee or Ranged Attack Roll: +8, reach 10 ft. or range 120 ft. Hit: 25 (6d6 + 4) Acid damage.",
+                },
+                {
+                    "name": "Spellcasting",
+                    "description": "The yochlol casts one of the following spells, requiring no Material components and using Charisma as the spellcasting ability (spell save DC 15):",
+                },
+                {
+                    "name": "Toxic Escape",
+                    "description": "Trigger: The yochlol is hit by an attack roll. Response: The yochlol halves the attack's damage to itself (round down), and it teleports to an unoccupied space it can see within 30 feet of itself. Constitution Saving Throw: DC 15, each creature within 5 feet of the yochlol's destination space. Failure: The target has the Poisoned condition until the end of its next turn. While Poisoned, it has the Incapacitated condition.",
+                },
+            ],
             bonus_actions=[
-            {"name": "Shape-Shift", "description": "The yochlol shape-shifts into a Medium Humanoid or a Medium spider or back into its true form. Its game statistics are the same in each form. Any equipment it is wearing or carrying isn't transformed."},
-        ],
+                {
+                    "name": "Shape-Shift",
+                    "description": "The yochlol shape-shifts into a Medium Humanoid or a Medium spider or back into its true form. Its game statistics are the same in each form. Any equipment it is wearing or carrying isn't transformed.",
+                },
+            ],
             reactions=[],
             legendary_actions=[],
             legendary_resistances=0,
@@ -594,12 +947,19 @@ class Yochlol(ExtendedCombatantData):
 class YoungGoldDragon(ExtendedCombatantData):
     def __init__(self):
         super().__init__(
-            name="Young Gold Dragon",
+            combatant_type="Young Gold Dragon",
             hp=178,
             ac=18,
             temp_hp=0,
             conditions=[],
-            ability_scores={"Str": 23, "Dex": 14, "Con": 21, "Int": 16, "Wis": 13, "Cha": 20},
+            ability_scores={
+                "Str": 23,
+                "Dex": 14,
+                "Con": 21,
+                "Int": 16,
+                "Wis": 13,
+                "Cha": 20,
+            },
             saving_throws={},
             spell_slots={},
             cr="10",
@@ -615,14 +975,29 @@ class YoungGoldDragon(ExtendedCombatantData):
             senses="Blindsight 30 ft., Darkvision 120 ft., Passive Perception 19",
             languages="Common, Draconic",
             traits=[
-            {"name": "Amphibious", "description": "The dragon can breathe air and water."},
-        ],
+                {
+                    "name": "Amphibious",
+                    "description": "The dragon can breathe air and water.",
+                },
+            ],
             actions=[
-            {"name": "Multiattack", "description": "The dragon makes three Rend attacks. It can replace one attack with a use of Weakening Breath."},
-            {"name": "Rend", "description": "Melee Attack Roll: +10, reach 10 ft. Hit: 17 (2d10 + 6) Slashing damage."},
-            {"name": "Fire Breath (Recharge 5–6)", "description": "Dexterity Saving Throw: DC 17, each creature in a 30-foot Cone. Failure: 55 (10d10) Fire damage. Success: Half damage."},
-            {"name": "Weakening Breath", "description": "Strength Saving Throw: DC 17, each creature that isn't currently affected by this breath in a 30-foot Cone. Failure: The target has Disadvantage on Strength-based D20 Tests and subtracts 3 (1d6) from its damage rolls. It repeats the save at the end of each of its turns, ending the effect on itself on a success. After 1 minute, it succeeds automatically."},
-        ],
+                {
+                    "name": "Multiattack",
+                    "description": "The dragon makes three Rend attacks. It can replace one attack with a use of Weakening Breath.",
+                },
+                {
+                    "name": "Rend",
+                    "description": "Melee Attack Roll: +10, reach 10 ft. Hit: 17 (2d10 + 6) Slashing damage.",
+                },
+                {
+                    "name": "Fire Breath (Recharge 5–6)",
+                    "description": "Dexterity Saving Throw: DC 17, each creature in a 30-foot Cone. Failure: 55 (10d10) Fire damage. Success: Half damage.",
+                },
+                {
+                    "name": "Weakening Breath",
+                    "description": "Strength Saving Throw: DC 17, each creature that isn't currently affected by this breath in a 30-foot Cone. Failure: The target has Disadvantage on Strength-based D20 Tests and subtracts 3 (1d6) from its damage rolls. It repeats the save at the end of each of its turns, ending the effect on itself on a success. After 1 minute, it succeeds automatically.",
+                },
+            ],
             bonus_actions=[],
             reactions=[],
             legendary_actions=[],
@@ -635,12 +1010,19 @@ class YoungGoldDragon(ExtendedCombatantData):
 class YoungRedDragon(ExtendedCombatantData):
     def __init__(self):
         super().__init__(
-            name="Young Red Dragon",
+            combatant_type="Young Red Dragon",
             hp=178,
             ac=18,
             temp_hp=0,
             conditions=[],
-            ability_scores={"Str": 23, "Dex": 10, "Con": 21, "Int": 14, "Wis": 11, "Cha": 19},
+            ability_scores={
+                "Str": 23,
+                "Dex": 10,
+                "Con": 21,
+                "Int": 14,
+                "Wis": 11,
+                "Cha": 19,
+            },
             saving_throws={},
             spell_slots={},
             cr="10",
@@ -657,10 +1039,19 @@ class YoungRedDragon(ExtendedCombatantData):
             languages="Common, Draconic",
             traits=[],
             actions=[
-            {"name": "Multiattack", "description": "The dragon makes three Rend attacks."},
-            {"name": "Rend", "description": "Melee Attack Roll: +10, reach 10 ft. Hit: 13 (2d6 + 6) Slashing damage plus 3 (1d6) Fire damage."},
-            {"name": "Fire Breath (Recharge 5–6)", "description": "Dexterity Saving Throw: DC 17, each creature in a 30-foot Cone. Failure: 56 (16d6) Fire damage. Success: Half damage."},
-        ],
+                {
+                    "name": "Multiattack",
+                    "description": "The dragon makes three Rend attacks.",
+                },
+                {
+                    "name": "Rend",
+                    "description": "Melee Attack Roll: +10, reach 10 ft. Hit: 13 (2d6 + 6) Slashing damage plus 3 (1d6) Fire damage.",
+                },
+                {
+                    "name": "Fire Breath (Recharge 5–6)",
+                    "description": "Dexterity Saving Throw: DC 17, each creature in a 30-foot Cone. Failure: 56 (16d6) Fire damage. Success: Half damage.",
+                },
+            ],
             bonus_actions=[],
             reactions=[],
             legendary_actions=[],
@@ -670,4 +1061,21 @@ class YoungRedDragon(ExtendedCombatantData):
         )
 
 
-__all__ = ['Aboleth', 'CultistHierophant', 'CyclopsOracle', 'DeathSlaad', 'Deva', 'DireWorg', 'GuardianNaga', 'HauntingRevenant', 'NobleProdigy', 'PerformerLegend', 'SpyMaster', 'StoneGolem', 'WarriorCommander', 'Yochlol', 'YoungGoldDragon', 'YoungRedDragon']
+__all__ = [
+    "Aboleth",
+    "CultistHierophant",
+    "CyclopsOracle",
+    "DeathSlaad",
+    "Deva",
+    "DireWorg",
+    "GuardianNaga",
+    "HauntingRevenant",
+    "NobleProdigy",
+    "PerformerLegend",
+    "SpyMaster",
+    "StoneGolem",
+    "WarriorCommander",
+    "Yochlol",
+    "YoungGoldDragon",
+    "YoungRedDragon",
+]
