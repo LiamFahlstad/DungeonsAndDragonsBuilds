@@ -90,6 +90,28 @@ class HtmlCharacterSheetWriter:
 
         file.write("</table>\n")
 
+    @staticmethod
+    def _write_slot_item_table(file: TextIO, title: str, rows: list[tuple[str, str, int]]):
+        """Inventory table with slot cost, carry quantity, and left-behind tracking."""
+        file.write("<table class='item-table'>\n")
+        file.write("<tr>\n")
+        file.write(f"<th class='item-title'>{title}</th>\n")
+        file.write("<th class='item-title item-col-narrow'>Slots</th>\n")
+        file.write("<th class='item-title item-col-carry'>Carry</th>\n")
+        file.write("<th class='item-title item-col-leftbehind'>Left Behind</th>\n")
+        file.write("</tr>\n")
+
+        for label, description, slots in rows:
+            leftbehind_id = label.replace(" ", "_").replace("(", "").replace(")", "") + "_leftbehind"
+            file.write("<tr>\n")
+            file.write(f"<td class='item-entry'><strong>{label}</strong><br/>{description}</td>\n")
+            file.write(f"<td style='text-align: center;'>{slots}</td>\n")
+            file.write("<td></td>\n")
+            file.write(f"<td class='item-leftbehind'><input type='checkbox' id='{leftbehind_id}_check' name='{leftbehind_id}_check'/></td>\n")
+            file.write("</tr>\n")
+
+        file.write("</table>\n")
+
     def _write_general_info(self, character: CharacterStatBlock, file: TextIO, experience_points: int = 0):
         file.write("<h2>General Info</h2>\n")
 
@@ -574,53 +596,37 @@ class HtmlCharacterSheetWriter:
             file.write("</tr>\n")
             file.write("</table>\n")
 
+        # Each section renders in the same slot-table format:
+        # (title, [(label, description, slots), ...])
         sections = []
         if armors:
             armor_rows = [
-                (armor.name, self._description_or_dash(armor.description))
+                (armor.name, self._description_or_dash(armor.description), armor.slots)
                 for armor in armors
             ]
             sections.append(("Armor", armor_rows))
 
         if weapons:
             weapon_rows = [
-                (weapon.name, self._description_or_dash(weapon.description))
+                (weapon.name, self._description_or_dash(weapon.description), weapon.slots)
                 for weapon in weapons
                 if not isinstance(weapon, UnarmedStrike)
             ]
             if weapon_rows:
                 sections.append(("Weapons", weapon_rows))
 
+        if items:
+            sorted_items = sorted(items, key=lambda x: x[0].name)
+            item_rows = [
+                (f"{item.name} ({quantity})", item.description(), item.slots)
+                for item, quantity in sorted_items
+            ]
+            sections.append(("Other items", item_rows))
+
         for i, (title, rows) in enumerate(sections):
             if i > 0:
                 file.write("<hr>")
-            self._write_item_table(file, title, rows)
-
-        if items:
-            if sections:
-                file.write("<hr>")
-            sorted_items = sorted(items, key=lambda x: x[0].name)
-            file.write("<table class='item-table'>\n")
-            file.write("<tr>\n")
-            file.write("<th class='item-title'>Other items</th>\n")
-            file.write("<th class='item-title item-col-narrow'>Slots</th>\n")
-            file.write("<th class='item-title item-col-carry'>Carry</th>\n")
-            file.write("<th class='item-title item-col-leftbehind'>Left Behind</th>\n")
-            file.write("</tr>\n")
-
-            for item, quantity in sorted_items:
-                item_label = f"{item.name} ({quantity})"
-                item_desc = item.description()
-                leftbehind_id = item.name.replace(" ", "_").replace("(", "").replace(")", "") + "_leftbehind"
-
-                file.write("<tr>\n")
-                file.write(f"<td class='item-entry'><strong>{item_label}</strong><br/>{item_desc}</td>\n")
-                file.write(f"<td style='text-align: center;'>{item.slots}</td>\n")
-                file.write("<td></td>\n")
-                file.write(f"<td class='item-leftbehind'><input type='checkbox' id='{leftbehind_id}_check' name='{leftbehind_id}_check'/></td>\n")
-                file.write("</tr>\n")
-
-            file.write("</table>\n")
+            self._write_slot_item_table(file, title, rows)
 
         file.write("<br class='section-gap'>\n")
 

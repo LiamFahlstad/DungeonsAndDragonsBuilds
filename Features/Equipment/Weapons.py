@@ -5,7 +5,7 @@ from typing import Optional, TextIO
 
 import DamageCalculator
 from Definitions import Ability, Die
-from Features.Core.BaseFeatures import Feature
+from Features.Items.Items import Item
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
@@ -125,13 +125,33 @@ class WeaponsStats:
 
 
 @dataclass
-class AbstractWeapon(Feature):
-    """An abstract class for armor features."""
+class AbstractWeapon(Item):
+    """Abstract base class for weapons, inheriting from Item for shared inventory mechanics."""
 
     player_is_proficient: bool = False
     player_has_mastery: bool = False
     attack_roll_bonuses: list[tuple[int, str]] = field(default_factory=list)
     ability: Optional[Ability] = None
+
+    def __post_init__(self):
+        """Initialize Item base class fields when dataclass is instantiated."""
+        # Dataclass fields set via __init__, but Item fields need explicit setting
+        if not hasattr(self, 'rarity'):
+            self.rarity = "common"
+        if not hasattr(self, 'requires_attunement'):
+            self.requires_attunement = False
+        if not hasattr(self, 'category'):
+            self.category = "weapon"
+        if not hasattr(self, 'weight'):
+            self.weight = None
+        if not hasattr(self, 'slots'):
+            self.slots = 1
+        if not hasattr(self, 'description_text'):
+            self.description_text = ""
+        if not hasattr(self, 'subfeatures'):
+            self.subfeatures = []
+        # Set origin (for display) to weapon category
+        self.origin = "weapon"
 
     @property
     def name(self):
@@ -245,6 +265,10 @@ class AbstractWeapon(Feature):
             results.append((ac, prob))
         return results
 
+    def apply(self, character_stat_block: CharacterStatBlock):
+        """Apply weapon's Item subfeatures (inherited from Item)."""
+        super().apply(character_stat_block)
+
     def write_to_file(self, character_stat_block: CharacterStatBlock, file: TextIO):
         pass  # HTML rendering is handled by write_weapons_to_file
 
@@ -282,6 +306,7 @@ class UnarmedStrike(AbstractWeapon):
     damage_roll: Optional[WeaponsDamageRolls] = None
 
     def __post_init__(self):
+        super().__post_init__()  # Initialize Item fields
         if self.ability is not None and self.ability not in (
             Ability.STRENGTH,
             Ability.DEXTERITY,
