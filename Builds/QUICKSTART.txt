@@ -1,0 +1,65 @@
+D&D BUILD CREATION QUICK START GUIDE
+=====================================
+
+Step-by-step instructions to create your first build:
+
+1. COPY THE TEMPLATE
+   Copy Builds/_TEMPLATE.py to a new file:
+   cp _TEMPLATE.py MyNewBuild.py
+
+2. FOLLOW THE TODOs
+   Open MyNewBuild.py and work through each TODO comment (there are ~15).
+   Each TODO is clearly marked and explains what you need to fill in:
+   - Choose your class (Fighter, Wizard, Cleric, etc.)
+   - Choose your subclass
+   - Set ability scores
+   - Pick skills
+   - Choose spells (if applicable)
+   - Configure equipment
+   - Set your character name
+
+3. REGISTER IN MAIN.PY
+   Add two lines to Main.py:
+   
+   a) At the top with other imports:
+      from Builds.MyNewBuild import MyNewCharacterBuilder
+   
+   b) In BuildSelector.builds() dict:
+      "MyNewBuild": MyNewCharacterBuilder(),
+
+4. RUN YOUR BUILD
+   Option A: Generate HTML for all builds
+   python Main.py
+
+   Option B: Test just your build (faster)
+   python -c "
+   import Definitions
+   from Builds.MyNewBuild import MyNewCharacterBuilder
+   MyNewCharacterBuilder().build().create_character_sheet(
+       skill_config=Definitions.SkillConfig.DEFAULT
+   )
+   "
+
+5. FIND YOUR CHARACTER SHEET
+   Look in Output/ directory for HTML file starting with your character name
+
+REFERENCE FILES
+===============
+- Builds/_TEMPLATE.py        ← Heavily commented template with all options
+- Builds/README.md           ← Detailed guide with examples
+- Builds/ExampleNewBardBard.py  ← Real working example from the template
+
+HELP WITH CHOICES
+=================
+Classes:              CharacterConfigs/BaseClasses/*.py
+Subclasses:           CharacterConfigs/SubClasses/*.py
+Species:              SpeciesConfigs/*.py
+Abilities/Skills:     Definitions.py
+Spells:               Spells/Definitions.py
+Feats:                Features/CharacterFeats/*.py
+Equipment:            Features/Equipment/*.py
+
+QUESTIONS?
+==========
+Check an existing build in Builds/ that matches your class, or read the
+detailed guide in Builds/README.md
