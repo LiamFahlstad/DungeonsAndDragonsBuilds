@@ -18,6 +18,7 @@ class Action(str, Enum):
 
 class Condition(str, Enum):
     BLINDED = "Blinded"
+    BLOODIED = "Bloodied"
     CHARMED = "Charmed"
     CONCENTRATING = "Concentrating"
     FRIGHTENED = "Frightened"
@@ -30,6 +31,20 @@ class Condition(str, Enum):
     @staticmethod
     def list_all():
         return [cond.value for cond in Condition]
+
+
+class Visibility(str, Enum):
+    LIGHTLY_OBSCURED = "Lightly Obscured"
+    HEAVILY_OBSCURED = "Heavily Obscured"
+    INVISIBLE = "Invisible"
+    DARKNESS = "Darkness"
+    HALF_COVER = "Half Cover"
+    THREE_QUARTERS_COVER = "Three-Quarters Cover"
+    TOTAL_COVER = "Total Cover"
+
+    @staticmethod
+    def list_all():
+        return [vis.value for vis in Visibility]
 
 
 @dataclass_decorator
@@ -52,6 +67,8 @@ class BasicCombatantData:
     saving_throws: Optional[dict[str, int]] = None
     max_hp: Optional[int] = None
     name: Optional[str] = None  # Optional custom name for the combatant
+    create_name: Optional[str] = None  # Instance name (display name), distinct from creature type
+    visibility_states: Optional[list[Visibility]] = None
 
     def __attrs_post_init__(self):
         if self.spell_slots is None:
@@ -62,15 +79,20 @@ class BasicCombatantData:
             self.saving_throws = {}
         if self.max_hp is None:
             self.max_hp = self.hp
+        if self.visibility_states is None:
+            self.visibility_states = []
 
     def as_dict(self, character=None):
         return {
             "name": self.name if self.name is not None else self.combatant_type,
+            "create_name": self.create_name if self.create_name is not None else self.combatant_type,
+            "combatant_type": self.combatant_type,
             "hp": self.hp,
             "max_hp": self.max_hp,
             "ac": self.ac,
             "temp_hp": self.temp_hp,
             "conditions": self.conditions,
+            "visibility_states": self.visibility_states if self.visibility_states is not None else [],
             "spell_slots": self.spell_slots if self.spell_slots is not None else {},
             "Ability Scores": (
                 self.ability_scores if self.ability_scores is not None else {}
@@ -82,6 +104,9 @@ class BasicCombatantData:
 
     def set_name(self, new_name: str):
         self.name = new_name
+
+    def set_create_name(self, new_create_name: str):
+        self.create_name = new_create_name
 
 
 @dataclass

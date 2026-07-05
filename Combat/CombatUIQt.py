@@ -36,6 +36,7 @@ from Combat.Definitions import (
     BasicCombatantData,
     Condition,
     ExtendedCombatantData,
+    Visibility,
 )
 from Combat.Rules import Rule, group_by_category, load_rules
 from Features.Equipment import Armor
@@ -297,6 +298,7 @@ class CombatAppQt:
             self._add_basic_combatant(c)
 
         self.conditions = Condition.list_all()
+        self.visibility_states = Visibility.list_all()
         self.selected_character: dict | None = None
         self.round_number = 1
         self.history: list[tuple[Action, str | int | tuple[int, int]]] = []
@@ -359,11 +361,13 @@ class CombatAppQt:
         self.characters.append(
             {
                 "name": character_sheet.character_name,
+                "create_name": character_sheet.character_name,
                 "hp": hp,
                 "max_hp": hp,
                 "ac": ac,
                 "temp_hp": 0,
                 "conditions": [],
+                "visibility_states": [],
                 "death_saves_fail": 0,
                 "death_saves_success": 0,
                 "spell_slots": spell_slots,
@@ -400,11 +404,14 @@ class CombatAppQt:
     def _add_basic_combatant(self, combatant: BasicCombatantData):
         char = {
             "name": combatant.combatant_type,
+            "create_name": combatant.create_name if combatant.create_name is not None else combatant.combatant_type,
+            "combatant_type": combatant.combatant_type,
             "hp": combatant.hp,
             "max_hp": combatant.max_hp,
             "ac": combatant.ac,
             "temp_hp": combatant.temp_hp,
             "conditions": [cond.value for cond in combatant.conditions],
+            "visibility_states": [vis.value for vis in (combatant.visibility_states or [])],
             "death_saves_fail": 0,
             "death_saves_success": 0,
             "spell_slots": combatant.spell_slots,
@@ -907,6 +914,18 @@ class CombatAppQt:
 
         dlg.exec()
 
+    def _apply_bloodied_condition(self, char: dict):
+        """Auto-apply/remove Bloodied condition based on HP threshold."""
+        max_hp = char.get("max_hp", 1)
+        hp = char.get("hp", 0)
+        is_bloodied = "Bloodied" in char.get("conditions", [])
+        should_be_bloodied = hp > 0 and hp <= max_hp / 2
+
+        if should_be_bloodied and not is_bloodied:
+            char["conditions"].append("Bloodied")
+        elif not should_be_bloodied and is_bloodied:
+            char["conditions"].remove("Bloodied")
+
     def _apply_damage(self):
         if not self.selected_character:
             return
@@ -926,6 +945,10 @@ class CombatAppQt:
         temp_delta = self.selected_character["temp_hp"] - pre_temp
         self.history.append((Action.DAMAGE, (hp_delta, temp_delta)))
         self._log_event(f"{self.selected_character['name']} takes {dmg} damage")
+
+        # Auto-apply bloodied condition
+        self._apply_bloodied_condition(self.selected_character)
+
         self._refresh_selected_card()
 
         if "Concentrating" in self.selected_character.get("conditions", []):
@@ -1083,6 +1106,9 @@ class CombatAppQt:
         else:
             self._log_event(f"{char['name']} heals {heal} HP")
 
+        # Auto-apply bloodied condition
+        self._apply_bloodied_condition(char)
+
         self._refresh_selected_card()
 
     def _apply_failed_death_save(self, char: dict):
@@ -1151,6 +1177,26 @@ class CombatAppQt:
             self._log_event(f"{self.selected_character['name']} loses {cond}")
             self._refresh_selected_card()
 
+    def _add_visibility(self):
+        if not self.selected_character:
+            return
+        vis = self.visibility_combo.currentText()
+        visibility_states = self.selected_character.get("visibility_states", [])
+        if vis not in visibility_states:
+            visibility_states.append(vis)
+            self._log_event(f"{self.selected_character['name']} gains {vis}")
+            self._refresh_selected_card()
+
+    def _remove_visibility(self):
+        if not self.selected_character:
+            return
+        vis = self.visibility_combo.currentText()
+        visibility_states = self.selected_character.get("visibility_states", [])
+        if vis in visibility_states:
+            visibility_states.remove(vis)
+            self._log_event(f"{self.selected_character['name']} loses {vis}")
+            self._refresh_selected_card()
+
     def _cast_spell_slot(self):
         if not self.selected_character:
             return
@@ -1211,6 +1257,9 @@ class CombatAppQt:
             char["death_saves_fail"] = max(char.get("death_saves_fail", 0) - 1, 0)
         elif action == Action.DEATH_SAVE_SUCCESS:
             char["death_saves_success"] = max(char.get("death_saves_success", 0) - 1, 0)
+
+        if action in (Action.DAMAGE, Action.HEAL):
+            self._apply_bloodied_condition(char)
 
         last_event = data[key].pop()
         self._write_log(data)
@@ -1627,6 +1676,7 @@ class CombatAppQt:
         self._window = QMainWindow()
         self._window.setWindowTitle("DnD Combat Engine")
         self._window.setMinimumSize(900, 600)
+        self._window.resize(2400, 1300)
 
         central = QWidget()
         self._window.setCentralWidget(central)
@@ -1698,11 +1748,6 @@ class CombatAppQt:
         )
         tracker_outer.addWidget(self._turn_counter_label)
 
-        self._init_tracker_layout = QVBoxLayout()
-        self._init_tracker_layout.setContentsMargins(0, 0, 0, 0)
-        self._init_tracker_layout.setSpacing(1)
-        tracker_outer.addLayout(self._init_tracker_layout)
-
         panel_layout.addWidget(self._init_tracker_container)
 
         panel_layout.addWidget(self._make_divider())
@@ -1759,6 +1804,22 @@ class CombatAppQt:
         cond_row.addWidget(add_cond_btn)
         cond_row.addWidget(rm_cond_btn)
         panel_layout.addLayout(cond_row)
+
+        panel_layout.addWidget(self._make_divider())
+
+        # Visibility section
+        panel_layout.addWidget(self._section_header("Visibility"))
+        self.visibility_combo = QComboBox()
+        self.visibility_combo.addItems(self.visibility_states)
+        panel_layout.addWidget(self.visibility_combo)
+        vis_row = QHBoxLayout()
+        add_vis_btn = QPushButton("Add")
+        add_vis_btn.clicked.connect(self._add_visibility)
+        rm_vis_btn = QPushButton("Remove")
+        rm_vis_btn.clicked.connect(self._remove_visibility)
+        vis_row.addWidget(add_vis_btn)
+        vis_row.addWidget(rm_vis_btn)
+        panel_layout.addLayout(vis_row)
 
         panel_layout.addWidget(self._make_divider())
 
@@ -1891,56 +1952,12 @@ class CombatAppQt:
             self._rebuild_card(self.selected_character)
 
     def _refresh_initiative_tracker(self):
-        """Rebuild the initiative order tracker widget rows."""
-        # Clear existing rows
-        while self._init_tracker_layout.count():
-            item = self._init_tracker_layout.takeAt(0)
-            if item is not None:
-                w = item.widget()
-                if w is not None:
-                    w.deleteLater()
-
+        """Update the turn counter label."""
         if not self.initiative_order:
             return
 
         total = len(self.initiative_order)
-        current_idx = self.current_turn_idx
-        self._turn_counter_label.setText(f"Turn {current_idx + 1} / {total}")
-
-        for idx, char in enumerate(self.initiative_order):
-            is_active = idx == current_idx
-            death_state = self._char_death_state(char)
-            already_gone = idx < current_idx
-
-            if is_active:
-                dot_color = "#c9a84c"
-                name_color = "#c9a84c"
-            elif death_state == "dead":
-                dot_color = "#555"
-                name_color = "#555"
-            elif already_gone:
-                dot_color = "#a0c4ff"
-                name_color = "#a0c4ff"
-            else:
-                dot_color = "#eaeaea"
-                name_color = "#eaeaea"
-
-            row_w = QWidget()
-            row_layout = QHBoxLayout(row_w)
-            row_layout.setContentsMargins(0, 0, 0, 0)
-            row_layout.setSpacing(4)
-
-            dot = QLabel("●")
-            dot.setStyleSheet(f"color: {dot_color}; font-size: 8px;")
-            dot.setFixedWidth(12)
-            row_layout.addWidget(dot)
-
-            display_name = char["name"][:20] + ("…" if len(char["name"]) > 20 else "")
-            name_lbl = QLabel(display_name)
-            name_lbl.setStyleSheet(f"color: {name_color}; font-size: 10px;")
-            row_layout.addWidget(name_lbl, stretch=1)
-
-            self._init_tracker_layout.addWidget(row_w)
+        self._turn_counter_label.setText(f"Turn {self.current_turn_idx + 1} / {total}")
 
     def _refresh_turn(self):
         """Update the active-turn highlight, tracker, and Next button label."""
@@ -1975,10 +1992,30 @@ class CombatAppQt:
         rule = ConditionRule.from_name(condition_name)
         if rule is None:
             return
-        heading, body = rule.heading, rule.description
+        self._show_rule_popup(condition_name, rule.heading, rule.description)
 
+    # Cover grades share a single "Cover" entry in rules.json
+    _VISIBILITY_RULE_NAMES = {
+        "Half Cover": "Cover",
+        "Three-Quarters Cover": "Cover",
+        "Total Cover": "Cover",
+    }
+
+    def _visibility_rule(self, visibility_name: str) -> Rule | None:
+        rule_name = self._VISIBILITY_RULE_NAMES.get(visibility_name, visibility_name)
+        if not hasattr(self, "_rules_cache"):
+            self._rules_cache: list[Rule] = load_rules()
+        return next((r for r in self._rules_cache if r.name == rule_name), None)
+
+    def _show_visibility_info(self, visibility_name: str):
+        rule = self._visibility_rule(visibility_name)
+        if rule is None:
+            return
+        self._show_rule_popup(visibility_name, f"{rule.name} [{rule.category}]", rule.body)
+
+    def _show_rule_popup(self, title: str, heading: str, body: str):
         dlg = QDialog(self._window)
-        dlg.setWindowTitle(condition_name)
+        dlg.setWindowTitle(title)
         dlg.setMinimumWidth(380)
         dlg.setStyleSheet(QSS)
 
@@ -2170,6 +2207,37 @@ class CombatAppQt:
                 cond_row.addWidget(badge)
             cond_row.addStretch()
             layout.addLayout(cond_row)
+
+        # --- Visibility states ---
+        visibility_states = char.get("visibility_states", [])
+        if visibility_states:
+            vis_row = QHBoxLayout()
+            vis_row.setSpacing(3)
+            vis_row.setAlignment(Qt.AlignmentFlag.AlignLeft)
+            for vis in visibility_states:
+                # Use a blue/cyan color for visibility states
+                if self._visibility_rule(vis) is not None:
+                    vis_badge = QPushButton(vis)
+                    vis_badge.setFlat(True)
+                    vis_badge.setStyleSheet(
+                        "QPushButton { background-color: #1a5c7a; color: #ffffff;"
+                        " border-radius: 3px; padding: 1px 4px; font-size: 10px;"
+                        " border: none; cursor: pointer; }"
+                        "QPushButton:hover { background-color: #1a5c7acc; }"
+                    )
+                    vis_badge.setCursor(Qt.CursorShape.PointingHandCursor)
+                    vis_badge.clicked.connect(
+                        lambda _=False, v=vis: self._show_visibility_info(v)
+                    )
+                else:
+                    vis_badge = QLabel(vis)
+                    vis_badge.setStyleSheet(
+                        "background-color: #1a5c7a; color: #ffffff;"
+                        " border-radius: 3px; padding: 1px 4px; font-size: 10px;"
+                    )
+                vis_row.addWidget(vis_badge)
+            vis_row.addStretch()
+            layout.addLayout(vis_row)
 
         # --- Spell slots ---
         slots = {k: v for k, v in (char.get("spell_slots") or {}).items() if v > 0}
