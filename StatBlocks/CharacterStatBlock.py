@@ -36,6 +36,8 @@ class CharacterStatBlock:
         self._caster_registry: dict = {}
         self.initiative_proficiency = False
         self.initiative_roll_condition = Definitions.DiceRollCondition.NEUTRAL
+        # (source, slots) pairs; every creature carries 3 slots on their person
+        self.carrying_capacity_sources: list[tuple[str, int]] = [("Person", 3)]
 
     @property
     def character_level(self) -> int:
@@ -47,6 +49,10 @@ class CharacterStatBlock:
         if self.initiative_proficiency:
             modifier += self.get_proficiency_bonus()
         return modifier
+
+    def get_carrying_capacity(self) -> int:
+        """Returns the total carrying capacity in item slots (base 3 + bonuses)."""
+        return sum(slots for _, slots in self.carrying_capacity_sources)
 
     def _require_spell_casting_ability(self) -> Ability:
         if self.spell_casting_ability is None:

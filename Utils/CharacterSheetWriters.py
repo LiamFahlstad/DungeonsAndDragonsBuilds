@@ -558,6 +558,22 @@ class HtmlCharacterSheetWriter:
 
         file.write("<h2>Items</h2>\n")
 
+        # Write carrying capacity: one checkbox per slot, one column per source
+        if items:
+            carrying_capacity = character.get_carrying_capacity()
+            file.write(f"<p><strong>Carrying Capacity ({carrying_capacity} slots):</strong></p>\n")
+            file.write("<table class='capacity-table'>\n")
+            file.write("<tr>\n")
+            for source, slots in character.carrying_capacity_sources:
+                file.write(f"<th class='item-title'>{source} ({slots})</th>\n")
+            file.write("</tr>\n")
+            file.write("<tr>\n")
+            for _source, slots in character.carrying_capacity_sources:
+                slot_boxes = "<span class='slot-box'></span>" * slots
+                file.write(f"<td><span class='slot-box-group'>{slot_boxes}</span></td>\n")
+            file.write("</tr>\n")
+            file.write("</table>\n")
+
         sections = []
         if armors:
             armor_rows = [
@@ -575,18 +591,36 @@ class HtmlCharacterSheetWriter:
             if weapon_rows:
                 sections.append(("Weapons", weapon_rows))
 
-        if items:
-            sorted_items = sorted(items, key=lambda x: x[0].name)
-            item_rows = [
-                (f"{item.name} ({quantity})", item.description())
-                for item, quantity in sorted_items
-            ]
-            sections.append(("Other items", item_rows))
-
         for i, (title, rows) in enumerate(sections):
             if i > 0:
                 file.write("<hr>")
             self._write_item_table(file, title, rows)
+
+        if items:
+            if sections:
+                file.write("<hr>")
+            sorted_items = sorted(items, key=lambda x: x[0].name)
+            file.write("<table class='item-table'>\n")
+            file.write("<tr>\n")
+            file.write("<th class='item-title'>Other items</th>\n")
+            file.write("<th class='item-title item-col-narrow'>Slots</th>\n")
+            file.write("<th class='item-title item-col-carry'>Carry</th>\n")
+            file.write("<th class='item-title item-col-leftbehind'>Left Behind</th>\n")
+            file.write("</tr>\n")
+
+            for item, quantity in sorted_items:
+                item_label = f"{item.name} ({quantity})"
+                item_desc = item.description()
+                leftbehind_id = item.name.replace(" ", "_").replace("(", "").replace(")", "") + "_leftbehind"
+
+                file.write("<tr>\n")
+                file.write(f"<td class='item-entry'><strong>{item_label}</strong><br/>{item_desc}</td>\n")
+                file.write(f"<td style='text-align: center;'>{item.slots}</td>\n")
+                file.write("<td></td>\n")
+                file.write(f"<td class='item-leftbehind'><input type='checkbox' id='{leftbehind_id}_check' name='{leftbehind_id}_check'/></td>\n")
+                file.write("</tr>\n")
+
+            file.write("</table>\n")
 
         file.write("<br class='section-gap'>\n")
 
@@ -862,6 +896,49 @@ class HtmlCharacterSheetWriter:
 
         .item-value {
             width: auto;
+        }
+
+        /* Carrying capacity: one column of slot checkboxes per source */
+        .capacity-table {
+            border-collapse: collapse;
+            font-size: 0.85rem;
+            margin: 0.25rem 0 0.5rem 0;
+        }
+
+        .capacity-table th,
+        .capacity-table td {
+            border: 1px solid var(--border-color);
+            padding: 4px 8px;
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        .capacity-table .slot-box-group {
+            flex-wrap: wrap;
+            max-width: 12em;
+        }
+
+        /* Item inventory rows: name + description, wraps normally */
+        .item-entry {
+            background: #fafafa;
+        }
+
+        .item-col-narrow {
+            width: 3em;
+            text-align: center;
+        }
+
+        .item-col-carry {
+            width: 4.5em;
+            text-align: center;
+        }
+
+        .item-col-leftbehind {
+            width: 9em;
+        }
+
+        .item-leftbehind input[type='checkbox'] {
+            vertical-align: middle;
         }
 
         /* Individual item rows styled as cards */

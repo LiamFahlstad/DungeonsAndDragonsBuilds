@@ -1,9 +1,13 @@
-from abc import ABC
 from typing import Optional
 
 from Definitions import Ability
 from Features.Core.BaseFeatures import Feature
-from Features.Core.SubFeatures import SubFeature, ArmorClassBonus, AbilityScoreBonus
+from Features.Core.SubFeatures import (
+    AbilityScoreBonus,
+    ArmorClassBonus,
+    CarryingCapacityBonus,
+    SubFeature,
+)
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
@@ -12,9 +16,10 @@ class Item(Feature):
     Base class for all items. Items are now Features, allowing them to be
     either description-only or to modify a character via SubFeatures.
 
-    An item has metadata (rarity, attunement, category, weight) and can:
+    An item has metadata (rarity, attunement, category, weight, slots) and can:
     - Provide a description via get_description()
     - Apply mechanical effects via subfeatures and apply()
+    - Take up carrying capacity slots
     """
 
     def __init__(
@@ -24,6 +29,7 @@ class Item(Feature):
         requires_attunement: bool = False,
         category: str = "wondrous",
         weight: Optional[float] = None,
+        slots: int = 1,
         description_text: str = "",
         subfeatures: Optional[list[SubFeature]] = None,
     ):
@@ -32,6 +38,7 @@ class Item(Feature):
         self.requires_attunement = requires_attunement
         self.category = category
         self.weight = weight
+        self.slots = slots
         self.description_text = description_text
         self.subfeatures = subfeatures or []
 
@@ -62,6 +69,7 @@ class Gold(Item):
             "Gold Pieces",
             rarity="common",
             category="currency",
+            slots=0,
             description_text="(value=1GP) A stack of gold pieces.",
         )
 
@@ -72,6 +80,7 @@ class Silver(Item):
             "Silver Pieces",
             rarity="common",
             category="currency",
+            slots=0,
             description_text="(value=0.1GP) A stack of silver pieces.",
         )
 
@@ -82,6 +91,7 @@ class Quiver(Item):
             "Quiver",
             rarity="uncommon",
             category="common",
+            slots=1,
             description_text="A regular quiver",
         )
 
@@ -92,6 +102,7 @@ class ThievesTools(Item):
             "Thieves' Tools",
             rarity="uncommon",
             category="common",
+            slots=1,
             description_text="Utilize: Pick a lock, or disarm a trap (DEX DC 15)",
         )
 
@@ -102,10 +113,12 @@ class Backpack(Item):
             "Backpack",
             rarity="common",
             category="container",
+            slots=1,
             description_text=(
                 "A backpack that can hold up to 30 pounds of gear within 1 cubic foot. "
                 "It can also be strapped to a mount as a saddlebag."
             ),
+            subfeatures=[CarryingCapacityBonus(10, source="Backpack")],
         )
 
 
@@ -115,6 +128,7 @@ class Caltrops(Item):
             "Caltrops",
             rarity="common",
             category="utility",
+            slots=1,
             description_text=(
                 "As an action, you can spread caltrops to cover a 5-foot-square area within 5 feet. "
                 "A creature entering the area must succeed on a DC 15 Dexterity saving throw or take "
@@ -130,6 +144,7 @@ class Crowbar(Item):
             "Crowbar",
             rarity="common",
             category="tool",
+            slots=1,
             description_text="Using a crowbar grants advantage on Strength checks where leverage can be applied.",
         )
 
@@ -140,6 +155,7 @@ class Candle(Item):
             "Candle",
             rarity="common",
             category="utility",
+            slots=0,
             description_text="For 1 hour, a lit Candle sheds Bright Light in a 5-foot radius and Dim Light for an additional 5 feet.",
         )
 
@@ -150,6 +166,7 @@ class BallBearings(Item):
             "Ball Bearings",
             rarity="common",
             category="utility",
+            slots=1,
             description_text="As a Utilize action, you can spill Ball Bearings from their pouch. They spread to cover a level, 10-foot-square area within 10 feet of yourself. A creature that enters this area for the first time on a turn must succeed on a DC 10 Dexterity saving throw or have the Prone condition. It takes 10 minutes to recover the Ball Bearings.",
         )
 
@@ -160,6 +177,7 @@ class HoodedLantern(Item):
             "Hooded Lantern",
             rarity="common",
             category="utility",
+            slots=1,
             description_text="A Hooded Lantern burns Oil as fuel to cast Bright Light in a 30-foot radius and Dim Light for an additional 30 feet. As a Bonus Action, you can lower the hood, reducing the light to Dim Light in a 5-foot radius, or raise it again.",
         )
 
@@ -170,6 +188,7 @@ class FlasksOfOil(Item):
             "Flask of Oil",
             rarity="common",
             category="utility",
+            slots=1,
             description_text=(
                 "You can throw this flask (range 20 ft) to coat a creature or object. "
                 "On a failed Dexterity save (DC = 8 + Dex mod + proficiency bonus), the target is covered in oil. "
@@ -187,6 +206,7 @@ class Rations(Item):
             "Rations",
             rarity="common",
             category="consumable",
+            slots=1,
             description_text=(
                 "Travel-ready food such as jerky, dried fruit, hardtack, and nuts. "
                 "Essential for long journeys; lack of food can lead to malnutrition."
@@ -200,6 +220,7 @@ class Antitoxin(Item):
             "Antitoxin",
             rarity="common",
             category="consumable",
+            slots=0,
             description_text="As a Bonus Action, you can drink a vial of Antitoxin to gain Advantage on saving throws to avoid or end the Poisoned condition for 1 hour.",
         )
 
@@ -210,6 +231,7 @@ class HealersKit(Item):
             "Healer's Kit",
             rarity="common",
             category="consumable",
+            slots=1,
             description_text="A Healer's Kit has ten uses. As a Utilize action, you can expend one of its uses to stabilize an Unconscious creature that has 0 Hit Points without needing to make a Wisdom (Medicine) check.",
         )
 
@@ -220,6 +242,7 @@ class PotionOfHealing(Item):
             "Potion of Healing",
             rarity="common",
             category="consumable",
+            slots=1,
             description_text=(
                 "You regain 2d4 + 2 Hit Points when you drink this potion.\n"
                 "Whatever its potency, the potion's red liquid glimmers when agitated."
@@ -249,6 +272,7 @@ class Tinderbox(Item):
             "Tinderbox",
             rarity="common",
             category="tool",
+            slots=0,
             description_text=(
                 "A small container with flint, fire steel, and tinder used to start fires. "
                 "Lighting a torch, lamp, lantern, or similar exposed fuel takes a bonus action. "
@@ -263,6 +287,7 @@ class Torch(Item):
             "Torch",
             rarity="common",
             category="utility",
+            slots=1,
             description_text=(
                 "Burns for 1 hour, providing bright light in a 20-foot radius and dim light for another 20 feet.\n\n"
                 "It can be used as a simple melee weapon. On a hit, it deals 1 fire damage."
@@ -276,6 +301,7 @@ class BullseyeLantern(Item):
             "Bullseye Lantern",
             rarity="common",
             category="utility",
+            slots=1,
             description_text=(
                 "Consumes oil as fuel to cast bright light in a 60-foot cone and dim light "
                 "for an additional 60 feet. The lantern can be shuttered to block the light."
@@ -289,6 +315,7 @@ class Costume(Item):
             "Costume",
             rarity="common",
             category="adventuring gear",
+            slots=1,
             description_text=(
                 "While wearing this costume, you have advantage on ability checks made to "
                 "impersonate the person or type of person it represents."
@@ -302,6 +329,7 @@ class Mirror(Item):
             "Steel Mirror",
             rarity="common",
             category="tool",
+            slots=0,
             description_text=(
                 "A small handheld mirror useful for personal grooming. It can also be used "
                 "to peek around corners without exposing yourself or to reflect light as a signal."
@@ -315,6 +343,7 @@ class Typewriter(Item):
             "Typewriter",
             rarity="common",
             category="musical instrument",
+            slots=1,
             description_text=(
                 "A mechanical typewriter that can also be used as a musical instrument, "
                 "producing rhythmic clacking sounds."
@@ -328,6 +357,7 @@ class NightVisionGoggles(Item):
             "Nightvision Goggles",
             rarity="uncommon",
             category="wondrous item",
+            slots=1,
             description_text="While wearing these goggles, you gain darkvision out to 120 feet.",
         )
 
@@ -338,6 +368,7 @@ class ButterflyKnife(Item):
             "Butterfly Knife",
             rarity="common",
             category="weapon",
+            slots=1,
             description_text=(
                 "A small folding knife that can be quickly deployed. "
                 "Functions as a light melee weapon."
@@ -351,6 +382,7 @@ class Beans(Item):
             "Can of Beans",
             rarity="common",
             category="consumable",
+            slots=1,
             description_text="A simple can of preserved beans. Provides a basic meal when consumed.",
         )
 
@@ -361,6 +393,7 @@ class Makarov(Item):
             "Makarov",
             rarity="uncommon",
             category="weapon",
+            slots=1,
             description_text=(
                 "In a fantasy realm, this pistol becomes a magical ranged weapon.\n\n"
                 "It has 4 charges. Each shot deals 2d6 + your Dexterity modifier damage. "
@@ -375,6 +408,7 @@ class Bedroll(Item):
             "Bedroll",
             rarity="common",
             category="adventuring gear",
+            slots=1,
             description_text=(
                 "A bedroll provides basic sleeping comfort for one Small or Medium creature.\n\n"
                 "While resting in a bedroll, you automatically succeed on saving throws "
@@ -389,6 +423,7 @@ class Bell(Item):
             "Bell",
             rarity="common",
             category="utility",
+            slots=0,
             description_text="When rung as an action, the bell produces a clear sound audible up to 60 feet away.",
         )
 
@@ -399,6 +434,7 @@ class Waterskin(Item):
             "Waterskin",
             rarity="common",
             category="container",
+            slots=1,
             description_text="Holds up to 4 pints of liquid. Essential for survival, as insufficient water can lead to dehydration.",
         )
 
@@ -409,6 +445,7 @@ class Arrows(Item):
             "Arrows",
             rarity="common",
             category="ammunition",
+            slots=1,
             description_text="A bundle of arrows.",
         )
 
@@ -419,6 +456,7 @@ class HobbyHorse(Item):
             "Käpphäst",
             rarity="uncommon",
             category="wondrous item",
+            slots=2,
             description_text=(
                 "A simple hobby horse that transforms into a real mount when brought into a fantasy realm.\n"
                 "While mounted, mounting or dismounting the käpphäst costs half your movement.\n"
@@ -435,6 +473,7 @@ class DramaticRainBottle(Item):
             "Dramatic Rain in a Bottle",
             rarity="common",
             category="wondrous",
+            slots=2,
             description_text=(
                 f"Uncorking this bottle summons a personal raincloud that follows you "
                 f"for 60 minutes, raining gently and dramatically—even indoors. "
@@ -450,6 +489,7 @@ class RobeOfLevitation(Item):
             "Robe of Levitation",
             rarity="common",
             category="wondrous",
+            slots=2,
             description_text=(
                 "While wearing this robe, you hover 1 foot above the ground at all times. "
                 "This provides no mechanical benefit—you cannot cross gaps or avoid terrain. "
@@ -467,6 +507,7 @@ class HeartseekersCompass(Item):
             rarity="uncommon",
             requires_attunement=True,
             category="wondrous",
+            slots=1,
             description_text=(
                 "This brass compass does not point north. Instead, it points toward the nearest "
                 "creature within 1 mile that it 'likes,' based on emotional resonance such as kindness "
@@ -481,6 +522,7 @@ class MinorDeathNote(Item):
             "Minor Death Note",
             rarity="common",
             category="wondrous",
+            slots=0,
             description_text=(
                 "When you write a creature's name in this notebook, that creature immediately receives "
                 "a papercut. The effect can only occur once per creature. Harmless, but very annoying."
@@ -494,6 +536,7 @@ class CoinOfTwoFacedJustice(Item):
             "Coin of Two-Faced Justice",
             rarity="uncommon",
             category="wondrous",
+            slots=0,
             description_text=(
                 "As a bonus action, call and flip this coin. If you call it correctly, you gain advantage "
                 "on your next roll; otherwise, you have disadvantage. This effect does not stack and cannot "
@@ -508,6 +551,7 @@ class GoldenFrog(Item):
             "Golden Frog with a Golden Voice",
             rarity="rare",
             category="wondrous",
+            slots=2,
             description_text=(
                 "This golden frog, once a prince, has a flawless voice and knows every song in the multiverse. "
                 "It can perfectly reproduce vocals and instruments. The frog cannot fight, speak normally, "
@@ -522,6 +566,7 @@ class ButtonOfNobleSacrifice(Item):
             "Button of Noble Sacrifice",
             rarity="legendary",
             category="wondrous",
+            slots=2,
             description_text=(
                 "When a creature presses this button, they instantly and irrevocably die. In doing so, "
                 "a more pure and deserving creature—fated to die—is spared instead. "
@@ -537,6 +582,7 @@ class DoomScroll(Item):
             "Doom Scroll",
             rarity="common",
             category="wondrous",
+            slots=1,
             description_text=(
                 "This scroll displays an endless feed of fascinating but useless information from across the multiverse. "
                 "When you read it, you must succeed on a DC 13 Intelligence saving throw or continue reading until the "
@@ -551,6 +597,7 @@ class Kamikaze(Item):
             "Kamikaze",
             rarity="uncommon",
             category="wondrous",
+            slots=1,
             description_text=(
                 "As an action, you activate this item to immediately cast Fireball centered on yourself. "
                 "You automatically fail the saving throw."
@@ -564,6 +611,7 @@ class FingerGunRing(Item):
             "Ring of Finger Guns",
             rarity="common",
             category="ring",
+            slots=0,
             description_text=(
                 "While wearing this ring, forming finger guns and saying 'pew' creates a tiny harmless spark "
                 "and sound effect. The spark can light candles but deals no damage."
@@ -577,6 +625,7 @@ class BadFriendGlasses(Item):
             "A Bad Friend Glasses",
             rarity="uncommon",
             category="wondrous",
+            slots=1,
             description_text=(
                 "While wearing these glasses, you may redirect damage you would take to another player character "
                 "with the lowest hit points. You are, objectively, a terrible friend."
@@ -609,7 +658,9 @@ class CloakOfProtection(Item):
 class PlusOneWeapon(Item):
     """A magical weapon that grants +1 to ability scores (e.g. Dexterity for finesse weapons)."""
 
-    def __init__(self, weapon_name: str = "Longsword", ability: Ability = Ability.DEXTERITY):
+    def __init__(
+        self, weapon_name: str = "Longsword", ability: Ability = Ability.DEXTERITY
+    ):
         self.ability = ability
         super().__init__(
             f"+1 {weapon_name}",

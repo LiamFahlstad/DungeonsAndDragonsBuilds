@@ -250,6 +250,23 @@ class SpeedBonus(SubFeature):
         character_stat_block.combat.speed += self.bonus
 
 
+# ── Carrying capacity ────────────────────────────────────────────────────────
+
+class CarryingCapacityBonus(SubFeature):
+    """Increases the character's carrying capacity (in item slots).
+
+    The source label identifies where the extra slots come from
+    (e.g. "Backpack") so the character sheet can group them.
+    """
+
+    def __init__(self, bonus: int, source: str = "Item"):
+        self.bonus = bonus
+        self.source = source
+
+    def apply(self, character_stat_block: CharacterStatBlock):
+        character_stat_block.carrying_capacity_sources.append((self.source, self.bonus))
+
+
 # ── Prerequisites ─────────────────────────────────────────────────────────────
 
 class StrengthRequirement(SubFeature):

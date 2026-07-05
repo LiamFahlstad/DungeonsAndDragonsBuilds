@@ -236,6 +236,9 @@ class CharacterSheetData:
         for armor in self.armors:
             armor.apply(character)
 
+        for item, _quantity in self.items:
+            item.apply(character)
+
         for fighting_style in self.fighting_styles:
             if isinstance(fighting_style, FightStyleModifier):
                 fighting_style.apply(character)
