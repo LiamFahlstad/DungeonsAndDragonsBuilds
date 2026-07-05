@@ -72,11 +72,17 @@ QFrame#combatantCard[stabilized="true"] {
 }
 QFrame#combatantCard[selected="true"] {
     background-color: #1e2d5a;
-    border: 2px solid #e94560;
+    border: 2px solid #ffffff;
 }
 QFrame#combatantCard[active="true"] {
     background-color: #2a2010;
     border: 2px solid #c9a84c;
+}
+QFrame#combatantCard[selected-active="true"] {
+    background-color: #1a3a1a;
+    border: 3px solid #ffffff;
+    border-left: 3px solid #c9a84c;
+    border-bottom: 3px solid #c9a84c;
 }
 
 /* Control panel */
@@ -1925,7 +1931,10 @@ class CombatAppQt:
             card.setProperty(
                 "selected", "true" if is_selected and not is_active else "false"
             )
-            card.setProperty("active", "true" if is_active else "false")
+            card.setProperty("active", "true" if is_active and not is_selected else "false")
+            card.setProperty(
+                "selected-active", "true" if is_selected and is_active else "false"
+            )
             card.style().unpolish(card)
             card.style().polish(card)
 
@@ -2075,7 +2084,10 @@ class CombatAppQt:
         card.setProperty(
             "selected", "true" if is_selected and not is_active else "false"
         )
-        card.setProperty("active", "true" if is_active else "false")
+        card.setProperty("active", "true" if is_active and not is_selected else "false")
+        card.setProperty(
+            "selected-active", "true" if is_selected and is_active else "false"
+        )
         card.setFixedWidth(220)
         card.setSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Minimum)
         card.setCursor(Qt.CursorShape.PointingHandCursor)
