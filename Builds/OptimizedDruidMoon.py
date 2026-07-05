@@ -31,7 +31,7 @@ from CharacterConfigs.SubClasses.DruidMoon import (
     DruidMoonLevel9,
     DruidMoonLevel10,
     DruidMoonLevel14,
-    DruidMoonNonGenericStarterClassArgs,
+    DruidMoonCustomStarterClassArgs,
 )
 from Definitions import Ability, Skill
 from Features import Backgrounds, EpicBoon, GeneralFeats, OriginFeats
@@ -54,7 +54,7 @@ from StatBlocks.SkillsStatBlock import DruidSkillsStatBlock
 
 def get_starter_class_builder():
     return StarterClassBuilder(
-        non_generic_arguments=DruidMoonNonGenericStarterClassArgs(
+        non_generic_arguments=DruidMoonCustomStarterClassArgs(
             skills=DruidSkillsStatBlock(
                 proficiencies={
                     Skill.ARCANA: True,

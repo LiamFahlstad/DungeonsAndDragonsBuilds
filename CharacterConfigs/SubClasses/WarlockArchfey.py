@@ -5,7 +5,7 @@ import attr
 from CharacterConfigs.BaseClasses import ClassBuilder
 from CharacterConfigs.BaseClasses.WarlockBase import (
     WarlockMulticlassBuilder,
-    WarlockNonGenericStarterClassArgs,
+    WarlockCustomStarterClassArgs,
 )
 from CharacterSheetCreator import CharacterSheetData
 from Definitions import WarlockSubclass
@@ -112,7 +112,7 @@ class ArchfeyWarlockLevel17(ClassBuilder.SubclassLevel17):
         return data
 
 
-class WarlockArchfeyNonGenericStarterClassArgs(WarlockNonGenericStarterClassArgs):
+class WarlockArchfeyCustomStarterClassArgs(WarlockCustomStarterClassArgs):
     def __init__(
         self,
         skills: WarlockSkillsStatBlock,

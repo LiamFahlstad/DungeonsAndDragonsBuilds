@@ -8,7 +8,7 @@ from CharacterConfigs.BaseClasses.PaladinBase import (
 )
 from CharacterConfigs.SubClasses.PaladinVengeance import (
     PaladinVengeanceLevel3,
-    PaladinVengeanceNonGenericStarterClassArgs,
+    PaladinVengeanceCustomStarterClassArgs,
 )
 from Definitions import Ability, Skill
 from Features import Backgrounds, FightingStyles, OriginFeats, Weapons
@@ -24,7 +24,7 @@ from StatBlocks.SkillsStatBlock import PaladinSkillsStatBlock
 
 def get_starter_class_builder():
     return StarterClassBuilder(
-        non_generic_arguments=PaladinVengeanceNonGenericStarterClassArgs(
+        non_generic_arguments=PaladinVengeanceCustomStarterClassArgs(
             skills=PaladinSkillsStatBlock(
                 proficiencies={
                     Skill.ATHLETICS: True,

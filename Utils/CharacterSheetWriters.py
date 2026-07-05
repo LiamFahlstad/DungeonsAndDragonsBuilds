@@ -96,7 +96,7 @@ class HtmlCharacterSheetWriter:
         rows = [
             ("Name", character.name),
             ("Level", character.character_level),
-            ("Class", character.starter_class.value),
+            ("Class", character.base_class.value),
             (
                 "Multiclass",
                 ", ".join(
@@ -530,7 +530,7 @@ class HtmlCharacterSheetWriter:
             Definitions.CharacterClass.PALADIN,
             Definitions.CharacterClass.ARTIFICER,
         }
-        show_prep_checkbox = character.starter_class in prepared_caster_classes
+        show_prep_checkbox = character.base_class in prepared_caster_classes
 
         # Group by level and emit a level header before each group
         from itertools import groupby
@@ -1439,7 +1439,7 @@ class HtmlCharacterSheetWriter:
         with open(output_path_obj, "w", encoding="utf-8") as file:
             file.write(self._get_css_style())
             file.write(
-                f"<h1>{character.name} - Level {character.character_level} {character.starter_class.value}</h1>\n"
+                f"<h1>{character.name} - Level {character.character_level} {character.base_class.value}</h1>\n"
             )
             self._write_general_info(character, file, experience_points)
             self._write_combat_stats(character, file, armors, armor_proficiencies)

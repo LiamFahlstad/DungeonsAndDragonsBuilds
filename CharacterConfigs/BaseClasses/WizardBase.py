@@ -307,7 +307,7 @@ class WizardLevel20(ClassBuilder.BaseClassLevel20):
         return data
 
 
-class WizardNonGenericStarterClassArgs(ClassBuilder.NonGenericStarterClassArgs):
+class WizardCustomStarterClassArgs(ClassBuilder.CustomStarterClassArgs):
     def __init__(
         self,
         subclass: str,

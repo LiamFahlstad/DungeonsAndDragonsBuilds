@@ -5,7 +5,7 @@ import attr
 from CharacterConfigs.BaseClasses import ClassBuilder
 from CharacterConfigs.BaseClasses.MonkBase import (
     MonkMulticlassBuilder,
-    MonkNonGenericStarterClassArgs,
+    MonkCustomStarterClassArgs,
 )
 from CharacterSheetCreator import CharacterSheetData
 from Definitions import Ability, MonkSubclass
@@ -64,7 +64,7 @@ class MonkShadowLevel17(ClassBuilder.SubclassLevel17):
         return data
 
 
-class MonkShadowNonGenericStarterClassArgs(MonkNonGenericStarterClassArgs):
+class MonkShadowCustomStarterClassArgs(MonkCustomStarterClassArgs):
     def __init__(
         self,
         skills: MonkSkillsStatBlock,

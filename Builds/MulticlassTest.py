@@ -10,7 +10,7 @@ from CharacterConfigs.BaseClasses.WizardBase import (
     WizardLevel4,
 )
 from CharacterConfigs.SubClasses.FighterBattleMaster import (
-    FighterBattleMasterNonGenericStarterClassArgs,
+    FighterBattleMasterCustomStarterClassArgs,
 )
 from CharacterConfigs.SubClasses.WizardBladesinger import (
     WizardBladesingerLevel3,
@@ -26,7 +26,7 @@ from StatBlocks.SkillsStatBlock import FighterSkillsStatBlock
 
 def get_starter_class_builder():
     return StarterClassBuilder(
-        non_generic_arguments=FighterBattleMasterNonGenericStarterClassArgs(
+        non_generic_arguments=FighterBattleMasterCustomStarterClassArgs(
             skills=FighterSkillsStatBlock(
                 proficiencies={
                     Skill.ACROBATICS: True,
@@ -132,7 +132,7 @@ def get_multiclass_builder():
     )
 
 
-class MutliclassTestCharacterBuilder(CharacterBuilder):
+class MulticlassTestCharacterBuilder(CharacterBuilder):
     def __init__(self):
         super().__init__(
             name="Multiclass Test",

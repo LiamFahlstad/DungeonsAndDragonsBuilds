@@ -210,7 +210,7 @@ class RogueLevel20(ClassBuilder.BaseClassLevel20):
         return data
 
 
-class RogueNonGenericStarterClassArgs(ClassBuilder.NonGenericStarterClassArgs):
+class RogueCustomStarterClassArgs(ClassBuilder.CustomStarterClassArgs):
     def __init__(
         self,
         subclass: str,

@@ -324,7 +324,7 @@ class BardLevel20(ClassBuilder.BaseClassLevel20):
         return data
 
 
-class BardNonGenericStarterClassArgs(ClassBuilder.NonGenericStarterClassArgs):
+class BardCustomStarterClassArgs(ClassBuilder.CustomStarterClassArgs):
     def __init__(
         self,
         subclass: str,

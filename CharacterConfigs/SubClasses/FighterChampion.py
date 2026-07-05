@@ -5,7 +5,7 @@ import attr
 from CharacterConfigs.BaseClasses import ClassBuilder
 from CharacterConfigs.BaseClasses.FighterBase import (
     FighterMulticlassBuilder,
-    FighterNonGenericStarterClassArgs,
+    FighterCustomStarterClassArgs,
 )
 from CharacterSheetCreator import CharacterSheetData
 from Definitions import FighterSubclass
@@ -89,7 +89,7 @@ class FighterChampionLevel18(ClassBuilder.SubclassLevel18):
         return data
 
 
-class FighterChampionNonGenericStarterClassArgs(FighterNonGenericStarterClassArgs):
+class FighterChampionCustomStarterClassArgs(FighterCustomStarterClassArgs):
     def __init__(
         self,
         skills: FighterSkillsStatBlock,

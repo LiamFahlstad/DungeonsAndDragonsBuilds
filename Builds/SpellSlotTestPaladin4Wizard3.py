@@ -14,7 +14,7 @@ from CharacterConfigs.BaseClasses.WizardBase import (
 )
 from CharacterConfigs.SubClasses.PaladinGlory import (
     PaladinGloryLevel3,
-    PaladinGloryNonGenericStarterClassArgs,
+    PaladinGloryCustomStarterClassArgs,
 )
 from CharacterConfigs.SubClasses.WizardBladesinger import (
     WizardBladesingerLevel3,
@@ -34,7 +34,7 @@ from StatBlocks.SkillsStatBlock import PaladinSkillsStatBlock
 #   effective caster level = floor(4/2) + 3 = 2 + 3 = 5 → full caster level 5
 def get_starter_class_builder():
     return StarterClassBuilder(
-        non_generic_arguments=PaladinGloryNonGenericStarterClassArgs(
+        non_generic_arguments=PaladinGloryCustomStarterClassArgs(
             skills=PaladinSkillsStatBlock(
                 proficiencies={
                     Skill.ATHLETICS: True,

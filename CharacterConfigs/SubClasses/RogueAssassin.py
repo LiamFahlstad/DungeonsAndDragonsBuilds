@@ -5,7 +5,7 @@ import attr
 from CharacterConfigs.BaseClasses import ClassBuilder
 from CharacterConfigs.BaseClasses.RogueBase import (
     RogueMulticlassBuilder,
-    RogueNonGenericStarterClassArgs,
+    RogueCustomStarterClassArgs,
 )
 from CharacterSheetCreator import CharacterSheetData
 from Definitions import RogueSubclass
@@ -70,7 +70,7 @@ class RogueAssassinLevel17(ClassBuilder.SubclassLevel17):
         return data
 
 
-class RogueAssassinNonGenericStarterClassArgs(RogueNonGenericStarterClassArgs):
+class RogueAssassinCustomStarterClassArgs(RogueCustomStarterClassArgs):
     def __init__(
         self,
         skills: RogueSkillsStatBlock,

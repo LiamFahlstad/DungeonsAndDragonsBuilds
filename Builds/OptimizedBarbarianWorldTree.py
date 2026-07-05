@@ -28,7 +28,7 @@ from CharacterConfigs.SubClasses.BarbarianPathOfTheWorldTree import (
     BarbarianWorldTreeLevel6,
     BarbarianWorldTreeLevel10,
     BarbarianWorldTreeLevel14,
-    BarbarianWorldTreeNonGenericStarterClassArgs,
+    BarbarianWorldTreeCustomStarterClassArgs,
 )
 from Definitions import Ability, Skill
 from Features import Backgrounds, EpicBoon, GeneralFeats, OriginFeats, Weapons
@@ -40,7 +40,7 @@ from StatBlocks.SkillsStatBlock import BarbarianSkillsStatBlock
 
 def get_starter_class_builder():
     return StarterClassBuilder(
-        non_generic_arguments=BarbarianWorldTreeNonGenericStarterClassArgs(
+        non_generic_arguments=BarbarianWorldTreeCustomStarterClassArgs(
             skills=BarbarianSkillsStatBlock(
                 proficiencies={
                     Skill.ANIMAL_HANDLING: False,

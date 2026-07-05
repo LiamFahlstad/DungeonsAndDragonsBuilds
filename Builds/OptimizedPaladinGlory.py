@@ -32,7 +32,7 @@ from CharacterConfigs.SubClasses.PaladinGlory import (
     PaladinGloryLevel15,
     PaladinGloryLevel17,
     PaladinGloryLevel20,
-    PaladinGloryNonGenericStarterClassArgs,
+    PaladinGloryCustomStarterClassArgs,
 )
 from Definitions import Ability, Skill
 from Features import Backgrounds, FightingStyles, GeneralFeats, OriginFeats, Weapons
@@ -50,7 +50,7 @@ from StatBlocks.SkillsStatBlock import PaladinSkillsStatBlock
 
 def get_starter_class_builder():
     return StarterClassBuilder(
-        non_generic_arguments=PaladinGloryNonGenericStarterClassArgs(
+        non_generic_arguments=PaladinGloryCustomStarterClassArgs(
             skills=PaladinSkillsStatBlock(
                 proficiencies={
                     Skill.ATHLETICS: True,

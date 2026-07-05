@@ -313,7 +313,7 @@ class DruidLevel20(ClassBuilder.BaseClassLevel20):
         return data
 
 
-class DruidNonGenericStarterClassArgs(ClassBuilder.NonGenericStarterClassArgs):
+class DruidCustomStarterClassArgs(ClassBuilder.CustomStarterClassArgs):
     def __init__(
         self,
         subclass: str,

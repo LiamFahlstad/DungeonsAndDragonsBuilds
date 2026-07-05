@@ -238,7 +238,7 @@ class MonkLevel20(ClassBuilder.BaseClassLevel20):
         return data
 
 
-class MonkNonGenericStarterClassArgs(ClassBuilder.NonGenericStarterClassArgs):
+class MonkCustomStarterClassArgs(ClassBuilder.CustomStarterClassArgs):
     def __init__(
         self,
         subclass: str,

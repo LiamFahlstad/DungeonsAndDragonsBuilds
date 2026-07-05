@@ -292,7 +292,7 @@ class PaladinLevel20(ClassBuilder.BaseClassLevel20):
         return data
 
 
-class PaladinNonGenericStarterClassArgs(ClassBuilder.NonGenericStarterClassArgs):
+class PaladinCustomStarterClassArgs(ClassBuilder.CustomStarterClassArgs):
     def __init__(
         self,
         subclass: str,

@@ -312,7 +312,7 @@ class ClericLevel20(ClassBuilder.BaseClassLevel20):
         return data
 
 
-class ClericNonGenericStarterClassArgs(ClassBuilder.NonGenericStarterClassArgs):
+class ClericCustomStarterClassArgs(ClassBuilder.CustomStarterClassArgs):
     def __init__(
         self,
         subclass: str,

@@ -230,7 +230,7 @@ class BarbarianLevel20(ClassBuilder.BaseClassLevel20):
         return data
 
 
-class BarbarianNonGenericStarterClassArgs(ClassBuilder.NonGenericStarterClassArgs):
+class BarbarianCustomStarterClassArgs(ClassBuilder.CustomStarterClassArgs):
     def __init__(
         self,
         subclass: str,

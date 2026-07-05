@@ -279,7 +279,7 @@ class RangerLevel20(ClassBuilder.BaseClassLevel20):
         return data
 
 
-class RangerNonGenericStarterClassArgs(ClassBuilder.NonGenericStarterClassArgs):
+class RangerCustomStarterClassArgs(ClassBuilder.CustomStarterClassArgs):
     def __init__(
         self,
         subclass: str,

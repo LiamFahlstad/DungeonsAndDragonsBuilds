@@ -16,7 +16,7 @@ from Utils import StringUtils
 
 
 class OriginCharacterFeat(Feature):
-    def get_spellcasting_ability(self) -> Optional[Ability]:
+    def get_spell_casting_ability(self) -> Optional[Ability]:
         return None
 
     def get_spells(self) -> list[str]:
@@ -24,7 +24,7 @@ class OriginCharacterFeat(Feature):
 
 
 class OriginTextFeat(Feature):
-    def get_spellcasting_ability(self) -> Optional[Ability]:
+    def get_spell_casting_ability(self) -> Optional[Ability]:
         return None
 
     def get_spells(self) -> list[str]:
@@ -184,7 +184,7 @@ class MagicInitiate(OriginTextFeat):
     def get_spells(self) -> list[str]:
         return [self.cantrip_1, self.cantrip_2, self.spell]
 
-    def get_spellcasting_ability(self) -> Ability:
+    def get_spell_casting_ability(self) -> Ability:
         return self.spell_casting_ability
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:

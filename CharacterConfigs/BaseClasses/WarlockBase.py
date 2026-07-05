@@ -326,7 +326,7 @@ class WarlockLevel20(ClassBuilder.BaseClassLevel20):
         return data
 
 
-class WarlockNonGenericStarterClassArgs(ClassBuilder.NonGenericStarterClassArgs):
+class WarlockCustomStarterClassArgs(ClassBuilder.CustomStarterClassArgs):
     def __init__(
         self,
         subclass: str,

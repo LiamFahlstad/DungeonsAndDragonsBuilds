@@ -314,7 +314,7 @@ class SorcererLevel20(ClassBuilder.BaseClassLevel20):
         return data
 
 
-class SorcererNonGenericStarterClassArgs(ClassBuilder.NonGenericStarterClassArgs):
+class SorcererCustomStarterClassArgs(ClassBuilder.CustomStarterClassArgs):
     def __init__(
         self,
         subclass: str,

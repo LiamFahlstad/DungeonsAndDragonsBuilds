@@ -30,7 +30,7 @@ from CharacterConfigs.SubClasses.BarbarianPathOfTheBerserker import (
     BarbarianBerserkerLevel6,
     BarbarianBerserkerLevel10,
     BarbarianBerserkerLevel14,
-    BarbarianBerserkerNonGenericStarterClassArgs,
+    BarbarianBerserkerCustomStarterClassArgs,
 )
 from Definitions import Ability, Skill
 from Features import Backgrounds, EpicBoon, GeneralFeats, OriginFeats, Weapons
@@ -41,7 +41,7 @@ from StatBlocks.SkillsStatBlock import BarbarianSkillsStatBlock
 
 def get_starter_class_builder():
     return StarterClassBuilder(
-        non_generic_arguments=BarbarianBerserkerNonGenericStarterClassArgs(
+        non_generic_arguments=BarbarianBerserkerCustomStarterClassArgs(
             skills=BarbarianSkillsStatBlock(
                 proficiencies={
                     Skill.ANIMAL_HANDLING: False,

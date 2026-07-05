@@ -27,7 +27,7 @@ from CharacterConfigs.SubClasses.ClericLight import (
     ClericLightLevel3,
     ClericLightLevel6,
     ClericLightLevel17,
-    ClericLightNonGenericStarterClassArgs,
+    ClericLightCustomStarterClassArgs,
 )
 from Definitions import Ability, Skill
 from Features import Backgrounds, EpicBoon, GeneralFeats, OriginFeats
@@ -49,7 +49,7 @@ from StatBlocks.SkillsStatBlock import ClericSkillsStatBlock
 
 def get_starter_class_builder():
     return StarterClassBuilder(
-        non_generic_arguments=ClericLightNonGenericStarterClassArgs(
+        non_generic_arguments=ClericLightCustomStarterClassArgs(
             skills=ClericSkillsStatBlock(
                 proficiencies={
                     Skill.HISTORY: False,

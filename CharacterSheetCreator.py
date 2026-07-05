@@ -20,7 +20,7 @@ from StatBlocks.CombatStatBlock import CombatStatBlock
 from StatBlocks.SavingThrowsStatBlock import SavingThrowsStatBlock
 from StatBlocks.SkillsStatBlock import SkillsStatBlock
 from ToolProficiencies.ToolProficiencies import ToolProficiency
-from Utils import CharaterSheetWriters
+from Utils import CharacterSheetWriters
 
 _MERGE_EMPTY_VALUES = (None, [], {}, "")
 
@@ -29,7 +29,7 @@ _MERGE_EMPTY_VALUES = (None, [], {}, "")
 class CharacterSheetData:
     character_name: Optional[str] = None
     character_subclass: Optional[str] = None
-    starter_class: Optional[CharacterClass] = None
+    base_class: Optional[CharacterClass] = None
     level_per_class: dict[CharacterClass, int] = attr.Factory(dict)
     abilities: Optional[AbilitiesStatBlock] = None
     skills: Optional[SkillsStatBlock] = None
@@ -71,7 +71,7 @@ class CharacterSheetData:
     def add_origin_feat(self, origin_feat: OriginFeats.OriginFeat):
         self.add_feature(origin_feat)
         for spell in origin_feat.get_spells():
-            self.add_spell(spell, origin_feat.get_spellcasting_ability())
+            self.add_spell(spell, origin_feat.get_spell_casting_ability())
 
     def get_features_by_type(self, feature_type: type) -> list[Any]:
         return [
@@ -184,7 +184,7 @@ class CharacterSheetData:
                 self.skills,
                 self.speed,
                 self.size,
-                self.starter_class,
+                self.base_class,
                 self.saving_throws,
             ]
         ):
@@ -192,7 +192,7 @@ class CharacterSheetData:
                 "All fields except weapon_masteries and fighting_styles must be set."
             )
 
-        CharaterSheetWriters.HtmlCharacterSheetWriter().write_character_sheet(
+        CharacterSheetWriters.HtmlCharacterSheetWriter().write_character_sheet(
             skill_config=skill_config,
             character=self.setup_character_stat_block(),
             output_path=self.get_file_path(),
@@ -220,7 +220,7 @@ class CharacterSheetData:
         character = CharacterStatBlock(
             name=self.character_name,
             character_subclass=self.character_subclass,
-            starter_class=self.starter_class,
+            base_class=self.base_class,
             level_per_class=self.level_per_class,
             abilities=self.abilities,
             skills=self.skills,

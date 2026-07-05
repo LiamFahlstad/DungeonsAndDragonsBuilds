@@ -5,7 +5,7 @@ import attr
 from CharacterConfigs.BaseClasses import ClassBuilder
 from CharacterConfigs.BaseClasses.PaladinBase import (
     PaladinMulticlassBuilder,
-    PaladinNonGenericStarterClassArgs,
+    PaladinCustomStarterClassArgs,
 )
 from CharacterSheetCreator import CharacterSheetData
 from Definitions import PaladinSubclass
@@ -120,7 +120,7 @@ class PaladinVengeanceLevel20(ClassBuilder.SubclassLevel20):
         return data
 
 
-class PaladinVengeanceNonGenericStarterClassArgs(PaladinNonGenericStarterClassArgs):
+class PaladinVengeanceCustomStarterClassArgs(PaladinCustomStarterClassArgs):
     def __init__(
         self,
         skills: PaladinSkillsStatBlock,

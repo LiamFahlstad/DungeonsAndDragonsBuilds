@@ -13,7 +13,7 @@ class CharacterStatBlock:
         self,
         name: str,
         character_subclass: str,
-        starter_class: CharacterClass,
+        base_class: CharacterClass,
         level_per_class: dict[CharacterClass, int],
         abilities: AbilitiesStatBlock,
         skills: SkillsStatBlock,
@@ -24,7 +24,7 @@ class CharacterStatBlock:
     ):
         self.name = name
         self.character_subclass = character_subclass
-        self.starter_class = starter_class
+        self.base_class = base_class
         self.level_per_class = level_per_class
         self.abilities = abilities
         self.skills = skills
@@ -126,7 +126,7 @@ class CharacterStatBlock:
     def calculate_hit_points(self) -> int:
         constitution_modifier = self.get_ability_modifier(Ability.CONSTITUTION)
         return self.combat.calculate_hit_points(
-            starter_class=self.starter_class,
+            base_class=self.base_class,
             level_per_class=self.level_per_class,
             constitution_modifier=constitution_modifier,
         )

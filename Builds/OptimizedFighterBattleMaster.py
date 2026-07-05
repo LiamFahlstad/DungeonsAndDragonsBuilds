@@ -10,7 +10,7 @@ from CharacterConfigs.BaseClasses.FighterBase import (
 )
 from CharacterConfigs.SubClasses.FighterBattleMaster import (
     FighterBattleMasterLevel3,
-    FighterBattleMasterNonGenericStarterClassArgs,
+    FighterBattleMasterCustomStarterClassArgs,
 )
 from Definitions import Ability, Skill
 from Features import (
@@ -29,7 +29,7 @@ from StatBlocks.SkillsStatBlock import FighterSkillsStatBlock
 
 def get_starter_class_builder():
     return StarterClassBuilder(
-        non_generic_arguments=FighterBattleMasterNonGenericStarterClassArgs(
+        non_generic_arguments=FighterBattleMasterCustomStarterClassArgs(
             skills=FighterSkillsStatBlock(
                 proficiencies={
                     Skill.ACROBATICS: True,

@@ -223,7 +223,7 @@ class FighterLevel20(ClassBuilder.BaseClassLevel20):
         return data
 
 
-class FighterNonGenericStarterClassArgs(ClassBuilder.NonGenericStarterClassArgs):
+class FighterCustomStarterClassArgs(ClassBuilder.CustomStarterClassArgs):
     def __init__(
         self,
         subclass: str,

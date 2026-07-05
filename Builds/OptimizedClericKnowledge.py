@@ -27,7 +27,7 @@ from CharacterConfigs.SubClasses.ClericKnowledge import (
     ClericKnowledgeLevel3,
     ClericKnowledgeLevel6,
     ClericKnowledgeLevel17,
-    ClericKnowledgeNonGenericStarterClassArgs,
+    ClericKnowledgeCustomStarterClassArgs,
 )
 from Definitions import Ability, Skill
 from Features import Armor, Backgrounds, EpicBoon, GeneralFeats, OriginFeats, Weapons
@@ -49,7 +49,7 @@ from StatBlocks.SkillsStatBlock import ClericSkillsStatBlock
 
 def get_starter_class_builder():
     return StarterClassBuilder(
-        non_generic_arguments=ClericKnowledgeNonGenericStarterClassArgs(
+        non_generic_arguments=ClericKnowledgeCustomStarterClassArgs(
             skills=ClericSkillsStatBlock(
                 proficiencies={
                     Skill.HISTORY: True,

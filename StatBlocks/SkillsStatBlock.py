@@ -86,18 +86,18 @@ class ClassSkillsStatBlock(SkillsStatBlock):
     def __init__(
         self,
         character_class: Definitions.CharacterClass,
-        excepted_skills: list[Skill],
+        allowed_skills: list[Skill],
         num_proficiencies: int,
         proficiencies: dict[Skill, bool],
         bonuses: Optional[dict[Skill, int]] = None,
         dice_roll_conditions: Optional[dict[Skill, DiceRollCondition]] = None,
     ):
         for skill, proficient in proficiencies.items():
-            if proficient and skill not in excepted_skills:
+            if proficient and skill not in allowed_skills:
                 raise ValueError(f"Invalid skill for {character_class.value}: {skill}")
 
         proficient_counter = sum(
-            1 for skill in excepted_skills if proficiencies.get(skill, False)
+            1 for skill in allowed_skills if proficiencies.get(skill, False)
         )
         if proficient_counter != num_proficiencies:
             raise ValueError(
@@ -121,7 +121,7 @@ class PaladinSkillsStatBlock(ClassSkillsStatBlock):
         bonuses: Optional[dict[Skill, int]] = None,
         dice_roll_conditions: Optional[dict[Skill, DiceRollCondition]] = None,
     ):
-        excepted_skills = [
+        allowed_skills = [
             Skill.ATHLETICS,
             Skill.INSIGHT,
             Skill.INTIMIDATION,
@@ -132,7 +132,7 @@ class PaladinSkillsStatBlock(ClassSkillsStatBlock):
 
         super().__init__(
             character_class=Definitions.CharacterClass.PALADIN,
-            excepted_skills=excepted_skills,
+            allowed_skills=allowed_skills,
             num_proficiencies=2,
             proficiencies=proficiencies,
             bonuses=bonuses,
@@ -149,7 +149,7 @@ class FighterSkillsStatBlock(ClassSkillsStatBlock):
         bonuses: Optional[dict[Skill, int]] = None,
         dice_roll_conditions: Optional[dict[Skill, DiceRollCondition]] = None,
     ):
-        excepted_skills = [
+        allowed_skills = [
             Skill.ACROBATICS,
             Skill.ANIMAL_HANDLING,
             Skill.ATHLETICS,
@@ -162,7 +162,7 @@ class FighterSkillsStatBlock(ClassSkillsStatBlock):
 
         super().__init__(
             character_class=Definitions.CharacterClass.FIGHTER,
-            excepted_skills=excepted_skills,
+            allowed_skills=allowed_skills,
             num_proficiencies=2,
             proficiencies=proficiencies,
             bonuses=bonuses,
@@ -179,7 +179,7 @@ class WarlockSkillsStatBlock(ClassSkillsStatBlock):
         bonuses: Optional[dict[Skill, int]] = None,
         dice_roll_conditions: Optional[dict[Skill, DiceRollCondition]] = None,
     ):
-        excepted_skills = [
+        allowed_skills = [
             Skill.ARCANA,
             Skill.DECEPTION,
             Skill.HISTORY,
@@ -191,7 +191,7 @@ class WarlockSkillsStatBlock(ClassSkillsStatBlock):
 
         super().__init__(
             character_class=Definitions.CharacterClass.WARLOCK,
-            excepted_skills=excepted_skills,
+            allowed_skills=allowed_skills,
             num_proficiencies=2,
             proficiencies=proficiencies,
             bonuses=bonuses,
@@ -208,7 +208,7 @@ class RangerSkillsStatBlock(ClassSkillsStatBlock):
         bonuses: Optional[dict[Skill, int]] = None,
         dice_roll_conditions: Optional[dict[Skill, DiceRollCondition]] = None,
     ):
-        excepted_skills = [
+        allowed_skills = [
             Skill.ANIMAL_HANDLING,
             Skill.ATHLETICS,
             Skill.INSIGHT,
@@ -220,7 +220,7 @@ class RangerSkillsStatBlock(ClassSkillsStatBlock):
         ]
         super().__init__(
             character_class=Definitions.CharacterClass.RANGER,
-            excepted_skills=excepted_skills,
+            allowed_skills=allowed_skills,
             num_proficiencies=3,
             proficiencies=proficiencies,
             bonuses=bonuses,
@@ -237,7 +237,7 @@ class WizardSkillsStatBlock(ClassSkillsStatBlock):
         bonuses: Optional[dict[Skill, int]] = None,
         dice_roll_conditions: Optional[dict[Skill, DiceRollCondition]] = None,
     ):
-        excepted_skills = [
+        allowed_skills = [
             Skill.ARCANA,
             Skill.HISTORY,
             Skill.INSIGHT,
@@ -248,7 +248,7 @@ class WizardSkillsStatBlock(ClassSkillsStatBlock):
         ]
         super().__init__(
             character_class=Definitions.CharacterClass.WIZARD,
-            excepted_skills=excepted_skills,
+            allowed_skills=allowed_skills,
             num_proficiencies=2,
             proficiencies=proficiencies,
             bonuses=bonuses,
@@ -265,7 +265,7 @@ class BarbarianSkillsStatBlock(ClassSkillsStatBlock):
         bonuses: Optional[dict[Skill, int]] = None,
         dice_roll_conditions: Optional[dict[Skill, DiceRollCondition]] = None,
     ):
-        excepted_skills = [
+        allowed_skills = [
             Skill.ANIMAL_HANDLING,
             Skill.ATHLETICS,
             Skill.INSIGHT,
@@ -276,7 +276,7 @@ class BarbarianSkillsStatBlock(ClassSkillsStatBlock):
         ]
         super().__init__(
             character_class=Definitions.CharacterClass.BARBARIAN,
-            excepted_skills=excepted_skills,
+            allowed_skills=allowed_skills,
             num_proficiencies=2,
             proficiencies=proficiencies,
             bonuses=bonuses,
@@ -293,7 +293,7 @@ class RogueSkillsStatBlock(ClassSkillsStatBlock):
         bonuses: Optional[dict[Skill, int]] = None,
         dice_roll_conditions: Optional[dict[Skill, DiceRollCondition]] = None,
     ):
-        excepted_skills = [
+        allowed_skills = [
             Skill.ACROBATICS,
             Skill.ATHLETICS,
             Skill.DECEPTION,
@@ -306,7 +306,7 @@ class RogueSkillsStatBlock(ClassSkillsStatBlock):
         ]
         super().__init__(
             character_class=Definitions.CharacterClass.ROGUE,
-            excepted_skills=excepted_skills,
+            allowed_skills=allowed_skills,
             num_proficiencies=4,
             proficiencies=proficiencies,
             bonuses=bonuses,
@@ -323,7 +323,7 @@ class DruidSkillsStatBlock(ClassSkillsStatBlock):
         bonuses: Optional[dict[Skill, int]] = None,
         dice_roll_conditions: Optional[dict[Skill, DiceRollCondition]] = None,
     ):
-        excepted_skills = [
+        allowed_skills = [
             Skill.ARCANA,
             Skill.ANIMAL_HANDLING,
             Skill.INSIGHT,
@@ -335,7 +335,7 @@ class DruidSkillsStatBlock(ClassSkillsStatBlock):
         ]
         super().__init__(
             character_class=Definitions.CharacterClass.DRUID,
-            excepted_skills=excepted_skills,
+            allowed_skills=allowed_skills,
             num_proficiencies=2,
             proficiencies=proficiencies,
             bonuses=bonuses,
@@ -352,7 +352,7 @@ class ClericSkillsStatBlock(ClassSkillsStatBlock):
         bonuses: Optional[dict[Skill, int]] = None,
         dice_roll_conditions: Optional[dict[Skill, DiceRollCondition]] = None,
     ):
-        excepted_skills = [
+        allowed_skills = [
             Skill.HISTORY,
             Skill.INSIGHT,
             Skill.MEDICINE,
@@ -361,7 +361,7 @@ class ClericSkillsStatBlock(ClassSkillsStatBlock):
         ]
         super().__init__(
             character_class=Definitions.CharacterClass.CLERIC,
-            excepted_skills=excepted_skills,
+            allowed_skills=allowed_skills,
             num_proficiencies=2,
             proficiencies=proficiencies,
             bonuses=bonuses,
@@ -378,10 +378,10 @@ class BardSkillsStatBlock(ClassSkillsStatBlock):
         bonuses: Optional[dict[Skill, int]] = None,
         dice_roll_conditions: Optional[dict[Skill, DiceRollCondition]] = None,
     ):
-        excepted_skills = list(Skill)
+        allowed_skills = list(Skill)
         super().__init__(
             character_class=Definitions.CharacterClass.BARD,
-            excepted_skills=excepted_skills,
+            allowed_skills=allowed_skills,
             num_proficiencies=3,
             proficiencies=proficiencies,
             bonuses=bonuses,
@@ -398,7 +398,7 @@ class SorcererSkillsStatBlock(ClassSkillsStatBlock):
         bonuses: Optional[dict[Skill, int]] = None,
         dice_roll_conditions: Optional[dict[Skill, DiceRollCondition]] = None,
     ):
-        excepted_skills = [
+        allowed_skills = [
             Skill.ARCANA,
             Skill.DECEPTION,
             Skill.INSIGHT,
@@ -408,7 +408,7 @@ class SorcererSkillsStatBlock(ClassSkillsStatBlock):
         ]
         super().__init__(
             character_class=Definitions.CharacterClass.SORCERER,
-            excepted_skills=excepted_skills,
+            allowed_skills=allowed_skills,
             num_proficiencies=2,
             proficiencies=proficiencies,
             bonuses=bonuses,
@@ -425,7 +425,7 @@ class MonkSkillsStatBlock(ClassSkillsStatBlock):
         bonuses: Optional[dict[Skill, int]] = None,
         dice_roll_conditions: Optional[dict[Skill, DiceRollCondition]] = None,
     ):
-        excepted_skills = [
+        allowed_skills = [
             Skill.ACROBATICS,
             Skill.ATHLETICS,
             Skill.HISTORY,
@@ -435,7 +435,7 @@ class MonkSkillsStatBlock(ClassSkillsStatBlock):
         ]
         super().__init__(
             character_class=Definitions.CharacterClass.MONK,
-            excepted_skills=excepted_skills,
+            allowed_skills=allowed_skills,
             num_proficiencies=2,
             proficiencies=proficiencies,
             bonuses=bonuses,

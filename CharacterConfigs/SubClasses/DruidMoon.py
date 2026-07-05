@@ -5,7 +5,7 @@ import attr
 from CharacterConfigs.BaseClasses import ClassBuilder
 from CharacterConfigs.BaseClasses.DruidBase import (
     DruidMulticlassBuilder,
-    DruidNonGenericStarterClassArgs,
+    DruidCustomStarterClassArgs,
 )
 from CharacterSheetCreator import CharacterSheetData
 from Definitions import DruidSubclass
@@ -105,7 +105,7 @@ class DruidMoonLevel14(ClassBuilder.SubclassLevel14):
         return data
 
 
-class DruidMoonNonGenericStarterClassArgs(DruidNonGenericStarterClassArgs):
+class DruidMoonCustomStarterClassArgs(DruidCustomStarterClassArgs):
     def __init__(
         self,
         skills: DruidSkillsStatBlock,

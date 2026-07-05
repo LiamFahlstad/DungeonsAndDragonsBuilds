@@ -6,7 +6,7 @@ import Spells.Definitions as SpellDefinitions
 from CharacterConfigs.BaseClasses import ClassBuilder
 from CharacterConfigs.BaseClasses.BardBase import (
     BardMulticlassBuilder,
-    BardNonGenericStarterClassArgs,
+    BardCustomStarterClassArgs,
 )
 from CharacterSheetCreator import CharacterSheetData
 from Definitions import BardSubclass, Skill
@@ -68,7 +68,7 @@ class BardLoreLevel14(ClassBuilder.SubclassLevel14):
         return data
 
 
-class BardLoreNonGenericStarterClassArgs(BardNonGenericStarterClassArgs):
+class BardLoreCustomStarterClassArgs(BardCustomStarterClassArgs):
     def __init__(
         self,
         skills: BardSkillsStatBlock,

@@ -5,7 +5,7 @@ import attr
 from CharacterConfigs.BaseClasses import ClassBuilder
 from CharacterConfigs.BaseClasses.BarbarianBase import (
     BarbarianMulticlassBuilder,
-    BarbarianNonGenericStarterClassArgs,
+    BarbarianCustomStarterClassArgs,
 )
 from CharacterSheetCreator import CharacterSheetData
 from Definitions import BarbarianSubclass
@@ -66,7 +66,7 @@ class BarbarianBerserkerLevel14(ClassBuilder.SubclassLevel14):
         return data
 
 
-class BarbarianBerserkerNonGenericStarterClassArgs(BarbarianNonGenericStarterClassArgs):
+class BarbarianBerserkerCustomStarterClassArgs(BarbarianCustomStarterClassArgs):
     def __init__(
         self,
         skills: BarbarianSkillsStatBlock,

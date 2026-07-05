@@ -10,7 +10,7 @@ from CharacterConfigs.BaseClasses.RangerBase import (
 )
 from CharacterConfigs.SubClasses.RangerBeastMaster import (
     RangerBeastMasterLevel3,
-    RangerBeastMasterNonGenericStarterClassArgs,
+    RangerBeastMasterCustomStarterClassArgs,
 )
 from Definitions import Ability, Skill
 from Features import Backgrounds, FightingStyles, GeneralFeats, OriginFeats, Weapons
@@ -22,7 +22,7 @@ from StatBlocks.SkillsStatBlock import RangerSkillsStatBlock
 
 def get_starter_class_builder():
     return StarterClassBuilder(
-        non_generic_arguments=RangerBeastMasterNonGenericStarterClassArgs(
+        non_generic_arguments=RangerBeastMasterCustomStarterClassArgs(
             skills=RangerSkillsStatBlock(
                 proficiencies={
                     Skill.ANIMAL_HANDLING: False,

@@ -11,7 +11,7 @@ from CharacterConfigs.BaseClasses.PaladinBase import (
 from CharacterConfigs.SubClasses.PaladinGlory import (
     PaladinGloryLevel3,
     PaladinGloryLevel5,
-    PaladinGloryNonGenericStarterClassArgs,
+    PaladinGloryCustomStarterClassArgs,
 )
 from Definitions import Ability, Skill
 from Features import Backgrounds, FightingStyles, GeneralFeats, OriginFeats, Weapons
@@ -25,7 +25,7 @@ from StatBlocks.SkillsStatBlock import PaladinSkillsStatBlock
 # Expected spell slots: {1: 4, 2: 2}  — (5+1)//2 = 3 → full caster level 3
 def get_starter_class_builder():
     return StarterClassBuilder(
-        non_generic_arguments=PaladinGloryNonGenericStarterClassArgs(
+        non_generic_arguments=PaladinGloryCustomStarterClassArgs(
             skills=PaladinSkillsStatBlock(
                 proficiencies={
                     Skill.ATHLETICS: True,

@@ -278,7 +278,7 @@ class ClassBuilder(ABC):
         return data
 
 
-class NonGenericStarterClassArgs:
+class CustomStarterClassArgs:
     def __init__(
         self,
         base_class: CharacterClass,
@@ -304,7 +304,7 @@ class StarterClassBuilder(ClassBuilder):
 
     def __init__(
         self,
-        non_generic_arguments: NonGenericStarterClassArgs,
+        non_generic_arguments: CustomStarterClassArgs,
         base_class_level_features: BaseClassLevelFeatures,
         base_class_level: int,
         abilities: AbilitiesStatBlock,
@@ -371,7 +371,7 @@ class StarterClassBuilder(ClassBuilder):
             abilities=self.abilities,
             skills=self.skills,
             saving_throws=self.saving_throws,
-            starter_class=self.base_class,
+            base_class=self.base_class,
             spell_casting_ability=self.spell_casting_ability,
         )
 

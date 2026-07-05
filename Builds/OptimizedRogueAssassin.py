@@ -12,7 +12,7 @@ from CharacterConfigs.BaseClasses.RogueBase import (
 )
 from CharacterConfigs.SubClasses.RogueAssassin import (
     RogueAssassinLevel3,
-    RogueAssassinNonGenericStarterClassArgs,
+    RogueAssassinCustomStarterClassArgs,
 )
 from Definitions import Ability, Skill
 from Features import Armor, Backgrounds, GeneralFeats, OriginFeats, Weapons
@@ -24,7 +24,7 @@ from StatBlocks.SkillsStatBlock import RogueSkillsStatBlock
 
 def get_starter_class_builder():
     return StarterClassBuilder(
-        non_generic_arguments=RogueAssassinNonGenericStarterClassArgs(
+        non_generic_arguments=RogueAssassinCustomStarterClassArgs(
             skills=RogueSkillsStatBlock(
                 proficiencies={
                     Skill.ACROBATICS: True,

@@ -10,7 +10,7 @@ from CharacterConfigs.BaseClasses.WizardBase import (
 )
 from CharacterConfigs.SubClasses.WizardDiviner import (
     WizardDivinerLevel3,
-    WizardDivinerNonGenericStarterClassArgs,
+    WizardDivinerCustomStarterClassArgs,
 )
 from Definitions import Ability, Skill
 from Features import Backgrounds, GeneralFeats, OriginFeats, Weapons
@@ -22,7 +22,7 @@ from StatBlocks.SkillsStatBlock import WizardSkillsStatBlock
 
 def get_starter_class_builder():
     return StarterClassBuilder(
-        non_generic_arguments=WizardDivinerNonGenericStarterClassArgs(
+        non_generic_arguments=WizardDivinerCustomStarterClassArgs(
             skills=WizardSkillsStatBlock(
                 proficiencies={
                     Skill.ARCANA: True,

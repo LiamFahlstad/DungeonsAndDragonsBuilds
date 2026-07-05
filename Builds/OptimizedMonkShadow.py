@@ -5,7 +5,7 @@ from CharacterConfigs.BaseClasses.ClassBuilder import StarterClassBuilder
 from CharacterConfigs.BaseClasses.MonkBase import MonkLevel1, MonkLevel2, MonkLevel3
 from CharacterConfigs.SubClasses.MonkShadow import (
     MonkShadowLevel3,
-    MonkShadowNonGenericStarterClassArgs,
+    MonkShadowCustomStarterClassArgs,
 )
 from Definitions import Ability, Skill
 from Features import Backgrounds, OriginFeats
@@ -17,7 +17,7 @@ from StatBlocks.SkillsStatBlock import MonkSkillsStatBlock
 def get_starter_class_builder():
     monk_level = 3
     return StarterClassBuilder(
-        non_generic_arguments=MonkShadowNonGenericStarterClassArgs(
+        non_generic_arguments=MonkShadowCustomStarterClassArgs(
             skills=MonkSkillsStatBlock(
                 proficiencies={
                     Skill.ACROBATICS: True,

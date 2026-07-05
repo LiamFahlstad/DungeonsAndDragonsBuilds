@@ -50,7 +50,7 @@ class AbilitiesStatBlock(StatBlock):
     ) -> Definitions.Ability:
         return self._get_ability_with_highest_modifier(list(Definitions.Ability))
 
-    def get_spellcasting_ability_with_highest_modifier(
+    def get_spell_casting_ability_with_highest_modifier(
         self,
     ) -> Definitions.Ability:
         return self._get_ability_with_highest_modifier(

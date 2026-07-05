@@ -5,7 +5,7 @@ import attr
 from CharacterConfigs.BaseClasses import ClassBuilder
 from CharacterConfigs.BaseClasses.ClericBase import (
     ClericMulticlassBuilder,
-    ClericNonGenericStarterClassArgs,
+    ClericCustomStarterClassArgs,
 )
 from CharacterSheetCreator import CharacterSheetData
 from Definitions import ClericSubclass
@@ -50,7 +50,7 @@ class ClericLightLevel17(ClassBuilder.SubclassLevel17):
         return data
 
 
-class ClericLightNonGenericStarterClassArgs(ClericNonGenericStarterClassArgs):
+class ClericLightCustomStarterClassArgs(ClericCustomStarterClassArgs):
     def __init__(
         self,
         skills: ClericSkillsStatBlock,

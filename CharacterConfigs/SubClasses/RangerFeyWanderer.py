@@ -5,7 +5,7 @@ import attr
 from CharacterConfigs.BaseClasses import ClassBuilder
 from CharacterConfigs.BaseClasses.RangerBase import (
     RangerMulticlassBuilder,
-    RangerNonGenericStarterClassArgs,
+    RangerCustomStarterClassArgs,
 )
 from CharacterSheetCreator import CharacterSheetData
 from Definitions import RangerSubclass
@@ -124,7 +124,7 @@ class FeyWandererRangerLevel20(ClassBuilder.SubclassLevel20):
         return data
 
 
-class RangerFeyWandererNonGenericStarterClassArgs(RangerNonGenericStarterClassArgs):
+class RangerFeyWandererCustomStarterClassArgs(RangerCustomStarterClassArgs):
     def __init__(
         self,
         skills: RangerSkillsStatBlock,

@@ -8,7 +8,7 @@ from CharacterConfigs.BaseClasses.RangerBase import (
 )
 from CharacterConfigs.SubClasses.RangerGloomStalker import (
     RangerGloomStalkerLevel3,
-    RangerGloomStalkerNonGenericStarterClassArgs,
+    RangerGloomStalkerCustomStarterClassArgs,
 )
 from Definitions import Ability, Skill
 from Features import Backgrounds, FightingStyles, OriginFeats, Weapons
@@ -21,7 +21,7 @@ from StatBlocks.SkillsStatBlock import RangerSkillsStatBlock
 
 def get_starter_class_builder():
     return StarterClassBuilder(
-        non_generic_arguments=RangerGloomStalkerNonGenericStarterClassArgs(
+        non_generic_arguments=RangerGloomStalkerCustomStarterClassArgs(
             skills=RangerSkillsStatBlock(
                 proficiencies={
                     Skill.ANIMAL_HANDLING: False,

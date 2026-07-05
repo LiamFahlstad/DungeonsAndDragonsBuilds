@@ -11,7 +11,7 @@ from CharacterConfigs.BaseClasses.WarlockBase import (
 from CharacterConfigs.SubClasses.WarlockArchfey import (
     ArchfeyWarlockLevel3,
     ArchfeyWarlockLevel5,
-    WarlockArchfeyNonGenericStarterClassArgs,
+    WarlockArchfeyCustomStarterClassArgs,
 )
 from Definitions import Ability, Skill
 from Features import Backgrounds, GeneralFeats, OriginFeats
@@ -33,7 +33,7 @@ from StatBlocks.SkillsStatBlock import WarlockSkillsStatBlock
 
 def get_starter_class_builder():
     return StarterClassBuilder(
-        non_generic_arguments=WarlockArchfeyNonGenericStarterClassArgs(
+        non_generic_arguments=WarlockArchfeyCustomStarterClassArgs(
             skills=WarlockSkillsStatBlock(
                 proficiencies={
                     Skill.ARCANA: True,

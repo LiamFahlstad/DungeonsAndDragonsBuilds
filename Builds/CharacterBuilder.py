@@ -36,7 +36,7 @@ class CharacterBuilder:
         if abilities is None:
             raise ValueError("AbilitiesStatBlock is None.")
         ability_with_highest_modifier = (
-            abilities.get_spellcasting_ability_with_highest_modifier()
+            abilities.get_spell_casting_ability_with_highest_modifier()
         )
         character_sheet_data.spell_casting_ability = ability_with_highest_modifier
 

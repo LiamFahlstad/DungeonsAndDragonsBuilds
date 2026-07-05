@@ -27,7 +27,7 @@ from CharacterConfigs.SubClasses.BardGlamour import (
     BardGlamourLevel3,
     BardGlamourLevel6,
     BardGlamourLevel14,
-    BardGlamourNonGenericStarterClassArgs,
+    BardGlamourCustomStarterClassArgs,
 )
 from Definitions import Ability, Skill
 from Features import Backgrounds, EpicBoon, GeneralFeats, OriginFeats
@@ -51,7 +51,7 @@ from StatBlocks.SkillsStatBlock import BardSkillsStatBlock
 
 def get_starter_class_builder():
     return StarterClassBuilder(
-        non_generic_arguments=BardGlamourNonGenericStarterClassArgs(
+        non_generic_arguments=BardGlamourCustomStarterClassArgs(
             skills=BardSkillsStatBlock(
                 proficiencies={
                     Skill.PERFORMANCE: True,

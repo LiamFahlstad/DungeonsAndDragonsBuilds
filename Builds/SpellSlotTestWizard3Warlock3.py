@@ -17,7 +17,7 @@ from CharacterConfigs.SubClasses.WarlockArchfey import (
 )
 from CharacterConfigs.SubClasses.WizardBladesinger import (
     WizardBladesingerLevel3,
-    WizardBladeSingerNonGenericStarterClassArgs,
+    WizardBladeSingerCustomStarterClassArgs,
 )
 from Definitions import Ability, Skill
 from Features import Backgrounds, GeneralFeats, OriginFeats, Weapons
@@ -35,7 +35,7 @@ from StatBlocks.SkillsStatBlock import WizardSkillsStatBlock
 # Cantrips and spells are chosen to avoid any name collisions between the two classes.
 def get_starter_class_builder():
     return StarterClassBuilder(
-        non_generic_arguments=WizardBladeSingerNonGenericStarterClassArgs(
+        non_generic_arguments=WizardBladeSingerCustomStarterClassArgs(
             skills=WizardSkillsStatBlock(
                 proficiencies={
                     Skill.ARCANA: True,

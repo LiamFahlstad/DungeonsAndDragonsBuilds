@@ -5,7 +5,7 @@ import attr
 from CharacterConfigs.BaseClasses import ClassBuilder
 from CharacterConfigs.BaseClasses.WizardBase import (
     WizardMulticlassBuilder,
-    WizardNonGenericStarterClassArgs,
+    WizardCustomStarterClassArgs,
 )
 from CharacterSheetCreator import CharacterSheetData
 from Definitions import Skill, WizardSubclass
@@ -60,7 +60,7 @@ class WizardBladesingerLevel14(ClassBuilder.SubclassLevel14):
         return data
 
 
-class WizardBladeSingerNonGenericStarterClassArgs(WizardNonGenericStarterClassArgs):
+class WizardBladeSingerCustomStarterClassArgs(WizardCustomStarterClassArgs):
     def __init__(
         self,
         skills: WizardSkillsStatBlock,
