@@ -278,7 +278,7 @@ class YourCharacterNameCharacterBuilder(CharacterBuilder):
             # If you want to multiclass, create additional class builders with
             # the MulticlassBuilder subclass for your secondary class.
             # Example: multiclass_builders=[get_wizard_multiclass_builder()]
-            # See Builds/MulticlassTest.py for a full multiclass example
+            # See Builds/Tests/MulticlassTest.py for a full multiclass example
         )
 
 
@@ -287,7 +287,7 @@ class YourCharacterNameCharacterBuilder(CharacterBuilder):
 # ============================================================================
 # Option 1: Add to Main.py
 #   1. Import your builder in Main.py:
-#      from Builds.MyBuild import YourCharacterNameCharacterBuilder
+#      from Builds.Characters.MyBuild import YourCharacterNameCharacterBuilder
 #   2. Add to BuildSelector.builds() dict:
 #      "MyBuild": YourCharacterNameCharacterBuilder(),
 #   3. Run: python Main.py
@@ -295,7 +295,7 @@ class YourCharacterNameCharacterBuilder(CharacterBuilder):
 # Option 2: Test just your build
 #   Run: python -c "
 #   import Definitions
-#   from Builds._TEMPLATE import YourCharacterNameCharacterBuilder
+#   from Builds.Examples._TEMPLATE import YourCharacterNameCharacterBuilder
 #   YourCharacterNameCharacterBuilder().build().create_character_sheet(
 #       skill_config=Definitions.SkillConfig.DEFAULT
 #   )

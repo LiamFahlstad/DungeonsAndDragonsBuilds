@@ -1,5 +1,5 @@
 import Definitions
-from Builds import (
+from Builds.Characters import (
     OptimizedBarbarianBerserker,
     OptimizedBarbarianWorldTree,
     OptimizedBardGlamour,
@@ -20,6 +20,8 @@ from Builds import (
     OptimizedWarlockGishArchfey,
     OptimizedWizardBladesinger,
     OptimizedWizardDiviner,
+)
+from Builds.Tests import (
     SpellSlotTestWizard5,
     SpellSlotTestPaladin5,
     SpellSlotTestPaladin4Wizard3,

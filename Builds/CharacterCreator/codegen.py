@@ -1,5 +1,5 @@
-"""Generates a build file (same style as the hand-written ones in Builds/)
-from a BuildSpec."""
+"""Generates a build file (same style as the hand-written ones in
+Builds/Characters/) from a BuildSpec."""
 
 import ast
 import subprocess

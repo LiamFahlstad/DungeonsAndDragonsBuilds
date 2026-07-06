@@ -2,7 +2,7 @@
 
 import Combat.GrimsCastle.Encounters as GrimsCastleEncounters
 import Combat.TimeLoop.Encounters as TimeLoopEncounters
-from Builds.OptimizedPaladinVengeance import OptimizedPaladinVengeanceCharacterBuilder
+from Builds.Characters.OptimizedPaladinVengeance import OptimizedPaladinVengeanceCharacterBuilder
 from Combat.Monsters.CR_24 import AncientRedDragon
 from Combat.Scenario import CombatScenario
 

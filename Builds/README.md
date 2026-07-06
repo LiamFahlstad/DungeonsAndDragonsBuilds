@@ -2,6 +2,18 @@
 
 This directory contains character build definitions for the D&D 5e character sheet builder. This guide walks you through creating a new build from scratch.
 
+## Directory layout
+
+| Path | Purpose |
+|---|---|
+| `Characters/` | The real character builds (one file per build) |
+| `Tests/` | Test builds (spell slots, multiclassing) |
+| `Examples/` | `_TEMPLATE.py` and a worked example |
+| `GeneratedBuilds/` | Output of the Character Creator UI |
+| `CharacterCreator/` | The Character Creator UI implementation |
+| `CharacterBuilder.py` | Base class every build subclasses |
+| `CharacterCreatorUI.py` | Entry point for the Character Creator UI |
+
 ## Easiest way: the Character Creator UI
 
 Run from the repo root:
@@ -19,7 +31,7 @@ To start from an existing build and tweak it, either click **Load build…**
 or pass it on the command line:
 
 ```bash
-python Builds/CharacterCreatorUI.py --load-build Builds/OptimizedBarbarianBerserker.py
+python Builds/CharacterCreatorUI.py --load-build Builds/Characters/OptimizedBarbarianBerserker.py
 ```
 
 Notes:
@@ -36,7 +48,7 @@ any other build.
 
 ## Quick Start
 
-1. **Copy the template**: `_TEMPLATE.py` → `MyNewBuild.py`
+1. **Copy the template**: `Examples/_TEMPLATE.py` → `Characters/MyNewBuild.py`
 2. **Edit your build**: Follow the inline TODO comments in the template
 3. **Add to Main.py**: Register your build in `Main.py`'s `BuildSelector.builds()` dict
 4. **Run it**: `python Main.py` (or test locally first)
@@ -46,10 +58,10 @@ any other build.
 ### Step 1: Copy the Template
 
 ```bash
-cp _TEMPLATE.py MyNewBuild.py
+cp Examples/_TEMPLATE.py Characters/MyNewBuild.py
 ```
 
-Open `MyNewBuild.py` in your editor and follow the TODOs.
+Open `Characters/MyNewBuild.py` in your editor and follow the TODOs.
 
 ### Step 2: Choose Your Class and Subclass
 
@@ -296,14 +308,14 @@ class MyMulticlassCharacterBuilder(CharacterBuilder):
         )
 ```
 
-See `Builds/MulticlassTest.py` for a complete multiclass example.
+See `Builds/Tests/MulticlassTest.py` for a complete multiclass example.
 
 ## Step 9: Register Your Build
 
 Edit `Main.py`:
 
 ```python
-from Builds.MyNewBuild import MyCustomBarbarianCharacterBuilder
+from Builds.Characters.MyNewBuild import MyCustomBarbarianCharacterBuilder
 
 class BuildSelector:
     @staticmethod
@@ -329,7 +341,7 @@ This generates HTML character sheets in the `Output/` directory for all register
 ```bash
 python -c "
 import Definitions
-from Builds.MyNewBuild import MyCustomBarbarianCharacterBuilder
+from Builds.Characters.MyNewBuild import MyCustomBarbarianCharacterBuilder
 MyCustomBarbarianCharacterBuilder().build().create_character_sheet(
     skill_config=Definitions.SkillConfig.DEFAULT
 )
@@ -341,7 +353,7 @@ If there's an error, it will show missing imports or configuration mistakes.
 ### Option 3: Debug Mode (Python REPL)
 
 ```python
-from Builds.MyNewBuild import MyCustomBarbarianCharacterBuilder
+from Builds.Characters.MyNewBuild import MyCustomBarbarianCharacterBuilder
 builder = MyCustomBarbarianCharacterBuilder()
 character_data = builder.build()
 # Inspect character_data to debug
@@ -405,7 +417,7 @@ from Spells.Definitions import ClericLevel1Spells, ClericLevel2Spells
 ## More Resources
 
 - **Definitions**: `Definitions.py` — Enums for CharacterClass, Ability, Skill, etc.
-- **Existing builds**: `Builds/Optimized*.py` — Examine real examples for your class
+- **Existing builds**: `Builds/Characters/Optimized*.py` — Examine real examples for your class
 - **Class features**: `CharacterConfigs/BaseClasses/` — See what each level offers
 - **Equipment options**: `Features/Equipment/Armor.py`, `Weapons.py`
 - **Spells**: `Spells/Definitions.py` — Available spells by class and level
@@ -413,4 +425,4 @@ from Spells.Definitions import ClericLevel1Spells, ClericLevel2Spells
 
 ## Questions?
 
-Refer back to `_TEMPLATE.py` or copy an existing build from `Builds/` and modify it step-by-step. The template is thoroughly commented to guide you through each section.
+Refer back to `Examples/_TEMPLATE.py` or copy an existing build from `Builds/Characters/` and modify it step-by-step. The template is thoroughly commented to guide you through each section.

@@ -4,8 +4,8 @@ D&D BUILD CREATION QUICK START GUIDE
 Step-by-step instructions to create your first build:
 
 1. COPY THE TEMPLATE
-   Copy Builds/_TEMPLATE.py to a new file:
-   cp _TEMPLATE.py MyNewBuild.py
+   Copy Builds/Examples/_TEMPLATE.py to a new file in Builds/Characters/:
+   cp Examples/_TEMPLATE.py Characters/MyNewBuild.py
 
 2. FOLLOW THE TODOs
    Open MyNewBuild.py and work through each TODO comment (there are ~15).
@@ -22,7 +22,7 @@ Step-by-step instructions to create your first build:
    Add two lines to Main.py:
    
    a) At the top with other imports:
-      from Builds.MyNewBuild import MyNewCharacterBuilder
+      from Builds.Characters.MyNewBuild import MyNewCharacterBuilder
    
    b) In BuildSelector.builds() dict:
       "MyNewBuild": MyNewCharacterBuilder(),
@@ -34,7 +34,7 @@ Step-by-step instructions to create your first build:
    Option B: Test just your build (faster)
    python -c "
    import Definitions
-   from Builds.MyNewBuild import MyNewCharacterBuilder
+   from Builds.Characters.MyNewBuild import MyNewCharacterBuilder
    MyNewCharacterBuilder().build().create_character_sheet(
        skill_config=Definitions.SkillConfig.DEFAULT
    )
@@ -45,9 +45,9 @@ Step-by-step instructions to create your first build:
 
 REFERENCE FILES
 ===============
-- Builds/_TEMPLATE.py        ← Heavily commented template with all options
-- Builds/README.md           ← Detailed guide with examples
-- Builds/ExampleNewBardBard.py  ← Real working example from the template
+- Builds/Examples/_TEMPLATE.py        ← Heavily commented template with all options
+- Builds/README.md                    ← Detailed guide with examples
+- Builds/Examples/ExampleNewBardBard.py  ← Real working example from the template
 
 HELP WITH CHOICES
 =================
@@ -61,5 +61,5 @@ Equipment:            Features/Equipment/*.py
 
 QUESTIONS?
 ==========
-Check an existing build in Builds/ that matches your class, or read the
-detailed guide in Builds/README.md
+Check an existing build in Builds/Characters/ that matches your class, or
+read the detailed guide in Builds/README.md
