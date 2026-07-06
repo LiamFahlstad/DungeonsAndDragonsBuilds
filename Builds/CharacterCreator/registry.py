@@ -155,6 +155,7 @@ class Registry:
         self._name_to_import = None
         self._granted_members = {}
         self._skill_pools = {}
+        self._enum_param_hints = {}
 
     # --------------------------------------------------- unconditional grants
 
@@ -233,6 +234,47 @@ class Registry:
                     for name in param_names:
                         hints.setdefault(name, pool)
         self._skill_pools[cache_key] = hints
+        return hints
+
+    def enum_param_hints(self, cls) -> dict:
+        """param name -> [enum classes] for constructor params that are
+        annotated as plain str but hold enum members in practice: the class'
+        source passes the param to a call together with an enum class (e.g.
+        MagicInitiateWizard's _resolve_spell_enum(cantrip_1,
+        WizardLevel0Spells)). Lets the UI offer an enum dropdown instead of a
+        free-text field."""
+        cache_key = f"{cls.__module__}.{cls.__qualname__}"
+        cached = self._enum_param_hints.get(cache_key)
+        if cached is not None:
+            return cached
+        hints = {}
+        module = sys.modules.get(cls.__module__)
+        param_names = {name for name, _annotation, _required in signature_params(cls)}
+        try:
+            tree = ast.parse(textwrap.dedent(inspect.getsource(cls)))
+        except (OSError, TypeError, SyntaxError):
+            tree = None
+        if tree is not None and param_names:
+            for node in ast.walk(tree):
+                if not isinstance(node, ast.Call):
+                    continue
+                args = list(node.args) + [kw.value for kw in node.keywords]
+                names = [
+                    arg.id
+                    for arg in args
+                    if isinstance(arg, ast.Name) and arg.id in param_names
+                ]
+                enums = [
+                    obj
+                    for arg in args
+                    if isinstance(arg, (ast.Name, ast.Attribute))
+                    for obj in [_resolve_attr_chain(arg, module)]
+                    if inspect.isclass(obj) and issubclass(obj, enum.Enum)
+                ]
+                if names and enums:
+                    for name in names:
+                        hints.setdefault(name, enums)
+        self._enum_param_hints[cache_key] = hints
         return hints
 
     # ------------------------------------------------------------- classes
@@ -429,6 +471,9 @@ class Registry:
             "ToolProficiencies.ToolProficiencies",
             "ToolProficiency",
         )
+        # Module alias so ToolProficiencies.ThievesTools() style expressions
+        # (emitted by the tool proficiency picker) import cleanly.
+        mapping["ToolProficiencies"] = ("ToolProficiencies", "ToolProficiencies")
 
         import StatBlocks.AbilitiesStatBlock as abilities_module
 
@@ -521,10 +566,13 @@ class EditorKind:
     ENUM = "enum"  # options: list of enum classes
     CLASS = "class"  # options: base class (pick a subclass)
     INT = "int"
+    FLOAT = "float"
     BOOL = "bool"
     STR = "str"
     SKILL_LIST = "skill_list"
     ABILITY_BONUS_LIST = "ability_bonus_list"
+    LIST = "list"  # payload: item annotation
+    DICT = "dict"  # payload: (key annotation, value annotation)
     RAW = "raw"
 
 
@@ -566,6 +614,8 @@ def resolve_annotation(annotation) -> ResolvedAnnotation:
             return ResolvedAnnotation(EditorKind.INT, optional=optional)
         if annotation is bool:
             return ResolvedAnnotation(EditorKind.BOOL, optional=optional)
+        if annotation is float:
+            return ResolvedAnnotation(EditorKind.FLOAT, optional=optional)
         if annotation is str:
             return ResolvedAnnotation(EditorKind.STR, optional=optional)
         return ResolvedAnnotation(EditorKind.CLASS, annotation, optional)
@@ -582,6 +632,12 @@ def resolve_annotation(annotation) -> ResolvedAnnotation:
                 return ResolvedAnnotation(
                     EditorKind.ABILITY_BONUS_LIST, optional=optional
                 )
+        if item is not None:
+            return ResolvedAnnotation(EditorKind.LIST, item, optional)
+    if origin in (dict, typing.Dict):
+        args = typing.get_args(annotation)
+        if len(args) == 2:
+            return ResolvedAnnotation(EditorKind.DICT, tuple(args), optional)
     return ResolvedAnnotation(EditorKind.RAW, optional=optional)
 
 
@@ -600,6 +656,12 @@ def signature_params(cls) -> list:
         signature = inspect.signature(cls.__init__)
     except (TypeError, ValueError):
         return []
+    try:
+        # Resolves quoted annotations (e.g. damage_roll: "WeaponsDamageRolls")
+        # that inspect.signature leaves as strings.
+        hints = typing.get_type_hints(cls.__init__)
+    except Exception:
+        hints = {}
     params = []
     for name, param in signature.parameters.items():
         if name == "self" or param.kind in (
@@ -612,6 +674,7 @@ def signature_params(cls) -> list:
             if param.annotation is not inspect.Parameter.empty
             else None
         )
+        annotation = hints.get(name, annotation)
         params.append((name, annotation, param.default is inspect.Parameter.empty))
     return params
 

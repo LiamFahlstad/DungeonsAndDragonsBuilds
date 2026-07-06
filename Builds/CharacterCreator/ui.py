@@ -9,6 +9,7 @@ verifies it by importing it and running .build() in a subprocess.
 
 import ast
 import inspect
+import typing
 from pathlib import Path
 
 from PyQt6.QtCore import Qt
@@ -18,6 +19,7 @@ from PyQt6.QtWidgets import (
     QComboBox,
     QCompleter,
     QDialog,
+    QDoubleSpinBox,
     QFileDialog,
     QFrame,
     QGridLayout,
@@ -137,10 +139,39 @@ QSpinBox {
     border: 1px solid #1a4a80;
     border-radius: 3px;
     color: #eaeaea;
-    padding: 2px 5px;
+    padding: 2px 3px 2px 5px;
 }
 QSpinBox:focus {
     border: 1px solid #c9a84c;
+}
+QSpinBox::up-button, QSpinBox::down-button {
+    subcontrol-origin: border;
+    width: 15px;
+    background-color: #1a4a80;
+    border: none;
+}
+QSpinBox::up-button {
+    subcontrol-position: top right;
+    margin: 1px 1px 0 0;
+    border-top-right-radius: 3px;
+}
+QSpinBox::down-button {
+    subcontrol-position: bottom right;
+    margin: 0 1px 1px 0;
+    border-bottom-right-radius: 3px;
+}
+QSpinBox::up-button:hover, QSpinBox::down-button:hover {
+    background-color: #c9a84c;
+}
+QSpinBox::up-arrow {
+    image: url(__SPIN_UP_ARROW__);
+    width: 8px;
+    height: 5px;
+}
+QSpinBox::down-arrow {
+    image: url(__SPIN_DOWN_ARROW__);
+    width: 8px;
+    height: 5px;
 }
 
 QCheckBox {
@@ -246,6 +277,47 @@ QStatusBar {
     color: #a0a0b0;
 }
 """
+
+
+def _spin_arrow_pixmap(pointing_up, color="#eaeaea", width=8, height=5):
+    """QSS cannot draw triangles, so the spinbox arrows are tiny pixmaps."""
+    from PyQt6.QtCore import QPointF
+    from PyQt6.QtGui import QColor, QPainter, QPixmap, QPolygonF
+
+    pixmap = QPixmap(width, height)
+    pixmap.fill(QColor(0, 0, 0, 0))
+    if pointing_up:
+        points = [
+            QPointF(0, height),
+            QPointF(width, height),
+            QPointF(width / 2, 0),
+        ]
+    else:
+        points = [QPointF(0, 0), QPointF(width, 0), QPointF(width / 2, height)]
+    painter = QPainter(pixmap)
+    painter.setRenderHint(QPainter.RenderHint.Antialiasing)
+    painter.setPen(Qt.PenStyle.NoPen)
+    painter.setBrush(QColor(color))
+    painter.drawPolygon(QPolygonF(points))
+    painter.end()
+    return pixmap
+
+
+def build_stylesheet():
+    """QSS with the generated spinbox arrow images filled in.
+
+    Requires a QApplication to exist (QPixmap needs one).
+    """
+    import tempfile
+
+    directory = Path(tempfile.gettempdir())
+    up_path = directory / "dnd_creator_spin_up.png"
+    down_path = directory / "dnd_creator_spin_down.png"
+    _spin_arrow_pixmap(pointing_up=True).save(str(up_path))
+    _spin_arrow_pixmap(pointing_up=False).save(str(down_path))
+    return QSS.replace("__SPIN_UP_ARROW__", up_path.as_posix()).replace(
+        "__SPIN_DOWN_ARROW__", down_path.as_posix()
+    )
 
 
 def _clear_layout(layout):
@@ -386,24 +458,97 @@ class StrEditor(Editor):
             self.line.setText(expr)
 
 
-class SkillListEditor(Editor):
-    """A checkbox per skill; value is e.g. "[Skill.HISTORY, Skill.STEALTH]"."""
+def _make_filter_combo(options):
+    """Editable dropdown with type-to-filter completion (EnumEditor style)."""
+    combo = QComboBox()
+    combo.addItems(options)
+    combo.setEditable(True)
+    combo.setInsertPolicy(QComboBox.InsertPolicy.NoInsert)
+    completer = combo.completer()
+    if completer is not None:
+        completer.setCompletionMode(QCompleter.CompletionMode.PopupCompletion)
+        completer.setFilterMode(Qt.MatchFlag.MatchContains)
+        completer.setCaseSensitivity(Qt.CaseSensitivity.CaseInsensitive)
+    return combo
 
-    def __init__(self, columns=3):
+
+class SkillListEditor(Editor):
+    """Add/remove rows of skill dropdowns; value e.g. "[Skill.HISTORY, Skill.STEALTH]".
+
+    `pool` (Skill member names) restricts the dropdown options, e.g. a
+    feature's allowed skill pool; default is every skill.
+    """
+
+    def __init__(self, pool=None, initial=0):
         super().__init__()
         from Definitions import Skill
 
-        grid = QGridLayout(self.widget)
-        grid.setContentsMargins(0, 0, 0, 0)
-        grid.setVerticalSpacing(2)
-        self.checks = {}
-        for index, skill in enumerate(Skill):
-            check = QCheckBox(skill.value)
-            self.checks[skill.name] = check
-            grid.addWidget(check, index // columns, index % columns)
+        members = (
+            [Skill[name] for name in pool if name in Skill.__members__]
+            if pool
+            else list(Skill)
+        )
+        self._value_to_name = {skill.value: skill.name for skill in members}
+        self._name_to_value = {skill.name: skill.value for skill in members}
+        self.rows = []  # (row widget, combo)
+
+        outer = QVBoxLayout(self.widget)
+        outer.setContentsMargins(0, 0, 0, 0)
+        outer.setSpacing(2)
+        self.rows_layout = QVBoxLayout()
+        self.rows_layout.setSpacing(2)
+        outer.addLayout(self.rows_layout)
+        buttons = QHBoxLayout()
+        add_btn = QPushButton("+ skill")
+        add_btn.setFixedWidth(70)
+        add_btn.clicked.connect(lambda: self.add_row())
+        remove_btn = QPushButton("- skill")
+        remove_btn.setFixedWidth(70)
+        remove_btn.clicked.connect(self.remove_row)
+        buttons.addWidget(add_btn)
+        buttons.addWidget(remove_btn)
+        buttons.addStretch()
+        outer.addLayout(buttons)
+        for _ in range(initial):
+            self.add_row()
+
+    def add_row(self, name=None):
+        row = QWidget()
+        layout = QHBoxLayout(row)
+        layout.setContentsMargins(0, 0, 0, 0)
+        combo = _make_filter_combo(list(self._value_to_name))
+        if name is None:
+            combo.setCurrentText("")
+        else:
+            # Unknown names stay as typed text so nothing is lost.
+            combo.setCurrentText(self._name_to_value.get(name, name))
+        layout.addWidget(combo)
+        layout.addStretch()
+        self.rows_layout.addWidget(row)
+        self.rows.append((row, combo))
+        return combo
+
+    def remove_row(self):
+        if self.rows:
+            row, _combo = self.rows.pop()
+            row.deleteLater()
+
+    def _clear(self):
+        while self.rows:
+            self.remove_row()
 
     def selected(self):
-        return [name for name, check in self.checks.items() if check.isChecked()]
+        names = []
+        for _row, combo in self.rows:
+            text = combo.currentText().strip()
+            if not text:
+                continue
+            name = self._value_to_name.get(text)
+            if name is None:
+                # Free-typed text: accept "Skill.HISTORY" or a member name.
+                name = text.split(".")[-1].strip()
+            names.append(name)
+        return names
 
     def get_expr(self):
         names = self.selected()
@@ -412,26 +557,22 @@ class SkillListEditor(Editor):
         return "[" + ", ".join(f"Skill.{name}" for name in names) + "]"
 
     def set_expr(self, expr):
-        for check in self.checks.values():
-            check.setChecked(False)
+        self._clear()
         if not expr:
             return
         try:
             tree = ast.parse(expr.strip(), mode="eval")
-            if isinstance(tree.body, ast.List):
-                for element in tree.body.elts:
-                    if isinstance(element, ast.Attribute):
-                        if element.attr in self.checks:
-                            self.checks[element.attr].setChecked(True)
         except SyntaxError:
-            pass
+            return
+        if isinstance(tree.body, ast.List):
+            for element in tree.body.elts:
+                if isinstance(element, ast.Attribute):
+                    self.add_row(element.attr)
 
     def set_names(self, names):
-        for check in self.checks.values():
-            check.setChecked(False)
+        self._clear()
         for name in names:
-            if name in self.checks:
-                self.checks[name].setChecked(True)
+            self.add_row(name)
 
 
 class AbilityBonusListEditor(Editor):
@@ -548,6 +689,211 @@ class OptionalEditor(Editor):
             self.inner.set_expr(expr)
 
 
+class FloatEditor(Editor):
+    def __init__(self, default=0.0):
+        super().__init__()
+        layout = QHBoxLayout(self.widget)
+        layout.setContentsMargins(0, 0, 0, 0)
+        self.spin = QDoubleSpinBox()
+        self.spin.setRange(0.0, 10000.0)
+        self.spin.setDecimals(2)
+        self.spin.setValue(default)
+        layout.addWidget(self.spin)
+        layout.addStretch()
+
+    def get_expr(self):
+        return repr(self.spin.value())
+
+    def set_expr(self, expr):
+        try:
+            self.spin.setValue(float((expr or "").strip()))
+        except ValueError:
+            pass
+
+
+def _normalized_expr(expr):
+    """Canonical form of an expression string, for lossless-set checks."""
+    if expr is None:
+        return None
+    try:
+        return ast.unparse(ast.parse(expr, mode="eval"))
+    except (SyntaxError, ValueError):
+        return expr.strip()
+
+
+def _lossless_set(editor, expr):
+    """set_expr, then verify the editor reproduces the value; raises
+    ValueError when the editor would silently lose information (e.g. an
+    IntEditor clamping an out-of-range number)."""
+    editor.set_expr(expr)
+    if _normalized_expr(editor.get_expr()) != _normalized_expr(expr):
+        raise ValueError(f"cannot represent {expr!r} structurally")
+
+
+class TupleEditor(Editor):
+    """Fixed-arity tuple of sub-editors, e.g. an (item, count) pair.
+
+    set_expr raises ValueError on structural mismatch — callers (the row
+    editors below) catch it and fall back to raw code.
+    """
+
+    def __init__(self, make_editors):
+        super().__init__()
+        layout = QHBoxLayout(self.widget)
+        layout.setContentsMargins(0, 0, 0, 0)
+        layout.setSpacing(4)
+        self.editors = [make() for make in make_editors]
+        for editor in self.editors:
+            layout.addWidget(editor.widget, stretch=1)
+
+    def get_expr(self):
+        parts = [editor.get_expr() for editor in self.editors]
+        if any(part is None for part in parts):
+            return None
+        return f"({', '.join(parts)})"
+
+    def set_expr(self, expr):
+        expr = (expr or "").strip()
+        if not expr:
+            return
+        node = ast.parse(expr, mode="eval").body
+        if not isinstance(node, ast.Tuple) or len(node.elts) != len(self.editors):
+            raise ValueError(f"not a {len(self.editors)}-tuple: {expr!r}")
+        for editor, element in zip(self.editors, node.elts):
+            _lossless_set(editor, ast.unparse(element))
+
+
+class ExprListEditor(Editor):
+    """Add/remove rows of structured editors, emitting a list expression
+    ("[a, b]"), or a dict expression ("{k: v}") when make_value is given.
+
+    A «code» checkbox swaps to a raw line edit as a last resort; set_expr
+    falls back to it automatically for anything it cannot represent
+    structurally, so loading a build never loses information.
+    """
+
+    def __init__(self, make_item, make_value=None, add_label="+ add"):
+        super().__init__()
+        self.make_item = make_item
+        self.make_value = make_value
+        self.rows = []  # (row widget, [editors])
+        self._explicit_empty = False
+
+        outer = QVBoxLayout(self.widget)
+        outer.setContentsMargins(0, 0, 0, 0)
+        outer.setSpacing(2)
+        self.rows_layout = QVBoxLayout()
+        self.rows_layout.setSpacing(2)
+        outer.addLayout(self.rows_layout)
+
+        controls = QHBoxLayout()
+        self.add_btn = QPushButton(add_label)
+        self.add_btn.setFixedWidth(74)
+        self.add_btn.clicked.connect(lambda: self.add_row())
+        controls.addWidget(self.add_btn)
+        self.raw_check = QCheckBox(ClassPickerEditor.RAW_CHOICE)
+        self.raw_check.toggled.connect(self._toggle_raw)
+        controls.addWidget(self.raw_check)
+        controls.addStretch()
+        outer.addLayout(controls)
+
+        self.raw_editor = RawEditor(placeholder="raw Python expression")
+        self.raw_editor.widget.setVisible(False)
+        outer.addWidget(self.raw_editor.widget)
+
+    def add_row(self):
+        row_widget = QWidget()
+        layout = QHBoxLayout(row_widget)
+        layout.setContentsMargins(0, 0, 0, 0)
+        layout.setSpacing(4)
+        editors = [self.make_item()]
+        layout.addWidget(editors[0].widget, stretch=1)
+        if self.make_value is not None:
+            arrow = QLabel("→")
+            arrow.setObjectName("secondary")
+            layout.addWidget(arrow)
+            editors.append(self.make_value())
+            layout.addWidget(editors[1].widget, stretch=1)
+        remove_btn = QPushButton("✕")
+        remove_btn.setFixedWidth(24)
+        remove_btn.clicked.connect(lambda: self._remove_row(row_widget))
+        layout.addWidget(remove_btn)
+        self.rows_layout.addWidget(row_widget)
+        self.rows.append((row_widget, editors))
+        self._explicit_empty = False
+        return editors
+
+    def _remove_row(self, row_widget):
+        self.rows = [(w, e) for w, e in self.rows if w is not row_widget]
+        row_widget.setParent(None)
+        row_widget.deleteLater()
+
+    def _clear_rows(self):
+        for row_widget, _editors in list(self.rows):
+            self._remove_row(row_widget)
+
+    def _toggle_raw(self, checked):
+        self.raw_editor.widget.setVisible(checked)
+        for row_widget, _editors in self.rows:
+            row_widget.setVisible(not checked)
+        self.add_btn.setVisible(not checked)
+        if checked and not self.raw_editor.line.text().strip():
+            # Carry the structured value over so it can be hand-edited.
+            structured = self._structured_expr()
+            if structured:
+                self.raw_editor.set_expr(structured)
+
+    def _structured_expr(self):
+        entries = []
+        for _row_widget, editors in self.rows:
+            exprs = [editor.get_expr() for editor in editors]
+            if any(expr is None for expr in exprs):
+                continue
+            entries.append(exprs)
+        if not entries:
+            if self._explicit_empty:
+                return "{}" if self.make_value is not None else "[]"
+            return None
+        if self.make_value is not None:
+            return "{" + ", ".join(f"{k}: {v}" for k, v in entries) + "}"
+        return "[" + ", ".join(exprs[0] for exprs in entries) + "]"
+
+    def get_expr(self):
+        if self.raw_check.isChecked():
+            return self.raw_editor.get_expr()
+        return self._structured_expr()
+
+    def set_expr(self, expr):
+        self._clear_rows()
+        self.raw_editor.set_expr("")
+        self.raw_check.setChecked(False)
+        self._explicit_empty = False
+        expr = (expr or "").strip()
+        if not expr:
+            return
+        try:
+            node = ast.parse(expr, mode="eval").body
+            if self.make_value is not None:
+                if not isinstance(node, ast.Dict) or None in node.keys:
+                    raise ValueError("not a plain dict")
+                for key, value in zip(node.keys, node.values):
+                    key_editor, value_editor = self.add_row()
+                    _lossless_set(key_editor, ast.unparse(key))
+                    _lossless_set(value_editor, ast.unparse(value))
+                self._explicit_empty = not node.keys
+            else:
+                if not isinstance(node, (ast.List, ast.Tuple)):
+                    raise ValueError("not a list")
+                for element in node.elts:
+                    (item_editor,) = self.add_row()
+                    _lossless_set(item_editor, ast.unparse(element))
+                self._explicit_empty = not node.elts
+        except Exception:
+            self._clear_rows()
+            self.raw_check.setChecked(True)
+            self.raw_editor.set_expr(expr)
+
+
 class ClassPickerEditor(Editor):
     """Pick a concrete subclass (e.g. a feat) and fill in its parameters.
 
@@ -612,6 +958,9 @@ class ClassPickerEditor(Editor):
         cls = self.classes.get(choice)
         if cls is None:
             return
+        # str-annotated params that actually hold enum members (e.g.
+        # MagicInitiate's cantrips) get an enum dropdown instead of free text.
+        enum_hints = registry_module.get_registry().enum_param_hints(cls)
         for name, annotation, required in registry_module.signature_params(cls):
             row = QWidget()
             row_layout = QHBoxLayout(row)
@@ -621,9 +970,25 @@ class ClassPickerEditor(Editor):
             label.setFixedWidth(160)
             label.setAlignment(Qt.AlignmentFlag.AlignTop)
             row_layout.addWidget(label)
-            editor = make_editor(
-                annotation, self.context, param_name=name, required=required
-            )
+            resolved = resolve_annotation(annotation) if annotation else None
+            if name in enum_hints and (
+                resolved is None or resolved.kind in (EditorKind.STR, EditorKind.RAW)
+            ):
+                enums = enum_hints[name]
+                if required:
+                    editor = EnumEditor(
+                        enums,
+                        optional=False,
+                        default_expr=_default_enum_expr(enums, self.context),
+                    )
+                else:
+                    editor = OptionalEditor(
+                        lambda enums=enums: EnumEditor(enums, optional=False)
+                    )
+            else:
+                editor = make_editor(
+                    annotation, self.context, param_name=name, required=required
+                )
             row_layout.addWidget(editor.widget, stretch=1)
             self.params_layout.addWidget(row)
             self.param_editors[name] = editor
@@ -741,6 +1106,17 @@ def _default_enum_expr(enum_classes, context):
     return candidates[0][0]
 
 
+def _item_editor_factory(annotation, context):
+    """Editor factory for one element of a list/dict annotation. Tuples
+    become fixed pair editors (e.g. items' (Item, count) rows)."""
+    if typing.get_origin(annotation) in (tuple, typing.Tuple):
+        element_annotations = typing.get_args(annotation)
+        return lambda: TupleEditor(
+            [_item_editor_factory(a, context) for a in element_annotations]
+        )
+    return lambda: make_editor(annotation, context, required=True)
+
+
 def make_editor(annotation, context, param_name=None, required=True):
     """Choose an editor widget for a constructor parameter annotation."""
     resolved = resolve_annotation(annotation) if annotation is not None else None
@@ -764,16 +1140,29 @@ def make_editor(annotation, context, param_name=None, required=True):
                 else 0
             )
             return IntEditor(default=default)
+        if resolved.kind == EditorKind.FLOAT:
+            return FloatEditor()
         if resolved.kind == EditorKind.BOOL:
             return BoolEditor()
         if resolved.kind == EditorKind.STR:
             return StrEditor()
         if resolved.kind == EditorKind.SKILL_LIST:
-            return SkillListEditor()
+            # A discoverable restricted pool (context["skill_pool"]) limits
+            # the dropdown options to the feature's allowed skills.
+            return SkillListEditor(pool=context.get("skill_pool"))
         if resolved.kind == EditorKind.ABILITY_BONUS_LIST:
             # Start with one +2 row so the default is a valid Ability Score
             # Improvement (its bonuses must sum to 2).
             return AbilityBonusListEditor(defaults=[("STRENGTH", 2)])
+        if resolved.kind == EditorKind.LIST:
+            return ExprListEditor(_item_editor_factory(resolved.payload, context))
+        if resolved.kind == EditorKind.DICT:
+            key_annotation, value_annotation = resolved.payload
+            return ExprListEditor(
+                _item_editor_factory(key_annotation, context),
+                make_value=_item_editor_factory(value_annotation, context),
+                add_label="+ pair",
+            )
         if resolved.kind == EditorKind.CLASS:
             return ClassPickerEditor(resolved.payload, context)
         return RawEditor()
@@ -815,7 +1204,8 @@ class CreatorApp(QMainWindow):
         self.resize(1200, 880)
 
         self.level_editors = {}  # ("base"|"sub", level, param) -> Editor
-        self.class_skill_checks = {}
+        self.class_skill_combos = []
+        self._class_skill_value_to_name = {}
         self.species_param_editors = {}
         self._level_cache = {}
         self._applying = False
@@ -967,7 +1357,7 @@ class CreatorApp(QMainWindow):
         skills_label = QLabel("Skill proficiencies (pick 2):")
         skills_label.setObjectName("secondary")
         background_layout.addWidget(skills_label)
-        self.background_skills = SkillListEditor(columns=6)
+        self.background_skills = SkillListEditor()
         self.background_skills.set_names(["PERCEPTION", "SURVIVAL"])
         background_layout.addWidget(self.background_skills.widget)
         _insert_before_stretch(layout, background_box)
@@ -1012,22 +1402,43 @@ class CreatorApp(QMainWindow):
         _insert_before_stretch(layout, self.armor_list.box)
 
     def _build_advanced(self):
+        from Features.Items import Items
+        from ToolProficiencies.ToolProficiencies import ToolProficiency
+
         layout = self.advanced_layout
         note = QLabel(
-            "Optional raw Python expressions, exactly as they would appear in a "
-            "build file. Leave empty to omit."
+            "Optional extras. Leave empty to omit. The «code» fallback and the "
+            "free-text boxes at the bottom accept raw Python expressions as a "
+            "last resort."
         )
         note.setObjectName("hint")
         _insert_before_stretch(layout, note)
 
-        self.replace_spells_editor = self._advanced_row(
-            "replace_spells",
-            "e.g. {ClericLevel1Spells.HEALING_WORD: ClericLevel2Spells.AUGURY}",
+        spell_enums = sorted(
+            self.registry.spell_enums().values(), key=lambda cls: cls.__name__
         )
-        self.items_editor = self._advanced_row("items", "e.g. [(Items.Potion(), 2)]")
-        self.tools_editor = self._advanced_row(
-            "tool_proficiencies", "e.g. ToolProficiency(...)"
+        self.replace_spells_editor = ExprListEditor(
+            make_item=lambda: EnumEditor(spell_enums, optional=False),
+            make_value=lambda: EnumEditor(spell_enums, optional=False),
+            add_label="+ pair",
         )
+        self._advanced_box(
+            "replace_spells (old spell → new spell)", self.replace_spells_editor
+        )
+        self.items_editor = ExprListEditor(
+            make_item=lambda: TupleEditor(
+                [
+                    lambda: ClassPickerEditor(Items.Item, self._context()),
+                    lambda: IntEditor(default=1, lower=1, upper=999),
+                ]
+            ),
+            add_label="+ item",
+        )
+        self._advanced_box("items (item, count)", self.items_editor)
+        self.tools_editor = ClassPickerEditor(
+            ToolProficiency, self._context(), optional=True
+        )
+        self._advanced_box("tool_proficiencies", self.tools_editor)
         self.starter_extra_editor = self._advanced_text(
             "Extra subclass starter args (one per line, name=expression)"
         )
@@ -1038,10 +1449,9 @@ class CreatorApp(QMainWindow):
             "Extra import lines (one per line)"
         )
 
-    def _advanced_row(self, title, hint):
+    def _advanced_box(self, title, editor):
         box = QGroupBox(title)
         box_layout = QVBoxLayout(box)
-        editor = RawEditor(placeholder=hint)
         box_layout.addWidget(editor.widget)
         _insert_before_stretch(self.advanced_layout, box)
         return editor
@@ -1077,7 +1487,8 @@ class CreatorApp(QMainWindow):
 
     def rebuild_class_skills(self, keep=None):
         _clear_layout(self.class_skills_layout)
-        self.class_skill_checks = {}
+        self.class_skill_combos = []
+        self._class_skill_value_to_name = {}
         info = self.registry.classes()[self.class_combo.currentText()].skills_block
         if info is None:
             self.class_skills_layout.addWidget(QLabel("(unknown)"))
@@ -1085,20 +1496,34 @@ class CreatorApp(QMainWindow):
         count_label = QLabel(f"Pick exactly {info.num_proficiencies}:")
         count_label.setObjectName("secondary")
         self.class_skills_layout.addWidget(count_label)
+        self._class_skill_value_to_name = {
+            skill.value: skill.name for skill in info.allowed_skills
+        }
+        name_to_value = {skill.name: skill.value for skill in info.allowed_skills}
+        options = [skill.value for skill in info.allowed_skills]
+        if keep is None:
+            # Fresh build: pre-select the first N allowed skills so the
+            # default UI state generates a valid build out of the box.
+            picks = [
+                skill.name for skill in info.allowed_skills[: info.num_proficiencies]
+            ]
+        else:
+            picks = [
+                skill.name for skill in info.allowed_skills if keep.get(skill.name)
+            ]
         grid_widget = QWidget()
         grid = QGridLayout(grid_widget)
         grid.setContentsMargins(0, 0, 0, 0)
         grid.setVerticalSpacing(2)
-        for index, skill in enumerate(info.allowed_skills):
-            check = QCheckBox(skill.value)
-            if keep is None:
-                # Fresh build: pre-check the first N allowed skills so the
-                # default UI state generates a valid build out of the box.
-                check.setChecked(index < info.num_proficiencies)
+        # One dropdown per pick; a loaded build with extra picks gets extra rows.
+        for index in range(max(info.num_proficiencies, len(picks))):
+            combo = _make_filter_combo(options)
+            if index < len(picks):
+                combo.setCurrentText(name_to_value[picks[index]])
             else:
-                check.setChecked(bool(keep.get(skill.name)))
-            self.class_skill_checks[skill.name] = check
-            grid.addWidget(check, index // 6, index % 6)
+                combo.setCurrentText("")
+            self.class_skill_combos.append(combo)
+            grid.addWidget(combo, index // 3, index % 3)
         self.class_skills_layout.addWidget(grid_widget)
 
     def rebuild_species_params(self, values=None):
@@ -1184,12 +1609,14 @@ class CreatorApp(QMainWindow):
                 param_context = row_context
                 if pools and name in pools:
                     # This param has a discoverable restricted skill pool
-                    # (e.g. Blessings of Knowledge) — default from it.
+                    # (e.g. Blessings of Knowledge) — default from it and
+                    # restrict skill-list dropdowns to it.
                     param_context = dict(
                         row_context,
                         preferred_skills=[
                             f"Skill.{member}" for member in pools[name]
                         ],
+                        skill_pool=list(pools[name]),
                     )
                 row = QWidget()
                 row_layout = QHBoxLayout(row)
@@ -1290,21 +1717,35 @@ class CreatorApp(QMainWindow):
             )
 
         info = self.registry.classes()[spec.class_key].skills_block
-        spec.class_skills = {
-            name: check.isChecked() for name, check in self.class_skill_checks.items()
-        }
-        if info is not None:
-            picked = sum(1 for value in spec.class_skills.values() if value)
-            if picked != info.num_proficiencies:
-                problems.append(
-                    f"{spec.class_key} needs exactly {info.num_proficiencies} class "
-                    f"skills ({picked} selected)."
-                )
+        picked = []
+        for combo in self.class_skill_combos:
+            text = combo.currentText().strip()
+            if not text:
+                continue
+            name = self._class_skill_value_to_name.get(text)
+            if name is None:
+                # Free-typed text: accept "Skill.HISTORY" or a member name.
+                name = text.split(".")[-1].strip()
+            picked.append(name)
+        spec.class_skills = (
+            {skill.name: (skill.name in picked) for skill in info.allowed_skills}
+            if info is not None
+            else {}
+        )
+        if len(set(picked)) != len(picked):
+            problems.append("Duplicate class skill picks.")
+        if info is not None and len(set(picked)) != info.num_proficiencies:
+            problems.append(
+                f"{spec.class_key} needs exactly {info.num_proficiencies} class "
+                f"skills ({len(set(picked))} selected)."
+            )
 
         spec.background_bonuses = self.background_bonuses.get_pairs()
         spec.background_skills = self.background_skills.selected()
         if len(spec.background_skills) != 2:
             problems.append("Backgrounds normally grant exactly 2 skill proficiencies.")
+        if len(set(spec.background_skills)) != len(spec.background_skills):
+            problems.append("Duplicate background skill picks.")
 
         origin = self.origin_feat.get_expr()
         if origin is None:
@@ -1676,7 +2117,7 @@ def run(load_build_path=None):
     import sys
 
     app = QApplication(sys.argv)
-    app.setStyleSheet(QSS)
+    app.setStyleSheet(build_stylesheet())
     window = CreatorApp()
     window.show()
     if load_build_path:
