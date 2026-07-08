@@ -7,17 +7,42 @@ from CharacterConfigs.BaseClasses.RangerBase import (
     RangerLevel3,
     RangerLevel4,
     RangerLevel5,
+    RangerLevel6,
+    RangerLevel7,
+    RangerLevel8,
+    RangerLevel9,
+    RangerLevel10,
+    RangerLevel11,
+    RangerLevel12,
+    RangerLevel13,
+    RangerLevel14,
+    RangerLevel15,
+    RangerLevel16,
+    RangerLevel17,
+    RangerLevel18,
+    RangerLevel19,
+    RangerLevel20,
 )
 from CharacterConfigs.SubClasses.RangerBeastMaster import (
     RangerBeastMasterLevel3,
+    RangerBeastMasterLevel7,
+    RangerBeastMasterLevel11,
+    RangerBeastMasterLevel15,
     RangerBeastMasterCustomStarterClassArgs,
 )
-from Definitions import Ability, Skill
-from Features.CharacterFeats import Backgrounds, GeneralFeats, OriginFeats
+from Definitions import Ability, DamageType, Skill
+from Features.CharacterFeats import Backgrounds, EpicBoon, GeneralFeats, OriginFeats
+from Features.ClassFeatures.PrimalCompanions import CompanionType
 from Features.Combat import FightingStyles
 from Features.Equipment import Weapons
 from SpeciesConfigs import Gnome
-from Spells.Definitions import RangerLevel1Spells, RangerLevel2Spells
+from Spells.Definitions import (
+    RangerLevel1Spells,
+    RangerLevel2Spells,
+    RangerLevel3Spells,
+    RangerLevel4Spells,
+    RangerLevel5Spells,
+)
 from StatBlocks.AbilitiesStatBlock import StandardArrayAbilitiesStatBlock
 from StatBlocks.SkillsStatBlock import RangerSkillsStatBlock
 
@@ -38,7 +63,7 @@ def get_starter_class_builder():
                 }
             ),
         ),
-        base_class_level=3,
+        base_class_level=20,
         # Distribute 15, 14, 13, 12, 10, 8 among your abilities.
         abilities=StandardArrayAbilitiesStatBlock(
             strength=10,
@@ -61,7 +86,7 @@ def get_starter_class_builder():
             ]
         ),
         add_default_equipment=True,
-        origin_feat=OriginFeats.Crafter(artisans_tools=[]),
+        origin_feat=OriginFeats.Tough(),
         armor=[],
         weapons=[],
         base_class_level_features=ClassBuilder.BaseClassLevelFeatures(
@@ -70,38 +95,90 @@ def get_starter_class_builder():
                     weapon_mastery_1=Weapons.Longbow(),
                     weapon_mastery_2=Weapons.Scimitar(),
                     spell_1=RangerLevel1Spells.CURE_WOUNDS,
-                    spell_2=RangerLevel1Spells.FOG_CLOUD,
+                    spell_2=RangerLevel1Spells.ENSNARING_STRIKE,
                 ),
                 2: RangerLevel2(
-                    skill=Skill.ACROBATICS,
+                    skill=Skill.PERCEPTION,
                     fighting_style=FightingStyles.Archery(),
-                    spell=RangerLevel1Spells.JUMP,
+                    spell=RangerLevel1Spells.ANIMAL_FRIENDSHIP,
                 ),
                 3: RangerLevel3(
-                    spell=RangerLevel1Spells.ALARM,
+                    spell=RangerLevel1Spells.GOODBERRY,
                 ),
                 4: RangerLevel4(
-                    spell=RangerLevel1Spells.LONGSTRIDER,
+                    general_feat=GeneralFeats.Sharpshooter(
+                        character_level=4,
+                        ability=Ability.DEXTERITY,
+                    ),
+                    spell=RangerLevel1Spells.ENTANGLE,
+                ),
+                5: RangerLevel5(
+                    spell=RangerLevel2Spells.BARKSKIN,
+                ),
+                6: RangerLevel6(),
+                7: RangerLevel7(
+                    spell=RangerLevel2Spells.LESSER_RESTORATION,
+                ),
+                8: RangerLevel8(
                     general_feat=GeneralFeats.AbilityScoreImprovement(
                         [
-                            (Ability.DEXTERITY, 1),
-                            (Ability.INTELLIGENCE, 1),
+                            (Ability.WISDOM, 2),
                         ]
                     ),
                 ),
-                5: RangerLevel5(
-                    spell=RangerLevel2Spells.PASS_WITHOUT_TRACE,
+                9: RangerLevel9(
+                    skill_1=Skill.ATHLETICS,
+                    skill_2=Skill.INVESTIGATION,
+                    spell=RangerLevel3Spells.CONJURE_ANIMALS,
                 ),
+                10: RangerLevel10(),
+                11: RangerLevel11(
+                    spell=RangerLevel3Spells.DISPEL_MAGIC,
+                ),
+                12: RangerLevel12(
+                    general_feat=GeneralFeats.AbilityScoreImprovement(
+                        [
+                            (Ability.CONSTITUTION, 2),
+                        ]
+                    ),
+                ),
+                13: RangerLevel13(
+                    spell=RangerLevel4Spells.CONJURE_WOODLAND_BEINGS,
+                ),
+                14: RangerLevel14(),
+                15: RangerLevel15(
+                    spell=RangerLevel4Spells.FREEDOM_OF_MOVEMENT,
+                ),
+                16: RangerLevel16(
+                    general_feat=GeneralFeats.AbilityScoreImprovement(
+                        [
+                            (Ability.WISDOM, 2),
+                        ]
+                    ),
+                ),
+                17: RangerLevel17(
+                    spell_1=RangerLevel5Spells.SWIFT_QUIVER,
+                    spell_2=RangerLevel5Spells.CONJURE_VOLLEY,
+                ),
+                18: RangerLevel18(),
+                19: RangerLevel19(
+                    epic_boon=EpicBoon.DummyEpicBoon(),
+                    spell=RangerLevel5Spells.GREATER_RESTORATION,
+                ),
+                20: RangerLevel20(),
             },
             subclass_features_by_level={
-                3: RangerBeastMasterLevel3(),
+                3: RangerBeastMasterLevel3(
+                    companion_type=CompanionType.BEAST_OF_THE_LAND,
+                    damage_type=DamageType.SLASHING,
+                ),
+                7: RangerBeastMasterLevel7(),
+                11: RangerBeastMasterLevel11(),
+                15: RangerBeastMasterLevel15(),
             },
         ),
-        replace_spells={
-            RangerLevel1Spells.ALARM: RangerLevel2Spells.SILENCE,
-        },
+        replace_spells={},
     )
-
 
 
 class OptimizedRangerBeastMasterCharacterBuilder(CharacterBuilder):

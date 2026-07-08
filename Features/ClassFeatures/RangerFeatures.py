@@ -1,6 +1,9 @@
 from enum import Enum
+from typing import Optional
 
-from Definitions import Ability, Skill
+from Definitions import Ability, DamageType, Skill
+from Features.ClassFeatures import PrimalCompanions
+from Features.ClassFeatures.PrimalCompanions import CompanionType
 from Features.Core.BaseFeatures import Feature
 from Features.Core.SubFeatures import SkillExpertiseChoice
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
@@ -173,15 +176,10 @@ class FoeSlayer(Feature):
 ### Beast Master Ranger Features ###
 
 
-class CompanionType(str, Enum):
-    BEAST_OF_THE_LAND = "Beast of the Land"
-    BEAST_OF_THE_SEA = "Beast of the Sea"
-    BEAST_OF_THE_SKY = "Beast of the Sky"
-
-
 class PrimalCompanion(Feature):
-    def __init__(self, companion_type: CompanionType):
+    def __init__(self, companion_type: CompanionType, damage_type: Optional[DamageType] = None):
         self.companion_type = companion_type
+        self.damage_type = damage_type
         super().__init__(name="Primal Companion", origin="Beast Master Ranger Level 3")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -189,7 +187,11 @@ class PrimalCompanion(Feature):
             "You magically summon a primal beast, which draws strength from your bond with nature. Choose its stat block: Beast of the Land, Beast of the Sea or Beast of the Sky. You also determine the kind of animal it is, choosing a kind appropriate for the stat block. Whatever beast you choose, it bears primal markings indicating its supernatural origin.\n"
             "    * The Beast in Combat: In Combat, the beast acts during your turn. It can move and use its Reaction on its own, but the only action it takes is the Dodge action unless you take a Bonus Action to command it to take an action in its stat block or some other action. You can also sacrifice one of your attacks when you take the Attack action to command the beast to take the Beast's Strike action. If you have the Incapacitated condition, the beast acts on its own and isn't limited to the dodge action.\n"
             "    * Restoring or Replacing the Beast: If the beast has died within the last hour, you can take a Magic action to touch it and expend a spell slot. The beast returns to life after 1 minute with all its Hit Points restored.\n"
-            "   Whenever you finish a Long Rest, you can summon a different primal beast, which appears in an unoccupied space within 5 feet of you. You choose its stat block and appearance. If you already have a beast from this feature, the old one vanishes when the new one appears."
+            "   Whenever you finish a Long Rest, you can summon a different primal beast, which appears in an unoccupied space within 5 feet of you. You choose its stat block and appearance. If you already have a beast from this feature, the old one vanishes when the new one appears.\n"
+            "\nYour Beast:\n"
+            + PrimalCompanions.format_primal_companion(
+                self.companion_type, character_stat_block, self.damage_type
+            )
         )
         return description
 
