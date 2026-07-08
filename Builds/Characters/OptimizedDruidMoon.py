@@ -45,7 +45,6 @@ from Spells.Definitions import (
     DruidLevel5Spells,
     DruidLevel6Spells,
     DruidLevel7Spells,
-    DruidLevel8Spells,
     DruidLevel9Spells,
 )
 from StatBlocks.AbilitiesStatBlock import StandardArrayAbilitiesStatBlock
@@ -141,6 +140,7 @@ def get_starter_class_builder():
                     spell_2=DruidLevel5Spells.GEAS,
                 ),
                 10: DruidLevel10(
+                    cantrip=DruidLevel0Spells.GUIDANCE,
                     spell=DruidLevel5Spells.ANTILIFE_SHELL,
                 ),
                 11: DruidLevel11(
@@ -156,7 +156,7 @@ def get_starter_class_builder():
                 13: DruidLevel13(
                     spell=DruidLevel7Spells.FIRE_STORM,
                 ),
-                14: DruidLevel14(spell=DruidLevel7Spells.MIRAGE_ARCANE),
+                14: DruidLevel14(),
                 15: DruidLevel15(
                     spell=DruidLevel7Spells.REGENERATE,
                 ),
@@ -166,8 +166,6 @@ def get_starter_class_builder():
                             (Ability.CONSTITUTION, 2),
                         ]
                     ),
-                    spell_1=DruidLevel8Spells.EARTHQUAKE,
-                    spell_2=DruidLevel8Spells.ANIMAL_SHAPES,
                 ),
                 17: DruidLevel17(
                     spell=DruidLevel9Spells.STORM_OF_VENGEANCE,

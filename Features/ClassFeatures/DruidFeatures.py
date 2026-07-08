@@ -53,11 +53,7 @@ class WildShape(Feature):
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         druid_level = character_stat_block.get_class_level(Definitions.CharacterClass.DRUID)
-        if druid_level >= 18:
-            uses = 6
-        elif druid_level >= 14:
-            uses = 5
-        elif druid_level >= 10:
+        if druid_level >= 17:
             uses = 4
         elif druid_level >= 6:
             uses = 3

@@ -178,12 +178,14 @@ class DruidLevel9(ClassBuilder.BaseClassLevel9):
 
 @attr.dataclass
 class DruidLevel10(ClassBuilder.BaseClassLevel10):
+    cantrip: DruidLevel0Spells
     spell: DruidSpellsUpTo5
 
     def add_features(
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
+        data.add_cantrip(self.cantrip)
         data.add_spell(self.spell)
         return data
 
@@ -226,13 +228,11 @@ class DruidLevel13(ClassBuilder.BaseClassLevel13):
 
 @attr.dataclass
 class DruidLevel14(ClassBuilder.BaseClassLevel14):
-    spell: DruidSpellsUpTo7
 
     def add_features(
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_spell(self.spell)
         return data
 
 
@@ -255,13 +255,9 @@ class DruidLevel15(ClassBuilder.BaseClassLevel15):
 @attr.dataclass
 class DruidLevel16(ClassBuilder.BaseClassLevel16):
     general_feat: GeneralFeats.GeneralFeat
-    spell_1: DruidSpellsUpTo8
-    spell_2: DruidSpellsUpTo8
 
     def add_features(self, data: CharacterSheetData) -> CharacterSheetData:
         data.add_feature(self.general_feat)
-        data.add_spell(self.spell_1)
-        data.add_spell(self.spell_2)
         return data
 
 
