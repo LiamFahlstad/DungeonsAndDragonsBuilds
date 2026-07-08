@@ -23,7 +23,7 @@ def get_starter_class_builder():
                 proficiencies={
                     Skill.ARCANA: True,
                     Skill.HISTORY: True,
-                    Skill.INSIGHT: False,
+                    Skill.NATURE: False,
                     Skill.INVESTIGATION: False,
                     Skill.MEDICINE: False,
                     Skill.PERCEPTION: False,
@@ -56,7 +56,8 @@ def get_starter_class_builder():
         add_default_equipment=False,
         origin_feat=OriginFeats.Alert(),
         armor=[
-            Armor.ChainMailArmor(),
+            Armor.StuddedLeatherArmor(),
+            Armor.ShieldArmor(),
         ],
         weapons=[
             Weapons.Longsword(player_is_proficient=True, ability=Ability.INTELLIGENCE),
@@ -68,15 +69,13 @@ def get_starter_class_builder():
                     cantrip_1=SpellDefinitions.ArtificerLevel0Spells.FIRE_BOLT,
                     cantrip_2=SpellDefinitions.ArtificerLevel0Spells.MENDING,
                     spell_1=SpellDefinitions.ArtificerLevel1Spells.SHIELD,
-                    spell_2=SpellDefinitions.ArtificerLevel1Spells.MAGIC_MISSILE,
-                    spell_3=SpellDefinitions.ArtificerLevel1Spells.CURE_WOUNDS,
-                    spell_4=SpellDefinitions.ArtificerLevel1Spells.IDENTIFY,
+                    spell_2=SpellDefinitions.ArtificerLevel1Spells.CURE_WOUNDS,
                 ),
                 2: ArtificerLevel2(
                     spell=SpellDefinitions.ArtificerLevel1Spells.THUNDERWAVE,
                 ),
                 3: ArtificerLevel3(
-                    spell=SpellDefinitions.ArtificerLevel2Spells.MAGIC_WEAPON,
+                    spell=SpellDefinitions.ArtificerLevel1Spells.MAGIC_MISSILE,
                 ),
             },
             subclass_features_by_level={

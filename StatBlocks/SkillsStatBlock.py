@@ -476,9 +476,9 @@ class ArtificerSkillsStatBlock(ClassSkillsStatBlock):
         allowed_skills = [
             Skill.ARCANA,
             Skill.HISTORY,
-            Skill.INSIGHT,
             Skill.INVESTIGATION,
             Skill.MEDICINE,
+            Skill.NATURE,
             Skill.PERCEPTION,
             Skill.SLEIGHT_OF_HAND,
         ]

@@ -17,15 +17,12 @@ from Spells.Definitions import (
     ArtificerLevel3Spells,
     ArtificerLevel4Spells,
     ArtificerLevel5Spells,
-    ArtificerLevel6Spells,
-    ArtificerLevel7Spells,
-    ArtificerLevel8Spells,
-    ArtificerLevel9Spells,
 )
 from StatBlocks.AbilitiesStatBlock import AbilitiesStatBlock
 from StatBlocks.SavingThrowsStatBlock import ArtificerSavingThrowsStatBlock
 from StatBlocks.SkillsStatBlock import ArtificerSkillsStatBlock
 
+# Artificer is a half-caster whose spell slots never exceed 5th level.
 ArtificerSpellsUpTo2: TypeAlias = ArtificerLevel1Spells | ArtificerLevel2Spells
 
 ArtificerSpellsUpTo3: TypeAlias = ArtificerSpellsUpTo2 | ArtificerLevel3Spells
@@ -34,14 +31,6 @@ ArtificerSpellsUpTo4: TypeAlias = ArtificerSpellsUpTo3 | ArtificerLevel4Spells
 
 ArtificerSpellsUpTo5: TypeAlias = ArtificerSpellsUpTo4 | ArtificerLevel5Spells
 
-ArtificerSpellsUpTo6: TypeAlias = ArtificerSpellsUpTo5 | ArtificerLevel6Spells
-
-ArtificerSpellsUpTo7: TypeAlias = ArtificerSpellsUpTo6 | ArtificerLevel7Spells
-
-ArtificerSpellsUpTo8: TypeAlias = ArtificerSpellsUpTo7 | ArtificerLevel8Spells
-
-ArtificerSpellsUpTo9: TypeAlias = ArtificerSpellsUpTo8 | ArtificerLevel9Spells
-
 
 @attr.dataclass
 class ArtificerLevel1(ClassBuilder.BaseClassLevel1):
@@ -49,8 +38,6 @@ class ArtificerLevel1(ClassBuilder.BaseClassLevel1):
     cantrip_2: ArtificerLevel0Spells
     spell_1: ArtificerLevel1Spells
     spell_2: ArtificerLevel1Spells
-    spell_3: ArtificerLevel1Spells
-    spell_4: ArtificerLevel1Spells
 
     def add_features(
         self,
@@ -61,8 +48,6 @@ class ArtificerLevel1(ClassBuilder.BaseClassLevel1):
         data.add_cantrip(self.cantrip_2)
         data.add_spell(self.spell_1)
         data.add_spell(self.spell_2)
-        data.add_spell(self.spell_3)
-        data.add_spell(self.spell_4)
         return data
 
 
@@ -81,7 +66,7 @@ class ArtificerLevel2(ClassBuilder.BaseClassLevel2):
 
 @attr.dataclass
 class ArtificerLevel3(ClassBuilder.BaseClassLevel3):
-    spell: ArtificerSpellsUpTo2
+    spell: ArtificerLevel1Spells
 
     def add_features(
         self,
@@ -94,36 +79,20 @@ class ArtificerLevel3(ClassBuilder.BaseClassLevel3):
 @attr.dataclass
 class ArtificerLevel4(ClassBuilder.BaseClassLevel4):
     general_feat: GeneralFeats.GeneralFeat
-    cantrip: ArtificerLevel0Spells
-    spell: ArtificerSpellsUpTo2
+    spell: ArtificerLevel1Spells
 
     def add_features(
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
         data.add_feature(self.general_feat)
-        data.add_cantrip(self.cantrip)
         data.add_spell(self.spell)
         return data
 
 
 @attr.dataclass
 class ArtificerLevel5(ClassBuilder.BaseClassLevel5):
-    spell_1: ArtificerSpellsUpTo3
-    spell_2: ArtificerSpellsUpTo3
-
-    def add_features(
-        self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
-        data.add_spell(self.spell_1)
-        data.add_spell(self.spell_2)
-        return data
-
-
-@attr.dataclass
-class ArtificerLevel6(ClassBuilder.BaseClassLevel6):
-    spell: ArtificerSpellsUpTo3
+    spell: ArtificerSpellsUpTo2
 
     def add_features(
         self,
@@ -134,8 +103,19 @@ class ArtificerLevel6(ClassBuilder.BaseClassLevel6):
 
 
 @attr.dataclass
+class ArtificerLevel6(ClassBuilder.BaseClassLevel6):
+
+    def add_features(
+        self,
+        data: CharacterSheetData,
+    ) -> CharacterSheetData:
+        data.add_feature(ArtificerFeatures.MagicItemTinker())
+        return data
+
+
+@attr.dataclass
 class ArtificerLevel7(ClassBuilder.BaseClassLevel7):
-    spell: ArtificerSpellsUpTo4
+    spell: ArtificerSpellsUpTo2
 
     def add_features(
         self,
@@ -149,21 +129,19 @@ class ArtificerLevel7(ClassBuilder.BaseClassLevel7):
 @attr.dataclass
 class ArtificerLevel8(ClassBuilder.BaseClassLevel8):
     general_feat: GeneralFeats.GeneralFeat
-    spell: ArtificerSpellsUpTo4
 
     def add_features(
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
         data.add_feature(self.general_feat)
-        data.add_spell(self.spell)
         return data
 
 
 @attr.dataclass
 class ArtificerLevel9(ClassBuilder.BaseClassLevel9):
-    spell_1: ArtificerSpellsUpTo5
-    spell_2: ArtificerSpellsUpTo5
+    spell_1: ArtificerSpellsUpTo3
+    spell_2: ArtificerSpellsUpTo3
 
     def add_features(
         self,
@@ -176,24 +154,26 @@ class ArtificerLevel9(ClassBuilder.BaseClassLevel9):
 
 @attr.dataclass
 class ArtificerLevel10(ClassBuilder.BaseClassLevel10):
-    spell: ArtificerSpellsUpTo5
+    cantrip: ArtificerLevel0Spells
 
     def add_features(
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_spell(self.spell)
+        data.add_feature(ArtificerFeatures.MagicItemAdept())
+        data.add_cantrip(self.cantrip)
         return data
 
 
 @attr.dataclass
 class ArtificerLevel11(ClassBuilder.BaseClassLevel11):
-    spell: ArtificerSpellsUpTo6
+    spell: ArtificerSpellsUpTo3
 
     def add_features(
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
+        data.add_feature(ArtificerFeatures.SpellStoringItem())
         data.add_spell(self.spell)
         return data
 
@@ -212,7 +192,7 @@ class ArtificerLevel12(ClassBuilder.BaseClassLevel12):
 
 @attr.dataclass
 class ArtificerLevel13(ClassBuilder.BaseClassLevel13):
-    spell: ArtificerSpellsUpTo7
+    spell: ArtificerSpellsUpTo4
 
     def add_features(
         self,
@@ -224,19 +204,20 @@ class ArtificerLevel13(ClassBuilder.BaseClassLevel13):
 
 @attr.dataclass
 class ArtificerLevel14(ClassBuilder.BaseClassLevel14):
-    spell: ArtificerSpellsUpTo7
+    cantrip: ArtificerLevel0Spells
 
     def add_features(
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_spell(self.spell)
+        data.add_feature(ArtificerFeatures.AdvancedArtifice())
+        data.add_cantrip(self.cantrip)
         return data
 
 
 @attr.dataclass
 class ArtificerLevel15(ClassBuilder.BaseClassLevel15):
-    spell: ArtificerSpellsUpTo8
+    spell: ArtificerSpellsUpTo4
 
     def add_features(
         self,
@@ -249,45 +230,41 @@ class ArtificerLevel15(ClassBuilder.BaseClassLevel15):
 @attr.dataclass
 class ArtificerLevel16(ClassBuilder.BaseClassLevel16):
     general_feat: GeneralFeats.GeneralFeat
-    spell_1: ArtificerSpellsUpTo8
-    spell_2: ArtificerSpellsUpTo8
 
     def add_features(self, data: CharacterSheetData) -> CharacterSheetData:
         data.add_feature(self.general_feat)
+        return data
+
+
+@attr.dataclass
+class ArtificerLevel17(ClassBuilder.BaseClassLevel17):
+    spell_1: ArtificerSpellsUpTo5
+    spell_2: ArtificerSpellsUpTo5
+
+    def add_features(
+        self,
+        data: CharacterSheetData,
+    ) -> CharacterSheetData:
         data.add_spell(self.spell_1)
         data.add_spell(self.spell_2)
         return data
 
 
 @attr.dataclass
-class ArtificerLevel17(ClassBuilder.BaseClassLevel17):
-    spell: ArtificerSpellsUpTo9
-
-    def add_features(
-        self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
-        data.add_spell(self.spell)
-        return data
-
-
-@attr.dataclass
 class ArtificerLevel18(ClassBuilder.BaseClassLevel18):
-    spell: ArtificerSpellsUpTo9
 
     def add_features(
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
         data.add_feature(ArtificerFeatures.MagicItemMaster())
-        data.add_spell(self.spell)
         return data
 
 
 @attr.dataclass
 class ArtificerLevel19(ClassBuilder.BaseClassLevel19):
     epic_boon: EpicBoon.EpicBoon
-    spell: ArtificerSpellsUpTo9
+    spell: ArtificerSpellsUpTo5
 
     def add_features(
         self,
@@ -300,11 +277,9 @@ class ArtificerLevel19(ClassBuilder.BaseClassLevel19):
 
 @attr.dataclass
 class ArtificerLevel20(ClassBuilder.BaseClassLevel20):
-    spell: ArtificerSpellsUpTo9
 
     def add_features(self, data: CharacterSheetData) -> CharacterSheetData:
         data.add_feature(ArtificerFeatures.SoulOfArtifice())
-        data.add_spell(self.spell)
         return data
 
 
@@ -327,10 +302,11 @@ class ArtificerCustomStarterClassArgs(ClassBuilder.CustomStarterClassArgs):
             skills=skills,
             armor_proficiencies=[
                 Definitions.ArmorType.LIGHT,
+                Definitions.ArmorType.MEDIUM,
                 Definitions.ArmorType.SHIELD,
             ],
             spell_casting_ability=Ability.INTELLIGENCE,
-            caster_type=SpellSlots.CasterType.FULL_CASTER,
+            caster_type=SpellSlots.CasterType.HALF_CASTER,
         )
 
 
@@ -373,13 +349,14 @@ class ArtificerStarterClassBuilder(ClassBuilder.StarterClassBuilder):
             origin_feat=origin_feat,
             armor_proficiencies=[
                 Definitions.ArmorType.LIGHT,
+                Definitions.ArmorType.MEDIUM,
                 Definitions.ArmorType.SHIELD,
             ],
             armor=armor,
             weapons=weapons,
             replace_spells=replace_spells,
             spell_casting_ability=Ability.INTELLIGENCE,
-            caster_type=SpellSlots.CasterType.FULL_CASTER,
+            caster_type=SpellSlots.CasterType.HALF_CASTER,
             items=items,
         )
 
@@ -401,5 +378,5 @@ class ArtificerMulticlassBuilder(ClassBuilder.MulticlassBuilder):
             subclass=subclass,
             replace_spells=replace_spells,
             spell_casting_ability=Ability.INTELLIGENCE,
-            caster_type=SpellSlots.CasterType.FULL_CASTER,
+            caster_type=SpellSlots.CasterType.HALF_CASTER,
         )
