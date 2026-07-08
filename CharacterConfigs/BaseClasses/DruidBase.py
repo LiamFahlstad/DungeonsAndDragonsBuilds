@@ -1,8 +1,9 @@
-from typing import Optional, TypeAlias
+from typing import Optional, Type, TypeAlias
 
 import attr
 
 import Definitions
+from Combat.Definitions import ExtendedCombatantData
 from CharacterConfigs.BaseClasses import ClassBuilder
 from CharacterSheetCreator import CharacterSheetData
 from Definitions import Ability, CharacterClass
@@ -69,12 +70,13 @@ class DruidLevel1(ClassBuilder.BaseClassLevel1):
 @attr.dataclass
 class DruidLevel2(ClassBuilder.BaseClassLevel2):
     spell: DruidLevel1Spells
+    known_forms: list
 
     def add_features(
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(DruidFeatures.WildShape())
+        data.add_feature(DruidFeatures.WildShape(known_forms=self.known_forms))
         data.add_feature(DruidFeatures.WildCompanion())
         data.add_spell(self.spell)
         return data

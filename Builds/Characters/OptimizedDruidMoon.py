@@ -33,6 +33,7 @@ from CharacterConfigs.SubClasses.DruidMoon import (
     DruidMoonLevel14,
     DruidMoonCustomStarterClassArgs,
 )
+from Combat.Monsters.CR_1.monsters import BrownBear, DireWolf, GiantSpider, Tiger
 from Definitions import Ability, Skill
 from Features.CharacterFeats import Backgrounds, EpicBoon, GeneralFeats, OriginFeats
 from SpeciesConfigs import Gnome
@@ -105,6 +106,7 @@ def get_starter_class_builder():
                 ),
                 2: DruidLevel2(
                     spell=DruidLevel1Spells.HEALING_WORD,
+                    known_forms=[BrownBear, DireWolf, GiantSpider, Tiger],
                 ),
                 3: DruidLevel3(
                     spell=DruidLevel2Spells.SPIKE_GROWTH,

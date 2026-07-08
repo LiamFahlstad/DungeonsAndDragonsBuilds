@@ -1,6 +1,10 @@
+from typing import Type
+
 import Definitions
+from Combat.Definitions import ExtendedCombatantData
 from Definitions import Ability
 from Features.Core.BaseFeatures import Feature
+from Features.ClassFeatures.WildShapeForms import format_wild_shape_form
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
@@ -48,8 +52,9 @@ class PrimalOrder(Feature):
 
 
 class WildShape(Feature):
-    def __init__(self):
+    def __init__(self, known_forms: list[Type[ExtendedCombatantData]]):
         super().__init__(name="Wild Shape", origin="Druid Level 2")
+        self.known_forms = known_forms
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         druid_level = character_stat_block.get_class_level(Definitions.CharacterClass.DRUID)
@@ -59,6 +64,9 @@ class WildShape(Feature):
             uses = 3
         else:
             uses = 2
+        known_forms_lines = "\n".join(
+            f"    * {format_wild_shape_form(form)}" for form in self.known_forms
+        )
         description = (
             "The power of nature allows you to assume the form of an animal. As a Bonus Action, you shape-shift into a Beast form that you have learned for this feature (see “Known Forms” below). You stay in that form for a number of hours equal to half your Druid level or until you use Wild Shape again, have the Incapacitated condition, or die. You can also leave the form early as a Bonus Action.\n"
             "Number of Uses. You can use Wild Shape twice. You regain one expended use when you finish a Short Rest, and you regain all expended uses when you finish a Long Rest.\n"
@@ -70,9 +78,19 @@ class WildShape(Feature):
             "Temporary Hit Points. When you assume a Wild Shape form, you gain a number of Temporary Hit Points equal to your Druid level.\n"
             "Game Statistics. Your game statistics are replaced by the Beast's stat block, but you retain your creature type; Hit Points; Hit Point Dice; Intelligence, Wisdom, and Charisma scores; class features; languages; and feats. You also retain your skill and saving throw proficiencies and use your Proficiency Bonus for them, in addition to gaining the proficiencies of the creature. If a skill or saving throw modifier in the Beast's stat block is higher than yours, use the one in the stat block.\n"
             "No Spellcasting. You can't cast spells, but shape-shifting doesn't break your Concentration or otherwise interfere with a spell you've already cast.\n"
-            "Objects. Your ability to handle objects is determined by the form's limbs rather than your own. In addition, you choose whether your equipment falls in your space, merges into your new form, or is worn by it. Worn equipment functions as normal, but the DM decides whether it's practical for the new form to wear a piece of equipment based on the creature's size and shape. Your equipment doesn't change size or shape to match the new form, and any equipment that the new form can't wear must either fall to the ground or merge with the form. Equipment that merges with the form has no effect while you're in that form."
+            "Objects. Your ability to handle objects is determined by the form's limbs rather than your own. In addition, you choose whether your equipment falls in your space, merges into your new form, or is worn by it. Worn equipment functions as normal, but the DM decides whether it's practical for the new form to wear a piece of equipment based on the creature's size and shape. Your equipment doesn't change size or shape to match the new form, and any equipment that the new form can't wear must either fall to the ground or merge with the form. Equipment that merges with the form has no effect while you're in that form.\n"
+            "\nKnown Forms:\n" + known_forms_lines
         )
         return StringUtils.add_boxes(description, uses, regain_x_on=(1, "short rest"), regain_all_on="long rest")
+
+
+class AdditionalWildShapeForms(Feature):
+    def __init__(self, known_forms: list[Type[ExtendedCombatantData]], origin: str):
+        super().__init__(name="Additional Known Forms", origin=origin)
+        self.known_forms = known_forms
+
+    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+        return "\n".join(f"    * {format_wild_shape_form(form)}" for form in self.known_forms)
 
 
 class WildCompanion(Feature):
