@@ -324,10 +324,9 @@ class ClericCustomStarterClassArgs(ClassBuilder.CustomStarterClassArgs):
             subclass=subclass,
             saving_throws=ClericSavingThrowsStatBlock(),
             default_equipment=[
-                Armor.LeatherArmor(),
+                Armor.ChainShirtArmor(),
                 Armor.ShieldArmor(),
-                Weapons.Sickle(player_is_proficient=True),
-                Weapons.Quarterstaff(player_is_proficient=True),
+                Weapons.Mace(player_is_proficient=True),
             ],
             skills=skills,
             armor_proficiencies=[

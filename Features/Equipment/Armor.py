@@ -66,6 +66,15 @@ class StuddedLeatherArmor(AbstractArmor):
         self._ac.apply(character_stat_block)
 
 
+class ChainShirtArmor(AbstractArmor):
+    def __init__(self):
+        super().__init__("Chain Shirt Armor", slots=1)
+        self._ac = SetArmorClass(13, Ability.DEXTERITY)
+
+    def apply_worn_effects(self, character_stat_block: CharacterStatBlock):
+        self._ac.apply(character_stat_block)
+
+
 class ChainMailArmor(AbstractArmor):
     def __init__(self):
         super().__init__("Chain Mail Armor", slots=2)  # Heavier armor takes more space

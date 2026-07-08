@@ -43,6 +43,7 @@ class ArtificerLevel1(ClassBuilder.BaseClassLevel1):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
+        data.add_feature(ArtificerFeatures.Spellcasting())
         data.add_feature(ArtificerFeatures.TinkersMagic())
         data.add_cantrip(self.cantrip_1)
         data.add_cantrip(self.cantrip_2)

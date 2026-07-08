@@ -38,12 +38,16 @@ class Scholar(Feature):
     ]
 
     def __init__(self, skill: Skill):
+        super().__init__(name="Scholar", origin="Wizard Level 2")
         self._expertise = SkillExpertiseChoice(
             [skill],
             self.SKILL_POOL,
             count=1,
             error_prefix="Scholar skill must be one of: Arcana, History, Investigation, Medicine, Nature, Religion",
         )
+
+    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+        return "While studying magic, you also specialized in another field of study. You have Expertise in the chosen skill."
 
     def apply(self, character_stat_block: CharacterStatBlock):
         self._expertise.apply(character_stat_block)
@@ -64,7 +68,7 @@ class SpellMastery(Feature):
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         text = (
             "You have achieved such mastery over certain spells that you can cast them at will. Choose a level 1 and a level 2 spell in your spellbook that have a casting time of an action. You always have those spells prepared, and you can cast them at their lowest level without expending a spell slot. To cast either spell at a higher level, you must expend a spell slot.\n"
-            "Whenever you finish a Long Rest, you can study your spellbook and replace one of those spells with an eligible spell of the same level from the book.Rest, you can study your spellbook and replace one of those spells with an eligible spell of the same level from the book."
+            "Whenever you finish a Long Rest, you can study your spellbook and replace one of those spells with an eligible spell of the same level from the book."
         )
         return text
 

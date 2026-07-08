@@ -79,7 +79,7 @@ class Metamagic(Feature):
         description = (
             f"Because your magic flows from within, you can alter your spells to suit your needs; You have {metamaagic_options} options to temporarily modify spells you cast. To use an option, you must spend the number of Sorcery Points that it costs.\n"
             "You can use only one Metamagic option on a spell when you cast it unless otherwise noted in one of those options.\n"
-            "Whenever you gain a Sorcerer level, you can replace one of your Metamagic options with one you don't know."
+            "Whenever you gain a Sorcerer level, you can replace one of your Metamagic options with one you don't know. You gain two more options at Sorcerer level 10 and two more at Sorcerer level 17."
         )
         return description
 

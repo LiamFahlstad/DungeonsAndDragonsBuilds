@@ -322,6 +322,7 @@ class RogueSkillsStatBlock(ClassSkillsStatBlock):
             Skill.INTIMIDATION,
             Skill.INVESTIGATION,
             Skill.PERCEPTION,
+            Skill.PERSUASION,
             Skill.SLEIGHT_OF_HAND,
             Skill.STEALTH,
         ]

@@ -6,6 +6,22 @@ from Utils import StringUtils
 ARTIFICER_HIT_DIE = 8
 
 
+class Spellcasting(Feature):
+    def __init__(self):
+        super().__init__(name="Spellcasting", origin="Artificer Level 1")
+
+    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+        description = (
+            "Spellcasting:\n"
+            "    * Tools Required: You produce your Artificer spells through tools. You can use Thieves' Tools, Tinker's Tools, or another kind of Artisan's Tools with which you have proficiency as a Spellcasting Focus, and you must have one of those focuses in hand when you cast an Artificer spell.\n"
+            "    * Cantrips: You know two Artificer cantrips of your choice. Whenever you finish a Long Rest, you can replace one of your cantrips with another Artificer cantrip of your choice. When you reach Artificer levels 10 and 14, you learn another Artificer cantrip of your choice.\n"
+            "    * Spell Slots: The Artificer Features table shows how many spell slots you have to cast your level 1+ spells. You regain all expended slots when you finish a Long Rest.\n"
+            "    * Prepared Spells: To start, choose two level 1 Artificer spells. The number of spells on your list increases as you gain Artificer levels. Whenever you finish a Long Rest, you can change your list of prepared spells.\n"
+            "    * Spellcasting Ability: Intelligence is your spellcasting ability for your Artificer spells."
+        )
+        return description
+
+
 class TinkersMagic(Feature):
     def __init__(self):
         super().__init__(name="Tinker's Magic", origin="Artificer Level 1")
