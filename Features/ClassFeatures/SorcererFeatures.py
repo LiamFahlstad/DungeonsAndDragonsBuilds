@@ -72,7 +72,7 @@ class Metamagic(Feature):
         )
         if sorcerer_level < 10:
             metamaagic_options = 2
-        elif sorcerer_level < 20:
+        elif sorcerer_level < 17:
             metamaagic_options = 4
         else:
             metamaagic_options = 6

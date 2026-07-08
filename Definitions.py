@@ -218,6 +218,15 @@ class WizardSubclass(str, Enum):
     BLADESINGER = "Bladesinger"
 
 
+class SorcererSubclass(str, Enum):
+    ABERRANT = "Aberrant Sorcery"
+    CLOCKWORK = "Clockwork Sorcery"
+    DRACONIC = "Draconic Sorcery"
+    SHADOW = "Shadow Sorcery"
+    SPELLFIRE = "Spellfire Sorcery"
+    WILD_MAGIC = "Wild Magic Sorcery"
+
+
 class WarlockSubclass(str, Enum):
     THE_FIEND = "The Fiend"
     THE_ARCHFEY = "The Archfey"

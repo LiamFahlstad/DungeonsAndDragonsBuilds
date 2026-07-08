@@ -2,12 +2,11 @@ from typing import Optional, TypeAlias
 
 import attr
 
-import Definitions
 from CharacterConfigs.BaseClasses import ClassBuilder
 from CharacterSheetCreator import CharacterSheetData
 from Definitions import Ability, CharacterClass
 from Features.CharacterFeats import EpicBoon, GeneralFeats
-from Features.Equipment import Armor, Weapons
+from Features.Equipment import Weapons
 from Features.ClassFeatures import SorcererFeatures, SpellSlots
 from Spells.Definitions import (
     SorcererLevel0Spells,
@@ -75,7 +74,7 @@ class SorcererLevel2(ClassBuilder.BaseClassLevel2):
         data: CharacterSheetData,
     ) -> CharacterSheetData:
         data.add_feature(SorcererFeatures.FontOfMagic())
-        data.add_feature(SorcererFeatures.WildCompanion())
+        data.add_feature(SorcererFeatures.Metamagic())
         data.add_spell(self.spell_1)
         data.add_spell(self.spell_2)
         return data
@@ -83,13 +82,15 @@ class SorcererLevel2(ClassBuilder.BaseClassLevel2):
 
 @attr.dataclass
 class SorcererLevel3(ClassBuilder.BaseClassLevel3):
-    spell: SorcererSpellsUpTo2
+    spell_1: SorcererSpellsUpTo2
+    spell_2: SorcererSpellsUpTo2
 
     def add_features(
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_spell(self.spell)
+        data.add_spell(self.spell_1)
+        data.add_spell(self.spell_2)
         return data
 
 
@@ -118,7 +119,7 @@ class SorcererLevel5(ClassBuilder.BaseClassLevel5):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(SorcererFeatures.WildResurgence())
+        data.add_feature(SorcererFeatures.SorcerousRestoration())
         data.add_spell(self.spell_1)
         data.add_spell(self.spell_2)
         return data
@@ -144,7 +145,7 @@ class SorcererLevel7(ClassBuilder.BaseClassLevel7):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(SorcererFeatures.ElementalFury())
+        data.add_feature(SorcererFeatures.SorceryIncarnate())
         data.add_spell(self.spell)
         return data
 
@@ -179,12 +180,14 @@ class SorcererLevel9(ClassBuilder.BaseClassLevel9):
 
 @attr.dataclass
 class SorcererLevel10(ClassBuilder.BaseClassLevel10):
+    cantrip: SorcererLevel0Spells
     spell: SorcererSpellsUpTo5
 
     def add_features(
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
+        data.add_cantrip(self.cantrip)
         data.add_spell(self.spell)
         return data
 
@@ -227,13 +230,11 @@ class SorcererLevel13(ClassBuilder.BaseClassLevel13):
 
 @attr.dataclass
 class SorcererLevel14(ClassBuilder.BaseClassLevel14):
-    spell: SorcererSpellsUpTo7
 
     def add_features(
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_spell(self.spell)
         return data
 
 
@@ -245,10 +246,6 @@ class SorcererLevel15(ClassBuilder.BaseClassLevel15):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        elemental_fury: SorcererFeatures.ElementalFury = data.get_features_by_type(
-            SorcererFeatures.ElementalFury
-        )[0]
-        elemental_fury.extend_feature(SorcererFeatures.ImprovedElementalFury())
         data.add_spell(self.spell)
         return data
 
@@ -256,13 +253,9 @@ class SorcererLevel15(ClassBuilder.BaseClassLevel15):
 @attr.dataclass
 class SorcererLevel16(ClassBuilder.BaseClassLevel16):
     general_feat: GeneralFeats.GeneralFeat
-    spell_1: SorcererSpellsUpTo8
-    spell_2: SorcererSpellsUpTo8
 
     def add_features(self, data: CharacterSheetData) -> CharacterSheetData:
         data.add_feature(self.general_feat)
-        data.add_spell(self.spell_1)
-        data.add_spell(self.spell_2)
         return data
 
 
@@ -286,7 +279,6 @@ class SorcererLevel18(ClassBuilder.BaseClassLevel18):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(SorcererFeatures.BeastSpells())
         data.add_spell(self.spell)
         return data
 
@@ -310,7 +302,7 @@ class SorcererLevel20(ClassBuilder.BaseClassLevel20):
     spell: SorcererSpellsUpTo9
 
     def add_features(self, data: CharacterSheetData) -> CharacterSheetData:
-        data.add_feature(SorcererFeatures.Archsorcerer())
+        data.add_feature(SorcererFeatures.ArcaneApotheosis())
         data.add_spell(self.spell)
         return data
 
@@ -326,16 +318,11 @@ class SorcererCustomStarterClassArgs(ClassBuilder.CustomStarterClassArgs):
             subclass=subclass,
             saving_throws=SorcererSavingThrowsStatBlock(),
             default_equipment=[
-                Armor.LeatherArmor(),
-                Armor.ShieldArmor(),
-                Weapons.Sickle(player_is_proficient=True),
+                Weapons.Dagger(player_is_proficient=True),
                 Weapons.Quarterstaff(player_is_proficient=True),
             ],
             skills=skills,
-            armor_proficiencies=[
-                Definitions.ArmorType.LIGHT,
-                Definitions.ArmorType.SHIELD,
-            ],
+            armor_proficiencies=None,
             spell_casting_ability=Ability.CHARISMA,
             caster_type=SpellSlots.CasterType.FULL_CASTER,
         )
@@ -357,6 +344,6 @@ class SorcererMulticlassBuilder(ClassBuilder.MulticlassBuilder):
             base_class_level=sorcerer_level,
             subclass=subclass,
             replace_spells=replace_spells,
-            spell_casting_ability=Ability.WISDOM,
+            spell_casting_ability=Ability.CHARISMA,
             caster_type=SpellSlots.CasterType.FULL_CASTER,
         )
