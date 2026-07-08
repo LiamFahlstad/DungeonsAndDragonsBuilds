@@ -24,7 +24,6 @@ Sorcerer Level	Spells
 9	Greater Restoration, Flame Strike
 Level 6: Absorb Spells
 You always have Counterspell prepared.
-
 Additionally, whenever a target fails the saving throw against a Counterspell you cast, you regain 1d4 Sorcery Points.
 
 Level 14: Honed Spellfire

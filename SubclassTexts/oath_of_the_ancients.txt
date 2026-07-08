@@ -3,7 +3,6 @@ Source: Player's Handbook
 Preserve Life and Light in the World
 
 The Oath of the Ancients is as old as the first elves.
-
 Paladins who swear this oath cherish the light; they love the beautiful and life-giving things of the world more than any principles of honor, courage and justice. They often adorn their armor and clothing with images of growing things - leaves, antlers, or flowers - to reflect their commitment to preserving life and light.
 
 These Paladins share the following tenets:

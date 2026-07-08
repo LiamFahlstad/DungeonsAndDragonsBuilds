@@ -9,6 +9,7 @@ Perhaps a psychic wind from the Astral Plane carried psionic energy to you, or y
 Level 3: Psionic Spells
 When you reach a Sorcerer level specified in the Psionic Spells table, you thereafter always have the listed spells prepared.
 
+Psionic Spells
 Sorcerer Level	Spells
 3	Arms of Hadar, Calm Emotions, Detect Thoughts, Dissonant Whispers, Mind Sliver
 5	Hunger of Hadar, Sending

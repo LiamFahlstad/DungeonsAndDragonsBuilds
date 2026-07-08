@@ -1,7 +1,6 @@
 Source: Eberron - Forge of the Artificer
 
 Wield Destructive Power from Afar
-
 An Artillerist specializes in using magic to hurl energy, projectiles, and explosions on a battlefield.
 
 Level 3: Tools of the Trade

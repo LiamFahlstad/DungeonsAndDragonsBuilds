@@ -7,6 +7,7 @@ The cosmic force of order has suffused you with magic. That power arises from Me
 Level 3: Clockwork Spells
 When you reach a Sorcerer level specified in the Clockwork Spells table, you thereafter always have the listed spells prepared.
 
+Clockwork Spells
 Sorcerer Level	Spells
 3	Aid, Alarm, Lesser Restoration, Protection from Evil and Good
 5	Dispel Magic, Protection from Energy
@@ -14,6 +15,7 @@ Sorcerer Level	Spells
 9	Greater Restoration, Wall of Force
 In addition, consult the Manifestations of Order table and choose or randomly determine a way your connection to order manifests while you are casting any of your Sorcerer spells.
 
+Manifestations of Order
 1d6	Manifestation
 1	Spectral cogwheels hover behind you.
 2	The hands of a clock spin in your eyes.

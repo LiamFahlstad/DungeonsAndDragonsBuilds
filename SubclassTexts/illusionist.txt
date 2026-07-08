@@ -1,7 +1,6 @@
 Source: Player's Handbook
 
 Weave Subtle Spells of Deception
-
 You specialize in magic that dazzles the senses and tricks the mind, and the illusions you craft make the impossible seem real.
 
 Level 3: Illusion Savant

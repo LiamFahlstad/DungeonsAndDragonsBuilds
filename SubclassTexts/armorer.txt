@@ -1,7 +1,6 @@
 Source: Eberron - Forge of the Artificer
 
 Craft Magic Armor to Enhance Your Abilities
-
 An Armorer modifies armor to function almost like a second skin. The armor is enhanced to hone the Armorer’s magic, unleash potent attacks, and generate a formidable defense.
 
 Level 3: Tools of the Trade

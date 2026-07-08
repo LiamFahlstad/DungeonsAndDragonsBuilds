@@ -1,7 +1,6 @@
 Source: Ravenloft - The Horrors Within
 
 Defy Death for Profane Power
-
 You’ve made a pact with a creature that defies the cycle of life and death: a powerful lich, a vampire, or another entity of undeath. Having once been mortal, these ancient patrons know firsthand the paths of ambition and the routes past the doors of death. They eagerly share this profane knowledge and other secrets with those who work their will among the living.
 
 Level 3: Form of Dread

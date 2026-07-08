@@ -25,6 +25,7 @@ Immediately after you cast a Sorcerer spell with a spell slot, you can create an
 
 Once you use this feature, you can’t do so again until you finish a Long Rest.
 
+Wild Magic Surge
 1d100	Effect
 01-04	Roll on this table at the start of each of your turns for the next minute, ignoring this result on subsequent rolls.
 05-08	A creature that is Friendly toward you appears in a random unoccupied space within 60 feet of you. The creature is under the DM’s control and disappears 1 minute later. Roll 1d4 to determine the creature: on a 1, a Modron Duodrone appears; on a 2, a Flumph appears; on a 3, a Modron Monodrone appears; on a 4, a Unicorn appears. See the Monster Manual for the creature’s stat block.

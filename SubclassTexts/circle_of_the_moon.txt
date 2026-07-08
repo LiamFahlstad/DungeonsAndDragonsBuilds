@@ -20,6 +20,7 @@ When you reach a Druid level specified in the Circle of the Moon Spells table, y
 
 In addition, you can cast the spells from this feature while you’re in a Wild Shape form.
 
+Circle of the Moon Spells
 Druid Level	Prepared Spells
 3	Cure Wounds, Moonbeam, Starry Wisp
 5	Conjure Animals

@@ -1,7 +1,6 @@
 Source: Player's Handbook
 
 Enhance Stealth with Arcane Spells
-
 Some Rogues enhance their fine-honed skills of stealth and agility with spells, learning magical tricks to aid them in their trade. Some Arcane Tricksters use their talents as pickpockets and burglars, while others are pranksters.
 
 Level 3: Spellcasting
@@ -25,6 +24,7 @@ Spellcasting Ability. Intelligence is your Spellcasting ability for your Wizard 
 
 Spellcasting Focus. You can use an Arcane Focus as a Spellcasting Focus for your Wizard Spells.
 
+Arcane Trickster Spellcasting
 Rogue Level	Prepared Spells	1st	2nd	3rd	4th
 3	3	2	-	-	-
 4	4	3	-	-	-

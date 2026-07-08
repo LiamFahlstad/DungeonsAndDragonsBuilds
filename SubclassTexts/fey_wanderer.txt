@@ -1,7 +1,6 @@
 Source: Player's Handbook
 
 Wield Fey Mirth and Fury
-
 A fey mystique surrounds you, thanks to the boon of an archfey or a location in the Feywild that transformed you. However you gained fey magic, you are now a Fey Wanderer. Your joyful laughter brightens the hearts of the downtrodden, and your martial prowess strikes terror in your foes, for great is the mirth of the fey and dreadful is their fury.
 
 Level 3: Dreadful Strikes

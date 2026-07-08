@@ -1,7 +1,6 @@
 Source: Eberron - Forge of the Artificer
 
 Chart Advantageous Courses through Turmoil
-
 Cartographers are the premier navigators and reconnaissance agents. Using their creations, Cartographers can highlight threats, safeguard allies, and carve portals to distant locations.
 
 Level 3: Tools of the Trade

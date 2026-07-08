@@ -1,12 +1,12 @@
 Source: Player's Handbook
 
 Strike Foes with Psionic Blades
-
 A Soulknife strikes with the mind, cutting through barriers both physical and psychic. These Rogues discover psionic power within themselves and channel it to do their roguish work. As a Soulknife your psionic abilities might have haunted you since childhood, revealing their full potential only as you experienced the stress of adventure. Or you might have sought out an order of psychic adepts and spent years learning how to manifest your power.
 
 Level 3: Psionic Power
 You harbor a wellspring of psionic energy within yourself. It is represented by your Psionic Energy Dice, which fuel certain powers you have from this subclass. The Soulknife Energy Dice table shows the number of these dice you have when you reach certain Rogue levels, and the table shows the die size.
 
+Soulknife Energy Dice
 Rogue Level	Die Size	Number
 3	D6	4
 5	D8	6
@@ -26,11 +26,8 @@ Level 3: Psychic Blades
 You can manifest shimmering blades of psychic energy. Whenever you take the Attack action or make an Opportunity Attack, you can manifest a Psychic Blade in your free hand and make the attack with that blade. The magic blade has the following traits:
 
 Weapon Category: Simple Melee
-
 Damage on a Hit: 1d6 Psychic plus the ability modifier used for the attack roll
-
 Properties: Finesse, Thrown (range 60/120 feet)
-
 Mastery: Vex (you can use this property, and it doesn't count against the number of properties you can use with Weapon Mastery)
 
 The blade vanishes immediately after it hits or misses its target, and it leaves no mark if it deals damage.

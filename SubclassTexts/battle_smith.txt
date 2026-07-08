@@ -1,7 +1,6 @@
 Source: Eberron - Forge of the Artificer
 
 Command a Construct Guardian
-
 A Battle Smith is a combination of protector and medic, an expert at defending others and repairing both materiel and personnel. To aid in their work, Battle Smiths are accompanied by a Steel Defender, a protective companion of their own creation.
 
 Level 3: Tools of the Trade
