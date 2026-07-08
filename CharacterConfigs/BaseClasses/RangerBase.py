@@ -97,6 +97,7 @@ class RangerLevel5(ClassBuilder.BaseClassLevel5):
 class RangerLevel6(ClassBuilder.BaseClassLevel6):
 
     def add_features(self, data: CharacterSheetData) -> CharacterSheetData:
+        data.add_feature(RangerFeatures.Roving())
         return data
 
 
@@ -122,11 +123,13 @@ class RangerLevel8(ClassBuilder.BaseClassLevel8):
 class RangerLevel9(ClassBuilder.BaseClassLevel9):
     skill_1: Skill
     skill_2: Skill
-    spell: RangerLevel1Spells | RangerLevel2Spells | RangerLevel3Spells
+    spell_1: RangerLevel1Spells | RangerLevel2Spells | RangerLevel3Spells
+    spell_2: RangerLevel1Spells | RangerLevel2Spells | RangerLevel3Spells
 
     def add_features(self, data: CharacterSheetData) -> CharacterSheetData:
         data.add_feature(RangerFeatures.Expertise(self.skill_1, self.skill_2))
-        data.add_spell(self.spell)
+        data.add_spell(self.spell_1)
+        data.add_spell(self.spell_2)
         return data
 
 

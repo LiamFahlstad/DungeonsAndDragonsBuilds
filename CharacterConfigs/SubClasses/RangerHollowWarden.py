@@ -11,131 +11,125 @@ from CharacterSheetCreator import CharacterSheetData
 from Definitions import RangerSubclass
 from Features.ClassFeatures import RangerFeatures
 from Spells.Definitions import (
-    BardLevel4Spells,
-    ClericLevel4Spells,
-    EnchantmentLevel1Spells,
+    IllusionLevel3Spells,
+    NecromancyLevel1Spells,
+    RangerLevel4Spells,
+    RangerLevel5Spells,
     TransmutationLevel2Spells,
-    WizardLevel3Spells,
-    WizardLevel5Spells,
 )
 from StatBlocks.SkillsStatBlock import RangerSkillsStatBlock
 
 
 @attr.dataclass
-class FeyWandererRangerLevel3(ClassBuilder.SubclassLevel3):
+class RangerHollowWardenLevel3(ClassBuilder.SubclassLevel3):
     level: int = attr.field(init=False, default=3)
 
     def add_features(
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(RangerFeatures.DreadfulStrikes())
-        data.add_feature(RangerFeatures.FeyWandererSpells())
-        data.add_feature(RangerFeatures.OtherworldlyGlamour())
-        data.add_spell(EnchantmentLevel1Spells.CHARM_PERSON)
+        data.add_feature(RangerFeatures.HollowWardenSpells())
+        data.add_feature(RangerFeatures.WrathOfTheWild())
+        data.add_spell(NecromancyLevel1Spells.WRATHFUL_SMITE)
         return data
 
 
 @attr.dataclass
-class FeyWandererRangerLevel5(ClassBuilder.SubclassLevel5):
+class RangerHollowWardenLevel5(ClassBuilder.SubclassLevel5):
     level: int = attr.field(init=False, default=5)
 
     def add_features(
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_spell(TransmutationLevel2Spells.ROPE_TRICK)
+        data.add_spell(TransmutationLevel2Spells.ALTER_SELF)
         return data
 
 
 @attr.dataclass
-class FeyWandererRangerLevel7(ClassBuilder.SubclassLevel7):
+class RangerHollowWardenLevel7(ClassBuilder.SubclassLevel7):
     level: int = attr.field(init=False, default=7)
 
     def add_features(
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(RangerFeatures.BeguilingTwist())
+        data.add_feature(RangerFeatures.HungeringMight())
         return data
 
 
 @attr.dataclass
-class FeyWandererRangerLevel9(ClassBuilder.SubclassLevel9):
+class RangerHollowWardenLevel9(ClassBuilder.SubclassLevel9):
     level: int = attr.field(init=False, default=9)
 
     def add_features(
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_spell(WizardLevel3Spells.HASTE)
-        data.add_spell(WizardLevel3Spells.PROTECTION_FROM_ENERGY)
+        data.add_spell(IllusionLevel3Spells.PHANTOM_STEED)
         return data
 
 
 @attr.dataclass
-class FeyWandererRangerLevel11(ClassBuilder.SubclassLevel11):
+class RangerHollowWardenLevel11(ClassBuilder.SubclassLevel11):
     level: int = attr.field(init=False, default=11)
 
     def add_features(
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(RangerFeatures.FeyReinforcements())
+        data.add_feature(RangerFeatures.RotAndViolence())
         return data
 
 
 @attr.dataclass
-class FeyWandererRangerLevel13(ClassBuilder.SubclassLevel13):
+class RangerHollowWardenLevel13(ClassBuilder.SubclassLevel13):
     level: int = attr.field(init=False, default=13)
 
     def add_features(
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_spell(BardLevel4Spells.COMPULSION)
-        data.add_spell(ClericLevel4Spells.FREEDOM_OF_MOVEMENT)
+        data.add_spell(RangerLevel4Spells.DOMINATE_BEAST)
         return data
 
 
 @attr.dataclass
-class FeyWandererRangerLevel15(ClassBuilder.SubclassLevel15):
+class RangerHollowWardenLevel15(ClassBuilder.SubclassLevel15):
     level: int = attr.field(init=False, default=15)
 
     def add_features(
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(RangerFeatures.MistyWanderer())
+        data.add_feature(RangerFeatures.AncientMight())
         return data
 
 
 @attr.dataclass
-class FeyWandererRangerLevel17(ClassBuilder.SubclassLevel17):
+class RangerHollowWardenLevel17(ClassBuilder.SubclassLevel17):
     level: int = attr.field(init=False, default=17)
 
     def add_features(
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_spell(WizardLevel5Spells.LEGEND_LORE)
-        data.add_spell(WizardLevel5Spells.YOLANDES_REGAL_PRESENCE)
+        data.add_spell(RangerLevel5Spells.STEEL_WIND_STRIKE)
         return data
 
 
-
-class RangerFeyWandererCustomStarterClassArgs(RangerCustomStarterClassArgs):
+class RangerHollowWardenCustomStarterClassArgs(RangerCustomStarterClassArgs):
     def __init__(
         self,
         skills: RangerSkillsStatBlock,
     ):
         super().__init__(
-            subclass=RangerSubclass.FEY_WANDERER.value,
+            subclass=RangerSubclass.HOLLOW_WARDEN.value,
             skills=skills,
         )
 
 
-class FeyWandererRangerMulticlassBuilder(RangerMulticlassBuilder):
+class RangerHollowWardenMulticlassBuilder(RangerMulticlassBuilder):
 
     def __init__(
         self,
@@ -146,6 +140,6 @@ class FeyWandererRangerMulticlassBuilder(RangerMulticlassBuilder):
         super().__init__(
             ranger_level_features=ranger_level_features,
             ranger_level=ranger_level,
-            subclass=RangerSubclass.FEY_WANDERER.value,
+            subclass=RangerSubclass.HOLLOW_WARDEN.value,
             replace_spells=replace_spells,
         )

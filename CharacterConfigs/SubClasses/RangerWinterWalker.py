@@ -29,6 +29,8 @@ class WinterWalkerRangerLevel3(ClassBuilder.SubclassLevel3):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
+        data.add_feature(RangerFeatures.FrigidExplorer())
+        data.add_feature(RangerFeatures.WinterWalkerSpells())
         data.add_feature(RangerFeatures.HuntersRime())
         data.add_spell(ConjurationLevel1Spells.ICE_KNIFE)
         return data
@@ -54,10 +56,7 @@ class WinterWalkerRangerLevel7(ClassBuilder.SubclassLevel7):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        aura_of_protection: RangerFeatures.AuraOfProtection = data.get_features_by_type(
-            RangerFeatures.AuraOfProtection
-        )[0]
-        aura_of_protection.extend_feature(RangerFeatures.AuraOfAlacrity())
+        data.add_feature(RangerFeatures.FortifyingSoul())
         return data
 
 
@@ -71,6 +70,18 @@ class WinterWalkerRangerLevel9(ClassBuilder.SubclassLevel9):
     ) -> CharacterSheetData:
         data.add_spell(WizardLevel3Spells.HASTE)
         data.add_spell(WizardLevel3Spells.PROTECTION_FROM_ENERGY)
+        return data
+
+
+@attr.dataclass
+class WinterWalkerRangerLevel11(ClassBuilder.SubclassLevel11):
+    level: int = attr.field(init=False, default=11)
+
+    def add_features(
+        self,
+        data: CharacterSheetData,
+    ) -> CharacterSheetData:
+        data.add_feature(RangerFeatures.ChillingRetribution())
         return data
 
 
@@ -95,7 +106,7 @@ class WinterWalkerRangerLevel15(ClassBuilder.SubclassLevel15):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(RangerFeatures.GloriousDefense())
+        data.add_feature(RangerFeatures.FrozenHaunt())
         return data
 
 
@@ -109,18 +120,6 @@ class WinterWalkerRangerLevel17(ClassBuilder.SubclassLevel17):
     ) -> CharacterSheetData:
         data.add_spell(WizardLevel5Spells.LEGEND_LORE)
         data.add_spell(WizardLevel5Spells.YOLANDES_REGAL_PRESENCE)
-        return data
-
-
-@attr.dataclass
-class WinterWalkerRangerLevel20(ClassBuilder.SubclassLevel20):
-    level: int = attr.field(init=False, default=20)
-
-    def add_features(
-        self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
-        data.add_feature(RangerFeatures.LivingLegend())
         return data
 
 

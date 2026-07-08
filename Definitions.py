@@ -244,6 +244,7 @@ class RangerSubclass(str, Enum):
     HUNTER = "Hunter"
     FEY_WANDERER = "Fey Wanderer"
     GLOOM_STALKER = "Gloom Stalker"
+    HOLLOW_WARDEN = "Hollow Warden"
     WINTER_WALKER = "Winter Walker"
 
 

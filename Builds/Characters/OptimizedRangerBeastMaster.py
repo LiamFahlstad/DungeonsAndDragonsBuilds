@@ -129,7 +129,8 @@ def get_starter_class_builder():
                 9: RangerLevel9(
                     skill_1=Skill.ATHLETICS,
                     skill_2=Skill.INVESTIGATION,
-                    spell=RangerLevel3Spells.CONJURE_ANIMALS,
+                    spell_1=RangerLevel3Spells.CONJURE_ANIMALS,
+                    spell_2=RangerLevel2Spells.SPIKE_GROWTH,
                 ),
                 10: RangerLevel10(),
                 11: RangerLevel11(

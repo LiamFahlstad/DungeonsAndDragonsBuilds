@@ -10,14 +10,6 @@ from CharacterConfigs.BaseClasses.RangerBase import (
 from CharacterSheetCreator import CharacterSheetData
 from Definitions import RangerSubclass
 from Features.ClassFeatures import RangerFeatures
-from Spells.Definitions import (
-    BardLevel4Spells,
-    ClericLevel2Spells,
-    ClericLevel4Spells,
-    RangerLevel2Spells,
-    WizardLevel3Spells,
-    WizardLevel5Spells,
-)
 from StatBlocks.SkillsStatBlock import RangerSkillsStatBlock
 
 
@@ -35,19 +27,6 @@ class HunterRangerLevel3(ClassBuilder.SubclassLevel3):
 
 
 @attr.dataclass
-class HunterRangerLevel5(ClassBuilder.SubclassLevel5):
-    level: int = attr.field(init=False, default=5)
-
-    def add_features(
-        self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
-        data.add_spell(ClericLevel2Spells.ENHANCE_ABILITY)
-        data.add_spell(RangerLevel2Spells.MAGIC_WEAPON)
-        return data
-
-
-@attr.dataclass
 class HunterRangerLevel7(ClassBuilder.SubclassLevel7):
     level: int = attr.field(init=False, default=7)
 
@@ -55,36 +34,19 @@ class HunterRangerLevel7(ClassBuilder.SubclassLevel7):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        aura_of_protection: RangerFeatures.AuraOfProtection = data.get_features_by_type(
-            RangerFeatures.AuraOfProtection
-        )[0]
-        aura_of_protection.extend_feature(RangerFeatures.AuraOfAlacrity())
+        data.add_feature(RangerFeatures.DefensiveTactics())
         return data
 
 
 @attr.dataclass
-class HunterRangerLevel9(ClassBuilder.SubclassLevel9):
-    level: int = attr.field(init=False, default=9)
+class HunterRangerLevel11(ClassBuilder.SubclassLevel11):
+    level: int = attr.field(init=False, default=11)
 
     def add_features(
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_spell(WizardLevel3Spells.HASTE)
-        data.add_spell(WizardLevel3Spells.PROTECTION_FROM_ENERGY)
-        return data
-
-
-@attr.dataclass
-class HunterRangerLevel13(ClassBuilder.SubclassLevel13):
-    level: int = attr.field(init=False, default=13)
-
-    def add_features(
-        self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
-        data.add_spell(BardLevel4Spells.COMPULSION)
-        data.add_spell(ClericLevel4Spells.FREEDOM_OF_MOVEMENT)
+        data.add_feature(RangerFeatures.SuperiorHuntersPrey())
         return data
 
 
@@ -96,32 +58,7 @@ class HunterRangerLevel15(ClassBuilder.SubclassLevel15):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(RangerFeatures.GloriousDefense())
-        return data
-
-
-@attr.dataclass
-class HunterRangerLevel17(ClassBuilder.SubclassLevel17):
-    level: int = attr.field(init=False, default=17)
-
-    def add_features(
-        self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
-        data.add_spell(WizardLevel5Spells.LEGEND_LORE)
-        data.add_spell(WizardLevel5Spells.YOLANDES_REGAL_PRESENCE)
-        return data
-
-
-@attr.dataclass
-class HunterRangerLevel20(ClassBuilder.SubclassLevel20):
-    level: int = attr.field(init=False, default=20)
-
-    def add_features(
-        self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
-        data.add_feature(RangerFeatures.LivingLegend())
+        data.add_feature(RangerFeatures.SuperiorHuntersDefense())
         return data
 
 

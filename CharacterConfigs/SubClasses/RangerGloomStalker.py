@@ -31,6 +31,7 @@ class RangerGloomStalkerLevel3(ClassBuilder.SubclassLevel3):
     ) -> CharacterSheetData:
         data.add_feature(RangerFeatures.DreadAmbusher())
         data.add_feature(RangerFeatures.UmbralSight())
+        data.add_feature(RangerFeatures.GloomStalkerSpells())
         data.add_spell(IllusionLevel1Spells.DISGUISE_SELF)
         return data
 
@@ -55,10 +56,7 @@ class RangerGloomStalkerLevel7(ClassBuilder.SubclassLevel7):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        aura_of_protection: RangerFeatures.AuraOfProtection = data.get_features_by_type(
-            RangerFeatures.AuraOfProtection
-        )[0]
-        aura_of_protection.extend_feature(RangerFeatures.AuraOfAlacrity())
+        data.add_feature(RangerFeatures.IronMind())
         return data
 
 
@@ -72,6 +70,18 @@ class RangerGloomStalkerLevel9(ClassBuilder.SubclassLevel9):
     ) -> CharacterSheetData:
         data.add_spell(WizardLevel3Spells.HASTE)
         data.add_spell(WizardLevel3Spells.PROTECTION_FROM_ENERGY)
+        return data
+
+
+@attr.dataclass
+class RangerGloomStalkerLevel11(ClassBuilder.SubclassLevel11):
+    level: int = attr.field(init=False, default=11)
+
+    def add_features(
+        self,
+        data: CharacterSheetData,
+    ) -> CharacterSheetData:
+        data.add_feature(RangerFeatures.StalkersFlurry())
         return data
 
 
@@ -96,7 +106,7 @@ class RangerGloomStalkerLevel15(ClassBuilder.SubclassLevel15):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(RangerFeatures.GloriousDefense())
+        data.add_feature(RangerFeatures.ShadowyDodge())
         return data
 
 
@@ -110,18 +120,6 @@ class RangerGloomStalkerLevel17(ClassBuilder.SubclassLevel17):
     ) -> CharacterSheetData:
         data.add_spell(WizardLevel5Spells.LEGEND_LORE)
         data.add_spell(WizardLevel5Spells.YOLANDES_REGAL_PRESENCE)
-        return data
-
-
-@attr.dataclass
-class RangerGloomStalkerLevel20(ClassBuilder.SubclassLevel20):
-    level: int = attr.field(init=False, default=20)
-
-    def add_features(
-        self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
-        data.add_feature(RangerFeatures.LivingLegend())
         return data
 
 
