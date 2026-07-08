@@ -185,8 +185,7 @@ class WarlockLevel8(ClassBuilder.BaseClassLevel8):
 
 @attr.dataclass
 class WarlockLevel9(ClassBuilder.BaseClassLevel9):
-    spell_1: WarlockSpellsUpTo5
-    spell_2: WarlockSpellsUpTo5
+    spell: WarlockSpellsUpTo5
     eldritch_invocation: EldritchInvocationsUpto9
 
     def add_features(
@@ -194,21 +193,20 @@ class WarlockLevel9(ClassBuilder.BaseClassLevel9):
         data: CharacterSheetData,
     ) -> CharacterSheetData:
         data.add_feature(WarlockFeatures.ContactPatron())
-        data.add_spell(self.spell_1)
-        data.add_spell(self.spell_2)
+        data.add_spell(self.spell)
         data.add_invocation(self.eldritch_invocation)
         return data
 
 
 @attr.dataclass
 class WarlockLevel10(ClassBuilder.BaseClassLevel10):
-    spell: WarlockSpellsUpTo5
+    cantrip: WarlockLevel0Spells
 
     def add_features(
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_spell(self.spell)
+        data.add_cantrip(self.cantrip)
         return data
 
 
@@ -259,13 +257,11 @@ class WarlockLevel13(ClassBuilder.BaseClassLevel13):
 
 @attr.dataclass
 class WarlockLevel14(ClassBuilder.BaseClassLevel14):
-    spell: WarlockSpellsUpTo7
 
     def add_features(
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_spell(self.spell)
         return data
 
 
@@ -292,13 +288,9 @@ class WarlockLevel15(ClassBuilder.BaseClassLevel15):
 @attr.dataclass
 class WarlockLevel16(ClassBuilder.BaseClassLevel16):
     general_feat: GeneralFeats.GeneralFeat
-    spell_1: WarlockSpellsUpTo8
-    spell_2: WarlockSpellsUpTo8
 
     def add_features(self, data: CharacterSheetData) -> CharacterSheetData:
         data.add_feature(self.general_feat)
-        data.add_spell(self.spell_1)
-        data.add_spell(self.spell_2)
         return data
 
 
@@ -322,14 +314,12 @@ class WarlockLevel17(ClassBuilder.BaseClassLevel17):
 
 @attr.dataclass
 class WarlockLevel18(ClassBuilder.BaseClassLevel18):
-    spell: WarlockSpellsUpTo9
     eldritch_invocation: EldritchInvocationsUpto18
 
     def add_features(
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_spell(self.spell)
         data.add_invocation(self.eldritch_invocation)
         return data
 
@@ -350,11 +340,9 @@ class WarlockLevel19(ClassBuilder.BaseClassLevel19):
 
 @attr.dataclass
 class WarlockLevel20(ClassBuilder.BaseClassLevel20):
-    spell: WarlockSpellsUpTo9
 
     def add_features(self, data: CharacterSheetData) -> CharacterSheetData:
         data.add_feature(WarlockFeatures.EldritchMaster())
-        data.add_spell(self.spell)
         return data
 
 

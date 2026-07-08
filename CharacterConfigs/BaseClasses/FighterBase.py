@@ -237,7 +237,6 @@ class FighterCustomStarterClassArgs(ClassBuilder.CustomStarterClassArgs):
             saving_throws=FighterSavingThrowsStatBlock(),
             default_equipment=[
                 Weapons.Greatsword(player_is_proficient=True),
-                Weapons.Longsword(player_is_proficient=True),
                 Weapons.Flail(player_is_proficient=True),
                 Armor.ChainMailArmor(),
                 Armor.ShieldArmor(),

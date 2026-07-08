@@ -177,12 +177,14 @@ class WizardLevel9(ClassBuilder.BaseClassLevel9):
 
 @attr.dataclass
 class WizardLevel10(ClassBuilder.BaseClassLevel10):
+    cantrip: WizardLevel0Spells
     spell: WizardSpellsUpTo5
 
     def add_features(
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
+        data.add_cantrip(self.cantrip)
         data.add_spell(self.spell)
         return data
 

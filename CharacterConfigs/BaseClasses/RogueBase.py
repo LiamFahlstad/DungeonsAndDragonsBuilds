@@ -125,10 +125,7 @@ class RogueLevel11(ClassBuilder.BaseClassLevel11):
         sneak_attack_feature: RogueFeatures.SneakAttack = data.get_features_by_type(
             RogueFeatures.SneakAttack
         )[0]
-        cunning_strike: RogueFeatures.CunningStrike = data.get_features_by_type(
-            RogueFeatures.CunningStrike
-        )[0]
-        cunning_strike.extend_feature(RogueFeatures.ImprovedCunningStrike())
+        sneak_attack_feature.extend_feature(RogueFeatures.ImprovedCunningStrike())
         return data
 
 
@@ -158,8 +155,7 @@ class RogueLevel14(ClassBuilder.BaseClassLevel14):
         sneak_attack_feature: RogueFeatures.SneakAttack = data.get_features_by_type(
             RogueFeatures.SneakAttack
         )[0]
-        sneak_attack_feature.extend_feature(RogueFeatures.CunningStrike())
-        data.add_feature(RogueFeatures.DeviousStrikes())
+        sneak_attack_feature.extend_feature(RogueFeatures.DeviousStrikes())
         return data
 
 

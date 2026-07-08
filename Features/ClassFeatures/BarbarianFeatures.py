@@ -16,11 +16,11 @@ class Rage(Feature):
         barbarian_level = character_stat_block.get_class_level(
             Definitions.CharacterClass.BARBARIAN
         )
-        if barbarian_level <= 4:
+        if barbarian_level <= 2:
             rage_usages = 2
-        elif barbarian_level <= 8:
+        elif barbarian_level <= 5:
             rage_usages = 3
-        elif barbarian_level <= 12:
+        elif barbarian_level <= 11:
             rage_usages = 4
         elif barbarian_level <= 16:
             rage_usages = 5

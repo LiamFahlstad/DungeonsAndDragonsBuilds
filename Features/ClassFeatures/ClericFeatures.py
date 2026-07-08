@@ -1,6 +1,6 @@
 from Definitions import Ability, Skill
 from Features.Core.BaseFeatures import Feature
-from Features.Core.SubFeatures import SkillProficiency, SkillProficiencyChoice
+from Features.Core.SubFeatures import SkillProficiencyChoice
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
@@ -33,14 +33,6 @@ class DivineOrder(Feature):
             "Thaumaturge: You know one extra cantrip from the Cleric spell list. In addition, your mystical connection to the divine gives you a bonus to your Intelligence (Arcana or Religion) checks. The bonus equals your Wisdom modifier (minimum of +1)."
         )
         return description
-
-
-class DivineOrderSkillProficiency(Feature):
-    def __init__(self):
-        self._proficiency = SkillProficiency([Skill.ARCANA, Skill.RELIGION])
-
-    def apply(self, character_stat_block: CharacterStatBlock):
-        self._proficiency.apply(character_stat_block)
 
 
 class ChannelDivinity(Feature):

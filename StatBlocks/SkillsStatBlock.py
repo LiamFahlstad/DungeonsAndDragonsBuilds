@@ -177,6 +177,7 @@ class FighterSkillsStatBlock(ClassSkillsStatBlock):
             Skill.HISTORY,
             Skill.INSIGHT,
             Skill.INTIMIDATION,
+            Skill.PERSUASION,
             Skill.PERCEPTION,
             Skill.SURVIVAL,
         ]
@@ -289,7 +290,6 @@ class BarbarianSkillsStatBlock(ClassSkillsStatBlock):
         allowed_skills = [
             Skill.ANIMAL_HANDLING,
             Skill.ATHLETICS,
-            Skill.INSIGHT,
             Skill.INTIMIDATION,
             Skill.NATURE,
             Skill.PERCEPTION,

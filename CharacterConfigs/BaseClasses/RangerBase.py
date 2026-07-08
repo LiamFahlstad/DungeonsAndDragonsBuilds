@@ -304,6 +304,7 @@ class RangerCustomStarterClassArgs(ClassBuilder.CustomStarterClassArgs):
             armor_proficiencies=[
                 Definitions.ArmorType.LIGHT,
                 Definitions.ArmorType.MEDIUM,
+                Definitions.ArmorType.SHIELD,
             ],
             spell_casting_ability=Ability.WISDOM,
             caster_type=SpellSlots.CasterType.HALF_CASTER,
