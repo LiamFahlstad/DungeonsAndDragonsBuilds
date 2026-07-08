@@ -29,7 +29,7 @@ class DruidMoonLevel3(ClassBuilder.SubclassLevel3):
         data: CharacterSheetData,
     ) -> CharacterSheetData:
         data.add_feature(DruidFeatures.CircleForms())
-        data.add_feature(DruidFeatures.CircleoftheMoonSpells())
+        data.add_feature(DruidFeatures.CircleOfTheMoonSpells())
         data.add_spell(DruidLevel0Spells.STARRY_WISP)
         data.add_spell(DruidLevel1Spells.CURE_WOUNDS)
         data.add_spell(DruidLevel2Spells.MOONBEAM)

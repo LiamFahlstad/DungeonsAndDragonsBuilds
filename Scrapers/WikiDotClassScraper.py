@@ -121,12 +121,23 @@ def fetch_class(page_ref: str, max_retries: int = 3) -> tuple[str, ClassParser]:
 
 
 DEFAULT_PAGES = [
+    "artificer:main",
+    "barbarian:main",
+    "bard:main",
+    "cleric:main",
+    "druid:main",
+    "fighter:main",
+    "monk:main",
     "paladin:main",
     "ranger:main",
+    "rogue:main",
+    "sorcerer:main",
+    "warlock:main",
+    "wizard:main",
 ]
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
-OUTPUT_DIR = REPO_ROOT / "SubclassTexts"
+OUTPUT_DIR = REPO_ROOT / "SourceTexts" / "ClassTexts"
 
 
 if __name__ == "__main__":

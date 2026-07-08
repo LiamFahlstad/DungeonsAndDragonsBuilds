@@ -3,8 +3,8 @@ from typing import Type
 import Definitions
 from Combat.Definitions import ExtendedCombatantData
 from Definitions import Ability
-from Features.Core.BaseFeatures import Feature
 from Features.ClassFeatures.WildShapeForms import format_wild_shape_form
+from Features.Core.BaseFeatures import Feature
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
@@ -57,7 +57,9 @@ class WildShape(Feature):
         self.known_forms = known_forms
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        druid_level = character_stat_block.get_class_level(Definitions.CharacterClass.DRUID)
+        druid_level = character_stat_block.get_class_level(
+            Definitions.CharacterClass.DRUID
+        )
         if druid_level >= 17:
             uses = 4
         elif druid_level >= 6:
@@ -65,7 +67,8 @@ class WildShape(Feature):
         else:
             uses = 2
         known_forms_lines = "\n".join(
-            format_wild_shape_form(form, character_stat_block) for form in self.known_forms
+            format_wild_shape_form(form, character_stat_block)
+            for form in self.known_forms
         )
         description = (
             "The power of nature allows you to assume the form of an animal. As a Bonus Action, you shape-shift into a Beast form that you have learned for this feature (see “Known Forms” below). You stay in that form for a number of hours equal to half your Druid level or until you use Wild Shape again, have the Incapacitated condition, or die. You can also leave the form early as a Bonus Action.\n"
@@ -81,7 +84,9 @@ class WildShape(Feature):
             "Objects. Your ability to handle objects is determined by the form's limbs rather than your own. In addition, you choose whether your equipment falls in your space, merges into your new form, or is worn by it. Worn equipment functions as normal, but the DM decides whether it's practical for the new form to wear a piece of equipment based on the creature's size and shape. Your equipment doesn't change size or shape to match the new form, and any equipment that the new form can't wear must either fall to the ground or merge with the form. Equipment that merges with the form has no effect while you're in that form.\n"
             "\nKnown Forms:\n" + known_forms_lines
         )
-        return StringUtils.add_boxes(description, uses, regain_x_on=(1, "short rest"), regain_all_on="long rest")
+        return StringUtils.add_boxes(
+            description, uses, regain_x_on=(1, "short rest"), regain_all_on="long rest"
+        )
 
 
 class AdditionalWildShapeForms(Feature):
@@ -91,7 +96,8 @@ class AdditionalWildShapeForms(Feature):
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         return "\n".join(
-            format_wild_shape_form(form, character_stat_block) for form in self.known_forms
+            format_wild_shape_form(form, character_stat_block)
+            for form in self.known_forms
         )
 
 
@@ -239,7 +245,7 @@ class CircleForms(Feature):
         return description
 
 
-class CircleoftheMoonSpells(Feature):
+class CircleOfTheMoonSpells(Feature):
     def __init__(self):
         super().__init__(
             name="Circle of the Moon Spells", origin="Circle of the Moon Druid Level 3"
