@@ -1,0 +1,118 @@
+"""Example build: Fighter Battle Master. Adapted from an optimized reference build to demonstrate this subclass."""
+
+from Builds.CharacterBuilder import CharacterBuilder
+from CharacterConfigs.BaseClasses import ClassBuilder
+from CharacterConfigs.BaseClasses.ClassBuilder import StarterClassBuilder
+from CharacterConfigs.BaseClasses.FighterBase import (
+    FighterLevel1,
+    FighterLevel2,
+    FighterLevel3,
+    FighterLevel4,
+    FighterLevel5,
+)
+from CharacterConfigs.SubClasses.FighterBattleMaster import (
+    FighterBattleMasterLevel3,
+    FighterBattleMasterCustomStarterClassArgs,
+)
+from Definitions import Ability, Skill
+from Features.CharacterFeats import Backgrounds, GeneralFeats, OriginFeats
+from Features.Combat import FightingStyles, Maneuvers
+from Features.Equipment import Armor, Weapons
+from SpeciesConfigs import Human
+from StatBlocks.AbilitiesStatBlock import StandardArrayAbilitiesStatBlock
+from StatBlocks.SkillsStatBlock import FighterSkillsStatBlock
+
+
+def get_starter_class_builder():
+    return StarterClassBuilder(
+        non_generic_arguments=FighterBattleMasterCustomStarterClassArgs(
+            skills=FighterSkillsStatBlock(
+                proficiencies={
+                    Skill.ACROBATICS: True,
+                    Skill.ANIMAL_HANDLING: False,
+                    Skill.ATHLETICS: True,
+                    Skill.HISTORY: False,
+                    Skill.INSIGHT: False,
+                    Skill.INTIMIDATION: False,
+                    Skill.PERCEPTION: False,
+                    Skill.SURVIVAL: False,
+                }
+            ),
+        ),
+        base_class_level=3,
+        # Distribute 15, 14, 13, 12, 10, 8 among your abilities.
+        abilities=StandardArrayAbilitiesStatBlock(
+            strength=15,
+            dexterity=12,
+            constitution=14,
+            intelligence=8,
+            wisdom=10,
+            charisma=13,
+        ),
+        background_ability_bonuses=Backgrounds.FreeBackgroundAbilityBonus(
+            [
+                (Ability.CONSTITUTION, 2),
+                (Ability.CHARISMA, 1),
+            ]
+        ),
+        background_skill_proficiencies=Backgrounds.FreeBackgroundSkillProficiency(
+            [
+                Skill.INTIMIDATION,
+                Skill.PERSUASION,
+            ]
+        ),
+        add_default_equipment=False,
+        origin_feat=OriginFeats.Tough(),
+        armor=[
+            Armor.ChainMailArmor(),
+        ],
+        weapons=[
+            Weapons.Longsword(player_is_proficient=True),
+            Weapons.Greatsword(player_is_proficient=True),
+        ],
+        base_class_level_features=ClassBuilder.BaseClassLevelFeatures(
+            base_class_features_by_level={
+                1: FighterLevel1(
+                    weapon_mastery_1=Weapons.Longsword(),
+                    weapon_mastery_2=Weapons.Flail(),
+                    weapon_mastery_3=Weapons.Greatsword(),
+                    fighting_style=FightingStyles.Defense(),
+                ),
+                2: FighterLevel2(),
+                3: FighterLevel3(),
+                4: FighterLevel4(
+                    weapon_mastery=Weapons.Handaxe(),
+                    general_feat=GeneralFeats.Sentinel(
+                        character_level=4,
+                        ability=Ability.STRENGTH,
+                    ),
+                ),
+                5: FighterLevel5(),
+            },
+            subclass_features_by_level={
+                3: FighterBattleMasterLevel3(
+                    maneuver_1=Maneuvers.GoadingAttack(),
+                    maneuver_2=Maneuvers.PushingAttack(),
+                    maneuver_3=Maneuvers.Riposte(),
+                ),
+            },
+        ),
+    )
+
+
+class ExampleFighterBattleMasterCharacterBuilder(CharacterBuilder):
+    def __init__(self):
+        super().__init__(
+            name="Example Fighter Battle Master",
+            starter_class_builder=get_starter_class_builder(),
+            species_builder=Human.HumanSpeciesBuilder(
+                skill_proficiency=Skill.SURVIVAL,
+                origin_feat=OriginFeats.Skilled(
+                    skills=[
+                        Skill.PERCEPTION,
+                        Skill.INSIGHT,
+                        Skill.HISTORY,
+                    ]
+                ),
+            ),
+        )
