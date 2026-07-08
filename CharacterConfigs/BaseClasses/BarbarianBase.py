@@ -246,7 +246,11 @@ class BarbarianCustomStarterClassArgs(ClassBuilder.CustomStarterClassArgs):
                 Weapons.Greataxe(player_is_proficient=True),
             ],
             skills=skills,
-            armor_proficiencies=None,
+            armor_proficiencies=[
+                Definitions.ArmorType.LIGHT,
+                Definitions.ArmorType.MEDIUM,
+                Definitions.ArmorType.SHIELD,
+            ],
         )
 
 

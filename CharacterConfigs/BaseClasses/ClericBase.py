@@ -186,6 +186,7 @@ class ClericLevel10(ClassBuilder.BaseClassLevel10):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
+        data.add_cantrip(self.cantrip)
         data.add_spell(self.spell)
         data.add_feature(ClericFeatures.DivineIntervention())
         return data
@@ -333,7 +334,6 @@ class ClericCustomStarterClassArgs(ClassBuilder.CustomStarterClassArgs):
             armor_proficiencies=[
                 Definitions.ArmorType.LIGHT,
                 Definitions.ArmorType.MEDIUM,
-                Definitions.ArmorType.HEAVY,
                 Definitions.ArmorType.SHIELD,
             ],
             spell_casting_ability=Ability.WISDOM,

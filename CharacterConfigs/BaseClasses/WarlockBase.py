@@ -1,4 +1,4 @@
-from typing import Optional, TypeAlias
+from typing import Optional, TypeAlias, cast
 
 import attr
 
@@ -6,7 +6,7 @@ import Definitions
 from CharacterConfigs.BaseClasses import ClassBuilder
 from CharacterSheetCreator import CharacterSheetData
 from Definitions import Ability, CharacterClass
-from Features.CharacterFeats import GeneralFeats
+from Features.CharacterFeats import EpicBoon, GeneralFeats
 from Features.Equipment import Armor, Weapons
 from Features.ClassFeatures import SpellSlots, WarlockFeatures
 from Invocations.Definitions import (
@@ -56,6 +56,7 @@ EldritchInvocationsUpto7: TypeAlias = EldritchInvocationsUpto5 | InvocationsLeve
 EldritchInvocationsUpto9: TypeAlias = EldritchInvocationsUpto7 | InvocationsLevel9
 EldritchInvocationsUpto12: TypeAlias = EldritchInvocationsUpto9 | InvocationsLevel12
 EldritchInvocationsUpto15: TypeAlias = EldritchInvocationsUpto12 | InvocationsLevel15
+EldritchInvocationsUpto18: TypeAlias = EldritchInvocationsUpto15
 
 
 @attr.dataclass
@@ -157,12 +158,14 @@ class WarlockLevel6(ClassBuilder.BaseClassLevel6):
 @attr.dataclass
 class WarlockLevel7(ClassBuilder.BaseClassLevel7):
     spell: WarlockSpellsUpTo4
+    eldritch_invocation: EldritchInvocationsUpto7
 
     def add_features(
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
         data.add_spell(self.spell)
+        data.add_invocation(self.eldritch_invocation)
         return data
 
 
@@ -184,13 +187,16 @@ class WarlockLevel8(ClassBuilder.BaseClassLevel8):
 class WarlockLevel9(ClassBuilder.BaseClassLevel9):
     spell_1: WarlockSpellsUpTo5
     spell_2: WarlockSpellsUpTo5
+    eldritch_invocation: EldritchInvocationsUpto9
 
     def add_features(
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
+        data.add_feature(WarlockFeatures.ContactPatron())
         data.add_spell(self.spell_1)
         data.add_spell(self.spell_2)
+        data.add_invocation(self.eldritch_invocation)
         return data
 
 
@@ -214,6 +220,7 @@ class WarlockLevel11(ClassBuilder.BaseClassLevel11):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
+        data.add_feature(WarlockFeatures.MysticArcanum())
         data.add_spell(self.spell)
         return data
 
@@ -221,12 +228,14 @@ class WarlockLevel11(ClassBuilder.BaseClassLevel11):
 @attr.dataclass
 class WarlockLevel12(ClassBuilder.BaseClassLevel12):
     general_feat: GeneralFeats.GeneralFeat
+    eldritch_invocation: EldritchInvocationsUpto12
 
     def add_features(
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
         data.add_feature(self.general_feat)
+        data.add_invocation(self.eldritch_invocation)
         return data
 
 
@@ -238,6 +247,12 @@ class WarlockLevel13(ClassBuilder.BaseClassLevel13):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
+        mystic_arcanum: WarlockFeatures.MysticArcanum = cast(
+            WarlockFeatures.MysticArcanum, data.get_features_by_type(
+                WarlockFeatures.MysticArcanum
+            )[0]
+        )
+        mystic_arcanum.extend_feature(WarlockFeatures.MysticArcanum())
         data.add_spell(self.spell)
         return data
 
@@ -257,12 +272,20 @@ class WarlockLevel14(ClassBuilder.BaseClassLevel14):
 @attr.dataclass
 class WarlockLevel15(ClassBuilder.BaseClassLevel15):
     spell: WarlockSpellsUpTo8
+    eldritch_invocation: EldritchInvocationsUpto15
 
     def add_features(
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
+        mystic_arcanum: WarlockFeatures.MysticArcanum = cast(
+            WarlockFeatures.MysticArcanum, data.get_features_by_type(
+                WarlockFeatures.MysticArcanum
+            )[0]
+        )
+        mystic_arcanum.extend_feature(WarlockFeatures.MysticArcanum())
         data.add_spell(self.spell)
+        data.add_invocation(self.eldritch_invocation)
         return data
 
 
@@ -287,6 +310,12 @@ class WarlockLevel17(ClassBuilder.BaseClassLevel17):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
+        mystic_arcanum: WarlockFeatures.MysticArcanum = cast(
+            WarlockFeatures.MysticArcanum, data.get_features_by_type(
+                WarlockFeatures.MysticArcanum
+            )[0]
+        )
+        mystic_arcanum.extend_feature(WarlockFeatures.MysticArcanum())
         data.add_spell(self.spell)
         return data
 
@@ -294,25 +323,27 @@ class WarlockLevel17(ClassBuilder.BaseClassLevel17):
 @attr.dataclass
 class WarlockLevel18(ClassBuilder.BaseClassLevel18):
     spell: WarlockSpellsUpTo9
+    eldritch_invocation: EldritchInvocationsUpto18
 
     def add_features(
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(WarlockFeatures.SpellMastery())
         data.add_spell(self.spell)
+        data.add_invocation(self.eldritch_invocation)
         return data
 
 
 @attr.dataclass
 class WarlockLevel19(ClassBuilder.BaseClassLevel19):
     spell: WarlockSpellsUpTo9
+    epic_boon: EpicBoon.EpicBoon
 
     def add_features(
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-
+        data.add_feature(self.epic_boon)
         data.add_spell(self.spell)
         return data
 
@@ -322,7 +353,7 @@ class WarlockLevel20(ClassBuilder.BaseClassLevel20):
     spell: WarlockSpellsUpTo9
 
     def add_features(self, data: CharacterSheetData) -> CharacterSheetData:
-        data.add_feature(WarlockFeatures.SignatureSpells())
+        data.add_feature(WarlockFeatures.EldritchMaster())
         data.add_spell(self.spell)
         return data
 

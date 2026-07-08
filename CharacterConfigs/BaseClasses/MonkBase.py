@@ -19,6 +19,7 @@ class MonkLevel1(ClassBuilder.BaseClassLevel1):
         data: CharacterSheetData,
     ) -> CharacterSheetData:
         data.add_feature(MonkFeatures.MartialArts())
+        data.add_feature(MonkFeatures.UnarmoredDefense())
         return data
 
 
@@ -33,8 +34,7 @@ class MonkLevel2(ClassBuilder.BaseClassLevel2):
         monks_focus.extend_feature(MonkFeatures.PatientDefense())
         monks_focus.extend_feature(MonkFeatures.StepOfTheWind())
         data.add_feature(monks_focus)
-        data.add_feature(MonkFeatures.UnarmoredDefense())
-        data.add_feature(MonkFeatures.UnarmoredDefenseText())
+        data.add_feature(MonkFeatures.UnarmoredMovement())
         data.add_feature(MonkFeatures.UncannyMetabolism())
 
         return data

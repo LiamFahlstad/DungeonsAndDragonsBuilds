@@ -294,10 +294,8 @@ class ArtificerCustomStarterClassArgs(ClassBuilder.CustomStarterClassArgs):
             subclass=subclass,
             saving_throws=ArtificerSavingThrowsStatBlock(),
             default_equipment=[
-                Armor.LeatherArmor(),
-                Armor.ShieldArmor(),
-                Weapons.Sickle(player_is_proficient=True),
-                Weapons.Quarterstaff(player_is_proficient=True),
+                Armor.StuddedLeatherArmor(),
+                Weapons.Dagger(player_is_proficient=True),
             ],
             skills=skills,
             armor_proficiencies=[
@@ -329,10 +327,8 @@ class ArtificerStarterClassBuilder(ClassBuilder.StarterClassBuilder):
         items: Optional[list[tuple[Items.Item, int]]] = None,
     ):
         default_equipment = [
-            Armor.LeatherArmor(),
-            Armor.ShieldArmor(),
-            Weapons.Sickle(player_is_proficient=True),
-            Weapons.Quarterstaff(player_is_proficient=True),
+            Armor.StuddedLeatherArmor(),
+            Weapons.Dagger(player_is_proficient=True),
         ]
         super().__init__(
             base_class=CharacterClass.ARTIFICER,

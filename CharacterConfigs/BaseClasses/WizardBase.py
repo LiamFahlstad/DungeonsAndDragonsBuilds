@@ -5,7 +5,7 @@ import attr
 from CharacterConfigs.BaseClasses import ClassBuilder
 from CharacterSheetCreator import CharacterSheetData
 from Definitions import Ability, CharacterClass, Skill
-from Features.CharacterFeats import GeneralFeats
+from Features.CharacterFeats import EpicBoon, GeneralFeats
 from Features.Equipment import Weapons
 from Features.ClassFeatures import SpellSlots, WizardFeatures
 from Spells.Definitions import (
@@ -287,13 +287,14 @@ class WizardLevel18(ClassBuilder.BaseClassLevel18):
 
 @attr.dataclass
 class WizardLevel19(ClassBuilder.BaseClassLevel19):
+    epic_boon: EpicBoon.EpicBoon
     spell: WizardSpellsUpTo9
 
     def add_features(
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-
+        data.add_feature(self.epic_boon)
         data.add_spell(self.spell)
         return data
 

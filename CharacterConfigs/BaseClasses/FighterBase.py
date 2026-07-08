@@ -111,6 +111,7 @@ class FighterLevel9(ClassBuilder.BaseClassLevel9):
         data: CharacterSheetData,
     ) -> CharacterSheetData:
         data.add_feature(FighterFeatures.Indomitable())
+        data.add_feature(FighterFeatures.TacticalMaster())
         return data
 
 

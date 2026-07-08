@@ -6,7 +6,7 @@ import Definitions
 from CharacterConfigs.BaseClasses import ClassBuilder
 from CharacterSheetCreator import CharacterSheetData
 from Definitions import CharacterClass
-from Features.CharacterFeats import GeneralFeats
+from Features.CharacterFeats import EpicBoon, GeneralFeats
 from Features.Equipment import Armor, Weapons
 from Features.ClassFeatures import RogueFeatures
 from StatBlocks.SavingThrowsStatBlock import RogueSavingThrowsStatBlock
@@ -73,8 +73,11 @@ class RogueLevel5(ClassBuilder.BaseClassLevel5):
 
 @attr.dataclass
 class RogueLevel6(ClassBuilder.BaseClassLevel6):
+    skill_1: Definitions.Skill
+    skill_2: Definitions.Skill
 
     def add_features(self, data: CharacterSheetData) -> CharacterSheetData:
+        data.add_feature(RogueFeatures.Expertise(self.skill_1, self.skill_2))
         return data
 
 
@@ -197,9 +200,10 @@ class RogueLevel18(ClassBuilder.BaseClassLevel18):
 
 @attr.dataclass
 class RogueLevel19(ClassBuilder.BaseClassLevel19):
+    epic_boon: EpicBoon.EpicBoon
 
     def add_features(self, data: CharacterSheetData) -> CharacterSheetData:
-
+        data.add_feature(self.epic_boon)
         return data
 
 

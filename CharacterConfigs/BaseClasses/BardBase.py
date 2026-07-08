@@ -198,6 +198,7 @@ class BardLevel10(ClassBuilder.BaseClassLevel10):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
+        data.add_cantrip(self.cantrip)
         data.add_spell(self.spell)
         data.add_feature(BardFeatures.MagicalSecrets())
         return data
