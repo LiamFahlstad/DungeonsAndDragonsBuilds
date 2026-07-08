@@ -188,9 +188,9 @@ class PrimalCompanion(Feature):
             "    * The Beast in Combat: In Combat, the beast acts during your turn. It can move and use its Reaction on its own, but the only action it takes is the Dodge action unless you take a Bonus Action to command it to take an action in its stat block or some other action. You can also sacrifice one of your attacks when you take the Attack action to command the beast to take the Beast's Strike action. If you have the Incapacitated condition, the beast acts on its own and isn't limited to the dodge action.\n"
             "    * Restoring or Replacing the Beast: If the beast has died within the last hour, you can take a Magic action to touch it and expend a spell slot. The beast returns to life after 1 minute with all its Hit Points restored.\n"
             "   Whenever you finish a Long Rest, you can summon a different primal beast, which appears in an unoccupied space within 5 feet of you. You choose its stat block and appearance. If you already have a beast from this feature, the old one vanishes when the new one appears.\n"
-            "\nYour Beast:\n"
-            + PrimalCompanions.format_primal_companion(
-                self.companion_type, character_stat_block, self.damage_type
+            "\nAll three Beast stat blocks are below so you can switch on a Long Rest without regenerating this sheet:\n"
+            + PrimalCompanions.format_all_primal_companions(
+                character_stat_block, self.companion_type, self.damage_type
             )
         )
         return description

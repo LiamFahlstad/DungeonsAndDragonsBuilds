@@ -267,3 +267,23 @@ def format_primal_companion(
 ) -> str:
     companion = build_primal_companion(companion_type, character_stat_block, damage_type)
     return format_creature_stat_block(companion, character_stat_block, retain_mental_abilities=False)
+
+
+def format_all_primal_companions(
+    character_stat_block: CharacterStatBlock,
+    selected_type: Optional[CompanionType] = None,
+    selected_damage_type: Optional[DamageType] = None,
+) -> str:
+    """Render all three Beast stat blocks so the player can pick (or switch on a
+    Long Rest, per the rules) without needing to regenerate the character sheet."""
+    blocks = []
+    for companion_type in CompanionType:
+        is_selected = companion_type is selected_type
+        damage_type = selected_damage_type if is_selected else None
+        companion = build_primal_companion(companion_type, character_stat_block, damage_type)
+        if is_selected:
+            companion.combatant_type += " (Currently Summoned)"
+        blocks.append(
+            format_creature_stat_block(companion, character_stat_block, retain_mental_abilities=False)
+        )
+    return "".join(blocks)
