@@ -198,6 +198,6 @@ class WizardDivinerMulticlassBuilder(WizardMulticlassBuilder):
         super().__init__(
             wizard_level_features=wizard_level_features,
             wizard_level=wizard_level,
-            subclass=WizardSubclass.BLADESINGER.value,
+            subclass=WizardSubclass.DIVINER.value,
             replace_spells=replace_spells,
         )

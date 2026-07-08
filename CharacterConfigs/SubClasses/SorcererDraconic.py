@@ -10,6 +10,15 @@ from CharacterConfigs.BaseClasses.SorcererBase import (
 from CharacterSheetCreator import CharacterSheetData
 from Definitions import SorcererSubclass
 from Features.ClassFeatures import SorcererFeatures
+from Spells.Definitions import (
+    SorcererLevel1Spells,
+    SorcererLevel2Spells,
+    SorcererLevel3Spells,
+    SorcererLevel4Spells,
+    BardLevel1Spells,
+    WizardLevel4Spells,
+    WizardLevel5Spells,
+)
 from StatBlocks.SkillsStatBlock import SorcererSkillsStatBlock
 
 
@@ -20,6 +29,21 @@ class SorcererDraconicLevel3(ClassBuilder.SubclassLevel3):
         data: CharacterSheetData,
     ) -> CharacterSheetData:
         data.add_feature(SorcererFeatures.DraconicResilience())
+        data.add_spell(SorcererLevel1Spells.CHROMATIC_ORB)
+        data.add_spell(SorcererLevel2Spells.ALTER_SELF)
+        data.add_spell(BardLevel1Spells.COMMAND)
+        data.add_spell(SorcererLevel2Spells.DRAGONS_BREATH)
+        return data
+
+
+@attr.dataclass
+class SorcererDraconicLevel5(ClassBuilder.SubclassLevel5):
+    def add_features(
+        self,
+        data: CharacterSheetData,
+    ) -> CharacterSheetData:
+        data.add_spell(SorcererLevel3Spells.FEAR)
+        data.add_spell(SorcererLevel3Spells.FLY)
         return data
 
 
@@ -30,6 +54,28 @@ class SorcererDraconicLevel6(ClassBuilder.SubclassLevel6):
         data: CharacterSheetData,
     ) -> CharacterSheetData:
         data.add_feature(SorcererFeatures.ElementalAffinity())
+        return data
+
+
+@attr.dataclass
+class SorcererDraconicLevel7(ClassBuilder.SubclassLevel7):
+    def add_features(
+        self,
+        data: CharacterSheetData,
+    ) -> CharacterSheetData:
+        data.add_spell(WizardLevel4Spells.ARCANE_EYE)
+        data.add_spell(WizardLevel4Spells.CHARM_MONSTER)
+        return data
+
+
+@attr.dataclass
+class SorcererDraconicLevel9(ClassBuilder.SubclassLevel9):
+    def add_features(
+        self,
+        data: CharacterSheetData,
+    ) -> CharacterSheetData:
+        data.add_spell(WizardLevel5Spells.LEGEND_LORE)
+        data.add_spell(WizardLevel5Spells.SUMMON_DRAGON)
         return data
 
 

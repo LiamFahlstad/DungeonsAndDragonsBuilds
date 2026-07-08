@@ -2,7 +2,13 @@ from typing import Optional, TypeAlias
 
 import attr
 
+from CharacterConfigs.BaseClasses import ClassBuilder
+from CharacterConfigs.BaseClasses.WizardBase import (
+    WizardMulticlassBuilder,
+    WizardCustomStarterClassArgs,
+)
 from CharacterSheetCreator import CharacterSheetData
+from Definitions import WizardSubclass
 from Features.ClassFeatures import WizardFeatures
 from Spells.Definitions import (
     AbjurationLevel1Spells,
@@ -15,6 +21,7 @@ from Spells.Definitions import (
     AbjurationLevel8Spells,
     AbjurationLevel9Spells,
 )
+from StatBlocks.SkillsStatBlock import WizardSkillsStatBlock
 
 AbjurationSpellsUpTo2: TypeAlias = AbjurationLevel1Spells | AbjurationLevel2Spells
 
@@ -34,8 +41,7 @@ AbjurationSpellsUpTo9: TypeAlias = AbjurationSpellsUpTo8 | AbjurationLevel9Spell
 
 
 @attr.dataclass
-class AbjurerWizardLevel3(WizardSubclassLevel3):
-    level: int = attr.field(init=False, default=3)
+class AbjurerWizardLevel3(ClassBuilder.SubclassLevel3):
     spell_1: AbjurationSpellsUpTo2
     spell_2: AbjurationSpellsUpTo2
 
@@ -51,8 +57,7 @@ class AbjurerWizardLevel3(WizardSubclassLevel3):
 
 
 @attr.dataclass
-class AbjurerWizardLevel5(WizardSubclassLevel5):
-    level: int = attr.field(init=False, default=5)
+class AbjurerWizardLevel5(ClassBuilder.SubclassLevel5):
     spell: AbjurationSpellsUpTo3
 
     def add_features(
@@ -64,8 +69,7 @@ class AbjurerWizardLevel5(WizardSubclassLevel5):
 
 
 @attr.dataclass
-class AbjurerWizardLevel6(WizardSubclassLevel6):
-    level: int = attr.field(init=False, default=6)
+class AbjurerWizardLevel6(ClassBuilder.SubclassLevel6):
 
     def add_features(
         self,
@@ -76,8 +80,7 @@ class AbjurerWizardLevel6(WizardSubclassLevel6):
 
 
 @attr.dataclass
-class AbjurerWizardLevel7(WizardSubclassLevel7):
-    level: int = attr.field(init=False, default=7)
+class AbjurerWizardLevel7(ClassBuilder.SubclassLevel7):
     spell: AbjurationSpellsUpTo4
 
     def add_features(
@@ -89,8 +92,7 @@ class AbjurerWizardLevel7(WizardSubclassLevel7):
 
 
 @attr.dataclass
-class AbjurerWizardLevel9(WizardSubclassLevel9):
-    level: int = attr.field(init=False, default=9)
+class AbjurerWizardLevel9(ClassBuilder.SubclassLevel9):
     spell: AbjurationSpellsUpTo5
 
     def add_features(
@@ -102,8 +104,7 @@ class AbjurerWizardLevel9(WizardSubclassLevel9):
 
 
 @attr.dataclass
-class AbjurerWizardLevel10(WizardSubclassLevel10):
-    level: int = attr.field(init=False, default=10)
+class AbjurerWizardLevel10(ClassBuilder.SubclassLevel10):
 
     def add_features(
         self,
@@ -116,8 +117,7 @@ class AbjurerWizardLevel10(WizardSubclassLevel10):
 
 
 @attr.dataclass
-class AbjurerWizardLevel11(WizardSubclassLevel11):
-    level: int = attr.field(init=False, default=11)
+class AbjurerWizardLevel11(ClassBuilder.SubclassLevel11):
     spell: AbjurationSpellsUpTo6
 
     def add_features(
@@ -129,8 +129,7 @@ class AbjurerWizardLevel11(WizardSubclassLevel11):
 
 
 @attr.dataclass
-class AbjurerWizardLevel13(WizardSubclassLevel13):
-    level: int = attr.field(init=False, default=13)
+class AbjurerWizardLevel13(ClassBuilder.SubclassLevel13):
     spell: AbjurationSpellsUpTo7
 
     def add_features(
@@ -142,8 +141,7 @@ class AbjurerWizardLevel13(WizardSubclassLevel13):
 
 
 @attr.dataclass
-class AbjurerWizardLevel14(WizardSubclassLevel14):
-    level: int = attr.field(init=False, default=14)
+class AbjurerWizardLevel14(ClassBuilder.SubclassLevel14):
 
     def add_features(
         self,
@@ -154,8 +152,7 @@ class AbjurerWizardLevel14(WizardSubclassLevel14):
 
 
 @attr.dataclass
-class AbjurerWizardLevel15(WizardSubclassLevel15):
-    level: int = attr.field(init=False, default=15)
+class AbjurerWizardLevel15(ClassBuilder.SubclassLevel15):
     spell: AbjurationSpellsUpTo8
 
     def add_features(
@@ -167,8 +164,7 @@ class AbjurerWizardLevel15(WizardSubclassLevel15):
 
 
 @attr.dataclass
-class AbjurerWizardLevel17(WizardSubclassLevel17):
-    level: int = attr.field(init=False, default=17)
+class AbjurerWizardLevel17(ClassBuilder.SubclassLevel17):
     spell: AbjurationSpellsUpTo8
 
     def add_features(
@@ -179,16 +175,28 @@ class AbjurerWizardLevel17(WizardSubclassLevel17):
         return data
 
 
-@attr.dataclass
-class AbjurerWizardFeaturePerLevel(WizardFeaturePerLevel):
-    subclass_level_3: Optional[AbjurerWizardLevel3] = None
-    subclass_level_5: Optional[AbjurerWizardLevel5] = None
-    subclass_level_6: Optional[AbjurerWizardLevel6] = None
-    subclass_level_7: Optional[AbjurerWizardLevel7] = None
-    subclass_level_9: Optional[AbjurerWizardLevel9] = None
-    subclass_level_10: Optional[AbjurerWizardLevel10] = None
-    subclass_level_11: Optional[AbjurerWizardLevel11] = None
-    subclass_level_13: Optional[AbjurerWizardLevel13] = None
-    subclass_level_14: Optional[AbjurerWizardLevel14] = None
-    subclass_level_15: Optional[AbjurerWizardLevel15] = None
-    subclass_level_17: Optional[AbjurerWizardLevel17] = None
+class AbjurerWizardCustomStarterClassArgs(WizardCustomStarterClassArgs):
+    def __init__(
+        self,
+        skills: WizardSkillsStatBlock,
+    ):
+        super().__init__(
+            subclass=WizardSubclass.ABJURER.value,
+            skills=skills,
+        )
+
+
+class AbjurerWizardMulticlassBuilder(WizardMulticlassBuilder):
+
+    def __init__(
+        self,
+        wizard_level_features: ClassBuilder.BaseClassLevelFeatures,
+        wizard_level: int,
+        replace_spells: Optional[dict[str, str]] = None,
+    ):
+        super().__init__(
+            wizard_level_features=wizard_level_features,
+            wizard_level=wizard_level,
+            subclass=WizardSubclass.ABJURER.value,
+            replace_spells=replace_spells,
+        )

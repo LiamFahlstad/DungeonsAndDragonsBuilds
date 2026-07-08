@@ -15,11 +15,9 @@ from Spells.Definitions import (
     BardLevel2Spells,
     BardLevel3Spells,
     BardLevel4Spells,
-    ClericLevel4Spells,
     SorcererLevel3Spells,
-    WarlockLevel2Spells,
-    WizardLevel3Spells,
-    WizardLevel5Spells,
+    SorcererLevel4Spells,
+    SorcererLevel5Spells,
 )
 from StatBlocks.SkillsStatBlock import WarlockSkillsStatBlock
 
@@ -31,11 +29,13 @@ class ArchfeyWarlockLevel3(ClassBuilder.SubclassLevel3):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
+        data.add_feature(WarlockFeatures.ArchfeySpells())
+        data.add_feature(WarlockFeatures.StepsOfTheFey())
+        data.add_spell(BardLevel1Spells.FAERIE_FIRE)
         data.add_spell(BardLevel2Spells.CALM_EMOTIONS)
-        data.add_spell(WarlockLevel2Spells.MISTY_STEP)
+        data.add_spell(BardLevel2Spells.MISTY_STEP)
         data.add_spell(BardLevel2Spells.PHANTASMAL_FORCE)
         data.add_spell(BardLevel1Spells.SLEEP)
-        data.add_feature(WarlockFeatures.StepsOfTheFey())
         return data
 
 
@@ -52,16 +52,25 @@ class ArchfeyWarlockLevel5(ClassBuilder.SubclassLevel5):
 
 
 @attr.dataclass
+class ArchfeyWarlockLevel6(ClassBuilder.SubclassLevel6):
+
+    def add_features(
+        self,
+        data: CharacterSheetData,
+    ) -> CharacterSheetData:
+        data.add_feature(WarlockFeatures.MistyEscape())
+        return data
+
+
+@attr.dataclass
 class ArchfeyWarlockLevel7(ClassBuilder.SubclassLevel7):
 
     def add_features(
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        aura_of_protection: WarlockFeatures.AuraOfProtection = (
-            data.get_features_by_type(WarlockFeatures.AuraOfProtection)[0]
-        )
-        aura_of_protection.extend_feature(WarlockFeatures.AuraOfAlacrity())
+        data.add_spell(BardLevel4Spells.DOMINATE_BEAST)
+        data.add_spell(SorcererLevel4Spells.GREATER_INVISIBILITY)
         return data
 
 
@@ -72,43 +81,30 @@ class ArchfeyWarlockLevel9(ClassBuilder.SubclassLevel9):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_spell(WizardLevel3Spells.HASTE)
-        data.add_spell(WizardLevel3Spells.PROTECTION_FROM_ENERGY)
+        data.add_spell(SorcererLevel5Spells.DOMINATE_PERSON)
+        data.add_spell(SorcererLevel5Spells.SEEMING)
         return data
 
 
 @attr.dataclass
-class ArchfeyWarlockLevel13(ClassBuilder.SubclassLevel13):
+class ArchfeyWarlockLevel10(ClassBuilder.SubclassLevel10):
 
     def add_features(
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_spell(BardLevel4Spells.COMPULSION)
-        data.add_spell(ClericLevel4Spells.FREEDOM_OF_MOVEMENT)
+        data.add_feature(WarlockFeatures.BeguilingDefenses())
         return data
 
 
 @attr.dataclass
-class ArchfeyWarlockLevel15(ClassBuilder.SubclassLevel15):
+class ArchfeyWarlockLevel14(ClassBuilder.SubclassLevel14):
 
     def add_features(
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(WarlockFeatures.GloriousDefense())
-        return data
-
-
-@attr.dataclass
-class ArchfeyWarlockLevel17(ClassBuilder.SubclassLevel17):
-
-    def add_features(
-        self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
-        data.add_spell(WizardLevel5Spells.LEGEND_LORE)
-        data.add_spell(WizardLevel5Spells.YOLANDES_REGAL_PRESENCE)
+        data.add_feature(WarlockFeatures.BewitchingMagic())
         return data
 
 

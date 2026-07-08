@@ -10,6 +10,17 @@ from CharacterConfigs.BaseClasses.ArtificerBase import (
 from CharacterSheetCreator import CharacterSheetData
 from Definitions import ArtificerSubclass
 from Features.ClassFeatures import ArtificerFeatures
+from Spells.Definitions import (
+    ArtificerLevel1Spells,
+    PaladinLevel1Spells,
+    PaladinLevel2Spells,
+    PaladinLevel3Spells,
+    PaladinLevel4Spells,
+    PaladinLevel5Spells,
+    RangerLevel3Spells,
+    SorcererLevel4Spells,
+    ArtificerLevel5Spells,
+)
 from StatBlocks.SkillsStatBlock import ArtificerSkillsStatBlock
 
 
@@ -23,6 +34,8 @@ class ArtificerBattleSmithLevel3(ClassBuilder.SubclassLevel3):
         data.add_feature(ArtificerFeatures.BattleSmithSpells())
         data.add_feature(ArtificerFeatures.BattleReady())
         data.add_feature(ArtificerFeatures.SteelDefender())
+        data.add_spell(PaladinLevel1Spells.HEROISM)
+        data.add_spell(ArtificerLevel1Spells.SHIELD)
         return data
 
 
@@ -33,6 +46,8 @@ class ArtificerBattleSmithLevel5(ClassBuilder.SubclassLevel5):
         data: CharacterSheetData,
     ) -> CharacterSheetData:
         data.add_feature(ArtificerFeatures.BattleSmithExtraAttack())
+        data.add_spell(PaladinLevel2Spells.SHINING_SMITE)
+        data.add_spell(PaladinLevel2Spells.WARDING_BOND)
         return data
 
 
@@ -43,6 +58,19 @@ class ArtificerBattleSmithLevel9(ClassBuilder.SubclassLevel9):
         data: CharacterSheetData,
     ) -> CharacterSheetData:
         data.add_feature(ArtificerFeatures.ArcaneJolt())
+        data.add_spell(PaladinLevel3Spells.AURA_OF_VITALITY)
+        data.add_spell(RangerLevel3Spells.CONJURE_BARRAGE)
+        return data
+
+
+@attr.dataclass
+class ArtificerBattleSmithLevel13(ClassBuilder.SubclassLevel13):
+    def add_features(
+        self,
+        data: CharacterSheetData,
+    ) -> CharacterSheetData:
+        data.add_spell(PaladinLevel4Spells.AURA_OF_PURITY)
+        data.add_spell(SorcererLevel4Spells.FIRE_SHIELD)
         return data
 
 
@@ -53,6 +81,17 @@ class ArtificerBattleSmithLevel15(ClassBuilder.SubclassLevel15):
         data: CharacterSheetData,
     ) -> CharacterSheetData:
         data.add_feature(ArtificerFeatures.ImprovedDefender())
+        return data
+
+
+@attr.dataclass
+class ArtificerBattleSmithLevel17(ClassBuilder.SubclassLevel17):
+    def add_features(
+        self,
+        data: CharacterSheetData,
+    ) -> CharacterSheetData:
+        data.add_spell(PaladinLevel5Spells.BANISHING_SMITE)
+        data.add_spell(ArtificerLevel5Spells.MASS_CURE_WOUNDS)
         return data
 
 

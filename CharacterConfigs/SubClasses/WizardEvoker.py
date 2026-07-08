@@ -2,7 +2,13 @@ from typing import Optional, TypeAlias
 
 import attr
 
+from CharacterConfigs.BaseClasses import ClassBuilder
+from CharacterConfigs.BaseClasses.WizardBase import (
+    WizardMulticlassBuilder,
+    WizardCustomStarterClassArgs,
+)
 from CharacterSheetCreator import CharacterSheetData
+from Definitions import WizardSubclass
 from Features.ClassFeatures import WizardFeatures
 from Spells.Definitions import (
     EvocationLevel1Spells,
@@ -15,6 +21,7 @@ from Spells.Definitions import (
     EvocationLevel8Spells,
     EvocationLevel9Spells,
 )
+from StatBlocks.SkillsStatBlock import WizardSkillsStatBlock
 
 EvocationSpellsUpTo2: TypeAlias = EvocationLevel1Spells | EvocationLevel2Spells
 
@@ -34,8 +41,7 @@ EvocationSpellsUpTo9: TypeAlias = EvocationSpellsUpTo8 | EvocationLevel9Spells
 
 
 @attr.dataclass
-class EvokerWizardLevel3(WizardSubclassLevel3):
-    level: int = attr.field(init=False, default=3)
+class EvokerWizardLevel3(ClassBuilder.SubclassLevel3):
     spell_1: EvocationSpellsUpTo2
     spell_2: EvocationSpellsUpTo2
 
@@ -43,16 +49,15 @@ class EvokerWizardLevel3(WizardSubclassLevel3):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(WizardFeatures.ImprovedIllusions())
-        data.add_feature(WizardFeatures.IllusionSavant())
+        data.add_feature(WizardFeatures.EvocationSavant())
+        data.add_feature(WizardFeatures.PotentCantrip())
         data.add_spell(self.spell_1)
         data.add_spell(self.spell_2)
         return data
 
 
 @attr.dataclass
-class EvokerWizardLevel5(WizardSubclassLevel5):
-    level: int = attr.field(init=False, default=5)
+class EvokerWizardLevel5(ClassBuilder.SubclassLevel5):
     spell: EvocationSpellsUpTo3
 
     def add_features(
@@ -64,20 +69,18 @@ class EvokerWizardLevel5(WizardSubclassLevel5):
 
 
 @attr.dataclass
-class EvokerWizardLevel6(WizardSubclassLevel6):
-    level: int = attr.field(init=False, default=6)
+class EvokerWizardLevel6(ClassBuilder.SubclassLevel6):
 
     def add_features(
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(WizardFeatures.PhantasmalCreatures())
+        data.add_feature(WizardFeatures.SculptSpells())
         return data
 
 
 @attr.dataclass
-class EvokerWizardLevel7(WizardSubclassLevel7):
-    level: int = attr.field(init=False, default=7)
+class EvokerWizardLevel7(ClassBuilder.SubclassLevel7):
     spell: EvocationSpellsUpTo4
 
     def add_features(
@@ -89,8 +92,7 @@ class EvokerWizardLevel7(WizardSubclassLevel7):
 
 
 @attr.dataclass
-class EvokerWizardLevel9(WizardSubclassLevel9):
-    level: int = attr.field(init=False, default=9)
+class EvokerWizardLevel9(ClassBuilder.SubclassLevel9):
     spell: EvocationSpellsUpTo5
 
     def add_features(
@@ -102,8 +104,7 @@ class EvokerWizardLevel9(WizardSubclassLevel9):
 
 
 @attr.dataclass
-class EvokerWizardLevel10(WizardSubclassLevel10):
-    level: int = attr.field(init=False, default=10)
+class EvokerWizardLevel10(ClassBuilder.SubclassLevel10):
 
     def add_features(
         self,
@@ -114,8 +115,7 @@ class EvokerWizardLevel10(WizardSubclassLevel10):
 
 
 @attr.dataclass
-class EvokerWizardLevel11(WizardSubclassLevel11):
-    level: int = attr.field(init=False, default=11)
+class EvokerWizardLevel11(ClassBuilder.SubclassLevel11):
     spell: EvocationSpellsUpTo6
 
     def add_features(
@@ -127,8 +127,7 @@ class EvokerWizardLevel11(WizardSubclassLevel11):
 
 
 @attr.dataclass
-class EvokerWizardLevel13(WizardSubclassLevel13):
-    level: int = attr.field(init=False, default=13)
+class EvokerWizardLevel13(ClassBuilder.SubclassLevel13):
     spell: EvocationSpellsUpTo7
 
     def add_features(
@@ -140,8 +139,7 @@ class EvokerWizardLevel13(WizardSubclassLevel13):
 
 
 @attr.dataclass
-class EvokerWizardLevel14(WizardSubclassLevel14):
-    level: int = attr.field(init=False, default=14)
+class EvokerWizardLevel14(ClassBuilder.SubclassLevel14):
 
     def add_features(
         self,
@@ -152,8 +150,7 @@ class EvokerWizardLevel14(WizardSubclassLevel14):
 
 
 @attr.dataclass
-class EvokerWizardLevel15(WizardSubclassLevel15):
-    level: int = attr.field(init=False, default=15)
+class EvokerWizardLevel15(ClassBuilder.SubclassLevel15):
     spell: EvocationSpellsUpTo8
 
     def add_features(
@@ -165,8 +162,7 @@ class EvokerWizardLevel15(WizardSubclassLevel15):
 
 
 @attr.dataclass
-class EvokerWizardLevel17(WizardSubclassLevel17):
-    level: int = attr.field(init=False, default=17)
+class EvokerWizardLevel17(ClassBuilder.SubclassLevel17):
     spell: EvocationSpellsUpTo8
 
     def add_features(
@@ -177,16 +173,28 @@ class EvokerWizardLevel17(WizardSubclassLevel17):
         return data
 
 
-@attr.dataclass
-class EvokerWizardFeaturePerLevel(WizardFeaturePerLevel):
-    subclass_level_3: Optional[EvokerWizardLevel3] = None
-    subclass_level_5: Optional[EvokerWizardLevel5] = None
-    subclass_level_6: Optional[EvokerWizardLevel6] = None
-    subclass_level_7: Optional[EvokerWizardLevel7] = None
-    subclass_level_9: Optional[EvokerWizardLevel9] = None
-    subclass_level_10: Optional[EvokerWizardLevel10] = None
-    subclass_level_11: Optional[EvokerWizardLevel11] = None
-    subclass_level_13: Optional[EvokerWizardLevel13] = None
-    subclass_level_14: Optional[EvokerWizardLevel14] = None
-    subclass_level_15: Optional[EvokerWizardLevel15] = None
-    subclass_level_17: Optional[EvokerWizardLevel17] = None
+class EvokerWizardCustomStarterClassArgs(WizardCustomStarterClassArgs):
+    def __init__(
+        self,
+        skills: WizardSkillsStatBlock,
+    ):
+        super().__init__(
+            subclass=WizardSubclass.EVOKER.value,
+            skills=skills,
+        )
+
+
+class EvokerWizardMulticlassBuilder(WizardMulticlassBuilder):
+
+    def __init__(
+        self,
+        wizard_level_features: ClassBuilder.BaseClassLevelFeatures,
+        wizard_level: int,
+        replace_spells: Optional[dict[str, str]] = None,
+    ):
+        super().__init__(
+            wizard_level_features=wizard_level_features,
+            wizard_level=wizard_level,
+            subclass=WizardSubclass.EVOKER.value,
+            replace_spells=replace_spells,
+        )

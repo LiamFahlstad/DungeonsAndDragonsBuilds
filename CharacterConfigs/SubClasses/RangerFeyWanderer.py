@@ -13,8 +13,11 @@ from Features.ClassFeatures import RangerFeatures
 from Spells.Definitions import (
     BardLevel4Spells,
     ClericLevel4Spells,
+    ConjurationLevel2Spells,
+    ConjurationLevel3Spells,
+    ConjurationLevel4Spells,
     EnchantmentLevel1Spells,
-    TransmutationLevel2Spells,
+    IllusionLevel5Spells,
     WizardLevel3Spells,
     WizardLevel5Spells,
 )
@@ -44,7 +47,7 @@ class FeyWandererRangerLevel5(ClassBuilder.SubclassLevel5):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_spell(TransmutationLevel2Spells.ROPE_TRICK)
+        data.add_spell(ConjurationLevel2Spells.MISTY_STEP)
         return data
 
 
@@ -68,8 +71,7 @@ class FeyWandererRangerLevel9(ClassBuilder.SubclassLevel9):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_spell(WizardLevel3Spells.HASTE)
-        data.add_spell(WizardLevel3Spells.PROTECTION_FROM_ENERGY)
+        data.add_spell(ConjurationLevel3Spells.SUMMON_FEY)
         return data
 
 
@@ -93,8 +95,7 @@ class FeyWandererRangerLevel13(ClassBuilder.SubclassLevel13):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_spell(BardLevel4Spells.COMPULSION)
-        data.add_spell(ClericLevel4Spells.FREEDOM_OF_MOVEMENT)
+        data.add_spell(ConjurationLevel4Spells.DIMENSION_DOOR)
         return data
 
 
@@ -118,8 +119,7 @@ class FeyWandererRangerLevel17(ClassBuilder.SubclassLevel17):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_spell(WizardLevel5Spells.LEGEND_LORE)
-        data.add_spell(WizardLevel5Spells.YOLANDES_REGAL_PRESENCE)
+        data.add_spell(IllusionLevel5Spells.MISLEAD)
         return data
 
 

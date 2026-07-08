@@ -33,6 +33,7 @@ class GeniesPaladinLevel3(ClassBuilder.SubclassLevel3):
             data.get_features_by_type(PaladinFeatures.ChannelDivinity)[0]
         )
         channel_divinity_feature.extend_feature(PaladinFeatures.ElementalSmite())
+        data.add_feature(PaladinFeatures.GeniesSplendor())
         data.add_spell(EvocationLevel1Spells.CHROMATIC_ORB)
         data.add_spell(TransmutationLevel0Spells.ELEMENTALISM)
         data.add_spell(EvocationLevel1Spells.THUNDEROUS_SMITE)

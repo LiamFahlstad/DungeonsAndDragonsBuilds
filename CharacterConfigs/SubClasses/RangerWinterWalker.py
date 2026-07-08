@@ -11,9 +11,13 @@ from CharacterSheetCreator import CharacterSheetData
 from Definitions import RangerSubclass
 from Features.ClassFeatures import RangerFeatures
 from Spells.Definitions import (
+    AbjurationLevel3Spells,
     BardLevel4Spells,
     ClericLevel4Spells,
     ConjurationLevel1Spells,
+    EnchantmentLevel2Spells,
+    EvocationLevel4Spells,
+    EvocationLevel5Spells,
     TransmutationLevel2Spells,
     WizardLevel3Spells,
     WizardLevel5Spells,
@@ -44,7 +48,7 @@ class WinterWalkerRangerLevel5(ClassBuilder.SubclassLevel5):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_spell(TransmutationLevel2Spells.ROPE_TRICK)
+        data.add_spell(EnchantmentLevel2Spells.HOLD_PERSON)
         return data
 
 
@@ -68,8 +72,7 @@ class WinterWalkerRangerLevel9(ClassBuilder.SubclassLevel9):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_spell(WizardLevel3Spells.HASTE)
-        data.add_spell(WizardLevel3Spells.PROTECTION_FROM_ENERGY)
+        data.add_spell(AbjurationLevel3Spells.REMOVE_CURSE)
         return data
 
 
@@ -93,8 +96,7 @@ class WinterWalkerRangerLevel13(ClassBuilder.SubclassLevel13):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_spell(BardLevel4Spells.COMPULSION)
-        data.add_spell(ClericLevel4Spells.FREEDOM_OF_MOVEMENT)
+        data.add_spell(EvocationLevel4Spells.ICE_STORM)
         return data
 
 
@@ -118,8 +120,7 @@ class WinterWalkerRangerLevel17(ClassBuilder.SubclassLevel17):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_spell(WizardLevel5Spells.LEGEND_LORE)
-        data.add_spell(WizardLevel5Spells.YOLANDES_REGAL_PRESENCE)
+        data.add_spell(EvocationLevel5Spells.CONE_OF_COLD)
         return data
 
 

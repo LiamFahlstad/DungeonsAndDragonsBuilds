@@ -2,7 +2,13 @@ from typing import Optional, TypeAlias
 
 import attr
 
+from CharacterConfigs.BaseClasses import ClassBuilder
+from CharacterConfigs.BaseClasses.WizardBase import (
+    WizardMulticlassBuilder,
+    WizardCustomStarterClassArgs,
+)
 from CharacterSheetCreator import CharacterSheetData
+from Definitions import WizardSubclass
 from Features.ClassFeatures import WizardFeatures
 from Spells.Definitions import (
     ConjurationLevel2Spells,
@@ -18,6 +24,7 @@ from Spells.Definitions import (
     IllusionLevel8Spells,
     IllusionLevel9Spells,
 )
+from StatBlocks.SkillsStatBlock import WizardSkillsStatBlock
 
 IllusionSpellsUpTo2: TypeAlias = IllusionLevel1Spells | IllusionLevel2Spells
 
@@ -37,8 +44,7 @@ IllusionSpellsUpTo9: TypeAlias = IllusionSpellsUpTo8 | IllusionLevel9Spells
 
 
 @attr.dataclass
-class IllusionistWizardLevel3(WizardSubclassLevel3):
-    level: int = attr.field(init=False, default=3)
+class IllusionistWizardLevel3(ClassBuilder.SubclassLevel3):
     spell_1: IllusionSpellsUpTo2
     spell_2: IllusionSpellsUpTo2
 
@@ -55,8 +61,7 @@ class IllusionistWizardLevel3(WizardSubclassLevel3):
 
 
 @attr.dataclass
-class IllusionistWizardLevel5(WizardSubclassLevel5):
-    level: int = attr.field(init=False, default=5)
+class IllusionistWizardLevel5(ClassBuilder.SubclassLevel5):
     spell: IllusionSpellsUpTo3
 
     def add_features(
@@ -68,22 +73,20 @@ class IllusionistWizardLevel5(WizardSubclassLevel5):
 
 
 @attr.dataclass
-class IllusionistWizardLevel6(WizardSubclassLevel6):
-    level: int = attr.field(init=False, default=6)
+class IllusionistWizardLevel6(ClassBuilder.SubclassLevel6):
 
     def add_features(
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(WizardFeatures.SculptSpells())
+        data.add_feature(WizardFeatures.PhantasmalCreatures())
         data.add_spell(ConjurationLevel2Spells.SUMMON_BEAST)
         data.add_spell(ConjurationLevel3Spells.SUMMON_FEY)
         return data
 
 
 @attr.dataclass
-class IllusionistWizardLevel7(WizardSubclassLevel7):
-    level: int = attr.field(init=False, default=7)
+class IllusionistWizardLevel7(ClassBuilder.SubclassLevel7):
     spell: IllusionSpellsUpTo4
 
     def add_features(
@@ -95,8 +98,7 @@ class IllusionistWizardLevel7(WizardSubclassLevel7):
 
 
 @attr.dataclass
-class IllusionistWizardLevel9(WizardSubclassLevel9):
-    level: int = attr.field(init=False, default=9)
+class IllusionistWizardLevel9(ClassBuilder.SubclassLevel9):
     spell: IllusionSpellsUpTo5
 
     def add_features(
@@ -108,8 +110,7 @@ class IllusionistWizardLevel9(WizardSubclassLevel9):
 
 
 @attr.dataclass
-class IllusionistWizardLevel10(WizardSubclassLevel10):
-    level: int = attr.field(init=False, default=10)
+class IllusionistWizardLevel10(ClassBuilder.SubclassLevel10):
 
     def add_features(
         self,
@@ -120,8 +121,7 @@ class IllusionistWizardLevel10(WizardSubclassLevel10):
 
 
 @attr.dataclass
-class IllusionistWizardLevel11(WizardSubclassLevel11):
-    level: int = attr.field(init=False, default=11)
+class IllusionistWizardLevel11(ClassBuilder.SubclassLevel11):
     spell: IllusionSpellsUpTo6
 
     def add_features(
@@ -133,8 +133,7 @@ class IllusionistWizardLevel11(WizardSubclassLevel11):
 
 
 @attr.dataclass
-class IllusionistWizardLevel13(WizardSubclassLevel13):
-    level: int = attr.field(init=False, default=13)
+class IllusionistWizardLevel13(ClassBuilder.SubclassLevel13):
     spell: IllusionSpellsUpTo7
 
     def add_features(
@@ -146,8 +145,7 @@ class IllusionistWizardLevel13(WizardSubclassLevel13):
 
 
 @attr.dataclass
-class IllusionistWizardLevel14(WizardSubclassLevel14):
-    level: int = attr.field(init=False, default=14)
+class IllusionistWizardLevel14(ClassBuilder.SubclassLevel14):
 
     def add_features(
         self,
@@ -158,8 +156,7 @@ class IllusionistWizardLevel14(WizardSubclassLevel14):
 
 
 @attr.dataclass
-class IllusionistWizardLevel15(WizardSubclassLevel15):
-    level: int = attr.field(init=False, default=15)
+class IllusionistWizardLevel15(ClassBuilder.SubclassLevel15):
     spell: IllusionSpellsUpTo8
 
     def add_features(
@@ -171,8 +168,7 @@ class IllusionistWizardLevel15(WizardSubclassLevel15):
 
 
 @attr.dataclass
-class IllusionistWizardLevel17(WizardSubclassLevel17):
-    level: int = attr.field(init=False, default=17)
+class IllusionistWizardLevel17(ClassBuilder.SubclassLevel17):
     spell: IllusionSpellsUpTo8
 
     def add_features(
@@ -183,16 +179,28 @@ class IllusionistWizardLevel17(WizardSubclassLevel17):
         return data
 
 
-@attr.dataclass
-class IllusionistWizardFeaturePerLevel(WizardFeaturePerLevel):
-    subclass_level_3: Optional[IllusionistWizardLevel3] = None
-    subclass_level_5: Optional[IllusionistWizardLevel5] = None
-    subclass_level_6: Optional[IllusionistWizardLevel6] = None
-    subclass_level_7: Optional[IllusionistWizardLevel7] = None
-    subclass_level_9: Optional[IllusionistWizardLevel9] = None
-    subclass_level_10: Optional[IllusionistWizardLevel10] = None
-    subclass_level_11: Optional[IllusionistWizardLevel11] = None
-    subclass_level_13: Optional[IllusionistWizardLevel13] = None
-    subclass_level_14: Optional[IllusionistWizardLevel14] = None
-    subclass_level_15: Optional[IllusionistWizardLevel15] = None
-    subclass_level_17: Optional[IllusionistWizardLevel17] = None
+class IllusionistWizardCustomStarterClassArgs(WizardCustomStarterClassArgs):
+    def __init__(
+        self,
+        skills: WizardSkillsStatBlock,
+    ):
+        super().__init__(
+            subclass=WizardSubclass.ILLUSIONIST.value,
+            skills=skills,
+        )
+
+
+class IllusionistWizardMulticlassBuilder(WizardMulticlassBuilder):
+
+    def __init__(
+        self,
+        wizard_level_features: ClassBuilder.BaseClassLevelFeatures,
+        wizard_level: int,
+        replace_spells: Optional[dict[str, str]] = None,
+    ):
+        super().__init__(
+            wizard_level_features=wizard_level_features,
+            wizard_level=wizard_level,
+            subclass=WizardSubclass.ILLUSIONIST.value,
+            replace_spells=replace_spells,
+        )

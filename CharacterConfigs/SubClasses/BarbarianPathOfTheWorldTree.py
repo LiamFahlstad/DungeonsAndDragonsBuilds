@@ -62,7 +62,7 @@ class BarbarianWorldTreeLevel14(ClassBuilder.SubclassLevel14):
         rage: BarbarianFeatures.Rage = data.get_features_by_type(
             BarbarianFeatures.Rage
         )[0]
-        rage.extend_feature(BarbarianFeatures.BranchesOfTheTree())
+        rage.extend_feature(BarbarianFeatures.TravelAlongTheTree())
         return data
 
 

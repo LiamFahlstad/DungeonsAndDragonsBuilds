@@ -99,8 +99,8 @@ class PaladinVengeanceLevel17(ClassBuilder.SubclassLevel17):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_spell(WizardLevel5Spells.LEGEND_LORE)
-        data.add_spell(WizardLevel5Spells.YOLANDES_REGAL_PRESENCE)
+        data.add_spell(WizardLevel5Spells.HOLD_MONSTER)
+        data.add_spell(WizardLevel5Spells.SCRYING)
         return data
 
 

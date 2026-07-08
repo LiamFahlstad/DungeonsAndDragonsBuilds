@@ -14,6 +14,9 @@ from Spells.Definitions import (
     BardLevel4Spells,
     ClericLevel4Spells,
     IllusionLevel1Spells,
+    IllusionLevel3Spells,
+    IllusionLevel4Spells,
+    IllusionLevel5Spells,
     TransmutationLevel2Spells,
     WizardLevel3Spells,
     WizardLevel5Spells,
@@ -68,8 +71,7 @@ class RangerGloomStalkerLevel9(ClassBuilder.SubclassLevel9):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_spell(WizardLevel3Spells.HASTE)
-        data.add_spell(WizardLevel3Spells.PROTECTION_FROM_ENERGY)
+        data.add_spell(IllusionLevel3Spells.FEAR)
         return data
 
 
@@ -93,8 +95,7 @@ class RangerGloomStalkerLevel13(ClassBuilder.SubclassLevel13):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_spell(BardLevel4Spells.COMPULSION)
-        data.add_spell(ClericLevel4Spells.FREEDOM_OF_MOVEMENT)
+        data.add_spell(IllusionLevel4Spells.GREATER_INVISIBILITY)
         return data
 
 
@@ -118,8 +119,7 @@ class RangerGloomStalkerLevel17(ClassBuilder.SubclassLevel17):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_spell(WizardLevel5Spells.LEGEND_LORE)
-        data.add_spell(WizardLevel5Spells.YOLANDES_REGAL_PRESENCE)
+        data.add_spell(IllusionLevel5Spells.SEEMING)
         return data
 
 

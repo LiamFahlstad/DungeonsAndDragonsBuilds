@@ -2,6 +2,7 @@ from typing import Optional
 
 import attr
 
+import Spells.Definitions as SpellDefinitions
 from CharacterConfigs.BaseClasses import ClassBuilder
 from CharacterConfigs.BaseClasses.ClericBase import (
     ClericMulticlassBuilder,
@@ -20,11 +21,27 @@ class ClericLightLevel3(ClassBuilder.SubclassLevel3):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
+        data.add_spell(SpellDefinitions.EvocationLevel1Spells.BURNING_HANDS)
+        data.add_spell(SpellDefinitions.EvocationLevel1Spells.FAERIE_FIRE)
+        data.add_spell(SpellDefinitions.EvocationLevel2Spells.SCORCHING_RAY)
+        data.add_spell(SpellDefinitions.SorcererLevel2Spells.SEE_INVISIBILITY)
         channel_divinity: ClericFeatures.ChannelDivinity = data.get_features_by_type(
             ClericFeatures.ChannelDivinity
         )[0]
         channel_divinity.extend_feature(ClericFeatures.RadianceOfTheDawn())
         data.add_feature(ClericFeatures.WardingFlare())
+        return data
+
+
+@attr.dataclass
+class ClericLightLevel5(ClassBuilder.SubclassLevel5):
+
+    def add_features(
+        self,
+        data: CharacterSheetData,
+    ) -> CharacterSheetData:
+        data.add_spell(SpellDefinitions.EvocationLevel3Spells.DAYLIGHT)
+        data.add_spell(SpellDefinitions.EvocationLevel3Spells.FIREBALL)
         return data
 
 
@@ -35,7 +52,34 @@ class ClericLightLevel6(ClassBuilder.SubclassLevel6):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(ClericFeatures.WardingFlare())
+        warding_flare: ClericFeatures.WardingFlare = data.get_features_by_type(
+            ClericFeatures.WardingFlare
+        )[0]
+        warding_flare.extend_feature(ClericFeatures.ImprovedWardingFlare())
+        return data
+
+
+@attr.dataclass
+class ClericLightLevel7(ClassBuilder.SubclassLevel7):
+
+    def add_features(
+        self,
+        data: CharacterSheetData,
+    ) -> CharacterSheetData:
+        data.add_spell(SpellDefinitions.DivinationLevel4Spells.ARCANE_EYE)
+        data.add_spell(SpellDefinitions.EvocationLevel4Spells.WALL_OF_FIRE)
+        return data
+
+
+@attr.dataclass
+class ClericLightLevel9(ClassBuilder.SubclassLevel9):
+
+    def add_features(
+        self,
+        data: CharacterSheetData,
+    ) -> CharacterSheetData:
+        data.add_spell(SpellDefinitions.EvocationLevel5Spells.FLAME_STRIKE)
+        data.add_spell(SpellDefinitions.DivinationLevel5Spells.SCRYING)
         return data
 
 
