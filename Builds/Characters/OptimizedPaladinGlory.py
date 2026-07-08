@@ -35,7 +35,7 @@ from CharacterConfigs.SubClasses.PaladinGlory import (
     PaladinGloryCustomStarterClassArgs,
 )
 from Definitions import Ability, Skill
-from Features.CharacterFeats import Backgrounds, GeneralFeats, OriginFeats
+from Features.CharacterFeats import Backgrounds, EpicBoon, GeneralFeats, OriginFeats
 from Features.Combat import FightingStyles
 from Features.Equipment import Weapons
 from SpeciesConfigs import Human
@@ -128,7 +128,8 @@ def get_starter_class_builder():
                     ),
                 ),
                 9: PaladinLevel9(
-                    spell=PaladinLevel3Spells.AURA_OF_VITALITY,
+                    spell_1=PaladinLevel3Spells.AURA_OF_VITALITY,
+                    spell_2=PaladinLevel3Spells.MAGIC_CIRCLE,
                 ),
                 10: PaladinLevel10(),
                 11: PaladinLevel11(
@@ -160,6 +161,7 @@ def get_starter_class_builder():
                     spell_2=PaladinLevel5Spells.GEAS,
                 ),
                 19: PaladinLevel19(
+                    epic_boon=EpicBoon.DummyEpicBoon(),
                     spell=PaladinLevel5Spells.CIRCLE_OF_POWER,
                 ),
                 18: PaladinLevel18(),

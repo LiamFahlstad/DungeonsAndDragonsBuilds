@@ -11,13 +11,11 @@ from CharacterSheetCreator import CharacterSheetData
 from Definitions import PaladinSubclass
 from Features.ClassFeatures import PaladinFeatures
 from Spells.Definitions import (
-    BardLevel4Spells,
     ClericLevel1Spells,
-    ClericLevel2Spells,
-    ClericLevel4Spells,
-    PaladinLevel2Spells,
     RangerLevel1Spells,
+    WarlockLevel2Spells,
     WizardLevel3Spells,
+    WizardLevel4Spells,
     WizardLevel5Spells,
 )
 from StatBlocks.SkillsStatBlock import PaladinSkillsStatBlock
@@ -43,8 +41,8 @@ class PaladinVengeanceLevel5(ClassBuilder.SubclassLevel5):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_spell(ClericLevel2Spells.ENHANCE_ABILITY)
-        data.add_spell(PaladinLevel2Spells.MAGIC_WEAPON)
+        data.add_spell(WarlockLevel2Spells.HOLD_PERSON)
+        data.add_spell(WarlockLevel2Spells.MISTY_STEP)
         return data
 
 
@@ -55,10 +53,7 @@ class PaladinVengeanceLevel7(ClassBuilder.SubclassLevel7):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        aura_of_protection: PaladinFeatures.AuraOfProtection = (
-            data.get_features_by_type(PaladinFeatures.AuraOfProtection)[0]
-        )
-        aura_of_protection.extend_feature(PaladinFeatures.AuraOfAlacrity())
+        data.add_feature(PaladinFeatures.RelentlessAvenger())
         return data
 
 
@@ -81,8 +76,8 @@ class PaladinVengeanceLevel13(ClassBuilder.SubclassLevel13):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_spell(BardLevel4Spells.COMPULSION)
-        data.add_spell(ClericLevel4Spells.FREEDOM_OF_MOVEMENT)
+        data.add_spell(WizardLevel4Spells.BANISHMENT)
+        data.add_spell(WizardLevel4Spells.DIMENSION_DOOR)
         return data
 
 
@@ -93,7 +88,7 @@ class PaladinVengeanceLevel15(ClassBuilder.SubclassLevel15):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(PaladinFeatures.GloriousDefense())
+        data.add_feature(PaladinFeatures.SoulOfVengeance())
         return data
 
 
@@ -116,7 +111,7 @@ class PaladinVengeanceLevel20(ClassBuilder.SubclassLevel20):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(PaladinFeatures.LivingLegend())
+        data.add_feature(PaladinFeatures.AvengingAngel())
         return data
 
 

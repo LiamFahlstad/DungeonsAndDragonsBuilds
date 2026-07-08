@@ -946,7 +946,7 @@ class ClericLevel2Spells(str, Enum):
 class ClericLevel3Spells(str, Enum):
     ANIMATE_DEAD = "Animate Dead"
     AURA_OF_VITALITY = "Aura of Vitality"
-    BEACON_OF_HOPE = "Beacon of Hope"
+    BEACON_OF_HOPE = "Beacon Of Hope"
     BESTOW_CURSE = "Bestow Curse"
     CLAIRVOYANCE = "Clairvoyance"
     CREATE_FOOD_AND_WATER = "Create Food and Water"
@@ -1156,7 +1156,7 @@ class DruidLevel5Spells(str, Enum):
     ALUSTRIELS_MOONCLOAK = "Alustriel's Mooncloak"
     ANTILIFE_SHELL = "Antilife Shell"
     AWAKEN = "Awaken"
-    COMMUNE_WITH_NATURE = "Commune with Nature"
+    COMMUNE_WITH_NATURE = "Commune With Nature"
     CONE_OF_COLD = "Cone of Cold"
     CONJURE_ELEMENTAL = "Conjure Elemental"
     CONTAGION = "Contagion"
@@ -1349,7 +1349,7 @@ class RangerLevel4Spells(str, Enum):
 
 class RangerLevel5Spells(str, Enum):
     ALUSTRIELS_MOONCLOAK = "Alustriel's Mooncloak"
-    COMMUNE_WITH_NATURE = "Commune with Nature"
+    COMMUNE_WITH_NATURE = "Commune With Nature"
     CONJURE_VOLLEY = "Conjure Volley"
     GREATER_RESTORATION = "Greater Restoration"
     STEEL_WIND_STRIKE = "Steel Wind Strike"
@@ -1513,7 +1513,7 @@ class AbjurationLevel2Spells(str, Enum):
 
 class AbjurationLevel3Spells(str, Enum):
     AURA_OF_VITALITY = "Aura of Vitality"
-    BEACON_OF_HOPE = "Beacon of Hope"
+    BEACON_OF_HOPE = "Beacon Of Hope"
     COUNTERSPELL = "Counterspell"
     DISPEL_MAGIC = "Dispel Magic"
     GLYPH_OF_WARDING = "Glyph of Warding"
@@ -1716,7 +1716,7 @@ class DivinationLevel4Spells(str, Enum):
 
 class DivinationLevel5Spells(str, Enum):
     COMMUNE = "Commune"
-    COMMUNE_WITH_NATURE = "Commune with Nature"
+    COMMUNE_WITH_NATURE = "Commune With Nature"
     CONTACT_OTHER_PLANE = "Contact Other Plane"
     LEGEND_LORE = "Legend Lore"
     RARYS_TELEPATHIC_BOND = "Rary's Telepathic Bond"

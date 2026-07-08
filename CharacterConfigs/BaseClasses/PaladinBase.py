@@ -6,7 +6,7 @@ import Definitions
 from CharacterConfigs.BaseClasses import ClassBuilder
 from CharacterSheetCreator import CharacterSheetData
 from Definitions import Ability, CharacterClass
-from Features.CharacterFeats import GeneralFeats
+from Features.CharacterFeats import EpicBoon, GeneralFeats
 from Features.Combat import FightingStyles
 from Features.Equipment import Armor, Weapons
 from Features.ClassFeatures import PaladinFeatures, SpellSlots
@@ -16,7 +16,6 @@ from Spells.Definitions import (
     PaladinLevel3Spells,
     PaladinLevel4Spells,
     PaladinLevel5Spells,
-    WarlockLevel2Spells,
 )
 from StatBlocks.SavingThrowsStatBlock import PaladinSavingThrowsStatBlock
 from StatBlocks.SkillsStatBlock import PaladinSkillsStatBlock
@@ -35,6 +34,7 @@ class PaladinLevel1(ClassBuilder.BaseClassLevel1):
     ) -> CharacterSheetData:
         data.add_weapon_mastery(self.weapon_mastery_1)
         data.add_weapon_mastery(self.weapon_mastery_2)
+        data.add_feature(PaladinFeatures.WeaponMastery())
 
         # Lay on Hands
         data.add_feature(PaladinFeatures.LayOnHands())
@@ -97,10 +97,6 @@ class PaladinLevel5(ClassBuilder.BaseClassLevel5):
         data.add_feature(PaladinFeatures.FaithfulSteed())
         data.add_spell(PaladinLevel2Spells.FIND_STEED)
 
-        # Oath of vengeance features
-        data.add_spell(WarlockLevel2Spells.HOLD_PERSON)
-        data.add_spell(WarlockLevel2Spells.MISTY_STEP)
-
         # Add/Change prepared spells:
         data.add_spell(self.spell)
         return data
@@ -134,7 +130,8 @@ class PaladinLevel8(ClassBuilder.BaseClassLevel8):
 
 @attr.dataclass
 class PaladinLevel9(ClassBuilder.BaseClassLevel9):
-    spell: PaladinLevel1Spells | PaladinLevel2Spells | PaladinLevel3Spells
+    spell_1: PaladinLevel1Spells | PaladinLevel2Spells | PaladinLevel3Spells
+    spell_2: PaladinLevel1Spells | PaladinLevel2Spells | PaladinLevel3Spells
 
     def add_features(
         self,
@@ -144,7 +141,8 @@ class PaladinLevel9(ClassBuilder.BaseClassLevel9):
             data.get_features_by_type(PaladinFeatures.ChannelDivinity)[0]
         )
         channel_divinity_feature.add_spell("Abjure Foes")
-        data.add_spell(self.spell)
+        data.add_spell(self.spell_1)
+        data.add_spell(self.spell_2)
         return data
 
 
@@ -274,6 +272,7 @@ class PaladinLevel18(ClassBuilder.BaseClassLevel18):
 
 @attr.dataclass
 class PaladinLevel19(ClassBuilder.BaseClassLevel19):
+    epic_boon: EpicBoon.EpicBoon
     spell: (
         PaladinLevel1Spells
         | PaladinLevel2Spells
@@ -283,6 +282,7 @@ class PaladinLevel19(ClassBuilder.BaseClassLevel19):
     )
 
     def add_features(self, data: CharacterSheetData) -> CharacterSheetData:
+        data.add_feature(self.epic_boon)
         data.add_spell(self.spell)
         return data
 

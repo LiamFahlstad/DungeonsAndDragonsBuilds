@@ -11,13 +11,12 @@ from CharacterSheetCreator import CharacterSheetData
 from Definitions import PaladinSubclass
 from Features.ClassFeatures import PaladinFeatures
 from Spells.Definitions import (
-    BardLevel4Spells,
-    ClericLevel2Spells,
-    ClericLevel4Spells,
     EvocationLevel1Spells,
-    PaladinLevel2Spells,
+    PaladinLevel5Spells,
     TransmutationLevel0Spells,
+    WizardLevel2Spells,
     WizardLevel3Spells,
+    WizardLevel4Spells,
     WizardLevel5Spells,
 )
 from StatBlocks.SkillsStatBlock import PaladinSkillsStatBlock
@@ -47,8 +46,8 @@ class GeniesPaladinLevel5(ClassBuilder.SubclassLevel5):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_spell(ClericLevel2Spells.ENHANCE_ABILITY)
-        data.add_spell(PaladinLevel2Spells.MAGIC_WEAPON)
+        data.add_spell(WizardLevel2Spells.MIRROR_IMAGE)
+        data.add_spell(WizardLevel2Spells.PHANTASMAL_FORCE)
         return data
 
 
@@ -59,10 +58,7 @@ class GeniesPaladinLevel7(ClassBuilder.SubclassLevel7):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        aura_of_protection: PaladinFeatures.AuraOfProtection = (
-            data.get_features_by_type(PaladinFeatures.AuraOfProtection)[0]
-        )
-        aura_of_protection.extend_feature(PaladinFeatures.AuraOfAlacrity())
+        data.add_feature(PaladinFeatures.AuraOfElementalShielding())
         return data
 
 
@@ -73,8 +69,8 @@ class GeniesPaladinLevel9(ClassBuilder.SubclassLevel9):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_spell(WizardLevel3Spells.HASTE)
-        data.add_spell(WizardLevel3Spells.PROTECTION_FROM_ENERGY)
+        data.add_spell(WizardLevel3Spells.FLY)
+        data.add_spell(WizardLevel3Spells.GASEOUS_FORM)
         return data
 
 
@@ -85,8 +81,8 @@ class GeniesPaladinLevel13(ClassBuilder.SubclassLevel13):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_spell(BardLevel4Spells.COMPULSION)
-        data.add_spell(ClericLevel4Spells.FREEDOM_OF_MOVEMENT)
+        data.add_spell(WizardLevel4Spells.CONJURE_MINOR_ELEMENTALS)
+        data.add_spell(WizardLevel4Spells.SUMMON_ELEMENTAL)
         return data
 
 
@@ -97,7 +93,7 @@ class GeniesPaladinLevel15(ClassBuilder.SubclassLevel15):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(PaladinFeatures.GloriousDefense())
+        data.add_feature(PaladinFeatures.ElementalRebuke())
         return data
 
 
@@ -108,8 +104,8 @@ class GeniesPaladinLevel17(ClassBuilder.SubclassLevel17):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_spell(WizardLevel5Spells.LEGEND_LORE)
-        data.add_spell(WizardLevel5Spells.YOLANDES_REGAL_PRESENCE)
+        data.add_spell(PaladinLevel5Spells.BANISHING_SMITE)
+        data.add_spell(WizardLevel5Spells.CONTACT_OTHER_PLANE)
         return data
 
 
@@ -120,7 +116,7 @@ class GeniesPaladinLevel20(ClassBuilder.SubclassLevel20):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(PaladinFeatures.LivingLegend())
+        data.add_feature(PaladinFeatures.NobleScion())
         return data
 
 

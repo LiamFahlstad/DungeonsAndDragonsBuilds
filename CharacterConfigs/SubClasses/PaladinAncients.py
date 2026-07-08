@@ -11,14 +11,13 @@ from CharacterSheetCreator import CharacterSheetData
 from Definitions import PaladinSubclass
 from Features.ClassFeatures import PaladinFeatures
 from Spells.Definitions import (
-    BardLevel4Spells,
-    ClericLevel2Spells,
-    ClericLevel4Spells,
     ConjurationLevel1Spells,
+    ConjurationLevel2Spells,
     DivinationLevel1Spells,
-    PaladinLevel2Spells,
-    WizardLevel3Spells,
-    WizardLevel5Spells,
+    DruidLevel2Spells,
+    RangerLevel3Spells,
+    RangerLevel5Spells,
+    WizardLevel4Spells,
 )
 from StatBlocks.SkillsStatBlock import PaladinSkillsStatBlock
 
@@ -48,8 +47,8 @@ class AncientsPaladinLevel5(ClassBuilder.SubclassLevel5):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_spell(ClericLevel2Spells.ENHANCE_ABILITY)
-        data.add_spell(PaladinLevel2Spells.MAGIC_WEAPON)
+        data.add_spell(ConjurationLevel2Spells.MISTY_STEP)
+        data.add_spell(DruidLevel2Spells.MOONBEAM)
         return data
 
 
@@ -61,10 +60,7 @@ class AncientsPaladinLevel7(ClassBuilder.SubclassLevel7):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        aura_of_protection: PaladinFeatures.AuraOfProtection = (
-            data.get_features_by_type(PaladinFeatures.AuraOfProtection)[0]
-        )
-        aura_of_protection.extend_feature(PaladinFeatures.AuraOfAlacrity())
+        data.add_feature(PaladinFeatures.AuraOfWarding())
         return data
 
 
@@ -76,8 +72,8 @@ class AncientsPaladinLevel9(ClassBuilder.SubclassLevel9):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_spell(WizardLevel3Spells.HASTE)
-        data.add_spell(WizardLevel3Spells.PROTECTION_FROM_ENERGY)
+        data.add_spell(RangerLevel3Spells.PLANT_GROWTH)
+        data.add_spell(RangerLevel3Spells.PROTECTION_FROM_ENERGY)
         return data
 
 
@@ -89,8 +85,8 @@ class AncientsPaladinLevel13(ClassBuilder.SubclassLevel13):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_spell(BardLevel4Spells.COMPULSION)
-        data.add_spell(ClericLevel4Spells.FREEDOM_OF_MOVEMENT)
+        data.add_spell(WizardLevel4Spells.ICE_STORM)
+        data.add_spell(WizardLevel4Spells.STONESKIN)
         return data
 
 
@@ -102,7 +98,7 @@ class AncientsPaladinLevel15(ClassBuilder.SubclassLevel15):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(PaladinFeatures.GloriousDefense())
+        data.add_feature(PaladinFeatures.UndyingSentinel())
         return data
 
 
@@ -114,8 +110,8 @@ class AncientsPaladinLevel17(ClassBuilder.SubclassLevel17):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_spell(WizardLevel5Spells.LEGEND_LORE)
-        data.add_spell(WizardLevel5Spells.YOLANDES_REGAL_PRESENCE)
+        data.add_spell(RangerLevel5Spells.COMMUNE_WITH_NATURE)
+        data.add_spell(RangerLevel5Spells.TREE_STRIDE)
         return data
 
 
@@ -127,7 +123,7 @@ class AncientsPaladinLevel20(ClassBuilder.SubclassLevel20):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(PaladinFeatures.LivingLegend())
+        data.add_feature(PaladinFeatures.ElderChampion())
         return data
 
 
