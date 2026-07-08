@@ -112,3 +112,10 @@ class MonkSavingThrowsStatBlock(SavingThrowsStatBlock):
         super().__init__(
             proficiencies=_proficiency_map(Ability.STRENGTH, Ability.DEXTERITY)
         )
+
+
+class ArtificerSavingThrowsStatBlock(SavingThrowsStatBlock):
+    def __init__(self):
+        super().__init__(
+            proficiencies=_proficiency_map(Ability.CONSTITUTION, Ability.INTELLIGENCE)
+        )

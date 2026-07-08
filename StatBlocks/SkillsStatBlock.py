@@ -462,3 +462,31 @@ class MonkSkillsStatBlock(ClassSkillsStatBlock):
             bonuses=bonuses,
             dice_roll_conditions=dice_roll_conditions,
         )
+
+
+class ArtificerSkillsStatBlock(ClassSkillsStatBlock):
+    """Artificer Skills Stat Block"""
+
+    def __init__(
+        self,
+        proficiencies: dict[Skill, bool],
+        bonuses: Optional[dict[Skill, int]] = None,
+        dice_roll_conditions: Optional[dict[Skill, DiceRollCondition]] = None,
+    ):
+        allowed_skills = [
+            Skill.ARCANA,
+            Skill.HISTORY,
+            Skill.INSIGHT,
+            Skill.INVESTIGATION,
+            Skill.MEDICINE,
+            Skill.PERCEPTION,
+            Skill.SLEIGHT_OF_HAND,
+        ]
+        super().__init__(
+            character_class=Definitions.CharacterClass.ARTIFICER,
+            allowed_skills=allowed_skills,
+            num_proficiencies=2,
+            proficiencies=proficiencies,
+            bonuses=bonuses,
+            dice_roll_conditions=dice_roll_conditions,
+        )

@@ -156,6 +156,15 @@ class DiceRollCondition(str, Enum):
     NEUTRAL = "Neutral"
 
 
+class ArtificerSubclass(str, Enum):
+    ALCHEMIST = "Alchemist"
+    ARMORER = "Armorer"
+    ARTILLERIST = "Artillerist"
+    BATTLE_SMITH = "Battle Smith"
+    CARTOGRAPHER = "Cartographer"
+    REANIMATOR = "Reanimator"
+
+
 class PaladinSubclass(str, Enum):
     OATH_OF_DEVOTION = "Oath of Devotion"
     OATH_OF_THE_ANCIENTS = "Oath of the Ancients"

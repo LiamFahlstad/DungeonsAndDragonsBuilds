@@ -1,5 +1,6 @@
 import Definitions
 from Builds.Characters import (
+    OptimizedArtificerBattleSmith,
     OptimizedBarbarianBerserker,
     OptimizedBarbarianWorldTree,
     OptimizedBardGlamour,
@@ -34,6 +35,7 @@ class BuildSelector:
     @staticmethod
     def builds() -> dict[str, CharacterBuilder]:
         return {
+            "OptimizedArtificerBattleSmith": OptimizedArtificerBattleSmith.OptimizedArtificerBattleSmithCharacterBuilder(),
             "OptimizedBarbarianBerserker": OptimizedBarbarianBerserker.OptimizedBarbarianBerserkerCharacterBuilder(),
             "OptimizedBarbarianWorldTree": OptimizedBarbarianWorldTree.OptimizedBarbarianWorldTreeCharacterBuilder(),
             "OptimizedBardGlamour": OptimizedBardGlamour.OptimizedBardGlamourCharacterBuilder(),

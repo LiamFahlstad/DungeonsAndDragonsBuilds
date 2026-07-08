@@ -56,9 +56,7 @@ class ArtificerLevel1(ClassBuilder.BaseClassLevel1):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(ArtificerFeatures.Spellcasting())
-        data.add_feature(ArtificerFeatures.Artificeric())
-        data.add_feature(ArtificerFeatures.PrimalOrder())
+        data.add_feature(ArtificerFeatures.TinkersMagic())
         data.add_cantrip(self.cantrip_1)
         data.add_cantrip(self.cantrip_2)
         data.add_spell(self.spell_1)
@@ -76,8 +74,7 @@ class ArtificerLevel2(ClassBuilder.BaseClassLevel2):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(ArtificerFeatures.WildShape())
-        data.add_feature(ArtificerFeatures.WildCompanion())
+        data.add_feature(ArtificerFeatures.ReplicateMagicItem())
         data.add_spell(self.spell)
         return data
 
@@ -119,7 +116,6 @@ class ArtificerLevel5(ClassBuilder.BaseClassLevel5):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(ArtificerFeatures.WildResurgence())
         data.add_spell(self.spell_1)
         data.add_spell(self.spell_2)
         return data
@@ -145,7 +141,7 @@ class ArtificerLevel7(ClassBuilder.BaseClassLevel7):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(ArtificerFeatures.ElementalFury())
+        data.add_feature(ArtificerFeatures.FlashofGenius())
         data.add_spell(self.spell)
         return data
 
@@ -246,10 +242,6 @@ class ArtificerLevel15(ClassBuilder.BaseClassLevel15):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        elemental_fury: ArtificerFeatures.ElementalFury = data.get_features_by_type(
-            ArtificerFeatures.ElementalFury
-        )[0]
-        elemental_fury.extend_feature(ArtificerFeatures.ImprovedElementalFury())
         data.add_spell(self.spell)
         return data
 
@@ -287,7 +279,7 @@ class ArtificerLevel18(ClassBuilder.BaseClassLevel18):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(ArtificerFeatures.BeastSpells())
+        data.add_feature(ArtificerFeatures.MagicItemMaster())
         data.add_spell(self.spell)
         return data
 
@@ -311,9 +303,35 @@ class ArtificerLevel20(ClassBuilder.BaseClassLevel20):
     spell: ArtificerSpellsUpTo9
 
     def add_features(self, data: CharacterSheetData) -> CharacterSheetData:
-        data.add_feature(ArtificerFeatures.Archartificer())
+        data.add_feature(ArtificerFeatures.SoulOfArtifice())
         data.add_spell(self.spell)
         return data
+
+
+class ArtificerCustomStarterClassArgs(ClassBuilder.CustomStarterClassArgs):
+    def __init__(
+        self,
+        subclass: str,
+        skills: ArtificerSkillsStatBlock,
+    ):
+        super().__init__(
+            base_class=CharacterClass.ARTIFICER,
+            subclass=subclass,
+            saving_throws=ArtificerSavingThrowsStatBlock(),
+            default_equipment=[
+                Armor.LeatherArmor(),
+                Armor.ShieldArmor(),
+                Weapons.Sickle(player_is_proficient=True),
+                Weapons.Quarterstaff(player_is_proficient=True),
+            ],
+            skills=skills,
+            armor_proficiencies=[
+                Definitions.ArmorType.LIGHT,
+                Definitions.ArmorType.SHIELD,
+            ],
+            spell_casting_ability=Ability.INTELLIGENCE,
+            caster_type=SpellSlots.CasterType.FULL_CASTER,
+        )
 
 
 class ArtificerStarterClassBuilder(ClassBuilder.StarterClassBuilder):
@@ -360,7 +378,7 @@ class ArtificerStarterClassBuilder(ClassBuilder.StarterClassBuilder):
             armor=armor,
             weapons=weapons,
             replace_spells=replace_spells,
-            spell_casting_ability=Ability.WISDOM,
+            spell_casting_ability=Ability.INTELLIGENCE,
             caster_type=SpellSlots.CasterType.FULL_CASTER,
             items=items,
         )
@@ -382,6 +400,6 @@ class ArtificerMulticlassBuilder(ClassBuilder.MulticlassBuilder):
             base_class_level=artificer_level,
             subclass=subclass,
             replace_spells=replace_spells,
-            spell_casting_ability=Ability.WISDOM,
+            spell_casting_ability=Ability.INTELLIGENCE,
             caster_type=SpellSlots.CasterType.FULL_CASTER,
         )
