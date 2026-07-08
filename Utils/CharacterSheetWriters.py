@@ -1336,6 +1336,86 @@ class HtmlCharacterSheetWriter:
             color: #333;
         }
 
+        /* ── Wild Shape form cards ────────────────────────────────────────── */
+        table.wildshape-card {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+            border: 2px solid #8fae6e;
+            border-radius: 4px;
+            margin: 0.4rem 0 8px 0;
+            table-layout: auto;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+        }
+
+        table.wildshape-card td,
+        table.wildshape-card th {
+            border: 1px solid var(--border-color);
+            padding: 3px 7px;
+            vertical-align: top;
+        }
+
+        .wsf-name {
+            color: #4a6b32;
+            font-size: 1rem;
+            font-weight: 700;
+            text-align: left;
+            letter-spacing: 0.02em;
+            padding: 4px 7px;
+            border-bottom: 2px solid #6f9a4a;
+        }
+
+        .wsf-name .wsf-subtitle {
+            font-size: 0.78rem;
+            font-weight: 400;
+            font-style: italic;
+            color: var(--muted-color);
+            margin-left: 0.5em;
+        }
+
+        .wsf-label-col {
+            font-weight: 600;
+            white-space: nowrap;
+            width: 1%;
+            color: var(--muted-color);
+            font-size: 0.78rem;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .wsf-value-col {
+            padding: 3px 7px;
+        }
+
+        /* Section divider row, e.g. "Actions", "Traits" */
+        tr.wsf-section th {
+            background: #eef3e6;
+            color: #4a6b32;
+            font-size: 0.78rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            text-align: left;
+            padding: 2px 7px;
+        }
+
+        .wsf-entry-name {
+            font-weight: 600;
+            white-space: nowrap;
+            width: 1%;
+            color: #444;
+        }
+
+        .wsf-entry-desc {
+            color: #333;
+        }
+
+        /* Notes about stats retained from the player rather than the Beast */
+        .wsf-retained {
+            font-style: italic;
+            color: var(--muted-color);
+        }
+
         /* ── Feature cards ───────────────────────────────────────────────── */
         .feature-card {
             border: 1px solid #b89060;

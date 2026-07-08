@@ -22,26 +22,41 @@ def _fmt_mod(modifier: int) -> str:
     return f"+{modifier}" if modifier >= 0 else str(modifier)
 
 
+def _row(label: str, value: str, value_class: str = "wsf-value-col") -> str:
+    return f'<tr><td class="wsf-label-col">{label}</td><td class="{value_class}">{value}</td></tr>'
+
+
+def _section_row(label: str) -> str:
+    return f'<tr class="wsf-section"><th colspan="2">{label}</th></tr>'
+
+
+def _entry_row(name: str, description: str) -> str:
+    return f'<tr><td class="wsf-entry-name">{name}</td><td class="wsf-entry-desc">{description}</td></tr>'
+
+
 def format_wild_shape_form(
     monster_cls: Type[ExtendedCombatantData],
     character_stat_block: CharacterStatBlock,
 ) -> str:
     monster = monster_cls()
-    lines = [f"    * {monster.combatant_type} (CR {monster.cr}, {monster.monster_type})"]
+    rows = [
+        f'<tr><th class="wsf-name" colspan="2">{monster.combatant_type}'
+        f'<span class="wsf-subtitle">CR {monster.cr} &middot; {monster.monster_type}</span></th></tr>'
+    ]
 
     ac_text = f"{monster.ac}" + (f" ({monster.ac_note})" if monster.ac_note else "")
-    lines.append(f"        - Armor Class: {ac_text}")
+    rows.append(_row("Armor Class", ac_text))
 
     speed = monster.speed.strip().rstrip(",")
     if speed:
-        lines.append(f"        - Speed: {speed}")
+        rows.append(_row("Speed", speed))
 
     physical_parts = []
     for abbr in ("Str", "Dex", "Con"):
         score = monster.ability_scores.get(abbr, 10)
         modifier = (score - 10) // 2
         physical_parts.append(f"{abbr} {score} ({_fmt_mod(modifier)})")
-    lines.append("        - " + ", ".join(physical_parts))
+    rows.append(_row("Str / Dex / Con", ", ".join(physical_parts)))
 
     mental_parts = []
     for abbr in _RETAINED_MENTAL_ABILITIES:
@@ -49,11 +64,21 @@ def format_wild_shape_form(
         own_score = character_stat_block.get_ability_score(ability)
         own_modifier = character_stat_block.get_ability_modifier(ability)
         mental_parts.append(f"{abbr} {own_score} ({_fmt_mod(own_modifier)})")
-    lines.append(
-        "        - " + ", ".join(mental_parts) + " — yours, not the Beast's"
+    rows.append(
+        _row(
+            "Int / Wis / Cha",
+            ", ".join(mental_parts) + " &mdash; yours, not the Beast's",
+            value_class="wsf-value-col wsf-retained",
+        )
     )
 
-    lines.append("        - Hit Points, Hit Dice, Languages, Class Features, and Feats: yours, not the Beast's")
+    rows.append(
+        _row(
+            "HP, Hit Dice, Languages, Class Features, Feats",
+            "Yours, not the Beast's",
+            value_class="wsf-value-col wsf-retained",
+        )
+    )
 
     if monster.skills:
         skill_parts = []
@@ -66,7 +91,7 @@ def format_wild_shape_form(
             best = max(beast_bonus, own_bonus)
             source = "Beast's" if beast_bonus >= own_bonus else "yours"
             skill_parts.append(f"{skill_name} {_fmt_mod(best)} ({source})")
-        lines.append("        - Skills: " + "; ".join(skill_parts))
+        rows.append(_row("Skills", "; ".join(skill_parts)))
 
     if monster.saving_throws:
         save_parts = []
@@ -79,13 +104,13 @@ def format_wild_shape_form(
             best = max(beast_bonus, own_bonus)
             source = "Beast's" if beast_bonus >= own_bonus else "yours"
             save_parts.append(f"{abbr} {_fmt_mod(best)} ({source})")
-        lines.append("        - Saving Throws: " + ", ".join(save_parts))
+        rows.append(_row("Saving Throws", ", ".join(save_parts)))
 
     if monster.senses:
-        # Strip periods before commas (e.g. "60 ft., Passive...") so the feature
-        # renderer's sentence-based bolding doesn't swallow the whole line.
+        # Strip periods before commas (e.g. "60 ft., Passive...") so downstream
+        # sentence-based bolding heuristics elsewhere on the sheet aren't tripped up.
         senses = monster.senses.replace(".,", ",")
-        lines.append(f"        - Senses: {senses}")
+        rows.append(_row("Senses", senses))
 
     for attribute_name, label in (
         ("damage_vulnerabilities", "Vulnerabilities"),
@@ -95,7 +120,7 @@ def format_wild_shape_form(
     ):
         values = getattr(monster, attribute_name)
         if values:
-            lines.append(f"        - {label}: {', '.join(values)}")
+            rows.append(_row(label, ", ".join(values)))
 
     for attribute_name, label in (
         ("traits", "Traits"),
@@ -105,8 +130,8 @@ def format_wild_shape_form(
     ):
         entries = getattr(monster, attribute_name)
         if entries:
-            lines.append(f"        - {label}:")
+            rows.append(_section_row(label))
             for entry in entries:
-                lines.append(f"            > {entry['name']}: {entry['description']}")
+                rows.append(_entry_row(entry["name"], entry["description"]))
 
-    return "\n".join(lines)
+    return '<table class="wildshape-card">' + "".join(rows) + "</table>"
