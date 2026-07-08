@@ -65,7 +65,7 @@ class WildShape(Feature):
         else:
             uses = 2
         known_forms_lines = "\n".join(
-            f"    * {format_wild_shape_form(form)}" for form in self.known_forms
+            format_wild_shape_form(form, character_stat_block) for form in self.known_forms
         )
         description = (
             "The power of nature allows you to assume the form of an animal. As a Bonus Action, you shape-shift into a Beast form that you have learned for this feature (see “Known Forms” below). You stay in that form for a number of hours equal to half your Druid level or until you use Wild Shape again, have the Incapacitated condition, or die. You can also leave the form early as a Bonus Action.\n"
@@ -90,7 +90,9 @@ class AdditionalWildShapeForms(Feature):
         self.known_forms = known_forms
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        return "\n".join(f"    * {format_wild_shape_form(form)}" for form in self.known_forms)
+        return "\n".join(
+            format_wild_shape_form(form, character_stat_block) for form in self.known_forms
+        )
 
 
 class WildCompanion(Feature):
