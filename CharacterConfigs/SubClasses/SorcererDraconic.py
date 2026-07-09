@@ -15,6 +15,7 @@ from Spells.Definitions import (
     SorcererLevel2Spells,
     SorcererLevel3Spells,
     SorcererLevel4Spells,
+    SorcererLevel5Spells,
     BardLevel1Spells,
     WizardLevel4Spells,
     WizardLevel5Spells,
@@ -64,7 +65,7 @@ class SorcererDraconicLevel7(ClassBuilder.SubclassLevel7):
         data: CharacterSheetData,
     ) -> CharacterSheetData:
         data.add_spell(WizardLevel4Spells.ARCANE_EYE)
-        data.add_spell(WizardLevel4Spells.CHARM_MONSTER)
+        data.add_spell(SorcererLevel4Spells.CHARM_MONSTER)
         return data
 
 

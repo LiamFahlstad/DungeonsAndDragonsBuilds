@@ -33,7 +33,18 @@ class BardLoreLevel3(ClassBuilder.SubclassLevel3):
 
 @attr.dataclass
 class BardLoreLevel6(ClassBuilder.SubclassLevel6):
-    spell: (
+    spell_1: (
+        SpellDefinitions.ClericLevel1Spells
+        | SpellDefinitions.ClericLevel2Spells
+        | SpellDefinitions.ClericLevel3Spells
+        | SpellDefinitions.DruidLevel1Spells
+        | SpellDefinitions.DruidLevel2Spells
+        | SpellDefinitions.DruidLevel3Spells
+        | SpellDefinitions.WizardLevel1Spells
+        | SpellDefinitions.WizardLevel2Spells
+        | SpellDefinitions.WizardLevel3Spells
+    )
+    spell_2: (
         SpellDefinitions.ClericLevel1Spells
         | SpellDefinitions.ClericLevel2Spells
         | SpellDefinitions.ClericLevel3Spells
@@ -49,7 +60,8 @@ class BardLoreLevel6(ClassBuilder.SubclassLevel6):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_spell(self.spell)
+        data.add_spell(self.spell_1)
+        data.add_spell(self.spell_2)
         data.add_feature(BardFeatures.MagicalDiscoveries())
         return data
 

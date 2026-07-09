@@ -250,7 +250,17 @@ class FeyWandererSpells(Feature):
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        description = "When you reach a Ranger level specified in the Fey Wanderer spells table, you thereafter always have the listed spells prepared."
+        description = (
+            "When you reach a Ranger level specified in the Fey Wanderer spells table, you thereafter always have the listed spells prepared.\n"
+            "You also possess a fey blessing. Choose it from the Feywild Gifts table or determine it randomly:\n"
+            "1d6	Gift\n"
+            "1	Illusory butterflies flutter around you while you take a Short or Long Rest.\n"
+            "2	Flowers bloom from your hair each dawn.\n"
+            "3	You faintly smell of cinnamon, lavender, nutmeg, or another comforting herb or spice.\n"
+            "4	Your shadow dances while no one is looking directly at it.\n"
+            "5	Horns or antlers sprout from your head.\n"
+            "6	Your skin and hair change color each dawn."
+        )
         return description
 
 

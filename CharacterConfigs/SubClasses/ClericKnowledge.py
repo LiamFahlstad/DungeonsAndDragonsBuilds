@@ -75,10 +75,7 @@ class ClericKnowledgeLevel5(ClassBuilder.SubclassLevel5):
         additional_ruling = "As a Magic action, you can expend one use of your Channel Divinity to cast this spell. As part of that action, you cast that spell without expending a spell slot or needing Material components."
 
         data.add_spell(ClericLevel3Spells.DISPEL_MAGIC)
-        data.add_spell(
-            DivinationLevel2Spells.NONDETECTION,
-            additional_ruling=additional_ruling,
-        )
+        data.add_spell(DivinationLevel2Spells.NONDETECTION)
         data.add_spell(
             DivinationLevel3Spells.TONGUES,
             additional_ruling=additional_ruling,

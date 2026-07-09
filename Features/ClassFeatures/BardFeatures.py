@@ -282,7 +282,7 @@ class PeerlessSkill(Feature):
         super().__init__(name="Peerless Skill", origin="College of Lore Bard Level 14")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        description = "When you make an ability check or attack roll and fail, you can expend one use of Bardic Inspiration; roll the Bardic Inspiration die, and add the number rolled to the d20, potentially turning a failure into a success. On a failure, the Bardic Inspiration isn't expended"
+        description = "When you make an ability check or attack roll and fail, you can expend one use of Bardic Inspiration; roll the Bardic Inspiration die, and add the number rolled to the d20, potentially turning a failure into a success. On a failure, the Bardic Inspiration isn't expended."
         return description
 
 

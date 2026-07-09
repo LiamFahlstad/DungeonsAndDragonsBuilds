@@ -15,6 +15,7 @@ from Spells.Definitions import (
     BardLevel2Spells,
     BardLevel3Spells,
     BardLevel4Spells,
+    WarlockLevel2Spells,
     SorcererLevel3Spells,
     SorcererLevel4Spells,
     SorcererLevel5Spells,
@@ -33,7 +34,7 @@ class ArchfeyWarlockLevel3(ClassBuilder.SubclassLevel3):
         data.add_feature(WarlockFeatures.StepsOfTheFey())
         data.add_spell(BardLevel1Spells.FAERIE_FIRE)
         data.add_spell(BardLevel2Spells.CALM_EMOTIONS)
-        data.add_spell(BardLevel2Spells.MISTY_STEP)
+        data.add_spell(WarlockLevel2Spells.MISTY_STEP)
         data.add_spell(BardLevel2Spells.PHANTASMAL_FORCE)
         data.add_spell(BardLevel1Spells.SLEEP)
         return data

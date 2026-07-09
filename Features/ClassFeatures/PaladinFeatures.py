@@ -244,7 +244,7 @@ class SacredWeapon(Feature):
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
-            "When you take the Attack action, you can expend one use of your Channel Divinity to imbue one Melee weapon that you are holding with positive energy. For 10 minutes or until you use this feature again, you add your Charisma modifier to attack rolls you make with that weapon (minimum bonus of +1), and each time you hit with it, you cause it to deal its normal damage type or Radiant damage.\n"
+            "When you take the Attack action, you can expend one use of your Channel Divinity to imbue one Melee weapon that you are holding with positive energy. For 10 minutes or until you use this feature again, you add your Charisma modifier to attack rolls you make with that weapon (minimum bonus of +1), and each time you hit with it, you cause it to deal its normal damage type or Radiant Damage.\n"
             "The weapon also emits Bright Light in a 20-foot radius and Dim Light 20 feet beyond that.\n"
             "You can end this effect early (no action required). This effect also ends if you aren't carrying the weapon."
         )
@@ -366,7 +366,7 @@ class LivingLegend(Feature):
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
-            "You can empower yourself with the legends—whether true or exaggerated—of your great deeds. As a Bonus Action, you gain the following benefits for 1 minute. Once you use this feature, you can't use it again until you finish a Long Rest. You can also restore your use of it by expending a level 5 spell slot (no action required).\n"
+            "You can empower yourself with the legends—whether true or exaggerated—of your great deeds. As a Bonus Action, you gain the following benefits for 10 minutes. Once you use this feature, you can't use it again until you finish a Long Rest. You can also restore your use of it by expending a level 5 spell slot (no action required).\n"
             "Charismatic. You are blessed with an otherworldly presence and have Advantage on all Charisma checks.\n"
             "Saving Throw Reroll. If you fail a saving throw, you can take a Reaction to reroll it. You must use this new roll.\n"
             "Unerring Strike. Once on each of your turns when you make an attack roll with a weapon and miss, you can cause that attack to hit instead."
@@ -384,7 +384,7 @@ class NaturesWrath(Feature):
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        description = "As a Magic action, you can expend one use of your Channel Divinity to conjure spectral vines around nearby creatures. Each creature of your choice that you can see within 15 feet of yourself must succeed on a Strength saving throw or have the Restrained condition for 1 minute. A Restrained creature repeats the saving throw at the end of each of its turns, ending the effect on itself on a success."
+        description = "As a Magic action, you can expend one use of your Channel Divinity to conjure spectral vines around nearby creatures. Each creature of your choice that you can see within 15 feet of yourself must succeed on a Strength saving throw or have the Restrained condition for 1 minute. A Restrained creature repeats the save at the end of each of its turns, ending the effect on a success."
         return description
 
 
@@ -517,9 +517,8 @@ class AvengingAngel(Feature):
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
-            "As a Bonus Action, you gain the benefits below for 10 minutes or until you end them (no action required). Once you use this feature, you can't use it\n"
-            "again until you finish a Long Rest. You can also restore your use of it by expending a level 5 spell slot (no action required).\n"
-            "Flight. You sprout spectral wings on your back, have a Fly Speed of 60 feet, and can hover.\n"
+            "As a Bonus Action, you gain the benefits below for 10 minutes or until you end them (no action required). Once you use this feature, you can't use it again until you finish a Long Rest. You can also restore your use of it by expending a level 5 spell slot (no action required).\n"
+            "Flight. You sprout spectral wings on your back and have a Fly Speed of 60 feet, and can hover.\n"
             "Frightful Aura. Whenever an enemy starts its turn in your Aura of Protection, that creature must succeed on a Wisdom saving throw or have the Frightened condition for 1 minute or until it takes any damage. Attack rolls against the Frightened creature have Advantage."
         )
         return description

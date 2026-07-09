@@ -189,7 +189,8 @@ def get_starter_class_builder():
                     skill_3=Skill.ACROBATICS,
                 ),
                 6: BardLoreLevel6(
-                    spell=WizardLevel3Spells.FIREBALL,
+                    spell_1=WizardLevel3Spells.FIREBALL,
+                    spell_2=WizardLevel3Spells.DISPEL_MAGIC,
                 ),
                 14: BardLoreLevel14(),
             },

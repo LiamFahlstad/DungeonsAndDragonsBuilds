@@ -1,6 +1,6 @@
 from Definitions import Ability, Skill
 from Features.Core.BaseFeatures import Feature
-from Features.Core.SubFeatures import SkillProficiencyChoice
+from Features.Core.SubFeatures import SkillProficiencyChoice, SkillExpertiseChoice
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
@@ -117,13 +117,20 @@ class GreaterDivineIntervention(Feature):
 
 class BlessingsOfKnowledge(Feature):
     def __init__(self, skill_1: Skill, skill_2: Skill):
+        super().__init__(name="Blessings of Knowledge", origin="Knowledge Domain Cleric Level 3")
         allowed_skills = [
             Skill.ARCANA,
             Skill.HISTORY,
             Skill.NATURE,
             Skill.RELIGION,
         ]
-        self._choice = SkillProficiencyChoice(
+        self._proficiency_choice = SkillProficiencyChoice(
+            [skill_1, skill_2],
+            allowed_skills,
+            count=2,
+            error_prefix="Blessings of Knowledge",
+        )
+        self._expertise_choice = SkillExpertiseChoice(
             [skill_1, skill_2],
             allowed_skills,
             count=2,
@@ -131,7 +138,12 @@ class BlessingsOfKnowledge(Feature):
         )
 
     def apply(self, character_stat_block: CharacterStatBlock):
-        self._choice.apply(character_stat_block)
+        self._proficiency_choice.apply(character_stat_block)
+        self._expertise_choice.apply(character_stat_block)
+
+    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+        description = "You gain proficiency with one type of Artisan's Tools of your choice and in two of the following skills of your choice: Arcana, History, Nature, or Religion. You have Expertise in those two skills."
+        return description
 
 
 class KnowledgeDomainSpells(Feature):
@@ -141,7 +153,7 @@ class KnowledgeDomainSpells(Feature):
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        description = "When you reach a Cleric level specified in the Knowledge Domain Spells table, you thereafter always have the listed spells prepare"
+        description = "When you reach a Cleric level specified in the Knowledge Domain Spells table, you thereafter always have the listed spells prepared."
         return description
 
 
