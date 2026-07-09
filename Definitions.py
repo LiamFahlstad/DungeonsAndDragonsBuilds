@@ -210,6 +210,13 @@ class DruidSubclass(str, Enum):
     SHELL = "Circle of the Shell"
 
 
+class DruidLandType(str, Enum):
+    ARID = "Arid"
+    POLAR = "Polar"
+    TEMPERATE = "Temperate"
+    TROPICAL = "Tropical"
+
+
 class WizardSubclass(str, Enum):
     ABJURER = "Abjurer"
     DIVINER = "Diviner"

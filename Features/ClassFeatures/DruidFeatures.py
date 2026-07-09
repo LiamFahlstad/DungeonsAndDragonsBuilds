@@ -177,6 +177,29 @@ class Archdruid(Feature):
 ### Circle of the Land Druid Features ###
 
 
+_LAND_TYPE_RESISTANCE: dict[Definitions.DruidLandType, str] = {
+    Definitions.DruidLandType.ARID: "Fire",
+    Definitions.DruidLandType.POLAR: "Cold",
+    Definitions.DruidLandType.TEMPERATE: "Lightning",
+    Definitions.DruidLandType.TROPICAL: "Poison",
+}
+
+
+class CircleOfTheLandSpells(Feature):
+    def __init__(self, land_type: Definitions.DruidLandType):
+        super().__init__(
+            name="Circle of the Land Spells", origin="Circle of the Land Druid Level 3"
+        )
+        self.land_type = land_type
+
+    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+        description = (
+            "Whenever you finish a Long Rest, choose one type of land: arid, polar, temperate, or tropical. Consult the table below that corresponds to the chosen type; you have the spells listed for your Druid level and lower prepared.\n"
+            f"You have chosen the {self.land_type.value} land."
+        )
+        return description
+
+
 class LandsAid(Feature):
     def __init__(self):
         super().__init__(name="Land's Aid", origin="Circle of the Land Druid Level 3")
@@ -204,13 +227,18 @@ class NaturalRecovery(Feature):
 
 
 class NaturesWard(Feature):
-    def __init__(self):
+    def __init__(self, land_type: Definitions.DruidLandType):
         super().__init__(
             name="Nature's Ward", origin="Circle of the Land Druid Level 10"
         )
+        self.land_type = land_type
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        description = "You are immune to the Poisoned condition, and you have Resistance to a damage type associated with your current land choice in the Circle Spells feature, as shown in the Nature's Ward table."
+        resistance = _LAND_TYPE_RESISTANCE[self.land_type]
+        description = (
+            f"You are immune to the Poisoned condition, and you have Resistance to {resistance} damage, "
+            f"the damage type associated with your {self.land_type.value} land choice in the Circle Spells feature."
+        )
         return description
 
 

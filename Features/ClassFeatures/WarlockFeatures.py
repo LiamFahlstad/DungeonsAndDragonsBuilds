@@ -209,6 +209,15 @@ class SearingVengeance(Feature):
 ### Fiend Patron Features ###
 
 
+class FiendSpells(Feature):
+    def __init__(self):
+        super().__init__(name="Fiend Spells", origin="Fiend Patron Warlock Level 3")
+
+    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+        description = "The magic of your patron ensures you always have certain spells ready; when you reach a Warlock level specified in the Fiend Spells table, you thereafter always have the listed spells prepared."
+        return description
+
+
 class DarkOnesBlessing(Feature):
     def __init__(self):
         super().__init__(
@@ -262,6 +271,17 @@ class HurlThroughHell(Feature):
 
 
 ### Great Old One Patron Features ###
+
+
+class GreatOldOneSpells(Feature):
+    def __init__(self):
+        super().__init__(
+            name="Great Old One Spells", origin="Great Old One Patron Warlock Level 3"
+        )
+
+    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+        description = "The magic of your patron ensures you always have certain spells ready; when you reach a Warlock level specified in the Great Old One Spells table, you thereafter always have the listed spells prepared."
+        return description
 
 
 class AwakenedMind(Feature):

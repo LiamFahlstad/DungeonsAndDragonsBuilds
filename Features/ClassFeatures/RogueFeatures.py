@@ -1,4 +1,4 @@
-from Definitions import Ability, Skill
+from Definitions import Ability, CharacterClass, Skill
 from Features.Core.BaseFeatures import Feature
 from Features.Core.SubFeatures import SavingThrowProficiencyChoice, SkillExpertiseChoice
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
@@ -180,6 +180,47 @@ class StrokeOfLuck(Feature):
 ### Arcane Trickster Rogue Features ###
 
 
+class Spellcasting(Feature):
+    def __init__(self):
+        super().__init__(name="Spellcasting", origin="Arcane Trickster Rogue Level 3")
+
+    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+        description = (
+            "You have learned to cast spells. See chapter 7 for the rules on spellcasting. The information below details how you use those rules as an Arcane Trickster.\n"
+            "Cantrips. You know three cantrips: Mage Hand and two other cantrips of your choice from the Wizard spell list (see that class's section for its list). Mind Sliver and Minor Illusion are recommended.\n"
+            "Whenever you gain a Rogue level, you can replace one of your cantrips, except Mage Hand, with another Wizard cantrip of your choice.\n"
+            "When you reach Rogue level 10, you learn another Wizard cantrip of your choice.\n"
+            "Spell Slots. The Arcane Trickster Spellcasting table shows how many spell slots you have to cast your level 1+ spells. You regain all expended spell slots when you finish a Long Rest.\n"
+            "Prepared Spells of Level 1+. You prepare a list of the level 1+ spells that are available for you to cast with this feature. To start, choose three level 1 Wizard spells. Charm Person, Disguise Self and Fog Cloud are recommended.\n"
+            "The number of spells on your list increases as you gain Rogue levels, as shown in the Prepared Spells column of the Arcane Trickster Spellcasting table. Whenever that number increases, choose additional Wizard spells until the number of spells on your list matches the number in the Arcane Trickster Spellcasting table. The chosen spells must be of a level for which you have spell slots. For example, if you're a level 7 Rogue, your list of prepared spells can include five Wizard spells of level 1 or 2 in any combination.\n"
+            "Changing Your Prepared Spells. Whenever you gain a Rogue level, you can replace one spell on your list with another Wizard spell for which you have spell slots.\n"
+            "Spellcasting Ability. Intelligence is your spellcasting ability for your Wizard spells.\n"
+            "Spellcasting Focus. You can use an Arcane Focus as a Spellcasting Focus for your Wizard spells.\n"
+            "Restriction. Aside from Mage Hand, the spells you choose for this feature must be Enchantment or Illusion spells, unless they are among a short list of exceptions such as Alarm, Detect Magic, Feather Fall, Find Familiar and Knock.\n"
+            "Arcane Trickster Spellcasting\n"
+            "Rogue Level	Prepared Spells	1st	2nd	3rd	4th\n"
+            "3	3	2	-	-	-\n"
+            "4	4	3	-	-	-\n"
+            "5	4	3	-	-	-\n"
+            "6	4	3	-	-	-\n"
+            "7	5	4	2	-	-\n"
+            "8	6	4	2	-	-\n"
+            "9	6	4	2	-	-\n"
+            "10	7	4	3	-	-\n"
+            "11	8	4	3	-	-\n"
+            "12	8	4	3	-	-\n"
+            "13	9	4	3	2	-\n"
+            "14	10	4	3	2	-\n"
+            "15	10	4	3	2	-\n"
+            "16	11	4	3	3	-\n"
+            "17	11	4	3	3	-\n"
+            "18	11	4	3	3	-\n"
+            "19	12	4	3	3	1\n"
+            "20	13	4	3	3	1"
+        )
+        return description
+
+
 class MageHandLegerdemain(Feature):
     def __init__(self):
         super().__init__(
@@ -303,7 +344,13 @@ class DreadAllegiance(Feature):
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        description = "Choose one of the Dead Three: Bane, Bhaal, or Myrkul. You gain Resistance to one type of damage and the ability to cast a cantrip, as detailed in the table below; Intelligence is your spellcasting ability for this cantrip. When you finish a Long Rest, you can change your choice."
+        description = (
+            "Choose one of the Dead Three: Bane, Bhaal, or Myrkul. You gain Resistance to one type of damage and the ability to cast a cantrip, as detailed in the table below; Intelligence is your spellcasting ability for this cantrip. When you finish a Long Rest, you can change your choice.\n"
+            "God	Damage Resistance	Cantrip\n"
+            "Bane	Psychic	Minor Illusion\n"
+            "Bhaal	Poison	Blade Ward\n"
+            "Myrkul	Necrotic	Chill Touch"
+        )
         return description
 
 
@@ -354,14 +401,42 @@ class PsionicPower(Feature):
         super().__init__(name="Psionic Power", origin="Soulknife Rogue Level 3")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+        rogue_level = character_stat_block.get_class_level(CharacterClass.ROGUE)
+
+        if rogue_level < 5:
+            die_size, number_of_dice = 6, 4
+        elif rogue_level < 9:
+            die_size, number_of_dice = 8, 6
+        elif rogue_level < 11:
+            die_size, number_of_dice = 8, 8
+        elif rogue_level < 13:
+            die_size, number_of_dice = 10, 8
+        elif rogue_level < 17:
+            die_size, number_of_dice = 10, 10
+        else:
+            die_size, number_of_dice = 12, 12
+
         description = (
-            "You harbor a wellspring of psionic energy within yourself. It is represented by your Psionic Energy Dice, which fuel certain powers you have from this subclass. The Soulknife Energy Dice table shows the number of these dice you have when you reach certain Rogue levels, and the table shows the die size.\n"
+            f"You harbor a wellspring of psionic energy within yourself. It is represented by your Psionic Energy Dice (currently d{die_size}s), which fuel certain powers you have from this subclass. The Soulknife Energy Dice table shows the number of these dice you have when you reach certain Rogue levels, and the table shows the die size.\n"
+            "Soulknife Energy Dice\n"
+            "Rogue Level	Die Size	Number\n"
+            "3	D6	4\n"
+            "5	D8	6\n"
+            "9	D8	8\n"
+            "11	D10	8\n"
+            "13	D10	10\n"
+            "17	D12	12\n"
             "Any features in this subclass that use a Psionic Energy Die use only the dice from this subclass. Some of your powers expend a Psionic Energy Die, as specified in the power's description, and you can't use the power if it requires you to use a die when your Psionic Energy Dice are all expended.\n"
             "You regain one of your expended Psionic Energy Dice when you finish a Short Rest, and you regain all of them when you finish a Long Rest.\n"
             "Psi-Bolstered Knack. If you fail an ability check using a skill or tool with which you have proficiency, you can roll one Psionic Energy Die and add the number rolled to the check, potentially turning failure into success. The die is expended only if the roll then succeeds.\n"
             "Psychic Whispers. You can establish telepathic communication between yourself and others. As a Magic action, choose one or more creatures you can see, up to a number of creatures equal to your Proficiency Bonus, and then roll one Psionic Energy Die. For a number of hours equal to the number rolled, the chosen creatures can speak telepathically to you, and you can speak telepathically with them. To send or receive a message (no action required), you and the other creature must be within 1 mile of each other. A creature can end the telepathic connection at any time (no action required)."
         )
-        return description
+        return StringUtils.add_boxes(
+            description,
+            number_of_dice,
+            regain_x_on=(1, "short rest"),
+            regain_all_on="long rest",
+        )
 
 
 class PsychicBlades(Feature):

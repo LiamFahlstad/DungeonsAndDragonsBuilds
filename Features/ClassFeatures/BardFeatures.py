@@ -305,8 +305,25 @@ class MoonsInspiration(Feature):
 
 
 class PrimalLore(Feature):
-    def __init__(self):
+    def __init__(self, skill: Skill):
         super().__init__(name="Primal Lore", origin="College of the Moon Bard Level 3")
+        allowed_skills = [
+            Skill.ANIMAL_HANDLING,
+            Skill.INSIGHT,
+            Skill.MEDICINE,
+            Skill.NATURE,
+            Skill.PERCEPTION,
+            Skill.SURVIVAL,
+        ]
+        self._proficiency_choice = SkillProficiencyChoice(
+            [skill],
+            allowed_skills,
+            count=1,
+            error_prefix="Primal Lore",
+        )
+
+    def apply(self, character_stat_block: CharacterStatBlock):
+        self._proficiency_choice.apply(character_stat_block)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
