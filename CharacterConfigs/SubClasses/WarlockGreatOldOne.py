@@ -9,7 +9,7 @@ from CharacterConfigs.BaseClasses.WarlockBase import (
 )
 from CharacterSheetCreator import CharacterSheetData
 from Definitions import WarlockSubclass
-from Features.ClassFeatures import WarlockFeatures
+from Features.ClassFeatures import WarlockGreatOldOneFeatures
 from Spells.Definitions import (
     BardLevel1Spells,
     BardLevel5Spells,
@@ -31,9 +31,9 @@ class GreatOldOneWarlockLevel3(ClassBuilder.SubclassLevel3):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(WarlockFeatures.GreatOldOneSpells())
-        data.add_feature(WarlockFeatures.AwakenedMind())
-        data.add_feature(WarlockFeatures.PsychicSpells())
+        data.add_feature(WarlockGreatOldOneFeatures.GreatOldOneSpells())
+        data.add_feature(WarlockGreatOldOneFeatures.AwakenedMind())
+        data.add_feature(WarlockGreatOldOneFeatures.PsychicSpells())
         data.add_spell(SorcererLevel2Spells.DETECT_THOUGHTS)
         data.add_spell(BardLevel1Spells.DISSONANT_WHISPERS)
         data.add_spell(SorcererLevel2Spells.PHANTASMAL_FORCE)
@@ -60,7 +60,7 @@ class GreatOldOneWarlockLevel6(ClassBuilder.SubclassLevel6):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(WarlockFeatures.ClairvoyantCombatant())
+        data.add_feature(WarlockGreatOldOneFeatures.ClairvoyantCombatant())
         return data
 
 
@@ -95,8 +95,8 @@ class GreatOldOneWarlockLevel10(ClassBuilder.SubclassLevel10):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(WarlockFeatures.EldritchHex())
-        data.add_feature(WarlockFeatures.ThoughtShield())
+        data.add_feature(WarlockGreatOldOneFeatures.EldritchHex())
+        data.add_feature(WarlockGreatOldOneFeatures.ThoughtShield())
         return data
 
 
@@ -107,7 +107,7 @@ class GreatOldOneWarlockLevel14(ClassBuilder.SubclassLevel14):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(WarlockFeatures.CreateThrall())
+        data.add_feature(WarlockGreatOldOneFeatures.CreateThrall())
         return data
 
 

@@ -9,7 +9,7 @@ from CharacterConfigs.BaseClasses.WizardBase import (
 )
 from CharacterSheetCreator import CharacterSheetData
 from Definitions import WizardSubclass
-from Features.ClassFeatures import WizardFeatures
+from Features.ClassFeatures import WizardAbjurerFeatures
 from Spells.Definitions import (
     AbjurationLevel1Spells,
     AbjurationLevel2Spells,
@@ -49,8 +49,8 @@ class AbjurerWizardLevel3(ClassBuilder.SubclassLevel3):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(WizardFeatures.AbjurationSavant())
-        data.add_feature(WizardFeatures.ArcaneWard())
+        data.add_feature(WizardAbjurerFeatures.AbjurationSavant())
+        data.add_feature(WizardAbjurerFeatures.ArcaneWard())
         data.add_spell(self.spell_1)
         data.add_spell(self.spell_2)
         return data
@@ -75,7 +75,7 @@ class AbjurerWizardLevel6(ClassBuilder.SubclassLevel6):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(WizardFeatures.ProjectedWard())
+        data.add_feature(WizardAbjurerFeatures.ProjectedWard())
         return data
 
 
@@ -110,7 +110,7 @@ class AbjurerWizardLevel10(ClassBuilder.SubclassLevel10):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(WizardFeatures.SpellBreaker())
+        data.add_feature(WizardAbjurerFeatures.SpellBreaker())
         data.add_spell(AbjurationLevel3Spells.COUNTERSPELL)
         data.add_spell(AbjurationLevel3Spells.DISPEL_MAGIC)
         return data
@@ -147,7 +147,7 @@ class AbjurerWizardLevel14(ClassBuilder.SubclassLevel14):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(WizardFeatures.SpellResistance())
+        data.add_feature(WizardAbjurerFeatures.SpellResistance())
         return data
 
 

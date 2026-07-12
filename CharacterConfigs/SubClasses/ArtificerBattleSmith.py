@@ -9,7 +9,7 @@ from CharacterConfigs.BaseClasses.ArtificerBase import (
 )
 from CharacterSheetCreator import CharacterSheetData
 from Definitions import ArtificerSubclass
-from Features.ClassFeatures import ArtificerFeatures
+from Features.ClassFeatures import ArtificerBattleSmithFeatures
 from Spells.Definitions import (
     ArtificerLevel1Spells,
     PaladinLevel1Spells,
@@ -30,10 +30,10 @@ class ArtificerBattleSmithLevel3(ClassBuilder.SubclassLevel3):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(ArtificerFeatures.BattleSmithToolsOfTheTrade())
-        data.add_feature(ArtificerFeatures.BattleSmithSpells())
-        data.add_feature(ArtificerFeatures.BattleReady())
-        data.add_feature(ArtificerFeatures.SteelDefender())
+        data.add_feature(ArtificerBattleSmithFeatures.BattleSmithToolsOfTheTrade())
+        data.add_feature(ArtificerBattleSmithFeatures.BattleSmithSpells())
+        data.add_feature(ArtificerBattleSmithFeatures.BattleReady())
+        data.add_feature(ArtificerBattleSmithFeatures.SteelDefender())
         data.add_spell(PaladinLevel1Spells.HEROISM)
         data.add_spell(ArtificerLevel1Spells.SHIELD)
         return data
@@ -45,7 +45,7 @@ class ArtificerBattleSmithLevel5(ClassBuilder.SubclassLevel5):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(ArtificerFeatures.BattleSmithExtraAttack())
+        data.add_feature(ArtificerBattleSmithFeatures.BattleSmithExtraAttack())
         data.add_spell(PaladinLevel2Spells.SHINING_SMITE)
         data.add_spell(PaladinLevel2Spells.WARDING_BOND)
         return data
@@ -57,7 +57,7 @@ class ArtificerBattleSmithLevel9(ClassBuilder.SubclassLevel9):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(ArtificerFeatures.ArcaneJolt())
+        data.add_feature(ArtificerBattleSmithFeatures.ArcaneJolt())
         data.add_spell(PaladinLevel3Spells.AURA_OF_VITALITY)
         data.add_spell(RangerLevel3Spells.CONJURE_BARRAGE)
         return data
@@ -80,7 +80,7 @@ class ArtificerBattleSmithLevel15(ClassBuilder.SubclassLevel15):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(ArtificerFeatures.ImprovedDefender())
+        data.add_feature(ArtificerBattleSmithFeatures.ImprovedDefender())
         return data
 
 

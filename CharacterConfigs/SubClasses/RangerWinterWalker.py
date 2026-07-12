@@ -9,7 +9,7 @@ from CharacterConfigs.BaseClasses.RangerBase import (
 )
 from CharacterSheetCreator import CharacterSheetData
 from Definitions import RangerSubclass
-from Features.ClassFeatures import RangerFeatures
+from Features.ClassFeatures import RangerWinterWalkerFeatures
 from Spells.Definitions import (
     AbjurationLevel3Spells,
     BardLevel4Spells,
@@ -33,9 +33,9 @@ class WinterWalkerRangerLevel3(ClassBuilder.SubclassLevel3):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(RangerFeatures.FrigidExplorer())
-        data.add_feature(RangerFeatures.WinterWalkerSpells())
-        data.add_feature(RangerFeatures.HuntersRime())
+        data.add_feature(RangerWinterWalkerFeatures.FrigidExplorer())
+        data.add_feature(RangerWinterWalkerFeatures.WinterWalkerSpells())
+        data.add_feature(RangerWinterWalkerFeatures.HuntersRime())
         data.add_spell(ConjurationLevel1Spells.ICE_KNIFE)
         return data
 
@@ -60,7 +60,7 @@ class WinterWalkerRangerLevel7(ClassBuilder.SubclassLevel7):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(RangerFeatures.FortifyingSoul())
+        data.add_feature(RangerWinterWalkerFeatures.FortifyingSoul())
         return data
 
 
@@ -84,7 +84,7 @@ class WinterWalkerRangerLevel11(ClassBuilder.SubclassLevel11):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(RangerFeatures.ChillingRetribution())
+        data.add_feature(RangerWinterWalkerFeatures.ChillingRetribution())
         return data
 
 
@@ -108,7 +108,7 @@ class WinterWalkerRangerLevel15(ClassBuilder.SubclassLevel15):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(RangerFeatures.FrozenHaunt())
+        data.add_feature(RangerWinterWalkerFeatures.FrozenHaunt())
         return data
 
 

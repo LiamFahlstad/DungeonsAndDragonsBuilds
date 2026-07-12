@@ -9,7 +9,7 @@ from CharacterConfigs.BaseClasses.RangerBase import (
 )
 from CharacterSheetCreator import CharacterSheetData
 from Definitions import RangerSubclass
-from Features.ClassFeatures import RangerFeatures
+from Features.ClassFeatures import RangerGloomStalkerFeatures
 from Spells.Definitions import (
     BardLevel4Spells,
     ClericLevel4Spells,
@@ -32,9 +32,9 @@ class RangerGloomStalkerLevel3(ClassBuilder.SubclassLevel3):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(RangerFeatures.DreadAmbusher())
-        data.add_feature(RangerFeatures.UmbralSight())
-        data.add_feature(RangerFeatures.GloomStalkerSpells())
+        data.add_feature(RangerGloomStalkerFeatures.DreadAmbusher())
+        data.add_feature(RangerGloomStalkerFeatures.UmbralSight())
+        data.add_feature(RangerGloomStalkerFeatures.GloomStalkerSpells())
         data.add_spell(IllusionLevel1Spells.DISGUISE_SELF)
         return data
 
@@ -59,7 +59,7 @@ class RangerGloomStalkerLevel7(ClassBuilder.SubclassLevel7):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(RangerFeatures.IronMind())
+        data.add_feature(RangerGloomStalkerFeatures.IronMind())
         return data
 
 
@@ -83,7 +83,7 @@ class RangerGloomStalkerLevel11(ClassBuilder.SubclassLevel11):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(RangerFeatures.StalkersFlurry())
+        data.add_feature(RangerGloomStalkerFeatures.StalkersFlurry())
         return data
 
 
@@ -107,7 +107,7 @@ class RangerGloomStalkerLevel15(ClassBuilder.SubclassLevel15):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(RangerFeatures.ShadowyDodge())
+        data.add_feature(RangerGloomStalkerFeatures.ShadowyDodge())
         return data
 
 

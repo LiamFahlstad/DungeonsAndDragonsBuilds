@@ -9,7 +9,7 @@ from CharacterConfigs.BaseClasses.ArtificerBase import (
 )
 from CharacterSheetCreator import CharacterSheetData
 from Definitions import ArtificerSubclass
-from Features.ClassFeatures import ArtificerFeatures
+from Features.ClassFeatures import ArtificerReanimatorFeatures
 from Spells.Definitions import (
     ArtificerLevel2Spells,
     ArtificerLevel3Spells,
@@ -30,9 +30,9 @@ class ArtificerReanimatorLevel3(ClassBuilder.SubclassLevel3):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(ArtificerFeatures.ReanimatorSpells())
-        data.add_feature(ArtificerFeatures.ReanimatorsSkillSet())
-        data.add_feature(ArtificerFeatures.ReanimatedCompanion())
+        data.add_feature(ArtificerReanimatorFeatures.ReanimatorSpells())
+        data.add_feature(ArtificerReanimatorFeatures.ReanimatorsSkillSet())
+        data.add_feature(ArtificerReanimatorFeatures.ReanimatedCompanion())
         data.add_cantrip(NecromancyLevel0Spells.SPARE_THE_DYING)
         data.add_spell(NecromancyLevel1Spells.FALSE_LIFE)
         data.add_spell(WizardLevel1Spells.WITCH_BOLT)
@@ -45,7 +45,7 @@ class ArtificerReanimatorLevel5(ClassBuilder.SubclassLevel5):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(ArtificerFeatures.StrangeModifications())
+        data.add_feature(ArtificerReanimatorFeatures.StrangeModifications())
         data.add_spell(ArtificerLevel2Spells.BLINDNESS_DEAFNESS)
         data.add_spell(ArtificerLevel2Spells.ENHANCE_ABILITY)
         return data
@@ -57,8 +57,8 @@ class ArtificerReanimatorLevel9(ClassBuilder.SubclassLevel9):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(ArtificerFeatures.ImprovedReanimation())
-        data.add_feature(ArtificerFeatures.MacabreModifications())
+        data.add_feature(ArtificerReanimatorFeatures.ImprovedReanimation())
+        data.add_feature(ArtificerReanimatorFeatures.MacabreModifications())
         data.add_spell(ArtificerLevel3Spells.ANIMATE_DEAD)
         data.add_spell(ArtificerLevel3Spells.LIGHTNING_BOLT)
         return data
@@ -81,7 +81,7 @@ class ArtificerReanimatorLevel15(ClassBuilder.SubclassLevel15):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(ArtificerFeatures.RefinedReanimation())
+        data.add_feature(ArtificerReanimatorFeatures.RefinedReanimation())
         return data
 
 

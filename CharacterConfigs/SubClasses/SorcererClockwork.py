@@ -9,7 +9,7 @@ from CharacterConfigs.BaseClasses.SorcererBase import (
 )
 from CharacterSheetCreator import CharacterSheetData
 from Definitions import SorcererSubclass
-from Features.ClassFeatures import SorcererFeatures
+from Features.ClassFeatures import SorcererClockworkFeatures
 from Spells.Definitions import (
     AbjurationLevel1Spells,
     AbjurationLevel2Spells,
@@ -28,12 +28,12 @@ class SorcererClockworkLevel3(ClassBuilder.SubclassLevel3):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(SorcererFeatures.ClockworkSpells())
+        data.add_feature(SorcererClockworkFeatures.ClockworkSpells())
         data.add_spell(AbjurationLevel2Spells.AID)
         data.add_spell(AbjurationLevel1Spells.ALARM)
         data.add_spell(AbjurationLevel2Spells.LESSER_RESTORATION)
         data.add_spell(AbjurationLevel1Spells.PROTECTION_FROM_EVIL_AND_GOOD)
-        data.add_feature(SorcererFeatures.RestoreBalance())
+        data.add_feature(SorcererClockworkFeatures.RestoreBalance())
         return data
 
 
@@ -54,7 +54,7 @@ class SorcererClockworkLevel6(ClassBuilder.SubclassLevel6):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(SorcererFeatures.BastionOfLaw())
+        data.add_feature(SorcererClockworkFeatures.BastionOfLaw())
         return data
 
 
@@ -86,7 +86,7 @@ class SorcererClockworkLevel14(ClassBuilder.SubclassLevel14):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(SorcererFeatures.TranceOfOrder())
+        data.add_feature(SorcererClockworkFeatures.TranceOfOrder())
         return data
 
 
@@ -96,7 +96,7 @@ class SorcererClockworkLevel18(ClassBuilder.SubclassLevel18):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(SorcererFeatures.ClockworkCavalcade())
+        data.add_feature(SorcererClockworkFeatures.ClockworkCavalcade())
         return data
 
 

@@ -10,7 +10,7 @@ from CharacterConfigs.BaseClasses.ClericBase import (
 )
 from CharacterSheetCreator import CharacterSheetData
 from Definitions import ClericSubclass
-from Features.ClassFeatures import ClericFeatures
+from Features.ClassFeatures import ClericTrickeryFeatures
 from StatBlocks.SkillsStatBlock import ClericSkillsStatBlock
 
 
@@ -26,11 +26,11 @@ class ClericTrickeryLevel3(ClassBuilder.SubclassLevel3):
         data.add_spell(SpellDefinitions.IllusionLevel2Spells.INVISIBILITY)
         data.add_spell(SpellDefinitions.AbjurationLevel2Spells.PASS_WITHOUT_TRACE)
 
-        channel_divinity: ClericFeatures.ChannelDivinity = data.get_features_by_type(
-            ClericFeatures.ChannelDivinity
+        channel_divinity: ClericTrickeryFeatures.ChannelDivinity = data.get_features_by_type(
+            ClericTrickeryFeatures.ChannelDivinity
         )[0]
-        channel_divinity.extend_feature(ClericFeatures.InvokeDuplicity())
-        data.add_feature(ClericFeatures.BlessingOfTheTrickster())
+        channel_divinity.extend_feature(ClericTrickeryFeatures.InvokeDuplicity())
+        data.add_feature(ClericTrickeryFeatures.BlessingOfTheTrickster())
         return data
 
 
@@ -53,7 +53,7 @@ class ClericTrickeryLevel6(ClassBuilder.SubclassLevel6):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(ClericFeatures.TrickstersTransposition())
+        data.add_feature(ClericTrickeryFeatures.TrickstersTransposition())
         return data
 
 
@@ -88,7 +88,7 @@ class ClericTrickeryLevel17(ClassBuilder.SubclassLevel17):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(ClericFeatures.ImprovedDuplicity())
+        data.add_feature(ClericTrickeryFeatures.ImprovedDuplicity())
         return data
 
 

@@ -9,7 +9,7 @@ from CharacterConfigs.BaseClasses.WizardBase import (
 )
 from CharacterSheetCreator import CharacterSheetData
 from Definitions import WizardSubclass
-from Features.ClassFeatures import WizardFeatures
+from Features.ClassFeatures import WizardIllusionistFeatures
 from Spells.Definitions import (
     ConjurationLevel2Spells,
     ConjurationLevel3Spells,
@@ -52,8 +52,8 @@ class IllusionistWizardLevel3(ClassBuilder.SubclassLevel3):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(WizardFeatures.IllusionSavant())
-        data.add_feature(WizardFeatures.ImprovedIllusions())
+        data.add_feature(WizardIllusionistFeatures.IllusionSavant())
+        data.add_feature(WizardIllusionistFeatures.ImprovedIllusions())
         data.add_spell(self.spell_1)
         data.add_spell(self.spell_2)
         data.add_cantrip(IllusionLevel0Spells.MINOR_ILLUSION)
@@ -79,7 +79,7 @@ class IllusionistWizardLevel6(ClassBuilder.SubclassLevel6):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(WizardFeatures.PhantasmalCreatures())
+        data.add_feature(WizardIllusionistFeatures.PhantasmalCreatures())
         data.add_spell(ConjurationLevel2Spells.SUMMON_BEAST)
         data.add_spell(ConjurationLevel3Spells.SUMMON_FEY)
         return data
@@ -116,7 +116,7 @@ class IllusionistWizardLevel10(ClassBuilder.SubclassLevel10):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(WizardFeatures.IllusorySelf())
+        data.add_feature(WizardIllusionistFeatures.IllusorySelf())
         return data
 
 
@@ -151,7 +151,7 @@ class IllusionistWizardLevel14(ClassBuilder.SubclassLevel14):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(WizardFeatures.IllusoryReality())
+        data.add_feature(WizardIllusionistFeatures.IllusoryReality())
         return data
 
 

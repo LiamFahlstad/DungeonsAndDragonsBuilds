@@ -10,7 +10,7 @@ from CharacterConfigs.BaseClasses.ClericBase import (
 )
 from CharacterSheetCreator import CharacterSheetData
 from Definitions import ClericSubclass
-from Features.ClassFeatures import ClericFeatures
+from Features.ClassFeatures import ClericLightFeatures
 from StatBlocks.SkillsStatBlock import ClericSkillsStatBlock
 
 
@@ -25,11 +25,11 @@ class ClericLightLevel3(ClassBuilder.SubclassLevel3):
         data.add_spell(SpellDefinitions.EvocationLevel1Spells.FAERIE_FIRE)
         data.add_spell(SpellDefinitions.EvocationLevel2Spells.SCORCHING_RAY)
         data.add_spell(SpellDefinitions.SorcererLevel2Spells.SEE_INVISIBILITY)
-        channel_divinity: ClericFeatures.ChannelDivinity = data.get_features_by_type(
-            ClericFeatures.ChannelDivinity
+        channel_divinity: ClericLightFeatures.ChannelDivinity = data.get_features_by_type(
+            ClericLightFeatures.ChannelDivinity
         )[0]
-        channel_divinity.extend_feature(ClericFeatures.RadianceOfTheDawn())
-        data.add_feature(ClericFeatures.WardingFlare())
+        channel_divinity.extend_feature(ClericLightFeatures.RadianceOfTheDawn())
+        data.add_feature(ClericLightFeatures.WardingFlare())
         return data
 
 
@@ -52,10 +52,10 @@ class ClericLightLevel6(ClassBuilder.SubclassLevel6):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        warding_flare: ClericFeatures.WardingFlare = data.get_features_by_type(
-            ClericFeatures.WardingFlare
+        warding_flare: ClericLightFeatures.WardingFlare = data.get_features_by_type(
+            ClericLightFeatures.WardingFlare
         )[0]
-        warding_flare.extend_feature(ClericFeatures.ImprovedWardingFlare())
+        warding_flare.extend_feature(ClericLightFeatures.ImprovedWardingFlare())
         return data
 
 
@@ -90,7 +90,7 @@ class ClericLightLevel17(ClassBuilder.SubclassLevel17):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(ClericFeatures.CoronaOfLight())
+        data.add_feature(ClericLightFeatures.CoronaOfLight())
         return data
 
 

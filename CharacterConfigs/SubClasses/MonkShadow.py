@@ -9,7 +9,7 @@ from CharacterConfigs.BaseClasses.MonkBase import (
 )
 from CharacterSheetCreator import CharacterSheetData
 from Definitions import Ability, MonkSubclass
-from Features.ClassFeatures import MonkFeatures
+from Features.ClassFeatures import MonkShadowFeatures
 from StatBlocks.SkillsStatBlock import MonkSkillsStatBlock
 
 
@@ -19,10 +19,10 @@ class MonkShadowLevel3(ClassBuilder.SubclassLevel3):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        monks_focus: MonkFeatures.MonksFocus = data.get_features_by_type(
-            MonkFeatures.MonksFocus
+        monks_focus: MonkShadowFeatures.MonksFocus = data.get_features_by_type(
+            MonkShadowFeatures.MonksFocus
         )[0]
-        monks_focus.extend_feature(MonkFeatures.ShadowArts())
+        monks_focus.extend_feature(MonkShadowFeatures.ShadowArts())
         return data
 
 
@@ -32,7 +32,7 @@ class MonkShadowLevel6(ClassBuilder.SubclassLevel6):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(MonkFeatures.ShadowStep())
+        data.add_feature(MonkShadowFeatures.ShadowStep())
         return data
 
 
@@ -43,10 +43,10 @@ class MonkShadowLevel11(ClassBuilder.SubclassLevel11):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        shadow_step: MonkFeatures.ShadowStep = data.get_features_by_type(
-            MonkFeatures.ShadowStep
+        shadow_step: MonkShadowFeatures.ShadowStep = data.get_features_by_type(
+            MonkShadowFeatures.ShadowStep
         )[0]
-        shadow_step.extend_feature(MonkFeatures.ImprovedShadowStep())
+        shadow_step.extend_feature(MonkShadowFeatures.ImprovedShadowStep())
         return data
 
 
@@ -57,10 +57,10 @@ class MonkShadowLevel17(ClassBuilder.SubclassLevel17):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        monks_focus: MonkFeatures.MonksFocus = data.get_features_by_type(
-            MonkFeatures.MonksFocus
+        monks_focus: MonkShadowFeatures.MonksFocus = data.get_features_by_type(
+            MonkShadowFeatures.MonksFocus
         )[0]
-        monks_focus.extend_feature(MonkFeatures.CloakOfShadows())
+        monks_focus.extend_feature(MonkShadowFeatures.CloakOfShadows())
         return data
 
 

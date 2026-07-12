@@ -9,7 +9,7 @@ from CharacterConfigs.BaseClasses.ClericBase import (
 )
 from CharacterSheetCreator import CharacterSheetData
 from Definitions import ClericSubclass
-from Features.ClassFeatures import ClericFeatures
+from Features.ClassFeatures import ClericLifeFeatures
 from Spells.Definitions import (
     ClericLevel1Spells,
     ClericLevel2Spells,
@@ -32,11 +32,11 @@ class ClericLifeLevel3(ClassBuilder.SubclassLevel3):
         data.add_spell(ClericLevel2Spells.AID)
         data.add_spell(ClericLevel2Spells.LESSER_RESTORATION)
 
-        channel_divinity: ClericFeatures.ChannelDivinity = data.get_features_by_type(
-            ClericFeatures.ChannelDivinity
+        channel_divinity: ClericLifeFeatures.ChannelDivinity = data.get_features_by_type(
+            ClericLifeFeatures.ChannelDivinity
         )[0]
-        channel_divinity.extend_feature(ClericFeatures.PreserveLife())
-        data.add_feature(ClericFeatures.DiscipleofLife())
+        channel_divinity.extend_feature(ClericLifeFeatures.PreserveLife())
+        data.add_feature(ClericLifeFeatures.DiscipleofLife())
         return data
 
 
@@ -59,7 +59,7 @@ class ClericLifeLevel6(ClassBuilder.SubclassLevel6):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(ClericFeatures.BlessedHealer())
+        data.add_feature(ClericLifeFeatures.BlessedHealer())
         return data
 
 
@@ -94,7 +94,7 @@ class ClericLifeLevel17(ClassBuilder.SubclassLevel17):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(ClericFeatures.SupremeHealing())
+        data.add_feature(ClericLifeFeatures.SupremeHealing())
         return data
 
 

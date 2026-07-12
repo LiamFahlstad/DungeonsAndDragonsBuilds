@@ -9,7 +9,7 @@ from CharacterConfigs.BaseClasses.ArtificerBase import (
 )
 from CharacterSheetCreator import CharacterSheetData
 from Definitions import ArtificerSubclass
-from Features.ClassFeatures import ArtificerFeatures
+from Features.ClassFeatures import ArtificerCartographerFeatures
 from Spells.Definitions import (
     ArtificerLevel3Spells,
     ArtificerLevel4Spells,
@@ -30,10 +30,10 @@ class ArtificerCartographerLevel3(ClassBuilder.SubclassLevel3):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(ArtificerFeatures.CartographerToolsOfTheTrade())
-        data.add_feature(ArtificerFeatures.CartographerSpells())
-        data.add_feature(ArtificerFeatures.AdventurersAtlas())
-        data.add_feature(ArtificerFeatures.MappingMagic())
+        data.add_feature(ArtificerCartographerFeatures.CartographerToolsOfTheTrade())
+        data.add_feature(ArtificerCartographerFeatures.CartographerSpells())
+        data.add_feature(ArtificerCartographerFeatures.AdventurersAtlas())
+        data.add_feature(ArtificerCartographerFeatures.MappingMagic())
         data.add_spell(DruidLevel1Spells.FAERIE_FIRE)
         data.add_spell(ClericLevel1Spells.GUIDING_BOLT)
         data.add_spell(ClericLevel1Spells.HEALING_WORD)
@@ -46,7 +46,7 @@ class ArtificerCartographerLevel5(ClassBuilder.SubclassLevel5):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(ArtificerFeatures.GuidedPrecision())
+        data.add_feature(ArtificerCartographerFeatures.GuidedPrecision())
         data.add_spell(DivinationLevel2Spells.LOCATE_OBJECT)
         data.add_spell(DivinationLevel2Spells.MIND_SPIKE)
         return data
@@ -58,7 +58,7 @@ class ArtificerCartographerLevel9(ClassBuilder.SubclassLevel9):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(ArtificerFeatures.IngeniousMovement())
+        data.add_feature(ArtificerCartographerFeatures.IngeniousMovement())
         data.add_spell(DruidLevel3Spells.CALL_LIGHTNING)
         data.add_spell(ArtificerLevel3Spells.CLAIRVOYANCE)
         return data
@@ -81,7 +81,7 @@ class ArtificerCartographerLevel15(ClassBuilder.SubclassLevel15):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(ArtificerFeatures.SuperiorAtlas())
+        data.add_feature(ArtificerCartographerFeatures.SuperiorAtlas())
         return data
 
 

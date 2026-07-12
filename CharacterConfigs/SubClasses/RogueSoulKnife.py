@@ -9,7 +9,7 @@ from CharacterConfigs.BaseClasses.RogueBase import (
 )
 from CharacterSheetCreator import CharacterSheetData
 from Definitions import RogueSubclass
-from Features.ClassFeatures import RogueFeatures
+from Features.ClassFeatures import RogueSoulKnifeFeatures
 from StatBlocks.SkillsStatBlock import RogueSkillsStatBlock
 
 
@@ -21,8 +21,8 @@ class RogueSoulKnifeLevel3(ClassBuilder.SubclassLevel3):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(RogueFeatures.PsionicPower())
-        data.add_feature(RogueFeatures.PsychicBlades())
+        data.add_feature(RogueSoulKnifeFeatures.PsionicPower())
+        data.add_feature(RogueSoulKnifeFeatures.PsychicBlades())
         return data
 
 
@@ -34,7 +34,7 @@ class RogueSoulKnifeLevel9(ClassBuilder.SubclassLevel9):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(RogueFeatures.SoulBlades())
+        data.add_feature(RogueSoulKnifeFeatures.SoulBlades())
         return data
 
 
@@ -46,7 +46,7 @@ class RogueSoulKnifeLevel13(ClassBuilder.SubclassLevel13):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(RogueFeatures.PsychicVeil())
+        data.add_feature(RogueSoulKnifeFeatures.PsychicVeil())
         return data
 
 
@@ -58,7 +58,7 @@ class RogueSoulKnifeLevel17(ClassBuilder.SubclassLevel17):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(RogueFeatures.RendMind())
+        data.add_feature(RogueSoulKnifeFeatures.RendMind())
         return data
 
 

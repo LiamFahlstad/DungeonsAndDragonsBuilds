@@ -9,7 +9,7 @@ from CharacterConfigs.BaseClasses.ArtificerBase import (
 )
 from CharacterSheetCreator import CharacterSheetData
 from Definitions import ArtificerSubclass
-from Features.ClassFeatures import ArtificerFeatures
+from Features.ClassFeatures import ArtificerArmorerFeatures
 from Spells.Definitions import (
     ArtificerLevel1Spells,
     ArtificerLevel2Spells,
@@ -26,10 +26,10 @@ class ArtificerArmorerLevel3(ClassBuilder.SubclassLevel3):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(ArtificerFeatures.ArmorerToolsOfTheTrade())
-        data.add_feature(ArtificerFeatures.ArmorerSpells())
-        data.add_feature(ArtificerFeatures.ArcaneArmor())
-        data.add_feature(ArtificerFeatures.ArmorModel())
+        data.add_feature(ArtificerArmorerFeatures.ArmorerToolsOfTheTrade())
+        data.add_feature(ArtificerArmorerFeatures.ArmorerSpells())
+        data.add_feature(ArtificerArmorerFeatures.ArcaneArmor())
+        data.add_feature(ArtificerArmorerFeatures.ArmorModel())
         data.add_spell(ArtificerLevel1Spells.MAGIC_MISSILE)
         data.add_spell(ArtificerLevel1Spells.THUNDERWAVE)
         return data
@@ -41,7 +41,7 @@ class ArtificerArmorerLevel5(ClassBuilder.SubclassLevel5):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(ArtificerFeatures.ArmorerExtraAttack())
+        data.add_feature(ArtificerArmorerFeatures.ArmorerExtraAttack())
         data.add_spell(ArtificerLevel2Spells.MIRROR_IMAGE)
         data.add_spell(ArtificerLevel2Spells.SHATTER)
         return data
@@ -53,7 +53,7 @@ class ArtificerArmorerLevel9(ClassBuilder.SubclassLevel9):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(ArtificerFeatures.ImprovedArmorer())
+        data.add_feature(ArtificerArmorerFeatures.ImprovedArmorer())
         data.add_spell(ArtificerLevel3Spells.HYPNOTIC_PATTERN)
         data.add_spell(ArtificerLevel3Spells.LIGHTNING_BOLT)
         return data
@@ -76,7 +76,7 @@ class ArtificerArmorerLevel15(ClassBuilder.SubclassLevel15):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(ArtificerFeatures.PerfectedArmor())
+        data.add_feature(ArtificerArmorerFeatures.PerfectedArmor())
         return data
 
 

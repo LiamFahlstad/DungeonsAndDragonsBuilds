@@ -9,7 +9,7 @@ from CharacterConfigs.BaseClasses.RangerBase import (
 )
 from CharacterSheetCreator import CharacterSheetData
 from Definitions import RangerSubclass
-from Features.ClassFeatures import RangerFeatures
+from Features.ClassFeatures import RangerFeyWandererFeatures
 from Spells.Definitions import (
     BardLevel4Spells,
     ClericLevel4Spells,
@@ -32,9 +32,9 @@ class FeyWandererRangerLevel3(ClassBuilder.SubclassLevel3):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(RangerFeatures.DreadfulStrikes())
-        data.add_feature(RangerFeatures.FeyWandererSpells())
-        data.add_feature(RangerFeatures.OtherworldlyGlamour())
+        data.add_feature(RangerFeyWandererFeatures.DreadfulStrikes())
+        data.add_feature(RangerFeyWandererFeatures.FeyWandererSpells())
+        data.add_feature(RangerFeyWandererFeatures.OtherworldlyGlamour())
         data.add_spell(EnchantmentLevel1Spells.CHARM_PERSON)
         return data
 
@@ -59,7 +59,7 @@ class FeyWandererRangerLevel7(ClassBuilder.SubclassLevel7):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(RangerFeatures.BeguilingTwist())
+        data.add_feature(RangerFeyWandererFeatures.BeguilingTwist())
         return data
 
 
@@ -83,7 +83,7 @@ class FeyWandererRangerLevel11(ClassBuilder.SubclassLevel11):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(RangerFeatures.FeyReinforcements())
+        data.add_feature(RangerFeyWandererFeatures.FeyReinforcements())
         return data
 
 
@@ -107,7 +107,7 @@ class FeyWandererRangerLevel15(ClassBuilder.SubclassLevel15):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(RangerFeatures.MistyWanderer())
+        data.add_feature(RangerFeyWandererFeatures.MistyWanderer())
         return data
 
 

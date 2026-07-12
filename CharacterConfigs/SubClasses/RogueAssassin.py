@@ -9,7 +9,7 @@ from CharacterConfigs.BaseClasses.RogueBase import (
 )
 from CharacterSheetCreator import CharacterSheetData
 from Definitions import RogueSubclass
-from Features.ClassFeatures import RogueFeatures
+from Features.ClassFeatures import RogueAssassinFeatures
 from StatBlocks.SkillsStatBlock import RogueSkillsStatBlock
 
 
@@ -21,8 +21,8 @@ class RogueAssassinLevel3(ClassBuilder.SubclassLevel3):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(RogueFeatures.Assassinate())
-        data.add_feature(RogueFeatures.AssassinsTools())
+        data.add_feature(RogueAssassinFeatures.Assassinate())
+        data.add_feature(RogueAssassinFeatures.AssassinsTools())
         return data
 
 
@@ -34,7 +34,7 @@ class RogueAssassinLevel9(ClassBuilder.SubclassLevel9):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(RogueFeatures.InfiltrationExpertise())
+        data.add_feature(RogueAssassinFeatures.InfiltrationExpertise())
         return data
 
 
@@ -46,11 +46,11 @@ class RogueAssassinLevel13(ClassBuilder.SubclassLevel13):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        sneak_attack_feature: RogueFeatures.SneakAttack = data.get_features_by_type(
-            RogueFeatures.SneakAttack
+        sneak_attack_feature: RogueAssassinFeatures.SneakAttack = data.get_features_by_type(
+            RogueAssassinFeatures.SneakAttack
         )[0]
-        sneak_attack_feature.extend_feature(RogueFeatures.CunningStrike())
-        data.add_feature(RogueFeatures.EnvenomWeapons())
+        sneak_attack_feature.extend_feature(RogueAssassinFeatures.CunningStrike())
+        data.add_feature(RogueAssassinFeatures.EnvenomWeapons())
         return data
 
 
@@ -62,11 +62,11 @@ class RogueAssassinLevel17(ClassBuilder.SubclassLevel17):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        sneak_attack_feature: RogueFeatures.SneakAttack = data.get_features_by_type(
-            RogueFeatures.SneakAttack
+        sneak_attack_feature: RogueAssassinFeatures.SneakAttack = data.get_features_by_type(
+            RogueAssassinFeatures.SneakAttack
         )[0]
-        sneak_attack_feature.extend_feature(RogueFeatures.CunningStrike())
-        data.add_feature(RogueFeatures.DeathStrike())
+        sneak_attack_feature.extend_feature(RogueAssassinFeatures.CunningStrike())
+        data.add_feature(RogueAssassinFeatures.DeathStrike())
         return data
 
 

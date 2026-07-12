@@ -9,7 +9,7 @@ from CharacterConfigs.BaseClasses.SorcererBase import (
 )
 from CharacterSheetCreator import CharacterSheetData
 from Definitions import SorcererSubclass
-from Features.ClassFeatures import SorcererFeatures
+from Features.ClassFeatures import SorcererSpellfireFeatures
 from Spells.Definitions import (
     AbjurationLevel1Spells,
     AbjurationLevel2Spells,
@@ -30,8 +30,8 @@ class SorcererSpellfireLevel3(ClassBuilder.SubclassLevel3):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(SorcererFeatures.SpellfireBurst())
-        data.add_feature(SorcererFeatures.SpellfireSpells())
+        data.add_feature(SorcererSpellfireFeatures.SpellfireBurst())
+        data.add_feature(SorcererSpellfireFeatures.SpellfireSpells())
         data.add_spell(AbjurationLevel1Spells.CURE_WOUNDS)
         data.add_spell(EvocationLevel1Spells.GUIDING_BOLT)
         data.add_spell(AbjurationLevel2Spells.LESSER_RESTORATION)
@@ -57,7 +57,7 @@ class SorcererSpellfireLevel6(ClassBuilder.SubclassLevel6):
         data: CharacterSheetData,
     ) -> CharacterSheetData:
         data.add_spell(SorcererLevel3Spells.COUNTERSPELL)
-        data.add_feature(SorcererFeatures.AbsorbSpells())
+        data.add_feature(SorcererSpellfireFeatures.AbsorbSpells())
         return data
 
 
@@ -89,7 +89,7 @@ class SorcererSpellfireLevel14(ClassBuilder.SubclassLevel14):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(SorcererFeatures.HonedSpellfire())
+        data.add_feature(SorcererSpellfireFeatures.HonedSpellfire())
         return data
 
 
@@ -99,7 +99,7 @@ class SorcererSpellfireLevel18(ClassBuilder.SubclassLevel18):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(SorcererFeatures.CrownOfSpellfire())
+        data.add_feature(SorcererSpellfireFeatures.CrownOfSpellfire())
         return data
 
 

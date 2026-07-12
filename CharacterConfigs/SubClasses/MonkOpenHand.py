@@ -9,7 +9,7 @@ from CharacterConfigs.BaseClasses.MonkBase import (
 )
 from CharacterSheetCreator import CharacterSheetData
 from Definitions import Ability, MonkSubclass
-from Features.ClassFeatures import MonkFeatures
+from Features.ClassFeatures import MonkOpenHandFeatures
 from StatBlocks.SkillsStatBlock import MonkSkillsStatBlock
 
 
@@ -19,7 +19,7 @@ class MonkOpenHandLevel3(ClassBuilder.SubclassLevel3):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(MonkFeatures.OpenHandTechnique())
+        data.add_feature(MonkOpenHandFeatures.OpenHandTechnique())
         return data
 
 
@@ -29,7 +29,7 @@ class MonkOpenHandLevel6(ClassBuilder.SubclassLevel6):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(MonkFeatures.WholenessOfBody())
+        data.add_feature(MonkOpenHandFeatures.WholenessOfBody())
         return data
 
 
@@ -40,7 +40,7 @@ class MonkOpenHandLevel11(ClassBuilder.SubclassLevel11):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(MonkFeatures.FleetStep())
+        data.add_feature(MonkOpenHandFeatures.FleetStep())
         return data
 
 
@@ -51,7 +51,7 @@ class MonkOpenHandLevel17(ClassBuilder.SubclassLevel17):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(MonkFeatures.QuiveringPalm())
+        data.add_feature(MonkOpenHandFeatures.QuiveringPalm())
         return data
 
 

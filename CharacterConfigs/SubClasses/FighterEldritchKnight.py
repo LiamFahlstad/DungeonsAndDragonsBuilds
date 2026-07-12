@@ -9,7 +9,7 @@ from CharacterConfigs.BaseClasses.FighterBase import (
 )
 from CharacterSheetCreator import CharacterSheetData
 from Definitions import FighterSubclass
-from Features.ClassFeatures import FighterFeatures, SpellSlots
+from Features.ClassFeatures import FighterEldritchKnightFeatures, SpellSlots
 from StatBlocks.SkillsStatBlock import FighterSkillsStatBlock
 
 
@@ -20,8 +20,8 @@ class FighterEldritchKnightLevel3(ClassBuilder.SubclassLevel3):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(FighterFeatures.EldritchKnightSpellcasting())
-        data.add_feature(FighterFeatures.WarBond())
+        data.add_feature(FighterEldritchKnightFeatures.EldritchKnightSpellcasting())
+        data.add_feature(FighterEldritchKnightFeatures.WarBond())
         return data
 
 
@@ -32,7 +32,7 @@ class FighterEldritchKnightLevel7(ClassBuilder.SubclassLevel7):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(FighterFeatures.WarMagic())
+        data.add_feature(FighterEldritchKnightFeatures.WarMagic())
         return data
 
 
@@ -43,7 +43,7 @@ class FighterEldritchKnightLevel10(ClassBuilder.SubclassLevel10):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(FighterFeatures.EldritchStrike())
+        data.add_feature(FighterEldritchKnightFeatures.EldritchStrike())
         return data
 
 
@@ -54,7 +54,7 @@ class FighterEldritchKnightLevel15(ClassBuilder.SubclassLevel15):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(FighterFeatures.ArcaneCharge())
+        data.add_feature(FighterEldritchKnightFeatures.ArcaneCharge())
         return data
 
 
@@ -65,10 +65,10 @@ class FighterEldritchKnightLevel18(ClassBuilder.SubclassLevel18):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        war_magic: FighterFeatures.WarMagic = data.get_features_by_type(
-            FighterFeatures.WarMagic
+        war_magic: FighterEldritchKnightFeatures.WarMagic = data.get_features_by_type(
+            FighterEldritchKnightFeatures.WarMagic
         )[0]
-        war_magic.extend_feature(FighterFeatures.ImprovedWarMagic())
+        war_magic.extend_feature(FighterEldritchKnightFeatures.ImprovedWarMagic())
         return data
 
 

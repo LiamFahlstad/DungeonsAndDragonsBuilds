@@ -9,7 +9,7 @@ from CharacterConfigs.BaseClasses.BarbarianBase import (
 )
 from CharacterSheetCreator import CharacterSheetData
 from Definitions import BarbarianSubclass
-from Features.ClassFeatures import BarbarianFeatures
+from Features.ClassFeatures import BarbarianPathOfTheWildHeartFeatures
 from StatBlocks.SkillsStatBlock import BarbarianSkillsStatBlock
 
 
@@ -20,11 +20,11 @@ class BarbarianWildHeartLevel3(ClassBuilder.SubclassLevel3):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(BarbarianFeatures.AnimalSpeaker())
-        rage: BarbarianFeatures.Rage = data.get_features_by_type(
-            BarbarianFeatures.Rage
+        data.add_feature(BarbarianPathOfTheWildHeartFeatures.AnimalSpeaker())
+        rage: BarbarianPathOfTheWildHeartFeatures.Rage = data.get_features_by_type(
+            BarbarianPathOfTheWildHeartFeatures.Rage
         )[0]
-        rage.extend_feature(BarbarianFeatures.RageOfTheWilds())
+        rage.extend_feature(BarbarianPathOfTheWildHeartFeatures.RageOfTheWilds())
         return data
 
 
@@ -35,7 +35,7 @@ class BarbarianWildHeartLevel6(ClassBuilder.SubclassLevel6):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(BarbarianFeatures.AspectOfTheWilds())
+        data.add_feature(BarbarianPathOfTheWildHeartFeatures.AspectOfTheWilds())
         return data
 
 
@@ -46,7 +46,7 @@ class BarbarianWildHeartLevel10(ClassBuilder.SubclassLevel10):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(BarbarianFeatures.NatureSpeaker())
+        data.add_feature(BarbarianPathOfTheWildHeartFeatures.NatureSpeaker())
         return data
 
 
@@ -57,10 +57,10 @@ class BarbarianWildHeartLevel14(ClassBuilder.SubclassLevel14):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        rage: BarbarianFeatures.Rage = data.get_features_by_type(
-            BarbarianFeatures.Rage
+        rage: BarbarianPathOfTheWildHeartFeatures.Rage = data.get_features_by_type(
+            BarbarianPathOfTheWildHeartFeatures.Rage
         )[0]
-        rage.extend_feature(BarbarianFeatures.PowerOfTheWilds())
+        rage.extend_feature(BarbarianPathOfTheWildHeartFeatures.PowerOfTheWilds())
         return data
 
 

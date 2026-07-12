@@ -9,7 +9,7 @@ from CharacterConfigs.BaseClasses.PaladinBase import (
 )
 from CharacterSheetCreator import CharacterSheetData
 from Definitions import PaladinSubclass
-from Features.ClassFeatures import PaladinFeatures
+from Features.ClassFeatures import PaladinGloryFeatures
 from Spells.Definitions import (
     BardLevel4Spells,
     ClericLevel1Spells,
@@ -31,11 +31,11 @@ class PaladinGloryLevel3(ClassBuilder.SubclassLevel3):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        channel_divinity_feature: PaladinFeatures.ChannelDivinity = (
-            data.get_features_by_type(PaladinFeatures.ChannelDivinity)[0]
+        channel_divinity_feature: PaladinGloryFeatures.ChannelDivinity = (
+            data.get_features_by_type(PaladinGloryFeatures.ChannelDivinity)[0]
         )
-        channel_divinity_feature.extend_feature(PaladinFeatures.InspiringSmite())
-        channel_divinity_feature.extend_feature(PaladinFeatures.PeerlessAthlete())
+        channel_divinity_feature.extend_feature(PaladinGloryFeatures.InspiringSmite())
+        channel_divinity_feature.extend_feature(PaladinGloryFeatures.PeerlessAthlete())
         data.add_spell(ClericLevel1Spells.GUIDING_BOLT)
         data.add_spell(PaladinLevel1Spells.HEROISM)
         return data
@@ -62,10 +62,10 @@ class PaladinGloryLevel7(ClassBuilder.SubclassLevel7):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        aura_of_protection: PaladinFeatures.AuraOfProtection = (
-            data.get_features_by_type(PaladinFeatures.AuraOfProtection)[0]
+        aura_of_protection: PaladinGloryFeatures.AuraOfProtection = (
+            data.get_features_by_type(PaladinGloryFeatures.AuraOfProtection)[0]
         )
-        aura_of_protection.extend_feature(PaladinFeatures.AuraOfAlacrity())
+        aura_of_protection.extend_feature(PaladinGloryFeatures.AuraOfAlacrity())
         return data
 
 
@@ -103,7 +103,7 @@ class PaladinGloryLevel15(ClassBuilder.SubclassLevel15):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(PaladinFeatures.GloriousDefense())
+        data.add_feature(PaladinGloryFeatures.GloriousDefense())
         return data
 
 
@@ -128,7 +128,7 @@ class PaladinGloryLevel20(ClassBuilder.SubclassLevel20):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(PaladinFeatures.LivingLegend())
+        data.add_feature(PaladinGloryFeatures.LivingLegend())
         return data
 
 

@@ -9,7 +9,7 @@ from CharacterConfigs.BaseClasses.WizardBase import (
 )
 from CharacterSheetCreator import CharacterSheetData
 from Definitions import Skill, WizardSubclass
-from Features.ClassFeatures import WizardFeatures
+from Features.ClassFeatures import WizardBladesingerFeatures
 from StatBlocks.SkillsStatBlock import WizardSkillsStatBlock
 
 
@@ -22,8 +22,8 @@ class WizardBladesingerLevel3(ClassBuilder.SubclassLevel3):
     ) -> CharacterSheetData:
         if data.armors:
             raise ValueError("Bladesong cannot be used while wearing armor.")
-        data.add_feature(WizardFeatures.BladesongText())
-        data.add_feature(WizardFeatures.TrainingInWarAndSong(Skill.ATHLETICS))
+        data.add_feature(WizardBladesingerFeatures.BladesongText())
+        data.add_feature(WizardBladesingerFeatures.TrainingInWarAndSong(Skill.ATHLETICS))
         return data
 
 
@@ -34,7 +34,7 @@ class WizardBladesingerLevel6(ClassBuilder.SubclassLevel6):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(WizardFeatures.ExtraAttack())
+        data.add_feature(WizardBladesingerFeatures.ExtraAttack())
         return data
 
 
@@ -45,7 +45,7 @@ class WizardBladesingerLevel10(ClassBuilder.SubclassLevel10):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(WizardFeatures.SongOfDefense())
+        data.add_feature(WizardBladesingerFeatures.SongOfDefense())
         return data
 
 
@@ -56,7 +56,7 @@ class WizardBladesingerLevel14(ClassBuilder.SubclassLevel14):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(WizardFeatures.SongOfVictory())
+        data.add_feature(WizardBladesingerFeatures.SongOfVictory())
         return data
 
 

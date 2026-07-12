@@ -9,7 +9,7 @@ from CharacterConfigs.BaseClasses.RangerBase import (
 )
 from CharacterSheetCreator import CharacterSheetData
 from Definitions import RangerSubclass
-from Features.ClassFeatures import RangerFeatures
+from Features.ClassFeatures import RangerHunterFeatures
 from StatBlocks.SkillsStatBlock import RangerSkillsStatBlock
 
 
@@ -21,8 +21,8 @@ class HunterRangerLevel3(ClassBuilder.SubclassLevel3):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(RangerFeatures.HuntersLore())
-        data.add_feature(RangerFeatures.HuntersPrey())
+        data.add_feature(RangerHunterFeatures.HuntersLore())
+        data.add_feature(RangerHunterFeatures.HuntersPrey())
         return data
 
 
@@ -34,7 +34,7 @@ class HunterRangerLevel7(ClassBuilder.SubclassLevel7):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(RangerFeatures.DefensiveTactics())
+        data.add_feature(RangerHunterFeatures.DefensiveTactics())
         return data
 
 
@@ -46,7 +46,7 @@ class HunterRangerLevel11(ClassBuilder.SubclassLevel11):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(RangerFeatures.SuperiorHuntersPrey())
+        data.add_feature(RangerHunterFeatures.SuperiorHuntersPrey())
         return data
 
 
@@ -58,7 +58,7 @@ class HunterRangerLevel15(ClassBuilder.SubclassLevel15):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(RangerFeatures.SuperiorHuntersDefense())
+        data.add_feature(RangerHunterFeatures.SuperiorHuntersDefense())
         return data
 
 

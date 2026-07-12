@@ -9,7 +9,7 @@ from CharacterConfigs.BaseClasses.DruidBase import (
 )
 from CharacterSheetCreator import CharacterSheetData
 from Definitions import DruidSubclass
-from Features.ClassFeatures import DruidFeatures
+from Features.ClassFeatures import DruidStarsFeatures
 from Spells.Definitions import DruidLevel0Spells, EvocationLevel1Spells
 from StatBlocks.SkillsStatBlock import DruidSkillsStatBlock
 
@@ -21,8 +21,8 @@ class DruidStarsLevel3(ClassBuilder.SubclassLevel3):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(DruidFeatures.StarMap())
-        data.add_feature(DruidFeatures.StarryForm())
+        data.add_feature(DruidStarsFeatures.StarMap())
+        data.add_feature(DruidStarsFeatures.StarryForm())
         data.add_spell(DruidLevel0Spells.GUIDANCE)
         data.add_spell(EvocationLevel1Spells.GUIDING_BOLT)
         return data
@@ -35,7 +35,7 @@ class DruidStarsLevel6(ClassBuilder.SubclassLevel6):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(DruidFeatures.CosmicOmen())
+        data.add_feature(DruidStarsFeatures.CosmicOmen())
         return data
 
 
@@ -46,7 +46,7 @@ class DruidStarsLevel10(ClassBuilder.SubclassLevel10):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(DruidFeatures.TwinklingConstellations())
+        data.add_feature(DruidStarsFeatures.TwinklingConstellations())
         return data
 
 
@@ -57,7 +57,7 @@ class DruidStarsLevel14(ClassBuilder.SubclassLevel14):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(DruidFeatures.FullOfStars())
+        data.add_feature(DruidStarsFeatures.FullOfStars())
         return data
 
 

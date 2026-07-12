@@ -10,7 +10,7 @@ from CharacterConfigs.BaseClasses.BardBase import (
 )
 from CharacterSheetCreator import CharacterSheetData
 from Definitions import BardSubclass, Skill
-from Features.ClassFeatures import BardFeatures
+from Features.ClassFeatures import BardLoreFeatures
 from StatBlocks.SkillsStatBlock import BardSkillsStatBlock
 
 
@@ -25,9 +25,9 @@ class BardLoreLevel3(ClassBuilder.SubclassLevel3):
         data: CharacterSheetData,
     ) -> CharacterSheetData:
         data.add_feature(
-            BardFeatures.BonusProficiencies(self.skill_1, self.skill_2, self.skill_3)
+            BardLoreFeatures.BonusProficiencies(self.skill_1, self.skill_2, self.skill_3)
         )
-        data.add_feature(BardFeatures.CuttingWords())
+        data.add_feature(BardLoreFeatures.CuttingWords())
         return data
 
 
@@ -62,7 +62,7 @@ class BardLoreLevel6(ClassBuilder.SubclassLevel6):
     ) -> CharacterSheetData:
         data.add_spell(self.spell_1)
         data.add_spell(self.spell_2)
-        data.add_feature(BardFeatures.MagicalDiscoveries())
+        data.add_feature(BardLoreFeatures.MagicalDiscoveries())
         return data
 
 
@@ -73,10 +73,10 @@ class BardLoreLevel14(ClassBuilder.SubclassLevel14):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        bardic_inspiration: BardFeatures.BardicInspiration = data.get_features_by_type(
-            BardFeatures.BardicInspiration
+        bardic_inspiration: BardLoreFeatures.BardicInspiration = data.get_features_by_type(
+            BardLoreFeatures.BardicInspiration
         )[0]
-        bardic_inspiration.extend_feature(BardFeatures.PeerlessSkill())
+        bardic_inspiration.extend_feature(BardLoreFeatures.PeerlessSkill())
         return data
 
 

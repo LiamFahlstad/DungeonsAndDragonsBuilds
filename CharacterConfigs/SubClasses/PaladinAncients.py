@@ -9,7 +9,7 @@ from CharacterConfigs.BaseClasses.PaladinBase import (
 )
 from CharacterSheetCreator import CharacterSheetData
 from Definitions import PaladinSubclass
-from Features.ClassFeatures import PaladinFeatures
+from Features.ClassFeatures import PaladinAncientsFeatures
 from Spells.Definitions import (
     ConjurationLevel1Spells,
     ConjurationLevel2Spells,
@@ -30,10 +30,10 @@ class AncientsPaladinLevel3(ClassBuilder.SubclassLevel3):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        channel_divinity_feature: PaladinFeatures.ChannelDivinity = (
-            data.get_features_by_type(PaladinFeatures.ChannelDivinity)[0]
+        channel_divinity_feature: PaladinAncientsFeatures.ChannelDivinity = (
+            data.get_features_by_type(PaladinAncientsFeatures.ChannelDivinity)[0]
         )
-        channel_divinity_feature.extend_feature(PaladinFeatures.NaturesWrath())
+        channel_divinity_feature.extend_feature(PaladinAncientsFeatures.NaturesWrath())
         data.add_spell(ConjurationLevel1Spells.ENSNARING_STRIKE)
         data.add_spell(DivinationLevel1Spells.SPEAK_WITH_ANIMALS)
         return data
@@ -60,7 +60,7 @@ class AncientsPaladinLevel7(ClassBuilder.SubclassLevel7):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(PaladinFeatures.AuraOfWarding())
+        data.add_feature(PaladinAncientsFeatures.AuraOfWarding())
         return data
 
 
@@ -98,7 +98,7 @@ class AncientsPaladinLevel15(ClassBuilder.SubclassLevel15):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(PaladinFeatures.UndyingSentinel())
+        data.add_feature(PaladinAncientsFeatures.UndyingSentinel())
         return data
 
 
@@ -123,7 +123,7 @@ class AncientsPaladinLevel20(ClassBuilder.SubclassLevel20):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(PaladinFeatures.ElderChampion())
+        data.add_feature(PaladinAncientsFeatures.ElderChampion())
         return data
 
 

@@ -9,7 +9,7 @@ from CharacterConfigs.BaseClasses.FighterBase import (
 )
 from CharacterSheetCreator import CharacterSheetData
 from Definitions import FighterSubclass
-from Features.ClassFeatures import FighterFeatures
+from Features.ClassFeatures import FighterChampionFeatures
 from StatBlocks.SkillsStatBlock import FighterSkillsStatBlock
 
 
@@ -20,8 +20,8 @@ class FighterChampionLevel3(ClassBuilder.SubclassLevel3):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(FighterFeatures.ImprovedCritical())
-        data.add_feature(FighterFeatures.RemarkableAthlete())
+        data.add_feature(FighterChampionFeatures.ImprovedCritical())
+        data.add_feature(FighterChampionFeatures.RemarkableAthlete())
         return data
 
 
@@ -32,7 +32,7 @@ class FighterChampionLevel7(ClassBuilder.SubclassLevel7):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(FighterFeatures.AdditionalFightingStyle())
+        data.add_feature(FighterChampionFeatures.AdditionalFightingStyle())
         return data
 
 
@@ -43,7 +43,7 @@ class FighterChampionLevel10(ClassBuilder.SubclassLevel10):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(FighterFeatures.HeroicWarrior())
+        data.add_feature(FighterChampionFeatures.HeroicWarrior())
         return data
 
 
@@ -54,7 +54,7 @@ class FighterChampionLevel15(ClassBuilder.SubclassLevel15):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(FighterFeatures.SuperiorCritical())
+        data.add_feature(FighterChampionFeatures.SuperiorCritical())
         return data
 
 
@@ -65,7 +65,7 @@ class FighterChampionLevel18(ClassBuilder.SubclassLevel18):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(FighterFeatures.Survivor())
+        data.add_feature(FighterChampionFeatures.Survivor())
         return data
 
 

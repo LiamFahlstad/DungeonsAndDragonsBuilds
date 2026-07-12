@@ -9,7 +9,7 @@ from CharacterConfigs.BaseClasses.RogueBase import (
 )
 from CharacterSheetCreator import CharacterSheetData
 from Definitions import RogueSubclass
-from Features.ClassFeatures import RogueFeatures
+from Features.ClassFeatures import RogueArcaneTricksterFeatures
 from StatBlocks.SkillsStatBlock import RogueSkillsStatBlock
 
 
@@ -21,8 +21,8 @@ class RogueArcaneTricksterLevel3(ClassBuilder.SubclassLevel3):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(RogueFeatures.Spellcasting())
-        data.add_feature(RogueFeatures.MageHandLegerdemain())
+        data.add_feature(RogueArcaneTricksterFeatures.Spellcasting())
+        data.add_feature(RogueArcaneTricksterFeatures.MageHandLegerdemain())
         return data
 
 
@@ -34,7 +34,7 @@ class RogueArcaneTricksterLevel9(ClassBuilder.SubclassLevel9):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(RogueFeatures.MagicalAmbush())
+        data.add_feature(RogueArcaneTricksterFeatures.MagicalAmbush())
         return data
 
 
@@ -46,7 +46,7 @@ class RogueArcaneTricksterLevel13(ClassBuilder.SubclassLevel13):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(RogueFeatures.VersatileTrickster())
+        data.add_feature(RogueArcaneTricksterFeatures.VersatileTrickster())
         return data
 
 
@@ -58,7 +58,7 @@ class RogueArcaneTricksterLevel17(ClassBuilder.SubclassLevel17):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(RogueFeatures.SpellThief())
+        data.add_feature(RogueArcaneTricksterFeatures.SpellThief())
         return data
 
 

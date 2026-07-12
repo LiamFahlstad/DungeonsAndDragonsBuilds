@@ -9,7 +9,7 @@ from CharacterConfigs.BaseClasses.RogueBase import (
 )
 from CharacterSheetCreator import CharacterSheetData
 from Definitions import RogueSubclass
-from Features.ClassFeatures import RogueFeatures
+from Features.ClassFeatures import RogueThiefFeatures
 from StatBlocks.SkillsStatBlock import RogueSkillsStatBlock
 
 
@@ -21,8 +21,8 @@ class RogueThiefLevel3(ClassBuilder.SubclassLevel3):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(RogueFeatures.FastHands())
-        data.add_feature(RogueFeatures.SecondStoryWork())
+        data.add_feature(RogueThiefFeatures.FastHands())
+        data.add_feature(RogueThiefFeatures.SecondStoryWork())
         return data
 
 
@@ -34,10 +34,10 @@ class RogueThiefLevel9(ClassBuilder.SubclassLevel9):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        sneak_attack_feature: RogueFeatures.SneakAttack = data.get_features_by_type(
-            RogueFeatures.SneakAttack
+        sneak_attack_feature: RogueThiefFeatures.SneakAttack = data.get_features_by_type(
+            RogueThiefFeatures.SneakAttack
         )[0]
-        sneak_attack_feature.extend_feature(RogueFeatures.SupremeSneak())
+        sneak_attack_feature.extend_feature(RogueThiefFeatures.SupremeSneak())
         return data
 
 
@@ -49,7 +49,7 @@ class RogueThiefLevel13(ClassBuilder.SubclassLevel13):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(RogueFeatures.UseMagicDevice())
+        data.add_feature(RogueThiefFeatures.UseMagicDevice())
         return data
 
 
@@ -61,7 +61,7 @@ class RogueThiefLevel17(ClassBuilder.SubclassLevel17):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(RogueFeatures.ThiefsReflexes())
+        data.add_feature(RogueThiefFeatures.ThiefsReflexes())
         return data
 
 

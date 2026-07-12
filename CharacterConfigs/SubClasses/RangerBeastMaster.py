@@ -9,7 +9,7 @@ from CharacterConfigs.BaseClasses.RangerBase import (
 )
 from CharacterSheetCreator import CharacterSheetData
 from Definitions import DamageType, RangerSubclass
-from Features.ClassFeatures import RangerFeatures
+from Features.ClassFeatures import RangerBeastMasterFeatures
 from Features.ClassFeatures.PrimalCompanions import CompanionType
 from StatBlocks.SkillsStatBlock import RangerSkillsStatBlock
 
@@ -25,7 +25,7 @@ class RangerBeastMasterLevel3(ClassBuilder.SubclassLevel3):
         data: CharacterSheetData,
     ) -> CharacterSheetData:
         data.add_feature(
-            RangerFeatures.PrimalCompanion(
+            RangerBeastMasterFeatures.PrimalCompanion(
                 companion_type=self.companion_type,
                 damage_type=self.damage_type,
             )
@@ -41,7 +41,7 @@ class RangerBeastMasterLevel7(ClassBuilder.SubclassLevel7):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(RangerFeatures.ExceptionalTraining())
+        data.add_feature(RangerBeastMasterFeatures.ExceptionalTraining())
         return data
 
 
@@ -53,7 +53,7 @@ class RangerBeastMasterLevel11(ClassBuilder.SubclassLevel11):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(RangerFeatures.BestialFury())
+        data.add_feature(RangerBeastMasterFeatures.BestialFury())
         return data
 
 
@@ -65,7 +65,7 @@ class RangerBeastMasterLevel15(ClassBuilder.SubclassLevel15):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(RangerFeatures.ShareSpells())
+        data.add_feature(RangerBeastMasterFeatures.ShareSpells())
         return data
 
 

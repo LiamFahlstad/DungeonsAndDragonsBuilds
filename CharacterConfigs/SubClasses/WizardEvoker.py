@@ -9,7 +9,7 @@ from CharacterConfigs.BaseClasses.WizardBase import (
 )
 from CharacterSheetCreator import CharacterSheetData
 from Definitions import WizardSubclass
-from Features.ClassFeatures import WizardFeatures
+from Features.ClassFeatures import WizardEvokerFeatures
 from Spells.Definitions import (
     EvocationLevel1Spells,
     EvocationLevel2Spells,
@@ -49,8 +49,8 @@ class EvokerWizardLevel3(ClassBuilder.SubclassLevel3):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(WizardFeatures.EvocationSavant())
-        data.add_feature(WizardFeatures.PotentCantrip())
+        data.add_feature(WizardEvokerFeatures.EvocationSavant())
+        data.add_feature(WizardEvokerFeatures.PotentCantrip())
         data.add_spell(self.spell_1)
         data.add_spell(self.spell_2)
         return data
@@ -75,7 +75,7 @@ class EvokerWizardLevel6(ClassBuilder.SubclassLevel6):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(WizardFeatures.SculptSpells())
+        data.add_feature(WizardEvokerFeatures.SculptSpells())
         return data
 
 
@@ -110,7 +110,7 @@ class EvokerWizardLevel10(ClassBuilder.SubclassLevel10):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(WizardFeatures.EmpoweredEvocation())
+        data.add_feature(WizardEvokerFeatures.EmpoweredEvocation())
         return data
 
 
@@ -145,7 +145,7 @@ class EvokerWizardLevel14(ClassBuilder.SubclassLevel14):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(WizardFeatures.Overchannel())
+        data.add_feature(WizardEvokerFeatures.Overchannel())
         return data
 
 

@@ -9,7 +9,7 @@ from CharacterConfigs.BaseClasses.RangerBase import (
 )
 from CharacterSheetCreator import CharacterSheetData
 from Definitions import RangerSubclass
-from Features.ClassFeatures import RangerFeatures
+from Features.ClassFeatures import RangerHollowWardenFeatures
 from Spells.Definitions import (
     IllusionLevel3Spells,
     NecromancyLevel1Spells,
@@ -28,8 +28,8 @@ class RangerHollowWardenLevel3(ClassBuilder.SubclassLevel3):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(RangerFeatures.HollowWardenSpells())
-        data.add_feature(RangerFeatures.WrathOfTheWild())
+        data.add_feature(RangerHollowWardenFeatures.HollowWardenSpells())
+        data.add_feature(RangerHollowWardenFeatures.WrathOfTheWild())
         data.add_spell(NecromancyLevel1Spells.WRATHFUL_SMITE)
         return data
 
@@ -54,7 +54,7 @@ class RangerHollowWardenLevel7(ClassBuilder.SubclassLevel7):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(RangerFeatures.HungeringMight())
+        data.add_feature(RangerHollowWardenFeatures.HungeringMight())
         return data
 
 
@@ -78,7 +78,7 @@ class RangerHollowWardenLevel11(ClassBuilder.SubclassLevel11):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(RangerFeatures.RotAndViolence())
+        data.add_feature(RangerHollowWardenFeatures.RotAndViolence())
         return data
 
 
@@ -102,7 +102,7 @@ class RangerHollowWardenLevel15(ClassBuilder.SubclassLevel15):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(RangerFeatures.AncientMight())
+        data.add_feature(RangerHollowWardenFeatures.AncientMight())
         return data
 
 

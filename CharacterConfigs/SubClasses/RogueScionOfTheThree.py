@@ -9,7 +9,7 @@ from CharacterConfigs.BaseClasses.RogueBase import (
 )
 from CharacterSheetCreator import CharacterSheetData
 from Definitions import RogueSubclass
-from Features.ClassFeatures import RogueFeatures
+from Features.ClassFeatures import RogueScionOfTheThreeFeatures
 from StatBlocks.SkillsStatBlock import RogueSkillsStatBlock
 
 
@@ -21,8 +21,8 @@ class RogueScionOfTheThreeLevel3(ClassBuilder.SubclassLevel3):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(RogueFeatures.Bloodthirst())
-        data.add_feature(RogueFeatures.DreadAllegiance())
+        data.add_feature(RogueScionOfTheThreeFeatures.Bloodthirst())
+        data.add_feature(RogueScionOfTheThreeFeatures.DreadAllegiance())
         return data
 
 
@@ -34,10 +34,10 @@ class RogueScionOfTheThreeLevel9(ClassBuilder.SubclassLevel9):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        sneak_attack_feature: RogueFeatures.SneakAttack = data.get_features_by_type(
-            RogueFeatures.SneakAttack
+        sneak_attack_feature: RogueScionOfTheThreeFeatures.SneakAttack = data.get_features_by_type(
+            RogueScionOfTheThreeFeatures.SneakAttack
         )[0]
-        sneak_attack_feature.extend_feature(RogueFeatures.StrikeFear())
+        sneak_attack_feature.extend_feature(RogueScionOfTheThreeFeatures.StrikeFear())
         return data
 
 
@@ -49,7 +49,7 @@ class RogueScionOfTheThreeLevel13(ClassBuilder.SubclassLevel13):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(RogueFeatures.AuraofMalevolence())
+        data.add_feature(RogueScionOfTheThreeFeatures.AuraofMalevolence())
         return data
 
 
@@ -61,7 +61,7 @@ class RogueScionOfTheThreeLevel17(ClassBuilder.SubclassLevel17):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(RogueFeatures.DreadIncarnate())
+        data.add_feature(RogueScionOfTheThreeFeatures.DreadIncarnate())
         return data
 
 

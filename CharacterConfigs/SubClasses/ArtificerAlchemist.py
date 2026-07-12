@@ -9,7 +9,7 @@ from CharacterConfigs.BaseClasses.ArtificerBase import (
 )
 from CharacterSheetCreator import CharacterSheetData
 from Definitions import ArtificerSubclass
-from Features.ClassFeatures import ArtificerFeatures
+from Features.ClassFeatures import ArtificerAlchemistFeatures
 from Spells.Definitions import (
     ArtificerLevel3Spells,
     ArtificerLevel5Spells,
@@ -30,9 +30,9 @@ class ArtificerAlchemistLevel3(ClassBuilder.SubclassLevel3):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(ArtificerFeatures.AlchemistToolsOfTheTrade())
-        data.add_feature(ArtificerFeatures.AlchemistSpells())
-        data.add_feature(ArtificerFeatures.ExperimentalElixir())
+        data.add_feature(ArtificerAlchemistFeatures.AlchemistToolsOfTheTrade())
+        data.add_feature(ArtificerAlchemistFeatures.AlchemistSpells())
+        data.add_feature(ArtificerAlchemistFeatures.ExperimentalElixir())
         data.add_spell(ClericLevel1Spells.HEALING_WORD)
         data.add_spell(WizardLevel1Spells.RAY_OF_SICKNESS)
         return data
@@ -44,7 +44,7 @@ class ArtificerAlchemistLevel5(ClassBuilder.SubclassLevel5):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(ArtificerFeatures.AlchemicalSavant())
+        data.add_feature(ArtificerAlchemistFeatures.AlchemicalSavant())
         data.add_spell(WizardLevel2Spells.FLAMING_SPHERE)
         data.add_spell(WizardLevel2Spells.MELFS_ACID_ARROW)
         return data
@@ -56,7 +56,7 @@ class ArtificerAlchemistLevel9(ClassBuilder.SubclassLevel9):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(ArtificerFeatures.RestorativeReagents())
+        data.add_feature(ArtificerAlchemistFeatures.RestorativeReagents())
         data.add_spell(ArtificerLevel3Spells.GASEOUS_FORM)
         data.add_spell(ClericLevel3Spells.MASS_HEALING_WORD)
         return data
@@ -79,7 +79,7 @@ class ArtificerAlchemistLevel15(ClassBuilder.SubclassLevel15):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(ArtificerFeatures.ChemicalMastery())
+        data.add_feature(ArtificerAlchemistFeatures.ChemicalMastery())
         return data
 
 

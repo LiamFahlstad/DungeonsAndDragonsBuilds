@@ -9,7 +9,7 @@ from CharacterConfigs.BaseClasses.WarlockBase import (
 )
 from CharacterSheetCreator import CharacterSheetData
 from Definitions import WarlockSubclass
-from Features.ClassFeatures import WarlockFeatures
+from Features.ClassFeatures import WarlockUndeadFeatures
 from Spells.Definitions import (
     BardLevel3Spells,
     BardLevel4Spells,
@@ -31,8 +31,8 @@ class UndeadWarlockLevel3(ClassBuilder.SubclassLevel3):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(WarlockFeatures.UndeadSpells())
-        data.add_feature(WarlockFeatures.FormOfDread())
+        data.add_feature(WarlockUndeadFeatures.UndeadSpells())
+        data.add_feature(WarlockUndeadFeatures.FormOfDread())
         data.add_spell(WarlockLevel1Spells.BANE)
         data.add_spell(SorcererLevel2Spells.BLINDNESS_DEAFNESS)
         data.add_spell(SorcererLevel2Spells.PHANTASMAL_FORCE)
@@ -59,7 +59,7 @@ class UndeadWarlockLevel6(ClassBuilder.SubclassLevel6):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(WarlockFeatures.GraveTouched())
+        data.add_feature(WarlockUndeadFeatures.GraveTouched())
         return data
 
 
@@ -94,7 +94,7 @@ class UndeadWarlockLevel10(ClassBuilder.SubclassLevel10):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(WarlockFeatures.NecroticHusk())
+        data.add_feature(WarlockUndeadFeatures.NecroticHusk())
         return data
 
 
@@ -105,7 +105,7 @@ class UndeadWarlockLevel14(ClassBuilder.SubclassLevel14):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(WarlockFeatures.SuperiorDread())
+        data.add_feature(WarlockUndeadFeatures.SuperiorDread())
         return data
 
 

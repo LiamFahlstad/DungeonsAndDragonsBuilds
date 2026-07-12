@@ -9,7 +9,7 @@ from CharacterConfigs.BaseClasses.ArtificerBase import (
 )
 from CharacterSheetCreator import CharacterSheetData
 from Definitions import ArtificerSubclass
-from Features.ClassFeatures import ArtificerFeatures
+from Features.ClassFeatures import ArtificerArtilleristFeatures
 from Spells.Definitions import (
     ArtificerLevel1Spells,
     ArtificerLevel2Spells,
@@ -27,9 +27,9 @@ class ArtificerArtilleristLevel3(ClassBuilder.SubclassLevel3):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(ArtificerFeatures.ArtilleristToolsOfTheTrade())
-        data.add_feature(ArtificerFeatures.ArtilleristSpells())
-        data.add_feature(ArtificerFeatures.EldritchCannon())
+        data.add_feature(ArtificerArtilleristFeatures.ArtilleristToolsOfTheTrade())
+        data.add_feature(ArtificerArtilleristFeatures.ArtilleristSpells())
+        data.add_feature(ArtificerArtilleristFeatures.EldritchCannon())
         data.add_spell(ArtificerLevel1Spells.SHIELD)
         data.add_spell(ArtificerLevel1Spells.THUNDERWAVE)
         return data
@@ -41,7 +41,7 @@ class ArtificerArtilleristLevel5(ClassBuilder.SubclassLevel5):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(ArtificerFeatures.ArcaneFirearm())
+        data.add_feature(ArtificerArtilleristFeatures.ArcaneFirearm())
         data.add_spell(ArtificerLevel2Spells.SCORCHING_RAY)
         data.add_spell(ArtificerLevel2Spells.SHATTER)
         return data
@@ -53,7 +53,7 @@ class ArtificerArtilleristLevel9(ClassBuilder.SubclassLevel9):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(ArtificerFeatures.ExplosiveCannon())
+        data.add_feature(ArtificerArtilleristFeatures.ExplosiveCannon())
         data.add_spell(ArtificerLevel3Spells.FIREBALL)
         data.add_spell(DruidLevel3Spells.WIND_WALL)
         return data
@@ -76,7 +76,7 @@ class ArtificerArtilleristLevel15(ClassBuilder.SubclassLevel15):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(ArtificerFeatures.FortifiedPosition())
+        data.add_feature(ArtificerArtilleristFeatures.FortifiedPosition())
         return data
 
 

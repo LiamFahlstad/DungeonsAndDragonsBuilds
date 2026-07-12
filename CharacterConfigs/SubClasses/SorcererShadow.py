@@ -9,7 +9,7 @@ from CharacterConfigs.BaseClasses.SorcererBase import (
 )
 from CharacterSheetCreator import CharacterSheetData
 from Definitions import SorcererSubclass
-from Features.ClassFeatures import SorcererFeatures
+from Features.ClassFeatures import SorcererShadowFeatures
 from Spells.Definitions import (
     AbjurationLevel2Spells,
     AbjurationLevel3Spells,
@@ -31,12 +31,12 @@ class SorcererShadowLevel3(ClassBuilder.SubclassLevel3):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(SorcererFeatures.ShadowSpells())
+        data.add_feature(SorcererShadowFeatures.ShadowSpells())
         data.add_spell(EnchantmentLevel1Spells.BANE)
         data.add_spell(SorcererLevel2Spells.DARKNESS)
         data.add_spell(NecromancyLevel1Spells.INFLICT_WOUNDS)
         data.add_spell(AbjurationLevel2Spells.PASS_WITHOUT_TRACE)
-        data.add_feature(SorcererFeatures.PowerOfShadow())
+        data.add_feature(SorcererShadowFeatures.PowerOfShadow())
         return data
 
 
@@ -57,7 +57,7 @@ class SorcererShadowLevel6(ClassBuilder.SubclassLevel6):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(SorcererFeatures.BeastsOfIllOmen())
+        data.add_feature(SorcererShadowFeatures.BeastsOfIllOmen())
         return data
 
 
@@ -89,7 +89,7 @@ class SorcererShadowLevel14(ClassBuilder.SubclassLevel14):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(SorcererFeatures.ShadowWalk())
+        data.add_feature(SorcererShadowFeatures.ShadowWalk())
         return data
 
 
@@ -99,7 +99,7 @@ class SorcererShadowLevel18(ClassBuilder.SubclassLevel18):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(SorcererFeatures.UmbralForm())
+        data.add_feature(SorcererShadowFeatures.UmbralForm())
         return data
 
 

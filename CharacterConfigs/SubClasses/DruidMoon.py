@@ -9,7 +9,7 @@ from CharacterConfigs.BaseClasses.DruidBase import (
 )
 from CharacterSheetCreator import CharacterSheetData
 from Definitions import DruidSubclass
-from Features.ClassFeatures import DruidFeatures
+from Features.ClassFeatures import DruidMoonFeatures
 from Spells.Definitions import (
     DruidLevel0Spells,
     DruidLevel1Spells,
@@ -28,8 +28,8 @@ class DruidMoonLevel3(ClassBuilder.SubclassLevel3):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(DruidFeatures.CircleForms())
-        data.add_feature(DruidFeatures.CircleOfTheMoonSpells())
+        data.add_feature(DruidMoonFeatures.CircleForms())
+        data.add_feature(DruidMoonFeatures.CircleOfTheMoonSpells())
         data.add_spell(DruidLevel0Spells.STARRY_WISP)
         data.add_spell(DruidLevel1Spells.CURE_WOUNDS)
         data.add_spell(DruidLevel2Spells.MOONBEAM)
@@ -54,10 +54,10 @@ class DruidMoonLevel6(ClassBuilder.SubclassLevel6):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        circle_forms: DruidFeatures.CircleForms = data.get_features_by_type(
-            DruidFeatures.CircleForms
+        circle_forms: DruidMoonFeatures.CircleForms = data.get_features_by_type(
+            DruidMoonFeatures.CircleForms
         )[0]
-        circle_forms.extend_feature(DruidFeatures.ImprovedCircleForms())
+        circle_forms.extend_feature(DruidMoonFeatures.ImprovedCircleForms())
         return data
 
 
@@ -90,7 +90,7 @@ class DruidMoonLevel10(ClassBuilder.SubclassLevel10):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(DruidFeatures.MoonlightStep())
+        data.add_feature(DruidMoonFeatures.MoonlightStep())
         return data
 
 
@@ -101,7 +101,7 @@ class DruidMoonLevel14(ClassBuilder.SubclassLevel14):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(DruidFeatures.LunarForm())
+        data.add_feature(DruidMoonFeatures.LunarForm())
         return data
 
 

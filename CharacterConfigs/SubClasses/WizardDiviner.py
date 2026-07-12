@@ -9,7 +9,7 @@ from CharacterConfigs.BaseClasses.WizardBase import (
 )
 from CharacterSheetCreator import CharacterSheetData
 from Definitions import WizardSubclass
-from Features.ClassFeatures import WizardFeatures
+from Features.ClassFeatures import WizardDivinerFeatures
 from Spells.Definitions import (
     DivinationLevel1Spells,
     DivinationLevel2Spells,
@@ -49,8 +49,8 @@ class WizardDivinerLevel3(ClassBuilder.SubclassLevel3):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(WizardFeatures.DivinationSavant())
-        data.add_feature(WizardFeatures.Portent())
+        data.add_feature(WizardDivinerFeatures.DivinationSavant())
+        data.add_feature(WizardDivinerFeatures.Portent())
         data.add_spell(self.spell_1)
         data.add_spell(self.spell_2)
         return data
@@ -75,7 +75,7 @@ class WizardDivinerLevel6(ClassBuilder.SubclassLevel6):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(WizardFeatures.ExpertDivination())
+        data.add_feature(WizardDivinerFeatures.ExpertDivination())
         return data
 
 
@@ -110,7 +110,7 @@ class WizardDivinerLevel10(ClassBuilder.SubclassLevel10):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(WizardFeatures.TheThirdEye())
+        data.add_feature(WizardDivinerFeatures.TheThirdEye())
         return data
 
 
@@ -145,10 +145,10 @@ class WizardDivinerLevel14(ClassBuilder.SubclassLevel14):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        portent: WizardFeatures.Portent = data.get_features_by_type(
-            WizardFeatures.Portent
+        portent: WizardDivinerFeatures.Portent = data.get_features_by_type(
+            WizardDivinerFeatures.Portent
         )[0]
-        portent.extend_feature(WizardFeatures.GreaterPortent())
+        portent.extend_feature(WizardDivinerFeatures.GreaterPortent())
         return data
 
 

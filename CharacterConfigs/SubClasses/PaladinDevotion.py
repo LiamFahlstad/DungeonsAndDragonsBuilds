@@ -9,7 +9,7 @@ from CharacterConfigs.BaseClasses.PaladinBase import (
 )
 from CharacterSheetCreator import CharacterSheetData
 from Definitions import PaladinSubclass
-from Features.ClassFeatures import PaladinFeatures
+from Features.ClassFeatures import PaladinDevotionFeatures
 from Spells.Definitions import (
     ClericLevel1Spells,
     ClericLevel2Spells,
@@ -28,7 +28,7 @@ class DevotionPaladinLevel3(ClassBuilder.SubclassLevel3):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(PaladinFeatures.SacredWeapon())
+        data.add_feature(PaladinDevotionFeatures.SacredWeapon())
         data.add_spell(ClericLevel1Spells.PROTECTION_FROM_EVIL_AND_GOOD)
         data.add_spell(PaladinLevel1Spells.SHIELD_OF_FAITH)
         return data
@@ -53,7 +53,7 @@ class DevotionPaladinLevel7(ClassBuilder.SubclassLevel7):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(PaladinFeatures.AuraOfDevotion())
+        data.add_feature(PaladinDevotionFeatures.AuraOfDevotion())
         return data
 
 
@@ -88,7 +88,7 @@ class DevotionPaladinLevel15(ClassBuilder.SubclassLevel15):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(PaladinFeatures.SmiteOfProtection())
+        data.add_feature(PaladinDevotionFeatures.SmiteOfProtection())
         return data
 
 
@@ -111,7 +111,7 @@ class DevotionPaladinLevel20(ClassBuilder.SubclassLevel20):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(PaladinFeatures.HolyNimbus())
+        data.add_feature(PaladinDevotionFeatures.HolyNimbus())
         return data
 
 

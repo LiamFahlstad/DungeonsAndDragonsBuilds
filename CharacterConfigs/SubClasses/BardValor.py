@@ -9,7 +9,7 @@ from CharacterConfigs.BaseClasses.BardBase import (
 )
 from CharacterSheetCreator import CharacterSheetData
 from Definitions import BardSubclass
-from Features.ClassFeatures import BardFeatures
+from Features.ClassFeatures import BardValorFeatures
 from StatBlocks.SkillsStatBlock import BardSkillsStatBlock
 
 
@@ -19,8 +19,8 @@ class BardValorLevel3(ClassBuilder.SubclassLevel3):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(BardFeatures.CombatInspiration())
-        data.add_feature(BardFeatures.MartialTraining())
+        data.add_feature(BardValorFeatures.CombatInspiration())
+        data.add_feature(BardValorFeatures.MartialTraining())
         return data
 
 
@@ -30,7 +30,7 @@ class BardValorLevel6(ClassBuilder.SubclassLevel6):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(BardFeatures.ExtraAttack())
+        data.add_feature(BardValorFeatures.ExtraAttack())
         return data
 
 
@@ -41,7 +41,7 @@ class BardValorLevel14(ClassBuilder.SubclassLevel14):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(BardFeatures.BattleMagic())
+        data.add_feature(BardValorFeatures.BattleMagic())
         return data
 
 

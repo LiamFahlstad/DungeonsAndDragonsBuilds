@@ -9,7 +9,7 @@ from CharacterConfigs.BaseClasses.PaladinBase import (
 )
 from CharacterSheetCreator import CharacterSheetData
 from Definitions import PaladinSubclass
-from Features.ClassFeatures import PaladinFeatures
+from Features.ClassFeatures import PaladinVengeanceFeatures
 from Spells.Definitions import (
     ClericLevel1Spells,
     RangerLevel1Spells,
@@ -28,7 +28,7 @@ class PaladinVengeanceLevel3(ClassBuilder.SubclassLevel3):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(PaladinFeatures.VowOfEnmity())
+        data.add_feature(PaladinVengeanceFeatures.VowOfEnmity())
         data.add_spell(ClericLevel1Spells.BANE)
         data.add_spell(RangerLevel1Spells.HUNTERS_MARK)
         return data
@@ -53,7 +53,7 @@ class PaladinVengeanceLevel7(ClassBuilder.SubclassLevel7):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(PaladinFeatures.RelentlessAvenger())
+        data.add_feature(PaladinVengeanceFeatures.RelentlessAvenger())
         return data
 
 
@@ -88,7 +88,7 @@ class PaladinVengeanceLevel15(ClassBuilder.SubclassLevel15):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(PaladinFeatures.SoulOfVengeance())
+        data.add_feature(PaladinVengeanceFeatures.SoulOfVengeance())
         return data
 
 
@@ -111,7 +111,7 @@ class PaladinVengeanceLevel20(ClassBuilder.SubclassLevel20):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(PaladinFeatures.AvengingAngel())
+        data.add_feature(PaladinVengeanceFeatures.AvengingAngel())
         return data
 
 

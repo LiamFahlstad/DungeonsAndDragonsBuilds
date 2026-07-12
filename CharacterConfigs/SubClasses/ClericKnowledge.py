@@ -9,7 +9,7 @@ from CharacterConfigs.BaseClasses.ClericBase import (
 )
 from CharacterSheetCreator import CharacterSheetData
 from Definitions import ClericSubclass, Skill
-from Features.ClassFeatures import ClericFeatures
+from Features.ClassFeatures import ClericKnowledgeFeatures
 from Spells.Definitions import (
     ClericLevel1Spells,
     ClericLevel3Spells,
@@ -55,12 +55,12 @@ class ClericKnowledgeLevel3(ClassBuilder.SubclassLevel3):
             DivinationLevel2Spells.MIND_SPIKE, additional_ruling=additional_ruling
         )
 
-        channel_divinity: ClericFeatures.ChannelDivinity = data.get_features_by_type(
-            ClericFeatures.ChannelDivinity
+        channel_divinity: ClericKnowledgeFeatures.ChannelDivinity = data.get_features_by_type(
+            ClericKnowledgeFeatures.ChannelDivinity
         )[0]
-        channel_divinity.extend_feature(ClericFeatures.MindMagic())
+        channel_divinity.extend_feature(ClericKnowledgeFeatures.MindMagic())
         data.add_feature(
-            ClericFeatures.BlessingsOfKnowledge(self.skill_1, self.skill_2)
+            ClericKnowledgeFeatures.BlessingsOfKnowledge(self.skill_1, self.skill_2)
         )
         return data
 
@@ -90,7 +90,7 @@ class ClericKnowledgeLevel6(ClassBuilder.SubclassLevel6):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(ClericFeatures.UnfetteredMind())
+        data.add_feature(ClericKnowledgeFeatures.UnfetteredMind())
         return data
 
 
@@ -142,7 +142,7 @@ class ClericKnowledgeLevel17(ClassBuilder.SubclassLevel17):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(ClericFeatures.DivineForeknowledge())
+        data.add_feature(ClericKnowledgeFeatures.DivineForeknowledge())
         return data
 
 

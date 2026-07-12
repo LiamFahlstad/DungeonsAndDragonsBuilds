@@ -10,7 +10,7 @@ from CharacterConfigs.BaseClasses.BardBase import (
 )
 from CharacterSheetCreator import CharacterSheetData
 from Definitions import BardSubclass
-from Features.ClassFeatures import BardFeatures
+from Features.ClassFeatures import BardGlamourFeatures
 from StatBlocks.SkillsStatBlock import BardSkillsStatBlock
 
 
@@ -22,8 +22,8 @@ class BardGlamourLevel3(ClassBuilder.SubclassLevel3):
     ) -> CharacterSheetData:
         data.add_spell(SpellDefinitions.BardLevel1Spells.CHARM_PERSON)
         data.add_spell(SpellDefinitions.BardLevel2Spells.MIRROR_IMAGE)
-        data.add_feature(BardFeatures.BeguilingMagic())
-        data.add_feature(BardFeatures.MantleOfInspiration())
+        data.add_feature(BardGlamourFeatures.BeguilingMagic())
+        data.add_feature(BardGlamourFeatures.MantleOfInspiration())
         return data
 
 
@@ -34,10 +34,10 @@ class BardGlamourLevel6(ClassBuilder.SubclassLevel6):
         data: CharacterSheetData,
     ) -> CharacterSheetData:
         data.add_spell(SpellDefinitions.BardLevel1Spells.COMMAND)
-        bardic_inspiration: BardFeatures.BardicInspiration = data.get_features_by_type(
-            BardFeatures.BardicInspiration
+        bardic_inspiration: BardGlamourFeatures.BardicInspiration = data.get_features_by_type(
+            BardGlamourFeatures.BardicInspiration
         )[0]
-        bardic_inspiration.extend_feature(BardFeatures.MantleOfMajesty())
+        bardic_inspiration.extend_feature(BardGlamourFeatures.MantleOfMajesty())
         return data
 
 
@@ -48,7 +48,7 @@ class BardGlamourLevel14(ClassBuilder.SubclassLevel14):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(BardFeatures.UnbreakableMajesty())
+        data.add_feature(BardGlamourFeatures.UnbreakableMajesty())
         return data
 
 

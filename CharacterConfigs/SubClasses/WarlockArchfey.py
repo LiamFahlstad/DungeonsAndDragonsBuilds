@@ -9,7 +9,7 @@ from CharacterConfigs.BaseClasses.WarlockBase import (
 )
 from CharacterSheetCreator import CharacterSheetData
 from Definitions import WarlockSubclass
-from Features.ClassFeatures import WarlockFeatures
+from Features.ClassFeatures import WarlockArchfeyFeatures
 from Spells.Definitions import (
     BardLevel1Spells,
     BardLevel2Spells,
@@ -30,8 +30,8 @@ class ArchfeyWarlockLevel3(ClassBuilder.SubclassLevel3):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(WarlockFeatures.ArchfeySpells())
-        data.add_feature(WarlockFeatures.StepsOfTheFey())
+        data.add_feature(WarlockArchfeyFeatures.ArchfeySpells())
+        data.add_feature(WarlockArchfeyFeatures.StepsOfTheFey())
         data.add_spell(BardLevel1Spells.FAERIE_FIRE)
         data.add_spell(BardLevel2Spells.CALM_EMOTIONS)
         data.add_spell(WarlockLevel2Spells.MISTY_STEP)
@@ -59,7 +59,7 @@ class ArchfeyWarlockLevel6(ClassBuilder.SubclassLevel6):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(WarlockFeatures.MistyEscape())
+        data.add_feature(WarlockArchfeyFeatures.MistyEscape())
         return data
 
 
@@ -94,7 +94,7 @@ class ArchfeyWarlockLevel10(ClassBuilder.SubclassLevel10):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(WarlockFeatures.BeguilingDefenses())
+        data.add_feature(WarlockArchfeyFeatures.BeguilingDefenses())
         return data
 
 
@@ -105,7 +105,7 @@ class ArchfeyWarlockLevel14(ClassBuilder.SubclassLevel14):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(WarlockFeatures.BewitchingMagic())
+        data.add_feature(WarlockArchfeyFeatures.BewitchingMagic())
         return data
 
 

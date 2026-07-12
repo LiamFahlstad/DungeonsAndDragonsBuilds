@@ -9,7 +9,7 @@ from CharacterConfigs.BaseClasses.DruidBase import (
 )
 from CharacterSheetCreator import CharacterSheetData
 from Definitions import DruidLandType, DruidSubclass
-from Features.ClassFeatures import DruidFeatures
+from Features.ClassFeatures import DruidLandFeatures
 from Spells.Definitions import (
     AbjurationLevel4Spells,
     ConjurationLevel1Spells,
@@ -85,8 +85,8 @@ class DruidLandLevel3(ClassBuilder.SubclassLevel3):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(DruidFeatures.CircleOfTheLandSpells(land_type=self.land_type))
-        data.add_feature(DruidFeatures.LandsAid())
+        data.add_feature(DruidLandFeatures.CircleOfTheLandSpells(land_type=self.land_type))
+        data.add_feature(DruidLandFeatures.LandsAid())
         for spell in _LEVEL_3_CIRCLE_SPELLS[self.land_type]:
             data.add_spell(spell)
         return data
@@ -111,7 +111,7 @@ class DruidLandLevel6(ClassBuilder.SubclassLevel6):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(DruidFeatures.NaturalRecovery())
+        data.add_feature(DruidLandFeatures.NaturalRecovery())
         return data
 
 
@@ -147,7 +147,7 @@ class DruidLandLevel10(ClassBuilder.SubclassLevel10):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(DruidFeatures.NaturesWard(land_type=self.land_type))
+        data.add_feature(DruidLandFeatures.NaturesWard(land_type=self.land_type))
         return data
 
 
@@ -158,7 +158,7 @@ class DruidLandLevel14(ClassBuilder.SubclassLevel14):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(DruidFeatures.NaturesSanctuary())
+        data.add_feature(DruidLandFeatures.NaturesSanctuary())
         return data
 
 

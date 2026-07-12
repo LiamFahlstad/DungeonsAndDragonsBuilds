@@ -9,7 +9,7 @@ from CharacterConfigs.BaseClasses.PaladinBase import (
 )
 from CharacterSheetCreator import CharacterSheetData
 from Definitions import PaladinSubclass
-from Features.ClassFeatures import PaladinFeatures
+from Features.ClassFeatures import PaladinGeniesFeatures
 from Spells.Definitions import (
     EvocationLevel1Spells,
     PaladinLevel5Spells,
@@ -29,11 +29,11 @@ class GeniesPaladinLevel3(ClassBuilder.SubclassLevel3):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        channel_divinity_feature: PaladinFeatures.ChannelDivinity = (
-            data.get_features_by_type(PaladinFeatures.ChannelDivinity)[0]
+        channel_divinity_feature: PaladinGeniesFeatures.ChannelDivinity = (
+            data.get_features_by_type(PaladinGeniesFeatures.ChannelDivinity)[0]
         )
-        channel_divinity_feature.extend_feature(PaladinFeatures.ElementalSmite())
-        data.add_feature(PaladinFeatures.GeniesSplendor())
+        channel_divinity_feature.extend_feature(PaladinGeniesFeatures.ElementalSmite())
+        data.add_feature(PaladinGeniesFeatures.GeniesSplendor())
         data.add_spell(EvocationLevel1Spells.CHROMATIC_ORB)
         data.add_spell(TransmutationLevel0Spells.ELEMENTALISM)
         data.add_spell(EvocationLevel1Spells.THUNDEROUS_SMITE)
@@ -59,7 +59,7 @@ class GeniesPaladinLevel7(ClassBuilder.SubclassLevel7):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(PaladinFeatures.AuraOfElementalShielding())
+        data.add_feature(PaladinGeniesFeatures.AuraOfElementalShielding())
         return data
 
 
@@ -94,7 +94,7 @@ class GeniesPaladinLevel15(ClassBuilder.SubclassLevel15):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(PaladinFeatures.ElementalRebuke())
+        data.add_feature(PaladinGeniesFeatures.ElementalRebuke())
         return data
 
 
@@ -117,7 +117,7 @@ class GeniesPaladinLevel20(ClassBuilder.SubclassLevel20):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(PaladinFeatures.NobleScion())
+        data.add_feature(PaladinGeniesFeatures.NobleScion())
         return data
 
 

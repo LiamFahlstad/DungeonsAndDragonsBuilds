@@ -9,7 +9,7 @@ from CharacterConfigs.BaseClasses.MonkBase import (
 )
 from CharacterSheetCreator import CharacterSheetData
 from Definitions import Ability, MonkSubclass
-from Features.ClassFeatures import MonkFeatures, SpellSlots
+from Features.ClassFeatures import MonkMysticArtsFeatures, SpellSlots
 from StatBlocks.SkillsStatBlock import MonkSkillsStatBlock
 
 
@@ -19,7 +19,7 @@ class MonkMysticArtsLevel3(ClassBuilder.SubclassLevel3):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(MonkFeatures.MysticArtsSpellcasting())
+        data.add_feature(MonkMysticArtsFeatures.MysticArtsSpellcasting())
         return data
 
 
@@ -29,8 +29,8 @@ class MonkMysticArtsLevel6(ClassBuilder.SubclassLevel6):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(MonkFeatures.MysticFightingStyle())
-        data.add_feature(MonkFeatures.MysticFocus())
+        data.add_feature(MonkMysticArtsFeatures.MysticFightingStyle())
+        data.add_feature(MonkMysticArtsFeatures.MysticFocus())
         return data
 
 
@@ -41,7 +41,7 @@ class MonkMysticArtsLevel11(ClassBuilder.SubclassLevel11):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(MonkFeatures.FocusedStrike())
+        data.add_feature(MonkMysticArtsFeatures.FocusedStrike())
         return data
 
 
@@ -52,10 +52,10 @@ class MonkMysticArtsLevel17(ClassBuilder.SubclassLevel17):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        mystic_fighting_style: MonkFeatures.MysticFightingStyle = (
-            data.get_features_by_type(MonkFeatures.MysticFightingStyle)[0]
+        mystic_fighting_style: MonkMysticArtsFeatures.MysticFightingStyle = (
+            data.get_features_by_type(MonkMysticArtsFeatures.MysticFightingStyle)[0]
         )
-        mystic_fighting_style.extend_feature(MonkFeatures.ImprovedMysticFightingStyle())
+        mystic_fighting_style.extend_feature(MonkMysticArtsFeatures.ImprovedMysticFightingStyle())
         return data
 
 

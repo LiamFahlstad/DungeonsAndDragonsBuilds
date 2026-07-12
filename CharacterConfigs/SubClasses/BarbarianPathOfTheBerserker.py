@@ -9,7 +9,7 @@ from CharacterConfigs.BaseClasses.BarbarianBase import (
 )
 from CharacterSheetCreator import CharacterSheetData
 from Definitions import BarbarianSubclass
-from Features.ClassFeatures import BarbarianFeatures
+from Features.ClassFeatures import BarbarianPathOfTheBerserkerFeatures
 from StatBlocks.SkillsStatBlock import BarbarianSkillsStatBlock
 
 
@@ -20,10 +20,10 @@ class BarbarianBerserkerLevel3(ClassBuilder.SubclassLevel3):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        rage: BarbarianFeatures.Rage = data.get_features_by_type(
-            BarbarianFeatures.Rage
+        rage: BarbarianPathOfTheBerserkerFeatures.Rage = data.get_features_by_type(
+            BarbarianPathOfTheBerserkerFeatures.Rage
         )[0]
-        rage.extend_feature(BarbarianFeatures.Frenzy())
+        rage.extend_feature(BarbarianPathOfTheBerserkerFeatures.Frenzy())
         return data
 
 
@@ -34,10 +34,10 @@ class BarbarianBerserkerLevel6(ClassBuilder.SubclassLevel6):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        rage: BarbarianFeatures.Rage = data.get_features_by_type(
-            BarbarianFeatures.Rage
+        rage: BarbarianPathOfTheBerserkerFeatures.Rage = data.get_features_by_type(
+            BarbarianPathOfTheBerserkerFeatures.Rage
         )[0]
-        rage.extend_feature(BarbarianFeatures.MindlessRage())
+        rage.extend_feature(BarbarianPathOfTheBerserkerFeatures.MindlessRage())
         return data
 
 
@@ -48,7 +48,7 @@ class BarbarianBerserkerLevel10(ClassBuilder.SubclassLevel10):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(BarbarianFeatures.Retaliation())
+        data.add_feature(BarbarianPathOfTheBerserkerFeatures.Retaliation())
         return data
 
 
@@ -59,10 +59,10 @@ class BarbarianBerserkerLevel14(ClassBuilder.SubclassLevel14):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        rage: BarbarianFeatures.Rage = data.get_features_by_type(
-            BarbarianFeatures.Rage
+        rage: BarbarianPathOfTheBerserkerFeatures.Rage = data.get_features_by_type(
+            BarbarianPathOfTheBerserkerFeatures.Rage
         )[0]
-        rage.extend_feature(BarbarianFeatures.IntimidatingPresence())
+        rage.extend_feature(BarbarianPathOfTheBerserkerFeatures.IntimidatingPresence())
         return data
 
 

@@ -9,7 +9,7 @@ from CharacterConfigs.BaseClasses.WarlockBase import (
 )
 from CharacterSheetCreator import CharacterSheetData
 from Definitions import WarlockSubclass
-from Features.ClassFeatures import WarlockFeatures
+from Features.ClassFeatures import WarlockFiendFeatures
 from Spells.Definitions import (
     BardLevel1Spells,
     BardLevel5Spells,
@@ -30,8 +30,8 @@ class FiendWarlockLevel3(ClassBuilder.SubclassLevel3):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(WarlockFeatures.FiendSpells())
-        data.add_feature(WarlockFeatures.DarkOnesBlessing())
+        data.add_feature(WarlockFiendFeatures.FiendSpells())
+        data.add_feature(WarlockFiendFeatures.DarkOnesBlessing())
         data.add_spell(SorcererLevel1Spells.BURNING_HANDS)
         data.add_spell(BardLevel1Spells.COMMAND)
         data.add_spell(SorcererLevel2Spells.SCORCHING_RAY)
@@ -58,7 +58,7 @@ class FiendWarlockLevel6(ClassBuilder.SubclassLevel6):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(WarlockFeatures.DarkOnesOwnLuck())
+        data.add_feature(WarlockFiendFeatures.DarkOnesOwnLuck())
         return data
 
 
@@ -93,7 +93,7 @@ class FiendWarlockLevel10(ClassBuilder.SubclassLevel10):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(WarlockFeatures.FiendishResilience())
+        data.add_feature(WarlockFiendFeatures.FiendishResilience())
         return data
 
 
@@ -104,7 +104,7 @@ class FiendWarlockLevel14(ClassBuilder.SubclassLevel14):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(WarlockFeatures.HurlThroughHell())
+        data.add_feature(WarlockFiendFeatures.HurlThroughHell())
         return data
 
 

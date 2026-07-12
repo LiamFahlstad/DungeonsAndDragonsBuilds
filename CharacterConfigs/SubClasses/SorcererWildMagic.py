@@ -9,7 +9,7 @@ from CharacterConfigs.BaseClasses.SorcererBase import (
 )
 from CharacterSheetCreator import CharacterSheetData
 from Definitions import SorcererSubclass
-from Features.ClassFeatures import SorcererFeatures
+from Features.ClassFeatures import SorcererWildMagicFeatures
 from StatBlocks.SkillsStatBlock import SorcererSkillsStatBlock
 
 
@@ -19,9 +19,9 @@ class SorcererWildMagicLevel3(ClassBuilder.SubclassLevel3):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(SorcererFeatures.WildMagicSurge())
-        data.add_feature(SorcererFeatures.WildMagicSurgeTable())
-        data.add_feature(SorcererFeatures.TidesOfChaos())
+        data.add_feature(SorcererWildMagicFeatures.WildMagicSurge())
+        data.add_feature(SorcererWildMagicFeatures.WildMagicSurgeTable())
+        data.add_feature(SorcererWildMagicFeatures.TidesOfChaos())
         return data
 
 
@@ -31,7 +31,7 @@ class SorcererWildMagicLevel6(ClassBuilder.SubclassLevel6):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(SorcererFeatures.BendLuck())
+        data.add_feature(SorcererWildMagicFeatures.BendLuck())
         return data
 
 
@@ -41,7 +41,7 @@ class SorcererWildMagicLevel14(ClassBuilder.SubclassLevel14):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(SorcererFeatures.ControlledChaos())
+        data.add_feature(SorcererWildMagicFeatures.ControlledChaos())
         return data
 
 
@@ -51,7 +51,7 @@ class SorcererWildMagicLevel18(ClassBuilder.SubclassLevel18):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(SorcererFeatures.TamedSurge())
+        data.add_feature(SorcererWildMagicFeatures.TamedSurge())
         return data
 
 

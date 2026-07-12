@@ -9,7 +9,7 @@ from CharacterConfigs.BaseClasses.SorcererBase import (
 )
 from CharacterSheetCreator import CharacterSheetData
 from Definitions import SorcererSubclass
-from Features.ClassFeatures import SorcererFeatures
+from Features.ClassFeatures import SorcererDraconicFeatures
 from Spells.Definitions import (
     SorcererLevel1Spells,
     SorcererLevel2Spells,
@@ -29,7 +29,7 @@ class SorcererDraconicLevel3(ClassBuilder.SubclassLevel3):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(SorcererFeatures.DraconicResilience())
+        data.add_feature(SorcererDraconicFeatures.DraconicResilience())
         data.add_spell(SorcererLevel1Spells.CHROMATIC_ORB)
         data.add_spell(SorcererLevel2Spells.ALTER_SELF)
         data.add_spell(BardLevel1Spells.COMMAND)
@@ -54,7 +54,7 @@ class SorcererDraconicLevel6(ClassBuilder.SubclassLevel6):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(SorcererFeatures.ElementalAffinity())
+        data.add_feature(SorcererDraconicFeatures.ElementalAffinity())
         return data
 
 
@@ -86,7 +86,7 @@ class SorcererDraconicLevel14(ClassBuilder.SubclassLevel14):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(SorcererFeatures.DragonWings())
+        data.add_feature(SorcererDraconicFeatures.DragonWings())
         return data
 
 
@@ -96,7 +96,7 @@ class SorcererDraconicLevel18(ClassBuilder.SubclassLevel18):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(SorcererFeatures.DragonCompanion())
+        data.add_feature(SorcererDraconicFeatures.DragonCompanion())
         return data
 
 

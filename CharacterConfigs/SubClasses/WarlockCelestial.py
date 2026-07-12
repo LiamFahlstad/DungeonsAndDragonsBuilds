@@ -9,7 +9,7 @@ from CharacterConfigs.BaseClasses.WarlockBase import (
 )
 from CharacterSheetCreator import CharacterSheetData
 from Definitions import WarlockSubclass
-from Features.ClassFeatures import WarlockFeatures
+from Features.ClassFeatures import WarlockCelestialFeatures
 from Spells.Definitions import (
     ClericLevel0Spells,
     ClericLevel1Spells,
@@ -29,8 +29,8 @@ class CelestialWarlockLevel3(ClassBuilder.SubclassLevel3):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(WarlockFeatures.CelestialSpells())
-        data.add_feature(WarlockFeatures.HealingLight())
+        data.add_feature(WarlockCelestialFeatures.CelestialSpells())
+        data.add_feature(WarlockCelestialFeatures.HealingLight())
         data.add_cantrip(ClericLevel0Spells.LIGHT)
         data.add_cantrip(ClericLevel0Spells.SACRED_FLAME)
         data.add_spell(ClericLevel1Spells.CURE_WOUNDS)
@@ -59,7 +59,7 @@ class CelestialWarlockLevel6(ClassBuilder.SubclassLevel6):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(WarlockFeatures.RadiantSoul())
+        data.add_feature(WarlockCelestialFeatures.RadiantSoul())
         return data
 
 
@@ -94,7 +94,7 @@ class CelestialWarlockLevel10(ClassBuilder.SubclassLevel10):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(WarlockFeatures.CelestialResilience())
+        data.add_feature(WarlockCelestialFeatures.CelestialResilience())
         return data
 
 
@@ -105,7 +105,7 @@ class CelestialWarlockLevel14(ClassBuilder.SubclassLevel14):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(WarlockFeatures.SearingVengeance())
+        data.add_feature(WarlockCelestialFeatures.SearingVengeance())
         return data
 
 
