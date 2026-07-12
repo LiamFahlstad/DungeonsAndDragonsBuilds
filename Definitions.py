@@ -257,6 +257,7 @@ class RangerSubclass(str, Enum):
 
 class MonkSubclass(str, Enum):
     SHADOW = "Shadow"
+    MYSTIC_ARTS = "Mystic Arts"
 
 
 class BarbarianSubclass(str, Enum):
@@ -326,8 +327,7 @@ class Die(int, Enum):
     def average_with_advantage(self) -> float:
         sides = self.value
         return sum(
-            k * ((k / sides) ** 2 - ((k - 1) / sides) ** 2)
-            for k in range(1, sides + 1)
+            k * ((k / sides) ** 2 - ((k - 1) / sides) ** 2) for k in range(1, sides + 1)
         )
 
     def average_with_disadvantage(self) -> float:
