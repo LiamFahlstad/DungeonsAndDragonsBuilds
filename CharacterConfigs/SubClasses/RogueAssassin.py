@@ -9,7 +9,7 @@ from CharacterConfigs.BaseClasses.RogueBase import (
 )
 from CharacterSheetCreator import CharacterSheetData
 from Definitions import RogueSubclass
-from Features.ClassFeatures.Rogue import RogueAssassinFeatures
+from Features.ClassFeatures.Rogue import RogueAssassinFeatures, RogueFeatures
 from StatBlocks.SkillsStatBlock import RogueSkillsStatBlock
 
 
@@ -46,10 +46,10 @@ class RogueAssassinLevel13(ClassBuilder.SubclassLevel13):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        sneak_attack_feature: RogueAssassinFeatures.SneakAttack = data.get_features_by_type(
-            RogueAssassinFeatures.SneakAttack
+        sneak_attack_feature: RogueFeatures.SneakAttack = data.get_features_by_type(
+            RogueFeatures.SneakAttack
         )[0]
-        sneak_attack_feature.extend_feature(RogueAssassinFeatures.CunningStrike())
+        sneak_attack_feature.extend_feature(RogueFeatures.CunningStrike())
         data.add_feature(RogueAssassinFeatures.EnvenomWeapons())
         return data
 
@@ -62,10 +62,10 @@ class RogueAssassinLevel17(ClassBuilder.SubclassLevel17):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        sneak_attack_feature: RogueAssassinFeatures.SneakAttack = data.get_features_by_type(
-            RogueAssassinFeatures.SneakAttack
+        sneak_attack_feature: RogueFeatures.SneakAttack = data.get_features_by_type(
+            RogueFeatures.SneakAttack
         )[0]
-        sneak_attack_feature.extend_feature(RogueAssassinFeatures.CunningStrike())
+        sneak_attack_feature.extend_feature(RogueFeatures.CunningStrike())
         data.add_feature(RogueAssassinFeatures.DeathStrike())
         return data
 

@@ -9,7 +9,7 @@ from CharacterConfigs.BaseClasses.BarbarianBase import (
 )
 from CharacterSheetCreator import CharacterSheetData
 from Definitions import BarbarianSubclass
-from Features.ClassFeatures.Barbarian import BarbarianPathOfTheBerserkerFeatures
+from Features.ClassFeatures.Barbarian import BarbarianPathOfTheBerserkerFeatures, BarbarianFeatures
 from StatBlocks.SkillsStatBlock import BarbarianSkillsStatBlock
 
 
@@ -20,8 +20,8 @@ class BarbarianBerserkerLevel3(ClassBuilder.SubclassLevel3):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        rage: BarbarianPathOfTheBerserkerFeatures.Rage = data.get_features_by_type(
-            BarbarianPathOfTheBerserkerFeatures.Rage
+        rage: BarbarianFeatures.Rage = data.get_features_by_type(
+            BarbarianFeatures.Rage
         )[0]
         rage.extend_feature(BarbarianPathOfTheBerserkerFeatures.Frenzy())
         return data
@@ -34,8 +34,8 @@ class BarbarianBerserkerLevel6(ClassBuilder.SubclassLevel6):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        rage: BarbarianPathOfTheBerserkerFeatures.Rage = data.get_features_by_type(
-            BarbarianPathOfTheBerserkerFeatures.Rage
+        rage: BarbarianFeatures.Rage = data.get_features_by_type(
+            BarbarianFeatures.Rage
         )[0]
         rage.extend_feature(BarbarianPathOfTheBerserkerFeatures.MindlessRage())
         return data
@@ -59,8 +59,8 @@ class BarbarianBerserkerLevel14(ClassBuilder.SubclassLevel14):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        rage: BarbarianPathOfTheBerserkerFeatures.Rage = data.get_features_by_type(
-            BarbarianPathOfTheBerserkerFeatures.Rage
+        rage: BarbarianFeatures.Rage = data.get_features_by_type(
+            BarbarianFeatures.Rage
         )[0]
         rage.extend_feature(BarbarianPathOfTheBerserkerFeatures.IntimidatingPresence())
         return data

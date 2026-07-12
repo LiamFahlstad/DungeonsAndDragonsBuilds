@@ -43,6 +43,7 @@ from Spells.Definitions import (
     BardLevel7Spells,
     BardLevel8Spells,
     BardLevel9Spells,
+    ClericLevel3Spells,
     WizardLevel3Spells,
 )
 from StatBlocks.AbilitiesStatBlock import StandardArrayAbilitiesStatBlock
@@ -188,7 +189,7 @@ def get_starter_class_builder():
                 ),
                 6: BardLoreLevel6(
                     spell_1=WizardLevel3Spells.FIREBALL,
-                    spell_2=WizardLevel3Spells.DISPEL_MAGIC,
+                    spell_2=ClericLevel3Spells.REVIVIFY,
                 ),
                 14: BardLoreLevel14(),
             },

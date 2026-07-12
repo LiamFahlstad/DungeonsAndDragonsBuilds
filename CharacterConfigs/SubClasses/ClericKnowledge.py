@@ -9,7 +9,7 @@ from CharacterConfigs.BaseClasses.ClericBase import (
 )
 from CharacterSheetCreator import CharacterSheetData
 from Definitions import ClericSubclass, Skill
-from Features.ClassFeatures.Cleric import ClericKnowledgeFeatures
+from Features.ClassFeatures.Cleric import ClericKnowledgeFeatures, ClericFeatures
 from Spells.Definitions import (
     ClericLevel1Spells,
     ClericLevel3Spells,
@@ -55,8 +55,8 @@ class ClericKnowledgeLevel3(ClassBuilder.SubclassLevel3):
             DivinationLevel2Spells.MIND_SPIKE, additional_ruling=additional_ruling
         )
 
-        channel_divinity: ClericKnowledgeFeatures.ChannelDivinity = data.get_features_by_type(
-            ClericKnowledgeFeatures.ChannelDivinity
+        channel_divinity: ClericFeatures.ChannelDivinity = data.get_features_by_type(
+            ClericFeatures.ChannelDivinity
         )[0]
         channel_divinity.extend_feature(ClericKnowledgeFeatures.MindMagic())
         data.add_feature(

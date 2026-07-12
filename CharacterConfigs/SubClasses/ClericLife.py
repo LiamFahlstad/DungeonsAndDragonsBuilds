@@ -9,7 +9,7 @@ from CharacterConfigs.BaseClasses.ClericBase import (
 )
 from CharacterSheetCreator import CharacterSheetData
 from Definitions import ClericSubclass
-from Features.ClassFeatures.Cleric import ClericLifeFeatures
+from Features.ClassFeatures.Cleric import ClericLifeFeatures, ClericFeatures
 from Spells.Definitions import (
     ClericLevel1Spells,
     ClericLevel2Spells,
@@ -32,8 +32,8 @@ class ClericLifeLevel3(ClassBuilder.SubclassLevel3):
         data.add_spell(ClericLevel2Spells.AID)
         data.add_spell(ClericLevel2Spells.LESSER_RESTORATION)
 
-        channel_divinity: ClericLifeFeatures.ChannelDivinity = data.get_features_by_type(
-            ClericLifeFeatures.ChannelDivinity
+        channel_divinity: ClericFeatures.ChannelDivinity = data.get_features_by_type(
+            ClericFeatures.ChannelDivinity
         )[0]
         channel_divinity.extend_feature(ClericLifeFeatures.PreserveLife())
         data.add_feature(ClericLifeFeatures.DiscipleofLife())

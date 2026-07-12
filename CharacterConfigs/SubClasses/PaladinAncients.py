@@ -9,7 +9,7 @@ from CharacterConfigs.BaseClasses.PaladinBase import (
 )
 from CharacterSheetCreator import CharacterSheetData
 from Definitions import PaladinSubclass
-from Features.ClassFeatures.Paladin import PaladinAncientsFeatures
+from Features.ClassFeatures.Paladin import PaladinAncientsFeatures, PaladinFeatures
 from Spells.Definitions import (
     ConjurationLevel1Spells,
     ConjurationLevel2Spells,
@@ -30,8 +30,8 @@ class AncientsPaladinLevel3(ClassBuilder.SubclassLevel3):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        channel_divinity_feature: PaladinAncientsFeatures.ChannelDivinity = (
-            data.get_features_by_type(PaladinAncientsFeatures.ChannelDivinity)[0]
+        channel_divinity_feature: PaladinFeatures.ChannelDivinity = (
+            data.get_features_by_type(PaladinFeatures.ChannelDivinity)[0]
         )
         channel_divinity_feature.extend_feature(PaladinAncientsFeatures.NaturesWrath())
         data.add_spell(ConjurationLevel1Spells.ENSNARING_STRIKE)

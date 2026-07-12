@@ -10,7 +10,7 @@ from CharacterConfigs.BaseClasses.ClericBase import (
 )
 from CharacterSheetCreator import CharacterSheetData
 from Definitions import ClericSubclass
-from Features.ClassFeatures.Cleric import ClericLightFeatures
+from Features.ClassFeatures.Cleric import ClericLightFeatures, ClericFeatures
 from StatBlocks.SkillsStatBlock import ClericSkillsStatBlock
 
 
@@ -25,8 +25,8 @@ class ClericLightLevel3(ClassBuilder.SubclassLevel3):
         data.add_spell(SpellDefinitions.EvocationLevel1Spells.FAERIE_FIRE)
         data.add_spell(SpellDefinitions.EvocationLevel2Spells.SCORCHING_RAY)
         data.add_spell(SpellDefinitions.SorcererLevel2Spells.SEE_INVISIBILITY)
-        channel_divinity: ClericLightFeatures.ChannelDivinity = data.get_features_by_type(
-            ClericLightFeatures.ChannelDivinity
+        channel_divinity: ClericFeatures.ChannelDivinity = data.get_features_by_type(
+            ClericFeatures.ChannelDivinity
         )[0]
         channel_divinity.extend_feature(ClericLightFeatures.RadianceOfTheDawn())
         data.add_feature(ClericLightFeatures.WardingFlare())

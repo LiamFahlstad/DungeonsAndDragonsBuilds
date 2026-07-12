@@ -9,7 +9,7 @@ from CharacterConfigs.BaseClasses.BarbarianBase import (
 )
 from CharacterSheetCreator import CharacterSheetData
 from Definitions import BarbarianSubclass
-from Features.ClassFeatures.Barbarian import BarbarianPathOfTheWorldTreeFeatures
+from Features.ClassFeatures.Barbarian import BarbarianPathOfTheWorldTreeFeatures, BarbarianFeatures
 from StatBlocks.SkillsStatBlock import BarbarianSkillsStatBlock
 
 
@@ -20,8 +20,8 @@ class BarbarianWorldTreeLevel3(ClassBuilder.SubclassLevel3):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        rage: BarbarianPathOfTheWorldTreeFeatures.Rage = data.get_features_by_type(
-            BarbarianPathOfTheWorldTreeFeatures.Rage
+        rage: BarbarianFeatures.Rage = data.get_features_by_type(
+            BarbarianFeatures.Rage
         )[0]
         rage.extend_feature(BarbarianPathOfTheWorldTreeFeatures.VitalityOfTheTree())
         return data
@@ -34,8 +34,8 @@ class BarbarianWorldTreeLevel6(ClassBuilder.SubclassLevel6):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        rage: BarbarianPathOfTheWorldTreeFeatures.Rage = data.get_features_by_type(
-            BarbarianPathOfTheWorldTreeFeatures.Rage
+        rage: BarbarianFeatures.Rage = data.get_features_by_type(
+            BarbarianFeatures.Rage
         )[0]
         rage.extend_feature(BarbarianPathOfTheWorldTreeFeatures.BranchesOfTheTree())
         return data
@@ -59,8 +59,8 @@ class BarbarianWorldTreeLevel14(ClassBuilder.SubclassLevel14):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        rage: BarbarianPathOfTheWorldTreeFeatures.Rage = data.get_features_by_type(
-            BarbarianPathOfTheWorldTreeFeatures.Rage
+        rage: BarbarianFeatures.Rage = data.get_features_by_type(
+            BarbarianFeatures.Rage
         )[0]
         rage.extend_feature(BarbarianPathOfTheWorldTreeFeatures.TravelAlongTheTree())
         return data

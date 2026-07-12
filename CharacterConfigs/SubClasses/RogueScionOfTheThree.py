@@ -9,7 +9,7 @@ from CharacterConfigs.BaseClasses.RogueBase import (
 )
 from CharacterSheetCreator import CharacterSheetData
 from Definitions import RogueSubclass
-from Features.ClassFeatures.Rogue import RogueScionOfTheThreeFeatures
+from Features.ClassFeatures.Rogue import RogueScionOfTheThreeFeatures, RogueFeatures
 from StatBlocks.SkillsStatBlock import RogueSkillsStatBlock
 
 
@@ -34,8 +34,8 @@ class RogueScionOfTheThreeLevel9(ClassBuilder.SubclassLevel9):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        sneak_attack_feature: RogueScionOfTheThreeFeatures.SneakAttack = data.get_features_by_type(
-            RogueScionOfTheThreeFeatures.SneakAttack
+        sneak_attack_feature: RogueFeatures.SneakAttack = data.get_features_by_type(
+            RogueFeatures.SneakAttack
         )[0]
         sneak_attack_feature.extend_feature(RogueScionOfTheThreeFeatures.StrikeFear())
         return data

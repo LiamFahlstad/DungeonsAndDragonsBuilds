@@ -9,7 +9,7 @@ from CharacterConfigs.BaseClasses.PaladinBase import (
 )
 from CharacterSheetCreator import CharacterSheetData
 from Definitions import PaladinSubclass
-from Features.ClassFeatures.Paladin import PaladinGloryFeatures
+from Features.ClassFeatures.Paladin import PaladinGloryFeatures, PaladinFeatures
 from Spells.Definitions import (
     BardLevel4Spells,
     ClericLevel1Spells,
@@ -31,8 +31,8 @@ class PaladinGloryLevel3(ClassBuilder.SubclassLevel3):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        channel_divinity_feature: PaladinGloryFeatures.ChannelDivinity = (
-            data.get_features_by_type(PaladinGloryFeatures.ChannelDivinity)[0]
+        channel_divinity_feature: PaladinFeatures.ChannelDivinity = (
+            data.get_features_by_type(PaladinFeatures.ChannelDivinity)[0]
         )
         channel_divinity_feature.extend_feature(PaladinGloryFeatures.InspiringSmite())
         channel_divinity_feature.extend_feature(PaladinGloryFeatures.PeerlessAthlete())
@@ -62,8 +62,8 @@ class PaladinGloryLevel7(ClassBuilder.SubclassLevel7):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        aura_of_protection: PaladinGloryFeatures.AuraOfProtection = (
-            data.get_features_by_type(PaladinGloryFeatures.AuraOfProtection)[0]
+        aura_of_protection: PaladinFeatures.AuraOfProtection = (
+            data.get_features_by_type(PaladinFeatures.AuraOfProtection)[0]
         )
         aura_of_protection.extend_feature(PaladinGloryFeatures.AuraOfAlacrity())
         return data

@@ -9,7 +9,7 @@ from CharacterConfigs.BaseClasses.MonkBase import (
 )
 from CharacterSheetCreator import CharacterSheetData
 from Definitions import Ability, MonkSubclass
-from Features.ClassFeatures.Monk import MonkShadowFeatures
+from Features.ClassFeatures.Monk import MonkShadowFeatures, MonkFeatures
 from StatBlocks.SkillsStatBlock import MonkSkillsStatBlock
 
 
@@ -19,8 +19,8 @@ class MonkShadowLevel3(ClassBuilder.SubclassLevel3):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        monks_focus: MonkShadowFeatures.MonksFocus = data.get_features_by_type(
-            MonkShadowFeatures.MonksFocus
+        monks_focus: MonkFeatures.MonksFocus = data.get_features_by_type(
+            MonkFeatures.MonksFocus
         )[0]
         monks_focus.extend_feature(MonkShadowFeatures.ShadowArts())
         return data
@@ -57,8 +57,8 @@ class MonkShadowLevel17(ClassBuilder.SubclassLevel17):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        monks_focus: MonkShadowFeatures.MonksFocus = data.get_features_by_type(
-            MonkShadowFeatures.MonksFocus
+        monks_focus: MonkFeatures.MonksFocus = data.get_features_by_type(
+            MonkFeatures.MonksFocus
         )[0]
         monks_focus.extend_feature(MonkShadowFeatures.CloakOfShadows())
         return data

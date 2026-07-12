@@ -10,7 +10,7 @@ from CharacterConfigs.BaseClasses.BardBase import (
 )
 from CharacterSheetCreator import CharacterSheetData
 from Definitions import BardSubclass
-from Features.ClassFeatures.Bard import BardGlamourFeatures
+from Features.ClassFeatures.Bard import BardGlamourFeatures, BardFeatures
 from StatBlocks.SkillsStatBlock import BardSkillsStatBlock
 
 
@@ -34,8 +34,8 @@ class BardGlamourLevel6(ClassBuilder.SubclassLevel6):
         data: CharacterSheetData,
     ) -> CharacterSheetData:
         data.add_spell(SpellDefinitions.BardLevel1Spells.COMMAND)
-        bardic_inspiration: BardGlamourFeatures.BardicInspiration = data.get_features_by_type(
-            BardGlamourFeatures.BardicInspiration
+        bardic_inspiration: BardFeatures.BardicInspiration = data.get_features_by_type(
+            BardFeatures.BardicInspiration
         )[0]
         bardic_inspiration.extend_feature(BardGlamourFeatures.MantleOfMajesty())
         return data

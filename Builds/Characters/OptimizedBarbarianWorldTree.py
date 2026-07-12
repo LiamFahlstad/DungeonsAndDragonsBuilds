@@ -46,8 +46,7 @@ def get_starter_class_builder():
                 proficiencies={
                     Skill.ANIMAL_HANDLING: False,
                     Skill.ATHLETICS: True,
-                    Skill.INSIGHT: True,
-                    Skill.INTIMIDATION: False,
+                    Skill.INTIMIDATION: True,
                     Skill.NATURE: False,
                     Skill.PERCEPTION: False,
                     Skill.SURVIVAL: False,

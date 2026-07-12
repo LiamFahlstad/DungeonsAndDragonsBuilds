@@ -10,7 +10,7 @@ from CharacterConfigs.BaseClasses.ClericBase import (
 )
 from CharacterSheetCreator import CharacterSheetData
 from Definitions import ClericSubclass
-from Features.ClassFeatures.Cleric import ClericWarFeatures
+from Features.ClassFeatures.Cleric import ClericWarFeatures, ClericFeatures
 from StatBlocks.SkillsStatBlock import ClericSkillsStatBlock
 
 
@@ -26,8 +26,8 @@ class ClericWarLevel3(ClassBuilder.SubclassLevel3):
         data.add_spell(SpellDefinitions.ClericLevel1Spells.SHIELD_OF_FAITH)
         data.add_spell(SpellDefinitions.ClericLevel2Spells.SPIRITUAL_WEAPON)
 
-        channel_divinity: ClericWarFeatures.ChannelDivinity = data.get_features_by_type(
-            ClericWarFeatures.ChannelDivinity
+        channel_divinity: ClericFeatures.ChannelDivinity = data.get_features_by_type(
+            ClericFeatures.ChannelDivinity
         )[0]
         channel_divinity.extend_feature(ClericWarFeatures.GuidedStrike())
         data.add_feature(ClericWarFeatures.WarPriest())
@@ -53,8 +53,8 @@ class ClericWarLevel6(ClassBuilder.SubclassLevel6):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        channel_divinity: ClericWarFeatures.ChannelDivinity = data.get_features_by_type(
-            ClericWarFeatures.ChannelDivinity
+        channel_divinity: ClericFeatures.ChannelDivinity = data.get_features_by_type(
+            ClericFeatures.ChannelDivinity
         )[0]
         channel_divinity.extend_feature(ClericWarFeatures.WarGodsBlessing())
         return data

@@ -9,7 +9,7 @@ from CharacterConfigs.BaseClasses.RogueBase import (
 )
 from CharacterSheetCreator import CharacterSheetData
 from Definitions import RogueSubclass
-from Features.ClassFeatures.Rogue import RogueThiefFeatures
+from Features.ClassFeatures.Rogue import RogueThiefFeatures, RogueFeatures
 from StatBlocks.SkillsStatBlock import RogueSkillsStatBlock
 
 
@@ -34,8 +34,8 @@ class RogueThiefLevel9(ClassBuilder.SubclassLevel9):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        sneak_attack_feature: RogueThiefFeatures.SneakAttack = data.get_features_by_type(
-            RogueThiefFeatures.SneakAttack
+        sneak_attack_feature: RogueFeatures.SneakAttack = data.get_features_by_type(
+            RogueFeatures.SneakAttack
         )[0]
         sneak_attack_feature.extend_feature(RogueThiefFeatures.SupremeSneak())
         return data

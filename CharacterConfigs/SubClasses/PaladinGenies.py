@@ -9,7 +9,7 @@ from CharacterConfigs.BaseClasses.PaladinBase import (
 )
 from CharacterSheetCreator import CharacterSheetData
 from Definitions import PaladinSubclass
-from Features.ClassFeatures.Paladin import PaladinGeniesFeatures
+from Features.ClassFeatures.Paladin import PaladinGeniesFeatures, PaladinFeatures
 from Spells.Definitions import (
     EvocationLevel1Spells,
     PaladinLevel5Spells,
@@ -29,8 +29,8 @@ class GeniesPaladinLevel3(ClassBuilder.SubclassLevel3):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        channel_divinity_feature: PaladinGeniesFeatures.ChannelDivinity = (
-            data.get_features_by_type(PaladinGeniesFeatures.ChannelDivinity)[0]
+        channel_divinity_feature: PaladinFeatures.ChannelDivinity = (
+            data.get_features_by_type(PaladinFeatures.ChannelDivinity)[0]
         )
         channel_divinity_feature.extend_feature(PaladinGeniesFeatures.ElementalSmite())
         data.add_feature(PaladinGeniesFeatures.GeniesSplendor())

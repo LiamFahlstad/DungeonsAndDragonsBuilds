@@ -10,7 +10,7 @@ from CharacterConfigs.BaseClasses.ClericBase import (
 )
 from CharacterSheetCreator import CharacterSheetData
 from Definitions import ClericSubclass
-from Features.ClassFeatures.Cleric import ClericTrickeryFeatures
+from Features.ClassFeatures.Cleric import ClericTrickeryFeatures, ClericFeatures
 from StatBlocks.SkillsStatBlock import ClericSkillsStatBlock
 
 
@@ -26,8 +26,8 @@ class ClericTrickeryLevel3(ClassBuilder.SubclassLevel3):
         data.add_spell(SpellDefinitions.IllusionLevel2Spells.INVISIBILITY)
         data.add_spell(SpellDefinitions.AbjurationLevel2Spells.PASS_WITHOUT_TRACE)
 
-        channel_divinity: ClericTrickeryFeatures.ChannelDivinity = data.get_features_by_type(
-            ClericTrickeryFeatures.ChannelDivinity
+        channel_divinity: ClericFeatures.ChannelDivinity = data.get_features_by_type(
+            ClericFeatures.ChannelDivinity
         )[0]
         channel_divinity.extend_feature(ClericTrickeryFeatures.InvokeDuplicity())
         data.add_feature(ClericTrickeryFeatures.BlessingOfTheTrickster())

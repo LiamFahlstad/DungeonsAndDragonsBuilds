@@ -9,7 +9,7 @@ from CharacterConfigs.BaseClasses.BarbarianBase import (
 )
 from CharacterSheetCreator import CharacterSheetData
 from Definitions import BarbarianSubclass
-from Features.ClassFeatures.Barbarian import BarbarianPathOfTheWildHeartFeatures
+from Features.ClassFeatures.Barbarian import BarbarianPathOfTheWildHeartFeatures, BarbarianFeatures
 from StatBlocks.SkillsStatBlock import BarbarianSkillsStatBlock
 
 
@@ -21,8 +21,8 @@ class BarbarianWildHeartLevel3(ClassBuilder.SubclassLevel3):
         data: CharacterSheetData,
     ) -> CharacterSheetData:
         data.add_feature(BarbarianPathOfTheWildHeartFeatures.AnimalSpeaker())
-        rage: BarbarianPathOfTheWildHeartFeatures.Rage = data.get_features_by_type(
-            BarbarianPathOfTheWildHeartFeatures.Rage
+        rage: BarbarianFeatures.Rage = data.get_features_by_type(
+            BarbarianFeatures.Rage
         )[0]
         rage.extend_feature(BarbarianPathOfTheWildHeartFeatures.RageOfTheWilds())
         return data
@@ -57,8 +57,8 @@ class BarbarianWildHeartLevel14(ClassBuilder.SubclassLevel14):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        rage: BarbarianPathOfTheWildHeartFeatures.Rage = data.get_features_by_type(
-            BarbarianPathOfTheWildHeartFeatures.Rage
+        rage: BarbarianFeatures.Rage = data.get_features_by_type(
+            BarbarianFeatures.Rage
         )[0]
         rage.extend_feature(BarbarianPathOfTheWildHeartFeatures.PowerOfTheWilds())
         return data

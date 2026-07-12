@@ -9,7 +9,7 @@ from CharacterConfigs.BaseClasses.BarbarianBase import (
 )
 from CharacterSheetCreator import CharacterSheetData
 from Definitions import BarbarianSubclass
-from Features.ClassFeatures.Barbarian import BarbarianPathOfTheZealotFeatures
+from Features.ClassFeatures.Barbarian import BarbarianPathOfTheZealotFeatures, BarbarianFeatures
 from StatBlocks.SkillsStatBlock import BarbarianSkillsStatBlock
 
 
@@ -20,8 +20,8 @@ class BarbarianZealotLevel3(ClassBuilder.SubclassLevel3):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        rage: BarbarianPathOfTheZealotFeatures.Rage = data.get_features_by_type(
-            BarbarianPathOfTheZealotFeatures.Rage
+        rage: BarbarianFeatures.Rage = data.get_features_by_type(
+            BarbarianFeatures.Rage
         )[0]
         rage.extend_feature(BarbarianPathOfTheZealotFeatures.DivineFury())
         data.add_feature(BarbarianPathOfTheZealotFeatures.WarriorOfTheGods())
@@ -35,8 +35,8 @@ class BarbarianZealotLevel6(ClassBuilder.SubclassLevel6):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        rage: BarbarianPathOfTheZealotFeatures.Rage = data.get_features_by_type(
-            BarbarianPathOfTheZealotFeatures.Rage
+        rage: BarbarianFeatures.Rage = data.get_features_by_type(
+            BarbarianFeatures.Rage
         )[0]
         rage.extend_feature(BarbarianPathOfTheZealotFeatures.FanaticalFocus())
         return data
@@ -60,8 +60,8 @@ class BarbarianZealotLevel14(ClassBuilder.SubclassLevel14):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        rage: BarbarianPathOfTheZealotFeatures.Rage = data.get_features_by_type(
-            BarbarianPathOfTheZealotFeatures.Rage
+        rage: BarbarianFeatures.Rage = data.get_features_by_type(
+            BarbarianFeatures.Rage
         )[0]
         rage.extend_feature(BarbarianPathOfTheZealotFeatures.RageOfTheGods())
         return data

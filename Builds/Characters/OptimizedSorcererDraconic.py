@@ -75,7 +75,7 @@ def get_starter_class_builder():
                     spell_2=SpellDefinitions.SorcererLevel1Spells.BURNING_HANDS,
                 ),
                 2: SorcererLevel2(
-                    spell_1=SpellDefinitions.SorcererLevel1Spells.CHROMATIC_ORB,
+                    spell_1=SpellDefinitions.SorcererLevel1Spells.FALSE_LIFE,
                     spell_2=SpellDefinitions.SorcererLevel1Spells.MAGIC_MISSILE,
                 ),
                 3: SorcererLevel3(

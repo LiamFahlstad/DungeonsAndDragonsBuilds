@@ -10,7 +10,7 @@ from CharacterConfigs.BaseClasses.BardBase import (
 )
 from CharacterSheetCreator import CharacterSheetData
 from Definitions import BardSubclass, Skill
-from Features.ClassFeatures.Bard import BardLoreFeatures
+from Features.ClassFeatures.Bard import BardLoreFeatures, BardFeatures
 from StatBlocks.SkillsStatBlock import BardSkillsStatBlock
 
 
@@ -73,8 +73,8 @@ class BardLoreLevel14(ClassBuilder.SubclassLevel14):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        bardic_inspiration: BardLoreFeatures.BardicInspiration = data.get_features_by_type(
-            BardLoreFeatures.BardicInspiration
+        bardic_inspiration: BardFeatures.BardicInspiration = data.get_features_by_type(
+            BardFeatures.BardicInspiration
         )[0]
         bardic_inspiration.extend_feature(BardLoreFeatures.PeerlessSkill())
         return data
