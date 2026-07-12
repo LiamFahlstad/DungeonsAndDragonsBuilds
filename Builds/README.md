@@ -227,7 +227,7 @@ base_class_level_features=ClassBuilder.BaseClassLevelFeatures(
 **For spellcasters** (Wizard, Cleric, Bard, etc.):
 
 ```python
-from Spells.Definitions import WizardLevel0Spells, WizardLevel1Spells
+from Spells.SpellLists import WizardLevel0Spells, WizardLevel1Spells
 
 base_class_level_features=ClassBuilder.BaseClassLevelFeatures(
     base_class_features_by_level={
@@ -380,7 +380,7 @@ from Features.CharacterFeats import GeneralFeats
 ### Adding Spells (Spellcasters)
 
 ```python
-from Spells.Definitions import ClericLevel1Spells, ClericLevel2Spells
+from Spells.SpellLists import ClericLevel1Spells, ClericLevel2Spells
 
 2: ClericLevel2(
     spell=ClericLevel1Spells.SANCTUARY,

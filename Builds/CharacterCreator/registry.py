@@ -420,10 +420,10 @@ class Registry:
         return result
 
     def spell_enums(self) -> dict:
-        """dict[enum class name, enum class] from Spells.Definitions."""
+        """dict[enum class name, enum class] from Spells.SpellLists."""
         if self._spell_enums is not None:
             return self._spell_enums
-        module = importlib.import_module("Spells.Definitions")
+        module = importlib.import_module("Spells.SpellLists")
         self._spell_enums = {
             cls.__name__: cls
             for cls in vars(module).values()
@@ -458,7 +458,7 @@ class Registry:
                 mapping[name] = ("Definitions", name)
 
         for name in self.spell_enums():
-            mapping[name] = ("Spells.Definitions", name)
+            mapping[name] = ("Spells.SpellLists", name)
 
         for name in ("Backgrounds", "EpicBoon", "GeneralFeats", "OriginFeats"):
             mapping[name] = ("Features.CharacterFeats", name)

@@ -2,7 +2,7 @@ import CharacterSheetCreator
 from Definitions import Ability
 from Features.SpeciesFeatures import AasimarFeatures
 from SpeciesConfigs.SpeciesBuilder import SpeciesBuilder
-from Spells.Definitions import SorcererLevel0Spells
+from Spells.SpellLists import SorcererLevel0Spells
 
 
 class AasimarSpeciesBuilder(SpeciesBuilder):

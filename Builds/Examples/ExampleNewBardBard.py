@@ -13,7 +13,7 @@ from CharacterConfigs.SubClasses.BardLore import BardLoreCustomStarterClassArgs
 from Definitions import Ability, Skill
 from Features.CharacterFeats import Backgrounds, GeneralFeats, OriginFeats
 from SpeciesConfigs import Human
-from Spells.Definitions import (
+from Spells.SpellLists import (
     BardLevel0Spells,
     BardLevel1Spells,
 )

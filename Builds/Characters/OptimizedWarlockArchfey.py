@@ -21,7 +21,7 @@ from Invocations.Definitions import (
     InvocationsLevel5,
 )
 from SpeciesConfigs import Human
-from Spells.Definitions import (
+from Spells.SpellLists import (
     WarlockLevel0Spells,
     WarlockLevel1Spells,
     WarlockLevel2Spells,

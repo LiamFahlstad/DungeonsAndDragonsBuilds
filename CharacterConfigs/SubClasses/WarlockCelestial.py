@@ -10,7 +10,7 @@ from CharacterConfigs.BaseClasses.WarlockBase import (
 from CharacterSheetCreator import CharacterSheetData
 from Definitions import WarlockSubclass
 from Features.ClassFeatures.Warlock import WarlockCelestialFeatures
-from Spells.Definitions import (
+from Spells.SpellLists import (
     ClericLevel0Spells,
     ClericLevel1Spells,
     ClericLevel2Spells,

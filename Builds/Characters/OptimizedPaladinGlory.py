@@ -39,7 +39,7 @@ from Features.CharacterFeats import Backgrounds, EpicBoon, GeneralFeats, OriginF
 from Features.Combat import FightingStyles
 from Features.Equipment import Weapons
 from SpeciesConfigs import Human
-from Spells.Definitions import (
+from Spells.SpellLists import (
     PaladinLevel1Spells,
     PaladinLevel2Spells,
     PaladinLevel3Spells,

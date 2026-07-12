@@ -37,7 +37,7 @@ from Combat.Monsters.CR_1.monsters import BrownBear, DireWolf, GiantSpider, Tige
 from Definitions import Ability, Skill
 from Features.CharacterFeats import Backgrounds, EpicBoon, GeneralFeats, OriginFeats
 from SpeciesConfigs import Gnome
-from Spells.Definitions import (
+from Spells.SpellLists import (
     DruidLevel0Spells,
     DruidLevel1Spells,
     DruidLevel2Spells,

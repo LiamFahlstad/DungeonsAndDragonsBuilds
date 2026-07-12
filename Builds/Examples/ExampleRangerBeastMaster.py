@@ -38,7 +38,7 @@ from Features.ClassFeatures.Ranger.PrimalCompanions import CompanionType
 from Features.Combat import FightingStyles
 from Features.Equipment import Weapons
 from SpeciesConfigs import Gnome
-from Spells.Definitions import (
+from Spells.SpellLists import (
     RangerLevel1Spells,
     RangerLevel2Spells,
     RangerLevel3Spells,

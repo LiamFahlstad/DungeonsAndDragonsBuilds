@@ -99,7 +99,7 @@ def _carry_unknown_imports(spec, tree):
     """Keep import lines for identifiers the registry cannot resolve.
 
     Hand-written builds sometimes use custom aliases, e.g.
-    `from Spells import Definitions as SpellDefs`. Codegen only knows the
+    `from Spells import SpellLists as SpellDefs`. Codegen only knows the
     conventional names, so remember the original import for anything else.
     """
     registry = registry_module.get_registry()

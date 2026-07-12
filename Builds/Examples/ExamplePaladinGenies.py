@@ -18,7 +18,7 @@ from Features.Combat import FightingStyles
 from Features.Equipment import Weapons
 from SpeciesConfigs import Dragonborn
 from Features.SpeciesFeatures.DragonbornFeatures import DragonColor
-from Spells.Definitions import PaladinLevel1Spells, WizardLevel0Spells, WizardLevel1Spells
+from Spells.SpellLists import PaladinLevel1Spells, WizardLevel0Spells, WizardLevel1Spells
 from StatBlocks.AbilitiesStatBlock import StandardArrayAbilitiesStatBlock
 from StatBlocks.SkillsStatBlock import PaladinSkillsStatBlock
 

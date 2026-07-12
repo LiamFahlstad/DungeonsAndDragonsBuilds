@@ -1,104 +1,98 @@
+"""Generates Spells/SpellLists.py from Spells/spells.json, the single source of truth.
+
+Run directly (`python Spells/SpellGenerator.py`) whenever spells.json changes to
+regenerate the per-class and per-school spell-name enums.
+"""
+
 import json
 import re
 from pathlib import Path
 
 INPUT_JSON = "Spells/spells.json"
-OUTPUT_PY = "Spells/GeneratedSpells.py"
+OUTPUT_PY = "Spells/SpellLists.py"
+
+# Order classes/schools are emitted in, purely for readable diffs.
+CLASS_ORDER = [
+    "Sorcerer",
+    "Artificer",
+    "Wizard",
+    "Bard",
+    "Cleric",
+    "Druid",
+    "Paladin",
+    "Ranger",
+    "Warlock",
+]
+SCHOOL_ORDER = [
+    "Abjuration",
+    "Conjuration",
+    "Divination",
+    "Enchantment",
+    "Evocation",
+    "Illusion",
+    "Necromancy",
+    "Transmutation",
+]
+LEVELS = range(10)
 
 
-def spell_name_to_class(name: str) -> str:
-    """
-    Convert spell names into valid Python class names.
+def member_name(spell_name: str) -> str:
+    """Convert a spell name into a SCREAMING_SNAKE_CASE enum member name.
 
     Examples:
-        Acid Splash -> AcidSplash
-        Tasha's Caustic Brew -> TashasCausticBrew
-        Melf's Acid Arrow -> MelfsAcidArrow
+        Acid Splash -> ACID_SPLASH
+        Dragon's Breath -> DRAGONS_BREATH
+        Blindness/Deafness -> BLINDNESS_DEAFNESS
     """
-    name = re.sub(r"[’']", "", name)
-    name = re.sub(r"[^a-zA-Z0-9 ]", "", name)
-    return "".join(word.capitalize() for word in name.split())
+    cleaned = re.sub(r"['’]", "", spell_name)
+    cleaned = re.sub(r"[^A-Za-z0-9]+", "_", cleaned).strip("_")
+    return cleaned.upper()
 
 
-def format_multiline_string(text: str) -> str:
-    """
-    Format description text (paragraphs separated by \\n) into a Python string literal:
-        (
-            "First paragraph.\\n"
-            "Second paragraph."
-        )
-    or just "Single paragraph." when there is only one paragraph.
-    """
-    lines = [line.strip() for line in text.strip().split("\n") if line.strip()]
-
-    if not lines:
-        return '""'
-
-    if len(lines) == 1:
-        return f'"{lines[0]}"'
-
-    formatted = "(\n"
-    for i, line in enumerate(lines):
-        escaped = line.replace("\\", "\\\\").replace('"', '\\"')
-        is_last = i == len(lines) - 1
-        suffix = "" if is_last else "\\n"
-        formatted += f'            "{escaped}{suffix}"\n'
-    formatted += "        )"
-    return formatted
-
-
-def generate_spell_class(spell: dict) -> str:
-    class_name = spell_name_to_class(spell["name"])
-
-    description = format_multiline_string(spell["description"])
-
-    return f"""
-class {class_name}(ExplicitSpell):
-    def __init__(
-        self,
-        spell_casting_ability: Optional[Ability] = None,
-        additional_ruling: Optional[str] = None,
-    ):
-        super().__init__(
-            name="{spell['name']}",
-            level={spell['level']},
-            school="{spell['school']}",
-            classes={spell['classes']},
-            casting_time="{spell['casting_time']}",
-            range="{spell['range']}",
-            components="{spell['components']}",
-            duration="{spell['duration']}",
-            description={description},
-            source="{spell['source']}",
-            spell_casting_ability=spell_casting_ability,
-            additional_ruling=additional_ruling,
-        )
-""".lstrip()
+def build_enum_source(class_name: str, spell_names: list[str]) -> str:
+    if not spell_names:
+        return f"class {class_name}(str, Enum):\n    pass\n"
+    lines = [f"class {class_name}(str, Enum):"]
+    for name in spell_names:
+        lines.append(f'    {member_name(name)} = "{name}"')
+    return "\n".join(lines) + "\n"
 
 
 def main():
     with open(INPUT_JSON, "r", encoding="utf-8") as f:
         spells = json.load(f)
 
-    output = []
+    by_class_level: dict[tuple[str, int], list[str]] = {}
+    by_school_level: dict[tuple[str, int], list[str]] = {}
+    for name, data in spells.items():
+        level = data["level"]
+        for cls in data["classes"]:
+            by_class_level.setdefault((cls, level), []).append(name)
+        by_school_level.setdefault((data["school"], level), []).append(name)
 
-    output.append("from typing import Optional\n\n")
-    output.append("from Definitions import Ability\n")
-    output.append("from Spells.Definitions import ExplicitSpell\n\n")
+    output = ["from enum import Enum\n\n"]
 
-    for spell_name in sorted(spells):
-        spell_data = spells[spell_name]
-        output.append(generate_spell_class(spell_data))
-        output.append("\n")
+    # Class-based enums: only emitted when at least one spell exists for that
+    # class/level combination (half-casters like Paladin/Ranger never get
+    # cantrips or spells above 5th level, so those enums simply don't exist).
+    for cls in CLASS_ORDER:
+        for level in LEVELS:
+            names = sorted(by_class_level.get((cls, level), []))
+            if not names:
+                continue
+            output.append(build_enum_source(f"{cls}Level{level}Spells", names))
+            output.append("\n")
 
-    output.append("SpellSet = {\n")
-    for spell_name in sorted(spells):
-        class_name = spell_name_to_class(spell_name)
-        output.append(f'    "{spell_name}": {class_name},\n')
-    output.append("}\n")
-    Path(OUTPUT_PY).write_text("".join(output), encoding="utf-8")
+    # School-based enums: always emitted for all 10 levels, even if empty,
+    # since callers build "spells up to level N" unions across every level.
+    for school in SCHOOL_ORDER:
+        for level in LEVELS:
+            names = sorted(by_school_level.get((school, level), []))
+            output.append(build_enum_source(f"{school}Level{level}Spells", names))
+            output.append("\n")
 
-    print(f"Generated {len(spells)} spells → {OUTPUT_PY}")
+    Path(OUTPUT_PY).write_text("".join(output).rstrip() + "\n", encoding="utf-8")
+    print(f"Generated enums for {len(spells)} spells -> {OUTPUT_PY}")
 
 
 if __name__ == "__main__":

@@ -11,7 +11,7 @@ from Features.Combat import FightingStyles
 from Features.Equipment import Armor, Weapons
 from Features.ClassFeatures import SpellSlots
 from Features.ClassFeatures.Ranger import RangerFeatures
-from Spells.Definitions import (
+from Spells.SpellLists import (
     RangerLevel1Spells,
     RangerLevel2Spells,
     RangerLevel3Spells,

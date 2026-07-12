@@ -24,7 +24,7 @@ from Features.CharacterFeats import Backgrounds, GeneralFeats, OriginFeats
 from Features.Equipment import Weapons
 from Invocations.Definitions import InvocationsLevel0, InvocationsLevel2
 from SpeciesConfigs import Human
-from Spells import Definitions as SpellDefs
+from Spells import SpellLists as SpellDefs
 from StatBlocks.AbilitiesStatBlock import StandardArrayAbilitiesStatBlock
 from StatBlocks.SkillsStatBlock import WizardSkillsStatBlock
 

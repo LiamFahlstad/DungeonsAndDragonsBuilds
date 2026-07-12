@@ -3,7 +3,7 @@ from enum import Enum
 import CharacterSheetCreator
 from Features.SpeciesFeatures import TieflingFeatures
 from SpeciesConfigs.SpeciesBuilder import SpeciesBuilder
-from Spells.Definitions import (
+from Spells.SpellLists import (
     ClericLevel2Spells,
     SorcererLevel0Spells,
     SorcererLevel1Spells,

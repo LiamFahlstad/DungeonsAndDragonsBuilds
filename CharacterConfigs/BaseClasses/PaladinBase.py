@@ -11,7 +11,7 @@ from Features.Combat import FightingStyles
 from Features.Equipment import Armor, Weapons
 from Features.ClassFeatures import SpellSlots
 from Features.ClassFeatures.Paladin import PaladinFeatures
-from Spells.Definitions import (
+from Spells.SpellLists import (
     PaladinLevel1Spells,
     PaladinLevel2Spells,
     PaladinLevel3Spells,

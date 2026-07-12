@@ -7,7 +7,7 @@ from Features.Core.SubFeatures import (
     InitiativeProficiency,
     SkillProficiencyChoice,
 )
-from Spells.Definitions import (
+from Spells.SpellLists import (
     ClericLevel0Spells,
     ClericLevel1Spells,
     DruidLevel0Spells,

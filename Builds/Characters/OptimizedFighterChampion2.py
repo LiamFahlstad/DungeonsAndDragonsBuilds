@@ -18,7 +18,7 @@ from Features.Combat import FightingStyles
 from Features.Equipment import Armor, Weapons
 from Features.Items import Items, Packs
 from SpeciesConfigs import Dwarf
-from Spells import Definitions as SpellsDefinitions
+from Spells import SpellLists as SpellsDefinitions
 from StatBlocks.AbilitiesStatBlock import StandardArrayAbilitiesStatBlock
 from StatBlocks.SkillsStatBlock import FighterSkillsStatBlock
 

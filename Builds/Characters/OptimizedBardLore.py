@@ -32,7 +32,7 @@ from CharacterConfigs.SubClasses.BardLore import (
 from Definitions import Ability, Skill
 from Features.CharacterFeats import Backgrounds, EpicBoon, GeneralFeats, OriginFeats
 from SpeciesConfigs import Gnome
-from Spells.Definitions import (
+from Spells.SpellLists import (
     BardLevel0Spells,
     BardLevel1Spells,
     BardLevel2Spells,

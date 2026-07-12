@@ -10,7 +10,7 @@ from CharacterConfigs.BaseClasses.WarlockBase import (
 from CharacterSheetCreator import CharacterSheetData
 from Definitions import WarlockSubclass
 from Features.ClassFeatures.Warlock import WarlockUndeadFeatures
-from Spells.Definitions import (
+from Spells.SpellLists import (
     BardLevel3Spells,
     BardLevel4Spells,
     DruidLevel5Spells,

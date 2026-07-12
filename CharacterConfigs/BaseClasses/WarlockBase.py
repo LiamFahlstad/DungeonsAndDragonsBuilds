@@ -19,7 +19,7 @@ from Invocations.Definitions import (
     InvocationsLevel12,
     InvocationsLevel15,
 )
-from Spells.Definitions import (
+from Spells.SpellLists import (
     WarlockLevel0Spells,
     WarlockLevel1Spells,
     WarlockLevel2Spells,

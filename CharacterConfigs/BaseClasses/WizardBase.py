@@ -9,7 +9,7 @@ from Features.CharacterFeats import EpicBoon, GeneralFeats
 from Features.Equipment import Weapons
 from Features.ClassFeatures import SpellSlots
 from Features.ClassFeatures.Wizard import WizardFeatures
-from Spells.Definitions import (
+from Spells.SpellLists import (
     WizardLevel0Spells,
     WizardLevel1Spells,
     WizardLevel2Spells,

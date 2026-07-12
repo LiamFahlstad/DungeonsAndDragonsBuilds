@@ -10,7 +10,7 @@ from Features.CharacterFeats import EpicBoon, GeneralFeats
 from Features.Equipment import Armor, Weapons
 from Features.ClassFeatures import SpellSlots
 from Features.ClassFeatures.Bard import BardFeatures
-from Spells.Definitions import (
+from Spells.SpellLists import (
     BardLevel0Spells,
     BardLevel1Spells,
     BardLevel2Spells,

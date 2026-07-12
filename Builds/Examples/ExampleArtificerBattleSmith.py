@@ -13,7 +13,7 @@ from Definitions import Ability, Skill
 from Features.CharacterFeats import Backgrounds, GeneralFeats, OriginFeats
 from Features.Equipment import Armor, Weapons
 from SpeciesConfigs import Dwarf
-from Spells import Definitions as SpellDefinitions
+from Spells import SpellLists as SpellDefinitions
 from StatBlocks.AbilitiesStatBlock import StandardArrayAbilitiesStatBlock
 from StatBlocks.SkillsStatBlock import ArtificerSkillsStatBlock
 

@@ -9,7 +9,7 @@ from Features.CharacterFeats import EpicBoon, GeneralFeats
 from Features.Equipment import Weapons
 from Features.ClassFeatures import SpellSlots
 from Features.ClassFeatures.Sorcerer import SorcererFeatures
-from Spells.Definitions import (
+from Spells.SpellLists import (
     SorcererLevel0Spells,
     SorcererLevel1Spells,
     SorcererLevel2Spells,

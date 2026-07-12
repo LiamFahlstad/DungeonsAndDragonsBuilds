@@ -10,7 +10,7 @@ from Features.CharacterFeats import EpicBoon, GeneralFeats
 from Features.Equipment import Armor, Weapons
 from Features.ClassFeatures import SpellSlots
 from Features.ClassFeatures.Cleric import ClericFeatures
-from Spells.Definitions import (
+from Spells.SpellLists import (
     ClericLevel0Spells,
     ClericLevel1Spells,
     ClericLevel2Spells,

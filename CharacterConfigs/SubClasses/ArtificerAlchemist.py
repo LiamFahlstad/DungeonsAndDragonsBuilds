@@ -10,7 +10,7 @@ from CharacterConfigs.BaseClasses.ArtificerBase import (
 from CharacterSheetCreator import CharacterSheetData
 from Definitions import ArtificerSubclass
 from Features.ClassFeatures.Artificer import ArtificerAlchemistFeatures
-from Spells.Definitions import (
+from Spells.SpellLists import (
     ArtificerLevel3Spells,
     ArtificerLevel5Spells,
     ClericLevel1Spells,

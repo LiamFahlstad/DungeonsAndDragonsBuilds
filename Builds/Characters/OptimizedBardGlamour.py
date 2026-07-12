@@ -33,7 +33,7 @@ from Definitions import Ability, Skill
 from Features.CharacterFeats import Backgrounds, EpicBoon, GeneralFeats, OriginFeats
 from Features.Items import Items, Packs
 from SpeciesConfigs import Aasimar
-from Spells.Definitions import (
+from Spells.SpellLists import (
     BardLevel0Spells,
     BardLevel1Spells,
     BardLevel2Spells,

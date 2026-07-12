@@ -11,7 +11,7 @@ from Features.CharacterFeats import EpicBoon, GeneralFeats
 from Features.Equipment import Armor, Weapons
 from Features.ClassFeatures import SpellSlots
 from Features.ClassFeatures.Druid import DruidFeatures
-from Spells.Definitions import (
+from Spells.SpellLists import (
     DruidLevel0Spells,
     DruidLevel1Spells,
     DruidLevel2Spells,

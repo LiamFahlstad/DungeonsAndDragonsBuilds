@@ -53,7 +53,7 @@ from Features.Combat import FightingStyles
 from Features.Equipment import Armor, Weapons
 
 # TODO: If your class uses spells (Cleric, Wizard, Bard, Druid, etc.), import spell definitions:
-#   from Spells.Definitions import (
+#   from Spells.SpellLists import (
 #       WizardLevel0Spells, WizardLevel1Spells, WizardLevel2Spells, ...
 #   )
 # For Fighter, Monk, Barbarian, Rogue (non-spellcasters), you don't need this

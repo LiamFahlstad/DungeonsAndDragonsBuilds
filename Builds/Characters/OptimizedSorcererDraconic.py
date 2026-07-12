@@ -17,7 +17,7 @@ from Features.CharacterFeats import Backgrounds, GeneralFeats, OriginFeats
 from Features.Equipment import Weapons
 from SpeciesConfigs import Dragonborn
 from Features.SpeciesFeatures import DragonbornFeatures
-from Spells import Definitions as SpellDefinitions
+from Spells import SpellLists as SpellDefinitions
 from StatBlocks.AbilitiesStatBlock import StandardArrayAbilitiesStatBlock
 from StatBlocks.SkillsStatBlock import SorcererSkillsStatBlock
 

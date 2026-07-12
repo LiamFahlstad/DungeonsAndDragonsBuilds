@@ -2,7 +2,7 @@ from typing import Optional
 
 import attr
 
-import Spells.Definitions as SpellDefinitions
+import Spells.SpellLists as SpellDefinitions
 from CharacterConfigs.BaseClasses import ClassBuilder
 from CharacterConfigs.BaseClasses.ClericBase import (
     ClericMulticlassBuilder,

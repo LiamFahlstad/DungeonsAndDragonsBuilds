@@ -18,7 +18,7 @@ from Features.Combat import FightingStyles
 from Features.Equipment import Weapons
 from Features.CharacterFeats import OriginFeats as SpeciesOriginFeats
 from SpeciesConfigs import Human
-from Spells.Definitions import RangerLevel1Spells
+from Spells.SpellLists import RangerLevel1Spells
 from StatBlocks.AbilitiesStatBlock import StandardArrayAbilitiesStatBlock
 from StatBlocks.SkillsStatBlock import RangerSkillsStatBlock
 

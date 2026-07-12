@@ -17,7 +17,7 @@ from Features.CharacterFeats import Backgrounds, OriginFeats
 from Features.Combat import FightingStyles
 from Features.Equipment import Weapons
 from SpeciesConfigs import Human
-from Spells.Definitions import (
+from Spells.SpellLists import (
     PaladinLevel1Spells,
     WizardLevel0Spells,
     WizardLevel1Spells,

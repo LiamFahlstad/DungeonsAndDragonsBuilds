@@ -10,7 +10,7 @@ from CharacterConfigs.BaseClasses.DruidBase import (
 from CharacterSheetCreator import CharacterSheetData
 from Definitions import DruidLandType, DruidSubclass
 from Features.ClassFeatures.Druid import DruidLandFeatures
-from Spells.Definitions import (
+from Spells.SpellLists import (
     AbjurationLevel4Spells,
     ConjurationLevel1Spells,
     ConjurationLevel2Spells,

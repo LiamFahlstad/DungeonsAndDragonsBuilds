@@ -10,7 +10,7 @@ from CharacterConfigs.BaseClasses.PaladinBase import (
 from CharacterSheetCreator import CharacterSheetData
 from Definitions import PaladinSubclass
 from Features.ClassFeatures.Paladin import PaladinGloryFeatures, PaladinFeatures
-from Spells.Definitions import (
+from Spells.SpellLists import (
     BardLevel4Spells,
     ClericLevel1Spells,
     ClericLevel2Spells,

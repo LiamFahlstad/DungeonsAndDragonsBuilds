@@ -1,6 +1,5 @@
 from enum import Enum
 
-
 class SorcererLevel0Spells(str, Enum):
     ACID_SPLASH = "Acid Splash"
     BLADE_WARD = "Blade Ward"
@@ -23,9 +22,9 @@ class SorcererLevel0Spells(str, Enum):
     THUNDERCLAP = "Thunderclap"
     TRUE_STRIKE = "True Strike"
 
-
 class SorcererLevel1Spells(str, Enum):
     BURNING_HANDS = "Burning Hands"
+    BUZZING_BEE = "Buzzing Bee"
     CHARM_PERSON = "Charm Person"
     CHROMATIC_ORB = "Chromatic Orb"
     COLOR_SPRAY = "Color Spray"
@@ -49,14 +48,13 @@ class SorcererLevel1Spells(str, Enum):
     THUNDERWAVE = "Thunderwave"
     WITCH_BOLT = "Witch Bolt"
 
-
 class SorcererLevel2Spells(str, Enum):
     ALTER_SELF = "Alter Self"
     ARCANE_VIGOR = "Arcane Vigor"
     BLINDNESS_DEAFNESS = "Blindness/Deafness"
     BLUR = "Blur"
-    CLOUD_OF_DAGGERS = "Cloud of Daggers"
-    CROWN_OF_MADNESS = "Crown of Madness"
+    CLOUD_OF_DAGGERS = "Cloud Of Daggers"
+    CROWN_OF_MADNESS = "Crown Of Madness"
     DARKNESS = "Darkness"
     DARKVISION = "Darkvision"
     DEATH_ARMOR = "Death Armor"
@@ -83,8 +81,8 @@ class SorcererLevel2Spells(str, Enum):
     SUGGESTION = "Suggestion"
     WEB = "Web"
 
-
 class SorcererLevel3Spells(str, Enum):
+    ASTRAL_FLOOD = "Astral Flood"
     BLINK = "Blink"
     CACOPHONIC_SHIELD = "Cacophonic Shield"
     CLAIRVOYANCE = "Clairvoyance"
@@ -109,7 +107,6 @@ class SorcererLevel3Spells(str, Enum):
     WATER_BREATHING = "Water Breathing"
     WATER_WALK = "Water Walk"
 
-
 class SorcererLevel4Spells(str, Enum):
     BACKLASH = "Backlash"
     BANISHMENT = "Banishment"
@@ -127,12 +124,11 @@ class SorcererLevel4Spells(str, Enum):
     VITRIOLIC_SPHERE = "Vitriolic Sphere"
     WALL_OF_FIRE = "Wall of Fire"
 
-
 class SorcererLevel5Spells(str, Enum):
     ANIMATE_OBJECTS = "Animate Objects"
     BIGBYS_HAND = "Bigby's Hand"
     CLOUDKILL = "Cloudkill"
-    CONE_OF_COLD = "Cone of Cold"
+    CONE_OF_COLD = "Cone Of Cold"
     CREATION = "Creation"
     DOMINATE_PERSON = "Dominate Person"
     HOLD_MONSTER = "Hold Monster"
@@ -144,22 +140,21 @@ class SorcererLevel5Spells(str, Enum):
     TELEPORTATION_CIRCLE = "Teleportation Circle"
     WALL_OF_STONE = "Wall of Stone"
 
-
 class SorcererLevel6Spells(str, Enum):
     ARCANE_GATE = "Arcane Gate"
     CHAIN_LIGHTNING = "Chain Lightning"
-    CIRCLE_OF_DEATH = "Circle of Death"
+    CIRCLE_OF_DEATH = "Circle Of Death"
     DISINTEGRATE = "Disintegrate"
     ELMINSTERS_EFFULGENT_SPHERES = "Elminster's Effulgent Spheres"
     EYEBITE = "Eyebite"
     FLESH_TO_STONE = "Flesh to Stone"
     GLOBE_OF_INVULNERABILITY = "Globe of Invulnerability"
+    LEOMUNDS_LAMENTABLE_BELABORMENT = "Leomund's Lamentable Belaborment"
     MASS_SUGGESTION = "Mass Suggestion"
     MOVE_EARTH = "Move Earth"
     OTILUKES_FREEZING_SPHERE = "Otiluke's Freezing Sphere"
     SUNBEAM = "Sunbeam"
     TRUE_SEEING = "True Seeing"
-
 
 class SorcererLevel7Spells(str, Enum):
     DELAYED_BLAST_FIREBALL = "Delayed Blast Fireball"
@@ -172,7 +167,6 @@ class SorcererLevel7Spells(str, Enum):
     SIMBULS_SYNOSTODWEOMER = "Simbul's Synostodweomer"
     TELEPORT = "Teleport"
 
-
 class SorcererLevel8Spells(str, Enum):
     DEMIPLANE = "Demiplane"
     DOMINATE_MONSTER = "Dominate Monster"
@@ -181,245 +175,105 @@ class SorcererLevel8Spells(str, Enum):
     POWER_WORD_STUN = "Power Word Stun"
     SUNBURST = "Sunburst"
 
-
 class SorcererLevel9Spells(str, Enum):
-    BLADE_OF_DISASTER = "Blade of Disaster"
+    BLADE_OF_DISASTER = "Blade Of Disaster"
     GATE = "Gate"
     METEOR_SWARM = "Meteor Swarm"
     POWER_WORD_KILL = "Power Word Kill"
     TIME_STOP = "Time Stop"
     WISH = "Wish"
 
-
 class ArtificerLevel0Spells(str, Enum):
     ACID_SPLASH = "Acid Splash"
-    BLADE_WARD = "Blade Ward"
+    DANCING_LIGHTS = "Dancing Lights"
+    ELEMENTALISM = "Elementalism"
     FIRE_BOLT = "Fire Bolt"
+    GUIDANCE = "Guidance"
     LIGHT = "Light"
     MAGE_HAND = "Mage Hand"
-    MENDING = "Mending"
     MESSAGE = "Message"
+    POISON_SPRAY = "Poison Spray"
     PRESTIDIGITATION = "Prestidigitation"
-
+    RAY_OF_FROST = "Ray of Frost"
+    RESISTANCE = "Resistance"
+    SHOCKING_GRASP = "Shocking Grasp"
+    SPARE_THE_DYING = "Spare the Dying"
+    THORN_WHIP = "Thorn Whip"
+    THUNDERCLAP = "Thunderclap"
+    TRUE_STRIKE = "True Strike"
 
 class ArtificerLevel1Spells(str, Enum):
     ALARM = "Alarm"
-    ARMOR_OF_AGATHYS = "Armor of Agathys"
-    BURNING_HANDS = "Burning Hands"
-    COMPREHEND_LANGUAGES = "Comprehend Languages"
     CURE_WOUNDS = "Cure Wounds"
     DETECT_MAGIC = "Detect Magic"
     DISGUISE_SELF = "Disguise Self"
     EXPEDITIOUS_RETREAT = "Expeditious Retreat"
+    FAERIE_FIRE = "Faerie Fire"
+    FALSE_LIFE = "False Life"
     FEATHER_FALL = "Feather Fall"
     GREASE = "Grease"
     IDENTIFY = "Identify"
     JUMP = "Jump"
-    MAGE_ARMOR = "Mage Armor"
-    MAGIC_MISSILE = "Magic Missile"
-    SHIELD = "Shield"
-    THUNDERWAVE = "Thunderwave"
-
+    LONGSTRIDER = "Longstrider"
+    PURIFY_FOOD_AND_DRINK = "Purify Food and Drink"
+    SANCTUARY = "Sanctuary"
 
 class ArtificerLevel2Spells(str, Enum):
-    ACID_ARROW = "Acid Arrow"
     AID = "Aid"
     ALTER_SELF = "Alter Self"
     ARCANE_LOCK = "Arcane Lock"
-    BLINDNESS_DEAFNESS = "Blindness/Deafness"
+    ARCANE_VIGOR = "Arcane Vigor"
     BLUR = "Blur"
     CONTINUAL_FLAME = "Continual Flame"
     DARKVISION = "Darkvision"
-    DETECT_THOUGHTS = "Detect Thoughts"
-    DISPEL_MAGIC = "Dispel Magic"
+    DRAGONS_BREATH = "Dragon's Breath"
     ENHANCE_ABILITY = "Enhance Ability"
     ENLARGE_REDUCE = "Enlarge/Reduce"
     HEAT_METAL = "Heat Metal"
-    HOLD_PERSON = "Hold Person"
-    IDENTIFY = "Identify"
+    HOMUNCULUS_SERVANT = "Homunculus Servant"
     INVISIBILITY = "Invisibility"
-    KNOCK = "Knock"
+    LESSER_RESTORATION = "Lesser Restoration"
     LEVITATE = "Levitate"
     MAGIC_MOUTH = "Magic Mouth"
     MAGIC_WEAPON = "Magic Weapon"
-    MIRROR_IMAGE = "Mirror Image"
-    MISTY_STEP = "Misty Step"
-    PHANTASMAL_FORCE = "Phantasmal Force"
-    SCORCHING_RAY = "Scorching Ray"
+    PROTECTION_FROM_POISON = "Protection from Poison"
+    ROPE_TRICK = "Rope Trick"
     SEE_INVISIBILITY = "See Invisibility"
-    SHATTER = "Shatter"
     SPIDER_CLIMB = "Spider Climb"
-    WARDING_BOND = "Warding Bond"
+    TORTOISE_SHELL = "Tortoise Shell"
     WEB = "Web"
 
-
 class ArtificerLevel3Spells(str, Enum):
-    ANIMATE_DEAD = "Animate Dead"
     BLINK = "Blink"
-    CATNAP = "Catnap"
-    CLAIRVOYANCE = "Clairvoyance"
-    COUNTERSPELL = "Counterspell"
-    DAYLIGHT = "Daylight"
+    CREATE_FOOD_AND_WATER = "Create Food And Water"
     DISPEL_MAGIC = "Dispel Magic"
-    DISPEL_MAGIC_GREATER = "Dispel Magic, Greater"
     ELEMENTAL_WEAPON = "Elemental Weapon"
-    FIREBALL = "Fireball"
     FLY = "Fly"
-    GASEOUS_FORM = "Gaseous Form"
     GLYPH_OF_WARDING = "Glyph of Warding"
     HASTE = "Haste"
-    HYPNOTIC_PATTERN = "Hypnotic Pattern"
-    INTELLECT_FORTRESS = "Intellect Fortress"
-    LEGEND_LORE = "Legend Lore"
-    LIGHTNING_BOLT = "Lightning Bolt"
-    MAGIC_CIRCLE = "Magic Circle"
-    MATERIAL_PLANE = "Material Plane"
-    NONDETECTION = "Nondetection"
-    PHANTOM_STEED = "Phantom Steed"
-    PLAN_SHIFT = "Plan Shift"
     PROTECTION_FROM_ENERGY = "Protection from Energy"
-    REMOVE_CURSE = "Remove Curse"
     REVIVIFY = "Revivify"
-    SENDING = "Sending"
-    SLEET_STORM = "Sleet Storm"
-    SLOW = "Slow"
-    STINKING_CLOUD = "Stinking Cloud"
-    TIDAL_WAVE = "Tidal Wave"
-    TINY_HUT = "Tiny Hut"
-    VAMPIRIC_TOUCH = "Vampiric Touch"
     WATER_BREATHING = "Water Breathing"
-
+    WATER_WALK = "Water Walk"
 
 class ArtificerLevel4Spells(str, Enum):
     ARCANE_EYE = "Arcane Eye"
-    BANISHMENT = "Banishment"
-    BLIGHT = "Blight"
-    CONJURE_MINOR_ELEMENTALS = "Conjure Minor Elementals"
-    DIMENSION_DOOR = "Dimension Door"
-    DIVINATION = "Divination"
     FABRICATE = "Fabricate"
-    FAITHFUL_HOUND = "Faithful Hound"
-    FIRE_SHIELD = "Fire Shield"
-    GREATER_INVISIBILITY = "Greater Invisibility"
-    GUARDIAN_OF_FAITH = "Guardian of Faith"
-    ICE_STORM = "Ice Storm"
-    INFERNAL_CALLING = "Infernal Calling"
-    LEOMUND_TINY_HUT = "Leomund's Tiny Hut"
-    MORDENKAINEN_FAITHFUL_HOUND = "Mordenkainen's Faithful Hound"
-    MORDENKAINEN_PRIVATE_SANCTUM = "Mordenkainen's Private Sanctum"
-    PHANTASMAL_KILLER = "Phantasmal Killer"
-    POLYMORPH = "Polymorph"
-    PRIVATE_SANCTUM = "Private Sanctum"
-    RESILIENT_SPHERE = "Resilient Sphere"
+    FREEDOM_OF_MOVEMENT = "Freedom of Movement"
+    LEOMUNDS_SECRET_CHEST = "Leomund's Secret Chest"
+    MORDENKAINENS_PRIVATE_SANCTUM = "Mordenkainen's Private Sanctum"
+    OTILUKES_RESILIENT_SPHERE = "Otiluke's Resilient Sphere"
+    STONE_SHAPE = "Stone Shape"
     STONESKIN = "Stoneskin"
     SUMMON_CONSTRUCT = "Summon Construct"
-    WALL_OF_FIRE = "Wall of Fire"
-
 
 class ArtificerLevel5Spells(str, Enum):
     ANIMATE_OBJECTS = "Animate Objects"
-    AWAKEN = "Awaken"
-    CLOUDKILL = "Cloudkill"
-    COMMUNE = "Commune"
-    CONE_OF_COLD = "Cone of Cold"
-    CONJURE_ELEMENTAL = "Conjure Elemental"
-    CONTACT_OTHER_PLANE = "Contact Other Plane"
+    BIGBYS_HAND = "Bigby's Hand"
+    CIRCLE_OF_POWER = "Circle Of Power"
     CREATION = "Creation"
-    GEAS = "Geas"
     GREATER_RESTORATION = "Greater Restoration"
-    HALLOW = "Hallow"
-    HOLD_MONSTER = "Hold Monster"
-    IMMOLATION = "Immolation"
-    LEGEND_LORE = "Legend Lore"
-    MASS_CURE_WOUNDS = "Mass Cure Wounds"
-    MODIFY_MEMORY = "Modify Memory"
-    PASSWALL = "Passwall"
-    PLANAR_BINDING = "Planar Binding"
-    SKILL_EMPOWERMENT = "Skill Empowerment"
-    SUMMON_DRACONIC_SPIRIT = "Summon Draconic Spirit"
-    TELEKINESIS = "Telekinesis"
-    TELEPORTATION_CIRCLE = "Teleportation Circle"
-    WALL_OF_FORCE = "Wall of Force"
     WALL_OF_STONE = "Wall of Stone"
-
-
-class ArtificerLevel6Spells(str, Enum):
-    ALLIES = "Allies"
-    ANALYZE_DWEOMER = "Analyze Dweomer"
-    ARCANE_GATE = "Arcane Gate"
-    CHAIN_LIGHTNING = "Chain Lightning"
-    CONJURE_FEY = "Conjure Fey"
-    CONTINGENCY = "Contingency"
-    DISINTEGRATE = "Disintegrate"
-    EYEBITE = "Eyebite"
-    FIND_THE_PATH = "Find the Path"
-    FORBIDDANCE = "Forbiddance"
-    GUARDS_AND_WARDS = "Guards and Wards"
-    INSTANT_SUMMONS = "Instant Summons"
-    LEGEND_LORE = "Legend Lore"
-    MASS_SUGGESTION = "Mass Suggestion"
-    MOVE_EARTH = "Move Earth"
-    Otto_IRRESISTIBLE_DANCE = "Otto's Irresistible Dance"
-    PROGRAMMED_ILLUSION = "Programmed Illusion"
-    SUNBEAM = "Sunbeam"
-    TRUE_POLYMORPH = "True Polymorph"
-    WALL_OF_THORNS = "Wall of Thorns"
-
-
-class ArtificerLevel7Spells(str, Enum):
-    ARCANE_SWORD = "Arcane Sword"
-    CONJURE_CELESTIAL = "Conjure Celestial"
-    DELAYED_BLAST_FIREBALL = "Delayed Blast Fireball"
-    DIVINE_WORD = "Divine Word"
-    FORCECAGE = "Forcecage"
-    MAGNIFICENT_MANSION = "Magnificent Mansion"
-    MASS_PLANE_SHIFT = "Mass Plane Shift"
-    MIRAGE_ARCANE = "Mirage Arcane"
-    MORDENKAINEN_MAGNIFICENT_MANSION = "Mordenkainen's Magnificent Mansion"
-    MORDENKAINEN_SWORD = "Mordenkainen's Sword"
-    PLANE_SHIFT = "Plane Shift"
-    POWERS_OF_CREATION = "Powers of Creation"
-    PRISMATIC_SPRAY = "Prismatic Spray"
-    REVERSE_GRAVITY = "Reverse Gravity"
-    SEQUESTER = "Sequester"
-    SIMULACRUM = "Simulacrum"
-    SYMBOL = "Symbol"
-    TELEPORT = "Teleport"
-
-
-class ArtificerLevel8Spells(str, Enum):
-    ANTIMAGIC_FIELD = "Antimagic Field"
-    ANTIPATHY_SYMPATHY = "Antipathy/Sympathy"
-    CLONE = "Clone"
-    CONTROL_WEATHER = "Control Weather"
-    DEMIPLANE = "Demiplane"
-    FEEBLEMIND = "Feeblemind"
-    HOMUNCULUS_SERVANT = "Homunculus Servant"
-    INCENDIARY_CLOUD = "Incendiary Cloud"
-    MAZE = "Maze"
-    MIND_BLANK = "Mind Blank"
-    POWER_WORD_STUN = "Power Word Stun"
-    REALITY_BREAK = "Reality Break"
-    SUNBURST = "Sunburst"
-    TSUNAMI = "Tsunami"
-
-
-class ArtificerLevel9Spells(str, Enum):
-    ASTRAL_PROJECTION = "Astral Projection"
-    GATE = "Gate"
-    IMPRISONMENT = "Imprisonment"
-    MASS_HEAL = "Mass Heal"
-    MASS_POLYMORPH = "Mass Polymorph"
-    METEOR_SWARM = "Meteor Swarm"
-    MIND_BLANK_GREATER = "Mind Blank, Greater"
-    POWER_WORD_HEAL = "Power Word Heal"
-    POWER_WORD_KILL = "Power Word Kill"
-    PRISMATIC_WALL = "Prismatic Wall"
-    SHAPECHANGE = "Shapechange"
-    TIME_STOP = "Time Stop"
-    TRUE_POLYMORPH = "True Polymorph"
-    WISH = "Wish"
-
 
 class WizardLevel0Spells(str, Enum):
     ACID_SPLASH = "Acid Splash"
@@ -443,10 +297,10 @@ class WizardLevel0Spells(str, Enum):
     TOLL_THE_DEAD = "Toll the Dead"
     TRUE_STRIKE = "True Strike"
 
-
 class WizardLevel1Spells(str, Enum):
     ALARM = "Alarm"
     BURNING_HANDS = "Burning Hands"
+    BUZZING_BEE = "Buzzing Bee"
     CHARM_PERSON = "Charm Person"
     CHROMATIC_ORB = "Chromatic Orb"
     COLOR_SPRAY = "Color Spray"
@@ -479,7 +333,6 @@ class WizardLevel1Spells(str, Enum):
     WARDAWAY = "Wardaway"
     WITCH_BOLT = "Witch Bolt"
 
-
 class WizardLevel2Spells(str, Enum):
     ALTER_SELF = "Alter Self"
     ARCANE_LOCK = "Arcane Lock"
@@ -487,9 +340,9 @@ class WizardLevel2Spells(str, Enum):
     AUGURY = "Augury"
     BLINDNESS_DEAFNESS = "Blindness/Deafness"
     BLUR = "Blur"
-    CLOUD_OF_DAGGERS = "Cloud of Daggers"
+    CLOUD_OF_DAGGERS = "Cloud Of Daggers"
     CONTINUAL_FLAME = "Continual Flame"
-    CROWN_OF_MADNESS = "Crown of Madness"
+    CROWN_OF_MADNESS = "Crown Of Madness"
     DARKNESS = "Darkness"
     DARKVISION = "Darkvision"
     DEATH_ARMOR = "Death Armor"
@@ -524,9 +377,9 @@ class WizardLevel2Spells(str, Enum):
     SUGGESTION = "Suggestion"
     WEB = "Web"
 
-
 class WizardLevel3Spells(str, Enum):
     ANIMATE_DEAD = "Animate Dead"
+    ASTRAL_FLOOD = "Astral Flood"
     BESTOW_CURSE = "Bestow Curse"
     BLINK = "Blink"
     CACOPHONIC_SHIELD = "Cacophonic Shield"
@@ -558,11 +411,10 @@ class WizardLevel3Spells(str, Enum):
     STINKING_CLOUD = "Stinking Cloud"
     SUMMON_FEY = "Summon Fey"
     SUMMON_UNDEAD = "Summon Undead"
-    SYLUNÉS_VIPER = "Syluné's Viper"
+    SYLUNES_VIPER = "Sylune's Viper"
     TONGUES = "Tongues"
     VAMPIRIC_TOUCH = "Vampiric Touch"
     WATER_BREATHING = "Water Breathing"
-
 
 class WizardLevel4Spells(str, Enum):
     ARCANE_EYE = "Arcane Eye"
@@ -597,14 +449,13 @@ class WizardLevel4Spells(str, Enum):
     VITRIOLIC_SPHERE = "Vitriolic Sphere"
     WALL_OF_FIRE = "Wall of Fire"
 
-
 class WizardLevel5Spells(str, Enum):
     ALUSTRIELS_MOONCLOAK = "Alustriel's Mooncloak"
     ANIMATE_OBJECTS = "Animate Objects"
     BIGBYS_HAND = "Bigby's Hand"
-    CIRCLE_OF_POWER = "Circle of Power"
+    CIRCLE_OF_POWER = "Circle Of Power"
     CLOUDKILL = "Cloudkill"
-    CONE_OF_COLD = "Cone of Cold"
+    CONE_OF_COLD = "Cone Of Cold"
     CONJURE_ELEMENTAL = "Conjure Elemental"
     CONTACT_OTHER_PLANE = "Contact Other Plane"
     CREATION = "Creation"
@@ -631,11 +482,10 @@ class WizardLevel5Spells(str, Enum):
     WALL_OF_STONE = "Wall of Stone"
     YOLANDES_REGAL_PRESENCE = "Yolande's Regal Presence"
 
-
 class WizardLevel6Spells(str, Enum):
     ARCANE_GATE = "Arcane Gate"
     CHAIN_LIGHTNING = "Chain Lightning"
-    CIRCLE_OF_DEATH = "Circle of Death"
+    CIRCLE_OF_DEATH = "Circle Of Death"
     CONTINGENCY = "Contingency"
     CREATE_UNDEAD = "Create Undead"
     DISINTEGRATE = "Disintegrate"
@@ -645,6 +495,7 @@ class WizardLevel6Spells(str, Enum):
     FLESH_TO_STONE = "Flesh to Stone"
     GLOBE_OF_INVULNERABILITY = "Globe of Invulnerability"
     GUARDS_AND_WARDS = "Guards and Wards"
+    LEOMUNDS_LAMENTABLE_BELABORMENT = "Leomund's Lamentable Belaborment"
     MAGIC_JAR = "Magic Jar"
     MASS_SUGGESTION = "Mass Suggestion"
     MOVE_EARTH = "Move Earth"
@@ -656,7 +507,6 @@ class WizardLevel6Spells(str, Enum):
     TASHAS_BUBBLING_CAULDRON = "Tasha's Bubbling Cauldron"
     TRUE_SEEING = "True Seeing"
     WALL_OF_ICE = "Wall of Ice"
-
 
 class WizardLevel7Spells(str, Enum):
     DELAYED_BLAST_FIREBALL = "Delayed Blast Fireball"
@@ -675,7 +525,7 @@ class WizardLevel7Spells(str, Enum):
     SIMULACRUM = "Simulacrum"
     SYMBOL = "Symbol"
     TELEPORT = "Teleport"
-
+    VOID_STAR = "Void Star"
 
 class WizardLevel8Spells(str, Enum):
     ANTIMAGIC_FIELD = "Antimagic Field"
@@ -693,10 +543,9 @@ class WizardLevel8Spells(str, Enum):
     SUNBURST = "Sunburst"
     TELEPATHY = "Telepathy"
 
-
 class WizardLevel9Spells(str, Enum):
     ASTRAL_PROJECTION = "Astral Projection"
-    BLADE_OF_DISASTER = "Blade of Disaster"
+    BLADE_OF_DISASTER = "Blade Of Disaster"
     FORESIGHT = "Foresight"
     GATE = "Gate"
     IMPRISONMENT = "Imprisonment"
@@ -708,7 +557,6 @@ class WizardLevel9Spells(str, Enum):
     TRUE_POLYMORPH = "True Polymorph"
     WEIRD = "Weird"
     WISH = "Wish"
-
 
 class BardLevel0Spells(str, Enum):
     BLADE_WARD = "Blade Ward"
@@ -724,7 +572,6 @@ class BardLevel0Spells(str, Enum):
     THUNDERCLAP = "Thunderclap"
     TRUE_STRIKE = "True Strike"
     VICIOUS_MOCKERY = "Vicious Mockery"
-
 
 class BardLevel1Spells(str, Enum):
     ANIMAL_FRIENDSHIP = "Animal Friendship"
@@ -743,6 +590,7 @@ class BardLevel1Spells(str, Enum):
     HEROISM = "Heroism"
     IDENTIFY = "Identify"
     ILLUSORY_SCRIPT = "Illusory Script"
+    INSIDIOUS_RHYTHM = "Insidious Rhythm"
     LONGSTRIDER = "Longstrider"
     SILENT_IMAGE = "Silent Image"
     SLEEP = "Sleep"
@@ -752,14 +600,13 @@ class BardLevel1Spells(str, Enum):
     UNSEEN_SERVANT = "Unseen Servant"
     WARDAWAY = "Wardaway"
 
-
 class BardLevel2Spells(str, Enum):
     AID = "Aid"
     ANIMAL_MESSENGER = "Animal Messenger"
     BLINDNESS_DEAFNESS = "Blindness/Deafness"
     CALM_EMOTIONS = "Calm Emotions"
-    CLOUD_OF_DAGGERS = "Cloud of Daggers"
-    CROWN_OF_MADNESS = "Crown of Madness"
+    CLOUD_OF_DAGGERS = "Cloud Of Daggers"
+    CROWN_OF_MADNESS = "Crown Of Madness"
     DETECT_THOUGHTS = "Detect Thoughts"
     ENHANCE_ABILITY = "Enhance Ability"
     ENLARGE_REDUCE = "Enlarge/Reduce"
@@ -780,8 +627,8 @@ class BardLevel2Spells(str, Enum):
     SUGGESTION = "Suggestion"
     ZONE_OF_TRUTH = "Zone of Truth"
 
-
 class BardLevel3Spells(str, Enum):
+    ASTRAL_FLOOD = "Astral Flood"
     BESTOW_CURSE = "Bestow Curse"
     CACOPHONIC_SHIELD = "Cacophonic Shield"
     CLAIRVOYANCE = "Clairvoyance"
@@ -802,7 +649,6 @@ class BardLevel3Spells(str, Enum):
     STINKING_CLOUD = "Stinking Cloud"
     TONGUES = "Tongues"
 
-
 class BardLevel4Spells(str, Enum):
     BACKLASH = "Backlash"
     CHARM_MONSTER = "Charm Monster"
@@ -817,7 +663,6 @@ class BardLevel4Spells(str, Enum):
     LOCATE_CREATURE = "Locate Creature"
     PHANTASMAL_KILLER = "Phantasmal Killer"
     POLYMORPH = "Polymorph"
-
 
 class BardLevel5Spells(str, Enum):
     ALUSTRIELS_MOONCLOAK = "Alustriel's Mooncloak"
@@ -841,18 +686,17 @@ class BardLevel5Spells(str, Enum):
     TELEPORTATION_CIRCLE = "Teleportation Circle"
     YOLANDES_REGAL_PRESENCE = "Yolande's Regal Presence"
 
-
 class BardLevel6Spells(str, Enum):
     DIRGE = "Dirge"
     EYEBITE = "Eyebite"
     FIND_THE_PATH = "Find the Path"
     GUARDS_AND_WARDS = "Guards and Wards"
-    HEROES__FEAST = "Heroes' Feast"
+    HEROES_FEAST = "Heroes' Feast"
+    LEOMUNDS_LAMENTABLE_BELABORMENT = "Leomund's Lamentable Belaborment"
     MASS_SUGGESTION = "Mass Suggestion"
     OTTOS_IRRESISTIBLE_DANCE = "Otto's Irresistible Dance"
     PROGRAMMED_ILLUSION = "Programmed Illusion"
     TRUE_SEEING = "True Seeing"
-
 
 class BardLevel7Spells(str, Enum):
     ETHEREALNESS = "Etherealness"
@@ -868,7 +712,6 @@ class BardLevel7Spells(str, Enum):
     SYMBOL = "Symbol"
     TELEPORT = "Teleport"
 
-
 class BardLevel8Spells(str, Enum):
     ANTIPATHY_SYMPATHY = "Antipathy/Sympathy"
     BEFUDDLEMENT = "Befuddlement"
@@ -877,14 +720,12 @@ class BardLevel8Spells(str, Enum):
     MIND_BLANK = "Mind Blank"
     POWER_WORD_STUN = "Power Word Stun"
 
-
 class BardLevel9Spells(str, Enum):
     FORESIGHT = "Foresight"
     POWER_WORD_HEAL = "Power Word Heal"
     POWER_WORD_KILL = "Power Word Kill"
     PRISMATIC_WALL = "Prismatic Wall"
     TRUE_POLYMORPH = "True Polymorph"
-
 
 class ClericLevel0Spells(str, Enum):
     GUIDANCE = "Guidance"
@@ -896,7 +737,6 @@ class ClericLevel0Spells(str, Enum):
     THAUMATURGY = "Thaumaturgy"
     TOLL_THE_DEAD = "Toll the Dead"
     WORD_OF_RADIANCE = "Word of Radiance"
-
 
 class ClericLevel1Spells(str, Enum):
     BANE = "Bane"
@@ -916,7 +756,6 @@ class ClericLevel1Spells(str, Enum):
     SHIELD_OF_FAITH = "Shield of Faith"
     WARDAWAY = "Wardaway"
 
-
 class ClericLevel2Spells(str, Enum):
     AID = "Aid"
     AUGURY = "Augury"
@@ -932,19 +771,20 @@ class ClericLevel2Spells(str, Enum):
     LOCATE_OBJECT = "Locate Object"
     PRAYER_OF_HEALING = "Prayer of Healing"
     PROTECTION_FROM_POISON = "Protection from Poison"
+    SEARING_ORB = "Searing Orb"
     SILENCE = "Silence"
     SPIRITUAL_WEAPON = "Spiritual Weapon"
     WARDING_BOND = "Warding Bond"
     ZONE_OF_TRUTH = "Zone of Truth"
 
-
 class ClericLevel3Spells(str, Enum):
     ANIMATE_DEAD = "Animate Dead"
+    ASTRAL_FLOOD = "Astral Flood"
     AURA_OF_VITALITY = "Aura of Vitality"
     BEACON_OF_HOPE = "Beacon Of Hope"
     BESTOW_CURSE = "Bestow Curse"
     CLAIRVOYANCE = "Clairvoyance"
-    CREATE_FOOD_AND_WATER = "Create Food and Water"
+    CREATE_FOOD_AND_WATER = "Create Food And Water"
     DAYLIGHT = "Daylight"
     DISPEL_MAGIC = "Dispel Magic"
     FEIGN_DEATH = "Feign Death"
@@ -962,7 +802,6 @@ class ClericLevel3Spells(str, Enum):
     TONGUES = "Tongues"
     WATER_WALK = "Water Walk"
 
-
 class ClericLevel4Spells(str, Enum):
     AURA_OF_LIFE = "Aura of Life"
     AURA_OF_PURITY = "Aura of Purity"
@@ -974,8 +813,8 @@ class ClericLevel4Spells(str, Enum):
     FREEDOM_OF_MOVEMENT = "Freedom of Movement"
     GUARDIAN_OF_FAITH = "Guardian of Faith"
     LOCATE_CREATURE = "Locate Creature"
+    STICKS_TO_SNAKES = "Sticks to Snakes"
     STONE_SHAPE = "Stone Shape"
-
 
 class ClericLevel5Spells(str, Enum):
     CIRCLE_OF_POWER = "Circle Of Power"
@@ -994,7 +833,6 @@ class ClericLevel5Spells(str, Enum):
     SCRYING = "Scrying"
     SUMMON_CELESTIAL = "Summon Celestial"
 
-
 class ClericLevel6Spells(str, Enum):
     BLADE_BARRIER = "Blade Barrier"
     CREATE_UNDEAD = "Create Undead"
@@ -1003,12 +841,11 @@ class ClericLevel6Spells(str, Enum):
     FORBIDDANCE = "Forbiddance"
     HARM = "Harm"
     HEAL = "Heal"
-    HEROES__FEAST = "Heroes' Feast"
+    HEROES_FEAST = "Heroes' Feast"
     PLANAR_ALLY = "Planar Ally"
     SUNBEAM = "Sunbeam"
     TRUE_SEEING = "True Seeing"
     WORD_OF_RECALL = "Word of Recall"
-
 
 class ClericLevel7Spells(str, Enum):
     CONJURE_CELESTIAL = "Conjure Celestial"
@@ -1021,7 +858,6 @@ class ClericLevel7Spells(str, Enum):
     RESURRECTION = "Resurrection"
     SYMBOL = "Symbol"
 
-
 class ClericLevel8Spells(str, Enum):
     ANTIMAGIC_FIELD = "Antimagic Field"
     CONTROL_WEATHER = "Control Weather"
@@ -1030,14 +866,12 @@ class ClericLevel8Spells(str, Enum):
     HOLY_STAR_OF_MYSTRA = "Holy Star of Mystra"
     SUNBURST = "Sunburst"
 
-
 class ClericLevel9Spells(str, Enum):
     ASTRAL_PROJECTION = "Astral Projection"
     GATE = "Gate"
     MASS_HEAL = "Mass Heal"
     POWER_WORD_HEAL = "Power Word Heal"
     TRUE_RESURRECTION = "True Resurrection"
-
 
 class DruidLevel0Spells(str, Enum):
     DRUIDCRAFT = "Druidcraft"
@@ -1047,7 +881,6 @@ class DruidLevel0Spells(str, Enum):
     MESSAGE = "Message"
     POISON_SPRAY = "Poison Spray"
     PRODUCE_FLAME = "Produce Flame"
-    RAY_OF_FROST = "Ray of Frost"
     RESISTANCE = "Resistance"
     SHILLELAGH = "Shillelagh"
     SPARE_THE_DYING = "Spare the Dying"
@@ -1055,9 +888,9 @@ class DruidLevel0Spells(str, Enum):
     THORN_WHIP = "Thorn Whip"
     THUNDERCLAP = "Thunderclap"
 
-
 class DruidLevel1Spells(str, Enum):
     ANIMAL_FRIENDSHIP = "Animal Friendship"
+    BUZZING_BEE = "Buzzing Bee"
     CHARM_PERSON = "Charm Person"
     CREATE_OR_DESTROY_WATER = "Create or Destroy Water"
     CURE_WOUNDS = "Cure Wounds"
@@ -1075,7 +908,6 @@ class DruidLevel1Spells(str, Enum):
     PURIFY_FOOD_AND_DRINK = "Purify Food and Drink"
     SPEAK_WITH_ANIMALS = "Speak with Animals"
     THUNDERWAVE = "Thunderwave"
-
 
 class DruidLevel2Spells(str, Enum):
     AID = "Aid"
@@ -1101,7 +933,7 @@ class DruidLevel2Spells(str, Enum):
     PROTECTION_FROM_POISON = "Protection from Poison"
     SPIKE_GROWTH = "Spike Growth"
     SUMMON_BEAST = "Summon Beast"
-
+    TORTOISE_SHELL = "Tortoise Shell"
 
 class DruidLevel3Spells(str, Enum):
     AURA_OF_VITALITY = "Aura of Vitality"
@@ -1111,7 +943,6 @@ class DruidLevel3Spells(str, Enum):
     DISPEL_MAGIC = "Dispel Magic"
     ELEMENTAL_WEAPON = "Elemental Weapon"
     FEIGN_DEATH = "Feign Death"
-    LIGHTNING_BOLT = "Lightning Bolt"
     MELD_INTO_STONE = "Meld into Stone"
     PLANT_GROWTH = "Plant Growth"
     PROTECTION_FROM_ENERGY = "Protection from Energy"
@@ -1119,11 +950,10 @@ class DruidLevel3Spells(str, Enum):
     SLEET_STORM = "Sleet Storm"
     SPEAK_WITH_PLANTS = "Speak with Plants"
     SUMMON_FEY = "Summon Fey"
-    SYLUNÉS_VIPER = "Syluné's Viper"
+    SYLUNES_VIPER = "Sylune's Viper"
     WATER_BREATHING = "Water Breathing"
     WATER_WALK = "Water Walk"
     WIND_WALL = "Wind Wall"
-
 
 class DruidLevel4Spells(str, Enum):
     BLIGHT = "Blight"
@@ -1143,23 +973,22 @@ class DruidLevel4Spells(str, Enum):
     ICE_STORM = "Ice Storm"
     LOCATE_CREATURE = "Locate Creature"
     POLYMORPH = "Polymorph"
+    STICKS_TO_SNAKES = "Sticks to Snakes"
     STONE_SHAPE = "Stone Shape"
     STONESKIN = "Stoneskin"
     SUMMON_ELEMENTAL = "Summon Elemental"
     WALL_OF_FIRE = "Wall of Fire"
-
 
 class DruidLevel5Spells(str, Enum):
     ALUSTRIELS_MOONCLOAK = "Alustriel's Mooncloak"
     ANTILIFE_SHELL = "Antilife Shell"
     AWAKEN = "Awaken"
     COMMUNE_WITH_NATURE = "Commune With Nature"
-    CONE_OF_COLD = "Cone of Cold"
+    CONE_OF_COLD = "Cone Of Cold"
     CONJURE_ELEMENTAL = "Conjure Elemental"
     CONTAGION = "Contagion"
     GEAS = "Geas"
     GREATER_RESTORATION = "Greater Restoration"
-    HOLD_MONSTER = "Hold Monster"
     INSECT_PLAGUE = "Insect Plague"
     MASS_CURE_WOUNDS = "Mass Cure Wounds"
     PLANAR_BINDING = "Planar Binding"
@@ -1169,20 +998,18 @@ class DruidLevel5Spells(str, Enum):
     TREE_STRIDE = "Tree Stride"
     WALL_OF_STONE = "Wall of Stone"
 
-
 class DruidLevel6Spells(str, Enum):
     CONJURE_FEY = "Conjure Fey"
     ELMINSTERS_EFFULGENT_SPHERES = "Elminster's Effulgent Spheres"
     FIND_THE_PATH = "Find the Path"
     FLESH_TO_STONE = "Flesh to Stone"
     HEAL = "Heal"
-    HEROES__FEAST = "Heroes' Feast"
+    HEROES_FEAST = "Heroes' Feast"
     MOVE_EARTH = "Move Earth"
     SUNBEAM = "Sunbeam"
     TRANSPORT_VIA_PLANTS = "Transport via Plants"
     WALL_OF_THORNS = "Wall of Thorns"
     WIND_WALK = "Wind Walk"
-
 
 class DruidLevel7Spells(str, Enum):
     FIRE_STORM = "Fire Storm"
@@ -1191,7 +1018,6 @@ class DruidLevel7Spells(str, Enum):
     REGENERATE = "Regenerate"
     REVERSE_GRAVITY = "Reverse Gravity"
     SYMBOL = "Symbol"
-
 
 class DruidLevel8Spells(str, Enum):
     ANIMAL_SHAPES = "Animal Shapes"
@@ -1203,13 +1029,11 @@ class DruidLevel8Spells(str, Enum):
     SUNBURST = "Sunburst"
     TSUNAMI = "Tsunami"
 
-
 class DruidLevel9Spells(str, Enum):
     FORESIGHT = "Foresight"
     SHAPECHANGE = "Shapechange"
     STORM_OF_VENGEANCE = "Storm of Vengeance"
     TRUE_RESURRECTION = "True Resurrection"
-
 
 class PaladinLevel1Spells(str, Enum):
     BLESS = "Bless"
@@ -1230,7 +1054,6 @@ class PaladinLevel1Spells(str, Enum):
     WARDAWAY = "Wardaway"
     WRATHFUL_SMITE = "Wrathful Smite"
 
-
 class PaladinLevel2Spells(str, Enum):
     AID = "Aid"
     FIND_STEED = "Find Steed"
@@ -1240,15 +1063,15 @@ class PaladinLevel2Spells(str, Enum):
     MAGIC_WEAPON = "Magic Weapon"
     PRAYER_OF_HEALING = "Prayer of Healing"
     PROTECTION_FROM_POISON = "Protection from Poison"
+    SEARING_ORB = "Searing Orb"
     SHINING_SMITE = "Shining Smite"
     WARDING_BOND = "Warding Bond"
     ZONE_OF_TRUTH = "Zone of Truth"
 
-
 class PaladinLevel3Spells(str, Enum):
     AURA_OF_VITALITY = "Aura of Vitality"
     BLINDING_SMITE = "Blinding Smite"
-    CREATE_FOOD_AND_WATER = "Create Food and Water"
+    CREATE_FOOD_AND_WATER = "Create Food And Water"
     CRUSADERS_MANTLE = "Crusader's Mantle"
     DAYLIGHT = "Daylight"
     DISPEL_MAGIC = "Dispel Magic"
@@ -1257,7 +1080,6 @@ class PaladinLevel3Spells(str, Enum):
     REMOVE_CURSE = "Remove Curse"
     REVIVIFY = "Revivify"
 
-
 class PaladinLevel4Spells(str, Enum):
     AURA_OF_LIFE = "Aura of Life"
     AURA_OF_PURITY = "Aura of Purity"
@@ -1265,7 +1087,6 @@ class PaladinLevel4Spells(str, Enum):
     DEATH_WARD = "Death Ward"
     LOCATE_CREATURE = "Locate Creature"
     STAGGERING_SMITE = "Staggering Smite"
-
 
 class PaladinLevel5Spells(str, Enum):
     BANISHING_SMITE = "Banishing Smite"
@@ -1277,10 +1098,10 @@ class PaladinLevel5Spells(str, Enum):
     RAISE_DEAD = "Raise Dead"
     SUMMON_CELESTIAL = "Summon Celestial"
 
-
 class RangerLevel1Spells(str, Enum):
     ALARM = "Alarm"
     ANIMAL_FRIENDSHIP = "Animal Friendship"
+    BUZZING_BEE = "Buzzing Bee"
     CURE_WOUNDS = "Cure Wounds"
     DETECT_MAGIC = "Detect Magic"
     DETECT_POISON_AND_DISEASE = "Detect Poison and Disease"
@@ -1294,13 +1115,12 @@ class RangerLevel1Spells(str, Enum):
     LONGSTRIDER = "Longstrider"
     SPEAK_WITH_ANIMALS = "Speak with Animals"
 
-
 class RangerLevel2Spells(str, Enum):
     AID = "Aid"
     ANIMAL_MESSENGER = "Animal Messenger"
     BARKSKIN = "Barkskin"
     BEAST_SENSE = "Beast Sense"
-    CORDON_OF_ARROWS = "Cordon of Arrows"
+    CORDON_OF_ARROWS = "Cordon Of Arrows"
     DARKVISION = "Darkvision"
     ENHANCE_ABILITY = "Enhance Ability"
     FIND_TRAPS = "Find Traps"
@@ -1314,7 +1134,7 @@ class RangerLevel2Spells(str, Enum):
     SILENCE = "Silence"
     SPIKE_GROWTH = "Spike Growth"
     SUMMON_BEAST = "Summon Beast"
-
+    TORTOISE_SHELL = "Tortoise Shell"
 
 class RangerLevel3Spells(str, Enum):
     CONJURE_ANIMALS = "Conjure Animals"
@@ -1334,16 +1154,15 @@ class RangerLevel3Spells(str, Enum):
     WATER_WALK = "Water Walk"
     WIND_WALL = "Wind Wall"
 
-
 class RangerLevel4Spells(str, Enum):
     CONJURE_WOODLAND_BEINGS = "Conjure Woodland Beings"
     DOMINATE_BEAST = "Dominate Beast"
     FREEDOM_OF_MOVEMENT = "Freedom of Movement"
     GRASPING_VINE = "Grasping Vine"
     LOCATE_CREATURE = "Locate Creature"
+    STICKS_TO_SNAKES = "Sticks to Snakes"
     STONESKIN = "Stoneskin"
     SUMMON_ELEMENTAL = "Summon Elemental"
-
 
 class RangerLevel5Spells(str, Enum):
     ALUSTRIELS_MOONCLOAK = "Alustriel's Mooncloak"
@@ -1353,7 +1172,6 @@ class RangerLevel5Spells(str, Enum):
     STEEL_WIND_STRIKE = "Steel Wind Strike"
     SWIFT_QUIVER = "Swift Quiver"
     TREE_STRIDE = "Tree Stride"
-
 
 class WarlockLevel0Spells(str, Enum):
     BLADE_WARD = "Blade Ward"
@@ -1368,7 +1186,6 @@ class WarlockLevel0Spells(str, Enum):
     THUNDERCLAP = "Thunderclap"
     TOLL_THE_DEAD = "Toll the Dead"
     TRUE_STRIKE = "True Strike"
-
 
 class WarlockLevel1Spells(str, Enum):
     ARMOR_OF_AGATHYS = "Armor of Agathys"
@@ -1387,10 +1204,9 @@ class WarlockLevel1Spells(str, Enum):
     UNSEEN_SERVANT = "Unseen Servant"
     WITCH_BOLT = "Witch Bolt"
 
-
 class WarlockLevel2Spells(str, Enum):
-    CLOUD_OF_DAGGERS = "Cloud of Daggers"
-    CROWN_OF_MADNESS = "Crown of Madness"
+    CLOUD_OF_DAGGERS = "Cloud Of Daggers"
+    CROWN_OF_MADNESS = "Crown Of Madness"
     DARKNESS = "Darkness"
     ENTHRALL = "Enthrall"
     HOLD_PERSON = "Hold Person"
@@ -1401,7 +1217,6 @@ class WarlockLevel2Spells(str, Enum):
     RAY_OF_ENFEEBLEMENT = "Ray of Enfeeblement"
     SPIDER_CLIMB = "Spider Climb"
     SUGGESTION = "Suggestion"
-
 
 class WarlockLevel3Spells(str, Enum):
     COUNTERSPELL = "Counterspell"
@@ -1419,7 +1234,6 @@ class WarlockLevel3Spells(str, Enum):
     TONGUES = "Tongues"
     VAMPIRIC_TOUCH = "Vampiric Touch"
 
-
 class WarlockLevel4Spells(str, Enum):
     BACKLASH = "Backlash"
     BANISHMENT = "Banishment"
@@ -1429,7 +1243,6 @@ class WarlockLevel4Spells(str, Enum):
     DOOMTIDE = "Doomtide"
     HALLUCINATORY_TERRAIN = "Hallucinatory Terrain"
     SUMMON_ABERRATION = "Summon Aberration"
-
 
 class WarlockLevel5Spells(str, Enum):
     CONTACT_OTHER_PLANE = "Contact Other Plane"
@@ -1442,23 +1255,21 @@ class WarlockLevel5Spells(str, Enum):
     SYNAPTIC_STATIC = "Synaptic Static"
     TELEPORTATION_CIRCLE = "Teleportation Circle"
 
-
 class WarlockLevel6Spells(str, Enum):
     ARCANE_GATE = "Arcane Gate"
-    CIRCLE_OF_DEATH = "Circle of Death"
+    CIRCLE_OF_DEATH = "Circle Of Death"
     CREATE_UNDEAD = "Create Undead"
     EYEBITE = "Eyebite"
     SUMMON_FIEND = "Summon Fiend"
     TASHAS_BUBBLING_CAULDRON = "Tasha's Bubbling Cauldron"
     TRUE_SEEING = "True Seeing"
 
-
 class WarlockLevel7Spells(str, Enum):
     ETHEREALNESS = "Etherealness"
     FINGER_OF_DEATH = "Finger of Death"
     FORCECAGE = "Forcecage"
     PLANE_SHIFT = "Plane Shift"
-
+    VOID_STAR = "Void Star"
 
 class WarlockLevel8Spells(str, Enum):
     BEFUDDLEMENT = "Befuddlement"
@@ -1467,10 +1278,9 @@ class WarlockLevel8Spells(str, Enum):
     GLIBNESS = "Glibness"
     POWER_WORD_STUN = "Power Word Stun"
 
-
 class WarlockLevel9Spells(str, Enum):
     ASTRAL_PROJECTION = "Astral Projection"
-    BLADE_OF_DISASTER = "Blade of Disaster"
+    BLADE_OF_DISASTER = "Blade Of Disaster"
     FORESIGHT = "Foresight"
     GATE = "Gate"
     IMPRISONMENT = "Imprisonment"
@@ -1478,11 +1288,9 @@ class WarlockLevel9Spells(str, Enum):
     TRUE_POLYMORPH = "True Polymorph"
     WEIRD = "Weird"
 
-
 class AbjurationLevel0Spells(str, Enum):
     BLADE_WARD = "Blade Ward"
     RESISTANCE = "Resistance"
-
 
 class AbjurationLevel1Spells(str, Enum):
     ALARM = "Alarm"
@@ -1496,7 +1304,6 @@ class AbjurationLevel1Spells(str, Enum):
     SHIELD_OF_FAITH = "Shield of Faith"
     WARDAWAY = "Wardaway"
 
-
 class AbjurationLevel2Spells(str, Enum):
     AID = "Aid"
     ARCANE_LOCK = "Arcane Lock"
@@ -1506,8 +1313,8 @@ class AbjurationLevel2Spells(str, Enum):
     PASS_WITHOUT_TRACE = "Pass without Trace"
     PRAYER_OF_HEALING = "Prayer of Healing"
     PROTECTION_FROM_POISON = "Protection from Poison"
+    TORTOISE_SHELL = "Tortoise Shell"
     WARDING_BOND = "Warding Bond"
-
 
 class AbjurationLevel3Spells(str, Enum):
     AURA_OF_VITALITY = "Aura of Vitality"
@@ -1521,7 +1328,6 @@ class AbjurationLevel3Spells(str, Enum):
     PROTECTION_FROM_ENERGY = "Protection from Energy"
     REMOVE_CURSE = "Remove Curse"
 
-
 class AbjurationLevel4Spells(str, Enum):
     AURA_OF_LIFE = "Aura of Life"
     AURA_OF_PURITY = "Aura of Purity"
@@ -1530,18 +1336,17 @@ class AbjurationLevel4Spells(str, Enum):
     DEATH_WARD = "Death Ward"
     FREEDOM_OF_MOVEMENT = "Freedom of Movement"
     MORDENKAINENS_PRIVATE_SANCTUM = "Mordenkainen's Private Sanctum"
-
+    OTILUKES_RESILIENT_SPHERE = "Otiluke's Resilient Sphere"
 
 class AbjurationLevel5Spells(str, Enum):
     ALUSTRIELS_MOONCLOAK = "Alustriel's Mooncloak"
     ANTILIFE_SHELL = "Antilife Shell"
-    CIRCLE_OF_POWER = "Circle of Power"
+    CIRCLE_OF_POWER = "Circle Of Power"
     DISPEL_EVIL_AND_GOOD = "Dispel Evil and Good"
     GREATER_RESTORATION = "Greater Restoration"
     HALLOW = "Hallow"
     MASS_CURE_WOUNDS = "Mass Cure Wounds"
     PLANAR_BINDING = "Planar Binding"
-
 
 class AbjurationLevel6Spells(str, Enum):
     CONTINGENCY = "Contingency"
@@ -1550,30 +1355,26 @@ class AbjurationLevel6Spells(str, Enum):
     GUARDS_AND_WARDS = "Guards and Wards"
     HEAL = "Heal"
 
-
 class AbjurationLevel7Spells(str, Enum):
     SYMBOL = "Symbol"
-
 
 class AbjurationLevel8Spells(str, Enum):
     ANTIMAGIC_FIELD = "Antimagic Field"
     HOLY_AURA = "Holy Aura"
     MIND_BLANK = "Mind Blank"
 
-
 class AbjurationLevel9Spells(str, Enum):
     IMPRISONMENT = "Imprisonment"
     MASS_HEAL = "Mass Heal"
     PRISMATIC_WALL = "Prismatic Wall"
 
-
 class ConjurationLevel0Spells(str, Enum):
     MAGE_HAND = "Mage Hand"
     PRODUCE_FLAME = "Produce Flame"
 
-
 class ConjurationLevel1Spells(str, Enum):
     ARMS_OF_HADAR = "Arms of Hadar"
+    BUZZING_BEE = "Buzzing Bee"
     ENSNARING_STRIKE = "Ensnaring Strike"
     ENTANGLE = "Entangle"
     FIND_FAMILIAR = "Find Familiar"
@@ -1585,30 +1386,28 @@ class ConjurationLevel1Spells(str, Enum):
     TENSERS_FLOATING_DISK = "Tenser's Floating Disk"
     UNSEEN_SERVANT = "Unseen Servant"
 
-
 class ConjurationLevel2Spells(str, Enum):
-    CLOUD_OF_DAGGERS = "Cloud of Daggers"
+    CLOUD_OF_DAGGERS = "Cloud Of Daggers"
     DERYANS_HELPFUL_HOMUNCULI = "Deryan's Helpful Homunculi"
     FIND_STEED = "Find Steed"
     FLAMING_SPHERE = "Flaming Sphere"
+    HOMUNCULUS_SERVANT = "Homunculus Servant"
     MISTY_STEP = "Misty Step"
     SUMMON_BEAST = "Summon Beast"
     WEB = "Web"
-
 
 class ConjurationLevel3Spells(str, Enum):
     CALL_LIGHTNING = "Call Lightning"
     CONJURE_ANIMALS = "Conjure Animals"
     CONJURE_BARRAGE = "Conjure Barrage"
     CONJURE_CONSTRUCTS = "Conjure Constructs"
-    CREATE_FOOD_AND_WATER = "Create Food and Water"
+    CREATE_FOOD_AND_WATER = "Create Food And Water"
     HUNGER_OF_HADAR = "Hunger of Hadar"
     SLEET_STORM = "Sleet Storm"
     SPIRIT_GUARDIANS = "Spirit Guardians"
     STINKING_CLOUD = "Stinking Cloud"
     SUMMON_FEY = "Summon Fey"
-    SYLUNS_VIPER = "Syluné's Viper"
-
+    SYLUNES_VIPER = "Sylune's Viper"
 
 class ConjurationLevel4Spells(str, Enum):
     CONJURE_MINOR_ELEMENTALS = "Conjure Minor Elementals"
@@ -1625,7 +1424,6 @@ class ConjurationLevel4Spells(str, Enum):
     SUMMON_CONSTRUCT = "Summon Construct"
     SUMMON_ELEMENTAL = "Summon Elemental"
 
-
 class ConjurationLevel5Spells(str, Enum):
     BANISHING_SMITE = "Banishing Smite"
     CLOUDKILL = "Cloudkill"
@@ -1637,7 +1435,6 @@ class ConjurationLevel5Spells(str, Enum):
     SUMMON_DRAGON = "Summon Dragon"
     TELEPORTATION_CIRCLE = "Teleportation Circle"
     TREE_STRIDE = "Tree Stride"
-
 
 class ConjurationLevel6Spells(str, Enum):
     ARCANE_GATE = "Arcane Gate"
@@ -1651,7 +1448,6 @@ class ConjurationLevel6Spells(str, Enum):
     WALL_OF_THORNS = "Wall of Thorns"
     WORD_OF_RECALL = "Word of Recall"
 
-
 class ConjurationLevel7Spells(str, Enum):
     CONJURE_CELESTIAL = "Conjure Celestial"
     ETHEREALNESS = "Etherealness"
@@ -1659,25 +1455,21 @@ class ConjurationLevel7Spells(str, Enum):
     PLANE_SHIFT = "Plane Shift"
     TELEPORT = "Teleport"
 
-
 class ConjurationLevel8Spells(str, Enum):
     DEMIPLANE = "Demiplane"
     INCENDIARY_CLOUD = "Incendiary Cloud"
     MAZE = "Maze"
     TSUNAMI = "Tsunami"
 
-
 class ConjurationLevel9Spells(str, Enum):
-    BLADE_OF_DISASTER = "Blade of Disaster"
+    BLADE_OF_DISASTER = "Blade Of Disaster"
     GATE = "Gate"
     STORM_OF_VENGEANCE = "Storm of Vengeance"
     WISH = "Wish"
 
-
 class DivinationLevel0Spells(str, Enum):
     GUIDANCE = "Guidance"
     TRUE_STRIKE = "True Strike"
-
 
 class DivinationLevel1Spells(str, Enum):
     COMPREHEND_LANGUAGES = "Comprehend Languages"
@@ -1687,7 +1479,6 @@ class DivinationLevel1Spells(str, Enum):
     HUNTERS_MARK = "Hunter's Mark"
     IDENTIFY = "Identify"
     SPEAK_WITH_ANIMALS = "Speak with Animals"
-
 
 class DivinationLevel2Spells(str, Enum):
     AUGURY = "Augury"
@@ -1699,18 +1490,15 @@ class DivinationLevel2Spells(str, Enum):
     MIND_SPIKE = "Mind Spike"
     SEE_INVISIBILITY = "See Invisibility"
 
-
 class DivinationLevel3Spells(str, Enum):
     CLAIRVOYANCE = "Clairvoyance"
     SENDING = "Sending"
     TONGUES = "Tongues"
 
-
 class DivinationLevel4Spells(str, Enum):
     ARCANE_EYE = "Arcane Eye"
     DIVINATION = "Divination"
     LOCATE_CREATURE = "Locate Creature"
-
 
 class DivinationLevel5Spells(str, Enum):
     COMMUNE = "Commune"
@@ -1720,29 +1508,23 @@ class DivinationLevel5Spells(str, Enum):
     RARYS_TELEPATHIC_BOND = "Rary's Telepathic Bond"
     SCRYING = "Scrying"
 
-
 class DivinationLevel6Spells(str, Enum):
     FIND_THE_PATH = "Find the Path"
     TRUE_SEEING = "True Seeing"
 
-
 class DivinationLevel7Spells(str, Enum):
     pass
-
 
 class DivinationLevel8Spells(str, Enum):
     TELEPATHY = "Telepathy"
 
-
 class DivinationLevel9Spells(str, Enum):
     FORESIGHT = "Foresight"
-
 
 class EnchantmentLevel0Spells(str, Enum):
     FRIENDS = "Friends"
     MIND_SLIVER = "Mind Sliver"
     VICIOUS_MOCKERY = "Vicious Mockery"
-
 
 class EnchantmentLevel1Spells(str, Enum):
     ANIMAL_FRIENDSHIP = "Animal Friendship"
@@ -1754,19 +1536,21 @@ class EnchantmentLevel1Spells(str, Enum):
     DISSONANT_WHISPERS = "Dissonant Whispers"
     HEROISM = "Heroism"
     HEX = "Hex"
+    INSIDIOUS_RHYTHM = "Insidious Rhythm"
     SLEEP = "Sleep"
     TASHAS_HIDEOUS_LAUGHTER = "Tasha's Hideous Laughter"
-
 
 class EnchantmentLevel2Spells(str, Enum):
     ANIMAL_MESSENGER = "Animal Messenger"
     CALM_EMOTIONS = "Calm Emotions"
-    CROWN_OF_MADNESS = "Crown of Madness"
+    CROWN_OF_MADNESS = "Crown Of Madness"
     ENTHRALL = "Enthrall"
     HOLD_PERSON = "Hold Person"
     SUGGESTION = "Suggestion"
     ZONE_OF_TRUTH = "Zone of Truth"
 
+class EnchantmentLevel3Spells(str, Enum):
+    pass
 
 class EnchantmentLevel4Spells(str, Enum):
     CHARM_MONSTER = "Charm Monster"
@@ -1774,7 +1558,6 @@ class EnchantmentLevel4Spells(str, Enum):
     CONFUSION = "Confusion"
     DOMINATE_BEAST = "Dominate Beast"
     STAGGERING_SMITE = "Staggering Smite"
-
 
 class EnchantmentLevel5Spells(str, Enum):
     DOMINATE_PERSON = "Dominate Person"
@@ -1784,16 +1567,14 @@ class EnchantmentLevel5Spells(str, Enum):
     SYNAPTIC_STATIC = "Synaptic Static"
     YOLANDES_REGAL_PRESENCE = "Yolande's Regal Presence"
 
-
 class EnchantmentLevel6Spells(str, Enum):
     DIRGE = "Dirge"
+    LEOMUNDS_LAMENTABLE_BELABORMENT = "Leomund's Lamentable Belaborment"
     MASS_SUGGESTION = "Mass Suggestion"
     OTTOS_IRRESISTIBLE_DANCE = "Otto's Irresistible Dance"
 
-
 class EnchantmentLevel7Spells(str, Enum):
     POWER_WORD_FORTIFY = "Power Word Fortify"
-
 
 class EnchantmentLevel8Spells(str, Enum):
     ANTIPATHY_SYMPATHY = "Antipathy/Sympathy"
@@ -1802,11 +1583,9 @@ class EnchantmentLevel8Spells(str, Enum):
     GLIBNESS = "Glibness"
     POWER_WORD_STUN = "Power Word Stun"
 
-
 class EnchantmentLevel9Spells(str, Enum):
     POWER_WORD_HEAL = "Power Word Heal"
     POWER_WORD_KILL = "Power Word Kill"
-
 
 class EvocationLevel0Spells(str, Enum):
     ACID_SPLASH = "Acid Splash"
@@ -1820,7 +1599,6 @@ class EvocationLevel0Spells(str, Enum):
     STARRY_WISP = "Starry Wisp"
     THUNDERCLAP = "Thunderclap"
     WORD_OF_RADIANCE = "Word of Radiance"
-
 
 class EvocationLevel1Spells(str, Enum):
     BURNING_HANDS = "Burning Hands"
@@ -1836,7 +1614,6 @@ class EvocationLevel1Spells(str, Enum):
     THUNDERWAVE = "Thunderwave"
     WITCH_BOLT = "Witch Bolt"
 
-
 class EvocationLevel2Spells(str, Enum):
     CONTINUAL_FLAME = "Continual Flame"
     DARKNESS = "Darkness"
@@ -1845,11 +1622,12 @@ class EvocationLevel2Spells(str, Enum):
     MELFS_ACID_ARROW = "Melf's Acid Arrow"
     MOONBEAM = "Moonbeam"
     SCORCHING_RAY = "Scorching Ray"
+    SEARING_ORB = "Searing Orb"
     SHATTER = "Shatter"
     SPIRITUAL_WEAPON = "Spiritual Weapon"
 
-
 class EvocationLevel3Spells(str, Enum):
+    ASTRAL_FLOOD = "Astral Flood"
     BLINDING_SMITE = "Blinding Smite"
     CACOPHONIC_SHIELD = "Cacophonic Shield"
     CRUSADERS_MANTLE = "Crusader's Mantle"
@@ -1860,26 +1638,22 @@ class EvocationLevel3Spells(str, Enum):
     LIGHTNING_BOLT = "Lightning Bolt"
     WIND_WALL = "Wind Wall"
 
-
 class EvocationLevel4Spells(str, Enum):
     FIRE_SHIELD = "Fire Shield"
     FOUNT_OF_MOONLIGHT = "Fount of Moonlight"
     ICE_STORM = "Ice Storm"
-    OTILUKES_RESILIENT_SPHERE = "Otiluke's Resilient Sphere"
     SPELLFIRE_STORM = "Spellfire Storm"
     VITRIOLIC_SPHERE = "Vitriolic Sphere"
     WALL_OF_FIRE = "Wall of Fire"
 
-
 class EvocationLevel5Spells(str, Enum):
     BIGBYS_HAND = "Bigby's Hand"
-    CONE_OF_COLD = "Cone of Cold"
+    CONE_OF_COLD = "Cone Of Cold"
     DESTRUCTIVE_WAVE = "Destructive Wave"
     FLAME_STRIKE = "Flame Strike"
     JALLARZIS_STORM_OF_RADIANCE = "Jallarzi's Storm of Radiance"
     WALL_OF_FORCE = "Wall of Force"
     WALL_OF_STONE = "Wall of Stone"
-
 
 class EvocationLevel6Spells(str, Enum):
     BLADE_BARRIER = "Blade Barrier"
@@ -1889,7 +1663,6 @@ class EvocationLevel6Spells(str, Enum):
     SUNBEAM = "Sunbeam"
     WALL_OF_ICE = "Wall of Ice"
 
-
 class EvocationLevel7Spells(str, Enum):
     DELAYED_BLAST_FIREBALL = "Delayed Blast Fireball"
     DIVINE_WORD = "Divine Word"
@@ -1898,27 +1671,22 @@ class EvocationLevel7Spells(str, Enum):
     MORDENKAINENS_SWORD = "Mordenkainen's Sword"
     PRISMATIC_SPRAY = "Prismatic Spray"
 
-
 class EvocationLevel8Spells(str, Enum):
     HOLY_STAR_OF_MYSTRA = "Holy Star of Mystra"
     SUNBURST = "Sunburst"
 
-
 class EvocationLevel9Spells(str, Enum):
     METEOR_SWARM = "Meteor Swarm"
-
 
 class IllusionLevel0Spells(str, Enum):
     DANCING_LIGHTS = "Dancing Lights"
     MINOR_ILLUSION = "Minor Illusion"
-
 
 class IllusionLevel1Spells(str, Enum):
     COLOR_SPRAY = "Color Spray"
     DISGUISE_SELF = "Disguise Self"
     ILLUSORY_SCRIPT = "Illusory Script"
     SILENT_IMAGE = "Silent Image"
-
 
 class IllusionLevel2Spells(str, Enum):
     BLUR = "Blur"
@@ -1929,19 +1697,16 @@ class IllusionLevel2Spells(str, Enum):
     PHANTASMAL_FORCE = "Phantasmal Force"
     SILENCE = "Silence"
 
-
 class IllusionLevel3Spells(str, Enum):
     FEAR = "Fear"
     HYPNOTIC_PATTERN = "Hypnotic Pattern"
     MAJOR_IMAGE = "Major Image"
     PHANTOM_STEED = "Phantom Steed"
 
-
 class IllusionLevel4Spells(str, Enum):
     GREATER_INVISIBILITY = "Greater Invisibility"
     HALLUCINATORY_TERRAIN = "Hallucinatory Terrain"
     PHANTASMAL_KILLER = "Phantasmal Killer"
-
 
 class IllusionLevel5Spells(str, Enum):
     CREATION = "Creation"
@@ -1949,24 +1714,19 @@ class IllusionLevel5Spells(str, Enum):
     MISLEAD = "Mislead"
     SEEMING = "Seeming"
 
-
 class IllusionLevel6Spells(str, Enum):
     PROGRAMMED_ILLUSION = "Programmed Illusion"
-
 
 class IllusionLevel7Spells(str, Enum):
     MIRAGE_ARCANE = "Mirage Arcane"
     PROJECT_IMAGE = "Project Image"
     SIMULACRUM = "Simulacrum"
 
-
 class IllusionLevel8Spells(str, Enum):
     pass
 
-
 class IllusionLevel9Spells(str, Enum):
     WEIRD = "Weird"
-
 
 class NecromancyLevel0Spells(str, Enum):
     CHILL_TOUCH = "Chill Touch"
@@ -1974,19 +1734,16 @@ class NecromancyLevel0Spells(str, Enum):
     SPARE_THE_DYING = "Spare the Dying"
     TOLL_THE_DEAD = "Toll the Dead"
 
-
 class NecromancyLevel1Spells(str, Enum):
     FALSE_LIFE = "False Life"
     INFLICT_WOUNDS = "Inflict Wounds"
     RAY_OF_SICKNESS = "Ray of Sickness"
     WRATHFUL_SMITE = "Wrathful Smite"
 
-
 class NecromancyLevel2Spells(str, Enum):
     DEATH_ARMOR = "Death Armor"
     GENTLE_REPOSE = "Gentle Repose"
     RAY_OF_ENFEEBLEMENT = "Ray of Enfeeblement"
-
 
 class NecromancyLevel3Spells(str, Enum):
     ANIMATE_DEAD = "Animate Dead"
@@ -1997,38 +1754,32 @@ class NecromancyLevel3Spells(str, Enum):
     SUMMON_UNDEAD = "Summon Undead"
     VAMPIRIC_TOUCH = "Vampiric Touch"
 
-
 class NecromancyLevel4Spells(str, Enum):
     BLIGHT = "Blight"
-
 
 class NecromancyLevel5Spells(str, Enum):
     CONTAGION = "Contagion"
     RAISE_DEAD = "Raise Dead"
     REINCARNATE = "Reincarnate"
 
-
 class NecromancyLevel6Spells(str, Enum):
-    CIRCLE_OF_DEATH = "Circle of Death"
+    CIRCLE_OF_DEATH = "Circle Of Death"
     CREATE_UNDEAD = "Create Undead"
     EYEBITE = "Eyebite"
     HARM = "Harm"
     MAGIC_JAR = "Magic Jar"
 
-
 class NecromancyLevel7Spells(str, Enum):
     FINGER_OF_DEATH = "Finger of Death"
     RESURRECTION = "Resurrection"
-
+    VOID_STAR = "Void Star"
 
 class NecromancyLevel8Spells(str, Enum):
     CLONE = "Clone"
 
-
 class NecromancyLevel9Spells(str, Enum):
     ASTRAL_PROJECTION = "Astral Projection"
     TRUE_RESURRECTION = "True Resurrection"
-
 
 class TransmutationLevel0Spells(str, Enum):
     DRUIDCRAFT = "Druidcraft"
@@ -2040,7 +1791,6 @@ class TransmutationLevel0Spells(str, Enum):
     THAUMATURGY = "Thaumaturgy"
     THORN_WHIP = "Thorn Whip"
 
-
 class TransmutationLevel1Spells(str, Enum):
     CREATE_OR_DESTROY_WATER = "Create or Destroy Water"
     DIVINE_FAVOR = "Divine Favor"
@@ -2050,12 +1800,11 @@ class TransmutationLevel1Spells(str, Enum):
     LONGSTRIDER = "Longstrider"
     PURIFY_FOOD_AND_DRINK = "Purify Food and Drink"
 
-
 class TransmutationLevel2Spells(str, Enum):
     ALTER_SELF = "Alter Self"
     BARKSKIN = "Barkskin"
     BLINDNESS_DEAFNESS = "Blindness/Deafness"
-    CORDON_OF_ARROWS = "Cordon of Arrows"
+    CORDON_OF_ARROWS = "Cordon Of Arrows"
     DARKVISION = "Darkvision"
     DRAGONS_BREATH = "Dragon's Breath"
     ENHANCE_ABILITY = "Enhance Ability"
@@ -2068,7 +1817,6 @@ class TransmutationLevel2Spells(str, Enum):
     SHINING_SMITE = "Shining Smite"
     SPIDER_CLIMB = "Spider Climb"
     SPIKE_GROWTH = "Spike Growth"
-
 
 class TransmutationLevel3Spells(str, Enum):
     BLINK = "Blink"
@@ -2084,14 +1832,13 @@ class TransmutationLevel3Spells(str, Enum):
     WATER_BREATHING = "Water Breathing"
     WATER_WALK = "Water Walk"
 
-
 class TransmutationLevel4Spells(str, Enum):
     CONTROL_WATER = "Control Water"
     FABRICATE = "Fabricate"
     POLYMORPH = "Polymorph"
+    STICKS_TO_SNAKES = "Sticks to Snakes"
     STONE_SHAPE = "Stone Shape"
     STONESKIN = "Stoneskin"
-
 
 class TransmutationLevel5Spells(str, Enum):
     ANIMATE_OBJECTS = "Animate Objects"
@@ -2101,13 +1848,11 @@ class TransmutationLevel5Spells(str, Enum):
     SWIFT_QUIVER = "Swift Quiver"
     TELEKINESIS = "Telekinesis"
 
-
 class TransmutationLevel6Spells(str, Enum):
     DISINTEGRATE = "Disintegrate"
     FLESH_TO_STONE = "Flesh to Stone"
     MOVE_EARTH = "Move Earth"
     WIND_WALK = "Wind Walk"
-
 
 class TransmutationLevel7Spells(str, Enum):
     REGENERATE = "Regenerate"
@@ -2115,12 +1860,10 @@ class TransmutationLevel7Spells(str, Enum):
     SEQUESTER = "Sequester"
     SIMBULS_SYNOSTODWEOMER = "Simbul's Synostodweomer"
 
-
 class TransmutationLevel8Spells(str, Enum):
     ANIMAL_SHAPES = "Animal Shapes"
     CONTROL_WEATHER = "Control Weather"
     EARTHQUAKE = "Earthquake"
-
 
 class TransmutationLevel9Spells(str, Enum):
     SHAPECHANGE = "Shapechange"

@@ -10,7 +10,7 @@ from CharacterConfigs.BaseClasses.DruidBase import (
 from CharacterSheetCreator import CharacterSheetData
 from Definitions import DruidSubclass
 from Features.ClassFeatures.Druid import DruidSeaFeatures
-from Spells.Definitions import (
+from Spells.SpellLists import (
     DruidLevel0Spells,
     DruidLevel1Spells,
     DruidLevel2Spells,

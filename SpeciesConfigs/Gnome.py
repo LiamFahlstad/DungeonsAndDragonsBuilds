@@ -3,7 +3,7 @@ import Definitions
 from Definitions import Ability
 from Features.SpeciesFeatures import GnomeFeatures
 from SpeciesConfigs.SpeciesBuilder import SpeciesBuilder
-from Spells.Definitions import BardLevel0Spells, DruidLevel1Spells
+from Spells.SpellLists import BardLevel0Spells, DruidLevel1Spells
 
 
 class ForestGnomeSpeciesBuilder(SpeciesBuilder):

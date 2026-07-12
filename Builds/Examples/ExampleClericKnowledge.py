@@ -35,7 +35,7 @@ from Definitions import Ability, Skill
 from Features.CharacterFeats import Backgrounds, EpicBoon, GeneralFeats, OriginFeats
 from Features.Equipment import Armor, Weapons
 from SpeciesConfigs import Warforged
-from Spells.Definitions import (
+from Spells.SpellLists import (
     ClericLevel0Spells,
     ClericLevel1Spells,
     ClericLevel2Spells,
