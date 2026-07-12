@@ -496,11 +496,11 @@ class Registry:
         for package in features_dir.iterdir():
             if not package.is_dir() or package.name.startswith("__"):
                 continue
-            for path in package.glob("*.py"):
-                if not path.stem.startswith("__"):
-                    mapping.setdefault(
-                        path.stem, (f"Features.{package.name}", path.stem)
-                    )
+            for path in package.rglob("*.py"):
+                if path.stem.startswith("__") or "__pycache__" in path.parts:
+                    continue
+                module_dotted = ".".join(path.parent.relative_to(REPO_ROOT).parts)
+                mapping.setdefault(path.stem, (module_dotted, path.stem))
 
         # Warlock invocations, e.g. InvocationsLevel2.AGONIZING_BLAST.
         try:
