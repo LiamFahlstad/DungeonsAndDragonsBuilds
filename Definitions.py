@@ -244,6 +244,7 @@ class WarlockSubclass(str, Enum):
 class FighterSubclass(str, Enum):
     BATTLE_MASTER = "Battle Master"
     CHAMPION = "Champion"
+    ELDRITCH_KNIGHT = "Eldritch Knight"
 
 
 class RangerSubclass(str, Enum):

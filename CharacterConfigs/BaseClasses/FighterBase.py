@@ -5,10 +5,10 @@ import attr
 import Definitions
 from CharacterConfigs.BaseClasses import ClassBuilder
 from CharacterSheetCreator import CharacterSheetData
-from Definitions import CharacterClass
+from Definitions import Ability, CharacterClass
 from Features.CharacterFeats import EpicBoon, GeneralFeats
 from Features.Equipment import Armor, Weapons
-from Features.ClassFeatures import FighterFeatures
+from Features.ClassFeatures import FighterFeatures, SpellSlots
 from Features.Combat.FightingStyles import FightingStyle
 from StatBlocks.SavingThrowsStatBlock import FighterSavingThrowsStatBlock
 from StatBlocks.SkillsStatBlock import FighterSkillsStatBlock
@@ -230,6 +230,7 @@ class FighterCustomStarterClassArgs(ClassBuilder.CustomStarterClassArgs):
         self,
         subclass: str,
         skills: FighterSkillsStatBlock,
+        caster_type: Optional[SpellSlots.CasterType] = None,
     ):
         super().__init__(
             base_class=CharacterClass.FIGHTER,
@@ -248,6 +249,8 @@ class FighterCustomStarterClassArgs(ClassBuilder.CustomStarterClassArgs):
                 Definitions.ArmorType.HEAVY,
                 Definitions.ArmorType.SHIELD,
             ],
+            spell_casting_ability=Ability.INTELLIGENCE if caster_type is not None else None,
+            caster_type=caster_type,
         )
 
 
@@ -259,6 +262,7 @@ class FighterMulticlassBuilder(ClassBuilder.MulticlassBuilder):
         fighter_level: int,
         subclass: str,
         replace_spells: Optional[dict[str, str]] = None,
+        caster_type: Optional[SpellSlots.CasterType] = None,
     ):
         self.subclass = subclass
         super().__init__(
@@ -267,4 +271,6 @@ class FighterMulticlassBuilder(ClassBuilder.MulticlassBuilder):
             base_class_level=fighter_level,
             subclass=subclass,
             replace_spells=replace_spells,
+            spell_casting_ability=Ability.INTELLIGENCE if caster_type is not None else None,
+            caster_type=caster_type,
         )
