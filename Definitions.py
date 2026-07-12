@@ -201,6 +201,7 @@ class BardSubclass(str, Enum):
     SWORD = "College of Swords"
     WHISPERS = "College of Whispers"
     MOON = "College of the Moon"
+    DANCE = "College of Dance"
 
 
 class DruidSubclass(str, Enum):
@@ -208,6 +209,8 @@ class DruidSubclass(str, Enum):
     LAND = "Circle of the Land"
     DREAMS = "Circle of Dreams"
     SHELL = "Circle of the Shell"
+    SEA = "Circle of the Sea"
+    STARS = "Circle of the Stars"
 
 
 class DruidLandType(str, Enum):
@@ -239,12 +242,14 @@ class WarlockSubclass(str, Enum):
     THE_ARCHFEY = "The Archfey"
     THE_GREAT_OLD_ONE = "The Great Old One"
     THE_UNDEAD = "The Undead"
+    THE_CELESTIAL = "The Celestial"
 
 
 class FighterSubclass(str, Enum):
     BATTLE_MASTER = "Battle Master"
     CHAMPION = "Champion"
     ELDRITCH_KNIGHT = "Eldritch Knight"
+    PSI_WARRIOR = "Psi Warrior"
 
 
 class RangerSubclass(str, Enum):
@@ -259,6 +264,9 @@ class RangerSubclass(str, Enum):
 class MonkSubclass(str, Enum):
     SHADOW = "Shadow"
     MYSTIC_ARTS = "Mystic Arts"
+    MERCY = "Mercy"
+    ELEMENTS = "the Elements"
+    OPEN_HAND = "Open Hand"
 
 
 class BarbarianSubclass(str, Enum):

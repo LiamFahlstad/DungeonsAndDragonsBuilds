@@ -115,7 +115,7 @@ DEFAULT_PAGES = [
 ]
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
-OUTPUT_DIR = REPO_ROOT / "SubclassTexts"
+OUTPUT_DIR = REPO_ROOT / "SourceTexts" / "SubclassTexts"
 
 
 if __name__ == "__main__":
