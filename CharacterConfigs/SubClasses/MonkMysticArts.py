@@ -9,7 +9,7 @@ from CharacterConfigs.BaseClasses.MonkBase import (
 )
 from CharacterSheetCreator import CharacterSheetData
 from Definitions import Ability, MonkSubclass
-from Features.ClassFeatures import MonkFeatures
+from Features.ClassFeatures import MonkFeatures, SpellSlots
 from StatBlocks.SkillsStatBlock import MonkSkillsStatBlock
 
 
@@ -71,6 +71,7 @@ class MonkMysticArtsCustomStarterClassArgs(MonkCustomStarterClassArgs):
             skills=skills,
             monk_level=monk_level,
             unarmed_strike=unarmed_strike,
+            caster_type=SpellSlots.CasterType.THIRD_CASTER,
         )
 
 
@@ -87,4 +88,5 @@ class MonkMysticArtsMulticlassBuilder(MonkMulticlassBuilder):
             monk_level=monk_level,
             subclass=MonkSubclass.MYSTIC_ARTS.value,
             replace_spells=replace_spells,
+            caster_type=SpellSlots.CasterType.THIRD_CASTER,
         )

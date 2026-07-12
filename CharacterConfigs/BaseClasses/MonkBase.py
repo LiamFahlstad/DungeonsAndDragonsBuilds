@@ -7,7 +7,7 @@ from CharacterSheetCreator import CharacterSheetData
 from Definitions import Ability, CharacterClass
 from Features.CharacterFeats import EpicBoon, GeneralFeats
 from Features.Equipment import Weapons
-from Features.ClassFeatures import MonkFeatures
+from Features.ClassFeatures import MonkFeatures, SpellSlots
 from StatBlocks.SavingThrowsStatBlock import MonkSavingThrowsStatBlock
 from StatBlocks.SkillsStatBlock import MonkSkillsStatBlock
 
@@ -246,6 +246,7 @@ class MonkCustomStarterClassArgs(ClassBuilder.CustomStarterClassArgs):
         skills: MonkSkillsStatBlock,
         monk_level: int,
         unarmed_strike: Ability,
+        caster_type: Optional[SpellSlots.CasterType] = None,
     ):
 
         martial_arts_die = MonkFeatures.LEVEL_TO_MARTIAL_ARTS_DIE[monk_level]
@@ -265,6 +266,8 @@ class MonkCustomStarterClassArgs(ClassBuilder.CustomStarterClassArgs):
             ],
             skills=skills,
             armor_proficiencies=None,
+            spell_casting_ability=Ability.WISDOM if caster_type is not None else None,
+            caster_type=caster_type,
         )
 
 
@@ -276,6 +279,7 @@ class MonkMulticlassBuilder(ClassBuilder.MulticlassBuilder):
         monk_level: int,
         subclass: str,
         replace_spells: Optional[dict[str, str]] = None,
+        caster_type: Optional[SpellSlots.CasterType] = None,
     ):
         self.subclass = subclass
         super().__init__(
@@ -285,4 +289,5 @@ class MonkMulticlassBuilder(ClassBuilder.MulticlassBuilder):
             subclass=subclass,
             replace_spells=replace_spells,
             spell_casting_ability=Ability.WISDOM,
+            caster_type=caster_type,
         )

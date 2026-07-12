@@ -9,6 +9,7 @@ class CasterType(Enum):
     FULL_CASTER = 1
     HALF_CASTER = 2
     WARLOCK_CASTER = 3
+    THIRD_CASTER = 4
 
 
 _FULL_CASTER_SLOTS = [
@@ -57,6 +58,29 @@ _WARLOCK_SLOTS = [
     [0, 0, 0, 0, 4, 0, 0, 0, 0],  # level 20
 ]
 
+_THIRD_CASTER_SLOTS = [
+    [0, 0, 0, 0, 0, 0, 0, 0, 0],  # level 1
+    [0, 0, 0, 0, 0, 0, 0, 0, 0],  # level 2
+    [2, 0, 0, 0, 0, 0, 0, 0, 0],  # level 3
+    [3, 0, 0, 0, 0, 0, 0, 0, 0],  # level 4
+    [3, 0, 0, 0, 0, 0, 0, 0, 0],  # level 5
+    [3, 0, 0, 0, 0, 0, 0, 0, 0],  # level 6
+    [4, 2, 0, 0, 0, 0, 0, 0, 0],  # level 7
+    [4, 2, 0, 0, 0, 0, 0, 0, 0],  # level 8
+    [4, 2, 0, 0, 0, 0, 0, 0, 0],  # level 9
+    [4, 3, 0, 0, 0, 0, 0, 0, 0],  # level 10
+    [4, 3, 0, 0, 0, 0, 0, 0, 0],  # level 11
+    [4, 3, 0, 0, 0, 0, 0, 0, 0],  # level 12
+    [4, 3, 2, 0, 0, 0, 0, 0, 0],  # level 13
+    [4, 3, 2, 0, 0, 0, 0, 0, 0],  # level 14
+    [4, 3, 2, 0, 0, 0, 0, 0, 0],  # level 15
+    [4, 3, 3, 0, 0, 0, 0, 0, 0],  # level 16
+    [4, 3, 3, 0, 0, 0, 0, 0, 0],  # level 17
+    [4, 3, 3, 0, 0, 0, 0, 0, 0],  # level 18
+    [4, 3, 3, 1, 0, 0, 0, 0, 0],  # level 19
+    [4, 3, 3, 1, 0, 0, 0, 0, 0],  # level 20
+]
+
 
 def get_spell_slots_for_level(level: int, caster_type: CasterType) -> list[int]:
     if level < 1 or level > 20:
@@ -64,6 +88,9 @@ def get_spell_slots_for_level(level: int, caster_type: CasterType) -> list[int]:
 
     if caster_type == CasterType.WARLOCK_CASTER:
         return _WARLOCK_SLOTS[level - 1]
+
+    if caster_type == CasterType.THIRD_CASTER:
+        return _THIRD_CASTER_SLOTS[level - 1]
 
     if caster_type == CasterType.HALF_CASTER:
         level = (level + 1) // 2
@@ -92,6 +119,8 @@ def _compute_effective_caster_level(registry: dict, level_per_class: dict) -> in
             total += level
         elif ct == CasterType.HALF_CASTER:
             total += (level + 1) // 2 if single_half_caster else level // 2
+        elif ct == CasterType.THIRD_CASTER:
+            total += level // 3
     return total
 
 
@@ -111,6 +140,28 @@ class SpellSlots(Feature):
             warlock_slots = _WARLOCK_SLOTS[warlock_level - 1]
             character_stat_block.pact_magic_slots = {
                 i + 1: count for i, count in enumerate(warlock_slots) if count > 0
+            }
+            return
+
+        # A lone third-caster doesn't follow the "one third of levels" multiclass rule
+        # against the full-caster table (e.g. Monk level 4 gives 2nd-level prepared
+        # spells, not the level-1 full-caster slot count) -- it has its own table.
+        non_warlock = {
+            cls: ct
+            for cls, ct in character_stat_block._caster_registry.items()
+            if ct != CasterType.WARLOCK_CASTER
+        }
+        single_third_caster = (
+            len(non_warlock) == 1
+            and next(iter(non_warlock.values())) == CasterType.THIRD_CASTER
+        )
+        if single_third_caster:
+            third_caster_level = character_stat_block.get_class_level(
+                self.character_class
+            )
+            third_caster_slots = _THIRD_CASTER_SLOTS[third_caster_level - 1]
+            character_stat_block.spell_slots = {
+                i + 1: count for i, count in enumerate(third_caster_slots) if count > 0
             }
             return
 
