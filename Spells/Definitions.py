@@ -1052,6 +1052,7 @@ class DruidLevel0Spells(str, Enum):
     MESSAGE = "Message"
     POISON_SPRAY = "Poison Spray"
     PRODUCE_FLAME = "Produce Flame"
+    RAY_OF_FROST = "Ray of Frost"
     RESISTANCE = "Resistance"
     SHILLELAGH = "Shillelagh"
     SPARE_THE_DYING = "Spare the Dying"
@@ -1115,6 +1116,7 @@ class DruidLevel3Spells(str, Enum):
     DISPEL_MAGIC = "Dispel Magic"
     ELEMENTAL_WEAPON = "Elemental Weapon"
     FEIGN_DEATH = "Feign Death"
+    LIGHTNING_BOLT = "Lightning Bolt"
     MELD_INTO_STONE = "Meld into Stone"
     PLANT_GROWTH = "Plant Growth"
     PROTECTION_FROM_ENERGY = "Protection from Energy"
@@ -1162,6 +1164,7 @@ class DruidLevel5Spells(str, Enum):
     CONTAGION = "Contagion"
     GEAS = "Geas"
     GREATER_RESTORATION = "Greater Restoration"
+    HOLD_MONSTER = "Hold Monster"
     INSECT_PLAGUE = "Insect Plague"
     MASS_CURE_WOUNDS = "Mass Cure Wounds"
     PLANAR_BINDING = "Planar Binding"
@@ -2226,7 +2229,9 @@ class Spell(ABC):
             "source": self.source,
         }
 
-    def write_to_file(self, file: TextIO, show_preparation_checkbox: bool = False):  # writes HTML
+    def write_to_file(
+        self, file: TextIO, show_preparation_checkbox: bool = False
+    ):  # writes HTML
         # ── Detect special tags ──────────────────────────────────────────────
         is_concentration = self.duration.lower().startswith("concentration")
         is_ritual = "ritual" in self.casting_time.lower()
@@ -2242,7 +2247,9 @@ class Spell(ABC):
             main_desc = StringUtils.boxes_to_html(main_desc.strip())
             main_desc = StringUtils.bolden_text_html(main_desc).replace("\n", "<br>")
             higher_rest = StringUtils.boxes_to_html(higher_rest.strip())
-            higher_rest = StringUtils.bolden_text_html(higher_rest).replace("\n", "<br>")
+            higher_rest = StringUtils.bolden_text_html(higher_rest).replace(
+                "\n", "<br>"
+            )
             higher_level_html = f"<strong>{higher_level_marker}</strong> {higher_rest}"
         else:
             main_desc = StringUtils.boxes_to_html(description)
@@ -2272,7 +2279,11 @@ class Spell(ABC):
         duration_display = self.duration
         if is_concentration:
             # Strip the "Concentration, " prefix for display; the tag already shows it
-            duration_display = self.duration[len("Concentration, "):] if self.duration.lower().startswith("concentration, ") else self.duration
+            duration_display = (
+                self.duration[len("Concentration, ") :]
+                if self.duration.lower().startswith("concentration, ")
+                else self.duration
+            )
         right_cell = (
             f"<span class='slabel'>Cast</span> {self.casting_time}"
             f"<span class='ssep'>·</span>"
@@ -2283,8 +2294,12 @@ class Spell(ABC):
 
         # ── Spell name with optional checkbox ─────────────────────────────────
         spell_name_display = self.name
-        if show_preparation_checkbox and self.level > 0:  # Don't show checkbox for cantrips
-            spell_name_display = f"<span class='spell-prep-checkbox'></span> {self.name}"
+        if (
+            show_preparation_checkbox and self.level > 0
+        ):  # Don't show checkbox for cantrips
+            spell_name_display = (
+                f"<span class='spell-prep-checkbox'></span> {self.name}"
+            )
 
         # ── Write card ───────────────────────────────────────────────────────
         file.write("<table class='spell-card'>\n")
