@@ -158,6 +158,17 @@ class BewitchingMagic(Feature):
 ### Celestial Patron Features ###
 
 
+class CelestialSpells(Feature):
+    def __init__(self):
+        super().__init__(
+            name="Celestial Spells", origin="Celestial Patron Warlock Level 3"
+        )
+
+    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+        description = "The magic of your patron ensures you always have certain spells ready; when you reach a Warlock level specified in the Celestial Spells table, you thereafter always have the listed spells prepared."
+        return description
+
+
 class HealingLight(Feature):
     def __init__(self):
         super().__init__(
