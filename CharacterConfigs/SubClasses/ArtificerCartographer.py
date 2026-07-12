@@ -9,7 +9,7 @@ from CharacterConfigs.BaseClasses.ArtificerBase import (
 )
 from CharacterSheetCreator import CharacterSheetData
 from Definitions import ArtificerSubclass
-from Features.ClassFeatures import ArtificerCartographerFeatures
+from Features.ClassFeatures.Artificer import ArtificerCartographerFeatures
 from Spells.Definitions import (
     ArtificerLevel3Spells,
     ArtificerLevel4Spells,

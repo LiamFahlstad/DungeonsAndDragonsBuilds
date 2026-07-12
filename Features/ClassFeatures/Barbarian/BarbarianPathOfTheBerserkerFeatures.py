@@ -1,5 +1,5 @@
 import Definitions
-from Features.ClassFeatures.BarbarianFeatures import get_rage_damage_bonus
+from Features.ClassFeatures.Barbarian.BarbarianFeatures import get_rage_damage_bonus
 from Features.Core.BaseFeatures import Feature
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 

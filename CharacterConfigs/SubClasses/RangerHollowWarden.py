@@ -9,7 +9,7 @@ from CharacterConfigs.BaseClasses.RangerBase import (
 )
 from CharacterSheetCreator import CharacterSheetData
 from Definitions import RangerSubclass
-from Features.ClassFeatures import RangerHollowWardenFeatures
+from Features.ClassFeatures.Ranger import RangerHollowWardenFeatures
 from Spells.Definitions import (
     IllusionLevel3Spells,
     NecromancyLevel1Spells,

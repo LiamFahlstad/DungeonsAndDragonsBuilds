@@ -9,7 +9,8 @@ from Definitions import Ability, CharacterClass
 from Features.CharacterFeats import EpicBoon, GeneralFeats
 from Features.Combat import FightingStyles
 from Features.Equipment import Armor, Weapons
-from Features.ClassFeatures import PaladinFeatures, SpellSlots
+from Features.ClassFeatures import SpellSlots
+from Features.ClassFeatures.Paladin import PaladinFeatures
 from Spells.Definitions import (
     PaladinLevel1Spells,
     PaladinLevel2Spells,

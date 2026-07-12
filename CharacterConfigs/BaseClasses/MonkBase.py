@@ -7,7 +7,8 @@ from CharacterSheetCreator import CharacterSheetData
 from Definitions import Ability, CharacterClass
 from Features.CharacterFeats import EpicBoon, GeneralFeats
 from Features.Equipment import Weapons
-from Features.ClassFeatures import MonkFeatures, SpellSlots
+from Features.ClassFeatures import SpellSlots
+from Features.ClassFeatures.Monk import MonkFeatures
 from StatBlocks.SavingThrowsStatBlock import MonkSavingThrowsStatBlock
 from StatBlocks.SkillsStatBlock import MonkSkillsStatBlock
 

@@ -9,7 +9,8 @@ from CharacterConfigs.BaseClasses.FighterBase import (
 )
 from CharacterSheetCreator import CharacterSheetData
 from Definitions import FighterSubclass
-from Features.ClassFeatures import FighterEldritchKnightFeatures, SpellSlots
+from Features.ClassFeatures import SpellSlots
+from Features.ClassFeatures.Fighter import FighterEldritchKnightFeatures
 from StatBlocks.SkillsStatBlock import FighterSkillsStatBlock
 
 

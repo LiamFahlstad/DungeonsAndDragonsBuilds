@@ -8,7 +8,8 @@ from CharacterSheetCreator import CharacterSheetData
 from Definitions import Ability, ApplyWhen, CharacterClass, Skill
 from Features.CharacterFeats import EpicBoon, GeneralFeats
 from Features.Equipment import Armor, Weapons
-from Features.ClassFeatures import BardFeatures, SpellSlots
+from Features.ClassFeatures import SpellSlots
+from Features.ClassFeatures.Bard import BardFeatures
 from Spells.Definitions import (
     BardLevel0Spells,
     BardLevel1Spells,

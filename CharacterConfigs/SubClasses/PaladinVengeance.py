@@ -9,7 +9,7 @@ from CharacterConfigs.BaseClasses.PaladinBase import (
 )
 from CharacterSheetCreator import CharacterSheetData
 from Definitions import PaladinSubclass
-from Features.ClassFeatures import PaladinVengeanceFeatures
+from Features.ClassFeatures.Paladin import PaladinVengeanceFeatures
 from Spells.Definitions import (
     ClericLevel1Spells,
     RangerLevel1Spells,

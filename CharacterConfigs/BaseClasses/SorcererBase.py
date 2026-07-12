@@ -7,7 +7,8 @@ from CharacterSheetCreator import CharacterSheetData
 from Definitions import Ability, CharacterClass
 from Features.CharacterFeats import EpicBoon, GeneralFeats
 from Features.Equipment import Weapons
-from Features.ClassFeatures import SorcererFeatures, SpellSlots
+from Features.ClassFeatures import SpellSlots
+from Features.ClassFeatures.Sorcerer import SorcererFeatures
 from Spells.Definitions import (
     SorcererLevel0Spells,
     SorcererLevel1Spells,

@@ -8,7 +8,7 @@ from CharacterSheetCreator import CharacterSheetData
 from Definitions import CharacterClass
 from Features.CharacterFeats import EpicBoon, GeneralFeats
 from Features.Equipment import Armor, Weapons
-from Features.ClassFeatures import RogueFeatures
+from Features.ClassFeatures.Rogue import RogueFeatures
 from StatBlocks.SavingThrowsStatBlock import RogueSavingThrowsStatBlock
 from StatBlocks.SkillsStatBlock import RogueSkillsStatBlock
 

@@ -9,7 +9,7 @@ from CharacterConfigs.BaseClasses.MonkBase import (
 )
 from CharacterSheetCreator import CharacterSheetData
 from Definitions import Ability, MonkSubclass
-from Features.ClassFeatures import MonkShadowFeatures
+from Features.ClassFeatures.Monk import MonkShadowFeatures
 from StatBlocks.SkillsStatBlock import MonkSkillsStatBlock
 
 

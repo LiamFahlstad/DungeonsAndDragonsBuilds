@@ -9,7 +9,7 @@ from CharacterConfigs.BaseClasses.BarbarianBase import (
 )
 from CharacterSheetCreator import CharacterSheetData
 from Definitions import BarbarianSubclass
-from Features.ClassFeatures import BarbarianPathOfTheBerserkerFeatures
+from Features.ClassFeatures.Barbarian import BarbarianPathOfTheBerserkerFeatures
 from StatBlocks.SkillsStatBlock import BarbarianSkillsStatBlock
 
 

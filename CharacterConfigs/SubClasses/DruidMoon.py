@@ -9,7 +9,7 @@ from CharacterConfigs.BaseClasses.DruidBase import (
 )
 from CharacterSheetCreator import CharacterSheetData
 from Definitions import DruidSubclass
-from Features.ClassFeatures import DruidMoonFeatures
+from Features.ClassFeatures.Druid import DruidMoonFeatures
 from Spells.Definitions import (
     DruidLevel0Spells,
     DruidLevel1Spells,

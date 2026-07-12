@@ -9,7 +9,7 @@ from CharacterConfigs.BaseClasses.RogueBase import (
 )
 from CharacterSheetCreator import CharacterSheetData
 from Definitions import RogueSubclass
-from Features.ClassFeatures import RogueSoulKnifeFeatures
+from Features.ClassFeatures.Rogue import RogueSoulKnifeFeatures
 from StatBlocks.SkillsStatBlock import RogueSkillsStatBlock
 
 

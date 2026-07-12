@@ -9,7 +9,7 @@ from CharacterConfigs.BaseClasses.BardBase import (
 )
 from CharacterSheetCreator import CharacterSheetData
 from Definitions import BardSubclass, Skill
-from Features.ClassFeatures import BardMoonFeatures
+from Features.ClassFeatures.Bard import BardMoonFeatures
 from Spells.Definitions import DruidLevel0Spells, DruidLevel2Spells
 from StatBlocks.SkillsStatBlock import BardSkillsStatBlock
 

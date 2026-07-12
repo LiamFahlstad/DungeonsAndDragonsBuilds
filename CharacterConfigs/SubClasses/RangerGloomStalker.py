@@ -9,7 +9,7 @@ from CharacterConfigs.BaseClasses.RangerBase import (
 )
 from CharacterSheetCreator import CharacterSheetData
 from Definitions import RangerSubclass
-from Features.ClassFeatures import RangerGloomStalkerFeatures
+from Features.ClassFeatures.Ranger import RangerGloomStalkerFeatures
 from Spells.Definitions import (
     BardLevel4Spells,
     ClericLevel4Spells,

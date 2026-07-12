@@ -9,7 +9,7 @@ from CharacterConfigs.BaseClasses.DruidBase import (
 )
 from CharacterSheetCreator import CharacterSheetData
 from Definitions import DruidSubclass
-from Features.ClassFeatures import DruidStarsFeatures
+from Features.ClassFeatures.Druid import DruidStarsFeatures
 from Spells.Definitions import DruidLevel0Spells, EvocationLevel1Spells
 from StatBlocks.SkillsStatBlock import DruidSkillsStatBlock
 

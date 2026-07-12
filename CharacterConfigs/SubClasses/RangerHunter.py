@@ -9,7 +9,7 @@ from CharacterConfigs.BaseClasses.RangerBase import (
 )
 from CharacterSheetCreator import CharacterSheetData
 from Definitions import RangerSubclass
-from Features.ClassFeatures import RangerHunterFeatures
+from Features.ClassFeatures.Ranger import RangerHunterFeatures
 from StatBlocks.SkillsStatBlock import RangerSkillsStatBlock
 
 

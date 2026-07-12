@@ -9,7 +9,7 @@ from CharacterConfigs.BaseClasses.SorcererBase import (
 )
 from CharacterSheetCreator import CharacterSheetData
 from Definitions import SorcererSubclass
-from Features.ClassFeatures import SorcererShadowFeatures
+from Features.ClassFeatures.Sorcerer import SorcererShadowFeatures
 from Spells.Definitions import (
     AbjurationLevel2Spells,
     AbjurationLevel3Spells,

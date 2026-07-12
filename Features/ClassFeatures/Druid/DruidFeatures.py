@@ -2,7 +2,7 @@ from typing import Type
 
 import Definitions
 from Combat.Definitions import ExtendedCombatantData
-from Features.ClassFeatures.WildShapeForms import format_wild_shape_form
+from Features.ClassFeatures.Druid.WildShapeForms import format_wild_shape_form
 from Features.Core.BaseFeatures import Feature
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils

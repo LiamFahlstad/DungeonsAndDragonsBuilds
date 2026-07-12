@@ -9,7 +9,7 @@ from CharacterConfigs.BaseClasses.WizardBase import (
 )
 from CharacterSheetCreator import CharacterSheetData
 from Definitions import Skill, WizardSubclass
-from Features.ClassFeatures import WizardBladesingerFeatures
+from Features.ClassFeatures.Wizard import WizardBladesingerFeatures
 from StatBlocks.SkillsStatBlock import WizardSkillsStatBlock
 
 

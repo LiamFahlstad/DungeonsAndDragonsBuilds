@@ -1,8 +1,8 @@
 from typing import Optional
 
 from Definitions import DamageType
-from Features.ClassFeatures import PrimalCompanions
-from Features.ClassFeatures.PrimalCompanions import CompanionType
+from Features.ClassFeatures.Ranger import PrimalCompanions
+from Features.ClassFeatures.Ranger.PrimalCompanions import CompanionType
 from Features.Core.BaseFeatures import Feature
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 

@@ -9,7 +9,8 @@ from Definitions import Ability, ApplyWhen, CharacterClass, Skill
 from Features.CharacterFeats import EpicBoon, GeneralFeats
 from Features.Combat import FightingStyles
 from Features.Equipment import Armor, Weapons
-from Features.ClassFeatures import RangerFeatures, SpellSlots
+from Features.ClassFeatures import SpellSlots
+from Features.ClassFeatures.Ranger import RangerFeatures
 from Spells.Definitions import (
     RangerLevel1Spells,
     RangerLevel2Spells,

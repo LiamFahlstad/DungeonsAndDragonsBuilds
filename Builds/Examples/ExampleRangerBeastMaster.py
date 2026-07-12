@@ -34,7 +34,7 @@ from CharacterConfigs.SubClasses.RangerBeastMaster import (
 )
 from Definitions import Ability, DamageType, Skill
 from Features.CharacterFeats import Backgrounds, EpicBoon, GeneralFeats, OriginFeats
-from Features.ClassFeatures.PrimalCompanions import CompanionType
+from Features.ClassFeatures.Ranger.PrimalCompanions import CompanionType
 from Features.Combat import FightingStyles
 from Features.Equipment import Weapons
 from SpeciesConfigs import Gnome

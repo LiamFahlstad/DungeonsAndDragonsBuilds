@@ -9,7 +9,7 @@ from CharacterConfigs.BaseClasses.WizardBase import (
 )
 from CharacterSheetCreator import CharacterSheetData
 from Definitions import WizardSubclass
-from Features.ClassFeatures import WizardEvokerFeatures
+from Features.ClassFeatures.Wizard import WizardEvokerFeatures
 from Spells.Definitions import (
     EvocationLevel1Spells,
     EvocationLevel2Spells,

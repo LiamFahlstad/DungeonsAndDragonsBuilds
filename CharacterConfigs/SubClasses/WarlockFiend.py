@@ -9,7 +9,7 @@ from CharacterConfigs.BaseClasses.WarlockBase import (
 )
 from CharacterSheetCreator import CharacterSheetData
 from Definitions import WarlockSubclass
-from Features.ClassFeatures import WarlockFiendFeatures
+from Features.ClassFeatures.Warlock import WarlockFiendFeatures
 from Spells.Definitions import (
     BardLevel1Spells,
     BardLevel5Spells,

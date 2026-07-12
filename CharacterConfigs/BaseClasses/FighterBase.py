@@ -8,7 +8,8 @@ from CharacterSheetCreator import CharacterSheetData
 from Definitions import Ability, CharacterClass
 from Features.CharacterFeats import EpicBoon, GeneralFeats
 from Features.Equipment import Armor, Weapons
-from Features.ClassFeatures import FighterFeatures, SpellSlots
+from Features.ClassFeatures import SpellSlots
+from Features.ClassFeatures.Fighter import FighterFeatures
 from Features.Combat.FightingStyles import FightingStyle
 from StatBlocks.SavingThrowsStatBlock import FighterSavingThrowsStatBlock
 from StatBlocks.SkillsStatBlock import FighterSkillsStatBlock

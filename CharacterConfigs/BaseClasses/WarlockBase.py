@@ -8,7 +8,8 @@ from CharacterSheetCreator import CharacterSheetData
 from Definitions import Ability, CharacterClass
 from Features.CharacterFeats import EpicBoon, GeneralFeats
 from Features.Equipment import Armor, Weapons
-from Features.ClassFeatures import SpellSlots, WarlockFeatures
+from Features.ClassFeatures import SpellSlots
+from Features.ClassFeatures.Warlock import WarlockFeatures
 from Invocations.Definitions import (
     InvocationsLevel0,
     InvocationsLevel2,

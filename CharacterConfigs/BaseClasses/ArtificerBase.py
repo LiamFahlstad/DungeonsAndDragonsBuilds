@@ -8,7 +8,8 @@ from CharacterSheetCreator import CharacterSheetData
 from Definitions import Ability, CharacterClass
 from Features.CharacterFeats import Backgrounds, EpicBoon, GeneralFeats, OriginFeats
 from Features.Equipment import Armor, Weapons
-from Features.ClassFeatures import ArtificerFeatures, SpellSlots
+from Features.ClassFeatures import SpellSlots
+from Features.ClassFeatures.Artificer import ArtificerFeatures
 from Features.Items import Items
 from Spells.Definitions import (
     ArtificerLevel0Spells,

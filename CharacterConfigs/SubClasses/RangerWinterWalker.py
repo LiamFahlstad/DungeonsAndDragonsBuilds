@@ -9,7 +9,7 @@ from CharacterConfigs.BaseClasses.RangerBase import (
 )
 from CharacterSheetCreator import CharacterSheetData
 from Definitions import RangerSubclass
-from Features.ClassFeatures import RangerWinterWalkerFeatures
+from Features.ClassFeatures.Ranger import RangerWinterWalkerFeatures
 from Spells.Definitions import (
     AbjurationLevel3Spells,
     BardLevel4Spells,

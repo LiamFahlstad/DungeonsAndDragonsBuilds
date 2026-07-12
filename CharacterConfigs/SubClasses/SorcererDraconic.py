@@ -9,7 +9,7 @@ from CharacterConfigs.BaseClasses.SorcererBase import (
 )
 from CharacterSheetCreator import CharacterSheetData
 from Definitions import SorcererSubclass
-from Features.ClassFeatures import SorcererDraconicFeatures
+from Features.ClassFeatures.Sorcerer import SorcererDraconicFeatures
 from Spells.Definitions import (
     SorcererLevel1Spells,
     SorcererLevel2Spells,
