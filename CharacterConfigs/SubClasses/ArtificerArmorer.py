@@ -11,11 +11,14 @@ from CharacterSheetCreator import CharacterSheetData
 from Definitions import ArtificerSubclass
 from Features.ClassFeatures.Artificer import ArtificerArmorerFeatures
 from Spells.SpellLists import (
-    ArtificerLevel1Spells,
-    ArtificerLevel2Spells,
-    ArtificerLevel3Spells,
-    ArtificerLevel4Spells,
-    ArtificerLevel5Spells,
+    BardLevel1Spells,
+    BardLevel2Spells,
+    BardLevel3Spells,
+    BardLevel4Spells,
+    DruidLevel4Spells,
+    SorcererLevel1Spells,
+    SorcererLevel3Spells,
+    WizardLevel5Spells,
 )
 from StatBlocks.SkillsStatBlock import ArtificerSkillsStatBlock
 
@@ -30,8 +33,8 @@ class ArtificerArmorerLevel3(ClassBuilder.SubclassLevel3):
         data.add_feature(ArtificerArmorerFeatures.ArmorerSpells())
         data.add_feature(ArtificerArmorerFeatures.ArcaneArmor())
         data.add_feature(ArtificerArmorerFeatures.ArmorModel())
-        data.add_spell(ArtificerLevel1Spells.MAGIC_MISSILE)
-        data.add_spell(ArtificerLevel1Spells.THUNDERWAVE)
+        data.add_spell(SorcererLevel1Spells.MAGIC_MISSILE)
+        data.add_spell(BardLevel1Spells.THUNDERWAVE)
         return data
 
 
@@ -42,8 +45,8 @@ class ArtificerArmorerLevel5(ClassBuilder.SubclassLevel5):
         data: CharacterSheetData,
     ) -> CharacterSheetData:
         data.add_feature(ArtificerArmorerFeatures.ArmorerExtraAttack())
-        data.add_spell(ArtificerLevel2Spells.MIRROR_IMAGE)
-        data.add_spell(ArtificerLevel2Spells.SHATTER)
+        data.add_spell(BardLevel2Spells.MIRROR_IMAGE)
+        data.add_spell(BardLevel2Spells.SHATTER)
         return data
 
 
@@ -54,8 +57,8 @@ class ArtificerArmorerLevel9(ClassBuilder.SubclassLevel9):
         data: CharacterSheetData,
     ) -> CharacterSheetData:
         data.add_feature(ArtificerArmorerFeatures.ImprovedArmorer())
-        data.add_spell(ArtificerLevel3Spells.HYPNOTIC_PATTERN)
-        data.add_spell(ArtificerLevel3Spells.LIGHTNING_BOLT)
+        data.add_spell(BardLevel3Spells.HYPNOTIC_PATTERN)
+        data.add_spell(SorcererLevel3Spells.LIGHTNING_BOLT)
         return data
 
 
@@ -65,8 +68,8 @@ class ArtificerArmorerLevel13(ClassBuilder.SubclassLevel13):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_spell(ArtificerLevel4Spells.FIRE_SHIELD)
-        data.add_spell(ArtificerLevel4Spells.GREATER_INVISIBILITY)
+        data.add_spell(DruidLevel4Spells.FIRE_SHIELD)
+        data.add_spell(BardLevel4Spells.GREATER_INVISIBILITY)
         return data
 
 
@@ -86,8 +89,8 @@ class ArtificerArmorerLevel17(ClassBuilder.SubclassLevel17):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_spell(ArtificerLevel5Spells.PASSWALL)
-        data.add_spell(ArtificerLevel5Spells.WALL_OF_FORCE)
+        data.add_spell(WizardLevel5Spells.PASSWALL)
+        data.add_spell(WizardLevel5Spells.WALL_OF_FORCE)
         return data
 
 

@@ -11,12 +11,12 @@ from CharacterSheetCreator import CharacterSheetData
 from Definitions import ArtificerSubclass
 from Features.ClassFeatures.Artificer import ArtificerAlchemistFeatures
 from Spells.SpellLists import (
-    ArtificerLevel3Spells,
-    ArtificerLevel5Spells,
     ClericLevel1Spells,
     ClericLevel3Spells,
     ClericLevel4Spells,
     ClericLevel5Spells,
+    SorcererLevel3Spells,
+    SorcererLevel5Spells,
     WizardLevel1Spells,
     WizardLevel2Spells,
     WizardLevel4Spells,
@@ -57,7 +57,7 @@ class ArtificerAlchemistLevel9(ClassBuilder.SubclassLevel9):
         data: CharacterSheetData,
     ) -> CharacterSheetData:
         data.add_feature(ArtificerAlchemistFeatures.RestorativeReagents())
-        data.add_spell(ArtificerLevel3Spells.GASEOUS_FORM)
+        data.add_spell(SorcererLevel3Spells.GASEOUS_FORM)
         data.add_spell(ClericLevel3Spells.MASS_HEALING_WORD)
         return data
 
@@ -89,7 +89,7 @@ class ArtificerAlchemistLevel17(ClassBuilder.SubclassLevel17):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_spell(ArtificerLevel5Spells.CLOUDKILL)
+        data.add_spell(SorcererLevel5Spells.CLOUDKILL)
         data.add_spell(ClericLevel5Spells.RAISE_DEAD)
         return data
 

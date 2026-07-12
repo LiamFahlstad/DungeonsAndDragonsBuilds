@@ -11,10 +11,10 @@ from CharacterSheetCreator import CharacterSheetData
 from Definitions import ArtificerSubclass
 from Features.ClassFeatures.Artificer import ArtificerCartographerFeatures
 from Spells.SpellLists import (
-    ArtificerLevel3Spells,
-    ArtificerLevel4Spells,
-    ArtificerLevel5Spells,
+    BardLevel3Spells,
+    BardLevel5Spells,
     ClericLevel1Spells,
+    ClericLevel4Spells,
     DivinationLevel2Spells,
     DivinationLevel4Spells,
     DivinationLevel5Spells,
@@ -60,7 +60,7 @@ class ArtificerCartographerLevel9(ClassBuilder.SubclassLevel9):
     ) -> CharacterSheetData:
         data.add_feature(ArtificerCartographerFeatures.IngeniousMovement())
         data.add_spell(DruidLevel3Spells.CALL_LIGHTNING)
-        data.add_spell(ArtificerLevel3Spells.CLAIRVOYANCE)
+        data.add_spell(BardLevel3Spells.CLAIRVOYANCE)
         return data
 
 
@@ -70,7 +70,7 @@ class ArtificerCartographerLevel13(ClassBuilder.SubclassLevel13):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_spell(ArtificerLevel4Spells.BANISHMENT)
+        data.add_spell(ClericLevel4Spells.BANISHMENT)
         data.add_spell(DivinationLevel4Spells.LOCATE_CREATURE)
         return data
 
@@ -92,7 +92,7 @@ class ArtificerCartographerLevel17(ClassBuilder.SubclassLevel17):
         data: CharacterSheetData,
     ) -> CharacterSheetData:
         data.add_spell(DivinationLevel5Spells.SCRYING)
-        data.add_spell(ArtificerLevel5Spells.TELEPORTATION_CIRCLE)
+        data.add_spell(BardLevel5Spells.TELEPORTATION_CIRCLE)
         return data
 
 

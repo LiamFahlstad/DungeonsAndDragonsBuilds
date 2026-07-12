@@ -11,15 +11,15 @@ from CharacterSheetCreator import CharacterSheetData
 from Definitions import ArtificerSubclass
 from Features.ClassFeatures.Artificer import ArtificerBattleSmithFeatures
 from Spells.SpellLists import (
-    ArtificerLevel1Spells,
+    BardLevel5Spells,
     PaladinLevel1Spells,
     PaladinLevel2Spells,
     PaladinLevel3Spells,
     PaladinLevel4Spells,
     PaladinLevel5Spells,
     RangerLevel3Spells,
+    SorcererLevel1Spells,
     SorcererLevel4Spells,
-    ArtificerLevel5Spells,
 )
 from StatBlocks.SkillsStatBlock import ArtificerSkillsStatBlock
 
@@ -35,7 +35,7 @@ class ArtificerBattleSmithLevel3(ClassBuilder.SubclassLevel3):
         data.add_feature(ArtificerBattleSmithFeatures.BattleReady())
         data.add_feature(ArtificerBattleSmithFeatures.SteelDefender())
         data.add_spell(PaladinLevel1Spells.HEROISM)
-        data.add_spell(ArtificerLevel1Spells.SHIELD)
+        data.add_spell(SorcererLevel1Spells.SHIELD)
         return data
 
 
@@ -91,7 +91,7 @@ class ArtificerBattleSmithLevel17(ClassBuilder.SubclassLevel17):
         data: CharacterSheetData,
     ) -> CharacterSheetData:
         data.add_spell(PaladinLevel5Spells.BANISHING_SMITE)
-        data.add_spell(ArtificerLevel5Spells.MASS_CURE_WOUNDS)
+        data.add_spell(BardLevel5Spells.MASS_CURE_WOUNDS)
         return data
 
 

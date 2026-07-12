@@ -11,12 +11,14 @@ from CharacterSheetCreator import CharacterSheetData
 from Definitions import DruidSubclass
 from Features.ClassFeatures.Druid import DruidSeaFeatures
 from Spells.SpellLists import (
-    DruidLevel0Spells,
+    ArtificerLevel0Spells,
+    BardLevel5Spells,
     DruidLevel1Spells,
     DruidLevel2Spells,
     DruidLevel3Spells,
     DruidLevel4Spells,
     DruidLevel5Spells,
+    SorcererLevel3Spells,
 )
 from StatBlocks.SkillsStatBlock import DruidSkillsStatBlock
 
@@ -32,7 +34,7 @@ class DruidSeaLevel3(ClassBuilder.SubclassLevel3):
         data.add_feature(DruidSeaFeatures.WrathOfTheSea())
         data.add_spell(DruidLevel1Spells.FOG_CLOUD)
         data.add_spell(DruidLevel2Spells.GUST_OF_WIND)
-        data.add_spell(DruidLevel0Spells.RAY_OF_FROST)
+        data.add_spell(ArtificerLevel0Spells.RAY_OF_FROST)
         data.add_spell(DruidLevel1Spells.THUNDERWAVE)
         return data
 
@@ -44,7 +46,7 @@ class DruidSeaLevel5(ClassBuilder.SubclassLevel5):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_spell(DruidLevel3Spells.LIGHTNING_BOLT)
+        data.add_spell(SorcererLevel3Spells.LIGHTNING_BOLT)
         data.add_spell(DruidLevel3Spells.WATER_BREATHING)
         return data
 
@@ -80,7 +82,7 @@ class DruidSeaLevel9(ClassBuilder.SubclassLevel9):
         data: CharacterSheetData,
     ) -> CharacterSheetData:
         data.add_spell(DruidLevel5Spells.CONJURE_ELEMENTAL)
-        data.add_spell(DruidLevel5Spells.HOLD_MONSTER)
+        data.add_spell(BardLevel5Spells.HOLD_MONSTER)
         return data
 
 

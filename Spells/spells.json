@@ -486,8 +486,8 @@
         "description": "You touch a willing creature. Until the spell ends, the target’s skin assumes a bark-like appearance, and the target has an Armor Class of 17 if its AC is lower than that.",
         "source": "Player's Handbook"
     },
-    "Beacon Of Hope": {
-        "name": "Beacon Of Hope",
+    "Beacon of Hope": {
+        "name": "Beacon of Hope",
         "level": 3,
         "school": "Abjuration",
         "classes": [
@@ -578,22 +578,6 @@
         "description": "You create a wall of whirling blades made of magical energy. The wall appears within range and lasts for the duration. You make a straight wall up to 100 feet long, 20 feet high, and 5 feet thick, or a ringed wall up to 60 feet in diameter, 20 feet high, and 5 feet thick. The wall provides Three-Quarters Cover, and its space is Difficult Terrain.\nAny creature in the wall’s space makes a Dexterity saving throw, taking 6d10 Force damage on a failed save or half as much damage on a successful one. A creature also makes that save if it enters the wall’s space or ends it turn there. A creature makes that save only once per turn.",
         "source": "Player's Handbook"
     },
-    "Blade Of Disaster": {
-        "name": "Blade Of Disaster",
-        "level": 9,
-        "school": "Conjuration",
-        "classes": [
-            "Sorcerer",
-            "Warlock",
-            "Wizard"
-        ],
-        "casting_time": "Bonus Action",
-        "range": "60 feet",
-        "components": "V, S",
-        "duration": "Concentration, up to 1 minute",
-        "description": "You create a 3-foot-long blade-shaped planar rift that lasts for the duration. The rift appears within range in a space of your choice, and you can immediately make up to two melee spell attacks, each one against a creature or object within 5 feet of the rift. On a hit, the target takes 10d6 Force damage. This attack scores a Critical Hit if the number on the d20 is 18 or higher.\nAs a Bonus Action on your later turns, you can move the rift up to 60 feet and repeat the two attacks against a creature or an object within 5 feet of it. You can direct the attacks at the same target or at different ones.\nThe blade can harmlessly pass through any barrier, including ones created by spells like Wall of Force .",
-        "source": "Forgotten Realms - Heroes of Faerun"
-    },
     "Blade Ward": {
         "name": "Blade Ward",
         "level": 0,
@@ -610,6 +594,22 @@
         "duration": "Concentration, up to 1 minute",
         "description": "Whenever a creature makes an attack roll against you before the spell ends, the attacker subtracts 1d4 from the attack roll.",
         "source": "Player's Handbook"
+    },
+    "Blade of Disaster": {
+        "name": "Blade of Disaster",
+        "level": 9,
+        "school": "Conjuration",
+        "classes": [
+            "Sorcerer",
+            "Warlock",
+            "Wizard"
+        ],
+        "casting_time": "Bonus Action",
+        "range": "60 feet",
+        "components": "V, S",
+        "duration": "Concentration, up to 1 minute",
+        "description": "You create a 3-foot-long blade-shaped planar rift that lasts for the duration. The rift appears within range in a space of your choice, and you can immediately make up to two melee spell attacks, each one against a creature or object within 5 feet of the rift. On a hit, the target takes 10d6 Force damage. This attack scores a Critical Hit if the number on the d20 is 18 or higher.\nAs a Bonus Action on your later turns, you can move the rift up to 60 feet and repeat the two attacks against a creature or an object within 5 feet of it. You can direct the attacks at the same target or at different ones.\nThe blade can harmlessly pass through any barrier, including ones created by spells like Wall of Force .",
+        "source": "Forgotten Realms - Heroes of Faerun"
     },
     "Bless": {
         "name": "Bless",
@@ -865,8 +865,8 @@
         "description": "You hurl an orb of energy at a target within range. Choose Acid, Cold, Fire, Lightning, Poison, or Thunder for the type of orb you create, and then make a ranged spell attack against the target. On a hit, the target takes 3d8 damage of the chosen type.\nIf you roll the same number on two or more of the d8s, the orb leaps to a different target of your choice within 30 feet of the target. Make an attack roll against the new target, and make a new damage roll. The orb can’t leap again unless you cast the spell with a level 2+ spell slot.\nUsing a Higher-Level Spell Slot. The damage increases by 1d8 for each spell slot level above 1. The orb can leap a maximum number of times equal to the level of the slot expended, and a creature can be targeted only once by each casting of this spell.",
         "source": "Player's Handbook"
     },
-    "Circle Of Death": {
-        "name": "Circle Of Death",
+    "Circle of Death": {
+        "name": "Circle of Death",
         "level": 6,
         "school": "Necromancy",
         "classes": [
@@ -881,8 +881,8 @@
         "description": "Negative energy ripples out in a 60-foot-radius Sphere from a point you choose within range. Each creature in that area makes a Constitution saving throw, taking 8d8 Necrotic damage on a failed save or half as much damage on a successful one.\nUsing a Higher-Level Spell Slot. The damage increases by 2d8 for each spell slot level above 6.",
         "source": "Player's Handbook"
     },
-    "Circle Of Power": {
-        "name": "Circle Of Power",
+    "Circle of Power": {
+        "name": "Circle of Power",
         "level": 5,
         "school": "Abjuration",
         "classes": [
@@ -929,8 +929,8 @@
         "description": "You touch a creature or at least 1 cubic inch of its flesh. An inert duplicate of that creature forms inside the vessel used in the spell’s casting and finishes growing after 120 days; you choose whether the finished clone is the same age as the creature or younger. The clone remains inert and endures indefinitely while its vessel remains undisturbed.\nIf the original creature dies after the clone finishes forming, the creature’s soul transfers to the clone if the soul is free and willing to return. The clone is physically identical to the original and has the same personality, memories, and abilities, but none of the original’s equipment. The creature’s original remains, if any, become inert and can’t be revived, since the creature’s soul is elsewhere.",
         "source": "Player's Handbook"
     },
-    "Cloud Of Daggers": {
-        "name": "Cloud Of Daggers",
+    "Cloud of Daggers": {
+        "name": "Cloud of Daggers",
         "level": 2,
         "school": "Conjuration",
         "classes": [
@@ -1067,8 +1067,8 @@
         "description": "Each creature of your choice that you can see within range must succeed on a Wisdom saving throw or have the Charmed condition until the spell ends.\nFor the duration, you can take a Bonus Action to designate a direction that is horizontal to you. Each Charmed target must use as much of its movement as possible to move in that direction on its next turn, taking the safest route. After moving in this way, a target repeats the save, ending the spell on itself on a success.",
         "source": "Player's Handbook"
     },
-    "Cone Of Cold": {
-        "name": "Cone Of Cold",
+    "Cone of Cold": {
+        "name": "Cone of Cold",
         "level": 5,
         "school": "Evocation",
         "classes": [
@@ -1323,8 +1323,8 @@
         "description": "You take control of the weather within 5 miles of you for the duration. You must be outdoors to cast this spell, and it ends early if you go indoors.\nWhen you cast the spell, you change the current weather conditions, which are determined by the DM. You can change precipitation, temperature, and wind. It takes 1d4 × 10 minutes for the new conditions to take effect. Once they do so, you can change the conditions again. When the spell ends, the weather gradually returns to normal.\nWhen you change the weather conditions, find a current condition on the following tables and change its stage by one, up or down. When changing the wind, you can change its direction.",
         "source": "Player's Handbook"
     },
-    "Cordon Of Arrows": {
-        "name": "Cordon Of Arrows",
+    "Cordon of Arrows": {
+        "name": "Cordon of Arrows",
         "level": 2,
         "school": "Transmutation",
         "classes": [
@@ -1353,8 +1353,8 @@
         "description": "You attempt to interrupt a creature in the process of casting a spell. The creature makes a Constitution saving throw. On a failed save, the spell dissipates with no effect, and the action, Bonus Action, or Reaction used to cast it is wasted. If that spell was cast with a spell slot, the slot isn’t expended.",
         "source": "Player's Handbook"
     },
-    "Create Food And Water": {
-        "name": "Create Food And Water",
+    "Create Food and Water": {
+        "name": "Create Food and Water",
         "level": 3,
         "school": "Conjuration",
         "classes": [
@@ -1416,8 +1416,8 @@
         "description": "You pull wisps of shadow material from the Shadowfell to create an object within range. It is either an object of vegetable matter (soft goods, rope, wood, and the like) or mineral matter (stone, crystal, metal, and the like). The object must be no larger than a 5-foot Cube, and the object must be of a form and material that you have seen.\nThe spell’s duration depends on the object’s material, as shown in the Materials table. If the object is composed of multiple materials, use the shortest duration. Using any object created by this spell as another spell’s Material component causes the other spell to fail.\nUsing a Higher-Level Spell Slot. The Cube increases by 5 feet for each spell slot level above 5.",
         "source": "Player's Handbook"
     },
-    "Crown Of Madness": {
-        "name": "Crown Of Madness",
+    "Crown of Madness": {
+        "name": "Crown of Madness",
         "level": 2,
         "school": "Enchantment",
         "classes": [
@@ -4141,6 +4141,7 @@
         "level": 4,
         "school": "Conjuration",
         "classes": [
+            "Artificer",
             "Wizard"
         ],
         "casting_time": "Action",

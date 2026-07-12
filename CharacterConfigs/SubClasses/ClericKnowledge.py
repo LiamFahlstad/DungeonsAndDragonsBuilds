@@ -11,6 +11,7 @@ from CharacterSheetCreator import CharacterSheetData
 from Definitions import ClericSubclass, Skill
 from Features.ClassFeatures.Cleric import ClericKnowledgeFeatures, ClericFeatures
 from Spells.SpellLists import (
+    BardLevel3Spells,
     ClericLevel1Spells,
     ClericLevel3Spells,
     ClericLevel4Spells,
@@ -75,7 +76,7 @@ class ClericKnowledgeLevel5(ClassBuilder.SubclassLevel5):
         additional_ruling = "As a Magic action, you can expend one use of your Channel Divinity to cast this spell. As part of that action, you cast that spell without expending a spell slot or needing Material components."
 
         data.add_spell(ClericLevel3Spells.DISPEL_MAGIC)
-        data.add_spell(DivinationLevel2Spells.NONDETECTION)
+        data.add_spell(BardLevel3Spells.NONDETECTION)
         data.add_spell(
             DivinationLevel3Spells.TONGUES,
             additional_ruling=additional_ruling,

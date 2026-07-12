@@ -12,13 +12,15 @@ from Definitions import ArtificerSubclass
 from Features.ClassFeatures.Artificer import ArtificerReanimatorFeatures
 from Spells.SpellLists import (
     ArtificerLevel2Spells,
-    ArtificerLevel3Spells,
-    ArtificerLevel4Spells,
+    BardLevel2Spells,
+    ClericLevel3Spells,
     ClericLevel4Spells,
     ClericLevel5Spells,
+    DruidLevel4Spells,
     DruidLevel5Spells,
     NecromancyLevel0Spells,
     NecromancyLevel1Spells,
+    SorcererLevel3Spells,
     WizardLevel1Spells,
 )
 from StatBlocks.SkillsStatBlock import ArtificerSkillsStatBlock
@@ -46,7 +48,7 @@ class ArtificerReanimatorLevel5(ClassBuilder.SubclassLevel5):
         data: CharacterSheetData,
     ) -> CharacterSheetData:
         data.add_feature(ArtificerReanimatorFeatures.StrangeModifications())
-        data.add_spell(ArtificerLevel2Spells.BLINDNESS_DEAFNESS)
+        data.add_spell(BardLevel2Spells.BLINDNESS_DEAFNESS)
         data.add_spell(ArtificerLevel2Spells.ENHANCE_ABILITY)
         return data
 
@@ -59,8 +61,8 @@ class ArtificerReanimatorLevel9(ClassBuilder.SubclassLevel9):
     ) -> CharacterSheetData:
         data.add_feature(ArtificerReanimatorFeatures.ImprovedReanimation())
         data.add_feature(ArtificerReanimatorFeatures.MacabreModifications())
-        data.add_spell(ArtificerLevel3Spells.ANIMATE_DEAD)
-        data.add_spell(ArtificerLevel3Spells.LIGHTNING_BOLT)
+        data.add_spell(ClericLevel3Spells.ANIMATE_DEAD)
+        data.add_spell(SorcererLevel3Spells.LIGHTNING_BOLT)
         return data
 
 
@@ -70,7 +72,7 @@ class ArtificerReanimatorLevel13(ClassBuilder.SubclassLevel13):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_spell(ArtificerLevel4Spells.BLIGHT)
+        data.add_spell(DruidLevel4Spells.BLIGHT)
         data.add_spell(ClericLevel4Spells.DEATH_WARD)
         return data
 

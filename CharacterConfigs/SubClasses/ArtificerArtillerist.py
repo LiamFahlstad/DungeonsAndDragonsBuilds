@@ -11,12 +11,15 @@ from CharacterSheetCreator import CharacterSheetData
 from Definitions import ArtificerSubclass
 from Features.ClassFeatures.Artificer import ArtificerArtilleristFeatures
 from Spells.SpellLists import (
-    ArtificerLevel1Spells,
-    ArtificerLevel2Spells,
-    ArtificerLevel3Spells,
-    ArtificerLevel4Spells,
-    ArtificerLevel5Spells,
+    BardLevel1Spells,
+    BardLevel2Spells,
     DruidLevel3Spells,
+    DruidLevel4Spells,
+    DruidLevel5Spells,
+    SorcererLevel1Spells,
+    SorcererLevel2Spells,
+    SorcererLevel3Spells,
+    WizardLevel5Spells,
 )
 from StatBlocks.SkillsStatBlock import ArtificerSkillsStatBlock
 
@@ -30,8 +33,8 @@ class ArtificerArtilleristLevel3(ClassBuilder.SubclassLevel3):
         data.add_feature(ArtificerArtilleristFeatures.ArtilleristToolsOfTheTrade())
         data.add_feature(ArtificerArtilleristFeatures.ArtilleristSpells())
         data.add_feature(ArtificerArtilleristFeatures.EldritchCannon())
-        data.add_spell(ArtificerLevel1Spells.SHIELD)
-        data.add_spell(ArtificerLevel1Spells.THUNDERWAVE)
+        data.add_spell(SorcererLevel1Spells.SHIELD)
+        data.add_spell(BardLevel1Spells.THUNDERWAVE)
         return data
 
 
@@ -42,8 +45,8 @@ class ArtificerArtilleristLevel5(ClassBuilder.SubclassLevel5):
         data: CharacterSheetData,
     ) -> CharacterSheetData:
         data.add_feature(ArtificerArtilleristFeatures.ArcaneFirearm())
-        data.add_spell(ArtificerLevel2Spells.SCORCHING_RAY)
-        data.add_spell(ArtificerLevel2Spells.SHATTER)
+        data.add_spell(SorcererLevel2Spells.SCORCHING_RAY)
+        data.add_spell(BardLevel2Spells.SHATTER)
         return data
 
 
@@ -54,7 +57,7 @@ class ArtificerArtilleristLevel9(ClassBuilder.SubclassLevel9):
         data: CharacterSheetData,
     ) -> CharacterSheetData:
         data.add_feature(ArtificerArtilleristFeatures.ExplosiveCannon())
-        data.add_spell(ArtificerLevel3Spells.FIREBALL)
+        data.add_spell(SorcererLevel3Spells.FIREBALL)
         data.add_spell(DruidLevel3Spells.WIND_WALL)
         return data
 
@@ -65,8 +68,8 @@ class ArtificerArtilleristLevel13(ClassBuilder.SubclassLevel13):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_spell(ArtificerLevel4Spells.ICE_STORM)
-        data.add_spell(ArtificerLevel4Spells.WALL_OF_FIRE)
+        data.add_spell(DruidLevel4Spells.ICE_STORM)
+        data.add_spell(DruidLevel4Spells.WALL_OF_FIRE)
         return data
 
 
@@ -86,8 +89,8 @@ class ArtificerArtilleristLevel17(ClassBuilder.SubclassLevel17):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_spell(ArtificerLevel5Spells.CONE_OF_COLD)
-        data.add_spell(ArtificerLevel5Spells.WALL_OF_FORCE)
+        data.add_spell(DruidLevel5Spells.CONE_OF_COLD)
+        data.add_spell(WizardLevel5Spells.WALL_OF_FORCE)
         return data
 
 

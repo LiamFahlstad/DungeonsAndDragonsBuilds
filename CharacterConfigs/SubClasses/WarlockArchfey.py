@@ -14,11 +14,11 @@ from Spells.SpellLists import (
     BardLevel1Spells,
     BardLevel2Spells,
     BardLevel3Spells,
-    BardLevel4Spells,
-    WarlockLevel2Spells,
+    DruidLevel4Spells,
     SorcererLevel3Spells,
     SorcererLevel4Spells,
     SorcererLevel5Spells,
+    WarlockLevel2Spells,
 )
 from StatBlocks.SkillsStatBlock import WarlockSkillsStatBlock
 
@@ -70,7 +70,7 @@ class ArchfeyWarlockLevel7(ClassBuilder.SubclassLevel7):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_spell(BardLevel4Spells.DOMINATE_BEAST)
+        data.add_spell(DruidLevel4Spells.DOMINATE_BEAST)
         data.add_spell(SorcererLevel4Spells.GREATER_INVISIBILITY)
         return data
 

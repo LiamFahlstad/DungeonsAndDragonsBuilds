@@ -10,6 +10,19 @@ from tqdm import tqdm
 
 BASE_URL = "https://dnd2024.wikidot.com/"
 
+# Connector words the wiki's index page inconsistently title-cases mid-name
+# (e.g. "Cloud Of Daggers" instead of "Cloud of Daggers"). Lowercase them
+# whenever they're not the first word, to match standard spell-name casing.
+_LOWERCASE_MIDWORDS = {"of", "and"}
+
+
+def normalize_spell_name(name: str) -> str:
+    words = name.split(" ")
+    return " ".join(
+        w.lower() if i > 0 and w.lower() in _LOWERCASE_MIDWORDS else w
+        for i, w in enumerate(words)
+    )
+
 
 def fetch_all_spell_names() -> list[str]:
     """Fetch all spell names from http://dnd2024.wikidot.com/spell:all."""
@@ -31,7 +44,7 @@ def fetch_all_spell_names() -> list[str]:
         # Skip category index links like "Abjuration Spells", "Conjuration Spells", …
         if not name or name.endswith(" Spells"):
             continue
-        spell_names.append(name)
+        spell_names.append(normalize_spell_name(name))
 
     return sorted(set(spell_names))
 
@@ -318,6 +331,6 @@ if __name__ == "__main__":
     with open(out_path, "w", encoding="utf-8") as f:
         json.dump(sorted_results, f, indent=4, ensure_ascii=False)
 
-    print(f"\nWrote {len(sorted_results)} spells → {out_path}")
+    print(f"\nWrote {len(sorted_results)} spells -> {out_path}")
     if failed:
         print(f"Failed ({len(failed)}): {', '.join(failed)}")
