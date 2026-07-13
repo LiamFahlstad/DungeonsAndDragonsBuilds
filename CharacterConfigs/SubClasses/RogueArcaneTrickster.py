@@ -9,6 +9,7 @@ from CharacterConfigs.BaseClasses.RogueBase import (
 )
 from CharacterSheetCreator import CharacterSheetData
 from Definitions import RogueSubclass
+from Features.ClassFeatures import SpellSlots
 from Features.ClassFeatures.Rogue import RogueArcaneTricksterFeatures
 from StatBlocks.SkillsStatBlock import RogueSkillsStatBlock
 
@@ -66,6 +67,7 @@ class RogueArcaneTricksterCustomStarterClassArgs(RogueCustomStarterClassArgs):
         super().__init__(
             subclass=RogueSubclass.ARCANE_TRICKSTER.value,
             skills=skills,
+            caster_type=SpellSlots.CasterType.THIRD_CASTER,
         )
 
 
@@ -82,4 +84,5 @@ class RogueArcaneTricksterMulticlassBuilder(RogueMulticlassBuilder):
             rogue_level=rogue_level,
             subclass=RogueSubclass.ARCANE_TRICKSTER.value,
             replace_spells=replace_spells,
+            caster_type=SpellSlots.CasterType.THIRD_CASTER,
         )

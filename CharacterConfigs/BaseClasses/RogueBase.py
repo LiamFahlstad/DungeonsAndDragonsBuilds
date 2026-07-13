@@ -5,8 +5,9 @@ import attr
 import Definitions
 from CharacterConfigs.BaseClasses import ClassBuilder
 from CharacterSheetCreator import CharacterSheetData
-from Definitions import CharacterClass
+from Definitions import Ability, CharacterClass
 from Features.CharacterFeats import EpicBoon, GeneralFeats
+from Features.ClassFeatures import SpellSlots
 from Features.Equipment import Armor, Weapons
 from Features.ClassFeatures.Rogue import RogueFeatures
 from StatBlocks.SavingThrowsStatBlock import RogueSavingThrowsStatBlock
@@ -216,6 +217,7 @@ class RogueCustomStarterClassArgs(ClassBuilder.CustomStarterClassArgs):
         self,
         subclass: str,
         skills: RogueSkillsStatBlock,
+        caster_type: Optional[SpellSlots.CasterType] = None,
     ):
         super().__init__(
             base_class=CharacterClass.ROGUE,
@@ -231,6 +233,8 @@ class RogueCustomStarterClassArgs(ClassBuilder.CustomStarterClassArgs):
             armor_proficiencies=[
                 Definitions.ArmorType.LIGHT,
             ],
+            spell_casting_ability=Ability.INTELLIGENCE if caster_type is not None else None,
+            caster_type=caster_type,
         )
 
 
@@ -242,6 +246,7 @@ class RogueMulticlassBuilder(ClassBuilder.MulticlassBuilder):
         rogue_level: int,
         subclass: str,
         replace_spells: Optional[dict[str, str]] = None,
+        caster_type: Optional[SpellSlots.CasterType] = None,
     ):
         self.subclass = subclass
         super().__init__(
@@ -250,4 +255,6 @@ class RogueMulticlassBuilder(ClassBuilder.MulticlassBuilder):
             base_class_level=rogue_level,
             subclass=subclass,
             replace_spells=replace_spells,
+            spell_casting_ability=Ability.INTELLIGENCE if caster_type is not None else None,
+            caster_type=caster_type,
         )
