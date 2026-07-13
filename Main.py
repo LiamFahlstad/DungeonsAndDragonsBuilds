@@ -1,4 +1,10 @@
+import argparse
+import importlib
+import inspect
+import pkgutil
+
 import Definitions
+import Builds.Examples
 from Builds.Characters import (
     OptimizedArtificerBattleSmith,
     OptimizedBarbarianBerserker,
@@ -69,8 +75,37 @@ class BuildSelector:
         return BuildSelector.builds()[build_name]
 
 
+class ExampleSelector:
+    @staticmethod
+    def builds() -> dict[str, CharacterBuilder]:
+        example_builds: dict[str, CharacterBuilder] = {}
+        for module_info in pkgutil.iter_modules(Builds.Examples.__path__):
+            module_name = module_info.name
+            if module_name.startswith("_"):
+                continue
+            module = importlib.import_module(f"Builds.Examples.{module_name}")
+            for attr_name, attr_value in inspect.getmembers(module, inspect.isclass):
+                if (
+                    issubclass(attr_value, CharacterBuilder)
+                    and attr_value is not CharacterBuilder
+                    and attr_value.__module__ == module.__name__
+                ):
+                    example_builds[attr_name] = attr_value()
+        return example_builds
+
+
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "--example",
+        action="store_true",
+        help="Create character sheets for all example builds in Builds/Examples instead "
+        "of the default builds in Main.py.",
+    )
+    args = parser.parse_args()
+
     skill_config = Definitions.SkillConfig.DEFAULT
-    for build_class in BuildSelector.builds().values():
+    builds = ExampleSelector.builds() if args.example else BuildSelector.builds()
+    for build_class in builds.values():
         character_sheet_data = build_class.build()
         character_sheet_data.create_character_sheet(skill_config=skill_config)

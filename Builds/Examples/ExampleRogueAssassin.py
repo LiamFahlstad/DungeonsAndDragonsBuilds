@@ -98,7 +98,10 @@ def get_starter_class_builder():
                     ),
                 ),
                 5: RogueLevel5(),
-                6: RogueLevel6(),
+                6: RogueLevel6(
+                    skill_1=Definitions.Skill.ACROBATICS,
+                    skill_2=Definitions.Skill.INVESTIGATION,
+                ),
             },
             subclass_features_by_level={
                 3: RogueAssassinLevel3(),

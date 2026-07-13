@@ -70,7 +70,7 @@ def get_starter_class_builder():
                 1: ArtificerLevel1(
                     cantrip_1=SpellDefinitions.ArtificerLevel0Spells.FIRE_BOLT,
                     cantrip_2=SpellDefinitions.BardLevel0Spells.MENDING,
-                    spell_1=SpellDefinitions.SorcererLevel1Spells.SHIELD,
+                    spell_1=SpellDefinitions.ArtificerLevel1Spells.FAERIE_FIRE,
                     spell_2=SpellDefinitions.ArtificerLevel1Spells.CURE_WOUNDS,
                 ),
                 2: ArtificerLevel2(

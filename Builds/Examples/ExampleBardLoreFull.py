@@ -190,7 +190,7 @@ def get_starter_class_builder():
                 ),
                 6: BardLoreLevel6(
                     spell_1=WizardLevel3Spells.FIREBALL,
-                    spell_2=WizardLevel3Spells.DISPEL_MAGIC,
+                    spell_2=WizardLevel3Spells.COUNTERSPELL,
                 ),
                 14: BardLoreLevel14(),
             },
