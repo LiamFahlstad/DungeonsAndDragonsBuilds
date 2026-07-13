@@ -1,4 +1,4 @@
-from Definitions import Skill
+from Definitions import Ability, Skill
 from Features.Core.BaseFeatures import Feature
 from Features.Core.SubFeatures import SkillProficiencyChoice, SkillExpertiseChoice
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
@@ -62,6 +62,19 @@ class UnfetteredMind(Feature):
         super().__init__(
             name="Unfettered Mind", origin="Knowledge Domain Cleric Level 6"
         )
+
+    def apply(self, character_stat_block: CharacterStatBlock):
+        # Check if already has Intelligence saving throw proficiency
+        if not character_stat_block.saving_throws.is_proficient(Ability.INTELLIGENCE):
+            character_stat_block.add_proficiency_in_saving_throw(Ability.INTELLIGENCE)
+        else:
+            # If already proficient in Intelligence, find the first ability not proficient and add it
+            abilities = [Ability.STRENGTH, Ability.DEXTERITY, Ability.CONSTITUTION,
+                        Ability.WISDOM, Ability.CHARISMA]
+            for ability in abilities:
+                if not character_stat_block.saving_throws.is_proficient(ability):
+                    character_stat_block.add_proficiency_in_saving_throw(ability)
+                    break
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

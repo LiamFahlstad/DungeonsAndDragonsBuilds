@@ -40,7 +40,16 @@ class WinterWalkerSpells(Feature):
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        description = "When you reach a Ranger level specified in the Winter Walker Spells table, you thereafter always have the listed spells prepared."
+        description = (
+            "When you reach a Ranger level specified in the Winter Walker Spells table, you thereafter always have the listed spells prepared.\n"
+            "Winter Walker Spells\n"
+            "Ranger Level	Spells\n"
+            "3	Ice Knife\n"
+            "5	Hold Person\n"
+            "9	Remove Curse\n"
+            "13	Ice Storm\n"
+            "17	Cone of Cold"
+        )
         return description
 
 

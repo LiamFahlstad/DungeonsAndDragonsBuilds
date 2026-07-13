@@ -29,6 +29,7 @@ class SorcererDraconicLevel3(ClassBuilder.SubclassLevel3):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
+        data.add_feature(SorcererDraconicFeatures.DraconicSpells())
         data.add_feature(SorcererDraconicFeatures.DraconicResilience())
         data.add_spell(SorcererLevel1Spells.CHROMATIC_ORB)
         data.add_spell(SorcererLevel2Spells.ALTER_SELF)

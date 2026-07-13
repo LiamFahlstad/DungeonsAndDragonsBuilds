@@ -4,6 +4,23 @@ from StatBlocks.CharacterStatBlock import CharacterStatBlock
 SORCERER_HIT_DIE = 6
 
 
+class DraconicSpells(Feature):
+    def __init__(self):
+        super().__init__(name="Draconic Spells", origin="Draconic Sorcerer Level 3")
+
+    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+        description = (
+            "When you reach a Sorcerer level specified in the Draconic Spells table, you thereafter always have the listed spells prepared.\n"
+            "Draconic Spells\n"
+            "Sorcerer Level	Spells\n"
+            "3	Alter Self, Chromatic Orb, Command, Dragon's Breath\n"
+            "5	Fear, Fly\n"
+            "7	Arcane Eye, Charm Monster\n"
+            "9	Legend Lore, Summon Dragon"
+        )
+        return description
+
+
 class DraconicResilience(Feature):
     def __init__(self):
         super().__init__(name="Draconic Resilience", origin="Draconic Sorcerer Level 3")

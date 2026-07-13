@@ -42,7 +42,7 @@ class PeerlessAthlete(Feature):
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        description = "As a Bonus Action, you can expend one use of your Channel Divinity to augment your athleticism. For 1 hour, you have Advantage on Strength (Athletics) and Dexterity (Acrobatics) checks, and the distance of your Long and High jumps increases by 10 feet (this extra distance costs movement as normal)."
+        description = "As a Bonus Action, you can expend one use of your Channel Divinity to augment your athleticism. For 1 hour, you have Advantage on Strength (Athletics) and Dexterity (Acrobatics) checks, and the distance of your Long and High Jumps increases by 10 feet (this extra distance costs movement as normal)."
         return description
 
 
@@ -55,7 +55,7 @@ class AuraOfAlacrity(Feature):
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
             "Your Speed increases by 10 feet.\n"
-            "In addition, whenever an ally enters your Aura of Protection for the first time on a turn or starts their turn here, the ally's Speed increases by 10 feet until the end of their next turn."
+            "In addition, whenever an ally enters your Aura of Protection for the first time on a turn or starts their turn there, the ally's Speed increases by 10 feet until the end of their next turn."
         )
         return description
 

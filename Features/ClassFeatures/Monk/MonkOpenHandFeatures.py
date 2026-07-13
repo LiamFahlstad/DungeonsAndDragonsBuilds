@@ -56,7 +56,7 @@ LEVEL_TO_FOCUS_POINTS = {
 class OpenHandTechnique(Feature):
     def __init__(self):
         super().__init__(
-            name="Open Hand Technique", origin="Warrior of the open Hand Monk Level 3"
+            name="Open Hand Technique", origin="Warrior of the Open Hand Monk Level 3"
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -72,7 +72,7 @@ class OpenHandTechnique(Feature):
 class WholenessOfBody(Feature):
     def __init__(self):
         super().__init__(
-            name="Wholeness of Body", origin="Warrior of the open Hand Monk Level 6"
+            name="Wholeness of Body", origin="Warrior of the Open Hand Monk Level 6"
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -90,7 +90,7 @@ class WholenessOfBody(Feature):
 class FleetStep(Feature):
     def __init__(self):
         super().__init__(
-            name="Fleet Step", origin="Warrior of the open Hand Monk Level 11"
+            name="Fleet Step", origin="Warrior of the Open Hand Monk Level 11"
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -101,7 +101,7 @@ class FleetStep(Feature):
 class QuiveringPalm(Feature):
     def __init__(self):
         super().__init__(
-            name="Quivering Palm", origin="Warrior of the open Hand Monk Level 17"
+            name="Quivering Palm", origin="Warrior of the Open Hand Monk Level 17"
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:

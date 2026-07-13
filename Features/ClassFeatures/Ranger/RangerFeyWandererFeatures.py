@@ -25,6 +25,13 @@ class FeyWandererSpells(Feature):
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
             "When you reach a Ranger level specified in the Fey Wanderer spells table, you thereafter always have the listed spells prepared.\n"
+            "Fey Wanderer Spells\n"
+            "Ranger Level	Spell\n"
+            "3	Charm Person\n"
+            "5	Misty Step\n"
+            "9	Summon Fey\n"
+            "13	Dimension Door\n"
+            "17	Mislead\n"
             "You also possess a fey blessing. Choose it from the Feywild Gifts table or determine it randomly:\n"
             "1d6	Gift\n"
             "1	Illusory butterflies flutter around you while you take a Short or Long Rest.\n"

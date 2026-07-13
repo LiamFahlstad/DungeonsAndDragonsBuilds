@@ -32,7 +32,7 @@ class VowOfEnmity(Feature):
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
-            "When you take the Attack action, you can expend one use of your Channel Divinity to utter a vow of enmity against a creature you can see within 30 feet of yourself. You gain Advantage on attack rolls against the creature for 1 minute or until you use this feature again.\n"
+            "When you take the Attack action, you can expend one use of your Channel Divinity to utter a vow of enmity against a creature you can see within 30 feet of yourself. You have Advantage on attack rolls against the creature for 1 minute or until you use this feature again.\n"
             "If the creature drops to 0 Hit Points before the vow ends, you can transfer the vow to a different creature within 30 feet of yourself (no action required)."
         )
         return description
