@@ -26,7 +26,6 @@ from StatBlocks.SkillsStatBlock import RangerSkillsStatBlock
 
 @attr.dataclass
 class RangerGloomStalkerLevel3(ClassBuilder.SubclassLevel3):
-    level: int = attr.field(init=False, default=3)
 
     def add_features(
         self,
@@ -41,7 +40,6 @@ class RangerGloomStalkerLevel3(ClassBuilder.SubclassLevel3):
 
 @attr.dataclass
 class RangerGloomStalkerLevel5(ClassBuilder.SubclassLevel5):
-    level: int = attr.field(init=False, default=5)
 
     def add_features(
         self,
@@ -53,7 +51,6 @@ class RangerGloomStalkerLevel5(ClassBuilder.SubclassLevel5):
 
 @attr.dataclass
 class RangerGloomStalkerLevel7(ClassBuilder.SubclassLevel7):
-    level: int = attr.field(init=False, default=7)
 
     def add_features(
         self,
@@ -65,7 +62,6 @@ class RangerGloomStalkerLevel7(ClassBuilder.SubclassLevel7):
 
 @attr.dataclass
 class RangerGloomStalkerLevel9(ClassBuilder.SubclassLevel9):
-    level: int = attr.field(init=False, default=9)
 
     def add_features(
         self,
@@ -77,7 +73,6 @@ class RangerGloomStalkerLevel9(ClassBuilder.SubclassLevel9):
 
 @attr.dataclass
 class RangerGloomStalkerLevel11(ClassBuilder.SubclassLevel11):
-    level: int = attr.field(init=False, default=11)
 
     def add_features(
         self,
@@ -89,7 +84,6 @@ class RangerGloomStalkerLevel11(ClassBuilder.SubclassLevel11):
 
 @attr.dataclass
 class RangerGloomStalkerLevel13(ClassBuilder.SubclassLevel13):
-    level: int = attr.field(init=False, default=13)
 
     def add_features(
         self,
@@ -101,7 +95,6 @@ class RangerGloomStalkerLevel13(ClassBuilder.SubclassLevel13):
 
 @attr.dataclass
 class RangerGloomStalkerLevel15(ClassBuilder.SubclassLevel15):
-    level: int = attr.field(init=False, default=15)
 
     def add_features(
         self,
@@ -113,7 +106,6 @@ class RangerGloomStalkerLevel15(ClassBuilder.SubclassLevel15):
 
 @attr.dataclass
 class RangerGloomStalkerLevel17(ClassBuilder.SubclassLevel17):
-    level: int = attr.field(init=False, default=17)
 
     def add_features(
         self,

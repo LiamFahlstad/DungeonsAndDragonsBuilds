@@ -15,7 +15,6 @@ from StatBlocks.SkillsStatBlock import RogueSkillsStatBlock
 
 @attr.dataclass
 class RogueScionOfTheThreeLevel3(ClassBuilder.SubclassLevel3):
-    level: int = attr.field(init=False, default=3)
 
     def add_features(
         self,
@@ -28,7 +27,6 @@ class RogueScionOfTheThreeLevel3(ClassBuilder.SubclassLevel3):
 
 @attr.dataclass
 class RogueScionOfTheThreeLevel9(ClassBuilder.SubclassLevel9):
-    level: int = attr.field(init=False, default=9)
 
     def add_features(
         self,
@@ -43,7 +41,6 @@ class RogueScionOfTheThreeLevel9(ClassBuilder.SubclassLevel9):
 
 @attr.dataclass
 class RogueScionOfTheThreeLevel13(ClassBuilder.SubclassLevel13):
-    level: int = attr.field(init=False, default=13)
 
     def add_features(
         self,
@@ -55,7 +52,6 @@ class RogueScionOfTheThreeLevel13(ClassBuilder.SubclassLevel13):
 
 @attr.dataclass
 class RogueScionOfTheThreeLevel17(ClassBuilder.SubclassLevel17):
-    level: int = attr.field(init=False, default=17)
 
     def add_features(
         self,

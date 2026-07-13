@@ -15,7 +15,6 @@ from StatBlocks.SkillsStatBlock import RangerSkillsStatBlock
 
 @attr.dataclass
 class HunterRangerLevel3(ClassBuilder.SubclassLevel3):
-    level: int = attr.field(init=False, default=3)
 
     def add_features(
         self,
@@ -28,7 +27,6 @@ class HunterRangerLevel3(ClassBuilder.SubclassLevel3):
 
 @attr.dataclass
 class HunterRangerLevel7(ClassBuilder.SubclassLevel7):
-    level: int = attr.field(init=False, default=7)
 
     def add_features(
         self,
@@ -40,7 +38,6 @@ class HunterRangerLevel7(ClassBuilder.SubclassLevel7):
 
 @attr.dataclass
 class HunterRangerLevel11(ClassBuilder.SubclassLevel11):
-    level: int = attr.field(init=False, default=11)
 
     def add_features(
         self,
@@ -52,7 +49,6 @@ class HunterRangerLevel11(ClassBuilder.SubclassLevel11):
 
 @attr.dataclass
 class HunterRangerLevel15(ClassBuilder.SubclassLevel15):
-    level: int = attr.field(init=False, default=15)
 
     def add_features(
         self,

@@ -184,6 +184,7 @@ class ClericSubclass(str, Enum):
     TEMPEST = "Tempest"
     TRICKERY = "Trickery"
     DEATH = "Death"
+    GRAVE = "Grave"
 
 
 class RogueSubclass(str, Enum):
@@ -192,6 +193,7 @@ class RogueSubclass(str, Enum):
     ARCANE_TRICKSTER = "Arcane Trickster"
     SOUL_KNIFE = "Soul Knife"
     SCION_OF_THE_THREE = "Scion of the Three"
+    PHANTOM = "Phantom"
 
 
 class BardSubclass(str, Enum):
@@ -202,6 +204,7 @@ class BardSubclass(str, Enum):
     WHISPERS = "College of Whispers"
     MOON = "College of the Moon"
     DANCE = "College of Dance"
+    SPIRITS = "College of Spirits"
 
 
 class DruidSubclass(str, Enum):
@@ -246,6 +249,7 @@ class WarlockSubclass(str, Enum):
 
 
 class FighterSubclass(str, Enum):
+    BANNERET = "Banneret"
     BATTLE_MASTER = "Battle Master"
     CHAMPION = "Champion"
     ELDRITCH_KNIGHT = "Eldritch Knight"

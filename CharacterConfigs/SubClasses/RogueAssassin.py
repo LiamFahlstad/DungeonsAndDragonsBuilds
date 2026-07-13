@@ -15,7 +15,6 @@ from StatBlocks.SkillsStatBlock import RogueSkillsStatBlock
 
 @attr.dataclass
 class RogueAssassinLevel3(ClassBuilder.SubclassLevel3):
-    level: int = attr.field(init=False, default=3)
 
     def add_features(
         self,
@@ -28,7 +27,6 @@ class RogueAssassinLevel3(ClassBuilder.SubclassLevel3):
 
 @attr.dataclass
 class RogueAssassinLevel9(ClassBuilder.SubclassLevel9):
-    level: int = attr.field(init=False, default=9)
 
     def add_features(
         self,
@@ -40,7 +38,6 @@ class RogueAssassinLevel9(ClassBuilder.SubclassLevel9):
 
 @attr.dataclass
 class RogueAssassinLevel13(ClassBuilder.SubclassLevel13):
-    level: int = attr.field(init=False, default=13)
 
     def add_features(
         self,
@@ -56,7 +53,6 @@ class RogueAssassinLevel13(ClassBuilder.SubclassLevel13):
 
 @attr.dataclass
 class RogueAssassinLevel17(ClassBuilder.SubclassLevel17):
-    level: int = attr.field(init=False, default=17)
 
     def add_features(
         self,

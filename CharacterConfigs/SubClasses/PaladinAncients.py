@@ -24,7 +24,6 @@ from StatBlocks.SkillsStatBlock import PaladinSkillsStatBlock
 
 @attr.dataclass
 class AncientsPaladinLevel3(ClassBuilder.SubclassLevel3):
-    level: int = attr.field(init=False, default=3)
 
     def add_features(
         self,
@@ -41,7 +40,6 @@ class AncientsPaladinLevel3(ClassBuilder.SubclassLevel3):
 
 @attr.dataclass
 class AncientsPaladinLevel5(ClassBuilder.SubclassLevel5):
-    level: int = attr.field(init=False, default=5)
 
     def add_features(
         self,
@@ -54,7 +52,6 @@ class AncientsPaladinLevel5(ClassBuilder.SubclassLevel5):
 
 @attr.dataclass
 class AncientsPaladinLevel7(ClassBuilder.SubclassLevel7):
-    level: int = attr.field(init=False, default=7)
 
     def add_features(
         self,
@@ -66,7 +63,6 @@ class AncientsPaladinLevel7(ClassBuilder.SubclassLevel7):
 
 @attr.dataclass
 class AncientsPaladinLevel9(ClassBuilder.SubclassLevel9):
-    level: int = attr.field(init=False, default=9)
 
     def add_features(
         self,
@@ -79,7 +75,6 @@ class AncientsPaladinLevel9(ClassBuilder.SubclassLevel9):
 
 @attr.dataclass
 class AncientsPaladinLevel13(ClassBuilder.SubclassLevel13):
-    level: int = attr.field(init=False, default=13)
 
     def add_features(
         self,
@@ -92,7 +87,6 @@ class AncientsPaladinLevel13(ClassBuilder.SubclassLevel13):
 
 @attr.dataclass
 class AncientsPaladinLevel15(ClassBuilder.SubclassLevel15):
-    level: int = attr.field(init=False, default=15)
 
     def add_features(
         self,
@@ -104,7 +98,6 @@ class AncientsPaladinLevel15(ClassBuilder.SubclassLevel15):
 
 @attr.dataclass
 class AncientsPaladinLevel17(ClassBuilder.SubclassLevel17):
-    level: int = attr.field(init=False, default=17)
 
     def add_features(
         self,
@@ -117,7 +110,6 @@ class AncientsPaladinLevel17(ClassBuilder.SubclassLevel17):
 
 @attr.dataclass
 class AncientsPaladinLevel20(ClassBuilder.SubclassLevel20):
-    level: int = attr.field(init=False, default=20)
 
     def add_features(
         self,

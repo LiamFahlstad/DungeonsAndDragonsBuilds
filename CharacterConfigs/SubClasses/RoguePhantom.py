@@ -9,67 +9,68 @@ from CharacterConfigs.BaseClasses.RogueBase import (
 )
 from CharacterSheetCreator import CharacterSheetData
 from Definitions import RogueSubclass
-from Features.ClassFeatures.Rogue import RogueSoulKnifeFeatures
+from Features.ClassFeatures.Rogue import RoguePhantomFeatures
 from StatBlocks.SkillsStatBlock import RogueSkillsStatBlock
 
 
 @attr.dataclass
-class RogueSoulKnifeLevel3(ClassBuilder.SubclassLevel3):
+class RoguePhantomLevel3(ClassBuilder.SubclassLevel3):
 
     def add_features(
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(RogueSoulKnifeFeatures.PsionicPower())
-        data.add_feature(RogueSoulKnifeFeatures.PsychicBlades())
+        data.add_feature(RoguePhantomFeatures.WailsFromTheGrave())
+        data.add_feature(RoguePhantomFeatures.WhispersOfTheDead())
         return data
 
 
 @attr.dataclass
-class RogueSoulKnifeLevel9(ClassBuilder.SubclassLevel9):
+class RoguePhantomLevel9(ClassBuilder.SubclassLevel9):
 
     def add_features(
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(RogueSoulKnifeFeatures.SoulBlades())
+        data.add_feature(RoguePhantomFeatures.TokensOfTheDeparted())
+        data.add_feature(RoguePhantomFeatures.VoiceOfDeath())
         return data
 
 
 @attr.dataclass
-class RogueSoulKnifeLevel13(ClassBuilder.SubclassLevel13):
+class RoguePhantomLevel13(ClassBuilder.SubclassLevel13):
 
     def add_features(
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(RogueSoulKnifeFeatures.PsychicVeil())
+        data.add_feature(RoguePhantomFeatures.GhostWalk())
         return data
 
 
 @attr.dataclass
-class RogueSoulKnifeLevel17(ClassBuilder.SubclassLevel17):
+class RoguePhantomLevel17(ClassBuilder.SubclassLevel17):
 
     def add_features(
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(RogueSoulKnifeFeatures.RendMind())
+        data.add_feature(RoguePhantomFeatures.DeathsFriend())
         return data
 
 
-class RogueSoulKnifeCustomStarterClassArgs(RogueCustomStarterClassArgs):
+class RoguePhantomCustomStarterClassArgs(RogueCustomStarterClassArgs):
     def __init__(
         self,
         skills: RogueSkillsStatBlock,
     ):
         super().__init__(
-            subclass=RogueSubclass.SOUL_KNIFE.value,
+            subclass=RogueSubclass.PHANTOM.value,
             skills=skills,
         )
 
 
-class RogueSoulKnifeMulticlassBuilder(RogueMulticlassBuilder):
+class RoguePhantomMulticlassBuilder(RogueMulticlassBuilder):
 
     def __init__(
         self,
@@ -80,6 +81,6 @@ class RogueSoulKnifeMulticlassBuilder(RogueMulticlassBuilder):
         super().__init__(
             rogue_level_features=rogue_level_features,
             rogue_level=rogue_level,
-            subclass=RogueSubclass.SOUL_KNIFE.value,
+            subclass=RogueSubclass.PHANTOM.value,
             replace_spells=replace_spells,
         )
