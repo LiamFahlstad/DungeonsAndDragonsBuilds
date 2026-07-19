@@ -1,14 +1,19 @@
-"""Generates Spells/SpellLists.py from Spells/spells.json, the single source of truth.
+"""Generates Spells/SpellLists.py from SpellFactory's merged spell data.
 
-Run directly (`python Spells/SpellGenerator.py`) whenever spells.json changes to
+SpellFactory merges Spells/spells_dnd2024.json, spells_aidedd.json, and
+spells_dnd5e.json in that priority order. Run directly
+(`python Spells/SpellGenerator.py`) whenever any of those files change to
 regenerate the per-class and per-school spell-name enums.
 """
 
-import json
 import re
+import sys
 from pathlib import Path
 
-INPUT_JSON = "Spells/spells.json"
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+
+from Spells.SpellFactory import SpellFactory
+
 OUTPUT_PY = "Spells/SpellLists.py"
 
 # Order classes/schools are emitted in, purely for readable diffs.
@@ -59,16 +64,15 @@ def build_enum_source(class_name: str, spell_names: list[str]) -> str:
 
 
 def main():
-    with open(INPUT_JSON, "r", encoding="utf-8") as f:
-        spells = json.load(f)
+    spells = SpellFactory.all_spells()
 
     by_class_level: dict[tuple[str, int], list[str]] = {}
     by_school_level: dict[tuple[str, int], list[str]] = {}
-    for name, data in spells.items():
-        level = data["level"]
-        for cls in data["classes"]:
-            by_class_level.setdefault((cls, level), []).append(name)
-        by_school_level.setdefault((data["school"], level), []).append(name)
+    for spell in spells:
+        level = spell.level
+        for cls in spell.classes:
+            by_class_level.setdefault((cls, level), []).append(spell.name)
+        by_school_level.setdefault((spell.school, level), []).append(spell.name)
 
     output = ["from enum import Enum\n\n"]
 

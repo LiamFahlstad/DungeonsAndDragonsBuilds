@@ -55,6 +55,10 @@ def fetch_all_spells() -> list[tuple[str, str]]:
         name = link.get_text(strip=True)
         if not name:
             continue
+        # Unearthed Arcana spells are unofficial playtest content, tagged
+        # "(UA)" in their display name on this wiki — exclude them.
+        if "(UA)" in name:
+            continue
         slug_to_name[slug] = normalize_spell_name(name)
 
     return sorted(

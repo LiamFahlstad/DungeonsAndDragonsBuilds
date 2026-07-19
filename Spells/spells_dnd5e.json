@@ -51,22 +51,6 @@
         "description": "You hurl a bubble of acid. Choose one creature you can see within range, or choose two creatures you can see within range that are within 5 feet of each other. A target must succeed on a Dexterity saving throw or take 1d6 acid damage.\nAt Higher Levels. This spell's damage increases by 1d6 when you reach 5th level (2d6), 11th level (3d6), and 17th level (4d6).",
         "source": "Player's Handbook"
     },
-    "Acid Stream (UA)": {
-        "name": "Acid Stream (UA)",
-        "level": 1,
-        "school": "Evocation",
-        "ritual": false,
-        "classes": [
-            "Sorcerer",
-            "Wizard"
-        ],
-        "casting_time": "1 action",
-        "range": "Self (30-foot line)",
-        "components": "V, S, M (a bit of rotten food)",
-        "duration": "Concentration, up to 1 minute",
-        "description": "A stream of acid emanates from you in a line 30 feet long and 5 feet wide in a direction you choose. Each creature in the line must succeed on a Dexterity saving throw or be covered in acid for the spell's duration or until a creature uses its action to scrape or wash the acid off itself or another creature. A creature covered in the acid takes 3d4 acid damage at the start of each of its turns.\nAt Higher Levels. When you cast this spell using a spell slot of 2nd level or higher, the damage increases by 1d4 for each slot level above 1st.",
-        "source": "Unearthed Arcana 70 - Spells and Magic Tattoos"
-    },
     "Aganazzar's Scorcher": {
         "name": "Aganazzar's Scorcher",
         "level": 2,
@@ -256,24 +240,6 @@
         "description": "Range: 30 feet\nComponents: V, S, M (a playing card depicting a rogue)\nDuration: Instantaneous\nYou whisper magical words that antagonize one creature of your choice within range. The target must make a Wisdom saving throw. On a failed save, the target takes 4d4 psychic damage and must immediately use its reaction to make a melee attack against another creature of your choice that you can see. If the target can't make this attack (for example, because there is no one within its reach or because its reaction is unavailable), the target instead has disadvantage on the next attack roll it makes before the start of your next turn. On a successful save, the target takes half as much damage only.\nAt Higher Levels. When you cast this spell using a spell slot of 4th level or higher, the damage increases by 1d4 for each slot level above 3rd.",
         "source": "The Book of Many Things"
     },
-    "Antagonize (UA)": {
-        "name": "Antagonize (UA)",
-        "level": 3,
-        "school": "Enchantment",
-        "ritual": false,
-        "classes": [
-            "Bard",
-            "Sorcerer",
-            "Warlock",
-            "Wizard"
-        ],
-        "casting_time": "1 action",
-        "range": "30 feet",
-        "components": "V, S, M (a playing card depicting a rogue)",
-        "duration": "Instantaneous",
-        "description": "You whisper magical words that antagonize one creature of your choice within range. The target must make a Wisdom saving throw. On a failed save, it takes 4d4 psychic damage and must immediately use its reaction, if available, to make a melee attack against another creature of your choice that you can see. If no other creature is within range, the target has disadvantage on the next attack roll it makes before the start of your next turn.\nAt Higher Levels. When you cast this spell using a spell slot of 4th level or higher, the damage increases by 1d4 for each slot level above 3rd.",
-        "source": "Unearthed Arcana 85 - Wonders of the Multiverse"
-    },
     "Antilife Shell": {
         "name": "Antilife Shell",
         "level": 5,
@@ -355,23 +321,6 @@
         "description": "You create linked teleportation portals that remain open for the duration. Choose two points on the ground that you can see, one point within 10 feet of you and one point within 500 feet of you. A circular portal, 10 feet in diameter, opens over each point. If the portal would open in the space occupied by a creature, the spell fails, and the casting is lost.\nThe portals are two-dimensional glowing rings filled with mist, hovering inches from the ground and perpendicular to it at the points you choose. A ring is visible only from one side (your choice), which is the side that functions as a portal.\nAny creature or object entering the portal exits from the other portal as if the two were adjacent to each other; passing through a portal from the nonportal side has no effect. The mist that fills each portal is opaque and blocks vision through it. On your turn, you can rotate the rings as a bonus action so that the active side faces in a different direction.",
         "source": "Player's Handbook"
     },
-    "Arcane Hacking (UA)": {
-        "name": "Arcane Hacking (UA)",
-        "level": 2,
-        "school": "Transmutation (Technomagic)",
-        "ritual": false,
-        "classes": [
-            "Sorcerer",
-            "Warlock",
-            "Wizard"
-        ],
-        "casting_time": "1 action",
-        "range": "Self",
-        "components": "V, S, M (hacking tools)",
-        "duration": "Concentration, up to 1 hour",
-        "description": "You gain advantage on all Intelligence checks using hacking tools to break software encryption or online security when using a foreign system.\nThis spell also allows you to break 2nd level and lower protective spells such as Arcane Lock or Glyph of Warding by making an Intelligence check using hacking tools against the spell save DC of the spell's caster.\nAt Higher Levels. When you cast this spell using a spell slot of 3rd level or higher, you can attempt to counteract a spell set to secure the foreign system if the spell's level is equal to or less than the level of the spell slot you used.",
-        "source": "Unearthed Arcana 7 - Modern Magic"
-    },
     "Arcane Lock": {
         "name": "Arcane Lock",
         "level": 2,
@@ -387,21 +336,6 @@
         "duration": "Until dispelled",
         "description": "You touch a closed door, window, gate, chest, or other entryway, and it becomes locked for the duration.\nYou and the creatures you designate when you cast this spell can open the object normally. You can also set a password that, when spoken within 5 feet of the object, suppresses this spell for 1 minute. Otherwise, it is impassable until it is broken or the spell is dispelled or suppressed. Casting Knock on the object suppresses Arcane Lock for 10 minutes.\nWhile affected by this spell, the object is more difficult to break or force open; the DC to break it or pick any locks on it increases by 10.",
         "source": "Player's Handbook"
-    },
-    "Arcane Weapon (UA)": {
-        "name": "Arcane Weapon (UA)",
-        "level": 1,
-        "school": "Transmutation",
-        "ritual": false,
-        "classes": [
-            "Artificer"
-        ],
-        "casting_time": "1 bonus action",
-        "range": "Self",
-        "components": "V, S",
-        "duration": "Concentration, up to 1 hour",
-        "description": "You channel arcane energy into one simple or martial weapon you're holding, and choose one damage type: acid, cold, fire, lightning, poison, or thunder. Until the spell ends, you deal an extra 1d6 damage of the chosen type to any target you hit with the weapon. If the weapon isn't magical, it becomes a magic weapon for the spell's duration.\nAs a bonus action, you can change the damage type, choosing from the options above.\nAt Higher Levels. When you cast this spell using a spell slot of 3rd level or higher, you can maintain your concentration on the spell for up to 8 hours.",
-        "source": "Unearthed Arcana 60 - The Artificer Returns"
     },
     "Armor of Agathys": {
         "name": "Armor of Agathys",
@@ -1278,23 +1212,6 @@
         "description": "You contact your deity or a divine proxy and ask up to three questions that can be answered with a yes or no. You must ask your questions before the spell ends. You receive a correct answer for each question.\nDivine beings aren't necessarily omniscient, so you might receive \"unclear\" as an answer if a question pertains to information that lies beyond the deity's knowledge. In a case where a one-word answer could be misleading or contrary to the deity's interests, the DM might offer a short phrase as an answer instead.\nIf you cast the spell two or more times before finishing your next long rest, there is a cumulative 25 percent chance for each casting after the first that you get no answer. The DM makes this roll in secret.",
         "source": "Player's Handbook"
     },
-    "Commune with City (UA)": {
-        "name": "Commune with City (UA)",
-        "level": 5,
-        "school": "Divination (Ritual) (Technomagic)",
-        "ritual": false,
-        "classes": [
-            "Sorcerer",
-            "Warlock",
-            "Wizard"
-        ],
-        "casting_time": "1 minute",
-        "range": "Self",
-        "components": "V, S",
-        "duration": "Instantaneous",
-        "description": "You briefly become one with the city and gain knowledge of the surrounding area. Aboveground, this spell gives you knowledge of the area within 1 mile of you. In sewers and other underground settings, you gain knowledge of the area within 600 feet of you.\nYou instantly gain knowledge of up to three facts of your choice about any of the following subjects as they relate to the area:\nTerrain and bodies of water\nPrevalent buildings, plants, animals, or intelligent creatures\nPowerful (CR 1 or higher) celestials, fey, fiends, elementals, or undead\nInfluences from other planes of existence\nElectrical currents, wireless signals, and active transit lines and tracks\nFor example, you could determine the location of powerful undead in the area, the location of major sources of electrical power or interference, and the location of any nearby parks.",
-        "source": "Unearthed Arcana 7 - Modern Magic"
-    },
     "Commune with Nature": {
         "name": "Commune with Nature",
         "level": 5,
@@ -1410,22 +1327,6 @@
         "description": "You summon fey spirits that take the form of beasts and appear in unoccupied spaces that you can see within range.\nChoose one of the following options for what appears:\nOne beast of challenge rating 2 or lower\nTwo beasts of challenge rating 1 or lower\nFour beasts of challenge rating 1/2 or lower\nEight beasts of challenge rating 1/4 or lower\nEach beast is also considered fey, and it disappears when it drops to 0 hit points or when the spell ends.\nThe summoned creatures are friendly to you and your companions. Roll initiative for the summoned creatures as a group, which has its own turns. They obey any verbal commands that you issue to them (no action required by you). If you don't issue any commands to them, they defend themselves from hostile creatures, but otherwise take no actions. The DM has the creatures' statistics.\nAt Higher Levels. When you cast this spell using certain higher-level spell slots, you choose one of the summoning options above, and more creatures appear: twice as many with a 5th-level slot, three times as many with a 7th-level slot, and four times as many with a 9th-level slot.",
         "source": "Player's Handbook"
     },
-    "Conjure Barlgura (UA)": {
-        "name": "Conjure Barlgura (UA)",
-        "level": 4,
-        "school": "Conjuration",
-        "ritual": false,
-        "classes": [
-            "Sorcerer",
-            "Wizard"
-        ],
-        "casting_time": "1 action",
-        "range": "60 feet",
-        "components": "V, S",
-        "duration": "Up to 10 minutes",
-        "description": "You summon a barlgura that appears in an unoccupied space you can see within range. The barlgura disappears when it drops to 0 hit points or when the spell ends.\nThe barlgura is hostile to all non-demons. Roll initiative for the barlgura, which has its own turns. At the start of its turn, it moves toward and attacks the nearest non-demon it can perceive. If two or more creatures are equally near, it picks one at random. If it cannot see any potential enemies, the barlgura moves in a random direction in search of foes.\nAs part of casting the spell, you can scribe a circle on the ground using the blood of an intelligent humanoid slain within the past 24 hours. The circle is large enough to encompass your space. The summoned barlgura cannot cross the circle or target anyone in it while the spell lasts.",
-        "source": "Unearthed Arcana 11 - That Old Black Magic"
-    },
     "Conjure Barrage": {
         "name": "Conjure Barrage",
         "level": 3,
@@ -1488,55 +1389,6 @@
         "description": "You summon a fey creature of challenge rating 6 or lower, or a fey spirit that takes the form of a beast of challenge rating 6 or lower. It appears in an unoccupied space that you can see within range. The fey creature disappears when it drops to 0 hit points or when the spell ends.\nThe fey creature is friendly to you and your companions for the duration. Roll initiative for the creature, which has its own turns. It obeys any verbal commands that you issue to it (no action required by you), as long as they don't violate its alignment. If you don't issue any commands to the fey creature, it defends itself from hostile creatures but otherwise takes no actions.\nIf your concentration is broken, the fey creature doesn't disappear. Instead, you lose control of the fey creature, it becomes hostile toward you and your companions, and it might attack. An uncontrolled fey creature can't be dismissed by you, and it disappears 1 hour after you summoned it. The DM has the fey creature's statistics.\nAt Higher Levels. When you cast this spell using a spell slot of 7th level or higher, the challenge rating increases by 1 for each slot level above 6th.",
         "source": "Player's Handbook"
     },
-    "Conjure Hezrou (UA)": {
-        "name": "Conjure Hezrou (UA)",
-        "level": 7,
-        "school": "Conjuration",
-        "ritual": false,
-        "classes": [
-            "Sorcerer",
-            "Wizard"
-        ],
-        "casting_time": "1 action",
-        "range": "60 feet",
-        "components": "V, S, M (food worth at least 100 gp, which the spell consumes)",
-        "duration": "Concentration, up to 1 hour",
-        "description": "You summon a hezrou that appears in an unoccupied space you can see within range. The hezrou disappears when it drops to 0 hit points or when the spell ends.\nThe hezrou's attitude depends on the value of the food used as a material component for this spell. Roll initiative for the hezrou, which has its own turns. At the start of the hezrou's turn, the DM makes a secret Charisma check on your behalf, with a bonus equal to the food's value divided by 20. The check DC starts at 10 and increases by 2 each round. You can issue orders to the hezrou and have it obey you as long as you succeed on the Charisma check.\nIf the check fails, the spell no longer requires concentration and the demon is no longer under your control. The hezrou then focuses on devouring any corpses it can see. If there are no such meals at hand, it attacks the nearest creatures and eats anything it kills. If its hit points are reduced to below half its hit point maximum, it returns to the Abyss.\nAs part of casting the spell, you can scribe a circle on the ground using the blood of an intelligent humanoid slain within the past 24 hours. The circle is large enough to encompass your space. The summoned hezrou cannot cross the circle or target anyone in it while the spell lasts.",
-        "source": "Unearthed Arcana 11 - That Old Black Magic"
-    },
-    "Conjure Knowbot (UA)": {
-        "name": "Conjure Knowbot (UA)",
-        "level": 4,
-        "school": "Conjuration (Technomagic)",
-        "ritual": false,
-        "classes": [
-            "Sorcerer",
-            "Warlock",
-            "Wizard"
-        ],
-        "casting_time": "1 action",
-        "range": "Touch",
-        "components": "V, S",
-        "duration": "10 minutes",
-        "description": "You touch a single computerized device or computer system to conjure a knowbot—a partially sentient piece of software imprinted with vestiges of your own skills and computer abilities. For the duration of the spell, you can use a bonus action to have the knowbot execute a computer related task that would normally require an action. The knowbot makes Intelligence ability checks using your ability score and proficiency bonuses including your proficiency with hacking tools, if applicable.\nYou have a limited telepathic bond with the knowbot, out to a range of 500 feet from the device or system where the knowbot was conjured. If you move beyond this range, the knowbot disappears in 2d4 rounds, as if the duration of the spell had expired. Moving within range again immediately reestablishes the bond.\nThe knowbot is bound to the system in which it was created, and it stays there until it is dismissed or the spell's duration expires.\nAt Higher Levels. When you cast this spell using a spell slot of 5th level or higher, the spell's duration increases to 1 hour. Additionally, your telepathic bond with the knowbot is effective out to a range of 1,000 feet, and if you leave the range of the bond, the knowbot continues performing its last directed task until the spell expires.",
-        "source": "Unearthed Arcana 7 - Modern Magic"
-    },
-    "Conjure Lesser Demon (UA)": {
-        "name": "Conjure Lesser Demon (UA)",
-        "level": 3,
-        "school": "Conjuration",
-        "ritual": false,
-        "classes": [
-            "Sorcerer",
-            "Wizard"
-        ],
-        "casting_time": "1 action",
-        "range": "60 feet",
-        "components": "V, S, M (a vial of blood from an intelligent humanoid killed within the past 24 hours)",
-        "duration": "Concentration, up to 1 hour",
-        "description": "You summon up to a total of eight manes or dretches that appear in unoccupied spaces you can see within range. A manes or dretch disappears when it drops to 0 hit points or when the spell ends.\nThe demons are hostile to all creatures. Roll initiative for the summoned demons as a group, which has its own turns. The demons attack the nearest non-demons to the best of their ability.\nAs part of casting the spell, you can scribe a circle on the ground with the blood used as a material component. The circle is large enough to encompass your space. The summoned demons cannot cross the circle or target anyone in it while the spell lasts. Using the material component in this manner consumes it.\nAt Higher Levels. When you cast this spell using a spell slot of 6th or 7th level, you summon sixteen demons. If you cast it using a spell slot of 8th or 9th level, you summon thirty-two demons.",
-        "source": "Unearthed Arcana 11 - That Old Black Magic"
-    },
     "Conjure Minor Elementals": {
         "name": "Conjure Minor Elementals",
         "level": 4,
@@ -1553,22 +1405,6 @@
         "description": "You summon elementals that appear in unoccupied spaces that you can see within range. You choose one the following options for what appears:\nOne elemental of challenge rating 2 or lower\nTwo elementals of challenge rating 1 or lower\nFour elementals of challenge rating 1/2 or lower\nEight elementals of challenge rating 1/4 or lower\nAn elemental summoned by this spell disappears when it drops to 0 hit points or when the spell ends.\nThe summoned creatures are friendly to you and your companions. Roll initiative for the summoned creatures as a group, which has its own turns. They obey any verbal commands that you issue to them (no action required by you). If you don't issue any commands to them, they defend themselves from hostile creatures, but otherwise take no actions. The DM has the creatures' statistics.\nAt Higher Levels. When you cast this spell using certain higher-level spell slots, you choose one of the summoning options above, and more creatures appear: twice as many with a 6th-level slot and three times as many with an 8th-level slot.",
         "source": "Player's Handbook"
     },
-    "Conjure Shadow Demon (UA)": {
-        "name": "Conjure Shadow Demon (UA)",
-        "level": 4,
-        "school": "Conjuration",
-        "ritual": false,
-        "classes": [
-            "Sorcerer",
-            "Wizard"
-        ],
-        "casting_time": "1 action",
-        "range": "60 feet",
-        "components": "V, S, M (a vial of blood from an intelligent humanoid killed within the past 24 hours)",
-        "duration": "Concentration, up to 1 hour",
-        "description": "You summon a shadow demon that appears in an unoccupied space you can see within range. The shadow demon disappears when it drops to 0 hit points or when the spell ends.\nRoll initiative for the shadow demon, which has its own turns. You can issue orders to the shadow demon, and it obeys you as long as it can attack a creature on each of its turns and does not start its turn in an area of bright light. If either of these conditions is not met, the shadow demon immediately makes a Charisma check contested by your Charisma check. If you fail the check, the spell no longer requires concentration and the demon is no longer under your control. The demon automatically succeeds on the check if it is more than 100 feet away from you.\nAs part of casting the spell, you can scribe a circle on the ground using the blood of an intelligent humanoid slain within the past 24 hours. The circle is large enough to encompass your space. The summoned shadow demon cannot cross the circle or target anyone in it while the spell lasts.",
-        "source": "Unearthed Arcana 11 - That Old Black Magic"
-    },
     "Conjure Volley": {
         "name": "Conjure Volley",
         "level": 5,
@@ -1583,22 +1419,6 @@
         "duration": "Instantaneous",
         "description": "You fire a piece of nonmagical ammunition from a ranged weapon or throw a nonmagical weapon into the air and choose a point within range. Hundreds of duplicates of the ammunition or weapon fall in a volley from above and then disappear. Each creature in a 40-foot-radius, 20-foot-high cylinder centered on that point must make a Dexterity saving throw. A creature takes 8d8 damage on a failed save, or half as much damage on a successful one. The damage type is the same as that of the ammunition or weapon.",
         "source": "Player's Handbook"
-    },
-    "Conjure Vrock (UA)": {
-        "name": "Conjure Vrock (UA)",
-        "level": 5,
-        "school": "Conjuration",
-        "ritual": false,
-        "classes": [
-            "Sorcerer",
-            "Wizard"
-        ],
-        "casting_time": "1 action",
-        "range": "60 feet",
-        "components": "V, S, M (a gem worth at least 100 gp, which the spell consumes)",
-        "duration": "Concentration, up to 1 hour",
-        "description": "You summon a vrock that appears in an unoccupied space you can see within range. The vrock disappears when it drops to 0 hit points or when the spell ends.\nThe vrock's attitude depends on the value of the gem used as a material component for this spell. Roll initiative for the vrock, which has its own turns. At the start of the vrock's turn, the DM makes a secret Charisma check on your behalf, with a bonus equal to the gem's value divided by 20. The check DC starts at 10 and increases by 2 each round. You can issue orders to the vrock and have it obey you as long as you succeed on the Charisma check.\nIf the check fails, the spell no longer requires concentration and the vrock is no longer under your control. The vrock takes no actions on its next turn and uses its telepathy to tell any creature it can see that it will fight in exchange for treasure. The creature that gives the vrock the most expensive gem can command it for the next 1d6 rounds. At the end of that time, it offers the bargain again. If no one offers the vrock treasure before its next turn begins, it attacks the nearest creatures for 1d6 rounds before returning to the Abyss.\nAs part of casting the spell, you can scribe a circle on the ground using the blood of an intelligent humanoid slain within the past 24 hours. The circle is large enough to encompass your space. The summoned vrock cannot cross the circle or target anyone in it while the spell lasts.",
-        "source": "Unearthed Arcana 11 - That Old Black Magic"
     },
     "Conjure Woodland Beings": {
         "name": "Conjure Woodland Beings",
@@ -2240,23 +2060,6 @@
         "description": "For the duration, you can read the thoughts of certain creatures. When you cast the spell and as your action on each turn until the spell ends, you can focus your mind on any one creature that you can see within 30 feet of you. If the creature you choose has an Intelligence of 3 or lower or doesn't speak any language, the creature is unaffected.\nYou initially learn the surface thoughts of the creature - what is most on its mind in that moment. As an action, you can either shift your attention to another creature's thoughts or attempt to probe deeper into the same creature's mind. If you probe deeper, the target must make a Wisdom saving throw. If it fails, you gain insight into its reasoning (if any), its emotional state, and something that looms large in its mind (such as something it worries over, loves, or hates). If it succeeds, the spell ends. Either way, the target knows that you are probing into its mind, and unless you shift your attention to another creature's thoughts, the creature can use its action on its turn to make an Intelligence check contested by your Intelligence check; if it succeeds, the spell ends.\nQuestions verbally directed at the target creature naturally shape the course of its thoughts, so this spell is particularly effective as part of an interrogation.\nYou can also use this spell to detect the presence of thinking creatures you can't see. When you cast the spell or as your action during the duration, you can search for thoughts within 30 feet of you. The spell can penetrate barriers, but 2 feet of rock, 2 inches of any metal other than lead, or a thin sheet of lead blocks you. You can't detect a creature with an Intelligence of 3 or lower or one that doesn't speak any language.\nOnce you detect the presence of a creature in this way, you can read its thoughts for the rest of the duration as described above, even if you can't see it, but it must still be within range.",
         "source": "Player's Handbook"
     },
-    "Digital Phantom (UA)": {
-        "name": "Digital Phantom (UA)",
-        "level": 2,
-        "school": "Abjuration (Technomagic)",
-        "ritual": false,
-        "classes": [
-            "Sorcerer",
-            "Warlock",
-            "Wizard"
-        ],
-        "casting_time": "1 action",
-        "range": "Self",
-        "components": "V, S, M (a small piece of copper wire)",
-        "duration": "Concentration, up to 1 hour",
-        "description": "This spell works to actively hide your presence within a computer system. For the spell's duration, you and any other users you choose on your local network gain a +10 bonus to Intelligence checks to avoid detection by administrators, knowbots, tracking software, and the like. Whenever you and your chosen users leave any computer system you are working in while this spell is in effect, all trace of your previous presence in that system is erased.",
-        "source": "Unearthed Arcana 7 - Modern Magic"
-    },
     "Dimension Door": {
         "name": "Dimension Door",
         "level": 4,
@@ -2496,23 +2299,6 @@
         "description": "With a roar, you draw on the magic of dragons to transform yourself, taking on draconic features. You gain the following benefits until the spell ends:\nBlindsight. You have blindsight with a range of 30 feet. Within that range, you can effectively see anything that isn't behind total cover, even if you're blinded or in darkness. Moreover, you can see an invisible creature, unless the creature successfully hides from you.\nBreath Weapon. When you cast this spell, and as a bonus action on subsequent turns for the duration, you can exhale shimmering energy in a 60-foot cone. Each creature in that area must make a Dexterity saving throw, taking 6d8 force damage on a failed save, or half as much damage on a successful one.\nWings. Incorporeal wings sprout from your back, giving you a flying speed of 60 feet.",
         "source": "Fizban's Treasury of Dragons"
     },
-    "Draconic Transformation (UA)": {
-        "name": "Draconic Transformation (UA)",
-        "level": 7,
-        "school": "Transmutation",
-        "ritual": false,
-        "classes": [
-            "Druid",
-            "Sorcerer",
-            "Wizard"
-        ],
-        "casting_time": "1 bonus action",
-        "range": "Self",
-        "components": "V, S, M (a statuette of a dragon,",
-        "duration": "Concentration, up to 1 minute",
-        "description": "With a roar, you draw on the magic of dragons to transform yourself, taking on various draconic features. You gain the following benefits until the spell ends:\nYou have blindsight with a range of 30 feet. Within that range, you can effectively see anything that isn't behind total cover, even if you're blinded or in darkness. Moreover, you can see an invisible creature, unless the creature successfully hides from you.\nIncorporeal wings sprout from your back, giving you a flying speed of 40 feet.\nWhen you cast this spell, and as a bonus action on subsequent turns for the duration, you can exhale a breath of shimmering energy in a 30-foot cone. Each creature in the area must make a Dexterity saving throw, taking 3d8 force damage on a failed save or half as much damage on a successful one.",
-        "source": "Unearthed Arcana 78 - Draconic Options"
-    },
     "Dragon's Breath": {
         "name": "Dragon's Breath",
         "level": 2,
@@ -2678,24 +2464,6 @@
         "duration": "Concentration, up to 1 minute",
         "description": "You create a seismic disturbance at a point on the ground that you can see within range. For the duration, an intense tremor rips through the ground in a 100-foot-radius circle centered on that point and shakes creatures and structures in contact with the ground in that area.\nThe ground in the area becomes difficult terrain. Each creature on the ground that is concentrating must make a Constitution saving throw. On a failed save, the creature's concentration is broken.\nWhen you cast this spell and at the end of each turn you spend concentrating on it, each creature on the ground in the area must make a Dexterity saving throw. On a failed save, the creature is knocked prone.\nThis spell can have additional effects depending on the terrain in the area, as determined by the DM.\nFissures. Fissures open throughout the spell's area at the start of your next turn after you cast the spell. A total of 1d6 such fissures open in locations chosen by the DM. Each is 1d10 x 10 feet deep, 10 feet wide, and extends from one edge of the spell's area to the opposite side. A creature standing on a spot where a fissure opens must succeed on a Dexterity saving throw or fall in. A creature that successfully saves moves with the fissure's edge as it opens. A fissure that opens beneath a structure causes it to automatically collapse (see below).\nStructures. The tremor deals 50 bludgeoning damage to any structure in contact with the ground in the area when you cast the spell and at the start of each of your turns until the spell ends. If a structure drops to 0 hit points, it collapses and potentially damages nearby creatures. A creature within half the distance of a structure's height must make a Dexterity saving throw. On a failed save, the creature takes 5d6 bludgeoning damage, is knocked prone, and is buried in the rubble, requiring a DC 20 Strength (Athletics) check as an action to escape. The DM can adjust the DC higher or lower, depending on the nature of the rubble. On a successful save, the creature takes half as much damage and doesn't fall prone or become buried.",
         "source": "Player's Handbook"
-    },
-    "Ego Whip (UA)": {
-        "name": "Ego Whip (UA)",
-        "level": 4,
-        "school": "Enchantment",
-        "ritual": false,
-        "classes": [
-            "Bard",
-            "Sorcerer",
-            "Warlock",
-            "Wizard"
-        ],
-        "casting_time": "1 action",
-        "range": "30 feet",
-        "components": "V",
-        "duration": "Concentration, up to 1 minute",
-        "description": "You lash the mind of one creature you can see within range, filling it with despair. The target must succeed on an Intelligence saving throw or suffer disadvantage on attack rolls, ability checks, and saving throws, and it can't cast spells. At the end of each of its turns, the target can make another Intelligence saving throw. On a success, the spell ends on the target.",
-        "source": "Unearthed Arcana 66 - Fighter, Rogue, and Wizard"
     },
     "Eldritch Blast": {
         "name": "Eldritch Blast",
@@ -3184,24 +2952,6 @@
         "description": "You sense the presence of any trap within range that is within line of sight.\nA trap, for the purpose of this spell, includes anything that would inflict a sudden or unexpected effect you consider harmful or undesirable, which was specifically intended as such by its creator. Thus, the spell would sense an area affected by the alarm spell, a glyph of warding, or a mechanical pit trap, but it would not reveal a natural weakness in the floor, an unstable ceiling, or a hidden sinkhole.\nThis spell merely reveals that a trap is present. You don't learn the location of each trap, but you do learn the general nature of the danger posed by a trap you sense.",
         "source": "Player's Handbook"
     },
-    "Find Vehicle (UA)": {
-        "name": "Find Vehicle (UA)",
-        "level": 2,
-        "school": "Conjuration (Technomagic)",
-        "ritual": false,
-        "classes": [
-            "Paladin",
-            "Sorcerer",
-            "Warlock",
-            "Wizard"
-        ],
-        "casting_time": "10 minutes",
-        "range": "30 feet",
-        "components": "V, S",
-        "duration": "8 hours",
-        "description": "You summon a spirit that assumes the form of a nonmilitary land vehicle of your choice, appearing in an unoccupied space within range. The vehicle has the statistics of a normal vehicle of its sort, though it is celestial, fey, or fiendish (your choice in origin). The physical characteristics of the vehicle reflect its origin to some degree. For example, a fiendish SUV might be jet black in color, with tinted windows and a sinister-looking front grille.\nYou have a supernatural bond with the conjured vehicle that allows you to drive beyond your normal ability. While driving the conjured vehicle, you are considered proficient with vehicles of its type, and you add double your proficiency bonus to ability checks related to driving the vehicle. While driving the vehicle, you can make any spell you cast that targets only you also target the vehicle.\nIf the vehicle drops to 0 hit points, it disappears, leaving behind no physical form. You can also dismiss the vehicle at any time as an action, causing it to disappear.\nYou can't have more than one vehicle bonded by this spell at a time. As an action, you can release the vehicle from its bond at any time, causing it to disappear.\nAt Higher Levels. When you cast this spell using a spell slot of 3rd level or higher, you can conjure a nonmilitary water vehicle large enough to carry six Medium creatures. When you cast this spell using a spell slot of 5th level or higher, you can conjure a nonmilitary air vehicle large enough to carry ten Medium creatures. When you cast this spell using a spell slot of 7th level or higher, you can conjure any type of vehicle, subject to the DM's approval.",
-        "source": "Unearthed Arcana 7 - Modern Magic"
-    },
     "Find the Path": {
         "name": "Find the Path",
         "level": 6,
@@ -3319,22 +3069,6 @@
         "description": "You create a field of silvery light that surrounds a creature of your choice within range (you can choose yourself). The field sheds dim light out to 5 feet. While surrounded by the field, a creature gains the following benefits:\nCover. The creature has half cover.\nDamage Resistance. The creature has resistance to acid, cold, fire, lightning, and poison damage.\nEvasion. If the creature is subjected to an effect that allows it to make a Dexterity saving throw to take only half damage, the creature instead takes no damage if it succeeds on the saving throw, and only half damage if it fails.\nAs a bonus action on subsequent turns, you can move the field to another creature within 60 feet of the field.",
         "source": "Fizban's Treasury of Dragons"
     },
-    "Fizban's Platinum Shield (UA)": {
-        "name": "Fizban's Platinum Shield (UA)",
-        "level": 6,
-        "school": "Abjuration",
-        "ritual": false,
-        "classes": [
-            "Sorcerer",
-            "Wizard"
-        ],
-        "casting_time": "1 action",
-        "range": "60 feet",
-        "components": "V, S, M (a platinum-plated dragon scale, worth at least 500 gp)",
-        "duration": "Concentration, up to 1 minute",
-        "description": "You create a field of silvery light that surrounds a creature of your choice within range (you can choose yourself). The field sheds dim light out to 5 feet.\nAs a bonus action on subsequent turns, you can move the field to another creature within 60 feet of the field.\nThe creature protected by the field gains the following benefits:\nThe creature has half cover.\nThe creature has resistance to acid, cold, fire, lightning, and poison damage.\nIf the creature is subjected to an effect that allows it to make a Dexterity saving throw to take only half damage, the creature instead takes no damage if it succeeds on the saving throw, and only half damage if it fails.",
-        "source": "Unearthed Arcana 78 - Draconic Options"
-    },
     "Flame Arrows": {
         "name": "Flame Arrows",
         "level": 3,
@@ -3369,24 +3103,6 @@
         "duration": "Concentration, up to 10 minutes",
         "description": "You evoke a fiery blade in your free hand. The blade is similar in size and shape to a scimitar, and it lasts for the duration. If you let go of the blade, it disappears, but you can evoke the blade again as a bonus action.\nYou can use your action to make a melee spell attack with the fiery blade. On a hit, the target takes 3d6 fire damage. The flaming blade sheds bright light in a 10-foot radius and dim light for an additional 10 feet.\nAt Higher Levels. When you cast this spell using a spell slot of 4th level or higher, the damage increases by 1d6 for every two slot levels above 2nd.",
         "source": "Player's Handbook"
-    },
-    "Flame Stride (UA)": {
-        "name": "Flame Stride (UA)",
-        "level": 3,
-        "school": "Transmutation",
-        "ritual": false,
-        "classes": [
-            "Artificer",
-            "Ranger",
-            "Sorcerer",
-            "Wizard"
-        ],
-        "casting_time": "1 bonus action",
-        "range": "Self",
-        "components": "V, S",
-        "duration": "Concentration, up to 1 minute",
-        "description": "The billowing flames of a dragon cover your feet, granting you explosive speed. For the duration, your speed increases by 20 feet and moving doesn't provoke opportunity attacks. When you move within 5 feet of a creature or object that isn't being worn or carried, it takes 1d6 fire damage from your trail of heat. A creature or object can take this damage only once during a turn.\nAt Higher Levels. When you cast this spell using a spell slot of 4th level or higher, increase your speed by 5 feet for each spell slot level above 3rd. Additionally, the spell deals an additional 1d6 fire damage for each slot level above 3rd.",
-        "source": "Unearthed Arcana 78 - Draconic Options"
     },
     "Flame Strike": {
         "name": "Flame Strike",
@@ -4053,24 +3769,6 @@
         "description": "A flash of light streaks toward a creature of your choice within range. Make a ranged spell attack against the target. On a hit, the target takes 4d6 radiant damage, and the next attack roll made against this target before the end of your next turn has advantage, thanks to the mystical dim light glittering on the target until then.\nAt Higher Levels. When you cast this spell using a spell slot of 2nd level or higher, the damage increases by 1d6 for each slot level above 1st.",
         "source": "Player's Handbook"
     },
-    "Guiding Hand (UA)": {
-        "name": "Guiding Hand (UA)",
-        "level": 1,
-        "school": "Divination",
-        "ritual": true,
-        "classes": [
-            "Bard",
-            "Cleric",
-            "Druid",
-            "Wizard"
-        ],
-        "casting_time": "1 minute",
-        "range": "5 feet",
-        "components": "V, S",
-        "duration": "Concentration, up to 8 hours",
-        "description": "You create a Tiny incorporeal hand of shimmering light in an unoccupied space you can see within range. The hand exists for the duration, but it disappears if you teleport or you travel to a different plane of existence.\nWhen the hand appears, you name one major landmark, such as a city, mountain, castle, or battlefield on the same plane of existence as you. Someone in history must have visited the site and mapped it. If the landmark appears on no map in existence, the spell fails. Otherwise, whenever you move toward the hand, it moves away from you at the same speed you moved, and it moves in the direction of the landmark, always remaining 5 feet away from you.\nIf you don't move toward the hand, it remains in place until you do and beckons for you to follow once every 1d4 minutes.",
-        "source": "Unearthed Arcana 36 - Starter Spells"
-    },
     "Gust": {
         "name": "Gust",
         "level": 0,
@@ -4154,19 +3852,6 @@
         "description": "You make natural terrain in a 150-foot cube in range look, sound, and smell like some other sort of natural terrain. Thus, open fields or a road can be made to resemble a swamp, hill, crevasse, or some other difficult or impassable terrain. A pond can be made to seem like a grassy meadow, a precipice like a gentle slope, or a rock-strewn gully like a wide and smooth road. Manufactured structures, equipment, and creatures within the area aren't changed in appearance.\nThe tactile characteristics of the terrain are unchanged, so creatures entering the area are likely to see through the illusion. If the difference isn't obvious by touch, a creature carefully examining the illusion can attempt an Intelligence (Investigation) check against your spell save DC to disbelieve it. A creature who discerns the illusion for what it is, sees it as a vague image superimposed on the terrain.",
         "source": "Player's Handbook"
     },
-    "Hand of Radiance (UA)": {
-        "name": "Hand of Radiance (UA)",
-        "level": 0,
-        "school": "Evocation",
-        "ritual": false,
-        "classes": [],
-        "casting_time": "1 action",
-        "range": "5 feet",
-        "components": "V, S",
-        "duration": "Instantaneous",
-        "description": "You raise your hand, and burning radiance erupts from it. Each creature of your choice that you can see within 5 feet of you must succeed on a Constitution saving throw or take 1d6 radiant damage.\nAt Higher Levels: The spell's damage increases by 1d6 when you reach 5th level (2d6), 11th level (3d6), and 17th level (4d6).\nSpell Lists: Cleric",
-        "source": "Unearthed Arcana 36 - Starter Spells"
-    },
     "Harm": {
         "name": "Harm",
         "level": 6,
@@ -4199,23 +3884,6 @@
         "description": "Choose a willing creature that you can see within range. Until the spell ends, the target's speed is doubled, it gains a +2 bonus to AC, it has advantage on Dexterity saving throws, and it gains an additional action on each of its turns. That action can be used only to take the Attack (one weapon attack only), Dash, Disengage, Hide, or Use an Object action.\nWhen the spell ends, the target can't move or take actions until after its next turn, as a wave of lethargy sweeps over it.",
         "source": "Player's Handbook"
     },
-    "Haywire (UA)": {
-        "name": "Haywire (UA)",
-        "level": 3,
-        "school": "Enchantment (Technomagic)",
-        "ritual": false,
-        "classes": [
-            "Sorcerer",
-            "Warlock",
-            "Wizard"
-        ],
-        "casting_time": "1 action",
-        "range": "90 feet",
-        "components": "V, S",
-        "duration": "Concentration, up to 1 minute",
-        "description": "This spell plays havoc with electronic devices, making the use of such devices all but impossible. Each electronic device in a 10-foot-radius sphere centered on a point you choose within range is subject to random behavior while it remains within the area. A device not held by a creature is automatically affected. If an electronic device is held by a creature, that creature must succeed on a Wisdom saving throw or have the device affected by the spell.\nAt the start of each of your turns, roll a d6 for each affected device to determine its behavior. Except where otherwise indicated, that behavior lasts until the start of your next turn while this spell is in effect.\nAt Higher Levels. When you cast this spell using a spell slot of 4th level or higher, the radius of the sphere affected by the spell increases by 5 feet for each slot level above 3rd.",
-        "source": "Unearthed Arcana 7 - Modern Magic"
-    },
     "Heal": {
         "name": "Heal",
         "level": 6,
@@ -4231,22 +3899,6 @@
         "duration": "Instantaneous",
         "description": "Choose a creature that you can see within range. A surge of positive energy washes through the creature, causing it to regain 70 hit points. The spell also ends blindness, deafness, and any diseases affecting the target. This spell has no effect on constructs or undead.\nAt Higher Levels. When you cast this spell using a spell slot of 7th level or higher, the amount of healing increases by 10 for each slot level above 6th.",
         "source": "Player's Handbook"
-    },
-    "Healing Elixir (UA)": {
-        "name": "Healing Elixir (UA)",
-        "level": 1,
-        "school": "Conjuration",
-        "ritual": false,
-        "classes": [
-            "Warlock",
-            "Wizard"
-        ],
-        "casting_time": "1 minute",
-        "range": "Self",
-        "components": "V, S, M (alchemist’s supplies)",
-        "duration": "24 hours",
-        "description": "You create a healing elixir in a simple vial that appears in your hand. The elixir retains its potency for the duration or until it's consumed, at which point the vial vanishes.\nAs an action, a creature can drink the elixir or administer it to another creature. The drinker regains 2d4 + 2 hit points.",
-        "source": "Unearthed Arcana 36 - Starter Spells"
     },
     "Healing Spirit": {
         "name": "Healing Spirit",
@@ -4430,24 +4082,6 @@
         "description": "You imbue a weapon you touch with holy power. Until the spell ends, the weapon emits bright light in a 30-foot radius and dim light for an additional 30 feet. In addition, weapon attacks made with it deal an extra 2d8 radiant damage on a hit. If the weapon isn't already a magic weapon, it becomes one for the duration. As a bonus action on your turn, you can dismiss this spell and cause the weapon to emit a burst of radiance. Each creature of your choice that you can see within 30 feet of the weapon must make a Constitution saving throw. On a failed save, a creature takes 4d8 radiant damage, and it is blinded for 1 minute. On a successful save, a creature takes half as much damage and isn't blinded. At the end of each of its turns, a blinded creature can make a Constitution saving throw, ending the effect on itself on a success.",
         "source": "Xanathar's Guide to Everything"
     },
-    "House of Cards (UA)": {
-        "name": "House of Cards (UA)",
-        "level": 3,
-        "school": "Conjuration",
-        "ritual": false,
-        "classes": [
-            "Artificer",
-            "Bard",
-            "Sorcerer",
-            "Wizard"
-        ],
-        "casting_time": "1 minute",
-        "range": "Touch",
-        "components": "V, S, M (a deck of cards)",
-        "duration": "24 hours",
-        "description": "You touch the ground and conjure forth a defensive structure made of enormous playing cards. The structure rises with you at its center, harmlessly lifting you and any creatures in the area. The house of cards has a square base that is 30 feet on each side, and it has three floors with 10-foot-high ceilings. The second floor is 20 feet on each side, and the top floor is 10 feet on each side—both centered above the bottom floor. Ramps connect the interior of each floor, and empty doorframes connect the interior and exterior of each level. Creatures inside or on top of the structure have half cover.\nEach card that comprises the house is 5 feet wide and 10 feet tall and is very fragile. A card has AC 10 and 1 hit point. The cards are immune to poison and psychic damage. Reducing a card to 0 hit points destroys it. Every time a card is destroyed, roll 1d6. If you roll a 5 or a 6, the house collapses, ending the spell.\nThe house and all its cards vanish when the spell ends.",
-        "source": "Unearthed Arcana 85 - Wonders of the Multiverse"
-    },
     "Hunger of Hadar": {
         "name": "Hunger of Hadar",
         "level": 3,
@@ -4529,39 +4163,6 @@
         "duration": "Instantaneous",
         "description": "A hail of rock-hard ice pounds to the ground in a 20-foot-radius, 40-foot-high cylinder centered on a point within range. Each creature in the cylinder must make a Dexterity saving throw. A creature takes 2d8 bludgeoning damage and 4d6 cold damage on a failed save, or half as much damage on a successful one.\nHailstones turn the storm's area of effect into difficult terrain until the end of your next turn.\nAt Higher Levels. When you cast this spell using a spell slot of 5th level or higher, the bludgeoning damage increases by 1d8 for each slot level above 4th.",
         "source": "Player's Handbook"
-    },
-    "Icingdeath's Frost (UA)": {
-        "name": "Icingdeath's Frost (UA)",
-        "level": 2,
-        "school": "Evocation",
-        "ritual": false,
-        "classes": [
-            "Sorcerer",
-            "Wizard"
-        ],
-        "casting_time": "1 action",
-        "range": "Self (15-foot cone)",
-        "components": "S, M (a vial of meltwater)",
-        "duration": "Instantaneous",
-        "description": "A burst of icy cold energy emanates from you in a 30-foot cone. Each creature in that area must make a Constitution saving throw. On a failed save, a creature takes 3d8 cold damage and is covered in ice for 1 minute or until a creature uses its action to break the ice off itself or another creature. A creature covered in ice has its speed reduced to 0. On a successful save, a creature takes half as much damage with no additional effects.\nAt Higher Levels. When you cast this spell using a spell slot of 3rd level or higher, increase the cold damage by 1d8 for each slot level above 2nd.",
-        "source": "Unearthed Arcana 78 - Draconic Options"
-    },
-    "Id Insinuation (UA)": {
-        "name": "Id Insinuation (UA)",
-        "level": 1,
-        "school": "Enchantment",
-        "ritual": false,
-        "classes": [
-            "Sorcerer",
-            "Warlock",
-            "Wizard"
-        ],
-        "casting_time": "1 action",
-        "range": "60 feet",
-        "components": "V, S",
-        "duration": "Concentration, up to 1 minute",
-        "description": "You unleash a torrent of conflicting desires in the mind of one creature you can see within range, impairing its ability to make decisions. The target must succeed on a Wisdom saving throw or be incapacitated. At the end of each of its turns, it takes 1d12 psychic damage, and it can then make another Wisdom saving throw. On a success, the spell ends on the target.",
-        "source": "Unearthed Arcana 66 - Fighter, Rogue, and Wizard"
     },
     "Identify": {
         "name": "Identify",
@@ -4693,23 +4294,6 @@
         "duration": "Concentration, up to 1 minute",
         "description": "When you cast this spell, you present the gem used as the material component and choose any number of creatures within range that can see you. Each target must succeed on a Wisdom saving throw or be charmed by you until the spell ends, or until you or your companions do anything harmful to it. While charmed in this way, a creature can do nothing but use its movement to approach you in a safe manner. While an affected creature is within 5 feet of you, it cannot move, but simply stares greedily at the gem you present.\nAt the end of each of its turns, an affected target can make a Wisdom saving throw. If it succeeds, this effect ends for that target.",
         "source": "Acquisitions Inc."
-    },
-    "Infallible Relay (UA)": {
-        "name": "Infallible Relay (UA)",
-        "level": 1,
-        "school": "Divination (Technomagic)",
-        "ritual": false,
-        "classes": [
-            "Sorcerer",
-            "Warlock",
-            "Wizard"
-        ],
-        "casting_time": "1 minute",
-        "range": "Self",
-        "components": "V, S, M (a mobile phone)",
-        "duration": "Concentration, up to 10 minutes",
-        "description": "With this spell, you can target any creature with whom you have spoken previously, as long as the two of you are on the same plane of existence. When you cast the spell, the nearest functioning telephone or similar communications device within 100 feet of the target begins to ring. If there is no suitable device close enough to the target, the spell fails.\nThe target must make a successful Charisma saving throw or be compelled to answer your call. Once the connection is established, the call is crystal clear and cannot be dropped until the conversation has ended or the spell's duration ends. You can end the conversation at any time, but a target must succeed on a Charisma saving throw to end the conversation.",
-        "source": "Unearthed Arcana 7 - Modern Magic"
     },
     "Infernal Calling": {
         "name": "Infernal Calling",
@@ -4880,23 +4464,6 @@
         "duration": "Concentration, up to 1 hour",
         "description": "A creature you touch becomes invisible until the spell ends. Anything the target is wearing or carrying is invisible as long as it is on the target's person. The spell ends for a target that attacks or casts a spell.\nAt Higher Levels. When you cast this spell using a spell slot of 3rd level or higher, you can target one additional creature for each slot level above 2nd.",
         "source": "Player's Handbook"
-    },
-    "Invisibility To Cameras (UA)": {
-        "name": "Invisibility To Cameras (UA)",
-        "level": 3,
-        "school": "Illusion (Technomagic)",
-        "ritual": false,
-        "classes": [
-            "Sorcerer",
-            "Warlock",
-            "Wizard"
-        ],
-        "casting_time": "1 action",
-        "range": "10 feet",
-        "components": "V, S, M (a scrap of black paper)",
-        "duration": "Concentration, up to 1 minute",
-        "description": "Four creatures of your choice within range become undetectable to electronic sensors and cameras for the duration of the spell. Anything a target is wearing or carrying is likewise undetectable as long as it is on the target's person. The targets remain visible to vision.",
-        "source": "Unearthed Arcana 7 - Modern Magic"
     },
     "Invulnerability": {
         "name": "Invulnerability",
@@ -5623,23 +5190,6 @@
         "description": "This spell repairs a single break or tear in an object you touch, such as a broken chain link, two halves of a broken key, a torn cloak, or a leaking wineskin. As long as the break or tear is no larger than 1 foot in any dimension, you mend it, leaving no trace of the former damage.\nThis spell can physically repair a magic item or construct, but the spell can't restore magic to such an object.",
         "source": "Player's Handbook"
     },
-    "Mental Barrier (UA)": {
-        "name": "Mental Barrier (UA)",
-        "level": 2,
-        "school": "Abjuration",
-        "ritual": false,
-        "classes": [
-            "Sorcerer",
-            "Warlock",
-            "Wizard"
-        ],
-        "casting_time": "1 reaction, which you take when you are forced to make an Intelligence, a Wisdom, or a Charisma saving throw",
-        "range": "Self",
-        "components": "V",
-        "duration": "1 round",
-        "description": "You protect your mind with a wall of looping, repetitive thought. Until the start of your next turn, you have advantage on Intelligence, Wisdom, and Charisma saving throws, and you have resistance to psychic damage.",
-        "source": "Unearthed Arcana 66 - Fighter, Rogue, and Wizard"
-    },
     "Mental Prison": {
         "name": "Mental Prison",
         "level": 6,
@@ -5755,23 +5305,6 @@
         "duration": "Concentration, up to 1 hour",
         "description": "You reach into the mind of one creature you can see within range. The target must make a Wisdom saving throw, taking 3d8 psychic damage on a failed save, or half as much damage on a successful one. On a failed save, you also always know the target's location until the spell ends, but only while the two of you are on the same plane of existence. While you have this knowledge, the target can't become hidden from you, and if it's invisible, it gains no benefit from that condition against you.\nAt Higher Levels. When you cast this spell using a spell slot of 3rd level or higher, the damage increases by 1d8 for each slot level above 2nd.",
         "source": "Xanathar's Guide to Everything"
-    },
-    "Mind Thrust (UA)": {
-        "name": "Mind Thrust (UA)",
-        "level": 2,
-        "school": "Enchantment",
-        "ritual": false,
-        "classes": [
-            "Sorcerer",
-            "Warlock",
-            "Wizard"
-        ],
-        "casting_time": "1 bonus action",
-        "range": "60 feet",
-        "components": "V, S",
-        "duration": "1 round",
-        "description": "You thrust a lance of psychic disruption into the mind of one creature you can see within range. The target must make an Intelligence saving throw. On a failed save, the target takes 3d6 psychic damage, and it can't take a reaction until the end of its next turn. Moreover, on its next turn, it must choose whether it gets a move, an action, or a bonus action; it gets only one of the three. On a successful save, the target takes half as much damage and suffers none of the spell's other effects.\nAt Higher Levels. When you cast this spell using a spell slot of 3rd level or higher, you can target one additional creature for each slot level above 2nd. The creatures must be within 30 feet of each other when you target them.",
-        "source": "Unearthed Arcana 71 - Psionic Options Revisited"
     },
     "Minor Illusion": {
         "name": "Minor Illusion",
@@ -6019,23 +5552,6 @@
         "description": "You fill a 20-foot cube you can see within range with fey and draconic magic. Roll on the Mischievous Surge table to determine the magical effect produced, and roll again at the start of each of your turns until the spell ends. You can move the cube up to 10 feet before you roll.",
         "source": "Fizban's Treasury of Dragons"
     },
-    "Nathair's Mischief (UA)": {
-        "name": "Nathair's Mischief (UA)",
-        "level": 2,
-        "school": "Illusion",
-        "ritual": false,
-        "classes": [
-            "Bard",
-            "Sorcerer",
-            "Wizard"
-        ],
-        "casting_time": "1 action",
-        "range": "60 feet",
-        "components": "S, M (a piece of crust from an apple pie)",
-        "duration": "Concentration, up to 1 minute",
-        "description": "You fill a 20-foot cube centered on a point you choose within range with fey and draconic magic. Roll on the Mischievous Surge table to determine the magical effect produced. At the start of each of your turns, you can move the cube up to 10 feet and reroll on the table.",
-        "source": "Unearthed Arcana 78 - Draconic Options"
-    },
     "Negative Energy Flood": {
         "name": "Negative Energy Flood",
         "level": 5,
@@ -6083,41 +5599,6 @@
         "duration": "24 hours",
         "description": "You place an illusion on a creature or an object you touch so that divination spells reveal false information about it. The target can be a willing creature or an object that isn't being carried or worn by another creature.\nWhen you cast the spell, choose one or both of the following effects. The effect lasts for the duration. If you cast this spell on the same creature or object every day for 30 days, placing the same effect on it each time, the illusion lasts until it is dispelled.\nFalse Aura. You change the way the target appears to spells and magical effects, such as Detect Magic , that detect magical auras. You can make a nonmagical object appear magical, a magical object appear nonmagical, or change the object's magical aura so that it appears to belong to a specific school of magic that you choose. When you use this effect on an object, you can make the false magic apparent to any creature that handles the item.\nMask. You change the way the target appears to spells and magical effects that detect creature types, such as a paladin's Divine Sense or the trigger of a symbol spell. You choose a creature type and other spells and magical effects treat the target as if it were a creature of that type or of that alignment.",
         "source": "Player's Handbook"
-    },
-    "On/Off (UA)": {
-        "name": "On/Off (UA)",
-        "level": 0,
-        "school": "Transmutation",
-        "ritual": false,
-        "classes": [
-            "Sorcerer",
-            "Warlock",
-            "Wizard"
-        ],
-        "casting_time": "1 action",
-        "range": "60 feet",
-        "components": "V, S",
-        "duration": "Instantaneous",
-        "description": "This cantrip allows you to activate or deactivate any electronic device within range, as long as the device has a clearly defined on or off function that can be easily accessed from the outside of the device. Any device that requires a software-based shutdown sequence to activate or deactivate cannot be affected by On/Off.",
-        "source": "Unearthed Arcana 7 - Modern Magic"
-    },
-    "Otherworldly Form (UA)": {
-        "name": "Otherworldly Form (UA)",
-        "level": 6,
-        "school": "Transmutation",
-        "ritual": false,
-        "classes": [
-            "Cleric",
-            "Sorcerer",
-            "Warlock",
-            "Wizard"
-        ],
-        "casting_time": "1 action",
-        "range": "Self",
-        "components": "V, S, M (an object engraved with a symbol of the Outer Planes, worth at least 500 gp)",
-        "duration": "Concentration, up to 1 minute",
-        "description": "Uttering an incantation, you draw on the magic of the Lower Planes or Upper Planes (your choice) to transform yourself. You gain the following benefits until the spell ends:\nYou are immune to fire and poison damage (Lower Planes) or radiant and necrotic damage (Upper Planes).\nYou are immune to the poisoned condition (Lower Planes) or the charmed condition (Upper Planes).\nSpectral wings appear on your back, giving you a flying speed of 40 feet.\nYou have a +2 bonus to AC.\nAll your weapon attacks are magical, and when you make a weapon attack, you can use your spellcasting ability modifier, instead of Strength or Dexterity, for the attack and damage rolls.\nYou can attack twice, instead of once, when you take the Attack action on your turn. You ignore this benefit if you already have a feature, like Extra Attack, that gives you extra attacks",
-        "source": "Unearthed Arcana 70 - Spells and Magic Tattoos"
     },
     "Otiluke's Freezing Sphere": {
         "name": "Otiluke's Freezing Sphere",
@@ -6567,23 +6048,6 @@
         "description": "You create an illusory copy of yourself that lasts for the duration. The copy can appear at any location within range that you have seen before, regardless of intervening obstacles. The illusion looks and sounds like you but is intangible. If the illusion takes any damage, it disappears, and the spell ends.\nYou can use your action to move this illusion up to twice your speed, and make it gesture, speak, and behave in whatever way you choose. It mimics your mannerisms perfectly.\nYou can see through its eyes and hear through its ears as if you were in its space. On your turn as a bonus action, you can switch from using its senses to using your own, or back again. While you are using its senses, you are blinded and deafened in regard to your own surroundings.\nPhysical interaction with the image reveals it to be an illusion, because things can pass through it. A creature that uses its action to examine the image can determine that it is an illusion with a successful Intelligence (Investigation) check against your spell save DC. If a creature discerns the illusion for what it is, the creature can see through the image, and any noise it makes sounds hollow to the creature.",
         "source": "Player's Handbook"
     },
-    "Protection from Ballistics (UA)": {
-        "name": "Protection from Ballistics (UA)",
-        "level": 3,
-        "school": "Abjuration (Technomagic)",
-        "ritual": false,
-        "classes": [
-            "Sorcerer",
-            "Warlock",
-            "Wizard"
-        ],
-        "casting_time": "1 action",
-        "range": "Touch",
-        "components": "V, S, M (a shell casing)",
-        "duration": "Concentration, up to 10 minutes",
-        "description": "This spell enchants the flesh of the target against the impact of bullets. Until the spell ends, the target has resistance to nonmagical ballistic damage.",
-        "source": "Unearthed Arcana 7 - Modern Magic"
-    },
     "Protection from Energy": {
         "name": "Protection from Energy",
         "level": 3,
@@ -6642,40 +6106,6 @@
         "description": "You touch a creature. If it is poisoned, you neutralize the poison. If more than one poison afflicts the target, you neutralize one poison that you know is present, or you neutralize one at random.\nFor the duration, the target has advantage on saving throws against being poisoned, and it has resistance to poison damage.",
         "source": "Player's Handbook"
     },
-    "Psionic Blast (UA)": {
-        "name": "Psionic Blast (UA)",
-        "level": 3,
-        "school": "Evocation",
-        "ritual": false,
-        "classes": [
-            "Sorcerer",
-            "Warlock",
-            "Wizard"
-        ],
-        "casting_time": "1 action",
-        "range": "Self (30-foot cone)",
-        "components": "V",
-        "duration": "Instantaneous",
-        "description": "You unleash a destructive wave of mental power in a 30-foot cone. Each creature in the area must make a Dexterity saving throw. On a failed save, a target takes 5d8 force damage, is pushed 20 feet directly away from you, and is knocked prone. On a successful save, a target takes half as much damage and isn't pushed or knocked prone.\nAt Higher Levels. When you cast this spell using a spell slot of 4th level or higher, the damage increases by 1d8 for each slot level above 3rd.",
-        "source": "Unearthed Arcana 66 - Fighter, Rogue, and Wizard"
-    },
-    "Psychic Crush (UA)": {
-        "name": "Psychic Crush (UA)",
-        "level": 6,
-        "school": "Enchantment",
-        "ritual": false,
-        "classes": [
-            "Sorcerer",
-            "Warlock",
-            "Wizard"
-        ],
-        "casting_time": "1 action",
-        "range": "60 feet",
-        "components": "V, S",
-        "duration": "1 minute",
-        "description": "You overload the mind of one creature you can see within range, filling its psyche with discordant emotions. The target must make an Intelligence saving throw. On a failed save, the target takes 12d6 psychic damage and is stunned for 1 minute. On a successful save, the target takes half as much damage and isn't stunned.\nThe stunned target can make an Intelligence saving throw at the end of each of its turns. On a successful save, the spell ends on the target.",
-        "source": "Unearthed Arcana 66 - Fighter, Rogue, and Wizard"
-    },
     "Psychic Scream": {
         "name": "Psychic Scream",
         "level": 9,
@@ -6708,23 +6138,6 @@
         "duration": "Instantaneous",
         "description": "You create intense pressure, unleash it in a 30-foot cone, and decide whether the pressure pulls or pushes creatures and objects. Each creature in that cone must make a Constitution saving throw. A creature takes 6d6 force damage on a failed save, or half as much damage on a successful one. And every creature that fails the save is either pulled 15 feet toward you or pushed 15 feet away from you, depending on the choice you made for the spell.\nIn addition, unsecured objects that are completely within the cone are likewise pulled or pushed 15 feet.\nAt Higher Levels. When you cast this spell using a spell slot of 4th level or higher, the damage increases by 1d6 and the distance pulled or pushed increases by 5 feet for each slot level above 3rd.",
         "source": "Explorer's Guide to Wildemount"
-    },
-    "Puppet (UA)": {
-        "name": "Puppet (UA)",
-        "level": 1,
-        "school": "Enchantment",
-        "ritual": false,
-        "classes": [
-            "Bard",
-            "Warlock",
-            "Wizard"
-        ],
-        "casting_time": "1 action",
-        "range": "120 feet",
-        "components": "V",
-        "duration": "Instantaneous",
-        "description": "Your gesture forces one humanoid you can see within range to make a Constitution saving throw. On a failed save, the target must move up to its speed in a direction you choose. In addition, you can cause the target to drop whatever it is holding. This spell has no effect on a humanoid that is immune to being charmed.",
-        "source": "Unearthed Arcana 36 - Starter Spells"
     },
     "Purify Food and Drink": {
         "name": "Purify Food and Drink",
@@ -6812,24 +6225,6 @@
         "duration": "Instantaneous",
         "description": "You unleash a shimmering lance of psychic power from your forehead at a creature that you can see within range. Alternatively, you can utter a creature's name. If the named target is within range, it becomes the spell's target even if you can't see it. If the named target isn't within range, the lance dissipates without effect.\nThe target must make an Intelligence saving throw. On a failed save, the target takes 7d6 psychic damage and is incapacitated until the start of your next turn. On a successful save, the creature takes half as much damage and isn't incapacitated.\nAt Higher Levels. When you cast this spell using a spell slot of 5th level or higher, the damage increases by 1d6 for each slot level above 4th.",
         "source": "Fizban's Treasury of Dragons"
-    },
-    "Raulothim's Psychic Lance (UA)": {
-        "name": "Raulothim's Psychic Lance (UA)",
-        "level": 4,
-        "school": "Enchantment",
-        "ritual": false,
-        "classes": [
-            "Bard",
-            "Sorcerer",
-            "Warlock",
-            "Wizard"
-        ],
-        "casting_time": "1 action",
-        "range": "120 feet",
-        "components": "V",
-        "duration": "Instantaneous",
-        "description": "You unleash a shimmering lance of psychic power from your forehead at a creature that you can see within range. Alternatively, you can utter the creature's name. If the named target is within range, it gains no benefit from cover or invisibility as the lance homes in on it. If the named target isn't within range, the lance dissipates, and the spell slot is not expended.\nThe target must succeed on an Intelligence saving throw or take 10d6 psychic damage and be incapacitated until the start of your next turn.\nAt Higher Levels. When you cast this spell using a spell slot of 5th level or higher, the damage increases by 1d6 for each slot level above 4th.",
-        "source": "Unearthed Arcana 78 - Draconic Options"
     },
     "Ravenous Void": {
         "name": "Ravenous Void",
@@ -6941,23 +6336,6 @@
         "duration": "Instantaneous",
         "description": "You touch a dead humanoid or a piece of a dead humanoid. Provided that the creature has been dead no longer than 10 days, the spell forms a new adult body for it and then calls the soul to enter that body. If the target's soul isn't free or willing to do so, the spell fails.\nThe magic fashions a new body for the creature to inhabit, which likely causes the creature's race to change. The DM rolls a d100 and consults the following table to determine what form the creature takes when restored to life, or the DM chooses a form.\nThe reincarnated creature recalls its former life and experiences. It retains the capabilities it had in its original form, except it exchanges its original race for the new one and changes its racial traits accordingly.",
         "source": "Player's Handbook"
-    },
-    "Remote Access (UA)": {
-        "name": "Remote Access (UA)",
-        "level": 1,
-        "school": "Transmutation (Technomagic)",
-        "ritual": false,
-        "classes": [
-            "Sorcerer",
-            "Warlock",
-            "Wizard"
-        ],
-        "casting_time": "1 action",
-        "range": "120 feet",
-        "components": "V, S",
-        "duration": "10 minutes",
-        "description": "You can use any electronic device within range as if it were in your hands. This is not a telekinesis effect. Rather, this spell allows you to simulate a device's mechanical functions electronically. You are able to access only functions that a person using the device manually would be able to access. You can use remote access with only one device at a time.",
-        "source": "Unearthed Arcana 7 - Modern Magic"
     },
     "Remove Curse": {
         "name": "Remove Curse",
@@ -7244,23 +6622,6 @@
         "description": "You send a short message of twenty-five words or less to a creature with which you are familiar. The creature hears the message in its mind, recognizes you as the sender if it knows you, and can answer in a like manner immediately. The spell enables creatures with Intelligence scores of at least 1 to understand the meaning of your message.\nYou can send the message across any distance and even to other planes of existence, but if the target is on a different plane than you, there is a 5 percent chance that the message doesn't arrive.",
         "source": "Player's Handbook"
     },
-    "Sense Emotion (UA)": {
-        "name": "Sense Emotion (UA)",
-        "level": 1,
-        "school": "Divination",
-        "ritual": false,
-        "classes": [
-            "Bard",
-            "Warlock",
-            "Wizard"
-        ],
-        "casting_time": "1 action",
-        "range": "Self",
-        "components": "V, S",
-        "duration": "Concentration, up to 1 minute",
-        "description": "You attune your senses to pick up the emotions of others for the duration. When you cast the spell, and as your action on each turn until the spell ends, you can focus your senses on one humanoid you can see within 30 feet of you. You instantly learn the target's prevailing emotion, whether it's love, anger, pain, fear, calm, or something else. If the target isn't actually humanoid or it is immune to being charmed, you sense that it is calm.",
-        "source": "Unearthed Arcana 36 - Starter Spells"
-    },
     "Sequester": {
         "name": "Sequester",
         "level": 7,
@@ -7422,23 +6783,6 @@
         "duration": "Instantaneous",
         "description": "Lightning springs from your hand to deliver a shock to a creature you try to touch. Make a melee spell attack against the target. You have advantage on the attack roll if the target is wearing armor made of metal. On a hit, the target takes 1d8 lightning damage, and it can't take reactions until the start of its next turn.\nAt Higher Levels. The spell's damage increases by 1d8 when you reach 5th level (2d8), 11th level (3d8), and 17th level (4d8).",
         "source": "Player's Handbook"
-    },
-    "Shutdown (UA)": {
-        "name": "Shutdown (UA)",
-        "level": 5,
-        "school": "Transmutation (Technomagic)",
-        "ritual": false,
-        "classes": [
-            "Sorcerer",
-            "Warlock",
-            "Wizard"
-        ],
-        "casting_time": "1 action",
-        "range": "120 feet",
-        "components": "V, S",
-        "duration": "Concentration, up to 1 minute",
-        "description": "This spell shuts down all electronic devices within range that are not wielded by or under the direct control of a creature. If an electronic device within range is used by a creature, that creature must succeed on a Constitution saving throw to prevent the device from being shut down. While the spell remains active, no electronic device within range can be started or restarted.",
-        "source": "Unearthed Arcana 7 - Modern Magic"
     },
     "Sickening Radiance": {
         "name": "Sickening Radiance",
@@ -7811,23 +7155,6 @@
         "description": "You call forth a spirit that embodies death. The spirit manifests in an unoccupied space you can see within range and uses the reaper spirit stat block. The spirit disappears when it is reduced to 0 hit points or when the spell ends.\nThe spirit is an ally to you and your companions. In combat, the spirit shares your initiative count and takes its turn immediately after yours. It obeys your verbal commands (no action required by you). If you don't issue the spirit any commands, it takes the Dodge action and uses its movement to avoid danger.\nAt Higher Levels. When you cast this spell using a spell slot of 5th level or higher, use the higher level wherever the spell's level appears in the reaper spirit stat block.",
         "source": "The Book of Many Things"
     },
-    "Spirit of Death (UA)": {
-        "name": "Spirit of Death (UA)",
-        "level": 4,
-        "school": "Necromancy",
-        "ritual": false,
-        "classes": [
-            "Sorcerer",
-            "Warlock",
-            "Wizard"
-        ],
-        "casting_time": "1 action",
-        "range": "60 feet",
-        "components": "V, S, M (a gilded playing card depicting an avatar of death worth at least 400 gp)",
-        "duration": "Concentration, up to 1 minute",
-        "description": "You call forth a spirit that embodies death itself. Choose a creature you can see within range. The spirit manifests in an unoccupied space that you can see within 10 feet of the target, and the target becomes haunted by the spirit. The spirit uses the Reaper Spirit stat block. The spirit disappears when it or the haunted creature is reduced to 0 hit points, or when the spell ends.\nThe reaper spirit is an ally to you and your companions. In combat, the spirit shares your initiative count, but it takes its turn immediately after yours. It obeys your verbal commands (no action required by you), but it will only attack the haunted creature. If you don't issue the spirit any commands, it takes the Dodge action and uses its move to avoid danger\nAt Higher Levels. When you cast this spell using a spell slot of 5th level or higher, use the higher level wherever the spell's level appears in the stat block.",
-        "source": "Unearthed Arcana 85 - Wonders of the Multiverse"
-    },
     "Spiritual Weapon": {
         "name": "Spiritual Weapon",
         "level": 2,
@@ -7860,24 +7187,6 @@
         "duration": "Instantaneous",
         "description": "You spray a 15-foot cone of spectral cards. Each creature in that area must make a Dexterity saving throw. On a failed save, a creature takes 2d10 force damage and has the blinded condition until the end of its next turn. On a successful save, a creature takes half as much damage only.\nAt Higher Levels. When you cast this spell using a spell slot of 3rd level or higher, the damage increases by 1d10 for each slot level above 2nd.",
         "source": "The Book of Many Things"
-    },
-    "Spray of Cards (UA)": {
-        "name": "Spray of Cards (UA)",
-        "level": 2,
-        "school": "Conjuration",
-        "ritual": false,
-        "classes": [
-            "Bard",
-            "Sorcerer",
-            "Warlock",
-            "Wizard"
-        ],
-        "casting_time": "1 action",
-        "range": "15-foot cone",
-        "components": "V, S, M (a deck of cards)",
-        "duration": "Instantaneous",
-        "description": "You spray spectral cards from your hands or sleeve; the cards blind or slash at your enemies, and then vanish. Choose one of the following effects for the cards:\nBlinding Cards. Each creature in a 15-foot cone must succeed on a Wisdom saving throw or be blinded until the end of their next turn.\nCutting Cards. Each creature in a 15-foot cone must make a Dexterity saving throw. A creature takes 2d10 force damage on a failed save or half as much damage on a successful one.\nAt Higher Levels. When you cast this spell using a spell slot of 4th level or higher, the damage of cutting cards increases by 1d10 for every two slot levels above 2nd",
-        "source": "Unearthed Arcana 85 - Wonders of the Multiverse"
     },
     "Staggering Smite": {
         "name": "Staggering Smite",
@@ -7995,24 +7304,6 @@
         "description": "A churning storm cloud forms, centered on a point you can see and spreading to a radius of 360 feet. Lightning flashes in the area, thunder booms, and strong winds roar. Each creature under the cloud (no more than 5,000 feet beneath the cloud) when it appears must make a Constitution saving throw. On a failed save, a creature takes 2d6 thunder damage and becomes deafened for 5 minutes.\nEach round you maintain concentration on this spell, the storm produces different effects on your turn.\nStorm of Vengeance After Round 1",
         "source": "Player's Handbook"
     },
-    "Sudden Awakening (UA)": {
-        "name": "Sudden Awakening (UA)",
-        "level": 1,
-        "school": "Enchantment",
-        "ritual": false,
-        "classes": [
-            "Bard",
-            "Ranger",
-            "Sorcerer",
-            "Wizard"
-        ],
-        "casting_time": "1 bonus action",
-        "range": "10 feet",
-        "components": "V",
-        "duration": "Instantaneous",
-        "description": "Each sleeping creature you choose within range awakens, and then each prone creature within range can stand up without expending any movement.",
-        "source": "Unearthed Arcana 36 - Starter Spells"
-    },
     "Suggestion": {
         "name": "Suggestion",
         "level": 2,
@@ -8111,23 +7402,6 @@
         "duration": "Concentration, up to 1 hour",
         "description": "You call forth a draconic spirit. It manifests in an unoccupied space that you can see within range. This corporeal form uses the Draconic Spirit stat block. When you cast this spell, choose a family of dragon: chromatic, gem, or metallic. The creature resembles a dragon of the chosen family, which determines certain traits in its stat block. The creature disappears when it drops to 0 hit points or when the spell ends.\nThe creature is an ally to you and your companions. In combat, the creature shares your initiative count, but it takes its turn immediately after yours. It obeys your verbal commands (no action required by you). If you don't issue any, it takes the Dodge action and uses its move to avoid danger.\nAt Higher Levels. When you cast this spell using a spell slot of 6th level or higher, use the higher level wherever the spell's level appears in the stat block.",
         "source": "Fizban's Treasury of Dragons"
-    },
-    "Summon Draconic Spirit (UA)": {
-        "name": "Summon Draconic Spirit (UA)",
-        "level": 5,
-        "school": "Conjuration",
-        "ritual": false,
-        "classes": [
-            "Druid",
-            "Sorcerer",
-            "Wizard"
-        ],
-        "casting_time": "1 action",
-        "range": "60 feet",
-        "components": "V, S, M (an art object from a dragon's hoard, worth at least 500 gp)",
-        "duration": "Concentration, up to 1 hour",
-        "description": "You call forth a draconic spirit. It manifests in an unoccupied space that you can see within range. This corporeal form uses the Draconic Spirit stat block. When you cast this spell, choose a family of dragon: Chromatic, Gem, or Metallic. The creature resembles a dragon of the chosen family, which determines certain traits in its stat block. The creature disappears when it drops to 0 hit points or when the spell ends.\nThe creature is an ally to you and your companions. In combat, the creature shares your initiative count, but it takes its turn immediately after yours. It obeys your verbal commands (no action required by you). If you don't issue any, it takes the Dodge action and uses its move to avoid danger.\nAt Higher Levels. When you cast this spell using a spell slot of 6th level or higher, use the higher level wherever the spell's level appears in the stat block.",
-        "source": "Unearthed Arcana 78 - Draconic Options"
     },
     "Summon Elemental": {
         "name": "Summon Elemental",
@@ -8244,23 +7518,6 @@
         "description": "You call forth an undead spirit. It manifests in an unoccupied space that you can see within range. This corporeal form uses the Undead Spirit stat block. When you cast the spell, choose the creature's form: Ghostly, Putrid, or Skeletal. The spirit resembles an undead creature with the chosen form, which determines certain traits in its stat block. The creature disappears when it drops to 0 hit points or when the spell ends.\nThe creature is an ally to you and your companions. In combat, the creature shares your initiative count, but it takes its turn immediately after yours. It obeys your verbal commands (no action required by you). If you don't issue any, it takes the Dodge action and uses its move to avoid danger.\nAt Higher Levels. When you cast this spell using a spell slot of 4th level or higher, use the higher level wherever the spell's level appears in the stat block.",
         "source": "Tasha's Cauldron of Everything"
     },
-    "Summon Warrior Spirit (UA)": {
-        "name": "Summon Warrior Spirit (UA)",
-        "level": 3,
-        "school": "Conjuration",
-        "ritual": false,
-        "classes": [
-            "Sorcerer",
-            "Warlock",
-            "Wizard"
-        ],
-        "casting_time": "1 action",
-        "range": "90 feet",
-        "components": "V, S, M (a gilded playing card depicting a knight worth at least 300 gp)",
-        "duration": "Concentration, up to 1 hour",
-        "description": "You call forth a warrior spirit from the legendary Deck of Many Things . It manifests in an unoccupied space that you can see within range. This corporeal form uses the Warrior Spirit stat block. When you cast the spell, choose a type of warrior: barbarian, fighter, or monk. The warrior resembles a humanoid armed appropriately to the chosen class, which determines certain traits in its stat block. The warrior disappears when it drops to 0 hit points or when the spell ends.\nThe warrior is an ally to you and your companions. In combat, the warrior shares your initiative count, but it takes its turn immediately after yours. It obeys your verbal commands (no action required by you). If you don't issue any, it takes the Dodge action and uses its move to avoid danger.\nAt Higher Levels. When you cast this spell using a spell slot of 4th level or higher, the creature assumes the higher level for that casting wherever it uses the spell's level in its stat block.",
-        "source": "Unearthed Arcana 85 - Wonders of the Multiverse"
-    },
     "Sunbeam": {
         "name": "Sunbeam",
         "level": 6,
@@ -8365,40 +7622,6 @@
         "duration": "Instantaneous",
         "description": "You choose a point within range and cause psychic energy to explode there. Each creature in a 20-foot-radius sphere centered on that point must make an Intelligence saving throw. A creature with an Intelligence score of 2 or lower can't be affected by this spell. A target takes 8d6 psychic damage on a failed save, or half as much damage on a successful one.\nAfter a failed save, a target has muddled thoughts for 1 minute. During that time, it rolls a d6 and subtracts the number rolled from all its attack rolls and ability checks, as well as its Constitution saving throws to maintain concentration. The target can make an Intelligence saving throw at the end of each of its turns, ending the effect on itself on a success.",
         "source": "Xanathar's Guide to Everything"
-    },
-    "Synchronicity (UA)": {
-        "name": "Synchronicity (UA)",
-        "level": 4,
-        "school": "Enchantment (Technomagic)",
-        "ritual": false,
-        "classes": [
-            "Sorcerer",
-            "Warlock",
-            "Wizard"
-        ],
-        "casting_time": "1 action",
-        "range": "Touch",
-        "components": "V, S",
-        "duration": "Concentration, up to 1 hour",
-        "description": "The creature you touch feels reality subtly shifted to its favor while this spell is in effect. The target isn't inconvenienced by mundane delays of any sort. Traffic lights are always green, there's always a waiting elevator, and a taxi is always around the corner. The target can run at full speed through dense crowds, and attacks of opportunity provoked by the target's movement are made with disadvantage.\nSynchronicity grants advantage to Dexterity (Stealth) checks, since the target always finds a handy piece of cover available. Additionally, the target has advantage on all ability checks made to drive a vehicle.\nIn the event that two or more creatures under the effect of synchronicity are attempting to avoid being inconvenienced by each other, the creatures engage in a contest of Charisma each time the effects of the spells would oppose each other.",
-        "source": "Unearthed Arcana 7 - Modern Magic"
-    },
-    "System Backdoor (UA)": {
-        "name": "System Backdoor (UA)",
-        "level": 4,
-        "school": "Transmutation (Technomagic)",
-        "ritual": false,
-        "classes": [
-            "Sorcerer",
-            "Warlock",
-            "Wizard"
-        ],
-        "casting_time": "1 minute",
-        "range": "Self",
-        "components": "V, S, M (hacking tools)",
-        "duration": "Concentration, up to 1 hour",
-        "description": "This spell allows you to bypass system security in order to create a secure login on a foreign system. The login you create allows you administrator-level privileges in any computer system not enhanced through technomagic. The login defeats any technomagic spells of 3rd level or lower.\nOnce the duration of the spell expires, the login and all privileges are wiped from the system. System logs still show the activity of the user, but the user identification cannot be found or traced.\nAt Higher Levels. When you cast this spell using a spell slot of 5th level or higher, you are able to bypass technomagic spells if the spell's level is equal to or less than the level of the spell slot you used.",
-        "source": "Unearthed Arcana 7 - Modern Magic"
     },
     "Tasha's Caustic Brew": {
         "name": "Tasha's Caustic Brew",
@@ -8637,23 +7860,6 @@
         "duration": "Instantaneous",
         "description": "You create a long, vine-like whip covered in thorns that lashes out at your command toward a creature in range. Make a melee spell attack against the target. If the attack hits, the creature takes 1d6 piercing damage, and if the creature is Large or smaller, you pull the creature up to 10 feet closer to you.\nAt Higher Levels. This spell's damage increases by 1d6 when you reach 5th level (2d6), 11th level (3d6), and 17th level (4d6).",
         "source": "Player's Handbook"
-    },
-    "Thought Shield (UA)": {
-        "name": "Thought Shield (UA)",
-        "level": 2,
-        "school": "Abjuration",
-        "ritual": false,
-        "classes": [
-            "Sorcerer",
-            "Warlock",
-            "Wizard"
-        ],
-        "casting_time": "1 action",
-        "range": "Touch",
-        "components": "V, S",
-        "duration": "8 hours",
-        "description": "You weave a clouding veil over the mind of one creature you touch. For the duration, the target's mind can't be read or detected, creatures can't telepathically communicate with the target unless the target allows it, and the target has advantage on saving throws against any effect that would determine whether it is telling the truth.",
-        "source": "Unearthed Arcana 66 - Fighter, Rogue, and Wizard"
     },
     "Thunder Step": {
         "name": "Thunder Step",
@@ -8954,21 +8160,6 @@
         "description": "A wall of water springs into existence at a point you choose within range. You can make the wall up to 300 feet long, 300 feet high, and 50 feet thick. The wall lasts for the duration.\nWhen the wall appears, each creature within its area must make a Strength saving throw. On a failed save, a creature takes 6d10 bludgeoning damage, or half as much damage on a successful save.\nAt the start of each of your turns after the wall appears, the wall, along with any creatures in it, moves 50 feet away from you. Any Huge or smaller creature inside the wall or whose space the wall enters when it moves must succeed on a Strength saving throw or take 5d10 bludgeoning damage. A creature can take this damage only once per round. At the end of the turn, the wall's height is reduced by 50 feet, and the damage creatures take from the spell on subsequent rounds is reduced by 1d10. When the wall reaches 0 feet in height, the spell ends.\nA creature caught in the wall can move by swimming. Because of the force of the wave, though, the creature must make a successful Strength (Athletics) check against your spell save DC in order to move at all. If it fails the check, it can't move. A creature that moves out of the area falls to the ground.",
         "source": "Player's Handbook"
     },
-    "Unearthly Chorus (UA)": {
-        "name": "Unearthly Chorus (UA)",
-        "level": 1,
-        "school": "Illusion",
-        "ritual": false,
-        "classes": [
-            "Bard"
-        ],
-        "casting_time": "1 action",
-        "range": "Self (30-foot radius)",
-        "components": "V",
-        "duration": "Concentration, up to 10 minutes",
-        "description": "Music of a style you choose fills the air around you in a 30-foot radius. The music spreads around corners and can be heard from up to 100 feet away. The music moves with you, centered on you for the duration.\nUntil the spell ends, you make Charisma (Performance) checks with advantage. In addition, you can use a bonus action on each of your turns to beguile one creature you choose within 30 feet of you that can see you and hear the music. The creature must make a Charisma saving throw. If you or your companions are attacking it, the creature automatically succeeds on the saving throw. On a failure, the creature becomes friendly to you for as long as it can hear the music and for 1 hour thereafter. You make Charisma (Deception) checks and Charisma (Persuasion) checks against creatures made friendly by this spell with advantage.",
-        "source": "Unearthed Arcana 36 - Starter Spells"
-    },
     "Unseen Servant": {
         "name": "Unseen Servant",
         "level": 1,
@@ -9017,21 +8208,6 @@
         "duration": "Instantaneous",
         "description": "You unleash a string of insults laced with subtle enchantments at a creature you can see within range. If the target can hear you (though it need not understand you), it must succeed on a Wisdom saving throw or take 1d4 psychic damage and have disadvantage on the next attack roll it makes before the end of its next turn.\nAt Higher Levels. This spell's damage increases by 1d4 when you reach 5th level (2d4), 11th level (3d4), and 17th level (4d4).",
         "source": "Player's Handbook"
-    },
-    "Virtue (UA)": {
-        "name": "Virtue (UA)",
-        "level": 0,
-        "school": "Abjuration",
-        "ritual": false,
-        "classes": [
-            "Cleric"
-        ],
-        "casting_time": "1 action",
-        "range": "Touch",
-        "components": "V, S",
-        "duration": "1 round",
-        "description": "You touch one creature, imbuing it with vitality. If the target has at least 1 hit point, it gains a number of temporary hit points equal to 1d4 + your spellcasting ability modifier. The temporary hit points are lost when the spell ends.",
-        "source": "Unearthed Arcana 36 - Starter Spells"
     },
     "Vitriolic Sphere": {
         "name": "Vitriolic Sphere",
@@ -9349,22 +8525,6 @@
         "duration": "Concentration, up to 1 minute",
         "description": "A whirlwind howls down to a point on the ground you specify. The whirlwind is a 10-foot-radius, 30-foot-high cylinder centered on that point. Until the spell ends, you can use your action to move the whirlwind up to 30 feet in any direction along the ground. The whirlwind sucks up any Medium or smaller objects that aren't secured to anything and that aren't worn or carried by anyone.\nA creature must make a Dexterity saving throw the first time on a turn that it enters the whirlwind or that the whirlwind enters its space, including when the whirlwind first appears. A creature takes 10d6 bludgeoning damage on a failed save, or half as much damage on a successful one. In addition, a Large or smaller creature that fails the save must succeed on a Strength saving throw or become restrained in the whirlwind until the spell ends.\nWhen a creature starts its turn restrained by the whirlwind, the creature is pulled 5 feet higher inside it, unless the creature is at the top. A restrained creature moves with the whirlwind and falls when the spell ends, unless the creature has some means to stay aloft.\nA restrained creature can use an action to make a Strength or Dexterity check against your spell save DC. If successful, the creature is no longer restrained by the whirlwind and is hurled 3d6 × 10 feet away from it in a random direction.",
         "source": "Xanathar's Guide to Everything"
-    },
-    "Wild Cunning (UA)": {
-        "name": "Wild Cunning (UA)",
-        "level": 1,
-        "school": "Transmutation",
-        "ritual": true,
-        "classes": [
-            "Druid",
-            "Ranger"
-        ],
-        "casting_time": "1 action",
-        "range": "120 feet",
-        "components": "V, S",
-        "duration": "Instantaneous",
-        "description": "You call out to the spirits of nature to aid you. When you cast this spell, choose one of the following effects:\nIf there are any tracks on the ground within range, you know where they are, and you make Wisdom (Survival) checks to follow these tracks with advantage for 1 hour or until you cast this spell again.\nIf there is edible forage within range, you know it and where to find it.\nIf there is clean drinking water within range, you know it and where to find it.\nIf there is suitable shelter for you and your companions within range, you know it and where to find it.\nSend the spirits to bring back wood for a fire and to set up a campsite in the area using your supplies. The spirits build the fire in a circle of stones, put up tents, unroll bedrolls, and put out any rations and water for consumption.\nHave the spirits instantly break down a campsite, which includes putting out a fire, taking down tents, packing up bags, and burying any rubbish.",
-        "source": "Unearthed Arcana 36 - Starter Spells"
     },
     "Wind Walk": {
         "name": "Wind Walk",
