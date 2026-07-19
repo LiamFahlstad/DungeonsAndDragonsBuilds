@@ -9,10 +9,10 @@ from CharacterConfigs.BaseClasses.WarlockBase import (
     WarlockLevel4,
     WarlockLevel5,
 )
-from CharacterConfigs.SubClasses.FighterBattleMaster import (
+from CharacterConfigs.SubClasses2024.FighterBattleMaster import (
     FighterBattleMasterCustomStarterClassArgs,
 )
-from CharacterConfigs.SubClasses.WarlockArchfey import (
+from CharacterConfigs.SubClasses2024.WarlockArchfey import (
     ArchfeyWarlockLevel3,
     ArchfeyWarlockLevel5,
     ArchfeyWarlockMulticlassBuilder,

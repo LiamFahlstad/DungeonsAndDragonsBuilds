@@ -25,7 +25,8 @@ from CharacterConfigs.BaseClasses.DruidBase import (
     DruidLevel19,
     DruidLevel20,
 )
-from CharacterConfigs.SubClasses.DruidSea import (
+from CharacterConfigs.SubClasses2024.DruidSea import (
+    DruidSeaCustomStarterClassArgs,
     DruidSeaLevel3,
     DruidSeaLevel5,
     DruidSeaLevel6,
@@ -33,9 +34,8 @@ from CharacterConfigs.SubClasses.DruidSea import (
     DruidSeaLevel9,
     DruidSeaLevel10,
     DruidSeaLevel14,
-    DruidSeaCustomStarterClassArgs,
 )
-from Combat.Monsters.CR_0.monsters import Crab, Octopus, ReefShark, GiantSeahorse
+from Combat.Monsters.CR_0.monsters import Crab, GiantSeahorse, Octopus, ReefShark
 from Definitions import Ability, Skill
 from Features.CharacterFeats import Backgrounds, EpicBoon, GeneralFeats, OriginFeats
 from SpeciesConfigs.Elf import ElfSpeciesBuilder, ElvenLineage

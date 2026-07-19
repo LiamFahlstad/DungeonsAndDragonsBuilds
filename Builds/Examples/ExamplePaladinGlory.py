@@ -25,7 +25,8 @@ from CharacterConfigs.BaseClasses.PaladinBase import (
     PaladinLevel19,
     PaladinLevel20,
 )
-from CharacterConfigs.SubClasses.PaladinGlory import (
+from CharacterConfigs.SubClasses2024.PaladinGlory import (
+    PaladinGloryCustomStarterClassArgs,
     PaladinGloryLevel3,
     PaladinGloryLevel5,
     PaladinGloryLevel7,
@@ -34,7 +35,6 @@ from CharacterConfigs.SubClasses.PaladinGlory import (
     PaladinGloryLevel15,
     PaladinGloryLevel17,
     PaladinGloryLevel20,
-    PaladinGloryCustomStarterClassArgs,
 )
 from Definitions import Ability, Skill
 from Features.CharacterFeats import Backgrounds, EpicBoon, GeneralFeats, OriginFeats

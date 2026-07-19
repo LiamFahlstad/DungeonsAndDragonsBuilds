@@ -23,12 +23,12 @@ from CharacterConfigs.BaseClasses.RangerBase import (
     RangerLevel19,
     RangerLevel20,
 )
-from CharacterConfigs.SubClasses.RangerBeastMaster import (
+from CharacterConfigs.SubClasses2024.RangerBeastMaster import (
+    RangerBeastMasterCustomStarterClassArgs,
     RangerBeastMasterLevel3,
     RangerBeastMasterLevel7,
     RangerBeastMasterLevel11,
     RangerBeastMasterLevel15,
-    RangerBeastMasterCustomStarterClassArgs,
 )
 from Definitions import Ability, DamageType, Skill
 from Features.CharacterFeats import Backgrounds, EpicBoon, GeneralFeats, OriginFeats

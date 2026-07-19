@@ -12,11 +12,11 @@ from CharacterConfigs.BaseClasses.WizardBase import (
     WizardLevel2,
     WizardLevel3,
 )
-from CharacterConfigs.SubClasses.PaladinGlory import (
-    PaladinGloryLevel3,
+from CharacterConfigs.SubClasses2024.PaladinGlory import (
     PaladinGloryCustomStarterClassArgs,
+    PaladinGloryLevel3,
 )
-from CharacterConfigs.SubClasses.WizardBladesinger import (
+from CharacterConfigs.SubClasses2024.WizardBladesinger import (
     WizardBladesingerLevel3,
     WizardBladesingerMulticlassBuilder,
 )

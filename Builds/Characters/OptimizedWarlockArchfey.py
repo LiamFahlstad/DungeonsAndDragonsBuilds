@@ -8,7 +8,7 @@ from CharacterConfigs.BaseClasses.WarlockBase import (
     WarlockLevel4,
     WarlockLevel5,
 )
-from CharacterConfigs.SubClasses.WarlockArchfey import (
+from CharacterConfigs.SubClasses2024.WarlockArchfey import (
     ArchfeyWarlockLevel3,
     ArchfeyWarlockLevel5,
     WarlockArchfeyCustomStarterClassArgs,

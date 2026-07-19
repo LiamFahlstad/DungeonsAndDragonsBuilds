@@ -8,15 +8,16 @@ from CharacterConfigs.BaseClasses.RangerBase import (
     RangerLevel2,
     RangerLevel3,
 )
-from CharacterConfigs.SubClasses.RangerHunter import (
+from CharacterConfigs.SubClasses2024.RangerHunter import (
     HunterRangerLevel3,
     RangerHunterCustomStarterClassArgs,
 )
 from Definitions import Ability, Skill
-from Features.CharacterFeats import Backgrounds, OriginFeats
+from Features.CharacterFeats import Backgrounds
+from Features.CharacterFeats import OriginFeats
+from Features.CharacterFeats import OriginFeats as SpeciesOriginFeats
 from Features.Combat import FightingStyles
 from Features.Equipment import Weapons
-from Features.CharacterFeats import OriginFeats as SpeciesOriginFeats
 from SpeciesConfigs import Human
 from Spells.SpellLists import RangerLevel1Spells
 from StatBlocks.AbilitiesStatBlock import StandardArrayAbilitiesStatBlock

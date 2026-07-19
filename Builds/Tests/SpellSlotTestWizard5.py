@@ -8,9 +8,9 @@ from CharacterConfigs.BaseClasses.WizardBase import (
     WizardLevel4,
     WizardLevel5,
 )
-from CharacterConfigs.SubClasses.WizardBladesinger import (
-    WizardBladesingerLevel3,
+from CharacterConfigs.SubClasses2024.WizardBladesinger import (
     WizardBladeSingerCustomStarterClassArgs,
+    WizardBladesingerLevel3,
 )
 from Definitions import Ability, Skill
 from Features.CharacterFeats import Backgrounds, GeneralFeats, OriginFeats
@@ -56,7 +56,9 @@ def get_starter_class_builder():
         add_default_equipment=True,
         origin_feat=OriginFeats.Alert(),
         armor=[],
-        weapons=[Weapons.Longsword(player_is_proficient=True, ability=Ability.INTELLIGENCE)],
+        weapons=[
+            Weapons.Longsword(player_is_proficient=True, ability=Ability.INTELLIGENCE)
+        ],
         base_class_level_features=ClassBuilder.BaseClassLevelFeatures(
             base_class_features_by_level={
                 1: WizardLevel1(

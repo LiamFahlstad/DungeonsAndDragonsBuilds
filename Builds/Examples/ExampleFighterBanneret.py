@@ -23,13 +23,13 @@ from CharacterConfigs.BaseClasses.FighterBase import (
     FighterLevel17,
     FighterLevel18,
 )
-from CharacterConfigs.SubClasses.FighterBanneret import (
+from CharacterConfigs.SubClasses2024.FighterBanneret import (
+    FighterBanneretCustomStarterClassArgs,
     FighterBanneretLevel3,
     FighterBanneretLevel7,
     FighterBanneretLevel10,
     FighterBanneretLevel15,
     FighterBanneretLevel18,
-    FighterBanneretCustomStarterClassArgs,
 )
 from Definitions import Ability, Skill
 from Features.CharacterFeats import Backgrounds, GeneralFeats, OriginFeats

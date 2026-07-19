@@ -8,7 +8,7 @@ from CharacterConfigs.BaseClasses.PaladinBase import (
     PaladinLevel2,
     PaladinLevel3,
 )
-from CharacterConfigs.SubClasses.PaladinGenies import (
+from CharacterConfigs.SubClasses2024.PaladinGenies import (
     GeniesPaladinLevel3,
     PaladinGeniesCustomStarterClassArgs,
 )
@@ -16,9 +16,13 @@ from Definitions import Ability, Skill
 from Features.CharacterFeats import Backgrounds, OriginFeats
 from Features.Combat import FightingStyles
 from Features.Equipment import Weapons
-from SpeciesConfigs import Dragonborn
 from Features.SpeciesFeatures.DragonbornFeatures import DragonColor
-from Spells.SpellLists import PaladinLevel1Spells, WizardLevel0Spells, WizardLevel1Spells
+from SpeciesConfigs import Dragonborn
+from Spells.SpellLists import (
+    PaladinLevel1Spells,
+    WizardLevel0Spells,
+    WizardLevel1Spells,
+)
 from StatBlocks.AbilitiesStatBlock import StandardArrayAbilitiesStatBlock
 from StatBlocks.SkillsStatBlock import PaladinSkillsStatBlock
 

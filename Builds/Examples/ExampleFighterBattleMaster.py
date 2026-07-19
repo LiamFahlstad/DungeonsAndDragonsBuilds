@@ -10,9 +10,9 @@ from CharacterConfigs.BaseClasses.FighterBase import (
     FighterLevel4,
     FighterLevel5,
 )
-from CharacterConfigs.SubClasses.FighterBattleMaster import (
-    FighterBattleMasterLevel3,
+from CharacterConfigs.SubClasses2024.FighterBattleMaster import (
     FighterBattleMasterCustomStarterClassArgs,
+    FighterBattleMasterLevel3,
 )
 from Definitions import Ability, Skill
 from Features.CharacterFeats import Backgrounds, GeneralFeats, OriginFeats

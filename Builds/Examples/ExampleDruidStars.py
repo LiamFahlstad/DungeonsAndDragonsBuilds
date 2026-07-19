@@ -25,12 +25,12 @@ from CharacterConfigs.BaseClasses.DruidBase import (
     DruidLevel19,
     DruidLevel20,
 )
-from CharacterConfigs.SubClasses.DruidStars import (
+from CharacterConfigs.SubClasses2024.DruidStars import (
+    DruidStarsCustomStarterClassArgs,
     DruidStarsLevel3,
     DruidStarsLevel6,
     DruidStarsLevel10,
     DruidStarsLevel14,
-    DruidStarsCustomStarterClassArgs,
 )
 from Combat.Monsters.CR_1.monsters import BrownBear, DireWolf, GiantSpider, Tiger
 from Definitions import Ability, Skill

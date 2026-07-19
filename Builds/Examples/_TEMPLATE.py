@@ -42,28 +42,20 @@ from CharacterConfigs.BaseClasses.FighterBase import (
 #   Wizard: CharacterConfigs/SubClasses/WizardBladesinger.py, WizardDiviner.py, etc.
 #   See CharacterConfigs/SubClasses/ for all available subclasses
 # Import your subclass:
-from CharacterConfigs.SubClasses.FighterChampion import (
-    FighterChampionLevel3,
+from CharacterConfigs.SubClasses2024.FighterChampion import (
     FighterChampionCustomStarterClassArgs,
+    FighterChampionLevel3,
 )
-
 from Definitions import Ability, Skill
 from Features.CharacterFeats import Backgrounds, GeneralFeats, OriginFeats
 from Features.Combat import FightingStyles
 from Features.Equipment import Armor, Weapons
-
-# TODO: If your class uses spells (Cleric, Wizard, Bard, Druid, etc.), import spell definitions:
-#   from Spells.SpellLists import (
-#       WizardLevel0Spells, WizardLevel1Spells, WizardLevel2Spells, ...
-#   )
-# For Fighter, Monk, Barbarian, Rogue (non-spellcasters), you don't need this
 
 # TODO: Replace 'Dwarf' with your desired species. Available species:
 #   CharacterConfigs/SpeciesConfigs/ has: Human, Elf, Dwarf, Halfling, Tiefling, Dragonborn,
 #   Gnome, Orc, Aasimar, Changeling, Dhampir, Goliath, Hexblood, Kalashtar, Khoravar,
 #   Lupin, Reborn, Shifter, Warforged
 from SpeciesConfigs import Dwarf
-
 from StatBlocks.AbilitiesStatBlock import StandardArrayAbilitiesStatBlock
 
 # TODO: Import your class's skill block. Available skill blocks:
@@ -71,11 +63,18 @@ from StatBlocks.AbilitiesStatBlock import StandardArrayAbilitiesStatBlock
 #   WizardSkillsStatBlock, etc. for each class
 from StatBlocks.SkillsStatBlock import FighterSkillsStatBlock
 
+# TODO: If your class uses spells (Cleric, Wizard, Bard, Druid, etc.), import spell definitions:
+#   from Spells.SpellLists import (
+#       WizardLevel0Spells, WizardLevel1Spells, WizardLevel2Spells, ...
+#   )
+# For Fighter, Monk, Barbarian, Rogue (non-spellcasters), you don't need this
+
 
 # ============================================================================
 # STEP 2: FUNCTION get_starter_class_builder()
 # This function builds your main (starter) class configuration.
 # ============================================================================
+
 
 def get_starter_class_builder():
     """
@@ -118,14 +117,12 @@ def get_starter_class_builder():
                 }
             ),
         ),
-
         # =====================================================================
         # base_class_level: Character level (1-20)
         # =====================================================================
         # This determines how many level features you need to define below
         # TODO: Set your desired level (1-20)
         base_class_level=4,
-
         # =====================================================================
         # abilities: Standard array (15, 14, 13, 12, 10, 8) distributed
         # =====================================================================
@@ -133,14 +130,13 @@ def get_starter_class_builder():
         # Example strategy for Fighter: STR=15 (primary), CON=13+ (survivability),
         # DEX/WIS for AC/initiative, CHA/INT lower priority
         abilities=StandardArrayAbilitiesStatBlock(
-            strength=15,      # TODO: Change to fit your character
+            strength=15,  # TODO: Change to fit your character
             dexterity=14,
             constitution=13,
             intelligence=8,
             wisdom=12,
             charisma=10,
         ),
-
         # =====================================================================
         # background_ability_bonuses: +2 to one ability, +1 to another
         # =====================================================================
@@ -151,7 +147,6 @@ def get_starter_class_builder():
                 (Ability.STRENGTH, 2),
             ]
         ),
-
         # =====================================================================
         # background_skill_proficiencies: Two additional skill proficiencies
         # =====================================================================
@@ -162,20 +157,17 @@ def get_starter_class_builder():
                 Skill.ATHLETICS,
             ]
         ),
-
         # =====================================================================
         # add_default_equipment: True = auto-equip class defaults, False = manually set below
         # =====================================================================
         # Set to True for quick builds, False to customize armor/weapons
         add_default_equipment=False,
-
         # =====================================================================
         # origin_feat: One feat from background/origin
         # =====================================================================
         # TODO: Choose from Features/CharacterFeats/OriginFeats.py
         # Examples: Tough(), Alert(), GiftedLeaner(), etc.
         origin_feat=OriginFeats.SavageAttacker(),
-
         # =====================================================================
         # armor: Your equipped armor pieces
         # =====================================================================
@@ -184,7 +176,6 @@ def get_starter_class_builder():
         armor=[
             Armor.LeatherArmor(),
         ],
-
         # =====================================================================
         # weapons: Weapons you carry
         # =====================================================================
@@ -196,13 +187,11 @@ def get_starter_class_builder():
             Weapons.Scimitar(player_is_proficient=True),
             Weapons.Longbow(player_is_proficient=True),
         ],
-
         # =====================================================================
         # base_class_level_features: Per-level class and subclass features
         # =====================================================================
         # This is the core of your character: spells, maneuvers, abilities per level
         base_class_level_features=ClassBuilder.BaseClassLevelFeatures(
-
             # ----- base_class_features_by_level: Main class features -----
             # Define features for levels 1 through base_class_level
             # TODO: Add a level entry for each level from 1 to base_class_level
@@ -233,7 +222,6 @@ def get_starter_class_builder():
                 # TODO: Add levels 5-20 following the same pattern
                 # If base_class_level=4, you only need levels 1-4 above
             },
-
             # ----- subclass_features_by_level: Subclass-specific features -----
             # These typically start at level 3 and continue at intervals (7, 10, 14, 17, 20)
             # TODO: For your subclass, check CharacterConfigs/SubClasses/YourSubclass.py
@@ -252,6 +240,7 @@ def get_starter_class_builder():
 # This creates your final character and sets name + species
 # ============================================================================
 
+
 class YourCharacterNameCharacterBuilder(CharacterBuilder):
     """
     Your character builder. Replace 'YourCharacterName' with a unique class name
@@ -264,16 +253,13 @@ class YourCharacterNameCharacterBuilder(CharacterBuilder):
         super().__init__(
             # TODO: Set your character's name (appears in character sheet)
             name="My Custom Fighter",
-
             # Your main class builder (configured above)
             starter_class_builder=get_starter_class_builder(),
-
             # TODO: Replace Dwarf with your desired species
             # Import from SpeciesConfigs/[SpeciesName].py
             # Some species have parameters (e.g., Elf has elven_lineage and skill_proficiency)
             # Check the species file to see what's required
             species_builder=Dwarf.DwarfSpeciesBuilder(),
-
             # OPTIONAL: multiclass_builders for multiclassing
             # If you want to multiclass, create additional class builders with
             # the MulticlassBuilder subclass for your secondary class.

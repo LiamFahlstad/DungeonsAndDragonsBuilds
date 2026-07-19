@@ -8,9 +8,9 @@ from CharacterConfigs.BaseClasses.WizardBase import (
     WizardLevel3,
     WizardLevel4,
 )
-from CharacterConfigs.SubClasses.WizardBladesinger import (
-    WizardBladesingerLevel3,
+from CharacterConfigs.SubClasses2024.WizardBladesinger import (
     WizardBladeSingerCustomStarterClassArgs,
+    WizardBladesingerLevel3,
 )
 from Definitions import Ability, Skill
 from Features.CharacterFeats import Backgrounds, GeneralFeats, OriginFeats

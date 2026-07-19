@@ -7,16 +7,13 @@ working character build. Follow the same steps to create your own builds.
 
 from Builds.CharacterBuilder import CharacterBuilder
 from CharacterConfigs.BaseClasses import ClassBuilder
-from CharacterConfigs.BaseClasses.ClassBuilder import StarterClassBuilder
 from CharacterConfigs.BaseClasses.BardBase import BardLevel1
-from CharacterConfigs.SubClasses.BardLore import BardLoreCustomStarterClassArgs
+from CharacterConfigs.BaseClasses.ClassBuilder import StarterClassBuilder
+from CharacterConfigs.SubClasses2024.BardLore import BardLoreCustomStarterClassArgs
 from Definitions import Ability, Skill
-from Features.CharacterFeats import Backgrounds, GeneralFeats, OriginFeats
+from Features.CharacterFeats import Backgrounds, OriginFeats
 from SpeciesConfigs import Human
-from Spells.SpellLists import (
-    BardLevel0Spells,
-    BardLevel1Spells,
-)
+from Spells.SpellLists import BardLevel0Spells, BardLevel1Spells
 from StatBlocks.AbilitiesStatBlock import StandardArrayAbilitiesStatBlock
 from StatBlocks.SkillsStatBlock import BardSkillsStatBlock
 

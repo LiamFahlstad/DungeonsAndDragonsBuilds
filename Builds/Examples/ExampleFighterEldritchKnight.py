@@ -23,13 +23,13 @@ from CharacterConfigs.BaseClasses.FighterBase import (
     FighterLevel17,
     FighterLevel18,
 )
-from CharacterConfigs.SubClasses.FighterEldritchKnight import (
+from CharacterConfigs.SubClasses2024.FighterEldritchKnight import (
+    FighterEldritchKnightCustomStarterClassArgs,
     FighterEldritchKnightLevel3,
     FighterEldritchKnightLevel7,
     FighterEldritchKnightLevel10,
     FighterEldritchKnightLevel15,
     FighterEldritchKnightLevel18,
-    FighterEldritchKnightCustomStarterClassArgs,
 )
 from Definitions import Ability, Skill
 from Features.CharacterFeats import Backgrounds, GeneralFeats, OriginFeats

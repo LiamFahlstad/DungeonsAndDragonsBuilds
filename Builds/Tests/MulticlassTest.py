@@ -9,10 +9,10 @@ from CharacterConfigs.BaseClasses.WizardBase import (
     WizardLevel3,
     WizardLevel4,
 )
-from CharacterConfigs.SubClasses.FighterBattleMaster import (
+from CharacterConfigs.SubClasses2024.FighterBattleMaster import (
     FighterBattleMasterCustomStarterClassArgs,
 )
-from CharacterConfigs.SubClasses.WizardBladesinger import (
+from CharacterConfigs.SubClasses2024.WizardBladesinger import (
     WizardBladesingerLevel3,
     WizardBladesingerMulticlassBuilder,
 )

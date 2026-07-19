@@ -27,12 +27,12 @@ from CharacterConfigs.BaseClasses.ClassBuilder import (
     BaseClassLevelFeatures,
     StarterClassBuilder,
 )
-from CharacterConfigs.SubClasses.BarbarianPathOfTheBerserker import (
+from CharacterConfigs.SubClasses2024.BarbarianPathOfTheBerserker import (
+    BarbarianBerserkerCustomStarterClassArgs,
     BarbarianBerserkerLevel3,
     BarbarianBerserkerLevel6,
     BarbarianBerserkerLevel10,
     BarbarianBerserkerLevel14,
-    BarbarianBerserkerCustomStarterClassArgs,
 )
 from Definitions import Ability, Skill
 from Features.CharacterFeats import Backgrounds, EpicBoon, GeneralFeats, OriginFeats

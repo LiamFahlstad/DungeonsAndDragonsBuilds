@@ -23,13 +23,13 @@ from CharacterConfigs.BaseClasses.FighterBase import (
     FighterLevel17,
     FighterLevel18,
 )
-from CharacterConfigs.SubClasses.FighterPsiWarrior import (
+from CharacterConfigs.SubClasses2024.FighterPsiWarrior import (
+    FighterPsiWarriorCustomStarterClassArgs,
     FighterPsiWarriorLevel3,
     FighterPsiWarriorLevel7,
     FighterPsiWarriorLevel10,
     FighterPsiWarriorLevel15,
     FighterPsiWarriorLevel18,
-    FighterPsiWarriorCustomStarterClassArgs,
 )
 from Definitions import Ability, Skill
 from Features.CharacterFeats import Backgrounds, GeneralFeats, OriginFeats

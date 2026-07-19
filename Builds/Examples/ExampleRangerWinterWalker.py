@@ -8,9 +8,9 @@ from CharacterConfigs.BaseClasses.RangerBase import (
     RangerLevel2,
     RangerLevel3,
 )
-from CharacterConfigs.SubClasses.RangerWinterWalker import (
-    WinterWalkerRangerLevel3,
+from CharacterConfigs.SubClasses2024.RangerWinterWalker import (
     RangerWinterWalkerCustomStarterClassArgs,
+    WinterWalkerRangerLevel3,
 )
 from Definitions import Ability, Skill
 from Features.CharacterFeats import Backgrounds, OriginFeats

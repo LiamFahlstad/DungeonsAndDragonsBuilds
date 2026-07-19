@@ -10,9 +10,9 @@ from CharacterConfigs.BaseClasses.WizardBase import (
     WizardLevel3,
     WizardLevel4,
 )
-from CharacterConfigs.SubClasses.WizardDiviner import (
-    WizardDivinerLevel3,
+from CharacterConfigs.SubClasses2024.WizardDiviner import (
     WizardDivinerCustomStarterClassArgs,
+    WizardDivinerLevel3,
 )
 from Definitions import Ability, Skill
 from Features.CharacterFeats import Backgrounds, GeneralFeats, OriginFeats

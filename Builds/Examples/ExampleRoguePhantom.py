@@ -23,12 +23,12 @@ from CharacterConfigs.BaseClasses.RogueBase import (
     RogueLevel16,
     RogueLevel17,
 )
-from CharacterConfigs.SubClasses.RoguePhantom import (
+from CharacterConfigs.SubClasses2024.RoguePhantom import (
+    RoguePhantomCustomStarterClassArgs,
     RoguePhantomLevel3,
     RoguePhantomLevel9,
     RoguePhantomLevel13,
     RoguePhantomLevel17,
-    RoguePhantomCustomStarterClassArgs,
 )
 from Definitions import Ability, Skill
 from Features.CharacterFeats import Backgrounds, GeneralFeats, OriginFeats

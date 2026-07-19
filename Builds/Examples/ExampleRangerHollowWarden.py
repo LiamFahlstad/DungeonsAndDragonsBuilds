@@ -8,9 +8,9 @@ from CharacterConfigs.BaseClasses.RangerBase import (
     RangerLevel2,
     RangerLevel3,
 )
-from CharacterConfigs.SubClasses.RangerHollowWarden import (
-    RangerHollowWardenLevel3,
+from CharacterConfigs.SubClasses2024.RangerHollowWarden import (
     RangerHollowWardenCustomStarterClassArgs,
+    RangerHollowWardenLevel3,
 )
 from Definitions import Ability, Skill
 from Features.CharacterFeats import Backgrounds, OriginFeats

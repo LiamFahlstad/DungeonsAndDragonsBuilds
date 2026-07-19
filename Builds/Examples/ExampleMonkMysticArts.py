@@ -23,12 +23,12 @@ from CharacterConfigs.BaseClasses.MonkBase import (
     MonkLevel16,
     MonkLevel17,
 )
-from CharacterConfigs.SubClasses.MonkMysticArts import (
+from CharacterConfigs.SubClasses2024.MonkMysticArts import (
+    MonkMysticArtsCustomStarterClassArgs,
     MonkMysticArtsLevel3,
     MonkMysticArtsLevel6,
     MonkMysticArtsLevel11,
     MonkMysticArtsLevel17,
-    MonkMysticArtsCustomStarterClassArgs,
 )
 from Definitions import Ability, Skill
 from Features.CharacterFeats import Backgrounds, GeneralFeats, OriginFeats

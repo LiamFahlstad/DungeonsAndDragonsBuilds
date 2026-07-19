@@ -8,10 +8,10 @@ from CharacterConfigs.BaseClasses.PaladinBase import (
     PaladinLevel4,
     PaladinLevel5,
 )
-from CharacterConfigs.SubClasses.PaladinGlory import (
+from CharacterConfigs.SubClasses2024.PaladinGlory import (
+    PaladinGloryCustomStarterClassArgs,
     PaladinGloryLevel3,
     PaladinGloryLevel5,
-    PaladinGloryCustomStarterClassArgs,
 )
 from Definitions import Ability, Skill
 from Features.CharacterFeats import Backgrounds, GeneralFeats, OriginFeats

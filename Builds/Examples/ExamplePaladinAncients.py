@@ -8,7 +8,7 @@ from CharacterConfigs.BaseClasses.PaladinBase import (
     PaladinLevel2,
     PaladinLevel3,
 )
-from CharacterConfigs.SubClasses.PaladinAncients import (
+from CharacterConfigs.SubClasses2024.PaladinAncients import (
     AncientsPaladinLevel3,
     PaladinAncientsCustomStarterClassArgs,
 )

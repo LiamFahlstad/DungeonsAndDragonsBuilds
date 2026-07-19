@@ -23,7 +23,8 @@ from CharacterConfigs.BaseClasses.DruidBase import (
     DruidLevel19,
     DruidLevel20,
 )
-from CharacterConfigs.SubClasses.DruidMoon import (
+from CharacterConfigs.SubClasses2024.DruidMoon import (
+    DruidMoonCustomStarterClassArgs,
     DruidMoonLevel3,
     DruidMoonLevel5,
     DruidMoonLevel6,
@@ -31,7 +32,6 @@ from CharacterConfigs.SubClasses.DruidMoon import (
     DruidMoonLevel9,
     DruidMoonLevel10,
     DruidMoonLevel14,
-    DruidMoonCustomStarterClassArgs,
 )
 from Combat.Monsters.CR_1.monsters import BrownBear, DireWolf, GiantSpider, Tiger
 from Definitions import Ability, Skill

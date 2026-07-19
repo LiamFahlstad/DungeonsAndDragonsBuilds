@@ -1,16 +1,19 @@
 """Example build: Artificer Battle Smith. Adapted from an optimized reference build to demonstrate this subclass."""
 
-import Definitions
 from Builds.CharacterBuilder import CharacterBuilder
 from CharacterConfigs.BaseClasses import ClassBuilder
+from CharacterConfigs.BaseClasses.ArtificerBase import (
+    ArtificerLevel1,
+    ArtificerLevel2,
+    ArtificerLevel3,
+)
 from CharacterConfigs.BaseClasses.ClassBuilder import StarterClassBuilder
-from CharacterConfigs.BaseClasses.ArtificerBase import ArtificerLevel1, ArtificerLevel2, ArtificerLevel3
-from CharacterConfigs.SubClasses.ArtificerBattleSmith import (
-    ArtificerBattleSmithLevel3,
+from CharacterConfigs.SubClasses2024.ArtificerBattleSmith import (
     ArtificerBattleSmithCustomStarterClassArgs,
+    ArtificerBattleSmithLevel3,
 )
 from Definitions import Ability, Skill
-from Features.CharacterFeats import Backgrounds, GeneralFeats, OriginFeats
+from Features.CharacterFeats import Backgrounds, OriginFeats
 from Features.Equipment import Armor, Weapons
 from SpeciesConfigs import Dwarf
 from Spells import SpellLists as SpellDefinitions

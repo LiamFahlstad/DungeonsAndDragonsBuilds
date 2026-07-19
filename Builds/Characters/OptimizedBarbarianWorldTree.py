@@ -23,12 +23,12 @@ from CharacterConfigs.BaseClasses.BarbarianBase import (
     BarbarianLevel20,
 )
 from CharacterConfigs.BaseClasses.ClassBuilder import StarterClassBuilder
-from CharacterConfigs.SubClasses.BarbarianPathOfTheWorldTree import (
+from CharacterConfigs.SubClasses2024.BarbarianPathOfTheWorldTree import (
+    BarbarianWorldTreeCustomStarterClassArgs,
     BarbarianWorldTreeLevel3,
     BarbarianWorldTreeLevel6,
     BarbarianWorldTreeLevel10,
     BarbarianWorldTreeLevel14,
-    BarbarianWorldTreeCustomStarterClassArgs,
 )
 from Definitions import Ability, Skill
 from Features.CharacterFeats import Backgrounds, EpicBoon, GeneralFeats, OriginFeats

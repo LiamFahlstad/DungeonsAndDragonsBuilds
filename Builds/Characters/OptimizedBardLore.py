@@ -23,11 +23,11 @@ from CharacterConfigs.BaseClasses.BardBase import (
     BardLevel20,
 )
 from CharacterConfigs.BaseClasses.ClassBuilder import StarterClassBuilder
-from CharacterConfigs.SubClasses.BardLore import (
+from CharacterConfigs.SubClasses2024.BardLore import (
+    BardLoreCustomStarterClassArgs,
     BardLoreLevel3,
     BardLoreLevel6,
     BardLoreLevel14,
-    BardLoreCustomStarterClassArgs,
 )
 from Definitions import Ability, Skill
 from Features.CharacterFeats import Backgrounds, EpicBoon, GeneralFeats, OriginFeats

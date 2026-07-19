@@ -19,7 +19,7 @@ from CharacterConfigs.BaseClasses.WarlockBase import (
     WarlockLevel13,
     WarlockLevel14,
 )
-from CharacterConfigs.SubClasses.WarlockCelestial import (
+from CharacterConfigs.SubClasses2024.WarlockCelestial import (
     CelestialWarlockLevel3,
     CelestialWarlockLevel5,
     CelestialWarlockLevel6,

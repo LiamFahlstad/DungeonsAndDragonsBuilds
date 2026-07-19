@@ -23,12 +23,12 @@ from CharacterConfigs.BaseClasses.MonkBase import (
     MonkLevel16,
     MonkLevel17,
 )
-from CharacterConfigs.SubClasses.MonkOpenHand import (
+from CharacterConfigs.SubClasses2024.MonkOpenHand import (
+    MonkOpenHandCustomStarterClassArgs,
     MonkOpenHandLevel3,
     MonkOpenHandLevel6,
     MonkOpenHandLevel11,
     MonkOpenHandLevel17,
-    MonkOpenHandCustomStarterClassArgs,
 )
 from Definitions import Ability, Skill
 from Features.CharacterFeats import Backgrounds, GeneralFeats, OriginFeats

@@ -8,7 +8,7 @@ from CharacterConfigs.BaseClasses.PaladinBase import (
     PaladinLevel2,
     PaladinLevel3,
 )
-from CharacterConfigs.SubClasses.PaladinDevotion import (
+from CharacterConfigs.SubClasses2024.PaladinDevotion import (
     DevotionPaladinLevel3,
     PaladinDevotionCustomStarterClassArgs,
 )

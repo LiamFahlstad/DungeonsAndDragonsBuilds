@@ -8,15 +8,15 @@ from CharacterConfigs.BaseClasses.SorcererBase import (
     SorcererLevel4,
     SorcererLevel5,
 )
-from CharacterConfigs.SubClasses.SorcererDraconic import (
-    SorcererDraconicLevel3,
+from CharacterConfigs.SubClasses2024.SorcererDraconic import (
     SorcererDraconicCustomStarterClassArgs,
+    SorcererDraconicLevel3,
 )
 from Definitions import Ability, Skill
 from Features.CharacterFeats import Backgrounds, GeneralFeats, OriginFeats
 from Features.Equipment import Weapons
-from SpeciesConfigs import Dragonborn
 from Features.SpeciesFeatures import DragonbornFeatures
+from SpeciesConfigs import Dragonborn
 from Spells import SpellLists as SpellDefinitions
 from StatBlocks.AbilitiesStatBlock import StandardArrayAbilitiesStatBlock
 from StatBlocks.SkillsStatBlock import SorcererSkillsStatBlock

@@ -8,7 +8,7 @@ from CharacterConfigs.BaseClasses.RangerBase import (
     RangerLevel2,
     RangerLevel3,
 )
-from CharacterConfigs.SubClasses.RangerFeyWanderer import (
+from CharacterConfigs.SubClasses2024.RangerFeyWanderer import (
     FeyWandererRangerLevel3,
     RangerFeyWandererCustomStarterClassArgs,
 )

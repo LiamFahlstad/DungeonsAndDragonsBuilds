@@ -5,9 +5,9 @@ from Builds.CharacterBuilder import CharacterBuilder
 from CharacterConfigs.BaseClasses import ClassBuilder
 from CharacterConfigs.BaseClasses.ClassBuilder import StarterClassBuilder
 from CharacterConfigs.BaseClasses.MonkBase import MonkLevel1, MonkLevel2, MonkLevel3
-from CharacterConfigs.SubClasses.MonkShadow import (
-    MonkShadowLevel3,
+from CharacterConfigs.SubClasses2024.MonkShadow import (
     MonkShadowCustomStarterClassArgs,
+    MonkShadowLevel3,
 )
 from Definitions import Ability, Skill
 from Features.CharacterFeats import Backgrounds, OriginFeats

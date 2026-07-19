@@ -8,9 +8,9 @@ from CharacterConfigs.BaseClasses.FighterBase import (
     FighterLevel4,
     FighterLevel5,
 )
-from CharacterConfigs.SubClasses.FighterChampion import (
-    FighterChampionLevel3,
+from CharacterConfigs.SubClasses2024.FighterChampion import (
     FighterChampionCustomStarterClassArgs,
+    FighterChampionLevel3,
 )
 from Definitions import Ability, Skill
 from Features.CharacterFeats import Backgrounds, GeneralFeats, OriginFeats
@@ -75,8 +75,7 @@ def get_starter_class_builder():
             Weapons.FlameTongueSword(player_is_proficient=True),
             Weapons.Longbow(player_is_proficient=True),
         ],
-        items=Packs.DungeoneersPack().get_items()
-        + [(Items.RingOfInvestigation(), 1)],
+        items=Packs.DungeoneersPack().get_items() + [(Items.RingOfInvestigation(), 1)],
         base_class_level_features=ClassBuilder.BaseClassLevelFeatures(
             base_class_features_by_level={
                 1: FighterLevel1(

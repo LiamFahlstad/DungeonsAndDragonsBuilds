@@ -6,9 +6,9 @@ from CharacterConfigs.BaseClasses.PaladinBase import (
     PaladinLevel2,
     PaladinLevel3,
 )
-from CharacterConfigs.SubClasses.PaladinVengeance import (
-    PaladinVengeanceLevel3,
+from CharacterConfigs.SubClasses2024.PaladinVengeance import (
     PaladinVengeanceCustomStarterClassArgs,
+    PaladinVengeanceLevel3,
 )
 from Definitions import Ability, Skill
 from Features.CharacterFeats import Backgrounds, OriginFeats

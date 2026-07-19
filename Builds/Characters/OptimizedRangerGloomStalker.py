@@ -6,9 +6,9 @@ from CharacterConfigs.BaseClasses.RangerBase import (
     RangerLevel2,
     RangerLevel3,
 )
-from CharacterConfigs.SubClasses.RangerGloomStalker import (
-    RangerGloomStalkerLevel3,
+from CharacterConfigs.SubClasses2024.RangerGloomStalker import (
     RangerGloomStalkerCustomStarterClassArgs,
+    RangerGloomStalkerLevel3,
 )
 from Definitions import Ability, Skill
 from Features.CharacterFeats import Backgrounds, OriginFeats

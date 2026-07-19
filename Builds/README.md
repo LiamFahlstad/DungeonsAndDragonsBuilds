@@ -103,7 +103,7 @@ from CharacterConfigs.BaseClasses.FighterBase import (
 )
 
 # Import your subclass levels and starter class args
-from CharacterConfigs.SubClasses.FighterChampion import (
+from CharacterConfigs.SubClasses2024.FighterChampion import (
     FighterChampionLevel3,
     FighterChampionCustomStarterClassArgs,
 )

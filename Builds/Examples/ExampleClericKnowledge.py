@@ -25,11 +25,11 @@ from CharacterConfigs.BaseClasses.ClericBase import (
     ClericLevel19,
     ClericLevel20,
 )
-from CharacterConfigs.SubClasses.ClericKnowledge import (
+from CharacterConfigs.SubClasses2024.ClericKnowledge import (
+    ClericKnowledgeCustomStarterClassArgs,
     ClericKnowledgeLevel3,
     ClericKnowledgeLevel6,
     ClericKnowledgeLevel17,
-    ClericKnowledgeCustomStarterClassArgs,
 )
 from Definitions import Ability, Skill
 from Features.CharacterFeats import Backgrounds, EpicBoon, GeneralFeats, OriginFeats

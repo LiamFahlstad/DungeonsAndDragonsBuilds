@@ -12,9 +12,9 @@ from CharacterConfigs.BaseClasses.RogueBase import (
     RogueLevel5,
     RogueLevel6,
 )
-from CharacterConfigs.SubClasses.RogueAssassin import (
-    RogueAssassinLevel3,
+from CharacterConfigs.SubClasses2024.RogueAssassin import (
     RogueAssassinCustomStarterClassArgs,
+    RogueAssassinLevel3,
 )
 from Definitions import Ability, Skill
 from Features.CharacterFeats import Backgrounds, GeneralFeats, OriginFeats

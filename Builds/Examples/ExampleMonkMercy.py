@@ -23,12 +23,12 @@ from CharacterConfigs.BaseClasses.MonkBase import (
     MonkLevel16,
     MonkLevel17,
 )
-from CharacterConfigs.SubClasses.MonkMercy import (
+from CharacterConfigs.SubClasses2024.MonkMercy import (
+    MonkMercyCustomStarterClassArgs,
     MonkMercyLevel3,
     MonkMercyLevel6,
     MonkMercyLevel11,
     MonkMercyLevel17,
-    MonkMercyCustomStarterClassArgs,
 )
 from Definitions import Ability, Skill
 from Features.CharacterFeats import Backgrounds, GeneralFeats, OriginFeats

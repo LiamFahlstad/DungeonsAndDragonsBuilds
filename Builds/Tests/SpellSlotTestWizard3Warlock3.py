@@ -11,16 +11,16 @@ from CharacterConfigs.BaseClasses.WizardBase import (
     WizardLevel2,
     WizardLevel3,
 )
-from CharacterConfigs.SubClasses.WarlockArchfey import (
+from CharacterConfigs.SubClasses2024.WarlockArchfey import (
     ArchfeyWarlockLevel3,
     ArchfeyWarlockMulticlassBuilder,
 )
-from CharacterConfigs.SubClasses.WizardBladesinger import (
-    WizardBladesingerLevel3,
+from CharacterConfigs.SubClasses2024.WizardBladesinger import (
     WizardBladeSingerCustomStarterClassArgs,
+    WizardBladesingerLevel3,
 )
 from Definitions import Ability, Skill
-from Features.CharacterFeats import Backgrounds, GeneralFeats, OriginFeats
+from Features.CharacterFeats import Backgrounds, OriginFeats
 from Features.Equipment import Weapons
 from Invocations.Definitions import InvocationsLevel0, InvocationsLevel2
 from SpeciesConfigs import Human
@@ -67,7 +67,9 @@ def get_starter_class_builder():
         add_default_equipment=True,
         origin_feat=OriginFeats.Alert(),
         armor=[],
-        weapons=[Weapons.Longsword(player_is_proficient=True, ability=Ability.INTELLIGENCE)],
+        weapons=[
+            Weapons.Longsword(player_is_proficient=True, ability=Ability.INTELLIGENCE)
+        ],
         base_class_level_features=ClassBuilder.BaseClassLevelFeatures(
             base_class_features_by_level={
                 1: WizardLevel1(
