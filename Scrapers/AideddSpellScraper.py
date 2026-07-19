@@ -15,6 +15,23 @@ class SpellNotFoundError(Exception):
     pass
 
 
+# Connector words other sources may inconsistently capitalize mid-name
+# (e.g. "Commune With Nature" vs "Commune with Nature"). Lowercase them
+# whenever they're not the first word, matching the wikidot scrapers, so
+# the same spell from different sources merges under one name instead of
+# producing near-duplicate entries.
+_LOWERCASE_MIDWORDS = {"of", "and", "with", "without"}
+
+
+def normalize_spell_name(name: str) -> str:
+    name = name.replace(": ", " ")
+    words = name.split(" ")
+    return " ".join(
+        w.lower() if i > 0 and w.lower() in _LOWERCASE_MIDWORDS else w
+        for i, w in enumerate(words)
+    )
+
+
 class SpellParser:
     BASE_URL = "https://www.aidedd.org/spell/"
 
@@ -159,7 +176,14 @@ def fetch_spell(spell_name: str, max_retries: int = 3) -> tuple[str, dict]:
         try:
             spell = SpellParser(spell_name)
             spell.fetch()
-            return spell_name, spell.to_dict()
+            data = spell.to_dict()
+            # Key by the name AideDD itself uses, not the input candidate -
+            # different candidate spellings (e.g. "Power Word: Heal" from
+            # dnd5e vs "Power Word Heal" from dnd2024) can resolve to the
+            # same AideDD page, and we don't want two entries for one spell.
+            name = normalize_spell_name(data["name"])
+            data["name"] = name
+            return name, data
         except (requests.exceptions.ConnectionError, requests.exceptions.Timeout) as e:
             last_exc = e
             if attempt < max_retries - 1:
@@ -177,7 +201,7 @@ def _candidate_names() -> list[str]:
     for path in ("Spells/spells_dnd2024.json", "Spells/spells_dnd5e.json"):
         try:
             with open(path, "r", encoding="utf-8") as f:
-                names.update(json.load(f).keys())
+                names.update(normalize_spell_name(n) for n in json.load(f).keys())
         except FileNotFoundError:
             print(f"  (skipping missing {path})")
     return sorted(names)

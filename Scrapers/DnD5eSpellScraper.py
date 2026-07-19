@@ -13,10 +13,14 @@ BASE_URL = "https://dnd5e.wikidot.com/"
 # Connector words the wiki's index page inconsistently title-cases mid-name
 # (e.g. "Spray Of Cards" instead of "Spray of Cards"). Lowercase them
 # whenever they're not the first word, to match standard spell-name casing.
-_LOWERCASE_MIDWORDS = {"of", "and"}
+_LOWERCASE_MIDWORDS = {"of", "and", "with", "without"}
 
 
 def normalize_spell_name(name: str) -> str:
+    # This wiki styles the "Power Word" spell family with a colon
+    # ("Power Word: Stun") where the 2024 rules and other sources drop it
+    # ("Power Word Stun") - strip it so the name matches across sources.
+    name = name.replace(": ", " ")
     words = name.split(" ")
     return " ".join(
         w.lower() if i > 0 and w.lower() in _LOWERCASE_MIDWORDS else w

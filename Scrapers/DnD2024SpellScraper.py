@@ -13,7 +13,7 @@ BASE_URL = "https://dnd2024.wikidot.com/"
 # Connector words the wiki's index page inconsistently title-cases mid-name
 # (e.g. "Cloud Of Daggers" instead of "Cloud of Daggers"). Lowercase them
 # whenever they're not the first word, to match standard spell-name casing.
-_LOWERCASE_MIDWORDS = {"of", "and"}
+_LOWERCASE_MIDWORDS = {"of", "and", "with", "without"}
 
 
 def normalize_spell_name(name: str) -> str:

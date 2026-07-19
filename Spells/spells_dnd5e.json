@@ -5648,8 +5648,8 @@
         "description": "Choose one creature that you can see within range. The target begins a comic dance in place: shuffling, tapping its feet, and capering for the duration. Creatures that can't be charmed are immune to this spell.\nA dancing creature must use all its movement to dance without leaving its space and has disadvantage on Dexterity saving throws and attack rolls. While the target is affected by this spell, other creatures have advantage on attack rolls against it. As an action, a dancing creature makes a Wisdom saving throw to regain control of itself. On a successful save, the spell ends.",
         "source": "Player's Handbook"
     },
-    "Pass Without Trace": {
-        "name": "Pass Without Trace",
+    "Pass without Trace": {
+        "name": "Pass without Trace",
         "level": 2,
         "school": "Abjuration",
         "ritual": false,
@@ -5834,8 +5834,8 @@
         "description": "This spell transforms a creature that you can see within range into a new form. An unwilling creature must make a Wisdom saving throw to avoid the effect. A shapechanger automatically succeeds on this saving throw.\nThe transformation lasts for the duration, or until the target drops to 0 hit points or dies. The new form can be any beast whose challenge rating is equal to or less than the target's (or the target's level, if it doesn't have a challenge rating). The target's game statistics, including mental ability scores, are replaced by the statistics of the chosen beast. It retains its alignment and personality.\nThe target assumes the hit points of its new form. When it reverts to its normal form, the creature returns to the number of hit points it had before it transformed. If it reverts as a result of dropping to 0 hit points, any excess damage carries over to its normal form. As long as the excess damage doesn't reduce the creature's normal form to 0 hit points, it isn't knocked unconscious.\nThe creature is limited in the actions it can perform by the nature of its new form, and it can't speak, cast spells, or take any other action that requires hands or speech.\nThe target's gear melds into the new form. The creature can't activate, use, wield, or otherwise benefit from any of its equipment. This spell can't affect a target that has 0 hit points.",
         "source": "Player's Handbook"
     },
-    "Power Word: Heal": {
-        "name": "Power Word: Heal",
+    "Power Word Heal": {
+        "name": "Power Word Heal",
         "level": 9,
         "school": "Evocation",
         "ritual": false,
@@ -5850,8 +5850,8 @@
         "description": "A wave of healing energy washes over a creature you touch. The target regains all its hit points. If the creature is charmed, frightened, paralyzed, or stunned, the condition ends. If the creature is prone, it can use its reaction to stand up. This spell has no effect on undead or constructs.",
         "source": "Player's Handbook"
     },
-    "Power Word: Kill": {
-        "name": "Power Word: Kill",
+    "Power Word Kill": {
+        "name": "Power Word Kill",
         "level": 9,
         "school": "Enchantment",
         "ritual": false,
@@ -5868,8 +5868,8 @@
         "description": "You utter a word of power that can compel one creature you can see within range to die instantly. If the creature you chose has 100 hit points or fewer, it dies. Otherwise, the spell has no effect.",
         "source": "Player's Handbook"
     },
-    "Power Word: Pain": {
-        "name": "Power Word: Pain",
+    "Power Word Pain": {
+        "name": "Power Word Pain",
         "level": 7,
         "school": "Enchantment",
         "ritual": false,
@@ -5885,8 +5885,8 @@
         "description": "You speak a word of power that causes waves of intense pain to assail one creature you can see within range. If the target has 100 hit points or fewer, it is subject to crippling pain. Otherwise, the spell has no effect on it. A target is also unaffected if it is immune to being charmed.\nWhile the target is affected by crippling pain, any speed it has can be no higher than 10 feet. The target also has disadvantage on attack rolls, ability checks, and saving throws, other than Constitution saving throws. Finally, if the target tries to cast a spell, it must first succeed on a Constitution saving throw, or the casting fails and the spell is wasted.\nA target suffering this pain can make a Constitution saving throw at the end of each of its turns. On a successful save, the pain ends.",
         "source": "Xanathar's Guide to Everything"
     },
-    "Power Word: Stun": {
-        "name": "Power Word: Stun",
+    "Power Word Stun": {
+        "name": "Power Word Stun",
         "level": 8,
         "school": "Enchantment",
         "ritual": false,

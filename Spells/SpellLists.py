@@ -223,7 +223,7 @@ class SorcererLevel7Spells(str, Enum):
     FINGER_OF_DEATH = "Finger of Death"
     FIRE_STORM = "Fire Storm"
     PLANE_SHIFT = "Plane Shift"
-    POWER_WORD_PAIN = "Power Word: Pain"
+    POWER_WORD_PAIN = "Power Word Pain"
     PRISMATIC_SPRAY = "Prismatic Spray"
     REVERSE_GRAVITY = "Reverse Gravity"
     SIMBULS_SYNOSTODWEOMER = "Simbul's Synostodweomer"
@@ -236,7 +236,6 @@ class SorcererLevel8Spells(str, Enum):
     EARTHQUAKE = "Earthquake"
     INCENDIARY_CLOUD = "Incendiary Cloud"
     POWER_WORD_STUN = "Power Word Stun"
-    POWER_WORD_STUN = "Power Word Stun"
     SUNBURST = "Sunburst"
 
 class SorcererLevel9Spells(str, Enum):
@@ -244,7 +243,6 @@ class SorcererLevel9Spells(str, Enum):
     GATE = "Gate"
     MASS_POLYMORPH = "Mass Polymorph"
     METEOR_SWARM = "Meteor Swarm"
-    POWER_WORD_KILL = "Power Word Kill"
     POWER_WORD_KILL = "Power Word Kill"
     PSYCHIC_SCREAM = "Psychic Scream"
     TIME_STOP = "Time Stop"
@@ -699,7 +697,7 @@ class WizardLevel7Spells(str, Enum):
     MORDENKAINENS_MAGNIFICENT_MANSION = "Mordenkainen's Magnificent Mansion"
     MORDENKAINENS_SWORD = "Mordenkainen's Sword"
     PLANE_SHIFT = "Plane Shift"
-    POWER_WORD_PAIN = "Power Word: Pain"
+    POWER_WORD_PAIN = "Power Word Pain"
     PRISMATIC_SPRAY = "Prismatic Spray"
     PROJECT_IMAGE = "Project Image"
     REVERSE_GRAVITY = "Reverse Gravity"
@@ -731,7 +729,6 @@ class WizardLevel8Spells(str, Enum):
     MIGHTY_FORTRESS = "Mighty Fortress"
     MIND_BLANK = "Mind Blank"
     POWER_WORD_STUN = "Power Word Stun"
-    POWER_WORD_STUN = "Power Word Stun"
     REALITY_BREAK = "Reality Break"
     SUNBURST = "Sunburst"
     TELEPATHY = "Telepathy"
@@ -745,7 +742,6 @@ class WizardLevel9Spells(str, Enum):
     INVULNERABILITY = "Invulnerability"
     MASS_POLYMORPH = "Mass Polymorph"
     METEOR_SWARM = "Meteor Swarm"
-    POWER_WORD_KILL = "Power Word Kill"
     POWER_WORD_KILL = "Power Word Kill"
     PRISMATIC_WALL = "Prismatic Wall"
     PSYCHIC_SCREAM = "Psychic Scream"
@@ -935,14 +931,11 @@ class BardLevel8Spells(str, Enum):
     GLIBNESS = "Glibness"
     MIND_BLANK = "Mind Blank"
     POWER_WORD_STUN = "Power Word Stun"
-    POWER_WORD_STUN = "Power Word Stun"
 
 class BardLevel9Spells(str, Enum):
     FORESIGHT = "Foresight"
     MASS_POLYMORPH = "Mass Polymorph"
     POWER_WORD_HEAL = "Power Word Heal"
-    POWER_WORD_HEAL = "Power Word Heal"
-    POWER_WORD_KILL = "Power Word Kill"
     POWER_WORD_KILL = "Power Word Kill"
     PRISMATIC_WALL = "Prismatic Wall"
     PSYCHIC_SCREAM = "Psychic Scream"
@@ -1098,7 +1091,6 @@ class ClericLevel9Spells(str, Enum):
     GATE = "Gate"
     MASS_HEAL = "Mass Heal"
     POWER_WORD_HEAL = "Power Word Heal"
-    POWER_WORD_HEAL = "Power Word Heal"
     TRUE_RESURRECTION = "True Resurrection"
 
 class DruidLevel0Spells(str, Enum):
@@ -1175,7 +1167,6 @@ class DruidLevel2Spells(str, Enum):
     LOCATE_OBJECT = "Locate Object"
     MOONBEAM = "Moonbeam"
     PASS_WITHOUT_TRACE = "Pass without Trace"
-    PASS_WITHOUT_TRACE = "Pass without Trace"
     PROTECTION_FROM_POISON = "Protection from Poison"
     SKYWRITE = "Skywrite"
     SPIKE_GROWTH = "Spike Growth"
@@ -1239,7 +1230,6 @@ class DruidLevel5Spells(str, Enum):
     ALUSTRIELS_MOONCLOAK = "Alustriel's Mooncloak"
     ANTILIFE_SHELL = "Antilife Shell"
     AWAKEN = "Awaken"
-    COMMUNE_WITH_NATURE = "Commune With Nature"
     COMMUNE_WITH_NATURE = "Commune with Nature"
     CONE_OF_COLD = "Cone of Cold"
     CONJURE_ELEMENTAL = "Conjure Elemental"
@@ -1412,7 +1402,6 @@ class RangerLevel2Spells(str, Enum):
     LOCATE_OBJECT = "Locate Object"
     MAGIC_WEAPON = "Magic Weapon"
     PASS_WITHOUT_TRACE = "Pass without Trace"
-    PASS_WITHOUT_TRACE = "Pass without Trace"
     PROTECTION_FROM_POISON = "Protection from Poison"
     SILENCE = "Silence"
     SPIKE_GROWTH = "Spike Growth"
@@ -1452,7 +1441,6 @@ class RangerLevel4Spells(str, Enum):
 
 class RangerLevel5Spells(str, Enum):
     ALUSTRIELS_MOONCLOAK = "Alustriel's Mooncloak"
-    COMMUNE_WITH_NATURE = "Commune With Nature"
     COMMUNE_WITH_NATURE = "Commune with Nature"
     CONJURE_VOLLEY = "Conjure Volley"
     GREATER_RESTORATION = "Greater Restoration"
@@ -1594,7 +1582,7 @@ class WarlockLevel7Spells(str, Enum):
     FINGER_OF_DEATH = "Finger of Death"
     FORCECAGE = "Forcecage"
     PLANE_SHIFT = "Plane Shift"
-    POWER_WORD_PAIN = "Power Word: Pain"
+    POWER_WORD_PAIN = "Power Word Pain"
     VOID_STAR = "Void Star"
 
 class WarlockLevel8Spells(str, Enum):
@@ -1605,7 +1593,6 @@ class WarlockLevel8Spells(str, Enum):
     GLIBNESS = "Glibness"
     MADDENING_DARKNESS = "Maddening Darkness"
     POWER_WORD_STUN = "Power Word Stun"
-    POWER_WORD_STUN = "Power Word Stun"
 
 class WarlockLevel9Spells(str, Enum):
     ASTRAL_PROJECTION = "Astral Projection"
@@ -1613,7 +1600,6 @@ class WarlockLevel9Spells(str, Enum):
     FORESIGHT = "Foresight"
     GATE = "Gate"
     IMPRISONMENT = "Imprisonment"
-    POWER_WORD_KILL = "Power Word Kill"
     POWER_WORD_KILL = "Power Word Kill"
     PSYCHIC_SCREAM = "Psychic Scream"
     TRUE_POLYMORPH = "True Polymorph"
@@ -1644,7 +1630,6 @@ class AbjurationLevel2Spells(str, Enum):
     ARCANE_VIGOR = "Arcane Vigor"
     ELMINSTERS_ELUSION = "Elminster's Elusion"
     LESSER_RESTORATION = "Lesser Restoration"
-    PASS_WITHOUT_TRACE = "Pass without Trace"
     PASS_WITHOUT_TRACE = "Pass without Trace"
     PRAYER_OF_HEALING = "Prayer of Healing"
     PROTECTION_FROM_POISON = "Protection from Poison"
@@ -1871,7 +1856,6 @@ class DivinationLevel4Spells(str, Enum):
 
 class DivinationLevel5Spells(str, Enum):
     COMMUNE = "Commune"
-    COMMUNE_WITH_NATURE = "Commune With Nature"
     COMMUNE_WITH_NATURE = "Commune with Nature"
     CONTACT_OTHER_PLANE = "Contact Other Plane"
     LEGEND_LORE = "Legend Lore"
@@ -1956,7 +1940,7 @@ class EnchantmentLevel6Spells(str, Enum):
 
 class EnchantmentLevel7Spells(str, Enum):
     POWER_WORD_FORTIFY = "Power Word Fortify"
-    POWER_WORD_PAIN = "Power Word: Pain"
+    POWER_WORD_PAIN = "Power Word Pain"
 
 class EnchantmentLevel8Spells(str, Enum):
     ANTIPATHY_SYMPATHY = "Antipathy/Sympathy"
@@ -1965,12 +1949,9 @@ class EnchantmentLevel8Spells(str, Enum):
     FEEBLEMIND = "Feeblemind"
     GLIBNESS = "Glibness"
     POWER_WORD_STUN = "Power Word Stun"
-    POWER_WORD_STUN = "Power Word Stun"
 
 class EnchantmentLevel9Spells(str, Enum):
     POWER_WORD_HEAL = "Power Word Heal"
-    POWER_WORD_HEAL = "Power Word Heal"
-    POWER_WORD_KILL = "Power Word Kill"
     POWER_WORD_KILL = "Power Word Kill"
     PSYCHIC_SCREAM = "Psychic Scream"
 

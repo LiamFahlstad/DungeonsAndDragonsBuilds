@@ -961,21 +961,6 @@
         "description": "You contact a deity or a divine proxy and ask up to three questions that can be answered with yes or no. You must ask your questions before the spell ends. You receive a correct answer for each question. Divine beings aren't necessarily omniscient, so you might receive \"unclear\" as an answer if a question pertains to information that lies beyond the deity's knowledge. In a case where a one-word answer could be misleading or contrary to the deity's interests, the DM might offer a short phrase as an answer instead. If you cast the spell more than once before finishing a Long Rest, there is a cumulative 25 percent chance for each casting after the first that you get no answer.",
         "source": "Player's Handbook 2024 (BR)"
     },
-    "Commune With Nature": {
-        "name": "Commune with Nature",
-        "level": 5,
-        "school": "Divination",
-        "classes": [
-            "Druid",
-            "Ranger"
-        ],
-        "casting_time": "1 minute or Ritual",
-        "range": "Self",
-        "components": "V, S",
-        "duration": "Instantaneous",
-        "description": "You commune with nature spirits and gain knowledge of the surrounding area. In the outdoors, the spell gives you knowledge of the area within 3 miles of you. In caves and other natural underground settings, the radius is limited to 300 feet. The spell doesn't function where nature has been replaced by construction, such as in castles and settlements. Choose three of the following facts; you learn those facts as they pertain to the spell's area: • Locations of settlements • Locations of portals to other planes of existence • Location of one Challenge Rating 10+ creature (DM's choice) that is a Celestial, an Elemental, a Fey, a Fiend, or an Undead • The most prevalent kind of plant, mineral, or Beast (you choose which to learn) • Locations of bodies of water For example, you could determine the location of a powerful monster in the area, the locations of bodies of water, and the locations of any towns.",
-        "source": "Player's Handbook 2024 (BR)"
-    },
     "Commune with Nature": {
         "name": "Commune with Nature",
         "level": 5,
@@ -4183,21 +4168,6 @@
         "description": "One creature that you can see within range must make a Wisdom saving throw. On a successful save, the target dances comically until the end of its next turn, during which it must spend all its movement to dance in place. On a failed save, the target has the Charmed condition for the duration. While Charmed, the target dances comically, must use all its movement to dance in place, and has Disadvantage on Dexterity saving throws and attack rolls, and other creatures have Advantage on attack rolls against it. On each of its turns, the target can take an action to collect itself and repeat the save, ending the spell on itself on a success.",
         "source": "Player's Handbook 2024 (BR)"
     },
-    "Pass Without Trace": {
-        "name": "Pass without Trace",
-        "level": 2,
-        "school": "Abjuration",
-        "classes": [
-            "Druid",
-            "Ranger"
-        ],
-        "casting_time": "Action",
-        "range": "Self",
-        "components": "V, S, M (ashes from a burned mistletoe)",
-        "duration": "Concentration, up to 1 hour",
-        "description": "You radiate a concealing aura in a 30-foot Emanation for the duration. While in the aura, you and each creature you choose have a +10 bonus to Dexterity (Stealth) checks and leave no tracks.",
-        "source": "Player's Handbook 2024 (BR)"
-    },
     "Pass without Trace": {
         "name": "Pass without Trace",
         "level": 2,
@@ -4420,55 +4390,6 @@
         "source": "Player's Handbook 2024 (BR)"
     },
     "Power Word Stun": {
-        "name": "Power Word Stun",
-        "level": 8,
-        "school": "Enchantment",
-        "classes": [
-            "Bard",
-            "Sorcerer",
-            "Warlock",
-            "Wizard"
-        ],
-        "casting_time": "Action",
-        "range": "60 feet",
-        "components": "V",
-        "duration": "Instantaneous",
-        "description": "You overwhelm the mind of one creature you can see within range. If the target has 150 Hit Points or fewer, it has the Stunned condition. Otherwise, its Speed is 0 until the start of your next turn. The Stunned target makes a Constitution saving throw at the end of each of its turns, ending the condition on itself on a success.",
-        "source": "Player's Handbook 2024 (BR)"
-    },
-    "Power Word: Heal": {
-        "name": "Power Word Heal",
-        "level": 9,
-        "school": "Enchantment",
-        "classes": [
-            "Bard",
-            "Cleric"
-        ],
-        "casting_time": "Action",
-        "range": "60 feet",
-        "components": "V",
-        "duration": "Instantaneous",
-        "description": "A wave of healing energy washes over one creature you can see within range. The target regains all its Hit Points. If the creature has the Charmed, Frightened, Paralyzed, Poisoned, or Stunned condition, the condition ends. If the creature has the Prone condition, it can use its Reaction to stand up.",
-        "source": "Player's Handbook 2024 (BR)"
-    },
-    "Power Word: Kill": {
-        "name": "Power Word Kill",
-        "level": 9,
-        "school": "Enchantment",
-        "classes": [
-            "Bard",
-            "Sorcerer",
-            "Warlock",
-            "Wizard"
-        ],
-        "casting_time": "Action",
-        "range": "60 feet",
-        "components": "V",
-        "duration": "Instantaneous",
-        "description": "You compel one creature you can see within range to die. If the target has 100 Hit Points or fewer, it dies. Otherwise, it takes 12d12 Psychic damage.",
-        "source": "Player's Handbook 2024 (BR)"
-    },
-    "Power Word: Stun": {
         "name": "Power Word Stun",
         "level": 8,
         "school": "Enchantment",
@@ -5703,7 +5624,7 @@
         "source": "Player's Handbook 2024"
     },
     "Sylune's Viper": {
-        "name": "Syluné's Viper",
+        "name": "Sylune's Viper",
         "level": 3,
         "school": "Conjuration",
         "classes": [
