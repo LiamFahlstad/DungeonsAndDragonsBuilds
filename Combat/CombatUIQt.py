@@ -283,6 +283,24 @@ QScrollBar:horizontal { height: 0; }
 
 
 # ---------------------------------------------------------------------------
+# Battle statistics
+# ---------------------------------------------------------------------------
+STAT_KEYS = (
+    "damage_dealt",
+    "damage_taken",
+    "healing_done",
+    "healing_received",
+    "knockouts",
+    "times_downed",
+    "deaths",
+)
+
+
+def _default_stats() -> dict:
+    return {key: 0 for key in STAT_KEYS}
+
+
+# ---------------------------------------------------------------------------
 # CombatAppQt
 # ---------------------------------------------------------------------------
 class CombatAppQt:
@@ -376,6 +394,7 @@ class CombatAppQt:
                 "visibility_states": [],
                 "death_saves_fail": 0,
                 "death_saves_success": 0,
+                "stats": _default_stats(),
                 "spell_slots": spell_slots,
                 "Ability Scores": {
                     ability.short_name: character.get_ability_score(ability)
@@ -420,6 +439,7 @@ class CombatAppQt:
             "visibility_states": [vis.value for vis in (combatant.visibility_states or [])],
             "death_saves_fail": 0,
             "death_saves_success": 0,
+            "stats": _default_stats(),
             "spell_slots": combatant.spell_slots,
             "Ability Scores": combatant.ability_scores,
             "Saving Throws": combatant.saving_throws,
@@ -466,6 +486,38 @@ class CombatAppQt:
         if self.phase != "COMBAT" or not self.initiative_order:
             return None
         return self.initiative_order[self.current_turn_idx]["name"]
+
+    def _find_character_by_name(self, name: str) -> dict | None:
+        for char in self.characters:
+            if char.get("name") == name:
+                return char
+        return None
+
+    def _refresh_source_combo(self):
+        """Repopulate the Source combo from self.characters, preserving selection
+        by name when possible, otherwise defaulting to the current turn's combatant."""
+        if not hasattr(self, "source_combo"):
+            return
+        previous = self.source_combo.currentText() if self.source_combo.count() else None
+        self.source_combo.blockSignals(True)
+        self.source_combo.clear()
+        self.source_combo.addItem("Unspecified")
+        for char in self.characters:
+            self.source_combo.addItem(char["name"])
+        self.source_combo.blockSignals(False)
+
+        target_name = None
+        if previous and previous != "Unspecified" and self._find_character_by_name(previous):
+            target_name = previous
+        else:
+            turn_name = self._current_turn_name()
+            if turn_name:
+                target_name = turn_name
+
+        if target_name is not None:
+            idx = self.source_combo.findText(target_name)
+            if idx >= 0:
+                self.source_combo.setCurrentIndex(idx)
 
     def _log_event(self, text: str, note_turn: bool = True):
         data = json.loads(self.log_file.read_text())
@@ -940,25 +992,62 @@ class CombatAppQt:
         except ValueError:
             return
 
-        pre_hp = self.selected_character["hp"]
-        pre_temp = self.selected_character["temp_hp"]
+        target = self.selected_character
 
-        temp_reduction = min(self.selected_character["temp_hp"], dmg)
-        self.selected_character["temp_hp"] -= temp_reduction
-        self.selected_character["hp"] -= dmg - temp_reduction
+        source_name = None
+        source = None
+        if hasattr(self, "source_combo"):
+            selected_source_name = self.source_combo.currentText()
+            if selected_source_name and selected_source_name != "Unspecified":
+                source = self._find_character_by_name(selected_source_name)
+                if source is not None:
+                    source_name = source["name"]
 
-        hp_delta = self.selected_character["hp"] - pre_hp
-        temp_delta = self.selected_character["temp_hp"] - pre_temp
-        self.history.append((Action.DAMAGE, (hp_delta, temp_delta)))
-        self._log_event(f"{self.selected_character['name']} takes {dmg} damage")
+        pre_hp = target["hp"]
+        pre_temp = target["temp_hp"]
+
+        temp_reduction = min(target["temp_hp"], dmg)
+        target["temp_hp"] -= temp_reduction
+        target["hp"] -= dmg - temp_reduction
+
+        hp_delta = target["hp"] - pre_hp
+        temp_delta = target["temp_hp"] - pre_temp
+
+        knockout = pre_hp > 0 and target["hp"] <= 0
+
+        target.setdefault("stats", _default_stats())
+        target["stats"]["damage_taken"] = target["stats"].get("damage_taken", 0) + dmg
+        if knockout:
+            target["stats"]["times_downed"] = target["stats"].get("times_downed", 0) + 1
+
+        if source is not None:
+            source.setdefault("stats", _default_stats())
+            source["stats"]["damage_dealt"] = source["stats"].get("damage_dealt", 0) + dmg
+            if knockout:
+                source["stats"]["knockouts"] = source["stats"].get("knockouts", 0) + 1
+
+        self.history.append(
+            (
+                Action.DAMAGE,
+                {
+                    "hp_delta": hp_delta,
+                    "temp_delta": temp_delta,
+                    "dmg": dmg,
+                    "source_name": source_name,
+                    "knockout": knockout,
+                },
+            )
+        )
+        source_suffix = f" from {source_name}" if source_name else ""
+        self._log_event(f"{target['name']} takes {dmg} damage{source_suffix}")
 
         # Auto-apply bloodied condition
-        self._apply_bloodied_condition(self.selected_character)
+        self._apply_bloodied_condition(target)
 
         self._refresh_selected_card()
 
-        if "Concentrating" in self.selected_character.get("conditions", []):
-            self._concentration_check_dialog(self.selected_character, dmg)
+        if "Concentrating" in target.get("conditions", []):
+            self._concentration_check_dialog(target, dmg)
 
     def _con_save_mod(self, char: dict) -> int:
         """Return the CON saving throw modifier for a character."""
@@ -1102,8 +1191,34 @@ class CombatAppQt:
         char = self.selected_character
         was_downed = self._char_death_state(char) != "alive"
 
+        source_name = None
+        source = None
+        if hasattr(self, "source_combo"):
+            selected_source_name = self.source_combo.currentText()
+            if selected_source_name and selected_source_name != "Unspecified":
+                source = self._find_character_by_name(selected_source_name)
+                if source is not None:
+                    source_name = source["name"]
+
+        pre_hp = char["hp"]
         char["hp"] = min(char["hp"] + heal, char["max_hp"])
-        self.history.append((Action.HEAL, heal))
+        actual_heal = char["hp"] - pre_hp
+
+        char.setdefault("stats", _default_stats())
+        char["stats"]["healing_received"] = char["stats"].get("healing_received", 0) + actual_heal
+        if source is not None:
+            source.setdefault("stats", _default_stats())
+            source["stats"]["healing_done"] = source["stats"].get("healing_done", 0) + actual_heal
+
+        self.history.append(
+            (
+                Action.HEAL,
+                {
+                    "heal": actual_heal,
+                    "source_name": source_name,
+                },
+            )
+        )
 
         if was_downed and char["hp"] > 0:
             char["death_saves_fail"] = 0
@@ -1121,8 +1236,13 @@ class CombatAppQt:
         if self._char_death_state(char) != "dying":
             return
         self._select_character(char)
-        char["death_saves_fail"] = min(char.get("death_saves_fail", 0) + 1, 3)
-        self.history.append((Action.DEATH_SAVE_FAIL, None))
+        pre_fail = char.get("death_saves_fail", 0)
+        char["death_saves_fail"] = min(pre_fail + 1, 3)
+        newly_dead = pre_fail < 3 and char["death_saves_fail"] >= 3
+        if newly_dead:
+            char.setdefault("stats", _default_stats())
+            char["stats"]["deaths"] = char["stats"].get("deaths", 0) + 1
+        self.history.append((Action.DEATH_SAVE_FAIL, newly_dead))
         if char["death_saves_fail"] >= 3:
             self._log_event(f"{char['name']} has died (3 failed death saves)")
         else:
@@ -1241,14 +1361,61 @@ class CombatAppQt:
         char = self.selected_character
 
         if action == Action.DAMAGE:
-            if isinstance(value, tuple):
+            if isinstance(value, dict):
+                hp_delta = value["hp_delta"]
+                temp_delta = value["temp_delta"]
+                dmg = value["dmg"]
+                source_name = value.get("source_name")
+                knockout = value.get("knockout", False)
+
+                char["hp"] -= hp_delta
+                char["temp_hp"] -= temp_delta
+
+                char.setdefault("stats", _default_stats())
+                char["stats"]["damage_taken"] = char["stats"].get("damage_taken", 0) - dmg
+                if knockout:
+                    char["stats"]["times_downed"] = max(
+                        char["stats"].get("times_downed", 0) - 1, 0
+                    )
+
+                if source_name:
+                    source = self._find_character_by_name(source_name)
+                    if source is not None:
+                        source.setdefault("stats", _default_stats())
+                        source["stats"]["damage_dealt"] = max(
+                            source["stats"].get("damage_dealt", 0) - dmg, 0
+                        )
+                        if knockout:
+                            source["stats"]["knockouts"] = max(
+                                source["stats"].get("knockouts", 0) - 1, 0
+                            )
+            elif isinstance(value, tuple):
                 hp_delta, temp_delta = value
                 char["hp"] -= hp_delta
                 char["temp_hp"] -= temp_delta
             else:
                 char["hp"] += value
         elif action == Action.HEAL:
-            char["hp"] -= value
+            if isinstance(value, dict):
+                heal = value["heal"]
+                source_name = value.get("source_name")
+
+                char["hp"] -= heal
+
+                char.setdefault("stats", _default_stats())
+                char["stats"]["healing_received"] = max(
+                    char["stats"].get("healing_received", 0) - heal, 0
+                )
+
+                if source_name:
+                    source = self._find_character_by_name(source_name)
+                    if source is not None:
+                        source.setdefault("stats", _default_stats())
+                        source["stats"]["healing_done"] = max(
+                            source["stats"].get("healing_done", 0) - heal, 0
+                        )
+            else:
+                char["hp"] -= value
         elif action == Action.ADD_CONDITION:
             if value in char["conditions"]:
                 char["conditions"].remove(value)
@@ -1261,6 +1428,9 @@ class CombatAppQt:
             char["spell_slots"][value] = max(char["spell_slots"].get(value, 0) - 1, 0)
         elif action == Action.DEATH_SAVE_FAIL:
             char["death_saves_fail"] = max(char.get("death_saves_fail", 0) - 1, 0)
+            if value:
+                char.setdefault("stats", _default_stats())
+                char["stats"]["deaths"] = max(char["stats"].get("deaths", 0) - 1, 0)
         elif action == Action.DEATH_SAVE_SUCCESS:
             char["death_saves_success"] = max(char.get("death_saves_success", 0) - 1, 0)
 
@@ -1326,6 +1496,70 @@ class CombatAppQt:
         close_btn = QPushButton("Close")
         close_btn.clicked.connect(dlg.accept)
         layout.addWidget(close_btn)
+
+        dlg.exec()
+
+    def _show_statistics(self):
+        """Display battle statistics for every combatant."""
+        dlg = QDialog(self._window)
+        dlg.setWindowTitle("Statistics")
+        dlg.setMinimumSize(760, 400)
+        dlg.setStyleSheet(QSS)
+
+        outer = QVBoxLayout(dlg)
+        outer.setContentsMargins(14, 14, 14, 14)
+        outer.setSpacing(10)
+
+        scroll = QScrollArea()
+        scroll.setWidgetResizable(True)
+        content = QWidget()
+        grid = QGridLayout(content)
+        grid.setHorizontalSpacing(14)
+        grid.setVerticalSpacing(6)
+
+        headers = [
+            "Name",
+            "Dmg Dealt",
+            "Dmg Taken",
+            "Heal Done",
+            "Heal Received",
+            "Knockouts",
+            "Times Downed",
+            "Deaths",
+            "Status",
+        ]
+        for col, text in enumerate(headers):
+            lbl = QLabel(text)
+            lbl.setStyleSheet("color: #c9a84c; font-weight: bold;")
+            grid.addWidget(lbl, 0, col)
+
+        for row, char in enumerate(self.characters, start=1):
+            stats = char.get("stats") or {}
+            status = self._char_death_state(char)
+            values = [
+                char.get("name", ""),
+                stats.get("damage_dealt", 0),
+                stats.get("damage_taken", 0),
+                stats.get("healing_done", 0),
+                stats.get("healing_received", 0),
+                stats.get("knockouts", 0),
+                stats.get("times_downed", 0),
+                stats.get("deaths", 0),
+                status,
+            ]
+            for col, value in enumerate(values):
+                lbl = QLabel(str(value))
+                if col == 0:
+                    lbl.setStyleSheet("color: #eaeaea; font-weight: bold;")
+                grid.addWidget(lbl, row, col)
+
+        grid.setColumnStretch(len(headers), 1)
+        scroll.setWidget(content)
+        outer.addWidget(scroll)
+
+        close_btn = QPushButton("Close")
+        close_btn.clicked.connect(dlg.accept)
+        outer.addWidget(close_btn)
 
         dlg.exec()
 
@@ -1418,6 +1652,10 @@ class CombatAppQt:
             QMessageBox.warning(self._window, "Error", "No combatants key in log file.")
             return
         self.characters = data["combatants"]
+        for char in self.characters:
+            stats = char.setdefault("stats", {})
+            for key in STAT_KEYS:
+                stats.setdefault(key, 0)
         self.round_number = data.get("round_number", 1)
         self.history = []
         self.selected_character = None
@@ -1674,6 +1912,7 @@ class CombatAppQt:
 
         self._rebuild_cards()
         self._refresh_turn()
+        self._refresh_source_combo()
 
     # ------------------------------------------------------------------
     # UI construction
@@ -1755,6 +1994,14 @@ class CombatAppQt:
         tracker_outer.addWidget(self._turn_counter_label)
 
         panel_layout.addWidget(self._init_tracker_container)
+
+        panel_layout.addWidget(self._make_divider())
+
+        # Source section (attribution for damage/heal)
+        panel_layout.addWidget(self._section_header("Source"))
+        self.source_combo = QComboBox()
+        self.source_combo.addItem("Unspecified")
+        panel_layout.addWidget(self.source_combo)
 
         panel_layout.addWidget(self._make_divider())
 
@@ -1879,6 +2126,10 @@ class CombatAppQt:
         log_btn = QPushButton("Open Current Log")
         log_btn.clicked.connect(self._show_current_log)
         panel_layout.addWidget(log_btn)
+
+        stats_btn = QPushButton("Statistics")
+        stats_btn.clicked.connect(self._show_statistics)
+        panel_layout.addWidget(stats_btn)
 
         rules_btn = QPushButton("Rules")
         rules_btn.clicked.connect(self._show_rules)
