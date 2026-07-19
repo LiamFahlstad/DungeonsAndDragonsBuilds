@@ -55,7 +55,7 @@ class SpellNotFoundError(Exception):
     pass
 
 
-class SpellParser:
+class DnD2024SpellParser:
     def __init__(self, spell_name: str):
         self.original_name = spell_name
         self.soup = None
@@ -286,7 +286,7 @@ def fetch_spell(spell_name: str, max_retries: int = 3) -> tuple[str, dict]:
     last_exc: Exception | None = None
     for attempt in range(max_retries):
         try:
-            spell = SpellParser(spell_name)
+            spell = DnD2024SpellParser(spell_name)
             spell.fetch()
             return spell_name, spell.to_dict()
         except (requests.exceptions.ConnectionError, requests.exceptions.Timeout) as e:
