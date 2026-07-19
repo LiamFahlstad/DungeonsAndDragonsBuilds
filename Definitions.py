@@ -175,6 +175,10 @@ class PaladinSubclass(str, Enum):
     OATH_OF_GENIES = "Oath of Genies"
 
 
+class PaladinSubclass2014(str, Enum):
+    OATHBREAKER = "Oathbreaker"
+
+
 class ClericSubclass(str, Enum):
     LIGHT = "Light"
     LIFE = "Life"
@@ -194,6 +198,10 @@ class RogueSubclass(str, Enum):
     SOUL_KNIFE = "Soul Knife"
     SCION_OF_THE_THREE = "Scion of the Three"
     PHANTOM = "Phantom"
+
+
+class RogueSubclass2014(str, Enum):
+    SWASHBUCKLER = "Swashbuckler"
 
 
 class BardSubclass(str, Enum):
@@ -248,6 +256,10 @@ class WarlockSubclass(str, Enum):
     THE_CELESTIAL = "The Celestial"
 
 
+class WarlockSubclass2014(str, Enum):
+    HEXBLADE = "Hexblade"
+
+
 class FighterSubclass(str, Enum):
     BANNERET = "Banneret"
     BATTLE_MASTER = "Battle Master"
@@ -278,6 +290,10 @@ class BarbarianSubclass(str, Enum):
     PATH_OF_THE_ZEALOT = "Path of the Zealot"
     PATH_OF_THE_WORLD_TREE = "Path of the World Tree"
     PATH_OF_THE_WILD_HEART = "Path of the Wild Heart"
+
+
+class BarbarianSubclass2014(str, Enum):
+    PATH_OF_THE_TOTEM_WARRIOR = "Path of the Totem Warrior"
 
 
 class CreatureSize(str, Enum):
