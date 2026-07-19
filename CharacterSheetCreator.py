@@ -22,7 +22,12 @@ from StatBlocks.SkillsStatBlock import SkillsStatBlock
 from ToolProficiencies.ToolProficiencies import ToolProficiency
 from Utils import CharacterSheetWriters
 
-_MERGE_EMPTY_VALUES = (None, [], {}, "")
+# Scalar values merge_with treats as "not set": an incoming value equal to one
+# of these never overwrites an existing value. 0 is included so that e.g. a
+# builder that never touched experience_points (int, default 0) cannot reset
+# XP accumulated by an earlier builder. All enums used in sheet fields are str
+# enums with non-empty values, so none of them compare equal to "" or 0.
+_MERGE_EMPTY_VALUES = (None, [], {}, "", 0)
 
 
 @attr.dataclass
@@ -69,9 +74,16 @@ class CharacterSheetData:
     def character_level(self) -> int:
         return sum(self.level_per_class.values())
 
+    def _invalidate_cache(self):
+        """Drop the cached CharacterStatBlock; any mutation after
+        setup_character_stat_block() must call this so the next setup call
+        rebuilds instead of returning stale state."""
+        self._character_cached = None
+
     def add_feature(
         self, feature: Feature, apply_when: ApplyWhen = ApplyWhen.IMMEDIATE
     ):
+        self._invalidate_cache()
         if apply_when == ApplyWhen.IMMEDIATE:
             self.features.insert(0, feature)
         elif apply_when == ApplyWhen.LAST:
@@ -79,6 +91,15 @@ class CharacterSheetData:
         else:
             raise ValueError(f"Unknown ApplyWhen value: {apply_when}")
         self.feature_apply_order.append((apply_when, feature))
+
+    def remove_features(self, should_remove) -> None:
+        """Remove every feature for which `should_remove(feature)` is true,
+        keeping `features` and `feature_apply_order` consistent."""
+        self._invalidate_cache()
+        self.features = [f for f in self.features if not should_remove(f)]
+        self.feature_apply_order = [
+            (when, f) for when, f in self.feature_apply_order if not should_remove(f)
+        ]
 
     def add_origin_feat(self, origin_feat: OriginFeats.OriginFeat):
         self.add_feature(origin_feat)
@@ -94,18 +115,23 @@ class CharacterSheetData:
         return self.level_per_class.get(character_class, 0)
 
     def add_armor(self, armor: AbstractArmor):
+        self._invalidate_cache()
         self.armors.append(armor)
 
     def add_weapon(self, weapon: AbstractWeapon):
+        self._invalidate_cache()
         self.weapons.append(weapon)
 
     def add_weapon_mastery(self, weapon: AbstractWeapon):
+        self._invalidate_cache()
         self.weapon_masteries.append(weapon)
 
     def add_armor_proficiency(self, armor_type: Definitions.ArmorType):
+        self._invalidate_cache()
         self.armor_proficiencies.add(armor_type)
 
     def add_fighting_style(self, fighting_style: FightingStyle):
+        self._invalidate_cache()
         self.fighting_styles.append(fighting_style)
 
     def add_spell(
@@ -120,6 +146,7 @@ class CharacterSheetData:
 
         if spell in [s[0] for s in self.spells]:
             raise ValueError(f"Spell {spell} already added.")
+        self._invalidate_cache()
         self.spells.append((spell, spell_casting_ability, additional_ruling))
 
     def add_cantrip(
@@ -133,6 +160,7 @@ class CharacterSheetData:
         )
         if cantrip in [s[0] for s in self.spells]:
             raise ValueError(f"Cantrip {cantrip} already added.")
+        self._invalidate_cache()
         self.spells.append((cantrip, spell_casting_ability, additional_ruling))
 
     def replace_spells(self, replace_spells: dict[str, str]):
@@ -166,12 +194,15 @@ class CharacterSheetData:
                 new_spells.append((spell_name, spell_ability, additional_ruling))
         if not success:
             raise ValueError(f"Spell {old_spell} not found to replace.")
+        self._invalidate_cache()
         self.spells = new_spells
 
     def add_invocation(self, invocation: str):
+        self._invalidate_cache()
         self.invocations.append(invocation)
 
     def add_item(self, item: Items.Item, quantity: int = 1):
+        self._invalidate_cache()
         for i, (existing_item, existing_quantity) in enumerate(self.items):
             if type(existing_item) is type(item):
                 self.items[i] = (existing_item, existing_quantity + quantity)
@@ -180,6 +211,7 @@ class CharacterSheetData:
 
     def add_tool_proficiency(self, tool_proficiency: ToolProficiency):
         if tool_proficiency not in self.tool_proficiencies:
+            self._invalidate_cache()
             self.tool_proficiencies.append(tool_proficiency)
         else:
             raise ValueError(f"Tool proficiency {tool_proficiency} already added.")
@@ -298,9 +330,23 @@ class CharacterSheetData:
         )
 
     def merge_with(self, other: "CharacterSheetData"):
-        """Merge this CharacterSheetData with another, with the other taking precedence."""
+        """Merge another CharacterSheetData into this one.
 
-        self._character_cached = None
+        Merge rules, by field kind:
+        - lists (features, spells, weapons, feature_apply_order, ...) are
+          concatenated, preserving each side's internal order with `other`'s
+          entries after `self`'s;
+        - dicts (level_per_class, spell_slots) are combined with `other`'s
+          entries winning on key collisions. For level_per_class this means a
+          later builder redeclaring an existing class states that class's
+          final total level (e.g. a starter Paladin 1 resumed by a Paladin 19
+          builder ends at 19, not 20);
+        - sets (armor_proficiencies) are combined with set union;
+        - scalars are overwritten only when `other`'s value is actually set
+          (see _MERGE_EMPTY_VALUES), so an untouched default never erases an
+          earlier builder's value.
+        """
+        self._invalidate_cache()
 
         for field_name in vars(self):
             if field_name.startswith("_"):

@@ -248,13 +248,29 @@ class BaseClassLevelFeatures:
         base_class: CharacterClass,
         applied_level_features: "AppliedLevelFeatures",
     ) -> CharacterSheetData:
+        """Apply this builder's per-level features to `data`, in ascending
+        level order (all base-class levels first, then all subclass levels),
+        skipping levels above the class's declared level and levels another
+        builder already applied for the same class."""
         class_level = data.get_level_for_class(base_class)
 
         for features_by_level, applied_levels in [
             (self.base_class_features_by_level, applied_level_features.base_class_levels),
             (self.subclass_features_by_level, applied_level_features.subclass_levels),
         ]:
-            for level, features in features_by_level.items():
+            for level in sorted(features_by_level):
+                features = features_by_level[level]
+                if features is None:
+                    raise ValueError(
+                        f"{base_class.value} level {level}: features cannot be None."
+                    )
+                if features.level != level:
+                    raise ValueError(
+                        f"{base_class.value} level {level} is mapped to features "
+                        f"declared for level {features.level} "
+                        f"({type(features).__name__})."
+                    )
+
                 if class_level < level:
                     continue
 
@@ -262,9 +278,6 @@ class BaseClassLevelFeatures:
                 if key in applied_levels:
                     continue
                 applied_levels.add(key)
-
-                assert features is not None, "Features for level cannot be None."
-                assert level == features.level, "Level mismatch in base class features."
 
                 data = features.add_features(data=data)
         return data
@@ -279,13 +292,22 @@ class ClassBuilder(ABC):
         base_class_level: int,
         replace_spells: Optional[dict[str, str]] = None,
     ):
+        if not 1 <= base_class_level <= 20:
+            raise ValueError(
+                f"{base_class.value}: class level must be between 1 and 20, "
+                f"got {base_class_level}."
+            )
         self.base_class = base_class
         self.base_class_level_features = base_class_level_features
         self.base_class_level = base_class_level
         self.replace_spells = replace_spells
 
     @abstractmethod
-    def _get_character_sheet_creator_base(self) -> CharacterSheetData:
+    def _create_base_sheet_data(self) -> CharacterSheetData:
+        """Build a fresh CharacterSheetData holding only this builder's
+        class-level contribution (class registration, stat blocks, equipment,
+        spell slots, ...) - everything except per-level features, which
+        create() applies afterwards onto the merged sheet."""
         pass
 
     def create(
@@ -300,13 +322,37 @@ class ClassBuilder(ABC):
         starter class resumed later via a multiclass builder after a dip
         into another class - sees features from earlier levels (added by an
         earlier builder) already present, and never has a given class level's
-        features applied more than once."""
+        features applied more than once. A builder resuming a class declares
+        the class's final total level. `replace_spells` operates on the
+        cumulative sheet, so it may also replace a spell added by an earlier
+        builder."""
         if character_sheet_data is None:
             character_sheet_data = CharacterSheetData()
         if applied_level_features is None:
             applied_level_features = AppliedLevelFeatures()
 
-        character_sheet_data.merge_with(self._get_character_sheet_creator_base())
+        base_sheet_data = self._create_base_sheet_data()
+
+        previously_declared_level = character_sheet_data.get_level_for_class(
+            self.base_class
+        )
+        if previously_declared_level > 0:
+            if self.base_class_level < previously_declared_level:
+                raise ValueError(
+                    f"{self.base_class.value} is declared with level "
+                    f"{self.base_class_level}, but an earlier builder already "
+                    f"declared level {previously_declared_level}. A builder "
+                    f"resuming a class must declare the class's final total "
+                    f"level."
+                )
+            # The builder that introduced the class already registered its
+            # SpellSlots feature; don't add a duplicate for the same class.
+            base_sheet_data.remove_features(
+                lambda f: isinstance(f, SpellSlots.SpellSlots)
+                and f.character_class == self.base_class
+            )
+
+        character_sheet_data.merge_with(base_sheet_data)
         character_sheet_data = self.base_class_level_features.add_features(
             character_sheet_data, self.base_class, applied_level_features
         )
@@ -400,7 +446,7 @@ class StarterClassBuilder(ClassBuilder):
     def armor_proficiencies(self) -> Optional[list[Definitions.ArmorType]]:
         return self.non_generic_arguments.armor_proficiencies
 
-    def _get_character_sheet_creator_base(self) -> CharacterSheetData:
+    def _create_base_sheet_data(self) -> CharacterSheetData:
         data = CharacterSheetData(
             character_subclass=self.subclass,
             level_per_class={self.base_class: self.base_class_level},
@@ -471,7 +517,7 @@ class MulticlassBuilder(ClassBuilder):
         self.spell_casting_ability = spell_casting_ability
         self.caster_type = caster_type
 
-    def _get_character_sheet_creator_base(self) -> CharacterSheetData:
+    def _create_base_sheet_data(self) -> CharacterSheetData:
         data = CharacterSheetData(
             character_subclass=self.subclass,
             level_per_class={self.base_class: self.base_class_level},

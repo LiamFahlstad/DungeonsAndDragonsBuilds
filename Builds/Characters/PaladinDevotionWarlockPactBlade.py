@@ -22,25 +22,21 @@ from CharacterConfigs.BaseClasses.PaladinBase import (
     PaladinLevel18,
     PaladinLevel19,
 )
-from CharacterConfigs.BaseClasses.WarlockBase import (
-    WarlockLevel1,
-    WarlockLevel2,
-)
+from CharacterConfigs.BaseClasses.WarlockBase import WarlockLevel1
 from CharacterConfigs.SubClasses2024.PaladinDevotion import (
-    PaladinDevotionCustomStarterClassArgs,
     DevotionPaladinLevel3,
     DevotionPaladinLevel5,
     DevotionPaladinLevel7,
     DevotionPaladinLevel9,
     DevotionPaladinLevel13,
     DevotionPaladinLevel17,
-    DevotionPaladinLevel20,
     DevotionPaladinMulticlassBuilder,
+    PaladinDevotionCustomStarterClassArgs,
 )
 from CharacterConfigs.SubClasses2024.WarlockArchfey import (
     ArchfeyWarlockMulticlassBuilder,
 )
-from Definitions import Ability, Skill, PaladinSubclass
+from Definitions import Ability, Skill
 from Features.CharacterFeats import Backgrounds, EpicBoon, GeneralFeats, OriginFeats
 from Features.Combat import FightingStyles
 from Features.Equipment import Weapons
