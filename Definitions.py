@@ -209,6 +209,10 @@ class ClericSubclass(str, Enum):
     GRAVE = "Grave"
 
 
+class ClericSubclass2014(str, Enum):
+    FORGE = "Forge"
+
+
 class RogueSubclass(str, Enum):
     THIEF = "Thief"
     ASSASSIN = "Assassin"
@@ -233,6 +237,10 @@ class BardSubclass(str, Enum):
     SPIRITS = "College of Spirits"
 
 
+class BardSubclass2014(str, Enum):
+    ELOQUENCE = "College of Eloquence"
+
+
 class DruidSubclass(str, Enum):
     MOON = "Circle of the Moon"
     LAND = "Circle of the Land"
@@ -240,6 +248,10 @@ class DruidSubclass(str, Enum):
     SHELL = "Circle of the Shell"
     SEA = "Circle of the Sea"
     STARS = "Circle of the Stars"
+
+
+class DruidSubclass2014(str, Enum):
+    SPORES = "Circle of Spores"
 
 
 class DruidLandType(str, Enum):
@@ -270,6 +282,10 @@ class SorcererSubclass(str, Enum):
     WILD_MAGIC = "Wild Magic Sorcery"
 
 
+class SorcererSubclass2014(str, Enum):
+    STORM = "Storm"
+
+
 class WarlockSubclass(str, Enum):
     THE_FIEND = "The Fiend"
     THE_ARCHFEY = "The Archfey"
@@ -290,6 +306,10 @@ class FighterSubclass(str, Enum):
     PSI_WARRIOR = "Psi Warrior"
 
 
+class FighterSubclass2014(str, Enum):
+    RUNE_KNIGHT = "Rune Knight"
+
+
 class RangerSubclass(str, Enum):
     BEAST_MASTER = "Beast Master"
     HUNTER = "Hunter"
@@ -299,12 +319,20 @@ class RangerSubclass(str, Enum):
     WINTER_WALKER = "Winter Walker"
 
 
+class RangerSubclass2014(str, Enum):
+    HORIZON_WALKER = "Horizon Walker"
+
+
 class MonkSubclass(str, Enum):
     SHADOW = "Shadow"
     MYSTIC_ARTS = "Mystic Arts"
     MERCY = "Mercy"
     ELEMENTS = "the Elements"
     OPEN_HAND = "Open Hand"
+
+
+class MonkSubclass2014(str, Enum):
+    KENSEI = "Kensei"
 
 
 class BarbarianSubclass(str, Enum):
