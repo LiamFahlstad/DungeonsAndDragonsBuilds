@@ -1,8 +1,12 @@
+import json
 import re
+import time
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from typing import TextIO
 
 import requests
 from bs4 import BeautifulSoup
+from tqdm import tqdm
 
 
 class SpellNotFoundError(Exception):
@@ -149,11 +153,75 @@ class SpellParser:
             file.write(f"{key.title().replace('_', ' ')}: {value}\n")
 
 
-if __name__ == "__main__":
-    spells = ["Mage Armor", "Fireball", "Cure Wounds", "Guidance"]
+def fetch_spell(spell_name: str, max_retries: int = 3) -> tuple[str, dict]:
+    last_exc: Exception | None = None
+    for attempt in range(max_retries):
+        try:
+            spell = SpellParser(spell_name)
+            spell.fetch()
+            return spell_name, spell.to_dict()
+        except (requests.exceptions.ConnectionError, requests.exceptions.Timeout) as e:
+            last_exc = e
+            if attempt < max_retries - 1:
+                time.sleep(2**attempt)
+    raise last_exc or RuntimeError(f"fetch_spell({spell_name!r}) failed")
 
-    for spell_name in spells:
-        spell = SpellParser(spell_name)
-        spell.fetch()
-        spell.print_info()
-        print("-" * 40)
+
+def _candidate_names() -> list[str]:
+    """Union of spell names known from the dnd2024 and dnd5e wikidot scrapers.
+
+    aidedd.org has no browsable spell index, so we reuse the names already
+    discovered by the other two sources as our candidate list.
+    """
+    names: set[str] = set()
+    for path in ("Spells/spells_dnd2024.json", "Spells/spells_dnd5e.json"):
+        try:
+            with open(path, "r", encoding="utf-8") as f:
+                names.update(json.load(f).keys())
+        except FileNotFoundError:
+            print(f"  (skipping missing {path})")
+    return sorted(names)
+
+
+if __name__ == "__main__":
+    print("Building candidate spell list from dnd2024/dnd5e JSON files …")
+    spells = _candidate_names()
+    print(f"Found {len(spells)} candidate spell names.")
+
+    results: dict[str, dict] = {}
+    not_found: list[str] = []
+    failed: list[str] = []
+
+    MAX_WORKERS = 4
+
+    with ThreadPoolExecutor(max_workers=MAX_WORKERS) as executor:
+        futures = {
+            executor.submit(fetch_spell, spell_name): spell_name
+            for spell_name in spells
+        }
+
+        for future in tqdm(
+            as_completed(futures),
+            total=len(futures),
+            desc="Fetching spells",
+        ):
+            spell_name = futures[future]
+            try:
+                name, data = future.result()
+                results[name] = data
+            except SpellNotFoundError:
+                not_found.append(spell_name)
+            except Exception as e:
+                print(f"  FAILED {spell_name}: {e}")
+                failed.append(spell_name)
+
+    sorted_results = dict(sorted(results.items()))
+
+    out_path = "Spells/spells_aidedd.json"
+    with open(out_path, "w", encoding="utf-8") as f:
+        json.dump(sorted_results, f, indent=4, ensure_ascii=False)
+
+    print(f"\nWrote {len(sorted_results)} spells -> {out_path}")
+    print(f"Not found on AideDD ({len(not_found)}): {', '.join(not_found)}")
+    if failed:
+        print(f"Failed ({len(failed)}): {', '.join(failed)}")

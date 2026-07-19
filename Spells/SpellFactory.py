@@ -294,16 +294,32 @@ class DataSpell(Spell):
 
 
 class SpellFactory:
-    """Factory that loads spells from spells.json, the single source of truth."""
+    """Factory that loads spells from multiple JSON sources and merges them.
 
-    json_path = "Spells/spells.json"
+    Sources are merged whole-record (never per-field) in priority order,
+    highest priority first. For any given spell name, the entire record from
+    the highest-priority source that has that name wins outright; lower
+    priority sources only fill in spells missing from higher ones.
+    """
+
+    # Highest priority first; each subsequent path only fills gaps.
+    json_paths = (
+        "Spells/spells_dnd2024.json",
+        "Spells/spells_aidedd.json",
+        "Spells/spells_dnd5e.json",
+    )
     _cache = None
 
     @classmethod
     def _load_json(cls):
         if cls._cache is None:
-            with open(cls.json_path, "r", encoding="utf-8") as f:
-                cls._cache = json.load(f)
+            merged: dict[str, Any] = {}
+            # Apply lowest priority first, then overwrite with higher
+            # priority sources so higher-priority entries win outright.
+            for path in reversed(cls.json_paths):
+                with open(path, "r", encoding="utf-8") as f:
+                    merged.update(json.load(f))
+            cls._cache = merged
         return cls._cache
 
     @classmethod
@@ -316,7 +332,9 @@ class SpellFactory:
         """Create a Spell object from the name."""
         data = cls._load_json()
         if spell_name not in data:
-            raise ValueError(f"Spell {spell_name!r} not found in {cls.json_path}.")
+            raise ValueError(
+                f"Spell {spell_name!r} not found in any of {cls.json_paths}."
+            )
         return DataSpell(
             spell_data=data[spell_name],
             spell_casting_ability=spell_casting_ability,
