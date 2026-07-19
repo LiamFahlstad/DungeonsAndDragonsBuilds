@@ -257,6 +257,10 @@ class WizardSubclass(str, Enum):
     BLADESINGER = "Bladesinger"
 
 
+class WizardSubclass2014(str, Enum):
+    NECROMANCY = "Necromancy"
+
+
 class SorcererSubclass(str, Enum):
     ABERRANT = "Aberrant Sorcery"
     CLOCKWORK = "Clockwork Sorcery"
