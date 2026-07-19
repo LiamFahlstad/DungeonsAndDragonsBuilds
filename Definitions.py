@@ -1,6 +1,24 @@
 from enum import Enum
 
 
+###### HIT DICE ######
+
+ARTIFICER_HIT_DIE = 8
+BARBARIAN_HIT_DIE = 12
+BARD_HIT_DIE = 8
+CLERIC_HIT_DIE = 8
+DRUID_HIT_DIE = 8
+FIGHTER_HIT_DIE = 10
+MONK_HIT_DIE = 8
+PALADIN_HIT_DIE = 10
+PSION_HIT_DIE = 6
+RANGER_HIT_DIE = 10
+ROGUE_HIT_DIE = 8
+SORCERER_HIT_DIE = 6
+WARLOCK_HIT_DIE = 8
+WIZARD_HIT_DIE = 6
+
+
 class CharacterClass(str, Enum):
     ARTIFICER = "Artificer"
     BARBARIAN = "Barbarian"

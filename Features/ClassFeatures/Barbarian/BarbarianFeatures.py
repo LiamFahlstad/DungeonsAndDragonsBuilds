@@ -1,11 +1,9 @@
 import Definitions
-from Definitions import Ability, Skill
+from Definitions import Ability, BARBARIAN_HIT_DIE, Skill
 from Features.Core.BaseFeatures import Feature
 from Features.Core.SubFeatures import MultiAbilityArmorClass, SavingThrowAdvantage, SkillProficiencyChoice
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
-
-BARBARIAN_HIT_DIE = 12
 
 
 class Rage(Feature):

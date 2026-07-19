@@ -1,8 +1,6 @@
-from Definitions import Ability
+from Definitions import Ability, WIZARD_HIT_DIE
 from Features.Core.BaseFeatures import Feature
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
-
-WIZARD_HIT_DIE = 6
 
 
 class AbjurationSavant(Feature):

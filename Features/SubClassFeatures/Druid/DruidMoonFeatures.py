@@ -1,10 +1,8 @@
 
-from Definitions import Ability
+from Definitions import Ability, DRUID_HIT_DIE
 from Features.Core.BaseFeatures import Feature
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
-
-DRUID_HIT_DIE = 8
 
 
 class CircleForms(Feature):

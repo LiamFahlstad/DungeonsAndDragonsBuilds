@@ -1,9 +1,7 @@
-from Definitions import Ability, Skill
+from Definitions import Ability, CLERIC_HIT_DIE, Skill
 from Features.Core.BaseFeatures import Feature
 from Features.Core.SubFeatures import SkillProficiencyChoice, SkillExpertiseChoice
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
-
-CLERIC_HIT_DIE = 8
 
 
 class BlessingsOfKnowledge(Feature):

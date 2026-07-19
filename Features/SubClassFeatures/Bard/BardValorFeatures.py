@@ -1,7 +1,6 @@
+from Definitions import BARD_HIT_DIE
 from Features.Core.BaseFeatures import Feature
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
-
-BARD_HIT_DIE = 8
 
 
 class CombatInspiration(Feature):

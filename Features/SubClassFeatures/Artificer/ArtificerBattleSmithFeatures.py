@@ -1,9 +1,7 @@
-from Definitions import Ability
+from Definitions import ARTIFICER_HIT_DIE, Ability
 from Features.Core.BaseFeatures import Feature
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
-
-ARTIFICER_HIT_DIE = 8
 
 
 class BattleSmithToolsOfTheTrade(Feature):

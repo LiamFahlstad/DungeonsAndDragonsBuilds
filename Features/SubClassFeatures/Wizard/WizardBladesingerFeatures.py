@@ -1,9 +1,7 @@
-from Definitions import Ability, Skill
+from Definitions import Ability, Skill, WIZARD_HIT_DIE
 from Features.Core.BaseFeatures import Feature
 from Features.Core.SubFeatures import SkillProficiencyChoice
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
-
-WIZARD_HIT_DIE = 6
 
 
 class BladesongText(Feature):

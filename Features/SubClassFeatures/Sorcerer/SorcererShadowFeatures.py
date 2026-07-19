@@ -1,7 +1,6 @@
+from Definitions import SORCERER_HIT_DIE
 from Features.Core.BaseFeatures import Feature
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
-
-SORCERER_HIT_DIE = 6
 
 
 class ShadowSpells(Feature):

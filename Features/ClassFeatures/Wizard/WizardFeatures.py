@@ -1,9 +1,7 @@
-from Definitions import Skill
+from Definitions import Skill, WIZARD_HIT_DIE
 from Features.Core.BaseFeatures import Feature
 from Features.Core.SubFeatures import SkillExpertiseChoice
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
-
-WIZARD_HIT_DIE = 6
 
 
 class RitualAdept(Feature):

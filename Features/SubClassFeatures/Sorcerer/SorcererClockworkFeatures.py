@@ -1,9 +1,7 @@
-from Definitions import Ability
+from Definitions import Ability, SORCERER_HIT_DIE
 from Features.Core.BaseFeatures import Feature
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
-
-SORCERER_HIT_DIE = 6
 
 
 class ClockworkSpells(Feature):

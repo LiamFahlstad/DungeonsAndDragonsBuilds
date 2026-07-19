@@ -1,9 +1,7 @@
-from Definitions import CharacterClass
+from Definitions import CharacterClass, ROGUE_HIT_DIE
 from Features.Core.BaseFeatures import Feature
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
-
-ROGUE_HIT_DIE = 8
 
 
 class PsionicPower(Feature):

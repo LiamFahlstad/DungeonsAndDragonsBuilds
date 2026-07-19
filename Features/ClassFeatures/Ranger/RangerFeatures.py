@@ -1,11 +1,9 @@
 
-from Definitions import Ability, Skill
+from Definitions import Ability, RANGER_HIT_DIE, Skill
 from Features.Core.BaseFeatures import Feature
 from Features.Core.SubFeatures import SkillExpertiseChoice
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
-
-RANGER_HIT_DIE = 10
 
 
 class SpellCasting(Feature):

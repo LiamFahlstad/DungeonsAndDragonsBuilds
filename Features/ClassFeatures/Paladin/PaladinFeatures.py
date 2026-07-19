@@ -1,8 +1,7 @@
+from Definitions import PALADIN_HIT_DIE
 from Features.Core.BaseFeatures import Feature
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
-
-PALADIN_HIT_DIE = 10
 
 
 class LayOnHands(Feature):

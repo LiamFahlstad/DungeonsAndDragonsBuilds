@@ -1,8 +1,7 @@
 
+from Definitions import RANGER_HIT_DIE
 from Features.Core.BaseFeatures import Feature
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
-
-RANGER_HIT_DIE = 10
 
 
 class HollowWardenSpells(Feature):

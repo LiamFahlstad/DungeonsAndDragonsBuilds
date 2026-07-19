@@ -1,3 +1,4 @@
+from Definitions import DRUID_HIT_DIE
 from typing import Type
 
 import Definitions
@@ -6,8 +7,6 @@ from Features.ClassFeatures.Druid.WildShapeForms import format_wild_shape_form
 from Features.Core.BaseFeatures import Feature
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
-
-DRUID_HIT_DIE = 8
 
 
 class Spellcasting(Feature):

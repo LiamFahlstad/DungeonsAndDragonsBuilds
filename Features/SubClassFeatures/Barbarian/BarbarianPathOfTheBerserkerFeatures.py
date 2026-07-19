@@ -1,9 +1,8 @@
 import Definitions
+from Definitions import BARBARIAN_HIT_DIE
 from Features.ClassFeatures.Barbarian.BarbarianFeatures import get_rage_damage_bonus
 from Features.Core.BaseFeatures import Feature
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
-
-BARBARIAN_HIT_DIE = 12
 
 
 class Frenzy(Feature):

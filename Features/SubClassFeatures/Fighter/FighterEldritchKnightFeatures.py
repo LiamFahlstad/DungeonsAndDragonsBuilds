@@ -1,7 +1,6 @@
+from Definitions import FIGHTER_HIT_DIE
 from Features.Core.BaseFeatures import Feature
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
-
-FIGHTER_HIT_DIE = 10
 
 
 class EldritchKnightSpellcasting(Feature):

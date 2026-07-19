@@ -1,7 +1,6 @@
+from Definitions import WARLOCK_HIT_DIE
 from Features.Core.BaseFeatures import Feature
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
-
-WARLOCK_HIT_DIE = 8
 
 
 class GreatOldOneSpells(Feature):

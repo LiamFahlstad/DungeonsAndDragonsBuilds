@@ -1,7 +1,6 @@
+from Definitions import ARTIFICER_HIT_DIE
 from Features.Core.BaseFeatures import Feature
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
-
-ARTIFICER_HIT_DIE = 8
 
 
 class ArtilleristToolsOfTheTrade(Feature):

@@ -1,8 +1,7 @@
 
+from Definitions import DRUID_HIT_DIE
 from Features.Core.BaseFeatures import Feature
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
-
-DRUID_HIT_DIE = 8
 
 
 class CircleOfTheSeaSpells(Feature):

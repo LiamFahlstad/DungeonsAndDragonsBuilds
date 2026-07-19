@@ -1,11 +1,9 @@
 import Definitions
-from Definitions import Ability, Skill
+from Definitions import Ability, BARD_HIT_DIE, Skill
 from Features.Core.BaseFeatures import Feature
 from Features.Core.SubFeatures import JackOfAllTradesBonus, SkillExpertiseChoice
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
-
-BARD_HIT_DIE = 8
 
 
 class Spellcasting(Feature):

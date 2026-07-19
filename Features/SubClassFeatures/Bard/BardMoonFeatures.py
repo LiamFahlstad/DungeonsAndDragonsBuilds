@@ -1,9 +1,7 @@
-from Definitions import Skill
+from Definitions import BARD_HIT_DIE, Skill
 from Features.Core.BaseFeatures import Feature
 from Features.Core.SubFeatures import SkillProficiencyChoice
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
-
-BARD_HIT_DIE = 8
 
 
 class MoonsInspiration(Feature):

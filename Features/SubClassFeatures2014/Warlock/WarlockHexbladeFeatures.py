@@ -1,9 +1,7 @@
-from Definitions import Ability
+from Definitions import Ability, WARLOCK_HIT_DIE
 from Features.Core.BaseFeatures import Feature
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
-
-WARLOCK_HIT_DIE = 8
 
 
 class HexbladeExpandedSpells(Feature):

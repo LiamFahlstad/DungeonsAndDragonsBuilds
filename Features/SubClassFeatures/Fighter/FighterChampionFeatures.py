@@ -1,9 +1,7 @@
-from Definitions import DiceRollCondition, Skill
+from Definitions import DiceRollCondition, FIGHTER_HIT_DIE, Skill
 from Features.Core.BaseFeatures import Feature
 from Features.Core.SubFeatures import InitiativeRollCondition, SkillRollCondition
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
-
-FIGHTER_HIT_DIE = 10
 
 
 class ImprovedCritical(Feature):

@@ -1,9 +1,7 @@
-from Definitions import Ability
+from Definitions import Ability, FIGHTER_HIT_DIE
 from Features.Core.BaseFeatures import Feature
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
-
-FIGHTER_HIT_DIE = 10
 
 
 class SuperiorityDice(Feature):

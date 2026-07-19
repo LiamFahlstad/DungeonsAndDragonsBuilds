@@ -1,7 +1,6 @@
+from Definitions import PSION_HIT_DIE
 from Features.Core.BaseFeatures import Feature
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
-
-PSION_HIT_DIE = 6
 
 
 class PsionicPower(Feature):

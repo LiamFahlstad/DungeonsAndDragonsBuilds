@@ -1,10 +1,9 @@
 import Definitions
+from Definitions import MONK_HIT_DIE
 from Features.Core.BaseFeatures import Feature
 from Features.Equipment.Weapons import WeaponsDamageRolls
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
-
-MONK_HIT_DIE = 8
 
 LEVEL_TO_MARTIAL_ARTS_DIE = {
     1: WeaponsDamageRolls.D6,

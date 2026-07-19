@@ -1,7 +1,6 @@
+from Definitions import PALADIN_HIT_DIE
 from Features.Core.BaseFeatures import Feature
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
-
-PALADIN_HIT_DIE = 10
 
 
 class NaturesWrath(Feature):

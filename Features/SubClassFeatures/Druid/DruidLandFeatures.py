@@ -1,9 +1,8 @@
 
 import Definitions
+from Definitions import DRUID_HIT_DIE
 from Features.Core.BaseFeatures import Feature
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
-
-DRUID_HIT_DIE = 8
 
 
 _LAND_TYPE_RESISTANCE: dict[Definitions.DruidLandType, str] = {

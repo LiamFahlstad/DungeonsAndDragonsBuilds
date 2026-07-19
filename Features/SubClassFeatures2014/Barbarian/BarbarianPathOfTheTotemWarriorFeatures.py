@@ -1,7 +1,6 @@
+from Definitions import BARBARIAN_HIT_DIE
 from Features.Core.BaseFeatures import Feature
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
-
-BARBARIAN_HIT_DIE = 12
 
 
 class SpiritSeeker(Feature):
