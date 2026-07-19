@@ -9,7 +9,7 @@ from CharacterConfigs.BaseClasses.FighterBase import (
 )
 from CharacterSheetCreator import CharacterSheetData
 from Definitions import FighterSubclass
-from Features.ClassFeatures.Fighter import FighterBanneretFeatures
+from Features.SubClassFeatures.Fighter import FighterBanneretFeatures
 from StatBlocks.SkillsStatBlock import FighterSkillsStatBlock
 
 

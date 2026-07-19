@@ -10,7 +10,7 @@ from CharacterConfigs.BaseClasses.FighterBase import (
 from CharacterSheetCreator import CharacterSheetData
 from Definitions import FighterSubclass
 from Features.Combat import Maneuvers
-from Features.ClassFeatures.Fighter import FighterBattleMasterFeatures
+from Features.SubClassFeatures.Fighter import FighterBattleMasterFeatures
 from StatBlocks.SkillsStatBlock import FighterSkillsStatBlock
 
 

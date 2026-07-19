@@ -9,7 +9,8 @@ from CharacterConfigs.BaseClasses.ClericBase import (
 )
 from CharacterSheetCreator import CharacterSheetData
 from Definitions import ClericSubclass
-from Features.ClassFeatures.Cleric import ClericLifeFeatures, ClericFeatures
+from Features.SubClassFeatures.Cleric import ClericLifeFeatures
+from Features.ClassFeatures.Cleric import ClericFeatures
 from Spells.SpellLists import (
     ClericLevel1Spells,
     ClericLevel2Spells,

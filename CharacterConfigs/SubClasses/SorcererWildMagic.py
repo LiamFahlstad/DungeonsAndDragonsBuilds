@@ -9,7 +9,7 @@ from CharacterConfigs.BaseClasses.SorcererBase import (
 )
 from CharacterSheetCreator import CharacterSheetData
 from Definitions import SorcererSubclass
-from Features.ClassFeatures.Sorcerer import SorcererWildMagicFeatures
+from Features.SubClassFeatures.Sorcerer import SorcererWildMagicFeatures
 from StatBlocks.SkillsStatBlock import SorcererSkillsStatBlock
 
 

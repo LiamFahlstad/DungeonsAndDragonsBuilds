@@ -10,7 +10,8 @@ from CharacterConfigs.BaseClasses.ClericBase import (
 )
 from CharacterSheetCreator import CharacterSheetData
 from Definitions import ClericSubclass
-from Features.ClassFeatures.Cleric import ClericTrickeryFeatures, ClericFeatures
+from Features.SubClassFeatures.Cleric import ClericTrickeryFeatures
+from Features.ClassFeatures.Cleric import ClericFeatures
 from StatBlocks.SkillsStatBlock import ClericSkillsStatBlock
 
 

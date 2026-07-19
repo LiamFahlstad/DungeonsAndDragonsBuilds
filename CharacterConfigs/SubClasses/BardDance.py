@@ -9,7 +9,7 @@ from CharacterConfigs.BaseClasses.BardBase import (
 )
 from CharacterSheetCreator import CharacterSheetData
 from Definitions import BardSubclass
-from Features.ClassFeatures.Bard import BardDanceFeatures
+from Features.SubClassFeatures.Bard import BardDanceFeatures
 from StatBlocks.SkillsStatBlock import BardSkillsStatBlock
 
 

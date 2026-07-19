@@ -9,7 +9,8 @@ from CharacterConfigs.BaseClasses.ClericBase import (
 )
 from CharacterSheetCreator import CharacterSheetData
 from Definitions import ClericSubclass, Skill
-from Features.ClassFeatures.Cleric import ClericKnowledgeFeatures, ClericFeatures
+from Features.SubClassFeatures.Cleric import ClericKnowledgeFeatures
+from Features.ClassFeatures.Cleric import ClericFeatures
 from Spells.SpellLists import (
     BardLevel3Spells,
     ClericLevel1Spells,

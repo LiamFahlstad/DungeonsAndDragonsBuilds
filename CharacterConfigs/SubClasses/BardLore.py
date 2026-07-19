@@ -10,7 +10,8 @@ from CharacterConfigs.BaseClasses.BardBase import (
 )
 from CharacterSheetCreator import CharacterSheetData
 from Definitions import BardSubclass, Skill
-from Features.ClassFeatures.Bard import BardLoreFeatures, BardFeatures
+from Features.SubClassFeatures.Bard import BardLoreFeatures
+from Features.ClassFeatures.Bard import BardFeatures
 from StatBlocks.SkillsStatBlock import BardSkillsStatBlock
 
 

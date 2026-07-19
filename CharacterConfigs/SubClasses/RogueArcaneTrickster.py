@@ -10,7 +10,7 @@ from CharacterConfigs.BaseClasses.RogueBase import (
 from CharacterSheetCreator import CharacterSheetData
 from Definitions import RogueSubclass
 from Features.ClassFeatures import SpellSlots
-from Features.ClassFeatures.Rogue import RogueArcaneTricksterFeatures
+from Features.SubClassFeatures.Rogue import RogueArcaneTricksterFeatures
 from StatBlocks.SkillsStatBlock import RogueSkillsStatBlock
 
 

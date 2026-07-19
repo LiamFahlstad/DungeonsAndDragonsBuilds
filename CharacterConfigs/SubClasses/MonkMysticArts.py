@@ -10,7 +10,7 @@ from CharacterConfigs.BaseClasses.MonkBase import (
 from CharacterSheetCreator import CharacterSheetData
 from Definitions import Ability, MonkSubclass
 from Features.ClassFeatures import SpellSlots
-from Features.ClassFeatures.Monk import MonkMysticArtsFeatures
+from Features.SubClassFeatures.Monk import MonkMysticArtsFeatures
 from StatBlocks.SkillsStatBlock import MonkSkillsStatBlock
 
 
