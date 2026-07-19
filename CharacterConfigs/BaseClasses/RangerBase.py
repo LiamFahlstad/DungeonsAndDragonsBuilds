@@ -128,7 +128,10 @@ class RangerLevel9(ClassBuilder.BaseClassLevel9):
     spell_2: RangerLevel1Spells | RangerLevel2Spells | RangerLevel3Spells
 
     def add_features(self, data: CharacterSheetData) -> CharacterSheetData:
-        data.add_feature(RangerFeatures.Expertise(self.skill_1, self.skill_2))
+        data.add_feature(
+            RangerFeatures.Expertise(self.skill_1, self.skill_2),
+            apply_when=ApplyWhen.LAST,
+        )
         data.add_spell(self.spell_1)
         data.add_spell(self.spell_2)
         return data

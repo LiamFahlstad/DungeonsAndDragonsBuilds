@@ -1,3 +1,28 @@
+"""SubFeatures: reusable stat-block mutations composed into Features.
+
+Ordering contract
+-----------------
+Features apply in two phases (see CharacterSheetData.setup_character_stat_block):
+every ApplyWhen.IMMEDIATE feature first, then every ApplyWhen.LAST feature,
+each phase in call order. Armors, weapons and items apply after all features.
+A SubFeature falls into one of three categories:
+
+- Additive or flag-setting writes (proficiencies, ability/AC/skill/speed
+  bonuses): order-insensitive because derived values (AC, skill totals, HP)
+  are computed lazily at read time. Safe as IMMEDIATE - and proficiency
+  grants MUST stay IMMEDIATE so that phase-LAST readers see them.
+- Overwrites (SetArmorClass, MultiAbilityArmorClass, roll conditions):
+  last writer wins, so only their order relative to each other matters.
+  Armor applying after all features is what lets worn armor override an
+  Unarmored Defense formula, matching the game rules.
+- Eager readers (SkillExpertise, JackOfAllTradesBonus, StrengthRequirement):
+  they read state at apply time, so every write they depend on must already
+  have happened. Features carrying these must be added with ApplyWhen.LAST,
+  unless the feature itself performs the prerequisite write first (e.g.
+  SkillExpert and BlessingsOfKnowledge grant the proficiency before the
+  expertise within one apply call).
+"""
+
 from abc import ABC, abstractmethod
 from typing import Optional
 
@@ -27,7 +52,11 @@ def _validate_pool(items, pool, count: int, error_prefix: str):
 # ── Skill proficiency ─────────────────────────────────────────────────────────
 
 class SkillProficiency(SubFeature):
-    """Grants proficiency in a fixed list of skills."""
+    """Grants proficiency in a fixed list of skills.
+
+    Ordering: idempotent flag set - but keep the owning feature IMMEDIATE,
+    since phase-LAST readers (SkillExpertise, JackOfAllTradesBonus) must see
+    every proficiency."""
 
     def __init__(self, skills: list[Skill]):
         self.skills = skills
@@ -48,7 +77,12 @@ class SkillProficiencyChoice(SkillProficiency):
 # ── Skill expertise ───────────────────────────────────────────────────────────
 
 class SkillExpertise(SubFeature):
-    """Grants expertise in a fixed list of skills."""
+    """Grants expertise in a fixed list of skills.
+
+    Ordering: eager reader - raises if the skill isn't already proficient, so
+    the owning feature must be added with ApplyWhen.LAST (proficiency can come
+    from any builder, including the species, which merges last), unless the
+    feature itself grants the proficiency earlier in its own apply()."""
 
     def __init__(self, skills: list[Skill]):
         self.skills = skills
@@ -118,7 +152,13 @@ class AbilityScoreBonus(SubFeature):
 # ── Armor class ───────────────────────────────────────────────────────────────
 
 class SetArmorClass(SubFeature):
-    """Sets base AC and replaces the ability modifier with a single ability (None = no modifier)."""
+    """Sets base AC and replaces the ability modifier with a single ability (None = no modifier).
+
+    Ordering: overwrite - the last SetArmorClass/MultiAbilityArmorClass to
+    apply wins the base and ability set. Additive ArmorClassBonus values live
+    in a separate accumulator and survive regardless of order. Armors apply
+    after all features, so worn armor deliberately overrides feature-provided
+    AC formulas such as Unarmored Defense."""
 
     def __init__(self, base: int, ability: Optional[Ability]):
         self.base = base
@@ -130,7 +170,11 @@ class SetArmorClass(SubFeature):
 
 
 class MultiAbilityArmorClass(SubFeature):
-    """Sets base AC and adds multiple ability modifiers (e.g. unarmored defense formulas)."""
+    """Sets base AC and adds multiple ability modifiers (e.g. unarmored defense formulas).
+
+    Ordering: overwrite of the base, but the listed abilities are ADDED to the
+    existing ability set (which starts as {DEX}) rather than replacing it - so
+    it must not run after a SetArmorClass that cleared or changed the set."""
 
     def __init__(self, base: int, abilities: list[Ability]):
         self.base = base
@@ -237,7 +281,11 @@ class SkillToAbilityOverride(SubFeature):
 
 
 class JackOfAllTradesBonus(SubFeature):
-    """Adds half proficiency bonus to every skill the character lacks proficiency in."""
+    """Adds half proficiency bonus to every skill the character lacks proficiency in.
+
+    Ordering: eager reader - snapshots is_proficient for every skill, so the
+    owning feature must be added with ApplyWhen.LAST, after every proficiency
+    grant from every builder."""
 
     def apply(self, character_stat_block: CharacterStatBlock):
         half_proficiency = character_stat_block.get_proficiency_bonus() // 2
@@ -280,7 +328,11 @@ class CarryingCapacityBonus(SubFeature):
 # ── Prerequisites ─────────────────────────────────────────────────────────────
 
 class StrengthRequirement(SubFeature):
-    """Raises ValueError if the character's Strength score is below the minimum."""
+    """Raises ValueError if the character's Strength score is below the minimum.
+
+    Ordering: eager reader - validated when armors apply, i.e. after all
+    features (so feat/background ability bonuses count) but BEFORE items, so
+    a Strength bonus granted by an item cannot satisfy an armor requirement."""
 
     def __init__(self, min_score: int):
         self.min_score = min_score
