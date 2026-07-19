@@ -54,6 +54,17 @@ class CharacterSheetData:
     experience_points: int = 0
     _character_cached: Optional[CharacterStatBlock] = None
 
+    # Records (apply_when, feature) in the order add_feature was called.
+    # Unlike `features` (ordered for display - newest IMMEDIATE feature
+    # first), this drives the order features are applied to the
+    # CharacterStatBlock: all IMMEDIATE features first, then all LAST
+    # features, each group preserving call order - so a later builder's
+    # (e.g. a multiclass dip's) IMMEDIATE features never apply ahead of an
+    # earlier builder's LAST features. A plain (non-underscore) field so
+    # merge_with's generic list-concat combines it across builders/species
+    # in the order they were merged in.
+    feature_apply_order: list[tuple[ApplyWhen, Feature]] = attr.Factory(list)
+
     @property
     def character_level(self) -> int:
         return sum(self.level_per_class.values())
@@ -67,6 +78,7 @@ class CharacterSheetData:
             self.features.append(feature)
         else:
             raise ValueError(f"Unknown ApplyWhen value: {apply_when}")
+        self.feature_apply_order.append((apply_when, feature))
 
     def add_origin_feat(self, origin_feat: OriginFeats.OriginFeat):
         self.add_feature(origin_feat)
@@ -242,8 +254,16 @@ class CharacterSheetData:
             spell_slots=self.spell_slots,
         )
 
-        for feature in self.features:
-            feature.apply(character)
+        # Apply every IMMEDIATE feature (in call order) before any LAST
+        # feature, regardless of which builder contributed it - so features
+        # from a starter/multiclass builder never interleave out of order
+        # (e.g. a later builder's expertise pick always applies after an
+        # earlier builder's prerequisite skill proficiency, and no LAST
+        # feature jumps ahead of an IMMEDIATE one from another builder).
+        for apply_when in (ApplyWhen.IMMEDIATE, ApplyWhen.LAST):
+            for when, feature in self.feature_apply_order:
+                if when == apply_when:
+                    feature.apply(character)
 
         for armor in self.armors:
             armor.apply(character)

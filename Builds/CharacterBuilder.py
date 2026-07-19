@@ -1,6 +1,7 @@
 from typing import Optional
 
 from CharacterConfigs.BaseClasses.ClassBuilder import (
+    AppliedLevelFeatures,
     MulticlassBuilder,
     StarterClassBuilder,
 )
@@ -23,13 +24,16 @@ class CharacterBuilder:
 
     def build(self) -> CharacterSheetData:
         character_sheet_data = CharacterSheetData()
-        character_class_data = self.starter_class_builder.create()
-        character_sheet_data.merge_with(character_class_data)
+        applied_level_features = AppliedLevelFeatures()
 
-        if self.multiclass_builders:
-            for multiclass_builder in self.multiclass_builders:
-                multiclass_data = multiclass_builder.create()
-                character_sheet_data.merge_with(multiclass_data)
+        character_sheet_data = self.starter_class_builder.create(
+            character_sheet_data, applied_level_features
+        )
+
+        for multiclass_builder in self.multiclass_builders:
+            character_sheet_data = multiclass_builder.create(
+                character_sheet_data, applied_level_features
+            )
 
         # Set spellcasting ability
         abilities = character_sheet_data.abilities

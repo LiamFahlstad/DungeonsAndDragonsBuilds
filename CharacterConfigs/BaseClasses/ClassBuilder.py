@@ -221,6 +221,18 @@ class BaseClassLevel20(LevelFeatures):
         return data
 
 
+@attr.dataclass
+class AppliedLevelFeatures:
+    """Tracks which (class, level) feature sets have already been applied
+    across a character's starter class and multiclass builders, so that a
+    level appearing in more than one builder (e.g. a class picked up again
+    after a multiclass dip) only has its features added once, from whichever
+    builder is processed first (the starter class, by convention)."""
+
+    base_class_levels: set[tuple[CharacterClass, int]] = attr.Factory(set)
+    subclass_levels: set[tuple[CharacterClass, int]] = attr.Factory(set)
+
+
 class BaseClassLevelFeatures:
     def __init__(
         self,
@@ -234,16 +246,22 @@ class BaseClassLevelFeatures:
         self,
         data: CharacterSheetData,
         base_class: CharacterClass,
+        applied_level_features: "AppliedLevelFeatures",
     ) -> CharacterSheetData:
         class_level = data.get_level_for_class(base_class)
 
-        for features_by_level in [
-            self.base_class_features_by_level,
-            self.subclass_features_by_level,
+        for features_by_level, applied_levels in [
+            (self.base_class_features_by_level, applied_level_features.base_class_levels),
+            (self.subclass_features_by_level, applied_level_features.subclass_levels),
         ]:
             for level, features in features_by_level.items():
                 if class_level < level:
                     continue
+
+                key = (base_class, level)
+                if key in applied_levels:
+                    continue
+                applied_levels.add(key)
 
                 assert features is not None, "Features for level cannot be None."
                 assert level == features.level, "Level mismatch in base class features."
@@ -272,11 +290,28 @@ class ClassBuilder(ABC):
 
     def create(
         self,
+        character_sheet_data: Optional[CharacterSheetData] = None,
+        applied_level_features: Optional["AppliedLevelFeatures"] = None,
     ) -> CharacterSheetData:
-        data = self._get_character_sheet_creator_base()
-        data = self.base_class_level_features.add_features(data, self.base_class)
-        data.replace_spells(self.replace_spells or {})
-        return data
+        """Merge this class builder's contribution into `character_sheet_data`
+        (a fresh one is created if not provided) and return it. Feature
+        application happens directly on that (possibly shared/cumulative)
+        object so that a base class split across multiple builders - e.g. a
+        starter class resumed later via a multiclass builder after a dip
+        into another class - sees features from earlier levels (added by an
+        earlier builder) already present, and never has a given class level's
+        features applied more than once."""
+        if character_sheet_data is None:
+            character_sheet_data = CharacterSheetData()
+        if applied_level_features is None:
+            applied_level_features = AppliedLevelFeatures()
+
+        character_sheet_data.merge_with(self._get_character_sheet_creator_base())
+        character_sheet_data = self.base_class_level_features.add_features(
+            character_sheet_data, self.base_class, applied_level_features
+        )
+        character_sheet_data.replace_spells(self.replace_spells or {})
+        return character_sheet_data
 
 
 class CustomStarterClassArgs:
