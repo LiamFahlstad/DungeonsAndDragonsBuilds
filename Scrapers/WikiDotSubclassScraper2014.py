@@ -10,24 +10,30 @@ from tqdm import tqdm
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from WikiDotPageRenderer import render_content_lines
 
-BASE_URL = "https://dnd2024.wikidot.com/"
+BASE_URL = "https://dnd5e.wikidot.com/"
 
 # NOTE: A site-wide list of every subclass page can be discovered via
-# https://dnd2024.wikidot.com/system:page-tags/tag/subclass
+# https://dnd5e.wikidot.com/system:page-tags/tag/subclass
 # (look for <div id="tagged-pages-list"> with
 # <div class="pages-list-item"><div class="title"><a href="/{class}:{slug}">Name</a></div></div>).
 # That full-site discovery/"--all" mode is intentionally not implemented here.
+#
+# NOTE: dnd5e.wikidot.com subclass slugs are the *short* archetype name, not
+# "oath-of-..."/"circle-of-..." style like dnd2024 (e.g. paladin:vengeance, not
+# paladin:oath-of-vengeance). Some pages also have "-ua" (Unearthed Arcana /
+# unofficial playtest) siblings, e.g. paladin:redemption vs paladin:redemption-ua -
+# those are unofficial and should be avoided.
 
 
 class SubclassNotFoundError(Exception):
-    """Raised when the subclass page does not exist on dnd2024.wikidot.com."""
+    """Raised when the subclass page does not exist on dnd5e.wikidot.com."""
 
     pass
 
 
 class SubclassParser:
     def __init__(self, page_ref: str):
-        """page_ref is e.g. 'ranger:hollow-warden' (class:slug)."""
+        """page_ref is e.g. 'druid:spores' (class:slug)."""
         self.page_ref = page_ref
         self.url = f"{BASE_URL}{page_ref}"
         self.soup = None
@@ -89,7 +95,7 @@ class SubclassParser:
 
 
 def slug_to_filename(page_ref: str) -> str:
-    """'ranger:hollow-warden' -> 'hollow_warden.txt'."""
+    """'druid:spores' -> 'spores.txt'."""
     slug = page_ref.split(":", 1)[-1]
     return slug.replace("-", "_") + ".txt"
 
@@ -109,13 +115,13 @@ def fetch_subclass(page_ref: str, max_retries: int = 3) -> tuple[str, SubclassPa
 
 
 DEFAULT_PAGES = [
-    "paladin:oath-of-the-ancients",
-    "ranger:hollow-warden",
-    "ranger:winter-walker",
+    "druid:spores",
+    "wizard:evocation",
+    "ranger:hunter",
 ]
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
-OUTPUT_DIR = REPO_ROOT / "SourceTexts" / "SubclassTexts"
+OUTPUT_DIR = REPO_ROOT / "SourceTexts" / "SubclassTexts2014"
 
 
 if __name__ == "__main__":

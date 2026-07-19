@@ -1,6 +1,6 @@
 """Shared plain-text renderer for dnd2024.wikidot.com `#page-content` blocks.
 
-Used by both WikiDotSubclassScraper.py (subclass pages, e.g. paladin:oath-of-the-ancients)
+Used by both WikiDotSubclassScraper2024.py (subclass pages, e.g. paladin:oath-of-the-ancients)
 and WikiDotClassScraper.py (main class pages, e.g. paladin:main). Subclass pages happen to
 have zero nested wrapper divs, while class pages sometimes wrap a block (typically a table)
 in a plain <div>. get_outermost_blocks() handles both cases with one algorithm.
