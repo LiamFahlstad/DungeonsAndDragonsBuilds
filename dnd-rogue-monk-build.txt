@@ -1,0 +1,83 @@
+Here's a **concise, updated version** of the build with **only the current changes from the original** included.
+
+---
+
+# Halfling Shadow Monk (Warrior of Shadow) 19 / Rogue 1 (2024 PHB)
+
+### Core Build
+
+* **Race:** Halfling
+* **Classes:** Rogue 1 → Warrior of Shadow Monk 19
+* **Origin Feat:** Tavern Brawler
+* **Stats (final):** 21 Dex / 20 Wis / 14 Con / 10 Int / 8 Str / 8 Cha
+* **ASIs:** +2 Dex, +2 Wis, +2 Dex, +2 Wis
+* **Epic Boon:** Night Spirit (+1 Dex)
+* **Expertise:** Acrobatics, Stealth
+* **Weapon Masteries:**
+
+  * Dagger (Nick)
+  * Shortbow (Vex)
+
+## Game Plan
+
+Use **Nick** with daggers to add an extra attack, then convert your Bonus Action into **Flurry of Blows**.
+
+At Monk 10 (character level 11):
+
+* 2 dagger attacks (Extra Attack)
+* 1 Nick attack
+* 3 Flurry attacks (Heightened Focus)
+
+**Total: 6 attacks each round** for only 1 Focus Point.
+
+Shadow Monk supplies consistent Advantage through its own Darkness, improving accuracy and enabling Sneak Attack.
+
+---
+
+## Why Rogue 1?
+
+You trade Monk's capstone for:
+
+* Nick Weapon Mastery
+* Sneak Attack (including opportunity attacks)
+* Expertise
+* Extra skills
+* Shortbow proficiency
+
+Overall this is primarily a utility trade rather than a raw DPR increase.
+
+---
+
+## Why Shadow?
+
+Shadow Monk provides:
+
+* Reliable self-generated Advantage via Darkness.
+* Shadow Step mobility.
+* Free Flurry while in Dim Light/Darkness at high levels (Cloak of Shadows), conserving Focus.
+
+---
+
+# Latest Update (May 9, 2026)
+
+The only substantive addition since the original build is support for the **D&D Beyond Drops** feats:
+
+### Fey Pact
+
+* Grants a Wisdom-based ranged cantrip such as:
+
+  * **Mind Sliver**
+  * **Vicious Mockery**
+* Useful for ranged utility and imposing penalties to enemy saves or attacks.
+
+### Fey Sentinel
+
+Excellent synergy with Monk mobility:
+
+* **Fey Shift** becomes a **Bonus Action teleport** equal to half your speed.
+* Combines extremely well with **Step of the Wind**, allowing exceptional battlefield repositioning.
+* **Plant Growth** creates difficult terrain that you can freely teleport around, making it a powerful battlefield-control option.
+
+---
+
+Everything else in the guide (variants, Tasha's options, Ranger dip, Rogue 2–3, etc.) remains unchanged. The Fey Pact/Fey Sentinel interaction is the only notable update added after the original build.

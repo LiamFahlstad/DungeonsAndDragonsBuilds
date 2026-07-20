@@ -51,6 +51,7 @@ class DruidLevel1(ClassBuilder.BaseClassLevel1):
     spell_2: DruidLevel1Spells
     spell_3: DruidLevel1Spells
     spell_4: DruidLevel1Spells
+    primal_order: DruidFeatures.PrimalOrderType = DruidFeatures.PrimalOrderType.MAGICIAN
 
     def add_features(
         self,
@@ -58,7 +59,9 @@ class DruidLevel1(ClassBuilder.BaseClassLevel1):
     ) -> CharacterSheetData:
         data.add_feature(DruidFeatures.Spellcasting())
         data.add_feature(DruidFeatures.Druidic())
-        data.add_feature(DruidFeatures.PrimalOrder())
+        data.add_feature(DruidFeatures.PrimalOrder(order=self.primal_order))
+        if self.primal_order == DruidFeatures.PrimalOrderType.WARDEN:
+            data.add_armor_proficiency(Definitions.ArmorType.MEDIUM)
         data.add_cantrip(self.cantrip_1)
         data.add_cantrip(self.cantrip_2)
         data.add_spell(self.spell_1)

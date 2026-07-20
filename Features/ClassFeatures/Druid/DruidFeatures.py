@@ -1,4 +1,5 @@
 from Definitions import DRUID_HIT_DIE
+from enum import Enum
 from typing import Type
 
 import Definitions
@@ -7,6 +8,11 @@ from Features.ClassFeatures.Druid.WildShapeForms import format_wild_shape_form
 from Features.Core.BaseFeatures import Feature
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
+
+
+class PrimalOrderType(str, Enum):
+    MAGICIAN = "Magician"
+    WARDEN = "Warden"
 
 
 class Spellcasting(Feature):
@@ -37,16 +43,21 @@ class Druidic(Feature):
 
 
 class PrimalOrder(Feature):
-    def __init__(self):
+    def __init__(self, order: PrimalOrderType = PrimalOrderType.MAGICIAN):
         super().__init__(name="Primal Order", origin="Druid Level 1")
+        self.order = order
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        description = (
-            "You have dedicated yourself to one of the following sacred roles of your choice.\n"
-            "Magician. You know one extra cantrip from the Druid spell list. In addition, your mystical connection to nature gives you a bonus to your Intelligence (Arcana or Nature) checks. The bonus equals your Wisdom modifier (minimum bonus of +1).\n"
-            "Warden. Trained for battle, you gain proficiency with Martial weapons and training with Medium armor."
+        if self.order == PrimalOrderType.WARDEN:
+            return (
+                "Warden. Trained for battle, you gain proficiency with Martial weapons "
+                "and training with Medium armor."
+            )
+        return (
+            "Magician. You know one extra cantrip from the Druid spell list. In addition, "
+            "your mystical connection to nature gives you a bonus to your Intelligence "
+            "(Arcana or Nature) checks. The bonus equals your Wisdom modifier (minimum bonus of +1)."
         )
-        return description
 
 
 class WildShape(Feature):

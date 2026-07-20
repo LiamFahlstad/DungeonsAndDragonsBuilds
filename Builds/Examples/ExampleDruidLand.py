@@ -49,6 +49,7 @@ from Combat.Monsters.CR_0.monsters import (
 from Combat.Monsters.CR_1.monsters import GiantOctopus, GiantSpider
 from Definitions import Ability, DruidLandType, Skill
 from Features.CharacterFeats import Backgrounds, EpicBoon, GeneralFeats, OriginFeats
+from Features.ClassFeatures.Druid import DruidFeatures
 from Features.Equipment import Armor
 from Features.Items import Items
 from SpeciesConfigs import Human
@@ -127,11 +128,10 @@ def get_starter_class_builder():
             spell=AbjurationLevel1Spells.SHIELD,
             spell_casting_ability=Ability.WISDOM,
         ),
-        # NOTE: this codebase locks Druid armor proficiency to Light + Shield regardless
-        # of Primal Order choice (Warden's Medium armor training isn't mechanically
-        # modeled), so Scale Mail/Half Plate from the source build aren't available here.
+        # Warden Primal Order (below) grants Medium armor proficiency; Chain Shirt is
+        # the closest available Medium armor to Scale Mail/Half Plate in this codebase.
         armor=[
-            Armor.LeatherArmor(),
+            Armor.ChainShirtArmor(),
             Armor.ShieldArmor(),
         ],
         weapons=[],
@@ -157,6 +157,7 @@ def get_starter_class_builder():
                     spell_2=DruidLevel1Spells.HEALING_WORD,
                     spell_3=DruidLevel1Spells.ENTANGLE,
                     spell_4=DruidLevel1Spells.FOG_CLOUD,
+                    primal_order=DruidFeatures.PrimalOrderType.WARDEN,
                 ),
                 2: DruidLevel2(
                     spell=DruidLevel1Spells.DETECT_MAGIC,
