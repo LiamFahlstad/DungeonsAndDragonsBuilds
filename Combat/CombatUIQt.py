@@ -1957,7 +1957,7 @@ class CombatAppQt:
         # --- Right: control panel ---
         panel = QFrame()
         panel.setObjectName("controlPanel")
-        panel.setFixedWidth(230)
+        panel.setFixedWidth(460)
         panel_layout = QVBoxLayout(panel)
         panel_layout.setContentsMargins(10, 10, 10, 10)
         panel_layout.setSpacing(6)
@@ -1997,29 +1997,37 @@ class CombatAppQt:
 
         panel_layout.addWidget(self._make_divider())
 
+        # Two-column layout for controls
+        columns_layout = QHBoxLayout()
+        columns_layout.setSpacing(6)
+
+        # Left column: Source, Damage, Heal, Temp HP
+        left_col = QVBoxLayout()
+        left_col.setSpacing(6)
+
         # Source section (attribution for damage/heal)
-        panel_layout.addWidget(self._section_header("Source"))
+        left_col.addWidget(self._section_header("Source"))
         self.source_combo = QComboBox()
         self.source_combo.addItem("Unspecified")
-        panel_layout.addWidget(self.source_combo)
+        left_col.addWidget(self.source_combo)
 
-        panel_layout.addWidget(self._make_divider())
+        left_col.addWidget(self._make_divider())
 
         # Damage section
-        panel_layout.addWidget(self._section_header("Damage"))
+        left_col.addWidget(self._section_header("Damage"))
         self.damage_input = QLineEdit()
         self.damage_input.setPlaceholderText("Amount...")
-        panel_layout.addWidget(self.damage_input)
+        left_col.addWidget(self.damage_input)
         self.damage_input.returnPressed.connect(self._apply_damage)
         dmg_btn = QPushButton("Apply Damage")
         dmg_btn.setObjectName("primaryBtn")
         dmg_btn.clicked.connect(self._apply_damage)
-        panel_layout.addWidget(dmg_btn)
+        left_col.addWidget(dmg_btn)
 
-        panel_layout.addWidget(self._make_divider())
+        left_col.addWidget(self._make_divider())
 
         # Heal section
-        panel_layout.addWidget(self._section_header("Heal"))
+        left_col.addWidget(self._section_header("Heal"))
         self.heal_input = QLineEdit()
         self.heal_input.setPlaceholderText("Amount...")
         self.heal_input.setStyleSheet(
@@ -2027,17 +2035,17 @@ class CombatAppQt:
             "border-radius: 3px; color: #eaeaea; padding: 3px 5px; }"
             "QLineEdit:focus { border: 1px solid #5cdf92; }"
         )
-        panel_layout.addWidget(self.heal_input)
+        left_col.addWidget(self.heal_input)
         self.heal_input.returnPressed.connect(self._apply_heal)
         heal_btn = QPushButton("Apply Heal")
         heal_btn.setObjectName("healBtn")
         heal_btn.clicked.connect(self._apply_heal)
-        panel_layout.addWidget(heal_btn)
+        left_col.addWidget(heal_btn)
 
-        panel_layout.addWidget(self._make_divider())
+        left_col.addWidget(self._make_divider())
 
         # Temp HP section
-        panel_layout.addWidget(self._section_header("Temp HP"))
+        left_col.addWidget(self._section_header("Temp HP"))
         self.temp_hp_input = QLineEdit()
         self.temp_hp_input.setPlaceholderText("Amount...")
         self.temp_hp_input.setStyleSheet(
@@ -2045,20 +2053,24 @@ class CombatAppQt:
             "border-radius: 3px; color: #eaeaea; padding: 3px 5px; }"
             "QLineEdit:focus { border: 1px solid #5ac8f5; }"
         )
-        panel_layout.addWidget(self.temp_hp_input)
+        left_col.addWidget(self.temp_hp_input)
         self.temp_hp_input.returnPressed.connect(self._apply_temp_hp)
         temp_hp_btn = QPushButton("Add Temp HP")
         temp_hp_btn.setObjectName("tempHpBtn")
         temp_hp_btn.clicked.connect(self._apply_temp_hp)
-        panel_layout.addWidget(temp_hp_btn)
+        left_col.addWidget(temp_hp_btn)
 
-        panel_layout.addWidget(self._make_divider())
+        left_col.addStretch()
+
+        # Right column: Conditions, Visibility, Spell Slots
+        right_col = QVBoxLayout()
+        right_col.setSpacing(6)
 
         # Conditions section
-        panel_layout.addWidget(self._section_header("Conditions"))
+        right_col.addWidget(self._section_header("Conditions"))
         self.condition_combo = QComboBox()
         self.condition_combo.addItems(self.conditions)
-        panel_layout.addWidget(self.condition_combo)
+        right_col.addWidget(self.condition_combo)
         cond_row = QHBoxLayout()
         add_cond_btn = QPushButton("Add")
         add_cond_btn.clicked.connect(self._add_condition)
@@ -2066,15 +2078,15 @@ class CombatAppQt:
         rm_cond_btn.clicked.connect(self._remove_condition)
         cond_row.addWidget(add_cond_btn)
         cond_row.addWidget(rm_cond_btn)
-        panel_layout.addLayout(cond_row)
+        right_col.addLayout(cond_row)
 
-        panel_layout.addWidget(self._make_divider())
+        right_col.addWidget(self._make_divider())
 
         # Visibility section
-        panel_layout.addWidget(self._section_header("Visibility"))
+        right_col.addWidget(self._section_header("Visibility"))
         self.visibility_combo = QComboBox()
         self.visibility_combo.addItems(self.visibility_states)
-        panel_layout.addWidget(self.visibility_combo)
+        right_col.addWidget(self.visibility_combo)
         vis_row = QHBoxLayout()
         add_vis_btn = QPushButton("Add")
         add_vis_btn.clicked.connect(self._add_visibility)
@@ -2082,15 +2094,15 @@ class CombatAppQt:
         rm_vis_btn.clicked.connect(self._remove_visibility)
         vis_row.addWidget(add_vis_btn)
         vis_row.addWidget(rm_vis_btn)
-        panel_layout.addLayout(vis_row)
+        right_col.addLayout(vis_row)
 
-        panel_layout.addWidget(self._make_divider())
+        right_col.addWidget(self._make_divider())
 
         # Spell slots section
-        panel_layout.addWidget(self._section_header("Spell Slots"))
+        right_col.addWidget(self._section_header("Spell Slots"))
         self.spell_combo = QComboBox()
         self.spell_combo.addItems([f"Level {i}" for i in range(1, 10)])
-        panel_layout.addWidget(self.spell_combo)
+        right_col.addWidget(self.spell_combo)
         spell_row = QHBoxLayout()
         cast_btn = QPushButton("Cast")
         cast_btn.clicked.connect(self._cast_spell_slot)
@@ -2098,7 +2110,16 @@ class CombatAppQt:
         regain_btn.clicked.connect(self._regain_spell_slot)
         spell_row.addWidget(cast_btn)
         spell_row.addWidget(regain_btn)
-        panel_layout.addLayout(spell_row)
+        right_col.addLayout(spell_row)
+
+        right_col.addStretch()
+
+        # Add both columns to the columns layout
+        columns_layout.addLayout(left_col)
+        columns_layout.addLayout(right_col)
+
+        # Add columns to main panel layout
+        panel_layout.addLayout(columns_layout)
 
         panel_layout.addWidget(self._make_divider())
 
