@@ -5,6 +5,7 @@ from datetime import datetime
 from pathlib import Path
 
 from PyQt6.QtCore import Qt
+from PyQt6.QtGui import QKeySequence, QShortcut
 from PyQt6.QtWidgets import (
     QApplication,
     QComboBox,
@@ -332,6 +333,13 @@ def _default_stats() -> dict:
 # CombatAppQt
 # ---------------------------------------------------------------------------
 class CombatAppQt:
+    ACTION_ECONOMY_TYPES: list[str] = ["Action", "Bonus Action", "Reaction"]
+    ACTION_ECONOMY_SHORTCUTS: dict[str, str] = {
+        "A": "Action",
+        "B": "Bonus Action",
+        "R": "Reaction",
+    }
+
     def __init__(
         self,
         combatants: list[BasicCombatantData],
@@ -1300,6 +1308,26 @@ class CombatAppQt:
             self._log_event(f"{self.selected_character['name']} loses {cond}")
             self._refresh_selected_card()
 
+    def _add_action_use(self, action_type: str):
+        """Log a use of Action/Bonus Action/Reaction for the source, this round.
+        Tallies reset when it becomes that combatant's turn again (see _advance_turn)."""
+        if not self.selected_character:
+            return
+        counts = self.selected_character.setdefault("action_uses", {})
+        counts[action_type] = counts.get(action_type, 0) + 1
+        self._log_event(f"{self.selected_character['name']} uses {action_type}")
+        self._refresh_selected_card()
+
+    def _remove_action_use(self, action_type: str):
+        """Correct a mis-logged Action/Bonus Action/Reaction use for the source."""
+        if not self.selected_character:
+            return
+        counts = self.selected_character.setdefault("action_uses", {})
+        if counts.get(action_type, 0) > 0:
+            counts[action_type] -= 1
+            self._log_event(f"{self.selected_character['name']} refunds {action_type}")
+            self._refresh_selected_card()
+
     def _add_visibility(self):
         if not self.selected_character:
             return
@@ -1455,6 +1483,12 @@ class CombatAppQt:
             self._log_event(f"--- Round {self.round_number} ---", note_turn=False)
             self.round_label.setText(f"Round {self.round_number}")
             self._tick_active_spells()
+        if self.initiative_order:
+            # The action economy (Action/Bonus Action/Reaction) resets for whoever's
+            # turn is now starting — other combatants keep their tallies until theirs does.
+            new_active = self.initiative_order[self.current_turn_idx]
+            new_active["action_uses"] = {}
+            self._rebuild_card(new_active)
         self._refresh_turn()
 
     def _tick_active_spells(self):
@@ -2294,6 +2328,26 @@ class CombatAppQt:
         spell_row.addWidget(regain_btn)
         right_col.addLayout(spell_row)
 
+        right_col.addWidget(self._make_divider())
+
+        # Action economy section (resets on this combatant's next turn)
+        right_col.addWidget(self._section_header("Action Economy"))
+        self.action_economy_combo = QComboBox()
+        self.action_economy_combo.addItems(self.ACTION_ECONOMY_TYPES)
+        right_col.addWidget(self.action_economy_combo)
+        action_economy_row = QHBoxLayout()
+        add_action_btn = QPushButton("Add (A/B/R)")
+        add_action_btn.clicked.connect(
+            lambda: self._add_action_use(self.action_economy_combo.currentText())
+        )
+        rm_action_btn = QPushButton("Remove")
+        rm_action_btn.clicked.connect(
+            lambda: self._remove_action_use(self.action_economy_combo.currentText())
+        )
+        action_economy_row.addWidget(add_action_btn)
+        action_economy_row.addWidget(rm_action_btn)
+        right_col.addLayout(action_economy_row)
+
         right_col.addStretch()
 
         # Add both columns to the columns layout
@@ -2340,6 +2394,14 @@ class CombatAppQt:
 
         panel_layout.addStretch()
         root_layout.addWidget(panel)
+
+        # Keyboard shortcuts: A / B / R log an Action / Bonus Action / Reaction use
+        # for the current source. These naturally yield to any focused text field.
+        self._action_shortcuts = []
+        for key, action_type in self.ACTION_ECONOMY_SHORTCUTS.items():
+            shortcut = QShortcut(QKeySequence(key), self._window)
+            shortcut.activated.connect(lambda a=action_type: self._add_action_use(a))
+            self._action_shortcuts.append(shortcut)
 
     @staticmethod
     def _make_divider() -> QFrame:
@@ -2557,6 +2619,16 @@ class CombatAppQt:
         if char.get("death_saves_success", 0) >= 3:
             return "stabilized"
         return "dying"
+
+    def _format_action_uses(self, counts: dict) -> str:
+        """Format e.g. {'Action': 2, 'Reaction': 1} as '2x Action, Reaction'."""
+        parts = []
+        for label in self.ACTION_ECONOMY_TYPES:
+            n = counts.get(label, 0)
+            if n <= 0:
+                continue
+            parts.append(f"{n}x {label}" if n > 1 else label)
+        return ", ".join(parts)
 
     def _make_card(self, char: dict) -> QFrame:
         hp = char["hp"]
@@ -2777,6 +2849,23 @@ class CombatAppQt:
                     "QProgressBar::chunk { background-color: #5ac8f5; border-radius: 3px; }"
                 )
                 layout.addWidget(time_bar)
+
+        # --- Action economy used this round ---
+        action_uses = {k: v for k, v in (char.get("action_uses") or {}).items() if v > 0}
+        if action_uses:
+            sep3 = QFrame()
+            sep3.setFrameShape(QFrame.Shape.HLine)
+            sep3.setStyleSheet("color: #0f3460;")
+            layout.addWidget(sep3)
+            actions_header = QLabel("Used:")
+            actions_header.setStyleSheet(
+                "color: #c9a84c; font-size: 10px; font-weight: bold;"
+            )
+            layout.addWidget(actions_header)
+            actions_lbl = QLabel(self._format_action_uses(action_uses))
+            actions_lbl.setStyleSheet("color: #a0c4ff; font-size: 11px;")
+            actions_lbl.setWordWrap(True)
+            layout.addWidget(actions_lbl)
 
         # --- Ability Scores / Saving Throws combined as mod/save ---
         ability_scores = char.get("Ability Scores") or {}
