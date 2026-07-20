@@ -1288,25 +1288,48 @@ class CombatAppQt:
         )
         self._refresh_selected_card()
 
+    def _add_condition_to(self, char: dict, cond: str):
+        if cond not in char["conditions"]:
+            char["conditions"].append(cond)
+            self.history.append((Action.ADD_CONDITION, cond))
+            self._log_event(f"{char['name']} gains {cond}")
+            self._rebuild_card(char)
+
+    def _remove_condition_from(self, char: dict, cond: str):
+        if cond in char["conditions"]:
+            char["conditions"].remove(cond)
+            self.history.append((Action.REMOVE_CONDITION, cond))
+            self._log_event(f"{char['name']} loses {cond}")
+            self._rebuild_card(char)
+
     def _add_condition(self):
         if not self.selected_character:
             return
-        cond = self.condition_combo.currentText()
-        if cond not in self.selected_character["conditions"]:
-            self.selected_character["conditions"].append(cond)
-            self.history.append((Action.ADD_CONDITION, cond))
-            self._log_event(f"{self.selected_character['name']} gains {cond}")
-            self._refresh_selected_card()
+        self._add_condition_to(self.selected_character, self.condition_combo.currentText())
 
     def _remove_condition(self):
         if not self.selected_character:
             return
-        cond = self.condition_combo.currentText()
-        if cond in self.selected_character["conditions"]:
-            self.selected_character["conditions"].remove(cond)
-            self.history.append((Action.REMOVE_CONDITION, cond))
-            self._log_event(f"{self.selected_character['name']} loses {cond}")
-            self._refresh_selected_card()
+        self._remove_condition_from(self.selected_character, self.condition_combo.currentText())
+
+    def _shortcut_add_concentration(self):
+        """Keyboard shortcut 'C': add Concentrating to the source."""
+        if not self.selected_character:
+            return
+        self._add_condition_to(self.selected_character, Condition.CONCENTRATING.value)
+
+    def _shortcut_remove_concentration(self):
+        """Keyboard shortcut 'Ctrl+C': remove Concentrating from the source."""
+        if not self.selected_character:
+            return
+        self._remove_condition_from(self.selected_character, Condition.CONCENTRATING.value)
+
+    def _shortcut_clear_target_conditions(self):
+        """Keyboard shortcut 'Ctrl+Shift+C': remove every condition from the target."""
+        if not self.target_character:
+            return
+        for cond in list(self.target_character.get("conditions", [])):
+            self._remove_condition_from(self.target_character, cond)
 
     def _add_action_use(self, action_type: str):
         """Log a use of Action/Bonus Action/Reaction for the source, this round.
@@ -1348,10 +1371,9 @@ class CombatAppQt:
             self._log_event(f"{self.selected_character['name']} loses {vis}")
             self._refresh_selected_card()
 
-    def _cast_spell_slot(self):
+    def _cast_spell_slot_level(self, level: int):
         if not self.selected_character:
             return
-        level = self.spell_combo.currentIndex() + 1
         if self.selected_character["spell_slots"].get(level, 0) <= 0:
             return
         old = self.selected_character["spell_slots"][level]
@@ -1490,6 +1512,11 @@ class CombatAppQt:
             new_active["action_uses"] = {}
             self._rebuild_card(new_active)
         self._refresh_turn()
+
+    def _shortcut_next_turn(self):
+        """Keyboard shortcut 'Enter': Next Combatant / Next Round, only once combat has started."""
+        if self.phase == "COMBAT":
+            self._advance_turn()
 
     def _tick_active_spells(self):
         """Deduct 6 seconds (one round) from every combatant's active spell timers,
@@ -2320,8 +2347,10 @@ class CombatAppQt:
         self.spell_combo.addItems([f"Level {i}" for i in range(1, 10)])
         right_col.addWidget(self.spell_combo)
         spell_row = QHBoxLayout()
-        cast_btn = QPushButton("Cast")
-        cast_btn.clicked.connect(self._cast_spell_slot)
+        cast_btn = QPushButton("Cast (1-9)")
+        cast_btn.clicked.connect(
+            lambda: self._cast_spell_slot_level(self.spell_combo.currentIndex() + 1)
+        )
         regain_btn = QPushButton("Regain")
         regain_btn.clicked.connect(self._regain_spell_slot)
         spell_row.addWidget(cast_btn)
@@ -2402,6 +2431,39 @@ class CombatAppQt:
             shortcut = QShortcut(QKeySequence(key), self._window)
             shortcut.activated.connect(lambda a=action_type: self._add_action_use(a))
             self._action_shortcuts.append(shortcut)
+
+        # C / Ctrl+C / Ctrl+Shift+C: Concentrating on the source, cleared from the target.
+        self._concentration_shortcut = QShortcut(QKeySequence("C"), self._window)
+        self._concentration_shortcut.activated.connect(self._shortcut_add_concentration)
+        self._remove_concentration_shortcut = QShortcut(QKeySequence("Ctrl+C"), self._window)
+        self._remove_concentration_shortcut.activated.connect(
+            self._shortcut_remove_concentration
+        )
+        self._clear_target_conditions_shortcut = QShortcut(
+            QKeySequence("Ctrl+Shift+C"), self._window
+        )
+        self._clear_target_conditions_shortcut.activated.connect(
+            self._shortcut_clear_target_conditions
+        )
+
+        # Ctrl+Z: Undo Last Action
+        self._undo_shortcut = QShortcut(QKeySequence("Ctrl+Z"), self._window)
+        self._undo_shortcut.activated.connect(self._undo_last)
+
+        # Enter / Return: Next Combatant / Next Round
+        self._next_turn_shortcuts = [
+            QShortcut(QKeySequence(Qt.Key.Key_Return), self._window),
+            QShortcut(QKeySequence(Qt.Key.Key_Enter), self._window),
+        ]
+        for shortcut in self._next_turn_shortcuts:
+            shortcut.activated.connect(self._shortcut_next_turn)
+
+        # 1-9: cast a spell slot of that level for the source
+        self._spell_slot_shortcuts = []
+        for level in range(1, 10):
+            shortcut = QShortcut(QKeySequence(str(level)), self._window)
+            shortcut.activated.connect(lambda lvl=level: self._cast_spell_slot_level(lvl))
+            self._spell_slot_shortcuts.append(shortcut)
 
     @staticmethod
     def _make_divider() -> QFrame:
