@@ -84,6 +84,28 @@ QFrame#combatantCard[selected-active="true"] {
     border-left: 3px solid #c9a84c;
     border-bottom: 3px solid #c9a84c;
 }
+QFrame#combatantCard[target="true"] {
+    background-color: #3a1010;
+    border: 2px solid #e74c3c;
+}
+QFrame#combatantCard[selected-target="true"] {
+    background-color: #2a1020;
+    border: 3px solid #ffffff;
+    border-left: 3px solid #e74c3c;
+    border-bottom: 3px solid #e74c3c;
+}
+QFrame#combatantCard[active-target="true"] {
+    background-color: #3a1c10;
+    border: 3px solid #c9a84c;
+    border-left: 3px solid #e74c3c;
+    border-bottom: 3px solid #e74c3c;
+}
+QFrame#combatantCard[selected-active-target="true"] {
+    background-color: #2a2a1a;
+    border: 3px solid #ffffff;
+    border-left: 3px solid #c9a84c;
+    border-bottom: 3px solid #e74c3c;
+}
 
 /* Control panel */
 QFrame#controlPanel {
@@ -131,6 +153,12 @@ QLabel#conditionBadge {
 /* Selected combatant label */
 QLabel#selectedLabel {
     color: #e94560;
+    font-weight: bold;
+    font-size: 12px;
+}
+
+QLabel#targetLabel {
+    color: #e74c3c;
     font-weight: bold;
     font-size: 12px;
 }
@@ -324,6 +352,7 @@ class CombatAppQt:
         self.conditions = Condition.list_all()
         self.visibility_states = Visibility.list_all()
         self.selected_character: dict | None = None
+        self.target_character: dict | None = None
         self.round_number = 1
         self.history: list[tuple[Action, str | int | tuple[int, int]]] = []
 
@@ -493,32 +522,6 @@ class CombatAppQt:
                 return char
         return None
 
-    def _refresh_source_combo(self):
-        """Repopulate the Source combo from self.characters, preserving selection
-        by name when possible, otherwise defaulting to the current turn's combatant."""
-        if not hasattr(self, "source_combo"):
-            return
-        previous = self.source_combo.currentText() if self.source_combo.count() else None
-        self.source_combo.blockSignals(True)
-        self.source_combo.clear()
-        self.source_combo.addItem("Unspecified")
-        for char in self.characters:
-            self.source_combo.addItem(char["name"])
-        self.source_combo.blockSignals(False)
-
-        target_name = None
-        if previous and previous != "Unspecified" and self._find_character_by_name(previous):
-            target_name = previous
-        else:
-            turn_name = self._current_turn_name()
-            if turn_name:
-                target_name = turn_name
-
-        if target_name is not None:
-            idx = self.source_combo.findText(target_name)
-            if idx >= 0:
-                self.source_combo.setCurrentIndex(idx)
-
     def _log_event(self, text: str, note_turn: bool = True):
         data = json.loads(self.log_file.read_text())
         key = f"round_{self.round_number}"
@@ -532,9 +535,14 @@ class CombatAppQt:
     # ------------------------------------------------------------------
     def _select_character(self, char: dict):
         self.selected_character = char
-        self.selected_label.setText(f"Selected: {char['name']}")
+        self.selected_label.setText(f"Source: {char['name']}")
         self._more_info_btn.setEnabled(True)
         self._cast_spell_btn.setEnabled(True)
+        self._refresh_cards()
+
+    def _select_target_character(self, char: dict):
+        self.target_character = char
+        self.target_label.setText(f"Target: {char['name']}")
         self._refresh_cards()
 
     def _show_more_info(self):
@@ -986,23 +994,17 @@ class CombatAppQt:
             char["conditions"].remove("Bloodied")
 
     def _apply_damage(self):
-        if not self.selected_character:
+        if not self.target_character:
             return
         try:
             dmg = int(self.damage_input.text())
         except ValueError:
             return
 
-        target = self.selected_character
+        target = self.target_character
 
-        source_name = None
-        source = None
-        if hasattr(self, "source_combo"):
-            selected_source_name = self.source_combo.currentText()
-            if selected_source_name and selected_source_name != "Unspecified":
-                source = self._find_character_by_name(selected_source_name)
-                if source is not None:
-                    source_name = source["name"]
+        source = self.selected_character
+        source_name = source["name"] if source is not None else None
 
         pre_hp = target["hp"]
         pre_temp = target["temp_hp"]
@@ -1045,7 +1047,7 @@ class CombatAppQt:
         # Auto-apply bloodied condition
         self._apply_bloodied_condition(target)
 
-        self._refresh_selected_card()
+        self._rebuild_card(target)
 
         if "Concentrating" in target.get("conditions", []):
             self._concentration_check_dialog(target, dmg)
@@ -1182,24 +1184,18 @@ class CombatAppQt:
         dialog.exec()
 
     def _apply_heal(self):
-        if not self.selected_character:
+        if not self.target_character:
             return
         try:
             heal = int(self.heal_input.text())
         except ValueError:
             return
 
-        char = self.selected_character
+        char = self.target_character
         was_downed = self._char_death_state(char) != "alive"
 
-        source_name = None
-        source = None
-        if hasattr(self, "source_combo"):
-            selected_source_name = self.source_combo.currentText()
-            if selected_source_name and selected_source_name != "Unspecified":
-                source = self._find_character_by_name(selected_source_name)
-                if source is not None:
-                    source_name = source["name"]
+        source = self.selected_character
+        source_name = source["name"] if source is not None else None
 
         pre_hp = char["hp"]
         char["hp"] = min(char["hp"] + heal, char["max_hp"])
@@ -1231,7 +1227,7 @@ class CombatAppQt:
         # Auto-apply bloodied condition
         self._apply_bloodied_condition(char)
 
-        self._refresh_selected_card()
+        self._rebuild_card(char)
 
     def _apply_failed_death_save(self, char: dict):
         if self._char_death_state(char) != "dying":
@@ -1351,15 +1347,20 @@ class CombatAppQt:
         self._refresh_selected_card()
 
     def _undo_last(self):
-        if not self.selected_character or not self.history:
+        if not self.history:
+            return
+        action, value = self.history[-1]
+        # Damage/Heal are applied to the target; every other tracked action
+        # (conditions, spell slots, death saves) is applied to the source.
+        char = self.target_character if action in (Action.DAMAGE, Action.HEAL) else self.selected_character
+        if not char:
             return
         data = json.loads(self.log_file.read_text())
         key = f"round_{self.round_number}"
         if key not in data or not data[key]:
             return
 
-        action, value = self.history.pop()
-        char = self.selected_character
+        self.history.pop()
 
         if action == Action.DAMAGE:
             if isinstance(value, dict):
@@ -1441,7 +1442,7 @@ class CombatAppQt:
         last_event = data[key].pop()
         self._write_log(data)
         print(f"Undid action: {last_event}")
-        self._refresh_selected_card()
+        self._rebuild_card(char)
 
     def _advance_turn(self):
         """Combined Next Combatant / Next Round button handler."""
@@ -1836,7 +1837,9 @@ class CombatAppQt:
         self.round_number = data.get("round_number", 1)
         self.history = []
         self.selected_character = None
-        self.selected_label.setText("Selected: None")
+        self.target_character = None
+        self.selected_label.setText("Source: None")
+        self.target_label.setText("Target: None")
         self.round_label.setText(f"Round {self.round_number}")
         self.log_file = Path(path)
         # When loading a log we jump straight into COMBAT with the loaded order
@@ -2089,7 +2092,6 @@ class CombatAppQt:
 
         self._rebuild_cards()
         self._refresh_turn()
-        self._refresh_source_combo()
 
     # ------------------------------------------------------------------
     # UI construction
@@ -2139,11 +2141,17 @@ class CombatAppQt:
         panel_layout.setContentsMargins(10, 10, 10, 10)
         panel_layout.setSpacing(6)
 
-        # Selected indicator
-        self.selected_label = QLabel("Selected: None")
+        # Selected indicator (source — left-click)
+        self.selected_label = QLabel("Source: None")
         self.selected_label.setObjectName("selectedLabel")
         self.selected_label.setWordWrap(True)
         panel_layout.addWidget(self.selected_label)
+
+        # Target indicator (right-click)
+        self.target_label = QLabel("Target: None")
+        self.target_label.setObjectName("targetLabel")
+        self.target_label.setWordWrap(True)
+        panel_layout.addWidget(self.target_label)
 
         self._more_info_btn = QPushButton("More Info")
         self._more_info_btn.setEnabled(False)
@@ -2183,17 +2191,9 @@ class CombatAppQt:
         columns_layout = QHBoxLayout()
         columns_layout.setSpacing(6)
 
-        # Left column: Source, Damage, Heal, Temp HP
+        # Left column: Damage, Heal, Temp HP
         left_col = QVBoxLayout()
         left_col.setSpacing(6)
-
-        # Source section (attribution for damage/heal)
-        left_col.addWidget(self._section_header("Source"))
-        self.source_combo = QComboBox()
-        self.source_combo.addItem("Unspecified")
-        left_col.addWidget(self.source_combo)
-
-        left_col.addWidget(self._make_divider())
 
         # Damage section
         left_col.addWidget(self._section_header("Damage"))
@@ -2374,6 +2374,54 @@ class CombatAppQt:
 
         self._refresh_initiative_tracker()
 
+    def _card_state_flags(self, char: dict) -> tuple[bool, bool, bool]:
+        """Return (is_source, is_active/turn, is_target) for a combatant card."""
+        is_source = char is self.selected_character
+        is_active = (
+            self.phase == "COMBAT"
+            and self.initiative_order
+            and self.initiative_order[self.current_turn_idx] is char
+        )
+        is_target = char is self.target_character
+        return is_source, is_active, is_target
+
+    def _apply_card_state_properties(self, card: QFrame, char: dict, death_state: str):
+        """Set the dead/dying/stabilized/source/active/target combo properties on a card."""
+        is_source, is_active, is_target = self._card_state_flags(char)
+        card.setProperty("dead", "true" if death_state == "dead" else "false")
+        card.setProperty("dying", "true" if death_state == "dying" else "false")
+        card.setProperty(
+            "stabilized", "true" if death_state == "stabilized" else "false"
+        )
+        card.setProperty(
+            "selected",
+            "true" if is_source and not is_active and not is_target else "false",
+        )
+        card.setProperty(
+            "active",
+            "true" if is_active and not is_source and not is_target else "false",
+        )
+        card.setProperty(
+            "target",
+            "true" if is_target and not is_source and not is_active else "false",
+        )
+        card.setProperty(
+            "selected-active",
+            "true" if is_source and is_active and not is_target else "false",
+        )
+        card.setProperty(
+            "selected-target",
+            "true" if is_source and is_target and not is_active else "false",
+        )
+        card.setProperty(
+            "active-target",
+            "true" if is_active and is_target and not is_source else "false",
+        )
+        card.setProperty(
+            "selected-active-target",
+            "true" if is_source and is_active and is_target else "false",
+        )
+
     def _refresh_cards(self):
         """Update border/background of all cards to reflect selection, active-turn, and dead state."""
         for char in self.characters:
@@ -2381,24 +2429,7 @@ class CombatAppQt:
             if card is None:
                 continue
             death_state = self._char_death_state(char)
-            is_selected = char is self.selected_character
-            is_active = (
-                self.phase == "COMBAT"
-                and self.initiative_order
-                and self.initiative_order[self.current_turn_idx] is char
-            )
-            card.setProperty("dead", "true" if death_state == "dead" else "false")
-            card.setProperty("dying", "true" if death_state == "dying" else "false")
-            card.setProperty(
-                "stabilized", "true" if death_state == "stabilized" else "false"
-            )
-            card.setProperty(
-                "selected", "true" if is_selected and not is_active else "false"
-            )
-            card.setProperty("active", "true" if is_active and not is_selected else "false")
-            card.setProperty(
-                "selected-active", "true" if is_selected and is_active else "false"
-            )
+            self._apply_card_state_properties(card, char, death_state)
             card.style().unpolish(card)
             card.style().polish(card)
 
@@ -2533,25 +2564,10 @@ class CombatAppQt:
         is_dead = death_state == "dead"
         is_dying = death_state == "dying"
         is_stabilized = death_state == "stabilized"
-        is_selected = char is self.selected_character
-        is_active = (
-            self.phase == "COMBAT"
-            and self.initiative_order
-            and self.initiative_order[self.current_turn_idx] is char
-        )
 
         card = QFrame()
         card.setObjectName("combatantCard")
-        card.setProperty("dead", "true" if is_dead else "false")
-        card.setProperty("dying", "true" if is_dying else "false")
-        card.setProperty("stabilized", "true" if is_stabilized else "false")
-        card.setProperty(
-            "selected", "true" if is_selected and not is_active else "false"
-        )
-        card.setProperty("active", "true" if is_active and not is_selected else "false")
-        card.setProperty(
-            "selected-active", "true" if is_selected and is_active else "false"
-        )
+        self._apply_card_state_properties(card, char, death_state)
         card.setFixedWidth(220)
         card.setSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Minimum)
         card.setCursor(Qt.CursorShape.PointingHandCursor)
@@ -2804,8 +2820,12 @@ class CombatAppQt:
                     )
                     layout.addWidget(row_lbl)
 
-        # --- Click to select ---
-        card.mousePressEvent = lambda event, c=char: self._select_character(c)
+        # --- Click to select: left = source, right = target ---
+        card.mousePressEvent = lambda event, c=char: (
+            self._select_target_character(c)
+            if event.button() == Qt.MouseButton.RightButton
+            else self._select_character(c)
+        )
         for child in card.findChildren(QWidget):
             if not isinstance(child, QPushButton):
                 child.setAttribute(
