@@ -1518,6 +1518,14 @@ class CombatAppQt:
         if self.phase == "COMBAT":
             self._advance_turn()
 
+    def _clear_concentration_if_unused(self, char: dict):
+        """Remove Concentrating if no remaining active spell on char still needs it."""
+        if any(e.get("concentration") for e in char.get("active_spells") or []):
+            return
+        conditions = char.get("conditions", [])
+        if Condition.CONCENTRATING.value in conditions:
+            conditions.remove(Condition.CONCENTRATING.value)
+
     def _tick_active_spells(self):
         """Deduct 6 seconds (one round) from every combatant's active spell timers,
         expiring and logging any that reach zero, and dropping Concentrating if its
@@ -1527,6 +1535,7 @@ class CombatAppQt:
             if not active_spells:
                 continue
             remaining = []
+            expired_concentration = False
             for entry in active_spells:
                 entry["time_left"] = max(entry["time_left"] - 6, 0)
                 if entry["time_left"] > 0:
@@ -1536,11 +1545,22 @@ class CombatAppQt:
                         f"{char['name']}'s {entry['name']} expires", note_turn=False
                     )
                     if entry.get("concentration"):
-                        conditions = char.get("conditions", [])
-                        if Condition.CONCENTRATING.value in conditions:
-                            conditions.remove(Condition.CONCENTRATING.value)
+                        expired_concentration = True
             char["active_spells"] = remaining
+            if expired_concentration:
+                self._clear_concentration_if_unused(char)
         self._rebuild_cards()
+
+    def _remove_active_spell(self, char: dict, entry: dict):
+        """Manually dismiss an active spell before its duration timer runs out."""
+        active_spells = char.get("active_spells") or []
+        if entry not in active_spells:
+            return
+        active_spells.remove(entry)
+        self._log_event(f"{char['name']}'s {entry['name']} ends early")
+        if entry.get("concentration"):
+            self._clear_concentration_if_unused(char)
+        self._rebuild_card(char)
 
     def _show_current_log(self):
         """Display the round-by-round event history of the active log file."""
@@ -2897,9 +2917,25 @@ class CombatAppQt:
             )
             layout.addWidget(spells_header)
             for entry in active_spells:
+                spell_name_row = QHBoxLayout()
+                spell_name_row.setSpacing(4)
                 name_row = QLabel(entry["name"])
                 name_row.setStyleSheet("color: #a0c4ff; font-size: 10px;")
-                layout.addWidget(name_row)
+                spell_name_row.addWidget(name_row, stretch=1)
+                remove_spell_btn = QPushButton("×")
+                remove_spell_btn.setFixedSize(16, 16)
+                remove_spell_btn.setToolTip(f"Dismiss {entry['name']}")
+                remove_spell_btn.setStyleSheet(
+                    "QPushButton { background-color: #5c1a1a; color: #ffffff;"
+                    " border: none; border-radius: 3px; font-size: 10px; padding: 0px; }"
+                    "QPushButton:hover { background-color: #7a2a2a; }"
+                )
+                remove_spell_btn.setCursor(Qt.CursorShape.PointingHandCursor)
+                remove_spell_btn.clicked.connect(
+                    lambda _=False, c=char, e=entry: self._remove_active_spell(c, e)
+                )
+                spell_name_row.addWidget(remove_spell_btn)
+                layout.addLayout(spell_name_row)
                 time_bar = QProgressBar()
                 time_bar.setMinimum(0)
                 time_bar.setMaximum(max(entry.get("duration", entry["time_left"]), 1))
