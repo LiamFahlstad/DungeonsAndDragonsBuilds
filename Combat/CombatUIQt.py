@@ -534,6 +534,7 @@ class CombatAppQt:
         self.selected_character = char
         self.selected_label.setText(f"Selected: {char['name']}")
         self._more_info_btn.setEnabled(True)
+        self._cast_spell_btn.setEnabled(True)
         self._refresh_cards()
 
     def _show_more_info(self):
@@ -1452,7 +1453,32 @@ class CombatAppQt:
             self.current_turn_idx = 0
             self._log_event(f"--- Round {self.round_number} ---", note_turn=False)
             self.round_label.setText(f"Round {self.round_number}")
+            self._tick_active_spells()
         self._refresh_turn()
+
+    def _tick_active_spells(self):
+        """Deduct 6 seconds (one round) from every combatant's active spell timers,
+        expiring and logging any that reach zero, and dropping Concentrating if its
+        spell expired."""
+        for char in self.characters:
+            active_spells = char.get("active_spells")
+            if not active_spells:
+                continue
+            remaining = []
+            for entry in active_spells:
+                entry["time_left"] = max(entry["time_left"] - 6, 0)
+                if entry["time_left"] > 0:
+                    remaining.append(entry)
+                else:
+                    self._log_event(
+                        f"{char['name']}'s {entry['name']} expires", note_turn=False
+                    )
+                    if entry.get("concentration"):
+                        conditions = char.get("conditions", [])
+                        if Condition.CONCENTRATING.value in conditions:
+                            conditions.remove(Condition.CONCENTRATING.value)
+            char["active_spells"] = remaining
+        self._rebuild_cards()
 
     def _show_current_log(self):
         """Display the round-by-round event history of the active log file."""
@@ -1645,6 +1671,157 @@ class CombatAppQt:
         outer.addWidget(close_btn)
 
         dlg.exec()
+
+    def _show_cast_spell_dialog(self):
+        """Search the spell list (like Rules) and cast a spell on the selected combatant."""
+        if not self.selected_character:
+            return
+
+        from Spells.SpellFactory import SpellFactory
+
+        if not hasattr(self, "_spells_cache"):
+            self._spells_cache = sorted(
+                SpellFactory.all_spells(), key=lambda s: (s.level, s.name)
+            )
+        spells = self._spells_cache
+
+        dlg = QDialog(self._window)
+        dlg.setWindowTitle(f"Cast Spell — {self.selected_character['name']}")
+        dlg.setMinimumSize(760, 560)
+        dlg.setStyleSheet(QSS)
+
+        outer = QVBoxLayout(dlg)
+        outer.setContentsMargins(14, 14, 14, 14)
+        outer.setSpacing(8)
+
+        search_box = QLineEdit()
+        search_box.setPlaceholderText("Search spells…")
+        outer.addWidget(search_box)
+
+        body = QHBoxLayout()
+        body.setSpacing(10)
+        outer.addLayout(body)
+
+        tree = QTreeWidget()
+        tree.setHeaderHidden(True)
+        tree.setMinimumWidth(260)
+        body.addWidget(tree, stretch=1)
+
+        detail = QTextEdit()
+        detail.setReadOnly(True)
+        body.addWidget(detail, stretch=2)
+
+        def level_label(level: int) -> str:
+            return "Cantrips" if level == 0 else f"Level {level}"
+
+        category_items: dict[str, QTreeWidgetItem] = {}
+        for spell in spells:
+            category = level_label(spell.level)
+            cat_item = category_items.get(category)
+            if cat_item is None:
+                cat_item = QTreeWidgetItem([category])
+                cat_item.setFirstColumnSpanned(True)
+                tree.addTopLevelItem(cat_item)
+                category_items[category] = cat_item
+            spell_item = QTreeWidgetItem([spell.name])
+            spell_item.setData(0, Qt.ItemDataRole.UserRole, spell)
+            cat_item.addChild(spell_item)
+
+        selected_spell: dict[str, object] = {"spell": None}
+
+        def show_spell(spell):
+            tags = []
+            if spell.is_concentration:
+                tags.append("Concentration")
+            if spell.is_ritual:
+                tags.append("Ritual")
+            tag_text = f" [{', '.join(tags)}]" if tags else ""
+            detail.setHtml(
+                f"<b style='color:#c9a84c; font-size:14px;'>{spell.name}</b>{tag_text}"
+                f"<br><span style='color:#a0a0b0;'>{level_label(spell.level)} · {spell.school}</span>"
+                f"<br><br><b>Casting Time:</b> {spell.casting_time}"
+                f"<br><b>Range:</b> {spell.range}"
+                f"<br><b>Components:</b> {spell.components}"
+                f"<br><b>Duration:</b> {spell.duration}"
+                f"<br><br>{spell.description.replace(chr(10) + chr(10), '<br><br>')}"
+            )
+            selected_spell["spell"] = spell
+            cast_btn.setEnabled(True)
+
+        def on_selection_changed():
+            items = tree.selectedItems()
+            if not items:
+                return
+            spell = items[0].data(0, Qt.ItemDataRole.UserRole)
+            if spell is not None:
+                show_spell(spell)
+
+        tree.itemSelectionChanged.connect(on_selection_changed)
+
+        def apply_filter(query: str):
+            query = query.strip().lower()
+            for category, cat_item in category_items.items():
+                any_visible = False
+                for i in range(cat_item.childCount()):
+                    child = cat_item.child(i)
+                    spell = child.data(0, Qt.ItemDataRole.UserRole)
+                    visible = query in spell.name.lower()
+                    child.setHidden(not visible)
+                    any_visible = any_visible or visible
+                cat_item.setHidden(not any_visible)
+                if query:
+                    cat_item.setExpanded(any_visible)
+
+        search_box.textChanged.connect(apply_filter)
+
+        btn_row = QHBoxLayout()
+        cast_btn = QPushButton("Cast")
+        cast_btn.setEnabled(False)
+
+        def do_cast():
+            spell = selected_spell["spell"]
+            if spell is None:
+                return
+            self._apply_cast_spell(spell)
+            dlg.accept()
+
+        cast_btn.clicked.connect(do_cast)
+        close_btn2 = QPushButton("Close")
+        close_btn2.clicked.connect(dlg.reject)
+        btn_row.addWidget(cast_btn)
+        btn_row.addWidget(close_btn2)
+        outer.addLayout(btn_row)
+
+        dlg.exec()
+
+    def _apply_cast_spell(self, spell):
+        """Apply a cast spell to the selected combatant: log it, auto-apply Concentrating,
+        and start a duration timer (shown as a time bar) unless the spell is instantaneous."""
+        char = self.selected_character
+        if char is None:
+            return
+
+        self._log_event(f"{char['name']} casts {spell.name}")
+
+        if spell.is_concentration:
+            conditions = char.setdefault("conditions", [])
+            if Condition.CONCENTRATING.value not in conditions:
+                conditions.append(Condition.CONCENTRATING.value)
+                self.history.append((Action.ADD_CONDITION, Condition.CONCENTRATING.value))
+                self._log_event(f"{char['name']} gains {Condition.CONCENTRATING.value}")
+
+        duration = spell.duration_seconds
+        if duration:
+            char.setdefault("active_spells", []).append(
+                {
+                    "name": spell.name,
+                    "time_left": duration,
+                    "duration": duration,
+                    "concentration": spell.is_concentration,
+                }
+            )
+
+        self._refresh_selected_card()
 
     def _load_log_from_path(self, path: str):
         data = json.loads(Path(path).read_text())
@@ -1972,6 +2149,11 @@ class CombatAppQt:
         self._more_info_btn.setEnabled(False)
         self._more_info_btn.clicked.connect(self._show_more_info)
         panel_layout.addWidget(self._more_info_btn)
+
+        self._cast_spell_btn = QPushButton("Cast Spell")
+        self._cast_spell_btn.setEnabled(False)
+        self._cast_spell_btn.clicked.connect(self._show_cast_spell_dialog)
+        panel_layout.addWidget(self._cast_spell_btn)
 
         # Round indicator
         self.round_label = QLabel(f"Round {self.round_number}")
@@ -2551,6 +2733,34 @@ class CombatAppQt:
             slots_lbl = QLabel(slots_text)
             slots_lbl.setStyleSheet("color: #a0c4ff; font-size: 11px;")
             layout.addWidget(slots_lbl)
+
+        # --- Active spells (time bars) ---
+        active_spells = char.get("active_spells") or []
+        if active_spells:
+            sep2 = QFrame()
+            sep2.setFrameShape(QFrame.Shape.HLine)
+            sep2.setStyleSheet("color: #0f3460;")
+            layout.addWidget(sep2)
+            spells_header = QLabel("Active Spells:")
+            spells_header.setStyleSheet(
+                "color: #c9a84c; font-size: 10px; font-weight: bold;"
+            )
+            layout.addWidget(spells_header)
+            for entry in active_spells:
+                name_row = QLabel(entry["name"])
+                name_row.setStyleSheet("color: #a0c4ff; font-size: 10px;")
+                layout.addWidget(name_row)
+                time_bar = QProgressBar()
+                time_bar.setMinimum(0)
+                time_bar.setMaximum(max(entry.get("duration", entry["time_left"]), 1))
+                time_bar.setValue(max(entry["time_left"], 0))
+                time_bar.setFormat(f"{entry['time_left']}s")
+                time_bar.setTextVisible(True)
+                time_bar.setFixedHeight(14)
+                time_bar.setStyleSheet(
+                    "QProgressBar::chunk { background-color: #5ac8f5; border-radius: 3px; }"
+                )
+                layout.addWidget(time_bar)
 
         # --- Ability Scores / Saving Throws combined as mod/save ---
         ability_scores = char.get("Ability Scores") or {}
