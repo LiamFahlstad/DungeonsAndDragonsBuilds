@@ -1,9 +1,36 @@
 import json
+import re
 from abc import ABC, abstractmethod
+from enum import Enum
 from typing import Any, Optional, TextIO
 
 import Definitions
 from Utils import StringUtils
+
+
+class School(Enum):
+    """The eight schools of magic."""
+
+    ABJURATION = "Abjuration"
+    CONJURATION = "Conjuration"
+    DIVINATION = "Divination"
+    ENCHANTMENT = "Enchantment"
+    EVOCATION = "Evocation"
+    ILLUSION = "Illusion"
+    NECROMANCY = "Necromancy"
+    TRANSMUTATION = "Transmutation"
+
+
+class CastingTimeType(Enum):
+    """The broad category of a spell's casting time, ignoring reaction triggers, ritual
+    alternatives, and other qualifying detail (e.g. "Reaction, which you take in response
+    to taking damage" is just REACTION)."""
+
+    ACTION = "Action"
+    BONUS_ACTION = "Bonus Action"
+    REACTION = "Reaction"
+    MINUTE = "Minute"
+    HOUR = "Hour"
 
 
 class Spell(ABC):
@@ -20,6 +47,28 @@ class Spell(ABC):
         "Necromancy": "#4a8b4a",
         "Transmutation": "#c87941",
     }
+
+    # Matches ranges like "150 feet", "1,000 feet", "60ft", "90 ft", "120 feet."
+    _RANGE_FEET_PATTERN = re.compile(
+        r"^([\d,]+)\s*(?:feet|foot|ft)\.?$", re.IGNORECASE
+    )
+    # Matches ranges like "1 mile", "500 miles"
+    _RANGE_MILE_PATTERN = re.compile(r"^([\d,]+)\s*miles?$", re.IGNORECASE)
+
+    _SECONDS_PER_DURATION_UNIT = {
+        "round": 6,
+        "minute": 60,
+        "hour": 3600,
+        "day": 86400,
+    }
+    _DURATION_INSTANTANEOUS_PATTERN = re.compile(
+        r"^instant(?:aneous|anous)\b", re.IGNORECASE
+    )
+    _DURATION_CONCENTRATION_PREFIX = re.compile(r"^concentration,?\s*", re.IGNORECASE)
+    _DURATION_UP_TO_PREFIX = re.compile(r"^up to\s*", re.IGNORECASE)
+    _DURATION_VALUE_PATTERN = re.compile(
+        r"^(\d+)\s*(round|minute|hour|day)s?$", re.IGNORECASE
+    )
 
     def __init__(
         self,
@@ -81,6 +130,106 @@ class Spell(ABC):
     def source(self) -> str:
         pass
 
+    # ---------- Interpreted properties (derived from the raw strings above) ---------- #
+
+    @property
+    def range_feet(self) -> Optional[int]:
+        """The range in feet, or None if it isn't a plain distance (e.g. Self, Touch, Sight, Special, Unlimited)."""
+        text = self.range.strip()
+        match = self._RANGE_MILE_PATTERN.match(text)
+        if match:
+            return int(match.group(1).replace(",", "")) * 5280
+        match = self._RANGE_FEET_PATTERN.match(text)
+        if match:
+            return int(match.group(1).replace(",", ""))
+        return None
+
+    @property
+    def school_enum(self) -> School:
+        """The school of magic as a School enum, ignoring any parenthetical suffix (e.g. "(Dunamancy)")."""
+        base_name = self.school.split(" (", 1)[0].strip()
+        try:
+            return School(base_name)
+        except ValueError:
+            raise ValueError(
+                f"Unknown school of magic for spell {self.name!r}: {self.school!r}"
+            )
+
+    def _has_component_letter(self, letter: str) -> bool:
+        prefix = self.components.split("(", 1)[0]
+        tokens = {token.strip() for token in prefix.split(",")}
+        return letter in tokens
+
+    @property
+    def has_verbal(self) -> bool:
+        return self._has_component_letter("V")
+
+    @property
+    def has_somatic(self) -> bool:
+        return self._has_component_letter("S")
+
+    @property
+    def has_material(self) -> bool:
+        return self._has_component_letter("M")
+
+    @property
+    def material_description(self) -> Optional[str]:
+        """The text inside the M(...) component, or None if there is no material component."""
+        if not self.has_material:
+            return None
+        start = self.components.find("(")
+        end = self.components.rfind(")")
+        if start == -1 or end == -1 or end <= start:
+            return None
+        return self.components[start + 1 : end].strip()
+
+    @property
+    def is_ritual(self) -> bool:
+        return "ritual" in self.casting_time.lower()
+
+    @property
+    def casting_time_type(self) -> CastingTimeType:
+        """The broad category of the casting time (see CastingTimeType). When multiple
+        options are given (e.g. "1 action or 8 hours"), the first one is used."""
+        text = self.casting_time.split(" or ", 1)[0].strip().lower()
+        if "reaction" in text:
+            return CastingTimeType.REACTION
+        if "bonus action" in text:
+            return CastingTimeType.BONUS_ACTION
+        if "action" in text:
+            return CastingTimeType.ACTION
+        if "minute" in text:
+            return CastingTimeType.MINUTE
+        if "hour" in text:
+            return CastingTimeType.HOUR
+        raise ValueError(
+            f"Unrecognized casting time for spell {self.name!r}: {self.casting_time!r}"
+        )
+
+    @property
+    def is_concentration(self) -> bool:
+        return self.duration.lower().startswith("concentration")
+
+    @property
+    def duration_seconds(self) -> Optional[int]:
+        """The duration in seconds (Instantaneous is 0), or None if it isn't a fixed length
+        (e.g. Special, Until dispelled). Rounds are 6 seconds. When multiple durations are
+        given (e.g. "Instantaneous or 1 hour"), the first one is used."""
+        text = self.duration.strip()
+        if self._DURATION_INSTANTANEOUS_PATTERN.match(text):
+            return 0
+        lowered = text.lower()
+        if lowered == "special" or lowered.startswith("until dispelled"):
+            return None
+        text = self._DURATION_CONCENTRATION_PREFIX.sub("", text)
+        text = self._DURATION_UP_TO_PREFIX.sub("", text)
+        text = text.split(" or ", 1)[0].strip()
+        match = self._DURATION_VALUE_PATTERN.match(text)
+        if not match:
+            return None
+        value, unit = match.groups()
+        return int(value) * self._SECONDS_PER_DURATION_UNIT[unit.lower()]
+
     # ---------- Shared behavior ---------- #
 
     @staticmethod
@@ -106,8 +255,8 @@ class Spell(ABC):
         self, file: TextIO, show_preparation_checkbox: bool = False
     ):  # writes HTML
         # ── Detect special tags ──────────────────────────────────────────────
-        is_concentration = self.duration.lower().startswith("concentration")
-        is_ritual = "ritual" in self.casting_time.lower()
+        is_concentration = self.is_concentration
+        is_ritual = self.is_ritual
 
         # ── Process description ──────────────────────────────────────────────
         description = self.description.strip()
