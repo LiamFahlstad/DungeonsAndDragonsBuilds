@@ -1,7 +1,7 @@
 """Registry of runnable combat scenarios. Select one with `python RunCombat.py --scenario <name>`."""
 
-import Combat.GrimsCastle.Encounters as GrimsCastleEncounters
-import Combat.TimeLoop.Encounters as TimeLoopEncounters
+import Combat.Campaigns.GrimsCastle.Encounters as GrimsCastleEncounters
+import Combat.Campaigns.TimeLoop.Encounters as TimeLoopEncounters
 from Builds.Characters.OptimizedPaladinVengeance import OptimizedPaladinVengeanceCharacterBuilder
 from Combat.Monsters.CR_24 import AncientRedDragon
 from Combat.Scenario import CombatScenario

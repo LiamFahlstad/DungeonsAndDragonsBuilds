@@ -197,7 +197,7 @@ from .monsters import *  # noqa: F401, F403
 
 if __name__ == "__main__":
     # Read raw monster data
-    raw_data_path = Path(__file__).parent / "monsters_raw.json"
+    raw_data_path = Path(__file__).parent.parent / "monsters_raw.json"
     if not raw_data_path.exists():
         print(f"Error: {raw_data_path} not found. Run scrape_monsters.py first.")
         exit(1)
@@ -219,7 +219,7 @@ if __name__ == "__main__":
     print(f"Organized into {len(tier_monsters)} CR tiers")
 
     # Create base Monsters directory
-    monsters_dir = Path(__file__).parent / "Monsters"
+    monsters_dir = Path(__file__).parent.parent / "Monsters"
     monsters_dir.mkdir(parents=True, exist_ok=True)
 
     # Generate files for each tier

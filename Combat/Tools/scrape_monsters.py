@@ -386,7 +386,7 @@ if __name__ == "__main__":
         print(f"Failed to scrape {failed_count} monsters")
 
     # Save to JSON
-    output_path = Path(__file__).parent / "monsters_raw.json"
+    output_path = Path(__file__).parent.parent / "monsters_raw.json"
     with open(output_path, "w", encoding="utf-8") as f:
         json.dump(monsters_data, f, indent=2, ensure_ascii=False)
     print(f"Saved to {output_path}")

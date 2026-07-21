@@ -1,6 +1,5 @@
 """Dialogs mixin for CombatAppQt."""
 
-import Definitions
 from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import (
     QDialog,
@@ -18,8 +17,10 @@ from PyQt6.QtWidgets import (
     QWidget,
 )
 
-from Combat.ConditionRules import ConditionRule
+import Definitions
+from Combat.Definitions import ConditionRule
 from Combat.Rules import Rule, group_by_category, load_rules
+
 from .styles import QSS
 
 
@@ -645,7 +646,9 @@ class DialogsMixin:
         rule = self._visibility_rule(visibility_name)
         if rule is None:
             return
-        self._show_rule_popup(visibility_name, f"{rule.name} [{rule.category}]", rule.body)
+        self._show_rule_popup(
+            visibility_name, f"{rule.name} [{rule.category}]", rule.body
+        )
 
     def _show_rule_popup(self, title: str, heading: str, body: str):
         dlg = QDialog(self._window)

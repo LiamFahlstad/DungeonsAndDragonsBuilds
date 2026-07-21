@@ -12,8 +12,7 @@ from PyQt6.QtWidgets import (
     QWidget,
 )
 
-from Combat.ConditionRules import ConditionRule
-from Combat.Rules import load_rules
+from Combat.Definitions import ConditionRule
 
 
 class CardsMixin:
@@ -388,7 +387,9 @@ class CardsMixin:
                 layout.addWidget(time_bar)
 
         # --- Action economy used this round ---
-        action_uses = {k: v for k, v in (char.get("action_uses") or {}).items() if v > 0}
+        action_uses = {
+            k: v for k, v in (char.get("action_uses") or {}).items() if v > 0
+        }
         if action_uses:
             sep3 = QFrame()
             sep3.setFrameShape(QFrame.Shape.HLine)
