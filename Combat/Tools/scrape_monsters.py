@@ -2,6 +2,7 @@
 Scraper for monsters from https://www.aidedd.org/monster/
 Saves raw monster data to Combat/monsters_raw.json
 """
+
 import json
 import re
 import time
@@ -60,8 +61,9 @@ def parse_saves_or_skills(text: str) -> dict[str, int]:
     Example: 'STR +3, DEX -1' or 'Stealth +2, Perception +5'
     """
     result = {}
-    # Try to find patterns like "Name +/-number"
-    pattern = r"(\w+(?:\s+\w+)?)\s+([+-]\d+)"
+    # Try to find patterns like "Name +/-number". Up to 2 extra words handles
+    # three-word skill names like "Sleight of Hand".
+    pattern = r"(\w+(?:\s+\w+){0,2})\s+([+-]\d+)"
     matches = re.findall(pattern, text)
     for name, modifier in matches:
         result[name.strip()] = int(modifier)
@@ -72,7 +74,82 @@ def parse_damage_list(text: str) -> list[str]:
     """Parse damage types or condition immunities (comma-separated)."""
     if not text:
         return []
-    return [s.strip() for s in text.split(",")]
+    return [s.strip() for s in text.split(",") if s.strip()]
+
+
+DAMAGE_TYPES = {
+    "acid", "bludgeoning", "cold", "fire", "force", "lightning", "necrotic",
+    "piercing", "poison", "psychic", "radiant", "slashing", "thunder",
+}
+CONDITIONS = {
+    "blinded", "charmed", "deafened", "exhaustion", "frightened", "grappled",
+    "incapacitated", "invisible", "paralyzed", "petrified", "poisoned",
+    "prone", "restrained", "stunned", "unconscious",
+}
+
+
+def get_labeled_field(soup, label: str) -> Optional[str]:
+    """Find a <strong>label</strong> tag in the stat block and return the
+    text of its siblings up to (but not including) the next <br> or <strong>.
+    Returns None if the label isn't present on the page.
+    """
+    for strong in soup.find_all("strong"):
+        if strong.get_text(strip=True) == label:
+            parts = []
+            for node in strong.next_siblings:
+                name = getattr(node, "name", None)
+                if name == "br" or name == "strong":
+                    break
+                parts.append(node if isinstance(node, str) else node.get_text())
+            return "".join(parts).strip(" .\n")
+    return None
+
+
+_ABILITY_TABLE_NAMES = {"Str", "Dex", "Con", "Int", "Wis", "Cha"}
+
+
+def parse_ability_table(soup) -> tuple[dict[str, int], dict[str, int]]:
+    """Parse the Str/Dex/Con/Int/Wis/Cha MOD/SAVE grid.
+    aidedd.org has no separate "Saving Throws" field for the 2024 stat block
+    format — proficient saves only show up as a SAVE value that differs from
+    the plain ability MOD in this grid. Returns (ability_scores, saving_throws),
+    where saving_throws only includes abilities where SAVE != MOD.
+    """
+    cells = soup.find_all("div", class_=re.compile(r"^car[1-6]$"))
+    texts = [c.get_text(strip=True) for c in cells]
+    ability_scores: dict[str, int] = {}
+    saving_throws: dict[str, int] = {}
+    for i in range(0, len(texts) - 3, 4):
+        name, score, mod, save = texts[i], texts[i + 1], texts[i + 2], texts[i + 3]
+        if name not in _ABILITY_TABLE_NAMES:
+            continue
+        try:
+            ability_scores[name] = int(score)
+        except ValueError:
+            continue
+        if save != mod:
+            try:
+                saving_throws[name] = int(save)
+            except ValueError:
+                pass
+    return ability_scores, saving_throws
+
+
+def parse_immunities(text: str) -> tuple[list[str], list[str]]:
+    """Split an "Immunities" field into (damage_immunities, condition_immunities).
+    The site combines both in one field as "<damage types>; <conditions>", but
+    either half may be omitted (no semicolon) when only one kind applies.
+    """
+    if not text:
+        return [], []
+    if ";" in text:
+        damage_part, condition_part = text.split(";", 1)
+        return parse_damage_list(damage_part), parse_damage_list(condition_part)
+
+    items = parse_damage_list(text)
+    if items and items[0].lower() in CONDITIONS:
+        return [], items
+    return items, []
 
 
 def parse_ability_sections(soup) -> dict:
@@ -88,8 +165,6 @@ def parse_ability_sections(soup) -> dict:
         "reactions": [],
         "legendary_actions": [],
         "legendary_resistances": 0,
-        "lair_actions": [],
-        "mythic_actions": [],
     }
 
     # Find all h2 headers with class "rub" (section headers)
@@ -98,22 +173,20 @@ def parse_ability_sections(soup) -> dict:
     for header in headers:
         section_name = header.get_text(strip=True).lower()
 
-        # Determine which section this is (check longer/more specific patterns first)
+        # Determine which section this is (check longer/more specific patterns first).
+        # aidedd.org never has separate "Lair Actions" / "Mythic Actions" headers, so
+        # there's nothing to route those into here.
         section_key = None
         if "legendary action" in section_name:
             section_key = "legendary_actions"
         elif "bonus action" in section_name:
             section_key = "bonus_actions"
-        elif "lair action" in section_name:
-            section_key = "lair_actions"
-        elif "mythic action" in section_name:
-            section_key = "mythic_actions"
+        elif "reaction" in section_name:
+            section_key = "reactions"
         elif "action" in section_name:
             section_key = "actions"
         elif "trait" in section_name:
             section_key = "traits"
-        elif "reaction" in section_name:
-            section_key = "reactions"
 
         if section_key is None:
             continue
@@ -148,16 +221,14 @@ def parse_ability_sections(soup) -> dict:
                 ability_desc = ability_desc.strip()
 
                 if ability_name and ability_desc:
-                    result[section_key].append({
-                        "name": ability_name,
-                        "description": ability_desc
-                    })
+                    result[section_key].append(
+                        {"name": ability_name, "description": ability_desc}
+                    )
                 elif ability_name:
                     # Some abilities might only have a name
-                    result[section_key].append({
-                        "name": ability_name,
-                        "description": ""
-                    })
+                    result[section_key].append(
+                        {"name": ability_name, "description": ""}
+                    )
 
             current = current.find_next_sibling()
 
@@ -230,15 +301,12 @@ def scrape_monster_detail(slug: str) -> Optional[dict]:
         "condition_immunities": [],
         "senses": "",
         "languages": "",
-        "challenge": "",
         "traits": [],
         "actions": [],
         "bonus_actions": [],
         "reactions": [],
         "legendary_actions": [],
         "legendary_resistances": 0,
-        "lair_actions": [],
-        "mythic_actions": [],
     }
 
     # Extract name from h1
@@ -246,107 +314,81 @@ def scrape_monster_detail(slug: str) -> Optional[dict]:
     if heading:
         monster["name"] = heading.get_text(strip=True)
 
-    # Get all text
-    text = soup.get_text()
-
     # Extract type (e.g., "Medium Elemental, Neutral")
     type_div = soup.find("div", class_="type")
     if type_div:
         type_text = type_div.get_text(strip=True)
         monster["type"] = type_text
 
-    # Parse the main stat block using regex on the concatenated text
-    # AC pattern
-    ac_match = re.search(r"AC\s+(\d+)(?:\s*\(([^)]*)\))?", text)
-    if ac_match:
-        monster["ac"] = int(ac_match.group(1))
-        if ac_match.group(2):
-            monster["ac_note"] = ac_match.group(2).strip()
+    # Parse the main stat block. AC/HP/Speed/Skills/Senses/Languages/CR are each
+    # wrapped in their own <strong>Label</strong> tag on aidedd.org, so pull them
+    # from the HTML structure directly rather than via fragile flat-text regexes
+    # (a plain-text regex bounded by "next capitalized word" breaks on values like
+    # "Fly 80 ft." or "Immunities ..." that themselves start with a capital letter).
+    ac_text = get_labeled_field(soup, "AC")
+    if ac_text:
+        monster["ac"], monster["ac_note"] = parse_ac(ac_text)
 
-    # HP pattern - looking for "HP 66 (12d8 + 12)"
-    hp_match = re.search(r"HP\s+(\d+)\s*\(([^)]+)\)", text)
-    if hp_match:
-        monster["hp"] = int(hp_match.group(1))
-        monster["hp_formula"] = hp_match.group(2).strip()
+    hp_text = get_labeled_field(soup, "HP")
+    if hp_text:
+        monster["hp"], monster["hp_formula"] = parse_hp(hp_text)
 
-    # Speed pattern
-    speed_match = re.search(r"Speed\s+([^A-Z][^\n]*?)(?=(?:[A-Z][a-z]+|STR|$))", text)
-    if speed_match:
-        monster["speed"] = speed_match.group(1).strip()
+    speed_text = get_labeled_field(soup, "Speed")
+    if speed_text:
+        monster["speed"] = speed_text.strip()
 
-    # Ability scores pattern - look for the structure Str10Dex16 etc
-    # The pattern is "StrXX+YY+ZZDexAA..." concatenated with possible newlines
-    ability_match = re.search(
-        r"Str(\d+)[\s\S]*?Dex(\d+)[\s\S]*?Con(\d+)[\s\S]*?Int(\d+)[\s\S]*?Wis(\d+)[\s\S]*?Cha(\d+)",
-        text,
-    )
-    if ability_match:
-        monster["ability_scores"] = {
-            "Str": int(ability_match.group(1)),
-            "Dex": int(ability_match.group(2)),
-            "Con": int(ability_match.group(3)),
-            "Int": int(ability_match.group(4)),
-            "Wis": int(ability_match.group(5)),
-            "Cha": int(ability_match.group(6)),
-        }
+    # Ability scores + saving throws come from the Str/Dex/Con/Int/Wis/Cha
+    # MOD/SAVE grid. Some (legacy 2014-format) pages instead have a separate
+    # "Saving Throws" label; prefer that when present, otherwise fall back to
+    # whatever the table implies.
+    ability_scores, table_saving_throws = parse_ability_table(soup)
+    if ability_scores:
+        monster["ability_scores"] = ability_scores
 
-    # Parse skills - look for "Skills" followed by content until next section
-    skills_match = re.search(r"Skills\s+([^\n]*?)(?=\n(?:Senses|Damage|Languages|CR|Saving|$))", text, re.IGNORECASE | re.MULTILINE)
-    if skills_match:
-        monster["skills"] = parse_saves_or_skills(skills_match.group(1))
+    skills_text = get_labeled_field(soup, "Skills")
+    if skills_text:
+        monster["skills"] = parse_saves_or_skills(skills_text)
 
-    # Parse saving throws
-    saves_match = re.search(
-        r"Saving Throws\s+([^A-Z][^\n]*?)(?=(?:Skills|Senses|Damage|Languages|CR|$))", text, re.IGNORECASE
-    )
-    if saves_match:
-        monster["saving_throws"] = parse_saves_or_skills(saves_match.group(1))
+    saves_text = get_labeled_field(soup, "Saving Throws")
+    if saves_text:
+        monster["saving_throws"] = parse_saves_or_skills(saves_text)
+    elif table_saving_throws:
+        monster["saving_throws"] = table_saving_throws
 
-    # Parse damage/condition resistances and immunities
-    vuln_match = re.search(
-        r"Damage Vulnerabilities\s+([^A-Z][^\n]*?)(?=(?:Damage|Senses|Languages|CR|$))", text, re.IGNORECASE
-    )
-    if vuln_match:
-        monster["damage_vulnerabilities"] = parse_damage_list(vuln_match.group(1))
+    # Parse damage/condition resistances and immunities.
+    # aidedd.org labels these "Vulnerabilities" / "Resistances" / "Immunities"
+    # (not "Damage Vulnerabilities" etc.), and "Immunities" combines damage
+    # immunities and condition immunities in one field separated by ";".
+    vuln_text = get_labeled_field(soup, "Vulnerabilities")
+    if vuln_text:
+        monster["damage_vulnerabilities"] = parse_damage_list(vuln_text)
 
-    resist_match = re.search(
-        r"Damage Resistances\s+([^A-Z][^\n]*?)(?=(?:Damage|Senses|Languages|CR|$))", text, re.IGNORECASE
-    )
-    if resist_match:
-        monster["damage_resistances"] = parse_damage_list(resist_match.group(1))
+    resist_text = get_labeled_field(soup, "Resistances")
+    if resist_text:
+        monster["damage_resistances"] = parse_damage_list(resist_text)
 
-    immune_match = re.search(
-        r"Damage Immunities\s+([^A-Z][^\n]*?)(?=(?:Damage|Senses|Languages|CR|$))", text, re.IGNORECASE
-    )
-    if immune_match:
-        monster["damage_immunities"] = parse_damage_list(immune_match.group(1))
-
-    cond_immune_match = re.search(
-        r"Condition Immunities\s+([^A-Z][^\n]*?)(?=(?:Senses|Languages|Damage|CR|$))", text, re.IGNORECASE
-    )
-    if cond_immune_match:
-        monster["condition_immunities"] = parse_damage_list(
-            cond_immune_match.group(1)
-        )
+    immune_text = get_labeled_field(soup, "Immunities")
+    if immune_text:
+        damage_immunities, condition_immunities = parse_immunities(immune_text)
+        monster["damage_immunities"] = damage_immunities
+        monster["condition_immunities"] = condition_immunities
 
     # Parse senses
-    senses_match = re.search(r"Senses\s+([^\n]+)", text, re.IGNORECASE)
-    if senses_match:
-        monster["senses"] = senses_match.group(1).strip()
+    senses_text = get_labeled_field(soup, "Senses")
+    if senses_text:
+        monster["senses"] = senses_text.strip()
 
     # Parse languages
-    lang_match = re.search(r"Languages\s+([^\n]+)", text, re.IGNORECASE)
-    if lang_match:
-        monster["languages"] = lang_match.group(1).strip()
+    languages_text = get_labeled_field(soup, "Languages")
+    if languages_text:
+        monster["languages"] = languages_text.strip()
 
-    # Parse CR/Challenge
-    cr_match = re.search(r"CR\s+([\d/]+)", text)
-    if cr_match:
-        monster["cr"] = cr_match.group(1)
-
-    challenge_match = re.search(r"Challenge\s+([^\n(]+)", text, re.IGNORECASE)
-    if challenge_match:
-        monster["challenge"] = challenge_match.group(1).strip()
+    # Parse CR (e.g. "16 (XP 15 000, or 18 000 in Lair; PB +5)" -> "16")
+    cr_text = get_labeled_field(soup, "CR")
+    if cr_text:
+        cr_match = re.search(r"([\d/]+)", cr_text)
+        if cr_match:
+            monster["cr"] = cr_match.group(1)
 
     # Parse ability sections from HTML structure
     ability_sections = parse_ability_sections(soup)

@@ -21,18 +21,31 @@ class Demilich(ExtendedCombatantData):
             temp_hp=0,
             conditions=[],
             ability_scores={Ability.STRENGTH.short_name: 1, Ability.DEXTERITY.short_name: 20, Ability.CONSTITUTION.short_name: 10, Ability.INTELLIGENCE.short_name: 20, Ability.WISDOM.short_name: 17, Ability.CHARISMA.short_name: 20},
-            saving_throws={},
+            saving_throws={Ability.CONSTITUTION.short_name: 6, Ability.INTELLIGENCE.short_name: 11, Ability.WISDOM.short_name: 9},
             spell_slots={},
             cr="18",
-            size=Size.TINY, monster_type='Undead', alignment=Alignment.NEUTRAL_EVIL,
+            monster_type='Undead',
+            alignment=Alignment.NEUTRAL_EVIL,
+            size=Size.TINY,
             ac_note="",
             hp_formula="72d4",
-            speed_ground_ft=5, speed_fly_ft=None, speed_climb_ft=None, speed_special_rules='',
+            speed_ground_ft=5,
+            speed_fly_ft=30,
+            speed_climb_ft=None,
+            speed_special_rules='hover',
             skills={},
             damage_vulnerabilities=[],
-            damage_resistances=[],
-            damage_immunities=[],
-            condition_immunities=[],
+            damage_resistances=[
+                DamageTypeEntry(damage_types=[DamageType.BLUDGEONING], note=''),
+                DamageTypeEntry(damage_types=[DamageType.PIERCING], note=''),
+                DamageTypeEntry(damage_types=[DamageType.SLASHING], note=''),
+            ],
+            damage_immunities=[
+                DamageTypeEntry(damage_types=[DamageType.NECROTIC], note=''),
+                DamageTypeEntry(damage_types=[DamageType.POISON], note=''),
+                DamageTypeEntry(damage_types=[DamageType.PSYCHIC], note=''),
+            ],
+            condition_immunities=[Condition.CHARMED, Condition.DEAFENED, Condition.EXHAUSTION, Condition.FRIGHTENED, Condition.PARALYZED, Condition.PETRIFIED, Condition.POISONED, Condition.PRONE, Condition.STUNNED],
             senses="Truesight 120 ft., Passive Perception 13",
             languages="None",
             traits=[
@@ -57,4 +70,4 @@ class Demilich(ExtendedCombatantData):
         )
 
 
-__all__ = ["Demilich"]
+__all__ = ['Demilich']

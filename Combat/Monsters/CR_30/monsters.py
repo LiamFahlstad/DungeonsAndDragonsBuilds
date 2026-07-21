@@ -21,18 +21,30 @@ class Tarrasque(ExtendedCombatantData):
             temp_hp=0,
             conditions=[],
             ability_scores={Ability.STRENGTH.short_name: 30, Ability.DEXTERITY.short_name: 11, Ability.CONSTITUTION.short_name: 30, Ability.INTELLIGENCE.short_name: 3, Ability.WISDOM.short_name: 11, Ability.CHARISMA.short_name: 11},
-            saving_throws={},
+            saving_throws={Ability.DEXTERITY.short_name: 9, Ability.INTELLIGENCE.short_name: 5, Ability.WISDOM.short_name: 9, Ability.CHARISMA.short_name: 9},
             spell_slots={},
             cr="30",
-            size=Size.GARGANTUAN, monster_type='Monstrosity (Titan)', alignment=Alignment.UNALIGNED,
+            monster_type='Monstrosity (Titan)',
+            alignment=Alignment.UNALIGNED,
+            size=Size.GARGANTUAN,
             ac_note="",
             hp_formula="34d20 + 340",
-            speed_ground_ft=60, speed_fly_ft=None, speed_climb_ft=None, speed_special_rules='',
-            skills={},
+            speed_ground_ft=60,
+            speed_fly_ft=None,
+            speed_climb_ft=60,
+            speed_special_rules='burrow 40 ft.',
+            skills={Skill.PERCEPTION: 9},
             damage_vulnerabilities=[],
-            damage_resistances=[],
-            damage_immunities=[],
-            condition_immunities=[],
+            damage_resistances=[
+                DamageTypeEntry(damage_types=[DamageType.BLUDGEONING], note=''),
+                DamageTypeEntry(damage_types=[DamageType.PIERCING], note=''),
+                DamageTypeEntry(damage_types=[DamageType.SLASHING], note=''),
+            ],
+            damage_immunities=[
+                DamageTypeEntry(damage_types=[DamageType.FIRE], note=''),
+                DamageTypeEntry(damage_types=[DamageType.POISON], note=''),
+            ],
+            condition_immunities=[Condition.CHARMED, Condition.DEAFENED, Condition.FRIGHTENED, Condition.PARALYZED, Condition.POISONED],
             senses="Blindsight 120 ft., Passive Perception 19",
             languages="None",
             traits=[
@@ -62,4 +74,4 @@ class Tarrasque(ExtendedCombatantData):
         )
 
 
-__all__ = ["Tarrasque"]
+__all__ = ['Tarrasque']

@@ -21,20 +21,31 @@ class Balor(ExtendedCombatantData):
             temp_hp=0,
             conditions=[],
             ability_scores={Ability.STRENGTH.short_name: 26, Ability.DEXTERITY.short_name: 15, Ability.CONSTITUTION.short_name: 22, Ability.INTELLIGENCE.short_name: 20, Ability.WISDOM.short_name: 16, Ability.CHARISMA.short_name: 22},
-            saving_throws={},
+            saving_throws={Ability.CONSTITUTION.short_name: 12, Ability.WISDOM.short_name: 9},
             spell_slots={},
             cr="19",
-            size=Size.HUGE, monster_type='Fiend (Demon)', alignment=Alignment.CHAOTIC_EVIL,
+            monster_type='Fiend (Demon)',
+            alignment=Alignment.CHAOTIC_EVIL,
+            size=Size.HUGE,
             ac_note="",
             hp_formula="23d12 + 138",
-            speed_ground_ft=40, speed_fly_ft=None, speed_climb_ft=None, speed_special_rules='',
-            skills={},
+            speed_ground_ft=40,
+            speed_fly_ft=80,
+            speed_climb_ft=None,
+            speed_special_rules='',
+            skills={Skill.PERCEPTION: 9},
             damage_vulnerabilities=[],
-            damage_resistances=[],
-            damage_immunities=[],
-            condition_immunities=[],
+            damage_resistances=[
+                DamageTypeEntry(damage_types=[DamageType.COLD], note=''),
+                DamageTypeEntry(damage_types=[DamageType.LIGHTNING], note=''),
+            ],
+            damage_immunities=[
+                DamageTypeEntry(damage_types=[DamageType.FIRE], note=''),
+                DamageTypeEntry(damage_types=[DamageType.POISON], note=''),
+            ],
+            condition_immunities=[Condition.CHARMED, Condition.FRIGHTENED, Condition.POISONED],
             senses="Truesight 120 ft., Passive Perception 19",
-            languages="Abyssal; telepathy 120 ft.",
+            languages="Abyssal; telepathy 120 ft",
             traits=[
             MonsterAbility(name='Death Throes', description='The balor explodes when it dies. Dexterity Saving Throw: DC 20, each creature in a 30-foot Emanation originating from the balor. Failure: 31 (9d6) Fire damage plus 31 (9d6) Force damage. Success: Half damage. Failure or Success: If the balor dies outside the Abyss, it gains a new body instantly, reviving with all its Hit Points somewhere in the Abyss.'),
             MonsterAbility(name='Fire Aura', description="At the end of each of the balor's turns, each creature in a 5-foot Emanation originating from the balor takes 13 (3d8) Fire damage."),
@@ -57,4 +68,4 @@ class Balor(ExtendedCombatantData):
         )
 
 
-__all__ = ["Balor"]
+__all__ = ['Balor']

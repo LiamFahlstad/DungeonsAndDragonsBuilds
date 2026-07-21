@@ -21,18 +21,29 @@ class Colossus(ExtendedCombatantData):
             temp_hp=0,
             conditions=[],
             ability_scores={Ability.STRENGTH.short_name: 30, Ability.DEXTERITY.short_name: 11, Ability.CONSTITUTION.short_name: 30, Ability.INTELLIGENCE.short_name: 3, Ability.WISDOM.short_name: 11, Ability.CHARISMA.short_name: 8},
-            saving_throws={},
+            saving_throws={Ability.DEXTERITY.short_name: 8, Ability.WISDOM.short_name: 8},
             spell_slots={},
             cr="25",
-            size=Size.GARGANTUAN, monster_type='Construct (Titan)', alignment=Alignment.UNALIGNED,
+            monster_type='Construct (Titan)',
+            alignment=Alignment.UNALIGNED,
+            size=Size.GARGANTUAN,
             ac_note="",
             hp_formula="27d20 + 270",
-            speed_ground_ft=None, speed_fly_ft=None, speed_climb_ft=None, speed_special_rules='without provoking',
+            speed_ground_ft=60,
+            speed_fly_ft=None,
+            speed_climb_ft=None,
+            speed_special_rules='',
             skills={},
             damage_vulnerabilities=[],
-            damage_resistances=[],
-            damage_immunities=[],
-            condition_immunities=[],
+            damage_resistances=[
+                DamageTypeEntry(damage_types=[DamageType.NECROTIC], note=''),
+                DamageTypeEntry(damage_types=[DamageType.RADIANT], note=''),
+            ],
+            damage_immunities=[
+                DamageTypeEntry(damage_types=[DamageType.POISON], note=''),
+                DamageTypeEntry(damage_types=[DamageType.PSYCHIC], note=''),
+            ],
+            condition_immunities=[Condition.CHARMED, Condition.EXHAUSTION, Condition.FRIGHTENED, Condition.PARALYZED, Condition.PETRIFIED, Condition.POISONED, Condition.STUNNED, Condition.UNCONSCIOUS],
             senses="Truesight 300 ft., Passive Perception 10",
             languages="Understands Celestial and Common but can't speak",
             traits=[
@@ -59,4 +70,4 @@ class Colossus(ExtendedCombatantData):
         )
 
 
-__all__ = ["Colossus"]
+__all__ = ['Colossus']
