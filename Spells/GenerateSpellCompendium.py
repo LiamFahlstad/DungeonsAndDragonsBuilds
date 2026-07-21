@@ -147,6 +147,22 @@ def _get_css_style() -> str:
         margin: 0 5px;
     }
 
+    /* Classes row */
+    tr.spell-classes-row td {
+        font-size: 0.78rem;
+        padding: 3px 7px;
+    }
+
+    .sclass-chip {
+        display: inline-block;
+        background: #eef2f7;
+        color: #3a5a7a;
+        border-radius: 3px;
+        padding: 1px 6px;
+        margin: 1px 3px 1px 0;
+        font-size: 0.78rem;
+    }
+
     /* Description rows */
     tr.spell-desc-row td,
     tr.spell-higher-row td {
@@ -222,7 +238,7 @@ def write_spell_compendium(output_path: str = OUTPUT_HTML):
             level_label = "Cantrips" if level == 0 else f"Level {level} Spells"
             file.write(f"<h3 class='spell-level-header'>{level_label}</h3>\n")
             for spell in group:
-                spell.write_to_file(file)
+                spell.write_to_file(file, show_classes=True)
 
         file.write("</div>\n</div>\n</body>\n</html>\n")
 

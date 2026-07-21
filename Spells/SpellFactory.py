@@ -252,7 +252,10 @@ class Spell(ABC):
         }
 
     def write_to_file(
-        self, file: TextIO, show_preparation_checkbox: bool = False
+        self,
+        file: TextIO,
+        show_preparation_checkbox: bool = False,
+        show_classes: bool = False,
     ):  # writes HTML
         # ── Detect special tags ──────────────────────────────────────────────
         is_concentration = self.is_concentration
@@ -314,6 +317,16 @@ class Spell(ABC):
             f"<span class='slabel'>Duration</span> {duration_display}"
         )
 
+        # ── Classes row (optional) ─────────────────────────────────────────────
+        classes_html = ""
+        if show_classes and self.classes:
+            class_chips = " ".join(
+                f"<span class='sclass-chip'>{cls}</span>" for cls in self.classes
+            )
+            classes_html = (
+                f"<span class='slabel'>Classes</span> {class_chips}"
+            )
+
         # ── Spell name with optional checkbox ─────────────────────────────────
         spell_name_display = self.name
         if (
@@ -340,6 +353,14 @@ class Spell(ABC):
             f"<td class='sqs-right'>{right_cell}</td>"
             f"</tr>\n"
         )
+
+        # Classes row (if requested)
+        if classes_html:
+            file.write(
+                f"<tr class='spell-classes-row'>"
+                f"<td colspan='2'>{classes_html}</td>"
+                f"</tr>\n"
+            )
 
         # Description row
         file.write(
