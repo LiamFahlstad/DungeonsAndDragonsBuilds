@@ -7,6 +7,14 @@ import re
 from pathlib import Path
 from typing import Optional
 
+from Combat.Tools.monster_enum_format import (
+    format_ability_list,
+    format_ability_scores,
+    format_condition_list,
+    format_damage_entries,
+    format_skills,
+)
+
 
 def class_name_from_monster_name(name: str) -> str:
     """Convert monster name to Python class name.
@@ -34,102 +42,45 @@ def cr_to_tier(cr: str) -> int:
         return 0
 
 
-def format_dict_field(d: dict, indent: int = 12) -> str:
-    """Format a dictionary for Python code."""
-    if not d:
-        return "{}"
-    indent_str = " " * indent
-    items = []
-    for key, value in d.items():
-        if isinstance(value, str):
-            items.append(f'"{key}": "{value}"')
-        else:
-            items.append(f'"{key}": {value}')
-    return "{" + ", ".join(items) + "}"
-
-
-def format_list_field(lst: list, indent: int = 12) -> str:
-    """Format a list for Python code."""
-    if not lst:
-        return "[]"
-    items = [f'"{item}"' for item in lst]
-    return "[" + ", ".join(items) + "]"
-
-
-def format_ability_list(abilities: list) -> str:
-    """Format a list of ability dicts as a Python literal."""
-    if not abilities:
-        return "[]"
-    lines = ["["]
-    for ab in abilities:
-        name = ab.get("name", "").replace('"', '\\"')
-        desc = ab.get("description", "").replace('"', '\\"').replace("\n", " ")
-        lines.append(f'        {{"name": "{name}", "description": "{desc}"}},')
-    lines.append("    ]")
-    return "\n    ".join(lines)
-
-
 def generate_monster_class(monster: dict) -> str:
     """Generate Python class code for a monster."""
     class_name = class_name_from_monster_name(monster.get("name", "Unknown"))
 
-    # Build ability_scores string
-    ability_scores = monster.get("ability_scores", {})
-    if not ability_scores:
-        ability_scores_str = "{}"
-    else:
-        ability_scores_str = format_dict_field(ability_scores)
+    name = monster.get("name", "Unknown")
+    ability_scores_str = format_ability_scores(monster.get("ability_scores", {}))
+    saving_throws_str = format_ability_scores(monster.get("saving_throws", {}))
+    skills_str, unmapped_skills = format_skills(monster.get("skills", {}))
 
-    # Build saving_throws string
-    saving_throws = monster.get("saving_throws", {})
-    saving_throws_str = format_dict_field(saving_throws)
+    damage_vuln_str, unmapped_vuln = format_damage_entries(monster.get("damage_vulnerabilities", []))
+    damage_resist_str, unmapped_resist = format_damage_entries(monster.get("damage_resistances", []))
+    damage_immune_str, unmapped_immune = format_damage_entries(monster.get("damage_immunities", []))
+    cond_immune_str, unmapped_conditions = format_condition_list(monster.get("condition_immunities", []))
 
-    # Build skills string
-    skills = monster.get("skills", {})
-    skills_str = format_dict_field(skills)
+    for label, unmapped in (
+        ("skill", unmapped_skills),
+        ("damage vulnerability", unmapped_vuln),
+        ("damage resistance", unmapped_resist),
+        ("damage immunity", unmapped_immune),
+        ("condition immunity", unmapped_conditions),
+    ):
+        if unmapped:
+            print(f"  ! {name}: unmapped {label} value(s), kept as raw text: {unmapped}")
 
-    # Build damage lists
-    damage_vuln = monster.get("damage_vulnerabilities", [])
-    damage_vuln_str = format_list_field(damage_vuln)
+    traits_str = format_ability_list(monster.get("traits", []))
+    actions_str = format_ability_list(monster.get("actions", []))
+    bonus_actions_str = format_ability_list(monster.get("bonus_actions", []))
+    reactions_str = format_ability_list(monster.get("reactions", []))
+    legendary_actions_str = format_ability_list(monster.get("legendary_actions", []))
+    lair_actions_str = format_ability_list(monster.get("lair_actions", []))
+    mythic_actions_str = format_ability_list(monster.get("mythic_actions", []))
 
-    damage_resist = monster.get("damage_resistances", [])
-    damage_resist_str = format_list_field(damage_resist)
-
-    damage_immune = monster.get("damage_immunities", [])
-    damage_immune_str = format_list_field(damage_immune)
-
-    cond_immune = monster.get("condition_immunities", [])
-    cond_immune_str = format_list_field(cond_immune)
-
-    # Build ability lists
-    traits = monster.get('traits', [])
-    traits_str = format_ability_list(traits)
-
-    actions = monster.get('actions', [])
-    actions_str = format_ability_list(actions)
-
-    bonus_actions = monster.get('bonus_actions', [])
-    bonus_actions_str = format_ability_list(bonus_actions)
-
-    reactions = monster.get('reactions', [])
-    reactions_str = format_ability_list(reactions)
-
-    legendary_actions = monster.get('legendary_actions', [])
-    legendary_actions_str = format_ability_list(legendary_actions)
-
-    lair_actions = monster.get('lair_actions', [])
-    lair_actions_str = format_ability_list(lair_actions)
-
-    mythic_actions = monster.get('mythic_actions', [])
-    mythic_actions_str = format_ability_list(mythic_actions)
-
-    legendary_resistances = monster.get('legendary_resistances', 0)
+    legendary_resistances = monster.get("legendary_resistances", 0)
 
     # Build the class string
     class_code = f"""class {class_name}(ExtendedCombatantData):
     def __init__(self):
         super().__init__(
-            name="{monster.get('name', '')}",
+            combatant_type="{monster.get('name', '')}",
             hp={monster.get('hp', 0)},
             ac={monster.get('ac', 0)},
             temp_hp=0,
@@ -177,7 +128,15 @@ def generate_monsters_file(monsters: list[dict], tier: int) -> tuple[str, list[s
 
     # Build the file content
     file_content = """# Auto-generated by generate_monsters.py — do not edit manually
-from Combat.Definitions import ExtendedCombatantData
+from Combat.Definitions import (
+    Condition,
+    DamageType,
+    DamageTypeEntry,
+    ExtendedCombatantData,
+    MonsterAbility,
+    Skill,
+)
+from Definitions import Ability
 
 
 """

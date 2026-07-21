@@ -5,19 +5,30 @@ from Definitions import Ability, Skill
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 _ABILITY_BY_ABBR = {
-    "Str": Ability.STRENGTH,
-    "Dex": Ability.DEXTERITY,
-    "Con": Ability.CONSTITUTION,
-    "Int": Ability.INTELLIGENCE,
-    "Wis": Ability.WISDOM,
-    "Cha": Ability.CHARISMA,
+    Ability.STRENGTH.short_name: Ability.STRENGTH,
+    Ability.DEXTERITY.short_name: Ability.DEXTERITY,
+    Ability.CONSTITUTION.short_name: Ability.CONSTITUTION,
+    Ability.INTELLIGENCE.short_name: Ability.INTELLIGENCE,
+    Ability.WISDOM.short_name: Ability.WISDOM,
+    Ability.CHARISMA.short_name: Ability.CHARISMA,
 }
 
-_MENTAL_ABILITIES = ("Int", "Wis", "Cha")
+_MENTAL_ABILITIES = (
+    Ability.INTELLIGENCE.short_name,
+    Ability.WISDOM.short_name,
+    Ability.CHARISMA.short_name,
+)
 
 
 def _fmt_mod(modifier: int) -> str:
     return f"+{modifier}" if modifier >= 0 else str(modifier)
+
+
+def _display(value) -> str:
+    """Render an enum member (Skill/DamageType/Ability/...) or a plain value
+    the same way — enums are str-mixins but f-string formatting them directly
+    shows 'ClassName.MEMBER' rather than the value, so unwrap explicitly."""
+    return value.value if hasattr(value, "value") else str(value)
 
 
 def _row(label: str, value: str, value_class: str = "wsf-value-col") -> str:
@@ -57,7 +68,11 @@ def format_creature_stat_block(
         rows.append(_row("Speed", speed))
 
     physical_parts = []
-    for abbr in ("Str", "Dex", "Con"):
+    for abbr in (
+        Ability.STRENGTH.short_name,
+        Ability.DEXTERITY.short_name,
+        Ability.CONSTITUTION.short_name,
+    ):
         score = monster.ability_scores.get(abbr, 10)
         modifier = (score - 10) // 2
         physical_parts.append(f"{abbr} {score} ({_fmt_mod(modifier)})")
@@ -101,6 +116,7 @@ def format_creature_stat_block(
     if monster.skills:
         skill_parts = []
         for skill_name, beast_bonus in monster.skills.items():
+            skill_label = _display(skill_name)
             own_bonus = None
             if retain_mental_abilities and character_stat_block is not None:
                 try:
@@ -108,11 +124,11 @@ def format_creature_stat_block(
                 except ValueError:
                     own_bonus = None
             if own_bonus is None:
-                skill_parts.append(f"{skill_name} {_fmt_mod(beast_bonus)}")
+                skill_parts.append(f"{skill_label} {_fmt_mod(beast_bonus)}")
                 continue
             best = max(beast_bonus, own_bonus)
             source = "Beast's" if beast_bonus >= own_bonus else "yours"
-            skill_parts.append(f"{skill_name} {_fmt_mod(best)} ({source})")
+            skill_parts.append(f"{skill_label} {_fmt_mod(best)} ({source})")
         rows.append(_row("Skills", "; ".join(skill_parts)))
 
     if monster.saving_throws:
@@ -140,11 +156,24 @@ def format_creature_stat_block(
         ("damage_vulnerabilities", "Vulnerabilities"),
         ("damage_resistances", "Resistances"),
         ("damage_immunities", "Damage Immunities"),
-        ("condition_immunities", "Condition Immunities"),
     ):
-        values = getattr(monster, attribute_name)
-        if values:
-            rows.append(_row(label, ", ".join(values)))
+        entries = getattr(monster, attribute_name)
+        if entries:
+            parts = []
+            for e in entries:
+                text = ", ".join(_display(t) for t in e.damage_types)
+                if e.note:
+                    text = f"{text} {e.note}" if text else e.note
+                parts.append(text)
+            rows.append(_row(label, "; ".join(parts)))
+
+    if monster.condition_immunities:
+        rows.append(
+            _row(
+                "Condition Immunities",
+                ", ".join(_display(c) for c in monster.condition_immunities),
+            )
+        )
 
     for attribute_name, label in (
         ("traits", "Traits"),
@@ -156,6 +185,6 @@ def format_creature_stat_block(
         if entries:
             rows.append(_section_row(label))
             for entry in entries:
-                rows.append(_entry_row(entry["name"], entry["description"]))
+                rows.append(_entry_row(entry.name, entry.description))
 
     return '<table class="wildshape-card">' + "".join(rows) + "</table>"

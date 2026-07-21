@@ -24,6 +24,35 @@ from Combat.Rules import Rule, group_by_category, load_rules
 from .styles import QSS
 
 
+def _display(value) -> str:
+    """Render an enum member (Skill/DamageType/Condition/...) or a plain
+    value the same way — falls back to str() for plain strings/ints and for
+    values that came back from a resumed JSON log (already plain strings)."""
+    return value.value if hasattr(value, "value") else str(value)
+
+
+def _ability_entry(ab) -> tuple[str, str]:
+    """A trait/action/... entry is a MonsterAbility fresh from a monster class,
+    or a plain {"name":..., "description":...} dict once it's round-tripped
+    through a saved combat log (JSON has no dataclass concept)."""
+    if isinstance(ab, dict):
+        return ab.get("name", ""), ab.get("description", "")
+    return ab.name, ab.description
+
+
+def _damage_entry_text(entry) -> str:
+    """A damage_resistances/immunities/vulnerabilities entry is a DamageTypeEntry
+    fresh from a monster class, or a plain dict once resumed from a saved log."""
+    if isinstance(entry, dict):
+        types, note = entry.get("damage_types", []), entry.get("note", "")
+    else:
+        types, note = entry.damage_types, entry.note
+    text = ", ".join(_display(t) for t in types)
+    if note:
+        text = f"{text} {note}" if text else note
+    return text
+
+
 class DialogsMixin:
     """Mixin for dialog windows."""
 
@@ -414,7 +443,7 @@ class DialogsMixin:
                 td = "border:1px solid #0f3460;padding:2px 8px;"
                 tdr = f"{td}text-align:right;"
                 rows = "".join(
-                    f"<tr><td style='{td}'>{k}</td><td style='{tdr}'>{v:+}</td></tr>"
+                    f"<tr><td style='{td}'>{_display(k)}</td><td style='{tdr}'>{v:+}</td></tr>"
                     for k, v in char["skills"].items()
                 )
                 skills_lbl = QLabel(
@@ -427,11 +456,16 @@ class DialogsMixin:
                 ("damage_vulnerabilities", "Vulnerabilities"),
                 ("damage_resistances", "Resistances"),
                 ("damage_immunities", "Damage Immunities"),
-                ("condition_immunities", "Condition Immunities"),
             ]:
-                val = char.get(key, [])
-                if val:
-                    add_field(label, ", ".join(val))
+                entries = char.get(key, [])
+                if entries:
+                    add_field(label, "; ".join(_damage_entry_text(e) for e in entries))
+
+            if char.get("condition_immunities"):
+                add_field(
+                    "Condition Immunities",
+                    ", ".join(_display(c) for c in char["condition_immunities"]),
+                )
 
             if char.get("legendary_resistances"):
                 add_field("Legendary Resistances", str(char["legendary_resistances"]))
@@ -450,7 +484,8 @@ class DialogsMixin:
                     add_divider()
                     add_header(section_label)
                     for ab in abilities:
-                        add_ability(ab.get("name", ""), ab.get("description", ""))
+                        name, desc = _ability_entry(ab)
+                        add_ability(name, desc)
 
         lay.addStretch()
         scroll.setWidget(content)

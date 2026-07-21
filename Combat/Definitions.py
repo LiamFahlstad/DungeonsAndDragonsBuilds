@@ -4,6 +4,8 @@ from typing import Optional
 
 from attr import dataclass
 
+from Definitions import Skill
+
 
 class Action(str, Enum):
     HEAL = "heal"
@@ -21,12 +23,19 @@ class Condition(str, Enum):
     BLOODIED = "Bloodied"
     CHARMED = "Charmed"
     CONCENTRATING = "Concentrating"
+    DEAFENED = "Deafened"
+    EXHAUSTION = "Exhaustion"
     FRIGHTENED = "Frightened"
     GRAPPLED = "Grappled"
+    INCAPACITATED = "Incapacitated"
+    INVISIBLE = "Invisible"
     PARALYZED = "Paralyzed"
+    PETRIFIED = "Petrified"
     POISONED = "Poisoned"
     PRONE = "Prone"
+    RESTRAINED = "Restrained"
     STUNNED = "Stunned"
+    UNCONSCIOUS = "Unconscious"
 
     @staticmethod
     def list_all():
@@ -53,6 +62,33 @@ class MonsterAbility:
 
     name: str
     description: str
+
+
+class DamageType(str, Enum):
+    ACID = "Acid"
+    BLUDGEONING = "Bludgeoning"
+    COLD = "Cold"
+    FIRE = "Fire"
+    FORCE = "Force"
+    LIGHTNING = "Lightning"
+    NECROTIC = "Necrotic"
+    PIERCING = "Piercing"
+    POISON = "Poison"
+    PSYCHIC = "Psychic"
+    RADIANT = "Radiant"
+    SLASHING = "Slashing"
+    THUNDER = "Thunder"
+
+
+@dataclass_decorator
+class DamageTypeEntry:
+    """One resistance/immunity/vulnerability entry from a monster's stat block,
+    e.g. "Bludgeoning, Piercing, and Slashing from Nonmagical Attacks" becomes
+    DamageTypeEntry(damage_types=[BLUDGEONING, PIERCING, SLASHING], note="from Nonmagical Attacks").
+    """
+
+    damage_types: list[DamageType]
+    note: str = ""
 
 
 @dataclass
@@ -126,21 +162,21 @@ class ExtendedCombatantData(BasicCombatantData):
     ac_note: str = ""  # e.g. "natural armor"
     hp_formula: str = ""  # e.g. "8d10+8"
     speed: str = ""
-    skills: Optional[dict[str, int]] = None
-    damage_vulnerabilities: Optional[list[str]] = None
-    damage_resistances: Optional[list[str]] = None
-    damage_immunities: Optional[list[str]] = None
-    condition_immunities: Optional[list[str]] = None
+    skills: Optional[dict[Skill, int]] = None
+    damage_vulnerabilities: Optional[list[DamageTypeEntry]] = None
+    damage_resistances: Optional[list[DamageTypeEntry]] = None
+    damage_immunities: Optional[list[DamageTypeEntry]] = None
+    condition_immunities: Optional[list[Condition]] = None
     senses: str = ""
     languages: str = ""
-    traits: Optional[list] = None  # special traits / passive abilities
-    actions: Optional[list] = None  # standard action entries
-    bonus_actions: Optional[list] = None  # bonus actions (some monsters)
-    reactions: Optional[list] = None  # reactions
-    legendary_actions: Optional[list] = None  # legendary actions
+    traits: Optional[list[MonsterAbility]] = None  # special traits / passive abilities
+    actions: Optional[list[MonsterAbility]] = None  # standard action entries
+    bonus_actions: Optional[list[MonsterAbility]] = None  # bonus actions (some monsters)
+    reactions: Optional[list[MonsterAbility]] = None  # reactions
+    legendary_actions: Optional[list[MonsterAbility]] = None  # legendary actions
     legendary_resistances: int = 0  # count of legendary resistances
-    lair_actions: Optional[list] = None  # lair actions
-    mythic_actions: Optional[list] = None  # mythic actions (some monsters)
+    lair_actions: Optional[list[MonsterAbility]] = None  # lair actions
+    mythic_actions: Optional[list[MonsterAbility]] = None  # mythic actions (some monsters)
 
     def __attrs_post_init__(self):
         super().__attrs_post_init__()
@@ -196,6 +232,24 @@ class ConditionRule(Enum):
         "The DC equals 10 or half the damage taken (round down), whichever is higher, up to a maximum DC of 30.\n\n"
         "Incapacitated or Dead. Your Concentration ends if you have the Incapacitated condition or you die.",
     )
+    DEAFENED = (
+        "Deafened [Condition]",
+        "While you have the Deafened condition, you experience the following effect.\n\n"
+        "Can't Hear. You can't hear and automatically fail any ability check that requires hearing.",
+    )
+    EXHAUSTION = (
+        "Exhaustion [Condition]",
+        "Exhaustion is measured in six levels. An effect can give a creature one or more levels of "
+        "Exhaustion, as specified in the effect's description.\n\n"
+        "Effects of Exhaustion. A creature suffers the effects of its greatest level of Exhaustion. "
+        "Each level gives a cumulative -2 penalty to D20 Tests, and the creature's Speed is reduced by "
+        "5 feet per level.\n\n"
+        "Removing Exhaustion Levels. Finishing a Long Rest removes one level of Exhaustion from the "
+        "creature, provided that the creature has also had some food and drink.\n\n"
+        "Effects Cumulative. Multiple instances of Exhaustion add their Exhaustion levels together, up "
+        "to a maximum level of 6. If a creature already has Exhaustion and something would give it 6 "
+        "more levels, the creature dies.",
+    )
     FRIGHTENED = (
         "Frightened [Condition]",
         "While you have the Frightened condition, you experience the following effects.\n\n"
@@ -211,6 +265,23 @@ class ConditionRule(Enum):
         "Movable. The grappler can drag or carry you when it moves, but every foot of movement costs it "
         "1 extra foot unless you are Tiny or two or more sizes smaller than it.",
     )
+    INCAPACITATED = (
+        "Incapacitated [Condition]",
+        "While you have the Incapacitated condition, you experience the following effects.\n\n"
+        "Inactive. You can't take any action, Bonus Action, or Reaction.\n\n"
+        "No Concentration. Your Concentration is broken if you had it.\n\n"
+        "Speechless. You can't speak.\n\n"
+        "Surprised. If you're Incapacitated when you roll Initiative, you have Disadvantage on the roll.",
+    )
+    INVISIBLE = (
+        "Invisible [Condition]",
+        "While you have the Invisible condition, you experience the following effects.\n\n"
+        "Surprise. If you're Invisible when you roll Initiative, you have Advantage on the roll.\n\n"
+        "Concealed. You can't be seen without the aid of magic or a special sense. For the purpose of "
+        "Hiding, you're heavily obscured. Your location can be detected by any noise you make or any "
+        "tracks you leave.\n\n"
+        "Attacks Affected. Attack rolls against you have Disadvantage, and your attack rolls have Advantage.",
+    )
     PARALYZED = (
         "Paralyzed [Condition]",
         "While you have the Paralyzed condition, you experience the following effects.\n\n"
@@ -219,6 +290,18 @@ class ConditionRule(Enum):
         "Saving Throws Affected. You automatically fail Strength and Dexterity saving throws.\n\n"
         "Attacks Affected. Attack rolls against you have Advantage.\n\n"
         "Automatic Critical Hits. Any attack roll that hits you is a Critical Hit if the attacker is within 5 feet of you.",
+    )
+    PETRIFIED = (
+        "Petrified [Condition]",
+        "While you have the Petrified condition, you experience the following effects.\n\n"
+        "Turned to Inert Substance. You are transformed, along with any nonmagical objects you are "
+        "wearing or carrying, into a solid inanimate substance (usually stone). Your weight increases "
+        "by a factor of ten, and you cease aging.\n\n"
+        "Incapacitated. You have the Incapacitated condition.\n\n"
+        "Attacks Affected. Attack rolls against you have Advantage.\n\n"
+        "Saving Throws Affected. You automatically fail Strength and Dexterity saving throws.\n\n"
+        "Resistances. You have Resistance to all damage.\n\n"
+        "Poison Immunity. You have Immunity to the Poisoned condition.",
     )
     POISONED = (
         "Poisoned [Condition]",
@@ -234,12 +317,29 @@ class ConditionRule(Enum):
         "Attacks Affected. You have Disadvantage on attack rolls. An attack roll against you has Advantage "
         "if the attacker is within 5 feet of you. Otherwise, that attack roll has Disadvantage.",
     )
+    RESTRAINED = (
+        "Restrained [Condition]",
+        "While you have the Restrained condition, you experience the following effects.\n\n"
+        "Speed 0. Your Speed is 0 and can't increase.\n\n"
+        "Attacks Affected. Attack rolls against you have Advantage, and your attack rolls have Disadvantage.\n\n"
+        "Saving Throws Affected. You have Disadvantage on Dexterity saving throws.",
+    )
     STUNNED = (
         "Stunned [Condition]",
         "While you have the Stunned condition, you experience the following effects.\n\n"
         "Incapacitated. You have the Incapacitated condition.\n\n"
         "Saving Throws Affected. You automatically fail Strength and Dexterity saving throws.\n\n"
         "Attacks Affected. Attack rolls against you have Advantage.",
+    )
+    UNCONSCIOUS = (
+        "Unconscious [Condition]",
+        "While you have the Unconscious condition, you experience the following effects.\n\n"
+        "Incapacitated. You have the Incapacitated condition, and you can't speak.\n\n"
+        "Unaware. You're unaware of your surroundings.\n\n"
+        "Drop and Prone. You drop whatever you're holding and fall Prone.\n\n"
+        "Saving Throws Affected. You automatically fail Strength and Dexterity saving throws.\n\n"
+        "Attacks Affected. Attack rolls against you have Advantage.\n\n"
+        "Automatic Critical Hits. Any attack roll that hits you is a Critical Hit if the attacker is within 5 feet of you.",
     )
 
     @property

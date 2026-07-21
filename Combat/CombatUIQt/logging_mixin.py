@@ -1,12 +1,24 @@
 """Logging mixin for CombatAppQt."""
 
+import dataclasses
 import json
 from pathlib import Path
 
-from PyQt6.QtWidgets import QDialog, QMessageBox, QTextEdit, QVBoxLayout, QPushButton
+from PyQt6.QtWidgets import QDialog, QMessageBox, QPushButton, QTextEdit, QVBoxLayout
 
 from Combat.Definitions import Action
+
 from .stats import STAT_KEYS, _default_stats
+
+
+class _CombatJSONEncoder(json.JSONEncoder):
+    """Monster stat-block fields (MonsterAbility, DamageTypeEntry, ...) are plain
+    dataclasses, not natively JSON-serializable — encode them as dicts."""
+
+    def default(self, o):
+        if dataclasses.is_dataclass(o) and not isinstance(o, type):
+            return dataclasses.asdict(o)
+        return super().default(o)
 
 
 class LoggingMixin:
@@ -18,7 +30,7 @@ class LoggingMixin:
             {k: v for k, v in c.items() if not k.startswith("_")}
             for c in self.characters
         ]
-        self.log_file.write_text(json.dumps(data, indent=2))
+        self.log_file.write_text(json.dumps(data, indent=2, cls=_CombatJSONEncoder))
 
     def _current_turn_name(self) -> str | None:
         if self.phase != "COMBAT" or not self.initiative_order:
@@ -45,7 +57,11 @@ class LoggingMixin:
         action, value = self.history[-1]
         # Damage/Heal are applied to the target; every other tracked action
         # (conditions, spell slots, death saves) is applied to the source.
-        char = self.target_character if action in (Action.DAMAGE, Action.HEAL) else self.selected_character
+        char = (
+            self.target_character
+            if action in (Action.DAMAGE, Action.HEAL)
+            else self.selected_character
+        )
         if not char:
             return
         data = json.loads(self.log_file.read_text())
@@ -67,7 +83,9 @@ class LoggingMixin:
                 char["temp_hp"] -= temp_delta
 
                 char.setdefault("stats", _default_stats())
-                char["stats"]["damage_taken"] = char["stats"].get("damage_taken", 0) - dmg
+                char["stats"]["damage_taken"] = (
+                    char["stats"].get("damage_taken", 0) - dmg
+                )
                 if knockout:
                     char["stats"]["times_downed"] = max(
                         char["stats"].get("times_downed", 0) - 1, 0
@@ -180,6 +198,7 @@ class LoggingMixin:
         dlg.setWindowTitle(f"Combat Log — {self.log_file.name}")
         dlg.setMinimumSize(480, 500)
         from .styles import QSS
+
         dlg.setStyleSheet(QSS)
 
         layout = QVBoxLayout(dlg)
