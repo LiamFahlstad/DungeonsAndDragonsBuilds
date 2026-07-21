@@ -1,9 +1,11 @@
 from Combat.Definitions import (
+    Alignment,
     Condition,
     DamageType,
     DamageTypeEntry,
     ExtendedCombatantData,
     MonsterAbility,
+    Size,
     Skill,
 )
 from Definitions import Ability
@@ -21,10 +23,10 @@ class TheCrownWithoutAKing(ExtendedCombatantData):
             saving_throws={},
             spell_slots={},
             cr="7",
-            monster_type="Tiny Undead, Lawful Evil",
+            size=Size.TINY, monster_type='Undead', alignment=Alignment.LAWFUL_EVIL,
             ac_note="natural armor",
             hp_formula="20d4+40",
-            speed="0 ft., fly 30 ft. (hover)",
+            speed_ground_ft=0, speed_fly_ft=30, speed_climb_ft=None, speed_special_rules='hover',
             skills={},
             damage_vulnerabilities=[],
             damage_resistances=[

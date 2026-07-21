@@ -42,6 +42,29 @@ class Condition(str, Enum):
         return [cond.value for cond in Condition]
 
 
+class Size(str, Enum):
+    TINY = "Tiny"
+    SMALL = "Small"
+    MEDIUM = "Medium"
+    LARGE = "Large"
+    HUGE = "Huge"
+    GARGANTUAN = "Gargantuan"
+
+
+class Alignment(str, Enum):
+    LAWFUL_GOOD = "Lawful Good"
+    NEUTRAL_GOOD = "Neutral Good"
+    CHAOTIC_GOOD = "Chaotic Good"
+    LAWFUL_NEUTRAL = "Lawful Neutral"
+    NEUTRAL = "Neutral"
+    CHAOTIC_NEUTRAL = "Chaotic Neutral"
+    LAWFUL_EVIL = "Lawful Evil"
+    NEUTRAL_EVIL = "Neutral Evil"
+    CHAOTIC_EVIL = "Chaotic Evil"
+    UNALIGNED = "Unaligned"
+    ANY_ALIGNMENT = "Any Alignment"
+
+
 class Visibility(str, Enum):
     LIGHTLY_OBSCURED = "Lightly Obscured"
     HEAVILY_OBSCURED = "Heavily Obscured"
@@ -158,10 +181,15 @@ class ExtendedCombatantData(BasicCombatantData):
     """Extended combatant data with additional monster stat block information."""
 
     cr: str = ""
-    monster_type: str = ""  # e.g. "Large beast"
+    monster_type: str = ""  # e.g. "Dragon (Metallic)" -- creature type/subtype only
+    alignment: Optional[Alignment] = None
+    size: Optional[Size] = None
     ac_note: str = ""  # e.g. "natural armor"
     hp_formula: str = ""  # e.g. "8d10+8"
-    speed: str = ""
+    speed_ground_ft: Optional[int] = None
+    speed_fly_ft: Optional[int] = None
+    speed_climb_ft: Optional[int] = None
+    speed_special_rules: str = ""  # e.g. "hover" or any speed text that doesn't fit the fields above
     skills: Optional[dict[Skill, int]] = None
     damage_vulnerabilities: Optional[list[DamageTypeEntry]] = None
     damage_resistances: Optional[list[DamageTypeEntry]] = None

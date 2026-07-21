@@ -1,9 +1,11 @@
 from Combat.Definitions import (
+    Alignment,
     Condition,
     DamageType,
     DamageTypeEntry,
     ExtendedCombatantData,
     MonsterAbility,
+    Size,
     Skill,
 )
 from Definitions import Ability
@@ -21,10 +23,10 @@ class TheHeadlessDragon(ExtendedCombatantData):
             saving_throws={},
             spell_slots={},
             cr="15",
-            monster_type="Huge Dragon, Neutral Evil",
+            size=Size.HUGE, monster_type='Dragon', alignment=Alignment.NEUTRAL_EVIL,
             ac_note="natural armor",
             hp_formula="23d12+69",
-            speed="40 ft., climb 40 ft., fly 80 ft.",
+            speed_ground_ft=40, speed_fly_ft=80, speed_climb_ft=40, speed_special_rules='',
             skills={},
             damage_vulnerabilities=[],
             damage_resistances=[],

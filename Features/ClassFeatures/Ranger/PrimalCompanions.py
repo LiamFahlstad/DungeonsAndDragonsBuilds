@@ -1,15 +1,15 @@
 from enum import Enum
 from typing import Optional
 
-from Combat.Definitions import ExtendedCombatantData
+from Combat.Definitions import Alignment, ExtendedCombatantData, MonsterAbility, Size
 from Definitions import Ability, CharacterClass, DamageType
 from Features.ClassFeatures.CreatureStatBlocks import format_creature_stat_block
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
-_PRIMAL_BOND_TRAIT = {
-    "name": "Primal Bond",
-    "description": "Add your Proficiency Bonus to any ability check or saving throw the beast makes.",
-}
+_PRIMAL_BOND_TRAIT = MonsterAbility(
+    name="Primal Bond",
+    description="Add your Proficiency Bonus to any ability check or saving throw the beast makes.",
+)
 
 
 class CompanionType(str, Enum):
@@ -40,14 +40,14 @@ def _strike_action(
     spell_attack_modifier: int,
     damage_type: DamageType,
     extra: str = "",
-) -> dict:
-    return {
-        "name": "Beast's Strike",
-        "description": (
+) -> MonsterAbility:
+    return MonsterAbility(
+        name="Beast's Strike",
+        description=(
             f"Melee Attack Roll: {spell_attack_modifier:+}, reach 5 ft. "
             f"Hit: {damage_die} + {flat_bonus} {damage_type.value} damage{extra}"
         ),
-    }
+    )
 
 
 class BeastOfTheLand(ExtendedCombatantData):
@@ -69,10 +69,13 @@ class BeastOfTheLand(ExtendedCombatantData):
             saving_throws={},
             spell_slots={},
             cr="None",
-            monster_type="Medium Beast, Neutral",
+            monster_type="Beast",
+            alignment=Alignment.NEUTRAL,
+            size=Size.MEDIUM,
             ac_note="13 plus your Wisdom modifier",
             hp_formula=f"5 + five times your Ranger level ({ranger_level} d8 Hit Dice)",
-            speed="40 ft., Climb 40 ft.,",
+            speed_ground_ft=40,
+            speed_climb_ft=40,
             skills={},
             damage_vulnerabilities=[],
             damage_resistances=[],
@@ -124,10 +127,13 @@ class BeastOfTheSea(ExtendedCombatantData):
             saving_throws={},
             spell_slots={},
             cr="None",
-            monster_type="Medium Beast, Neutral",
+            monster_type="Beast",
+            alignment=Alignment.NEUTRAL,
+            size=Size.MEDIUM,
             ac_note="13 plus your Wisdom modifier",
             hp_formula=f"5 + five times your Ranger level ({ranger_level} d8 Hit Dice)",
-            speed="5 ft., Swim 60 ft.,",
+            speed_ground_ft=5,
+            speed_special_rules="swim 60 ft.",
             skills={},
             damage_vulnerabilities=[],
             damage_resistances=[],
@@ -136,10 +142,10 @@ class BeastOfTheSea(ExtendedCombatantData):
             senses="Darkvision 90 ft., Passive Perception 12",
             languages="Understands the languages you know but can't speak",
             traits=[
-                {
-                    "name": "Amphibious",
-                    "description": "The beast can breathe air and water.",
-                },
+                MonsterAbility(
+                    name="Amphibious",
+                    description="The beast can breathe air and water.",
+                ),
                 _PRIMAL_BOND_TRAIT,
             ],
             actions=[
@@ -181,10 +187,13 @@ class BeastOfTheSky(ExtendedCombatantData):
             saving_throws={},
             spell_slots={},
             cr="None",
-            monster_type="Small Beast, Neutral",
+            monster_type="Beast",
+            alignment=Alignment.NEUTRAL,
+            size=Size.SMALL,
             ac_note="13 plus your Wisdom modifier",
             hp_formula=f"4 + four times your Ranger level ({ranger_level} d6 Hit Dice)",
-            speed="10 ft., Fly 60 ft.,",
+            speed_ground_ft=10,
+            speed_fly_ft=60,
             skills={},
             damage_vulnerabilities=[],
             damage_resistances=[],
@@ -193,10 +202,10 @@ class BeastOfTheSky(ExtendedCombatantData):
             senses="Darkvision 60 ft., Passive Perception 12",
             languages="Understands the languages you know but can't speak",
             traits=[
-                {
-                    "name": "Flyby",
-                    "description": "The beast doesn't provoke Opportunity Attacks when it flies out of an enemy's reach.",
-                },
+                MonsterAbility(
+                    name="Flyby",
+                    description="The beast doesn't provoke Opportunity Attacks when it flies out of an enemy's reach.",
+                ),
                 _PRIMAL_BOND_TRAIT,
             ],
             actions=[

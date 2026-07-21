@@ -171,6 +171,105 @@ def format_condition_list(lst: list) -> tuple[str, list[str]]:
     return "[" + ", ".join(items) + "]", unmapped
 
 
+_SIZE_NAMES = ["Gargantuan", "Huge", "Large", "Medium", "Small", "Tiny"]
+_SIZE_RE = re.compile(r"^(" + "|".join(_SIZE_NAMES) + r")\b", re.IGNORECASE)
+_SIZE_OR_QUALIFIER_RE = re.compile(
+    r"^\s+or\s+(" + "|".join(_SIZE_NAMES) + r"|Smaller|Larger)\b", re.IGNORECASE
+)
+
+_ALIGNMENT_TO_ENUM = {
+    "lawful good": "LAWFUL_GOOD",
+    "neutral good": "NEUTRAL_GOOD",
+    "chaotic good": "CHAOTIC_GOOD",
+    "lawful neutral": "LAWFUL_NEUTRAL",
+    "neutral": "NEUTRAL",
+    "chaotic neutral": "CHAOTIC_NEUTRAL",
+    "lawful evil": "LAWFUL_EVIL",
+    "neutral evil": "NEUTRAL_EVIL",
+    "chaotic evil": "CHAOTIC_EVIL",
+    "unaligned": "UNALIGNED",
+    "any alignment": "ANY_ALIGNMENT",
+}
+
+
+def parse_monster_type(raw: str) -> tuple[str, str, str, list[str]]:
+    """'Medium Dragon (Metallic), Chaotic Good' -> ('MEDIUM', 'Dragon (Metallic)', 'CHAOTIC_GOOD', flags).
+
+    size/alignment are Size/Alignment enum *names* (or "" if unparseable);
+    flags lists anything that couldn't be cleanly resolved (compound sizes like
+    "Huge or Gargantuan" are reduced to their first/primary size and flagged).
+    """
+    raw = raw.strip()
+    if not raw:
+        return "", "", "", []
+    flags = []
+    if "," in raw:
+        type_and_size, _, alignment_part = raw.rpartition(",")
+    else:
+        type_and_size, alignment_part = raw, ""
+    type_and_size = type_and_size.strip()
+    alignment_part = alignment_part.strip()
+
+    alignment_name = _ALIGNMENT_TO_ENUM.get(alignment_part.lower(), "")
+    if not alignment_name and alignment_part:
+        flags.append(f"unmapped alignment: {alignment_part!r}")
+
+    m = _SIZE_RE.match(type_and_size)
+    if not m:
+        flags.append(f"no leading size in: {type_and_size!r}")
+        return "", type_and_size, alignment_name, flags
+    size_name = m.group(1).upper()
+    rest = type_and_size[m.end():]
+    m2 = _SIZE_OR_QUALIFIER_RE.match(rest)
+    if m2:
+        flags.append(f"compound size reduced to {size_name}: {type_and_size!r}")
+        rest = rest[m2.end():]
+    return size_name, rest.strip(), alignment_name, flags
+
+
+_SPEED_BARE_RE = re.compile(r"^(\d+)\s*ft\.?$", re.IGNORECASE)
+_SPEED_KEYWORD_RE = re.compile(r"^(climb|fly|swim|burrow)\s+(\d+)\s*ft\.?\s*(\(.*\))?$", re.IGNORECASE)
+
+
+def parse_speed(raw: str) -> tuple[int | None, int | None, int | None, str, list[str]]:
+    """'40 ft., climb 40 ft., fly 80 ft.' -> (40, 80, 40, '', []).
+    Anything that doesn't fit (garbage scrape fragments, an unrecognized
+    segment, swim/burrow speeds) is preserved verbatim in the returned note
+    text rather than dropped, and flagged for review."""
+    raw = raw.strip().rstrip(",").strip()
+    flags = []
+    if not raw:
+        return None, None, None, "", flags
+    if not re.match(r"^\d", raw):
+        flags.append(f"unparseable speed text (kept as note): {raw!r}")
+        return None, None, None, raw, flags
+
+    segments = [s.strip() for s in raw.split(",") if s.strip()]
+    ground = fly = climb = None
+    notes = []
+    for i, seg in enumerate(segments):
+        m_bare = _SPEED_BARE_RE.match(seg)
+        m_kw = _SPEED_KEYWORD_RE.match(seg)
+        if m_bare and i == 0:
+            ground = int(m_bare.group(1))
+        elif m_kw:
+            kind = m_kw.group(1).lower()
+            value = int(m_kw.group(2))
+            paren_note = m_kw.group(3)
+            if kind == "climb":
+                climb = value
+            elif kind == "fly":
+                fly = value
+            else:
+                notes.append(f"{kind} {value} ft.")
+            if paren_note:
+                notes.append(paren_note.strip("()"))
+        else:
+            notes.append(seg)
+            flags.append(f"unrecognized speed segment {seg!r} (full: {raw!r})")
+    return ground, fly, climb, "; ".join(notes), flags
+
+
 def format_ability_list(abilities: list) -> str:
     """[{"name": ..., "description": ...}] -> '[MonsterAbility(name=..., description=...), ...]'."""
     if not abilities:

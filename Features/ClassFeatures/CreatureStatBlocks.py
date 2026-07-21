@@ -43,6 +43,33 @@ def _entry_row(name: str, description: str) -> str:
     return f'<tr><td class="wsf-entry-name">{name}</td><td class="wsf-entry-desc">{description}</td></tr>'
 
 
+def _monster_type_text(monster: ExtendedCombatantData) -> str:
+    parts = []
+    if monster.size:
+        parts.append(_display(monster.size))
+    if monster.monster_type:
+        parts.append(monster.monster_type)
+    text = " ".join(parts)
+    if monster.alignment:
+        alignment_text = _display(monster.alignment)
+        text = f"{text}, {alignment_text}" if text else alignment_text
+    return text
+
+
+def _speed_text(monster: ExtendedCombatantData) -> str:
+    parts = []
+    if monster.speed_ground_ft is not None:
+        parts.append(f"{monster.speed_ground_ft} ft.")
+    if monster.speed_climb_ft is not None:
+        parts.append(f"climb {monster.speed_climb_ft} ft.")
+    if monster.speed_fly_ft is not None:
+        parts.append(f"fly {monster.speed_fly_ft} ft.")
+    text = ", ".join(parts)
+    if monster.speed_special_rules:
+        text = f"{text} ({monster.speed_special_rules})" if text else monster.speed_special_rules
+    return text
+
+
 def format_creature_stat_block(
     monster: ExtendedCombatantData,
     character_stat_block: Optional[CharacterStatBlock] = None,
@@ -57,13 +84,13 @@ def format_creature_stat_block(
     """
     rows = [
         f'<tr><th class="wsf-name" colspan="2">{monster.combatant_type}'
-        f'<span class="wsf-subtitle">CR {monster.cr} &middot; {monster.monster_type}</span></th></tr>'
+        f'<span class="wsf-subtitle">CR {monster.cr} &middot; {_monster_type_text(monster)}</span></th></tr>'
     ]
 
     ac_text = f"{monster.ac}" + (f" ({monster.ac_note})" if monster.ac_note else "")
     rows.append(_row("Armor Class", ac_text))
 
-    speed = monster.speed.strip().rstrip(",")
+    speed = _speed_text(monster)
     if speed:
         rows.append(_row("Speed", speed))
 

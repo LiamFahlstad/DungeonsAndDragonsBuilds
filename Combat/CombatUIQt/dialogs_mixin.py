@@ -40,6 +40,34 @@ def _ability_entry(ab) -> tuple[str, str]:
     return ab.name, ab.description
 
 
+def _monster_type_text(char: dict) -> str:
+    parts = []
+    if char.get("size"):
+        parts.append(_display(char["size"]))
+    if char.get("monster_type"):
+        parts.append(char["monster_type"])
+    text = " ".join(parts)
+    if char.get("alignment"):
+        alignment_text = _display(char["alignment"])
+        text = f"{text}, {alignment_text}" if text else alignment_text
+    return text
+
+
+def _speed_text(char: dict) -> str:
+    parts = []
+    if char.get("speed_ground_ft") is not None:
+        parts.append(f"{char['speed_ground_ft']} ft.")
+    if char.get("speed_climb_ft") is not None:
+        parts.append(f"climb {char['speed_climb_ft']} ft.")
+    if char.get("speed_fly_ft") is not None:
+        parts.append(f"fly {char['speed_fly_ft']} ft.")
+    text = ", ".join(parts)
+    special = char.get("speed_special_rules")
+    if special:
+        text = f"{text} ({special})" if text else special
+    return text
+
+
 def _damage_entry_text(entry) -> str:
     """A damage_resistances/immunities/vulnerabilities entry is a DamageTypeEntry
     fresh from a monster class, or a plain dict once resumed from a saved log."""
@@ -427,10 +455,18 @@ class DialogsMixin:
         # --- Extended stats (only present for ExtendedCombatantData) ---
         if "cr" in char:
             add_divider()
+            type_text = _monster_type_text(char)
+            if type_text:
+                add_field("Type", type_text)
             for key, label in [
-                ("monster_type", "Type"),
                 ("cr", "CR"),
-                ("speed", "Speed"),
+            ]:
+                if char.get(key):
+                    add_field(label, char[key])
+            speed_text = _speed_text(char)
+            if speed_text:
+                add_field("Speed", speed_text)
+            for key, label in [
                 ("hp_formula", "Hit Dice"),
                 ("senses", "Senses"),
                 ("languages", "Languages"),
