@@ -1,5 +1,6 @@
 """Registry of runnable combat scenarios. Select one with `python RunCombat.py --scenario <name>`."""
 
+import Combat.Campaigns.CurseOfTheLich.Encounters as CurseOfTheLichEncounters
 import Combat.Campaigns.GrimsCastle.Encounters as GrimsCastleEncounters
 import Combat.Campaigns.TimeLoop.Encounters as TimeLoopEncounters
 from Builds.Characters.OptimizedPaladinVengeance import OptimizedPaladinVengeanceCharacterBuilder
@@ -41,5 +42,45 @@ GRIMS_CASTLE_BULL = _register(
     CombatScenario(
         name="grims_castle_bull",
         combatants=lambda: GrimsCastleEncounters.get_players() + GrimsCastleEncounters.get_bull(),
+    )
+)
+
+CURSE_OF_THE_LICH_BLACK_TONGUES_SKIRMISH = _register(
+    CombatScenario(
+        name="curse_of_the_lich_black_tongues_skirmish",
+        combatants=lambda: CurseOfTheLichEncounters.get_black_tongues_skirmish_combatants(),
+        character_sheets=lambda: CurseOfTheLichEncounters.get_players(),
+    )
+)
+
+CURSE_OF_THE_LICH_YELLOW_CAPES_PATROL = _register(
+    CombatScenario(
+        name="curse_of_the_lich_yellow_capes_patrol",
+        combatants=lambda: CurseOfTheLichEncounters.get_yellow_capes_patrol_combatants(),
+        character_sheets=lambda: CurseOfTheLichEncounters.get_players(),
+    )
+)
+
+CURSE_OF_THE_LICH_BLACK_TONGUES_RITUAL = _register(
+    CombatScenario(
+        name="curse_of_the_lich_black_tongues_ritual",
+        combatants=lambda: CurseOfTheLichEncounters.get_black_tongues_ritual_combatants(),
+        character_sheets=lambda: CurseOfTheLichEncounters.get_players(),
+    )
+)
+
+CURSE_OF_THE_LICH_YELLOW_CAPES_LAST_STAND = _register(
+    CombatScenario(
+        name="curse_of_the_lich_yellow_capes_last_stand",
+        combatants=lambda: CurseOfTheLichEncounters.get_yellow_capes_last_stand_combatants(),
+        character_sheets=lambda: CurseOfTheLichEncounters.get_players(),
+    )
+)
+
+CURSE_OF_THE_LICH_MOUTH_THAT_WALKS = _register(
+    CombatScenario(
+        name="curse_of_the_lich_mouth_that_walks",
+        combatants=lambda: CurseOfTheLichEncounters.get_mouth_that_walks_combatants(),
+        character_sheets=lambda: CurseOfTheLichEncounters.get_players(),
     )
 )

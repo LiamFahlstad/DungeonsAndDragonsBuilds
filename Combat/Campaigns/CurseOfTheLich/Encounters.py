@@ -1,13 +1,15 @@
+from Builds.CharacterBuilder import CharacterSheetData
+from Builds.Characters.OptimizedClericLight import OptimizedClericLightCharacterBuilder
+from Builds.Characters.OptimizedPaladinVengeance import OptimizedPaladinVengeanceCharacterBuilder
+from Builds.Characters.OptimizedRogueAssassin import OptimizedRogueAssassinCharacterBuilder
+from Builds.Characters.OptimizedWizardBladesinger import OptimizedWizardBladesingerCharacterBuilder
 from Combat import Combatants
 from Combat.Monsters.CR_0.monsters_homebrew import (
     Accursed,
     AccursedBrute,
     AccursedWarden,
 )
-from Combat.Monsters.CR_1.monsters_homebrew import (
-    CommonCultist,
-    SisterAshNumberSeven,
-)
+from Combat.Monsters.CR_1.monsters_homebrew import CommonCultist, SisterAshNumberSeven
 from Combat.Monsters.CR_2.monsters_homebrew import (
     AccursedGroupLarge,
     PriestOfTheBlackTongues,
@@ -21,19 +23,13 @@ from Combat.Monsters.CR_4.monsters_homebrew import MarshalVirel
 from Combat.Monsters.CR_6.monsters_homebrew import TheMouthThatWalks
 
 
-def get_players() -> list[Combatants.BasicCombatantData]:
-    p1 = Combatants.Player1()
-    p1.set_name("Player 1")
-
-    p2 = Combatants.Player1()
-    p2.set_name("Player 2")
-
-    p3 = Combatants.Player1()
-    p3.set_name("Player 3")
-
-    p4 = Combatants.Player1()
-    p4.set_name("Player 4")
-    return [p1, p2, p3, p4]
+def get_players() -> list[CharacterSheetData]:
+    return [
+        OptimizedPaladinVengeanceCharacterBuilder().build(),
+        OptimizedWizardBladesingerCharacterBuilder().build(),
+        OptimizedClericLightCharacterBuilder().build(),
+        OptimizedRogueAssassinCharacterBuilder().build(),
+    ]
 
 
 def get_black_tongues_skirmish_combatants() -> list[Combatants.BasicCombatantData]:

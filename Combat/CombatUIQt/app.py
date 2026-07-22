@@ -150,8 +150,14 @@ class CombatAppQt(DamageMixin, ConditionsMixin, SpellsMixin, TurnsMixin, CardsMi
         )
 
     def _add_basic_combatant(self, combatant: BasicCombatantData):
+        # Compute display name: use custom name with type in parentheses if different, else just type
+        if combatant.name and combatant.name != combatant.combatant_type:
+            display_name = f"{combatant.name} ({combatant.combatant_type})"
+        else:
+            display_name = combatant.combatant_type
+
         char = {
-            "name": combatant.combatant_type,
+            "name": display_name,
             "create_name": combatant.create_name if combatant.create_name is not None else combatant.combatant_type,
             "combatant_type": combatant.combatant_type,
             "hp": combatant.hp,
