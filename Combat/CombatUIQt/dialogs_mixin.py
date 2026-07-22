@@ -335,6 +335,15 @@ class DialogsMixin:
                             desc_lbl.setWordWrap(True)
                             desc_lbl.setStyleSheet("color: #c0c0c0; font-size: 11px;")
                             swl.addWidget(desc_lbl)
+                        if spell_obj.additional_ruling:
+                            ruling_lbl = QLabel(
+                                f"<span style='color:#c9a84c'>Ruling:</span> "
+                                f"<span style='color:#c0c0c0'>{spell_obj.additional_ruling}</span>"
+                            )
+                            ruling_lbl.setTextFormat(Qt.TextFormat.RichText)
+                            ruling_lbl.setWordWrap(True)
+                            ruling_lbl.setStyleSheet("font-size: 11px;")
+                            swl.addWidget(ruling_lbl)
                         lay.addWidget(make_expandable(spell_name, sw))
                     else:
                         lay.addWidget(QLabel(f"  • {spell_name}"))
@@ -419,6 +428,9 @@ class DialogsMixin:
                     if get_desc is not None and sb:
                         try:
                             desc_text = get_desc(sb)
+                            if desc_text is None:
+                                lay.addWidget(QLabel(f"• {feat_name}"))
+                                continue
                             fw = QWidget()
                             fwl = QVBoxLayout(fw)
                             fwl.setContentsMargins(16, 2, 0, 4)

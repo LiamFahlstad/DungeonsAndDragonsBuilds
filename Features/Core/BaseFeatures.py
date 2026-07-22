@@ -8,7 +8,7 @@ class Feature:
     """A single feature type. Override apply() to modify the stat block, get_description() to render a card, or both."""
 
     def __init__(self, name: str | None = None, origin: str | None = None):
-        self.name = name
+        self.name = name if name is not None else type(self).__name__
         self.origin = origin
         self.extensions: list["Feature"] = []
 

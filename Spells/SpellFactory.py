@@ -78,6 +78,12 @@ class Spell(ABC):
         self.spell_casting_ability = spell_casting_ability
         self._additional_ruling = additional_ruling
 
+    @property
+    def additional_ruling(self) -> Optional[str]:
+        """Character-specific ruling text attached when this spell was granted (e.g. a
+        Channel Divinity option that lets it be cast without a slot), or None."""
+        return self._additional_ruling
+
     # ---------- Required properties ---------- #
 
     @property
@@ -374,6 +380,18 @@ class Spell(ABC):
             file.write(
                 f"<tr class='spell-higher-row'>"
                 f"<td class='sdesc-text' colspan='2'>{higher_level_html}</td>"
+                f"</tr>\n"
+            )
+
+        # Additional ruling row (if present) - e.g. a Channel Divinity option
+        # that lets this specific character cast the spell without a slot.
+        if self._additional_ruling:
+            ruling_html = StringUtils.bolden_text_html(
+                StringUtils.boxes_to_html(self._additional_ruling.strip())
+            ).replace("\n", "<br>")
+            file.write(
+                f"<tr class='spell-higher-row'>"
+                f"<td class='sdesc-text' colspan='2'><strong>Ruling.</strong> {ruling_html}</td>"
                 f"</tr>\n"
             )
 

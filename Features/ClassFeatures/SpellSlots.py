@@ -130,7 +130,7 @@ class SpellSlots(Feature):
     ) -> None:
         self.caster_type = caster_type
         self.character_class = character_class
-        super().__init__()
+        super().__init__(name="Spell Slots")
 
     def apply(self, character_stat_block: CharacterStatBlock):
         character_stat_block._caster_registry[self.character_class] = self.caster_type
