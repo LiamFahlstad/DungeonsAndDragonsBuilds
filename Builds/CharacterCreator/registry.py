@@ -441,13 +441,6 @@ class Registry:
         }
         return self._spell_enums
 
-    def equipment(self, kind) -> list:
-        """kind: "Weapons" or "Armor" -> concrete equipment classes."""
-        module = importlib.import_module(f"Features.Equipment.{kind}")
-        base_name = "AbstractWeapon" if kind == "Weapons" else "AbstractArmor"
-        base = getattr(module, base_name)
-        return self.concrete_subclasses(base)
-
     # -------------------------------------------------- import resolution
 
     def name_to_import(self) -> dict:
@@ -531,9 +524,9 @@ class Registry:
             pass
 
         # Aliases some hand-written builds use for the spells module.
-        mapping.setdefault("SpellDefinitions", ("Spells", "Definitions as SpellDefinitions"))
-        mapping.setdefault("SpellsDefinitions", ("Spells", "Definitions as SpellsDefinitions"))
-        mapping.setdefault("Definitions", ("", "Definitions"))
+        mapping.setdefault("SpellDefinitions", ("Spells", "SpellLists as SpellDefinitions"))
+        mapping.setdefault("SpellsDefinitions", ("Spells", "SpellLists as SpellsDefinitions"))
+        mapping.setdefault("Definitions", ("Core", "Definitions"))
 
         self._name_to_import = mapping
         return mapping

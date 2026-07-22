@@ -13,11 +13,11 @@ import typing
 from pathlib import Path
 
 from PyQt6.QtCore import Qt
+from PyQt6.QtGui import QFont
 from PyQt6.QtWidgets import (
     QApplication,
     QCheckBox,
     QComboBox,
-    QCompleter,
     QDialog,
     QDoubleSpinBox,
     QFileDialog,
@@ -54,6 +54,20 @@ ABILITY_NAMES = (
     "wisdom",
     "charisma",
 )
+
+# (mode value stored on BuildSpec, label shown in the combo)
+ABILITY_SCORE_MODES = (
+    ("standard_array", "Standard array (must be exactly 15, 14, 13, 12, 10, 8)"),
+    ("point_buy", "Point buy (27 points, each score 8-15)"),
+    ("manual", "Manual (no validation)"),
+)
+
+
+def _point_buy_cost(score: int) -> int:
+    """Mirrors StatBlocks.AbilitiesStatBlock.PointBuyAbilitiesStatBlock._point_cost."""
+    if score <= 13:
+        return score - 8
+    return 5 + 2 * (score - 13)
 
 # ---------------------------------------------------------------------------
 # Global stylesheet — dark fantasy theme (matches Combat/CombatUIQt.py)
@@ -365,7 +379,12 @@ class RawEditor(Editor):
 
 
 class EnumEditor(Editor):
-    """Editable combobox with type-to-filter completion over enum members."""
+    """Closed (non-editable) combobox listing enum members.
+
+    Qt's built-in keyboard type-ahead (press a letter to jump to the next
+    item starting with it) keeps long enum lists searchable without an
+    editable text field.
+    """
 
     def __init__(self, enum_classes, optional=False, default_expr=None):
         super().__init__()
@@ -386,13 +405,6 @@ class EnumEditor(Editor):
                     display = f"{enum_class.__name__}: {CreatorApp._readable_display_name(member.name)}"
                 self.combo.addItem(display, expr)
 
-        self.combo.setEditable(True)
-        self.combo.setInsertPolicy(QComboBox.InsertPolicy.NoInsert)
-        completer = self.combo.completer()
-        if completer is not None:
-            completer.setCompletionMode(QCompleter.CompletionMode.PopupCompletion)
-            completer.setFilterMode(Qt.MatchFlag.MatchContains)
-            completer.setCaseSensitivity(Qt.CaseSensitivity.CaseInsensitive)
         if optional:
             self.combo.setCurrentIndex(0)
         elif default_expr:
@@ -414,11 +426,15 @@ class EnumEditor(Editor):
 
         index = self.combo.findData(expr)
         if index < 0:
-            index = self.combo.findText(expr, Qt.MatchFixedString)
-        if index >= 0:
-            self.combo.setCurrentIndex(index)
-        else:
-            self.combo.setCurrentText(expr)
+            index = self.combo.findText(expr, Qt.MatchFlag.MatchFixedString)
+        if index < 0:
+            # Unmatched expr (e.g. a hand-written build using a member the
+            # registry doesn't enumerate here). The combo is non-editable,
+            # so setCurrentText would silently drop it -- insert it instead
+            # so the pick still displays and round-trips.
+            index = self.combo.count()
+            self.combo.addItem(expr, expr)
+        self.combo.setCurrentIndex(index)
 
 
 class BoolEditor(Editor):
@@ -480,17 +496,18 @@ class StrEditor(Editor):
             self.line.setText(expr)
 
 
-def _make_filter_combo(options):
-    """Editable dropdown with type-to-filter completion (EnumEditor style)."""
+def _make_filter_combo(options, blank=False):
+    """Closed (non-editable) dropdown; Qt's built-in keyboard type-ahead
+    (press a letter to jump to the next matching item) keeps skill lists
+    searchable without an editable text field.
+
+    `blank`: prepend an empty "" item so the row can represent "nothing
+    picked yet" (a non-editable combo can't otherwise show blank text).
+    """
     combo = QComboBox()
+    if blank:
+        combo.addItem("")
     combo.addItems(options)
-    combo.setEditable(True)
-    combo.setInsertPolicy(QComboBox.InsertPolicy.NoInsert)
-    completer = combo.completer()
-    if completer is not None:
-        completer.setCompletionMode(QCompleter.CompletionMode.PopupCompletion)
-        completer.setFilterMode(Qt.MatchFlag.MatchContains)
-        completer.setCaseSensitivity(Qt.CaseSensitivity.CaseInsensitive)
     return combo
 
 
@@ -538,12 +555,18 @@ class SkillListEditor(Editor):
         row = QWidget()
         layout = QHBoxLayout(row)
         layout.setContentsMargins(0, 0, 0, 0)
-        combo = _make_filter_combo(list(self._value_to_name))
-        if name is None:
-            combo.setCurrentText("")
-        else:
-            # Unknown names stay as typed text so nothing is lost.
-            combo.setCurrentText(self._name_to_value.get(name, name))
+        combo = _make_filter_combo(list(self._value_to_name), blank=True)
+        if name is not None:
+            display = self._name_to_value.get(name, name)
+            index = combo.findText(display)
+            if index < 0:
+                # Unknown/out-of-pool skill (e.g. a hand-written build
+                # referencing a skill this row's pool excludes) -- insert
+                # it so the pick still displays and round-trips instead of
+                # being silently dropped.
+                combo.addItem(display)
+                index = combo.count() - 1
+            combo.setCurrentIndex(index)
         layout.addWidget(combo)
         layout.addStretch()
         self.rows_layout.addWidget(row)
@@ -945,13 +968,6 @@ class ClassPickerEditor(Editor):
         options = ([""] if optional else []) + sorted(self.classes) + [self.RAW_CHOICE]
         self.combo = QComboBox()
         self.combo.addItems(options)
-        self.combo.setEditable(True)
-        self.combo.setInsertPolicy(QComboBox.InsertPolicy.NoInsert)
-        completer = self.combo.completer()
-        if completer is not None:
-            completer.setCompletionMode(QCompleter.CompletionMode.PopupCompletion)
-            completer.setFilterMode(Qt.MatchFlag.MatchContains)
-            completer.setCaseSensitivity(Qt.CaseSensitivity.CaseInsensitive)
         self.combo.currentTextChanged.connect(lambda _text: self._rebuild_params())
         layout.addWidget(self.combo)
 
@@ -1231,6 +1247,11 @@ class CreatorApp(QMainWindow):
         self.species_param_editors = {}
         self._level_cache = {}
         self._applying = False
+        # Carried-forward values for fields not modeled by any widget (set
+        # by apply_spec when loading an existing build); to_spec() reads
+        # these back so round-tripping a loaded build doesn't drop them.
+        self._carried_extra_kwargs = {}
+        self._carried_extra_imports = []
 
         central = QWidget()
         self.setCentralWidget(central)
@@ -1366,11 +1387,21 @@ class CreatorApp(QMainWindow):
             spin.setFixedWidth(60)
             abilities_grid.addWidget(spin, 1, index)
             self.ability_spins[ability] = spin
-        self.standard_array_check = QCheckBox(
-            "Standard array (must be exactly 15, 14, 13, 12, 10, 8)"
+            spin.valueChanged.connect(self._update_point_buy_label)
+
+        self.ability_mode_combo = QComboBox()
+        self.ability_mode_combo.setEditable(False)
+        for mode_key, mode_label in ABILITY_SCORE_MODES:
+            self.ability_mode_combo.addItem(mode_label, mode_key)
+        self.ability_mode_combo.activated.connect(
+            lambda _index: self._update_point_buy_label()
         )
-        self.standard_array_check.setChecked(True)
-        abilities_grid.addWidget(self.standard_array_check, 2, 0, 1, 6)
+        abilities_grid.addWidget(self.ability_mode_combo, 2, 0, 1, 6)
+
+        self.point_buy_label = QLabel("")
+        self.point_buy_label.setObjectName("hint")
+        abilities_grid.addWidget(self.point_buy_label, 3, 0, 1, 6)
+        self._update_point_buy_label()
         _insert_before_stretch(layout, abilities_box)
 
         background_box = QGroupBox("Background")
@@ -1410,6 +1441,16 @@ class CreatorApp(QMainWindow):
         _insert_before_stretch(layout, self.species_box)
         self.rebuild_species_params()
 
+    def _update_point_buy_label(self):
+        mode = self.ability_mode_combo.currentData()
+        if mode != "point_buy":
+            self.point_buy_label.setText("")
+            return
+        spent = sum(
+            _point_buy_cost(spin.value()) for spin in self.ability_spins.values()
+        )
+        self.point_buy_label.setText(f"Points spent: {spent} / 27")
+
     def _build_equipment(self):
         layout = self.equipment_layout
         self.add_default_equipment_check = QCheckBox(
@@ -1429,15 +1470,29 @@ class CreatorApp(QMainWindow):
         )
         _insert_before_stretch(layout, self.armor_list.box)
 
-    def _build_advanced(self):
         from Features.Items import Items
+
+        self.items_editor = ExprListEditor(
+            make_item=lambda: TupleEditor(
+                [
+                    lambda: ClassPickerEditor(Items.Item, self._context()),
+                    lambda: IntEditor(default=1, lower=1, upper=999),
+                ]
+            ),
+            add_label="+ item",
+        )
+        items_box = QGroupBox("items (item, count)")
+        items_box_layout = QVBoxLayout(items_box)
+        items_box_layout.addWidget(self.items_editor.widget)
+        _insert_before_stretch(layout, items_box)
+
+    def _build_advanced(self):
         from ToolProficiencies.ToolProficiencies import ToolProficiency
 
         layout = self.advanced_layout
         note = QLabel(
-            "Optional extras. Leave empty to omit. The «code» fallback and the "
-            "free-text boxes at the bottom accept raw Python expressions as a "
-            "last resort."
+            "Optional extras. Leave empty to omit. The «code» fallback accepts "
+            "raw Python expressions as a last resort."
         )
         note.setObjectName("hint")
         _insert_before_stretch(layout, note)
@@ -1453,30 +1508,11 @@ class CreatorApp(QMainWindow):
         self._advanced_box(
             "replace_spells (old spell → new spell)", self.replace_spells_editor
         )
-        self.items_editor = ExprListEditor(
-            make_item=lambda: TupleEditor(
-                [
-                    lambda: ClassPickerEditor(Items.Item, self._context()),
-                    lambda: IntEditor(default=1, lower=1, upper=999),
-                ]
-            ),
-            add_label="+ item",
-        )
-        self._advanced_box("items (item, count)", self.items_editor)
         self.tools_editor = ExprListEditor(
             make_item=lambda: ClassPickerEditor(ToolProficiency, self._context()),
             add_label="+ tool",
         )
         self._advanced_box("tool_proficiencies", self.tools_editor)
-        self.starter_extra_editor = self._advanced_text(
-            "Extra subclass starter args (one per line, name=expression)"
-        )
-        self.extra_kwargs_editor = self._advanced_text(
-            "Extra StarterClassBuilder kwargs (one per line, name=expression)"
-        )
-        self.extra_imports_editor = self._advanced_text(
-            "Extra import lines (one per line)"
-        )
 
     def _advanced_box(self, title, editor):
         box = QGroupBox(title)
@@ -1484,15 +1520,6 @@ class CreatorApp(QMainWindow):
         box_layout.addWidget(editor.widget)
         _insert_before_stretch(self.advanced_layout, box)
         return editor
-
-    def _advanced_text(self, title):
-        box = QGroupBox(title)
-        box_layout = QVBoxLayout(box)
-        text = QTextEdit()
-        text.setFixedHeight(64)
-        box_layout.addWidget(text)
-        _insert_before_stretch(self.advanced_layout, box)
-        return text
 
     # -------------------------------------------------------------- rebuilds
 
@@ -1622,11 +1649,9 @@ class CreatorApp(QMainWindow):
         grid.setVerticalSpacing(2)
         # One dropdown per pick; a loaded build with extra picks gets extra rows.
         for index in range(max(info.num_proficiencies, len(picks))):
-            combo = _make_filter_combo(options)
+            combo = _make_filter_combo(options, blank=True)
             if index < len(picks):
                 combo.setCurrentText(name_to_value[picks[index]])
-            else:
-                combo.setCurrentText("")
             self.class_skill_combos.append(combo)
             grid.addWidget(combo, index // 3, index % 3)
         self.class_skills_layout.addWidget(grid_widget)
@@ -1715,7 +1740,11 @@ class CreatorApp(QMainWindow):
             context, enum_used=enum_used, preferred_skills=preferred_skills
         )
 
-        def add_param_rows(box_layout, params, kind, lvl, row_context, pools=None):
+        def add_param_rows(box_layout, params, kind, lvl, row_context, pools=None, cls=None):
+            # str-annotated params that actually hold enum members (e.g.
+            # MagicInitiate-style spell picks) get an enum dropdown instead
+            # of free text, same convention as ClassPickerEditor._rebuild_params.
+            enum_hints = self.registry.enum_param_hints(cls) if cls is not None else {}
             for name, annotation, required in params:
                 param_context = row_context
                 if pools and name in pools:
@@ -1737,9 +1766,25 @@ class CreatorApp(QMainWindow):
                 label.setFixedWidth(160)
                 label.setAlignment(Qt.AlignmentFlag.AlignTop)
                 row_layout.addWidget(label)
-                editor = make_editor(
-                    annotation, param_context, param_name=name, required=required
-                )
+                resolved = resolve_annotation(annotation) if annotation else None
+                if name in enum_hints and (
+                    resolved is None or resolved.kind in (EditorKind.STR, EditorKind.RAW)
+                ):
+                    enums = enum_hints[name]
+                    if required:
+                        editor = EnumEditor(
+                            enums,
+                            optional=False,
+                            default_expr=_default_enum_expr(enums, param_context),
+                        )
+                    else:
+                        editor = OptionalEditor(
+                            lambda enums=enums: EnumEditor(enums, optional=False)
+                        )
+                else:
+                    editor = make_editor(
+                        annotation, param_context, param_name=name, required=required
+                    )
                 row_layout.addWidget(editor.widget, stretch=1)
                 box_layout.addWidget(row)
                 key = (kind, lvl, name)
@@ -1763,7 +1808,12 @@ class CreatorApp(QMainWindow):
                 box_layout = QVBoxLayout(box)
                 box_layout.setSpacing(2)
                 add_param_rows(
-                    box_layout, args_params, "args", 0, dict(context, level=level)
+                    box_layout,
+                    args_params,
+                    "args",
+                    0,
+                    dict(context, level=level),
+                    cls=subclass_info.args_class,
                 )
                 _insert_before_stretch(self.levels_layout, box)
 
@@ -1801,6 +1851,7 @@ class CreatorApp(QMainWindow):
                 lvl,
                 dict(context, level=lvl),
                 pools=self.registry.skill_pool_hints(cls),
+                cls=cls,
             )
             _insert_before_stretch(self.levels_layout, box)
 
@@ -1821,13 +1872,34 @@ class CreatorApp(QMainWindow):
         spec.abilities = {
             ability: spin.value() for ability, spin in self.ability_spins.items()
         }
-        spec.use_standard_array = self.standard_array_check.isChecked()
-        if spec.use_standard_array and sorted(spec.abilities.values()) != [
-            8, 10, 12, 13, 14, 15,
-        ]:
+        spec.ability_score_mode = self.ability_mode_combo.currentData() or "manual"
+        if spec.ability_score_mode == "standard_array" and sorted(
+            spec.abilities.values()
+        ) != [8, 10, 12, 13, 14, 15]:
             problems.append(
-                "Standard array is checked but scores are not 15/14/13/12/10/8."
+                "Standard array is selected but scores are not 15/14/13/12/10/8."
             )
+        elif spec.ability_score_mode == "point_buy":
+            out_of_range = [
+                ability
+                for ability, score in spec.abilities.items()
+                if not (8 <= score <= 15)
+            ]
+            if out_of_range:
+                problems.append(
+                    "Point buy is selected but these scores are outside 8-15: "
+                    + ", ".join(sorted(out_of_range))
+                    + "."
+                )
+            else:
+                spent = sum(
+                    _point_buy_cost(score) for score in spec.abilities.values()
+                )
+                if spent != 27:
+                    problems.append(
+                        f"Point buy is selected but spends {spent} points; "
+                        "it must spend exactly 27."
+                    )
 
         info = self.registry.classes().get(spec.class_key)
         picked = []
@@ -1929,15 +2001,11 @@ class CreatorApp(QMainWindow):
         spec.replace_spells_expr = self.replace_spells_editor.get_expr()
         spec.items_expr = self.items_editor.get_expr()
         spec.tool_proficiencies_expr = self.tools_editor.get_expr()
-        # Raw lines from the Advanced tab override/extend the structured
-        # starter-arg editors collected above.
-        spec.starter_args_extra.update(_parse_kv_lines(self.starter_extra_editor))
-        spec.extra_starter_kwargs = _parse_kv_lines(self.extra_kwargs_editor)
-        spec.extra_imports = [
-            line.strip()
-            for line in self.extra_imports_editor.toPlainText().splitlines()
-            if line.strip()
-        ]
+        # Values not modeled by any widget (e.g. loaded from a hand-written
+        # build with kwargs/imports the registry doesn't recognize) are
+        # carried forward from apply_spec rather than edited in the UI.
+        spec.extra_starter_kwargs = dict(self._carried_extra_kwargs)
+        spec.extra_imports = list(self._carried_extra_imports)
         return spec, problems
 
     def apply_spec(self, spec):
@@ -1969,7 +2037,9 @@ class CreatorApp(QMainWindow):
 
             for ability, spin in self.ability_spins.items():
                 spin.setValue(spec.abilities.get(ability, 10))
-            self.standard_array_check.setChecked(spec.use_standard_array)
+            mode_index = self.ability_mode_combo.findData(spec.ability_score_mode)
+            self.ability_mode_combo.setCurrentIndex(max(mode_index, 0))
+            self._update_point_buy_label()
 
             self.rebuild_class_skills(keep=spec.class_skills)
             self.background_bonuses.set_pairs(spec.background_bonuses)
@@ -1988,7 +2058,7 @@ class CreatorApp(QMainWindow):
             self.tools_editor.set_expr(spec.tool_proficiencies_expr or "")
             # Args the subclass args class models structurally go to the
             # starter-argument editors (via the level cache); anything else
-            # stays in the raw Advanced editor.
+            # is not represented by any widget and is simply dropped.
             args_param_names = set()
             subclass_info = self.registry.subclasses().get(
                 self.subclass_combo.currentText()
@@ -2001,16 +2071,11 @@ class CreatorApp(QMainWindow):
                     )
                     if name != "skills"
                 }
-            _set_kv_lines(
-                self.starter_extra_editor,
-                {
-                    name: expr
-                    for name, expr in spec.starter_args_extra.items()
-                    if name not in args_param_names
-                },
-            )
-            _set_kv_lines(self.extra_kwargs_editor, spec.extra_starter_kwargs)
-            self.extra_imports_editor.setPlainText("\n".join(spec.extra_imports))
+            # Kwargs/imports the registry doesn't model structurally: stash
+            # them (no widget holds them) so to_spec() can carry them
+            # forward unchanged into the regenerated build.
+            self._carried_extra_kwargs = dict(spec.extra_starter_kwargs)
+            self._carried_extra_imports = list(spec.extra_imports)
 
             self._level_cache = {}
             for name, expr in spec.starter_args_extra.items():
@@ -2075,8 +2140,16 @@ class CreatorApp(QMainWindow):
         view = QTextEdit()
         view.setReadOnly(True)
         view.setLineWrapMode(QTextEdit.LineWrapMode.NoWrap)
+        # Explicit point size: the app stylesheet sets font-size in px, which
+        # leaves QFont.pointSize() at -1 on inherited fonts. setFontFamily()
+        # alone would merge into that inherited (pointSize == -1) font and
+        # trigger "QFont::setPointSize: Point size <= 0" once anything (Qt's
+        # own text-layout code included) does arithmetic on it. Setting the
+        # whole font up front with a valid point size avoids that, and also
+        # applies to the whole document since it happens before the text is
+        # inserted (setFontFamily alone only affects text typed afterwards).
+        view.setFont(QFont("Consolas", 10))
         view.setPlainText(text)
-        view.setFontFamily("Consolas")
         layout.addWidget(view)
         close_btn = QPushButton("Close")
         close_btn.clicked.connect(dialog.accept)
@@ -2221,23 +2294,6 @@ class EquipmentList:
         ok_btn.clicked.connect(confirm)
         cancel_btn.clicked.connect(dialog.reject)
         dialog.exec()
-
-
-def _parse_kv_lines(text_widget):
-    result = {}
-    for line in text_widget.toPlainText().splitlines():
-        line = line.strip()
-        if not line or "=" not in line:
-            continue
-        name, _, expr = line.partition("=")
-        result[name.strip()] = expr.strip()
-    return result
-
-
-def _set_kv_lines(text_widget, mapping):
-    text_widget.setPlainText(
-        "\n".join(f"{name}={expr}" for name, expr in mapping.items())
-    )
 
 
 def run(load_build_path=None):

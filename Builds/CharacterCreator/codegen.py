@@ -10,6 +10,16 @@ from Builds.CharacterCreator.model import BuildSpec, builder_class_name
 
 INDENT = "    "
 
+_ABILITIES_CLASS_BY_MODE = {
+    "standard_array": "StandardArrayAbilitiesStatBlock",
+    "point_buy": "PointBuyAbilitiesStatBlock",
+    "manual": "AbilitiesStatBlock",
+}
+
+
+def _abilities_class_name(spec: BuildSpec) -> str:
+    return _ABILITIES_CLASS_BY_MODE.get(spec.ability_score_mode, "AbilitiesStatBlock")
+
 
 def generate(spec: BuildSpec) -> str:
     registry = registry_module.get_registry()
@@ -25,7 +35,7 @@ def generate(spec: BuildSpec) -> str:
             )
         raise ValueError(
             f"{spec.class_key} has no subclasses implemented yet "
-            f"(no CharacterConfigs/SubClasses module with a "
+            f"(no CharacterConfigs/SubClasses2024 module with a "
             f"*CustomStarterClassArgs class), so a build cannot be generated."
         )
     if spec.subclass_key not in registry.subclasses():
@@ -91,13 +101,11 @@ def _starter_builder_source(spec, class_info, subclass_info):
 
     lines.append(f"{arg}base_class_level={spec.level},")
 
-    abilities_class = (
-        "StandardArrayAbilitiesStatBlock"
-        if spec.use_standard_array
-        else "AbilitiesStatBlock"
-    )
-    if spec.use_standard_array:
+    abilities_class = _abilities_class_name(spec)
+    if spec.ability_score_mode == "standard_array":
         lines.append(f"{arg}# Distribute 15, 14, 13, 12, 10, 8 among your abilities.")
+    elif spec.ability_score_mode == "point_buy":
+        lines.append(f"{arg}# Point buy: scores 8-15, total cost must equal 27.")
     lines.append(f"{arg}abilities={abilities_class}(")
     for ability in (
         "strength",
@@ -256,11 +264,7 @@ def _imports_source(spec, registry, class_info, subclass_info):
 
     if class_info.skills_block is not None:
         add("StatBlocks.SkillsStatBlock", class_info.skills_block.cls.__name__)
-    abilities_class = (
-        "StandardArrayAbilitiesStatBlock"
-        if spec.use_standard_array
-        else "AbilitiesStatBlock"
-    )
+    abilities_class = _abilities_class_name(spec)
     add("StatBlocks.AbilitiesStatBlock", abilities_class)
 
     species_info = registry.species()[spec.species_class]

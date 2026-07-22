@@ -259,9 +259,13 @@ def _parse_starter_call(spec, call, seg, warnings):
 
     abilities_node = take("abilities")
     if isinstance(abilities_node, ast.Call):
-        spec.use_standard_array = _dotted_name(abilities_node.func).split(".")[
-            -1
-        ].startswith("StandardArray")
+        abilities_class_name = _dotted_name(abilities_node.func).split(".")[-1]
+        if abilities_class_name.startswith("StandardArray"):
+            spec.ability_score_mode = "standard_array"
+        elif abilities_class_name.startswith("PointBuy"):
+            spec.ability_score_mode = "point_buy"
+        else:
+            spec.ability_score_mode = "manual"
         for name, value in _call_kwargs(abilities_node).items():
             if isinstance(value, ast.Constant) and isinstance(value.value, int):
                 spec.abilities[name] = value.value

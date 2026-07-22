@@ -21,7 +21,8 @@ class BuildSpec:
         strength=15, dexterity=13, constitution=14,
         intelligence=10, wisdom=12, charisma=8,
     ))
-    use_standard_array: bool = True
+    # "manual", "standard_array" or "point_buy"
+    ability_score_mode: str = "standard_array"
 
     # Skill member name -> proficient (covers the class' allowed skills)
     class_skills: dict = field(default_factory=dict)
