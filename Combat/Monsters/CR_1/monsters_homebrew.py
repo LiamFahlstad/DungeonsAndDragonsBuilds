@@ -1,6 +1,8 @@
 from Combat.Definitions import (
     Alignment,
     Condition,
+    DamageType,
+    DamageTypeEntry,
     ExtendedCombatantData,
     MonsterAbility,
     Size,
