@@ -72,15 +72,15 @@ def get_starter_class_builder():
             base_class_features_by_level={
                 1: ArtificerLevel1(
                     cantrip_1=SpellDefinitions.ArtificerLevel0Spells.FIRE_BOLT,
-                    cantrip_2=SpellDefinitions.BardLevel0Spells.MENDING,
+                    cantrip_2=SpellDefinitions.ArtificerLevel0Spells.GUIDANCE,
                     spell_1=SpellDefinitions.ArtificerLevel1Spells.FAERIE_FIRE,
                     spell_2=SpellDefinitions.ArtificerLevel1Spells.CURE_WOUNDS,
                 ),
                 2: ArtificerLevel2(
-                    spell=SpellDefinitions.BardLevel1Spells.THUNDERWAVE,
+                    spell=SpellDefinitions.ArtificerLevel1Spells.CATAPULT,
                 ),
                 3: ArtificerLevel3(
-                    spell=SpellDefinitions.SorcererLevel1Spells.MAGIC_MISSILE,
+                    spell=SpellDefinitions.ArtificerLevel1Spells.TASHAS_CAUSTIC_BREW,
                 ),
             },
             subclass_features_by_level={
