@@ -252,7 +252,7 @@ def _imports_source(spec, registry, class_info, subclass_info):
     }
     subclass_names = {cls.__name__ for cls in sub_levels.values()}
     subclass_names.add(subclass_info.args_class.__name__)
-    from_imports[f"CharacterConfigs.SubClasses.{subclass_info.key}"] = subclass_names
+    from_imports[subclass_info.module.__name__] = subclass_names
 
     if class_info.skills_block is not None:
         add("StatBlocks.SkillsStatBlock", class_info.skills_block.cls.__name__)

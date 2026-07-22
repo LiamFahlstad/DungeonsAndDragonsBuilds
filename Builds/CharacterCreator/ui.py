@@ -371,13 +371,21 @@ class EnumEditor(Editor):
         super().__init__()
         layout = QHBoxLayout(self.widget)
         layout.setContentsMargins(0, 0, 0, 0)
-        options = [""] if optional else []
-        for enum_class in enum_classes:
-            options.extend(
-                f"{enum_class.__name__}.{member.name}" for member in enum_class
-            )
+
         self.combo = QComboBox()
-        self.combo.addItems(options)
+        if optional:
+            self.combo.addItem("", None)
+
+        single_enum = len(enum_classes) == 1
+        for enum_class in enum_classes:
+            for member in enum_class:
+                expr = f"{enum_class.__name__}.{member.name}"
+                if single_enum:
+                    display = CreatorApp._readable_display_name(member.name)
+                else:
+                    display = f"{enum_class.__name__}: {CreatorApp._readable_display_name(member.name)}"
+                self.combo.addItem(display, expr)
+
         self.combo.setEditable(True)
         self.combo.setInsertPolicy(QComboBox.InsertPolicy.NoInsert)
         completer = self.combo.completer()
@@ -386,17 +394,31 @@ class EnumEditor(Editor):
             completer.setFilterMode(Qt.MatchFlag.MatchContains)
             completer.setCaseSensitivity(Qt.CaseSensitivity.CaseInsensitive)
         if optional:
-            self.combo.setCurrentText("")
+            self.combo.setCurrentIndex(0)
         elif default_expr:
-            self.combo.setCurrentText(default_expr)
+            self.set_expr(default_expr)
         layout.addWidget(self.combo)
 
     def get_expr(self):
+        data = self.combo.currentData()
+        if data is not None:
+            return data
         text = self.combo.currentText().strip()
         return text or None
 
     def set_expr(self, expr):
-        self.combo.setCurrentText(expr or "")
+        expr = (expr or "").strip()
+        if not expr:
+            self.combo.setCurrentIndex(0)
+            return
+
+        index = self.combo.findData(expr)
+        if index < 0:
+            index = self.combo.findText(expr, Qt.MatchFixedString)
+        if index >= 0:
+            self.combo.setCurrentIndex(index)
+        else:
+            self.combo.setCurrentText(expr)
 
 
 class BoolEditor(Editor):
@@ -1247,11 +1269,11 @@ class CreatorApp(QMainWindow):
         # <Subclass>CustomStarterClassArgs, so a class with no discovered
         # subclasses (e.g. a *Base.py without any SubClasses module) would
         # KeyError in generate.
-        self.class_combo.addItems(sorted(
-            key for key in self.registry.classes()
-            if self.registry.subclasses_for(key)
-        ))
-        self.class_combo.setCurrentText("Fighter")
+        class_keys = sorted(self.registry.classes())
+        self.class_combo.addItem("Choose a class…", None)
+        for key in class_keys:
+            self.class_combo.addItem(self._readable_display_name(key), key)
+        self.class_combo.setCurrentIndex(0)
         self.class_combo.setFixedWidth(110)
         # `activated` fires only on user interaction, so programmatic
         # setCurrentText during apply_spec does not retrigger rebuilds.
@@ -1260,7 +1282,10 @@ class CreatorApp(QMainWindow):
 
         add_label("SUBCLASS", 2)
         self.subclass_combo = QComboBox()
+        self.subclass_combo.addItem("Choose a class first", None)
+        self.subclass_combo.setCurrentIndex(0)
         self.subclass_combo.setFixedWidth(220)
+        self.subclass_combo.setEnabled(False)
         self.subclass_combo.activated.connect(lambda _index: self.rebuild_levels())
         grid.addWidget(self.subclass_combo, 1, 2)
 
@@ -1274,8 +1299,11 @@ class CreatorApp(QMainWindow):
 
         add_label("SPECIES", 4)
         self.species_combo = QComboBox()
-        self.species_combo.addItems(sorted(self.registry.species()))
-        self.species_combo.setCurrentText("HumanSpeciesBuilder")
+        for species_class in sorted(self.registry.species()):
+            self.species_combo.addItem(
+                self._species_display_name(species_class), species_class
+            )
+        self.set_species_class("HumanSpeciesBuilder")
         self.species_combo.setFixedWidth(230)
         self.species_combo.activated.connect(
             lambda _index: self.rebuild_species_params()
@@ -1474,13 +1502,77 @@ class CreatorApp(QMainWindow):
     def current_level(self):
         return self.level_spin.value()
 
+    def current_class_key(self):
+        data = self.class_combo.currentData()
+        return data if data is not None else ""
+
+    def current_subclass_key(self):
+        data = self.subclass_combo.currentData()
+        return data if data is not None else ""
+
+    def set_class_key(self, class_key):
+        index = self.class_combo.findData(class_key)
+        self.class_combo.setCurrentIndex(index if index >= 0 else 0)
+
+    def set_subclass_key(self, subclass_key):
+        index = self.subclass_combo.findData(subclass_key)
+        self.subclass_combo.setCurrentIndex(index if index >= 0 else 0)
+
+    @staticmethod
+    def _readable_display_name(name):
+        if name.isupper() or "_" in name:
+            words = [word.lower() for word in name.split("_") if word]
+            if not words:
+                return name
+            return " ".join(words).capitalize()
+
+        readable = []
+        for index, ch in enumerate(name):
+            if index and ch.isupper() and name[index - 1].islower():
+                readable.append(" ")
+            readable.append(ch)
+        return "".join(readable).strip()
+
+    @staticmethod
+    def _species_display_name(class_name):
+        name = class_name
+        if name.endswith("SpeciesBuilder"):
+            name = name[: -len("SpeciesBuilder")]
+        return CreatorApp._readable_display_name(name)
+
+    def current_species_class(self):
+        return self.species_combo.currentData() or ""
+
+    def set_species_class(self, species_class):
+        index = self.species_combo.findData(species_class)
+        if index >= 0:
+            self.species_combo.setCurrentIndex(index)
+
+    @staticmethod
+    def _subclass_display_name(subclass_key, class_key=None):
+        name = subclass_key
+        if class_key and name.startswith(class_key):
+            name = name[len(class_key) :]
+        if name.startswith("PathOfThe"):
+            name = name[len("PathOfThe") :]
+        return CreatorApp._readable_display_name(name)
+
     def on_class_changed(self, initial=False):
-        class_key = self.class_combo.currentText()
-        subclasses = sorted(self.registry.subclasses_for(class_key))
+        class_key = self.current_class_key()
+        subclasses = sorted(self.registry.subclasses_for(class_key)) if class_key else []
         self.subclass_combo.clear()
-        self.subclass_combo.addItems(subclasses)
-        if subclasses:
-            self.subclass_combo.setCurrentText(subclasses[0])
+        if class_key:
+            self.subclass_combo.setEnabled(True)
+            self.subclass_combo.addItem("Choose a subclass…", None)
+            for subclass_key in subclasses:
+                self.subclass_combo.addItem(
+                    self._subclass_display_name(subclass_key, class_key),
+                    subclass_key,
+                )
+            self.subclass_combo.setCurrentIndex(0)
+        else:
+            self.subclass_combo.setEnabled(False)
+            self.subclass_combo.addItem("Choose a class first", None)
         self.rebuild_class_skills()
         if not initial:
             self._level_cache = {}
@@ -1490,7 +1582,19 @@ class CreatorApp(QMainWindow):
         _clear_layout(self.class_skills_layout)
         self.class_skill_combos = []
         self._class_skill_value_to_name = {}
-        info = self.registry.classes()[self.class_combo.currentText()].skills_block
+        class_key = self.current_class_key()
+        if not class_key:
+            no_class_label = QLabel("(choose a class to configure skills)")
+            no_class_label.setObjectName("secondary")
+            self.class_skills_layout.addWidget(no_class_label)
+            return
+        info = self.registry.classes().get(class_key)
+        if info is None:
+            no_class_label = QLabel("(unknown class)")
+            no_class_label.setObjectName("secondary")
+            self.class_skills_layout.addWidget(no_class_label)
+            return
+        info = info.skills_block
         if info is None:
             self.class_skills_layout.addWidget(QLabel("(unknown)"))
             return
@@ -1530,7 +1634,7 @@ class CreatorApp(QMainWindow):
     def rebuild_species_params(self, values=None):
         _clear_layout(self.species_layout)
         self.species_param_editors = {}
-        info = self.registry.species().get(self.species_combo.currentText())
+        info = self.registry.species().get(self.current_species_class())
         if info is None:
             return
         params = registry_module.signature_params(info.cls)
@@ -1576,10 +1680,16 @@ class CreatorApp(QMainWindow):
         self.levels_layout.addStretch()
         self.level_editors = {}
 
-        class_key = self.class_combo.currentText()
-        class_info = self.registry.classes()[class_key]
+        class_key = self.current_class_key()
+        class_info = self.registry.classes().get(class_key)
+        if class_info is None:
+            no_class_label = QLabel("(choose a class to configure level features)")
+            no_class_label.setObjectName("secondary")
+            self.levels_layout.addWidget(no_class_label)
+            self.levels_layout.addStretch()
+            return
         subclass_info = self.registry.subclasses().get(
-            self.subclass_combo.currentText()
+            self.current_subclass_key()
         )
         level = self.current_level()
         context = self._context()
@@ -1700,9 +1810,11 @@ class CreatorApp(QMainWindow):
         spec = BuildSpec()
         problems = []
         spec.name = self.name_edit.text().strip() or "New Character"
-        spec.class_key = self.class_combo.currentText()
-        spec.subclass_key = self.subclass_combo.currentText()
-        if not spec.subclass_key:
+        spec.class_key = self.current_class_key()
+        spec.subclass_key = self.current_subclass_key()
+        if not spec.class_key:
+            problems.append("No class selected.")
+        if spec.class_key and not spec.subclass_key:
             problems.append("No subclass selected.")
         spec.level = self.current_level()
 
@@ -1717,8 +1829,10 @@ class CreatorApp(QMainWindow):
                 "Standard array is checked but scores are not 15/14/13/12/10/8."
             )
 
-        info = self.registry.classes()[spec.class_key].skills_block
+        info = self.registry.classes().get(spec.class_key)
         picked = []
+        if info is not None:
+            info = info.skills_block
         for combo in self.class_skill_combos:
             text = combo.currentText().strip()
             if not text:
@@ -1775,22 +1889,24 @@ class CreatorApp(QMainWindow):
 
         # Report required level params that are still empty.
         class_info = self.registry.classes()[spec.class_key]
+        class_info = self.registry.classes().get(spec.class_key)
         subclass_info = self.registry.subclasses().get(spec.subclass_key)
-        for kind, info_levels in (
-            ("base", class_info.level_classes),
-            ("sub", subclass_info.level_classes if subclass_info else {}),
-        ):
-            params_by_level = (
-                spec.base_level_params if kind == "base" else spec.subclass_level_params
-            )
-            for level, cls in info_levels.items():
-                if level > spec.level:
-                    continue
-                for name, _annotation, required in self.registry.level_params(cls):
-                    if required and not params_by_level.get(level, {}).get(name):
-                        problems.append(
-                            f"{cls.__name__}: required choice {name!r} is empty."
-                        )
+        if class_info is not None:
+            for kind, info_levels in (
+                ("base", class_info.level_classes),
+                ("sub", subclass_info.level_classes if subclass_info else {}),
+            ):
+                params_by_level = (
+                    spec.base_level_params if kind == "base" else spec.subclass_level_params
+                )
+                for level, cls in info_levels.items():
+                    if level > spec.level:
+                        continue
+                    for name, _annotation, required in self.registry.level_params(cls):
+                        if required and not params_by_level.get(level, {}).get(name):
+                            problems.append(
+                                f"{cls.__name__}: required choice {name!r} is empty."
+                            )
         if subclass_info is not None:
             for name, _annotation, required in registry_module.signature_params(
                 subclass_info.args_class
@@ -1803,7 +1919,7 @@ class CreatorApp(QMainWindow):
                         f"{name!r} is empty."
                     )
 
-        spec.species_class = self.species_combo.currentText()
+        spec.species_class = self.current_species_class()
         spec.species_params = {}
         for name, editor in self.species_param_editors.items():
             expr = editor.get_expr()
@@ -1830,16 +1946,26 @@ class CreatorApp(QMainWindow):
             self.name_edit.setText(spec.name)
             self.level_spin.setValue(spec.level)
             if spec.class_key in self.registry.classes():
-                self.class_combo.setCurrentText(spec.class_key)
+                self.set_class_key(spec.class_key)
             subclasses = sorted(
-                self.registry.subclasses_for(self.class_combo.currentText())
+                self.registry.subclasses_for(self.current_class_key())
             )
             self.subclass_combo.clear()
-            self.subclass_combo.addItems(subclasses)
-            if spec.subclass_key in subclasses:
-                self.subclass_combo.setCurrentText(spec.subclass_key)
-            elif subclasses:
-                self.subclass_combo.setCurrentText(subclasses[0])
+            if self.current_class_key():
+                self.subclass_combo.setEnabled(True)
+                self.subclass_combo.addItem("Choose a subclass…", None)
+                for subclass_key in subclasses:
+                    self.subclass_combo.addItem(
+                        self._subclass_display_name(subclass_key, self.current_class_key()),
+                        subclass_key,
+                    )
+                if spec.subclass_key in subclasses:
+                    self.set_subclass_key(spec.subclass_key)
+                else:
+                    self.set_subclass_key("")
+            else:
+                self.subclass_combo.setEnabled(False)
+                self.subclass_combo.addItem("Choose a class first", None)
 
             for ability, spin in self.ability_spins.items():
                 spin.setValue(spec.abilities.get(ability, 10))
@@ -1854,7 +1980,7 @@ class CreatorApp(QMainWindow):
             self.armor_list.set_exprs(spec.armor_exprs)
 
             if spec.species_class in self.registry.species():
-                self.species_combo.setCurrentText(spec.species_class)
+                self.set_species_class(spec.species_class)
             self.rebuild_species_params(values=spec.species_params)
 
             self.replace_spells_editor.set_expr(spec.replace_spells_expr or "")

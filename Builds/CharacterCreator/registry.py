@@ -327,36 +327,44 @@ class Registry:
         subclass_bases = _subclass_level_bases()
         class_keys = sorted(self.classes(), key=len, reverse=True)
         result = {}
-        sub_dir = REPO_ROOT / "CharacterConfigs" / "SubClasses"
-        for path in sorted(sub_dir.glob("*.py")):
-            if path.stem.startswith("__"):
+        sub_dirs = [
+            REPO_ROOT / "CharacterConfigs" / "SubClasses",
+            REPO_ROOT / "CharacterConfigs" / "SubClasses2014",
+            REPO_ROOT / "CharacterConfigs" / "SubClasses2024",
+        ]
+        for sub_dir in sub_dirs:
+            if not sub_dir.exists():
                 continue
-            try:
-                module = importlib.import_module(
-                    f"CharacterConfigs.SubClasses.{path.stem}"
+            package = sub_dir.name
+            for path in sorted(sub_dir.glob("*.py")):
+                if path.stem.startswith("__"):
+                    continue
+                try:
+                    module = importlib.import_module(
+                        f"CharacterConfigs.{package}.{path.stem}"
+                    )
+                except Exception:
+                    continue
+                args_class = None
+                for cls in _classes_defined_in(module):
+                    if cls.__name__.endswith("CustomStarterClassArgs"):
+                        args_class = cls
+                        break
+                level_classes = _collect_level_classes(module, subclass_bases)
+                if args_class is None:
+                    continue
+                class_key = next(
+                    (k for k in class_keys if path.stem.startswith(k)), None
                 )
-            except Exception:
-                continue
-            args_class = None
-            for cls in _classes_defined_in(module):
-                if cls.__name__.endswith("CustomStarterClassArgs"):
-                    args_class = cls
-                    break
-            level_classes = _collect_level_classes(module, subclass_bases)
-            if args_class is None:
-                continue
-            class_key = next(
-                (k for k in class_keys if path.stem.startswith(k)), None
-            )
-            if class_key is None:
-                continue
-            result[path.stem] = SubclassInfo(
-                key=path.stem,
-                class_key=class_key,
-                module=module,
-                level_classes=level_classes,
-                args_class=args_class,
-            )
+                if class_key is None:
+                    continue
+                result[path.stem] = SubclassInfo(
+                    key=path.stem,
+                    class_key=class_key,
+                    module=module,
+                    level_classes=level_classes,
+                    args_class=args_class,
+                )
         self._subclasses = result
         return result
 
@@ -455,7 +463,7 @@ class Registry:
 
         for name, obj in vars(definitions_module).items():
             if inspect.isclass(obj) and obj.__module__ == "Core.Definitions":
-                mapping[name] = ("Definitions", name)
+                mapping[name] = ("Core.Definitions", name)
 
         for name in self.spell_enums():
             mapping[name] = ("Spells.SpellLists", name)
@@ -501,6 +509,17 @@ class Registry:
                     continue
                 module_dotted = ".".join(path.parent.relative_to(REPO_ROOT).parts)
                 mapping.setdefault(path.stem, (module_dotted, path.stem))
+                try:
+                    module = importlib.import_module(f"{module_dotted}.{path.stem}")
+                except Exception:
+                    continue
+                for name, obj in vars(module).items():
+                    if (
+                        inspect.isclass(obj)
+                        and obj.__module__ == f"{module_dotted}.{path.stem}"
+                        and not name.startswith("__")
+                    ):
+                        mapping.setdefault(name, (f"{module_dotted}.{path.stem}", name))
 
         # Warlock invocations, e.g. InvocationsLevel2.AGONIZING_BLAST.
         try:
