@@ -1,0 +1,14 @@
+# D&D 5e Character Sheet Builder - Core Build Engine Dependencies
+# This file lists third-party packages required to run the build engine
+# (generating character sheets from Builds/ scripts) and the combat simulator.
+#
+# The following are NOT included (used elsewhere but not for core builds):
+# - beautifulsoup4, requests: Only for Combat/Tools/scrape_monsters.py
+# - matplotlib, numpy: Only for Combat/Tools/analyze_monster_stats.py
+# - tqdm: Only for Scrapers/ (progress bars while scraping wiki data)
+
+attrs>=24.0.0
+
+# Combat Simulator Dependencies
+# Required to run RunCombat.py and the PyQt6-based combat UI (Combat/CombatUIQt/)
+PyQt6>=6.0.0
