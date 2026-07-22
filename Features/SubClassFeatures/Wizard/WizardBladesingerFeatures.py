@@ -43,7 +43,7 @@ class TrainingInWarAndSong(Feature):
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
             "You gain proficiency with all Melee Martial weapons that don't have the Two-Handed or Heavy property. You can use a Melee weapon with which you have proficiency as a Spellcasting Focus for your Wizard spells.\n"
-            "You also gain proficiency in one of the following skills of your choice: Acrobatics, Athletics, Performance, or Persuasion."
+            f"You also gain proficiency in {self._choice.skills[0].value}."
         )
         return description
 

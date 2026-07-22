@@ -6,13 +6,18 @@ from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 class Expertise(Feature):
     def __init__(self, skill_1: Skill, skill_2: Skill):
-        super().__init__()
+        super().__init__(name="Expertise", origin="Rogue Level 1")
         self._choice = SkillExpertiseChoice(
             [skill_1, skill_2], list(Skill), count=2, error_prefix="Rogue Expertise"
         )
 
     def apply(self, character_stat_block: CharacterStatBlock):
         self._choice.apply(character_stat_block)
+
+    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+        skill_names = " and ".join(skill.value for skill in self._choice.skills)
+        description = f"You have Expertise in {skill_names}. When you make an ability check using one of these skills, you add double your Proficiency Bonus to the ability check instead of adding your Proficiency Bonus once."
+        return description
 
 
 class SneakAttack(Feature):

@@ -22,6 +22,7 @@ class MoonsInspiration(Feature):
 class PrimalLore(Feature):
     def __init__(self, skill: Skill):
         super().__init__(name="Primal Lore", origin="College of the Moon Bard Level 3")
+        self._skill = skill
         allowed_skills = [
             Skill.ANIMAL_HANDLING,
             Skill.INSIGHT,
@@ -43,7 +44,7 @@ class PrimalLore(Feature):
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
             "You learn Druidic and one cantrip from the Druid spell list. It counts as a Bard spell for you but doesn't count against the number of cantrips you know. Whenever you gain a Bard level, you can replace this cantrip with another cantrip of your choice from the Druid spell list.\n"
-            "Additionally, choose one of the following skills: Animal Handling, Insight, Medicine, Nature, Perception, or Survival. You have proficiency in that skill."
+            f"Additionally, you have proficiency in {self._skill.value}."
         )
         return description
 

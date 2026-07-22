@@ -49,16 +49,22 @@ class BardicInspiration(Feature):
 
 class Expertise1(Feature):
     def __init__(self, skill_1: Skill, skill_2: Skill):
+        super().__init__(name="Expertise", origin="Bard Level 1")
         self._choice = SkillExpertiseChoice(
             [skill_1, skill_2], list(Skill), count=2, error_prefix="Bard Expertise"
         )
 
     def apply(self, character_stat_block: CharacterStatBlock):
         self._choice.apply(character_stat_block)
+
+    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+        description = "You gain proficiency with two skills of your choice. When you make an ability check using a proficient skill, you add double your Proficiency Bonus to the check instead of adding the Proficiency Bonus once."
+        return description
 
 
 class Expertise2(Feature):
     def __init__(self, skill_1: Skill, skill_2: Skill):
+        super().__init__(name="Expertise", origin="Bard Level 9")
         self._choice = SkillExpertiseChoice(
             [skill_1, skill_2], list(Skill), count=2, error_prefix="Bard Expertise"
         )
@@ -66,13 +72,22 @@ class Expertise2(Feature):
     def apply(self, character_stat_block: CharacterStatBlock):
         self._choice.apply(character_stat_block)
 
+    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+        description = "You gain proficiency with two more skills of your choice. When you make an ability check using a proficient skill, you add double your Proficiency Bonus to the check instead of adding the Proficiency Bonus once."
+        return description
+
 
 class JackOfAllTrades(Feature):
     def __init__(self):
+        super().__init__(name="Jack of All Trades", origin="Bard Level 2")
         self._bonus = JackOfAllTradesBonus()
 
     def apply(self, character_stat_block: CharacterStatBlock):
         self._bonus.apply(character_stat_block)
+
+    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+        description = "You can add half your Proficiency Bonus (round up) to any ability check you make that doesn't already use your Proficiency Bonus. In addition, you can use this bonus when you use a weapon and add your Proficiency Bonus to the damage roll."
+        return description
 
 
 class FontOfInspiration(Feature):

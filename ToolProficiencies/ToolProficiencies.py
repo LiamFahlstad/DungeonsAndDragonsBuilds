@@ -1,40 +1,48 @@
-from abc import ABC, abstractmethod
 from typing import Optional
 
-from Features.Items import Items
+from Definitions import Ability
+from Features.Core.BaseFeatures import Feature
+from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
-class ToolProficiency(ABC):
+class ToolProficiency(Feature):
     def __init__(
         self,
         name: str,
-        ability: str,
+        category: str,
+        ability: Ability,
         weight: Optional[float],
-        cost: int,
+        cost: float,
+        utilize: str,
+        craftables: Optional[list[str]] = None,
     ):
-        self.name = name
+        super().__init__(name=name)
+        self.category = category
         self.ability = ability
         self.weight = weight
         self.cost = cost
+        self.utilize = utilize
+        self.craftables = craftables if craftables is not None else []
 
-    @abstractmethod
     def description(self) -> str:
-        pass
+        parts = [f"Utilize: {self.utilize}."]
+        if self.craftables:
+            parts.append(f"Craft: {', '.join(self.craftables)}.")
+        return " ".join(parts)
+
+    def get_description(self, character_stat_block: CharacterStatBlock) -> str | None:
+        return self.description()
 
 
 class NavigatorsTools(ToolProficiency):
     def __init__(self):
         super().__init__(
             name="Navigator's Tools",
-            ability="Wisdom",
+            category="Other Tool",
+            ability=Ability.WISDOM,
             weight=2.0,
             cost=25,
-        )
-
-    def description(self) -> str:
-        return (
-            "Utilize: Plot a course (DC 10), "
-            "or determine position by stargazing (DC 15)."
+            utilize="Plot a course (DC 10), or determine position by stargazing (DC 15)",
         )
 
 
@@ -42,48 +50,514 @@ class PoisonersKit(ToolProficiency):
     def __init__(self):
         super().__init__(
             name="Poisoner's Kit",
-            ability="Intelligence",
+            category="Other Tool",
+            ability=Ability.INTELLIGENCE,
             weight=2.0,
             cost=50,
+            utilize="Detect a poisoned object (DC 10)",
+            craftables=["Basic Poison"],
         )
-
-    def description(self) -> str:
-        return "Utilize: Detect a poisoned object (DC 10). " "Craft: Basic Poison."
 
 
 class ThievesTools(ToolProficiency):
     def __init__(self):
         super().__init__(
             name="Thieves' Tools",
-            ability="Dexterity",
+            category="Other Tool",
+            ability=Ability.DEXTERITY,
             weight=1.0,
             cost=25,
+            utilize="Pick a lock (DC 15), or disarm a trap (DC 15)",
         )
-
-    def description(self) -> str:
-        return "Utilize: Pick a lock (DC 15), " "or disarm a trap (DC 15)."
-
-
-from typing import List
 
 
 class HerbalismKit(ToolProficiency):
     def __init__(self):
         super().__init__(
             name="Herbalism Kit",
-            ability="Intelligence",
+            category="Other Tool",
+            ability=Ability.INTELLIGENCE,
             weight=3.0,
             cost=5,
+            utilize="Identify a plant (DC 10)",
+            craftables=["Antitoxin", "Candle", "Healer's Kit", "Potion of Healing"],
         )
 
-    def craftable_items(self) -> List[Items.Item]:
-        return [
-            Items.Antitoxin(),
-            Items.Candle(),
-            Items.HealersKit(),
-            Items.PotionOfHealing(),
-        ]
 
-    def description(self) -> str:
-        craftables = ", ".join(item.name for item in self.craftable_items())
-        return "Utilize: Identify a plant (DC 10). " f"Craft: {craftables}."
+class AlchemistsSupplies(ToolProficiency):
+    def __init__(self):
+        super().__init__(
+            name="Alchemist's Supplies",
+            category="Artisan's Tools",
+            ability=Ability.INTELLIGENCE,
+            weight=8.0,
+            cost=50,
+            utilize="Identify a substance (DC 15), or start a fire (DC 15)",
+            craftables=["Acid", "Alchemist's Fire", "Component Pouch", "Oil", "Paper", "Perfume"],
+        )
+
+
+class BrewersSupplies(ToolProficiency):
+    def __init__(self):
+        super().__init__(
+            name="Brewer's Supplies",
+            category="Artisan's Tools",
+            ability=Ability.INTELLIGENCE,
+            weight=9.0,
+            cost=20,
+            utilize="Detect poisoned drink (DC 15), or identify alcohol (DC 10)",
+            craftables=["Antitoxin"],
+        )
+
+
+class CalligraphersSupplies(ToolProficiency):
+    def __init__(self):
+        super().__init__(
+            name="Calligrapher's Supplies",
+            category="Artisan's Tools",
+            ability=Ability.DEXTERITY,
+            weight=5.0,
+            cost=10,
+            utilize="Write text with impressive flourishes that guard against forgery (DC 15)",
+            craftables=["Ink", "Spell Scroll"],
+        )
+
+
+class CarpentersTools(ToolProficiency):
+    def __init__(self):
+        super().__init__(
+            name="Carpenter's Tools",
+            category="Artisan's Tools",
+            ability=Ability.STRENGTH,
+            weight=6.0,
+            cost=8,
+            utilize="Seal or pry open a door or container (DC 20)",
+            craftables=["Club", "Greatclub", "Quarterstaff", "Barrel", "Chest", "Ladder", "Pole", "Portable Ram", "Torch"],
+        )
+
+
+class CartographersTools(ToolProficiency):
+    def __init__(self):
+        super().__init__(
+            name="Cartographer's Tools",
+            category="Artisan's Tools",
+            ability=Ability.WISDOM,
+            weight=6.0,
+            cost=15,
+            utilize="Draft a map of a small area (DC 15)",
+            craftables=["Map"],
+        )
+
+
+class CobblersTools(ToolProficiency):
+    def __init__(self):
+        super().__init__(
+            name="Cobbler's Tools",
+            category="Artisan's Tools",
+            ability=Ability.DEXTERITY,
+            weight=5.0,
+            cost=5,
+            utilize="Modify footwear to give Advantage on the wearer's next Dexterity (Acrobatics) check (DC 10)",
+            craftables=["Climber's Kit"],
+        )
+
+
+class CooksUtensils(ToolProficiency):
+    def __init__(self):
+        super().__init__(
+            name="Cook's Utensils",
+            category="Artisan's Tools",
+            ability=Ability.WISDOM,
+            weight=8.0,
+            cost=1,
+            utilize="Improve food's flavor (DC 10), or detect spoiled or poisoned food (DC 15)",
+            craftables=["Rations"],
+        )
+
+
+class GlassblowersTools(ToolProficiency):
+    def __init__(self):
+        super().__init__(
+            name="Glassblower's Tools",
+            category="Artisan's Tools",
+            ability=Ability.INTELLIGENCE,
+            weight=5.0,
+            cost=30,
+            utilize="Discern what a glass object held in the past 24 hours (DC 15)",
+            craftables=["Glass Bottle", "Magnifying Glass", "Spyglass", "Vial"],
+        )
+
+
+class JewelersTools(ToolProficiency):
+    def __init__(self):
+        super().__init__(
+            name="Jeweler's Tools",
+            category="Artisan's Tools",
+            ability=Ability.INTELLIGENCE,
+            weight=2.0,
+            cost=25,
+            utilize="Discern a gem's value (DC 15)",
+            craftables=["Arcane Focus", "Holy Symbol"],
+        )
+
+
+class LeatherworkersTools(ToolProficiency):
+    def __init__(self):
+        super().__init__(
+            name="Leatherworker's Tools",
+            category="Artisan's Tools",
+            ability=Ability.DEXTERITY,
+            weight=5.0,
+            cost=5,
+            utilize="Add a design to a leather item (DC 10)",
+            craftables=[
+                "Sling",
+                "Whip",
+                "Hide Armor",
+                "Leather Armor",
+                "Studded Leather Armor",
+                "Backpack",
+                "Crossbow Bolt Case",
+                "Map or Scroll Case",
+                "Parchment",
+                "Pouch",
+                "Quiver",
+                "Waterskin",
+            ],
+        )
+
+
+class MasonsTools(ToolProficiency):
+    def __init__(self):
+        super().__init__(
+            name="Mason's Tools",
+            category="Artisan's Tools",
+            ability=Ability.STRENGTH,
+            weight=8.0,
+            cost=10,
+            utilize="Chisel a symbol or hole in stone (DC 10)",
+            craftables=["Block and Tackle"],
+        )
+
+
+class PaintersSupplies(ToolProficiency):
+    def __init__(self):
+        super().__init__(
+            name="Painter's Supplies",
+            category="Artisan's Tools",
+            ability=Ability.WISDOM,
+            weight=5.0,
+            cost=10,
+            utilize="Paint a recognizable image of something you've seen (DC 10)",
+            craftables=["Druidic Focus", "Holy Symbol"],
+        )
+
+
+class PottersTools(ToolProficiency):
+    def __init__(self):
+        super().__init__(
+            name="Potter's Tools",
+            category="Artisan's Tools",
+            ability=Ability.INTELLIGENCE,
+            weight=3.0,
+            cost=10,
+            utilize="Discern what a ceramic object held in the past 24 hours (DC 15)",
+            craftables=["Jug", "Lamp"],
+        )
+
+
+class SmithsTools(ToolProficiency):
+    def __init__(self):
+        super().__init__(
+            name="Smith's Tools",
+            category="Artisan's Tools",
+            ability=Ability.STRENGTH,
+            weight=8.0,
+            cost=20,
+            utilize="Pry open a door or container (DC 20)",
+            craftables=[
+                "Any Melee weapon (except Club, Greatclub, Quarterstaff, and Whip)",
+                "Medium armor (except Hide)",
+                "Heavy armor",
+                "Ball Bearings",
+                "Bucket",
+                "Caltrops",
+                "Chain",
+                "Crowbar",
+                "Firearm Bullets",
+                "Grappling Hook",
+                "Iron Pot",
+                "Iron Spikes",
+                "Sling Bullets",
+            ],
+        )
+
+
+class TinkersTools(ToolProficiency):
+    def __init__(self):
+        super().__init__(
+            name="Tinker's Tools",
+            category="Artisan's Tools",
+            ability=Ability.DEXTERITY,
+            weight=10.0,
+            cost=50,
+            utilize="Assemble a Tiny item composed of scrap, which falls apart in 1 minute (DC 20)",
+            craftables=[
+                "Musket",
+                "Pistol",
+                "Bell",
+                "Bullseye Lantern",
+                "Flask",
+                "Hooded Lantern",
+                "Hunting Trap",
+                "Lock",
+                "Manacles",
+                "Mirror",
+                "Shovel",
+                "Signal Whistle",
+                "Tinderbox",
+            ],
+        )
+
+
+class WeaversTools(ToolProficiency):
+    def __init__(self):
+        super().__init__(
+            name="Weaver's Tools",
+            category="Artisan's Tools",
+            ability=Ability.DEXTERITY,
+            weight=5.0,
+            cost=1,
+            utilize="Mend a tear in clothing (DC 10), or sew a Tiny design (DC 10)",
+            craftables=[
+                "Padded Armor",
+                "Basket",
+                "Bedroll",
+                "Blanket",
+                "Fine Clothes",
+                "Net",
+                "Robe",
+                "Rope",
+                "Sack",
+                "String",
+                "Tent",
+                "Traveler's Clothes",
+            ],
+        )
+
+
+class WoodcarversTools(ToolProficiency):
+    def __init__(self):
+        super().__init__(
+            name="Woodcarver's Tools",
+            category="Artisan's Tools",
+            ability=Ability.DEXTERITY,
+            weight=5.0,
+            cost=1,
+            utilize="Carve a pattern in wood (DC 10)",
+            craftables=[
+                "Club",
+                "Greatclub",
+                "Quarterstaff",
+                "Ranged weapons (except Pistol, Musket, and Sling)",
+                "Arcane Focus",
+                "Arrows",
+                "Bolts",
+                "Druidic Focus",
+                "Ink Pen",
+                "Needles",
+            ],
+        )
+
+
+class DisguiseKit(ToolProficiency):
+    def __init__(self):
+        super().__init__(
+            name="Disguise Kit",
+            category="Other Tool",
+            ability=Ability.CHARISMA,
+            weight=3.0,
+            cost=25,
+            utilize="Apply makeup (DC 10)",
+            craftables=["Costume"],
+        )
+
+
+class ForgeryKit(ToolProficiency):
+    def __init__(self):
+        super().__init__(
+            name="Forgery Kit",
+            category="Other Tool",
+            ability=Ability.DEXTERITY,
+            weight=5.0,
+            cost=15,
+            utilize="Mimic 10 or fewer words of someone else's handwriting (DC 15), or duplicate a wax seal (DC 20)",
+        )
+
+
+class Dice(ToolProficiency):
+    def __init__(self):
+        super().__init__(
+            name="Dice",
+            category="Gaming Set",
+            ability=Ability.WISDOM,
+            weight=None,
+            cost=0.1,
+            utilize="Discern whether someone is cheating (DC 10), or win the game (DC 20)",
+        )
+
+
+class Dragonchess(ToolProficiency):
+    def __init__(self):
+        super().__init__(
+            name="Dragonchess",
+            category="Gaming Set",
+            ability=Ability.WISDOM,
+            weight=None,
+            cost=1,
+            utilize="Discern whether someone is cheating (DC 10), or win the game (DC 20)",
+        )
+
+
+class PlayingCards(ToolProficiency):
+    def __init__(self):
+        super().__init__(
+            name="Playing Cards",
+            category="Gaming Set",
+            ability=Ability.WISDOM,
+            weight=None,
+            cost=0.5,
+            utilize="Discern whether someone is cheating (DC 10), or win the game (DC 20)",
+        )
+
+
+class ThreeDragonAnte(ToolProficiency):
+    def __init__(self):
+        super().__init__(
+            name="Three-Dragon Ante",
+            category="Gaming Set",
+            ability=Ability.WISDOM,
+            weight=None,
+            cost=1,
+            utilize="Discern whether someone is cheating (DC 10), or win the game (DC 20)",
+        )
+
+
+class Bagpipes(ToolProficiency):
+    def __init__(self):
+        super().__init__(
+            name="Bagpipes",
+            category="Musical Instrument",
+            ability=Ability.CHARISMA,
+            weight=6.0,
+            cost=30,
+            utilize="Play a known tune (DC 10), or improvise a song (DC 15)",
+        )
+
+
+class Drum(ToolProficiency):
+    def __init__(self):
+        super().__init__(
+            name="Drum",
+            category="Musical Instrument",
+            ability=Ability.CHARISMA,
+            weight=3.0,
+            cost=6,
+            utilize="Play a known tune (DC 10), or improvise a song (DC 15)",
+        )
+
+
+class Dulcimer(ToolProficiency):
+    def __init__(self):
+        super().__init__(
+            name="Dulcimer",
+            category="Musical Instrument",
+            ability=Ability.CHARISMA,
+            weight=10.0,
+            cost=25,
+            utilize="Play a known tune (DC 10), or improvise a song (DC 15)",
+        )
+
+
+class Flute(ToolProficiency):
+    def __init__(self):
+        super().__init__(
+            name="Flute",
+            category="Musical Instrument",
+            ability=Ability.CHARISMA,
+            weight=1.0,
+            cost=2,
+            utilize="Play a known tune (DC 10), or improvise a song (DC 15)",
+        )
+
+
+class Horn(ToolProficiency):
+    def __init__(self):
+        super().__init__(
+            name="Horn",
+            category="Musical Instrument",
+            ability=Ability.CHARISMA,
+            weight=2.0,
+            cost=3,
+            utilize="Play a known tune (DC 10), or improvise a song (DC 15)",
+        )
+
+
+class Lute(ToolProficiency):
+    def __init__(self):
+        super().__init__(
+            name="Lute",
+            category="Musical Instrument",
+            ability=Ability.CHARISMA,
+            weight=2.0,
+            cost=35,
+            utilize="Play a known tune (DC 10), or improvise a song (DC 15)",
+        )
+
+
+class Lyre(ToolProficiency):
+    def __init__(self):
+        super().__init__(
+            name="Lyre",
+            category="Musical Instrument",
+            ability=Ability.CHARISMA,
+            weight=2.0,
+            cost=30,
+            utilize="Play a known tune (DC 10), or improvise a song (DC 15)",
+        )
+
+
+class PanFlute(ToolProficiency):
+    def __init__(self):
+        super().__init__(
+            name="Pan Flute",
+            category="Musical Instrument",
+            ability=Ability.CHARISMA,
+            weight=2.0,
+            cost=12,
+            utilize="Play a known tune (DC 10), or improvise a song (DC 15)",
+        )
+
+
+class Shawm(ToolProficiency):
+    def __init__(self):
+        super().__init__(
+            name="Shawm",
+            category="Musical Instrument",
+            ability=Ability.CHARISMA,
+            weight=1.0,
+            cost=2,
+            utilize="Play a known tune (DC 10), or improvise a song (DC 15)",
+        )
+
+
+class Viol(ToolProficiency):
+    def __init__(self):
+        super().__init__(
+            name="Viol",
+            category="Musical Instrument",
+            ability=Ability.CHARISMA,
+            weight=1.0,
+            cost=30,
+            utilize="Play a known tune (DC 10), or improvise a song (DC 15)",
+        )

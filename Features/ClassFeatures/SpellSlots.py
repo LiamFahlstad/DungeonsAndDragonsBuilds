@@ -130,7 +130,17 @@ class SpellSlots(Feature):
     ) -> None:
         self.caster_type = caster_type
         self.character_class = character_class
-        super().__init__(name="Spell Slots")
+        super().__init__(name="Spell Slots", origin=f"{character_class.value} Spellcasting")
+
+    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+        caster_map = {
+            CasterType.FULL_CASTER: "You are a full spellcaster and gain spell slots according to the full caster table.",
+            CasterType.HALF_CASTER: "You are a half-spellcaster and gain spell slots at half your class level (rounded up for a single half-caster).",
+            CasterType.WARLOCK_CASTER: "You are a warlock and gain pact magic slots that refresh on short or long rests.",
+            CasterType.THIRD_CASTER: "You are a one-third spellcaster and gain spell slots according to one-third of your class level.",
+        }
+        description = caster_map.get(self.caster_type, "You gain spell slots for spellcasting.")
+        return f"{self.character_class.value} Spellcasting.\n{description}"
 
     def apply(self, character_stat_block: CharacterStatBlock):
         character_stat_block._caster_registry[self.character_class] = self.caster_type

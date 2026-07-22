@@ -56,9 +56,14 @@ class FavoredEnemy(Feature):
 
 class DeftExplorerExpertise(Feature):
     def __init__(self, skill: Skill):
+        super().__init__(name="Deft Explorer Expertise", origin="Deft Explorer Ranger Level 2")
+        self.skill = skill
         self._choice = SkillExpertiseChoice(
             [skill], list(Skill), count=1, error_prefix="Deft Explorer Expertise"
         )
+
+    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+        return f"You gain Expertise with the {self.skill.value} skill."
 
     def apply(self, character_stat_block: CharacterStatBlock):
         self._choice.apply(character_stat_block)
@@ -93,9 +98,15 @@ class Roving(Feature):
 
 class Expertise(Feature):
     def __init__(self, skill_1: Skill, skill_2: Skill):
+        super().__init__(name="Expertise", origin="Ranger Level 7")
+        self.skill_1 = skill_1
+        self.skill_2 = skill_2
         self._choice = SkillExpertiseChoice(
             [skill_1, skill_2], list(Skill), count=2, error_prefix="Ranger Expertise"
         )
+
+    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+        return f"You gain Expertise with the {self.skill_1.value} and {self.skill_2.value} skills."
 
     def apply(self, character_stat_block: CharacterStatBlock):
         self._choice.apply(character_stat_block)

@@ -48,9 +48,14 @@ class WerewolfInstincts(Feature):
     VALID_SKILLS = [Skill.PERCEPTION, Skill.STEALTH, Skill.SURVIVAL]
 
     def __init__(self, skill: Skill):
+        self.skill = skill
+        super().__init__(name="Werewolf Instincts", origin="Lupin Trait")
         self._choice = SkillProficiencyChoice(
             [skill], self.VALID_SKILLS, count=1, error_prefix="Werewolf Instincts"
         )
 
     def apply(self, character_stat_block: CharacterStatBlock):
         self._choice.apply(character_stat_block)
+
+    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+        return f"You gain proficiency in the {self.skill.value} skill."

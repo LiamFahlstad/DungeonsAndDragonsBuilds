@@ -1435,8 +1435,9 @@ class CreatorApp(QMainWindow):
             add_label="+ item",
         )
         self._advanced_box("items (item, count)", self.items_editor)
-        self.tools_editor = ClassPickerEditor(
-            ToolProficiency, self._context(), optional=True
+        self.tools_editor = ExprListEditor(
+            make_item=lambda: ClassPickerEditor(ToolProficiency, self._context()),
+            add_label="+ tool",
         )
         self._advanced_box("tool_proficiencies", self.tools_editor)
         self.starter_extra_editor = self._advanced_text(

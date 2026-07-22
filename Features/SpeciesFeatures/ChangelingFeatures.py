@@ -16,12 +16,20 @@ class ChangelingInstincts(Feature):
     ]
 
     def __init__(self, skills: list[Skill]):
+        super().__init__(name="Changeling Instincts", origin="Changeling Trait")
         self._choice = SkillProficiencyChoice(
             skills, self.VALID_SKILLS, count=2, error_prefix="Changeling Instincts"
         )
 
     def apply(self, character_stat_block: CharacterStatBlock):
         self._choice.apply(character_stat_block)
+
+    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+        if len(self._choice.skills) == 2:
+            skill_text = f"{self._choice.skills[0].value} and {self._choice.skills[1].value}"
+        else:
+            skill_text = self._choice.skills[0].value
+        return f"You have proficiency in the {skill_text} skills."
 
 
 class ShapeShifter(Feature):

@@ -38,12 +38,17 @@ class FeyGift(Feature):
 
 class SkillVersatility(Feature):
     def __init__(self, skill: Skill):
+        self.skill = skill
+        super().__init__(name="Skill Versatility", origin="Khoravar Trait")
         self._choice = SkillProficiencyChoice(
             [skill], list(Skill), count=1, error_prefix="SkillVersatility"
         )
 
     def apply(self, character_stat_block: CharacterStatBlock):
         self._choice.apply(character_stat_block)
+
+    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+        return f"You gain proficiency in the {self.skill.value} skill."
 
 
 class LethargyResilience(Feature):

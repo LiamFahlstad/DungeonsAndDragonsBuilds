@@ -6,12 +6,17 @@ from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 class BonusProficiencies(Feature):
     def __init__(self, skill_1: Skill, skill_2: Skill, skill_3: Skill):
+        super().__init__(name="Bonus Proficiencies", origin="College of Lore Bard Level 3")
         self._proficiency = SkillProficiencyChoice(
             [skill_1, skill_2, skill_3], list(Skill), count=3
         )
 
     def apply(self, character_stat_block: CharacterStatBlock):
         self._proficiency.apply(character_stat_block)
+
+    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+        description = "You gain proficiency with three skills of your choice."
+        return description
 
 
 class CuttingWords(Feature):

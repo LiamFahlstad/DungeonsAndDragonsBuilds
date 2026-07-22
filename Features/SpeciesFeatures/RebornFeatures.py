@@ -37,12 +37,17 @@ class RebornKnowledge(Feature):
 
 class RebornKnowledgeSkill(Feature):
     def __init__(self, skill: Skill):
+        self.skill = skill
+        super().__init__(name="Reborn Knowledge", origin="Reborn Trait")
         self._choice = SkillProficiencyChoice(
             [skill], list(Skill), count=1, error_prefix="RebornKnowledgeSkill"
         )
 
     def apply(self, character_stat_block: CharacterStatBlock):
         self._choice.apply(character_stat_block)
+
+    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+        return f"You gain proficiency in the {self.skill.value} skill."
 
 
 class StrangeEndurance(Feature):

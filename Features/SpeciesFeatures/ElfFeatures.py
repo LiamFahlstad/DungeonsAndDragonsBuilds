@@ -27,6 +27,7 @@ class FeyAncestry(Feature):
 
 class KeenSenses(Feature):
     def __init__(self, skill: Skill):
+        super().__init__(name="Keen Senses", origin="Elf Trait")
         self._choice = SkillProficiencyChoice(
             [skill],
             [Skill.SURVIVAL, Skill.PERCEPTION, Skill.INSIGHT],
@@ -36,6 +37,9 @@ class KeenSenses(Feature):
 
     def apply(self, character_stat_block: CharacterStatBlock):
         self._choice.apply(character_stat_block)
+
+    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+        return f"You have proficiency in the {self._choice.skills[0].value} skill."
 
 
 class Trance(Feature):

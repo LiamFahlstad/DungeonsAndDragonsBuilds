@@ -398,7 +398,7 @@ class StarterClassBuilder(ClassBuilder):
         weapons: Optional[list[Weapons.AbstractWeapon]] = None,
         replace_spells: Optional[dict[str, str]] = None,
         items: Optional[list[tuple[Items.Item, int]]] = None,
-        tool_proficiencies: Optional[ToolProficiency] = None,
+        tool_proficiencies: Optional[list[ToolProficiency]] = None,
     ):
         self.non_generic_arguments = non_generic_arguments
         self.abilities = abilities
@@ -491,6 +491,9 @@ class StarterClassBuilder(ClassBuilder):
         if self.items is not None:
             for item, quantity in self.items:
                 data.add_item(item, quantity)
+
+        for tool_proficiency in self.tool_proficiencies or []:
+            data.add_tool_proficiency(tool_proficiency)
 
         return data
 

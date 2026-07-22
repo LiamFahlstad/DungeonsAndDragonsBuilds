@@ -34,9 +34,18 @@ class Skilled(OriginFeat):
         self._choice = SkillProficiencyChoice(
             skills, list(Skill), count=3, error_prefix="Skilled"
         )
+        super().__init__(name="Skilled", origin="Origin Feat")
 
     def apply(self, character_stat_block: CharacterStatBlock):
         self._choice.apply(character_stat_block)
+
+    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+        choices = "\n".join(f"    * {skill.value}" for skill in self._choice.skills)
+        return (
+            "You gain proficiency in any combination of three skills of your choice.\n"
+            "Choices:\n"
+            f"{choices}"
+        )
 
 
 class Alert(OriginFeat):
@@ -291,9 +300,16 @@ class TavernBrawler(OriginFeat):
 class Tough(OriginFeat):
     def __init__(self):
         self._hp = HitPointsPerLevelBonus(2)
+        super().__init__(name="Tough", origin="Origin Feat")
 
     def apply(self, character_stat_block: CharacterStatBlock):
         self._hp.apply(character_stat_block)
+
+    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+        return (
+            "Resilience. You gain 2 additional Hit Points for each level you have. "
+            "Whenever you gain a new level, you gain 2 additional Hit Points."
+        )
 
 
 class CultOfTheDragonInitiate(OriginFeat):
@@ -363,9 +379,10 @@ class PurpleDragonRook(OriginFeat):
         self._choice.apply(character_stat_block)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+        skill_name = self._choice.skills[0].value if self._choice.skills else "Insight"
         return (
             "You gain the following benefits.\n"
-            "Entreat. You gain proficiency in one of the following skills: Insight, Performance, or Persuasion.\n"
+            f"Entreat. You gain proficiency in {skill_name}.\n"
             "Rallying Cry. When you roll Initiative and don’t have the Incapacitated condition, you can choose a number of creatures equal to your Proficiency Bonus that you can see within 30 feet of yourself. Those creatures gain Heroic Inspiration.\n"
             "Once you use this benefit, you can’t do so again until you finish a Long Rest.\n"
         )

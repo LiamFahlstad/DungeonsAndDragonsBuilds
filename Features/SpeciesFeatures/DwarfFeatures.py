@@ -26,10 +26,14 @@ class DwarvenResilience(Feature):
 
 class DwarvenToughness(Feature):
     def __init__(self):
+        super().__init__(name="Dwarven Toughness", origin="Dwarf Trait")
         self._hp = HitPointsPerLevelBonus(1)
 
     def apply(self, character_stat_block: CharacterStatBlock):
         self._hp.apply(character_stat_block)
+
+    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+        return "You gain an additional Hit Point for each level you gain."
 
 
 class Stonecunning(Feature):

@@ -45,7 +45,7 @@ class Scholar(Feature):
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        return "While studying magic, you also specialized in another field of study. You have Expertise in the chosen skill."
+        return f"While studying magic, you specialized in {self._expertise.skills[0].value}. You have Expertise in it."
 
     def apply(self, character_stat_block: CharacterStatBlock):
         self._expertise.apply(character_stat_block)

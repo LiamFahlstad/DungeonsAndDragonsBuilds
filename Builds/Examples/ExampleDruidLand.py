@@ -147,7 +147,7 @@ def get_starter_class_builder():
         # Only one tool proficiency slot is modeled; Herbalism Kit is picked over
         # Tinker's Tools since it isn't implemented in this codebase and fits the
         # "craft healing potions" downtime priority.
-        tool_proficiencies=HerbalismKit(),
+        tool_proficiencies=[HerbalismKit()],
         base_class_level_features=ClassBuilder.BaseClassLevelFeatures(
             base_class_features_by_level={
                 1: DruidLevel1(

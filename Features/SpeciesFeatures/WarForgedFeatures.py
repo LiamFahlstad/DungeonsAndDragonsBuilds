@@ -33,17 +33,26 @@ class Tireless(Feature):
 
 class IntegratedProtection(Feature):
     def __init__(self):
+        super().__init__(name="Integrated Protection", origin="Warforged Trait")
         self._bonus = ArmorClassBonus(1)
 
     def apply(self, character_stat_block: CharacterStatBlock):
         self._bonus.apply(character_stat_block)
 
+    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+        return "Your Armor Class increases by 1."
+
 
 class SpecializedDesign(Feature):
     def __init__(self, skill: Skill):
+        self.skill = skill
+        super().__init__(name="Specialized Design", origin="Warforged Trait")
         self._choice = SkillProficiencyChoice(
             [skill], list(Skill), count=1, error_prefix="SpecializedDesign"
         )
 
     def apply(self, character_stat_block: CharacterStatBlock):
         self._choice.apply(character_stat_block)
+
+    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+        return f"You gain proficiency in the {self.skill.value} skill."

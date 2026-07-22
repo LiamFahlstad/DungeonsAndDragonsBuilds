@@ -7,6 +7,8 @@ from StatBlocks.CharacterStatBlock import CharacterStatBlock
 class BlessingsOfKnowledge(Feature):
     def __init__(self, skill_1: Skill, skill_2: Skill):
         super().__init__(name="Blessings of Knowledge", origin="Knowledge Domain Cleric Level 3")
+        self._skill_1 = skill_1
+        self._skill_2 = skill_2
         allowed_skills = [
             Skill.ARCANA,
             Skill.HISTORY,
@@ -31,7 +33,7 @@ class BlessingsOfKnowledge(Feature):
         self._expertise_choice.apply(character_stat_block)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        description = "You gain proficiency with one type of Artisan's Tools of your choice and in two of the following skills of your choice: Arcana, History, Nature, or Religion. You have Expertise in those two skills."
+        description = f"You gain proficiency with one type of Artisan's Tools of your choice and in {self._skill_1.value} and {self._skill_2.value}. You have Expertise in those two skills."
         return description
 
 

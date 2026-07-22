@@ -114,6 +114,6 @@ class HeightenedTelekinesis(Feature):
             "slot using this feature, you can modify the spell so\n"
             "that it doesn't require Concentration. If you do so,\n"
             "the spell's duration becomes 1 minute for that\n"
-            "casting, and you"
+            "casting, and you can concentrate on another spell as normal."
         )
         return description

@@ -18,10 +18,14 @@ class Darkvision(Feature):
 
 class GnomishCunning(Feature):
     def __init__(self):
+        super().__init__(name="Gnomish Cunning", origin="Gnome Trait")
         self._advantage = SavingThrowAdvantage([Ability.INTELLIGENCE, Ability.WISDOM, Ability.CHARISMA])
 
     def apply(self, character_stat_block: CharacterStatBlock) -> None:
         self._advantage.apply(character_stat_block)
+
+    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+        return "You have Advantage on Intelligence, Wisdom, and Charisma saving throws."
 
 
 class ForestGnomeSpeakWithAnimals(Feature):
