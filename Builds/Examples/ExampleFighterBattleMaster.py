@@ -14,7 +14,7 @@ from CharacterConfigs.SubClasses2024.FighterBattleMaster import (
     FighterBattleMasterCustomStarterClassArgs,
     FighterBattleMasterLevel3,
 )
-from Definitions import Ability, Skill
+from Core.Definitions import Ability, Skill
 from Features.CharacterFeats import Backgrounds, GeneralFeats, OriginFeats
 from Features.Combat import FightingStyles, Maneuvers
 from Features.Equipment import Armor, Weapons

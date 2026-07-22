@@ -7,8 +7,8 @@ from CharacterConfigs.BaseClasses.BarbarianBase import (
     BarbarianMulticlassBuilder,
     BarbarianCustomStarterClassArgs,
 )
-from CharacterSheetCreator import CharacterSheetData
-from Definitions import BarbarianSubclass2014
+from Builds.CharacterSheetCreator import CharacterSheetData
+from Core.Definitions import BarbarianSubclass2014
 from Features.SubClassFeatures2014.Barbarian import BarbarianPathOfTheBerserkerFeatures
 from Features.ClassFeatures.Barbarian import BarbarianFeatures
 from StatBlocks.SkillsStatBlock import BarbarianSkillsStatBlock

@@ -7,8 +7,8 @@ from CharacterConfigs.BaseClasses.FighterBase import (
     FighterMulticlassBuilder,
     FighterCustomStarterClassArgs,
 )
-from CharacterSheetCreator import CharacterSheetData
-from Definitions import FighterSubclass2014
+from Builds.CharacterSheetCreator import CharacterSheetData
+from Core.Definitions import FighterSubclass2014
 from Features.Combat import Maneuvers
 from Features.SubClassFeatures2014.Fighter import FighterBattleMasterFeatures
 from StatBlocks.SkillsStatBlock import FighterSkillsStatBlock

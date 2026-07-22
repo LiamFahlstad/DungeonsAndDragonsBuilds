@@ -31,7 +31,7 @@ from CharacterConfigs.SubClasses2014.ArtificerBattleSmith import (
     ArtificerBattleSmithLevel15,
     ArtificerBattleSmithLevel17,
 )
-from Definitions import Ability, Skill
+from Core.Definitions import Ability, Skill
 from Features.CharacterFeats import Backgrounds, GeneralFeats, OriginFeats
 from Features.Equipment import Armor, Weapons
 from SpeciesConfigs import Dwarf

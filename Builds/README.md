@@ -42,7 +42,7 @@ Notes:
 - Multiclass builds are not supported by the UI yet; loading one keeps only
   the starter class.
 
-To register a generated build in `Main.py`, import it from
+To register a generated build in `RunCharacterCreator.py`, import it from
 `Builds.GeneratedBuilds.<Name>` and add it to `BuildSelector.builds()` like
 any other build.
 
@@ -50,8 +50,8 @@ any other build.
 
 1. **Copy the template**: `Examples/_TEMPLATE.py` → `Characters/MyNewBuild.py`
 2. **Edit your build**: Follow the inline TODO comments in the template
-3. **Add to Main.py**: Register your build in `Main.py`'s `BuildSelector.builds()` dict
-4. **Run it**: `python Main.py` (or test locally first)
+3. **Add to RunCharacterCreator.py**: Register your build in `RunCharacterCreator.py`'s `BuildSelector.builds()` dict
+4. **Run it**: `python RunCharacterCreator.py` (or test locally first)
 
 ## Step-by-Step Guide
 
@@ -312,7 +312,7 @@ See `Builds/Tests/MulticlassTest.py` for a complete multiclass example.
 
 ## Step 9: Register Your Build
 
-Edit `Main.py`:
+Edit `RunCharacterCreator.py`:
 
 ```python
 from Builds.Characters.MyNewBuild import MyCustomBarbarianCharacterBuilder
@@ -331,7 +331,7 @@ class BuildSelector:
 ### Option 1: Run All Builds
 
 ```bash
-python Main.py
+python RunCharacterCreator.py
 ```
 
 This generates HTML character sheets in the `Output/` directory for all registered builds.
@@ -412,7 +412,7 @@ from Spells.SpellLists import ClericLevel1Spells, ClericLevel2Spells
 - Verify you're passing all required parameters
 
 **"No such file or directory: Output/..."**
-- Create the `Output/` directory manually or run `python Main.py` once to auto-create it
+- Create the `Output/` directory manually or run `python RunCharacterCreator.py` once to auto-create it
 
 ## More Resources
 

@@ -26,7 +26,7 @@ A SubFeature falls into one of three categories:
 from abc import ABC, abstractmethod
 from typing import Optional
 
-from Definitions import Ability, DiceRollCondition, Skill
+from Core.Definitions import Ability, DiceRollCondition, Skill
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 

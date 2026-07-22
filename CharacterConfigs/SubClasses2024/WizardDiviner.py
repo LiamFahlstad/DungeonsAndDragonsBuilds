@@ -7,8 +7,8 @@ from CharacterConfigs.BaseClasses.WizardBase import (
     WizardMulticlassBuilder,
     WizardCustomStarterClassArgs,
 )
-from CharacterSheetCreator import CharacterSheetData
-from Definitions import WizardSubclass
+from Builds.CharacterSheetCreator import CharacterSheetData
+from Core.Definitions import WizardSubclass
 from Features.SubClassFeatures.Wizard import WizardDivinerFeatures
 from Spells.SpellLists import (
     DivinationLevel1Spells,

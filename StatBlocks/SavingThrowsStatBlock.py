@@ -1,6 +1,6 @@
 from typing import Optional
 
-from Definitions import Ability
+from Core.Definitions import Ability
 from StatBlocks.StatBlock import StatBlock
 
 

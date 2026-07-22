@@ -1,6 +1,6 @@
 from typing import Optional
 
-from Definitions import Ability, CharacterClass, Skill
+from Core.Definitions import Ability, CharacterClass, Skill
 from Features.Core.BaseFeatures import Feature
 from Features.Core.SubFeatures import (
     HitPointsPerLevelBonus,

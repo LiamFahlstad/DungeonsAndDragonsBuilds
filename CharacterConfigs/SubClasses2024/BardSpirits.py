@@ -7,8 +7,8 @@ from CharacterConfigs.BaseClasses.BardBase import (
     BardMulticlassBuilder,
     BardCustomStarterClassArgs,
 )
-from CharacterSheetCreator import CharacterSheetData
-from Definitions import BardSubclass
+from Builds.CharacterSheetCreator import CharacterSheetData
+from Core.Definitions import BardSubclass
 from Features.SubClassFeatures.Bard import BardSpiritsFeatures
 from Spells.SpellLists import ClericLevel0Spells, ClericLevel3Spells
 from StatBlocks.SkillsStatBlock import BardSkillsStatBlock

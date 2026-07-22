@@ -1,6 +1,6 @@
 from enum import Enum
 
-import Definitions
+import Core.Definitions as Definitions
 from Features.Core.BaseFeatures import Feature
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 

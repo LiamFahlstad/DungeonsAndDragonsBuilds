@@ -1,6 +1,6 @@
 """Example build: Rogue Swashbuckler (2014 rules). Demonstrates the subclass up through level 17."""
 
-import Definitions
+import Core.Definitions as Definitions
 from Builds.CharacterBuilder import CharacterBuilder
 from CharacterConfigs.BaseClasses import ClassBuilder
 from CharacterConfigs.BaseClasses.ClassBuilder import StarterClassBuilder
@@ -30,7 +30,7 @@ from CharacterConfigs.SubClasses2014.RogueSwashbuckler import (
     RogueSwashbucklerLevel13,
     RogueSwashbucklerLevel17,
 )
-from Definitions import Ability, Skill
+from Core.Definitions import Ability, Skill
 from Features.CharacterFeats import Backgrounds, GeneralFeats, OriginFeats
 from Features.Equipment import Armor, Weapons
 from Features.Items import Items, Packs

@@ -10,7 +10,7 @@ from CharacterConfigs.SubClasses2024.RangerGloomStalker import (
     RangerGloomStalkerCustomStarterClassArgs,
     RangerGloomStalkerLevel3,
 )
-from Definitions import Ability, Skill
+from Core.Definitions import Ability, Skill
 from Features.CharacterFeats import Backgrounds, OriginFeats
 from Features.Combat import FightingStyles
 from Features.Equipment import Weapons

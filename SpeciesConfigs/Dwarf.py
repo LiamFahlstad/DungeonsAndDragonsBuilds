@@ -1,4 +1,4 @@
-import CharacterSheetCreator
+from Builds import CharacterSheetCreator
 from Features.SpeciesFeatures import DwarfFeatures
 from SpeciesConfigs.SpeciesBuilder import SpeciesBuilder
 

@@ -7,8 +7,8 @@ from CharacterConfigs.BaseClasses.MonkBase import (
     MonkMulticlassBuilder,
     MonkCustomStarterClassArgs,
 )
-from CharacterSheetCreator import CharacterSheetData
-from Definitions import Ability, MonkSubclass
+from Builds.CharacterSheetCreator import CharacterSheetData
+from Core.Definitions import Ability, MonkSubclass
 from Features.SubClassFeatures.Monk import MonkElementsFeatures
 from Features.ClassFeatures.Monk import MonkFeatures
 from StatBlocks.SkillsStatBlock import MonkSkillsStatBlock

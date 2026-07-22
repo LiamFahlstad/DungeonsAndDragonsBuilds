@@ -1,4 +1,4 @@
-from Definitions import ROGUE_HIT_DIE
+from Core.Definitions import ROGUE_HIT_DIE
 from Features.Core.BaseFeatures import Feature
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils

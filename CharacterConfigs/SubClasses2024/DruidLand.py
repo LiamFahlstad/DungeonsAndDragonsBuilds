@@ -7,8 +7,8 @@ from CharacterConfigs.BaseClasses.DruidBase import (
     DruidCustomStarterClassArgs,
     DruidMulticlassBuilder,
 )
-from CharacterSheetCreator import CharacterSheetData
-from Definitions import DruidLandType, DruidSubclass
+from Builds.CharacterSheetCreator import CharacterSheetData
+from Core.Definitions import DruidLandType, DruidSubclass
 from Features.SubClassFeatures.Druid import DruidLandFeatures
 from Spells.SpellLists import (
     AbjurationLevel4Spells,

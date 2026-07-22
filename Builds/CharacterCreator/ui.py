@@ -481,7 +481,7 @@ class SkillListEditor(Editor):
 
     def __init__(self, pool=None, initial=0):
         super().__init__()
-        from Definitions import Skill
+        from Core.Definitions import Skill
 
         members = (
             [Skill[name] for name in pool if name in Skill.__members__]
@@ -602,7 +602,7 @@ class AbilityBonusListEditor(Editor):
             self.add_row(ability_name, amount)
 
     def add_row(self, ability_name="STRENGTH", amount=1):
-        from Definitions import Ability
+        from Core.Definitions import Ability
 
         row = QWidget()
         layout = QHBoxLayout(row)

@@ -3,7 +3,7 @@ import importlib
 import inspect
 import pkgutil
 
-import Definitions
+import Core.Definitions as Definitions
 import Builds.Examples
 from Builds.Characters import (
     OptimizedArtificerBattleSmith,
@@ -102,7 +102,7 @@ if __name__ == "__main__":
         "--example",
         action="store_true",
         help="Create character sheets for all example builds in Builds/Examples instead "
-        "of the default builds in Main.py.",
+        "of the default builds in RunCharacterCreator.py.",
     )
     args = parser.parse_args()
 

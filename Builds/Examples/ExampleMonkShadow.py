@@ -1,6 +1,6 @@
 """Example build: Monk Way of Shadow. Adapted from an optimized reference build to demonstrate this subclass."""
 
-import Definitions
+import Core.Definitions as Definitions
 from Builds.CharacterBuilder import CharacterBuilder
 from CharacterConfigs.BaseClasses import ClassBuilder
 from CharacterConfigs.BaseClasses.ClassBuilder import StarterClassBuilder
@@ -9,7 +9,7 @@ from CharacterConfigs.SubClasses2024.MonkShadow import (
     MonkShadowCustomStarterClassArgs,
     MonkShadowLevel3,
 )
-from Definitions import Ability, Skill
+from Core.Definitions import Ability, Skill
 from Features.CharacterFeats import Backgrounds, OriginFeats
 from SpeciesConfigs import Elf
 from StatBlocks.AbilitiesStatBlock import StandardArrayAbilitiesStatBlock

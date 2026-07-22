@@ -35,7 +35,7 @@ from CharacterConfigs.SubClasses2014.FighterBattleMaster import (
     FighterBattleMasterLevel15,
     FighterBattleMasterLevel18,
 )
-from Definitions import Ability, Skill
+from Core.Definitions import Ability, Skill
 from Features.CharacterFeats import Backgrounds, EpicBoon, GeneralFeats, OriginFeats
 from Features.Combat import FightingStyles, Maneuvers
 from Features.Equipment import Armor, Weapons

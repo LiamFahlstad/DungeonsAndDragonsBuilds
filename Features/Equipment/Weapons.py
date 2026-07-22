@@ -3,8 +3,8 @@ from dataclasses import dataclass, field
 from enum import Enum
 from typing import Optional, TextIO
 
-import DamageCalculator
-from Definitions import Ability, Die
+from Utils import DamageCalculator
+from Core.Definitions import Ability, Die
 from Features.Items.Items import WearableItem
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils

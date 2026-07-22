@@ -29,7 +29,7 @@ from CharacterConfigs.SubClasses2024.ClericLight import (
     ClericLightLevel6,
     ClericLightLevel17,
 )
-from Definitions import Ability, Skill
+from Core.Definitions import Ability, Skill
 from Features.CharacterFeats import Backgrounds, EpicBoon, GeneralFeats, OriginFeats
 from SpeciesConfigs import Elf
 from Spells.SpellLists import (

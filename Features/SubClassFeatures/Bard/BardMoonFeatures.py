@@ -1,4 +1,4 @@
-from Definitions import BARD_HIT_DIE, Skill
+from Core.Definitions import BARD_HIT_DIE, Skill
 from Features.Core.BaseFeatures import Feature
 from Features.Core.SubFeatures import SkillProficiencyChoice
 from StatBlocks.CharacterStatBlock import CharacterStatBlock

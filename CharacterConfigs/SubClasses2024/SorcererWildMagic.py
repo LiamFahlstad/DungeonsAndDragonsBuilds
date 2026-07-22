@@ -7,8 +7,8 @@ from CharacterConfigs.BaseClasses.SorcererBase import (
     SorcererMulticlassBuilder,
     SorcererCustomStarterClassArgs,
 )
-from CharacterSheetCreator import CharacterSheetData
-from Definitions import SorcererSubclass
+from Builds.CharacterSheetCreator import CharacterSheetData
+from Core.Definitions import SorcererSubclass
 from Features.SubClassFeatures.Sorcerer import SorcererWildMagicFeatures
 from StatBlocks.SkillsStatBlock import SorcererSkillsStatBlock
 

@@ -4,7 +4,7 @@ from typing import Optional
 
 from attr import dataclass
 
-from Definitions import Skill
+from Core.Definitions import Skill
 
 
 class Action(str, Enum):

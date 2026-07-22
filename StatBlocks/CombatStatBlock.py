@@ -1,6 +1,6 @@
 from typing import Optional
 
-import Definitions
+import Core.Definitions as Definitions
 from StatBlocks.StatBlock import StatBlock
 
 

@@ -33,7 +33,7 @@ from CharacterConfigs.SubClasses2014.RangerHorizonWalker import (
     RangerHorizonWalkerLevel17,
     RangerHorizonWalkerCustomStarterClassArgs,
 )
-from Definitions import Ability, Skill
+from Core.Definitions import Ability, Skill
 from Features.CharacterFeats import Backgrounds, GeneralFeats, OriginFeats
 from Features.Combat import FightingStyles
 from Features.Equipment import Weapons

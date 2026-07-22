@@ -7,8 +7,8 @@ from CharacterConfigs.BaseClasses.RangerBase import (
     RangerMulticlassBuilder,
     RangerCustomStarterClassArgs,
 )
-from CharacterSheetCreator import CharacterSheetData
-from Definitions import RangerSubclass2014
+from Builds.CharacterSheetCreator import CharacterSheetData
+from Core.Definitions import RangerSubclass2014
 from Features.SubClassFeatures2014.Ranger import RangerHorizonWalkerFeatures
 from Spells.SpellLists import (
     WizardLevel1Spells,

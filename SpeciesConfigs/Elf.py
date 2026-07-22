@@ -1,7 +1,7 @@
 from enum import Enum
 
-import CharacterSheetCreator
-import Definitions
+from Builds import CharacterSheetCreator
+import Core.Definitions as Definitions
 from Features.SpeciesFeatures import ElfFeatures
 from SpeciesConfigs.SpeciesBuilder import SpeciesBuilder
 from Spells.SpellLists import (

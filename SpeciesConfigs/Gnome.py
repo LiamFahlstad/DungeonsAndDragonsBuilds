@@ -1,6 +1,6 @@
-import CharacterSheetCreator
-import Definitions
-from Definitions import Ability
+from Builds import CharacterSheetCreator
+import Core.Definitions as Definitions
+from Core.Definitions import Ability
 from Features.SpeciesFeatures import GnomeFeatures
 from SpeciesConfigs.SpeciesBuilder import SpeciesBuilder
 from Spells.SpellLists import BardLevel0Spells, DruidLevel1Spells

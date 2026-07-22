@@ -29,7 +29,7 @@ from CharacterConfigs.SubClasses2014.ClericDeath import (
     ClericDeathLevel8,
     ClericDeathLevel17,
 )
-from Definitions import Ability, Skill
+from Core.Definitions import Ability, Skill
 from Features.CharacterFeats import Backgrounds, GeneralFeats, OriginFeats
 from SpeciesConfigs import Human
 from Spells.SpellLists import (

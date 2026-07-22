@@ -1,6 +1,6 @@
 from typing import Optional
 
-from Definitions import DamageType, RANGER_HIT_DIE
+from Core.Definitions import DamageType, RANGER_HIT_DIE
 from Features.ClassFeatures.Ranger import PrimalCompanions
 from Features.ClassFeatures.Ranger.PrimalCompanions import CompanionType
 from Features.Core.BaseFeatures import Feature

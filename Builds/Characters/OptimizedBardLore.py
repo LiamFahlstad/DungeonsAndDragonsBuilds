@@ -29,7 +29,7 @@ from CharacterConfigs.SubClasses2024.BardLore import (
     BardLoreLevel6,
     BardLoreLevel14,
 )
-from Definitions import Ability, Skill
+from Core.Definitions import Ability, Skill
 from Features.CharacterFeats import Backgrounds, EpicBoon, GeneralFeats, OriginFeats
 from SpeciesConfigs import Gnome
 from Spells.SpellLists import (

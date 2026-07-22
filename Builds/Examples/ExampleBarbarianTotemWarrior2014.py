@@ -34,7 +34,7 @@ from CharacterConfigs.SubClasses2014.BarbarianPathOfTheTotemWarrior import (
     BarbarianTotemWarriorLevel10,
     BarbarianTotemWarriorLevel14,
 )
-from Definitions import Ability, Skill
+from Core.Definitions import Ability, Skill
 from Features.CharacterFeats import Backgrounds, EpicBoon, GeneralFeats, OriginFeats
 from Features.Equipment import Weapons
 from SpeciesConfigs import Orc

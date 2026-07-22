@@ -5,8 +5,8 @@ This template demonstrates how to create a new character build. To create your o
 1. Copy this file to a new build file (e.g., "MyCustomBard.py")
 2. Replace the placeholder sections (marked with TODO) with your choices
 3. Update the class name at the bottom
-4. Add your build to Main.py's BuildSelector.builds() dict
-5. Run: python Main.py  (or test just your build with the command in the README)
+4. Add your build to RunCharacterCreator.py's BuildSelector.builds() dict
+5. Run: python RunCharacterCreator.py  (or test just your build with the command in the README)
 
 Key sections:
 - Imports: Find valid options in the paths noted below
@@ -46,7 +46,7 @@ from CharacterConfigs.SubClasses2024.FighterChampion import (
     FighterChampionCustomStarterClassArgs,
     FighterChampionLevel3,
 )
-from Definitions import Ability, Skill
+from Core.Definitions import Ability, Skill
 from Features.CharacterFeats import Backgrounds, GeneralFeats, OriginFeats
 from Features.Combat import FightingStyles
 from Features.Equipment import Armor, Weapons
@@ -271,16 +271,16 @@ class YourCharacterNameCharacterBuilder(CharacterBuilder):
 # ============================================================================
 # HOW TO RUN YOUR BUILD
 # ============================================================================
-# Option 1: Add to Main.py
-#   1. Import your builder in Main.py:
+# Option 1: Add to RunCharacterCreator.py
+#   1. Import your builder in RunCharacterCreator.py:
 #      from Builds.Characters.MyBuild import YourCharacterNameCharacterBuilder
 #   2. Add to BuildSelector.builds() dict:
 #      "MyBuild": YourCharacterNameCharacterBuilder(),
-#   3. Run: python Main.py
+#   3. Run: python RunCharacterCreator.py
 #
 # Option 2: Test just your build
 #   Run: python -c "
-#   import Definitions
+#   import Core.Definitions as Definitions
 #   from Builds.Examples._TEMPLATE import YourCharacterNameCharacterBuilder
 #   YourCharacterNameCharacterBuilder().build().create_character_sheet(
 #       skill_config=Definitions.SkillConfig.DEFAULT

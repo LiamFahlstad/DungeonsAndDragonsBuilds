@@ -35,7 +35,7 @@ from CharacterConfigs.SubClasses2014.FighterChampion import (
     FighterChampionLevel15,
     FighterChampionLevel18,
 )
-from Definitions import Ability, Skill
+from Core.Definitions import Ability, Skill
 from Features.CharacterFeats import Backgrounds, EpicBoon, GeneralFeats, OriginFeats
 from Features.Combat import FightingStyles
 from Features.Equipment import Armor, Weapons

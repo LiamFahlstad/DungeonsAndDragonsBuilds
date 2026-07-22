@@ -27,7 +27,7 @@ def ensure_repo_on_path():
 ensure_repo_on_path()
 
 from CharacterConfigs.BaseClasses import ClassBuilder  # noqa: E402
-from Definitions import Skill  # noqa: E402
+from Core.Definitions import Skill  # noqa: E402
 
 
 class ClassInfo:
@@ -451,10 +451,10 @@ class Registry:
             return self._name_to_import
         mapping = {}
 
-        import Definitions as definitions_module
+        import Core.Definitions as definitions_module
 
         for name, obj in vars(definitions_module).items():
-            if inspect.isclass(obj) and obj.__module__ == "Definitions":
+            if inspect.isclass(obj) and obj.__module__ == "Core.Definitions":
                 mapping[name] = ("Definitions", name)
 
         for name in self.spell_enums():
@@ -585,7 +585,7 @@ class ResolvedAnnotation:
 
 def resolve_annotation(annotation) -> ResolvedAnnotation:
     """Map a type annotation to a UI editor description."""
-    from Definitions import Ability
+    from Core.Definitions import Ability
 
     optional = False
     args = _union_members(annotation)

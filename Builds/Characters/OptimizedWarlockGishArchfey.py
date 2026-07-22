@@ -17,7 +17,7 @@ from CharacterConfigs.SubClasses2024.WarlockArchfey import (
     ArchfeyWarlockLevel5,
     ArchfeyWarlockMulticlassBuilder,
 )
-from Definitions import Ability, Skill
+from Core.Definitions import Ability, Skill
 from Features.CharacterFeats import Backgrounds, GeneralFeats, OriginFeats
 from Features.Combat import FightingStyles
 from Features.Equipment import Weapons

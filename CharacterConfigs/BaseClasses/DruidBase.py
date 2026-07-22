@@ -2,11 +2,11 @@ from typing import Optional, Type, TypeAlias
 
 import attr
 
-import Definitions
+import Core.Definitions as Definitions
 from Combat.Definitions import ExtendedCombatantData
 from CharacterConfigs.BaseClasses import ClassBuilder
-from CharacterSheetCreator import CharacterSheetData
-from Definitions import Ability, CharacterClass
+from Builds.CharacterSheetCreator import CharacterSheetData
+from Core.Definitions import Ability, CharacterClass
 from Features.CharacterFeats import EpicBoon, GeneralFeats
 from Features.Equipment import Armor, Weapons
 from Features.ClassFeatures import SpellSlots

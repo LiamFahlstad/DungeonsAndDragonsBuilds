@@ -1,4 +1,4 @@
-from Definitions import CreatureSize, Skill
+from Core.Definitions import CreatureSize, Skill
 from Features.Core.BaseFeatures import Feature
 from Features.Core.SubFeatures import SkillProficiencyChoice
 from StatBlocks.CharacterStatBlock import CharacterStatBlock

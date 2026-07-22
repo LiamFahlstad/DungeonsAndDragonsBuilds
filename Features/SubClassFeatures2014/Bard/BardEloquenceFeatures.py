@@ -1,4 +1,4 @@
-from Definitions import BARD_HIT_DIE, Ability
+from Core.Definitions import BARD_HIT_DIE, Ability
 from Features.Core.BaseFeatures import Feature
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils

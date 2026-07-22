@@ -2,10 +2,10 @@ from typing import Optional
 
 import attr
 
-import Definitions
+import Core.Definitions as Definitions
 from CharacterConfigs.BaseClasses import ClassBuilder
-from CharacterSheetCreator import CharacterSheetData
-from Definitions import CharacterClass
+from Builds.CharacterSheetCreator import CharacterSheetData
+from Core.Definitions import CharacterClass
 from Features.CharacterFeats import EpicBoon, GeneralFeats
 from Features.Equipment import Armor, Weapons
 from Features.ClassFeatures.Barbarian import BarbarianFeatures

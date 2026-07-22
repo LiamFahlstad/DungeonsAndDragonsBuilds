@@ -1,4 +1,4 @@
-from Definitions import DiceRollCondition, FIGHTER_HIT_DIE, Skill
+from Core.Definitions import DiceRollCondition, FIGHTER_HIT_DIE, Skill
 from Features.Core.BaseFeatures import Feature
 from Features.Core.SubFeatures import InitiativeRollCondition, SkillRollCondition
 from StatBlocks.CharacterStatBlock import CharacterStatBlock

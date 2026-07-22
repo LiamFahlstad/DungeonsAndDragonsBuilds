@@ -2,7 +2,7 @@ from enum import Enum
 from typing import Optional
 
 from Combat.Definitions import Alignment, ExtendedCombatantData, MonsterAbility, Size
-from Definitions import Ability, CharacterClass, DamageType
+from Core.Definitions import Ability, CharacterClass, DamageType
 from Features.ClassFeatures.CreatureStatBlocks import format_creature_stat_block
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 

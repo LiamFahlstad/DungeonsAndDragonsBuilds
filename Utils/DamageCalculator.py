@@ -1,4 +1,4 @@
-from Definitions import DiceRollCondition, Die
+from Core.Definitions import DiceRollCondition, Die
 from Utils.TableUtils import write_table_with_title
 
 

@@ -10,7 +10,7 @@ from CharacterConfigs.SubClasses2024.ArtificerBattleSmith import (
     ArtificerBattleSmithCustomStarterClassArgs,
     ArtificerBattleSmithLevel3,
 )
-from Definitions import Ability, Skill
+from Core.Definitions import Ability, Skill
 from Features.CharacterFeats import Backgrounds, OriginFeats
 from Features.Equipment import Armor, Weapons
 from SpeciesConfigs import Dwarf

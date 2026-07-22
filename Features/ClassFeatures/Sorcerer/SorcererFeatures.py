@@ -1,5 +1,5 @@
-import Definitions
-from Definitions import SORCERER_HIT_DIE
+import Core.Definitions as Definitions
+from Core.Definitions import SORCERER_HIT_DIE
 from Features.Core.BaseFeatures import Feature
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils

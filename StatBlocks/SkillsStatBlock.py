@@ -1,7 +1,7 @@
 from typing import Optional
 
-import Definitions
-from Definitions import Ability, DiceRollCondition, Skill
+import Core.Definitions as Definitions
+from Core.Definitions import Ability, DiceRollCondition, Skill
 from StatBlocks.StatBlock import StatBlock
 
 

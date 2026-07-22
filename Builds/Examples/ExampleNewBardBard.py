@@ -10,7 +10,7 @@ from CharacterConfigs.BaseClasses import ClassBuilder
 from CharacterConfigs.BaseClasses.BardBase import BardLevel1
 from CharacterConfigs.BaseClasses.ClassBuilder import StarterClassBuilder
 from CharacterConfigs.SubClasses2024.BardLore import BardLoreCustomStarterClassArgs
-from Definitions import Ability, Skill
+from Core.Definitions import Ability, Skill
 from Features.CharacterFeats import Backgrounds, OriginFeats
 from SpeciesConfigs import Human
 from Spells.SpellLists import BardLevel0Spells, BardLevel1Spells

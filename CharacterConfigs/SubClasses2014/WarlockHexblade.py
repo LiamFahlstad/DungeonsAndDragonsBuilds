@@ -7,8 +7,8 @@ from CharacterConfigs.BaseClasses.WarlockBase import (
     WarlockMulticlassBuilder,
     WarlockCustomStarterClassArgs,
 )
-from CharacterSheetCreator import CharacterSheetData
-from Definitions import WarlockSubclass2014
+from Builds.CharacterSheetCreator import CharacterSheetData
+from Core.Definitions import WarlockSubclass2014
 from Features.SubClassFeatures2014.Warlock import WarlockHexbladeFeatures
 from StatBlocks.SkillsStatBlock import WarlockSkillsStatBlock
 

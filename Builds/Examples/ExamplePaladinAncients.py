@@ -12,7 +12,7 @@ from CharacterConfigs.SubClasses2024.PaladinAncients import (
     AncientsPaladinLevel3,
     PaladinAncientsCustomStarterClassArgs,
 )
-from Definitions import Ability, Skill
+from Core.Definitions import Ability, Skill
 from Features.CharacterFeats import Backgrounds, OriginFeats
 from Features.Combat import FightingStyles
 from Features.Equipment import Weapons

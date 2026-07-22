@@ -167,7 +167,7 @@ from Combat.Definitions import (
     Size,
     Skill,
 )
-from Definitions import Ability
+from Core.Definitions import Ability
 
 
 """

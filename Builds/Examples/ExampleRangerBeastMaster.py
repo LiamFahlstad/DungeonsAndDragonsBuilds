@@ -32,7 +32,7 @@ from CharacterConfigs.SubClasses2024.RangerBeastMaster import (
     RangerBeastMasterLevel11,
     RangerBeastMasterLevel15,
 )
-from Definitions import Ability, DamageType, Skill
+from Core.Definitions import Ability, DamageType, Skill
 from Features.CharacterFeats import Backgrounds, EpicBoon, GeneralFeats, OriginFeats
 from Features.ClassFeatures.Ranger.PrimalCompanions import CompanionType
 from Features.Combat import FightingStyles

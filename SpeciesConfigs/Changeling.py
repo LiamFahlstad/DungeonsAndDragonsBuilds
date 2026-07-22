@@ -1,5 +1,5 @@
-import CharacterSheetCreator
-from Definitions import CreatureSize, Skill
+from Builds import CharacterSheetCreator
+from Core.Definitions import CreatureSize, Skill
 from Features.SpeciesFeatures import ChangelingFeatures
 from SpeciesConfigs.SpeciesBuilder import SpeciesBuilder
 

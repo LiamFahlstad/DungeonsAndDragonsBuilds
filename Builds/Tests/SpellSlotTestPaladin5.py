@@ -13,7 +13,7 @@ from CharacterConfigs.SubClasses2024.PaladinGlory import (
     PaladinGloryLevel3,
     PaladinGloryLevel5,
 )
-from Definitions import Ability, Skill
+from Core.Definitions import Ability, Skill
 from Features.CharacterFeats import Backgrounds, GeneralFeats, OriginFeats
 from Features.Combat import FightingStyles
 from Features.Equipment import Weapons

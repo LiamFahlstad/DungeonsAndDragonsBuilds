@@ -12,7 +12,7 @@ from CharacterConfigs.SubClasses2024.SorcererDraconic import (
     SorcererDraconicCustomStarterClassArgs,
     SorcererDraconicLevel3,
 )
-from Definitions import Ability, Skill
+from Core.Definitions import Ability, Skill
 from Features.CharacterFeats import Backgrounds, GeneralFeats, OriginFeats
 from Features.Equipment import Weapons
 from Features.SpeciesFeatures import DragonbornFeatures

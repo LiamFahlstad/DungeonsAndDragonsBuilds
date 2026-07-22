@@ -2,8 +2,8 @@ from typing import Any, Optional
 
 import attr
 
-import Definitions
-from Definitions import Ability, ApplyWhen, CharacterClass
+import Core.Definitions as Definitions
+from Core.Definitions import Ability, ApplyWhen, CharacterClass
 from Features.CharacterFeats import OriginFeats
 from Features.Combat.FightingStyles import (
     FightingStyle,

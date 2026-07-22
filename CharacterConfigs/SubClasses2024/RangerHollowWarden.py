@@ -7,8 +7,8 @@ from CharacterConfigs.BaseClasses.RangerBase import (
     RangerMulticlassBuilder,
     RangerCustomStarterClassArgs,
 )
-from CharacterSheetCreator import CharacterSheetData
-from Definitions import RangerSubclass
+from Builds.CharacterSheetCreator import CharacterSheetData
+from Core.Definitions import RangerSubclass
 from Features.SubClassFeatures.Ranger import RangerHollowWardenFeatures
 from Spells.SpellLists import (
     IllusionLevel3Spells,

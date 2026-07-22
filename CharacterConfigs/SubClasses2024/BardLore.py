@@ -8,8 +8,8 @@ from CharacterConfigs.BaseClasses.BardBase import (
     BardMulticlassBuilder,
     BardCustomStarterClassArgs,
 )
-from CharacterSheetCreator import CharacterSheetData
-from Definitions import BardSubclass, Skill
+from Builds.CharacterSheetCreator import CharacterSheetData
+from Core.Definitions import BardSubclass, Skill
 from Features.SubClassFeatures.Bard import BardLoreFeatures
 from Features.ClassFeatures.Bard import BardFeatures
 from StatBlocks.SkillsStatBlock import BardSkillsStatBlock

@@ -1,4 +1,4 @@
-from Definitions import Ability, Skill
+from Core.Definitions import Ability, Skill
 from Features.Core.BaseFeatures import Feature
 from Features.Core.SubFeatures import AbilityScoreBonus, SkillExpertiseChoice, SkillProficiencyChoice
 from StatBlocks.CharacterStatBlock import CharacterStatBlock

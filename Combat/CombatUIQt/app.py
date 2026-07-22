@@ -6,7 +6,7 @@ from pathlib import Path
 
 from PyQt6.QtWidgets import QApplication
 
-import Definitions
+import Core.Definitions as Definitions
 from Combat.Definitions import BasicCombatantData, Condition, ExtendedCombatantData, Visibility
 from Features.Equipment import Armor
 from .damage_mixin import DamageMixin

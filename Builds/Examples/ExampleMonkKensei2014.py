@@ -1,6 +1,6 @@
 """Example build: Monk Way of the Kensei (2014 edition). Demonstrates this classic sword-and-technique subclass."""
 
-import Definitions
+import Core.Definitions as Definitions
 from Builds.CharacterBuilder import CharacterBuilder
 from CharacterConfigs.BaseClasses import ClassBuilder
 from CharacterConfigs.BaseClasses.ClassBuilder import StarterClassBuilder
@@ -12,7 +12,7 @@ from CharacterConfigs.SubClasses2014.MonkKensei import (
     MonkKenseiLevel11,
     MonkKenseiLevel17,
 )
-from Definitions import Ability, Skill
+from Core.Definitions import Ability, Skill
 from Features.CharacterFeats import Backgrounds, OriginFeats
 from SpeciesConfigs import Human
 from StatBlocks.AbilitiesStatBlock import StandardArrayAbilitiesStatBlock

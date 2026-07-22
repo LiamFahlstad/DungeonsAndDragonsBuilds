@@ -7,8 +7,8 @@ from CharacterConfigs.BaseClasses.PaladinBase import (
     PaladinMulticlassBuilder,
     PaladinCustomStarterClassArgs,
 )
-from CharacterSheetCreator import CharacterSheetData
-from Definitions import PaladinSubclass
+from Builds.CharacterSheetCreator import CharacterSheetData
+from Core.Definitions import PaladinSubclass
 from Features.SubClassFeatures.Paladin import PaladinGloryFeatures
 from Features.ClassFeatures.Paladin import PaladinFeatures
 from Spells.SpellLists import (

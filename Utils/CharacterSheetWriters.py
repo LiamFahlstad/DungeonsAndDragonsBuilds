@@ -2,9 +2,9 @@ import pathlib
 import re
 from typing import Optional, TextIO
 
-import DamageCalculator
-import Definitions
-from Definitions import Ability, Die, DiceRollCondition
+from Utils import DamageCalculator
+import Core.Definitions as Definitions
+from Core.Definitions import Ability, Die, DiceRollCondition
 from Features.Equipment import Armor
 from Features.Core.BaseFeatures import Feature
 from Features.Combat.FightingStyles import FightingStyle

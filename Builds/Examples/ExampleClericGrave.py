@@ -34,7 +34,7 @@ from CharacterConfigs.SubClasses2024.ClericGrave import (
     ClericGraveLevel9,
     ClericGraveLevel17,
 )
-from Definitions import Ability, Skill
+from Core.Definitions import Ability, Skill
 from Features.CharacterFeats import Backgrounds, EpicBoon, GeneralFeats, OriginFeats
 from SpeciesConfigs import Elf
 from Spells.SpellLists import (

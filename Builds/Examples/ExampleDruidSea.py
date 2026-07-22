@@ -36,7 +36,7 @@ from CharacterConfigs.SubClasses2024.DruidSea import (
     DruidSeaLevel14,
 )
 from Combat.Monsters.CR_0.monsters import Crab, GiantSeahorse, Octopus, ReefShark
-from Definitions import Ability, Skill
+from Core.Definitions import Ability, Skill
 from Features.CharacterFeats import Backgrounds, EpicBoon, GeneralFeats, OriginFeats
 from SpeciesConfigs.Elf import ElfSpeciesBuilder, ElvenLineage
 from Spells.SpellLists import (

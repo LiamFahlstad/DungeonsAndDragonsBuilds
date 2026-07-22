@@ -31,7 +31,7 @@ from CharacterConfigs.SubClasses2024.BardSpirits import (
     BardSpiritsLevel6,
     BardSpiritsLevel14,
 )
-from Definitions import Ability, Skill
+from Core.Definitions import Ability, Skill
 from Features.CharacterFeats import Backgrounds, EpicBoon, GeneralFeats, OriginFeats
 from Features.Items import Items, Packs
 from SpeciesConfigs import Aasimar

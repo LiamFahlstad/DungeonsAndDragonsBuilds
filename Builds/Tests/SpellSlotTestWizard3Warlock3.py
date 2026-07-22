@@ -19,7 +19,7 @@ from CharacterConfigs.SubClasses2024.WizardBladesinger import (
     WizardBladeSingerCustomStarterClassArgs,
     WizardBladesingerLevel3,
 )
-from Definitions import Ability, Skill
+from Core.Definitions import Ability, Skill
 from Features.CharacterFeats import Backgrounds, OriginFeats
 from Features.Equipment import Weapons
 from Invocations.Definitions import InvocationsLevel0, InvocationsLevel2

@@ -1,6 +1,6 @@
 from enum import Enum
 
-from Definitions import CreatureSize
+from Core.Definitions import CreatureSize
 from Features.Core.BaseFeatures import Feature
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils

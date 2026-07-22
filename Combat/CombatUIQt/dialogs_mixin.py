@@ -17,7 +17,7 @@ from PyQt6.QtWidgets import (
     QWidget,
 )
 
-import Definitions
+import Core.Definitions as Definitions
 from Combat.Definitions import ConditionRule
 from Combat.Rules import Rule, group_by_category, load_rules
 

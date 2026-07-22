@@ -3,8 +3,8 @@ from typing import Optional
 import attr
 
 from CharacterConfigs.BaseClasses import ClassBuilder
-from CharacterSheetCreator import CharacterSheetData
-from Definitions import Ability, CharacterClass
+from Builds.CharacterSheetCreator import CharacterSheetData
+from Core.Definitions import Ability, CharacterClass
 from Features.CharacterFeats import EpicBoon, GeneralFeats
 from Features.Equipment import Weapons
 from Features.ClassFeatures import SpellSlots

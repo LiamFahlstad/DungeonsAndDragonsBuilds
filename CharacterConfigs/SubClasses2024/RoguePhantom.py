@@ -7,8 +7,8 @@ from CharacterConfigs.BaseClasses.RogueBase import (
     RogueMulticlassBuilder,
     RogueCustomStarterClassArgs,
 )
-from CharacterSheetCreator import CharacterSheetData
-from Definitions import RogueSubclass
+from Builds.CharacterSheetCreator import CharacterSheetData
+from Core.Definitions import RogueSubclass
 from Features.SubClassFeatures.Rogue import RoguePhantomFeatures
 from StatBlocks.SkillsStatBlock import RogueSkillsStatBlock
 

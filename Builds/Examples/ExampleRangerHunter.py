@@ -12,7 +12,7 @@ from CharacterConfigs.SubClasses2024.RangerHunter import (
     HunterRangerLevel3,
     RangerHunterCustomStarterClassArgs,
 )
-from Definitions import Ability, Skill
+from Core.Definitions import Ability, Skill
 from Features.CharacterFeats import Backgrounds
 from Features.CharacterFeats import OriginFeats
 from Features.CharacterFeats import OriginFeats as SpeciesOriginFeats

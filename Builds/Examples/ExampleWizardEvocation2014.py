@@ -1,6 +1,6 @@
 """Example build: Wizard School of Evocation (2014 rules). Demonstrates the subclass through level 14."""
 
-import Definitions
+import Core.Definitions as Definitions
 from Builds.CharacterBuilder import CharacterBuilder
 from CharacterConfigs.BaseClasses import ClassBuilder
 from CharacterConfigs.BaseClasses.ClassBuilder import StarterClassBuilder
@@ -27,7 +27,7 @@ from CharacterConfigs.SubClasses2014.WizardEvocation import (
     EvocationWizardLevel14,
     WizardEvocationCustomStarterClassArgs,
 )
-from Definitions import Ability, Skill
+from Core.Definitions import Ability, Skill
 from Features.CharacterFeats import Backgrounds, GeneralFeats, OriginFeats
 from SpeciesConfigs import Gnome
 from Spells import SpellLists as SpellDefinitions

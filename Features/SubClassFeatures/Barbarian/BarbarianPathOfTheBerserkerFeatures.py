@@ -1,5 +1,5 @@
-import Definitions
-from Definitions import BARBARIAN_HIT_DIE
+import Core.Definitions as Definitions
+from Core.Definitions import BARBARIAN_HIT_DIE
 from Features.ClassFeatures.Barbarian.BarbarianFeatures import get_rage_damage_bonus
 from Features.Core.BaseFeatures import Feature
 from StatBlocks.CharacterStatBlock import CharacterStatBlock

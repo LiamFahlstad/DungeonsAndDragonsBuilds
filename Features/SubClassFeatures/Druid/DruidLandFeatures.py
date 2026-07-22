@@ -1,6 +1,6 @@
 
-import Definitions
-from Definitions import DRUID_HIT_DIE
+import Core.Definitions as Definitions
+from Core.Definitions import DRUID_HIT_DIE
 from Features.Core.BaseFeatures import Feature
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 

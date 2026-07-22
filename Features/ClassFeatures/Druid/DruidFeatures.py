@@ -1,8 +1,8 @@
-from Definitions import DRUID_HIT_DIE
+from Core.Definitions import DRUID_HIT_DIE
 from enum import Enum
 from typing import Type
 
-import Definitions
+import Core.Definitions as Definitions
 from Combat.Definitions import ExtendedCombatantData
 from Features.ClassFeatures.Druid.WildShapeForms import format_wild_shape_form
 from Features.Core.BaseFeatures import Feature

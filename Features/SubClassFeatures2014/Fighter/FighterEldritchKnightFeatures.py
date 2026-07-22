@@ -1,4 +1,4 @@
-from Definitions import Ability
+from Core.Definitions import Ability
 from Features.Core.BaseFeatures import Feature
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 

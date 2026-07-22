@@ -1,7 +1,7 @@
 from typing import Optional
 
 from Combat.Definitions import ExtendedCombatantData
-from Definitions import Ability, Skill
+from Core.Definitions import Ability, Skill
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 _ABILITY_BY_ABBR = {

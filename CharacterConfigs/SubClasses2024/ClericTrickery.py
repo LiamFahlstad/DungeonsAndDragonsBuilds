@@ -8,8 +8,8 @@ from CharacterConfigs.BaseClasses.ClericBase import (
     ClericMulticlassBuilder,
     ClericCustomStarterClassArgs,
 )
-from CharacterSheetCreator import CharacterSheetData
-from Definitions import ClericSubclass
+from Builds.CharacterSheetCreator import CharacterSheetData
+from Core.Definitions import ClericSubclass
 from Features.SubClassFeatures.Cleric import ClericTrickeryFeatures
 from Features.ClassFeatures.Cleric import ClericFeatures
 from StatBlocks.SkillsStatBlock import ClericSkillsStatBlock

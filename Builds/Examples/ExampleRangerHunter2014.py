@@ -27,7 +27,7 @@ from CharacterConfigs.SubClasses2014.RangerHunter import (
     RangerHunterLevel15,
     RangerHunterCustomStarterClassArgs,
 )
-from Definitions import Ability, Skill
+from Core.Definitions import Ability, Skill
 from Features.CharacterFeats import Backgrounds, GeneralFeats, OriginFeats
 from Features.Combat import FightingStyles
 from Features.Equipment import Weapons

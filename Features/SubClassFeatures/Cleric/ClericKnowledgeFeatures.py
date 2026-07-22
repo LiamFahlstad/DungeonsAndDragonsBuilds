@@ -1,4 +1,4 @@
-from Definitions import Ability, CLERIC_HIT_DIE, Skill
+from Core.Definitions import Ability, CLERIC_HIT_DIE, Skill
 from Features.Core.BaseFeatures import Feature
 from Features.Core.SubFeatures import SkillProficiencyChoice, SkillExpertiseChoice
 from StatBlocks.CharacterStatBlock import CharacterStatBlock

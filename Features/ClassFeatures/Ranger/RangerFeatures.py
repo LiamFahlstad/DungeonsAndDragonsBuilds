@@ -1,5 +1,5 @@
 
-from Definitions import Ability, RANGER_HIT_DIE, Skill
+from Core.Definitions import Ability, RANGER_HIT_DIE, Skill
 from Features.Core.BaseFeatures import Feature
 from Features.Core.SubFeatures import SkillExpertiseChoice
 from StatBlocks.CharacterStatBlock import CharacterStatBlock

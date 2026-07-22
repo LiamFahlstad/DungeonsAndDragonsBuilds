@@ -1,5 +1,5 @@
-import CharacterSheetCreator
-import Definitions
+from Builds import CharacterSheetCreator
+import Core.Definitions as Definitions
 from Features.CharacterFeats import OriginFeats
 from Features.SpeciesFeatures import HumanFeatures
 from SpeciesConfigs.SpeciesBuilder import SpeciesBuilder

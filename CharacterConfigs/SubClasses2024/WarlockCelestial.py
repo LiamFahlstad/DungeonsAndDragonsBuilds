@@ -7,8 +7,8 @@ from CharacterConfigs.BaseClasses.WarlockBase import (
     WarlockMulticlassBuilder,
     WarlockCustomStarterClassArgs,
 )
-from CharacterSheetCreator import CharacterSheetData
-from Definitions import WarlockSubclass
+from Builds.CharacterSheetCreator import CharacterSheetData
+from Core.Definitions import WarlockSubclass
 from Features.SubClassFeatures.Warlock import WarlockCelestialFeatures
 from Spells.SpellLists import (
     ClericLevel0Spells,

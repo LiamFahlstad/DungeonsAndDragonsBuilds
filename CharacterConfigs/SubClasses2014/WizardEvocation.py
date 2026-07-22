@@ -7,8 +7,8 @@ from CharacterConfigs.BaseClasses.WizardBase import (
     WizardMulticlassBuilder,
     WizardCustomStarterClassArgs,
 )
-from CharacterSheetCreator import CharacterSheetData
-from Definitions import WizardSubclass2014
+from Builds.CharacterSheetCreator import CharacterSheetData
+from Core.Definitions import WizardSubclass2014
 from Features.SubClassFeatures2014.Wizard import WizardEvocationFeatures
 from StatBlocks.SkillsStatBlock import WizardSkillsStatBlock
 

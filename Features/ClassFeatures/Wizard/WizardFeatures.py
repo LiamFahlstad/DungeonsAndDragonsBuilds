@@ -1,4 +1,4 @@
-from Definitions import Skill, WIZARD_HIT_DIE
+from Core.Definitions import Skill, WIZARD_HIT_DIE
 from Features.Core.BaseFeatures import Feature
 from Features.Core.SubFeatures import SkillExpertiseChoice
 from StatBlocks.CharacterStatBlock import CharacterStatBlock

@@ -1,4 +1,4 @@
-from Definitions import CreatureSize
+from Core.Definitions import CreatureSize
 from Features.Core.BaseFeatures import Feature
 from Features.Core.SubFeatures import HitPointsPerLevelBonus
 from StatBlocks.CharacterStatBlock import CharacterStatBlock

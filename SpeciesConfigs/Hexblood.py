@@ -1,5 +1,5 @@
-import CharacterSheetCreator
-from Definitions import CreatureSize
+from Builds import CharacterSheetCreator
+from Core.Definitions import CreatureSize
 from Features.SpeciesFeatures import HexbloodFeatures
 from SpeciesConfigs.SpeciesBuilder import SpeciesBuilder
 

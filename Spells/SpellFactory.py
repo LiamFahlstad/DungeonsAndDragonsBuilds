@@ -4,7 +4,7 @@ from abc import ABC, abstractmethod
 from enum import Enum
 from typing import Any, Optional, TextIO
 
-import Definitions
+import Core.Definitions as Definitions
 from Utils import StringUtils
 
 

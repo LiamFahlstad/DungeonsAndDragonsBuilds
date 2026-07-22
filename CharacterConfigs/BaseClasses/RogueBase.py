@@ -2,10 +2,10 @@ from typing import Optional
 
 import attr
 
-import Definitions
+import Core.Definitions as Definitions
 from CharacterConfigs.BaseClasses import ClassBuilder
-from CharacterSheetCreator import CharacterSheetData
-from Definitions import Ability, ApplyWhen, CharacterClass
+from Builds.CharacterSheetCreator import CharacterSheetData
+from Core.Definitions import Ability, ApplyWhen, CharacterClass
 from Features.CharacterFeats import EpicBoon, GeneralFeats
 from Features.ClassFeatures import SpellSlots
 from Features.Equipment import Armor, Weapons

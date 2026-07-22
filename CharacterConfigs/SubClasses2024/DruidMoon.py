@@ -7,8 +7,8 @@ from CharacterConfigs.BaseClasses.DruidBase import (
     DruidCustomStarterClassArgs,
     DruidMulticlassBuilder,
 )
-from CharacterSheetCreator import CharacterSheetData
-from Definitions import DruidSubclass
+from Builds.CharacterSheetCreator import CharacterSheetData
+from Core.Definitions import DruidSubclass
 from Features.SubClassFeatures.Druid import DruidMoonFeatures
 from Spells.SpellLists import (
     DruidLevel0Spells,

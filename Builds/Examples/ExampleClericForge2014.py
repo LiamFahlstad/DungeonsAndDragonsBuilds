@@ -29,7 +29,7 @@ from CharacterConfigs.SubClasses2014.ClericForge import (
     ClericForgeLevel8,
     ClericForgeLevel17,
 )
-from Definitions import Ability, Skill
+from Core.Definitions import Ability, Skill
 from Features.CharacterFeats import Backgrounds, GeneralFeats, OriginFeats
 from SpeciesConfigs import Dwarf
 from Spells.SpellLists import (

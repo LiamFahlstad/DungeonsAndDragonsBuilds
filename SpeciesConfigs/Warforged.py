@@ -1,5 +1,5 @@
-import CharacterSheetCreator
-from Definitions import Skill
+from Builds import CharacterSheetCreator
+from Core.Definitions import Skill
 from Features.SpeciesFeatures import WarForgedFeatures
 from SpeciesConfigs.SpeciesBuilder import SpeciesBuilder
 

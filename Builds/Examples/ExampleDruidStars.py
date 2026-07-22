@@ -33,7 +33,7 @@ from CharacterConfigs.SubClasses2024.DruidStars import (
     DruidStarsLevel14,
 )
 from Combat.Monsters.CR_1.monsters import BrownBear, DireWolf, GiantSpider, Tiger
-from Definitions import Ability, Skill
+from Core.Definitions import Ability, Skill
 from Features.CharacterFeats import Backgrounds, EpicBoon, GeneralFeats, OriginFeats
 from SpeciesConfigs import Gnome
 from Spells.SpellLists import (

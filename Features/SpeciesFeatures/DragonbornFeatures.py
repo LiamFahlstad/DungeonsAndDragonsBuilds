@@ -1,7 +1,7 @@
 from enum import Enum
 
-import Definitions
-from Definitions import Ability, CreatureSize
+import Core.Definitions as Definitions
+from Core.Definitions import Ability, CreatureSize
 from Features.Core.BaseFeatures import Feature
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils

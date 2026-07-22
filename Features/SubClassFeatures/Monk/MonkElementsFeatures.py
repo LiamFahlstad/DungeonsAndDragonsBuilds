@@ -1,4 +1,4 @@
-from Definitions import MONK_HIT_DIE
+from Core.Definitions import MONK_HIT_DIE
 from Features.Core.BaseFeatures import Feature
 from Features.Equipment.Weapons import WeaponsDamageRolls
 from StatBlocks.CharacterStatBlock import CharacterStatBlock

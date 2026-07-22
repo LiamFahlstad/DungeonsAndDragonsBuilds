@@ -1,4 +1,4 @@
-"""Registry of runnable combat scenarios. Select one with `python RunCombat.py --scenario <name>`."""
+"""Registry of runnable combat scenarios. Select one with `python RunCombatSimulator.py --scenario <name>`."""
 
 import Combat.Campaigns.CurseOfTheLich.Encounters as CurseOfTheLichEncounters
 import Combat.Campaigns.GrimsCastle.Encounters as GrimsCastleEncounters

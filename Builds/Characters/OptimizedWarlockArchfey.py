@@ -13,7 +13,7 @@ from CharacterConfigs.SubClasses2024.WarlockArchfey import (
     ArchfeyWarlockLevel5,
     WarlockArchfeyCustomStarterClassArgs,
 )
-from Definitions import Ability, Skill
+from Core.Definitions import Ability, Skill
 from Features.CharacterFeats import Backgrounds, GeneralFeats, OriginFeats
 from Invocations.Definitions import (
     InvocationsLevel0,

@@ -37,7 +37,7 @@ from CharacterConfigs.SubClasses2014.PaladinOathbreaker import (
     OathbreakerPaladinLevel20,
     PaladinOathbreakerCustomStarterClassArgs,
 )
-from Definitions import Ability, Skill
+from Core.Definitions import Ability, Skill
 from Features.CharacterFeats import Backgrounds, EpicBoon, GeneralFeats, OriginFeats
 from Features.Combat import FightingStyles
 from Features.Equipment import Weapons

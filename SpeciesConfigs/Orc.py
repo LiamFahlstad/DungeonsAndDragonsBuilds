@@ -1,4 +1,4 @@
-import CharacterSheetCreator
+from Builds import CharacterSheetCreator
 from Features.SpeciesFeatures import OrcFeatures
 from SpeciesConfigs.SpeciesBuilder import SpeciesBuilder
 

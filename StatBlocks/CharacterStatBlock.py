@@ -1,7 +1,7 @@
 from typing import Optional
 
-import Definitions
-from Definitions import Ability, CharacterClass, Skill
+import Core.Definitions as Definitions
+from Core.Definitions import Ability, CharacterClass, Skill
 from StatBlocks.AbilitiesStatBlock import AbilitiesStatBlock
 from StatBlocks.CombatStatBlock import CombatStatBlock
 from StatBlocks.SavingThrowsStatBlock import SavingThrowsStatBlock

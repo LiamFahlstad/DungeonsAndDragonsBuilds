@@ -19,7 +19,7 @@ Step-by-step instructions to create your first build:
    - Set your character name
 
 3. REGISTER IN MAIN.PY
-   Add two lines to Main.py:
+   Add two lines to RunCharacterCreator.py:
    
    a) At the top with other imports:
       from Builds.Characters.MyNewBuild import MyNewCharacterBuilder
@@ -29,7 +29,7 @@ Step-by-step instructions to create your first build:
 
 4. RUN YOUR BUILD
    Option A: Generate HTML for all builds
-   python Main.py
+   python RunCharacterCreator.py
 
    Option B: Test just your build (faster)
    python -c "

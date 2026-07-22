@@ -1,6 +1,6 @@
 from typing import Optional
 
-from Definitions import Ability
+from Core.Definitions import Ability
 from Features.Core.SubFeatures import (
     ArmorClassBonus,
     SetArmorClass,

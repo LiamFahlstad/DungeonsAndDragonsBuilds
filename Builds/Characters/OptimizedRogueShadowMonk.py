@@ -30,7 +30,7 @@ from CharacterConfigs.SubClasses2024.MonkShadow import (
     MonkShadowLevel17,
     MonkShadowMulticlassBuilder,
 )
-from Definitions import Ability, RogueSubclass, Skill
+from Core.Definitions import Ability, RogueSubclass, Skill
 from Features.CharacterFeats import Backgrounds, EpicBoon, GeneralFeats, OriginFeats
 from Features.Equipment import Weapons
 from SpeciesConfigs import Halfing

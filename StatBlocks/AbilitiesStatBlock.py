@@ -1,5 +1,5 @@
-import Definitions
-from Definitions import Ability
+import Core.Definitions as Definitions
+from Core.Definitions import Ability
 from StatBlocks.StatBlock import StatBlock
 
 

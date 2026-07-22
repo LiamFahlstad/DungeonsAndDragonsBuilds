@@ -7,8 +7,8 @@ from CharacterConfigs.BaseClasses.ClericBase import (
     ClericMulticlassBuilder,
     ClericCustomStarterClassArgs,
 )
-from CharacterSheetCreator import CharacterSheetData
-from Definitions import ClericSubclass2014
+from Builds.CharacterSheetCreator import CharacterSheetData
+from Core.Definitions import ClericSubclass2014
 from Features.SubClassFeatures2014.Cleric import ClericDeathFeatures
 from StatBlocks.SkillsStatBlock import ClericSkillsStatBlock
 

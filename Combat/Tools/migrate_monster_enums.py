@@ -31,7 +31,7 @@ NEW_IMPORT = """from Combat.Definitions import (
     MonsterAbility,
     Skill,
 )
-from Definitions import Ability"""
+from Core.Definitions import Ability"""
 
 # kwarg name -> formatter. Formatters returning a tuple also report unmapped values.
 _SIMPLE_FIELDS = {

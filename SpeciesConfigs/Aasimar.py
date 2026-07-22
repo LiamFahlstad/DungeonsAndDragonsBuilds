@@ -1,5 +1,5 @@
-import CharacterSheetCreator
-from Definitions import Ability
+from Builds import CharacterSheetCreator
+from Core.Definitions import Ability
 from Features.SpeciesFeatures import AasimarFeatures
 from SpeciesConfigs.SpeciesBuilder import SpeciesBuilder
 from Spells.SpellLists import SorcererLevel0Spells

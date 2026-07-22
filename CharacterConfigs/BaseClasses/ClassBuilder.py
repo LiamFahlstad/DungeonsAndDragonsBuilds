@@ -3,9 +3,9 @@ from typing import Optional
 
 import attr
 
-import Definitions
-from CharacterSheetCreator import CharacterSheetData
-from Definitions import Ability, CharacterClass
+import Core.Definitions as Definitions
+from Builds.CharacterSheetCreator import CharacterSheetData
+from Core.Definitions import Ability, CharacterClass
 from Features.CharacterFeats import Backgrounds, OriginFeats
 from Features.Equipment import Armor, Weapons
 from Features.ClassFeatures import SpellSlots

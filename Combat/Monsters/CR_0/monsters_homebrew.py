@@ -7,7 +7,7 @@ from Combat.Definitions import (
     MonsterAbility,
     Size,
 )
-from Definitions import Ability
+from Core.Definitions import Ability
 
 
 class Accursed(ExtendedCombatantData):

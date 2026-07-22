@@ -7,8 +7,8 @@ from CharacterConfigs.BaseClasses.ArtificerBase import (
     ArtificerMulticlassBuilder,
     ArtificerCustomStarterClassArgs,
 )
-from CharacterSheetCreator import CharacterSheetData
-from Definitions import ArtificerSubclass2014
+from Builds.CharacterSheetCreator import CharacterSheetData
+from Core.Definitions import ArtificerSubclass2014
 from Features.SubClassFeatures2014.Artificer import ArtificerAlchemistFeatures
 from Spells.SpellLists import (
     ClericLevel1Spells,

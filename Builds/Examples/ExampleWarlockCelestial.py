@@ -29,7 +29,7 @@ from CharacterConfigs.SubClasses2024.WarlockCelestial import (
     CelestialWarlockLevel14,
     WarlockCelestialCustomStarterClassArgs,
 )
-from Definitions import Ability, Skill
+from Core.Definitions import Ability, Skill
 from Features.CharacterFeats import Backgrounds, GeneralFeats, OriginFeats
 from Invocations.Definitions import (
     InvocationsLevel0,

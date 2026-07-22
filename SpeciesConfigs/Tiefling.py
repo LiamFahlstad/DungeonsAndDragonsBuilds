@@ -1,6 +1,6 @@
 from enum import Enum
 
-import CharacterSheetCreator
+from Builds import CharacterSheetCreator
 from Features.SpeciesFeatures import TieflingFeatures
 from SpeciesConfigs.SpeciesBuilder import SpeciesBuilder
 from Spells.SpellLists import (

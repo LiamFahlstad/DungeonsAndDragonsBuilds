@@ -1,5 +1,5 @@
-import Definitions
-from Definitions import MONK_HIT_DIE
+import Core.Definitions as Definitions
+from Core.Definitions import MONK_HIT_DIE
 from Features.Core.BaseFeatures import Feature
 from Features.Core.SubFeatures import MultiAbilityArmorClass
 from Features.Equipment.Weapons import WeaponsDamageRolls

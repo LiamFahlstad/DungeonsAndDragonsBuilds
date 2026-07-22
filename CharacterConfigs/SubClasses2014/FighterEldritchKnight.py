@@ -7,8 +7,8 @@ from CharacterConfigs.BaseClasses.FighterBase import (
     FighterMulticlassBuilder,
     FighterCustomStarterClassArgs,
 )
-from CharacterSheetCreator import CharacterSheetData
-from Definitions import FighterSubclass2014
+from Builds.CharacterSheetCreator import CharacterSheetData
+from Core.Definitions import FighterSubclass2014
 from Features.ClassFeatures import SpellSlots
 from Features.SubClassFeatures2014.Fighter import FighterEldritchKnightFeatures
 from StatBlocks.SkillsStatBlock import FighterSkillsStatBlock

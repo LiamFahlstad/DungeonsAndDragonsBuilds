@@ -26,7 +26,7 @@ from CharacterConfigs.SubClasses2014.WarlockHexblade import (
     HexbladeWarlockLevel14,
     WarlockHexbladeCustomStarterClassArgs,
 )
-from Definitions import Ability, Skill
+from Core.Definitions import Ability, Skill
 from Features.CharacterFeats import Backgrounds, GeneralFeats, OriginFeats
 from Invocations.Definitions import (
     InvocationsLevel0,
