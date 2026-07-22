@@ -8,6 +8,7 @@ verifies it by importing it and running .build() in a subprocess.
 """
 
 import ast
+import importlib
 import inspect
 import typing
 from pathlib import Path
@@ -107,6 +108,11 @@ QLabel#secondary {
 }
 QLabel#hint {
     color: #666a80;
+    font-size: 11px;
+}
+QLabel#description {
+    color: #8a8fae;
+    font-style: italic;
     font-size: 11px;
 }
 
@@ -344,6 +350,136 @@ def _clear_layout(layout):
             _clear_layout(item.layout())
 
 
+# ===================================================== instance descriptions
+#
+# Best-effort "show a rules description for whatever the player just picked"
+# support. Purely additive UI sugar: any failure just means no description
+# is shown, never a crash and never a change to the generated expression.
+
+
+def _clean_description_text(text):
+    """Filter out empty/placeholder text; return usable text or None."""
+    if not isinstance(text, str):
+        return None
+    text = text.strip()
+    if not text:
+        return None
+    lower = text.lower()
+    if "placeholder" in lower or "not yet defined" in lower:
+        return None
+    return text
+
+
+def _instantiate_from_expr(expr, registry):
+    """Best-effort eval of a build-file expression into a live object.
+
+    Resolves identifiers via registry.name_to_import() -- the same mapping
+    codegen uses to build import statements -- then evaluates the expression
+    in a namespace built from those imports. Returns None on any failure
+    (unknown identifier, import error, constructor error, ...).
+    """
+    if not expr:
+        return None
+    try:
+        tree = ast.parse(expr, mode="eval")
+    except Exception:
+        return None
+    names = {node.id for node in ast.walk(tree) if isinstance(node, ast.Name)}
+    mapping = registry.name_to_import()
+    namespace = {}
+    for name in names:
+        if name not in mapping:
+            return None
+        module_name, imported_name = mapping[name]
+        real_name = imported_name.split(" as ")[0]
+        try:
+            module = importlib.import_module(module_name)
+            namespace[name] = getattr(module, real_name)
+        except Exception:
+            return None
+    try:
+        return eval(expr, {"__builtins__": {}}, namespace)
+    except Exception:
+        return None
+
+
+def _describe_instance(instance):
+    """Best-effort human-readable description for a live feat/item/etc instance."""
+    if instance is None:
+        return None
+
+    get_desc = getattr(instance, "get_description", None)
+    if callable(get_desc):
+        try:
+            text = get_desc()
+        except TypeError:
+            try:
+                text = get_desc(None)
+            except Exception:
+                return None
+        except Exception:
+            return None
+        text = _clean_description_text(text)
+        if text:
+            return text
+
+    desc = getattr(instance, "description", None)
+    if callable(desc):
+        try:
+            text = _clean_description_text(desc())
+        except Exception:
+            text = None
+        if text:
+            return text
+    elif isinstance(desc, str):
+        text = _clean_description_text(desc)
+        if text:
+            return text
+
+    text = _clean_description_text(getattr(instance, "description_text", None))
+    if text:
+        return text
+
+    # Weapons rarely set the fields above; compose text from any notable
+    # property/mastery rules text instead.
+    stats_fn = getattr(instance, "stats", None)
+    if callable(stats_fn):
+        try:
+            stats = stats_fn()
+        except Exception:
+            stats = None
+        if stats is not None:
+            parts = []
+            for prop in getattr(stats, "properties", None) or []:
+                try:
+                    detail = prop.description
+                except Exception:
+                    detail = None
+                if detail:
+                    parts.append(f"{prop.value}: {detail}")
+            mastery = getattr(stats, "mastery", None)
+            if mastery is not None:
+                try:
+                    detail = mastery.description
+                except Exception:
+                    detail = None
+                if detail:
+                    parts.append(f"{mastery.value} (mastery): {detail}")
+            if parts:
+                return " ".join(parts)
+
+    return None
+
+
+def _describe_expr(expr, registry):
+    """Description text for a build-file expression, or None if unavailable."""
+    instance = _instantiate_from_expr(expr, registry)
+    try:
+        return _describe_instance(instance)
+    except Exception:
+        return None
+
+
 # ============================================================ value editors
 
 
@@ -388,8 +524,27 @@ class EnumEditor(Editor):
 
     def __init__(self, enum_classes, optional=False, default_expr=None):
         super().__init__()
-        layout = QHBoxLayout(self.widget)
-        layout.setContentsMargins(0, 0, 0, 0)
+        # Description panel is spell-only (excluded everywhere else, notably
+        # Skill -- see SkillListEditor/AbilityBonusListEditor which don't use
+        # EnumEditor at all, and plain Skill dropdowns which do use it).
+        self._spell_enum_classes = [
+            cls for cls in enum_classes if getattr(cls, "__module__", "") == "Spells.SpellLists"
+        ]
+        self._is_spell_enum = bool(enum_classes) and len(self._spell_enum_classes) == len(
+            list(enum_classes)
+        )
+        self.description_label = None
+
+        if self._is_spell_enum:
+            outer = QVBoxLayout(self.widget)
+            outer.setContentsMargins(0, 0, 0, 0)
+            outer.setSpacing(2)
+            layout = QHBoxLayout()
+            layout.setContentsMargins(0, 0, 0, 0)
+            outer.addLayout(layout)
+        else:
+            layout = QHBoxLayout(self.widget)
+            layout.setContentsMargins(0, 0, 0, 0)
 
         self.combo = QComboBox()
         if optional:
@@ -405,11 +560,50 @@ class EnumEditor(Editor):
                     display = f"{enum_class.__name__}: {CreatorApp._readable_display_name(member.name)}"
                 self.combo.addItem(display, expr)
 
+        layout.addWidget(self.combo)
+
+        if self._is_spell_enum:
+            self.description_label = QLabel()
+            self.description_label.setObjectName("description")
+            self.description_label.setWordWrap(True)
+            self.description_label.setVisible(False)
+            outer.addWidget(self.description_label)
+            self.combo.currentIndexChanged.connect(lambda _i: self._update_spell_description())
+
         if optional:
             self.combo.setCurrentIndex(0)
         elif default_expr:
             self.set_expr(default_expr)
-        layout.addWidget(self.combo)
+
+        if self._is_spell_enum:
+            self._update_spell_description()
+
+    def _update_spell_description(self):
+        if self.description_label is None:
+            return
+        text = None
+        data = self.combo.currentData()
+        expr = data if data is not None else (self.combo.currentText().strip() or None)
+        if expr:
+            try:
+                class_name, _, member_name = expr.partition(".")
+                enum_cls = next(
+                    (c for c in self._spell_enum_classes if c.__name__ == class_name), None
+                )
+                if enum_cls is not None:
+                    member = enum_cls[member_name]
+                    from Spells.SpellFactory import SpellFactory
+
+                    spell = SpellFactory.create(member.value)
+                    text = _clean_description_text(spell.description)
+            except Exception:
+                text = None
+        if text:
+            self.description_label.setText(text)
+            self.description_label.setVisible(True)
+        else:
+            self.description_label.clear()
+            self.description_label.setVisible(False)
 
     def get_expr(self):
         data = self.combo.currentData()
@@ -978,6 +1172,12 @@ class ClassPickerEditor(Editor):
         self.params_layout.setSpacing(2)
         layout.addWidget(self.params_widget)
 
+        self.description_label = QLabel()
+        self.description_label.setObjectName("description")
+        self.description_label.setWordWrap(True)
+        self.description_label.setVisible(False)
+        layout.addWidget(self.description_label)
+
         self.param_editors = {}
         self.raw_editor = None
         if not optional and self.classes:
@@ -992,9 +1192,11 @@ class ClassPickerEditor(Editor):
         if choice == self.RAW_CHOICE:
             self.raw_editor = RawEditor(placeholder="raw Python expression")
             self.params_layout.addWidget(self.raw_editor.widget)
+            self._update_description()
             return
         cls = self.classes.get(choice)
         if cls is None:
+            self._update_description()
             return
         # str-annotated params that actually hold enum members (e.g.
         # MagicInitiate's cantrips) get an enum dropdown instead of free text.
@@ -1030,6 +1232,24 @@ class ClassPickerEditor(Editor):
             row_layout.addWidget(editor.widget, stretch=1)
             self.params_layout.addWidget(row)
             self.param_editors[name] = editor
+        self._update_description()
+
+    def _update_description(self):
+        choice = self.combo.currentText()
+        text = None
+        if choice and choice != self.RAW_CHOICE:
+            try:
+                expr = self.get_expr()
+            except Exception:
+                expr = None
+            if expr:
+                text = _describe_expr(expr, registry_module.get_registry())
+        if text:
+            self.description_label.setText(text)
+            self.description_label.setVisible(True)
+        else:
+            self.description_label.clear()
+            self.description_label.setVisible(False)
 
     def get_expr(self):
         choice = self.combo.currentText()
