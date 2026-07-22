@@ -1,0 +1,166 @@
+"""Example build: Wizard School of Evocation (2014 rules). Demonstrates the subclass through level 14."""
+
+import Definitions
+from Builds.CharacterBuilder import CharacterBuilder
+from CharacterConfigs.BaseClasses import ClassBuilder
+from CharacterConfigs.BaseClasses.ClassBuilder import StarterClassBuilder
+from CharacterConfigs.BaseClasses.WizardBase import (
+    WizardLevel1,
+    WizardLevel2,
+    WizardLevel3,
+    WizardLevel4,
+    WizardLevel5,
+    WizardLevel6,
+    WizardLevel7,
+    WizardLevel8,
+    WizardLevel9,
+    WizardLevel10,
+    WizardLevel11,
+    WizardLevel12,
+    WizardLevel13,
+    WizardLevel14,
+)
+from CharacterConfigs.SubClasses2014.WizardEvocation import (
+    EvocationWizardLevel3,
+    EvocationWizardLevel6,
+    EvocationWizardLevel10,
+    EvocationWizardLevel14,
+    WizardEvocationCustomStarterClassArgs,
+)
+from Definitions import Ability, Skill
+from Features.CharacterFeats import Backgrounds, GeneralFeats, OriginFeats
+from SpeciesConfigs import Gnome
+from Spells import SpellLists as SpellDefinitions
+from StatBlocks.AbilitiesStatBlock import StandardArrayAbilitiesStatBlock
+from StatBlocks.SkillsStatBlock import WizardSkillsStatBlock
+
+
+def get_starter_class_builder():
+    return StarterClassBuilder(
+        non_generic_arguments=WizardEvocationCustomStarterClassArgs(
+            skills=WizardSkillsStatBlock(
+                proficiencies={
+                    Skill.ARCANA: True,
+                    Skill.HISTORY: False,
+                    Skill.INSIGHT: False,
+                    Skill.INVESTIGATION: True,
+                    Skill.MEDICINE: False,
+                    Skill.NATURE: False,
+                    Skill.RELIGION: False,
+                }
+            ),
+        ),
+        base_class_level=14,
+        # Distribute 15, 14, 13, 12, 10, 8 among your abilities.
+        abilities=StandardArrayAbilitiesStatBlock(
+            strength=8,
+            dexterity=14,
+            constitution=13,
+            intelligence=15,
+            wisdom=10,
+            charisma=12,
+        ),
+        background_ability_bonuses=Backgrounds.FreeBackgroundAbilityBonus(
+            [
+                (Ability.INTELLIGENCE, 2),
+                (Ability.CONSTITUTION, 1),
+            ]
+        ),
+        background_skill_proficiencies=Backgrounds.FreeBackgroundSkillProficiency(
+            [
+                Skill.INVESTIGATION,
+                Skill.PERCEPTION,
+            ]
+        ),
+        add_default_equipment=True,
+        origin_feat=OriginFeats.Alert(),
+        armor=[],
+        weapons=[],
+        base_class_level_features=ClassBuilder.BaseClassLevelFeatures(
+            base_class_features_by_level={
+                1: WizardLevel1(
+                    cantrip_1=SpellDefinitions.WizardLevel0Spells.FIRE_BOLT,
+                    cantrip_2=SpellDefinitions.WizardLevel0Spells.MAGE_HAND,
+                    cantrip_3=SpellDefinitions.WizardLevel0Spells.PRESTIDIGITATION,
+                    spell_1=SpellDefinitions.WizardLevel1Spells.MAGIC_MISSILE,
+                    spell_2=SpellDefinitions.WizardLevel1Spells.THUNDERWAVE,
+                    spell_3=SpellDefinitions.WizardLevel1Spells.SHIELD,
+                    spell_4=SpellDefinitions.WizardLevel1Spells.BURNING_HANDS,
+                ),
+                2: WizardLevel2(
+                    skill_to_expertise_in=Skill.ARCANA,
+                    spell=SpellDefinitions.WizardLevel1Spells.MAGE_ARMOR,
+                ),
+                3: WizardLevel3(
+                    spell=SpellDefinitions.WizardLevel2Spells.SCORCHING_RAY,
+                ),
+                4: WizardLevel4(
+                    general_feat=GeneralFeats.AbilityScoreImprovement(
+                        bonuses=[
+                            (Ability.INTELLIGENCE, 2),
+                        ]
+                    ),
+                    cantrip=SpellDefinitions.WizardLevel0Spells.RAY_OF_FROST,
+                    spell=SpellDefinitions.WizardLevel2Spells.MISTY_STEP,
+                ),
+                5: WizardLevel5(
+                    spell_1=SpellDefinitions.WizardLevel3Spells.FIREBALL,
+                    spell_2=SpellDefinitions.WizardLevel3Spells.LIGHTNING_BOLT,
+                ),
+                6: WizardLevel6(
+                    spell=SpellDefinitions.WizardLevel3Spells.COUNTERSPELL,
+                ),
+                7: WizardLevel7(
+                    spell=SpellDefinitions.WizardLevel4Spells.ICE_STORM,
+                ),
+                8: WizardLevel8(
+                    general_feat=GeneralFeats.AbilityScoreImprovement(
+                        bonuses=[
+                            (Ability.INTELLIGENCE, 2),
+                        ]
+                    ),
+                    spell=SpellDefinitions.WizardLevel4Spells.FIRE_SHIELD,
+                ),
+                9: WizardLevel9(
+                    spell_1=SpellDefinitions.WizardLevel5Spells.CONE_OF_COLD,
+                    spell_2=SpellDefinitions.WizardLevel5Spells.WALL_OF_FORCE,
+                ),
+                10: WizardLevel10(
+                    cantrip=SpellDefinitions.WizardLevel0Spells.FROSTBITE,
+                    spell=SpellDefinitions.WizardLevel5Spells.CLOUDKILL,
+                ),
+                11: WizardLevel11(
+                    spell=SpellDefinitions.WizardLevel6Spells.CHAIN_LIGHTNING,
+                ),
+                12: WizardLevel12(
+                    general_feat=GeneralFeats.AbilityScoreImprovement(
+                        bonuses=[
+                            (Ability.CONSTITUTION, 2),
+                        ]
+                    ),
+                ),
+                13: WizardLevel13(
+                    spell=SpellDefinitions.WizardLevel7Spells.DELAYED_BLAST_FIREBALL,
+                ),
+                14: WizardLevel14(
+                    spell=SpellDefinitions.WizardLevel7Spells.PRISMATIC_SPRAY,
+                ),
+            },
+            subclass_features_by_level={
+                3: EvocationWizardLevel3(),
+                6: EvocationWizardLevel6(),
+                10: EvocationWizardLevel10(),
+                14: EvocationWizardLevel14(),
+            },
+        ),
+        replace_spells={},
+    )
+
+
+class ExampleWizardEvocation2014CharacterBuilder(CharacterBuilder):
+    def __init__(self):
+        super().__init__(
+            name="Example Wizard Evocation",
+            starter_class_builder=get_starter_class_builder(),
+            species_builder=Gnome.RockGnomeSpeciesBuilder(),
+        )

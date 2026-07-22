@@ -183,6 +183,13 @@ class ArtificerSubclass(str, Enum):
     REANIMATOR = "Reanimator"
 
 
+class ArtificerSubclass2014(str, Enum):
+    ALCHEMIST = "Alchemist"
+    ARMORER = "Armorer"
+    ARTILLERIST = "Artillerist"
+    BATTLE_SMITH = "Battle Smith"
+
+
 class PaladinSubclass(str, Enum):
     OATH_OF_DEVOTION = "Oath of Devotion"
     OATH_OF_THE_ANCIENTS = "Oath of the Ancients"
@@ -195,6 +202,8 @@ class PaladinSubclass(str, Enum):
 
 class PaladinSubclass2014(str, Enum):
     OATHBREAKER = "Oathbreaker"
+    DEVOTION = "Oath of Devotion"
+    VENGEANCE = "Oath of Vengeance"
 
 
 class ClericSubclass(str, Enum):
@@ -211,6 +220,8 @@ class ClericSubclass(str, Enum):
 
 class ClericSubclass2014(str, Enum):
     FORGE = "Forge"
+    LIFE = "Life"
+    DEATH = "Death"
 
 
 class RogueSubclass(str, Enum):
@@ -224,6 +235,7 @@ class RogueSubclass(str, Enum):
 
 class RogueSubclass2014(str, Enum):
     SWASHBUCKLER = "Swashbuckler"
+    THIEF = "Thief"
 
 
 class BardSubclass(str, Enum):
@@ -239,6 +251,7 @@ class BardSubclass(str, Enum):
 
 class BardSubclass2014(str, Enum):
     ELOQUENCE = "College of Eloquence"
+    LORE = "College of Lore"
 
 
 class DruidSubclass(str, Enum):
@@ -271,6 +284,7 @@ class WizardSubclass(str, Enum):
 
 class WizardSubclass2014(str, Enum):
     NECROMANCY = "Necromancy"
+    EVOCATION = "Evocation"
 
 
 class SorcererSubclass(str, Enum):
@@ -284,6 +298,7 @@ class SorcererSubclass(str, Enum):
 
 class SorcererSubclass2014(str, Enum):
     STORM = "Storm"
+    DRACONIC = "Draconic"
 
 
 class WarlockSubclass(str, Enum):
@@ -296,6 +311,7 @@ class WarlockSubclass(str, Enum):
 
 class WarlockSubclass2014(str, Enum):
     HEXBLADE = "Hexblade"
+    FIEND = "Fiend"
 
 
 class FighterSubclass(str, Enum):
@@ -308,6 +324,9 @@ class FighterSubclass(str, Enum):
 
 class FighterSubclass2014(str, Enum):
     RUNE_KNIGHT = "Rune Knight"
+    CHAMPION = "Champion"
+    BATTLE_MASTER = "Battle Master"
+    ELDRITCH_KNIGHT = "Eldritch Knight"
 
 
 class RangerSubclass(str, Enum):
@@ -321,6 +340,7 @@ class RangerSubclass(str, Enum):
 
 class RangerSubclass2014(str, Enum):
     HORIZON_WALKER = "Horizon Walker"
+    HUNTER = "Hunter"
 
 
 class MonkSubclass(str, Enum):
@@ -344,6 +364,7 @@ class BarbarianSubclass(str, Enum):
 
 class BarbarianSubclass2014(str, Enum):
     PATH_OF_THE_TOTEM_WARRIOR = "Path of the Totem Warrior"
+    PATH_OF_THE_BERSERKER = "Path of the Berserker"
 
 
 class CreatureSize(str, Enum):
