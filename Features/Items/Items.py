@@ -856,3 +856,799 @@ class RingOfInvestigation(WearableItem):
                 SkillBonus(Skill.INVESTIGATION, 1, source="Ring of Investigation")
             ],
         )
+
+
+# Placeholder Craftable Items (TODO: fill in real stats)
+
+class Acid(Item):
+    def __init__(self):
+        super().__init__(
+            "Acid",
+            rarity="common",
+            category="placeholder",
+            weight=None,
+            slots=1,
+            description_text="Placeholder item — full stats not yet defined.",
+        )
+
+class AlchemistsFire(Item):
+    def __init__(self):
+        super().__init__(
+            "Alchemist's Fire",
+            rarity="common",
+            category="placeholder",
+            weight=None,
+            slots=1,
+            description_text="Placeholder item — full stats not yet defined.",
+        )
+
+class AnyMeleeWeaponPlaceholder(Item):
+    def __init__(self):
+        super().__init__(
+            "Any Melee weapon (except Club, Greatclub, Quarterstaff, and Whip)",
+            rarity="common",
+            category="placeholder",
+            weight=None,
+            slots=1,
+            description_text="Placeholder item — full stats not yet defined.",
+        )
+
+class ArcaneFocus(Item):
+    def __init__(self):
+        super().__init__(
+            "Arcane Focus",
+            rarity="common",
+            category="placeholder",
+            weight=None,
+            slots=1,
+            description_text="Placeholder item — full stats not yet defined.",
+        )
+
+class Barrel(Item):
+    def __init__(self):
+        super().__init__(
+            "Barrel",
+            rarity="common",
+            category="placeholder",
+            weight=None,
+            slots=1,
+            description_text="Placeholder item — full stats not yet defined.",
+        )
+
+class BasicPoison(Item):
+    def __init__(self):
+        super().__init__(
+            "Basic Poison",
+            rarity="common",
+            category="placeholder",
+            weight=None,
+            slots=1,
+            description_text="Placeholder item — full stats not yet defined.",
+        )
+
+class Basket(Item):
+    def __init__(self):
+        super().__init__(
+            "Basket",
+            rarity="common",
+            category="placeholder",
+            weight=None,
+            slots=1,
+            description_text="Placeholder item — full stats not yet defined.",
+        )
+
+class Blanket(Item):
+    def __init__(self):
+        super().__init__(
+            "Blanket",
+            rarity="common",
+            category="placeholder",
+            weight=None,
+            slots=1,
+            description_text="Placeholder item — full stats not yet defined.",
+        )
+
+class BlockAndTackle(Item):
+    def __init__(self):
+        super().__init__(
+            "Block and Tackle",
+            rarity="common",
+            category="placeholder",
+            weight=None,
+            slots=1,
+            description_text="Placeholder item — full stats not yet defined.",
+        )
+
+class Bolts(Item):
+    def __init__(self):
+        super().__init__(
+            "Bolts",
+            rarity="common",
+            category="placeholder",
+            weight=None,
+            slots=1,
+            description_text="Placeholder item — full stats not yet defined.",
+        )
+
+class Bucket(Item):
+    def __init__(self):
+        super().__init__(
+            "Bucket",
+            rarity="common",
+            category="placeholder",
+            weight=None,
+            slots=1,
+            description_text="Placeholder item — full stats not yet defined.",
+        )
+
+class Chain(Item):
+    def __init__(self):
+        super().__init__(
+            "Chain",
+            rarity="common",
+            category="placeholder",
+            weight=None,
+            slots=1,
+            description_text="Placeholder item — full stats not yet defined.",
+        )
+
+class Chest(Item):
+    def __init__(self):
+        super().__init__(
+            "Chest",
+            rarity="common",
+            category="placeholder",
+            weight=None,
+            slots=1,
+            description_text="Placeholder item — full stats not yet defined.",
+        )
+
+class ClimbersKit(Item):
+    def __init__(self):
+        super().__init__(
+            "Climber's Kit",
+            rarity="common",
+            category="placeholder",
+            weight=None,
+            slots=1,
+            description_text="Placeholder item — full stats not yet defined.",
+        )
+
+class Club(Item):
+    def __init__(self):
+        super().__init__(
+            "Club",
+            rarity="common",
+            category="placeholder",
+            weight=None,
+            slots=1,
+            description_text="Placeholder item — full stats not yet defined.",
+        )
+
+class ComponentPouch(Item):
+    def __init__(self):
+        super().__init__(
+            "Component Pouch",
+            rarity="common",
+            category="placeholder",
+            weight=None,
+            slots=1,
+            description_text="Placeholder item — full stats not yet defined.",
+        )
+
+class CrossbowBoltCase(Item):
+    def __init__(self):
+        super().__init__(
+            "Crossbow Bolt Case",
+            rarity="common",
+            category="placeholder",
+            weight=None,
+            slots=1,
+            description_text="Placeholder item — full stats not yet defined.",
+        )
+
+class DruidicFocus(Item):
+    def __init__(self):
+        super().__init__(
+            "Druidic Focus",
+            rarity="common",
+            category="placeholder",
+            weight=None,
+            slots=1,
+            description_text="Placeholder item — full stats not yet defined.",
+        )
+
+class FineClothes(Item):
+    def __init__(self):
+        super().__init__(
+            "Fine Clothes",
+            rarity="common",
+            category="placeholder",
+            weight=None,
+            slots=1,
+            description_text="Placeholder item — full stats not yet defined.",
+        )
+
+class FirearmBullets(Item):
+    def __init__(self):
+        super().__init__(
+            "Firearm Bullets",
+            rarity="common",
+            category="placeholder",
+            weight=None,
+            slots=1,
+            description_text="Placeholder item — full stats not yet defined.",
+        )
+
+class Flask(Item):
+    def __init__(self):
+        super().__init__(
+            "Flask",
+            rarity="common",
+            category="placeholder",
+            weight=None,
+            slots=1,
+            description_text="Placeholder item — full stats not yet defined.",
+        )
+
+class GlassBottle(Item):
+    def __init__(self):
+        super().__init__(
+            "Glass Bottle",
+            rarity="common",
+            category="placeholder",
+            weight=None,
+            slots=1,
+            description_text="Placeholder item — full stats not yet defined.",
+        )
+
+class GrapplingHook(Item):
+    def __init__(self):
+        super().__init__(
+            "Grappling Hook",
+            rarity="common",
+            category="placeholder",
+            weight=None,
+            slots=1,
+            description_text="Placeholder item — full stats not yet defined.",
+        )
+
+class Greatclub(Item):
+    def __init__(self):
+        super().__init__(
+            "Greatclub",
+            rarity="common",
+            category="placeholder",
+            weight=None,
+            slots=1,
+            description_text="Placeholder item — full stats not yet defined.",
+        )
+
+class HeavyArmorPlaceholder(Item):
+    def __init__(self):
+        super().__init__(
+            "Heavy armor",
+            rarity="common",
+            category="placeholder",
+            weight=None,
+            slots=1,
+            description_text="Placeholder item — full stats not yet defined.",
+        )
+
+class HideArmor(Item):
+    def __init__(self):
+        super().__init__(
+            "Hide Armor",
+            rarity="common",
+            category="placeholder",
+            weight=None,
+            slots=1,
+            description_text="Placeholder item — full stats not yet defined.",
+        )
+
+class HolySymbol(Item):
+    def __init__(self):
+        super().__init__(
+            "Holy Symbol",
+            rarity="common",
+            category="placeholder",
+            weight=None,
+            slots=1,
+            description_text="Placeholder item — full stats not yet defined.",
+        )
+
+class HuntingTrap(Item):
+    def __init__(self):
+        super().__init__(
+            "Hunting Trap",
+            rarity="common",
+            category="placeholder",
+            weight=None,
+            slots=1,
+            description_text="Placeholder item — full stats not yet defined.",
+        )
+
+class Ink(Item):
+    def __init__(self):
+        super().__init__(
+            "Ink",
+            rarity="common",
+            category="placeholder",
+            weight=None,
+            slots=1,
+            description_text="Placeholder item — full stats not yet defined.",
+        )
+
+class InkPen(Item):
+    def __init__(self):
+        super().__init__(
+            "Ink Pen",
+            rarity="common",
+            category="placeholder",
+            weight=None,
+            slots=1,
+            description_text="Placeholder item — full stats not yet defined.",
+        )
+
+class IronPot(Item):
+    def __init__(self):
+        super().__init__(
+            "Iron Pot",
+            rarity="common",
+            category="placeholder",
+            weight=None,
+            slots=1,
+            description_text="Placeholder item — full stats not yet defined.",
+        )
+
+class IronSpikes(Item):
+    def __init__(self):
+        super().__init__(
+            "Iron Spikes",
+            rarity="common",
+            category="placeholder",
+            weight=None,
+            slots=1,
+            description_text="Placeholder item — full stats not yet defined.",
+        )
+
+class Jug(Item):
+    def __init__(self):
+        super().__init__(
+            "Jug",
+            rarity="common",
+            category="placeholder",
+            weight=None,
+            slots=1,
+            description_text="Placeholder item — full stats not yet defined.",
+        )
+
+class Ladder(Item):
+    def __init__(self):
+        super().__init__(
+            "Ladder",
+            rarity="common",
+            category="placeholder",
+            weight=None,
+            slots=1,
+            description_text="Placeholder item — full stats not yet defined.",
+        )
+
+class Lamp(Item):
+    def __init__(self):
+        super().__init__(
+            "Lamp",
+            rarity="common",
+            category="placeholder",
+            weight=None,
+            slots=1,
+            description_text="Placeholder item — full stats not yet defined.",
+        )
+
+class LeatherArmor(Item):
+    def __init__(self):
+        super().__init__(
+            "Leather Armor",
+            rarity="common",
+            category="placeholder",
+            weight=None,
+            slots=1,
+            description_text="Placeholder item — full stats not yet defined.",
+        )
+
+class Lock(Item):
+    def __init__(self):
+        super().__init__(
+            "Lock",
+            rarity="common",
+            category="placeholder",
+            weight=None,
+            slots=1,
+            description_text="Placeholder item — full stats not yet defined.",
+        )
+
+class MagnifyingGlass(Item):
+    def __init__(self):
+        super().__init__(
+            "Magnifying Glass",
+            rarity="common",
+            category="placeholder",
+            weight=None,
+            slots=1,
+            description_text="Placeholder item — full stats not yet defined.",
+        )
+
+class Manacles(Item):
+    def __init__(self):
+        super().__init__(
+            "Manacles",
+            rarity="common",
+            category="placeholder",
+            weight=None,
+            slots=1,
+            description_text="Placeholder item — full stats not yet defined.",
+        )
+
+class Map(Item):
+    def __init__(self):
+        super().__init__(
+            "Map",
+            rarity="common",
+            category="placeholder",
+            weight=None,
+            slots=1,
+            description_text="Placeholder item — full stats not yet defined.",
+        )
+
+class MapOrScrollCase(Item):
+    def __init__(self):
+        super().__init__(
+            "Map or Scroll Case",
+            rarity="common",
+            category="placeholder",
+            weight=None,
+            slots=1,
+            description_text="Placeholder item — full stats not yet defined.",
+        )
+
+class MediumArmorPlaceholder(Item):
+    def __init__(self):
+        super().__init__(
+            "Medium armor (except Hide)",
+            rarity="common",
+            category="placeholder",
+            weight=None,
+            slots=1,
+            description_text="Placeholder item — full stats not yet defined.",
+        )
+
+class MirrorPlaceholder(Item):
+    def __init__(self):
+        super().__init__(
+            "Mirror",
+            rarity="common",
+            category="placeholder",
+            weight=None,
+            slots=1,
+            description_text="Placeholder item — full stats not yet defined.",
+        )
+
+class Musket(Item):
+    def __init__(self):
+        super().__init__(
+            "Musket",
+            rarity="common",
+            category="placeholder",
+            weight=None,
+            slots=1,
+            description_text="Placeholder item — full stats not yet defined.",
+        )
+
+class Needles(Item):
+    def __init__(self):
+        super().__init__(
+            "Needles",
+            rarity="common",
+            category="placeholder",
+            weight=None,
+            slots=1,
+            description_text="Placeholder item — full stats not yet defined.",
+        )
+
+class Net(Item):
+    def __init__(self):
+        super().__init__(
+            "Net",
+            rarity="common",
+            category="placeholder",
+            weight=None,
+            slots=1,
+            description_text="Placeholder item — full stats not yet defined.",
+        )
+
+class Oil(Item):
+    def __init__(self):
+        super().__init__(
+            "Oil",
+            rarity="common",
+            category="placeholder",
+            weight=None,
+            slots=1,
+            description_text="Placeholder item — full stats not yet defined.",
+        )
+
+class PaddedArmor(Item):
+    def __init__(self):
+        super().__init__(
+            "Padded Armor",
+            rarity="common",
+            category="placeholder",
+            weight=None,
+            slots=1,
+            description_text="Placeholder item — full stats not yet defined.",
+        )
+
+class Paper(Item):
+    def __init__(self):
+        super().__init__(
+            "Paper",
+            rarity="common",
+            category="placeholder",
+            weight=None,
+            slots=1,
+            description_text="Placeholder item — full stats not yet defined.",
+        )
+
+class Parchment(Item):
+    def __init__(self):
+        super().__init__(
+            "Parchment",
+            rarity="common",
+            category="placeholder",
+            weight=None,
+            slots=1,
+            description_text="Placeholder item — full stats not yet defined.",
+        )
+
+class Perfume(Item):
+    def __init__(self):
+        super().__init__(
+            "Perfume",
+            rarity="common",
+            category="placeholder",
+            weight=None,
+            slots=1,
+            description_text="Placeholder item — full stats not yet defined.",
+        )
+
+class Pistol(Item):
+    def __init__(self):
+        super().__init__(
+            "Pistol",
+            rarity="common",
+            category="placeholder",
+            weight=None,
+            slots=1,
+            description_text="Placeholder item — full stats not yet defined.",
+        )
+
+class Pole(Item):
+    def __init__(self):
+        super().__init__(
+            "Pole",
+            rarity="common",
+            category="placeholder",
+            weight=None,
+            slots=1,
+            description_text="Placeholder item — full stats not yet defined.",
+        )
+
+class PortableRam(Item):
+    def __init__(self):
+        super().__init__(
+            "Portable Ram",
+            rarity="common",
+            category="placeholder",
+            weight=None,
+            slots=1,
+            description_text="Placeholder item — full stats not yet defined.",
+        )
+
+class Pouch(Item):
+    def __init__(self):
+        super().__init__(
+            "Pouch",
+            rarity="common",
+            category="placeholder",
+            weight=None,
+            slots=1,
+            description_text="Placeholder item — full stats not yet defined.",
+        )
+
+class Quarterstaff(Item):
+    def __init__(self):
+        super().__init__(
+            "Quarterstaff",
+            rarity="common",
+            category="placeholder",
+            weight=None,
+            slots=1,
+            description_text="Placeholder item — full stats not yet defined.",
+        )
+
+class RangedWeaponsPlaceholder(Item):
+    def __init__(self):
+        super().__init__(
+            "Ranged weapons (except Pistol, Musket, and Sling)",
+            rarity="common",
+            category="placeholder",
+            weight=None,
+            slots=1,
+            description_text="Placeholder item — full stats not yet defined.",
+        )
+
+class Robe(Item):
+    def __init__(self):
+        super().__init__(
+            "Robe",
+            rarity="common",
+            category="placeholder",
+            weight=None,
+            slots=1,
+            description_text="Placeholder item — full stats not yet defined.",
+        )
+
+class RopePlaceholder(Item):
+    def __init__(self):
+        super().__init__(
+            "Rope",
+            rarity="common",
+            category="placeholder",
+            weight=None,
+            slots=1,
+            description_text="Placeholder item — full stats not yet defined.",
+        )
+
+class Sack(Item):
+    def __init__(self):
+        super().__init__(
+            "Sack",
+            rarity="common",
+            category="placeholder",
+            weight=None,
+            slots=1,
+            description_text="Placeholder item — full stats not yet defined.",
+        )
+
+class Shovel(Item):
+    def __init__(self):
+        super().__init__(
+            "Shovel",
+            rarity="common",
+            category="placeholder",
+            weight=None,
+            slots=1,
+            description_text="Placeholder item — full stats not yet defined.",
+        )
+
+class SignalWhistle(Item):
+    def __init__(self):
+        super().__init__(
+            "Signal Whistle",
+            rarity="common",
+            category="placeholder",
+            weight=None,
+            slots=1,
+            description_text="Placeholder item — full stats not yet defined.",
+        )
+
+class Sling(Item):
+    def __init__(self):
+        super().__init__(
+            "Sling",
+            rarity="common",
+            category="placeholder",
+            weight=None,
+            slots=1,
+            description_text="Placeholder item — full stats not yet defined.",
+        )
+
+class SlingBullets(Item):
+    def __init__(self):
+        super().__init__(
+            "Sling Bullets",
+            rarity="common",
+            category="placeholder",
+            weight=None,
+            slots=1,
+            description_text="Placeholder item — full stats not yet defined.",
+        )
+
+class SpellScroll(Item):
+    def __init__(self):
+        super().__init__(
+            "Spell Scroll",
+            rarity="common",
+            category="placeholder",
+            weight=None,
+            slots=1,
+            description_text="Placeholder item — full stats not yet defined.",
+        )
+
+class Spyglass(Item):
+    def __init__(self):
+        super().__init__(
+            "Spyglass",
+            rarity="common",
+            category="placeholder",
+            weight=None,
+            slots=1,
+            description_text="Placeholder item — full stats not yet defined.",
+        )
+
+class StringItem(Item):
+    def __init__(self):
+        super().__init__(
+            "String",
+            rarity="common",
+            category="placeholder",
+            weight=None,
+            slots=1,
+            description_text="Placeholder item — full stats not yet defined.",
+        )
+
+class StuddedLeatherArmor(Item):
+    def __init__(self):
+        super().__init__(
+            "Studded Leather Armor",
+            rarity="common",
+            category="placeholder",
+            weight=None,
+            slots=1,
+            description_text="Placeholder item — full stats not yet defined.",
+        )
+
+class Tent(Item):
+    def __init__(self):
+        super().__init__(
+            "Tent",
+            rarity="common",
+            category="placeholder",
+            weight=None,
+            slots=1,
+            description_text="Placeholder item — full stats not yet defined.",
+        )
+
+class TravelersClothes(Item):
+    def __init__(self):
+        super().__init__(
+            "Traveler's Clothes",
+            rarity="common",
+            category="placeholder",
+            weight=None,
+            slots=1,
+            description_text="Placeholder item — full stats not yet defined.",
+        )
+
+class Vial(Item):
+    def __init__(self):
+        super().__init__(
+            "Vial",
+            rarity="common",
+            category="placeholder",
+            weight=None,
+            slots=1,
+            description_text="Placeholder item — full stats not yet defined.",
+        )
+
+class Whip(Item):
+    def __init__(self):
+        super().__init__(
+            "Whip",
+            rarity="common",
+            category="placeholder",
+            weight=None,
+            slots=1,
+            description_text="Placeholder item — full stats not yet defined.",
+        )
+

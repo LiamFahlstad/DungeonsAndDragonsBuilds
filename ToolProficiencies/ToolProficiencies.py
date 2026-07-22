@@ -2,6 +2,7 @@ from typing import Optional
 
 from Definitions import Ability
 from Features.Core.BaseFeatures import Feature
+from Features.Items import Items
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
@@ -14,7 +15,7 @@ class ToolProficiency(Feature):
         weight: Optional[float],
         cost: float,
         utilize: str,
-        craftables: Optional[list[str]] = None,
+        craftables: Optional[list[Items.Item]] = None,
     ):
         super().__init__(name=name)
         self.category = category
@@ -27,7 +28,7 @@ class ToolProficiency(Feature):
     def description(self) -> str:
         parts = [f"Utilize: {self.utilize}."]
         if self.craftables:
-            parts.append(f"Craft: {', '.join(self.craftables)}.")
+            parts.append(f"Craft: {', '.join(item.name for item in self.craftables)}.")
         return " ".join(parts)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str | None:
@@ -55,7 +56,7 @@ class PoisonersKit(ToolProficiency):
             weight=2.0,
             cost=50,
             utilize="Detect a poisoned object (DC 10)",
-            craftables=["Basic Poison"],
+            craftables=[Items.BasicPoison()],
         )
 
 
@@ -80,7 +81,7 @@ class HerbalismKit(ToolProficiency):
             weight=3.0,
             cost=5,
             utilize="Identify a plant (DC 10)",
-            craftables=["Antitoxin", "Candle", "Healer's Kit", "Potion of Healing"],
+            craftables=[Items.Antitoxin(), Items.Candle(), Items.HealersKit(), Items.PotionOfHealing()],
         )
 
 
@@ -93,7 +94,7 @@ class AlchemistsSupplies(ToolProficiency):
             weight=8.0,
             cost=50,
             utilize="Identify a substance (DC 15), or start a fire (DC 15)",
-            craftables=["Acid", "Alchemist's Fire", "Component Pouch", "Oil", "Paper", "Perfume"],
+            craftables=[Items.Acid(), Items.AlchemistsFire(), Items.ComponentPouch(), Items.Oil(), Items.Paper(), Items.Perfume()],
         )
 
 
@@ -106,7 +107,7 @@ class BrewersSupplies(ToolProficiency):
             weight=9.0,
             cost=20,
             utilize="Detect poisoned drink (DC 15), or identify alcohol (DC 10)",
-            craftables=["Antitoxin"],
+            craftables=[Items.Antitoxin()],
         )
 
 
@@ -119,7 +120,7 @@ class CalligraphersSupplies(ToolProficiency):
             weight=5.0,
             cost=10,
             utilize="Write text with impressive flourishes that guard against forgery (DC 15)",
-            craftables=["Ink", "Spell Scroll"],
+            craftables=[Items.Ink(), Items.SpellScroll()],
         )
 
 
@@ -132,7 +133,7 @@ class CarpentersTools(ToolProficiency):
             weight=6.0,
             cost=8,
             utilize="Seal or pry open a door or container (DC 20)",
-            craftables=["Club", "Greatclub", "Quarterstaff", "Barrel", "Chest", "Ladder", "Pole", "Portable Ram", "Torch"],
+            craftables=[Items.Club(), Items.Greatclub(), Items.Quarterstaff(), Items.Barrel(), Items.Chest(), Items.Ladder(), Items.Pole(), Items.PortableRam(), Items.Torch()],
         )
 
 
@@ -145,7 +146,7 @@ class CartographersTools(ToolProficiency):
             weight=6.0,
             cost=15,
             utilize="Draft a map of a small area (DC 15)",
-            craftables=["Map"],
+            craftables=[Items.Map()],
         )
 
 
@@ -158,7 +159,7 @@ class CobblersTools(ToolProficiency):
             weight=5.0,
             cost=5,
             utilize="Modify footwear to give Advantage on the wearer's next Dexterity (Acrobatics) check (DC 10)",
-            craftables=["Climber's Kit"],
+            craftables=[Items.ClimbersKit()],
         )
 
 
@@ -171,7 +172,7 @@ class CooksUtensils(ToolProficiency):
             weight=8.0,
             cost=1,
             utilize="Improve food's flavor (DC 10), or detect spoiled or poisoned food (DC 15)",
-            craftables=["Rations"],
+            craftables=[Items.Rations()],
         )
 
 
@@ -184,7 +185,7 @@ class GlassblowersTools(ToolProficiency):
             weight=5.0,
             cost=30,
             utilize="Discern what a glass object held in the past 24 hours (DC 15)",
-            craftables=["Glass Bottle", "Magnifying Glass", "Spyglass", "Vial"],
+            craftables=[Items.GlassBottle(), Items.MagnifyingGlass(), Items.Spyglass(), Items.Vial()],
         )
 
 
@@ -197,7 +198,7 @@ class JewelersTools(ToolProficiency):
             weight=2.0,
             cost=25,
             utilize="Discern a gem's value (DC 15)",
-            craftables=["Arcane Focus", "Holy Symbol"],
+            craftables=[Items.ArcaneFocus(), Items.HolySymbol()],
         )
 
 
@@ -210,20 +211,7 @@ class LeatherworkersTools(ToolProficiency):
             weight=5.0,
             cost=5,
             utilize="Add a design to a leather item (DC 10)",
-            craftables=[
-                "Sling",
-                "Whip",
-                "Hide Armor",
-                "Leather Armor",
-                "Studded Leather Armor",
-                "Backpack",
-                "Crossbow Bolt Case",
-                "Map or Scroll Case",
-                "Parchment",
-                "Pouch",
-                "Quiver",
-                "Waterskin",
-            ],
+            craftables=[Items.Sling(), Items.Whip(), Items.HideArmor(), Items.LeatherArmor(), Items.StuddedLeatherArmor(), Items.Backpack(), Items.CrossbowBoltCase(), Items.MapOrScrollCase(), Items.Parchment(), Items.Pouch(), Items.Quiver(), Items.Waterskin()],
         )
 
 
@@ -236,7 +224,7 @@ class MasonsTools(ToolProficiency):
             weight=8.0,
             cost=10,
             utilize="Chisel a symbol or hole in stone (DC 10)",
-            craftables=["Block and Tackle"],
+            craftables=[Items.BlockAndTackle()],
         )
 
 
@@ -249,7 +237,7 @@ class PaintersSupplies(ToolProficiency):
             weight=5.0,
             cost=10,
             utilize="Paint a recognizable image of something you've seen (DC 10)",
-            craftables=["Druidic Focus", "Holy Symbol"],
+            craftables=[Items.DruidicFocus(), Items.HolySymbol()],
         )
 
 
@@ -262,7 +250,7 @@ class PottersTools(ToolProficiency):
             weight=3.0,
             cost=10,
             utilize="Discern what a ceramic object held in the past 24 hours (DC 15)",
-            craftables=["Jug", "Lamp"],
+            craftables=[Items.Jug(), Items.Lamp()],
         )
 
 
@@ -275,21 +263,7 @@ class SmithsTools(ToolProficiency):
             weight=8.0,
             cost=20,
             utilize="Pry open a door or container (DC 20)",
-            craftables=[
-                "Any Melee weapon (except Club, Greatclub, Quarterstaff, and Whip)",
-                "Medium armor (except Hide)",
-                "Heavy armor",
-                "Ball Bearings",
-                "Bucket",
-                "Caltrops",
-                "Chain",
-                "Crowbar",
-                "Firearm Bullets",
-                "Grappling Hook",
-                "Iron Pot",
-                "Iron Spikes",
-                "Sling Bullets",
-            ],
+            craftables=[Items.AnyMeleeWeaponPlaceholder(), Items.MediumArmorPlaceholder(), Items.HeavyArmorPlaceholder(), Items.BallBearings(), Items.Bucket(), Items.Caltrops(), Items.Chain(), Items.Crowbar(), Items.FirearmBullets(), Items.GrapplingHook(), Items.IronPot(), Items.IronSpikes(), Items.SlingBullets()],
         )
 
 
@@ -302,21 +276,7 @@ class TinkersTools(ToolProficiency):
             weight=10.0,
             cost=50,
             utilize="Assemble a Tiny item composed of scrap, which falls apart in 1 minute (DC 20)",
-            craftables=[
-                "Musket",
-                "Pistol",
-                "Bell",
-                "Bullseye Lantern",
-                "Flask",
-                "Hooded Lantern",
-                "Hunting Trap",
-                "Lock",
-                "Manacles",
-                "Mirror",
-                "Shovel",
-                "Signal Whistle",
-                "Tinderbox",
-            ],
+            craftables=[Items.Musket(), Items.Pistol(), Items.Bell(), Items.BullseyeLantern(), Items.Flask(), Items.HoodedLantern(), Items.HuntingTrap(), Items.Lock(), Items.Manacles(), Items.MirrorPlaceholder(), Items.Shovel(), Items.SignalWhistle(), Items.Tinderbox()],
         )
 
 
@@ -329,20 +289,7 @@ class WeaversTools(ToolProficiency):
             weight=5.0,
             cost=1,
             utilize="Mend a tear in clothing (DC 10), or sew a Tiny design (DC 10)",
-            craftables=[
-                "Padded Armor",
-                "Basket",
-                "Bedroll",
-                "Blanket",
-                "Fine Clothes",
-                "Net",
-                "Robe",
-                "Rope",
-                "Sack",
-                "String",
-                "Tent",
-                "Traveler's Clothes",
-            ],
+            craftables=[Items.PaddedArmor(), Items.Basket(), Items.Bedroll(), Items.Blanket(), Items.FineClothes(), Items.Net(), Items.Robe(), Items.RopePlaceholder(), Items.Sack(), Items.StringItem(), Items.Tent(), Items.TravelersClothes()],
         )
 
 
@@ -355,18 +302,7 @@ class WoodcarversTools(ToolProficiency):
             weight=5.0,
             cost=1,
             utilize="Carve a pattern in wood (DC 10)",
-            craftables=[
-                "Club",
-                "Greatclub",
-                "Quarterstaff",
-                "Ranged weapons (except Pistol, Musket, and Sling)",
-                "Arcane Focus",
-                "Arrows",
-                "Bolts",
-                "Druidic Focus",
-                "Ink Pen",
-                "Needles",
-            ],
+            craftables=[Items.Club(), Items.Greatclub(), Items.Quarterstaff(), Items.RangedWeaponsPlaceholder(), Items.ArcaneFocus(), Items.Arrows(), Items.Bolts(), Items.DruidicFocus(), Items.InkPen(), Items.Needles()],
         )
 
 
@@ -379,7 +315,7 @@ class DisguiseKit(ToolProficiency):
             weight=3.0,
             cost=25,
             utilize="Apply makeup (DC 10)",
-            craftables=["Costume"],
+            craftables=[Items.Costume()],
         )
 
 
