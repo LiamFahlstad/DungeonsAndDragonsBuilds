@@ -633,20 +633,19 @@ class HtmlCharacterSheetWriter:
         file.write("<h2>Items</h2>\n")
 
         # Write carrying capacity: one checkbox per slot, one column per source
-        if items:
-            carrying_capacity = character.get_carrying_capacity()
-            file.write(f"<p><strong>Carrying Capacity ({carrying_capacity} slots):</strong></p>\n")
-            file.write("<table class='capacity-table'>\n")
-            file.write("<tr>\n")
-            for source, slots in character.carrying_capacity_sources:
-                file.write(f"<th class='item-title'>{source} ({slots})</th>\n")
-            file.write("</tr>\n")
-            file.write("<tr>\n")
-            for _source, slots in character.carrying_capacity_sources:
-                slot_boxes = "<span class='slot-box'></span>" * slots
-                file.write(f"<td><span class='slot-box-group'>{slot_boxes}</span></td>\n")
-            file.write("</tr>\n")
-            file.write("</table>\n")
+        carrying_capacity = character.get_carrying_capacity()
+        file.write(f"<p><strong>Carrying Capacity ({carrying_capacity} slots):</strong></p>\n")
+        file.write("<table class='capacity-table'>\n")
+        file.write("<tr>\n")
+        for source, slots in character.carrying_capacity_sources:
+            file.write(f"<th class='item-title'>{source} ({slots})</th>\n")
+        file.write("</tr>\n")
+        file.write("<tr>\n")
+        for _source, slots in character.carrying_capacity_sources:
+            slot_boxes = "<span class='slot-box'></span>" * slots
+            file.write(f"<td><span class='slot-box-group'>{slot_boxes}</span></td>\n")
+        file.write("</tr>\n")
+        file.write("</table>\n")
 
         # Each section renders in the same slot-table format:
         # (title, [(label, description, slots), ...])

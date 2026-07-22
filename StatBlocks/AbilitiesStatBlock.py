@@ -95,3 +95,49 @@ class StandardArrayAbilitiesStatBlock(AbilitiesStatBlock):
         super().__init__(
             strength, dexterity, constitution, intelligence, wisdom, charisma
         )
+
+
+class PointBuyAbilitiesStatBlock(AbilitiesStatBlock):
+    _BUDGET = 27
+    _MIN_SCORE = 8
+    _MAX_SCORE = 15
+
+    def __init__(
+        self,
+        strength: int,
+        dexterity: int,
+        constitution: int,
+        intelligence: int,
+        wisdom: int,
+        charisma: int,
+    ):
+        scores = {
+            Ability.STRENGTH: strength,
+            Ability.DEXTERITY: dexterity,
+            Ability.CONSTITUTION: constitution,
+            Ability.INTELLIGENCE: intelligence,
+            Ability.WISDOM: wisdom,
+            Ability.CHARISMA: charisma,
+        }
+        for ability, score in scores.items():
+            if not (self._MIN_SCORE <= score <= self._MAX_SCORE):
+                raise ValueError(
+                    f"Point Buy {ability.name.title()} score must be between "
+                    f"{self._MIN_SCORE} and {self._MAX_SCORE}, got {score}."
+                )
+
+        spent = sum(self._point_cost(score) for score in scores.values())
+        if spent != self._BUDGET:
+            raise ValueError(
+                f"Point Buy scores must spend exactly {self._BUDGET} points, got {spent}."
+            )
+
+        super().__init__(
+            strength, dexterity, constitution, intelligence, wisdom, charisma
+        )
+
+    @staticmethod
+    def _point_cost(score: int) -> int:
+        if score <= 13:
+            return score - 8
+        return 5 + 2 * (score - 13)
