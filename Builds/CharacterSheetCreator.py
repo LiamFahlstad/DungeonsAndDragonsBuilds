@@ -36,6 +36,12 @@ class CharacterSheetData:
     character_subclass: Optional[str] = None
     base_class: Optional[CharacterClass] = None
     level_per_class: dict[CharacterClass, int] = attr.Factory(dict)
+    # Which class a given total character level was taken in, e.g. {1: FIGHTER,
+    # 2: FIGHTER, 3: WIZARD}. Populated by ClassBuilder.create() as builders are
+    # applied in order, so it reflects the actual level-by-level pick history
+    # (including dips and resumed classes), not just the final per-class totals
+    # in level_per_class.
+    class_by_character_level: dict[int, CharacterClass] = attr.Factory(dict)
     abilities: Optional[AbilitiesStatBlock] = None
     skills: Optional[SkillsStatBlock] = None
     speed: Optional[int] = None
@@ -114,6 +120,10 @@ class CharacterSheetData:
 
     def get_level_for_class(self, character_class: CharacterClass) -> int:
         return self.level_per_class.get(character_class, 0)
+
+    def record_class_level(self, character_level: int, character_class: CharacterClass):
+        self._invalidate_cache()
+        self.class_by_character_level[character_level] = character_class
 
     def add_armor(self, armor: AbstractArmor):
         self._invalidate_cache()
@@ -288,6 +298,7 @@ class CharacterSheetData:
             character_subclass=self.character_subclass,
             base_class=self.base_class,
             level_per_class=self.level_per_class,
+            class_by_character_level=self.class_by_character_level,
             abilities=self.abilities,
             skills=self.skills,
             combat=combat,

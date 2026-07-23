@@ -352,6 +352,16 @@ class ClassBuilder(ABC):
                 and f.character_class == self.base_class
             )
 
+        # Record which total character level each newly-gained class level
+        # corresponds to, before merge_with folds this builder's level count
+        # into character_sheet_data.character_level.
+        starting_character_level = character_sheet_data.character_level + 1
+        new_class_level_count = self.base_class_level - previously_declared_level
+        for offset in range(new_class_level_count):
+            character_sheet_data.record_class_level(
+                starting_character_level + offset, self.base_class
+            )
+
         character_sheet_data.merge_with(base_sheet_data)
         character_sheet_data = self.base_class_level_features.add_features(
             character_sheet_data, self.base_class, applied_level_features

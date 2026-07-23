@@ -21,11 +21,13 @@ class CharacterStatBlock:
         saving_throws: SavingThrowsStatBlock,
         spell_casting_ability: Optional[Ability] = None,
         spell_slots: Optional[dict[int, int]] = None,
+        class_by_character_level: Optional[dict[int, CharacterClass]] = None,
     ):
         self.name = name
         self.character_subclass = character_subclass
         self.base_class = base_class
         self.level_per_class = level_per_class
+        self.class_by_character_level = class_by_character_level or {}
         self.abilities = abilities
         self.skills = skills
         self.combat = combat
@@ -67,6 +69,26 @@ class CharacterStatBlock:
 
     def get_class_level(self, character_class: CharacterClass) -> int:
         return self.level_per_class.get(character_class, 0)
+
+    def get_class_level_segments(self) -> list[tuple[int, int, CharacterClass]]:
+        """Contiguous (start_level, end_level, class) ranges describing which
+        class was being leveled at each total character level, in
+        chronological order. A class taken again after a dip into another
+        class (e.g. Artificer 1-7, Wizard 8, Artificer 9-15) appears as two
+        separate segments rather than being merged into one."""
+        segments: list[tuple[int, int, CharacterClass]] = []
+        current_class = None
+        start = None
+        for level in range(1, self.character_level + 1):
+            character_class = self.class_by_character_level.get(level)
+            if character_class != current_class:
+                if current_class is not None:
+                    segments.append((start, level - 1, current_class))
+                current_class = character_class
+                start = level
+        if current_class is not None:
+            segments.append((start, self.character_level, current_class))
+        return segments
 
     def get_proficiency_bonus(self) -> int:
         return 2 + (self.character_level - 1) // 4

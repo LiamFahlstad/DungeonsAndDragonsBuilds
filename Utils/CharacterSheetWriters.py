@@ -139,34 +139,40 @@ class HtmlCharacterSheetWriter:
             return f" <span class='wtag wtag-worn'>{worn_label}</span>"
         return f" <span class='wtag wtag-not-worn'>{not_worn_label}</span>"
 
+    @staticmethod
+    def _format_class_level_history(character: CharacterStatBlock) -> str:
+        def format_segment(start: int, end: int, character_class) -> str:
+            level_label = str(start) if start == end else f"{start}-{end}"
+            return f"{level_label}: {character_class.value}"
+
+        return ", ".join(
+            format_segment(start, end, character_class)
+            for start, end, character_class in character.get_class_level_segments()
+        )
+
     def _write_general_info(
         self, character: CharacterStatBlock, file: TextIO, experience_points: int = 0
     ):
         file.write("<h2>General Info</h2>\n")
 
         rows = [
-            ("Name", character.name),
-            ("Level", character.character_level),
-            ("Class", character.base_class.value),
-            (
-                "Multiclass",
-                ", ".join(
-                    f"{cls.value}: {lvl}"
-                    for cls, lvl in character.level_per_class.items()
-                    if lvl > 0
-                ),
-            ),
-            ("Subclass", character.character_subclass),
-            ("Prof. Bonus", character.get_proficiency_bonus()),
-            ("XP", experience_points),
+            ("Name", character.name, ""),
+            ("Levels per class", self._format_class_level_history(character), ""),
+            ("Subclass", character.character_subclass, ""),
+            ("Prof. Bonus", character.get_proficiency_bonus(), ""),
+            # Left blank (regardless of experience_points) so the player can
+            # fill it in by hand; xp-cell widens the column to leave room.
+            ("XP", "", "xp-cell"),
         ]
 
         file.write("<table class='stat-table'>\n<tr>")
-        for field, _ in rows:
-            file.write(f"<th>{field}</th>")
+        for field, _, css_class in rows:
+            cls = f" class='{css_class}'" if css_class else ""
+            file.write(f"<th{cls}>{field}</th>")
         file.write("</tr>\n<tr>")
-        for _, value in rows:
-            file.write(f"<td>{value}</td>")
+        for _, value, css_class in rows:
+            cls = f" class='{css_class}'" if css_class else ""
+            file.write(f"<td{cls}>{value}</td>")
         file.write("</tr>\n</table>\n<br class='section-gap'>\n")
 
     def _write_combat_stats(
@@ -926,6 +932,11 @@ class HtmlCharacterSheetWriter:
             letter-spacing: 0.06em;
             white-space: nowrap;
             border-bottom: 2px solid #3a2c1c;
+        }
+
+        /* Blank, hand-fillable XP column - widened to leave writing room */
+        table.stat-table td.xp-cell {
+            min-width: 4rem;
         }
 
         table.stat-table tr.st-proficient td {
