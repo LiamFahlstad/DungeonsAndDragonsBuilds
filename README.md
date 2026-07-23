@@ -32,7 +32,7 @@ required for the core build engine above.
 
 | Tool | Run with | Extra install |
 | --- | --- | --- |
-| Character Creator GUI | `python Builds/CharacterCreatorUI.py` | included in `requirements.txt` (PyQt6) |
+| Character Creator GUI | `python RunCharacterCreatorUI.py` | included in `requirements.txt` (PyQt6) |
 | Combat simulator | `python RunCombatSimulator.py` | included in `requirements.txt` (PyQt6) |
 | Spell/subclass/monster scrapers (`Scrapers/`, `Combat/Tools/scrape_monsters.py`) | e.g. `python Scrapers/DnD2024SpellScraper.py` | `pip install beautifulsoup4 requests tqdm` |
 | Monster stat analysis | `python Combat/Tools/analyze_monster_stats.py` | `pip install matplotlib numpy` |

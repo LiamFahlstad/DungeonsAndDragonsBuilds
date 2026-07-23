@@ -12,14 +12,13 @@ This directory contains character build definitions for the D&D 5e character she
 | `GeneratedBuilds/` | Output of the Character Creator UI |
 | `CharacterCreator/` | The Character Creator UI implementation |
 | `CharacterBuilder.py` | Base class every build subclasses |
-| `CharacterCreatorUI.py` | Entry point for the Character Creator UI |
 
 ## Easiest way: the Character Creator UI
 
-Run from the repo root:
+Run from the repo root (entry point is `RunCharacterCreatorUI.py`):
 
 ```bash
-python Builds/CharacterCreatorUI.py
+python RunCharacterCreatorUI.py
 ```
 
 Pick a class, subclass, level, species, ability scores, skills, feats, spells
@@ -31,7 +30,7 @@ To start from an existing build and tweak it, either click **Load build…**
 or pass it on the command line:
 
 ```bash
-python Builds/CharacterCreatorUI.py --load-build Builds/Characters/OptimizedBarbarianBerserker.py
+python RunCharacterCreatorUI.py --load-build Builds/Characters/OptimizedBarbarianBerserker.py
 ```
 
 Notes:
