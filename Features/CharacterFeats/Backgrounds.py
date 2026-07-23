@@ -15,14 +15,13 @@ class FreeBackgroundAbilityBonus(Feature):
         self._bonus.apply(character_stat_block)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        choices = "\n".join(
-            f"    * {ability.value} +{bonus}" for ability, bonus in self._bonus.bonuses
+        choices = ", ".join(
+            f"{ability.value} +{bonus}" for ability, bonus in self._bonus.bonuses
         )
         return (
             "Your background grants an Ability Score bonus: either +1 to three different abilities "
             "or +2 to one ability and +1 to another, totaling +3.\n"
-            "Choices:\n"
-            f"{choices}"
+            f"Choices: {choices}"
         )
 
 
@@ -42,9 +41,8 @@ class FreeBackgroundSkillProficiency(Feature):
         self._choice.apply(character_stat_block)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        choices = "\n".join(f"    * {skill.value}" for skill in self._choice.skills)
+        choices = ", ".join(skill.value for skill in self._choice.skills)
         return (
             "Your background grants proficiency in two skills of your choice.\n"
-            "Choices:\n"
-            f"{choices}"
+            f"Choices: {choices}"
         )

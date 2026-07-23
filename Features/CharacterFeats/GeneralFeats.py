@@ -58,14 +58,13 @@ class AbilityScoreImprovement(GeneralFeat):
         self._bonus.apply(character_stat_block)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        choices = "\n".join(
-            f"    * {ability.value} +{bonus}" for ability, bonus in self._bonus.bonuses
+        choices = ", ".join(
+            f"{ability.value} +{bonus}" for ability, bonus in self._bonus.bonuses
         )
         return (
             "You can increase one ability score of your choice by 2, or you can increase two ability scores of your choice by 1 each. "
             "You can't increase an ability score above 20 using this feature.\n"
-            "Choices:\n"
-            f"{choices}"
+            f"Choices: {choices}"
         )
 
 

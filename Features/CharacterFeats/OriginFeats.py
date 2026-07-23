@@ -40,11 +40,10 @@ class Skilled(OriginFeat):
         self._choice.apply(character_stat_block)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        choices = "\n".join(f"    * {skill.value}" for skill in self._choice.skills)
+        choices = ", ".join(skill.value for skill in self._choice.skills)
         return (
             "You gain proficiency in any combination of three skills of your choice.\n"
-            "Choices:\n"
-            f"{choices}"
+            f"Choices: {choices}"
         )
 
 
@@ -190,12 +189,13 @@ class MagicInitiate(OriginFeat):
         return self.spell_casting_ability
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+        spells = (
+            f"Cantrip 1: {self.cantrip_1}, Cantrip 2: {self.cantrip_2}, "
+            f"Level 1 Spell: {self.spell} (Cast once per long rest without a spell slot)"
+        )
         return (
             f"Magic Initiate {self.character_class.name.title()} Spellcasting\n"
-            "Spell List (always prepared):\n"
-            f"    * Cantrip 1: {self.cantrip_1}\n"
-            f"    * Cantrip 2: {self.cantrip_2}\n"
-            f"    * Level 1 Spell: {self.spell} (Cast once per long rest without a spell slot)\n"
+            f"Spell List (always prepared): {spells}\n"
             "Spell Change. Whenever you gain a new level, you can replace one of the spells you chose for this feat with a different spell of the same level from the chosen spell list.\n\n"
             "Repeatable. You can take this feat more than once, but you must choose a different spell list each time."
         )
