@@ -2,24 +2,23 @@ import pathlib
 import re
 from typing import Optional, TextIO
 
-from Utils import DamageCalculator
 import Core.Definitions as Definitions
-from Core.Definitions import Ability, Die, DiceRollCondition
-from Features.Equipment import Armor
-from Features.Core.BaseFeatures import Feature
+from Core.Definitions import Ability, DiceRollCondition, Die
 from Features.Combat.FightingStyles import FightingStyle
+from Features.Core.BaseFeatures import Feature
+from Features.Equipment import Armor
 from Features.Equipment.Weapons import (
     AbstractWeapon,
     UnarmedStrike,
     WeaponProficiency,
     write_weapons_to_file,
 )
-from Invocations.InvocationFactory import InvocationFactory
 from Features.Items import Items
+from Invocations.InvocationFactory import InvocationFactory
 from Spells.SpellFactory import SpellFactory
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from ToolProficiencies.ToolProficiencies import ToolProficiency
-from Utils import StringUtils
+from Utils import DamageCalculator, StringUtils
 
 
 class HtmlCharacterSheetWriter:
@@ -97,7 +96,9 @@ class HtmlCharacterSheetWriter:
         file.write("</table>\n")
 
     @staticmethod
-    def _write_slot_item_table(file: TextIO, title: str, rows: list[tuple[str, str, int]]):
+    def _write_slot_item_table(
+        file: TextIO, title: str, rows: list[tuple[str, str, int]]
+    ):
         """Inventory table with slot cost, carry quantity, and left-behind tracking."""
         file.write("<table class='item-table'>\n")
         file.write("<tr>\n")
@@ -110,18 +111,27 @@ class HtmlCharacterSheetWriter:
         for label, description, slots in rows:
             plain_label = re.sub(r"<span[^>]*>.*?</span>", "", label)
             plain_label = re.sub(r"<[^>]*>", "", plain_label).strip()
-            leftbehind_id = plain_label.replace(" ", "_").replace("(", "").replace(")", "") + "_leftbehind"
+            leftbehind_id = (
+                plain_label.replace(" ", "_").replace("(", "").replace(")", "")
+                + "_leftbehind"
+            )
             file.write("<tr>\n")
-            file.write(f"<td class='item-entry'><strong>{label}</strong><br/>{description}</td>\n")
+            file.write(
+                f"<td class='item-entry'><strong>{label}</strong><br/>{description}</td>\n"
+            )
             file.write(f"<td style='text-align: center;'>{slots}</td>\n")
             file.write("<td></td>\n")
-            file.write(f"<td class='item-leftbehind'><input type='checkbox' id='{leftbehind_id}_check' name='{leftbehind_id}_check'/></td>\n")
+            file.write(
+                f"<td class='item-leftbehind'><input type='checkbox' id='{leftbehind_id}_check' name='{leftbehind_id}_check'/></td>\n"
+            )
             file.write("</tr>\n")
 
         file.write("</table>\n")
 
     @staticmethod
-    def _worn_tag(item: Items.Item, worn_label: str = "Worn", not_worn_label: str = "Not worn") -> str:
+    def _worn_tag(
+        item: Items.Item, worn_label: str = "Worn", not_worn_label: str = "Not worn"
+    ) -> str:
         """Chip showing worn state for wearable items; empty for everything else."""
         if not isinstance(item, Items.WearableItem):
             return ""
@@ -129,7 +139,9 @@ class HtmlCharacterSheetWriter:
             return f" <span class='wtag wtag-worn'>{worn_label}</span>"
         return f" <span class='wtag wtag-not-worn'>{not_worn_label}</span>"
 
-    def _write_general_info(self, character: CharacterStatBlock, file: TextIO, experience_points: int = 0):
+    def _write_general_info(
+        self, character: CharacterStatBlock, file: TextIO, experience_points: int = 0
+    ):
         file.write("<h2>General Info</h2>\n")
 
         rows = [
@@ -182,14 +194,14 @@ class HtmlCharacterSheetWriter:
             initiative += f" ({character.initiative_roll_condition.value})"
 
         rows = [
-            ("Max Hit Points", character.calculate_hit_points()),
-            ("Armor Class", ac),
+            ("Max HP", character.calculate_hit_points()),
+            ("AC", ac),
             (
-                "Armor Proficiencies",
+                "Armor Prof.",
                 ", ".join(sorted([a.value for a in armor_proficiencies])),
             ),
             (
-                "Weapon Proficiencies",
+                "Weapon Prof.",
                 ", ".join(sorted([wp.value for wp in weapon_proficiencies])),
             ),
             ("Initiative", initiative),
@@ -247,12 +259,21 @@ class HtmlCharacterSheetWriter:
                 f"{ability_attack_bonus:+}",
             ]
 
-            tr_class = "st-proficient" if character.is_proficient_in_saving_throw(ability) else ""
+            tr_class = (
+                "st-proficient"
+                if character.is_proficient_in_saving_throw(ability)
+                else ""
+            )
             self._write_table_row(file, row, tr_class)
 
         file.write("</table>\n<br>\n")
 
-    def _write_save_dc_probabilities(self, character: CharacterStatBlock, file: TextIO, spellcasting_abilities: list[Ability]):
+    def _write_save_dc_probabilities(
+        self,
+        character: CharacterStatBlock,
+        file: TextIO,
+        spellcasting_abilities: list[Ability],
+    ):
         save_bonuses = range(-3, 13)
 
         dc_to_abilities: dict[int, list[str]] = {}
@@ -269,7 +290,9 @@ class HtmlCharacterSheetWriter:
 
         for dc in sorted(dc_to_abilities.keys(), reverse=True):
             abilities_label = "/".join(dc_to_abilities[dc])
-            file.write(f"<tr><th class='dc-fail-dc-col'>DC {dc} ({abilities_label})</th>")
+            file.write(
+                f"<tr><th class='dc-fail-dc-col'>DC {dc} ({abilities_label})</th>"
+            )
             for bonus in save_bonuses:
                 prob_success = DamageCalculator.probability_of_success(
                     difficulty_class=dc,
@@ -299,7 +322,9 @@ class HtmlCharacterSheetWriter:
         ]
 
         file.write("<table class='dc-fail-table'>\n")
-        file.write("<tr><th class='dc-fail-dc-col'>Spell Attack (Hit %)</th><th class='dc-fail-dc-col'></th>")
+        file.write(
+            "<tr><th class='dc-fail-dc-col'>Spell Attack (Hit %)</th><th class='dc-fail-dc-col'></th>"
+        )
         for ac in ac_range:
             file.write(f"<th class='whit-ac'>AC {ac}</th>")
         file.write("</tr>\n")
@@ -309,8 +334,12 @@ class HtmlCharacterSheetWriter:
             sign = "+" if attack_bonus >= 0 else ""
             bonus_label = f"{sign}{attack_bonus} ({abilities_label})"
             for i, (cond_label, condition) in enumerate(spell_attack_conditions):
-                row_header = f"<th class='dc-fail-dc-col'>{bonus_label if i == 0 else ''}</th>"
-                file.write(f"<tr>{row_header}<th class='dc-fail-dc-col'>{cond_label}</th>")
+                row_header = (
+                    f"<th class='dc-fail-dc-col'>{bonus_label if i == 0 else ''}</th>"
+                )
+                file.write(
+                    f"<tr>{row_header}<th class='dc-fail-dc-col'>{cond_label}</th>"
+                )
                 for ac in ac_range:
                     prob = DamageCalculator.probability_of_success(
                         difficulty_class=ac,
@@ -320,7 +349,9 @@ class HtmlCharacterSheetWriter:
                     )
                     pct = round(prob * 100)
                     pct_bucket = round(pct / 5) * 5
-                    file.write(f"<td class='whit-pct' data-pct='{pct_bucket}'>{pct}%</td>")
+                    file.write(
+                        f"<td class='whit-pct' data-pct='{pct_bucket}'>{pct}%</td>"
+                    )
                 file.write("</tr>\n")
 
         file.write("</table>\n")
@@ -366,7 +397,9 @@ class HtmlCharacterSheetWriter:
                     self._modifier_with_condition(
                         character.get_skill_modifier(skill), condition
                     ),
-                    self._skill_modifier_breakdown(character, skill, condition, reasons),
+                    self._skill_modifier_breakdown(
+                        character, skill, condition, reasons
+                    ),
                     character.get_skill_ability(skill).value,
                 ]
                 self._write_table_row(file, row, tr_class)
@@ -405,7 +438,9 @@ class HtmlCharacterSheetWriter:
                     self._modifier_with_condition(
                         character.get_skill_modifier(best_skill), condition
                     ),
-                    self._skill_modifier_breakdown(character, best_skill, condition, reasons),
+                    self._skill_modifier_breakdown(
+                        character, best_skill, condition, reasons
+                    ),
                     character.get_skill_ability(possible_skills[0]).value,
                 ]
                 self._write_table_row(file, row, tr_class)
@@ -429,7 +464,8 @@ class HtmlCharacterSheetWriter:
         condition_reasons: Optional[list[str]] = None,
     ) -> str:
         """Modifier as a sum of its parts, e.g. '2 + 3 (proficiency) + 1 (Ring of X)',
-        followed by the roll condition and its reason, e.g. 'Disadvantage (Chain Mail)'."""
+        followed by the roll condition and its reason, e.g. 'Disadvantage (Chain Mail)'.
+        """
         terms: list[tuple[int, str]] = []
         proficiency_bonus = character.get_proficiency_bonus()
         if character.has_expertise_in_skill(skill):
@@ -439,7 +475,9 @@ class HtmlCharacterSheetWriter:
             terms.append((proficiency_bonus, "proficiency"))
         terms.extend(character.get_skill_bonus_sources(skill))
 
-        breakdown = str(character.get_ability_modifier(character.get_skill_ability(skill)))
+        breakdown = str(
+            character.get_ability_modifier(character.get_skill_ability(skill))
+        )
         for value, label in terms:
             sign = "+" if value >= 0 else "-"
             breakdown += f" {sign} {abs(value)} ({label})"
@@ -454,7 +492,9 @@ class HtmlCharacterSheetWriter:
     def _write_features(
         self, character: CharacterStatBlock, file: TextIO, features: list[Feature]
     ):
-        text_features = [f for f in features if f.get_description(character) is not None]
+        text_features = [
+            f for f in features if f.get_description(character) is not None
+        ]
         if not text_features:
             return
 
@@ -524,7 +564,11 @@ class HtmlCharacterSheetWriter:
         )
 
         for invocation in sorted_invocations:
-            level_label = f"Level {invocation.level}" if invocation.level else "No level requirement"
+            level_label = (
+                f"Level {invocation.level}"
+                if invocation.level
+                else "No level requirement"
+            )
             file.write("<div class='feature-card'>\n")
             file.write("<div class='feature-header'>\n")
             file.write(f"<span class='feature-name'>{invocation.name}</span>\n")
@@ -532,7 +576,9 @@ class HtmlCharacterSheetWriter:
             file.write("</div>\n")
             file.write("<div class='feature-body'>\n")
             if invocation.prerequisite:
-                file.write(f"<p><strong>Prerequisite:</strong> {invocation.prerequisite}</p>\n")
+                file.write(
+                    f"<p><strong>Prerequisite:</strong> {invocation.prerequisite}</p>\n"
+                )
             processed_desc = StringUtils.boxes_to_html(invocation.description)
             for para in processed_desc.split("\n"):
                 if para.strip():
@@ -594,7 +640,11 @@ class HtmlCharacterSheetWriter:
             {ability for _, ability, _ in spells},
             key=lambda a: a.value,
         )
-        label = "Spellcasting Abilities" if len(casting_abilities) > 1 else "Spellcasting Ability"
+        label = (
+            "Spellcasting Abilities"
+            if len(casting_abilities) > 1
+            else "Spellcasting Ability"
+        )
         abilities_str = ", ".join(a.value for a in casting_abilities)
         file.write(f"<p><strong>{label}:</strong> {abilities_str}</p>\n")
         self._write_save_dc_probabilities(character, file, casting_abilities)
@@ -618,6 +668,7 @@ class HtmlCharacterSheetWriter:
 
         # Group by level and emit a level header before each group
         from itertools import groupby
+
         for level, group in groupby(sorted_spells, key=lambda s: s.level):
             level_label = "Cantrips" if level == 0 else f"Level {level} Spells"
             file.write(f"<h3 class='spell-level-header'>{level_label}</h3>\n")
@@ -644,7 +695,9 @@ class HtmlCharacterSheetWriter:
 
         # Write carrying capacity: one checkbox per slot, one column per source
         carrying_capacity = character.get_carrying_capacity()
-        file.write(f"<p><strong>Carrying Capacity ({carrying_capacity} slots):</strong></p>\n")
+        file.write(
+            f"<p><strong>Carrying Capacity ({carrying_capacity} slots):</strong></p>\n"
+        )
         file.write("<table class='capacity-table'>\n")
         file.write("<tr>\n")
         for source, slots in character.carrying_capacity_sources:
