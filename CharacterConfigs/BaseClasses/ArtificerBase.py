@@ -3,13 +3,13 @@ from typing import Optional, TypeAlias
 import attr
 
 import Core.Definitions as Definitions
-from CharacterConfigs.BaseClasses import ClassBuilder
 from Builds.CharacterSheetCreator import CharacterSheetData
+from CharacterConfigs.BaseClasses import ClassBuilder
 from Core.Definitions import Ability, CharacterClass
 from Features.CharacterFeats import Backgrounds, EpicBoon, GeneralFeats, OriginFeats
-from Features.Equipment import Armor, Weapons
 from Features.ClassFeatures import SpellSlots
 from Features.ClassFeatures.Artificer import ArtificerFeatures
+from Features.Equipment import Armor, Weapons
 from Features.Items import Items
 from Spells.SpellLists import (
     ArtificerLevel0Spells,

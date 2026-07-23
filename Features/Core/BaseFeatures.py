@@ -65,6 +65,7 @@ class Feature:
     @staticmethod
     def _description_to_html(description: str) -> str:
         processed = StringUtils.boxes_to_html(description)
+        processed = StringUtils.tables_to_html(processed)
 
         BULLET_PREFIXES = [
             ("            > ", 3),

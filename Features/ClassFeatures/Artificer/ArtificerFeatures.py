@@ -1,4 +1,4 @@
-from Core.Definitions import ARTIFICER_HIT_DIE, Ability
+from Core.Definitions import Ability
 from Features.Core.BaseFeatures import Feature
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
@@ -25,7 +25,9 @@ class TinkersMagic(Feature):
         super().__init__(name="Tinker's Magic", origin="Artificer Level 1")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        intelligence_modifier = character_stat_block.get_ability_modifier(Ability.INTELLIGENCE)
+        intelligence_modifier = character_stat_block.get_ability_modifier(
+            Ability.INTELLIGENCE
+        )
         uses = max(1, intelligence_modifier)
         description = (
             "You know the Mending cantrip.\n"
@@ -80,7 +82,7 @@ class ReplicateMagicItem(Feature):
             "Wand of Secrets	No\n"
             "Wand of the War Mage +1	Yes\n"
             "Weapon +1	No\n"
-            "Wraps of Unarmed Power +1\n"
+            "Wraps of Unarmed Power +1	No\n"
             "Magic Item Plans (Artificer Level 6+)\n"
             "Magic Item Plan	Attunement\n"
             "Armor +1	No\n"
@@ -150,7 +152,9 @@ class FlashofGenius(Feature):
         super().__init__(name="Flash of Genius", origin="Artificer Level 7")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        intelligence_modifier = character_stat_block.get_ability_modifier(Ability.INTELLIGENCE)
+        intelligence_modifier = character_stat_block.get_ability_modifier(
+            Ability.INTELLIGENCE
+        )
         uses = max(1, intelligence_modifier)
         description = (
             "When you or a creature you can see within 30 feet of you fails an ability check or a saving throw, you can take a Reaction to add a bonus to the roll, potentially causing it to succeed. The bonus equals your Intelligence modifier (minimum of +1).\n"

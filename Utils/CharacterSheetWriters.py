@@ -1467,6 +1467,36 @@ class HtmlCharacterSheetWriter:
             margin: 0.3em 0 0.3em 1.2em;
         }
 
+        /* Tables embedded inside feature descriptions (e.g. item/plan lists) */
+        .feature-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.82rem;
+            margin: 0.4rem 0;
+        }
+
+        .feature-table td,
+        .feature-table th {
+            border: 1px solid var(--border-color);
+            padding: 3px 7px;
+            vertical-align: top;
+            text-align: left;
+        }
+
+        .feature-table th {
+            color: #3a2c1c;
+            font-weight: 700;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            background: #f4ede0;
+            border-bottom: 2px solid #9a7040;
+        }
+
+        .feature-table tr:nth-child(even) td {
+            background: #faf7f2;
+        }
+
         /* Feature upgrade blocks (nested inside .feature-body) */
         .feature-upgrade {
             margin-top: 0.5rem;

@@ -165,6 +165,44 @@ def boxes_to_html(description: str) -> str:
     return "\n".join(new_lines)
 
 
+def tables_to_html(description: str) -> str:
+    """Convert blocks of consecutive tab-separated lines into HTML tables.
+
+    A block is a run of lines that each contain at least one tab. If every
+    row in the block has the same cell count, the first row is rendered as
+    a header (<th>); otherwise (ragged column counts, e.g. a printed
+    multi-column item list) all rows render as plain <td> rows with no
+    header styling.
+    """
+    lines = description.split("\n")
+    new_lines = []
+    index = 0
+
+    while index < len(lines):
+        if "\t" not in lines[index]:
+            new_lines.append(lines[index])
+            index += 1
+            continue
+
+        block_rows = []
+        while index < len(lines) and "\t" in lines[index]:
+            cells = [cell.strip() for cell in lines[index].strip().split("\t")]
+            block_rows.append(cells)
+            index += 1
+
+        cell_counts = {len(row) for row in block_rows}
+        has_header = len(cell_counts) == 1 and len(block_rows[0]) > 1
+
+        new_lines.append("<table class='feature-table'>")
+        for i, cells in enumerate(block_rows):
+            tag = "th" if (has_header and i == 0) else "td"
+            cells_html = "".join(f"<{tag}>{cell}</{tag}>" for cell in cells)
+            new_lines.append(f"<tr>{cells_html}</tr>")
+        new_lines.append("</table>")
+
+    return "\n".join(new_lines)
+
+
 def _is_reset_sentinel_line(line: str) -> bool:
     """Return True if *line* is (possibly followed by <br>) a reset sentinel."""
     stripped = line.strip()
