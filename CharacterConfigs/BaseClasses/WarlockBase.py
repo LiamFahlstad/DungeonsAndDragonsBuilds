@@ -358,12 +358,13 @@ class WarlockCustomStarterClassArgs(ClassBuilder.CustomStarterClassArgs):
             subclass=subclass,
             saving_throws=WarlockSavingThrowsStatBlock(),
             default_equipment=[
-                Weapons.Sickle(player_is_proficient=True),
-                Weapons.Dagger(player_is_proficient=True),
+                Weapons.Sickle(),
+                Weapons.Dagger(),
                 Armor.LeatherArmor(),
             ],
             skills=skills,
             armor_proficiencies=[Definitions.ArmorType.LIGHT],
+            weapon_proficiencies=[Weapons.WeaponProficiency.SIMPLE],
             spell_casting_ability=Ability.CHARISMA,
             caster_type=SpellSlots.CasterType.WARLOCK_CASTER,
         )

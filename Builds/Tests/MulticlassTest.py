@@ -69,17 +69,14 @@ def get_starter_class_builder():
         armor=[],
         weapons=[
             Weapons.Longsword(
-                player_is_proficient=True,
                 player_has_mastery=True,
                 ability=Ability.INTELLIGENCE,
             ),
             Weapons.Shortsword(
-                player_is_proficient=True,
                 player_has_mastery=True,
                 ability=Ability.INTELLIGENCE,
             ),
             Weapons.Scimitar(
-                player_is_proficient=True,
                 player_has_mastery=True,
                 ability=Ability.INTELLIGENCE,
             ),

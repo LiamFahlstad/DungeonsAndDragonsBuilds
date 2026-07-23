@@ -72,8 +72,8 @@ def get_starter_class_builder():
             Armor.ArmorOfProtection(),
         ],
         weapons=[
-            Weapons.FlameTongueSword(player_is_proficient=True),
-            Weapons.Longbow(player_is_proficient=True),
+            Weapons.FlameTongueSword(),
+            Weapons.Longbow(),
         ],
         items=Packs.DungeoneersPack().get_items() + [(Items.RingOfInvestigation(), 1)],
         base_class_level_features=ClassBuilder.BaseClassLevelFeatures(

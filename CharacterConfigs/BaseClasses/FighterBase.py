@@ -238,8 +238,8 @@ class FighterCustomStarterClassArgs(ClassBuilder.CustomStarterClassArgs):
             subclass=subclass,
             saving_throws=FighterSavingThrowsStatBlock(),
             default_equipment=[
-                Weapons.Greatsword(player_is_proficient=True),
-                Weapons.Flail(player_is_proficient=True),
+                Weapons.Greatsword(),
+                Weapons.Flail(),
                 Armor.ChainMailArmor(),
                 Armor.ShieldArmor(),
             ],
@@ -249,6 +249,10 @@ class FighterCustomStarterClassArgs(ClassBuilder.CustomStarterClassArgs):
                 Definitions.ArmorType.MEDIUM,
                 Definitions.ArmorType.HEAVY,
                 Definitions.ArmorType.SHIELD,
+            ],
+            weapon_proficiencies=[
+                Weapons.WeaponProficiency.SIMPLE,
+                Weapons.WeaponProficiency.MARTIAL,
             ],
             spell_casting_ability=Ability.INTELLIGENCE if caster_type is not None else None,
             caster_type=caster_type,

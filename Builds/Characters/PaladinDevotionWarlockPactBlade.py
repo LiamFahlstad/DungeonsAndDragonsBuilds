@@ -103,7 +103,6 @@ def get_starter_class_builder():
         armor=[],
         weapons=[
             Weapons.Greatsword(
-                player_is_proficient=True,
                 ability=Ability.STRENGTH,
             ),
         ],

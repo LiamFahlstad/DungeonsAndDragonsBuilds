@@ -300,15 +300,19 @@ class RangerCustomStarterClassArgs(ClassBuilder.CustomStarterClassArgs):
             saving_throws=RangerSavingThrowsStatBlock(),
             default_equipment=[
                 Armor.StuddedLeatherArmor(),
-                Weapons.Scimitar(player_is_proficient=True),
-                Weapons.Shortsword(player_is_proficient=True),
-                Weapons.Longbow(player_is_proficient=True),
+                Weapons.Scimitar(),
+                Weapons.Shortsword(),
+                Weapons.Longbow(),
             ],
             skills=skills,
             armor_proficiencies=[
                 Definitions.ArmorType.LIGHT,
                 Definitions.ArmorType.MEDIUM,
                 Definitions.ArmorType.SHIELD,
+            ],
+            weapon_proficiencies=[
+                Weapons.WeaponProficiency.SIMPLE,
+                Weapons.WeaponProficiency.MARTIAL,
             ],
             spell_casting_ability=Ability.WISDOM,
             caster_type=SpellSlots.CasterType.HALF_CASTER,

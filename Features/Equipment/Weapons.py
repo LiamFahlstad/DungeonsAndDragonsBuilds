@@ -84,6 +84,18 @@ class WeaponType(Enum):
     SIMPLE_RANGED = "Simple Ranged"
 
 
+class WeaponProficiency(Enum):
+    """A class's weapon proficiency grant, per its Weapon Proficiencies entry
+    in SourceTexts/ClassTexts/<class>.txt. Most classes grant a broad
+    category (simple and/or martial); Monk and Rogue additionally grant a
+    property-restricted slice of martial weapons."""
+
+    SIMPLE = "Simple weapons"
+    MARTIAL = "Martial weapons"
+    MARTIAL_LIGHT = "Martial weapons with the Light property"
+    MARTIAL_FINESSE_OR_LIGHT = "Martial weapons with the Finesse or Light property"
+
+
 class WeaponsDamageTypes(Enum):
     SLASHING = "Slashing"
     PIERCING = "Piercing"
@@ -323,6 +335,32 @@ class AbstractWeapon(WearableItem):
             damage_condition=damage_condition,
             damage_bonus=damage_bonus,
         )
+
+
+def weapon_matches_proficiency(
+    weapon: AbstractWeapon, proficiency: WeaponProficiency
+) -> bool:
+    stats = weapon.stats()
+    is_simple = stats.weapon_type in (WeaponType.SIMPLE_MELEE, WeaponType.SIMPLE_RANGED)
+    is_martial = stats.weapon_type in (WeaponType.MARTIAL_MELEE, WeaponType.MARTIAL_RANGED)
+    if proficiency == WeaponProficiency.SIMPLE:
+        return is_simple
+    if proficiency == WeaponProficiency.MARTIAL:
+        return is_martial
+    if proficiency == WeaponProficiency.MARTIAL_LIGHT:
+        return is_martial and WeaponProperty.LIGHT in stats.properties
+    if proficiency == WeaponProficiency.MARTIAL_FINESSE_OR_LIGHT:
+        return is_martial and (
+            WeaponProperty.FINESSE in stats.properties
+            or WeaponProperty.LIGHT in stats.properties
+        )
+    raise ValueError(f"Unhandled weapon proficiency: {proficiency}")
+
+
+def is_proficient_with(
+    weapon: AbstractWeapon, proficiencies: "set[WeaponProficiency] | list[WeaponProficiency]"
+) -> bool:
+    return any(weapon_matches_proficiency(weapon, p) for p in proficiencies)
 
 
 @dataclass

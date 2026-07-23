@@ -66,9 +66,9 @@ def get_starter_class_builder():
             Armor.LeatherArmor(),
         ],
         weapons=[
-            Weapons.Shortsword(player_is_proficient=True),
-            Weapons.Scimitar(player_is_proficient=True),
-            Weapons.Longbow(player_is_proficient=True),
+            Weapons.Shortsword(),
+            Weapons.Scimitar(),
+            Weapons.Longbow(),
         ],
         items=Packs.DungeoneersPack().get_items()
         + [(Items.RobeOfLevitation(), 1), (Items.HobbyHorse(), 1)],

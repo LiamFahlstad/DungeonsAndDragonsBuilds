@@ -61,8 +61,8 @@ def get_starter_class_builder():
         add_default_equipment=False,
         origin_feat=OriginFeats.Lucky(),
         weapons=[
-            Weapons.Spear(player_is_proficient=True),
-            Weapons.Dagger(player_is_proficient=True),
+            Weapons.Spear(),
+            Weapons.Dagger(),
         ],
         base_class_level_features=ClassBuilder.BaseClassLevelFeatures(
             base_class_features_by_level={

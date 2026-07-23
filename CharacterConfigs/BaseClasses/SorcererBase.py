@@ -319,11 +319,12 @@ class SorcererCustomStarterClassArgs(ClassBuilder.CustomStarterClassArgs):
             subclass=subclass,
             saving_throws=SorcererSavingThrowsStatBlock(),
             default_equipment=[
-                Weapons.Dagger(player_is_proficient=True),
-                Weapons.Quarterstaff(player_is_proficient=True),
+                Weapons.Dagger(),
+                Weapons.Quarterstaff(),
             ],
             skills=skills,
             armor_proficiencies=None,
+            weapon_proficiencies=[Weapons.WeaponProficiency.SIMPLE],
             spell_casting_ability=Ability.CHARISMA,
             caster_type=SpellSlots.CasterType.FULL_CASTER,
         )

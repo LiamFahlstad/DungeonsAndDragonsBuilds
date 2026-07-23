@@ -183,9 +183,9 @@ def get_starter_class_builder():
         # Set player_is_proficient=True if your class has proficiency
         # Set player_has_mastery=True if you have weapon mastery (Fighter-specific)
         weapons=[
-            Weapons.Shortsword(player_is_proficient=True),
-            Weapons.Scimitar(player_is_proficient=True),
-            Weapons.Longbow(player_is_proficient=True),
+            Weapons.Shortsword(),
+            Weapons.Scimitar(),
+            Weapons.Longbow(),
         ],
         # =====================================================================
         # base_class_level_features: Per-level class and subclass features

@@ -329,14 +329,15 @@ class DruidCustomStarterClassArgs(ClassBuilder.CustomStarterClassArgs):
             default_equipment=[
                 Armor.LeatherArmor(),
                 Armor.ShieldArmor(),
-                Weapons.Sickle(player_is_proficient=True),
-                Weapons.Quarterstaff(player_is_proficient=True),
+                Weapons.Sickle(),
+                Weapons.Quarterstaff(),
             ],
             skills=skills,
             armor_proficiencies=[
                 Definitions.ArmorType.LIGHT,
                 Definitions.ArmorType.SHIELD,
             ],
+            weapon_proficiencies=[Weapons.WeaponProficiency.SIMPLE],
             spell_casting_ability=Ability.WISDOM,
             caster_type=SpellSlots.CasterType.FULL_CASTER,
         )

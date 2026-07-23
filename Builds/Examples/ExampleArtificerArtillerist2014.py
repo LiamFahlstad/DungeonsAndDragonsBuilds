@@ -83,8 +83,8 @@ def get_starter_class_builder():
             Armor.StuddedLeatherArmor(),
         ],
         weapons=[
-            Weapons.LightCrossbow(player_is_proficient=True, ability=Ability.INTELLIGENCE),
-            Weapons.Dagger(player_is_proficient=True),
+            Weapons.LightCrossbow(ability=Ability.INTELLIGENCE),
+            Weapons.Dagger(),
         ],
         base_class_level_features=ClassBuilder.BaseClassLevelFeatures(
             base_class_features_by_level={

@@ -8,7 +8,12 @@ from Core.Definitions import Ability, Die, DiceRollCondition
 from Features.Equipment import Armor
 from Features.Core.BaseFeatures import Feature
 from Features.Combat.FightingStyles import FightingStyle
-from Features.Equipment.Weapons import AbstractWeapon, UnarmedStrike, write_weapons_to_file
+from Features.Equipment.Weapons import (
+    AbstractWeapon,
+    UnarmedStrike,
+    WeaponProficiency,
+    write_weapons_to_file,
+)
 from Invocations.InvocationFactory import InvocationFactory
 from Features.Items import Items
 from Spells.SpellFactory import SpellFactory
@@ -158,6 +163,7 @@ class HtmlCharacterSheetWriter:
         file: TextIO,
         armors: list[Armor.AbstractArmor],
         armor_proficiencies: set[Definitions.ArmorType],
+        weapon_proficiencies: set[WeaponProficiency],
     ):
         file.write("<h2>Combat Stats</h2>\n")
 
@@ -181,6 +187,10 @@ class HtmlCharacterSheetWriter:
             (
                 "Armor Proficiencies",
                 ", ".join(sorted([a.value for a in armor_proficiencies])),
+            ),
+            (
+                "Weapon Proficiencies",
+                ", ".join(sorted([wp.value for wp in weapon_proficiencies])),
             ),
             ("Initiative", initiative),
             ("Speed (ft)", character.combat.speed),
@@ -1657,6 +1667,7 @@ class HtmlCharacterSheetWriter:
         output_path: str,
         armors: list[Armor.AbstractArmor],
         armor_proficiencies: set[Definitions.ArmorType],
+        weapon_proficiencies: set[WeaponProficiency],
         features: list[Feature],
         weapons: list[AbstractWeapon],
         weapon_masteries: list[AbstractWeapon],
@@ -1675,7 +1686,9 @@ class HtmlCharacterSheetWriter:
                 f"<h1>{character.name} - Level {character.character_level} {character.base_class.value}</h1>\n"
             )
             self._write_general_info(character, file, experience_points)
-            self._write_combat_stats(character, file, armors, armor_proficiencies)
+            self._write_combat_stats(
+                character, file, armors, armor_proficiencies, weapon_proficiencies
+            )
             self._write_abilities(character, file)
             self._write_skills(character, file, skill_config)
             file.write("<div class='print-page-break'></div>\n")

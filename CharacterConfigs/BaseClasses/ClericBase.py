@@ -327,7 +327,7 @@ class ClericCustomStarterClassArgs(ClassBuilder.CustomStarterClassArgs):
             default_equipment=[
                 Armor.ChainShirtArmor(),
                 Armor.ShieldArmor(),
-                Weapons.Mace(player_is_proficient=True),
+                Weapons.Mace(),
             ],
             skills=skills,
             armor_proficiencies=[
@@ -335,6 +335,7 @@ class ClericCustomStarterClassArgs(ClassBuilder.CustomStarterClassArgs):
                 Definitions.ArmorType.MEDIUM,
                 Definitions.ArmorType.SHIELD,
             ],
+            weapon_proficiencies=[Weapons.WeaponProficiency.SIMPLE],
             spell_casting_ability=Ability.WISDOM,
             caster_type=SpellSlots.CasterType.FULL_CASTER,
         )

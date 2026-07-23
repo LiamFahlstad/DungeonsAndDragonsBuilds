@@ -67,7 +67,7 @@ def get_starter_class_builder():
         add_default_equipment=False,
         origin_feat=OriginFeats.Tough(),
         armor=[],
-        weapons=[Weapons.Longsword(player_is_proficient=True)],
+        weapons=[Weapons.Longsword()],
         base_class_level_features=ClassBuilder.BaseClassLevelFeatures(
             base_class_features_by_level={
                 1: PaladinLevel1(

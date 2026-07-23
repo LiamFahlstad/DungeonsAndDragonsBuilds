@@ -232,14 +232,18 @@ class RogueCustomStarterClassArgs(ClassBuilder.CustomStarterClassArgs):
             subclass=subclass,
             saving_throws=RogueSavingThrowsStatBlock(),
             default_equipment=[
-                Weapons.Shortsword(player_is_proficient=True),
-                Weapons.Dagger(player_is_proficient=True),
-                Weapons.Scimitar(player_is_proficient=True),
+                Weapons.Shortsword(),
+                Weapons.Dagger(),
+                Weapons.Scimitar(),
                 Armor.LeatherArmor(),
             ],
             skills=skills,
             armor_proficiencies=[
                 Definitions.ArmorType.LIGHT,
+            ],
+            weapon_proficiencies=[
+                Weapons.WeaponProficiency.SIMPLE,
+                Weapons.WeaponProficiency.MARTIAL_FINESSE_OR_LIGHT,
             ],
             spell_casting_ability=Ability.INTELLIGENCE if caster_type is not None else None,
             caster_type=caster_type,

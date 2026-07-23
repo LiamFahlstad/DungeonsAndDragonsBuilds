@@ -79,7 +79,7 @@ def get_starter_class_builder():
         origin_feat=OriginFeats.Alert(),
         armor=[],
         weapons=[
-            Weapons.Longbow(player_is_proficient=True, ability=Ability.DEXTERITY),
+            Weapons.Longbow(ability=Ability.DEXTERITY),
         ],
         base_class_level_features=ClassBuilder.BaseClassLevelFeatures(
             base_class_features_by_level={

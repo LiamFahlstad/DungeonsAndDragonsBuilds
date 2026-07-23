@@ -242,14 +242,18 @@ class BarbarianCustomStarterClassArgs(ClassBuilder.CustomStarterClassArgs):
             subclass=subclass,
             saving_throws=BarbarianSavingThrowsStatBlock(),
             default_equipment=[
-                Weapons.UnarmedStrike(player_is_proficient=True),
-                Weapons.Greataxe(player_is_proficient=True),
+                Weapons.UnarmedStrike(),
+                Weapons.Greataxe(),
             ],
             skills=skills,
             armor_proficiencies=[
                 Definitions.ArmorType.LIGHT,
                 Definitions.ArmorType.MEDIUM,
                 Definitions.ArmorType.SHIELD,
+            ],
+            weapon_proficiencies=[
+                Weapons.WeaponProficiency.SIMPLE,
+                Weapons.WeaponProficiency.MARTIAL,
             ],
         )
 

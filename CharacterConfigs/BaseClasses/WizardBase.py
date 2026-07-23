@@ -328,11 +328,12 @@ class WizardCustomStarterClassArgs(ClassBuilder.CustomStarterClassArgs):
             subclass=subclass,
             saving_throws=WizardSavingThrowsStatBlock(),
             default_equipment=[
-                Weapons.Dagger(player_is_proficient=True),
-                Weapons.Quarterstaff(player_is_proficient=True),
+                Weapons.Dagger(),
+                Weapons.Quarterstaff(),
             ],
             skills=skills,
             armor_proficiencies=None,
+            weapon_proficiencies=[Weapons.WeaponProficiency.SIMPLE],
             spell_casting_ability=Ability.INTELLIGENCE,
             caster_type=SpellSlots.CasterType.FULL_CASTER,
         )

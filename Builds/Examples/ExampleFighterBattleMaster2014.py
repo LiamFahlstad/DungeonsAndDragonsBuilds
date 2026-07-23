@@ -88,8 +88,8 @@ def get_starter_class_builder():
             Armor.ChainMailArmor(),
         ],
         weapons=[
-            Weapons.Longsword(player_is_proficient=True),
-            Weapons.Greatsword(player_is_proficient=True),
+            Weapons.Longsword(),
+            Weapons.Greatsword(),
         ],
         base_class_level_features=BaseClassLevelFeatures(
             base_class_features_by_level={

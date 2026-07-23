@@ -371,6 +371,7 @@ class CustomStarterClassArgs:
         spell_casting_ability: Optional[Ability] = None,
         caster_type: Optional[SpellSlots.CasterType] = None,
         armor_proficiencies: Optional[list[Definitions.ArmorType]] = None,
+        weapon_proficiencies: Optional[list[Weapons.WeaponProficiency]] = None,
     ):
         self.base_class = base_class
         self.default_equipment = default_equipment
@@ -380,6 +381,7 @@ class CustomStarterClassArgs:
         self.spell_casting_ability = spell_casting_ability
         self.caster_type = caster_type
         self.armor_proficiencies = armor_proficiencies
+        self.weapon_proficiencies = weapon_proficiencies
 
 
 class StarterClassBuilder(ClassBuilder):
@@ -446,6 +448,10 @@ class StarterClassBuilder(ClassBuilder):
     def armor_proficiencies(self) -> Optional[list[Definitions.ArmorType]]:
         return self.non_generic_arguments.armor_proficiencies
 
+    @property
+    def weapon_proficiencies(self) -> Optional[list[Weapons.WeaponProficiency]]:
+        return self.non_generic_arguments.weapon_proficiencies
+
     def _create_base_sheet_data(self) -> CharacterSheetData:
         data = CharacterSheetData(
             character_subclass=self.subclass,
@@ -465,6 +471,9 @@ class StarterClassBuilder(ClassBuilder):
 
         for armor_type in self.armor_proficiencies or []:
             data.add_armor_proficiency(armor_type)
+
+        for weapon_proficiency in self.weapon_proficiencies or []:
+            data.add_weapon_proficiency(weapon_proficiency)
 
         if not any(isinstance(item, Weapons.UnarmedStrike) for item in self.default_equipment):
             data.add_weapon(Weapons.UnarmedStrike(player_is_proficient=True))

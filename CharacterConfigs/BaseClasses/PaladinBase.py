@@ -308,8 +308,8 @@ class PaladinCustomStarterClassArgs(ClassBuilder.CustomStarterClassArgs):
             default_equipment=[
                 Armor.ChainMailArmor(),
                 Armor.ShieldArmor(),
-                Weapons.Longsword(player_is_proficient=True),
-                Weapons.Javelin(player_is_proficient=True),
+                Weapons.Longsword(),
+                Weapons.Javelin(),
             ],
             skills=skills,
             armor_proficiencies=[
@@ -317,6 +317,10 @@ class PaladinCustomStarterClassArgs(ClassBuilder.CustomStarterClassArgs):
                 Definitions.ArmorType.MEDIUM,
                 Definitions.ArmorType.HEAVY,
                 Definitions.ArmorType.SHIELD,
+            ],
+            weapon_proficiencies=[
+                Weapons.WeaponProficiency.SIMPLE,
+                Weapons.WeaponProficiency.MARTIAL,
             ],
             spell_casting_ability=Ability.CHARISMA,
             caster_type=SpellSlots.CasterType.HALF_CASTER,

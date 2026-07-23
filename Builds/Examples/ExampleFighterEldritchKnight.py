@@ -86,8 +86,8 @@ def get_starter_class_builder():
             Armor.ShieldArmor(),
         ],
         weapons=[
-            Weapons.Longsword(player_is_proficient=True),
-            Weapons.Handaxe(player_is_proficient=True),
+            Weapons.Longsword(),
+            Weapons.Handaxe(),
         ],
         base_class_level_features=ClassBuilder.BaseClassLevelFeatures(
             base_class_features_by_level={

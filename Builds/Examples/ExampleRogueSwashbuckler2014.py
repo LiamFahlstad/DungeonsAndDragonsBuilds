@@ -84,8 +84,8 @@ def get_starter_class_builder():
             Armor.LeatherArmor(),
         ],
         weapons=[
-            Weapons.Rapier(player_is_proficient=True),
-            Weapons.Shortsword(player_is_proficient=True),
+            Weapons.Rapier(),
+            Weapons.Shortsword(),
         ],
         items=Packs.BurglarsPack().get_items()
         + [

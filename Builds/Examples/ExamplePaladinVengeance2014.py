@@ -92,7 +92,7 @@ def get_starter_class_builder():
         origin_feat=OriginFeats.Tough(),
         armor=[],
         weapons=[
-            Weapons.Greatsword(player_is_proficient=True, ability=Ability.STRENGTH),
+            Weapons.Greatsword(ability=Ability.STRENGTH),
         ],
         base_class_level_features=ClassBuilder.BaseClassLevelFeatures(
             base_class_features_by_level={

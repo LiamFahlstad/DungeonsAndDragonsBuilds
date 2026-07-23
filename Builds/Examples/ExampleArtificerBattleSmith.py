@@ -66,7 +66,7 @@ def get_starter_class_builder():
         ],
         weapons=[
             Weapons.Longsword(player_is_proficient=True, ability=Ability.INTELLIGENCE),
-            Weapons.Dagger(player_is_proficient=True),
+            Weapons.Dagger(),
         ],
         base_class_level_features=ClassBuilder.BaseClassLevelFeatures(
             base_class_features_by_level={

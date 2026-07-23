@@ -339,10 +339,11 @@ class BardCustomStarterClassArgs(ClassBuilder.CustomStarterClassArgs):
             saving_throws=BardSavingThrowsStatBlock(),
             default_equipment=[
                 Armor.LeatherArmor(),
-                Weapons.Dagger(player_is_proficient=True),
+                Weapons.Dagger(),
             ],
             skills=skills,
             armor_proficiencies=[Definitions.ArmorType.LIGHT],
+            weapon_proficiencies=[Weapons.WeaponProficiency.SIMPLE],
             spell_casting_ability=Ability.CHARISMA,
             caster_type=SpellSlots.CasterType.FULL_CASTER,
         )

@@ -66,7 +66,7 @@ def get_starter_class_builder():
         origin_feat=OriginFeats.Tough(),
         armor=[],
         weapons=[
-            Weapons.Morningstar(player_is_proficient=True, ability=Ability.CHARISMA),
+            Weapons.Morningstar(ability=Ability.CHARISMA),
         ],
         base_class_level_features=ClassBuilder.BaseClassLevelFeatures(
             base_class_features_by_level={

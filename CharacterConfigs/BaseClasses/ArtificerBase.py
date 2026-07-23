@@ -297,7 +297,7 @@ class ArtificerCustomStarterClassArgs(ClassBuilder.CustomStarterClassArgs):
             saving_throws=ArtificerSavingThrowsStatBlock(),
             default_equipment=[
                 Armor.StuddedLeatherArmor(),
-                Weapons.Dagger(player_is_proficient=True),
+                Weapons.Dagger(),
             ],
             skills=skills,
             armor_proficiencies=[
@@ -305,6 +305,7 @@ class ArtificerCustomStarterClassArgs(ClassBuilder.CustomStarterClassArgs):
                 Definitions.ArmorType.MEDIUM,
                 Definitions.ArmorType.SHIELD,
             ],
+            weapon_proficiencies=[Weapons.WeaponProficiency.SIMPLE],
             spell_casting_ability=Ability.INTELLIGENCE,
             caster_type=SpellSlots.CasterType.HALF_CASTER,
         )

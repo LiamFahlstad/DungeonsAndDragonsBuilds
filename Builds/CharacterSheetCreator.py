@@ -12,7 +12,7 @@ from Features.Combat.FightingStyles import (
 )
 from Features.Core.BaseFeatures import Feature
 from Features.Equipment.Armor import AbstractArmor
-from Features.Equipment.Weapons import AbstractWeapon
+from Features.Equipment.Weapons import AbstractWeapon, WeaponProficiency, is_proficient_with
 from Features.Items import Items
 from StatBlocks.AbilitiesStatBlock import AbilitiesStatBlock
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
@@ -54,6 +54,7 @@ class CharacterSheetData:
     weapon_masteries: list[AbstractWeapon] = attr.Factory(list)
     fighting_styles: list[FightingStyle] = attr.Factory(list)
     armor_proficiencies: set[Definitions.ArmorType] = attr.Factory(set)
+    weapon_proficiencies: set[WeaponProficiency] = attr.Factory(set)
     items: list[tuple[Items.Item, int]] = attr.Factory(list)  # (item_name, quantity)
     tool_proficiencies: list[ToolProficiency] = attr.Factory(list)
     experience_points: int = 0
@@ -120,6 +121,10 @@ class CharacterSheetData:
 
     def add_weapon(self, weapon: AbstractWeapon):
         self._invalidate_cache()
+        if not weapon.player_is_proficient and is_proficient_with(
+            weapon, self.weapon_proficiencies
+        ):
+            weapon.player_is_proficient = True
         self.weapons.append(weapon)
 
     def add_weapon_mastery(self, weapon: AbstractWeapon):
@@ -129,6 +134,10 @@ class CharacterSheetData:
     def add_armor_proficiency(self, armor_type: Definitions.ArmorType):
         self._invalidate_cache()
         self.armor_proficiencies.add(armor_type)
+
+    def add_weapon_proficiency(self, weapon_proficiency: WeaponProficiency):
+        self._invalidate_cache()
+        self.weapon_proficiencies.add(weapon_proficiency)
 
     def add_fighting_style(self, fighting_style: FightingStyle):
         self._invalidate_cache()
@@ -242,6 +251,7 @@ class CharacterSheetData:
             output_path=self.get_file_path(),
             armors=self.armors,
             armor_proficiencies=self.armor_proficiencies,
+            weapon_proficiencies=self.weapon_proficiencies,
             features=self.features,
             weapons=self.weapons,
             weapon_masteries=self.weapon_masteries,
@@ -341,7 +351,8 @@ class CharacterSheetData:
           later builder redeclaring an existing class states that class's
           final total level (e.g. a starter Paladin 1 resumed by a Paladin 19
           builder ends at 19, not 20);
-        - sets (armor_proficiencies) are combined with set union;
+        - sets (armor_proficiencies, weapon_proficiencies) are combined with
+          set union;
         - scalars are overwritten only when `other`'s value is actually set
           (see _MERGE_EMPTY_VALUES), so an untouched default never erases an
           earlier builder's value.

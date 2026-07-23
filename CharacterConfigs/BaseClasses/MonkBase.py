@@ -262,11 +262,15 @@ class MonkCustomStarterClassArgs(ClassBuilder.CustomStarterClassArgs):
                     ability=unarmed_strike,
                     damage_roll=martial_arts_die,
                 ),
-                Weapons.Spear(player_is_proficient=True),
-                Weapons.Dagger(player_is_proficient=True),
+                Weapons.Spear(),
+                Weapons.Dagger(),
             ],
             skills=skills,
             armor_proficiencies=None,
+            weapon_proficiencies=[
+                Weapons.WeaponProficiency.SIMPLE,
+                Weapons.WeaponProficiency.MARTIAL_LIGHT,
+            ],
             spell_casting_ability=Ability.WISDOM if caster_type is not None else None,
             caster_type=caster_type,
         )
