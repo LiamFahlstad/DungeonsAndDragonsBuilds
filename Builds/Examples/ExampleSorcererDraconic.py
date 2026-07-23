@@ -86,8 +86,7 @@ def get_starter_class_builder():
                 ),
                 4: SorcererLevel4(
                     general_feat=GeneralFeats.AbilityScoreImprovement(
-                        [(Ability.CHARISMA, 2)]
-                    ),
+                        [(Ability.CHARISMA, 2)]),
                     cantrip=SpellDefinitions.SorcererLevel0Spells.MAGE_HAND,
                     spell=SpellDefinitions.SorcererLevel2Spells.MISTY_STEP,
                 ),

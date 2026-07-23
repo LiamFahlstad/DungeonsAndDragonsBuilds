@@ -100,8 +100,7 @@ def get_starter_class_builder():
                 ),
                 4: SorcererLevel4(
                     general_feat=GeneralFeats.AbilityScoreImprovement(
-                        [(Ability.CHARISMA, 2)]
-                    ),
+                        [(Ability.CHARISMA, 2)]),
                     cantrip=SpellDefinitions.SorcererLevel0Spells.MAGE_HAND,
                     spell=SpellDefinitions.SorcererLevel2Spells.BLUR,
                 ),
@@ -117,8 +116,7 @@ def get_starter_class_builder():
                 ),
                 8: SorcererLevel8(
                     general_feat=GeneralFeats.AbilityScoreImprovement(
-                        [(Ability.CHARISMA, 2)]
-                    ),
+                        [(Ability.CHARISMA, 2)]),
                     spell=SpellDefinitions.SorcererLevel4Spells.DIMENSION_DOOR,
                 ),
                 9: SorcererLevel9(
@@ -134,8 +132,7 @@ def get_starter_class_builder():
                 ),
                 12: SorcererLevel12(
                     general_feat=GeneralFeats.AbilityScoreImprovement(
-                        [(Ability.WISDOM, 2)]
-                    ),
+                        [(Ability.WISDOM, 2)]),
                 ),
                 13: SorcererLevel13(
                     spell=SpellDefinitions.SorcererLevel5Spells.HOLD_MONSTER,
@@ -146,8 +143,7 @@ def get_starter_class_builder():
                 ),
                 16: SorcererLevel16(
                     general_feat=GeneralFeats.AbilityScoreImprovement(
-                        [(Ability.CONSTITUTION, 2)]
-                    ),
+                        [(Ability.CONSTITUTION, 2)]),
                 ),
                 17: SorcererLevel17(
                     spell=SpellDefinitions.SorcererLevel5Spells.SUMMON_DRACONIC_SPIRIT,

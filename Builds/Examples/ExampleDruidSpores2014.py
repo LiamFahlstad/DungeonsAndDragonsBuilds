@@ -105,8 +105,7 @@ def get_starter_class_builder():
                     general_feat=GeneralFeats.AbilityScoreImprovement(
                         [
                             (Ability.WISDOM, 2),
-                        ]
-                    ),
+                        ]),
                     cantrip=DruidLevel0Spells.DRUIDCRAFT,
                     spell=DruidLevel2Spells.HEAT_METAL,
                 ),
@@ -124,8 +123,7 @@ def get_starter_class_builder():
                     general_feat=GeneralFeats.AbilityScoreImprovement(
                         [
                             (Ability.CONSTITUTION, 2),
-                        ]
-                    ),
+                        ]),
                     spell=DruidLevel4Spells.FREEDOM_OF_MOVEMENT,
                 ),
                 9: DruidLevel9(
@@ -144,8 +142,7 @@ def get_starter_class_builder():
                         [
                             (Ability.WISDOM, 1),
                             (Ability.DEXTERITY, 1),
-                        ]
-                    ),
+                        ]),
                 ),
                 13: DruidLevel13(
                     spell=DruidLevel4Spells.DIVINATION,

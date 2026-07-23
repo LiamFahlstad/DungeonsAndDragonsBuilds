@@ -85,8 +85,7 @@ def get_starter_class_builder():
                 ),
                 4: PaladinLevel4(
                     general_feat=GeneralFeats.AbilityScoreImprovement(
-                        [(Ability.CHARISMA, 2)]
-                    ),
+                        [(Ability.CHARISMA, 2)]),
                     spell=PaladinLevel1Spells.CURE_WOUNDS,
                 ),
             },

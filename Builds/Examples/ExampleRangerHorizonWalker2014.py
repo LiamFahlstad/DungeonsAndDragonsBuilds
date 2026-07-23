@@ -106,8 +106,7 @@ def get_starter_class_builder():
                         bonuses=[
                             (Ability.WISDOM, 1),
                             (Ability.DEXTERITY, 1),
-                        ]
-                    ),
+                        ]),
                     spell=RangerLevel1Spells.LONGSTRIDER,
                 ),
                 5: RangerLevel5(
@@ -122,8 +121,7 @@ def get_starter_class_builder():
                         bonuses=[
                             (Ability.WISDOM, 1),
                             (Ability.CONSTITUTION, 1),
-                        ]
-                    ),
+                        ]),
                 ),
                 9: RangerLevel9(
                     skill_1=Skill.SURVIVAL,
@@ -140,8 +138,7 @@ def get_starter_class_builder():
                         bonuses=[
                             (Ability.WISDOM, 1),
                             (Ability.DEXTERITY, 1),
-                        ]
-                    ),
+                        ]),
                 ),
                 13: RangerLevel13(
                     spell=RangerLevel4Spells.LOCATE_CREATURE,
@@ -155,8 +152,7 @@ def get_starter_class_builder():
                         bonuses=[
                             (Ability.WISDOM, 1),
                             (Ability.CONSTITUTION, 1),
-                        ]
-                    ),
+                        ]),
                 ),
                 17: RangerLevel17(
                     spell_1=RangerLevel2Spells.GUST_OF_WIND,

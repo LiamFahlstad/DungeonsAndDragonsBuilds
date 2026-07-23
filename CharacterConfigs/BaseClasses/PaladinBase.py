@@ -83,6 +83,7 @@ class PaladinLevel4(ClassBuilder.BaseClassLevel4):
     spell: PaladinLevel1Spells
 
     def add_features(self, data: CharacterSheetData) -> CharacterSheetData:
+        self.general_feat.origin = f"Paladin Level {self.level}"
         data.add_feature(self.general_feat)
         data.add_spell(self.spell)
         return data
@@ -125,6 +126,7 @@ class PaladinLevel8(ClassBuilder.BaseClassLevel8):
     general_feat: GeneralFeats.GeneralFeat
 
     def add_features(self, data: CharacterSheetData) -> CharacterSheetData:
+        self.general_feat.origin = f"Paladin Level {self.level}"
         data.add_feature(self.general_feat)
         return data
 
@@ -179,6 +181,7 @@ class PaladinLevel12(ClassBuilder.BaseClassLevel12):
     general_feat: GeneralFeats.GeneralFeat
 
     def add_features(self, data: CharacterSheetData) -> CharacterSheetData:
+        self.general_feat.origin = f"Paladin Level {self.level}"
         data.add_feature(self.general_feat)
         return data
 
@@ -230,6 +233,7 @@ class PaladinLevel16(ClassBuilder.BaseClassLevel16):
     general_feat: GeneralFeats.GeneralFeat
 
     def add_features(self, data: CharacterSheetData) -> CharacterSheetData:
+        self.general_feat.origin = f"Paladin Level {self.level}"
         data.add_feature(self.general_feat)
         return data
 
@@ -283,6 +287,7 @@ class PaladinLevel19(ClassBuilder.BaseClassLevel19):
     )
 
     def add_features(self, data: CharacterSheetData) -> CharacterSheetData:
+        self.epic_boon.origin = f"Paladin Level {self.level}"
         data.add_feature(self.epic_boon)
         data.add_spell(self.spell)
         return data

@@ -125,8 +125,7 @@ def get_starter_class_builder():
                     general_feat=GeneralFeats.AbilityScoreImprovement(
                         [
                             (Ability.WISDOM, 2),
-                        ]
-                    ),
+                        ]),
                 ),
                 9: RangerLevel9(
                     skill_1=Skill.ATHLETICS,
@@ -142,8 +141,7 @@ def get_starter_class_builder():
                     general_feat=GeneralFeats.AbilityScoreImprovement(
                         [
                             (Ability.CONSTITUTION, 2),
-                        ]
-                    ),
+                        ]),
                 ),
                 13: RangerLevel13(
                     spell=RangerLevel4Spells.CONJURE_WOODLAND_BEINGS,
@@ -156,8 +154,7 @@ def get_starter_class_builder():
                     general_feat=GeneralFeats.AbilityScoreImprovement(
                         [
                             (Ability.WISDOM, 2),
-                        ]
-                    ),
+                        ]),
                 ),
                 17: RangerLevel17(
                     spell_1=RangerLevel5Spells.SWIFT_QUIVER,

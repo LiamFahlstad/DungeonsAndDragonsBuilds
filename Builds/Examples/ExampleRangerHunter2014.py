@@ -101,8 +101,7 @@ def get_starter_class_builder():
                     general_feat=GeneralFeats.AbilityScoreImprovement(
                         bonuses=[
                             (Ability.DEXTERITY, 2),
-                        ]
-                    ),
+                        ]),
                     spell=RangerLevel1Spells.LONGSTRIDER,
                 ),
                 5: RangerLevel5(
@@ -117,8 +116,7 @@ def get_starter_class_builder():
                         bonuses=[
                             (Ability.WISDOM, 1),
                             (Ability.CONSTITUTION, 1),
-                        ]
-                    ),
+                        ]),
                 ),
                 9: RangerLevel9(
                     skill_1=Skill.SURVIVAL,
@@ -134,8 +132,7 @@ def get_starter_class_builder():
                     general_feat=GeneralFeats.AbilityScoreImprovement(
                         bonuses=[
                             (Ability.DEXTERITY, 2),
-                        ]
-                    ),
+                        ]),
                 ),
                 13: RangerLevel13(
                     spell=RangerLevel4Spells.LOCATE_CREATURE,

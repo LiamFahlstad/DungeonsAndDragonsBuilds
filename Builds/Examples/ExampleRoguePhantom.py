@@ -103,8 +103,7 @@ def get_starter_class_builder():
                 3: RogueLevel3(),
                 4: RogueLevel4(
                     general_feat=GeneralFeats.AbilityScoreImprovement(
-                        bonuses=[(Ability.DEXTERITY, 2)],
-                    ),
+                        bonuses=[(Ability.DEXTERITY, 2)]),
                 ),
                 5: RogueLevel5(),
                 6: RogueLevel6(
@@ -114,28 +113,24 @@ def get_starter_class_builder():
                 7: RogueLevel7(),
                 8: RogueLevel8(
                     general_feat=GeneralFeats.AbilityScoreImprovement(
-                        bonuses=[(Ability.WISDOM, 2)],
-                    ),
+                        bonuses=[(Ability.WISDOM, 2)]),
                 ),
                 9: RogueLevel9(),
                 10: RogueLevel10(
                     general_feat=GeneralFeats.AbilityScoreImprovement(
-                        bonuses=[(Ability.DEXTERITY, 2)],
-                    ),
+                        bonuses=[(Ability.DEXTERITY, 2)]),
                 ),
                 11: RogueLevel11(),
                 12: RogueLevel12(
                     general_feat=GeneralFeats.AbilityScoreImprovement(
-                        bonuses=[(Ability.CONSTITUTION, 2)],
-                    ),
+                        bonuses=[(Ability.CONSTITUTION, 2)]),
                 ),
                 13: RogueLevel13(),
                 14: RogueLevel14(),
                 15: RogueLevel15(),
                 16: RogueLevel16(
                     general_feat=GeneralFeats.AbilityScoreImprovement(
-                        bonuses=[(Ability.DEXTERITY, 2)],
-                    ),
+                        bonuses=[(Ability.DEXTERITY, 2)]),
                 ),
                 17: RogueLevel17(),
             },

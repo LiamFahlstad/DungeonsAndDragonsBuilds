@@ -114,8 +114,7 @@ def get_starter_class_builder():
                         bonuses=[
                             (Ability.CHARISMA, 1),
                             (Ability.CONSTITUTION, 1),
-                        ]
-                    ),
+                        ]),
                     cantrip=WarlockLevel0Spells.MINOR_ILLUSION,
                     spell=WarlockLevel2Spells.INVISIBILITY,
                 ),
@@ -136,8 +135,7 @@ def get_starter_class_builder():
                         bonuses=[
                             (Ability.CHARISMA, 1),
                             (Ability.STRENGTH, 1),
-                        ]
-                    ),
+                        ]),
                     spell=WarlockLevel4Spells.DIMENSION_DOOR,
                 ),
                 9: WarlockLevel9(
@@ -155,8 +153,7 @@ def get_starter_class_builder():
                         bonuses=[
                             (Ability.CHARISMA, 1),
                             (Ability.CONSTITUTION, 1),
-                        ]
-                    ),
+                        ]),
                     eldritch_invocation=InvocationsLevel12.DEVOURING_BLADE,
                 ),
                 13: WarlockLevel13(

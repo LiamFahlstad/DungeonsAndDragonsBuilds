@@ -113,8 +113,7 @@ def get_starter_class_builder():
                     general_feat=GeneralFeats.AbilityScoreImprovement(
                         [
                             (Ability.STRENGTH, 2),
-                        ]
-                    ),
+                        ]),
                     spell=PaladinLevel1Spells.SEARING_SMITE,
                 ),
                 5: PaladinLevel5(
@@ -128,8 +127,7 @@ def get_starter_class_builder():
                     general_feat=GeneralFeats.AbilityScoreImprovement(
                         [
                             (Ability.CHARISMA, 2),
-                        ]
-                    ),
+                        ]),
                 ),
                 9: PaladinLevel9(
                     spell_1=PaladinLevel3Spells.BLINDING_SMITE,
@@ -143,8 +141,7 @@ def get_starter_class_builder():
                     general_feat=GeneralFeats.AbilityScoreImprovement(
                         [
                             (Ability.STRENGTH, 2),
-                        ]
-                    ),
+                        ]),
                 ),
                 13: PaladinLevel13(
                     spell=PaladinLevel4Spells.STAGGERING_SMITE,
@@ -157,8 +154,7 @@ def get_starter_class_builder():
                     general_feat=GeneralFeats.AbilityScoreImprovement(
                         [
                             (Ability.CHARISMA, 2),
-                        ]
-                    ),
+                        ]),
                 ),
                 17: PaladinLevel17(
                     spell_1=PaladinLevel5Spells.BANISHING_SMITE,

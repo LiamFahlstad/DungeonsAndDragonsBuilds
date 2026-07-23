@@ -63,6 +63,7 @@ class FighterLevel4(ClassBuilder.BaseClassLevel4):
 
     def add_features(self, data: CharacterSheetData) -> CharacterSheetData:
         data.add_weapon_mastery(self.weapon_mastery)
+        self.general_feat.origin = f"Fighter Level {self.level}"
         data.add_feature(self.general_feat)
         return data
 
@@ -84,6 +85,7 @@ class FighterLevel6(ClassBuilder.BaseClassLevel6):
     general_feat: GeneralFeats.GeneralFeat
 
     def add_features(self, data: CharacterSheetData) -> CharacterSheetData:
+        self.general_feat.origin = f"Fighter Level {self.level}"
         data.add_feature(self.general_feat)
         return data
 
@@ -100,6 +102,7 @@ class FighterLevel8(ClassBuilder.BaseClassLevel8):
     general_feat: GeneralFeats.GeneralFeat
 
     def add_features(self, data: CharacterSheetData) -> CharacterSheetData:
+        self.general_feat.origin = f"Fighter Level {self.level}"
         data.add_feature(self.general_feat)
         return data
 
@@ -147,6 +150,7 @@ class FighterLevel12(ClassBuilder.BaseClassLevel12):
     general_feat: GeneralFeats.GeneralFeat
 
     def add_features(self, data: CharacterSheetData) -> CharacterSheetData:
+        self.general_feat.origin = f"Fighter Level {self.level}"
         data.add_feature(self.general_feat)
         return data
 
@@ -167,6 +171,7 @@ class FighterLevel14(ClassBuilder.BaseClassLevel14):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
+        self.general_feat.origin = f"Fighter Level {self.level}"
         data.add_feature(self.general_feat)
         return data
 
@@ -185,6 +190,7 @@ class FighterLevel16(ClassBuilder.BaseClassLevel16):
 
     def add_features(self, data: CharacterSheetData) -> CharacterSheetData:
         data.add_weapon_mastery(self.weapon_mastery)
+        self.general_feat.origin = f"Fighter Level {self.level}"
         data.add_feature(self.general_feat)
         return data
 
@@ -211,6 +217,7 @@ class FighterLevel19(ClassBuilder.BaseClassLevel19):
     epic_boon: EpicBoon.EpicBoon
 
     def add_features(self, data: CharacterSheetData) -> CharacterSheetData:
+        self.epic_boon.origin = f"Fighter Level {self.level}"
         data.add_feature(self.epic_boon)
         return data
 

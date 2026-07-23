@@ -79,6 +79,7 @@ class RangerLevel4(ClassBuilder.BaseClassLevel4):
 
     def add_features(self, data: CharacterSheetData) -> CharacterSheetData:
 
+        self.general_feat.origin = f"Ranger Level {self.level}"
         data.add_feature(self.general_feat)
         data.add_spell(self.spell)
         return data
@@ -116,6 +117,7 @@ class RangerLevel8(ClassBuilder.BaseClassLevel8):
     general_feat: GeneralFeats.GeneralFeat
 
     def add_features(self, data: CharacterSheetData) -> CharacterSheetData:
+        self.general_feat.origin = f"Ranger Level {self.level}"
         data.add_feature(self.general_feat)
         return data
 
@@ -165,6 +167,7 @@ class RangerLevel12(ClassBuilder.BaseClassLevel12):
     general_feat: GeneralFeats.GeneralFeat
 
     def add_features(self, data: CharacterSheetData) -> CharacterSheetData:
+        self.general_feat.origin = f"Ranger Level {self.level}"
         data.add_feature(self.general_feat)
         return data
 
@@ -217,6 +220,7 @@ class RangerLevel16(ClassBuilder.BaseClassLevel16):
     general_feat: GeneralFeats.GeneralFeat
 
     def add_features(self, data: CharacterSheetData) -> CharacterSheetData:
+        self.general_feat.origin = f"Ranger Level {self.level}"
         data.add_feature(self.general_feat)
         return data
 
@@ -272,6 +276,7 @@ class RangerLevel19(ClassBuilder.BaseClassLevel19):
     )
 
     def add_features(self, data: CharacterSheetData) -> CharacterSheetData:
+        self.epic_boon.origin = f"Ranger Level {self.level}"
         data.add_feature(self.epic_boon)
         data.add_spell(self.spell)
         return data

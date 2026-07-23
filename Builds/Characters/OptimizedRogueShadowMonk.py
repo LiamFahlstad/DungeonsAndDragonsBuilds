@@ -22,7 +22,10 @@ from CharacterConfigs.BaseClasses.MonkBase import (
     MonkLevel18,
     MonkLevel19,
 )
-from CharacterConfigs.BaseClasses.RogueBase import RogueCustomStarterClassArgs, RogueLevel1
+from CharacterConfigs.BaseClasses.RogueBase import (
+    RogueCustomStarterClassArgs,
+    RogueLevel1,
+)
 from CharacterConfigs.SubClasses2024.MonkShadow import (
     MonkShadowLevel3,
     MonkShadowLevel6,

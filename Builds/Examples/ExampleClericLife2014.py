@@ -108,8 +108,7 @@ def get_starter_class_builder():
                     general_feat=GeneralFeats.AbilityScoreImprovement(
                         [
                             (Ability.WISDOM, 2),
-                        ]
-                    ),
+                        ]),
                     cantrip=ClericLevel0Spells.TOLL_THE_DEAD,
                     spell=ClericLevel2Spells.PRAYER_OF_HEALING,
                 ),
@@ -127,8 +126,7 @@ def get_starter_class_builder():
                     general_feat=GeneralFeats.AbilityScoreImprovement(
                         [
                             (Ability.WISDOM, 2),
-                        ]
-                    ),
+                        ]),
                     spell=ClericLevel4Spells.GUARDIAN_OF_FAITH,
                 ),
                 9: ClericLevel9(
@@ -146,8 +144,7 @@ def get_starter_class_builder():
                     general_feat=GeneralFeats.AbilityScoreImprovement(
                         [
                             (Ability.CONSTITUTION, 2),
-                        ]
-                    ),
+                        ]),
                 ),
                 13: ClericLevel13(
                     spell=ClericLevel7Spells.RESURRECTION,

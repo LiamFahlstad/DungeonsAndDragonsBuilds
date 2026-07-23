@@ -98,8 +98,7 @@ def get_starter_class_builder():
                     general_feat=GeneralFeats.AbilityScoreImprovement(
                         bonuses=[
                             (Ability.INTELLIGENCE, 2),
-                        ]
-                    ),
+                        ]),
                     cantrip=SpellDefinitions.WizardLevel0Spells.TOLL_THE_DEAD,
                     spell=SpellDefinitions.WizardLevel2Spells.BLINDNESS_DEAFNESS,
                 ),
@@ -117,8 +116,7 @@ def get_starter_class_builder():
                     general_feat=GeneralFeats.AbilityScoreImprovement(
                         bonuses=[
                             (Ability.INTELLIGENCE, 2),
-                        ]
-                    ),
+                        ]),
                     spell=SpellDefinitions.WizardLevel4Spells.PHANTASMAL_KILLER,
                 ),
                 9: WizardLevel9(
@@ -136,8 +134,7 @@ def get_starter_class_builder():
                     general_feat=GeneralFeats.AbilityScoreImprovement(
                         bonuses=[
                             (Ability.CONSTITUTION, 2),
-                        ]
-                    ),
+                        ]),
                 ),
                 13: WizardLevel13(
                     spell=SpellDefinitions.WizardLevel7Spells.FINGER_OF_DEATH,

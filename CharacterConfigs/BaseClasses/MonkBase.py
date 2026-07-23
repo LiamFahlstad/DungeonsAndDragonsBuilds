@@ -62,6 +62,7 @@ class MonkLevel4(ClassBuilder.BaseClassLevel4):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
+        self.general_feat.origin = f"Monk Level {self.level}"
         data.add_feature(self.general_feat)
         data.add_feature(MonkFeatures.SlowFall())
         return data
@@ -109,6 +110,7 @@ class MonkLevel8(ClassBuilder.BaseClassLevel8):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
+        self.general_feat.origin = f"Monk Level {self.level}"
         data.add_feature(self.general_feat)
         return data
 
@@ -151,6 +153,7 @@ class MonkLevel12(ClassBuilder.BaseClassLevel12):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
+        self.general_feat.origin = f"Monk Level {self.level}"
         data.add_feature(self.general_feat)
         return data
 
@@ -195,6 +198,7 @@ class MonkLevel16(ClassBuilder.BaseClassLevel16):
     general_feat: GeneralFeats.GeneralFeat
 
     def add_features(self, data: CharacterSheetData) -> CharacterSheetData:
+        self.general_feat.origin = f"Monk Level {self.level}"
         data.add_feature(self.general_feat)
         return data
 
@@ -229,6 +233,7 @@ class MonkLevel19(ClassBuilder.BaseClassLevel19):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
+        self.epic_boon.origin = f"Monk Level {self.level}"
         data.add_feature(self.epic_boon)
         return data
 

@@ -101,20 +101,17 @@ def get_starter_class_builder():
                 4: FighterLevel4(
                     weapon_mastery=Weapons.Handaxe(),
                     general_feat=GeneralFeats.AbilityScoreImprovement(
-                        bonuses=[(Ability.INTELLIGENCE, 2)],
-                    ),
+                        bonuses=[(Ability.INTELLIGENCE, 2)]),
                 ),
                 5: FighterLevel5(),
                 6: FighterLevel6(
                     general_feat=GeneralFeats.AbilityScoreImprovement(
-                        bonuses=[(Ability.STRENGTH, 2)],
-                    ),
+                        bonuses=[(Ability.STRENGTH, 2)]),
                 ),
                 7: FighterLevel7(),
                 8: FighterLevel8(
                     general_feat=GeneralFeats.AbilityScoreImprovement(
-                        bonuses=[(Ability.INTELLIGENCE, 2)],
-                    ),
+                        bonuses=[(Ability.INTELLIGENCE, 2)]),
                 ),
                 9: FighterLevel9(),
                 10: FighterLevel10(
@@ -123,21 +120,18 @@ def get_starter_class_builder():
                 11: FighterLevel11(),
                 12: FighterLevel12(
                     general_feat=GeneralFeats.AbilityScoreImprovement(
-                        bonuses=[(Ability.STRENGTH, 2)],
-                    ),
+                        bonuses=[(Ability.STRENGTH, 2)]),
                 ),
                 13: FighterLevel13(),
                 14: FighterLevel14(
                     general_feat=GeneralFeats.AbilityScoreImprovement(
-                        bonuses=[(Ability.CONSTITUTION, 2)],
-                    ),
+                        bonuses=[(Ability.CONSTITUTION, 2)]),
                 ),
                 15: FighterLevel15(),
                 16: FighterLevel16(
                     weapon_mastery=Weapons.Warhammer(),
                     general_feat=GeneralFeats.AbilityScoreImprovement(
-                        bonuses=[(Ability.INTELLIGENCE, 2)],
-                    ),
+                        bonuses=[(Ability.INTELLIGENCE, 2)]),
                 ),
                 17: FighterLevel17(),
                 18: FighterLevel18(),

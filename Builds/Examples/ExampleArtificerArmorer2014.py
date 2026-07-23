@@ -103,8 +103,7 @@ def get_starter_class_builder():
                     general_feat=GeneralFeats.AbilityScoreImprovement(
                         bonuses=[
                             (Ability.INTELLIGENCE, 2),
-                        ]
-                    ),
+                        ]),
                     spell=SpellDefinitions.ArtificerLevel1Spells.GREASE,
                 ),
                 5: ArtificerLevel5(
@@ -118,8 +117,7 @@ def get_starter_class_builder():
                     general_feat=GeneralFeats.AbilityScoreImprovement(
                         bonuses=[
                             (Ability.CONSTITUTION, 2),
-                        ]
-                    ),
+                        ]),
                 ),
                 9: ArtificerLevel9(
                     spell_1=SpellDefinitions.ArtificerLevel3Spells.PROTECTION_FROM_ENERGY,
@@ -135,8 +133,7 @@ def get_starter_class_builder():
                     general_feat=GeneralFeats.AbilityScoreImprovement(
                         bonuses=[
                             (Ability.STRENGTH, 2),
-                        ]
-                    ),
+                        ]),
                 ),
                 13: ArtificerLevel13(
                     spell=SpellDefinitions.ArtificerLevel4Spells.STONESKIN,
@@ -151,8 +148,7 @@ def get_starter_class_builder():
                     general_feat=GeneralFeats.AbilityScoreImprovement(
                         bonuses=[
                             (Ability.CONSTITUTION, 2),
-                        ]
-                    ),
+                        ]),
                 ),
                 17: ArtificerLevel17(
                     spell_1=SpellDefinitions.ArtificerLevel5Spells.WALL_OF_STONE,

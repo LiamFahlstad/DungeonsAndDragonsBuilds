@@ -122,6 +122,7 @@ class WarlockLevel4(ClassBuilder.BaseClassLevel4):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
+        self.general_feat.origin = f"Warlock Level {self.level}"
         data.add_feature(self.general_feat)
         data.add_cantrip(self.cantrip)
         data.add_spell(self.spell)
@@ -179,6 +180,7 @@ class WarlockLevel8(ClassBuilder.BaseClassLevel8):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
+        self.general_feat.origin = f"Warlock Level {self.level}"
         data.add_feature(self.general_feat)
         data.add_spell(self.spell)
         return data
@@ -233,6 +235,7 @@ class WarlockLevel12(ClassBuilder.BaseClassLevel12):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
+        self.general_feat.origin = f"Warlock Level {self.level}"
         data.add_feature(self.general_feat)
         data.add_invocation(self.eldritch_invocation)
         return data
@@ -291,6 +294,7 @@ class WarlockLevel16(ClassBuilder.BaseClassLevel16):
     general_feat: GeneralFeats.GeneralFeat
 
     def add_features(self, data: CharacterSheetData) -> CharacterSheetData:
+        self.general_feat.origin = f"Warlock Level {self.level}"
         data.add_feature(self.general_feat)
         return data
 
@@ -334,6 +338,7 @@ class WarlockLevel19(ClassBuilder.BaseClassLevel19):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
+        self.epic_boon.origin = f"Warlock Level {self.level}"
         data.add_feature(self.epic_boon)
         data.add_spell(self.spell)
         return data

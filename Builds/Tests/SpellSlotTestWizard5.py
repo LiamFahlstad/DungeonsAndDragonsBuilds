@@ -79,8 +79,7 @@ def get_starter_class_builder():
                 ),
                 4: WizardLevel4(
                     general_feat=GeneralFeats.AbilityScoreImprovement(
-                        [(Ability.INTELLIGENCE, 2)]
-                    ),
+                        [(Ability.INTELLIGENCE, 2)]),
                     cantrip=SpellDefs.WizardLevel0Spells.TOLL_THE_DEAD,
                     spell=SpellDefs.WizardLevel2Spells.ROPE_TRICK,
                 ),

@@ -231,8 +231,7 @@ def get_starter_class_builder():
                     general_feat=GeneralFeats.AbilityScoreImprovement(
                         [
                             (Ability.WISDOM, 2),
-                        ]
-                    ),
+                        ]),
                 ),
                 17: DruidLevel17(
                     spell=TransmutationLevel9Spells.SHAPECHANGE,

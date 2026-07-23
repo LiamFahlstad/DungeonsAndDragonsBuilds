@@ -109,8 +109,7 @@ def get_starter_class_builder():
                         [
                             (Ability.STRENGTH, 1),
                             (Ability.CONSTITUTION, 1),
-                        ]
-                    ),
+                        ]),
                     cantrip=ClericLevel0Spells.TOLL_THE_DEAD,
                     spell=ClericLevel2Spells.ENHANCE_ABILITY,
                 ),
@@ -128,8 +127,7 @@ def get_starter_class_builder():
                     general_feat=GeneralFeats.AbilityScoreImprovement(
                         [
                             (Ability.WISDOM, 2),
-                        ]
-                    ),
+                        ]),
                     spell=ClericLevel4Spells.FREEDOM_OF_MOVEMENT,
                 ),
                 9: ClericLevel9(
@@ -148,8 +146,7 @@ def get_starter_class_builder():
                         [
                             (Ability.CONSTITUTION, 1),
                             (Ability.WISDOM, 1),
-                        ]
-                    ),
+                        ]),
                 ),
                 13: ClericLevel13(
                     spell=ClericLevel7Spells.CONJURE_CELESTIAL,

@@ -132,8 +132,7 @@ def get_starter_class_builder():
                     general_feat=GeneralFeats.AbilityScoreImprovement(
                         [
                             (Ability.DEXTERITY, 2),
-                        ]
-                    ),
+                        ]),
                     spell=DruidLevel4Spells.FREEDOM_OF_MOVEMENT,
                 ),
                 9: DruidLevel9(
@@ -151,8 +150,7 @@ def get_starter_class_builder():
                     general_feat=GeneralFeats.AbilityScoreImprovement(
                         [
                             (Ability.WISDOM, 2),
-                        ]
-                    ),
+                        ]),
                 ),
                 13: DruidLevel13(
                     spell=DruidLevel7Spells.FIRE_STORM,
@@ -165,8 +163,7 @@ def get_starter_class_builder():
                     general_feat=GeneralFeats.AbilityScoreImprovement(
                         [
                             (Ability.CONSTITUTION, 2),
-                        ]
-                    ),
+                        ]),
                 ),
                 17: DruidLevel17(
                     spell=DruidLevel9Spells.STORM_OF_VENGEANCE,

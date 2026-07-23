@@ -89,8 +89,7 @@ def get_starter_class_builder():
                     general_feat=GeneralFeats.AbilityScoreImprovement(
                         [
                             (Ability.WISDOM, 2),
-                        ]
-                    ),
+                        ]),
                 ),
                 5: MonkLevel5(),
                 6: MonkLevel6(),
@@ -99,8 +98,7 @@ def get_starter_class_builder():
                     general_feat=GeneralFeats.AbilityScoreImprovement(
                         [
                             (Ability.DEXTERITY, 2),
-                        ]
-                    ),
+                        ]),
                 ),
                 9: MonkLevel9(),
                 10: MonkLevel10(),
@@ -109,8 +107,7 @@ def get_starter_class_builder():
                     general_feat=GeneralFeats.AbilityScoreImprovement(
                         [
                             (Ability.WISDOM, 2),
-                        ]
-                    ),
+                        ]),
                 ),
                 13: MonkLevel13(),
                 14: MonkLevel14(),
@@ -119,8 +116,7 @@ def get_starter_class_builder():
                     general_feat=GeneralFeats.AbilityScoreImprovement(
                         [
                             (Ability.CONSTITUTION, 2),
-                        ]
-                    ),
+                        ]),
                 ),
                 17: MonkLevel17(),
             },
