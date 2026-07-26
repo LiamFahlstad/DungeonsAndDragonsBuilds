@@ -158,6 +158,9 @@ class WeaponsStats:
     mastery: Optional[WeaponMastery] = None
     additional_description: Optional[str] = None
     extra_damage: Optional[list[ExtraDamage]] = None
+    weight: Optional[float] = None
+    value: Optional[float] = None
+    is_homebrew: bool = False
 
 
 class AbstractWeapon(WearableItem):
@@ -174,7 +177,6 @@ class AbstractWeapon(WearableItem):
         rarity: ItemRarity = ItemRarity.COMMON,
         requires_attunement: bool = False,
         category: ItemCategory = ItemCategory.WEAPON,
-        weight: Optional[float] = None,
         slots: int = 1,
         subfeatures: Optional[list[SubFeature]] = None,
     ):
@@ -188,11 +190,13 @@ class AbstractWeapon(WearableItem):
             rarity=rarity,
             requires_attunement=requires_attunement,
             category=category,
-            weight=weight,
+            weight=stats.weight,
             slots=slots,
             description_text=stats.additional_description or "",
             subfeatures=subfeatures,
             is_wearing=is_wearing,
+            is_homebrew=stats.is_homebrew,
+            value=stats.value,
         )
 
     @abstractmethod
@@ -403,6 +407,8 @@ class Battleaxe(AbstractWeapon):
             weapon_type=WeaponType.MARTIAL_MELEE,
             damage_type=WeaponsDamageTypes.SLASHING,
             damage_roll=WeaponsDamageRolls.D8,
+            weight=4,
+            value=10,
         )
 
 
@@ -416,6 +422,8 @@ class Flail(AbstractWeapon):
             weapon_type=WeaponType.MARTIAL_MELEE,
             damage_type=WeaponsDamageTypes.BLUDGEONING,
             damage_roll=WeaponsDamageRolls.D8,
+            weight=2,
+            value=10,
         )
 
 
@@ -433,6 +441,8 @@ class Glaive(AbstractWeapon):
             weapon_type=WeaponType.MARTIAL_MELEE,
             damage_type=WeaponsDamageTypes.SLASHING,
             damage_roll=WeaponsDamageRolls.D10,
+            weight=6,
+            value=20,
         )
 
 
@@ -446,6 +456,8 @@ class Greataxe(AbstractWeapon):
             weapon_type=WeaponType.MARTIAL_MELEE,
             damage_type=WeaponsDamageTypes.SLASHING,
             damage_roll=WeaponsDamageRolls.D12,
+            weight=7,
+            value=30,
         )
 
 
@@ -459,6 +471,8 @@ class Greatsword(AbstractWeapon):
             weapon_type=WeaponType.MARTIAL_MELEE,
             damage_type=WeaponsDamageTypes.SLASHING,
             damage_roll=WeaponsDamageRolls.D6x2,
+            weight=6,
+            value=50,
         )
 
 
@@ -476,6 +490,8 @@ class Halberd(AbstractWeapon):
             weapon_type=WeaponType.MARTIAL_MELEE,
             damage_type=WeaponsDamageTypes.SLASHING,
             damage_roll=WeaponsDamageRolls.D10,
+            weight=6,
+            value=20,
         )
 
 
@@ -493,6 +509,8 @@ class Lance(AbstractWeapon):
             weapon_type=WeaponType.MARTIAL_MELEE,
             damage_type=WeaponsDamageTypes.PIERCING,
             damage_roll=WeaponsDamageRolls.D10,
+            weight=6,
+            value=10,
         )
 
 
@@ -506,6 +524,8 @@ class Longsword(AbstractWeapon):
             weapon_type=WeaponType.MARTIAL_MELEE,
             damage_type=WeaponsDamageTypes.SLASHING,
             damage_roll=WeaponsDamageRolls.D8,
+            weight=3,
+            value=15,
         )
 
 
@@ -519,6 +539,8 @@ class Maul(AbstractWeapon):
             weapon_type=WeaponType.MARTIAL_MELEE,
             damage_type=WeaponsDamageTypes.BLUDGEONING,
             damage_roll=WeaponsDamageRolls.D6x2,
+            weight=10,
+            value=10,
         )
 
 
@@ -532,6 +554,8 @@ class Morningstar(AbstractWeapon):
             weapon_type=WeaponType.MARTIAL_MELEE,
             damage_type=WeaponsDamageTypes.PIERCING,
             damage_roll=WeaponsDamageRolls.D8,
+            weight=4,
+            value=15,
         )
 
 
@@ -549,6 +573,8 @@ class Pike(AbstractWeapon):
             weapon_type=WeaponType.MARTIAL_MELEE,
             damage_type=WeaponsDamageTypes.PIERCING,
             damage_roll=WeaponsDamageRolls.D10,
+            weight=18,
+            value=5,
         )
 
 
@@ -562,6 +588,8 @@ class Rapier(AbstractWeapon):
             weapon_type=WeaponType.MARTIAL_MELEE,
             damage_type=WeaponsDamageTypes.PIERCING,
             damage_roll=WeaponsDamageRolls.D8,
+            weight=2,
+            value=25,
         )
 
 
@@ -575,6 +603,8 @@ class Scimitar(AbstractWeapon):
             weapon_type=WeaponType.MARTIAL_MELEE,
             damage_type=WeaponsDamageTypes.SLASHING,
             damage_roll=WeaponsDamageRolls.D6,
+            weight=3,
+            value=25,
         )
 
 
@@ -588,6 +618,8 @@ class Shortsword(AbstractWeapon):
             weapon_type=WeaponType.MARTIAL_MELEE,
             damage_type=WeaponsDamageTypes.PIERCING,
             damage_roll=WeaponsDamageRolls.D6,
+            weight=2,
+            value=25,
         )
 
 
@@ -601,6 +633,8 @@ class Trident(AbstractWeapon):
             weapon_type=WeaponType.MARTIAL_MELEE,
             damage_type=WeaponsDamageTypes.PIERCING,
             damage_roll=WeaponsDamageRolls.D8,
+            weight=4,
+            value=5,
         )
 
 
@@ -614,6 +648,8 @@ class Warhammer(AbstractWeapon):
             weapon_type=WeaponType.MARTIAL_MELEE,
             damage_type=WeaponsDamageTypes.BLUDGEONING,
             damage_roll=WeaponsDamageRolls.D8,
+            weight=2,
+            value=15,
         )
 
 
@@ -627,6 +663,8 @@ class WarPick(AbstractWeapon):
             weapon_type=WeaponType.MARTIAL_MELEE,
             damage_type=WeaponsDamageTypes.PIERCING,
             damage_roll=WeaponsDamageRolls.D8,
+            weight=2,
+            value=5,
         )
 
 
@@ -640,6 +678,8 @@ class Whip(AbstractWeapon):
             weapon_type=WeaponType.MARTIAL_MELEE,
             damage_type=WeaponsDamageTypes.SLASHING,
             damage_roll=WeaponsDamageRolls.D4,
+            weight=3,
+            value=2,
         )
 
 
@@ -653,6 +693,8 @@ class Club(AbstractWeapon):
             weapon_type=WeaponType.SIMPLE_MELEE,
             damage_type=WeaponsDamageTypes.BLUDGEONING,
             damage_roll=WeaponsDamageRolls.D4,
+            weight=2,
+            value=0.1,
         )
 
 
@@ -670,6 +712,8 @@ class Dagger(AbstractWeapon):
             weapon_type=WeaponType.SIMPLE_MELEE,
             damage_type=WeaponsDamageTypes.PIERCING,
             damage_roll=WeaponsDamageRolls.D4,
+            weight=1,
+            value=2,
         )
 
 
@@ -683,6 +727,8 @@ class Greatclub(AbstractWeapon):
             weapon_type=WeaponType.SIMPLE_MELEE,
             damage_type=WeaponsDamageTypes.BLUDGEONING,
             damage_roll=WeaponsDamageRolls.D8,
+            weight=5,
+            value=0.2,
         )
 
 
@@ -696,6 +742,8 @@ class Handaxe(AbstractWeapon):
             weapon_type=WeaponType.SIMPLE_MELEE,
             damage_type=WeaponsDamageTypes.SLASHING,
             damage_roll=WeaponsDamageRolls.D6,
+            weight=2,
+            value=5,
         )
 
 
@@ -709,6 +757,8 @@ class Javelin(AbstractWeapon):
             weapon_type=WeaponType.SIMPLE_MELEE,
             damage_type=WeaponsDamageTypes.PIERCING,
             damage_roll=WeaponsDamageRolls.D6,
+            weight=2,
+            value=0.5,
         )
 
 
@@ -722,6 +772,8 @@ class LightHammer(AbstractWeapon):
             weapon_type=WeaponType.SIMPLE_MELEE,
             damage_type=WeaponsDamageTypes.BLUDGEONING,
             damage_roll=WeaponsDamageRolls.D4,
+            weight=2,
+            value=2,
         )
 
 
@@ -735,6 +787,8 @@ class Mace(AbstractWeapon):
             weapon_type=WeaponType.SIMPLE_MELEE,
             damage_type=WeaponsDamageTypes.BLUDGEONING,
             damage_roll=WeaponsDamageRolls.D6,
+            weight=4,
+            value=5,
         )
 
 
@@ -748,6 +802,8 @@ class Quarterstaff(AbstractWeapon):
             weapon_type=WeaponType.SIMPLE_MELEE,
             damage_type=WeaponsDamageTypes.BLUDGEONING,
             damage_roll=WeaponsDamageRolls.D6,
+            weight=4,
+            value=0.2,
         )
 
 
@@ -761,6 +817,8 @@ class Sickle(AbstractWeapon):
             weapon_type=WeaponType.SIMPLE_MELEE,
             damage_type=WeaponsDamageTypes.SLASHING,
             damage_roll=WeaponsDamageRolls.D4,
+            weight=2,
+            value=1,
         )
 
 
@@ -774,6 +832,8 @@ class Spear(AbstractWeapon):
             weapon_type=WeaponType.SIMPLE_MELEE,
             damage_type=WeaponsDamageTypes.PIERCING,
             damage_roll=WeaponsDamageRolls.D6,
+            weight=3,
+            value=1,
         )
 
 
@@ -787,6 +847,8 @@ class Dart(AbstractWeapon):
             weapon_type=WeaponType.SIMPLE_RANGED,
             damage_type=WeaponsDamageTypes.PIERCING,
             damage_roll=WeaponsDamageRolls.D4,
+            weight=0.25,
+            value=0.05,
         )
 
 
@@ -804,6 +866,8 @@ class LightCrossbow(AbstractWeapon):
             weapon_type=WeaponType.SIMPLE_RANGED,
             damage_type=WeaponsDamageTypes.PIERCING,
             damage_roll=WeaponsDamageRolls.D8,
+            weight=5,
+            value=25,
         )
 
 
@@ -817,6 +881,8 @@ class Shortbow(AbstractWeapon):
             weapon_type=WeaponType.SIMPLE_RANGED,
             damage_type=WeaponsDamageTypes.PIERCING,
             damage_roll=WeaponsDamageRolls.D6,
+            weight=2,
+            value=25,
         )
 
 
@@ -830,6 +896,7 @@ class Sling(AbstractWeapon):
             weapon_type=WeaponType.SIMPLE_RANGED,
             damage_type=WeaponsDamageTypes.BLUDGEONING,
             damage_roll=WeaponsDamageRolls.D4,
+            value=0.1,
         )
 
 
@@ -843,6 +910,8 @@ class Blowgun(AbstractWeapon):
             weapon_type=WeaponType.MARTIAL_RANGED,
             damage_type=WeaponsDamageTypes.PIERCING,
             damage_roll=WeaponsDamageRolls.D1,
+            weight=1,
+            value=10,
         )
 
 
@@ -860,6 +929,8 @@ class HandCrossbow(AbstractWeapon):
             weapon_type=WeaponType.MARTIAL_RANGED,
             damage_type=WeaponsDamageTypes.PIERCING,
             damage_roll=WeaponsDamageRolls.D6,
+            weight=3,
+            value=75,
         )
 
 
@@ -878,6 +949,8 @@ class HeavyCrossbow(AbstractWeapon):
             weapon_type=WeaponType.MARTIAL_RANGED,
             damage_type=WeaponsDamageTypes.PIERCING,
             damage_roll=WeaponsDamageRolls.D10,
+            weight=18,
+            value=50,
         )
 
 
@@ -895,6 +968,8 @@ class Longbow(AbstractWeapon):
             weapon_type=WeaponType.MARTIAL_RANGED,
             damage_type=WeaponsDamageTypes.PIERCING,
             damage_roll=WeaponsDamageRolls.D8,
+            weight=2,
+            value=50,
         )
 
 
@@ -912,6 +987,8 @@ class Musket(AbstractWeapon):
             weapon_type=WeaponType.MARTIAL_RANGED,
             damage_type=WeaponsDamageTypes.PIERCING,
             damage_roll=WeaponsDamageRolls.D12,
+            weight=10,
+            value=500,
         )
 
 
@@ -925,6 +1002,8 @@ class Pistol(AbstractWeapon):
             weapon_type=WeaponType.MARTIAL_RANGED,
             damage_type=WeaponsDamageTypes.PIERCING,
             damage_roll=WeaponsDamageRolls.D10,
+            weight=3,
+            value=250,
         )
 
 
@@ -949,6 +1028,7 @@ class Nullblade(AbstractWeapon):
             damage_type=WeaponsDamageTypes.SLASHING,
             damage_roll=WeaponsDamageRolls.D8,
             additional_description=description,
+            is_homebrew=True,
         )
 
 
@@ -971,6 +1051,7 @@ class Bloodletter(AbstractWeapon):
             damage_type=WeaponsDamageTypes.SLASHING,
             damage_roll=WeaponsDamageRolls.D8,
             additional_description=description,
+            is_homebrew=True,
         )
 
 
@@ -989,6 +1070,7 @@ class HuntersHarpoon(AbstractWeapon):
             damage_type=WeaponsDamageTypes.PIERCING,
             damage_roll=WeaponsDamageRolls.D10,
             additional_description=description,
+            is_homebrew=True,
         )
 
 
@@ -1008,6 +1090,7 @@ class RicochetBlade(AbstractWeapon):
             damage_type=WeaponsDamageTypes.SLASHING,
             damage_roll=WeaponsDamageRolls.D6,
             additional_description=description,
+            is_homebrew=True,
         )
 
 
@@ -1027,6 +1110,7 @@ class RampagingBlade(AbstractWeapon):
             damage_type=WeaponsDamageTypes.SLASHING,
             damage_roll=WeaponsDamageRolls.D8,
             additional_description=description,
+            is_homebrew=True,
         )
 
 
@@ -1051,6 +1135,7 @@ class ElementalSword(AbstractWeapon):
                     note="chosen type, activate as bonus action"
                 )
             ],
+            is_homebrew=True,
         )
 
 
@@ -1071,6 +1156,7 @@ class BloodlustBlade(AbstractWeapon):
             damage_type=WeaponsDamageTypes.SLASHING,
             damage_roll=WeaponsDamageRolls.D8,
             additional_description=description,
+            is_homebrew=True,
         )
 
 
@@ -1090,6 +1176,7 @@ class CoinflipCutBlade(AbstractWeapon):
             damage_type=WeaponsDamageTypes.SLASHING,
             damage_roll=WeaponsDamageRolls.D6,
             additional_description=description,
+            is_homebrew=True,
         )
 
 
@@ -1108,6 +1195,7 @@ class Sundersteel(AbstractWeapon):
             damage_type=WeaponsDamageTypes.SLASHING,
             damage_roll=WeaponsDamageRolls.D12,
             additional_description=description,
+            is_homebrew=True,
         )
 
 
@@ -1126,6 +1214,7 @@ class VampiricEdge(AbstractWeapon):
             damage_type=WeaponsDamageTypes.SLASHING,
             damage_roll=WeaponsDamageRolls.D8,
             additional_description=description,
+            is_homebrew=True,
         )
 
 
