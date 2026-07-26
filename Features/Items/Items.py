@@ -17,7 +17,8 @@ class Item(Feature):
     Base class for all items. Items are now Features, allowing them to be
     either description-only or to modify a character via SubFeatures.
 
-    An item has metadata (rarity, attunement, category, weight, slots) and can:
+    An item has metadata (rarity, attunement, category, weight, slots, value,
+    homebrew status) and can:
     - Provide a description via get_description()
     - Apply mechanical effects via subfeatures and apply()
     - Take up carrying capacity slots
@@ -33,6 +34,8 @@ class Item(Feature):
         slots: int = 1,
         description_text: str = "",
         subfeatures: Optional[list[SubFeature]] = None,
+        is_homebrew: bool = True,
+        value: Optional[float] = None,
     ):
         super().__init__(name=name, origin=category)
         self.rarity = rarity
@@ -42,6 +45,10 @@ class Item(Feature):
         self.slots = slots
         self.description_text = description_text
         self.subfeatures = subfeatures or []
+        self.is_homebrew = is_homebrew
+        # Value in gold pieces (GP). None means unknown/unpriced and should
+        # not be displayed.
+        self.value = value
 
     def apply(self, character_stat_block: CharacterStatBlock):
         """Apply all subfeatures to the character."""
@@ -53,6 +60,14 @@ class Item(Feature):
         if self.description_text:
             return self.description_text
         return None
+
+    def get_value_display(self) -> Optional[str]:
+        """Return the item's value as a display string (e.g. '25 GP'), or None if unpriced."""
+        if self.value is None:
+            return None
+        if self.value == int(self.value):
+            return f"{int(self.value)} GP"
+        return f"{self.value:g} GP"
 
     def description(self) -> str:
         """Backward compatibility: returns description_text (no character stat block needed)."""
@@ -81,6 +96,8 @@ class WearableItem(Item):
         description_text: str = "",
         subfeatures: Optional[list[SubFeature]] = None,
         is_wearing: bool = True,
+        is_homebrew: bool = True,
+        value: Optional[float] = None,
     ):
         super().__init__(
             name=name,
@@ -91,6 +108,8 @@ class WearableItem(Item):
             slots=slots,
             description_text=description_text,
             subfeatures=subfeatures,
+            is_homebrew=is_homebrew,
+            value=value,
         )
         self.is_wearing = is_wearing
 
@@ -121,6 +140,8 @@ class ConsumableItem(Item):
         slots: int = 1,
         description_text: str = "",
         subfeatures: Optional[list[SubFeature]] = None,
+        is_homebrew: bool = True,
+        value: Optional[float] = None,
     ):
         super().__init__(
             name=name,
@@ -131,6 +152,8 @@ class ConsumableItem(Item):
             slots=slots,
             description_text=description_text,
             subfeatures=subfeatures,
+            is_homebrew=is_homebrew,
+            value=value,
         )
         # Consumables are typically never attuned
         self.requires_attunement = False
@@ -148,7 +171,9 @@ class Gold(Item):
             rarity="common",
             category="currency",
             slots=0,
-            description_text="(value=1GP) A stack of gold pieces.",
+            description_text="A stack of gold pieces.",
+            is_homebrew=False,
+            value=1,
         )
 
 
@@ -159,7 +184,9 @@ class Silver(Item):
             rarity="common",
             category="currency",
             slots=0,
-            description_text="(value=0.1GP) A stack of silver pieces.",
+            description_text="A stack of silver pieces.",
+            is_homebrew=False,
+            value=0.1,
         )
 
 
@@ -171,6 +198,8 @@ class Quiver(Item):
             category="common",
             slots=1,
             description_text="A regular quiver",
+            is_homebrew=False,
+            value=1,
         )
 
 
@@ -182,6 +211,7 @@ class ThievesTools(Item):
             category="common",
             slots=1,
             description_text="Utilize: Pick a lock, or disarm a trap (DEX DC 15)",
+            is_homebrew=False,
         )
 
 
@@ -198,6 +228,8 @@ class Backpack(WearableItem):
             ),
             subfeatures=[CarryingCapacityBonus(10, source="Backpack")],
             is_wearing=is_wearing,
+            is_homebrew=False,
+            value=2,
         )
 
 
@@ -214,6 +246,8 @@ class Caltrops(Item):
                 "1 piercing damage and have its speed reduced to 0 until the start of its next turn. "
                 "Recovering the caltrops takes 10 minutes."
             ),
+            is_homebrew=False,
+            value=1,
         )
 
 
@@ -225,6 +259,8 @@ class Crowbar(Item):
             category="tool",
             slots=1,
             description_text="Using a crowbar grants advantage on Strength checks where leverage can be applied.",
+            is_homebrew=False,
+            value=2,
         )
 
 
@@ -236,6 +272,8 @@ class Candle(ConsumableItem):
             category="utility",
             slots=0,
             description_text="For 1 hour, a lit Candle sheds Bright Light in a 5-foot radius and Dim Light for an additional 5 feet.",
+            is_homebrew=False,
+            value=0.01,
         )
 
 
@@ -247,6 +285,8 @@ class BallBearings(Item):
             category="utility",
             slots=1,
             description_text="As a Utilize action, you can spill Ball Bearings from their pouch. They spread to cover a level, 10-foot-square area within 10 feet of yourself. A creature that enters this area for the first time on a turn must succeed on a DC 10 Dexterity saving throw or have the Prone condition. It takes 10 minutes to recover the Ball Bearings.",
+            is_homebrew=False,
+            value=1,
         )
 
 
@@ -258,6 +298,8 @@ class HoodedLantern(Item):
             category="utility",
             slots=1,
             description_text="A Hooded Lantern burns Oil as fuel to cast Bright Light in a 30-foot radius and Dim Light for an additional 30 feet. As a Bonus Action, you can lower the hood, reducing the light to Dim Light in a 5-foot radius, or raise it again.",
+            is_homebrew=False,
+            value=5,
         )
 
 
@@ -276,6 +318,8 @@ class FlasksOfOil(ConsumableItem):
                 "dealing 5 fire damage to creatures entering or ending their turn in the area (once per turn).\n\n"
                 "Oil can also be used as fuel, burning for up to 6 hours in a lamp or lantern."
             ),
+            is_homebrew=False,
+            value=0.1,
         )
 
 
@@ -290,6 +334,8 @@ class Rations(ConsumableItem):
                 "Travel-ready food such as jerky, dried fruit, hardtack, and nuts. "
                 "Essential for long journeys; lack of food can lead to malnutrition."
             ),
+            is_homebrew=False,
+            value=0.5,
         )
 
 
@@ -301,6 +347,8 @@ class Antitoxin(ConsumableItem):
             category="consumable",
             slots=0,
             description_text="As a Bonus Action, you can drink a vial of Antitoxin to gain Advantage on saving throws to avoid or end the Poisoned condition for 1 hour.",
+            is_homebrew=False,
+            value=50,
         )
 
 
@@ -312,6 +360,8 @@ class HealersKit(ConsumableItem):
             category="consumable",
             slots=1,
             description_text="A Healer's Kit has ten uses. As a Utilize action, you can expend one of its uses to stabilize an Unconscious creature that has 0 Hit Points without needing to make a Wisdom (Medicine) check.",
+            is_homebrew=False,
+            value=5,
         )
 
 
@@ -326,6 +376,8 @@ class PotionOfHealing(ConsumableItem):
                 "You regain 2d4 + 2 Hit Points when you drink this potion.\n"
                 "Whatever its potency, the potion's red liquid glimmers when agitated."
             ),
+            is_homebrew=False,
+            value=50,
         )
 
 
@@ -342,6 +394,8 @@ class Rope(Item):
                 "If its legs are bound, it becomes restrained. Escaping requires a DC 15 Dexterity "
                 "(Acrobatics) check as an action."
             ),
+            is_homebrew=False,
+            value=1,
         )
 
 
@@ -357,6 +411,8 @@ class Tinderbox(Item):
                 "Lighting a torch, lamp, lantern, or similar exposed fuel takes a bonus action. "
                 "Lighting other fires takes 1 minute."
             ),
+            is_homebrew=False,
+            value=0.5,
         )
 
 
@@ -371,6 +427,8 @@ class Torch(ConsumableItem):
                 "Burns for 1 hour, providing bright light in a 20-foot radius and dim light for another 20 feet.\n\n"
                 "It can be used as a simple melee weapon. On a hit, it deals 1 fire damage."
             ),
+            is_homebrew=False,
+            value=0.01,
         )
 
 
@@ -385,6 +443,8 @@ class BullseyeLantern(Item):
                 "Consumes oil as fuel to cast bright light in a 60-foot cone and dim light "
                 "for an additional 60 feet. The lantern can be shuttered to block the light."
             ),
+            is_homebrew=False,
+            value=10,
         )
 
 
@@ -400,6 +460,8 @@ class Costume(WearableItem):
                 "impersonate the person or type of person it represents."
             ),
             is_wearing=is_wearing,
+            is_homebrew=False,
+            value=5,
         )
 
 
@@ -414,6 +476,8 @@ class Mirror(Item):
                 "A small handheld mirror useful for personal grooming. It can also be used "
                 "to peek around corners without exposing yourself or to reflect light as a signal."
             ),
+            is_homebrew=False,
+            value=5,
         )
 
 
@@ -495,6 +559,8 @@ class Bedroll(Item):
                 "While resting in a bedroll, you automatically succeed on saving throws "
                 "against extreme cold."
             ),
+            is_homebrew=False,
+            value=1,
         )
 
 
@@ -506,6 +572,8 @@ class Bell(Item):
             category="utility",
             slots=0,
             description_text="When rung as an action, the bell produces a clear sound audible up to 60 feet away.",
+            is_homebrew=False,
+            value=1,
         )
 
 
@@ -517,6 +585,8 @@ class Waterskin(Item):
             category="container",
             slots=1,
             description_text="Holds up to 4 pints of liquid. Essential for survival, as insufficient water can lead to dehydration.",
+            is_homebrew=False,
+            value=0.2,
         )
 
 
@@ -528,6 +598,7 @@ class Arrows(Item):
             category="ammunition",
             slots=1,
             description_text="A bundle of arrows.",
+            is_homebrew=False,
         )
 
 
@@ -737,6 +808,7 @@ class CloakOfProtection(WearableItem):
             ),
             is_wearing=is_wearing,
             subfeatures=[ArmorClassBonus(1)],
+            is_homebrew=False,
         )
 
 
@@ -760,6 +832,7 @@ class PlusOneWeapon(Item):
                     bonuses=[(ability, 1)],
                     total=1,
                     error_prefix=f"+1 {weapon_name} bonus",
+            is_homebrew=False,
                 )
             ],
         )
@@ -784,6 +857,7 @@ class BracersOfArchery(WearableItem):
                     bonuses=[(Ability.DEXTERITY, 2)],
                     total=2,
                     error_prefix="Bracers of Archery bonus",
+            is_homebrew=False,
                 )
             ],
         )
@@ -865,10 +939,12 @@ class Acid(Item):
         super().__init__(
             "Acid",
             rarity="common",
-            category="placeholder",
-            weight=None,
+            category="consumable",
+            weight=1,
             slots=1,
-            description_text="Placeholder item — full stats not yet defined.",
+            description_text="When you take the Attack action, you can replace one of your attacks with throwing a vial of Acid. Target one creature or object you can see within 20 feet of yourself. The target must succeed on a Dexterity saving throw (DC 8 plus your Dexterity modifier and Proficiency Bonus) or take 2d6 Acid damage.",
+            is_homebrew=False,
+            value=25,
         )
 
 class AlchemistsFire(Item):
@@ -876,10 +952,12 @@ class AlchemistsFire(Item):
         super().__init__(
             "Alchemist's Fire",
             rarity="common",
-            category="placeholder",
-            weight=None,
+            category="consumable",
+            weight=1,
             slots=1,
-            description_text="Placeholder item — full stats not yet defined.",
+            description_text="When you take the Attack action, you can replace one of your attacks with throwing a flask of Alchemist's Fire. Target one creature or object you can see within 20 feet of yourself. The target must succeed on a Dexterity saving throw (DC 8 plus your Dexterity modifier and Proficiency Bonus) or take 1d4 Fire damage and start burning.",
+            is_homebrew=False,
+            value=50,
         )
 
 class AnyMeleeWeaponPlaceholder(Item):
@@ -891,6 +969,7 @@ class AnyMeleeWeaponPlaceholder(Item):
             weight=None,
             slots=1,
             description_text="Placeholder item — full stats not yet defined.",
+            is_homebrew=False,
         )
 
 class ArcaneFocus(Item):
@@ -898,10 +977,11 @@ class ArcaneFocus(Item):
         super().__init__(
             "Arcane Focus",
             rarity="common",
-            category="placeholder",
+            category="focus",
             weight=None,
             slots=1,
-            description_text="Placeholder item — full stats not yet defined.",
+            description_text="An Arcane Focus takes one of several forms and is bejeweled or carved to channel arcane magic. A Sorcerer, Warlock, or Wizard can use such an item as a Spellcasting Focus.",
+            is_homebrew=False,
         )
 
 class Barrel(Item):
@@ -909,10 +989,12 @@ class Barrel(Item):
         super().__init__(
             "Barrel",
             rarity="common",
-            category="placeholder",
-            weight=None,
+            category="gear",
+            weight=70,
             slots=1,
-            description_text="Placeholder item — full stats not yet defined.",
+            description_text="A Barrel holds up to 40 gallons of liquid or up to 4 cubic feet of dry goods.",
+            is_homebrew=False,
+            value=2,
         )
 
 class BasicPoison(Item):
@@ -920,10 +1002,12 @@ class BasicPoison(Item):
         super().__init__(
             "Basic Poison",
             rarity="common",
-            category="placeholder",
+            category="consumable",
             weight=None,
             slots=1,
-            description_text="Placeholder item — full stats not yet defined.",
+            description_text="As a Bonus Action, you can use a vial of Basic Poison to coat one weapon or up to three pieces of ammunition. A creature that takes Piercing or Slashing damage from the poisoned weapon or ammunition takes an extra 1d4 Poison damage. Once applied, the poison retains potency for 1 minute or until its damage is dealt, whichever comes first.",
+            is_homebrew=False,
+            value=100,
         )
 
 class Basket(Item):
@@ -931,10 +1015,12 @@ class Basket(Item):
         super().__init__(
             "Basket",
             rarity="common",
-            category="placeholder",
-            weight=None,
+            category="gear",
+            weight=2,
             slots=1,
-            description_text="Placeholder item — full stats not yet defined.",
+            description_text="A Basket holds up to 40 pounds within 2 cubic feet.",
+            is_homebrew=False,
+            value=0.4,
         )
 
 class Blanket(Item):
@@ -942,10 +1028,12 @@ class Blanket(Item):
         super().__init__(
             "Blanket",
             rarity="common",
-            category="placeholder",
-            weight=None,
+            category="gear",
+            weight=3,
             slots=1,
-            description_text="Placeholder item — full stats not yet defined.",
+            description_text="While wrapped in a blanket, you have Advantage on saving throws against extreme cold.",
+            is_homebrew=False,
+            value=0.5,
         )
 
 class BlockAndTackle(Item):
@@ -953,10 +1041,12 @@ class BlockAndTackle(Item):
         super().__init__(
             "Block and Tackle",
             rarity="common",
-            category="placeholder",
-            weight=None,
+            category="tool",
+            weight=5,
             slots=1,
-            description_text="Placeholder item — full stats not yet defined.",
+            description_text="A Block and Tackle allows you to hoist up to four times the weight you can normally lift.",
+            is_homebrew=False,
+            value=1,
         )
 
 class Bolts(Item):
@@ -968,6 +1058,7 @@ class Bolts(Item):
             weight=None,
             slots=1,
             description_text="Placeholder item — full stats not yet defined.",
+            is_homebrew=False,
         )
 
 class Bucket(Item):
@@ -975,10 +1066,173 @@ class Bucket(Item):
         super().__init__(
             "Bucket",
             rarity="common",
-            category="placeholder",
+            category="gear",
+            weight=2,
+            slots=1,
+            description_text="A Bucket holds up to half a cubic foot of contents.",
+            is_homebrew=False,
+            value=0.05,
+        )
+
+class BrightFungalCloak(WearableItem):
+    def __init__(self, is_wearing: bool = True):
+        super().__init__(
+            "Bright Fungal Cloak",
+            rarity="common",
+            category="clothing",
             weight=None,
             slots=1,
-            description_text="Placeholder item — full stats not yet defined.",
+            description_text=(
+                "While wearing a Bright Fungal Cloak, you can take a Bonus Action to furl or unfurl it. "
+                "When the cloak is unfurled, it sheds Bright Light in a 5-foot radius and Dim Light for an "
+                "additional 5 feet. One pound of fungus is sewn into a Bright Fungal Cloak. This fungus can "
+                "be eaten as food. Once all the fungus is consumed, the cloak becomes a mundane set of "
+                "Traveler's Clothes."
+            ),
+            is_wearing=is_wearing,
+            is_homebrew=False,
+            value=25,
+        )
+
+class Book(Item):
+    def __init__(self):
+        super().__init__(
+            "Book",
+            rarity="common",
+            category="gear",
+            weight=5,
+            slots=1,
+            description_text="A Book contains fiction or nonfiction. If you consult an accurate nonfiction Book about its topic, you gain a +5 bonus to Intelligence (Arcana, History, Nature, or Religion) checks you make about that topic.",
+            is_homebrew=False,
+            value=25,
+        )
+
+class DesertClothing(WearableItem):
+    def __init__(self, is_wearing: bool = True):
+        super().__init__(
+            "Desert Clothing",
+            rarity="common",
+            category="clothing",
+            weight=None,
+            slots=1,
+            description_text="When you are wearing Desert Clothing and not wearing Medium or Heavy armor, you automatically succeed on saving throws against the effects of extreme heat.",
+            is_wearing=is_wearing,
+            is_homebrew=False,
+            value=5,
+        )
+
+class DevilMask(WearableItem):
+    def __init__(self, is_wearing: bool = True):
+        super().__init__(
+            "Devil Mask",
+            rarity="common",
+            category="clothing",
+            weight=None,
+            slots=1,
+            description_text="While you are wearing a Devil Mask, other creatures have Disadvantage on Intelligence (Investigation) and Wisdom (Insight) checks made to discern your true identity or intentions.",
+            is_wearing=is_wearing,
+            is_homebrew=False,
+            value=25,
+        )
+
+class GarbOfLightAndShadow(WearableItem):
+    def __init__(self, is_wearing: bool = True):
+        super().__init__(
+            "Garb of Light and Shadow",
+            rarity="common",
+            category="wondrous",
+            weight=None,
+            slots=1,
+            description_text="This garb appeals to Fey from one Domain of Delight, such as the Gloaming Court or the Summer Court. While wearing the garb, you have Advantage on ability checks to influence Fey associated with that Domain of Delight.",
+            is_wearing=is_wearing,
+            is_homebrew=False,
+            value=50,
+        )
+
+class GenieRobe(WearableItem):
+    def __init__(self, is_wearing: bool = True):
+        super().__init__(
+            "Genie Robe",
+            rarity="common",
+            category="wondrous",
+            weight=None,
+            slots=1,
+            description_text="This robe appeals to Elementals associated with a particular Elemental Plane (Air, Earth, Fire, Water). While wearing a Genie Robe, you have Advantage on ability checks made to influence Elementals associated with that plane.",
+            is_wearing=is_wearing,
+            is_homebrew=False,
+            value=50,
+        )
+
+class HolyWater(Item):
+    def __init__(self):
+        super().__init__(
+            "Holy Water",
+            rarity="common",
+            category="consumable",
+            weight=1,
+            slots=1,
+            description_text="When you take the Attack action, you can replace one of your attacks with throwing a flask of Holy Water. Target one creature you can see within 20 feet of yourself. The target must succeed on a Dexterity saving throw (DC 8 plus your Dexterity modifier and Proficiency Bonus) or take 2d8 Radiant damage if it is a Fiend or an Undead.",
+            is_homebrew=False,
+            value=25,
+        )
+
+class LockingSpellbook(Item):
+    def __init__(self):
+        super().__init__(
+            "Locking Spellbook",
+            rarity="common",
+            category="gear",
+            weight=None,
+            slots=1,
+            description_text="This 100-page leather-bound tome can be used as a Spellbook. It is closed with a lock that comes with a key. As a Utilize action, a creature can try to pick the lock using Thieves' Tools, doing so with a successful DC 15 Dexterity (Sleight of Hand) check.",
+            is_homebrew=False,
+            value=35,
+        )
+
+class MonsterCamouflage(WearableItem):
+    def __init__(self, is_wearing: bool = True):
+        super().__init__(
+            "Monster Camouflage",
+            rarity="common",
+            category="clothing",
+            weight=None,
+            slots=1,
+            description_text="A suit of Monster Camouflage looks like a Beast or Monstrosity, such as an owlbear. To discern that you're disguised, a creature must take the Study action to inspect your appearance and succeed on a DC 10 Intelligence (Investigation or Nature) check. The creature has Advantage on this check if it is within 30 feet of you and automatically succeeds on this check if you do anything the monster you're disguised as couldn't do.",
+            is_wearing=is_wearing,
+            is_homebrew=False,
+            value=50,
+        )
+
+class WarmFungalClothing(WearableItem):
+    def __init__(self, is_wearing: bool = True):
+        super().__init__(
+            "Warm Fungal Clothing",
+            rarity="common",
+            category="clothing",
+            weight=None,
+            slots=1,
+            description_text=(
+                "When you're wearing Warm Fungal Clothing, you automatically succeed on saving throws against "
+                "the effects of extreme cold. One pound of fungus is sewn into Fungal Clothing. This fungus can "
+                "be eaten as food. Once all the fungus is consumed, this becomes a mundane set of Traveler's Clothes."
+            ),
+            is_wearing=is_wearing,
+            is_homebrew=False,
+            value=15,
+        )
+
+class WinterCamouflage(WearableItem):
+    def __init__(self, is_wearing: bool = True):
+        super().__init__(
+            "Winter Camouflage",
+            rarity="common",
+            category="clothing",
+            weight=None,
+            slots=1,
+            description_text="While you wear Winter Camouflage in an appropriate environment, you have Advantage on Dexterity (Stealth) checks.",
+            is_wearing=is_wearing,
+            is_homebrew=False,
+            value=50,
         )
 
 class Chain(Item):
@@ -986,10 +1240,12 @@ class Chain(Item):
         super().__init__(
             "Chain",
             rarity="common",
-            category="placeholder",
-            weight=None,
+            category="gear",
+            weight=10,
             slots=1,
-            description_text="Placeholder item — full stats not yet defined.",
+            description_text="As a Utilize action, you can wrap a Chain around an unwilling creature within 5 feet of yourself that has the Grappled, Incapacitated, or Restrained condition if you succeed on a DC 13 Strength (Athletics) check. If the creature's legs are bound, the creature has the Restrained condition until it escapes. Escaping the Chain requires the creature to make a successful DC 18 Dexterity (Acrobatics) check as an action. Bursting the Chain requires a successful DC 20 Strength (Athletics) check as an action.",
+            is_homebrew=False,
+            value=5,
         )
 
 class Chest(Item):
@@ -997,10 +1253,12 @@ class Chest(Item):
         super().__init__(
             "Chest",
             rarity="common",
-            category="placeholder",
-            weight=None,
+            category="container",
+            weight=25,
             slots=1,
-            description_text="Placeholder item — full stats not yet defined.",
+            description_text="A Chest holds up to 12 cubic feet of contents.",
+            is_homebrew=False,
+            value=5,
         )
 
 class ClimbersKit(Item):
@@ -1008,10 +1266,12 @@ class ClimbersKit(Item):
         super().__init__(
             "Climber's Kit",
             rarity="common",
-            category="placeholder",
-            weight=None,
+            category="tool",
+            weight=12,
             slots=1,
-            description_text="Placeholder item — full stats not yet defined.",
+            description_text="A Climber's Kit includes boot tips, gloves, pitons, and a harness. As a Utilize action, you can use the Climber's Kit to anchor yourself; when you do, you can't fall more than 25 feet from the anchor point, and you can't move more than 25 feet from there without undoing the anchor as a Bonus Action.",
+            is_homebrew=False,
+            value=25,
         )
 
 class Club(Item):
@@ -1023,6 +1283,7 @@ class Club(Item):
             weight=None,
             slots=1,
             description_text="Placeholder item — full stats not yet defined.",
+            is_homebrew=False,
         )
 
 class ComponentPouch(Item):
@@ -1030,10 +1291,12 @@ class ComponentPouch(Item):
         super().__init__(
             "Component Pouch",
             rarity="common",
-            category="placeholder",
-            weight=None,
+            category="gear",
+            weight=2,
             slots=1,
-            description_text="Placeholder item — full stats not yet defined.",
+            description_text="A Component Pouch is watertight and filled with compartments that hold all the free Material components of your spells.",
+            is_homebrew=False,
+            value=25,
         )
 
 class CrossbowBoltCase(Item):
@@ -1041,10 +1304,12 @@ class CrossbowBoltCase(Item):
         super().__init__(
             "Crossbow Bolt Case",
             rarity="common",
-            category="placeholder",
-            weight=None,
+            category="container",
+            weight=1,
             slots=1,
-            description_text="Placeholder item — full stats not yet defined.",
+            description_text="A Crossbow Bolt Case holds up to 20 Bolts.",
+            is_homebrew=False,
+            value=1,
         )
 
 class DruidicFocus(Item):
@@ -1052,10 +1317,11 @@ class DruidicFocus(Item):
         super().__init__(
             "Druidic Focus",
             rarity="common",
-            category="placeholder",
+            category="focus",
             weight=None,
             slots=1,
-            description_text="Placeholder item — full stats not yet defined.",
+            description_text="A Druidic Focus takes one of several forms and is carved, tied with ribbon, or painted to channel primal magic. A Druid or Ranger can use such an object as a Spellcasting Focus.",
+            is_homebrew=False,
         )
 
 class FineClothes(Item):
@@ -1063,10 +1329,12 @@ class FineClothes(Item):
         super().__init__(
             "Fine Clothes",
             rarity="common",
-            category="placeholder",
-            weight=None,
+            category="clothing",
+            weight=6,
             slots=1,
-            description_text="Placeholder item — full stats not yet defined.",
+            description_text="Fine Clothes are made of expensive fabrics and adorned with expertly crafted details. Some events and locations admit only people wearing these clothes.",
+            is_homebrew=False,
+            value=15,
         )
 
 class FirearmBullets(Item):
@@ -1078,6 +1346,7 @@ class FirearmBullets(Item):
             weight=None,
             slots=1,
             description_text="Placeholder item — full stats not yet defined.",
+            is_homebrew=False,
         )
 
 class Flask(Item):
@@ -1085,10 +1354,12 @@ class Flask(Item):
         super().__init__(
             "Flask",
             rarity="common",
-            category="placeholder",
-            weight=None,
+            category="gear",
+            weight=1,
             slots=1,
-            description_text="Placeholder item — full stats not yet defined.",
+            description_text="A Flask holds up to 1 pint.",
+            is_homebrew=False,
+            value=0.02,
         )
 
 class GlassBottle(Item):
@@ -1096,10 +1367,12 @@ class GlassBottle(Item):
         super().__init__(
             "Glass Bottle",
             rarity="common",
-            category="placeholder",
-            weight=None,
+            category="container",
+            weight=2,
             slots=1,
-            description_text="Placeholder item — full stats not yet defined.",
+            description_text="A Glass Bottle holds up to 1½ pints.",
+            is_homebrew=False,
+            value=2,
         )
 
 class GrapplingHook(Item):
@@ -1107,10 +1380,12 @@ class GrapplingHook(Item):
         super().__init__(
             "Grappling Hook",
             rarity="common",
-            category="placeholder",
-            weight=None,
+            category="tool",
+            weight=4,
             slots=1,
-            description_text="Placeholder item — full stats not yet defined.",
+            description_text="As a Utilize action, you can throw the Grappling Hook at a railing, a ledge, or another catch within 50 feet of yourself, and the hook catches on if you succeed on a DC 13 Dexterity (Acrobatics) check. If you tied a Rope to the hook, you can then climb it.",
+            is_homebrew=False,
+            value=5,
         )
 
 class Greatclub(Item):
@@ -1122,6 +1397,7 @@ class Greatclub(Item):
             weight=None,
             slots=1,
             description_text="Placeholder item — full stats not yet defined.",
+            is_homebrew=False,
         )
 
 class HeavyArmorPlaceholder(Item):
@@ -1133,6 +1409,7 @@ class HeavyArmorPlaceholder(Item):
             weight=None,
             slots=1,
             description_text="Placeholder item — full stats not yet defined.",
+            is_homebrew=False,
         )
 
 class HideArmor(Item):
@@ -1144,6 +1421,7 @@ class HideArmor(Item):
             weight=None,
             slots=1,
             description_text="Placeholder item — full stats not yet defined.",
+            is_homebrew=False,
         )
 
 class HolySymbol(Item):
@@ -1151,10 +1429,11 @@ class HolySymbol(Item):
         super().__init__(
             "Holy Symbol",
             rarity="common",
-            category="placeholder",
+            category="focus",
             weight=None,
             slots=1,
-            description_text="Placeholder item — full stats not yet defined.",
+            description_text="A Holy Symbol takes one of several forms and is bejeweled or painted to channel divine magic. A Cleric or Paladin can use a Holy Symbol as a Spellcasting Focus.",
+            is_homebrew=False,
         )
 
 class HuntingTrap(Item):
@@ -1162,10 +1441,12 @@ class HuntingTrap(Item):
         super().__init__(
             "Hunting Trap",
             rarity="common",
-            category="placeholder",
-            weight=None,
+            category="gear",
+            weight=25,
             slots=1,
-            description_text="Placeholder item — full stats not yet defined.",
+            description_text="As a Utilize action, you can set a Hunting Trap, which is a sawtooth steel ring that snaps shut when a creature steps on a pressure plate in the center. A creature that steps on the plate must succeed on a DC 13 Dexterity saving throw or take 1d4 Piercing damage and have its Speed reduced to 0 until the start of its next turn. A creature can use its action to make a DC 13 Strength (Athletics) check, freeing itself or another creature within its reach on a success.",
+            is_homebrew=False,
+            value=5,
         )
 
 class Ink(Item):
@@ -1173,10 +1454,12 @@ class Ink(Item):
         super().__init__(
             "Ink",
             rarity="common",
-            category="placeholder",
+            category="gear",
             weight=None,
             slots=1,
-            description_text="Placeholder item — full stats not yet defined.",
+            description_text="Ink comes in a 1-ounce bottle, which provides enough ink to write about 500 pages.",
+            is_homebrew=False,
+            value=10,
         )
 
 class InkPen(Item):
@@ -1184,10 +1467,12 @@ class InkPen(Item):
         super().__init__(
             "Ink Pen",
             rarity="common",
-            category="placeholder",
+            category="gear",
             weight=None,
             slots=1,
-            description_text="Placeholder item — full stats not yet defined.",
+            description_text="Using Ink, an Ink Pen is used to write or draw.",
+            is_homebrew=False,
+            value=0.02,
         )
 
 class IronPot(Item):
@@ -1195,10 +1480,12 @@ class IronPot(Item):
         super().__init__(
             "Iron Pot",
             rarity="common",
-            category="placeholder",
-            weight=None,
+            category="gear",
+            weight=10,
             slots=1,
-            description_text="Placeholder item — full stats not yet defined.",
+            description_text="An Iron Pot holds up to 1 gallon.",
+            is_homebrew=False,
+            value=2,
         )
 
 class IronSpikes(Item):
@@ -1206,10 +1493,12 @@ class IronSpikes(Item):
         super().__init__(
             "Iron Spikes",
             rarity="common",
-            category="placeholder",
-            weight=None,
+            category="gear",
+            weight=5,
             slots=1,
-            description_text="Placeholder item — full stats not yet defined.",
+            description_text="Iron Spikes come in bundles of ten. As a Utilize action, you can use a blunt object, such as a Light Hammer, to hammer a spike into wood, earth, or a similar material. You can do so to jam a door shut or to then tie a Rope or Chain to the Spike.",
+            is_homebrew=False,
+            value=1,
         )
 
 class Jug(Item):
@@ -1217,10 +1506,12 @@ class Jug(Item):
         super().__init__(
             "Jug",
             rarity="common",
-            category="placeholder",
-            weight=None,
+            category="container",
+            weight=4,
             slots=1,
-            description_text="Placeholder item — full stats not yet defined.",
+            description_text="A Jug holds up to 1 gallon.",
+            is_homebrew=False,
+            value=0.02,
         )
 
 class Ladder(Item):
@@ -1228,10 +1519,12 @@ class Ladder(Item):
         super().__init__(
             "Ladder",
             rarity="common",
-            category="placeholder",
-            weight=None,
+            category="gear",
+            weight=25,
             slots=1,
-            description_text="Placeholder item — full stats not yet defined.",
+            description_text="A Ladder is 10 feet tall. You must climb to move up or down it.",
+            is_homebrew=False,
+            value=0.1,
         )
 
 class Lamp(Item):
@@ -1239,10 +1532,12 @@ class Lamp(Item):
         super().__init__(
             "Lamp",
             rarity="common",
-            category="placeholder",
-            weight=None,
+            category="gear",
+            weight=1,
             slots=1,
-            description_text="Placeholder item — full stats not yet defined.",
+            description_text="A Lamp burns Oil as fuel to cast Bright Light in a 15-foot radius and Dim Light for an additional 30 feet.",
+            is_homebrew=False,
+            value=0.5,
         )
 
 class LeatherArmor(Item):
@@ -1254,6 +1549,7 @@ class LeatherArmor(Item):
             weight=None,
             slots=1,
             description_text="Placeholder item — full stats not yet defined.",
+            is_homebrew=False,
         )
 
 class Lock(Item):
@@ -1261,10 +1557,12 @@ class Lock(Item):
         super().__init__(
             "Lock",
             rarity="common",
-            category="placeholder",
-            weight=None,
+            category="gear",
+            weight=1,
             slots=1,
-            description_text="Placeholder item — full stats not yet defined.",
+            description_text="A Lock comes with a key. Without the key, a creature can use Thieves' Tools to pick this Lock with a successful DC 15 Dexterity (Sleight of Hand) check.",
+            is_homebrew=False,
+            value=10,
         )
 
 class MagnifyingGlass(Item):
@@ -1272,10 +1570,12 @@ class MagnifyingGlass(Item):
         super().__init__(
             "Magnifying Glass",
             rarity="common",
-            category="placeholder",
+            category="gear",
             weight=None,
             slots=1,
-            description_text="Placeholder item — full stats not yet defined.",
+            description_text="A Magnifying Glass grants Advantage on any ability check made to appraise or inspect a highly detailed item. Lighting a fire with a Magnifying Glass requires light as bright as sunlight to focus, tinder to ignite, and about 5 minutes for the fire to ignite.",
+            is_homebrew=False,
+            value=100,
         )
 
 class Manacles(Item):
@@ -1283,10 +1583,12 @@ class Manacles(Item):
         super().__init__(
             "Manacles",
             rarity="common",
-            category="placeholder",
-            weight=None,
+            category="gear",
+            weight=6,
             slots=1,
-            description_text="Placeholder item — full stats not yet defined.",
+            description_text="As a Utilize action, you can use Manacles to bind an unwilling Small or Medium creature within 5 feet of yourself that has the Grappled, Incapacitated, or Restrained condition if you succeed on a DC 13 Dexterity (Sleight of Hand) check. While bound, a creature has Disadvantage on attack rolls, and the creature is Restrained if the Manacles are attached to a chain or hook that is fixed in place. Escaping the Manacles requires a successful DC 20 Dexterity (Sleight of Hand) check as an action. Bursting them requires a successful DC 25 Strength (Athletics) check as an action. Each set of Manacles comes with a key.",
+            is_homebrew=False,
+            value=2,
         )
 
 class Map(Item):
@@ -1294,10 +1596,12 @@ class Map(Item):
         super().__init__(
             "Map",
             rarity="common",
-            category="placeholder",
+            category="gear",
             weight=None,
             slots=1,
-            description_text="Placeholder item — full stats not yet defined.",
+            description_text="If you consult an accurate Map, you gain a +5 bonus to Wisdom (Survival) checks you make to find your way in the place represented on it.",
+            is_homebrew=False,
+            value=1,
         )
 
 class MapOrScrollCase(Item):
@@ -1305,10 +1609,12 @@ class MapOrScrollCase(Item):
         super().__init__(
             "Map or Scroll Case",
             rarity="common",
-            category="placeholder",
-            weight=None,
+            category="container",
+            weight=1,
             slots=1,
-            description_text="Placeholder item — full stats not yet defined.",
+            description_text="A Map or Scroll Case holds up to 10 sheets of paper or 5 sheets of parchment.",
+            is_homebrew=False,
+            value=1,
         )
 
 class MediumArmorPlaceholder(Item):
@@ -1320,6 +1626,7 @@ class MediumArmorPlaceholder(Item):
             weight=None,
             slots=1,
             description_text="Placeholder item — full stats not yet defined.",
+            is_homebrew=False,
         )
 
 class MirrorPlaceholder(Item):
@@ -1327,10 +1634,12 @@ class MirrorPlaceholder(Item):
         super().__init__(
             "Mirror",
             rarity="common",
-            category="placeholder",
-            weight=None,
+            category="gear",
+            weight=0.5,
             slots=1,
-            description_text="Placeholder item — full stats not yet defined.",
+            description_text="A handheld steel Mirror is useful for personal cosmetics but also for peeking around corners and reflecting light as a signal.",
+            is_homebrew=False,
+            value=5,
         )
 
 class Musket(Item):
@@ -1342,6 +1651,7 @@ class Musket(Item):
             weight=None,
             slots=1,
             description_text="Placeholder item — full stats not yet defined.",
+            is_homebrew=False,
         )
 
 class Needles(Item):
@@ -1353,6 +1663,7 @@ class Needles(Item):
             weight=None,
             slots=1,
             description_text="Placeholder item — full stats not yet defined.",
+            is_homebrew=False,
         )
 
 class Net(Item):
@@ -1360,10 +1671,12 @@ class Net(Item):
         super().__init__(
             "Net",
             rarity="common",
-            category="placeholder",
-            weight=None,
+            category="gear",
+            weight=3,
             slots=1,
-            description_text="Placeholder item — full stats not yet defined.",
+            description_text="When you take the Attack action, you can replace one of your attacks with throwing a Net. Target a creature you can see within 15 feet of yourself. The target must succeed on a Dexterity saving throw (DC 8 plus your Dexterity modifier and Proficiency Bonus) or have the Restrained condition until it escapes. To escape, the target or a creature within 5 feet of it must take an action to make a DC 10 Strength (Athletics) check, freeing the Restrained creature on a success.",
+            is_homebrew=False,
+            value=1,
         )
 
 class Oil(Item):
@@ -1371,10 +1684,12 @@ class Oil(Item):
         super().__init__(
             "Oil",
             rarity="common",
-            category="placeholder",
-            weight=None,
+            category="gear",
+            weight=1,
             slots=1,
-            description_text="Placeholder item — full stats not yet defined.",
+            description_text="You can douse a creature, object, or space with Oil or use it as fuel. When you take the Attack action, you can replace one of your attacks with throwing an Oil flask; the target must succeed on a Dexterity saving throw (DC 8 plus your Dexterity modifier and Proficiency Bonus) or be covered in oil, taking an extra 5 Fire damage from burning oil if it takes Fire damage before the oil dries. Oil also serves as fuel for Lamps and Lanterns, burning for 6 hours once lit.",
+            is_homebrew=False,
+            value=0.1,
         )
 
 class PaddedArmor(Item):
@@ -1386,6 +1701,7 @@ class PaddedArmor(Item):
             weight=None,
             slots=1,
             description_text="Placeholder item — full stats not yet defined.",
+            is_homebrew=False,
         )
 
 class Paper(Item):
@@ -1393,10 +1709,12 @@ class Paper(Item):
         super().__init__(
             "Paper",
             rarity="common",
-            category="placeholder",
+            category="gear",
             weight=None,
             slots=1,
-            description_text="Placeholder item — full stats not yet defined.",
+            description_text="One sheet of Paper can hold about 250 handwritten words.",
+            is_homebrew=False,
+            value=0.2,
         )
 
 class Parchment(Item):
@@ -1404,10 +1722,12 @@ class Parchment(Item):
         super().__init__(
             "Parchment",
             rarity="common",
-            category="placeholder",
+            category="gear",
             weight=None,
             slots=1,
-            description_text="Placeholder item — full stats not yet defined.",
+            description_text="One sheet of Parchment can hold about 250 handwritten words.",
+            is_homebrew=False,
+            value=0.1,
         )
 
 class Perfume(Item):
@@ -1415,10 +1735,12 @@ class Perfume(Item):
         super().__init__(
             "Perfume",
             rarity="common",
-            category="placeholder",
+            category="gear",
             weight=None,
             slots=1,
-            description_text="Placeholder item — full stats not yet defined.",
+            description_text="Perfume comes in a 4-ounce vial. For 1 hour after applying Perfume to yourself, you have Advantage on Charisma (Persuasion) checks made to influence an Indifferent Humanoid within 5 feet of yourself.",
+            is_homebrew=False,
+            value=5,
         )
 
 class Pistol(Item):
@@ -1430,6 +1752,7 @@ class Pistol(Item):
             weight=None,
             slots=1,
             description_text="Placeholder item — full stats not yet defined.",
+            is_homebrew=False,
         )
 
 class Pole(Item):
@@ -1437,10 +1760,12 @@ class Pole(Item):
         super().__init__(
             "Pole",
             rarity="common",
-            category="placeholder",
-            weight=None,
+            category="gear",
+            weight=7,
             slots=1,
-            description_text="Placeholder item — full stats not yet defined.",
+            description_text="A Pole is 10 feet long. You can use it to touch something up to 10 feet away. If you must make a Strength (Athletics) check as part of a High or Long Jump, you can use the Pole to vault, giving yourself Advantage on the check.",
+            is_homebrew=False,
+            value=0.05,
         )
 
 class PortableRam(Item):
@@ -1448,10 +1773,12 @@ class PortableRam(Item):
         super().__init__(
             "Portable Ram",
             rarity="common",
-            category="placeholder",
-            weight=None,
+            category="tool",
+            weight=35,
             slots=1,
-            description_text="Placeholder item — full stats not yet defined.",
+            description_text="You can use a Portable Ram to break down doors. When doing so, you gain a +4 bonus to the Strength check. One other character can help you use the ram, giving you Advantage on this check.",
+            is_homebrew=False,
+            value=4,
         )
 
 class Pouch(Item):
@@ -1459,10 +1786,12 @@ class Pouch(Item):
         super().__init__(
             "Pouch",
             rarity="common",
-            category="placeholder",
-            weight=None,
+            category="container",
+            weight=1,
             slots=1,
-            description_text="Placeholder item — full stats not yet defined.",
+            description_text="A Pouch holds up to 6 pounds within one-fifth of a cubic foot.",
+            is_homebrew=False,
+            value=0.5,
         )
 
 class Quarterstaff(Item):
@@ -1474,6 +1803,7 @@ class Quarterstaff(Item):
             weight=None,
             slots=1,
             description_text="Placeholder item — full stats not yet defined.",
+            is_homebrew=False,
         )
 
 class RangedWeaponsPlaceholder(Item):
@@ -1485,6 +1815,7 @@ class RangedWeaponsPlaceholder(Item):
             weight=None,
             slots=1,
             description_text="Placeholder item — full stats not yet defined.",
+            is_homebrew=False,
         )
 
 class Robe(Item):
@@ -1492,10 +1823,12 @@ class Robe(Item):
         super().__init__(
             "Robe",
             rarity="common",
-            category="placeholder",
-            weight=None,
+            category="clothing",
+            weight=4,
             slots=1,
-            description_text="Placeholder item — full stats not yet defined.",
+            description_text="A Robe has vocational or ceremonial significance. Some events and locations admit only people wearing a Robe bearing certain colors or symbols.",
+            is_homebrew=False,
+            value=1,
         )
 
 class RopePlaceholder(Item):
@@ -1503,10 +1836,12 @@ class RopePlaceholder(Item):
         super().__init__(
             "Rope",
             rarity="common",
-            category="placeholder",
-            weight=None,
+            category="gear",
+            weight=5,
             slots=1,
-            description_text="Placeholder item — full stats not yet defined.",
+            description_text="As a Utilize action, you can tie a knot with Rope if you succeed on a DC 10 Dexterity (Sleight of Hand) check. The Rope can be burst with a successful DC 20 Strength (Athletics) check. You can bind an unwilling creature with the Rope only if the creature has the Grappled, Incapacitated, or Restrained condition. Escaping the Rope requires the creature to make a successful DC 15 Dexterity (Acrobatics) check as an action.",
+            is_homebrew=False,
+            value=1,
         )
 
 class Sack(Item):
@@ -1514,10 +1849,12 @@ class Sack(Item):
         super().__init__(
             "Sack",
             rarity="common",
-            category="placeholder",
-            weight=None,
+            category="container",
+            weight=0.5,
             slots=1,
-            description_text="Placeholder item — full stats not yet defined.",
+            description_text="A Sack holds up to 30 pounds within 1 cubic foot.",
+            is_homebrew=False,
+            value=0.01,
         )
 
 class Shovel(Item):
@@ -1525,10 +1862,12 @@ class Shovel(Item):
         super().__init__(
             "Shovel",
             rarity="common",
-            category="placeholder",
-            weight=None,
+            category="tool",
+            weight=5,
             slots=1,
-            description_text="Placeholder item — full stats not yet defined.",
+            description_text="Working for 1 hour, you can use a Shovel to dig a hole that is 5 feet on each side in soil or similar material.",
+            is_homebrew=False,
+            value=2,
         )
 
 class SignalWhistle(Item):
@@ -1536,10 +1875,12 @@ class SignalWhistle(Item):
         super().__init__(
             "Signal Whistle",
             rarity="common",
-            category="placeholder",
+            category="gear",
             weight=None,
             slots=1,
-            description_text="Placeholder item — full stats not yet defined.",
+            description_text="When blown as a Utilize action, a Signal Whistle produces a sound that can be heard up to 600 feet away.",
+            is_homebrew=False,
+            value=0.05,
         )
 
 class Sling(Item):
@@ -1551,6 +1892,7 @@ class Sling(Item):
             weight=None,
             slots=1,
             description_text="Placeholder item — full stats not yet defined.",
+            is_homebrew=False,
         )
 
 class SlingBullets(Item):
@@ -1562,6 +1904,7 @@ class SlingBullets(Item):
             weight=None,
             slots=1,
             description_text="Placeholder item — full stats not yet defined.",
+            is_homebrew=False,
         )
 
 class SpellScroll(Item):
@@ -1569,10 +1912,11 @@ class SpellScroll(Item):
         super().__init__(
             "Spell Scroll",
             rarity="common",
-            category="placeholder",
+            category="consumable",
             weight=None,
             slots=1,
-            description_text="Placeholder item — full stats not yet defined.",
+            description_text="A Spell Scroll is a magic item that bears the words of a cantrip or a level 1 spell, determined by the scroll's creator. If the spell is on your class's spell list, you can read the scroll and cast the spell using its normal casting time and without providing any Material components. If the spell requires a saving throw or an attack roll, the spell save DC is 13, and the attack bonus is +5. The scroll disintegrates when the casting is completed.",
+            is_homebrew=False,
         )
 
 class Spyglass(Item):
@@ -1580,10 +1924,12 @@ class Spyglass(Item):
         super().__init__(
             "Spyglass",
             rarity="common",
-            category="placeholder",
-            weight=None,
+            category="gear",
+            weight=1,
             slots=1,
-            description_text="Placeholder item — full stats not yet defined.",
+            description_text="Objects viewed through a Spyglass are magnified to twice their size.",
+            is_homebrew=False,
+            value=1000,
         )
 
 class StringItem(Item):
@@ -1591,10 +1937,12 @@ class StringItem(Item):
         super().__init__(
             "String",
             rarity="common",
-            category="placeholder",
+            category="gear",
             weight=None,
             slots=1,
-            description_text="Placeholder item — full stats not yet defined.",
+            description_text="String is 10 feet long. You can tie a knot in it as a Utilize action.",
+            is_homebrew=False,
+            value=0.1,
         )
 
 class StuddedLeatherArmor(Item):
@@ -1606,6 +1954,7 @@ class StuddedLeatherArmor(Item):
             weight=None,
             slots=1,
             description_text="Placeholder item — full stats not yet defined.",
+            is_homebrew=False,
         )
 
 class Tent(Item):
@@ -1613,10 +1962,12 @@ class Tent(Item):
         super().__init__(
             "Tent",
             rarity="common",
-            category="placeholder",
-            weight=None,
+            category="gear",
+            weight=20,
             slots=1,
-            description_text="Placeholder item — full stats not yet defined.",
+            description_text="A Tent sleeps up to two Small or Medium creatures.",
+            is_homebrew=False,
+            value=2,
         )
 
 class TravelersClothes(Item):
@@ -1624,10 +1975,12 @@ class TravelersClothes(Item):
         super().__init__(
             "Traveler's Clothes",
             rarity="common",
-            category="placeholder",
-            weight=None,
+            category="clothing",
+            weight=4,
             slots=1,
-            description_text="Placeholder item — full stats not yet defined.",
+            description_text="Traveler's Clothes are resilient garments designed for travel in various environments.",
+            is_homebrew=False,
+            value=2,
         )
 
 class Vial(Item):
@@ -1635,10 +1988,12 @@ class Vial(Item):
         super().__init__(
             "Vial",
             rarity="common",
-            category="placeholder",
+            category="container",
             weight=None,
             slots=1,
-            description_text="Placeholder item — full stats not yet defined.",
+            description_text="A Vial holds up to 4 ounces.",
+            is_homebrew=False,
+            value=1,
         )
 
 class Whip(Item):
@@ -1650,5 +2005,6 @@ class Whip(Item):
             weight=None,
             slots=1,
             description_text="Placeholder item — full stats not yet defined.",
+            is_homebrew=False,
         )
 
