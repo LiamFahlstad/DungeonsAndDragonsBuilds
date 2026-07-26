@@ -2,6 +2,7 @@ from typing import Optional
 
 from Core.Definitions import Ability
 from Features.Core.BaseFeatures import Feature
+from Features.Equipment import Armor, Weapons
 from Features.Items import Items
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
@@ -133,7 +134,7 @@ class CarpentersTools(ToolProficiency):
             weight=6.0,
             cost=8,
             utilize="Seal or pry open a door or container (DC 20)",
-            craftables=[Items.Club(), Items.Greatclub(), Items.Quarterstaff(), Items.Barrel(), Items.Chest(), Items.Ladder(), Items.Pole(), Items.PortableRam(), Items.Torch()],
+            craftables=[Weapons.Club(), Weapons.Greatclub(), Weapons.Quarterstaff(), Items.Barrel(), Items.Chest(), Items.Ladder(), Items.Pole(), Items.PortableRam(), Items.Torch()],
         )
 
 
@@ -211,7 +212,7 @@ class LeatherworkersTools(ToolProficiency):
             weight=5.0,
             cost=5,
             utilize="Add a design to a leather item (DC 10)",
-            craftables=[Items.Sling(), Items.Whip(), Items.HideArmor(), Items.LeatherArmor(), Items.StuddedLeatherArmor(), Items.Backpack(), Items.CrossbowBoltCase(), Items.MapOrScrollCase(), Items.Parchment(), Items.Pouch(), Items.Quiver(), Items.Waterskin()],
+            craftables=[Weapons.Sling(), Weapons.Whip(), Items.HideArmor(), Armor.LeatherArmor(), Armor.StuddedLeatherArmor(), Items.Backpack(), Items.CrossbowBoltCase(), Items.MapOrScrollCase(), Items.Parchment(), Items.Pouch(), Items.Quiver(), Items.Waterskin()],
         )
 
 
@@ -276,7 +277,7 @@ class TinkersTools(ToolProficiency):
             weight=10.0,
             cost=50,
             utilize="Assemble a Tiny item composed of scrap, which falls apart in 1 minute (DC 20)",
-            craftables=[Items.Musket(), Items.Pistol(), Items.Bell(), Items.BullseyeLantern(), Items.Flask(), Items.HoodedLantern(), Items.HuntingTrap(), Items.Lock(), Items.Manacles(), Items.MirrorPlaceholder(), Items.Shovel(), Items.SignalWhistle(), Items.Tinderbox()],
+            craftables=[Weapons.Musket(), Weapons.Pistol(), Items.Bell(), Items.BullseyeLantern(), Items.Flask(), Items.HoodedLantern(), Items.HuntingTrap(), Items.Lock(), Items.Manacles(), Items.MirrorPlaceholder(), Items.Shovel(), Items.SignalWhistle(), Items.Tinderbox()],
         )
 
 
@@ -302,7 +303,7 @@ class WoodcarversTools(ToolProficiency):
             weight=5.0,
             cost=1,
             utilize="Carve a pattern in wood (DC 10)",
-            craftables=[Items.Club(), Items.Greatclub(), Items.Quarterstaff(), Items.RangedWeaponsPlaceholder(), Items.ArcaneFocus(), Items.Arrows(), Items.Bolts(), Items.DruidicFocus(), Items.InkPen(), Items.Needles()],
+            craftables=[Weapons.Club(), Weapons.Greatclub(), Weapons.Quarterstaff(), Items.RangedWeaponsPlaceholder(), Items.ArcaneFocus(), Items.Arrows(), Items.Bolts(), Items.DruidicFocus(), Items.InkPen(), Items.Needles()],
         )
 
 

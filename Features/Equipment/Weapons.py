@@ -1,11 +1,12 @@
 from abc import abstractmethod
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from enum import Enum
 from typing import Optional, TextIO
 
 from Utils import DamageCalculator
 from Core.Definitions import Ability, Die
-from Features.Items.Items import WearableItem
+from Features.Core.SubFeatures import AbilityScoreBonus, SubFeature
+from Features.Items.Items import ItemCategory, ItemRarity, WearableItem
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
@@ -159,40 +160,40 @@ class WeaponsStats:
     extra_damage: Optional[list[ExtraDamage]] = None
 
 
-@dataclass
 class AbstractWeapon(WearableItem):
     """Abstract base class for weapons. Weapons are wearable items: their
     subfeatures only apply while worn/wielded (is_wearing)."""
 
-    player_is_proficient: bool = False
-    player_has_mastery: bool = False
-    attack_roll_bonuses: list[tuple[int, str]] = field(default_factory=list)
-    ability: Optional[Ability] = None
-    is_wearing: bool = True
-
-    def __post_init__(self):
-        """Initialize Item base class fields when dataclass is instantiated."""
-        # Dataclass fields set via __init__, but Item fields need explicit setting
-        if not hasattr(self, 'rarity'):
-            self.rarity = "common"
-        if not hasattr(self, 'requires_attunement'):
-            self.requires_attunement = False
-        if not hasattr(self, 'category'):
-            self.category = "weapon"
-        if not hasattr(self, 'weight'):
-            self.weight = None
-        if not hasattr(self, 'slots'):
-            self.slots = 1
-        if not hasattr(self, 'description_text'):
-            self.description_text = ""
-        if not hasattr(self, 'subfeatures'):
-            self.subfeatures = []
-        # Set origin (for display) to weapon category
-        self.origin = "weapon"
-
-    @property
-    def name(self):
-        return self.stats().name
+    def __init__(
+        self,
+        player_is_proficient: bool = False,
+        player_has_mastery: bool = False,
+        attack_roll_bonuses: Optional[list[tuple[int, str]]] = None,
+        ability: Optional[Ability] = None,
+        is_wearing: bool = True,
+        rarity: ItemRarity = ItemRarity.COMMON,
+        requires_attunement: bool = False,
+        category: ItemCategory = ItemCategory.WEAPON,
+        weight: Optional[float] = None,
+        slots: int = 1,
+        subfeatures: Optional[list[SubFeature]] = None,
+    ):
+        self.player_is_proficient = player_is_proficient
+        self.player_has_mastery = player_has_mastery
+        self.attack_roll_bonuses = attack_roll_bonuses if attack_roll_bonuses is not None else []
+        self.ability = ability
+        stats = self.stats()
+        super().__init__(
+            name=stats.name,
+            rarity=rarity,
+            requires_attunement=requires_attunement,
+            category=category,
+            weight=weight,
+            slots=slots,
+            description_text=stats.additional_description or "",
+            subfeatures=subfeatures,
+            is_wearing=is_wearing,
+        )
 
     @property
     def description(self):
@@ -363,20 +364,22 @@ def is_proficient_with(
     return any(weapon_matches_proficiency(weapon, p) for p in proficiencies)
 
 
-@dataclass
 class UnarmedStrike(AbstractWeapon):
-    ability: Optional[Ability] = None
-    damage_roll: Optional[WeaponsDamageRolls] = None
-
-    def __post_init__(self):
-        super().__post_init__()  # Initialize Item fields
-        if self.ability is not None and self.ability not in (
+    def __init__(
+        self,
+        ability: Optional[Ability] = None,
+        damage_roll: Optional[WeaponsDamageRolls] = None,
+        **kwargs,
+    ):
+        if ability is not None and ability not in (
             Ability.STRENGTH,
             Ability.DEXTERITY,
         ):
             raise ValueError("Unarmed Strike ability must be STR or DEX.")
-        if self.player_has_mastery:
+        if kwargs.get("player_has_mastery"):
             raise ValueError("Unarmed Strike cannot have weapon mastery.")
+        self.damage_roll = damage_roll
+        super().__init__(ability=ability, **kwargs)
 
     def stats(self) -> WeaponsStats:
         return WeaponsStats(
@@ -1138,16 +1141,14 @@ class VampiricEdge(AbstractWeapon):
 class FlameTongueSword(AbstractWeapon):
     """A magical sword wreathed in flames, dealing extra fire damage on hit."""
 
-    def __post_init__(self):
-        super().__post_init__()
-        self.rarity = "rare"
-        self.requires_attunement = True
-        # Add +1 to ability scores (from SubFeature)
-        from Features.Core.SubFeatures import AbilityScoreBonus
-
-        self.subfeatures = [
-            AbilityScoreBonus([(Ability.STRENGTH, 1)], total=1, error_prefix="Flame Tongue Sword bonus")
-        ]
+    def __init__(self, **kwargs):
+        kwargs.setdefault("rarity", ItemRarity.RARE)
+        kwargs.setdefault("requires_attunement", True)
+        kwargs.setdefault(
+            "subfeatures",
+            [AbilityScoreBonus([(Ability.STRENGTH, 1)], total=1, error_prefix="Flame Tongue Sword bonus")],
+        )
+        super().__init__(**kwargs)
 
     def stats(self) -> WeaponsStats:
         return WeaponsStats(

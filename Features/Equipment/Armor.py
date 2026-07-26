@@ -8,7 +8,7 @@ from Features.Core.SubFeatures import (
     StrengthRequirement,
     SubFeature,
 )
-from Features.Items.Items import WearableItem
+from Features.Items.Items import ItemCategory, ItemRarity, WearableItem
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
@@ -21,7 +21,7 @@ class AbstractArmor(WearableItem):
         name: str,
         description: Optional[str] = None,
         slots: int = 1,
-        rarity: str = "common",
+        rarity: ItemRarity = ItemRarity.COMMON,
         subfeatures: Optional[list[SubFeature]] = None,
         is_shield: bool = False,
         is_wearing: bool = True,
@@ -29,7 +29,7 @@ class AbstractArmor(WearableItem):
         super().__init__(
             name=name,
             rarity=rarity,
-            category="armor",
+            category=ItemCategory.ARMOR,
             slots=slots,
             description_text=description or "",
             subfeatures=subfeatures or [],
@@ -109,7 +109,7 @@ class ArmorOfProtection(AbstractArmor):
         super().__init__(
             "Armor of Protection",
             slots=2,
-            rarity="rare",
+            rarity=ItemRarity.RARE,
             description=(
                 "A magical suit of chain mail. While wearing it, you gain a +1 bonus to AC "
                 "on top of its base AC of 16."

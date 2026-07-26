@@ -1,3 +1,4 @@
+from enum import Enum
 from typing import Optional
 
 from Core.Definitions import Ability, Skill
@@ -10,6 +11,36 @@ from Features.Core.SubFeatures import (
     SubFeature,
 )
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
+
+
+class ItemRarity(str, Enum):
+    COMMON = "common"
+    UNCOMMON = "uncommon"
+    RARE = "rare"
+    VERY_RARE = "very rare"
+    LEGENDARY = "legendary"
+    ARTIFACT = "artifact"
+
+
+class ItemCategory(str, Enum):
+    ADVENTURING_GEAR = "adventuring gear"
+    AMMUNITION = "ammunition"
+    ARMOR = "armor"
+    CLOTHING = "clothing"
+    COMMON = "common"
+    CONSUMABLE = "consumable"
+    CONTAINER = "container"
+    CURRENCY = "currency"
+    FOCUS = "focus"
+    GEAR = "gear"
+    MUSICAL_INSTRUMENT = "musical instrument"
+    PLACEHOLDER = "placeholder"
+    RING = "ring"
+    TOOL = "tool"
+    UTILITY = "utility"
+    WEAPON = "weapon"
+    WONDROUS = "wondrous"
+    WONDROUS_ITEM = "wondrous item"
 
 
 class Item(Feature):
@@ -27,9 +58,9 @@ class Item(Feature):
     def __init__(
         self,
         name: str,
-        rarity: str = "common",
+        rarity: ItemRarity = ItemRarity.COMMON,
         requires_attunement: bool = False,
-        category: str = "wondrous",
+        category: ItemCategory = ItemCategory.WONDROUS,
         weight: Optional[float] = None,
         slots: int = 1,
         description_text: str = "",
@@ -88,9 +119,9 @@ class WearableItem(Item):
     def __init__(
         self,
         name: str,
-        rarity: str = "common",
+        rarity: ItemRarity = ItemRarity.COMMON,
         requires_attunement: bool = False,
-        category: str = "wondrous",
+        category: ItemCategory = ItemCategory.WONDROUS,
         weight: Optional[float] = None,
         slots: int = 1,
         description_text: str = "",
@@ -134,8 +165,8 @@ class ConsumableItem(Item):
     def __init__(
         self,
         name: str,
-        rarity: str = "common",
-        category: str = "consumable",
+        rarity: ItemRarity = ItemRarity.COMMON,
+        category: ItemCategory = ItemCategory.CONSUMABLE,
         weight: Optional[float] = None,
         slots: int = 1,
         description_text: str = "",
@@ -168,8 +199,8 @@ class Gold(Item):
     def __init__(self):
         super().__init__(
             "Gold Pieces",
-            rarity="common",
-            category="currency",
+            rarity=ItemRarity.COMMON,
+            category=ItemCategory.CURRENCY,
             slots=0,
             description_text="A stack of gold pieces.",
             is_homebrew=False,
@@ -181,8 +212,8 @@ class Silver(Item):
     def __init__(self):
         super().__init__(
             "Silver Pieces",
-            rarity="common",
-            category="currency",
+            rarity=ItemRarity.COMMON,
+            category=ItemCategory.CURRENCY,
             slots=0,
             description_text="A stack of silver pieces.",
             is_homebrew=False,
@@ -194,8 +225,8 @@ class Quiver(Item):
     def __init__(self):
         super().__init__(
             "Quiver",
-            rarity="uncommon",
-            category="common",
+            rarity=ItemRarity.UNCOMMON,
+            category=ItemCategory.COMMON,
             slots=1,
             description_text="A regular quiver",
             is_homebrew=False,
@@ -207,8 +238,8 @@ class ThievesTools(Item):
     def __init__(self):
         super().__init__(
             "Thieves' Tools",
-            rarity="uncommon",
-            category="common",
+            rarity=ItemRarity.UNCOMMON,
+            category=ItemCategory.COMMON,
             slots=1,
             description_text="Utilize: Pick a lock, or disarm a trap (DEX DC 15)",
             is_homebrew=False,
@@ -219,8 +250,8 @@ class Backpack(WearableItem):
     def __init__(self, is_wearing: bool = True):
         super().__init__(
             "Backpack",
-            rarity="common",
-            category="container",
+            rarity=ItemRarity.COMMON,
+            category=ItemCategory.CONTAINER,
             slots=1,
             description_text=(
                 "A backpack that can hold up to 30 pounds of gear within 1 cubic foot. "
@@ -237,8 +268,8 @@ class Caltrops(Item):
     def __init__(self):
         super().__init__(
             "Caltrops",
-            rarity="common",
-            category="utility",
+            rarity=ItemRarity.COMMON,
+            category=ItemCategory.UTILITY,
             slots=1,
             description_text=(
                 "As an action, you can spread caltrops to cover a 5-foot-square area within 5 feet. "
@@ -255,8 +286,8 @@ class Crowbar(Item):
     def __init__(self):
         super().__init__(
             "Crowbar",
-            rarity="common",
-            category="tool",
+            rarity=ItemRarity.COMMON,
+            category=ItemCategory.TOOL,
             slots=1,
             description_text="Using a crowbar grants advantage on Strength checks where leverage can be applied.",
             is_homebrew=False,
@@ -268,8 +299,8 @@ class Candle(ConsumableItem):
     def __init__(self):
         super().__init__(
             "Candle",
-            rarity="common",
-            category="utility",
+            rarity=ItemRarity.COMMON,
+            category=ItemCategory.UTILITY,
             slots=0,
             description_text="For 1 hour, a lit Candle sheds Bright Light in a 5-foot radius and Dim Light for an additional 5 feet.",
             is_homebrew=False,
@@ -281,8 +312,8 @@ class BallBearings(Item):
     def __init__(self):
         super().__init__(
             "Ball Bearings",
-            rarity="common",
-            category="utility",
+            rarity=ItemRarity.COMMON,
+            category=ItemCategory.UTILITY,
             slots=1,
             description_text="As a Utilize action, you can spill Ball Bearings from their pouch. They spread to cover a level, 10-foot-square area within 10 feet of yourself. A creature that enters this area for the first time on a turn must succeed on a DC 10 Dexterity saving throw or have the Prone condition. It takes 10 minutes to recover the Ball Bearings.",
             is_homebrew=False,
@@ -294,8 +325,8 @@ class HoodedLantern(Item):
     def __init__(self):
         super().__init__(
             "Hooded Lantern",
-            rarity="common",
-            category="utility",
+            rarity=ItemRarity.COMMON,
+            category=ItemCategory.UTILITY,
             slots=1,
             description_text="A Hooded Lantern burns Oil as fuel to cast Bright Light in a 30-foot radius and Dim Light for an additional 30 feet. As a Bonus Action, you can lower the hood, reducing the light to Dim Light in a 5-foot radius, or raise it again.",
             is_homebrew=False,
@@ -307,8 +338,8 @@ class FlasksOfOil(ConsumableItem):
     def __init__(self):
         super().__init__(
             "Flask of Oil",
-            rarity="common",
-            category="utility",
+            rarity=ItemRarity.COMMON,
+            category=ItemCategory.UTILITY,
             slots=1,
             description_text=(
                 "You can throw this flask (range 20 ft) to coat a creature or object. "
@@ -327,8 +358,8 @@ class Rations(ConsumableItem):
     def __init__(self):
         super().__init__(
             "Rations",
-            rarity="common",
-            category="consumable",
+            rarity=ItemRarity.COMMON,
+            category=ItemCategory.CONSUMABLE,
             slots=1,
             description_text=(
                 "Travel-ready food such as jerky, dried fruit, hardtack, and nuts. "
@@ -343,8 +374,8 @@ class Antitoxin(ConsumableItem):
     def __init__(self):
         super().__init__(
             "Antitoxin",
-            rarity="common",
-            category="consumable",
+            rarity=ItemRarity.COMMON,
+            category=ItemCategory.CONSUMABLE,
             slots=0,
             description_text="As a Bonus Action, you can drink a vial of Antitoxin to gain Advantage on saving throws to avoid or end the Poisoned condition for 1 hour.",
             is_homebrew=False,
@@ -356,8 +387,8 @@ class HealersKit(ConsumableItem):
     def __init__(self):
         super().__init__(
             "Healer's Kit",
-            rarity="common",
-            category="consumable",
+            rarity=ItemRarity.COMMON,
+            category=ItemCategory.CONSUMABLE,
             slots=1,
             description_text="A Healer's Kit has ten uses. As a Utilize action, you can expend one of its uses to stabilize an Unconscious creature that has 0 Hit Points without needing to make a Wisdom (Medicine) check.",
             is_homebrew=False,
@@ -369,8 +400,8 @@ class PotionOfHealing(ConsumableItem):
     def __init__(self):
         super().__init__(
             "Potion of Healing",
-            rarity="common",
-            category="consumable",
+            rarity=ItemRarity.COMMON,
+            category=ItemCategory.CONSUMABLE,
             slots=1,
             description_text=(
                 "You regain 2d4 + 2 Hit Points when you drink this potion.\n"
@@ -385,8 +416,8 @@ class Rope(Item):
     def __init__(self):
         super().__init__(
             "Rope (50 ft)",
-            rarity="common",
-            category="utility",
+            rarity=ItemRarity.COMMON,
+            category=ItemCategory.UTILITY,
             description_text=(
                 "As an action, you can tie a knot with a successful DC 10 Dexterity (Sleight of Hand) check. "
                 "The rope can be burst with a DC 20 Strength (Athletics) check.\n\n"
@@ -403,8 +434,8 @@ class Tinderbox(Item):
     def __init__(self):
         super().__init__(
             "Tinderbox",
-            rarity="common",
-            category="tool",
+            rarity=ItemRarity.COMMON,
+            category=ItemCategory.TOOL,
             slots=0,
             description_text=(
                 "A small container with flint, fire steel, and tinder used to start fires. "
@@ -420,8 +451,8 @@ class Torch(ConsumableItem):
     def __init__(self):
         super().__init__(
             "Torch",
-            rarity="common",
-            category="utility",
+            rarity=ItemRarity.COMMON,
+            category=ItemCategory.UTILITY,
             slots=1,
             description_text=(
                 "Burns for 1 hour, providing bright light in a 20-foot radius and dim light for another 20 feet.\n\n"
@@ -436,8 +467,8 @@ class BullseyeLantern(Item):
     def __init__(self):
         super().__init__(
             "Bullseye Lantern",
-            rarity="common",
-            category="utility",
+            rarity=ItemRarity.COMMON,
+            category=ItemCategory.UTILITY,
             slots=1,
             description_text=(
                 "Consumes oil as fuel to cast bright light in a 60-foot cone and dim light "
@@ -452,8 +483,8 @@ class Costume(WearableItem):
     def __init__(self, is_wearing: bool = True):
         super().__init__(
             "Costume",
-            rarity="common",
-            category="adventuring gear",
+            rarity=ItemRarity.COMMON,
+            category=ItemCategory.ADVENTURING_GEAR,
             slots=1,
             description_text=(
                 "While wearing this costume, you have advantage on ability checks made to "
@@ -469,8 +500,8 @@ class Mirror(Item):
     def __init__(self):
         super().__init__(
             "Steel Mirror",
-            rarity="common",
-            category="tool",
+            rarity=ItemRarity.COMMON,
+            category=ItemCategory.TOOL,
             slots=0,
             description_text=(
                 "A small handheld mirror useful for personal grooming. It can also be used "
@@ -485,8 +516,8 @@ class Typewriter(Item):
     def __init__(self):
         super().__init__(
             "Typewriter",
-            rarity="common",
-            category="musical instrument",
+            rarity=ItemRarity.COMMON,
+            category=ItemCategory.MUSICAL_INSTRUMENT,
             slots=1,
             description_text=(
                 "A mechanical typewriter that can also be used as a musical instrument, "
@@ -499,8 +530,8 @@ class NightVisionGoggles(WearableItem):
     def __init__(self, is_wearing: bool = True):
         super().__init__(
             "Nightvision Goggles",
-            rarity="uncommon",
-            category="wondrous item",
+            rarity=ItemRarity.UNCOMMON,
+            category=ItemCategory.WONDROUS_ITEM,
             slots=1,
             description_text="While wearing these goggles, you gain darkvision out to 120 feet.",
             is_wearing=is_wearing,
@@ -511,8 +542,8 @@ class ButterflyKnife(Item):
     def __init__(self):
         super().__init__(
             "Butterfly Knife",
-            rarity="common",
-            category="weapon",
+            rarity=ItemRarity.COMMON,
+            category=ItemCategory.WEAPON,
             slots=1,
             description_text=(
                 "A small folding knife that can be quickly deployed. "
@@ -525,8 +556,8 @@ class Beans(ConsumableItem):
     def __init__(self):
         super().__init__(
             "Can of Beans",
-            rarity="common",
-            category="consumable",
+            rarity=ItemRarity.COMMON,
+            category=ItemCategory.CONSUMABLE,
             slots=1,
             description_text="A simple can of preserved beans. Provides a basic meal when consumed.",
         )
@@ -536,8 +567,8 @@ class Makarov(Item):
     def __init__(self):
         super().__init__(
             "Makarov",
-            rarity="uncommon",
-            category="weapon",
+            rarity=ItemRarity.UNCOMMON,
+            category=ItemCategory.WEAPON,
             slots=1,
             description_text=(
                 "In a fantasy realm, this pistol becomes a magical ranged weapon.\n\n"
@@ -551,8 +582,8 @@ class Bedroll(Item):
     def __init__(self):
         super().__init__(
             "Bedroll",
-            rarity="common",
-            category="adventuring gear",
+            rarity=ItemRarity.COMMON,
+            category=ItemCategory.ADVENTURING_GEAR,
             slots=1,
             description_text=(
                 "A bedroll provides basic sleeping comfort for one Small or Medium creature.\n\n"
@@ -568,8 +599,8 @@ class Bell(Item):
     def __init__(self):
         super().__init__(
             "Bell",
-            rarity="common",
-            category="utility",
+            rarity=ItemRarity.COMMON,
+            category=ItemCategory.UTILITY,
             slots=0,
             description_text="When rung as an action, the bell produces a clear sound audible up to 60 feet away.",
             is_homebrew=False,
@@ -581,8 +612,8 @@ class Waterskin(Item):
     def __init__(self):
         super().__init__(
             "Waterskin",
-            rarity="common",
-            category="container",
+            rarity=ItemRarity.COMMON,
+            category=ItemCategory.CONTAINER,
             slots=1,
             description_text="Holds up to 4 pints of liquid. Essential for survival, as insufficient water can lead to dehydration.",
             is_homebrew=False,
@@ -594,8 +625,8 @@ class Arrows(Item):
     def __init__(self):
         super().__init__(
             "Arrows",
-            rarity="common",
-            category="ammunition",
+            rarity=ItemRarity.COMMON,
+            category=ItemCategory.AMMUNITION,
             slots=1,
             description_text="A bundle of arrows.",
             is_homebrew=False,
@@ -606,8 +637,8 @@ class HobbyHorse(Item):
     def __init__(self):
         super().__init__(
             "Käpphäst",
-            rarity="uncommon",
-            category="wondrous item",
+            rarity=ItemRarity.UNCOMMON,
+            category=ItemCategory.WONDROUS_ITEM,
             slots=2,
             description_text=(
                 "A simple hobby horse that transforms into a real mount when brought into a fantasy realm.\n"
@@ -623,8 +654,8 @@ class DramaticRainBottle(Item):
     def __init__(self):
         super().__init__(
             "Dramatic Rain in a Bottle",
-            rarity="common",
-            category="wondrous",
+            rarity=ItemRarity.COMMON,
+            category=ItemCategory.WONDROUS,
             slots=2,
             description_text=(
                 f"Uncorking this bottle summons a personal raincloud that follows you "
@@ -639,8 +670,8 @@ class RobeOfLevitation(WearableItem):
     def __init__(self, is_wearing: bool = True):
         super().__init__(
             "Robe of Levitation",
-            rarity="common",
-            category="wondrous",
+            rarity=ItemRarity.COMMON,
+            category=ItemCategory.WONDROUS,
             slots=2,
             description_text=(
                 "While wearing this robe, you hover 1 foot above the ground at all times. "
@@ -657,9 +688,9 @@ class HeartseekersCompass(Item):
     def __init__(self):
         super().__init__(
             "Heartseeker's Compass",
-            rarity="uncommon",
+            rarity=ItemRarity.UNCOMMON,
             requires_attunement=True,
-            category="wondrous",
+            category=ItemCategory.WONDROUS,
             slots=1,
             description_text=(
                 "This brass compass does not point north. Instead, it points toward the nearest "
@@ -673,8 +704,8 @@ class MinorDeathNote(Item):
     def __init__(self):
         super().__init__(
             "Minor Death Note",
-            rarity="common",
-            category="wondrous",
+            rarity=ItemRarity.COMMON,
+            category=ItemCategory.WONDROUS,
             slots=0,
             description_text=(
                 "When you write a creature's name in this notebook, that creature immediately receives "
@@ -687,8 +718,8 @@ class CoinOfTwoFacedJustice(Item):
     def __init__(self):
         super().__init__(
             "Coin of Two-Faced Justice",
-            rarity="uncommon",
-            category="wondrous",
+            rarity=ItemRarity.UNCOMMON,
+            category=ItemCategory.WONDROUS,
             slots=0,
             description_text=(
                 "As a bonus action, call and flip this coin. If you call it correctly, you gain advantage "
@@ -702,8 +733,8 @@ class GoldenFrog(Item):
     def __init__(self):
         super().__init__(
             "Golden Frog with a Golden Voice",
-            rarity="rare",
-            category="wondrous",
+            rarity=ItemRarity.RARE,
+            category=ItemCategory.WONDROUS,
             slots=2,
             description_text=(
                 "This golden frog, once a prince, has a flawless voice and knows every song in the multiverse. "
@@ -717,8 +748,8 @@ class ButtonOfNobleSacrifice(Item):
     def __init__(self):
         super().__init__(
             "Button of Noble Sacrifice",
-            rarity="legendary",
-            category="wondrous",
+            rarity=ItemRarity.LEGENDARY,
+            category=ItemCategory.WONDROUS,
             slots=2,
             description_text=(
                 "When a creature presses this button, they instantly and irrevocably die. In doing so, "
@@ -733,8 +764,8 @@ class DoomScroll(Item):
     def __init__(self):
         super().__init__(
             "Doom Scroll",
-            rarity="common",
-            category="wondrous",
+            rarity=ItemRarity.COMMON,
+            category=ItemCategory.WONDROUS,
             slots=1,
             description_text=(
                 "This scroll displays an endless feed of fascinating but useless information from across the multiverse. "
@@ -748,8 +779,8 @@ class Kamikaze(Item):
     def __init__(self):
         super().__init__(
             "Kamikaze",
-            rarity="uncommon",
-            category="wondrous",
+            rarity=ItemRarity.UNCOMMON,
+            category=ItemCategory.WONDROUS,
             slots=1,
             description_text=(
                 "As an action, you activate this item to immediately cast Fireball centered on yourself. "
@@ -762,8 +793,8 @@ class FingerGunRing(WearableItem):
     def __init__(self, is_wearing: bool = True):
         super().__init__(
             "Ring of Finger Guns",
-            rarity="common",
-            category="ring",
+            rarity=ItemRarity.COMMON,
+            category=ItemCategory.RING,
             slots=0,
             description_text=(
                 "While wearing this ring, forming finger guns and saying 'pew' creates a tiny harmless spark "
@@ -777,8 +808,8 @@ class BadFriendGlasses(WearableItem):
     def __init__(self, is_wearing: bool = True):
         super().__init__(
             "A Bad Friend Glasses",
-            rarity="uncommon",
-            category="wondrous",
+            rarity=ItemRarity.UNCOMMON,
+            category=ItemCategory.WONDROUS,
             slots=1,
             description_text=(
                 "While wearing these glasses, you may redirect damage you would take to another player character "
@@ -799,9 +830,9 @@ class CloakOfProtection(WearableItem):
     def __init__(self, is_wearing: bool = True):
         super().__init__(
             "Cloak of Protection",
-            rarity="uncommon",
+            rarity=ItemRarity.UNCOMMON,
             requires_attunement=True,
-            category="wondrous item",
+            category=ItemCategory.WONDROUS_ITEM,
             description_text=(
                 "You gain a +1 bonus to AC while wearing this cloak.\n\n"
                 "This silken cloak shimmers with protective magic and feels warm to the touch."
@@ -821,8 +852,8 @@ class PlusOneWeapon(Item):
         self.ability = ability
         super().__init__(
             f"+1 {weapon_name}",
-            rarity="uncommon",
-            category="weapon",
+            rarity=ItemRarity.UNCOMMON,
+            category=ItemCategory.WEAPON,
             description_text=(
                 f"This magical {weapon_name.lower()} grants you a +1 bonus to attack rolls and damage rolls made with it.\n\n"
                 "The blade gleams with enchantment."
@@ -844,9 +875,9 @@ class BracersOfArchery(WearableItem):
     def __init__(self, is_wearing: bool = True):
         super().__init__(
             "Bracers of Archery",
-            rarity="uncommon",
+            rarity=ItemRarity.UNCOMMON,
             requires_attunement=True,
-            category="wondrous item",
+            category=ItemCategory.WONDROUS_ITEM,
             description_text=(
                 "While wearing these bracers, you gain a +2 bonus to your Dexterity score.\n\n"
                 "These leather bracers are reinforced with magical sinew, enhancing the wielder's precision."
@@ -869,9 +900,9 @@ class GauntletsOfStrength(WearableItem):
     def __init__(self, is_wearing: bool = True):
         super().__init__(
             "Gauntlets of Strength",
-            rarity="rare",
+            rarity=ItemRarity.RARE,
             requires_attunement=True,
-            category="wondrous item",
+            category=ItemCategory.WONDROUS_ITEM,
             slots=0,
             description_text=(
                 "While wearing these gauntlets, your Strength score increases by 2.\n\n"
@@ -894,9 +925,9 @@ class RingOfIntelligence(WearableItem):
     def __init__(self, is_wearing: bool = True):
         super().__init__(
             "Ring of Intellect",
-            rarity="rare",
+            rarity=ItemRarity.RARE,
             requires_attunement=True,
-            category="ring",
+            category=ItemCategory.RING,
             description_text=(
                 "While wearing this ring, your Intelligence score increases by 2, as does your Intelligence saving throw.\n\n"
                 "This silver ring is inscribed with arcane runes that glow faintly when worn."
@@ -918,9 +949,9 @@ class RingOfInvestigation(WearableItem):
     def __init__(self, is_wearing: bool = True):
         super().__init__(
             "Ring of Investigation",
-            rarity="uncommon",
+            rarity=ItemRarity.UNCOMMON,
             requires_attunement=False,
-            category="ring",
+            category=ItemCategory.RING,
             description_text=(
                 "While wearing this ring, you gain a +1 bonus to Intelligence (Investigation) checks.\n\n"
                 "A slender copper band set with a tiny magnifying lens that focuses the wearer's attention on overlooked details."
@@ -938,8 +969,8 @@ class Acid(Item):
     def __init__(self):
         super().__init__(
             "Acid",
-            rarity="common",
-            category="consumable",
+            rarity=ItemRarity.COMMON,
+            category=ItemCategory.CONSUMABLE,
             weight=1,
             slots=1,
             description_text="When you take the Attack action, you can replace one of your attacks with throwing a vial of Acid. Target one creature or object you can see within 20 feet of yourself. The target must succeed on a Dexterity saving throw (DC 8 plus your Dexterity modifier and Proficiency Bonus) or take 2d6 Acid damage.",
@@ -951,8 +982,8 @@ class AlchemistsFire(Item):
     def __init__(self):
         super().__init__(
             "Alchemist's Fire",
-            rarity="common",
-            category="consumable",
+            rarity=ItemRarity.COMMON,
+            category=ItemCategory.CONSUMABLE,
             weight=1,
             slots=1,
             description_text="When you take the Attack action, you can replace one of your attacks with throwing a flask of Alchemist's Fire. Target one creature or object you can see within 20 feet of yourself. The target must succeed on a Dexterity saving throw (DC 8 plus your Dexterity modifier and Proficiency Bonus) or take 1d4 Fire damage and start burning.",
@@ -964,8 +995,8 @@ class AnyMeleeWeaponPlaceholder(Item):
     def __init__(self):
         super().__init__(
             "Any Melee weapon (except Club, Greatclub, Quarterstaff, and Whip)",
-            rarity="common",
-            category="placeholder",
+            rarity=ItemRarity.COMMON,
+            category=ItemCategory.PLACEHOLDER,
             weight=None,
             slots=1,
             description_text="Placeholder item — full stats not yet defined.",
@@ -976,8 +1007,8 @@ class ArcaneFocus(Item):
     def __init__(self):
         super().__init__(
             "Arcane Focus",
-            rarity="common",
-            category="focus",
+            rarity=ItemRarity.COMMON,
+            category=ItemCategory.FOCUS,
             weight=None,
             slots=1,
             description_text="An Arcane Focus takes one of several forms and is bejeweled or carved to channel arcane magic. A Sorcerer, Warlock, or Wizard can use such an item as a Spellcasting Focus.",
@@ -988,8 +1019,8 @@ class Barrel(Item):
     def __init__(self):
         super().__init__(
             "Barrel",
-            rarity="common",
-            category="gear",
+            rarity=ItemRarity.COMMON,
+            category=ItemCategory.GEAR,
             weight=70,
             slots=1,
             description_text="A Barrel holds up to 40 gallons of liquid or up to 4 cubic feet of dry goods.",
@@ -1001,8 +1032,8 @@ class BasicPoison(Item):
     def __init__(self):
         super().__init__(
             "Basic Poison",
-            rarity="common",
-            category="consumable",
+            rarity=ItemRarity.COMMON,
+            category=ItemCategory.CONSUMABLE,
             weight=None,
             slots=1,
             description_text="As a Bonus Action, you can use a vial of Basic Poison to coat one weapon or up to three pieces of ammunition. A creature that takes Piercing or Slashing damage from the poisoned weapon or ammunition takes an extra 1d4 Poison damage. Once applied, the poison retains potency for 1 minute or until its damage is dealt, whichever comes first.",
@@ -1014,8 +1045,8 @@ class Basket(Item):
     def __init__(self):
         super().__init__(
             "Basket",
-            rarity="common",
-            category="gear",
+            rarity=ItemRarity.COMMON,
+            category=ItemCategory.GEAR,
             weight=2,
             slots=1,
             description_text="A Basket holds up to 40 pounds within 2 cubic feet.",
@@ -1027,8 +1058,8 @@ class Blanket(Item):
     def __init__(self):
         super().__init__(
             "Blanket",
-            rarity="common",
-            category="gear",
+            rarity=ItemRarity.COMMON,
+            category=ItemCategory.GEAR,
             weight=3,
             slots=1,
             description_text="While wrapped in a blanket, you have Advantage on saving throws against extreme cold.",
@@ -1040,8 +1071,8 @@ class BlockAndTackle(Item):
     def __init__(self):
         super().__init__(
             "Block and Tackle",
-            rarity="common",
-            category="tool",
+            rarity=ItemRarity.COMMON,
+            category=ItemCategory.TOOL,
             weight=5,
             slots=1,
             description_text="A Block and Tackle allows you to hoist up to four times the weight you can normally lift.",
@@ -1053,8 +1084,8 @@ class Bolts(Item):
     def __init__(self):
         super().__init__(
             "Bolts",
-            rarity="common",
-            category="placeholder",
+            rarity=ItemRarity.COMMON,
+            category=ItemCategory.PLACEHOLDER,
             weight=None,
             slots=1,
             description_text="Placeholder item — full stats not yet defined.",
@@ -1065,8 +1096,8 @@ class Bucket(Item):
     def __init__(self):
         super().__init__(
             "Bucket",
-            rarity="common",
-            category="gear",
+            rarity=ItemRarity.COMMON,
+            category=ItemCategory.GEAR,
             weight=2,
             slots=1,
             description_text="A Bucket holds up to half a cubic foot of contents.",
@@ -1078,8 +1109,8 @@ class BrightFungalCloak(WearableItem):
     def __init__(self, is_wearing: bool = True):
         super().__init__(
             "Bright Fungal Cloak",
-            rarity="common",
-            category="clothing",
+            rarity=ItemRarity.COMMON,
+            category=ItemCategory.CLOTHING,
             weight=None,
             slots=1,
             description_text=(
@@ -1098,8 +1129,8 @@ class Book(Item):
     def __init__(self):
         super().__init__(
             "Book",
-            rarity="common",
-            category="gear",
+            rarity=ItemRarity.COMMON,
+            category=ItemCategory.GEAR,
             weight=5,
             slots=1,
             description_text="A Book contains fiction or nonfiction. If you consult an accurate nonfiction Book about its topic, you gain a +5 bonus to Intelligence (Arcana, History, Nature, or Religion) checks you make about that topic.",
@@ -1111,8 +1142,8 @@ class DesertClothing(WearableItem):
     def __init__(self, is_wearing: bool = True):
         super().__init__(
             "Desert Clothing",
-            rarity="common",
-            category="clothing",
+            rarity=ItemRarity.COMMON,
+            category=ItemCategory.CLOTHING,
             weight=None,
             slots=1,
             description_text="When you are wearing Desert Clothing and not wearing Medium or Heavy armor, you automatically succeed on saving throws against the effects of extreme heat.",
@@ -1125,8 +1156,8 @@ class DevilMask(WearableItem):
     def __init__(self, is_wearing: bool = True):
         super().__init__(
             "Devil Mask",
-            rarity="common",
-            category="clothing",
+            rarity=ItemRarity.COMMON,
+            category=ItemCategory.CLOTHING,
             weight=None,
             slots=1,
             description_text="While you are wearing a Devil Mask, other creatures have Disadvantage on Intelligence (Investigation) and Wisdom (Insight) checks made to discern your true identity or intentions.",
@@ -1139,8 +1170,8 @@ class GarbOfLightAndShadow(WearableItem):
     def __init__(self, is_wearing: bool = True):
         super().__init__(
             "Garb of Light and Shadow",
-            rarity="common",
-            category="wondrous",
+            rarity=ItemRarity.COMMON,
+            category=ItemCategory.WONDROUS,
             weight=None,
             slots=1,
             description_text="This garb appeals to Fey from one Domain of Delight, such as the Gloaming Court or the Summer Court. While wearing the garb, you have Advantage on ability checks to influence Fey associated with that Domain of Delight.",
@@ -1153,8 +1184,8 @@ class GenieRobe(WearableItem):
     def __init__(self, is_wearing: bool = True):
         super().__init__(
             "Genie Robe",
-            rarity="common",
-            category="wondrous",
+            rarity=ItemRarity.COMMON,
+            category=ItemCategory.WONDROUS,
             weight=None,
             slots=1,
             description_text="This robe appeals to Elementals associated with a particular Elemental Plane (Air, Earth, Fire, Water). While wearing a Genie Robe, you have Advantage on ability checks made to influence Elementals associated with that plane.",
@@ -1167,8 +1198,8 @@ class HolyWater(Item):
     def __init__(self):
         super().__init__(
             "Holy Water",
-            rarity="common",
-            category="consumable",
+            rarity=ItemRarity.COMMON,
+            category=ItemCategory.CONSUMABLE,
             weight=1,
             slots=1,
             description_text="When you take the Attack action, you can replace one of your attacks with throwing a flask of Holy Water. Target one creature you can see within 20 feet of yourself. The target must succeed on a Dexterity saving throw (DC 8 plus your Dexterity modifier and Proficiency Bonus) or take 2d8 Radiant damage if it is a Fiend or an Undead.",
@@ -1180,8 +1211,8 @@ class LockingSpellbook(Item):
     def __init__(self):
         super().__init__(
             "Locking Spellbook",
-            rarity="common",
-            category="gear",
+            rarity=ItemRarity.COMMON,
+            category=ItemCategory.GEAR,
             weight=None,
             slots=1,
             description_text="This 100-page leather-bound tome can be used as a Spellbook. It is closed with a lock that comes with a key. As a Utilize action, a creature can try to pick the lock using Thieves' Tools, doing so with a successful DC 15 Dexterity (Sleight of Hand) check.",
@@ -1193,8 +1224,8 @@ class MonsterCamouflage(WearableItem):
     def __init__(self, is_wearing: bool = True):
         super().__init__(
             "Monster Camouflage",
-            rarity="common",
-            category="clothing",
+            rarity=ItemRarity.COMMON,
+            category=ItemCategory.CLOTHING,
             weight=None,
             slots=1,
             description_text="A suit of Monster Camouflage looks like a Beast or Monstrosity, such as an owlbear. To discern that you're disguised, a creature must take the Study action to inspect your appearance and succeed on a DC 10 Intelligence (Investigation or Nature) check. The creature has Advantage on this check if it is within 30 feet of you and automatically succeeds on this check if you do anything the monster you're disguised as couldn't do.",
@@ -1207,8 +1238,8 @@ class WarmFungalClothing(WearableItem):
     def __init__(self, is_wearing: bool = True):
         super().__init__(
             "Warm Fungal Clothing",
-            rarity="common",
-            category="clothing",
+            rarity=ItemRarity.COMMON,
+            category=ItemCategory.CLOTHING,
             weight=None,
             slots=1,
             description_text=(
@@ -1225,8 +1256,8 @@ class WinterCamouflage(WearableItem):
     def __init__(self, is_wearing: bool = True):
         super().__init__(
             "Winter Camouflage",
-            rarity="common",
-            category="clothing",
+            rarity=ItemRarity.COMMON,
+            category=ItemCategory.CLOTHING,
             weight=None,
             slots=1,
             description_text="While you wear Winter Camouflage in an appropriate environment, you have Advantage on Dexterity (Stealth) checks.",
@@ -1239,8 +1270,8 @@ class Chain(Item):
     def __init__(self):
         super().__init__(
             "Chain",
-            rarity="common",
-            category="gear",
+            rarity=ItemRarity.COMMON,
+            category=ItemCategory.GEAR,
             weight=10,
             slots=1,
             description_text="As a Utilize action, you can wrap a Chain around an unwilling creature within 5 feet of yourself that has the Grappled, Incapacitated, or Restrained condition if you succeed on a DC 13 Strength (Athletics) check. If the creature's legs are bound, the creature has the Restrained condition until it escapes. Escaping the Chain requires the creature to make a successful DC 18 Dexterity (Acrobatics) check as an action. Bursting the Chain requires a successful DC 20 Strength (Athletics) check as an action.",
@@ -1252,8 +1283,8 @@ class Chest(Item):
     def __init__(self):
         super().__init__(
             "Chest",
-            rarity="common",
-            category="container",
+            rarity=ItemRarity.COMMON,
+            category=ItemCategory.CONTAINER,
             weight=25,
             slots=1,
             description_text="A Chest holds up to 12 cubic feet of contents.",
@@ -1265,8 +1296,8 @@ class ClimbersKit(Item):
     def __init__(self):
         super().__init__(
             "Climber's Kit",
-            rarity="common",
-            category="tool",
+            rarity=ItemRarity.COMMON,
+            category=ItemCategory.TOOL,
             weight=12,
             slots=1,
             description_text="A Climber's Kit includes boot tips, gloves, pitons, and a harness. As a Utilize action, you can use the Climber's Kit to anchor yourself; when you do, you can't fall more than 25 feet from the anchor point, and you can't move more than 25 feet from there without undoing the anchor as a Bonus Action.",
@@ -1274,24 +1305,13 @@ class ClimbersKit(Item):
             value=25,
         )
 
-class Club(Item):
-    def __init__(self):
-        super().__init__(
-            "Club",
-            rarity="common",
-            category="placeholder",
-            weight=None,
-            slots=1,
-            description_text="Placeholder item — full stats not yet defined.",
-            is_homebrew=False,
-        )
 
 class ComponentPouch(Item):
     def __init__(self):
         super().__init__(
             "Component Pouch",
-            rarity="common",
-            category="gear",
+            rarity=ItemRarity.COMMON,
+            category=ItemCategory.GEAR,
             weight=2,
             slots=1,
             description_text="A Component Pouch is watertight and filled with compartments that hold all the free Material components of your spells.",
@@ -1303,8 +1323,8 @@ class CrossbowBoltCase(Item):
     def __init__(self):
         super().__init__(
             "Crossbow Bolt Case",
-            rarity="common",
-            category="container",
+            rarity=ItemRarity.COMMON,
+            category=ItemCategory.CONTAINER,
             weight=1,
             slots=1,
             description_text="A Crossbow Bolt Case holds up to 20 Bolts.",
@@ -1316,8 +1336,8 @@ class DruidicFocus(Item):
     def __init__(self):
         super().__init__(
             "Druidic Focus",
-            rarity="common",
-            category="focus",
+            rarity=ItemRarity.COMMON,
+            category=ItemCategory.FOCUS,
             weight=None,
             slots=1,
             description_text="A Druidic Focus takes one of several forms and is carved, tied with ribbon, or painted to channel primal magic. A Druid or Ranger can use such an object as a Spellcasting Focus.",
@@ -1328,8 +1348,8 @@ class FineClothes(Item):
     def __init__(self):
         super().__init__(
             "Fine Clothes",
-            rarity="common",
-            category="clothing",
+            rarity=ItemRarity.COMMON,
+            category=ItemCategory.CLOTHING,
             weight=6,
             slots=1,
             description_text="Fine Clothes are made of expensive fabrics and adorned with expertly crafted details. Some events and locations admit only people wearing these clothes.",
@@ -1341,8 +1361,8 @@ class FirearmBullets(Item):
     def __init__(self):
         super().__init__(
             "Firearm Bullets",
-            rarity="common",
-            category="placeholder",
+            rarity=ItemRarity.COMMON,
+            category=ItemCategory.PLACEHOLDER,
             weight=None,
             slots=1,
             description_text="Placeholder item — full stats not yet defined.",
@@ -1353,8 +1373,8 @@ class Flask(Item):
     def __init__(self):
         super().__init__(
             "Flask",
-            rarity="common",
-            category="gear",
+            rarity=ItemRarity.COMMON,
+            category=ItemCategory.GEAR,
             weight=1,
             slots=1,
             description_text="A Flask holds up to 1 pint.",
@@ -1366,8 +1386,8 @@ class GlassBottle(Item):
     def __init__(self):
         super().__init__(
             "Glass Bottle",
-            rarity="common",
-            category="container",
+            rarity=ItemRarity.COMMON,
+            category=ItemCategory.CONTAINER,
             weight=2,
             slots=1,
             description_text="A Glass Bottle holds up to 1½ pints.",
@@ -1379,8 +1399,8 @@ class GrapplingHook(Item):
     def __init__(self):
         super().__init__(
             "Grappling Hook",
-            rarity="common",
-            category="tool",
+            rarity=ItemRarity.COMMON,
+            category=ItemCategory.TOOL,
             weight=4,
             slots=1,
             description_text="As a Utilize action, you can throw the Grappling Hook at a railing, a ledge, or another catch within 50 feet of yourself, and the hook catches on if you succeed on a DC 13 Dexterity (Acrobatics) check. If you tied a Rope to the hook, you can then climb it.",
@@ -1388,24 +1408,13 @@ class GrapplingHook(Item):
             value=5,
         )
 
-class Greatclub(Item):
-    def __init__(self):
-        super().__init__(
-            "Greatclub",
-            rarity="common",
-            category="placeholder",
-            weight=None,
-            slots=1,
-            description_text="Placeholder item — full stats not yet defined.",
-            is_homebrew=False,
-        )
 
 class HeavyArmorPlaceholder(Item):
     def __init__(self):
         super().__init__(
             "Heavy armor",
-            rarity="common",
-            category="placeholder",
+            rarity=ItemRarity.COMMON,
+            category=ItemCategory.PLACEHOLDER,
             weight=None,
             slots=1,
             description_text="Placeholder item — full stats not yet defined.",
@@ -1416,8 +1425,8 @@ class HideArmor(Item):
     def __init__(self):
         super().__init__(
             "Hide Armor",
-            rarity="common",
-            category="placeholder",
+            rarity=ItemRarity.COMMON,
+            category=ItemCategory.PLACEHOLDER,
             weight=None,
             slots=1,
             description_text="Placeholder item — full stats not yet defined.",
@@ -1428,8 +1437,8 @@ class HolySymbol(Item):
     def __init__(self):
         super().__init__(
             "Holy Symbol",
-            rarity="common",
-            category="focus",
+            rarity=ItemRarity.COMMON,
+            category=ItemCategory.FOCUS,
             weight=None,
             slots=1,
             description_text="A Holy Symbol takes one of several forms and is bejeweled or painted to channel divine magic. A Cleric or Paladin can use a Holy Symbol as a Spellcasting Focus.",
@@ -1440,8 +1449,8 @@ class HuntingTrap(Item):
     def __init__(self):
         super().__init__(
             "Hunting Trap",
-            rarity="common",
-            category="gear",
+            rarity=ItemRarity.COMMON,
+            category=ItemCategory.GEAR,
             weight=25,
             slots=1,
             description_text="As a Utilize action, you can set a Hunting Trap, which is a sawtooth steel ring that snaps shut when a creature steps on a pressure plate in the center. A creature that steps on the plate must succeed on a DC 13 Dexterity saving throw or take 1d4 Piercing damage and have its Speed reduced to 0 until the start of its next turn. A creature can use its action to make a DC 13 Strength (Athletics) check, freeing itself or another creature within its reach on a success.",
@@ -1453,8 +1462,8 @@ class Ink(Item):
     def __init__(self):
         super().__init__(
             "Ink",
-            rarity="common",
-            category="gear",
+            rarity=ItemRarity.COMMON,
+            category=ItemCategory.GEAR,
             weight=None,
             slots=1,
             description_text="Ink comes in a 1-ounce bottle, which provides enough ink to write about 500 pages.",
@@ -1466,8 +1475,8 @@ class InkPen(Item):
     def __init__(self):
         super().__init__(
             "Ink Pen",
-            rarity="common",
-            category="gear",
+            rarity=ItemRarity.COMMON,
+            category=ItemCategory.GEAR,
             weight=None,
             slots=1,
             description_text="Using Ink, an Ink Pen is used to write or draw.",
@@ -1479,8 +1488,8 @@ class IronPot(Item):
     def __init__(self):
         super().__init__(
             "Iron Pot",
-            rarity="common",
-            category="gear",
+            rarity=ItemRarity.COMMON,
+            category=ItemCategory.GEAR,
             weight=10,
             slots=1,
             description_text="An Iron Pot holds up to 1 gallon.",
@@ -1492,8 +1501,8 @@ class IronSpikes(Item):
     def __init__(self):
         super().__init__(
             "Iron Spikes",
-            rarity="common",
-            category="gear",
+            rarity=ItemRarity.COMMON,
+            category=ItemCategory.GEAR,
             weight=5,
             slots=1,
             description_text="Iron Spikes come in bundles of ten. As a Utilize action, you can use a blunt object, such as a Light Hammer, to hammer a spike into wood, earth, or a similar material. You can do so to jam a door shut or to then tie a Rope or Chain to the Spike.",
@@ -1505,8 +1514,8 @@ class Jug(Item):
     def __init__(self):
         super().__init__(
             "Jug",
-            rarity="common",
-            category="container",
+            rarity=ItemRarity.COMMON,
+            category=ItemCategory.CONTAINER,
             weight=4,
             slots=1,
             description_text="A Jug holds up to 1 gallon.",
@@ -1518,8 +1527,8 @@ class Ladder(Item):
     def __init__(self):
         super().__init__(
             "Ladder",
-            rarity="common",
-            category="gear",
+            rarity=ItemRarity.COMMON,
+            category=ItemCategory.GEAR,
             weight=25,
             slots=1,
             description_text="A Ladder is 10 feet tall. You must climb to move up or down it.",
@@ -1531,8 +1540,8 @@ class Lamp(Item):
     def __init__(self):
         super().__init__(
             "Lamp",
-            rarity="common",
-            category="gear",
+            rarity=ItemRarity.COMMON,
+            category=ItemCategory.GEAR,
             weight=1,
             slots=1,
             description_text="A Lamp burns Oil as fuel to cast Bright Light in a 15-foot radius and Dim Light for an additional 30 feet.",
@@ -1540,24 +1549,13 @@ class Lamp(Item):
             value=0.5,
         )
 
-class LeatherArmor(Item):
-    def __init__(self):
-        super().__init__(
-            "Leather Armor",
-            rarity="common",
-            category="placeholder",
-            weight=None,
-            slots=1,
-            description_text="Placeholder item — full stats not yet defined.",
-            is_homebrew=False,
-        )
 
 class Lock(Item):
     def __init__(self):
         super().__init__(
             "Lock",
-            rarity="common",
-            category="gear",
+            rarity=ItemRarity.COMMON,
+            category=ItemCategory.GEAR,
             weight=1,
             slots=1,
             description_text="A Lock comes with a key. Without the key, a creature can use Thieves' Tools to pick this Lock with a successful DC 15 Dexterity (Sleight of Hand) check.",
@@ -1569,8 +1567,8 @@ class MagnifyingGlass(Item):
     def __init__(self):
         super().__init__(
             "Magnifying Glass",
-            rarity="common",
-            category="gear",
+            rarity=ItemRarity.COMMON,
+            category=ItemCategory.GEAR,
             weight=None,
             slots=1,
             description_text="A Magnifying Glass grants Advantage on any ability check made to appraise or inspect a highly detailed item. Lighting a fire with a Magnifying Glass requires light as bright as sunlight to focus, tinder to ignite, and about 5 minutes for the fire to ignite.",
@@ -1582,8 +1580,8 @@ class Manacles(Item):
     def __init__(self):
         super().__init__(
             "Manacles",
-            rarity="common",
-            category="gear",
+            rarity=ItemRarity.COMMON,
+            category=ItemCategory.GEAR,
             weight=6,
             slots=1,
             description_text="As a Utilize action, you can use Manacles to bind an unwilling Small or Medium creature within 5 feet of yourself that has the Grappled, Incapacitated, or Restrained condition if you succeed on a DC 13 Dexterity (Sleight of Hand) check. While bound, a creature has Disadvantage on attack rolls, and the creature is Restrained if the Manacles are attached to a chain or hook that is fixed in place. Escaping the Manacles requires a successful DC 20 Dexterity (Sleight of Hand) check as an action. Bursting them requires a successful DC 25 Strength (Athletics) check as an action. Each set of Manacles comes with a key.",
@@ -1595,8 +1593,8 @@ class Map(Item):
     def __init__(self):
         super().__init__(
             "Map",
-            rarity="common",
-            category="gear",
+            rarity=ItemRarity.COMMON,
+            category=ItemCategory.GEAR,
             weight=None,
             slots=1,
             description_text="If you consult an accurate Map, you gain a +5 bonus to Wisdom (Survival) checks you make to find your way in the place represented on it.",
@@ -1608,8 +1606,8 @@ class MapOrScrollCase(Item):
     def __init__(self):
         super().__init__(
             "Map or Scroll Case",
-            rarity="common",
-            category="container",
+            rarity=ItemRarity.COMMON,
+            category=ItemCategory.CONTAINER,
             weight=1,
             slots=1,
             description_text="A Map or Scroll Case holds up to 10 sheets of paper or 5 sheets of parchment.",
@@ -1621,8 +1619,8 @@ class MediumArmorPlaceholder(Item):
     def __init__(self):
         super().__init__(
             "Medium armor (except Hide)",
-            rarity="common",
-            category="placeholder",
+            rarity=ItemRarity.COMMON,
+            category=ItemCategory.PLACEHOLDER,
             weight=None,
             slots=1,
             description_text="Placeholder item — full stats not yet defined.",
@@ -1633,8 +1631,8 @@ class MirrorPlaceholder(Item):
     def __init__(self):
         super().__init__(
             "Mirror",
-            rarity="common",
-            category="gear",
+            rarity=ItemRarity.COMMON,
+            category=ItemCategory.GEAR,
             weight=0.5,
             slots=1,
             description_text="A handheld steel Mirror is useful for personal cosmetics but also for peeking around corners and reflecting light as a signal.",
@@ -1642,24 +1640,13 @@ class MirrorPlaceholder(Item):
             value=5,
         )
 
-class Musket(Item):
-    def __init__(self):
-        super().__init__(
-            "Musket",
-            rarity="common",
-            category="placeholder",
-            weight=None,
-            slots=1,
-            description_text="Placeholder item — full stats not yet defined.",
-            is_homebrew=False,
-        )
 
 class Needles(Item):
     def __init__(self):
         super().__init__(
             "Needles",
-            rarity="common",
-            category="placeholder",
+            rarity=ItemRarity.COMMON,
+            category=ItemCategory.PLACEHOLDER,
             weight=None,
             slots=1,
             description_text="Placeholder item — full stats not yet defined.",
@@ -1670,8 +1657,8 @@ class Net(Item):
     def __init__(self):
         super().__init__(
             "Net",
-            rarity="common",
-            category="gear",
+            rarity=ItemRarity.COMMON,
+            category=ItemCategory.GEAR,
             weight=3,
             slots=1,
             description_text="When you take the Attack action, you can replace one of your attacks with throwing a Net. Target a creature you can see within 15 feet of yourself. The target must succeed on a Dexterity saving throw (DC 8 plus your Dexterity modifier and Proficiency Bonus) or have the Restrained condition until it escapes. To escape, the target or a creature within 5 feet of it must take an action to make a DC 10 Strength (Athletics) check, freeing the Restrained creature on a success.",
@@ -1683,8 +1670,8 @@ class Oil(Item):
     def __init__(self):
         super().__init__(
             "Oil",
-            rarity="common",
-            category="gear",
+            rarity=ItemRarity.COMMON,
+            category=ItemCategory.GEAR,
             weight=1,
             slots=1,
             description_text="You can douse a creature, object, or space with Oil or use it as fuel. When you take the Attack action, you can replace one of your attacks with throwing an Oil flask; the target must succeed on a Dexterity saving throw (DC 8 plus your Dexterity modifier and Proficiency Bonus) or be covered in oil, taking an extra 5 Fire damage from burning oil if it takes Fire damage before the oil dries. Oil also serves as fuel for Lamps and Lanterns, burning for 6 hours once lit.",
@@ -1696,8 +1683,8 @@ class PaddedArmor(Item):
     def __init__(self):
         super().__init__(
             "Padded Armor",
-            rarity="common",
-            category="placeholder",
+            rarity=ItemRarity.COMMON,
+            category=ItemCategory.PLACEHOLDER,
             weight=None,
             slots=1,
             description_text="Placeholder item — full stats not yet defined.",
@@ -1708,8 +1695,8 @@ class Paper(Item):
     def __init__(self):
         super().__init__(
             "Paper",
-            rarity="common",
-            category="gear",
+            rarity=ItemRarity.COMMON,
+            category=ItemCategory.GEAR,
             weight=None,
             slots=1,
             description_text="One sheet of Paper can hold about 250 handwritten words.",
@@ -1721,8 +1708,8 @@ class Parchment(Item):
     def __init__(self):
         super().__init__(
             "Parchment",
-            rarity="common",
-            category="gear",
+            rarity=ItemRarity.COMMON,
+            category=ItemCategory.GEAR,
             weight=None,
             slots=1,
             description_text="One sheet of Parchment can hold about 250 handwritten words.",
@@ -1734,8 +1721,8 @@ class Perfume(Item):
     def __init__(self):
         super().__init__(
             "Perfume",
-            rarity="common",
-            category="gear",
+            rarity=ItemRarity.COMMON,
+            category=ItemCategory.GEAR,
             weight=None,
             slots=1,
             description_text="Perfume comes in a 4-ounce vial. For 1 hour after applying Perfume to yourself, you have Advantage on Charisma (Persuasion) checks made to influence an Indifferent Humanoid within 5 feet of yourself.",
@@ -1743,24 +1730,13 @@ class Perfume(Item):
             value=5,
         )
 
-class Pistol(Item):
-    def __init__(self):
-        super().__init__(
-            "Pistol",
-            rarity="common",
-            category="placeholder",
-            weight=None,
-            slots=1,
-            description_text="Placeholder item — full stats not yet defined.",
-            is_homebrew=False,
-        )
 
 class Pole(Item):
     def __init__(self):
         super().__init__(
             "Pole",
-            rarity="common",
-            category="gear",
+            rarity=ItemRarity.COMMON,
+            category=ItemCategory.GEAR,
             weight=7,
             slots=1,
             description_text="A Pole is 10 feet long. You can use it to touch something up to 10 feet away. If you must make a Strength (Athletics) check as part of a High or Long Jump, you can use the Pole to vault, giving yourself Advantage on the check.",
@@ -1772,8 +1748,8 @@ class PortableRam(Item):
     def __init__(self):
         super().__init__(
             "Portable Ram",
-            rarity="common",
-            category="tool",
+            rarity=ItemRarity.COMMON,
+            category=ItemCategory.TOOL,
             weight=35,
             slots=1,
             description_text="You can use a Portable Ram to break down doors. When doing so, you gain a +4 bonus to the Strength check. One other character can help you use the ram, giving you Advantage on this check.",
@@ -1785,8 +1761,8 @@ class Pouch(Item):
     def __init__(self):
         super().__init__(
             "Pouch",
-            rarity="common",
-            category="container",
+            rarity=ItemRarity.COMMON,
+            category=ItemCategory.CONTAINER,
             weight=1,
             slots=1,
             description_text="A Pouch holds up to 6 pounds within one-fifth of a cubic foot.",
@@ -1794,24 +1770,13 @@ class Pouch(Item):
             value=0.5,
         )
 
-class Quarterstaff(Item):
-    def __init__(self):
-        super().__init__(
-            "Quarterstaff",
-            rarity="common",
-            category="placeholder",
-            weight=None,
-            slots=1,
-            description_text="Placeholder item — full stats not yet defined.",
-            is_homebrew=False,
-        )
 
 class RangedWeaponsPlaceholder(Item):
     def __init__(self):
         super().__init__(
             "Ranged weapons (except Pistol, Musket, and Sling)",
-            rarity="common",
-            category="placeholder",
+            rarity=ItemRarity.COMMON,
+            category=ItemCategory.PLACEHOLDER,
             weight=None,
             slots=1,
             description_text="Placeholder item — full stats not yet defined.",
@@ -1822,8 +1787,8 @@ class Robe(Item):
     def __init__(self):
         super().__init__(
             "Robe",
-            rarity="common",
-            category="clothing",
+            rarity=ItemRarity.COMMON,
+            category=ItemCategory.CLOTHING,
             weight=4,
             slots=1,
             description_text="A Robe has vocational or ceremonial significance. Some events and locations admit only people wearing a Robe bearing certain colors or symbols.",
@@ -1835,8 +1800,8 @@ class RopePlaceholder(Item):
     def __init__(self):
         super().__init__(
             "Rope",
-            rarity="common",
-            category="gear",
+            rarity=ItemRarity.COMMON,
+            category=ItemCategory.GEAR,
             weight=5,
             slots=1,
             description_text="As a Utilize action, you can tie a knot with Rope if you succeed on a DC 10 Dexterity (Sleight of Hand) check. The Rope can be burst with a successful DC 20 Strength (Athletics) check. You can bind an unwilling creature with the Rope only if the creature has the Grappled, Incapacitated, or Restrained condition. Escaping the Rope requires the creature to make a successful DC 15 Dexterity (Acrobatics) check as an action.",
@@ -1848,8 +1813,8 @@ class Sack(Item):
     def __init__(self):
         super().__init__(
             "Sack",
-            rarity="common",
-            category="container",
+            rarity=ItemRarity.COMMON,
+            category=ItemCategory.CONTAINER,
             weight=0.5,
             slots=1,
             description_text="A Sack holds up to 30 pounds within 1 cubic foot.",
@@ -1861,8 +1826,8 @@ class Shovel(Item):
     def __init__(self):
         super().__init__(
             "Shovel",
-            rarity="common",
-            category="tool",
+            rarity=ItemRarity.COMMON,
+            category=ItemCategory.TOOL,
             weight=5,
             slots=1,
             description_text="Working for 1 hour, you can use a Shovel to dig a hole that is 5 feet on each side in soil or similar material.",
@@ -1874,8 +1839,8 @@ class SignalWhistle(Item):
     def __init__(self):
         super().__init__(
             "Signal Whistle",
-            rarity="common",
-            category="gear",
+            rarity=ItemRarity.COMMON,
+            category=ItemCategory.GEAR,
             weight=None,
             slots=1,
             description_text="When blown as a Utilize action, a Signal Whistle produces a sound that can be heard up to 600 feet away.",
@@ -1883,24 +1848,13 @@ class SignalWhistle(Item):
             value=0.05,
         )
 
-class Sling(Item):
-    def __init__(self):
-        super().__init__(
-            "Sling",
-            rarity="common",
-            category="placeholder",
-            weight=None,
-            slots=1,
-            description_text="Placeholder item — full stats not yet defined.",
-            is_homebrew=False,
-        )
 
 class SlingBullets(Item):
     def __init__(self):
         super().__init__(
             "Sling Bullets",
-            rarity="common",
-            category="placeholder",
+            rarity=ItemRarity.COMMON,
+            category=ItemCategory.PLACEHOLDER,
             weight=None,
             slots=1,
             description_text="Placeholder item — full stats not yet defined.",
@@ -1911,8 +1865,8 @@ class SpellScroll(Item):
     def __init__(self):
         super().__init__(
             "Spell Scroll",
-            rarity="common",
-            category="consumable",
+            rarity=ItemRarity.COMMON,
+            category=ItemCategory.CONSUMABLE,
             weight=None,
             slots=1,
             description_text="A Spell Scroll is a magic item that bears the words of a cantrip or a level 1 spell, determined by the scroll's creator. If the spell is on your class's spell list, you can read the scroll and cast the spell using its normal casting time and without providing any Material components. If the spell requires a saving throw or an attack roll, the spell save DC is 13, and the attack bonus is +5. The scroll disintegrates when the casting is completed.",
@@ -1923,8 +1877,8 @@ class Spyglass(Item):
     def __init__(self):
         super().__init__(
             "Spyglass",
-            rarity="common",
-            category="gear",
+            rarity=ItemRarity.COMMON,
+            category=ItemCategory.GEAR,
             weight=1,
             slots=1,
             description_text="Objects viewed through a Spyglass are magnified to twice their size.",
@@ -1936,8 +1890,8 @@ class StringItem(Item):
     def __init__(self):
         super().__init__(
             "String",
-            rarity="common",
-            category="gear",
+            rarity=ItemRarity.COMMON,
+            category=ItemCategory.GEAR,
             weight=None,
             slots=1,
             description_text="String is 10 feet long. You can tie a knot in it as a Utilize action.",
@@ -1945,24 +1899,13 @@ class StringItem(Item):
             value=0.1,
         )
 
-class StuddedLeatherArmor(Item):
-    def __init__(self):
-        super().__init__(
-            "Studded Leather Armor",
-            rarity="common",
-            category="placeholder",
-            weight=None,
-            slots=1,
-            description_text="Placeholder item — full stats not yet defined.",
-            is_homebrew=False,
-        )
 
 class Tent(Item):
     def __init__(self):
         super().__init__(
             "Tent",
-            rarity="common",
-            category="gear",
+            rarity=ItemRarity.COMMON,
+            category=ItemCategory.GEAR,
             weight=20,
             slots=1,
             description_text="A Tent sleeps up to two Small or Medium creatures.",
@@ -1974,8 +1917,8 @@ class TravelersClothes(Item):
     def __init__(self):
         super().__init__(
             "Traveler's Clothes",
-            rarity="common",
-            category="clothing",
+            rarity=ItemRarity.COMMON,
+            category=ItemCategory.CLOTHING,
             weight=4,
             slots=1,
             description_text="Traveler's Clothes are resilient garments designed for travel in various environments.",
@@ -1987,24 +1930,12 @@ class Vial(Item):
     def __init__(self):
         super().__init__(
             "Vial",
-            rarity="common",
-            category="container",
+            rarity=ItemRarity.COMMON,
+            category=ItemCategory.CONTAINER,
             weight=None,
             slots=1,
             description_text="A Vial holds up to 4 ounces.",
             is_homebrew=False,
             value=1,
-        )
-
-class Whip(Item):
-    def __init__(self):
-        super().__init__(
-            "Whip",
-            rarity="common",
-            category="placeholder",
-            weight=None,
-            slots=1,
-            description_text="Placeholder item — full stats not yet defined.",
-            is_homebrew=False,
         )
 
