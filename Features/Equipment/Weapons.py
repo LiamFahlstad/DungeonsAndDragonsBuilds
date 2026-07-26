@@ -195,10 +195,6 @@ class AbstractWeapon(WearableItem):
             is_wearing=is_wearing,
         )
 
-    @property
-    def description(self):
-        return self.stats().additional_description
-
     @abstractmethod
     def stats(self) -> WeaponsStats:
         raise NotImplementedError("Subclasses must implement stats property.")

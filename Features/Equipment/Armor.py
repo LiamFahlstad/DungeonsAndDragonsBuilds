@@ -35,8 +35,6 @@ class AbstractArmor(WearableItem):
             subfeatures=subfeatures or [],
             is_wearing=is_wearing,
         )
-        # Keep old interface for backward compatibility
-        self.description = description or ""
         self.is_shield = is_shield
 
     def apply(self, character_stat_block: CharacterStatBlock):

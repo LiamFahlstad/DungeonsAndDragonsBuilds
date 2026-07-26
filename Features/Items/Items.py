@@ -87,7 +87,8 @@ class Item(Feature):
             subfeature.apply(character_stat_block)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str | None:
-        """Return the item description. Subclasses can override."""
+        """Return the item description. Subclasses can override for a description
+        that depends on the character (e.g. scaling with level or ability scores)."""
         if self.description_text:
             return self.description_text
         return None
@@ -99,10 +100,6 @@ class Item(Feature):
         if self.value == int(self.value):
             return f"{int(self.value)} GP"
         return f"{self.value:g} GP"
-
-    def description(self) -> str:
-        """Backward compatibility: returns description_text (no character stat block needed)."""
-        return self.description_text
 
 
 # ══════════════════════════════════════════════════════════════════════════════

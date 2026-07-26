@@ -723,7 +723,7 @@ class HtmlCharacterSheetWriter:
             armor_rows = [
                 (
                     f"{armor.name}{self._worn_tag(armor)}",
-                    self._description_or_dash(armor.description),
+                    self._description_or_dash(armor.description_text),
                     armor.slots,
                 )
                 for armor in armors
@@ -734,7 +734,7 @@ class HtmlCharacterSheetWriter:
             weapon_rows = [
                 (
                     f"{weapon.name}{self._worn_tag(weapon, 'Wielded', 'Not wielded')}",
-                    self._description_or_dash(weapon.description),
+                    self._description_or_dash(weapon.description_text),
                     weapon.slots,
                 )
                 for weapon in weapons
@@ -748,7 +748,7 @@ class HtmlCharacterSheetWriter:
             item_rows = [
                 (
                     f"{item.name} ({quantity}){self._worn_tag(item)}",
-                    item.description(),
+                    item.description_text,
                     item.slots,
                 )
                 for item, quantity in sorted_items
