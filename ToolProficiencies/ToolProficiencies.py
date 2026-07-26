@@ -26,14 +26,11 @@ class ToolProficiency(Feature):
         self.utilize = utilize
         self.craftables = craftables if craftables is not None else []
 
-    def description(self) -> str:
+    def get_description(self, character_stat_block: CharacterStatBlock) -> str | None:
         parts = [f"Utilize: {self.utilize}."]
         if self.craftables:
             parts.append(f"Craft: {', '.join(item.name for item in self.craftables)}.")
         return " ".join(parts)
-
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str | None:
-        return self.description()
 
 
 class NavigatorsTools(ToolProficiency):

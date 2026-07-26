@@ -775,7 +775,7 @@ class HtmlCharacterSheetWriter:
 
         sorted_tool_proficiencies = sorted(tool_proficiencies, key=lambda x: x.name)
         proficiency_rows = [
-            (tool_proficiency.name, tool_proficiency.description())
+            (tool_proficiency.name, tool_proficiency.get_description(character))
             for tool_proficiency in sorted_tool_proficiencies
         ]
         self._write_item_table(file, "Other Tool Proficiencies", proficiency_rows)
