@@ -75,6 +75,12 @@ class Item(Feature):
         value: Optional[float] = None,
         is_wearing: Optional[bool] = None,
     ):
+        # Populated by subclasses that compose CharacterImprovements before
+        # calling Item.__init__ (see AbstractWeapon, AbstractArmor) - not
+        # assigned here since add_character_improvement() must work during
+        # their base_stats()/setup_improvements(), which run before this
+        # __init__; the annotation alone tells the type checker it exists.
+        self.character_improvements: list[CharacterImprovement]
         super().__init__(name=name, origin=category)
         self.rarity = rarity
         self.requires_attunement = requires_attunement
@@ -138,10 +144,10 @@ class Item(Feature):
         `improvements=`, but composable at the class level. Call from
         base_stats() (or setup_improvements()) to distinguish "this affects
         the wielder/wearer" from add_weapon_improvement/add_armor_improvement,
-        which affect the item itself. Requires self._innate_improvements to
-        already exist (see AbstractWeapon / AbstractArmor, which initialize
-        it before calling base_stats())."""
-        self._innate_improvements.append(improvement)
+        which affect the item itself. Requires self.character_improvements
+        to already exist (see AbstractWeapon / AbstractArmor, which
+        initialize it before calling base_stats())."""
+        self.character_improvements.append(improvement)
 
 
 # ══════════════════════════════════════════════════════════════════════════════

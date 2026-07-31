@@ -36,7 +36,12 @@ class ArmorImprovement(ItemImprovement):
     """Base class for armor improvements. Override apply() to modify the armor."""
 
     @abstractmethod
-    def apply(self, armor: "AbstractArmor") -> None:
+    def apply(self, armor: "AbstractArmor") -> None:  # pyright: ignore[reportIncompatibleMethodOverride]
+        # Renaming ItemImprovement.apply's generic `item` param to `armor`
+        # here (and to `weapon` in WeaponImprovement) is intentional - it's
+        # far more readable in every armor-specific apply() below than a
+        # generic `item` would be. Pyright's override check wants the exact
+        # same parameter name, so it's silenced just for this one rule.
         pass
 
 
@@ -126,9 +131,9 @@ class AbstractArmor(Item, ABC):
         self.rarity: ItemRarity = ItemRarity.COMMON
         self.requires_attunement: bool = False
         # Character-affecting CharacterImprovements innate to this armor (e.g. a +1
-        # bonus granted by owning Armor of Protection). Distinct from
+        # bonus granted by owning Dragonscale Plate). Distinct from
         # ArmorImprovement, which modifies the armor itself, not the wearer.
-        self._innate_improvements: list[CharacterImprovement] = []
+        self.character_improvements: list[CharacterImprovement] = []
 
         self.base_stats()
 
@@ -144,7 +149,7 @@ class AbstractArmor(Item, ABC):
             weight=self.weight,
             slots=slots,
             description_text=self.description_text,
-            improvements=self._innate_improvements + list(improvements or []),
+            improvements=self.character_improvements + list(improvements or []),
             is_wearing=is_wearing,
             is_homebrew=self.is_homebrew,
             value=self.value,
@@ -308,8 +313,8 @@ class DragonscalePlate(AbstractArmor):
 
 class SentinelsWatchArmor(ChainShirtArmor):
     """Magical Chain Shirt demonstrating a character-affecting improvement
-    (`_innate_improvements`, i.e. the armor's own `improvements=` - the same
-    mechanism RingOfIntelligence uses) rather than an ArmorImprovement: it
+    (`character_improvements`, i.e. the armor's own `improvements=` - the
+    same mechanism RingOfIntelligence uses) rather than an ArmorImprovement: it
     sharpens the wearer's own senses, not the armor's AC."""
 
     def base_stats(self) -> None:

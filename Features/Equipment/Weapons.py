@@ -172,7 +172,12 @@ class WeaponImprovement(ItemImprovement):
     """Base class for weapon improvements. Override apply() to modify the weapon."""
 
     @abstractmethod
-    def apply(self, weapon: "AbstractWeapon") -> None:
+    def apply(self, weapon: "AbstractWeapon") -> None:  # pyright: ignore[reportIncompatibleMethodOverride]
+        # Renaming ItemImprovement.apply's generic `item` param to `weapon`
+        # here (and to `armor` in ArmorImprovement) is intentional - it's
+        # far more readable in every weapon-specific apply() below than a
+        # generic `item` would be. Pyright's override check wants the exact
+        # same parameter name, so it's silenced just for this one rule.
         pass
 
 
@@ -343,7 +348,7 @@ class AbstractWeapon(Item, ABC):
         # to Strength granted just by owning a Flame Tongue Sword). Distinct
         # from WeaponImprovement, which modifies the weapon itself, not the
         # wielder.
-        self._innate_improvements: list[CharacterImprovement] = []
+        self.character_improvements: list[CharacterImprovement] = []
 
         self.base_stats()
 
@@ -359,7 +364,7 @@ class AbstractWeapon(Item, ABC):
             weight=self.weight,
             slots=slots,
             description_text=self.description_text,
-            improvements=self._innate_improvements + list(improvements or []),
+            improvements=self.character_improvements + list(improvements or []),
             is_wearing=is_wearing,
             is_homebrew=self.is_homebrew,
             value=self.value,
@@ -568,7 +573,7 @@ class UnarmedStrike(AbstractWeapon):
             raise ValueError("Unarmed Strike ability must be STR or DEX.")
         if kwargs.get("player_has_mastery"):
             raise ValueError("Unarmed Strike cannot have weapon mastery.")
-        self.damage_roll = damage_roll
+        self._damage_roll_arg: Optional[WeaponsDamageRolls] = damage_roll
         super().__init__(ability=ability, **kwargs)
 
     def base_stats(self) -> None:
@@ -578,7 +583,7 @@ class UnarmedStrike(AbstractWeapon):
         self.mastery = None
         self.weapon_type = WeaponType.MARTIAL_MELEE
         self.damage_type = WeaponsDamageTypes.BLUDGEONING
-        self.damage_roll = self.damage_roll or WeaponsDamageRolls.D1
+        self.damage_roll = self._damage_roll_arg or WeaponsDamageRolls.D1
         self.description_text = (
             "You can replace one attack with a grapple or shove. Grapple: target within reach and no more than one size larger, requires a free hand; make an Athletics check contested by Athletics or Acrobatics; on success, the target’s speed becomes 0, you can move it at half speed, and you can release it at any time; it can repeat the check to escape and automatically fails if incapacitated. "
             "Shove: same limits and check; on success, either knock the target prone or push it 5 ft. "
@@ -1468,8 +1473,8 @@ class FlameTongueSword(AbstractWeapon):
 
 class SkirmishersShortsword(Shortsword):
     """A magical Shortsword demonstrating a character-affecting improvement
-    (`_innate_improvements`, i.e. the weapon's own `improvements=` - the same
-    mechanism RingOfIntelligence uses) rather than a WeaponImprovement: it
+    (`character_improvements`, i.e. the weapon's own `improvements=` - the
+    same mechanism RingOfIntelligence uses) rather than a WeaponImprovement: it
     hones the wielder's own footwork, not the blade itself."""
 
     def base_stats(self) -> None:
@@ -1553,10 +1558,6 @@ def _write_single_weapon(
         damage_roll_str += f" + {extra_damages}"
 
     proficient_label = "Proficient" if weapon.player_is_proficient else "Not proficient"
-
-    prop_names = (
-        ", ".join(p.value for p in weapon.properties) if weapon.properties else "—"
-    )
 
     mastery_label = ""
     if weapon.mastery:

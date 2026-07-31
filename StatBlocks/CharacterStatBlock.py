@@ -91,10 +91,12 @@ class CharacterStatBlock:
             character_class = self.class_by_character_level.get(level)
             if character_class != current_class:
                 if current_class is not None:
+                    assert start is not None
                     segments.append((start, level - 1, current_class))
                 current_class = character_class
                 start = level
         if current_class is not None:
+            assert start is not None
             segments.append((start, self.character_level, current_class))
         return segments
 
