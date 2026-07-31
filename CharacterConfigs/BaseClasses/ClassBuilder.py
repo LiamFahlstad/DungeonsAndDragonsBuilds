@@ -9,7 +9,7 @@ from Core.Definitions import Ability, CharacterClass
 from Features.CharacterFeats import Backgrounds, OriginFeats
 from Features.Equipment import Armor, Weapons
 from Features.ClassFeatures import SpellSlots
-from Features.Items import Items
+from Features.Items import Items, Packs
 from StatBlocks.AbilitiesStatBlock import AbilitiesStatBlock
 from StatBlocks.SavingThrowsStatBlock import SavingThrowsStatBlock
 from StatBlocks.SkillsStatBlock import ClassSkillsStatBlock
@@ -382,6 +382,7 @@ class CustomStarterClassArgs:
         caster_type: Optional[SpellSlots.CasterType] = None,
         armor_proficiencies: Optional[list[Definitions.ArmorType]] = None,
         weapon_proficiencies: Optional[list[Weapons.WeaponProficiency]] = None,
+        default_pack: Optional[Packs.Pack] = None,
     ):
         self.base_class = base_class
         self.default_equipment = default_equipment
@@ -392,6 +393,9 @@ class CustomStarterClassArgs:
         self.caster_type = caster_type
         self.armor_proficiencies = armor_proficiencies
         self.weapon_proficiencies = weapon_proficiencies
+        # The equipment pack (Dungeoneer's, Explorer's, ...) granted by this
+        # class's Starting Equipment option A, per SourceTexts/ClassTexts.
+        self.default_pack = default_pack
 
 
 class StarterClassBuilder(ClassBuilder):
@@ -447,6 +451,10 @@ class StarterClassBuilder(ClassBuilder):
         return self.non_generic_arguments.default_equipment
 
     @property
+    def default_pack(self) -> Optional[Packs.Pack]:
+        return self.non_generic_arguments.default_pack
+
+    @property
     def spell_casting_ability(self) -> Optional[Ability]:
         return self.non_generic_arguments.spell_casting_ability
 
@@ -498,6 +506,14 @@ class StarterClassBuilder(ClassBuilder):
                 elif isinstance(item, Armor.AbstractArmor):
                     if item.is_shield or not has_explicit_body_armor:
                         data.add_armor(item)
+
+        # The starting pack (Dungeoneer's, Explorer's, ...) is granted
+        # regardless of add_default_equipment: a character always gets it,
+        # even when the build picks its own weapons/armor instead of the
+        # class's default equipment option.
+        if self.default_pack is not None:
+            for pack_item, quantity in self.default_pack.get_items():
+                data.add_item(pack_item, quantity)
 
         if self.armor is not None:
             for a in self.armor:

@@ -7,6 +7,7 @@ from Builds.CharacterSheetCreator import CharacterSheetData
 from Core.Definitions import Ability, CharacterClass
 from Features.CharacterFeats import EpicBoon, GeneralFeats
 from Features.Equipment import Weapons
+from Features.Items import Packs
 from Features.ClassFeatures import SpellSlots
 from Features.ClassFeatures.Sorcerer import SorcererFeatures
 from Spells.SpellLists import (
@@ -332,6 +333,7 @@ class SorcererCustomStarterClassArgs(ClassBuilder.CustomStarterClassArgs):
             weapon_proficiencies=[Weapons.WeaponProficiency.SIMPLE],
             spell_casting_ability=Ability.CHARISMA,
             caster_type=SpellSlots.CasterType.FULL_CASTER,
+            default_pack=Packs.DungeoneersPack(),
         )
 
 

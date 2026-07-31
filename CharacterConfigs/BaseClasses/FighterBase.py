@@ -8,6 +8,7 @@ from Builds.CharacterSheetCreator import CharacterSheetData
 from Core.Definitions import Ability, CharacterClass
 from Features.CharacterFeats import EpicBoon, GeneralFeats
 from Features.Equipment import Armor, Weapons
+from Features.Items import Packs
 from Features.ClassFeatures import SpellSlots
 from Features.ClassFeatures.Fighter import FighterFeatures
 from Features.Combat.FightingStyles import FightingStyle
@@ -263,6 +264,7 @@ class FighterCustomStarterClassArgs(ClassBuilder.CustomStarterClassArgs):
             ],
             spell_casting_ability=Ability.INTELLIGENCE if caster_type is not None else None,
             caster_type=caster_type,
+            default_pack=Packs.DungeoneersPack(),
         )
 
 

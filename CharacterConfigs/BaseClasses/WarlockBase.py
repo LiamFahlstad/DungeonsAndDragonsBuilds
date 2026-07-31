@@ -8,6 +8,7 @@ from Builds.CharacterSheetCreator import CharacterSheetData
 from Core.Definitions import Ability, CharacterClass
 from Features.CharacterFeats import EpicBoon, GeneralFeats
 from Features.Equipment import Armor, Weapons
+from Features.Items import Packs
 from Features.ClassFeatures import SpellSlots
 from Features.ClassFeatures.Warlock import WarlockFeatures
 from Invocations.Definitions import (
@@ -372,6 +373,7 @@ class WarlockCustomStarterClassArgs(ClassBuilder.CustomStarterClassArgs):
             weapon_proficiencies=[Weapons.WeaponProficiency.SIMPLE],
             spell_casting_ability=Ability.CHARISMA,
             caster_type=SpellSlots.CasterType.WARLOCK_CASTER,
+            default_pack=Packs.ScholarsPack(),
         )
 
 

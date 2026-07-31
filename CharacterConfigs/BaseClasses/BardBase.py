@@ -8,6 +8,7 @@ from Builds.CharacterSheetCreator import CharacterSheetData
 from Core.Definitions import Ability, ApplyWhen, CharacterClass, Skill
 from Features.CharacterFeats import EpicBoon, GeneralFeats
 from Features.Equipment import Armor, Weapons
+from Features.Items import Packs
 from Features.ClassFeatures import SpellSlots
 from Features.ClassFeatures.Bard import BardFeatures
 from Spells.SpellLists import (
@@ -351,6 +352,7 @@ class BardCustomStarterClassArgs(ClassBuilder.CustomStarterClassArgs):
             weapon_proficiencies=[Weapons.WeaponProficiency.SIMPLE],
             spell_casting_ability=Ability.CHARISMA,
             caster_type=SpellSlots.CasterType.FULL_CASTER,
+            default_pack=Packs.Entertainers(),
         )
 
 

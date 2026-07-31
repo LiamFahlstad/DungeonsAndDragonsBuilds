@@ -9,6 +9,7 @@ from Core.Definitions import Ability, ApplyWhen, CharacterClass
 from Features.CharacterFeats import EpicBoon, GeneralFeats
 from Features.ClassFeatures import SpellSlots
 from Features.Equipment import Armor, Weapons
+from Features.Items import Packs
 from Features.ClassFeatures.Rogue import RogueFeatures
 from StatBlocks.SavingThrowsStatBlock import RogueSavingThrowsStatBlock
 from StatBlocks.SkillsStatBlock import RogueSkillsStatBlock
@@ -253,6 +254,7 @@ class RogueCustomStarterClassArgs(ClassBuilder.CustomStarterClassArgs):
             ],
             spell_casting_ability=Ability.INTELLIGENCE if caster_type is not None else None,
             caster_type=caster_type,
+            default_pack=Packs.BurglarsPack(),
         )
 
 
