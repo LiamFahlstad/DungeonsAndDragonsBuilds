@@ -113,23 +113,35 @@ class Item(Feature):
         return f"{self.value:g} GP"
 
     def add_improvement(self, improvement: ItemImprovement) -> None:
-        """Apply a single ItemImprovement to this item. This is the one
-        access point for composing improvements, whether they come from a
-        subclass's own improvement-list constructor parameter (e.g.
-        AbstractWeapon's `weapon_subfeatures=`, AbstractArmor's
-        `armor_subfeatures=`) or from setup_improvements()."""
+        """Apply a single ItemImprovement to this item. This is the generic,
+        low-level access point every type-specific improvement method
+        (AbstractWeapon.add_weapon_improvement, AbstractArmor.add_armor_improvement,
+        ...) delegates to; prefer those clearer, item-type-specific names
+        over calling this directly."""
         improvement.apply(self)
 
     def setup_improvements(self) -> None:
         """Override to bake in this item's default improvements, e.g.:
 
             def setup_improvements(self) -> None:
-                self.add_improvement(Reskin("Frostbrand Blade", "..."))
+                self.add_weapon_improvement(Reskin("Frostbrand Blade", "..."))
 
         Called once during __init__, after any improvements passed in via
-        the subclass's own improvement-list constructor parameter. Only
-        meaningful for items that compose ItemImprovements (see
-        AbstractWeapon, AbstractArmor)."""
+        the subclass's own improvement-list constructor parameter (e.g.
+        AbstractWeapon's `weapon_subfeatures=`, AbstractArmor's
+        `armor_subfeatures=`). Only meaningful for items that compose
+        ItemImprovements (see AbstractWeapon, AbstractArmor)."""
+
+    def add_character_improvement(self, subfeature: SubFeature) -> None:
+        """Attach a character-affecting SubFeature to this item at
+        construction time - the same kind RingOfIntelligence passes via
+        `subfeatures=`, but composable at the class level. Call from
+        base_stats() (or setup_improvements()) to distinguish "this affects
+        the wielder/wearer" from add_weapon_improvement/add_armor_improvement,
+        which affect the item itself. Requires self._innate_subfeatures to
+        already exist (see AbstractWeapon / AbstractArmor, which initialize
+        it before calling base_stats())."""
+        self._innate_subfeatures.append(subfeature)
 
 
 # ══════════════════════════════════════════════════════════════════════════════

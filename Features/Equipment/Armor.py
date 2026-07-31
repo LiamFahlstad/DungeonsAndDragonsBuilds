@@ -131,7 +131,7 @@ class AbstractArmor(Item, ABC):
         self.base_stats()
 
         for armor_subfeature in armor_subfeatures or []:
-            self.add_improvement(armor_subfeature)
+            self.add_armor_improvement(armor_subfeature)
         self.setup_improvements()
 
         super().__init__(
@@ -154,6 +154,14 @@ class AbstractArmor(Item, ABC):
         (self.name, self.base_ac, self.ac_ability, ...). Called once during
         __init__, before any improvement is applied."""
         raise NotImplementedError("Subclasses must implement base_stats().")
+
+    def add_armor_improvement(self, armor_subfeature: "ArmorSubFeature") -> None:
+        """Attach an ArmorSubFeature - an armor-only improvement (AC,
+        ability used for AC, Strength requirement, Stealth disadvantage,
+        ...) - to this armor. Named for clarity alongside
+        add_character_improvement(), which attaches an effect on the
+        wearer instead."""
+        self.add_improvement(armor_subfeature)
 
     def apply(self, character_stat_block: CharacterStatBlock):
         super().apply(character_stat_block)  # SubFeatures (gated on is_wearing)
@@ -285,13 +293,13 @@ class DragonscalePlate(AbstractArmor):
             "with iridescent light and radiates a faint warmth. A wearer attuned to it "
             "gains a +1 bonus to Constitution and resistance to one damage type of your choice."
         )
-        self._innate_subfeatures = [
+        self.add_character_improvement(
             AbilityScoreBonus(
                 [(Ability.CONSTITUTION, 1)],
                 total=1,
                 error_prefix="Dragonscale Plate bonus",
             )
-        ]
+        )
 
 
 class SentinelsWatchArmor(ChainShirtArmor):
@@ -303,12 +311,12 @@ class SentinelsWatchArmor(ChainShirtArmor):
     def base_stats(self) -> None:
         super().base_stats()
         self.rarity = ItemRarity.UNCOMMON
-        self._innate_subfeatures = [
+        self.add_character_improvement(
             SkillBonus(Skill.PERCEPTION, 2, source="Sentinel's Watch Armor")
-        ]
+        )
 
     def setup_improvements(self) -> None:
-        self.add_improvement(
+        self.add_armor_improvement(
             Reskin(
                 "Sentinel's Watch Armor",
                 "Enchanted mail rings chime faintly at the edge of hearing, sharpening "
@@ -328,10 +336,10 @@ class StalwartsAegis(ChainMailArmor):
         super().base_stats()
         self.rarity = ItemRarity.RARE
         self.requires_attunement = True
-        self._innate_subfeatures = [SavingThrowAdvantage([Ability.WISDOM])]
+        self.add_character_improvement(SavingThrowAdvantage([Ability.WISDOM]))
 
     def setup_improvements(self) -> None:
-        self.add_improvement(
+        self.add_armor_improvement(
             Reskin(
                 "Stalwart's Aegis",
                 "This breastplate radiates a calm, unshakable resolve. While wearing "
@@ -351,8 +359,8 @@ class ReinforcedBulwark(ChainMailArmor):
     fixed value with no ability modifier."""
 
     def setup_improvements(self) -> None:
-        self.add_improvement(SetArmorClassBase(18, ability=None))
-        self.add_improvement(
+        self.add_armor_improvement(SetArmorClassBase(18, ability=None))
+        self.add_armor_improvement(
             Reskin(
                 "Reinforced Bulwark",
                 "Thickened with additional steel plating, this chain mail armor "
@@ -366,8 +374,8 @@ class WardensBuckler(ShieldArmor):
     of the shield's own AC bonus."""
 
     def setup_improvements(self) -> None:
-        self.add_improvement(AddArmorClassBonus(1, "Guardian Blessing"))
-        self.add_improvement(
+        self.add_armor_improvement(AddArmorClassBonus(1, "Guardian Blessing"))
+        self.add_armor_improvement(
             Reskin(
                 "Warden's Buckler",
                 "Blessed by a protective deity, this small shield grants +3 to your AC "
@@ -381,8 +389,8 @@ class GiantkinPlate(ChainMailArmor):
     minimum Strength requirement for a wearer sized for giants."""
 
     def setup_improvements(self) -> None:
-        self.add_improvement(SetStrengthRequirement(15))
-        self.add_improvement(
+        self.add_armor_improvement(SetStrengthRequirement(15))
+        self.add_armor_improvement(
             Reskin(
                 "Giantkin Plate",
                 "Sized for a wearer of great stature, this armor requires a Strength "
@@ -396,8 +404,8 @@ class ShadowplateMail(ChainMailArmor):
     the Stealth disadvantage normally imposed by heavy armor."""
 
     def setup_improvements(self) -> None:
-        self.add_improvement(SetStealthDisadvantage(False))
-        self.add_improvement(
+        self.add_armor_improvement(SetStealthDisadvantage(False))
+        self.add_armor_improvement(
             Reskin(
                 "Shadowplate Mail",
                 "Crafted from a dark metal that absorbs sound, this chain mail "
@@ -413,13 +421,13 @@ class VeteransChainShirt(ChainShirtArmor):
     def setup_improvements(self) -> None:
         # Use individual improvements rather than Reskin (which replaces
         # description) to preserve and append to the base description.
-        self.add_improvement(SetItemName("Veteran's Chain Shirt"))
-        self.add_improvement(SetItemValue(None))
-        self.add_improvement(SetItemHomebrew())
-        self.add_improvement(
+        self.add_armor_improvement(SetItemName("Veteran's Chain Shirt"))
+        self.add_armor_improvement(SetItemValue(None))
+        self.add_armor_improvement(SetItemHomebrew())
+        self.add_armor_improvement(
             AddItemDescription("Scarred from countless campaigns, this armor bears the marks of an experienced warrior.")
         )
-        self.add_improvement(
+        self.add_armor_improvement(
             AddItemDescription(
                 "Once per long rest, you can attune to the armor's memories: ask it one "
                 "yes/no question about a creature that wore it previously, and it answers truthfully."

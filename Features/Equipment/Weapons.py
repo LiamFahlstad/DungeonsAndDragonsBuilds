@@ -346,7 +346,7 @@ class AbstractWeapon(Item, ABC):
         self.base_stats()
 
         for weapon_subfeature in weapon_subfeatures or []:
-            self.add_improvement(weapon_subfeature)
+            self.add_weapon_improvement(weapon_subfeature)
         self.setup_improvements()
 
         super().__init__(
@@ -369,6 +369,13 @@ class AbstractWeapon(Item, ABC):
         (self.name, self.ability, self.properties, ...). Called once during
         __init__, before any improvement is applied."""
         raise NotImplementedError("Subclasses must implement base_stats().")
+
+    def add_weapon_improvement(self, weapon_subfeature: "WeaponSubFeature") -> None:
+        """Attach a WeaponSubFeature - a weapon-only improvement (damage
+        die/type, properties, attack/damage bonuses, ...) - to this weapon.
+        Named for clarity alongside add_character_improvement(), which
+        attaches an effect on the wielder instead."""
+        self.add_improvement(weapon_subfeature)
 
     def _calculate_ability_modifier_bonus(
         self, character_stat_block: CharacterStatBlock
@@ -1275,8 +1282,8 @@ class UnerringBlade(Longsword):
     additive bonuses."""
 
     def setup_improvements(self) -> None:
-        self.add_improvement(SetAttackRollBonus(7))
-        self.add_improvement(
+        self.add_weapon_improvement(SetAttackRollBonus(7))
+        self.add_weapon_improvement(
             Reskin(
                 "Unerring Blade",
                 "This blade's strikes are guided by fate: it always hits with a "
@@ -1290,8 +1297,8 @@ class MarksmansLongbow(Longbow):
     on top of the normal attack roll."""
 
     def setup_improvements(self) -> None:
-        self.add_improvement(AddAttackRollBonus(2, "Marksman's Scope"))
-        self.add_improvement(
+        self.add_weapon_improvement(AddAttackRollBonus(2, "Marksman's Scope"))
+        self.add_weapon_improvement(
             Reskin(
                 "Marksman's Longbow",
                 "A precision-crafted scope grants a +2 bonus to attack rolls with "
@@ -1305,8 +1312,8 @@ class Skullcrusher(Maul):
     fixed, ignoring ability modifier."""
 
     def setup_improvements(self) -> None:
-        self.add_improvement(SetDamageRollBonus(10))
-        self.add_improvement(
+        self.add_weapon_improvement(SetDamageRollBonus(10))
+        self.add_weapon_improvement(
             Reskin(
                 "Skullcrusher",
                 "Enchanted to strike with unwavering force, this maul always deals "
@@ -1320,8 +1327,8 @@ class VenomfangDagger(Dagger):
     on top of the normal damage bonus."""
 
     def setup_improvements(self) -> None:
-        self.add_improvement(AddDamageRollBonus(3, "Venom Coating"))
-        self.add_improvement(
+        self.add_weapon_improvement(AddDamageRollBonus(3, "Venom Coating"))
+        self.add_weapon_improvement(
             Reskin(
                 "Venomfang Dagger",
                 "Coated in a potent, self-replenishing venom that adds +3 to every "
@@ -1335,8 +1342,8 @@ class Colossustrike(Greatclub):
     overridden to something larger than the base weapon's own die."""
 
     def setup_improvements(self) -> None:
-        self.add_improvement(SetDamageDie(WeaponsDamageRolls.D12x2))
-        self.add_improvement(
+        self.add_weapon_improvement(SetDamageDie(WeaponsDamageRolls.D12x2))
+        self.add_weapon_improvement(
             Reskin(
                 "Colossustrike",
                 "This oversized greatclub has been reinforced with iron bands, "
@@ -1350,8 +1357,8 @@ class FrostbrandBlade(Longsword):
     overridden from the base weapon's."""
 
     def setup_improvements(self) -> None:
-        self.add_improvement(SetDamageType(WeaponsDamageTypes.COLD))
-        self.add_improvement(
+        self.add_weapon_improvement(SetDamageType(WeaponsDamageTypes.COLD))
+        self.add_weapon_improvement(
             Reskin(
                 "Frostbrand Blade",
                 "Forged from enchanted ice, this longsword deals Cold damage "
@@ -1365,8 +1372,8 @@ class LungingLongsword(Longsword):
     added on top of the base weapon's own list."""
 
     def setup_improvements(self) -> None:
-        self.add_improvement(AddWeaponProperty(WeaponProperty.REACH))
-        self.add_improvement(
+        self.add_weapon_improvement(AddWeaponProperty(WeaponProperty.REACH))
+        self.add_weapon_improvement(
             Reskin(
                 "Lunging Longsword",
                 "A telescoping blade mechanism grants this longsword the Reach "
@@ -1383,13 +1390,13 @@ class LoremastersRapier(Rapier):
         # SetItemName/SetItemValue/SetItemHomebrew individually here, rather
         # than the Reskin bundle, since Reskin's description would *replace*
         # rather than *append to* the base description below.
-        self.add_improvement(SetItemName("Loremaster's Rapier"))
-        self.add_improvement(SetItemValue(None))
-        self.add_improvement(SetItemHomebrew())
-        self.add_improvement(
+        self.add_weapon_improvement(SetItemName("Loremaster's Rapier"))
+        self.add_weapon_improvement(SetItemValue(None))
+        self.add_weapon_improvement(SetItemHomebrew())
+        self.add_weapon_improvement(
             AddItemDescription("An inquisitive blade that whispers secrets to its wielder.")
         )
-        self.add_improvement(
+        self.add_weapon_improvement(
             AddItemDescription(
                 "Once per long rest, you can ask the blade a question about a "
                 "creature it has struck; it answers with a single true fact."
@@ -1402,14 +1409,14 @@ class StormcallerMace(Mace):
     layered on top of the base weapon's."""
 
     def setup_improvements(self) -> None:
-        self.add_improvement(
+        self.add_weapon_improvement(
             AddExtraDamage(
                 WeaponsDamageRolls.D6,
                 WeaponsDamageTypes.LIGHTNING,
                 note="crackles with static charge",
             )
         )
-        self.add_improvement(
+        self.add_weapon_improvement(
             Reskin(
                 "Stormcaller Mace",
                 "Crackling with pent-up static, this mace deals an extra 1d6 "
@@ -1448,11 +1455,11 @@ class FlameTongueSword(AbstractWeapon):
         ]
         self.rarity = ItemRarity.RARE
         self.requires_attunement = True
-        self._innate_subfeatures = [
+        self.add_character_improvement(
             AbilityScoreBonus(
                 [(Ability.STRENGTH, 1)], total=1, error_prefix="Flame Tongue Sword bonus"
             )
-        ]
+        )
 
 
 class SkirmishersShortsword(Shortsword):
@@ -1464,12 +1471,12 @@ class SkirmishersShortsword(Shortsword):
     def base_stats(self) -> None:
         super().base_stats()
         self.rarity = ItemRarity.UNCOMMON
-        self._innate_subfeatures = [
+        self.add_character_improvement(
             SkillBonus(Skill.ACROBATICS, 2, source="Skirmisher's Shortsword")
-        ]
+        )
 
     def setup_improvements(self) -> None:
-        self.add_improvement(
+        self.add_weapon_improvement(
             Reskin(
                 "Skirmisher's Shortsword",
                 "This lightweight blade trains its wielder's footwork. "
@@ -1487,10 +1494,10 @@ class VanguardsSpear(Spear):
     def base_stats(self) -> None:
         super().base_stats()
         self.rarity = ItemRarity.UNCOMMON
-        self._innate_subfeatures = [InitiativeRollCondition(DiceRollCondition.ADVANTAGE)]
+        self.add_character_improvement(InitiativeRollCondition(DiceRollCondition.ADVANTAGE))
 
     def setup_improvements(self) -> None:
-        self.add_improvement(
+        self.add_weapon_improvement(
             Reskin(
                 "Vanguard's Spear",
                 "This spear hums with a restless energy, sharpening its wielder's "
