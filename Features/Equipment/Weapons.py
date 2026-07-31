@@ -288,10 +288,12 @@ class AbstractWeapon(Item, ABC):
       character-affecting effects, applied to the wielder's stat block while
       worn - e.g. FlameTongueSword granting +1 Strength, the same mechanism
       RingOfIntelligence uses in Features.Items.Items.
-    - `weapon_improvements=[...]` (list[WeaponImprovement], defined below):
-      weapon-only effects that modify the weapon itself (damage die/type,
-      properties, attack/damage bonuses, ...) - not applicable to any other
-      item type. See the WeaponImprovement showcase further down."""
+    - `weapon_improvements=[...]` (list[ItemImprovement], defined below and in
+      Features.Core.Improvements): typically a WeaponImprovement - a
+      weapon-only effect that modifies the weapon itself (damage die/type,
+      properties, attack/damage bonuses, ...), not applicable to any other
+      item type - but also accepts the generic ItemImprovements (Reskin,
+      SetItemName, ...). See the WeaponImprovement showcase further down."""
 
     # Required fields every base_stats() must set; declared here (with no
     # class-level value) purely so static type checkers know they exist.
@@ -312,7 +314,7 @@ class AbstractWeapon(Item, ABC):
         category: ItemCategory = ItemCategory.WEAPON,
         slots: int = 1,
         improvements: Optional[list[CharacterImprovement]] = None,
-        weapon_improvements: Optional[list[WeaponImprovement]] = None,
+        weapon_improvements: Optional[list[ItemImprovement]] = None,
     ):
         self.player_is_proficient = player_is_proficient
         self.player_has_mastery = player_has_mastery
@@ -370,11 +372,13 @@ class AbstractWeapon(Item, ABC):
         __init__, before any improvement is applied."""
         raise NotImplementedError("Subclasses must implement base_stats().")
 
-    def add_weapon_improvement(self, weapon_improvement: "WeaponImprovement") -> None:
-        """Attach a WeaponImprovement - a weapon-only improvement (damage
-        die/type, properties, attack/damage bonuses, ...) - to this weapon.
-        Named for clarity alongside add_character_improvement(), which
-        attaches an effect on the wielder instead."""
+    def add_weapon_improvement(self, weapon_improvement: ItemImprovement) -> None:
+        """Attach an ItemImprovement to this weapon - typically a
+        WeaponImprovement (a weapon-only improvement: damage die/type,
+        properties, attack/damage bonuses, ...), but also accepts the
+        generic ones (Reskin, SetItemName, ...) since those apply to any
+        item. Named for clarity alongside add_character_improvement(),
+        which attaches an effect on the wielder instead."""
         self.add_improvement(weapon_improvement)
 
     def _calculate_ability_modifier_bonus(

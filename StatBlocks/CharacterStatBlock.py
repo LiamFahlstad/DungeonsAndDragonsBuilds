@@ -107,14 +107,6 @@ class CharacterStatBlock:
     def get_ability_modifier(self, ability: Ability) -> int:
         return self.abilities.get_modifier(ability)
 
-    def get_ability_check_modifier(self, ability: Ability) -> int:
-        """Modifier for a raw ability check (e.g. forcing a door), as
-        distinct from a skill check (get_skill_modifier)."""
-        return self.get_ability_modifier(ability) + self.abilities.get_check_bonus(ability)
-
-    def add_ability_check_bonus(self, ability: Ability, bonus: int) -> None:
-        self.abilities.add_check_bonus(ability, bonus)
-
     def is_proficient_in_skill(self, skill: Skill) -> bool:
         return self.skills.is_proficient(skill)
 

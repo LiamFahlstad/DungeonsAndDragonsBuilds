@@ -192,19 +192,6 @@ class AbilityScoreBonus(CharacterImprovement):
             character_stat_block.abilities.add_bonus(ability, bonus)
 
 
-class AbilityCheckBonus(CharacterImprovement):
-    """Adds a flat bonus to ability checks (not skill checks - see
-    SkillBonus) for one or more abilities."""
-
-    def __init__(self, abilities: list[Ability], bonus: int):
-        self.abilities = abilities
-        self.bonus = bonus
-
-    def apply(self, character_stat_block: CharacterStatBlock):
-        for ability in self.abilities:
-            character_stat_block.add_ability_check_bonus(ability, self.bonus)
-
-
 # ── Armor class ───────────────────────────────────────────────────────────────
 
 

@@ -92,10 +92,12 @@ class AbstractArmor(Item, ABC):
       character-affecting effects, applied to the wearer's stat block while
       worn - e.g. DragonscalePlate granting +1 Constitution, the same
       mechanism RingOfIntelligence uses in Features.Items.Items.
-    - `armor_improvements=[...]` (list[ArmorImprovement], defined below):
-      armor-only effects that modify the armor itself (AC, ability used for
-      AC, Strength requirement, Stealth disadvantage, ...) - not applicable
-      to any other item type. See the ArmorImprovement showcase further down."""
+    - `armor_improvements=[...]` (list[ItemImprovement], defined below and in
+      Features.Core.Improvements): typically an ArmorImprovement - an
+      armor-only effect that modifies the armor itself (AC, ability used for
+      AC, Strength requirement, Stealth disadvantage, ...), not applicable to
+      any other item type - but also accepts the generic ItemImprovements
+      (Reskin, SetItemName, ...). See the ArmorImprovement showcase further down."""
 
     # Required fields every base_stats() must set; declared here (with no
     # class-level value) purely so static type checkers know they exist.
@@ -108,7 +110,7 @@ class AbstractArmor(Item, ABC):
         is_wearing: bool = True,
         slots: int = 1,
         improvements: Optional[list[CharacterImprovement]] = None,
-        armor_improvements: Optional[list[ArmorImprovement]] = None,
+        armor_improvements: Optional[list[ItemImprovement]] = None,
     ):
         # Defaults for the fields a concrete armor's base_stats() may leave
         # unset; required fields (name, base_ac, ac_ability) have no default
@@ -155,10 +157,12 @@ class AbstractArmor(Item, ABC):
         __init__, before any improvement is applied."""
         raise NotImplementedError("Subclasses must implement base_stats().")
 
-    def add_armor_improvement(self, armor_improvement: "ArmorImprovement") -> None:
-        """Attach an ArmorImprovement - an armor-only improvement (AC,
-        ability used for AC, Strength requirement, Stealth disadvantage,
-        ...) - to this armor. Named for clarity alongside
+    def add_armor_improvement(self, armor_improvement: ItemImprovement) -> None:
+        """Attach an ItemImprovement to this armor - typically an
+        ArmorImprovement (an armor-only improvement: AC, ability used for
+        AC, Strength requirement, Stealth disadvantage, ...), but also
+        accepts the generic ones (Reskin, SetItemName, ...) since those
+        apply to any item. Named for clarity alongside
         add_character_improvement(), which attaches an effect on the
         wearer instead."""
         self.add_improvement(armor_improvement)
