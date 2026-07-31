@@ -354,11 +354,10 @@ class DialogsMixin:
                 add_divider()
                 add_header("Weapons")
                 for weapon in weapons_objs:
-                    stats = weapon.stats()
                     to_hit = weapon.calculate_total_attack_roll_bonus_int(sb)
                     ab_mod, ab_name = weapon._calculate_ability_modifier_bonus(sb)
-                    dmg = f"{stats.damage_roll.value} {ab_mod:+} ({ab_name})"
-                    header_text = f"{stats.name}  1d20{to_hit:+}  dmg {dmg}"
+                    dmg = f"{weapon.damage_roll.value} {ab_mod:+} ({ab_name})"
+                    header_text = f"{weapon.name}  1d20{to_hit:+}  dmg {dmg}"
 
                     ww = QWidget()
                     wwl = QVBoxLayout(ww)
@@ -371,40 +370,40 @@ class DialogsMixin:
                         else "Not proficient"
                     )
                     type_line = "  ·  ".join(
-                        [stats.weapon_type.value, stats.damage_type.value, prof_str]
+                        [weapon.weapon_type.value, weapon.damage_type.value, prof_str]
                     )
                     type_lbl = QLabel(f"<span style='color:#a0a0b0'>{type_line}</span>")
                     type_lbl.setTextFormat(Qt.TextFormat.RichText)
                     type_lbl.setWordWrap(True)
                     wwl.addWidget(type_lbl)
 
-                    if stats.additional_description:
-                        desc_lbl = QLabel(stats.additional_description)
+                    if weapon.description_text:
+                        desc_lbl = QLabel(weapon.description_text)
                         desc_lbl.setWordWrap(True)
                         desc_lbl.setStyleSheet("color: #c0c0c0; font-size: 11px;")
                         wwl.addWidget(desc_lbl)
 
-                    if stats.mastery:
+                    if weapon.mastery:
                         mark = (
                             "✓" if getattr(weapon, "player_has_mastery", False) else "✗"
                         )
                         mastery_lbl = QLabel(
                             f"<span style='color:#a0a0b0'>Mastery:</span> "
-                            f"<span style='color:#c9a84c'>{stats.mastery.value} {mark}</span> "
-                            f"<span style='color:#c0c0c0'>— {stats.mastery.description}</span>"
+                            f"<span style='color:#c9a84c'>{weapon.mastery.value} {mark}</span> "
+                            f"<span style='color:#c0c0c0'>— {weapon.mastery.description}</span>"
                         )
                         mastery_lbl.setTextFormat(Qt.TextFormat.RichText)
                         mastery_lbl.setWordWrap(True)
                         mastery_lbl.setStyleSheet("font-size: 11px;")
                         wwl.addWidget(mastery_lbl)
 
-                    if stats.properties:
+                    if weapon.properties:
                         prop_header_lbl = QLabel("Properties:")
                         prop_header_lbl.setStyleSheet(
                             "color: #a0a0b0; font-size: 11px;"
                         )
                         wwl.addWidget(prop_header_lbl)
-                        for prop in stats.properties:
+                        for prop in weapon.properties:
                             prop_lbl = QLabel(
                                 f"<span style='color:#c9a84c'>{prop.value}</span> "
                                 f"<span style='color:#c0c0c0'>— {prop.description}</span>"

@@ -7,6 +7,7 @@ from Features.Core.SubFeatures import (
     AbilityScoreBonus,
     ArmorClassBonus,
     CarryingCapacityBonus,
+    ItemImprovement,
     SkillBonus,
     SubFeature,
 )
@@ -53,6 +54,11 @@ class Item(Feature):
     - Provide a description via get_description()
     - Apply mechanical effects via subfeatures and apply()
     - Take up carrying capacity slots
+
+    is_wearing is None for items with no wearable concept at all (most
+    items); it's a real bool for items that must be worn/wielded for their
+    subfeatures to apply (weapons, armor, rings, cloaks, ...) - see
+    AbstractWeapon/AbstractArmor and the is_wearing-accepting items below.
     """
 
     def __init__(
@@ -67,6 +73,7 @@ class Item(Feature):
         subfeatures: Optional[list[SubFeature]] = None,
         is_homebrew: bool = True,
         value: Optional[float] = None,
+        is_wearing: Optional[bool] = None,
     ):
         super().__init__(name=name, origin=category)
         self.rarity = rarity
@@ -80,9 +87,13 @@ class Item(Feature):
         # Value in gold pieces (GP). None means unknown/unpriced and should
         # not be displayed.
         self.value = value
+        self.is_wearing = is_wearing
 
     def apply(self, character_stat_block: CharacterStatBlock):
-        """Apply all subfeatures to the character."""
+        """Apply all subfeatures to the character - unless this is a
+        wearable item currently not being worn."""
+        if self.is_wearing is False:
+            return
         for subfeature in self.subfeatures:
             subfeature.apply(character_stat_block)
 
@@ -101,51 +112,24 @@ class Item(Feature):
             return f"{int(self.value)} GP"
         return f"{self.value:g} GP"
 
+    def add_improvement(self, improvement: ItemImprovement) -> None:
+        """Apply a single ItemImprovement to this item. This is the one
+        access point for composing improvements, whether they come from a
+        subclass's own improvement-list constructor parameter (e.g.
+        AbstractWeapon's `weapon_subfeatures=`, AbstractArmor's
+        `armor_subfeatures=`) or from setup_improvements()."""
+        improvement.apply(self)
 
-# ══════════════════════════════════════════════════════════════════════════════
-# WearableItem: Items that must be worn to apply their effects
-# ══════════════════════════════════════════════════════════════════════════════
+    def setup_improvements(self) -> None:
+        """Override to bake in this item's default improvements, e.g.:
 
+            def setup_improvements(self) -> None:
+                self.add_improvement(Reskin("Frostbrand Blade", "..."))
 
-class WearableItem(Item):
-    """
-    An item that must be worn for its effects to apply.
-    Subfeatures only activate when is_wearing is True.
-    """
-
-    def __init__(
-        self,
-        name: str,
-        rarity: ItemRarity = ItemRarity.COMMON,
-        requires_attunement: bool = False,
-        category: ItemCategory = ItemCategory.WONDROUS,
-        weight: Optional[float] = None,
-        slots: int = 1,
-        description_text: str = "",
-        subfeatures: Optional[list[SubFeature]] = None,
-        is_wearing: bool = True,
-        is_homebrew: bool = True,
-        value: Optional[float] = None,
-    ):
-        super().__init__(
-            name=name,
-            rarity=rarity,
-            requires_attunement=requires_attunement,
-            category=category,
-            weight=weight,
-            slots=slots,
-            description_text=description_text,
-            subfeatures=subfeatures,
-            is_homebrew=is_homebrew,
-            value=value,
-        )
-        self.is_wearing = is_wearing
-
-    def apply(self, character_stat_block: CharacterStatBlock):
-        """Only apply subfeatures if the item is being worn."""
-        if self.is_wearing:
-            for subfeature in self.subfeatures:
-                subfeature.apply(character_stat_block)
+        Called once during __init__, after any improvements passed in via
+        the subclass's own improvement-list constructor parameter. Only
+        meaningful for items that compose ItemImprovements (see
+        AbstractWeapon, AbstractArmor)."""
 
 
 # ══════════════════════════════════════════════════════════════════════════════
@@ -243,7 +227,7 @@ class ThievesTools(Item):
         )
 
 
-class Backpack(WearableItem):
+class Backpack(Item):
     def __init__(self, is_wearing: bool = True):
         super().__init__(
             "Backpack",
@@ -476,7 +460,7 @@ class BullseyeLantern(Item):
         )
 
 
-class Costume(WearableItem):
+class Costume(Item):
     def __init__(self, is_wearing: bool = True):
         super().__init__(
             "Costume",
@@ -523,7 +507,7 @@ class Typewriter(Item):
         )
 
 
-class NightVisionGoggles(WearableItem):
+class NightVisionGoggles(Item):
     def __init__(self, is_wearing: bool = True):
         super().__init__(
             "Nightvision Goggles",
@@ -663,7 +647,7 @@ class DramaticRainBottle(Item):
         )
 
 
-class RobeOfLevitation(WearableItem):
+class RobeOfLevitation(Item):
     def __init__(self, is_wearing: bool = True):
         super().__init__(
             "Robe of Levitation",
@@ -786,7 +770,7 @@ class Kamikaze(Item):
         )
 
 
-class FingerGunRing(WearableItem):
+class FingerGunRing(Item):
     def __init__(self, is_wearing: bool = True):
         super().__init__(
             "Ring of Finger Guns",
@@ -801,7 +785,7 @@ class FingerGunRing(WearableItem):
         )
 
 
-class BadFriendGlasses(WearableItem):
+class BadFriendGlasses(Item):
     def __init__(self, is_wearing: bool = True):
         super().__init__(
             "A Bad Friend Glasses",
@@ -821,7 +805,7 @@ class BadFriendGlasses(WearableItem):
 # ══════════════════════════════════════════════════════════════════════════════
 
 
-class CloakOfProtection(WearableItem):
+class CloakOfProtection(Item):
     """A magical cloak that grants +1 AC."""
 
     def __init__(self, is_wearing: bool = True):
@@ -860,13 +844,13 @@ class PlusOneWeapon(Item):
                     bonuses=[(ability, 1)],
                     total=1,
                     error_prefix=f"+1 {weapon_name} bonus",
-            is_homebrew=False,
                 )
             ],
+            is_homebrew=False,
         )
 
 
-class BracersOfArchery(WearableItem):
+class BracersOfArchery(Item):
     """Magical bracers that grant +2 Dexterity for ranged combat."""
 
     def __init__(self, is_wearing: bool = True):
@@ -885,13 +869,13 @@ class BracersOfArchery(WearableItem):
                     bonuses=[(Ability.DEXTERITY, 2)],
                     total=2,
                     error_prefix="Bracers of Archery bonus",
-            is_homebrew=False,
                 )
             ],
+            is_homebrew=False,
         )
 
 
-class GauntletsOfStrength(WearableItem):
+class GauntletsOfStrength(Item):
     """Magical gauntlets that increase Strength by 2."""
 
     def __init__(self, is_wearing: bool = True):
@@ -916,7 +900,7 @@ class GauntletsOfStrength(WearableItem):
         )
 
 
-class RingOfIntelligence(WearableItem):
+class RingOfIntelligence(Item):
     """A mystical ring that increases Intelligence by 2."""
 
     def __init__(self, is_wearing: bool = True):
@@ -940,7 +924,7 @@ class RingOfIntelligence(WearableItem):
         )
 
 
-class RingOfInvestigation(WearableItem):
+class RingOfInvestigation(Item):
     """A ring that grants +1 to Investigation checks."""
 
     def __init__(self, is_wearing: bool = True):
@@ -1102,7 +1086,7 @@ class Bucket(Item):
             value=0.05,
         )
 
-class BrightFungalCloak(WearableItem):
+class BrightFungalCloak(Item):
     def __init__(self, is_wearing: bool = True):
         super().__init__(
             "Bright Fungal Cloak",
@@ -1135,7 +1119,7 @@ class Book(Item):
             value=25,
         )
 
-class DesertClothing(WearableItem):
+class DesertClothing(Item):
     def __init__(self, is_wearing: bool = True):
         super().__init__(
             "Desert Clothing",
@@ -1149,7 +1133,7 @@ class DesertClothing(WearableItem):
             value=5,
         )
 
-class DevilMask(WearableItem):
+class DevilMask(Item):
     def __init__(self, is_wearing: bool = True):
         super().__init__(
             "Devil Mask",
@@ -1163,7 +1147,7 @@ class DevilMask(WearableItem):
             value=25,
         )
 
-class GarbOfLightAndShadow(WearableItem):
+class GarbOfLightAndShadow(Item):
     def __init__(self, is_wearing: bool = True):
         super().__init__(
             "Garb of Light and Shadow",
@@ -1177,7 +1161,7 @@ class GarbOfLightAndShadow(WearableItem):
             value=50,
         )
 
-class GenieRobe(WearableItem):
+class GenieRobe(Item):
     def __init__(self, is_wearing: bool = True):
         super().__init__(
             "Genie Robe",
@@ -1217,7 +1201,7 @@ class LockingSpellbook(Item):
             value=35,
         )
 
-class MonsterCamouflage(WearableItem):
+class MonsterCamouflage(Item):
     def __init__(self, is_wearing: bool = True):
         super().__init__(
             "Monster Camouflage",
@@ -1231,7 +1215,7 @@ class MonsterCamouflage(WearableItem):
             value=50,
         )
 
-class WarmFungalClothing(WearableItem):
+class WarmFungalClothing(Item):
     def __init__(self, is_wearing: bool = True):
         super().__init__(
             "Warm Fungal Clothing",
@@ -1249,7 +1233,7 @@ class WarmFungalClothing(WearableItem):
             value=15,
         )
 
-class WinterCamouflage(WearableItem):
+class WinterCamouflage(Item):
     def __init__(self, is_wearing: bool = True):
         super().__init__(
             "Winter Camouflage",

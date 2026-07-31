@@ -35,7 +35,7 @@ class FightStyleWeaponFeature(FightingStyle):
 class Archery(FightStyleWeaponFeature):
     def apply(self, weapons: list[AbstractWeapon]):
         for weapon in weapons:
-            if weapon.stats().weapon_type in (
+            if weapon.weapon_type in (
                 WeaponType.MARTIAL_RANGED,
                 WeaponType.SIMPLE_RANGED,
             ):
@@ -61,7 +61,7 @@ class Defense(FightStyleModifier):
 class Dueling(FightStyleWeaponFeature):
     def apply(self, weapons: list[AbstractWeapon]):
         for weapon in weapons:
-            if weapon.stats().weapon_type in (
+            if weapon.weapon_type in (
                 WeaponType.MARTIAL_MELEE,
                 WeaponType.SIMPLE_MELEE,
             ):
@@ -94,7 +94,7 @@ class Protection(FightingStyle):
 class ThrownWeaponFighting(FightStyleWeaponFeature):
     def apply(self, weapons: list[AbstractWeapon]):
         for weapon in weapons:
-            if WeaponProperty.THROWN in weapon.stats().properties:
+            if WeaponProperty.THROWN in weapon.properties:
                 weapon.attack_roll_bonuses.append(
                     (2, "2 (Thrown Weapon Fighting Style)")
                 )

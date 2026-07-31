@@ -340,3 +340,106 @@ class StrengthRequirement(SubFeature):
     def apply(self, character_stat_block: CharacterStatBlock):
         if character_stat_block.get_ability_score(Ability.STRENGTH) < self.min_score:
             raise ValueError(f"Strength score must be at least {self.min_score}.")
+
+
+# ──────────────────────────────────────────────────────────────────────────────
+# ItemImprovement: composable modifiers applied to an item (weapon, armor, or
+# any future equipment type) at construction time - e.g. a magic variant or a
+# homebrew reskin. Distinct from SubFeature above: apply() mutates the item
+# instance itself (its name, description, GP value, homebrew flag), not the
+# wielding character's stat block. Type-specific improvements (e.g. a
+# weapon's damage die, an armor's AC) belong in their own equipment module
+# (see Features.Equipment.Weapons.WeaponSubFeature / Armor.ArmorSubFeature)
+# and should subclass this.
+# ──────────────────────────────────────────────────────────────────────────────
+
+
+class ItemImprovement(ABC):
+    """Base class for item improvements. Override apply() to modify the item.
+
+    Expects the target item to already have its base (pre-improvement)
+    attributes set - name, description_text, value, is_homebrew - since
+    apply() mutates them directly (see AbstractWeapon.__init__ /
+    AbstractArmor.__init__: base_stats() runs first, improvements after)."""
+
+    @abstractmethod
+    def apply(self, item) -> None:
+        pass
+
+
+class SetItemName(ItemImprovement):
+    """Overrides the item's display name."""
+
+    def __init__(self, name: str):
+        self.name = name
+
+    def apply(self, item) -> None:
+        item.name = self.name
+
+
+class AddItemDescription(ItemImprovement):
+    """Appends text to the item's description."""
+
+    def __init__(self, text: str):
+        self.text = text
+
+    def apply(self, item) -> None:
+        item.description_text = (
+            f"{item.description_text}\n{self.text}" if item.description_text else self.text
+        )
+
+
+class SetItemDescription(ItemImprovement):
+    """Overrides (replaces, rather than appends to) the item's description."""
+
+    def __init__(self, text: str):
+        self.text = text
+
+    def apply(self, item) -> None:
+        item.description_text = self.text
+
+
+class SetItemValue(ItemImprovement):
+    """Overrides the item's GP value. Pass None to mark it unpriced (e.g. a
+    unique magic item that no longer has a standard market price)."""
+
+    def __init__(self, value: Optional[float]):
+        self.value = value
+
+    def apply(self, item) -> None:
+        item.value = self.value
+
+
+class SetItemHomebrew(ItemImprovement):
+    """Flags the item as homebrew (or, with is_homebrew=False, as official)."""
+
+    def __init__(self, is_homebrew: bool = True):
+        self.is_homebrew = is_homebrew
+
+    def apply(self, item) -> None:
+        item.is_homebrew = self.is_homebrew
+
+
+class Reskin(ItemImprovement):
+    """Convenience bundle for the common case of rebranding a base item as a
+    new named variant: overrides its name and description, unsets its GP
+    value (it's no longer standard equipment), and flags it as homebrew.
+    Equivalent to combining SetItemName, SetItemDescription,
+    SetItemValue(None), and SetItemHomebrew()."""
+
+    def __init__(self, name: str, description: str, is_homebrew: bool = True):
+        self.name = name
+        self.description = description
+        self.is_homebrew = is_homebrew
+
+    def apply(self, item) -> None:
+        SetItemName(self.name).apply(item)
+        SetItemDescription(self.description).apply(item)
+        SetItemValue(None).apply(item)
+        SetItemHomebrew(self.is_homebrew).apply(item)
+
+
+# add_improvement()/setup_improvements() - the access point for composing
+# ItemImprovements onto an item - live directly on Features.Items.Items.Item,
+# not here, so that any Item subclass (not just weapons/armor) can use them
+# without an extra mixin base class.

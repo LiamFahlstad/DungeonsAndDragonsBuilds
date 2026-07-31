@@ -1,12 +1,21 @@
 from abc import ABC, abstractmethod
-from dataclasses import dataclass, replace
+from dataclasses import dataclass
 from enum import Enum
 from typing import Optional, TextIO
 
 from Utils import DamageCalculator
 from Core.Definitions import Ability, Die
-from Features.Core.SubFeatures import AbilityScoreBonus, SubFeature
-from Features.Items.Items import ItemCategory, ItemRarity, WearableItem
+from Features.Core.SubFeatures import (
+    AbilityScoreBonus,
+    AddItemDescription,
+    ItemImprovement,
+    Reskin,
+    SetItemHomebrew,
+    SetItemName,
+    SetItemValue,
+    SubFeature,
+)
+from Features.Items.Items import Item, ItemCategory, ItemRarity
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
@@ -147,28 +156,6 @@ class ExtraDamage:
         return f"{self.damage_roll.value} {self.damage_type.value}"
 
 
-@dataclass
-class WeaponsStats:
-    name: str
-    ability: Ability
-    properties: list[WeaponProperty]
-    weapon_type: WeaponType
-    damage_type: WeaponsDamageTypes
-    damage_roll: WeaponsDamageRolls
-    mastery: Optional[WeaponMastery] = None
-    additional_description: Optional[str] = None
-    extra_damage: Optional[list[ExtraDamage]] = None
-    weight: Optional[float] = None
-    value: Optional[float] = None
-    is_homebrew: bool = False
-    rarity: ItemRarity = ItemRarity.COMMON
-    requires_attunement: bool = False
-    # Character-affecting SubFeatures innate to this weapon (e.g. the +1 to
-    # Strength granted just by owning a Flame Tongue Sword). Distinct from
-    # WeaponSubFeature below, which modifies the weapon itself, not the wielder.
-    subfeatures: Optional[list[SubFeature]] = None
-
-
 # ──────────────────────────────────────────────────────────────────────────────
 # WeaponSubFeature: composable modifiers applied to a weapon at construction
 # time (e.g. a magic weapon variant, or a homebrew reskin). Mirrors
@@ -179,7 +166,7 @@ class WeaponsStats:
 # ──────────────────────────────────────────────────────────────────────────────
 
 
-class WeaponSubFeature(ABC):
+class WeaponSubFeature(ItemImprovement):
     """Base class for weapon improvements. Override apply() to modify the weapon."""
 
     @abstractmethod
@@ -238,7 +225,7 @@ class SetDamageDie(WeaponSubFeature):
         self.damage_roll = damage_roll
 
     def apply(self, weapon: "AbstractWeapon") -> None:
-        weapon._damage_roll_override = self.damage_roll
+        weapon.damage_roll = self.damage_roll
 
 
 class SetDamageType(WeaponSubFeature):
@@ -248,7 +235,7 @@ class SetDamageType(WeaponSubFeature):
         self.damage_type = damage_type
 
     def apply(self, weapon: "AbstractWeapon") -> None:
-        weapon._damage_type_override = self.damage_type
+        weapon.damage_type = self.damage_type
 
 
 class AddWeaponProperty(WeaponSubFeature):
@@ -258,17 +245,8 @@ class AddWeaponProperty(WeaponSubFeature):
         self.property = property
 
     def apply(self, weapon: "AbstractWeapon") -> None:
-        weapon._extra_properties.append(self.property)
-
-
-class AddWeaponDescription(WeaponSubFeature):
-    """Appends text to the weapon's additional description."""
-
-    def __init__(self, text: str):
-        self.text = text
-
-    def apply(self, weapon: "AbstractWeapon") -> None:
-        weapon._description_additions.append(self.text)
+        if self.property not in weapon.properties:
+            weapon.properties.append(self.property)
 
 
 class AddExtraDamage(WeaponSubFeature):
@@ -283,68 +261,7 @@ class AddExtraDamage(WeaponSubFeature):
         self.extra_damage = ExtraDamage(damage_roll=damage_roll, damage_type=damage_type, note=note)
 
     def apply(self, weapon: "AbstractWeapon") -> None:
-        weapon._extra_damage_additions.append(self.extra_damage)
-
-
-class SetWeaponName(WeaponSubFeature):
-    """Overrides the weapon's display name."""
-
-    def __init__(self, name: str):
-        self.name = name
-
-    def apply(self, weapon: "AbstractWeapon") -> None:
-        weapon._name_override = self.name
-
-
-class SetWeaponDescription(WeaponSubFeature):
-    """Overrides (replaces, rather than appends to) the weapon's description."""
-
-    def __init__(self, text: str):
-        self.text = text
-
-    def apply(self, weapon: "AbstractWeapon") -> None:
-        weapon._description_override = self.text
-
-
-class SetWeaponValue(WeaponSubFeature):
-    """Overrides the weapon's GP value. Pass None to mark it unpriced (e.g. a
-    unique magic item that no longer has a standard market price)."""
-
-    def __init__(self, value: Optional[float]):
-        self.value = value
-
-    def apply(self, weapon: "AbstractWeapon") -> None:
-        weapon._value_override_set = True
-        weapon._value_override = self.value
-
-
-class SetHomebrew(WeaponSubFeature):
-    """Flags the weapon as homebrew (or, with is_homebrew=False, as official)."""
-
-    def __init__(self, is_homebrew: bool = True):
-        self.is_homebrew = is_homebrew
-
-    def apply(self, weapon: "AbstractWeapon") -> None:
-        weapon._is_homebrew_override = self.is_homebrew
-
-
-class Reskin(WeaponSubFeature):
-    """Convenience bundle for the common case of rebranding a base weapon as a
-    new named variant: overrides its name and description, unsets its GP
-    value (it's no longer standard equipment), and flags it as homebrew.
-    Equivalent to combining SetWeaponName, SetWeaponDescription,
-    SetWeaponValue(None), and SetHomebrew()."""
-
-    def __init__(self, name: str, description: str, is_homebrew: bool = True):
-        self.name = name
-        self.description = description
-        self.is_homebrew = is_homebrew
-
-    def apply(self, weapon: "AbstractWeapon") -> None:
-        SetWeaponName(self.name).apply(weapon)
-        SetWeaponDescription(self.description).apply(weapon)
-        SetWeaponValue(None).apply(weapon)
-        SetHomebrew(self.is_homebrew).apply(weapon)
+        weapon.extra_damage.append(self.extra_damage)
 
 
 class SetWeaponAbility(WeaponSubFeature):
@@ -360,9 +277,28 @@ class SetWeaponAbility(WeaponSubFeature):
         weapon._ability_override = self.ability
 
 
-class AbstractWeapon(WearableItem):
+class AbstractWeapon(Item, ABC):
     """Abstract base class for weapons. Weapons are wearable items: their
-    subfeatures only apply while worn/wielded (is_wearing)."""
+    subfeatures only apply while worn/wielded (is_wearing).
+
+    Two independent ways to attach behavior to a weapon:
+    - `subfeatures=[...]` (list[SubFeature], defined in Features.Core.SubFeatures):
+      character-affecting effects, applied to the wielder's stat block while
+      worn - e.g. FlameTongueSword granting +1 Strength, the same mechanism
+      RingOfIntelligence uses in Features.Items.Items.
+    - `weapon_subfeatures=[...]` (list[WeaponSubFeature], defined below):
+      weapon-only effects that modify the weapon itself (damage die/type,
+      properties, attack/damage bonuses, ...) - not applicable to any other
+      item type. See the WeaponSubFeature showcase further down."""
+
+    # Required fields every base_stats() must set; declared here (with no
+    # class-level value) purely so static type checkers know they exist.
+    name: str
+    ability: Ability
+    properties: list[WeaponProperty]
+    weapon_type: WeaponType
+    damage_type: WeaponsDamageTypes
+    damage_roll: WeaponsDamageRolls
 
     def __init__(
         self,
@@ -374,116 +310,63 @@ class AbstractWeapon(WearableItem):
         category: ItemCategory = ItemCategory.WEAPON,
         slots: int = 1,
         subfeatures: Optional[list[SubFeature]] = None,
-        improvements: Optional[list[WeaponSubFeature]] = None,
+        weapon_subfeatures: Optional[list[WeaponSubFeature]] = None,
     ):
         self.player_is_proficient = player_is_proficient
         self.player_has_mastery = player_has_mastery
         self.attack_roll_bonuses = attack_roll_bonuses if attack_roll_bonuses is not None else []
         self.damage_roll_bonuses: list[tuple[int, str]] = []
 
-        # Improvement state, populated below (from `ability`, the
-        # `improvements` list, and setup_improvements()) and read by
-        # stats()/the attack- and damage-bonus calculations.
+        # Ability/attack-roll/damage-bonus overrides live outside base_stats()
+        # entirely: they're read directly by the bonus-calculation methods
+        # below rather than composed into a weapon field.
         self._ability_override: Optional[Ability] = ability
         self._attack_roll_override: Optional[int] = None
         self._damage_bonus_override: Optional[int] = None
-        self._damage_roll_override: Optional[WeaponsDamageRolls] = None
-        self._damage_type_override: Optional[WeaponsDamageTypes] = None
-        self._extra_properties: list[WeaponProperty] = []
-        self._description_additions: list[str] = []
-        self._extra_damage_additions: list[ExtraDamage] = []
-        self._name_override: Optional[str] = None
-        self._description_override: Optional[str] = None
-        self._value_override_set: bool = False
-        self._value_override: Optional[float] = None
-        self._is_homebrew_override: Optional[bool] = None
-        for improvement in improvements or []:
-            self.add_improvement(improvement)
+
+        # Defaults for the fields a concrete weapon's base_stats() may leave
+        # unset; required fields (name, ability, properties, weapon_type,
+        # damage_type, damage_roll) have no default and must always be set.
+        self.mastery: Optional[WeaponMastery] = None
+        self.description_text: str = ""
+        self.extra_damage: list[ExtraDamage] = []
+        self.weight: Optional[float] = None
+        self.value: Optional[float] = None
+        self.is_homebrew: bool = False
+        self.rarity: ItemRarity = ItemRarity.COMMON
+        self.requires_attunement: bool = False
+        # Character-affecting SubFeatures innate to this weapon (e.g. the +1
+        # to Strength granted just by owning a Flame Tongue Sword). Distinct
+        # from WeaponSubFeature, which modifies the weapon itself, not the
+        # wielder.
+        self._innate_subfeatures: list[SubFeature] = []
+
+        self.base_stats()
+
+        for weapon_subfeature in weapon_subfeatures or []:
+            self.add_improvement(weapon_subfeature)
         self.setup_improvements()
 
-        stats = self.stats()
         super().__init__(
-            name=stats.name,
-            rarity=stats.rarity,
-            requires_attunement=stats.requires_attunement,
+            name=self.name,
+            rarity=self.rarity,
+            requires_attunement=self.requires_attunement,
             category=category,
-            weight=stats.weight,
+            weight=self.weight,
             slots=slots,
-            description_text=stats.additional_description or "",
-            subfeatures=list(stats.subfeatures or []) + list(subfeatures or []),
+            description_text=self.description_text,
+            subfeatures=self._innate_subfeatures + list(subfeatures or []),
             is_wearing=is_wearing,
-            is_homebrew=stats.is_homebrew,
-            value=stats.value,
+            is_homebrew=self.is_homebrew,
+            value=self.value,
         )
-
-    def add_improvement(self, improvement: WeaponSubFeature) -> None:
-        """Apply a single WeaponSubFeature to this weapon. This is the one
-        access point for composing improvements, whether they come from the
-        `improvements=` constructor list or from a subclass's
-        setup_improvements() override."""
-        improvement.apply(self)
-
-    def setup_improvements(self) -> None:
-        """Override to bake in this weapon's default improvements, e.g.:
-
-            def setup_improvements(self) -> None:
-                self.add_improvement(SetDamageType(WeaponsDamageTypes.COLD))
-
-        Called once during __init__, after any improvements passed in via
-        the constructor's `improvements=` list."""
 
     @abstractmethod
-    def base_stats(self) -> WeaponsStats:
+    def base_stats(self) -> None:
+        """Set this weapon's base (pre-improvement) attributes directly
+        (self.name, self.ability, self.properties, ...). Called once during
+        __init__, before any improvement is applied."""
         raise NotImplementedError("Subclasses must implement base_stats().")
-
-    def stats(self) -> WeaponsStats:
-        """Effective stats: this weapon's base_stats() with any improvements
-        (WeaponSubFeature passed to __init__) layered on top."""
-        base = self.base_stats()
-        if not (
-            self._damage_roll_override
-            or self._damage_type_override
-            or self._extra_properties
-            or self._description_additions
-            or self._extra_damage_additions
-            or self._name_override
-            or self._description_override is not None
-            or self._value_override_set
-            or self._is_homebrew_override is not None
-        ):
-            return base
-
-        properties = list(base.properties)
-        for prop in self._extra_properties:
-            if prop not in properties:
-                properties.append(prop)
-
-        if self._description_override is not None:
-            additional_description = self._description_override
-        else:
-            additional_description = base.additional_description or ""
-            for text in self._description_additions:
-                additional_description = (
-                    f"{additional_description}\n{text}" if additional_description else text
-                )
-
-        extra_damage = list(base.extra_damage or []) + self._extra_damage_additions
-
-        return replace(
-            base,
-            name=self._name_override or base.name,
-            properties=properties,
-            damage_roll=self._damage_roll_override or base.damage_roll,
-            damage_type=self._damage_type_override or base.damage_type,
-            additional_description=additional_description or None,
-            extra_damage=extra_damage or None,
-            value=self._value_override if self._value_override_set else base.value,
-            is_homebrew=(
-                self._is_homebrew_override
-                if self._is_homebrew_override is not None
-                else base.is_homebrew
-            ),
-        )
 
     def _calculate_ability_modifier_bonus(
         self, character_stat_block: CharacterStatBlock
@@ -493,9 +376,9 @@ class AbstractWeapon(WearableItem):
             return character_stat_block.get_ability_modifier(ability), ability.value
 
         abilities_to_consider = set()
-        abilities_to_consider.add(self.stats().ability)
+        abilities_to_consider.add(self.ability)
 
-        if WeaponProperty.FINESSE in self.stats().properties:
+        if WeaponProperty.FINESSE in self.properties:
             abilities_to_consider.add(Ability.STRENGTH)
             abilities_to_consider.add(Ability.DEXTERITY)
 
@@ -603,10 +486,6 @@ class AbstractWeapon(WearableItem):
             results.append((ac, prob))
         return results
 
-    def apply(self, character_stat_block: CharacterStatBlock):
-        """Apply weapon's Item subfeatures (inherited from Item)."""
-        super().apply(character_stat_block)
-
     def write_to_file(self, character_stat_block: CharacterStatBlock, file: TextIO):
         pass  # HTML rendering is handled by write_weapons_to_file
 
@@ -615,14 +494,13 @@ class AbstractWeapon(WearableItem):
         character_stat_block: CharacterStatBlock,
         file,
     ) -> None:
-        stats = self.stats()
         attack_roll_die = DamageCalculator.Die.D20
         attack_roll_condition = DamageCalculator.DiceRollCondition.NEUTRAL
         attack_roll_bonus = self.calculate_total_attack_roll_bonus_int(
             character_stat_block
         )
-        damage_die = Die.die_from_value(stats.damage_roll.die_size)
-        number_of_damage_dice = stats.damage_roll.number_of_dice
+        damage_die = Die.die_from_value(self.damage_roll.die_size)
+        number_of_damage_dice = self.damage_roll.number_of_dice
         damage_condition = DamageCalculator.DiceRollCondition.NEUTRAL
         damage_bonus = self.calculate_damage_bonus_int(character_stat_block)
 
@@ -641,19 +519,18 @@ class AbstractWeapon(WearableItem):
 def weapon_matches_proficiency(
     weapon: AbstractWeapon, proficiency: WeaponProficiency
 ) -> bool:
-    stats = weapon.stats()
-    is_simple = stats.weapon_type in (WeaponType.SIMPLE_MELEE, WeaponType.SIMPLE_RANGED)
-    is_martial = stats.weapon_type in (WeaponType.MARTIAL_MELEE, WeaponType.MARTIAL_RANGED)
+    is_simple = weapon.weapon_type in (WeaponType.SIMPLE_MELEE, WeaponType.SIMPLE_RANGED)
+    is_martial = weapon.weapon_type in (WeaponType.MARTIAL_MELEE, WeaponType.MARTIAL_RANGED)
     if proficiency == WeaponProficiency.SIMPLE:
         return is_simple
     if proficiency == WeaponProficiency.MARTIAL:
         return is_martial
     if proficiency == WeaponProficiency.MARTIAL_LIGHT:
-        return is_martial and WeaponProperty.LIGHT in stats.properties
+        return is_martial and WeaponProperty.LIGHT in weapon.properties
     if proficiency == WeaponProficiency.MARTIAL_FINESSE_OR_LIGHT:
         return is_martial and (
-            WeaponProperty.FINESSE in stats.properties
-            or WeaponProperty.LIGHT in stats.properties
+            WeaponProperty.FINESSE in weapon.properties
+            or WeaponProperty.LIGHT in weapon.properties
         )
     raise ValueError(f"Unhandled weapon proficiency: {proficiency}")
 
@@ -681,637 +558,523 @@ class UnarmedStrike(AbstractWeapon):
         self.damage_roll = damage_roll
         super().__init__(ability=ability, **kwargs)
 
-    def base_stats(self) -> WeaponsStats:
-        return WeaponsStats(
-            name="Unarmed Strike",
-            ability=self._ability_override or Ability.STRENGTH,
-            properties=[],
-            mastery=None,
-            weapon_type=WeaponType.MARTIAL_MELEE,
-            damage_type=WeaponsDamageTypes.BLUDGEONING,
-            damage_roll=self.damage_roll or WeaponsDamageRolls.D1,
-            additional_description=(
-                "You can replace one attack with a grapple or shove. Grapple: target within reach and no more than one size larger, requires a free hand; make an Athletics check contested by Athletics or Acrobatics; on success, the target’s speed becomes 0, you can move it at half speed, and you can release it at any time; it can repeat the check to escape and automatically fails if incapacitated. "
-                "Shove: same limits and check; on success, either knock the target prone or push it 5 ft. "
-            ),
+    def base_stats(self) -> None:
+        self.name = "Unarmed Strike"
+        self.ability = self._ability_override or Ability.STRENGTH
+        self.properties = []
+        self.mastery = None
+        self.weapon_type = WeaponType.MARTIAL_MELEE
+        self.damage_type = WeaponsDamageTypes.BLUDGEONING
+        self.damage_roll = self.damage_roll or WeaponsDamageRolls.D1
+        self.description_text = (
+            "You can replace one attack with a grapple or shove. Grapple: target within reach and no more than one size larger, requires a free hand; make an Athletics check contested by Athletics or Acrobatics; on success, the target’s speed becomes 0, you can move it at half speed, and you can release it at any time; it can repeat the check to escape and automatically fails if incapacitated. "
+            "Shove: same limits and check; on success, either knock the target prone or push it 5 ft. "
         )
 
 
 class Battleaxe(AbstractWeapon):
-    def base_stats(self) -> WeaponsStats:
-        return WeaponsStats(
-            name="Battleaxe",
-            ability=Ability.STRENGTH,
-            properties=[WeaponProperty.VERSATILE_10],
-            mastery=WeaponMastery.TOPPLE,
-            weapon_type=WeaponType.MARTIAL_MELEE,
-            damage_type=WeaponsDamageTypes.SLASHING,
-            damage_roll=WeaponsDamageRolls.D8,
-            weight=4,
-            value=10,
-        )
+    def base_stats(self) -> None:
+        self.name = "Battleaxe"
+        self.ability = Ability.STRENGTH
+        self.properties = [WeaponProperty.VERSATILE_10]
+        self.mastery = WeaponMastery.TOPPLE
+        self.weapon_type = WeaponType.MARTIAL_MELEE
+        self.damage_type = WeaponsDamageTypes.SLASHING
+        self.damage_roll = WeaponsDamageRolls.D8
+        self.weight = 4
+        self.value = 10
 
 
 class Flail(AbstractWeapon):
-    def base_stats(self) -> WeaponsStats:
-        return WeaponsStats(
-            name="Flail",
-            ability=Ability.STRENGTH,
-            properties=[],
-            mastery=WeaponMastery.SAP,
-            weapon_type=WeaponType.MARTIAL_MELEE,
-            damage_type=WeaponsDamageTypes.BLUDGEONING,
-            damage_roll=WeaponsDamageRolls.D8,
-            weight=2,
-            value=10,
-        )
+    def base_stats(self) -> None:
+        self.name = "Flail"
+        self.ability = Ability.STRENGTH
+        self.properties = []
+        self.mastery = WeaponMastery.SAP
+        self.weapon_type = WeaponType.MARTIAL_MELEE
+        self.damage_type = WeaponsDamageTypes.BLUDGEONING
+        self.damage_roll = WeaponsDamageRolls.D8
+        self.weight = 2
+        self.value = 10
 
 
 class Glaive(AbstractWeapon):
-    def base_stats(self) -> WeaponsStats:
-        return WeaponsStats(
-            name="Glaive",
-            ability=Ability.STRENGTH,
-            properties=[
-                WeaponProperty.HEAVY,
-                WeaponProperty.REACH,
-                WeaponProperty.TWO_HANDED,
-            ],
-            mastery=WeaponMastery.GRAZE,
-            weapon_type=WeaponType.MARTIAL_MELEE,
-            damage_type=WeaponsDamageTypes.SLASHING,
-            damage_roll=WeaponsDamageRolls.D10,
-            weight=6,
-            value=20,
-        )
+    def base_stats(self) -> None:
+        self.name = "Glaive"
+        self.ability = Ability.STRENGTH
+        self.properties = [WeaponProperty.HEAVY, WeaponProperty.REACH, WeaponProperty.TWO_HANDED]
+        self.mastery = WeaponMastery.GRAZE
+        self.weapon_type = WeaponType.MARTIAL_MELEE
+        self.damage_type = WeaponsDamageTypes.SLASHING
+        self.damage_roll = WeaponsDamageRolls.D10
+        self.weight = 6
+        self.value = 20
 
 
 class Greataxe(AbstractWeapon):
-    def base_stats(self) -> WeaponsStats:
-        return WeaponsStats(
-            name="Greataxe",
-            ability=Ability.STRENGTH,
-            properties=[WeaponProperty.HEAVY, WeaponProperty.TWO_HANDED],
-            mastery=WeaponMastery.CLEAVE,
-            weapon_type=WeaponType.MARTIAL_MELEE,
-            damage_type=WeaponsDamageTypes.SLASHING,
-            damage_roll=WeaponsDamageRolls.D12,
-            weight=7,
-            value=30,
-        )
+    def base_stats(self) -> None:
+        self.name = "Greataxe"
+        self.ability = Ability.STRENGTH
+        self.properties = [WeaponProperty.HEAVY, WeaponProperty.TWO_HANDED]
+        self.mastery = WeaponMastery.CLEAVE
+        self.weapon_type = WeaponType.MARTIAL_MELEE
+        self.damage_type = WeaponsDamageTypes.SLASHING
+        self.damage_roll = WeaponsDamageRolls.D12
+        self.weight = 7
+        self.value = 30
 
 
 class Greatsword(AbstractWeapon):
-    def base_stats(self) -> WeaponsStats:
-        return WeaponsStats(
-            name="Greatsword",
-            ability=Ability.STRENGTH,
-            properties=[WeaponProperty.HEAVY, WeaponProperty.TWO_HANDED],
-            mastery=WeaponMastery.GRAZE,
-            weapon_type=WeaponType.MARTIAL_MELEE,
-            damage_type=WeaponsDamageTypes.SLASHING,
-            damage_roll=WeaponsDamageRolls.D6x2,
-            weight=6,
-            value=50,
-        )
+    def base_stats(self) -> None:
+        self.name = "Greatsword"
+        self.ability = Ability.STRENGTH
+        self.properties = [WeaponProperty.HEAVY, WeaponProperty.TWO_HANDED]
+        self.mastery = WeaponMastery.GRAZE
+        self.weapon_type = WeaponType.MARTIAL_MELEE
+        self.damage_type = WeaponsDamageTypes.SLASHING
+        self.damage_roll = WeaponsDamageRolls.D6x2
+        self.weight = 6
+        self.value = 50
 
 
 class Halberd(AbstractWeapon):
-    def base_stats(self) -> WeaponsStats:
-        return WeaponsStats(
-            name="Halberd",
-            ability=Ability.STRENGTH,
-            properties=[
-                WeaponProperty.HEAVY,
-                WeaponProperty.REACH,
-                WeaponProperty.TWO_HANDED,
-            ],
-            mastery=WeaponMastery.CLEAVE,
-            weapon_type=WeaponType.MARTIAL_MELEE,
-            damage_type=WeaponsDamageTypes.SLASHING,
-            damage_roll=WeaponsDamageRolls.D10,
-            weight=6,
-            value=20,
-        )
+    def base_stats(self) -> None:
+        self.name = "Halberd"
+        self.ability = Ability.STRENGTH
+        self.properties = [WeaponProperty.HEAVY, WeaponProperty.REACH, WeaponProperty.TWO_HANDED]
+        self.mastery = WeaponMastery.CLEAVE
+        self.weapon_type = WeaponType.MARTIAL_MELEE
+        self.damage_type = WeaponsDamageTypes.SLASHING
+        self.damage_roll = WeaponsDamageRolls.D10
+        self.weight = 6
+        self.value = 20
 
 
 class Lance(AbstractWeapon):
-    def base_stats(self) -> WeaponsStats:
-        return WeaponsStats(
-            name="Lance",
-            ability=Ability.STRENGTH,
-            properties=[
-                WeaponProperty.HEAVY,
-                WeaponProperty.REACH,
-                WeaponProperty.TWO_HANDED,
-            ],
-            mastery=WeaponMastery.TOPPLE,
-            weapon_type=WeaponType.MARTIAL_MELEE,
-            damage_type=WeaponsDamageTypes.PIERCING,
-            damage_roll=WeaponsDamageRolls.D10,
-            weight=6,
-            value=10,
-        )
+    def base_stats(self) -> None:
+        self.name = "Lance"
+        self.ability = Ability.STRENGTH
+        self.properties = [WeaponProperty.HEAVY, WeaponProperty.REACH, WeaponProperty.TWO_HANDED]
+        self.mastery = WeaponMastery.TOPPLE
+        self.weapon_type = WeaponType.MARTIAL_MELEE
+        self.damage_type = WeaponsDamageTypes.PIERCING
+        self.damage_roll = WeaponsDamageRolls.D10
+        self.weight = 6
+        self.value = 10
 
 
 class Longsword(AbstractWeapon):
-    def base_stats(self) -> WeaponsStats:
-        return WeaponsStats(
-            name="Longsword",
-            ability=Ability.STRENGTH,
-            properties=[WeaponProperty.VERSATILE_10],
-            mastery=WeaponMastery.SAP,
-            weapon_type=WeaponType.MARTIAL_MELEE,
-            damage_type=WeaponsDamageTypes.SLASHING,
-            damage_roll=WeaponsDamageRolls.D8,
-            weight=3,
-            value=15,
-        )
+    def base_stats(self) -> None:
+        self.name = "Longsword"
+        self.ability = Ability.STRENGTH
+        self.properties = [WeaponProperty.VERSATILE_10]
+        self.mastery = WeaponMastery.SAP
+        self.weapon_type = WeaponType.MARTIAL_MELEE
+        self.damage_type = WeaponsDamageTypes.SLASHING
+        self.damage_roll = WeaponsDamageRolls.D8
+        self.weight = 3
+        self.value = 15
 
 
 class Maul(AbstractWeapon):
-    def base_stats(self) -> WeaponsStats:
-        return WeaponsStats(
-            name="Maul",
-            ability=Ability.STRENGTH,
-            properties=[WeaponProperty.HEAVY, WeaponProperty.TWO_HANDED],
-            mastery=WeaponMastery.TOPPLE,
-            weapon_type=WeaponType.MARTIAL_MELEE,
-            damage_type=WeaponsDamageTypes.BLUDGEONING,
-            damage_roll=WeaponsDamageRolls.D6x2,
-            weight=10,
-            value=10,
-        )
+    def base_stats(self) -> None:
+        self.name = "Maul"
+        self.ability = Ability.STRENGTH
+        self.properties = [WeaponProperty.HEAVY, WeaponProperty.TWO_HANDED]
+        self.mastery = WeaponMastery.TOPPLE
+        self.weapon_type = WeaponType.MARTIAL_MELEE
+        self.damage_type = WeaponsDamageTypes.BLUDGEONING
+        self.damage_roll = WeaponsDamageRolls.D6x2
+        self.weight = 10
+        self.value = 10
 
 
 class Morningstar(AbstractWeapon):
-    def base_stats(self) -> WeaponsStats:
-        return WeaponsStats(
-            name="Morningstar",
-            ability=Ability.STRENGTH,
-            properties=[],
-            mastery=WeaponMastery.SAP,
-            weapon_type=WeaponType.MARTIAL_MELEE,
-            damage_type=WeaponsDamageTypes.PIERCING,
-            damage_roll=WeaponsDamageRolls.D8,
-            weight=4,
-            value=15,
-        )
+    def base_stats(self) -> None:
+        self.name = "Morningstar"
+        self.ability = Ability.STRENGTH
+        self.properties = []
+        self.mastery = WeaponMastery.SAP
+        self.weapon_type = WeaponType.MARTIAL_MELEE
+        self.damage_type = WeaponsDamageTypes.PIERCING
+        self.damage_roll = WeaponsDamageRolls.D8
+        self.weight = 4
+        self.value = 15
 
 
 class Pike(AbstractWeapon):
-    def base_stats(self) -> WeaponsStats:
-        return WeaponsStats(
-            name="Pike",
-            ability=Ability.STRENGTH,
-            properties=[
-                WeaponProperty.HEAVY,
-                WeaponProperty.REACH,
-                WeaponProperty.TWO_HANDED,
-            ],
-            mastery=WeaponMastery.PUSH,
-            weapon_type=WeaponType.MARTIAL_MELEE,
-            damage_type=WeaponsDamageTypes.PIERCING,
-            damage_roll=WeaponsDamageRolls.D10,
-            weight=18,
-            value=5,
-        )
+    def base_stats(self) -> None:
+        self.name = "Pike"
+        self.ability = Ability.STRENGTH
+        self.properties = [WeaponProperty.HEAVY, WeaponProperty.REACH, WeaponProperty.TWO_HANDED]
+        self.mastery = WeaponMastery.PUSH
+        self.weapon_type = WeaponType.MARTIAL_MELEE
+        self.damage_type = WeaponsDamageTypes.PIERCING
+        self.damage_roll = WeaponsDamageRolls.D10
+        self.weight = 18
+        self.value = 5
 
 
 class Rapier(AbstractWeapon):
-    def base_stats(self) -> WeaponsStats:
-        return WeaponsStats(
-            name="Rapier",
-            ability=Ability.STRENGTH,
-            properties=[WeaponProperty.FINESSE],
-            mastery=WeaponMastery.VEX,
-            weapon_type=WeaponType.MARTIAL_MELEE,
-            damage_type=WeaponsDamageTypes.PIERCING,
-            damage_roll=WeaponsDamageRolls.D8,
-            weight=2,
-            value=25,
-        )
+    def base_stats(self) -> None:
+        self.name = "Rapier"
+        self.ability = Ability.STRENGTH
+        self.properties = [WeaponProperty.FINESSE]
+        self.mastery = WeaponMastery.VEX
+        self.weapon_type = WeaponType.MARTIAL_MELEE
+        self.damage_type = WeaponsDamageTypes.PIERCING
+        self.damage_roll = WeaponsDamageRolls.D8
+        self.weight = 2
+        self.value = 25
 
 
 class Scimitar(AbstractWeapon):
-    def base_stats(self) -> WeaponsStats:
-        return WeaponsStats(
-            name="Scimitar",
-            ability=Ability.STRENGTH,
-            properties=[WeaponProperty.FINESSE, WeaponProperty.LIGHT],
-            mastery=WeaponMastery.NICK,
-            weapon_type=WeaponType.MARTIAL_MELEE,
-            damage_type=WeaponsDamageTypes.SLASHING,
-            damage_roll=WeaponsDamageRolls.D6,
-            weight=3,
-            value=25,
-        )
+    def base_stats(self) -> None:
+        self.name = "Scimitar"
+        self.ability = Ability.STRENGTH
+        self.properties = [WeaponProperty.FINESSE, WeaponProperty.LIGHT]
+        self.mastery = WeaponMastery.NICK
+        self.weapon_type = WeaponType.MARTIAL_MELEE
+        self.damage_type = WeaponsDamageTypes.SLASHING
+        self.damage_roll = WeaponsDamageRolls.D6
+        self.weight = 3
+        self.value = 25
 
 
 class Shortsword(AbstractWeapon):
-    def base_stats(self) -> WeaponsStats:
-        return WeaponsStats(
-            name="Shortsword",
-            ability=Ability.STRENGTH,
-            properties=[WeaponProperty.FINESSE, WeaponProperty.LIGHT],
-            mastery=WeaponMastery.VEX,
-            weapon_type=WeaponType.MARTIAL_MELEE,
-            damage_type=WeaponsDamageTypes.PIERCING,
-            damage_roll=WeaponsDamageRolls.D6,
-            weight=2,
-            value=25,
-        )
+    def base_stats(self) -> None:
+        self.name = "Shortsword"
+        self.ability = Ability.STRENGTH
+        self.properties = [WeaponProperty.FINESSE, WeaponProperty.LIGHT]
+        self.mastery = WeaponMastery.VEX
+        self.weapon_type = WeaponType.MARTIAL_MELEE
+        self.damage_type = WeaponsDamageTypes.PIERCING
+        self.damage_roll = WeaponsDamageRolls.D6
+        self.weight = 2
+        self.value = 25
 
 
 class Trident(AbstractWeapon):
-    def base_stats(self) -> WeaponsStats:
-        return WeaponsStats(
-            name="Trident",
-            ability=Ability.STRENGTH,
-            properties=[WeaponProperty.THROWN, WeaponProperty.VERSATILE_10],
-            mastery=WeaponMastery.TOPPLE,
-            weapon_type=WeaponType.MARTIAL_MELEE,
-            damage_type=WeaponsDamageTypes.PIERCING,
-            damage_roll=WeaponsDamageRolls.D8,
-            weight=4,
-            value=5,
-        )
+    def base_stats(self) -> None:
+        self.name = "Trident"
+        self.ability = Ability.STRENGTH
+        self.properties = [WeaponProperty.THROWN, WeaponProperty.VERSATILE_10]
+        self.mastery = WeaponMastery.TOPPLE
+        self.weapon_type = WeaponType.MARTIAL_MELEE
+        self.damage_type = WeaponsDamageTypes.PIERCING
+        self.damage_roll = WeaponsDamageRolls.D8
+        self.weight = 4
+        self.value = 5
 
 
 class Warhammer(AbstractWeapon):
-    def base_stats(self) -> WeaponsStats:
-        return WeaponsStats(
-            name="Warhammer",
-            ability=Ability.STRENGTH,
-            properties=[WeaponProperty.VERSATILE_10],
-            mastery=WeaponMastery.PUSH,
-            weapon_type=WeaponType.MARTIAL_MELEE,
-            damage_type=WeaponsDamageTypes.BLUDGEONING,
-            damage_roll=WeaponsDamageRolls.D8,
-            weight=2,
-            value=15,
-        )
+    def base_stats(self) -> None:
+        self.name = "Warhammer"
+        self.ability = Ability.STRENGTH
+        self.properties = [WeaponProperty.VERSATILE_10]
+        self.mastery = WeaponMastery.PUSH
+        self.weapon_type = WeaponType.MARTIAL_MELEE
+        self.damage_type = WeaponsDamageTypes.BLUDGEONING
+        self.damage_roll = WeaponsDamageRolls.D8
+        self.weight = 2
+        self.value = 15
 
 
 class WarPick(AbstractWeapon):
-    def base_stats(self) -> WeaponsStats:
-        return WeaponsStats(
-            name="WarPick",
-            ability=Ability.STRENGTH,
-            properties=[WeaponProperty.VERSATILE_10],
-            mastery=WeaponMastery.SAP,
-            weapon_type=WeaponType.MARTIAL_MELEE,
-            damage_type=WeaponsDamageTypes.PIERCING,
-            damage_roll=WeaponsDamageRolls.D8,
-            weight=2,
-            value=5,
-        )
+    def base_stats(self) -> None:
+        self.name = "WarPick"
+        self.ability = Ability.STRENGTH
+        self.properties = [WeaponProperty.VERSATILE_10]
+        self.mastery = WeaponMastery.SAP
+        self.weapon_type = WeaponType.MARTIAL_MELEE
+        self.damage_type = WeaponsDamageTypes.PIERCING
+        self.damage_roll = WeaponsDamageRolls.D8
+        self.weight = 2
+        self.value = 5
 
 
 class Whip(AbstractWeapon):
-    def base_stats(self) -> WeaponsStats:
-        return WeaponsStats(
-            name="Whip",
-            ability=Ability.STRENGTH,
-            properties=[WeaponProperty.FINESSE, WeaponProperty.REACH],
-            mastery=WeaponMastery.SLOW,
-            weapon_type=WeaponType.MARTIAL_MELEE,
-            damage_type=WeaponsDamageTypes.SLASHING,
-            damage_roll=WeaponsDamageRolls.D4,
-            weight=3,
-            value=2,
-        )
+    def base_stats(self) -> None:
+        self.name = "Whip"
+        self.ability = Ability.STRENGTH
+        self.properties = [WeaponProperty.FINESSE, WeaponProperty.REACH]
+        self.mastery = WeaponMastery.SLOW
+        self.weapon_type = WeaponType.MARTIAL_MELEE
+        self.damage_type = WeaponsDamageTypes.SLASHING
+        self.damage_roll = WeaponsDamageRolls.D4
+        self.weight = 3
+        self.value = 2
 
 
 class Club(AbstractWeapon):
-    def base_stats(self) -> WeaponsStats:
-        return WeaponsStats(
-            name="Club",
-            ability=Ability.STRENGTH,
-            properties=[WeaponProperty.LIGHT],
-            mastery=WeaponMastery.SLOW,
-            weapon_type=WeaponType.SIMPLE_MELEE,
-            damage_type=WeaponsDamageTypes.BLUDGEONING,
-            damage_roll=WeaponsDamageRolls.D4,
-            weight=2,
-            value=0.1,
-        )
+    def base_stats(self) -> None:
+        self.name = "Club"
+        self.ability = Ability.STRENGTH
+        self.properties = [WeaponProperty.LIGHT]
+        self.mastery = WeaponMastery.SLOW
+        self.weapon_type = WeaponType.SIMPLE_MELEE
+        self.damage_type = WeaponsDamageTypes.BLUDGEONING
+        self.damage_roll = WeaponsDamageRolls.D4
+        self.weight = 2
+        self.value = 0.1
 
 
 class Dagger(AbstractWeapon):
-    def base_stats(self) -> WeaponsStats:
-        return WeaponsStats(
-            name="Dagger",
-            ability=Ability.STRENGTH,
-            properties=[
-                WeaponProperty.FINESSE,
-                WeaponProperty.LIGHT,
-                WeaponProperty.THROWN,
-            ],
-            mastery=WeaponMastery.NICK,
-            weapon_type=WeaponType.SIMPLE_MELEE,
-            damage_type=WeaponsDamageTypes.PIERCING,
-            damage_roll=WeaponsDamageRolls.D4,
-            weight=1,
-            value=2,
-        )
+    def base_stats(self) -> None:
+        self.name = "Dagger"
+        self.ability = Ability.STRENGTH
+        self.properties = [WeaponProperty.FINESSE, WeaponProperty.LIGHT, WeaponProperty.THROWN]
+        self.mastery = WeaponMastery.NICK
+        self.weapon_type = WeaponType.SIMPLE_MELEE
+        self.damage_type = WeaponsDamageTypes.PIERCING
+        self.damage_roll = WeaponsDamageRolls.D4
+        self.weight = 1
+        self.value = 2
 
 
 class Greatclub(AbstractWeapon):
-    def base_stats(self) -> WeaponsStats:
-        return WeaponsStats(
-            name="Greatclub",
-            ability=Ability.STRENGTH,
-            properties=[WeaponProperty.HEAVY, WeaponProperty.TWO_HANDED],
-            mastery=WeaponMastery.PUSH,
-            weapon_type=WeaponType.SIMPLE_MELEE,
-            damage_type=WeaponsDamageTypes.BLUDGEONING,
-            damage_roll=WeaponsDamageRolls.D8,
-            weight=5,
-            value=0.2,
-        )
+    def base_stats(self) -> None:
+        self.name = "Greatclub"
+        self.ability = Ability.STRENGTH
+        self.properties = [WeaponProperty.HEAVY, WeaponProperty.TWO_HANDED]
+        self.mastery = WeaponMastery.PUSH
+        self.weapon_type = WeaponType.SIMPLE_MELEE
+        self.damage_type = WeaponsDamageTypes.BLUDGEONING
+        self.damage_roll = WeaponsDamageRolls.D8
+        self.weight = 5
+        self.value = 0.2
 
 
 class Handaxe(AbstractWeapon):
-    def base_stats(self) -> WeaponsStats:
-        return WeaponsStats(
-            name="Handaxe",
-            ability=Ability.STRENGTH,
-            properties=[WeaponProperty.LIGHT, WeaponProperty.THROWN],
-            mastery=WeaponMastery.VEX,
-            weapon_type=WeaponType.SIMPLE_MELEE,
-            damage_type=WeaponsDamageTypes.SLASHING,
-            damage_roll=WeaponsDamageRolls.D6,
-            weight=2,
-            value=5,
-        )
+    def base_stats(self) -> None:
+        self.name = "Handaxe"
+        self.ability = Ability.STRENGTH
+        self.properties = [WeaponProperty.LIGHT, WeaponProperty.THROWN]
+        self.mastery = WeaponMastery.VEX
+        self.weapon_type = WeaponType.SIMPLE_MELEE
+        self.damage_type = WeaponsDamageTypes.SLASHING
+        self.damage_roll = WeaponsDamageRolls.D6
+        self.weight = 2
+        self.value = 5
 
 
 class Javelin(AbstractWeapon):
-    def base_stats(self) -> WeaponsStats:
-        return WeaponsStats(
-            name="Javelin",
-            ability=Ability.STRENGTH,
-            properties=[WeaponProperty.THROWN],
-            mastery=WeaponMastery.SLOW,
-            weapon_type=WeaponType.SIMPLE_MELEE,
-            damage_type=WeaponsDamageTypes.PIERCING,
-            damage_roll=WeaponsDamageRolls.D6,
-            weight=2,
-            value=0.5,
-        )
+    def base_stats(self) -> None:
+        self.name = "Javelin"
+        self.ability = Ability.STRENGTH
+        self.properties = [WeaponProperty.THROWN]
+        self.mastery = WeaponMastery.SLOW
+        self.weapon_type = WeaponType.SIMPLE_MELEE
+        self.damage_type = WeaponsDamageTypes.PIERCING
+        self.damage_roll = WeaponsDamageRolls.D6
+        self.weight = 2
+        self.value = 0.5
 
 
 class LightHammer(AbstractWeapon):
-    def base_stats(self) -> WeaponsStats:
-        return WeaponsStats(
-            name="Light Hammer",
-            ability=Ability.STRENGTH,
-            properties=[WeaponProperty.LIGHT, WeaponProperty.THROWN],
-            mastery=WeaponMastery.NICK,
-            weapon_type=WeaponType.SIMPLE_MELEE,
-            damage_type=WeaponsDamageTypes.BLUDGEONING,
-            damage_roll=WeaponsDamageRolls.D4,
-            weight=2,
-            value=2,
-        )
+    def base_stats(self) -> None:
+        self.name = "Light Hammer"
+        self.ability = Ability.STRENGTH
+        self.properties = [WeaponProperty.LIGHT, WeaponProperty.THROWN]
+        self.mastery = WeaponMastery.NICK
+        self.weapon_type = WeaponType.SIMPLE_MELEE
+        self.damage_type = WeaponsDamageTypes.BLUDGEONING
+        self.damage_roll = WeaponsDamageRolls.D4
+        self.weight = 2
+        self.value = 2
 
 
 class Mace(AbstractWeapon):
-    def base_stats(self) -> WeaponsStats:
-        return WeaponsStats(
-            name="Mace",
-            ability=Ability.STRENGTH,
-            properties=[],
-            mastery=WeaponMastery.SAP,
-            weapon_type=WeaponType.SIMPLE_MELEE,
-            damage_type=WeaponsDamageTypes.BLUDGEONING,
-            damage_roll=WeaponsDamageRolls.D6,
-            weight=4,
-            value=5,
-        )
+    def base_stats(self) -> None:
+        self.name = "Mace"
+        self.ability = Ability.STRENGTH
+        self.properties = []
+        self.mastery = WeaponMastery.SAP
+        self.weapon_type = WeaponType.SIMPLE_MELEE
+        self.damage_type = WeaponsDamageTypes.BLUDGEONING
+        self.damage_roll = WeaponsDamageRolls.D6
+        self.weight = 4
+        self.value = 5
 
 
 class Quarterstaff(AbstractWeapon):
-    def base_stats(self) -> WeaponsStats:
-        return WeaponsStats(
-            name="Quarterstaff",
-            ability=Ability.STRENGTH,
-            properties=[WeaponProperty.VERSATILE_8],
-            mastery=WeaponMastery.TOPPLE,
-            weapon_type=WeaponType.SIMPLE_MELEE,
-            damage_type=WeaponsDamageTypes.BLUDGEONING,
-            damage_roll=WeaponsDamageRolls.D6,
-            weight=4,
-            value=0.2,
-        )
+    def base_stats(self) -> None:
+        self.name = "Quarterstaff"
+        self.ability = Ability.STRENGTH
+        self.properties = [WeaponProperty.VERSATILE_8]
+        self.mastery = WeaponMastery.TOPPLE
+        self.weapon_type = WeaponType.SIMPLE_MELEE
+        self.damage_type = WeaponsDamageTypes.BLUDGEONING
+        self.damage_roll = WeaponsDamageRolls.D6
+        self.weight = 4
+        self.value = 0.2
 
 
 class Sickle(AbstractWeapon):
-    def base_stats(self) -> WeaponsStats:
-        return WeaponsStats(
-            name="Sickle",
-            ability=Ability.STRENGTH,
-            properties=[WeaponProperty.LIGHT],
-            mastery=WeaponMastery.NICK,
-            weapon_type=WeaponType.SIMPLE_MELEE,
-            damage_type=WeaponsDamageTypes.SLASHING,
-            damage_roll=WeaponsDamageRolls.D4,
-            weight=2,
-            value=1,
-        )
+    def base_stats(self) -> None:
+        self.name = "Sickle"
+        self.ability = Ability.STRENGTH
+        self.properties = [WeaponProperty.LIGHT]
+        self.mastery = WeaponMastery.NICK
+        self.weapon_type = WeaponType.SIMPLE_MELEE
+        self.damage_type = WeaponsDamageTypes.SLASHING
+        self.damage_roll = WeaponsDamageRolls.D4
+        self.weight = 2
+        self.value = 1
 
 
 class Spear(AbstractWeapon):
-    def base_stats(self) -> WeaponsStats:
-        return WeaponsStats(
-            name="Spear",
-            ability=Ability.STRENGTH,
-            properties=[WeaponProperty.VERSATILE_8, WeaponProperty.THROWN],
-            mastery=WeaponMastery.SAP,
-            weapon_type=WeaponType.SIMPLE_MELEE,
-            damage_type=WeaponsDamageTypes.PIERCING,
-            damage_roll=WeaponsDamageRolls.D6,
-            weight=3,
-            value=1,
-        )
+    def base_stats(self) -> None:
+        self.name = "Spear"
+        self.ability = Ability.STRENGTH
+        self.properties = [WeaponProperty.VERSATILE_8, WeaponProperty.THROWN]
+        self.mastery = WeaponMastery.SAP
+        self.weapon_type = WeaponType.SIMPLE_MELEE
+        self.damage_type = WeaponsDamageTypes.PIERCING
+        self.damage_roll = WeaponsDamageRolls.D6
+        self.weight = 3
+        self.value = 1
 
 
 class Dart(AbstractWeapon):
-    def base_stats(self) -> WeaponsStats:
-        return WeaponsStats(
-            name="Dart",
-            ability=Ability.DEXTERITY,
-            properties=[WeaponProperty.FINESSE, WeaponProperty.THROWN],
-            mastery=WeaponMastery.VEX,
-            weapon_type=WeaponType.SIMPLE_RANGED,
-            damage_type=WeaponsDamageTypes.PIERCING,
-            damage_roll=WeaponsDamageRolls.D4,
-            weight=0.25,
-            value=0.05,
-        )
+    def base_stats(self) -> None:
+        self.name = "Dart"
+        self.ability = Ability.DEXTERITY
+        self.properties = [WeaponProperty.FINESSE, WeaponProperty.THROWN]
+        self.mastery = WeaponMastery.VEX
+        self.weapon_type = WeaponType.SIMPLE_RANGED
+        self.damage_type = WeaponsDamageTypes.PIERCING
+        self.damage_roll = WeaponsDamageRolls.D4
+        self.weight = 0.25
+        self.value = 0.05
 
 
 class LightCrossbow(AbstractWeapon):
-    def base_stats(self) -> WeaponsStats:
-        return WeaponsStats(
-            name="Light Crossbow",
-            ability=Ability.DEXTERITY,
-            properties=[
-                WeaponProperty.AMMUNITION,
-                WeaponProperty.TWO_HANDED,
-                WeaponProperty.LOADING,
-            ],
-            mastery=WeaponMastery.SLOW,
-            weapon_type=WeaponType.SIMPLE_RANGED,
-            damage_type=WeaponsDamageTypes.PIERCING,
-            damage_roll=WeaponsDamageRolls.D8,
-            weight=5,
-            value=25,
-        )
+    def base_stats(self) -> None:
+        self.name = "Light Crossbow"
+        self.ability = Ability.DEXTERITY
+        self.properties = [WeaponProperty.AMMUNITION, WeaponProperty.TWO_HANDED, WeaponProperty.LOADING]
+        self.mastery = WeaponMastery.SLOW
+        self.weapon_type = WeaponType.SIMPLE_RANGED
+        self.damage_type = WeaponsDamageTypes.PIERCING
+        self.damage_roll = WeaponsDamageRolls.D8
+        self.weight = 5
+        self.value = 25
 
 
 class Shortbow(AbstractWeapon):
-    def base_stats(self) -> WeaponsStats:
-        return WeaponsStats(
-            name="Shortbow",
-            ability=Ability.DEXTERITY,
-            properties=[WeaponProperty.AMMUNITION, WeaponProperty.TWO_HANDED],
-            mastery=WeaponMastery.VEX,
-            weapon_type=WeaponType.SIMPLE_RANGED,
-            damage_type=WeaponsDamageTypes.PIERCING,
-            damage_roll=WeaponsDamageRolls.D6,
-            weight=2,
-            value=25,
-        )
+    def base_stats(self) -> None:
+        self.name = "Shortbow"
+        self.ability = Ability.DEXTERITY
+        self.properties = [WeaponProperty.AMMUNITION, WeaponProperty.TWO_HANDED]
+        self.mastery = WeaponMastery.VEX
+        self.weapon_type = WeaponType.SIMPLE_RANGED
+        self.damage_type = WeaponsDamageTypes.PIERCING
+        self.damage_roll = WeaponsDamageRolls.D6
+        self.weight = 2
+        self.value = 25
 
 
 class Sling(AbstractWeapon):
-    def base_stats(self) -> WeaponsStats:
-        return WeaponsStats(
-            name="Sling",
-            ability=Ability.DEXTERITY,
-            properties=[WeaponProperty.AMMUNITION],
-            mastery=WeaponMastery.SLOW,
-            weapon_type=WeaponType.SIMPLE_RANGED,
-            damage_type=WeaponsDamageTypes.BLUDGEONING,
-            damage_roll=WeaponsDamageRolls.D4,
-            value=0.1,
-        )
+    def base_stats(self) -> None:
+        self.name = "Sling"
+        self.ability = Ability.DEXTERITY
+        self.properties = [WeaponProperty.AMMUNITION]
+        self.mastery = WeaponMastery.SLOW
+        self.weapon_type = WeaponType.SIMPLE_RANGED
+        self.damage_type = WeaponsDamageTypes.BLUDGEONING
+        self.damage_roll = WeaponsDamageRolls.D4
+        self.value = 0.1
 
 
 class Blowgun(AbstractWeapon):
-    def base_stats(self) -> WeaponsStats:
-        return WeaponsStats(
-            name="Blowgun",
-            ability=Ability.DEXTERITY,
-            properties=[WeaponProperty.AMMUNITION, WeaponProperty.LOADING],
-            mastery=WeaponMastery.VEX,
-            weapon_type=WeaponType.MARTIAL_RANGED,
-            damage_type=WeaponsDamageTypes.PIERCING,
-            damage_roll=WeaponsDamageRolls.D1,
-            weight=1,
-            value=10,
-        )
+    def base_stats(self) -> None:
+        self.name = "Blowgun"
+        self.ability = Ability.DEXTERITY
+        self.properties = [WeaponProperty.AMMUNITION, WeaponProperty.LOADING]
+        self.mastery = WeaponMastery.VEX
+        self.weapon_type = WeaponType.MARTIAL_RANGED
+        self.damage_type = WeaponsDamageTypes.PIERCING
+        self.damage_roll = WeaponsDamageRolls.D1
+        self.weight = 1
+        self.value = 10
 
 
 class HandCrossbow(AbstractWeapon):
-    def base_stats(self) -> WeaponsStats:
-        return WeaponsStats(
-            name="Hand Crossbow",
-            ability=Ability.DEXTERITY,
-            properties=[
-                WeaponProperty.AMMUNITION,
-                WeaponProperty.LIGHT,
-                WeaponProperty.LOADING,
-            ],
-            mastery=WeaponMastery.VEX,
-            weapon_type=WeaponType.MARTIAL_RANGED,
-            damage_type=WeaponsDamageTypes.PIERCING,
-            damage_roll=WeaponsDamageRolls.D6,
-            weight=3,
-            value=75,
-        )
+    def base_stats(self) -> None:
+        self.name = "Hand Crossbow"
+        self.ability = Ability.DEXTERITY
+        self.properties = [WeaponProperty.AMMUNITION, WeaponProperty.LIGHT, WeaponProperty.LOADING]
+        self.mastery = WeaponMastery.VEX
+        self.weapon_type = WeaponType.MARTIAL_RANGED
+        self.damage_type = WeaponsDamageTypes.PIERCING
+        self.damage_roll = WeaponsDamageRolls.D6
+        self.weight = 3
+        self.value = 75
 
 
 class HeavyCrossbow(AbstractWeapon):
-    def base_stats(self) -> WeaponsStats:
-        return WeaponsStats(
-            name="Heavy Crossbow",
-            ability=Ability.DEXTERITY,
-            properties=[
-                WeaponProperty.AMMUNITION,
-                WeaponProperty.HEAVY,
-                WeaponProperty.LOADING,
-                WeaponProperty.TWO_HANDED,
-            ],
-            mastery=WeaponMastery.SLOW,
-            weapon_type=WeaponType.MARTIAL_RANGED,
-            damage_type=WeaponsDamageTypes.PIERCING,
-            damage_roll=WeaponsDamageRolls.D10,
-            weight=18,
-            value=50,
-        )
+    def base_stats(self) -> None:
+        self.name = "Heavy Crossbow"
+        self.ability = Ability.DEXTERITY
+        self.properties = [
+            WeaponProperty.AMMUNITION,
+            WeaponProperty.HEAVY,
+            WeaponProperty.LOADING,
+            WeaponProperty.TWO_HANDED,
+        ]
+        self.mastery = WeaponMastery.SLOW
+        self.weapon_type = WeaponType.MARTIAL_RANGED
+        self.damage_type = WeaponsDamageTypes.PIERCING
+        self.damage_roll = WeaponsDamageRolls.D10
+        self.weight = 18
+        self.value = 50
 
 
 class Longbow(AbstractWeapon):
-    def base_stats(self) -> WeaponsStats:
-        return WeaponsStats(
-            name="Longbow",
-            ability=Ability.DEXTERITY,
-            properties=[
-                WeaponProperty.AMMUNITION,
-                WeaponProperty.HEAVY,
-                WeaponProperty.TWO_HANDED,
-            ],
-            mastery=WeaponMastery.SLOW,
-            weapon_type=WeaponType.MARTIAL_RANGED,
-            damage_type=WeaponsDamageTypes.PIERCING,
-            damage_roll=WeaponsDamageRolls.D8,
-            weight=2,
-            value=50,
-        )
+    def base_stats(self) -> None:
+        self.name = "Longbow"
+        self.ability = Ability.DEXTERITY
+        self.properties = [WeaponProperty.AMMUNITION, WeaponProperty.HEAVY, WeaponProperty.TWO_HANDED]
+        self.mastery = WeaponMastery.SLOW
+        self.weapon_type = WeaponType.MARTIAL_RANGED
+        self.damage_type = WeaponsDamageTypes.PIERCING
+        self.damage_roll = WeaponsDamageRolls.D8
+        self.weight = 2
+        self.value = 50
 
 
 class Musket(AbstractWeapon):
-    def base_stats(self) -> WeaponsStats:
-        return WeaponsStats(
-            name="Musket",
-            ability=Ability.DEXTERITY,
-            properties=[
-                WeaponProperty.AMMUNITION,
-                WeaponProperty.LOADING,
-                WeaponProperty.TWO_HANDED,
-            ],
-            mastery=WeaponMastery.SLOW,
-            weapon_type=WeaponType.MARTIAL_RANGED,
-            damage_type=WeaponsDamageTypes.PIERCING,
-            damage_roll=WeaponsDamageRolls.D12,
-            weight=10,
-            value=500,
-        )
+    def base_stats(self) -> None:
+        self.name = "Musket"
+        self.ability = Ability.DEXTERITY
+        self.properties = [WeaponProperty.AMMUNITION, WeaponProperty.LOADING, WeaponProperty.TWO_HANDED]
+        self.mastery = WeaponMastery.SLOW
+        self.weapon_type = WeaponType.MARTIAL_RANGED
+        self.damage_type = WeaponsDamageTypes.PIERCING
+        self.damage_roll = WeaponsDamageRolls.D12
+        self.weight = 10
+        self.value = 500
 
 
 class Pistol(AbstractWeapon):
-    def base_stats(self) -> WeaponsStats:
-        return WeaponsStats(
-            name="Pistol",
-            ability=Ability.DEXTERITY,
-            properties=[WeaponProperty.AMMUNITION, WeaponProperty.LOADING],
-            mastery=WeaponMastery.VEX,
-            weapon_type=WeaponType.MARTIAL_RANGED,
-            damage_type=WeaponsDamageTypes.PIERCING,
-            damage_roll=WeaponsDamageRolls.D10,
-            weight=3,
-            value=250,
-        )
+    def base_stats(self) -> None:
+        self.name = "Pistol"
+        self.ability = Ability.DEXTERITY
+        self.properties = [WeaponProperty.AMMUNITION, WeaponProperty.LOADING]
+        self.mastery = WeaponMastery.VEX
+        self.weapon_type = WeaponType.MARTIAL_RANGED
+        self.damage_type = WeaponsDamageTypes.PIERCING
+        self.damage_roll = WeaponsDamageRolls.D10
+        self.weight = 3
+        self.value = 250
 
 
 ### HOMEBREW WEAPONS
 
 
 class Nullblade(AbstractWeapon):
-    def base_stats(self) -> WeaponsStats:
+    def base_stats(self) -> None:
         description = (
             "Antimagic Edge. When you attack with this weapon:\n"
             "    * Ignore AC bonuses granted by spells or magical effects.\n"
@@ -1319,21 +1082,19 @@ class Nullblade(AbstractWeapon):
             "    * Ignore disadvantage imposed by magical effects.\n"
             "The Nullblade counts as nonmagical for interactions with magical effects."
         )
-        return WeaponsStats(
-            name="Nullblade",
-            ability=Ability.STRENGTH,
-            properties=[WeaponProperty.VERSATILE_10],
-            mastery=WeaponMastery.GRAZE,
-            weapon_type=WeaponType.MARTIAL_MELEE,
-            damage_type=WeaponsDamageTypes.SLASHING,
-            damage_roll=WeaponsDamageRolls.D8,
-            additional_description=description,
-            is_homebrew=True,
-        )
+        self.name = "Nullblade"
+        self.ability = Ability.STRENGTH
+        self.properties = [WeaponProperty.VERSATILE_10]
+        self.mastery = WeaponMastery.GRAZE
+        self.weapon_type = WeaponType.MARTIAL_MELEE
+        self.damage_type = WeaponsDamageTypes.SLASHING
+        self.damage_roll = WeaponsDamageRolls.D8
+        self.description_text = description
+        self.is_homebrew = True
 
 
 class Bloodletter(AbstractWeapon):
-    def base_stats(self) -> WeaponsStats:
+    def base_stats(self) -> None:
         description = (
             "Wounds from this blade refuse to close.\n"
             "On hit, the target must succeed on a CON save "
@@ -1342,185 +1103,167 @@ class Bloodletter(AbstractWeapon):
             "It can repeat the save at the end of its turn, or the effect ends "
             "if it receives magical healing or an ally uses an action to staunch the wound."
         )
-        return WeaponsStats(
-            name="Bloodletter",
-            ability=Ability.STRENGTH,
-            properties=[],
-            mastery=WeaponMastery.GRAZE,
-            weapon_type=WeaponType.MARTIAL_MELEE,
-            damage_type=WeaponsDamageTypes.SLASHING,
-            damage_roll=WeaponsDamageRolls.D8,
-            additional_description=description,
-            is_homebrew=True,
-        )
+        self.name = "Bloodletter"
+        self.ability = Ability.STRENGTH
+        self.properties = []
+        self.mastery = WeaponMastery.GRAZE
+        self.weapon_type = WeaponType.MARTIAL_MELEE
+        self.damage_type = WeaponsDamageTypes.SLASHING
+        self.damage_roll = WeaponsDamageRolls.D8
+        self.description_text = description
+        self.is_homebrew = True
 
 
 class HuntersHarpoon(AbstractWeapon):
-    def base_stats(self) -> WeaponsStats:
+    def base_stats(self) -> None:
         description = (
             "On hit, you may tether the target (DEX save).\n"
             "While tethered, you may use a bonus action to pull the target 10 ft toward you."
         )
-        return WeaponsStats(
-            name="Hunter’s Harpoon",
-            ability=Ability.STRENGTH,
-            properties=[WeaponProperty.THROWN],
-            mastery=WeaponMastery.SLOW,
-            weapon_type=WeaponType.MARTIAL_MELEE,
-            damage_type=WeaponsDamageTypes.PIERCING,
-            damage_roll=WeaponsDamageRolls.D10,
-            additional_description=description,
-            is_homebrew=True,
-        )
+        self.name = "Hunter’s Harpoon"
+        self.ability = Ability.STRENGTH
+        self.properties = [WeaponProperty.THROWN]
+        self.mastery = WeaponMastery.SLOW
+        self.weapon_type = WeaponType.MARTIAL_MELEE
+        self.damage_type = WeaponsDamageTypes.PIERCING
+        self.damage_roll = WeaponsDamageRolls.D10
+        self.description_text = description
+        self.is_homebrew = True
 
 
 class RicochetBlade(AbstractWeapon):
-    def base_stats(self) -> WeaponsStats:
+    def base_stats(self) -> None:
         description = (
             "On hit, you may bounce the attack to another creature within 5 ft.\n"
             "Make a new attack roll. The new target takes half damage (rounded down).\n"
             "The attack can bounce up to two times."
         )
-        return WeaponsStats(
-            name="Ricochet Blade",
-            ability=Ability.DEXTERITY,
-            properties=[WeaponProperty.FINESSE],
-            mastery=WeaponMastery.NICK,
-            weapon_type=WeaponType.MARTIAL_MELEE,
-            damage_type=WeaponsDamageTypes.SLASHING,
-            damage_roll=WeaponsDamageRolls.D6,
-            additional_description=description,
-            is_homebrew=True,
-        )
+        self.name = "Ricochet Blade"
+        self.ability = Ability.DEXTERITY
+        self.properties = [WeaponProperty.FINESSE]
+        self.mastery = WeaponMastery.NICK
+        self.weapon_type = WeaponType.MARTIAL_MELEE
+        self.damage_type = WeaponsDamageTypes.SLASHING
+        self.damage_roll = WeaponsDamageRolls.D6
+        self.description_text = description
+        self.is_homebrew = True
 
 
 class RampagingBlade(AbstractWeapon):
-    def base_stats(self) -> WeaponsStats:
+    def base_stats(self) -> None:
         description = (
             "Momentum. Each time you hit without missing since your last turn, gain a stack.\n"
             "Each stack grants +1d4 damage (max 5 stacks).\n"
             "Stacks reset if you miss, go a full turn without hitting, or combat ends."
         )
-        return WeaponsStats(
-            name="Rampaging Blade",
-            ability=Ability.STRENGTH,
-            properties=[],
-            mastery=WeaponMastery.CLEAVE,
-            weapon_type=WeaponType.MARTIAL_MELEE,
-            damage_type=WeaponsDamageTypes.SLASHING,
-            damage_roll=WeaponsDamageRolls.D8,
-            additional_description=description,
-            is_homebrew=True,
-        )
+        self.name = "Rampaging Blade"
+        self.ability = Ability.STRENGTH
+        self.properties = []
+        self.mastery = WeaponMastery.CLEAVE
+        self.weapon_type = WeaponType.MARTIAL_MELEE
+        self.damage_type = WeaponsDamageTypes.SLASHING
+        self.damage_roll = WeaponsDamageRolls.D8
+        self.description_text = description
+        self.is_homebrew = True
 
 
 class ElementalSword(AbstractWeapon):
-    def base_stats(self) -> WeaponsStats:
-        return WeaponsStats(
-            name="Elemental Sword",
-            ability=Ability.STRENGTH,
-            properties=[WeaponProperty.VERSATILE_10],
-            mastery=WeaponMastery.GRAZE,
-            weapon_type=WeaponType.MARTIAL_MELEE,
-            damage_type=WeaponsDamageTypes.SLASHING,
-            damage_roll=WeaponsDamageRolls.D8,
-            additional_description=(
-                "As a bonus action, choose acid, cold, fire, lightning, or thunder. "
-                "The weapon deals an extra 1d6 damage of the chosen type on hit."
-            ),
-            extra_damage=[
-                ExtraDamage(
-                    damage_roll=WeaponsDamageRolls.D6,
-                    damage_type=WeaponsDamageTypes.FIRE,
-                    note="chosen type, activate as bonus action"
-                )
-            ],
-            is_homebrew=True,
+    def base_stats(self) -> None:
+        self.name = "Elemental Sword"
+        self.ability = Ability.STRENGTH
+        self.properties = [WeaponProperty.VERSATILE_10]
+        self.mastery = WeaponMastery.GRAZE
+        self.weapon_type = WeaponType.MARTIAL_MELEE
+        self.damage_type = WeaponsDamageTypes.SLASHING
+        self.damage_roll = WeaponsDamageRolls.D8
+        self.description_text = (
+            "As a bonus action, choose acid, cold, fire, lightning, or thunder. "
+            "The weapon deals an extra 1d6 damage of the chosen type on hit."
         )
+        self.extra_damage = [
+            ExtraDamage(
+                damage_roll=WeaponsDamageRolls.D6,
+                damage_type=WeaponsDamageTypes.FIRE,
+                note="chosen type, activate as bonus action",
+            )
+        ]
+        self.is_homebrew = True
 
 
 class BloodlustBlade(AbstractWeapon):
-    def base_stats(self) -> WeaponsStats:
+    def base_stats(self) -> None:
         description = (
             "Predator’s Instinct. You have advantage on attack rolls against bloodied creatures.\n"
             "If a bloodied creature is visible and you attack another target, you have disadvantage.\n"
             "This never applies when targeting allies.\n"
             "A creature is bloodied when at half HP or lower."
         )
-        return WeaponsStats(
-            name="Bloodlust Blade",
-            ability=Ability.STRENGTH,
-            properties=[],
-            mastery=WeaponMastery.GRAZE,
-            weapon_type=WeaponType.MARTIAL_MELEE,
-            damage_type=WeaponsDamageTypes.SLASHING,
-            damage_roll=WeaponsDamageRolls.D8,
-            additional_description=description,
-            is_homebrew=True,
-        )
+        self.name = "Bloodlust Blade"
+        self.ability = Ability.STRENGTH
+        self.properties = []
+        self.mastery = WeaponMastery.GRAZE
+        self.weapon_type = WeaponType.MARTIAL_MELEE
+        self.damage_type = WeaponsDamageTypes.SLASHING
+        self.damage_roll = WeaponsDamageRolls.D8
+        self.description_text = description
+        self.is_homebrew = True
 
 
 class CoinflipCutBlade(AbstractWeapon):
-    def base_stats(self) -> WeaponsStats:
+    def base_stats(self) -> None:
         description = (
             "After you hit, flip a coin:\n"
             "Heads — deal +2d6 force damage.\n"
             "Tails — you take 1d6 force damage."
         )
-        return WeaponsStats(
-            name="Coinflip Cut",
-            ability=Ability.DEXTERITY,
-            properties=[WeaponProperty.FINESSE],
-            mastery=WeaponMastery.NICK,
-            weapon_type=WeaponType.MARTIAL_MELEE,
-            damage_type=WeaponsDamageTypes.SLASHING,
-            damage_roll=WeaponsDamageRolls.D6,
-            additional_description=description,
-            is_homebrew=True,
-        )
+        self.name = "Coinflip Cut"
+        self.ability = Ability.DEXTERITY
+        self.properties = [WeaponProperty.FINESSE]
+        self.mastery = WeaponMastery.NICK
+        self.weapon_type = WeaponType.MARTIAL_MELEE
+        self.damage_type = WeaponsDamageTypes.SLASHING
+        self.damage_roll = WeaponsDamageRolls.D6
+        self.description_text = description
+        self.is_homebrew = True
 
 
 class Sundersteel(AbstractWeapon):
-    def base_stats(self) -> WeaponsStats:
+    def base_stats(self) -> None:
         description = (
             "Damage ignores resistance.\n"
             "Creatures immune to this damage instead take damage as if resistant."
         )
-        return WeaponsStats(
-            name="Sundersteel",
-            ability=Ability.STRENGTH,
-            properties=[WeaponProperty.HEAVY],
-            mastery=WeaponMastery.CLEAVE,
-            weapon_type=WeaponType.MARTIAL_MELEE,
-            damage_type=WeaponsDamageTypes.SLASHING,
-            damage_roll=WeaponsDamageRolls.D12,
-            additional_description=description,
-            is_homebrew=True,
-        )
+        self.name = "Sundersteel"
+        self.ability = Ability.STRENGTH
+        self.properties = [WeaponProperty.HEAVY]
+        self.mastery = WeaponMastery.CLEAVE
+        self.weapon_type = WeaponType.MARTIAL_MELEE
+        self.damage_type = WeaponsDamageTypes.SLASHING
+        self.damage_roll = WeaponsDamageRolls.D12
+        self.description_text = description
+        self.is_homebrew = True
 
 
 class VampiricEdge(AbstractWeapon):
-    def base_stats(self) -> WeaponsStats:
+    def base_stats(self) -> None:
         description = (
             "When you hit a creature, regain 1d4 hit points.\n"
             "You cannot regain more HP than the damage dealt."
         )
-        return WeaponsStats(
-            name="Vampiric Edge",
-            ability=Ability.STRENGTH,
-            properties=[],
-            mastery=WeaponMastery.GRAZE,
-            weapon_type=WeaponType.MARTIAL_MELEE,
-            damage_type=WeaponsDamageTypes.SLASHING,
-            damage_roll=WeaponsDamageRolls.D8,
-            additional_description=description,
-            is_homebrew=True,
-        )
+        self.name = "Vampiric Edge"
+        self.ability = Ability.STRENGTH
+        self.properties = []
+        self.mastery = WeaponMastery.GRAZE
+        self.weapon_type = WeaponType.MARTIAL_MELEE
+        self.damage_type = WeaponsDamageTypes.SLASHING
+        self.damage_roll = WeaponsDamageRolls.D8
+        self.description_text = description
+        self.is_homebrew = True
 
 
 # ──────────────────────────────────────────────────────────────────────────────
 # WeaponSubFeature showcase: one weapon per improvement, demonstrating how
-# `improvements=[...]` composes on top of a weapon's base_stats().
+# `weapon_subfeatures=[...]` composes on top of a weapon's base_stats().
 # ──────────────────────────────────────────────────────────────────────────────
 
 
@@ -1635,17 +1378,17 @@ class LoremastersRapier(Rapier):
     appended to the base weapon's description."""
 
     def setup_improvements(self) -> None:
-        # SetWeaponName/SetWeaponValue/SetHomebrew individually here, rather
+        # SetItemName/SetItemValue/SetItemHomebrew individually here, rather
         # than the Reskin bundle, since Reskin's description would *replace*
         # rather than *append to* the base description below.
-        self.add_improvement(SetWeaponName("Loremaster's Rapier"))
-        self.add_improvement(SetWeaponValue(None))
-        self.add_improvement(SetHomebrew())
+        self.add_improvement(SetItemName("Loremaster's Rapier"))
+        self.add_improvement(SetItemValue(None))
+        self.add_improvement(SetItemHomebrew())
         self.add_improvement(
-            AddWeaponDescription("An inquisitive blade that whispers secrets to its wielder.")
+            AddItemDescription("An inquisitive blade that whispers secrets to its wielder.")
         )
         self.add_improvement(
-            AddWeaponDescription(
+            AddItemDescription(
                 "Once per long rest, you can ask the blade a question about a "
                 "creature it has struck; it answers with a single true fact."
             )
@@ -1681,35 +1424,33 @@ class StormcallerMace(Mace):
 class FlameTongueSword(AbstractWeapon):
     """A magical sword wreathed in flames, dealing extra fire damage on hit."""
 
-    def base_stats(self) -> WeaponsStats:
-        return WeaponsStats(
-            name="Flame Tongue Sword",
-            ability=Ability.STRENGTH,
-            properties=[WeaponProperty.VERSATILE_10],
-            mastery=WeaponMastery.TOPPLE,
-            weapon_type=WeaponType.MARTIAL_MELEE,
-            damage_type=WeaponsDamageTypes.SLASHING,
-            damage_roll=WeaponsDamageRolls.D8,
-            additional_description=(
-                "This sword is wreathed in magical flames. "
-                "It deals an extra 2d6 fire damage on a hit. "
-                "Requires attunement (rare)."
-            ),
-            extra_damage=[
-                ExtraDamage(
-                    damage_roll=WeaponsDamageRolls.D6x2,
-                    damage_type=WeaponsDamageTypes.FIRE,
-                    note="magical flames"
-                )
-            ],
-            rarity=ItemRarity.RARE,
-            requires_attunement=True,
-            subfeatures=[
-                AbilityScoreBonus(
-                    [(Ability.STRENGTH, 1)], total=1, error_prefix="Flame Tongue Sword bonus"
-                )
-            ],
+    def base_stats(self) -> None:
+        self.name = "Flame Tongue Sword"
+        self.ability = Ability.STRENGTH
+        self.properties = [WeaponProperty.VERSATILE_10]
+        self.mastery = WeaponMastery.TOPPLE
+        self.weapon_type = WeaponType.MARTIAL_MELEE
+        self.damage_type = WeaponsDamageTypes.SLASHING
+        self.damage_roll = WeaponsDamageRolls.D8
+        self.description_text = (
+            "This sword is wreathed in magical flames. "
+            "It deals an extra 2d6 fire damage on a hit. "
+            "Requires attunement (rare)."
         )
+        self.extra_damage = [
+            ExtraDamage(
+                damage_roll=WeaponsDamageRolls.D6x2,
+                damage_type=WeaponsDamageTypes.FIRE,
+                note="magical flames",
+            )
+        ]
+        self.rarity = ItemRarity.RARE
+        self.requires_attunement = True
+        self._innate_subfeatures = [
+            AbilityScoreBonus(
+                [(Ability.STRENGTH, 1)], total=1, error_prefix="Flame Tongue Sword bonus"
+            )
+        ]
 
 
 ### Utility functions
@@ -1737,8 +1478,6 @@ def _write_single_weapon(
     character_stat_block: CharacterStatBlock,
     file: TextIO,
 ):
-    stats = weapon.stats()
-
     attack_bonus_int = weapon.calculate_total_attack_roll_bonus_int(
         character_stat_block
     )
@@ -1749,22 +1488,22 @@ def _write_single_weapon(
         damage_bonus_label = "fixed"
     else:
         _, damage_bonus_label = weapon._calculate_ability_modifier_bonus(character_stat_block)
-    damage_roll_str = f"{stats.damage_roll.value} {damage_bonus_int:+} ({damage_bonus_label})"
+    damage_roll_str = f"{weapon.damage_roll.value} {damage_bonus_int:+} ({damage_bonus_label})"
 
     # Add extra damage if present
-    if stats.extra_damage:
-        extra_damages = " + ".join(ed.format_damage() for ed in stats.extra_damage)
+    if weapon.extra_damage:
+        extra_damages = " + ".join(ed.format_damage() for ed in weapon.extra_damage)
         damage_roll_str += f" + {extra_damages}"
 
     proficient_label = "Proficient" if weapon.player_is_proficient else "Not proficient"
 
     prop_names = (
-        ", ".join(p.value for p in stats.properties) if stats.properties else "—"
+        ", ".join(p.value for p in weapon.properties) if weapon.properties else "—"
     )
 
     mastery_label = ""
-    if stats.mastery:
-        mastery_label = stats.mastery.value
+    if weapon.mastery:
+        mastery_label = weapon.mastery.value
         if weapon.player_has_mastery:
             mastery_label += " ✓"
 
@@ -1777,17 +1516,17 @@ def _write_single_weapon(
             wielded_tag = " <span class='wtag wtag-worn'>Wielded</span>"
         else:
             wielded_tag = " <span class='wtag wtag-not-worn'>Not wielded</span>"
-    file.write(f"<tr><th class='weapon-name' colspan='2'>{stats.name}{wielded_tag}</th></tr>\n")
+    file.write(f"<tr><th class='weapon-name' colspan='2'>{weapon.name}{wielded_tag}</th></tr>\n")
 
     # ── Quick-stats row ─────────────────────────────────────────────────────
     # Two cells: left = type/category info, right = roll info
     type_cell = (
-        f"{stats.weapon_type.value}"
+        f"{weapon.weapon_type.value}"
         f"<span class='wsep'>·</span>"
         f"{proficient_label}"
     )
-    damage_type_class = _DAMAGE_TYPE_CSS_CLASS.get(stats.damage_type, "")
-    damage_type_tag = f" <span class='wtag {damage_type_class}'>{stats.damage_type.value}</span>"
+    damage_type_class = _DAMAGE_TYPE_CSS_CLASS.get(weapon.damage_type, "")
+    damage_type_tag = f" <span class='wtag {damage_type_class}'>{weapon.damage_type.value}</span>"
     roll_cell = (
         f"<span class='wlabel'>Attack</span> 1d20 {attack_bonus_str}"
         f"<span class='wsep'>·</span>"
@@ -1832,9 +1571,9 @@ def _write_single_weapon(
     )
 
     # ── Properties row ──────────────────────────────────────────────────────
-    if stats.properties or mastery_label:
+    if weapon.properties or mastery_label:
         tags_html = ""
-        for prop in stats.properties:
+        for prop in weapon.properties:
             tags_html += f"<span class='wtag'>{prop.value}</span> "
         if mastery_label:
             mastery_cls = (
@@ -1851,7 +1590,7 @@ def _write_single_weapon(
         )
 
     # ── Per-property descriptions ────────────────────────────────────────────
-    for prop in stats.properties:
+    for prop in weapon.properties:
         prop_desc_processed = StringUtils.boxes_to_html(prop.description)
         prop_desc_html = prop_desc_processed.replace("\n", "<br>")
         file.write(
@@ -1862,20 +1601,20 @@ def _write_single_weapon(
         )
 
     # ── Mastery description (only if the player has mastery) ────────────────
-    if stats.mastery and weapon.player_has_mastery:
-        mastery_desc_processed = StringUtils.boxes_to_html(stats.mastery.description)
+    if weapon.mastery and weapon.player_has_mastery:
+        mastery_desc_processed = StringUtils.boxes_to_html(weapon.mastery.description)
         mastery_desc_html = mastery_desc_processed.replace("\n", "<br>")
         file.write(
             f"<tr class='weapon-mastery-row'>"
-            f"<td class='wmastery-label'>Mastery — {stats.mastery.value}</td>"
+            f"<td class='wmastery-label'>Mastery — {weapon.mastery.value}</td>"
             f"<td class='wmastery-desc'>{mastery_desc_html}</td>"
             f"</tr>\n"
         )
 
     # ── Additional description ───────────────────────────────────────────────
-    if stats.additional_description:
+    if weapon.description_text:
         # Replace newlines with <br> for HTML display
-        desc_processed = StringUtils.boxes_to_html(stats.additional_description)
+        desc_processed = StringUtils.boxes_to_html(weapon.description_text)
         desc_html = desc_processed.replace("\n", "<br>")
         file.write(
             f"<tr class='weapon-addl-row'>"

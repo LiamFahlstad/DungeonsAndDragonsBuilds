@@ -1,106 +1,243 @@
+from abc import ABC, abstractmethod
 from typing import Optional
 
 from Core.Definitions import Ability
 from Features.Core.SubFeatures import (
+    AbilityScoreBonus,
+    AddItemDescription,
     ArmorClassBonus,
+    ItemImprovement,
+    Reskin,
     SetArmorClass,
+    SetItemHomebrew,
+    SetItemName,
+    SetItemValue,
     StealthDisadvantage,
     StrengthRequirement,
     SubFeature,
 )
-from Features.Items.Items import ItemCategory, ItemRarity, WearableItem
+from Features.Items.Items import Item, ItemCategory, ItemRarity
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
-class AbstractArmor(WearableItem):
-    """Base class for armor. Armor is a wearable item: its effects (AC and
-    subfeatures) only apply while it is worn."""
+# ──────────────────────────────────────────────────────────────────────────────
+# ArmorSubFeature: composable modifiers applied to an armor at construction
+# time (e.g. a magic armor variant, or a homebrew reskin). Mirrors
+# Features.Core.SubFeatures.SubFeature, but its apply() mutates the armor
+# instance instead of the character stat block, since these improvements
+# (AC, ability modifiers, names, descriptions) are properties of the armor
+# itself, not of the wielder.
+# ──────────────────────────────────────────────────────────────────────────────
+
+
+class ArmorSubFeature(ItemImprovement):
+    """Base class for armor improvements. Override apply() to modify the armor."""
+
+    @abstractmethod
+    def apply(self, armor: "AbstractArmor") -> None:
+        pass
+
+
+class SetArmorClassBase(ArmorSubFeature):
+    """Overrides the armor's base AC and ability modifier outright."""
+
+    def __init__(self, base: int, ability: Optional[Ability]):
+        self.base = base
+        self.ability = ability
+
+    def apply(self, armor: "AbstractArmor") -> None:
+        armor.base_ac = self.base
+        armor.ac_ability = self.ability
+
+
+class AddArmorClassBonus(ArmorSubFeature):
+    """Adds a flat bonus to the armor's AC, stacking on top of its own ac_bonus."""
+
+    def __init__(self, value: int, reason: str = "Bonus"):
+        self.value = value
+        self.reason = reason
+
+    def apply(self, armor: "AbstractArmor") -> None:
+        armor.ac_bonus += self.value
+
+
+class SetStrengthRequirement(ArmorSubFeature):
+    """Overrides the armor's Strength requirement. Pass None to remove any requirement."""
+
+    def __init__(self, min_score: Optional[int]):
+        self.min_score = min_score
+
+    def apply(self, armor: "AbstractArmor") -> None:
+        armor.strength_requirement = self.min_score
+
+
+class SetStealthDisadvantage(ArmorSubFeature):
+    """Overrides whether the armor imposes stealth disadvantage."""
+
+    def __init__(self, value: bool = True):
+        self.value = value
+
+    def apply(self, armor: "AbstractArmor") -> None:
+        armor.stealth_disadvantage = self.value
+
+
+class AbstractArmor(Item, ABC):
+    """Abstract base class for armor. Armor is a wearable item: its effects (AC
+    and subfeatures) only apply while worn (is_wearing).
+
+    Two independent ways to attach behavior to an armor:
+    - `subfeatures=[...]` (list[SubFeature], defined in Features.Core.SubFeatures):
+      character-affecting effects, applied to the wearer's stat block while
+      worn - e.g. DragonscalePlate granting +1 Constitution, the same
+      mechanism RingOfIntelligence uses in Features.Items.Items.
+    - `armor_subfeatures=[...]` (list[ArmorSubFeature], defined below):
+      armor-only effects that modify the armor itself (AC, ability used for
+      AC, Strength requirement, Stealth disadvantage, ...) - not applicable
+      to any other item type. See the ArmorSubFeature showcase further down."""
+
+    # Required fields every base_stats() must set; declared here (with no
+    # class-level value) purely so static type checkers know they exist.
+    name: str
+    base_ac: int
+    ac_ability: Optional[Ability]
 
     def __init__(
         self,
-        name: str,
-        description: Optional[str] = None,
-        slots: int = 1,
-        rarity: ItemRarity = ItemRarity.COMMON,
-        subfeatures: Optional[list[SubFeature]] = None,
-        is_shield: bool = False,
         is_wearing: bool = True,
-        weight: Optional[float] = None,
-        value: Optional[float] = None,
-        is_homebrew: bool = False,
+        slots: int = 1,
+        subfeatures: Optional[list[SubFeature]] = None,
+        armor_subfeatures: Optional[list[ArmorSubFeature]] = None,
     ):
+        # Defaults for the fields a concrete armor's base_stats() may leave
+        # unset; required fields (name, base_ac, ac_ability) have no default
+        # and must always be set.
+        self.is_shield: bool = False
+        self.ac_bonus: int = 0
+        self.strength_requirement: Optional[int] = None
+        self.stealth_disadvantage: bool = False
+        self.description_text: str = ""
+        self.weight: Optional[float] = None
+        self.value: Optional[float] = None
+        self.is_homebrew: bool = False
+        self.rarity: ItemRarity = ItemRarity.COMMON
+        self.requires_attunement: bool = False
+        # Character-affecting SubFeatures innate to this armor (e.g. a +1
+        # bonus granted by owning Armor of Protection). Distinct from
+        # ArmorSubFeature, which modifies the armor itself, not the wearer.
+        self._innate_subfeatures: list[SubFeature] = []
+
+        self.base_stats()
+
+        for armor_subfeature in armor_subfeatures or []:
+            self.add_improvement(armor_subfeature)
+        self.setup_improvements()
+
         super().__init__(
-            name=name,
-            rarity=rarity,
+            name=self.name,
+            rarity=self.rarity,
+            requires_attunement=self.requires_attunement,
             category=ItemCategory.ARMOR,
-            weight=weight,
+            weight=self.weight,
             slots=slots,
-            description_text=description or "",
-            subfeatures=subfeatures or [],
+            description_text=self.description_text,
+            subfeatures=self._innate_subfeatures + list(subfeatures or []),
             is_wearing=is_wearing,
-            is_homebrew=is_homebrew,
-            value=value,
+            is_homebrew=self.is_homebrew,
+            value=self.value,
         )
-        self.is_shield = is_shield
+
+    @abstractmethod
+    def base_stats(self) -> None:
+        """Set this armor's base (pre-improvement) attributes directly
+        (self.name, self.base_ac, self.ac_ability, ...). Called once during
+        __init__, before any improvement is applied."""
+        raise NotImplementedError("Subclasses must implement base_stats().")
 
     def apply(self, character_stat_block: CharacterStatBlock):
-        super().apply(character_stat_block)  # Subfeatures (gated on is_wearing)
+        super().apply(character_stat_block)  # SubFeatures (gated on is_wearing)
         if self.is_wearing:
             self.apply_worn_effects(character_stat_block)
 
     def apply_worn_effects(self, character_stat_block: CharacterStatBlock):
-        """Armor-specific effects (AC etc.) that only apply while worn."""
+        """Apply this armor's AC and ability-based effects to the character."""
+        if self.strength_requirement is not None:
+            StrengthRequirement(self.strength_requirement).apply(character_stat_block)
+        if self.stealth_disadvantage:
+            StealthDisadvantage(reason=self.name).apply(character_stat_block)
+        if self.is_shield:
+            if self.ac_bonus:
+                ArmorClassBonus(self.ac_bonus).apply(character_stat_block)
+        else:
+            SetArmorClass(self.base_ac, self.ac_ability).apply(character_stat_block)
+            if self.ac_bonus:
+                ArmorClassBonus(self.ac_bonus).apply(character_stat_block)
+
+
+# ──────────────────────────────────────────────────────────────────────────────
+# Standard Armor
+# ──────────────────────────────────────────────────────────────────────────────
 
 
 class LeatherArmor(AbstractArmor):
-    def __init__(self):
-        super().__init__("Leather Armor", slots=1, weight=10, value=10)
-        self._ac = SetArmorClass(11, Ability.DEXTERITY)
+    """Light armor made of hardened leather."""
 
-    def apply_worn_effects(self, character_stat_block: CharacterStatBlock):
-        self._ac.apply(character_stat_block)
+    def base_stats(self) -> None:
+        self.name = "Leather Armor"
+        self.base_ac = 11
+        self.ac_ability = Ability.DEXTERITY
+        self.weight = 10
+        self.value = 10
 
 
 class StuddedLeatherArmor(AbstractArmor):
-    def __init__(self):
-        super().__init__("Studded Leather Armor", slots=1, weight=13, value=45)
-        self._ac = SetArmorClass(12, Ability.DEXTERITY)
+    """Light armor of leather studded with metal."""
 
-    def apply_worn_effects(self, character_stat_block: CharacterStatBlock):
-        self._ac.apply(character_stat_block)
+    def base_stats(self) -> None:
+        self.name = "Studded Leather Armor"
+        self.base_ac = 12
+        self.ac_ability = Ability.DEXTERITY
+        self.weight = 13
+        self.value = 45
 
 
 class ChainShirtArmor(AbstractArmor):
-    def __init__(self):
-        super().__init__("Chain Shirt Armor", slots=1, weight=20, value=50)
-        self._ac = SetArmorClass(13, Ability.DEXTERITY)
+    """Medium armor made of mail rings sewn into a shirt."""
 
-    def apply_worn_effects(self, character_stat_block: CharacterStatBlock):
-        self._ac.apply(character_stat_block)
+    def base_stats(self) -> None:
+        self.name = "Chain Shirt Armor"
+        self.base_ac = 13
+        self.ac_ability = Ability.DEXTERITY
+        self.weight = 20
+        self.value = 50
 
 
 class ChainMailArmor(AbstractArmor):
-    def __init__(self):
-        super().__init__(
-            "Chain Mail Armor", slots=2, weight=55, value=75
-        )  # Heavier armor takes more space
-        self._str_req = StrengthRequirement(13)
-        self._stealth = StealthDisadvantage(reason=self.name)
-        self._ac = SetArmorClass(16, ability=None)
+    """Heavy armor made of interlocking metal rings."""
 
-    def apply_worn_effects(self, character_stat_block: CharacterStatBlock):
-        self._str_req.apply(character_stat_block)
-        self._stealth.apply(character_stat_block)
-        self._ac.apply(character_stat_block)
+    def __init__(self, **kwargs):
+        super().__init__(slots=2, **kwargs)  # Heavier armor takes more space
+
+    def base_stats(self) -> None:
+        self.name = "Chain Mail Armor"
+        self.base_ac = 16
+        self.ac_ability = None
+        self.strength_requirement = 13
+        self.stealth_disadvantage = True
+        self.weight = 55
+        self.value = 75
 
 
 class ShieldArmor(AbstractArmor):
-    def __init__(self):
-        super().__init__("Shield", slots=1, is_shield=True, weight=6, value=10)
-        self._bonus = ArmorClassBonus(2)
+    """A wooden or metal shield held in one hand."""
 
-    def apply_worn_effects(self, character_stat_block: CharacterStatBlock):
-        self._bonus.apply(character_stat_block)
+    def base_stats(self) -> None:
+        self.name = "Shield"
+        self.base_ac = 0
+        self.ac_ability = None
+        self.is_shield = True
+        self.ac_bonus = 2
+        self.weight = 6
+        self.value = 10
 
 
 # ──────────────────────────────────────────────────────────────────────────────
@@ -111,25 +248,132 @@ class ShieldArmor(AbstractArmor):
 class ArmorOfProtection(AbstractArmor):
     """Magical chain mail that grants an additional +1 to AC."""
 
-    def __init__(self):
-        super().__init__(
-            "Armor of Protection",
-            slots=2,
-            rarity=ItemRarity.RARE,
-            weight=55,
-            description=(
-                "A magical suit of chain mail. While wearing it, you gain a +1 bonus to AC "
-                "on top of its base AC of 16."
-            ),
-        )
-        self.requires_attunement = True
-        self._str_req = StrengthRequirement(13)
-        self._stealth = StealthDisadvantage(reason=self.name)
-        self._ac = SetArmorClass(16, ability=None)
-        self._ac_bonus = ArmorClassBonus(1)
+    def __init__(self, **kwargs):
+        super().__init__(slots=2, **kwargs)
 
-    def apply_worn_effects(self, character_stat_block: CharacterStatBlock):
-        self._str_req.apply(character_stat_block)
-        self._stealth.apply(character_stat_block)
-        self._ac.apply(character_stat_block)
-        self._ac_bonus.apply(character_stat_block)
+    def base_stats(self) -> None:
+        self.name = "Armor of Protection"
+        self.base_ac = 16
+        self.ac_ability = None
+        self.ac_bonus = 1
+        self.strength_requirement = 13
+        self.stealth_disadvantage = True
+        self.weight = 55
+        self.rarity = ItemRarity.RARE
+        self.requires_attunement = True
+        self.description_text = (
+            "A magical suit of chain mail. While wearing it, you gain a +1 bonus to AC "
+            "on top of its base AC of 16."
+        )
+
+
+class DragonscalePlate(AbstractArmor):
+    """Medium armor crafted from dragon scales, granting draconic resilience."""
+
+    def base_stats(self) -> None:
+        self.name = "Dragonscale Plate"
+        self.base_ac = 14
+        self.ac_ability = Ability.DEXTERITY
+        self.weight = 45
+        self.value = None
+        self.rarity = ItemRarity.RARE
+        self.requires_attunement = True
+        self.description_text = (
+            "Fashioned from the scales of an ancient dragon, this armor shimmers "
+            "with iridescent light and radiates a faint warmth. A wearer attuned to it "
+            "gains a +1 bonus to Constitution and resistance to one damage type of your choice."
+        )
+        self._innate_subfeatures = [
+            AbilityScoreBonus(
+                [(Ability.CONSTITUTION, 1)],
+                total=1,
+                error_prefix="Dragonscale Plate bonus",
+            )
+        ]
+
+
+# ──────────────────────────────────────────────────────────────────────────────
+# ArmorSubFeature showcase: one armor per improvement, demonstrating how
+# `armor_subfeatures=[...]` composes on top of an armor's base_stats().
+# ──────────────────────────────────────────────────────────────────────────────
+
+
+class ReinforcedBulwark(ChainMailArmor):
+    """A Chain Mail variant demonstrating SetArmorClassBase: overrides AC to a
+    fixed value with no ability modifier."""
+
+    def setup_improvements(self) -> None:
+        self.add_improvement(SetArmorClassBase(18, ability=None))
+        self.add_improvement(
+            Reskin(
+                "Reinforced Bulwark",
+                "Thickened with additional steel plating, this chain mail armor "
+                "provides an unvarying AC of 18, independent of your abilities.",
+            )
+        )
+
+
+class WardensBuckler(ShieldArmor):
+    """A Shield variant demonstrating AddArmorClassBonus: adds a bonus on top
+    of the shield's own AC bonus."""
+
+    def setup_improvements(self) -> None:
+        self.add_improvement(AddArmorClassBonus(1, "Guardian Blessing"))
+        self.add_improvement(
+            Reskin(
+                "Warden's Buckler",
+                "Blessed by a protective deity, this small shield grants +3 to your AC "
+                "(the usual +2 from a shield, plus an additional +1 from divine blessing).",
+            )
+        )
+
+
+class GiantkinPlate(ChainMailArmor):
+    """A Chain Mail variant demonstrating SetStrengthRequirement: raises the
+    minimum Strength requirement for a wearer sized for giants."""
+
+    def setup_improvements(self) -> None:
+        self.add_improvement(SetStrengthRequirement(15))
+        self.add_improvement(
+            Reskin(
+                "Giantkin Plate",
+                "Sized for a wearer of great stature, this armor requires a Strength "
+                "score of 15 or higher to wear effectively.",
+            )
+        )
+
+
+class ShadowplateMail(ChainMailArmor):
+    """A Chain Mail variant demonstrating SetStealthDisadvantage(False): removes
+    the Stealth disadvantage normally imposed by heavy armor."""
+
+    def setup_improvements(self) -> None:
+        self.add_improvement(SetStealthDisadvantage(False))
+        self.add_improvement(
+            Reskin(
+                "Shadowplate Mail",
+                "Crafted from a dark metal that absorbs sound, this chain mail "
+                "imposes no disadvantage on Stealth checks despite its weight.",
+            )
+        )
+
+
+class VeteransChainShirt(ChainShirtArmor):
+    """A Chain Shirt variant demonstrating AddArmorDescription: extra text is
+    appended to the base armor's description."""
+
+    def setup_improvements(self) -> None:
+        # Use individual improvements rather than Reskin (which replaces
+        # description) to preserve and append to the base description.
+        self.add_improvement(SetItemName("Veteran's Chain Shirt"))
+        self.add_improvement(SetItemValue(None))
+        self.add_improvement(SetItemHomebrew())
+        self.add_improvement(
+            AddItemDescription("Scarred from countless campaigns, this armor bears the marks of an experienced warrior.")
+        )
+        self.add_improvement(
+            AddItemDescription(
+                "Once per long rest, you can attune to the armor's memories: ask it one "
+                "yes/no question about a creature that wore it previously, and it answers truthfully."
+            )
+        )

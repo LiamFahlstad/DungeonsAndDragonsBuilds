@@ -133,7 +133,7 @@ class HtmlCharacterSheetWriter:
         item: Items.Item, worn_label: str = "Worn", not_worn_label: str = "Not worn"
     ) -> str:
         """Chip showing worn state for wearable items; empty for everything else."""
-        if not isinstance(item, Items.WearableItem):
+        if item.is_wearing is None:
             return ""
         if item.is_wearing:
             return f" <span class='wtag wtag-worn'>{worn_label}</span>"
