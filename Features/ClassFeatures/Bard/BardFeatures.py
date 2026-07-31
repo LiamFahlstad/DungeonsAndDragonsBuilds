@@ -1,7 +1,7 @@
 import Core.Definitions as Definitions
 from Core.Definitions import Ability, BARD_HIT_DIE, Skill
 from Features.Core.BaseFeatures import Feature
-from Features.Core.SubFeatures import JackOfAllTradesBonus, SkillExpertiseChoice
+from Features.Core.Improvements import JackOfAllTradesBonus, SkillExpertiseChoice
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 

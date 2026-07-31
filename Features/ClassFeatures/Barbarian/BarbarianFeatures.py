@@ -1,7 +1,7 @@
 import Core.Definitions as Definitions
 from Core.Definitions import Ability, BARBARIAN_HIT_DIE, Skill
 from Features.Core.BaseFeatures import Feature
-from Features.Core.SubFeatures import MultiAbilityArmorClass, SavingThrowAdvantage, SkillProficiencyChoice
+from Features.Core.Improvements import MultiAbilityArmorClass, SavingThrowAdvantage, SkillProficiencyChoice
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 

@@ -2,7 +2,7 @@ from enum import Enum
 
 from Core.Definitions import Skill
 from Features.Core.BaseFeatures import Feature
-from Features.Core.SubFeatures import SkillProficiencyChoice
+from Features.Core.Improvements import SkillProficiencyChoice
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 SPEED = 30  # Given by your species

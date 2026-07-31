@@ -1,6 +1,6 @@
 from Core.Definitions import Ability, ROGUE_HIT_DIE, Skill
 from Features.Core.BaseFeatures import Feature
-from Features.Core.SubFeatures import SavingThrowProficiencyChoice, SkillExpertiseChoice
+from Features.Core.Improvements import SavingThrowProficiencyChoice, SkillExpertiseChoice
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 

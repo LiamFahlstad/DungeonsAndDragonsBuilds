@@ -5,7 +5,7 @@ from typing import Optional, TextIO
 
 from Utils import DamageCalculator
 from Core.Definitions import Ability, DiceRollCondition, Die, Skill
-from Features.Core.SubFeatures import (
+from Features.Core.Improvements import (
     AbilityScoreBonus,
     AddItemDescription,
     InitiativeRollCondition,
@@ -15,7 +15,7 @@ from Features.Core.SubFeatures import (
     SetItemName,
     SetItemValue,
     SkillBonus,
-    SubFeature,
+    CharacterImprovement,
 )
 from Features.Items.Items import Item, ItemCategory, ItemRarity
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
@@ -159,16 +159,16 @@ class ExtraDamage:
 
 
 # ──────────────────────────────────────────────────────────────────────────────
-# WeaponSubFeature: composable modifiers applied to a weapon at construction
+# WeaponImprovement: composable modifiers applied to a weapon at construction
 # time (e.g. a magic weapon variant, or a homebrew reskin). Mirrors
-# Features.Core.SubFeatures.SubFeature, but its apply() mutates the weapon
+# Features.Core.Improvements.CharacterImprovement, but its apply() mutates the weapon
 # instance instead of the character stat block, since these improvements
 # (attack/damage bonuses, damage die/type, properties, flavor text) are
 # properties of the weapon itself, not of the wielder.
 # ──────────────────────────────────────────────────────────────────────────────
 
 
-class WeaponSubFeature(ItemImprovement):
+class WeaponImprovement(ItemImprovement):
     """Base class for weapon improvements. Override apply() to modify the weapon."""
 
     @abstractmethod
@@ -176,7 +176,7 @@ class WeaponSubFeature(ItemImprovement):
         pass
 
 
-class SetAttackRollBonus(WeaponSubFeature):
+class SetAttackRollBonus(WeaponImprovement):
     """Overrides the weapon's total attack roll bonus with a fixed value,
     ignoring ability modifier, proficiency, and any additive bonuses."""
 
@@ -187,7 +187,7 @@ class SetAttackRollBonus(WeaponSubFeature):
         weapon._attack_roll_override = self.value
 
 
-class AddAttackRollBonus(WeaponSubFeature):
+class AddAttackRollBonus(WeaponImprovement):
     """Adds a flat bonus to the weapon's attack roll."""
 
     def __init__(self, value: int, reason: str = "Bonus"):
@@ -198,7 +198,7 @@ class AddAttackRollBonus(WeaponSubFeature):
         weapon.attack_roll_bonuses.append((self.value, f"{self.value} ({self.reason})"))
 
 
-class SetDamageRollBonus(WeaponSubFeature):
+class SetDamageRollBonus(WeaponImprovement):
     """Overrides the weapon's damage bonus (the flat number added to the
     damage die), ignoring the ability modifier and any additive bonuses."""
 
@@ -209,7 +209,7 @@ class SetDamageRollBonus(WeaponSubFeature):
         weapon._damage_bonus_override = self.value
 
 
-class AddDamageRollBonus(WeaponSubFeature):
+class AddDamageRollBonus(WeaponImprovement):
     """Adds a flat bonus to the weapon's damage roll."""
 
     def __init__(self, value: int, reason: str = "Bonus"):
@@ -220,7 +220,7 @@ class AddDamageRollBonus(WeaponSubFeature):
         weapon.damage_roll_bonuses.append((self.value, f"{self.value} ({self.reason})"))
 
 
-class SetDamageDie(WeaponSubFeature):
+class SetDamageDie(WeaponImprovement):
     """Overrides the weapon's damage die (e.g. upgrading a Longsword to 2d6)."""
 
     def __init__(self, damage_roll: WeaponsDamageRolls):
@@ -230,7 +230,7 @@ class SetDamageDie(WeaponSubFeature):
         weapon.damage_roll = self.damage_roll
 
 
-class SetDamageType(WeaponSubFeature):
+class SetDamageType(WeaponImprovement):
     """Overrides the weapon's damage type (e.g. a frost blade dealing Cold instead of Slashing)."""
 
     def __init__(self, damage_type: WeaponsDamageTypes):
@@ -240,7 +240,7 @@ class SetDamageType(WeaponSubFeature):
         weapon.damage_type = self.damage_type
 
 
-class AddWeaponProperty(WeaponSubFeature):
+class AddWeaponProperty(WeaponImprovement):
     """Adds a weapon property (e.g. Finesse, Reach) not already on the weapon."""
 
     def __init__(self, property: WeaponProperty):
@@ -251,7 +251,7 @@ class AddWeaponProperty(WeaponSubFeature):
             weapon.properties.append(self.property)
 
 
-class AddExtraDamage(WeaponSubFeature):
+class AddExtraDamage(WeaponImprovement):
     """Adds extra damage dice to the weapon's attack (e.g. a flaming blade's extra 1d6 Fire)."""
 
     def __init__(
@@ -266,7 +266,7 @@ class AddExtraDamage(WeaponSubFeature):
         weapon.extra_damage.append(self.extra_damage)
 
 
-class SetWeaponAbility(WeaponSubFeature):
+class SetWeaponAbility(WeaponImprovement):
     """Overrides which ability score is used for the weapon's attack and damage
     rolls (e.g. a Bladesinger using Intelligence instead of Strength/Dexterity),
     replacing the weapon's own ability - and any Finesse Str/Dex comparison -
@@ -281,17 +281,17 @@ class SetWeaponAbility(WeaponSubFeature):
 
 class AbstractWeapon(Item, ABC):
     """Abstract base class for weapons. Weapons are wearable items: their
-    subfeatures only apply while worn/wielded (is_wearing).
+    improvements only apply while worn/wielded (is_wearing).
 
     Two independent ways to attach behavior to a weapon:
-    - `subfeatures=[...]` (list[SubFeature], defined in Features.Core.SubFeatures):
+    - `improvements=[...]` (list[CharacterImprovement], defined in Features.Core.Improvements):
       character-affecting effects, applied to the wielder's stat block while
       worn - e.g. FlameTongueSword granting +1 Strength, the same mechanism
       RingOfIntelligence uses in Features.Items.Items.
-    - `weapon_subfeatures=[...]` (list[WeaponSubFeature], defined below):
+    - `weapon_improvements=[...]` (list[WeaponImprovement], defined below):
       weapon-only effects that modify the weapon itself (damage die/type,
       properties, attack/damage bonuses, ...) - not applicable to any other
-      item type. See the WeaponSubFeature showcase further down."""
+      item type. See the WeaponImprovement showcase further down."""
 
     # Required fields every base_stats() must set; declared here (with no
     # class-level value) purely so static type checkers know they exist.
@@ -311,8 +311,8 @@ class AbstractWeapon(Item, ABC):
         is_wearing: bool = True,
         category: ItemCategory = ItemCategory.WEAPON,
         slots: int = 1,
-        subfeatures: Optional[list[SubFeature]] = None,
-        weapon_subfeatures: Optional[list[WeaponSubFeature]] = None,
+        improvements: Optional[list[CharacterImprovement]] = None,
+        weapon_improvements: Optional[list[WeaponImprovement]] = None,
     ):
         self.player_is_proficient = player_is_proficient
         self.player_has_mastery = player_has_mastery
@@ -337,16 +337,16 @@ class AbstractWeapon(Item, ABC):
         self.is_homebrew: bool = False
         self.rarity: ItemRarity = ItemRarity.COMMON
         self.requires_attunement: bool = False
-        # Character-affecting SubFeatures innate to this weapon (e.g. the +1
+        # Character-affecting CharacterImprovements innate to this weapon (e.g. the +1
         # to Strength granted just by owning a Flame Tongue Sword). Distinct
-        # from WeaponSubFeature, which modifies the weapon itself, not the
+        # from WeaponImprovement, which modifies the weapon itself, not the
         # wielder.
-        self._innate_subfeatures: list[SubFeature] = []
+        self._innate_improvements: list[CharacterImprovement] = []
 
         self.base_stats()
 
-        for weapon_subfeature in weapon_subfeatures or []:
-            self.add_weapon_improvement(weapon_subfeature)
+        for weapon_improvement in weapon_improvements or []:
+            self.add_weapon_improvement(weapon_improvement)
         self.setup_improvements()
 
         super().__init__(
@@ -357,7 +357,7 @@ class AbstractWeapon(Item, ABC):
             weight=self.weight,
             slots=slots,
             description_text=self.description_text,
-            subfeatures=self._innate_subfeatures + list(subfeatures or []),
+            improvements=self._innate_improvements + list(improvements or []),
             is_wearing=is_wearing,
             is_homebrew=self.is_homebrew,
             value=self.value,
@@ -370,12 +370,12 @@ class AbstractWeapon(Item, ABC):
         __init__, before any improvement is applied."""
         raise NotImplementedError("Subclasses must implement base_stats().")
 
-    def add_weapon_improvement(self, weapon_subfeature: "WeaponSubFeature") -> None:
-        """Attach a WeaponSubFeature - a weapon-only improvement (damage
+    def add_weapon_improvement(self, weapon_improvement: "WeaponImprovement") -> None:
+        """Attach a WeaponImprovement - a weapon-only improvement (damage
         die/type, properties, attack/damage bonuses, ...) - to this weapon.
         Named for clarity alongside add_character_improvement(), which
         attaches an effect on the wielder instead."""
-        self.add_improvement(weapon_subfeature)
+        self.add_improvement(weapon_improvement)
 
     def _calculate_ability_modifier_bonus(
         self, character_stat_block: CharacterStatBlock
@@ -1271,8 +1271,8 @@ class VampiricEdge(AbstractWeapon):
 
 
 # ──────────────────────────────────────────────────────────────────────────────
-# WeaponSubFeature showcase: one weapon per improvement, demonstrating how
-# `weapon_subfeatures=[...]` composes on top of a weapon's base_stats().
+# WeaponImprovement showcase: one weapon per improvement, demonstrating how
+# `weapon_improvements=[...]` composes on top of a weapon's base_stats().
 # ──────────────────────────────────────────────────────────────────────────────
 
 
@@ -1463,9 +1463,9 @@ class FlameTongueSword(AbstractWeapon):
 
 
 class SkirmishersShortsword(Shortsword):
-    """A magical Shortsword demonstrating a character-affecting subfeature
-    (`_innate_subfeatures`, i.e. the weapon's own `subfeatures=` - the same
-    mechanism RingOfIntelligence uses) rather than a WeaponSubFeature: it
+    """A magical Shortsword demonstrating a character-affecting improvement
+    (`_innate_improvements`, i.e. the weapon's own `improvements=` - the same
+    mechanism RingOfIntelligence uses) rather than a WeaponImprovement: it
     hones the wielder's own footwork, not the blade itself."""
 
     def base_stats(self) -> None:
@@ -1487,7 +1487,7 @@ class SkirmishersShortsword(Shortsword):
 
 class VanguardsSpear(Spear):
     """A magical Spear demonstrating a different character-affecting
-    subfeature (InitiativeRollCondition): it keeps its wielder a half-step
+    improvement (InitiativeRollCondition): it keeps its wielder a half-step
     ahead of danger, granting Advantage on Initiative rolls rather than
     changing anything about the spear's own attack or damage."""
 

@@ -1,7 +1,7 @@
-"""Example build: Fighter Champion outfitted with one of every WeaponSubFeature demo
+"""Example build: Fighter Champion outfitted with one of every WeaponImprovement demo
 weapon (see Features/Equipment/Weapons.py), a plain weapon with its ability
 overridden via SetWeaponAbility, and a couple of magic weapons that modify the
-wielder rather than the weapon (via `subfeatures=`), so all of it is visible
+wielder rather than the weapon (via `improvements=`), so all of it is visible
 together on one character sheet."""
 
 from Builds.CharacterBuilder import CharacterBuilder
@@ -71,7 +71,7 @@ def get_starter_class_builder():
             Armor.LeatherArmor(),
         ],
         weapons=[
-            # -- WeaponSubFeature showcase: one of each improvement --
+            # -- WeaponImprovement showcase: one of each improvement --
             Weapons.UnerringBlade(player_is_proficient=True),  # SetAttackRollBonus
             Weapons.MarksmansLongbow(player_is_proficient=True),  # AddAttackRollBonus
             Weapons.Skullcrusher(player_is_proficient=True),  # SetDamageRollBonus
@@ -84,8 +84,8 @@ def get_starter_class_builder():
             # -- SetWeaponAbility showcase: a plain Shortbow using Wisdom instead
             # of Dexterity, e.g. a "guided by instinct" reskin --
             Weapons.Shortbow(player_is_proficient=True, ability=Ability.WISDOM),
-            # -- Character-affecting subfeature showcase: magic weapons that
-            # modify the wielder (via `subfeatures=`), not the weapon itself --
+            # -- Character-affecting improvement showcase: magic weapons that
+            # modify the wielder (via `improvements=`), not the weapon itself --
             Weapons.SkirmishersShortsword(player_is_proficient=True),  # SkillBonus
             Weapons.VanguardsSpear(player_is_proficient=True),  # InitiativeRollCondition
         ],

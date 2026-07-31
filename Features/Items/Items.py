@@ -3,13 +3,13 @@ from typing import Optional
 
 from Core.Definitions import Ability, Skill
 from Features.Core.BaseFeatures import Feature
-from Features.Core.SubFeatures import (
+from Features.Core.Improvements import (
     AbilityScoreBonus,
     ArmorClassBonus,
     CarryingCapacityBonus,
     ItemImprovement,
     SkillBonus,
-    SubFeature,
+    CharacterImprovement,
 )
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
@@ -47,17 +47,17 @@ class ItemCategory(str, Enum):
 class Item(Feature):
     """
     Base class for all items. Items are now Features, allowing them to be
-    either description-only or to modify a character via SubFeatures.
+    either description-only or to modify a character via CharacterImprovements.
 
     An item has metadata (rarity, attunement, category, weight, slots, value,
     homebrew status) and can:
     - Provide a description via get_description()
-    - Apply mechanical effects via subfeatures and apply()
+    - Apply mechanical effects via improvements and apply()
     - Take up carrying capacity slots
 
     is_wearing is None for items with no wearable concept at all (most
     items); it's a real bool for items that must be worn/wielded for their
-    subfeatures to apply (weapons, armor, rings, cloaks, ...) - see
+    improvements to apply (weapons, armor, rings, cloaks, ...) - see
     AbstractWeapon/AbstractArmor and the is_wearing-accepting items below.
     """
 
@@ -70,7 +70,7 @@ class Item(Feature):
         weight: Optional[float] = None,
         slots: int = 1,
         description_text: str = "",
-        subfeatures: Optional[list[SubFeature]] = None,
+        improvements: Optional[list[CharacterImprovement]] = None,
         is_homebrew: bool = True,
         value: Optional[float] = None,
         is_wearing: Optional[bool] = None,
@@ -82,7 +82,7 @@ class Item(Feature):
         self.weight = weight
         self.slots = slots
         self.description_text = description_text
-        self.subfeatures = subfeatures or []
+        self.improvements = improvements or []
         self.is_homebrew = is_homebrew
         # Value in gold pieces (GP). None means unknown/unpriced and should
         # not be displayed.
@@ -90,12 +90,12 @@ class Item(Feature):
         self.is_wearing = is_wearing
 
     def apply(self, character_stat_block: CharacterStatBlock):
-        """Apply all subfeatures to the character - unless this is a
+        """Apply all improvements to the character - unless this is a
         wearable item currently not being worn."""
         if self.is_wearing is False:
             return
-        for subfeature in self.subfeatures:
-            subfeature.apply(character_stat_block)
+        for improvement in self.improvements:
+            improvement.apply(character_stat_block)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str | None:
         """Return the item description. Subclasses can override for a description
@@ -128,20 +128,20 @@ class Item(Feature):
 
         Called once during __init__, after any improvements passed in via
         the subclass's own improvement-list constructor parameter (e.g.
-        AbstractWeapon's `weapon_subfeatures=`, AbstractArmor's
-        `armor_subfeatures=`). Only meaningful for items that compose
+        AbstractWeapon's `weapon_improvements=`, AbstractArmor's
+        `armor_improvements=`). Only meaningful for items that compose
         ItemImprovements (see AbstractWeapon, AbstractArmor)."""
 
-    def add_character_improvement(self, subfeature: SubFeature) -> None:
-        """Attach a character-affecting SubFeature to this item at
+    def add_character_improvement(self, improvement: CharacterImprovement) -> None:
+        """Attach a CharacterImprovement to this item at
         construction time - the same kind RingOfIntelligence passes via
-        `subfeatures=`, but composable at the class level. Call from
+        `improvements=`, but composable at the class level. Call from
         base_stats() (or setup_improvements()) to distinguish "this affects
         the wielder/wearer" from add_weapon_improvement/add_armor_improvement,
-        which affect the item itself. Requires self._innate_subfeatures to
+        which affect the item itself. Requires self._innate_improvements to
         already exist (see AbstractWeapon / AbstractArmor, which initialize
         it before calling base_stats())."""
-        self._innate_subfeatures.append(subfeature)
+        self._innate_improvements.append(improvement)
 
 
 # ══════════════════════════════════════════════════════════════════════════════
@@ -163,7 +163,7 @@ class ConsumableItem(Item):
         weight: Optional[float] = None,
         slots: int = 1,
         description_text: str = "",
-        subfeatures: Optional[list[SubFeature]] = None,
+        improvements: Optional[list[CharacterImprovement]] = None,
         is_homebrew: bool = True,
         value: Optional[float] = None,
     ):
@@ -175,7 +175,7 @@ class ConsumableItem(Item):
             weight=weight,
             slots=slots,
             description_text=description_text,
-            subfeatures=subfeatures,
+            improvements=improvements,
             is_homebrew=is_homebrew,
             value=value,
         )
@@ -250,7 +250,7 @@ class Backpack(Item):
                 "A backpack that can hold up to 30 pounds of gear within 1 cubic foot. "
                 "It can also be strapped to a mount as a saddlebag."
             ),
-            subfeatures=[CarryingCapacityBonus(10, source="Backpack")],
+            improvements=[CarryingCapacityBonus(10, source="Backpack")],
             is_wearing=is_wearing,
             is_homebrew=False,
             value=2,
@@ -813,7 +813,7 @@ class BadFriendGlasses(Item):
 
 
 # ══════════════════════════════════════════════════════════════════════════════
-# Mechanical Items (with SubFeatures)
+# Mechanical Items (with CharacterImprovements)
 # ══════════════════════════════════════════════════════════════════════════════
 
 
@@ -831,7 +831,7 @@ class CloakOfProtection(Item):
                 "This silken cloak shimmers with protective magic and feels warm to the touch."
             ),
             is_wearing=is_wearing,
-            subfeatures=[ArmorClassBonus(1)],
+            improvements=[ArmorClassBonus(1)],
             is_homebrew=False,
         )
 
@@ -851,7 +851,7 @@ class PlusOneWeapon(Item):
                 f"This magical {weapon_name.lower()} grants you a +1 bonus to attack rolls and damage rolls made with it.\n\n"
                 "The blade gleams with enchantment."
             ),
-            subfeatures=[
+            improvements=[
                 AbilityScoreBonus(
                     bonuses=[(ability, 1)],
                     total=1,
@@ -876,7 +876,7 @@ class BracersOfArchery(Item):
                 "These leather bracers are reinforced with magical sinew, enhancing the wielder's precision."
             ),
             is_wearing=is_wearing,
-            subfeatures=[
+            improvements=[
                 AbilityScoreBonus(
                     bonuses=[(Ability.DEXTERITY, 2)],
                     total=2,
@@ -902,7 +902,7 @@ class GauntletsOfStrength(Item):
                 "These steel gauntlets hum with raw, restrained power."
             ),
             is_wearing=is_wearing,
-            subfeatures=[
+            improvements=[
                 AbilityScoreBonus(
                     bonuses=[(Ability.STRENGTH, 2)],
                     total=2,
@@ -926,7 +926,7 @@ class RingOfIntelligence(Item):
                 "This silver ring is inscribed with arcane runes that glow faintly when worn."
             ),
             is_wearing=is_wearing,
-            subfeatures=[
+            improvements=[
                 AbilityScoreBonus(
                     bonuses=[(Ability.INTELLIGENCE, 2)],
                     total=2,
@@ -950,7 +950,7 @@ class RingOfInvestigation(Item):
                 "A slender copper band set with a tiny magnifying lens that focuses the wearer's attention on overlooked details."
             ),
             is_wearing=is_wearing,
-            subfeatures=[
+            improvements=[
                 SkillBonus(Skill.INVESTIGATION, 1, source="Ring of Investigation")
             ],
         )

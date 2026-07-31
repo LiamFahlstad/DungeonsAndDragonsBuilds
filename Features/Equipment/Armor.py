@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 from typing import Optional
 
 from Core.Definitions import Ability, Skill
-from Features.Core.SubFeatures import (
+from Features.Core.Improvements import (
     AbilityScoreBonus,
     AddItemDescription,
     ArmorClassBonus,
@@ -16,23 +16,23 @@ from Features.Core.SubFeatures import (
     SkillBonus,
     StealthDisadvantage,
     StrengthRequirement,
-    SubFeature,
+    CharacterImprovement,
 )
 from Features.Items.Items import Item, ItemCategory, ItemRarity
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
 # ──────────────────────────────────────────────────────────────────────────────
-# ArmorSubFeature: composable modifiers applied to an armor at construction
+# ArmorImprovement: composable modifiers applied to an armor at construction
 # time (e.g. a magic armor variant, or a homebrew reskin). Mirrors
-# Features.Core.SubFeatures.SubFeature, but its apply() mutates the armor
+# Features.Core.Improvements.CharacterImprovement, but its apply() mutates the armor
 # instance instead of the character stat block, since these improvements
 # (AC, ability modifiers, names, descriptions) are properties of the armor
 # itself, not of the wielder.
 # ──────────────────────────────────────────────────────────────────────────────
 
 
-class ArmorSubFeature(ItemImprovement):
+class ArmorImprovement(ItemImprovement):
     """Base class for armor improvements. Override apply() to modify the armor."""
 
     @abstractmethod
@@ -40,7 +40,7 @@ class ArmorSubFeature(ItemImprovement):
         pass
 
 
-class SetArmorClassBase(ArmorSubFeature):
+class SetArmorClassBase(ArmorImprovement):
     """Overrides the armor's base AC and ability modifier outright."""
 
     def __init__(self, base: int, ability: Optional[Ability]):
@@ -52,7 +52,7 @@ class SetArmorClassBase(ArmorSubFeature):
         armor.ac_ability = self.ability
 
 
-class AddArmorClassBonus(ArmorSubFeature):
+class AddArmorClassBonus(ArmorImprovement):
     """Adds a flat bonus to the armor's AC, stacking on top of its own ac_bonus."""
 
     def __init__(self, value: int, reason: str = "Bonus"):
@@ -63,7 +63,7 @@ class AddArmorClassBonus(ArmorSubFeature):
         armor.ac_bonus += self.value
 
 
-class SetStrengthRequirement(ArmorSubFeature):
+class SetStrengthRequirement(ArmorImprovement):
     """Overrides the armor's Strength requirement. Pass None to remove any requirement."""
 
     def __init__(self, min_score: Optional[int]):
@@ -73,7 +73,7 @@ class SetStrengthRequirement(ArmorSubFeature):
         armor.strength_requirement = self.min_score
 
 
-class SetStealthDisadvantage(ArmorSubFeature):
+class SetStealthDisadvantage(ArmorImprovement):
     """Overrides whether the armor imposes stealth disadvantage."""
 
     def __init__(self, value: bool = True):
@@ -85,17 +85,17 @@ class SetStealthDisadvantage(ArmorSubFeature):
 
 class AbstractArmor(Item, ABC):
     """Abstract base class for armor. Armor is a wearable item: its effects (AC
-    and subfeatures) only apply while worn (is_wearing).
+    and improvements) only apply while worn (is_wearing).
 
     Two independent ways to attach behavior to an armor:
-    - `subfeatures=[...]` (list[SubFeature], defined in Features.Core.SubFeatures):
+    - `improvements=[...]` (list[CharacterImprovement], defined in Features.Core.Improvements):
       character-affecting effects, applied to the wearer's stat block while
       worn - e.g. DragonscalePlate granting +1 Constitution, the same
       mechanism RingOfIntelligence uses in Features.Items.Items.
-    - `armor_subfeatures=[...]` (list[ArmorSubFeature], defined below):
+    - `armor_improvements=[...]` (list[ArmorImprovement], defined below):
       armor-only effects that modify the armor itself (AC, ability used for
       AC, Strength requirement, Stealth disadvantage, ...) - not applicable
-      to any other item type. See the ArmorSubFeature showcase further down."""
+      to any other item type. See the ArmorImprovement showcase further down."""
 
     # Required fields every base_stats() must set; declared here (with no
     # class-level value) purely so static type checkers know they exist.
@@ -107,8 +107,8 @@ class AbstractArmor(Item, ABC):
         self,
         is_wearing: bool = True,
         slots: int = 1,
-        subfeatures: Optional[list[SubFeature]] = None,
-        armor_subfeatures: Optional[list[ArmorSubFeature]] = None,
+        improvements: Optional[list[CharacterImprovement]] = None,
+        armor_improvements: Optional[list[ArmorImprovement]] = None,
     ):
         # Defaults for the fields a concrete armor's base_stats() may leave
         # unset; required fields (name, base_ac, ac_ability) have no default
@@ -123,15 +123,15 @@ class AbstractArmor(Item, ABC):
         self.is_homebrew: bool = False
         self.rarity: ItemRarity = ItemRarity.COMMON
         self.requires_attunement: bool = False
-        # Character-affecting SubFeatures innate to this armor (e.g. a +1
+        # Character-affecting CharacterImprovements innate to this armor (e.g. a +1
         # bonus granted by owning Armor of Protection). Distinct from
-        # ArmorSubFeature, which modifies the armor itself, not the wearer.
-        self._innate_subfeatures: list[SubFeature] = []
+        # ArmorImprovement, which modifies the armor itself, not the wearer.
+        self._innate_improvements: list[CharacterImprovement] = []
 
         self.base_stats()
 
-        for armor_subfeature in armor_subfeatures or []:
-            self.add_armor_improvement(armor_subfeature)
+        for armor_improvement in armor_improvements or []:
+            self.add_armor_improvement(armor_improvement)
         self.setup_improvements()
 
         super().__init__(
@@ -142,7 +142,7 @@ class AbstractArmor(Item, ABC):
             weight=self.weight,
             slots=slots,
             description_text=self.description_text,
-            subfeatures=self._innate_subfeatures + list(subfeatures or []),
+            improvements=self._innate_improvements + list(improvements or []),
             is_wearing=is_wearing,
             is_homebrew=self.is_homebrew,
             value=self.value,
@@ -155,16 +155,16 @@ class AbstractArmor(Item, ABC):
         __init__, before any improvement is applied."""
         raise NotImplementedError("Subclasses must implement base_stats().")
 
-    def add_armor_improvement(self, armor_subfeature: "ArmorSubFeature") -> None:
-        """Attach an ArmorSubFeature - an armor-only improvement (AC,
+    def add_armor_improvement(self, armor_improvement: "ArmorImprovement") -> None:
+        """Attach an ArmorImprovement - an armor-only improvement (AC,
         ability used for AC, Strength requirement, Stealth disadvantage,
         ...) - to this armor. Named for clarity alongside
         add_character_improvement(), which attaches an effect on the
         wearer instead."""
-        self.add_improvement(armor_subfeature)
+        self.add_improvement(armor_improvement)
 
     def apply(self, character_stat_block: CharacterStatBlock):
-        super().apply(character_stat_block)  # SubFeatures (gated on is_wearing)
+        super().apply(character_stat_block)  # CharacterImprovements (gated on is_wearing)
         if self.is_wearing:
             self.apply_worn_effects(character_stat_block)
 
@@ -303,9 +303,9 @@ class DragonscalePlate(AbstractArmor):
 
 
 class SentinelsWatchArmor(ChainShirtArmor):
-    """Magical Chain Shirt demonstrating a character-affecting subfeature
-    (`_innate_subfeatures`, i.e. the armor's own `subfeatures=` - the same
-    mechanism RingOfIntelligence uses) rather than an ArmorSubFeature: it
+    """Magical Chain Shirt demonstrating a character-affecting improvement
+    (`_innate_improvements`, i.e. the armor's own `improvements=` - the same
+    mechanism RingOfIntelligence uses) rather than an ArmorImprovement: it
     sharpens the wearer's own senses, not the armor's AC."""
 
     def base_stats(self) -> None:
@@ -328,7 +328,7 @@ class SentinelsWatchArmor(ChainShirtArmor):
 
 class StalwartsAegis(ChainMailArmor):
     """Magical Chain Mail demonstrating a different character-affecting
-    subfeature (SavingThrowAdvantage): it steels the wearer's resolve,
+    improvement (SavingThrowAdvantage): it steels the wearer's resolve,
     granting Advantage on Wisdom saving throws rather than changing
     anything about the armor's own AC."""
 
@@ -349,8 +349,8 @@ class StalwartsAegis(ChainMailArmor):
 
 
 # ──────────────────────────────────────────────────────────────────────────────
-# ArmorSubFeature showcase: one armor per improvement, demonstrating how
-# `armor_subfeatures=[...]` composes on top of an armor's base_stats().
+# ArmorImprovement showcase: one armor per improvement, demonstrating how
+# `armor_improvements=[...]` composes on top of an armor's base_stats().
 # ──────────────────────────────────────────────────────────────────────────────
 
 

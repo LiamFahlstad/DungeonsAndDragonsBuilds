@@ -1,6 +1,6 @@
-"""Example build: Fighter Champion outfitted with one of every ArmorSubFeature demo
+"""Example build: Fighter Champion outfitted with one of every ArmorImprovement demo
 armor (see Features/Equipment/Armor.py), plus a few magic armors that modify the
-wearer rather than the armor itself (via `subfeatures=`), so all of it is visible
+wearer rather than the armor itself (via `improvements=`), so all of it is visible
 together on one character sheet."""
 
 from Builds.CharacterBuilder import CharacterBuilder
@@ -67,15 +67,15 @@ def get_starter_class_builder():
         add_default_equipment=False,
         origin_feat=OriginFeats.SavageAttacker(),
         armor=[
-            # -- ArmorSubFeature showcase: one of each improvement --
+            # -- ArmorImprovement showcase: one of each improvement --
             Armor.ReinforcedBulwark(),  # SetArmorClassBase (worn)
             Armor.WardensBuckler(),  # AddArmorClassBonus (worn shield)
             Armor.GiantkinPlate(is_wearing=False),  # SetStrengthRequirement
             Armor.ShadowplateMail(is_wearing=False),  # SetStealthDisadvantage(False)
             Armor.VeteransChainShirt(is_wearing=False),  # AddArmorDescription
             Armor.DragonscalePlate(is_wearing=False),  # Standalone magical armor
-            # -- Character-affecting subfeature showcase: magic armor that
-            # modifies the wearer (via `subfeatures=`), not the armor itself --
+            # -- Character-affecting improvement showcase: magic armor that
+            # modifies the wearer (via `improvements=`), not the armor itself --
             Armor.SentinelsWatchArmor(is_wearing=False),  # SkillBonus
             Armor.StalwartsAegis(is_wearing=False),  # SavingThrowAdvantage
         ],

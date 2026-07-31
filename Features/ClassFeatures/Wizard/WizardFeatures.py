@@ -1,6 +1,6 @@
 from Core.Definitions import Skill, WIZARD_HIT_DIE
 from Features.Core.BaseFeatures import Feature
-from Features.Core.SubFeatures import SkillExpertiseChoice
+from Features.Core.Improvements import SkillExpertiseChoice
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 

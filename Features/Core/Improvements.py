@@ -1,11 +1,14 @@
-"""SubFeatures: reusable stat-block mutations composed into Features.
+"""Improvements: reusable stat-block mutations composed into Features
+(CharacterImprovement), plus composable modifiers applied directly to items
+at construction time (ItemImprovement and its weapon-/armor-specific
+subclasses - see Features.Equipment.Weapons/Armor).
 
 Ordering contract
 -----------------
 Features apply in two phases (see CharacterSheetData.setup_character_stat_block):
 every ApplyWhen.IMMEDIATE feature first, then every ApplyWhen.LAST feature,
 each phase in call order. Armors, weapons and items apply after all features.
-A SubFeature falls into one of three categories:
+A CharacterImprovement falls into one of three categories:
 
 - Additive or flag-setting writes (proficiencies, ability/AC/skill/speed
   bonuses): order-insensitive because derived values (AC, skill totals, HP)
@@ -30,8 +33,8 @@ from Core.Definitions import Ability, DamageType, DiceRollCondition, Skill
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
-class SubFeature(ABC):
-    """Base class for all SubFeatures. Override apply() to modify the stat block."""
+class CharacterImprovement(ABC):
+    """Base class for all CharacterImprovements. Override apply() to modify the stat block."""
 
     @abstractmethod
     def apply(self, character_stat_block: CharacterStatBlock):
@@ -52,7 +55,7 @@ def _validate_pool(items, pool, count: int, error_prefix: str):
 # ── Skill proficiency ─────────────────────────────────────────────────────────
 
 
-class SkillProficiency(SubFeature):
+class SkillProficiency(CharacterImprovement):
     """Grants proficiency in a fixed list of skills.
 
     Ordering: idempotent flag set - but keep the owning feature IMMEDIATE,
@@ -84,7 +87,7 @@ class SkillProficiencyChoice(SkillProficiency):
 # ── Skill expertise ───────────────────────────────────────────────────────────
 
 
-class SkillExpertise(SubFeature):
+class SkillExpertise(CharacterImprovement):
     """Grants expertise in a fixed list of skills.
 
     Ordering: eager reader - raises if the skill isn't already proficient, so
@@ -117,7 +120,7 @@ class SkillExpertiseChoice(SkillExpertise):
 # ── Saving throw proficiency ──────────────────────────────────────────────────
 
 
-class SavingThrowProficiency(SubFeature):
+class SavingThrowProficiency(CharacterImprovement):
     """Grants saving throw proficiency for a fixed list of abilities."""
 
     def __init__(self, abilities: list[Ability]):
@@ -145,7 +148,7 @@ class SavingThrowProficiencyChoice(SavingThrowProficiency):
 # ── Saving throw advantage ────────────────────────────────────────────────────
 
 
-class SavingThrowAdvantage(SubFeature):
+class SavingThrowAdvantage(CharacterImprovement):
     """Grants advantage on saving throws for one or more abilities."""
 
     def __init__(self, abilities: list[Ability]):
@@ -156,7 +159,7 @@ class SavingThrowAdvantage(SubFeature):
             character_stat_block.saving_throws.add_advantage(ability)
 
 
-class SavingThrowBonus(SubFeature):
+class SavingThrowBonus(CharacterImprovement):
     """Adds a flat bonus to saving throws for one or more abilities."""
 
     def __init__(self, abilities: list[Ability], bonus: int):
@@ -171,7 +174,7 @@ class SavingThrowBonus(SubFeature):
 # ── Ability scores ────────────────────────────────────────────────────────────
 
 
-class AbilityScoreBonus(SubFeature):
+class AbilityScoreBonus(CharacterImprovement):
     """Applies (Ability, bonus) pairs, validated to sum to `total`."""
 
     def __init__(
@@ -189,7 +192,7 @@ class AbilityScoreBonus(SubFeature):
             character_stat_block.abilities.add_bonus(ability, bonus)
 
 
-class AbilityCheckBonus(SubFeature):
+class AbilityCheckBonus(CharacterImprovement):
     """Adds a flat bonus to ability checks (not skill checks - see
     SkillBonus) for one or more abilities."""
 
@@ -205,7 +208,7 @@ class AbilityCheckBonus(SubFeature):
 # ── Armor class ───────────────────────────────────────────────────────────────
 
 
-class SetArmorClass(SubFeature):
+class SetArmorClass(CharacterImprovement):
     """Sets base AC and replaces the ability modifier with a single ability (None = no modifier).
 
     Ordering: overwrite - the last SetArmorClass/MultiAbilityArmorClass to
@@ -223,7 +226,7 @@ class SetArmorClass(SubFeature):
         character_stat_block.combat.change_armor_class_ability(self.ability)
 
 
-class MultiAbilityArmorClass(SubFeature):
+class MultiAbilityArmorClass(CharacterImprovement):
     """Sets base AC and adds multiple ability modifiers (e.g. unarmored defense formulas).
 
     Ordering: overwrite of the base, but the listed abilities are ADDED to the
@@ -240,7 +243,7 @@ class MultiAbilityArmorClass(SubFeature):
             character_stat_block.combat.add_armor_class_ability(ability)
 
 
-class ArmorClassBonus(SubFeature):
+class ArmorClassBonus(CharacterImprovement):
     """Adds a flat bonus to AC."""
 
     def __init__(self, bonus: int):
@@ -253,7 +256,7 @@ class ArmorClassBonus(SubFeature):
 # ── Skill roll conditions ─────────────────────────────────────────────────────
 
 
-class SkillRollCondition(SubFeature):
+class SkillRollCondition(CharacterImprovement):
     """Applies a roll condition (advantage/disadvantage/neutral) to a specific skill.
     `reason` names where the condition comes from (e.g. the item or feature name)
     on the character sheet."""
@@ -281,14 +284,14 @@ class StealthDisadvantage(SkillRollCondition):
 # ── Initiative ────────────────────────────────────────────────────────────────
 
 
-class InitiativeProficiency(SubFeature):
+class InitiativeProficiency(CharacterImprovement):
     """Grants proficiency bonus to initiative rolls."""
 
     def apply(self, character_stat_block: CharacterStatBlock):
         character_stat_block.add_initiative_proficiency()
 
 
-class InitiativeRollCondition(SubFeature):
+class InitiativeRollCondition(CharacterImprovement):
     """Applies a roll condition (e.g. advantage) to initiative rolls."""
 
     def __init__(self, condition: DiceRollCondition):
@@ -298,7 +301,7 @@ class InitiativeRollCondition(SubFeature):
         character_stat_block.add_initiative_roll_condition(self.condition)
 
 
-class InitiativeBonus(SubFeature):
+class InitiativeBonus(CharacterImprovement):
     """Adds a flat bonus to initiative rolls (as distinct from
     InitiativeProficiency, which adds the full proficiency bonus)."""
 
@@ -312,7 +315,7 @@ class InitiativeBonus(SubFeature):
 # ── Hit points ────────────────────────────────────────────────────────────────
 
 
-class HitPointsPerLevelBonus(SubFeature):
+class HitPointsPerLevelBonus(CharacterImprovement):
     """Adds `multiplier × character_level` to the hit points bonus."""
 
     def __init__(self, multiplier: int):
@@ -327,7 +330,7 @@ class HitPointsPerLevelBonus(SubFeature):
 # ── Skill modifiers ───────────────────────────────────────────────────────────
 
 
-class SkillBonus(SubFeature):
+class SkillBonus(CharacterImprovement):
     """Adds a flat bonus to a specific skill. `source` names where the bonus
     comes from (e.g. the item or feature name) on the character sheet."""
 
@@ -345,7 +348,7 @@ class SkillBonus(SubFeature):
             character_stat_block.skills.add_skill_bonus(self.skill, self.bonus)
 
 
-class SkillToAbilityOverride(SubFeature):
+class SkillToAbilityOverride(CharacterImprovement):
     """Remaps one or more skills to use a different ability score."""
 
     def __init__(self, skills: list[Skill], ability: Ability):
@@ -357,7 +360,7 @@ class SkillToAbilityOverride(SubFeature):
             character_stat_block.skills.update_skill_to_ability(skill, self.ability)
 
 
-class JackOfAllTradesBonus(SubFeature):
+class JackOfAllTradesBonus(CharacterImprovement):
     """Adds half proficiency bonus to every skill the character lacks proficiency in.
 
     Ordering: eager reader - snapshots is_proficient for every skill, so the
@@ -376,7 +379,7 @@ class JackOfAllTradesBonus(SubFeature):
 # ── Movement ──────────────────────────────────────────────────────────────────
 
 
-class SpeedBonus(SubFeature):
+class SpeedBonus(CharacterImprovement):
     """Increases the character's movement speed by a flat amount."""
 
     def __init__(self, bonus: int):
@@ -389,7 +392,7 @@ class SpeedBonus(SubFeature):
 # ── Carrying capacity ────────────────────────────────────────────────────────
 
 
-class CarryingCapacityBonus(SubFeature):
+class CarryingCapacityBonus(CharacterImprovement):
     """Increases the character's carrying capacity (in item slots).
 
     The source label identifies where the extra slots come from
@@ -407,7 +410,7 @@ class CarryingCapacityBonus(SubFeature):
 # ── Spellcasting ──────────────────────────────────────────────────────────────
 
 
-class SpellSaveDCBonus(SubFeature):
+class SpellSaveDCBonus(CharacterImprovement):
     """Adds a flat bonus to spell save DC (calculate_difficulty_class[_for_ability])."""
 
     def __init__(self, bonus: int):
@@ -420,7 +423,7 @@ class SpellSaveDCBonus(SubFeature):
 # ── Prerequisites ─────────────────────────────────────────────────────────────
 
 
-class StrengthRequirement(SubFeature):
+class StrengthRequirement(CharacterImprovement):
     """Raises ValueError if the character's Strength score is below the minimum.
 
     Ordering: eager reader - validated when armors apply, i.e. after all
@@ -435,13 +438,13 @@ class StrengthRequirement(SubFeature):
             raise ValueError(f"Strength score must be at least {self.min_score}.")
 
 
-# ── Informational-only item subfeatures ─────────────────────────────────────
+# ── Informational-only item improvements ─────────────────────────────────────
 # The mechanics below have no automated hook in this engine: no incoming-
 # damage pipeline, no resistance/vulnerability/immunity tracking, no
 # current-HP or "Bloodied" state, no critical-hit-range model, no per-target
 # combat state, and no spell-slot expenditure/recovery tracking during play
 # (spell_slots is a static max-by-level table, not a live tracker). Each
-# still exists as a concrete, named SubFeature - so a magic item can
+# still exists as a concrete, named CharacterImprovement - so a magic item can
 # reference a real, discoverable class and store its flavor parameters -
 # but apply() is intentionally a no-op; the effect must be tracked manually
 # at the table. This mirrors the "informational card, no computation"
@@ -451,15 +454,15 @@ class StrengthRequirement(SubFeature):
 # a Feature with a description but no apply() override at all).
 
 
-class InformationalSubFeature(SubFeature):
-    """Base class for SubFeatures with no automated mechanical hook in this
+class InformationalImprovement(CharacterImprovement):
+    """Base class for CharacterImprovements with no automated mechanical hook in this
     engine. apply() is intentionally a no-op; track the effect manually."""
 
     def apply(self, character_stat_block: CharacterStatBlock) -> None:
         pass
 
 
-class SpellResistance(InformationalSubFeature):
+class SpellResistance(InformationalImprovement):
     """Advantage on saving throws against spells. Not auto-applied: this
     engine's saving-throw advantage (SavingThrowAdvantage) is tracked per
     ability only, with no "was this against a spell" qualifier, so granting
@@ -467,7 +470,7 @@ class SpellResistance(InformationalSubFeature):
     saves too."""
 
 
-class ElementalMastery(InformationalSubFeature):
+class ElementalMastery(InformationalImprovement):
     """Deal extra damage of a chosen damage type on your attacks. Not
     auto-applied: this engine has no character-level "bonus damage on every
     attack" hook - only a per-weapon one (Weapons.AddExtraDamage)."""
@@ -477,16 +480,16 @@ class ElementalMastery(InformationalSubFeature):
         self.bonus = bonus
 
 
-class ExposedWeakness(InformationalSubFeature):
+class ExposedWeakness(InformationalImprovement):
     """Creatures you damage become Vulnerable to a chosen damage type. Not
     auto-applied: it targets an enemy, not the wielder - there's no
-    enemy/target state reachable from a character SubFeature's apply()."""
+    enemy/target state reachable from a CharacterImprovement's apply()."""
 
     def __init__(self, damage_type: DamageType):
         self.damage_type = damage_type
 
 
-class ArcaneRecovery(InformationalSubFeature):
+class ArcaneRecovery(InformationalImprovement):
     """Restore a spell slot, a number of times per day equal to one-third
     of your level (rounded down, minimum 1). Not to be confused with the
     Wizard class feature of the same name (Features.ClassFeatures.Wizard.
@@ -494,7 +497,7 @@ class ArcaneRecovery(InformationalSubFeature):
     track spell slot expenditure/recovery during play."""
 
 
-class DamageMitigation(InformationalSubFeature):
+class DamageMitigation(InformationalImprovement):
     """Take reduced damage from a chosen damage type. Not auto-applied: no
     incoming-damage pipeline exists in this engine."""
 
@@ -502,24 +505,24 @@ class DamageMitigation(InformationalSubFeature):
         self.damage_type = damage_type
 
 
-class CollateralDamage(InformationalSubFeature):
+class CollateralDamage(InformationalImprovement):
     """Your attacks also deal damage to creatures near your target, even if
     they aren't the target. Not auto-applied: no per-target combat state
     exists in this engine."""
 
 
-class DangerousCollateralDamage(InformationalSubFeature):
+class DangerousCollateralDamage(InformationalImprovement):
     """Your attacks also deal damage to all creatures near your target
     (except yourself), including allies. Not auto-applied: same limitation
     as CollateralDamage."""
 
 
-class EmpoweredHealing(InformationalSubFeature):
+class EmpoweredHealing(InformationalImprovement):
     """Healing you provide restores additional hit points. Not auto-applied:
     no healing pipeline exists in this engine."""
 
 
-class DamageReduction(InformationalSubFeature):
+class DamageReduction(InformationalImprovement):
     """Incoming damage is reduced by a flat amount. Not auto-applied: no
     incoming-damage pipeline exists in this engine."""
 
@@ -527,7 +530,7 @@ class DamageReduction(InformationalSubFeature):
         self.amount = amount
 
 
-class ElementalResistance(InformationalSubFeature):
+class ElementalResistance(InformationalImprovement):
     """Resistance to a chosen damage type. Not auto-applied: no
     resistance/vulnerability/immunity tracking exists in this engine."""
 
@@ -535,17 +538,17 @@ class ElementalResistance(InformationalSubFeature):
         self.damage_type = damage_type
 
 
-class CriticalFailure(InformationalSubFeature):
+class CriticalFailure(InformationalImprovement):
     """You cannot score critical hits. Not auto-applied: no critical-hit
     computation exists in this engine."""
 
 
-class CriticalImmunity(InformationalSubFeature):
+class CriticalImmunity(InformationalImprovement):
     """Enemies cannot score critical hits against you. Not auto-applied:
     same limitation as CriticalFailure."""
 
 
-class IronWill(InformationalSubFeature):
+class IronWill(InformationalImprovement):
     """Immunity, or advantage (your choice which), against being Frightened
     or Charmed. Not auto-applied: this engine's saving-throw advantage is
     tracked per ability only, with no per-condition qualifier, so it can't
@@ -553,7 +556,7 @@ class IronWill(InformationalSubFeature):
     it automatically would overreach."""
 
 
-class Executioner(InformationalSubFeature):
+class Executioner(InformationalImprovement):
     """Deal increased damage to Bloodied or otherwise low-HP creatures. Not
     auto-applied: this engine doesn't track current/max HP or a "Bloodied"
     threshold for any creature."""
@@ -562,11 +565,11 @@ class Executioner(InformationalSubFeature):
 # ──────────────────────────────────────────────────────────────────────────────
 # ItemImprovement: composable modifiers applied to an item (weapon, armor, or
 # any future equipment type) at construction time - e.g. a magic variant or a
-# homebrew reskin. Distinct from SubFeature above: apply() mutates the item
+# homebrew reskin. Distinct from CharacterImprovement above: apply() mutates the item
 # instance itself (its name, description, GP value, homebrew flag), not the
 # wielding character's stat block. Type-specific improvements (e.g. a
 # weapon's damage die, an armor's AC) belong in their own equipment module
-# (see Features.Equipment.Weapons.WeaponSubFeature / Armor.ArmorSubFeature)
+# (see Features.Equipment.Weapons.WeaponImprovement / Armor.ArmorImprovement)
 # and should subclass this.
 # ──────────────────────────────────────────────────────────────────────────────
 

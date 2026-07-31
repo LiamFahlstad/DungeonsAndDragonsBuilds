@@ -1,6 +1,6 @@
 from Core.Definitions import Ability, Skill
 from Features.Core.BaseFeatures import Feature
-from Features.Core.SubFeatures import AbilityScoreBonus, SkillProficiencyChoice
+from Features.Core.Improvements import AbilityScoreBonus, SkillProficiencyChoice
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
