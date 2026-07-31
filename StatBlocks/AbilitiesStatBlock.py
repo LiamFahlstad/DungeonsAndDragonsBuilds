@@ -19,6 +19,16 @@ class AbilitiesStatBlock(StatBlock):
         self.intelligence = intelligence
         self.wisdom = wisdom
         self.charisma = charisma
+        # Flat bonuses to ability CHECKS (e.g. a raw Strength check to force
+        # a door), as distinct from bonuses to the ability SCORE itself
+        # (add_bonus above) or to a specific skill (SkillsStatBlock.bonuses).
+        self.check_bonuses: dict[Ability, int] = {}
+
+    def get_check_bonus(self, ability: Ability) -> int:
+        return self.check_bonuses.get(ability, 0)
+
+    def add_check_bonus(self, ability: Ability, bonus: int) -> None:
+        self.check_bonuses[ability] = self.get_check_bonus(ability) + bonus
 
     def add_bonus(self, ability: Ability, bonus: int):
         if not isinstance(bonus, int):

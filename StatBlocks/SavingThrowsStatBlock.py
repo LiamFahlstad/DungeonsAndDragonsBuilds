@@ -16,6 +16,7 @@ class SavingThrowsStatBlock(StatBlock):
     ):
         self.proficiencies = proficiencies if proficiencies is not None else {}
         self.advantages = advantages if advantages is not None else {}
+        self.bonuses: dict[Ability, int] = {}
 
     def is_proficient(self, ability: Ability) -> bool:
         return self.proficiencies.get(ability, False)
@@ -28,6 +29,12 @@ class SavingThrowsStatBlock(StatBlock):
 
     def add_advantage(self, ability: Ability) -> None:
         self.advantages[ability] = True
+
+    def get_bonus(self, ability: Ability) -> int:
+        return self.bonuses.get(ability, 0)
+
+    def add_bonus(self, ability: Ability, bonus: int) -> None:
+        self.bonuses[ability] = self.get_bonus(ability) + bonus
 
 
 class PaladinSavingThrowsStatBlock(SavingThrowsStatBlock):

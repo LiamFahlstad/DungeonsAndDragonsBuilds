@@ -38,6 +38,8 @@ class CharacterStatBlock:
         self._caster_registry: dict = {}
         self.initiative_proficiency = False
         self.initiative_roll_condition = Definitions.DiceRollCondition.NEUTRAL
+        self.initiative_bonus = 0
+        self.spell_save_dc_bonus = 0
         # (source, slots) pairs; every creature carries 3 slots on their person
         self.carrying_capacity_sources: list[tuple[str, int]] = [("Person", 3)]
 
@@ -50,7 +52,7 @@ class CharacterStatBlock:
         modifier = self.abilities.get_modifier(Ability.DEXTERITY)
         if self.initiative_proficiency:
             modifier += self.get_proficiency_bonus()
-        return modifier
+        return modifier + self.initiative_bonus
 
     def get_carrying_capacity(self) -> int:
         """Returns the total carrying capacity in item slots (base 3 + bonuses)."""
@@ -66,6 +68,12 @@ class CharacterStatBlock:
 
     def add_initiative_roll_condition(self, condition: Definitions.DiceRollCondition):
         self.initiative_roll_condition = condition
+
+    def add_initiative_bonus(self, bonus: int) -> None:
+        self.initiative_bonus += bonus
+
+    def add_spell_save_dc_bonus(self, bonus: int) -> None:
+        self.spell_save_dc_bonus += bonus
 
     def get_class_level(self, character_class: CharacterClass) -> int:
         return self.level_per_class.get(character_class, 0)
@@ -98,6 +106,14 @@ class CharacterStatBlock:
 
     def get_ability_modifier(self, ability: Ability) -> int:
         return self.abilities.get_modifier(ability)
+
+    def get_ability_check_modifier(self, ability: Ability) -> int:
+        """Modifier for a raw ability check (e.g. forcing a door), as
+        distinct from a skill check (get_skill_modifier)."""
+        return self.get_ability_modifier(ability) + self.abilities.get_check_bonus(ability)
+
+    def add_ability_check_bonus(self, ability: Ability, bonus: int) -> None:
+        self.abilities.add_check_bonus(ability, bonus)
 
     def is_proficient_in_skill(self, skill: Skill) -> bool:
         return self.skills.is_proficient(skill)
@@ -158,7 +174,7 @@ class CharacterStatBlock:
             if self.is_proficient_in_saving_throw(ability)
             else 0
         )
-        return base_modifier + proficiency_bonus
+        return base_modifier + proficiency_bonus + self.saving_throws.get_bonus(ability)
 
     def calculate_hit_points(self) -> int:
         constitution_modifier = self.get_ability_modifier(Ability.CONSTITUTION)
@@ -189,7 +205,7 @@ class CharacterStatBlock:
 
     def calculate_difficulty_class_for_ability(self, ability: Ability) -> int:
         modifier = self.get_ability_modifier(ability)
-        return 8 + self.get_proficiency_bonus() + modifier
+        return 8 + self.get_proficiency_bonus() + modifier + self.spell_save_dc_bonus
 
     def calculate_attack_bonus(self) -> int:
         return self.calculate_attack_bonus_for_ability(

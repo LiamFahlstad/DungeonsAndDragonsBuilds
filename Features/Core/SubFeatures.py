@@ -26,7 +26,7 @@ A SubFeature falls into one of three categories:
 from abc import ABC, abstractmethod
 from typing import Optional
 
-from Core.Definitions import Ability, DiceRollCondition, Skill
+from Core.Definitions import Ability, DamageType, DiceRollCondition, Skill
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
@@ -51,6 +51,7 @@ def _validate_pool(items, pool, count: int, error_prefix: str):
 
 # ── Skill proficiency ─────────────────────────────────────────────────────────
 
+
 class SkillProficiency(SubFeature):
     """Grants proficiency in a fixed list of skills.
 
@@ -69,12 +70,19 @@ class SkillProficiency(SubFeature):
 class SkillProficiencyChoice(SkillProficiency):
     """Grants proficiency in user-chosen skills, validated against a pool."""
 
-    def __init__(self, skills: list[Skill], pool: list[Skill], count: int, error_prefix: str = "Invalid skill choice"):
+    def __init__(
+        self,
+        skills: list[Skill],
+        pool: list[Skill],
+        count: int,
+        error_prefix: str = "Invalid skill choice",
+    ):
         _validate_pool(skills, pool, count, error_prefix)
         super().__init__(skills)
 
 
 # ── Skill expertise ───────────────────────────────────────────────────────────
+
 
 class SkillExpertise(SubFeature):
     """Grants expertise in a fixed list of skills.
@@ -95,12 +103,19 @@ class SkillExpertise(SubFeature):
 class SkillExpertiseChoice(SkillExpertise):
     """Grants expertise in user-chosen skills, validated against a pool."""
 
-    def __init__(self, skills: list[Skill], pool: list[Skill], count: int, error_prefix: str = "Invalid skill choice"):
+    def __init__(
+        self,
+        skills: list[Skill],
+        pool: list[Skill],
+        count: int,
+        error_prefix: str = "Invalid skill choice",
+    ):
         _validate_pool(skills, pool, count, error_prefix)
         super().__init__(skills)
 
 
 # ── Saving throw proficiency ──────────────────────────────────────────────────
+
 
 class SavingThrowProficiency(SubFeature):
     """Grants saving throw proficiency for a fixed list of abilities."""
@@ -116,12 +131,19 @@ class SavingThrowProficiency(SubFeature):
 class SavingThrowProficiencyChoice(SavingThrowProficiency):
     """Grants saving throw proficiency for user-chosen abilities, validated against a pool."""
 
-    def __init__(self, abilities: list[Ability], pool: list[Ability], count: int, error_prefix: str = "Invalid saving throw choice"):
+    def __init__(
+        self,
+        abilities: list[Ability],
+        pool: list[Ability],
+        count: int,
+        error_prefix: str = "Invalid saving throw choice",
+    ):
         _validate_pool(abilities, pool, count, error_prefix)
         super().__init__(abilities)
 
 
 # ── Saving throw advantage ────────────────────────────────────────────────────
+
 
 class SavingThrowAdvantage(SubFeature):
     """Grants advantage on saving throws for one or more abilities."""
@@ -134,12 +156,30 @@ class SavingThrowAdvantage(SubFeature):
             character_stat_block.saving_throws.add_advantage(ability)
 
 
+class SavingThrowBonus(SubFeature):
+    """Adds a flat bonus to saving throws for one or more abilities."""
+
+    def __init__(self, abilities: list[Ability], bonus: int):
+        self.abilities = abilities
+        self.bonus = bonus
+
+    def apply(self, character_stat_block: CharacterStatBlock):
+        for ability in self.abilities:
+            character_stat_block.saving_throws.add_bonus(ability, self.bonus)
+
+
 # ── Ability scores ────────────────────────────────────────────────────────────
+
 
 class AbilityScoreBonus(SubFeature):
     """Applies (Ability, bonus) pairs, validated to sum to `total`."""
 
-    def __init__(self, bonuses: list[tuple[Ability, int]], total: int, error_prefix: str = "Invalid ability bonus"):
+    def __init__(
+        self,
+        bonuses: list[tuple[Ability, int]],
+        total: int,
+        error_prefix: str = "Invalid ability bonus",
+    ):
         if sum(b[1] for b in bonuses) != total:
             raise ValueError(f"{error_prefix}: bonuses must sum to {total}.")
         self.bonuses = bonuses
@@ -149,7 +189,21 @@ class AbilityScoreBonus(SubFeature):
             character_stat_block.abilities.add_bonus(ability, bonus)
 
 
+class AbilityCheckBonus(SubFeature):
+    """Adds a flat bonus to ability checks (not skill checks - see
+    SkillBonus) for one or more abilities."""
+
+    def __init__(self, abilities: list[Ability], bonus: int):
+        self.abilities = abilities
+        self.bonus = bonus
+
+    def apply(self, character_stat_block: CharacterStatBlock):
+        for ability in self.abilities:
+            character_stat_block.add_ability_check_bonus(ability, self.bonus)
+
+
 # ── Armor class ───────────────────────────────────────────────────────────────
+
 
 class SetArmorClass(SubFeature):
     """Sets base AC and replaces the ability modifier with a single ability (None = no modifier).
@@ -198,18 +252,23 @@ class ArmorClassBonus(SubFeature):
 
 # ── Skill roll conditions ─────────────────────────────────────────────────────
 
+
 class SkillRollCondition(SubFeature):
     """Applies a roll condition (advantage/disadvantage/neutral) to a specific skill.
     `reason` names where the condition comes from (e.g. the item or feature name)
     on the character sheet."""
 
-    def __init__(self, skill: Skill, condition: DiceRollCondition, reason: Optional[str] = None):
+    def __init__(
+        self, skill: Skill, condition: DiceRollCondition, reason: Optional[str] = None
+    ):
         self.skill = skill
         self.condition = condition
         self.reason = reason
 
     def apply(self, character_stat_block: CharacterStatBlock):
-        character_stat_block.set_skill_roll_condition(self.skill, self.condition, self.reason)
+        character_stat_block.set_skill_roll_condition(
+            self.skill, self.condition, self.reason
+        )
 
 
 class StealthDisadvantage(SkillRollCondition):
@@ -220,6 +279,7 @@ class StealthDisadvantage(SkillRollCondition):
 
 
 # ── Initiative ────────────────────────────────────────────────────────────────
+
 
 class InitiativeProficiency(SubFeature):
     """Grants proficiency bonus to initiative rolls."""
@@ -238,7 +298,19 @@ class InitiativeRollCondition(SubFeature):
         character_stat_block.add_initiative_roll_condition(self.condition)
 
 
+class InitiativeBonus(SubFeature):
+    """Adds a flat bonus to initiative rolls (as distinct from
+    InitiativeProficiency, which adds the full proficiency bonus)."""
+
+    def __init__(self, bonus: int):
+        self.bonus = bonus
+
+    def apply(self, character_stat_block: CharacterStatBlock):
+        character_stat_block.add_initiative_bonus(self.bonus)
+
+
 # ── Hit points ────────────────────────────────────────────────────────────────
+
 
 class HitPointsPerLevelBonus(SubFeature):
     """Adds `multiplier × character_level` to the hit points bonus."""
@@ -247,10 +319,13 @@ class HitPointsPerLevelBonus(SubFeature):
         self.multiplier = multiplier
 
     def apply(self, character_stat_block: CharacterStatBlock):
-        character_stat_block.combat.hit_points_bonus += self.multiplier * character_stat_block.character_level
+        character_stat_block.combat.hit_points_bonus += (
+            self.multiplier * character_stat_block.character_level
+        )
 
 
 # ── Skill modifiers ───────────────────────────────────────────────────────────
+
 
 class SkillBonus(SubFeature):
     """Adds a flat bonus to a specific skill. `source` names where the bonus
@@ -263,7 +338,9 @@ class SkillBonus(SubFeature):
 
     def apply(self, character_stat_block: CharacterStatBlock):
         if self.source is not None:
-            character_stat_block.skills.add_skill_bonus(self.skill, self.bonus, self.source)
+            character_stat_block.skills.add_skill_bonus(
+                self.skill, self.bonus, self.source
+            )
         else:
             character_stat_block.skills.add_skill_bonus(self.skill, self.bonus)
 
@@ -298,6 +375,7 @@ class JackOfAllTradesBonus(SubFeature):
 
 # ── Movement ──────────────────────────────────────────────────────────────────
 
+
 class SpeedBonus(SubFeature):
     """Increases the character's movement speed by a flat amount."""
 
@@ -309,6 +387,7 @@ class SpeedBonus(SubFeature):
 
 
 # ── Carrying capacity ────────────────────────────────────────────────────────
+
 
 class CarryingCapacityBonus(SubFeature):
     """Increases the character's carrying capacity (in item slots).
@@ -325,7 +404,21 @@ class CarryingCapacityBonus(SubFeature):
         character_stat_block.carrying_capacity_sources.append((self.source, self.bonus))
 
 
+# ── Spellcasting ──────────────────────────────────────────────────────────────
+
+
+class SpellSaveDCBonus(SubFeature):
+    """Adds a flat bonus to spell save DC (calculate_difficulty_class[_for_ability])."""
+
+    def __init__(self, bonus: int):
+        self.bonus = bonus
+
+    def apply(self, character_stat_block: CharacterStatBlock):
+        character_stat_block.add_spell_save_dc_bonus(self.bonus)
+
+
 # ── Prerequisites ─────────────────────────────────────────────────────────────
+
 
 class StrengthRequirement(SubFeature):
     """Raises ValueError if the character's Strength score is below the minimum.
@@ -340,6 +433,130 @@ class StrengthRequirement(SubFeature):
     def apply(self, character_stat_block: CharacterStatBlock):
         if character_stat_block.get_ability_score(Ability.STRENGTH) < self.min_score:
             raise ValueError(f"Strength score must be at least {self.min_score}.")
+
+
+# ── Informational-only item subfeatures ─────────────────────────────────────
+# The mechanics below have no automated hook in this engine: no incoming-
+# damage pipeline, no resistance/vulnerability/immunity tracking, no
+# current-HP or "Bloodied" state, no critical-hit-range model, no per-target
+# combat state, and no spell-slot expenditure/recovery tracking during play
+# (spell_slots is a static max-by-level table, not a live tracker). Each
+# still exists as a concrete, named SubFeature - so a magic item can
+# reference a real, discoverable class and store its flavor parameters -
+# but apply() is intentionally a no-op; the effect must be tracked manually
+# at the table. This mirrors the "informational card, no computation"
+# pattern used elsewhere for effects this codebase can't compute
+# automatically (e.g. FightingStyles.Interception/Protection, both marked
+# "(calculate manually)"; SpeciesFeatures.DwarfFeatures.DwarvenResilience,
+# a Feature with a description but no apply() override at all).
+
+
+class InformationalSubFeature(SubFeature):
+    """Base class for SubFeatures with no automated mechanical hook in this
+    engine. apply() is intentionally a no-op; track the effect manually."""
+
+    def apply(self, character_stat_block: CharacterStatBlock) -> None:
+        pass
+
+
+class SpellResistance(InformationalSubFeature):
+    """Advantage on saving throws against spells. Not auto-applied: this
+    engine's saving-throw advantage (SavingThrowAdvantage) is tracked per
+    ability only, with no "was this against a spell" qualifier, so granting
+    it here would overreach into advantage on that ability's non-spell
+    saves too."""
+
+
+class ElementalMastery(InformationalSubFeature):
+    """Deal extra damage of a chosen damage type on your attacks. Not
+    auto-applied: this engine has no character-level "bonus damage on every
+    attack" hook - only a per-weapon one (Weapons.AddExtraDamage)."""
+
+    def __init__(self, damage_type: DamageType, bonus: int = 1):
+        self.damage_type = damage_type
+        self.bonus = bonus
+
+
+class ExposedWeakness(InformationalSubFeature):
+    """Creatures you damage become Vulnerable to a chosen damage type. Not
+    auto-applied: it targets an enemy, not the wielder - there's no
+    enemy/target state reachable from a character SubFeature's apply()."""
+
+    def __init__(self, damage_type: DamageType):
+        self.damage_type = damage_type
+
+
+class ArcaneRecovery(InformationalSubFeature):
+    """Restore a spell slot, a number of times per day equal to one-third
+    of your level (rounded down, minimum 1). Not to be confused with the
+    Wizard class feature of the same name (Features.ClassFeatures.Wizard.
+    WizardFeatures.ArcaneRecovery). Not auto-applied: this engine doesn't
+    track spell slot expenditure/recovery during play."""
+
+
+class DamageMitigation(InformationalSubFeature):
+    """Take reduced damage from a chosen damage type. Not auto-applied: no
+    incoming-damage pipeline exists in this engine."""
+
+    def __init__(self, damage_type: DamageType):
+        self.damage_type = damage_type
+
+
+class CollateralDamage(InformationalSubFeature):
+    """Your attacks also deal damage to creatures near your target, even if
+    they aren't the target. Not auto-applied: no per-target combat state
+    exists in this engine."""
+
+
+class DangerousCollateralDamage(InformationalSubFeature):
+    """Your attacks also deal damage to all creatures near your target
+    (except yourself), including allies. Not auto-applied: same limitation
+    as CollateralDamage."""
+
+
+class EmpoweredHealing(InformationalSubFeature):
+    """Healing you provide restores additional hit points. Not auto-applied:
+    no healing pipeline exists in this engine."""
+
+
+class DamageReduction(InformationalSubFeature):
+    """Incoming damage is reduced by a flat amount. Not auto-applied: no
+    incoming-damage pipeline exists in this engine."""
+
+    def __init__(self, amount: Optional[int] = None):
+        self.amount = amount
+
+
+class ElementalResistance(InformationalSubFeature):
+    """Resistance to a chosen damage type. Not auto-applied: no
+    resistance/vulnerability/immunity tracking exists in this engine."""
+
+    def __init__(self, damage_type: DamageType):
+        self.damage_type = damage_type
+
+
+class CriticalFailure(InformationalSubFeature):
+    """You cannot score critical hits. Not auto-applied: no critical-hit
+    computation exists in this engine."""
+
+
+class CriticalImmunity(InformationalSubFeature):
+    """Enemies cannot score critical hits against you. Not auto-applied:
+    same limitation as CriticalFailure."""
+
+
+class IronWill(InformationalSubFeature):
+    """Immunity, or advantage (your choice which), against being Frightened
+    or Charmed. Not auto-applied: this engine's saving-throw advantage is
+    tracked per ability only, with no per-condition qualifier, so it can't
+    be distinguished from blanket Wisdom/Charisma save advantage - applying
+    it automatically would overreach."""
+
+
+class Executioner(InformationalSubFeature):
+    """Deal increased damage to Bloodied or otherwise low-HP creatures. Not
+    auto-applied: this engine doesn't track current/max HP or a "Bloodied"
+    threshold for any creature."""
 
 
 # ──────────────────────────────────────────────────────────────────────────────
@@ -385,7 +602,9 @@ class AddItemDescription(ItemImprovement):
 
     def apply(self, item) -> None:
         item.description_text = (
-            f"{item.description_text}\n{self.text}" if item.description_text else self.text
+            f"{item.description_text}\n{self.text}"
+            if item.description_text
+            else self.text
         )
 
 
