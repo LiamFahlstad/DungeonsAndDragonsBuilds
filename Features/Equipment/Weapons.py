@@ -1715,6 +1715,23 @@ class FlameTongueSword(AbstractWeapon):
 ### Utility functions
 
 
+_DAMAGE_TYPE_CSS_CLASS = {
+    WeaponsDamageTypes.SLASHING: "wtag-dmg-slashing",
+    WeaponsDamageTypes.PIERCING: "wtag-dmg-piercing",
+    WeaponsDamageTypes.BLUDGEONING: "wtag-dmg-bludgeoning",
+    WeaponsDamageTypes.ACID: "wtag-dmg-acid",
+    WeaponsDamageTypes.COLD: "wtag-dmg-cold",
+    WeaponsDamageTypes.FIRE: "wtag-dmg-fire",
+    WeaponsDamageTypes.LIGHTNING: "wtag-dmg-lightning",
+    WeaponsDamageTypes.THUNDER: "wtag-dmg-thunder",
+    WeaponsDamageTypes.NECROTIC: "wtag-dmg-necrotic",
+    WeaponsDamageTypes.RADIANT: "wtag-dmg-radiant",
+    WeaponsDamageTypes.POISON: "wtag-dmg-poison",
+    WeaponsDamageTypes.PSYCHIC: "wtag-dmg-psychic",
+    WeaponsDamageTypes.FORCE: "wtag-dmg-force",
+}
+
+
 def _write_single_weapon(
     weapon: AbstractWeapon,
     character_stat_block: CharacterStatBlock,
@@ -1767,14 +1784,14 @@ def _write_single_weapon(
     type_cell = (
         f"{stats.weapon_type.value}"
         f"<span class='wsep'>·</span>"
-        f"{stats.damage_type.value}"
-        f"<span class='wsep'>·</span>"
         f"{proficient_label}"
     )
+    damage_type_class = _DAMAGE_TYPE_CSS_CLASS.get(stats.damage_type, "")
+    damage_type_tag = f" <span class='wtag {damage_type_class}'>{stats.damage_type.value}</span>"
     roll_cell = (
         f"<span class='wlabel'>Attack</span> 1d20 {attack_bonus_str}"
         f"<span class='wsep'>·</span>"
-        f"<span class='wlabel'>Damage</span> {damage_roll_str}"
+        f"<span class='wlabel'>Damage</span> {damage_roll_str}{damage_type_tag}"
     )
     file.write(
         f"<tr class='weapon-quickstats'>"

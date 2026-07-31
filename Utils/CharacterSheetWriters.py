@@ -1364,6 +1364,73 @@ class HtmlCharacterSheetWriter:
             font-style: italic;
         }
 
+        /* Damage type chip, next to the Damage roll — one color per type */
+        .wtag-dmg-slashing, .wtag-dmg-piercing, .wtag-dmg-bludgeoning {
+            border-color: #b0a89a;
+            color: #6a5f4e;
+            font-weight: 600;
+        }
+
+        .wtag-dmg-acid {
+            border-color: #9ab04a;
+            color: #5c7024;
+            font-weight: 600;
+        }
+
+        .wtag-dmg-cold {
+            border-color: #7ab0d8;
+            color: #2a6a9a;
+            font-weight: 600;
+        }
+
+        .wtag-dmg-fire {
+            border-color: #e0955a;
+            color: #b0501a;
+            font-weight: 600;
+        }
+
+        .wtag-dmg-lightning {
+            border-color: #c8a828;
+            color: #8a6a00;
+            font-weight: 600;
+        }
+
+        .wtag-dmg-thunder {
+            border-color: #8a9ab8;
+            color: #445a80;
+            font-weight: 600;
+        }
+
+        .wtag-dmg-necrotic {
+            border-color: #8a5aa0;
+            color: #4a2a5a;
+            font-weight: 600;
+        }
+
+        .wtag-dmg-radiant {
+            border-color: #d8b840;
+            color: #9a7a00;
+            font-weight: 600;
+        }
+
+        .wtag-dmg-poison {
+            border-color: #5a9a5a;
+            color: #2a5a2a;
+            font-weight: 600;
+        }
+
+        .wtag-dmg-psychic {
+            border-color: #d060a8;
+            color: #a0206e;
+            font-weight: 600;
+        }
+
+        .wtag-dmg-force {
+            border-color: #8a7ad8;
+            color: #5a44b0;
+            font-weight: 600;
+        }
+
         /* Per-property description rows */
         tr.weapon-prop-row td {
             font-size: 0.8rem;
