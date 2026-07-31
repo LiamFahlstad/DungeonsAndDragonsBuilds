@@ -1,7 +1,8 @@
 """Example build: Fighter Champion outfitted with one of every WeaponSubFeature demo
-weapon (see Features/Equipment/Weapons.py), plus a plain weapon with its ability
-overridden via SetWeaponAbility, so all of it is visible together on one character
-sheet."""
+weapon (see Features/Equipment/Weapons.py), a plain weapon with its ability
+overridden via SetWeaponAbility, and a couple of magic weapons that modify the
+wielder rather than the weapon (via `subfeatures=`), so all of it is visible
+together on one character sheet."""
 
 from Builds.CharacterBuilder import CharacterBuilder
 from CharacterConfigs.BaseClasses import ClassBuilder
@@ -83,6 +84,10 @@ def get_starter_class_builder():
             # -- SetWeaponAbility showcase: a plain Shortbow using Wisdom instead
             # of Dexterity, e.g. a "guided by instinct" reskin --
             Weapons.Shortbow(player_is_proficient=True, ability=Ability.WISDOM),
+            # -- Character-affecting subfeature showcase: magic weapons that
+            # modify the wielder (via `subfeatures=`), not the weapon itself --
+            Weapons.SkirmishersShortsword(player_is_proficient=True),  # SkillBonus
+            Weapons.VanguardsSpear(player_is_proficient=True),  # InitiativeRollCondition
         ],
         base_class_level_features=ClassBuilder.BaseClassLevelFeatures(
             base_class_features_by_level={

@@ -4,15 +4,17 @@ from enum import Enum
 from typing import Optional, TextIO
 
 from Utils import DamageCalculator
-from Core.Definitions import Ability, Die
+from Core.Definitions import Ability, DiceRollCondition, Die, Skill
 from Features.Core.SubFeatures import (
     AbilityScoreBonus,
     AddItemDescription,
+    InitiativeRollCondition,
     ItemImprovement,
     Reskin,
     SetItemHomebrew,
     SetItemName,
     SetItemValue,
+    SkillBonus,
     SubFeature,
 )
 from Features.Items.Items import Item, ItemCategory, ItemRarity
@@ -1451,6 +1453,50 @@ class FlameTongueSword(AbstractWeapon):
                 [(Ability.STRENGTH, 1)], total=1, error_prefix="Flame Tongue Sword bonus"
             )
         ]
+
+
+class SkirmishersShortsword(Shortsword):
+    """A magical Shortsword demonstrating a character-affecting subfeature
+    (`_innate_subfeatures`, i.e. the weapon's own `subfeatures=` - the same
+    mechanism RingOfIntelligence uses) rather than a WeaponSubFeature: it
+    hones the wielder's own footwork, not the blade itself."""
+
+    def base_stats(self) -> None:
+        super().base_stats()
+        self.rarity = ItemRarity.UNCOMMON
+        self._innate_subfeatures = [
+            SkillBonus(Skill.ACROBATICS, 2, source="Skirmisher's Shortsword")
+        ]
+
+    def setup_improvements(self) -> None:
+        self.add_improvement(
+            Reskin(
+                "Skirmisher's Shortsword",
+                "This lightweight blade trains its wielder's footwork. "
+                "While wielding it, you gain a +2 bonus to Dexterity (Acrobatics) checks.",
+            )
+        )
+
+
+class VanguardsSpear(Spear):
+    """A magical Spear demonstrating a different character-affecting
+    subfeature (InitiativeRollCondition): it keeps its wielder a half-step
+    ahead of danger, granting Advantage on Initiative rolls rather than
+    changing anything about the spear's own attack or damage."""
+
+    def base_stats(self) -> None:
+        super().base_stats()
+        self.rarity = ItemRarity.UNCOMMON
+        self._innate_subfeatures = [InitiativeRollCondition(DiceRollCondition.ADVANTAGE)]
+
+    def setup_improvements(self) -> None:
+        self.add_improvement(
+            Reskin(
+                "Vanguard's Spear",
+                "This spear hums with a restless energy, sharpening its wielder's "
+                "reflexes. While wielding it, you have Advantage on Initiative rolls.",
+            )
+        )
 
 
 ### Utility functions

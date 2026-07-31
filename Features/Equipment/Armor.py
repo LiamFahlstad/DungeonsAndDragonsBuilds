@@ -1,17 +1,19 @@
 from abc import ABC, abstractmethod
 from typing import Optional
 
-from Core.Definitions import Ability
+from Core.Definitions import Ability, Skill
 from Features.Core.SubFeatures import (
     AbilityScoreBonus,
     AddItemDescription,
     ArmorClassBonus,
     ItemImprovement,
     Reskin,
+    SavingThrowAdvantage,
     SetArmorClass,
     SetItemHomebrew,
     SetItemName,
     SetItemValue,
+    SkillBonus,
     StealthDisadvantage,
     StrengthRequirement,
     SubFeature,
@@ -290,6 +292,52 @@ class DragonscalePlate(AbstractArmor):
                 error_prefix="Dragonscale Plate bonus",
             )
         ]
+
+
+class SentinelsWatchArmor(ChainShirtArmor):
+    """Magical Chain Shirt demonstrating a character-affecting subfeature
+    (`_innate_subfeatures`, i.e. the armor's own `subfeatures=` - the same
+    mechanism RingOfIntelligence uses) rather than an ArmorSubFeature: it
+    sharpens the wearer's own senses, not the armor's AC."""
+
+    def base_stats(self) -> None:
+        super().base_stats()
+        self.rarity = ItemRarity.UNCOMMON
+        self._innate_subfeatures = [
+            SkillBonus(Skill.PERCEPTION, 2, source="Sentinel's Watch Armor")
+        ]
+
+    def setup_improvements(self) -> None:
+        self.add_improvement(
+            Reskin(
+                "Sentinel's Watch Armor",
+                "Enchanted mail rings chime faintly at the edge of hearing, sharpening "
+                "the wearer's senses. While wearing it, you gain a +2 bonus to Wisdom "
+                "(Perception) checks.",
+            )
+        )
+
+
+class StalwartsAegis(ChainMailArmor):
+    """Magical Chain Mail demonstrating a different character-affecting
+    subfeature (SavingThrowAdvantage): it steels the wearer's resolve,
+    granting Advantage on Wisdom saving throws rather than changing
+    anything about the armor's own AC."""
+
+    def base_stats(self) -> None:
+        super().base_stats()
+        self.rarity = ItemRarity.RARE
+        self.requires_attunement = True
+        self._innate_subfeatures = [SavingThrowAdvantage([Ability.WISDOM])]
+
+    def setup_improvements(self) -> None:
+        self.add_improvement(
+            Reskin(
+                "Stalwart's Aegis",
+                "This breastplate radiates a calm, unshakable resolve. While wearing "
+                "it, you have Advantage on Wisdom saving throws.",
+            )
+        )
 
 
 # ──────────────────────────────────────────────────────────────────────────────
