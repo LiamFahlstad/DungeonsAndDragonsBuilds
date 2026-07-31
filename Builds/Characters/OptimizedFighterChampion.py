@@ -16,7 +16,7 @@ from Core.Definitions import Ability, Skill
 from Features.CharacterFeats import Backgrounds, GeneralFeats, OriginFeats
 from Features.Combat import FightingStyles
 from Features.Equipment import Armor, Weapons
-from Features.Items import Items, Packs
+from Features.Items import Items
 from SpeciesConfigs import Dwarf
 from StatBlocks.AbilitiesStatBlock import StandardArrayAbilitiesStatBlock
 from StatBlocks.SkillsStatBlock import FighterSkillsStatBlock
@@ -70,8 +70,7 @@ def get_starter_class_builder():
             Weapons.Scimitar(),
             Weapons.Longbow(),
         ],
-        items=Packs.DungeoneersPack().get_items()
-        + [(Items.RobeOfLevitation(), 1), (Items.HobbyHorse(), 1)],
+        items=[(Items.RobeOfLevitation(), 1), (Items.HobbyHorse(), 1)],
         base_class_level_features=ClassBuilder.BaseClassLevelFeatures(
             base_class_features_by_level={
                 1: FighterLevel1(

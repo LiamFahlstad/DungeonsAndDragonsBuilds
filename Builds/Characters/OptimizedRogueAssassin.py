@@ -17,7 +17,7 @@ from CharacterConfigs.SubClasses2024.RogueAssassin import (
 from Core.Definitions import Ability, Skill
 from Features.CharacterFeats import Backgrounds, GeneralFeats, OriginFeats
 from Features.Equipment import Armor, Weapons
-from Features.Items import Items, Packs
+from Features.Items import Items
 from SpeciesConfigs import Elf
 from StatBlocks.AbilitiesStatBlock import StandardArrayAbilitiesStatBlock
 from StatBlocks.SkillsStatBlock import RogueSkillsStatBlock
@@ -71,8 +71,7 @@ def get_starter_class_builder():
             Weapons.Shortsword(),
             Weapons.Scimitar(),
         ],
-        items=Packs.BurglarsPack().get_items()
-        + [
+        items=[
             (Items.Makarov(), 1),
             (Items.NightVisionGoggles(), 2),
             (Items.ButterflyKnife(), 2),

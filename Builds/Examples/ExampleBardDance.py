@@ -33,7 +33,7 @@ from CharacterConfigs.SubClasses2024.BardDance import (
 )
 from Core.Definitions import Ability, Skill
 from Features.CharacterFeats import Backgrounds, EpicBoon, GeneralFeats, OriginFeats
-from Features.Items import Items, Packs
+from Features.Items import Items
 from SpeciesConfigs import Aasimar
 from Spells.SpellLists import (
     BardLevel0Spells,
@@ -88,7 +88,7 @@ def get_starter_class_builder():
         origin_feat=OriginFeats.Musician(),
         armor=[],
         weapons=[],
-        items=Packs.Entertainers().get_items() + [(Items.Typewriter(), 1)],
+        items=[(Items.Typewriter(), 1)],
         base_class_level_features=ClassBuilder.BaseClassLevelFeatures(
             base_class_features_by_level={
                 1: BardLevel1(
