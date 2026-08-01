@@ -7,21 +7,36 @@ from pathlib import Path
 from PyQt6.QtWidgets import QApplication
 
 import Core.Definitions as Definitions
-from Combat.Definitions import BasicCombatantData, Condition, ExtendedCombatantData, Visibility
 from CharacterContent.Items import Armor
-from .damage_mixin import DamageMixin
-from .conditions_mixin import ConditionsMixin
-from .spells_mixin import SpellsMixin
-from .turns_mixin import TurnsMixin
+from Combat.Definitions import (
+    BasicCombatantData,
+    Condition,
+    ExtendedCombatantData,
+    Visibility,
+)
+
 from .cards_mixin import CardsMixin
-from .logging_mixin import LoggingMixin
+from .conditions_mixin import ConditionsMixin
+from .damage_mixin import DamageMixin
 from .dialogs_mixin import DialogsMixin
-from .window_mixin import WindowMixin
-from .styles import QSS
+from .logging_mixin import LoggingMixin
+from .spells_mixin import SpellsMixin
 from .stats import _default_stats
+from .styles import QSS
+from .turns_mixin import TurnsMixin
+from .window_mixin import WindowMixin
 
 
-class CombatAppQt(DamageMixin, ConditionsMixin, SpellsMixin, TurnsMixin, CardsMixin, LoggingMixin, DialogsMixin, WindowMixin):
+class CombatAppQt(
+    DamageMixin,
+    ConditionsMixin,
+    SpellsMixin,
+    TurnsMixin,
+    CardsMixin,
+    LoggingMixin,
+    DialogsMixin,
+    WindowMixin,
+):
     ACTION_ECONOMY_TYPES: list[str] = ["Action", "Bonus Action", "Reaction"]
     ACTION_ECONOMY_SHORTCUTS: dict[str, str] = {
         "A": "Action",
@@ -58,7 +73,7 @@ class CombatAppQt(DamageMixin, ConditionsMixin, SpellsMixin, TurnsMixin, CardsMi
         self.initiative_order: list[dict] = []
         self.current_turn_idx: int = 0
 
-        log_dir = Path("CombatLogs")
+        log_dir = Path("Combat/CombatLogs")
         log_dir.mkdir(exist_ok=True)
         timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
         self.log_file = log_dir / f"combat_log_{timestamp}.json"
@@ -158,14 +173,20 @@ class CombatAppQt(DamageMixin, ConditionsMixin, SpellsMixin, TurnsMixin, CardsMi
 
         char = {
             "name": display_name,
-            "create_name": combatant.create_name if combatant.create_name is not None else combatant.combatant_type,
+            "create_name": (
+                combatant.create_name
+                if combatant.create_name is not None
+                else combatant.combatant_type
+            ),
             "combatant_type": combatant.combatant_type,
             "hp": combatant.hp,
             "max_hp": combatant.max_hp,
             "ac": combatant.ac,
             "temp_hp": combatant.temp_hp,
             "conditions": [cond.value for cond in combatant.conditions],
-            "visibility_states": [vis.value for vis in (combatant.visibility_states or [])],
+            "visibility_states": [
+                vis.value for vis in (combatant.visibility_states or [])
+            ],
             "death_saves_fail": 0,
             "death_saves_success": 0,
             "stats": _default_stats(),

@@ -3,7 +3,6 @@ from typing import Any, Optional
 import attr
 
 import Core.Definitions as Definitions
-from Core.Definitions import Ability, ApplyWhen, CharacterClass
 from CharacterContent.Features.CharacterFeats import OriginFeats
 from CharacterContent.Features.CombatFeatures.FightingStyles import (
     FightingStyle,
@@ -11,9 +10,14 @@ from CharacterContent.Features.CombatFeatures.FightingStyles import (
     FightStyleWeaponFeature,
 )
 from CharacterContent.Features.Core.BaseFeatures import Feature
-from CharacterContent.Items.Armor import AbstractArmor
-from CharacterContent.Items.Weapons import AbstractWeapon, WeaponProficiency, is_proficient_with
 from CharacterContent.Items import Items
+from CharacterContent.Items.Armor import AbstractArmor
+from CharacterContent.Items.Weapons import (
+    AbstractWeapon,
+    WeaponProficiency,
+    is_proficient_with,
+)
+from Core.Definitions import Ability, ApplyWhen, CharacterClass
 from StatBlocks.AbilitiesStatBlock import AbilitiesStatBlock
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from StatBlocks.CombatStatBlock import CombatStatBlock
@@ -289,6 +293,24 @@ class CharacterSheetData:
                 f"(Shields do not count toward this limit.)"
             )
 
+        # Validate each attribute
+        if self.character_name is None:
+            raise ValueError("Character name must be set.")
+        if self.character_subclass is None:
+            raise ValueError("Character subclass must be set.")
+        if self.abilities is None:
+            raise ValueError("Character abilities must be set.")
+        if self.skills is None:
+            raise ValueError("Character skills must be set.")
+        if self.speed is None:
+            raise ValueError("Character speed must be set.")
+        if self.size is None:
+            raise ValueError("Character size must be set.")
+        if self.base_class is None:
+            raise ValueError("Character base class must be set.")
+        if self.saving_throws is None:
+            raise ValueError("Character saving throws must be set.")
+
         combat = CombatStatBlock(
             speed=self.speed,
             size=self.size,
@@ -345,6 +367,10 @@ class CharacterSheetData:
         return character.calculate_attack_bonus_for_ability(ability)
 
     def get_file_path(self) -> str:
+        if self.character_name is None:
+            raise ValueError("Character name must be set to generate file path.")
+        if self.character_subclass is None:
+            raise ValueError("Character subclass must be set to generate file path.")
         return (
             f"Output/{self._slugify_name(self.character_name)}_"
             f"{self.character_subclass.lower()}_level_{self.character_level}_character_sheet.html"
