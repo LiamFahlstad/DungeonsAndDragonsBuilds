@@ -267,9 +267,11 @@ class CardsMixin:
             cond_row.setSpacing(3)
             cond_row.setAlignment(Qt.AlignmentFlag.AlignLeft)
             for cond in conditions:
-                badge_color = self._CONDITION_COLORS.get(cond, "#7a5c00")
+                spell_desc = char.get("spell_condition_descriptions", {}).get(cond)
+                spell_color = char.get("spell_condition_colors", {}).get(cond)
+                badge_color = spell_color or self._CONDITION_COLORS.get(cond, "#7a5c00")
                 has_rule = ConditionRule.from_name(cond) is not None
-                if has_rule:
+                if has_rule or spell_desc:
                     badge = QPushButton(cond)
                     badge.setFlat(True)
                     badge.setStyleSheet(
@@ -279,15 +281,26 @@ class CardsMixin:
                         f"QPushButton:hover {{ background-color: {badge_color}cc; }}"
                     )
                     badge.setCursor(Qt.CursorShape.PointingHandCursor)
-                    badge.clicked.connect(
-                        lambda _=False, c=cond: self._show_condition_info(c)
-                    )
+                    if has_rule:
+                        badge.clicked.connect(
+                            lambda _=False, c=cond: self._show_condition_info(c)
+                        )
+                    else:
+                        badge.clicked.connect(
+                            lambda _=False, c=cond, d=spell_desc: self._show_rule_popup(c, c, d)
+                        )
                 else:
                     badge = QLabel(cond)
                     badge.setStyleSheet(
                         f"background-color: {badge_color}; color: #ffffff;"
                         " border-radius: 3px; padding: 1px 4px; font-size: 10px;"
                     )
+                if spell_desc:
+                    badge.setToolTip(spell_desc)
+                badge.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
+                badge.customContextMenuRequested.connect(
+                    lambda _pos, c=char, cond=cond: self._remove_condition_from(c, cond)
+                )
                 cond_row.addWidget(badge)
             cond_row.addStretch()
             layout.addLayout(cond_row)

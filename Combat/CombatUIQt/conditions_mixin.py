@@ -16,6 +16,8 @@ class ConditionsMixin:
     def _remove_condition_from(self, char: dict, cond: str):
         if cond in char["conditions"]:
             char["conditions"].remove(cond)
+            char.get("spell_condition_descriptions", {}).pop(cond, None)
+            char.get("spell_condition_colors", {}).pop(cond, None)
             self.history.append((Action.REMOVE_CONDITION, cond))
             self._log_event(f"{char['name']} loses {cond}")
             self._rebuild_card(char)

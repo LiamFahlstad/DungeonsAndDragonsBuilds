@@ -163,6 +163,7 @@ class SpellsMixin:
             )
             selected_spell["spell"] = spell
             cast_btn.setEnabled(True)
+            condition_btn.setEnabled(True)
 
         def on_selection_changed():
             items = tree.selectedItems()
@@ -202,9 +203,23 @@ class SpellsMixin:
             dlg.accept()
 
         cast_btn.clicked.connect(do_cast)
+
+        condition_btn = QPushButton("Apply as Condition")
+        condition_btn.setEnabled(False)
+
+        def do_apply_condition():
+            spell = selected_spell["spell"]
+            if spell is None:
+                return
+            self._apply_spell_as_condition(spell)
+            dlg.accept()
+
+        condition_btn.clicked.connect(do_apply_condition)
+
         close_btn2 = QPushButton("Close")
         close_btn2.clicked.connect(dlg.reject)
         btn_row.addWidget(cast_btn)
+        btn_row.addWidget(condition_btn)
         btn_row.addWidget(close_btn2)
         outer.addLayout(btn_row)
 
@@ -238,3 +253,42 @@ class SpellsMixin:
             )
 
         self._refresh_selected_card()
+
+    def _apply_spell_as_condition(self, spell):
+        """Add a spell's name as a condition badge on the selected combatant,
+        with the spell's full description available as a hover tooltip."""
+        char = self.selected_character
+        if char is None:
+            return
+
+        from Spells.SpellFactory import Spell
+
+        # Build tooltip HTML from the spell details
+        tags = []
+        if spell.is_concentration:
+            tags.append("Concentration")
+        if spell.is_ritual:
+            tags.append("Ritual")
+        tag_text = f" [{', '.join(tags)}]" if tags else ""
+
+        def level_label(level: int) -> str:
+            return "Cantrips" if level == 0 else f"Level {level}"
+
+        tooltip_html = (
+            f"<b style='color:#c9a84c; font-size:14px;'>{spell.name}</b>{tag_text}"
+            f"<br><span style='color:#a0a0b0;'>{level_label(spell.level)} · {spell.school}</span>"
+            f"<br><br><b>Casting Time:</b> {spell.casting_time}"
+            f"<br><b>Range:</b> {spell.range}"
+            f"<br><b>Components:</b> {spell.components}"
+            f"<br><b>Duration:</b> {spell.duration}"
+            f"<br><br>{spell.description.replace(chr(10) + chr(10), '<br><br>')}"
+        )
+
+        # Store the tooltip description and the school-of-magic badge color
+        char.setdefault("spell_condition_descriptions", {})[spell.name] = tooltip_html
+        char.setdefault("spell_condition_colors", {})[spell.name] = Spell.get_school_color(
+            spell.school
+        )
+
+        # Add the spell name as a condition
+        self._add_condition_to(char, spell.name)
