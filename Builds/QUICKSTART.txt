@@ -57,7 +57,7 @@ Species:              SpeciesConfigs/*.py
 Abilities/Skills:     Definitions.py
 Spells:               Spells/Definitions.py
 Feats:                Features/CharacterFeats/*.py
-Equipment:            Features/Equipment/*.py
+Equipment:            Features/Items/Armor/*.py, Features/Items/Weapons/*.py
 
 QUESTIONS?
 ==========

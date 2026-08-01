@@ -15,7 +15,7 @@ from CharacterConfigs.SubClasses2024.RangerFeyWanderer import (
 from Core.Definitions import Ability, Skill
 from Features.CharacterFeats import Backgrounds, OriginFeats
 from Features.Combat import FightingStyles
-from Features.Equipment import Weapons
+from Features.Items import Weapons
 from SpeciesConfigs import Elf
 from SpeciesConfigs.Elf import ElvenLineage
 from Spells.SpellLists import RangerLevel1Spells

@@ -17,7 +17,7 @@ from CharacterConfigs.SubClasses2024.FighterBattleMaster import (
 from Core.Definitions import Ability, Skill
 from Features.CharacterFeats import Backgrounds, GeneralFeats, OriginFeats
 from Features.Combat import FightingStyles, Maneuvers
-from Features.Equipment import Armor, Weapons
+from Features.Items import Armor, Weapons
 from SpeciesConfigs import Human
 from StatBlocks.AbilitiesStatBlock import StandardArrayAbilitiesStatBlock
 from StatBlocks.SkillsStatBlock import FighterSkillsStatBlock

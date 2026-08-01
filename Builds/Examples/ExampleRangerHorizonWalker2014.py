@@ -36,7 +36,7 @@ from CharacterConfigs.SubClasses2014.RangerHorizonWalker import (
 from Core.Definitions import Ability, Skill
 from Features.CharacterFeats import Backgrounds, GeneralFeats, OriginFeats
 from Features.Combat import FightingStyles
-from Features.Equipment import Weapons
+from Features.Items import Weapons
 from SpeciesConfigs import Elf, Human
 from Spells.SpellLists import RangerLevel1Spells, RangerLevel2Spells, RangerLevel3Spells, RangerLevel4Spells
 from StatBlocks.AbilitiesStatBlock import StandardArrayAbilitiesStatBlock

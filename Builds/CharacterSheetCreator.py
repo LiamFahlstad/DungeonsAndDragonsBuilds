@@ -11,8 +11,8 @@ from Features.Combat.FightingStyles import (
     FightStyleWeaponFeature,
 )
 from Features.Core.BaseFeatures import Feature
-from Features.Equipment.Armor import AbstractArmor
-from Features.Equipment.Weapons import AbstractWeapon, WeaponProficiency, is_proficient_with
+from Features.Items.Armor import AbstractArmor
+from Features.Items.Weapons import AbstractWeapon, WeaponProficiency, is_proficient_with
 from Features.Items import Items
 from StatBlocks.AbilitiesStatBlock import AbilitiesStatBlock
 from StatBlocks.CharacterStatBlock import CharacterStatBlock

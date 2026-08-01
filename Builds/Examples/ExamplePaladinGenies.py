@@ -15,7 +15,7 @@ from CharacterConfigs.SubClasses2024.PaladinGenies import (
 from Core.Definitions import Ability, Skill
 from Features.CharacterFeats import Backgrounds, OriginFeats
 from Features.Combat import FightingStyles
-from Features.Equipment import Weapons
+from Features.Items import Weapons
 from Features.SpeciesFeatures.DragonbornFeatures import DragonColor
 from SpeciesConfigs import Dragonborn
 from Spells.SpellLists import (

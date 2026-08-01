@@ -49,7 +49,7 @@ from CharacterConfigs.SubClasses2024.FighterChampion import (
 from Core.Definitions import Ability, Skill
 from Features.CharacterFeats import Backgrounds, GeneralFeats, OriginFeats
 from Features.Combat import FightingStyles
-from Features.Equipment import Armor, Weapons
+from Features.Items import Armor, Weapons
 
 # TODO: Replace 'Dwarf' with your desired species. Available species:
 #   CharacterConfigs/SpeciesConfigs/ has: Human, Elf, Dwarf, Halfling, Tiefling, Dragonborn,

@@ -1679,7 +1679,7 @@ class CreatorApp(QMainWindow):
         self.add_default_equipment_check.setChecked(True)
         _insert_before_stretch(layout, self.add_default_equipment_check)
 
-        from Features.Equipment import Armor, Weapons
+        from Features.Items import Armor, Weapons
 
         self.weapons_list = EquipmentList(
             self, "Weapons", Weapons.AbstractWeapon, self._context()

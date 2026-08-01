@@ -12,7 +12,7 @@ from CharacterConfigs.SubClasses2024.ArtificerBattleSmith import (
 )
 from Core.Definitions import Ability, Skill
 from Features.CharacterFeats import Backgrounds, OriginFeats
-from Features.Equipment import Armor, Weapons
+from Features.Items import Armor, Weapons
 from SpeciesConfigs import Dwarf
 from Spells import SpellLists as SpellDefinitions
 from StatBlocks.AbilitiesStatBlock import StandardArrayAbilitiesStatBlock

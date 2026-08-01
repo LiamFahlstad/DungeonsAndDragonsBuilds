@@ -7,7 +7,7 @@ import Core.Definitions as Definitions
 from Builds.CharacterSheetCreator import CharacterSheetData
 from Core.Definitions import Ability, CharacterClass
 from Features.CharacterFeats import Backgrounds, OriginFeats
-from Features.Equipment import Armor, Weapons
+from Features.Items import Armor, Weapons
 from Features.ClassFeatures import SpellSlots
 from Features.Items import Items, Packs
 from StatBlocks.AbilitiesStatBlock import AbilitiesStatBlock

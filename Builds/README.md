@@ -165,7 +165,7 @@ background_skill_proficiencies=Backgrounds.FreeBackgroundSkillProficiency(
 
 **Armor:**
 
-Find valid armor in `Features/Equipment/Armor.py`:
+Find valid armor in `Features/Items/Armor/`:
 
 ```python
 armor=[
@@ -176,7 +176,7 @@ armor=[
 
 **Weapons:**
 
-Find valid weapons in `Features/Equipment/Weapons.py`:
+Find valid weapons in `Features/Items/Weapons/`:
 
 ```python
 weapons=[
@@ -418,7 +418,7 @@ from Spells.SpellLists import ClericLevel1Spells, ClericLevel2Spells
 - **Definitions**: `Definitions.py` — Enums for CharacterClass, Ability, Skill, etc.
 - **Existing builds**: `Builds/Characters/Optimized*.py` — Examine real examples for your class
 - **Class features**: `CharacterConfigs/BaseClasses/` — See what each level offers
-- **Equipment options**: `Features/Equipment/Armor.py`, `Weapons.py`
+- **Equipment options**: `Features/Items/Armor/`, `Features/Items/Weapons/`
 - **Spells**: `Spells/Definitions.py` — Available spells by class and level
 - **Feats**: `Features/CharacterFeats/GeneralFeats.py`, `OriginFeats.py`
 

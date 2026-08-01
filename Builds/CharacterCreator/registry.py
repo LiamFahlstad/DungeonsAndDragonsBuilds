@@ -464,8 +464,8 @@ class Registry:
         for name in ("Backgrounds", "EpicBoon", "GeneralFeats", "OriginFeats"):
             mapping[name] = ("Features.CharacterFeats", name)
 
-        mapping["Armor"] = ("Features.Equipment", "Armor")
-        mapping["Weapons"] = ("Features.Equipment", "Weapons")
+        mapping["Armor"] = ("Features.Items", "Armor")
+        mapping["Weapons"] = ("Features.Items", "Weapons")
         mapping["Items"] = ("Features.Items", "Items")
         mapping["SpellSlots"] = ("Features.ClassFeatures", "SpellSlots")
         mapping["ToolProficiency"] = (

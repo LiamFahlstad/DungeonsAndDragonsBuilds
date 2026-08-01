@@ -34,7 +34,7 @@ from Core.Definitions import Ability, DamageType, Skill
 from Features.CharacterFeats import Backgrounds, EpicBoon, GeneralFeats, OriginFeats
 from Features.ClassFeatures.Ranger.PrimalCompanions import CompanionType
 from Features.Combat import FightingStyles
-from Features.Equipment import Weapons
+from Features.Items import Weapons
 from SpeciesConfigs import Gnome
 from Spells.SpellLists import (
     RangerLevel1Spells,

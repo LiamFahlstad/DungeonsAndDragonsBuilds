@@ -40,7 +40,7 @@ from CharacterConfigs.SubClasses2014.PaladinOathbreaker import (
 from Core.Definitions import Ability, Skill
 from Features.CharacterFeats import Backgrounds, EpicBoon, GeneralFeats, OriginFeats
 from Features.Combat import FightingStyles
-from Features.Equipment import Weapons
+from Features.Items import Weapons
 from SpeciesConfigs import Human
 from Spells.SpellLists import (
     PaladinLevel1Spells,

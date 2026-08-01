@@ -50,7 +50,7 @@ from Combat.Monsters.CR_1.monsters import GiantOctopus, GiantSpider
 from Core.Definitions import Ability, DruidLandType, Skill
 from Features.CharacterFeats import Backgrounds, EpicBoon, GeneralFeats, OriginFeats
 from Features.ClassFeatures.Druid import DruidFeatures
-from Features.Equipment import Armor
+from Features.Items import Armor
 from Features.Items import Items
 from SpeciesConfigs import Human
 from Spells.SpellLists import (

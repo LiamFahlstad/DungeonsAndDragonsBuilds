@@ -35,7 +35,7 @@ from CharacterConfigs.SubClasses2024.MonkShadow import (
 )
 from Core.Definitions import Ability, RogueSubclass, Skill
 from Features.CharacterFeats import Backgrounds, EpicBoon, GeneralFeats, OriginFeats
-from Features.Equipment import Weapons
+from Features.Items import Weapons
 from SpeciesConfigs import Halfing
 from StatBlocks.AbilitiesStatBlock import PointBuyAbilitiesStatBlock
 from StatBlocks.SkillsStatBlock import RogueSkillsStatBlock

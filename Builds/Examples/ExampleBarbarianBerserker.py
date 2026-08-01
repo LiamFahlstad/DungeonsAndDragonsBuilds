@@ -36,7 +36,7 @@ from CharacterConfigs.SubClasses2024.BarbarianPathOfTheBerserker import (
 )
 from Core.Definitions import Ability, Skill
 from Features.CharacterFeats import Backgrounds, EpicBoon, GeneralFeats, OriginFeats
-from Features.Equipment import Weapons
+from Features.Items import Weapons
 from SpeciesConfigs import Orc
 from StatBlocks.AbilitiesStatBlock import StandardArrayAbilitiesStatBlock
 from StatBlocks.SkillsStatBlock import BarbarianSkillsStatBlock

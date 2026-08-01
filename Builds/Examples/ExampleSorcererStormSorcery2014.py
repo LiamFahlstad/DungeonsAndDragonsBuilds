@@ -32,7 +32,7 @@ from CharacterConfigs.SubClasses2014.SorcererStormSorcery import (
 )
 from Core.Definitions import Ability, Skill
 from Features.CharacterFeats import Backgrounds, GeneralFeats, OriginFeats
-from Features.Equipment import Weapons
+from Features.Items import Weapons
 from SpeciesConfigs import Human
 from Spells import SpellLists as SpellDefinitions
 from StatBlocks.AbilitiesStatBlock import StandardArrayAbilitiesStatBlock

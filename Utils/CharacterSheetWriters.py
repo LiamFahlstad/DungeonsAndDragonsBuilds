@@ -6,8 +6,8 @@ import Core.Definitions as Definitions
 from Core.Definitions import Ability, DiceRollCondition, Die
 from Features.Combat.FightingStyles import FightingStyle
 from Features.Core.BaseFeatures import Feature
-from Features.Equipment import Armor
-from Features.Equipment.Weapons import (
+from Features.Items import Armor
+from Features.Items.Weapons import (
     AbstractWeapon,
     UnarmedStrike,
     WeaponProficiency,

@@ -1,7 +1,7 @@
 """Improvements: reusable stat-block mutations composed into Features
 (CharacterImprovement), plus composable modifiers applied directly to items
 at construction time (ItemImprovement and its weapon-/armor-specific
-subclasses - see Features.Equipment.Weapons/Armor).
+subclasses - see Features.Items.Weapons/Armor).
 
 Ordering contract
 -----------------
@@ -556,7 +556,7 @@ class Executioner(InformationalImprovement):
 # instance itself (its name, description, GP value, homebrew flag), not the
 # wielding character's stat block. Type-specific improvements (e.g. a
 # weapon's damage die, an armor's AC) belong in their own equipment module
-# (see Features.Equipment.Weapons.WeaponImprovement / Armor.ArmorImprovement)
+# (see Features.Items.Weapons.WeaponImprovement / Armor.ArmorImprovement)
 # and should subclass this.
 # ──────────────────────────────────────────────────────────────────────────────
 

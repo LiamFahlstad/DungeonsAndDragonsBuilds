@@ -16,7 +16,7 @@ from CharacterConfigs.SubClasses2024.SorcererDraconic import (
 )
 from Core.Definitions import Ability, Skill
 from Features.CharacterFeats import Backgrounds, GeneralFeats, OriginFeats
-from Features.Equipment import Weapons
+from Features.Items import Weapons
 from Features.SpeciesFeatures import DragonbornFeatures
 from SpeciesConfigs import Dragonborn
 from Spells import SpellLists as SpellDefinitions

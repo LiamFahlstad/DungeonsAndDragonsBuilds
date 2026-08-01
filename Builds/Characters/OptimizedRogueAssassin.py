@@ -16,7 +16,7 @@ from CharacterConfigs.SubClasses2024.RogueAssassin import (
 )
 from Core.Definitions import Ability, Skill
 from Features.CharacterFeats import Backgrounds, GeneralFeats, OriginFeats
-from Features.Equipment import Armor, Weapons
+from Features.Items import Armor, Weapons
 from Features.Items import Items
 from SpeciesConfigs import Elf
 from StatBlocks.AbilitiesStatBlock import StandardArrayAbilitiesStatBlock

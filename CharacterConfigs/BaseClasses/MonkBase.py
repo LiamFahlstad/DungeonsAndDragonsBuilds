@@ -6,7 +6,7 @@ from CharacterConfigs.BaseClasses import ClassBuilder
 from Builds.CharacterSheetCreator import CharacterSheetData
 from Core.Definitions import Ability, CharacterClass
 from Features.CharacterFeats import EpicBoon, GeneralFeats
-from Features.Equipment import Weapons
+from Features.Items import Weapons
 from Features.Items import Packs
 from Features.ClassFeatures import SpellSlots
 from Features.ClassFeatures.Monk import MonkFeatures

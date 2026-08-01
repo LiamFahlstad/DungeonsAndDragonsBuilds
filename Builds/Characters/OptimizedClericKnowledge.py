@@ -31,7 +31,7 @@ from CharacterConfigs.SubClasses2024.ClericKnowledge import (
 )
 from Core.Definitions import Ability, Skill
 from Features.CharacterFeats import Backgrounds, EpicBoon, GeneralFeats, OriginFeats
-from Features.Equipment import Armor, Weapons
+from Features.Items import Armor, Weapons
 from SpeciesConfigs import Warforged
 from Spells.SpellLists import (
     ClericLevel0Spells,

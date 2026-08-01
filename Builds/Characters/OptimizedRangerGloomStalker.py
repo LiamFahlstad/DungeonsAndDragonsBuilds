@@ -13,7 +13,7 @@ from CharacterConfigs.SubClasses2024.RangerGloomStalker import (
 from Core.Definitions import Ability, Skill
 from Features.CharacterFeats import Backgrounds, OriginFeats
 from Features.Combat import FightingStyles
-from Features.Equipment import Weapons
+from Features.Items import Weapons
 from Features.SpeciesFeatures import DragonbornFeatures
 from SpeciesConfigs import Dragonborn
 from Spells.SpellLists import RangerLevel1Spells

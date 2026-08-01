@@ -21,7 +21,7 @@ from CharacterConfigs.SubClasses2024.WizardBladesinger import (
 )
 from Core.Definitions import Ability, Skill
 from Features.CharacterFeats import Backgrounds, OriginFeats
-from Features.Equipment import Weapons
+from Features.Items import Weapons
 from Invocations.Definitions import InvocationsLevel0, InvocationsLevel2
 from SpeciesConfigs import Human
 from Spells import SpellLists as SpellDefs

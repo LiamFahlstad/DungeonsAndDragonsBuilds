@@ -8,7 +8,7 @@ from Builds.CharacterSheetCreator import CharacterSheetData
 from Core.Definitions import Ability, CharacterClass
 from Features.CharacterFeats import EpicBoon, GeneralFeats
 from Features.Combat import FightingStyles
-from Features.Equipment import Armor, Weapons
+from Features.Items import Armor, Weapons
 from Features.Items import Packs
 from Features.ClassFeatures import SpellSlots
 from Features.ClassFeatures.Paladin import PaladinFeatures

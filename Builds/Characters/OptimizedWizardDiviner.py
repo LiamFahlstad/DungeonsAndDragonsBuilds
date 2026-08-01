@@ -14,7 +14,7 @@ from CharacterConfigs.SubClasses2024.WizardDiviner import (
 )
 from Core.Definitions import Ability, Skill
 from Features.CharacterFeats import Backgrounds, GeneralFeats, OriginFeats
-from Features.Equipment import Weapons
+from Features.Items import Weapons
 from SpeciesConfigs import Elf
 from Spells import SpellLists as SpellDefinitions
 from StatBlocks.AbilitiesStatBlock import StandardArrayAbilitiesStatBlock
