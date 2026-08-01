@@ -11,7 +11,7 @@ from CharacterContent.Features.ClassFeatures import SpellSlots
 from CharacterContent.Features.ClassFeatures.Artificer import ArtificerFeatures
 from CharacterContent.Items import Armor, Weapons
 from CharacterContent.Items import Items, Packs
-from Spells.SpellLists import (
+from CharacterContent.Spells.SpellLists import (
     ArtificerLevel0Spells,
     ArtificerLevel1Spells,
     ArtificerLevel2Spells,

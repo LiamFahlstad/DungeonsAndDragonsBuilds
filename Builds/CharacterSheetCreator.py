@@ -23,7 +23,7 @@ from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from StatBlocks.CombatStatBlock import CombatStatBlock
 from StatBlocks.SavingThrowsStatBlock import SavingThrowsStatBlock
 from StatBlocks.SkillsStatBlock import SkillsStatBlock
-from ToolProficiencies.ToolProficiencies import ToolProficiency
+from CharacterContent.ToolProficiencies.ToolProficiencies import ToolProficiency
 from Utils import CharacterSheetWriters
 
 # Scalar values merge_with treats as "not set": an incoming value equal to one

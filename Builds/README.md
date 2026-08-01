@@ -226,7 +226,7 @@ base_class_level_features=ClassBuilder.BaseClassLevelFeatures(
 **For spellcasters** (Wizard, Cleric, Bard, etc.):
 
 ```python
-from Spells.SpellLists import WizardLevel0Spells, WizardLevel1Spells
+from CharacterContent.Spells.SpellLists import WizardLevel0Spells, WizardLevel1Spells
 
 base_class_level_features=ClassBuilder.BaseClassLevelFeatures(
     base_class_features_by_level={
@@ -242,7 +242,7 @@ base_class_level_features=ClassBuilder.BaseClassLevelFeatures(
 )
 ```
 
-Check `Spells/Definitions.py` for spell names and availability by class/level.
+Check `CharacterContent/Spells/SpellLists.py` for spell names and availability by class/level.
 
 ### Step 7: Choose Your Species
 
@@ -379,7 +379,7 @@ from CharacterContent.Features.CharacterFeats import GeneralFeats
 ### Adding Spells (Spellcasters)
 
 ```python
-from Spells.SpellLists import ClericLevel1Spells, ClericLevel2Spells
+from CharacterContent.Spells.SpellLists import ClericLevel1Spells, ClericLevel2Spells
 
 2: ClericLevel2(
     spell=ClericLevel1Spells.SANCTUARY,
@@ -419,7 +419,7 @@ from Spells.SpellLists import ClericLevel1Spells, ClericLevel2Spells
 - **Existing builds**: `Builds/Characters/Optimized*.py` — Examine real examples for your class
 - **Class features**: `CharacterContent/Classes/BaseClasses/` — See what each level offers
 - **Equipment options**: `CharacterContent/Items/Armor/`, `CharacterContent/Items/Weapons/`
-- **Spells**: `Spells/Definitions.py` — Available spells by class and level
+- **Spells**: `CharacterContent/Spells/SpellLists.py` — Available spells by class and level
 - **Feats**: `CharacterContent/Features/CharacterFeats/GeneralFeats.py`, `OriginFeats.py`
 
 ## Questions?

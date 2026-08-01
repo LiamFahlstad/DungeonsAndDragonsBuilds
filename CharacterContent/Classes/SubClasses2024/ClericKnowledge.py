@@ -11,7 +11,7 @@ from Builds.CharacterSheetCreator import CharacterSheetData
 from Core.Definitions import ClericSubclass, Skill
 from CharacterContent.Features.SubClassFeatures.Cleric import ClericKnowledgeFeatures
 from CharacterContent.Features.ClassFeatures.Cleric import ClericFeatures
-from Spells.SpellLists import (
+from CharacterContent.Spells.SpellLists import (
     BardLevel3Spells,
     ClericLevel1Spells,
     ClericLevel3Spells,

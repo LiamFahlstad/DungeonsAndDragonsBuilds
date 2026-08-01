@@ -12,7 +12,7 @@ from CharacterContent.Items import Armor, Weapons
 from CharacterContent.Items import Packs
 from CharacterContent.Features.ClassFeatures import SpellSlots
 from CharacterContent.Features.ClassFeatures.Ranger import RangerFeatures
-from Spells.SpellLists import (
+from CharacterContent.Spells.SpellLists import (
     RangerLevel1Spells,
     RangerLevel2Spells,
     RangerLevel3Spells,

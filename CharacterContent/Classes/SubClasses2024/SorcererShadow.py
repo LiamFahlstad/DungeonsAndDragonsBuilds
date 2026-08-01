@@ -10,7 +10,7 @@ from CharacterContent.Classes.BaseClasses.SorcererBase import (
 from Builds.CharacterSheetCreator import CharacterSheetData
 from Core.Definitions import SorcererSubclass
 from CharacterContent.Features.SubClassFeatures.Sorcerer import SorcererShadowFeatures
-from Spells.SpellLists import (
+from CharacterContent.Spells.SpellLists import (
     AbjurationLevel2Spells,
     AbjurationLevel3Spells,
     ConjurationLevel3Spells,

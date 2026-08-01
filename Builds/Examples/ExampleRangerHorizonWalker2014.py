@@ -38,7 +38,7 @@ from CharacterContent.Features.CharacterFeats import Backgrounds, GeneralFeats, 
 from CharacterContent.Features.CombatFeatures import FightingStyles
 from CharacterContent.Items import Weapons
 from CharacterContent.Species import Elf, Human
-from Spells.SpellLists import RangerLevel1Spells, RangerLevel2Spells, RangerLevel3Spells, RangerLevel4Spells
+from CharacterContent.Spells.SpellLists import RangerLevel1Spells, RangerLevel2Spells, RangerLevel3Spells, RangerLevel4Spells
 from StatBlocks.AbilitiesStatBlock import StandardArrayAbilitiesStatBlock
 from StatBlocks.SkillsStatBlock import RangerSkillsStatBlock
 

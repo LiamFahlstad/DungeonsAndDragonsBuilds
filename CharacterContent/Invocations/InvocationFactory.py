@@ -67,7 +67,7 @@ class Invocation:
 class InvocationFactory:
     """Factory that loads a invocation JSON file and creates Invocation objects."""
 
-    json_path = "Invocations/invocations.json"
+    json_path = "CharacterContent/Invocations/invocations.json"
     _cache = None
 
     @classmethod

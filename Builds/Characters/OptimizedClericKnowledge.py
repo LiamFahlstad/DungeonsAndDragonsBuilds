@@ -33,7 +33,7 @@ from Core.Definitions import Ability, Skill
 from CharacterContent.Features.CharacterFeats import Backgrounds, EpicBoon, GeneralFeats, OriginFeats
 from CharacterContent.Items import Armor, Weapons
 from CharacterContent.Species import Warforged
-from Spells.SpellLists import (
+from CharacterContent.Spells.SpellLists import (
     ClericLevel0Spells,
     ClericLevel1Spells,
     ClericLevel2Spells,

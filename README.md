@@ -41,9 +41,9 @@ required for the core build engine above.
 
 - `Builds/` — character builders; `Builds/Characters` are the default builds run by `RunCharacterCreator.py`, `Builds/Examples` covers every class/subclass combo
 - `CharacterContent/` — game content (per-class/subclass features, species, feats, items) used by the builders
-- `Spells/`, `Invocations/`, `ToolProficiencies/` — game data (spells, eldritch invocations, tools)
+- `CharacterContent/Spells/`, `CharacterContent/Invocations/`, `CharacterContent/ToolProficiencies/` — game data (spells, eldritch invocations, tools)
 - `Combat/` — turn-based combat simulator (Qt UI) and monster stat blocks
-- `Scrapers/` — scripts that pull spell/subclass/monster data from external wikis into the JSON files under `Spells/` and `Combat/`
+- `Scrapers/` — scripts that pull spell/subclass/monster data from external wikis into the JSON files under `CharacterContent/Spells/` and `Combat/`
 - `Output/` — generated character sheets (HTML)
 
 ## License

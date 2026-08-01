@@ -25,8 +25,8 @@ from CharacterContent.Features.CharacterFeats import Backgrounds, GeneralFeats, 
 from CharacterContent.Features.CombatFeatures import FightingStyles
 from CharacterContent.Items import Weapons
 from CharacterContent.Species import Human
-from Spells import SpellLists as SpellDefs
-from Spells.SpellLists import PaladinLevel1Spells
+from CharacterContent.Spells import SpellLists as SpellDefs
+from CharacterContent.Spells.SpellLists import PaladinLevel1Spells
 from StatBlocks.AbilitiesStatBlock import StandardArrayAbilitiesStatBlock
 from StatBlocks.SkillsStatBlock import PaladinSkillsStatBlock
 

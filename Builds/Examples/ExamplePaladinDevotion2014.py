@@ -42,7 +42,7 @@ from CharacterContent.Features.CharacterFeats import Backgrounds, EpicBoon, Gene
 from CharacterContent.Features.CombatFeatures import FightingStyles
 from CharacterContent.Items import Weapons
 from CharacterContent.Species import Human
-from Spells.SpellLists import (
+from CharacterContent.Spells.SpellLists import (
     PaladinLevel1Spells,
     PaladinLevel2Spells,
     PaladinLevel3Spells,

@@ -10,7 +10,7 @@ from CharacterContent.Classes.BaseClasses.ArtificerBase import (
 from Builds.CharacterSheetCreator import CharacterSheetData
 from Core.Definitions import ArtificerSubclass
 from CharacterContent.Features.SubClassFeatures.Artificer import ArtificerReanimatorFeatures
-from Spells.SpellLists import (
+from CharacterContent.Spells.SpellLists import (
     ArtificerLevel2Spells,
     BardLevel2Spells,
     ClericLevel3Spells,

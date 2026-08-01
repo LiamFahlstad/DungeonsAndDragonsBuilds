@@ -31,7 +31,7 @@ from Core.Definitions import Ability, Skill
 from CharacterContent.Features.CharacterFeats import Backgrounds, GeneralFeats, OriginFeats
 from CharacterContent.Features.CharacterFeats import OriginFeats as SpeciesOriginFeats
 from CharacterContent.Species import Human
-from Spells.SpellLists import (
+from CharacterContent.Spells.SpellLists import (
     DruidLevel0Spells,
     DruidLevel1Spells,
     DruidLevel2Spells,

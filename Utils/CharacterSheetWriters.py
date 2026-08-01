@@ -14,10 +14,10 @@ from CharacterContent.Items.Weapons import (
     write_weapons_to_file,
 )
 from CharacterContent.Items import Items
-from Invocations.InvocationFactory import InvocationFactory
-from Spells.SpellFactory import SpellFactory
+from CharacterContent.Invocations.InvocationFactory import InvocationFactory
+from CharacterContent.Spells.SpellFactory import SpellFactory
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
-from ToolProficiencies.ToolProficiencies import ToolProficiency
+from CharacterContent.ToolProficiencies.ToolProficiencies import ToolProficiency
 from Utils import DamageCalculator, StringUtils
 
 

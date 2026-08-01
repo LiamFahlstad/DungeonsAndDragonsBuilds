@@ -18,7 +18,7 @@ from CharacterContent.Features.CombatFeatures import FightingStyles
 from CharacterContent.Items import Weapons
 from CharacterContent.Features.SpeciesFeatures.DragonbornFeatures import DragonColor
 from CharacterContent.Species import Dragonborn
-from Spells.SpellLists import (
+from CharacterContent.Spells.SpellLists import (
     PaladinLevel1Spells,
     WizardLevel0Spells,
     WizardLevel1Spells,

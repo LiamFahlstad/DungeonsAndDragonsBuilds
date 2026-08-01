@@ -2,7 +2,7 @@ from typing import Optional
 
 import attr
 
-import Spells.SpellLists as SpellDefinitions
+import CharacterContent.Spells.SpellLists as SpellDefinitions
 from CharacterContent.Classes.BaseClasses import ClassBuilder
 from CharacterContent.Classes.BaseClasses.BardBase import (
     BardMulticlassBuilder,

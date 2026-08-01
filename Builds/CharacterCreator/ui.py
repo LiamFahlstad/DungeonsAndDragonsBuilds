@@ -528,7 +528,7 @@ class EnumEditor(Editor):
         # Skill -- see SkillListEditor/AbilityBonusListEditor which don't use
         # EnumEditor at all, and plain Skill dropdowns which do use it).
         self._spell_enum_classes = [
-            cls for cls in enum_classes if getattr(cls, "__module__", "") == "Spells.SpellLists"
+            cls for cls in enum_classes if getattr(cls, "__module__", "") == "CharacterContent.Spells.SpellLists"
         ]
         self._is_spell_enum = bool(enum_classes) and len(self._spell_enum_classes) == len(
             list(enum_classes)
@@ -592,7 +592,7 @@ class EnumEditor(Editor):
                 )
                 if enum_cls is not None:
                     member = enum_cls[member_name]
-                    from Spells.SpellFactory import SpellFactory
+                    from CharacterContent.Spells.SpellFactory import SpellFactory
 
                     spell = SpellFactory.create(member.value)
                     text = _clean_description_text(spell.description)
@@ -1707,7 +1707,7 @@ class CreatorApp(QMainWindow):
         _insert_before_stretch(layout, items_box)
 
     def _build_advanced(self):
-        from ToolProficiencies.ToolProficiencies import ToolProficiency
+        from CharacterContent.ToolProficiencies.ToolProficiencies import ToolProficiency
 
         layout = self.advanced_layout
         note = QLabel(

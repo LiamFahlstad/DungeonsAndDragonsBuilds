@@ -198,7 +198,7 @@ def _candidate_names() -> list[str]:
     discovered by the other two sources as our candidate list.
     """
     names: set[str] = set()
-    for path in ("Spells/spells_dnd2024.json", "Spells/spells_dnd5e.json"):
+    for path in ("CharacterContent/Spells/spells_dnd2024.json", "CharacterContent/Spells/spells_dnd5e.json"):
         try:
             with open(path, "r", encoding="utf-8") as f:
                 names.update(normalize_spell_name(n) for n in json.load(f).keys())
@@ -241,7 +241,7 @@ if __name__ == "__main__":
 
     sorted_results = dict(sorted(results.items()))
 
-    out_path = "Spells/spells_aidedd.json"
+    out_path = "CharacterContent/Spells/spells_aidedd.json"
     with open(out_path, "w", encoding="utf-8") as f:
         json.dump(sorted_results, f, indent=4, ensure_ascii=False)
 

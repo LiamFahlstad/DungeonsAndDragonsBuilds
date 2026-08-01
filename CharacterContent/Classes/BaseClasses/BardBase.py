@@ -11,7 +11,7 @@ from CharacterContent.Items import Armor, Weapons
 from CharacterContent.Items import Packs
 from CharacterContent.Features.ClassFeatures import SpellSlots
 from CharacterContent.Features.ClassFeatures.Bard import BardFeatures
-from Spells.SpellLists import (
+from CharacterContent.Spells.SpellLists import (
     BardLevel0Spells,
     BardLevel1Spells,
     BardLevel2Spells,

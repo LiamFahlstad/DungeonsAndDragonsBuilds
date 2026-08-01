@@ -31,7 +31,7 @@ from CharacterContent.Features.CharacterFeats import Backgrounds, GeneralFeats, 
 from CharacterContent.Features.CharacterFeats import OriginFeats as SpeciesOriginFeats
 from CharacterContent.Items import Items
 from CharacterContent.Species import Human
-from Spells.SpellLists import (
+from CharacterContent.Spells.SpellLists import (
     BardLevel0Spells,
     BardLevel1Spells,
     BardLevel2Spells,

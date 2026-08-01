@@ -40,9 +40,9 @@ from Core.Definitions import Ability, Skill
 from CharacterContent.Features.CharacterFeats import Backgrounds, EpicBoon, GeneralFeats, OriginFeats
 from CharacterContent.Features.CombatFeatures import FightingStyles
 from CharacterContent.Items import Weapons
-from Invocations.Definitions import InvocationsLevel0
+from CharacterContent.Invocations.Definitions import InvocationsLevel0
 from CharacterContent.Species import Human
-from Spells.SpellLists import (
+from CharacterContent.Spells.SpellLists import (
     PaladinLevel1Spells,
     PaladinLevel2Spells,
     PaladinLevel3Spells,

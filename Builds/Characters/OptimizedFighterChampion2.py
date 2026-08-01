@@ -18,7 +18,7 @@ from CharacterContent.Features.CombatFeatures import FightingStyles
 from CharacterContent.Items import Armor, Weapons
 from CharacterContent.Items import Items
 from CharacterContent.Species import Dwarf
-from Spells import SpellLists as SpellsDefinitions
+from CharacterContent.Spells import SpellLists as SpellsDefinitions
 from StatBlocks.AbilitiesStatBlock import StandardArrayAbilitiesStatBlock
 from StatBlocks.SkillsStatBlock import FighterSkillsStatBlock
 

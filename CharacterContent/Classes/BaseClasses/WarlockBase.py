@@ -11,7 +11,7 @@ from CharacterContent.Items import Armor, Weapons
 from CharacterContent.Items import Packs
 from CharacterContent.Features.ClassFeatures import SpellSlots
 from CharacterContent.Features.ClassFeatures.Warlock import WarlockFeatures
-from Invocations.Definitions import (
+from CharacterContent.Invocations.Definitions import (
     InvocationsLevel0,
     InvocationsLevel2,
     InvocationsLevel5,
@@ -20,7 +20,7 @@ from Invocations.Definitions import (
     InvocationsLevel12,
     InvocationsLevel15,
 )
-from Spells.SpellLists import (
+from CharacterContent.Spells.SpellLists import (
     WarlockLevel0Spells,
     WarlockLevel1Spells,
     WarlockLevel2Spells,

@@ -86,7 +86,7 @@ class CombatAppQt(
         self._initiative_inputs: dict = {}
 
     def _add_from_character_sheet(self, character_sheet):
-        from Spells.SpellFactory import SpellFactory
+        from CharacterContent.Spells.SpellFactory import SpellFactory
 
         character = character_sheet.setup_character_stat_block()
         ac = character.calculate_armor_class()

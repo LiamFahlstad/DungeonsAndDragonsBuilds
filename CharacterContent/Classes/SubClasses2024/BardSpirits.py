@@ -10,7 +10,7 @@ from CharacterContent.Classes.BaseClasses.BardBase import (
 from Builds.CharacterSheetCreator import CharacterSheetData
 from Core.Definitions import BardSubclass
 from CharacterContent.Features.SubClassFeatures.Bard import BardSpiritsFeatures
-from Spells.SpellLists import ClericLevel0Spells, ClericLevel3Spells
+from CharacterContent.Spells.SpellLists import ClericLevel0Spells, ClericLevel3Spells
 from StatBlocks.SkillsStatBlock import BardSkillsStatBlock
 
 

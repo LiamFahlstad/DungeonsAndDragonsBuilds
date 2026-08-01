@@ -10,7 +10,7 @@ from CharacterContent.Classes.BaseClasses.DruidBase import (
 from Builds.CharacterSheetCreator import CharacterSheetData
 from Core.Definitions import DruidSubclass
 from CharacterContent.Features.SubClassFeatures.Druid import DruidSeaFeatures
-from Spells.SpellLists import (
+from CharacterContent.Spells.SpellLists import (
     ArtificerLevel0Spells,
     BardLevel5Spells,
     DruidLevel1Spells,

@@ -164,7 +164,7 @@ if __name__ == "__main__":
             dict_per_level[level] = {}
         dict_per_level[level][invocation_name] = invocation_data
 
-    with open("Invocations/Definitions.py", "w", encoding="utf-8") as f:
+    with open("CharacterContent/Invocations/Definitions.py", "w", encoding="utf-8") as f:
         for level in sorted(dict_per_level.keys()):
             f.write(f"class InvocationsLevel{level}(str, Enum):\n")
             for invocation_name, invocation_data in dict_per_level[level].items():

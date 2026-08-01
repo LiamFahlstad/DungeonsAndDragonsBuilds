@@ -10,7 +10,7 @@ from CharacterContent.Classes.BaseClasses.RangerBase import (
 from Builds.CharacterSheetCreator import CharacterSheetData
 from Core.Definitions import RangerSubclass
 from CharacterContent.Features.SubClassFeatures.Ranger import RangerFeyWandererFeatures
-from Spells.SpellLists import (
+from CharacterContent.Spells.SpellLists import (
     BardLevel4Spells,
     ClericLevel4Spells,
     ConjurationLevel2Spells,

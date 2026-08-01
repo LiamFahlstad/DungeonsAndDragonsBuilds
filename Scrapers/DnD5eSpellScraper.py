@@ -368,7 +368,7 @@ if __name__ == "__main__":
 
     sorted_results = dict(sorted(results.items()))
 
-    out_path = "Spells/spells_dnd5e.json"
+    out_path = "CharacterContent/Spells/spells_dnd5e.json"
     with open(out_path, "w", encoding="utf-8") as f:
         json.dump(sorted_results, f, indent=4, ensure_ascii=False)
 

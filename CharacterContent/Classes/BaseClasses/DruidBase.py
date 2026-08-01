@@ -12,7 +12,7 @@ from CharacterContent.Items import Armor, Weapons
 from CharacterContent.Items import Packs
 from CharacterContent.Features.ClassFeatures import SpellSlots
 from CharacterContent.Features.ClassFeatures.Druid import DruidFeatures
-from Spells.SpellLists import (
+from CharacterContent.Spells.SpellLists import (
     DruidLevel0Spells,
     DruidLevel1Spells,
     DruidLevel2Spells,

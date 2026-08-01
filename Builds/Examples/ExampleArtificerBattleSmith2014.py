@@ -35,7 +35,7 @@ from Core.Definitions import Ability, Skill
 from CharacterContent.Features.CharacterFeats import Backgrounds, GeneralFeats, OriginFeats
 from CharacterContent.Items import Armor, Weapons
 from CharacterContent.Species import Dwarf
-from Spells import SpellLists as SpellDefinitions
+from CharacterContent.Spells import SpellLists as SpellDefinitions
 from StatBlocks.AbilitiesStatBlock import StandardArrayAbilitiesStatBlock
 from StatBlocks.SkillsStatBlock import ArtificerSkillsStatBlock
 

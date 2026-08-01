@@ -7,7 +7,7 @@ from CharacterContent.Features.Core.Improvements import (
     InitiativeProficiency,
     SkillProficiencyChoice,
 )
-from Spells.SpellLists import (
+from CharacterContent.Spells.SpellLists import (
     ClericLevel0Spells,
     ClericLevel1Spells,
     DruidLevel0Spells,

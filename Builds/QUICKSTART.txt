@@ -55,7 +55,7 @@ Classes:              CharacterContent/Classes/BaseClasses/*.py
 Subclasses:           CharacterContent/Classes/SubClasses/*.py
 Species:              CharacterContent/Species/*.py
 Abilities/Skills:     Definitions.py
-Spells:               Spells/Definitions.py
+Spells:               CharacterContent/Spells/SpellLists.py
 Feats:                CharacterContent/Features/CharacterFeats/*.py
 Equipment:            CharacterContent/Items/Armor/*.py, CharacterContent/Items/Weapons/*.py
 

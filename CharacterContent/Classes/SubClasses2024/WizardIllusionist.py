@@ -10,7 +10,7 @@ from CharacterContent.Classes.BaseClasses.WizardBase import (
 from Builds.CharacterSheetCreator import CharacterSheetData
 from Core.Definitions import WizardSubclass
 from CharacterContent.Features.SubClassFeatures.Wizard import WizardIllusionistFeatures
-from Spells.SpellLists import (
+from CharacterContent.Spells.SpellLists import (
     ConjurationLevel2Spells,
     ConjurationLevel3Spells,
     IllusionLevel0Spells,

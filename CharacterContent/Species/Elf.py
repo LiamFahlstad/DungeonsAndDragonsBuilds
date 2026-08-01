@@ -4,7 +4,7 @@ from Builds import CharacterSheetCreator
 import Core.Definitions as Definitions
 from CharacterContent.Features.SpeciesFeatures import ElfFeatures
 from CharacterContent.Species.SpeciesBuilder import SpeciesBuilder
-from Spells.SpellLists import (
+from CharacterContent.Spells.SpellLists import (
     BardLevel0Spells,
     BardLevel1Spells,
     ClericLevel1Spells,

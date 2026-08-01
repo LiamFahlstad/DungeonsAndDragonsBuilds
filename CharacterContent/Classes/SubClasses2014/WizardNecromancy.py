@@ -10,7 +10,7 @@ from CharacterContent.Classes.BaseClasses.WizardBase import (
 from Builds.CharacterSheetCreator import CharacterSheetData
 from Core.Definitions import WizardSubclass2014
 from CharacterContent.Features.SubClassFeatures2014.Wizard import WizardNecromancyFeatures
-from Spells.SpellLists import NecromancyLevel3Spells
+from CharacterContent.Spells.SpellLists import NecromancyLevel3Spells
 from StatBlocks.SkillsStatBlock import WizardSkillsStatBlock
 
 

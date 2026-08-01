@@ -428,10 +428,10 @@ class Registry:
         return result
 
     def spell_enums(self) -> dict:
-        """dict[enum class name, enum class] from Spells.SpellLists."""
+        """dict[enum class name, enum class] from CharacterContent.Spells.SpellLists."""
         if self._spell_enums is not None:
             return self._spell_enums
-        module = importlib.import_module("Spells.SpellLists")
+        module = importlib.import_module("CharacterContent.Spells.SpellLists")
         self._spell_enums = {
             cls.__name__: cls
             for cls in vars(module).values()
@@ -459,7 +459,7 @@ class Registry:
                 mapping[name] = ("Core.Definitions", name)
 
         for name in self.spell_enums():
-            mapping[name] = ("Spells.SpellLists", name)
+            mapping[name] = ("CharacterContent.Spells.SpellLists", name)
 
         for name in ("Backgrounds", "EpicBoon", "GeneralFeats", "OriginFeats"):
             mapping[name] = ("CharacterContent.Features.CharacterFeats", name)
@@ -469,12 +469,12 @@ class Registry:
         mapping["Items"] = ("CharacterContent.Items", "Items")
         mapping["SpellSlots"] = ("CharacterContent.Features.ClassFeatures", "SpellSlots")
         mapping["ToolProficiency"] = (
-            "ToolProficiencies.ToolProficiencies",
+            "CharacterContent.ToolProficiencies.ToolProficiencies",
             "ToolProficiency",
         )
         # Module alias so ToolProficiencies.ThievesTools() style expressions
         # (emitted by the tool proficiency picker) import cleanly.
-        mapping["ToolProficiencies"] = ("ToolProficiencies", "ToolProficiencies")
+        mapping["ToolProficiencies"] = ("CharacterContent.ToolProficiencies", "ToolProficiencies")
 
         import StatBlocks.AbilitiesStatBlock as abilities_module
 
@@ -516,16 +516,16 @@ class Registry:
 
         # Warlock invocations, e.g. InvocationsLevel2.AGONIZING_BLAST.
         try:
-            invocations = importlib.import_module("Invocations.Definitions")
+            invocations = importlib.import_module("CharacterContent.Invocations.Definitions")
             for name, obj in vars(invocations).items():
                 if inspect.isclass(obj) and obj.__module__ == invocations.__name__:
-                    mapping.setdefault(name, ("Invocations.Definitions", name))
+                    mapping.setdefault(name, ("CharacterContent.Invocations.Definitions", name))
         except Exception:
             pass
 
         # Aliases some hand-written builds use for the spells module.
-        mapping.setdefault("SpellDefinitions", ("Spells", "SpellLists as SpellDefinitions"))
-        mapping.setdefault("SpellsDefinitions", ("Spells", "SpellLists as SpellsDefinitions"))
+        mapping.setdefault("SpellDefinitions", ("CharacterContent.Spells", "SpellLists as SpellDefinitions"))
+        mapping.setdefault("SpellsDefinitions", ("CharacterContent.Spells", "SpellLists as SpellsDefinitions"))
         mapping.setdefault("Definitions", ("Core", "Definitions"))
 
         self._name_to_import = mapping

@@ -31,7 +31,7 @@ from CharacterContent.Classes.SubClasses2024.WarlockCelestial import (
 )
 from Core.Definitions import Ability, Skill
 from CharacterContent.Features.CharacterFeats import Backgrounds, GeneralFeats, OriginFeats
-from Invocations.Definitions import (
+from CharacterContent.Invocations.Definitions import (
     InvocationsLevel0,
     InvocationsLevel2,
     InvocationsLevel5,
@@ -40,7 +40,7 @@ from Invocations.Definitions import (
     InvocationsLevel12,
 )
 from CharacterContent.Species import Human
-from Spells.SpellLists import (
+from CharacterContent.Spells.SpellLists import (
     WarlockLevel0Spells,
     WarlockLevel1Spells,
     WarlockLevel2Spells,

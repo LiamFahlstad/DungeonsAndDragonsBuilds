@@ -34,7 +34,7 @@ from CharacterContent.Classes.SubClasses2024.ClericLight import (
 from Core.Definitions import Ability, Skill
 from CharacterContent.Features.CharacterFeats import Backgrounds, EpicBoon, GeneralFeats, OriginFeats
 from CharacterContent.Species import Elf
-from Spells.SpellLists import (
+from CharacterContent.Spells.SpellLists import (
     ClericLevel0Spells,
     ClericLevel1Spells,
     ClericLevel2Spells,

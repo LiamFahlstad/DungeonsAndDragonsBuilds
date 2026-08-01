@@ -12,7 +12,7 @@ from CharacterContent.Items import Armor, Weapons
 from CharacterContent.Items import Packs
 from CharacterContent.Features.ClassFeatures import SpellSlots
 from CharacterContent.Features.ClassFeatures.Paladin import PaladinFeatures
-from Spells.SpellLists import (
+from CharacterContent.Spells.SpellLists import (
     PaladinLevel1Spells,
     PaladinLevel2Spells,
     PaladinLevel3Spells,

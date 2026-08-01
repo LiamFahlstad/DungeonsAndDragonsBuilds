@@ -16,7 +16,7 @@ from Core.Definitions import Ability, Skill
 from CharacterContent.Features.CharacterFeats import Backgrounds, GeneralFeats, OriginFeats
 from CharacterContent.Items import Weapons
 from CharacterContent.Species import Human
-from Spells import SpellLists as SpellDefs
+from CharacterContent.Spells import SpellLists as SpellDefs
 from StatBlocks.AbilitiesStatBlock import StandardArrayAbilitiesStatBlock
 from StatBlocks.SkillsStatBlock import WizardSkillsStatBlock
 

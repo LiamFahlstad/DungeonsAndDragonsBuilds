@@ -12,9 +12,9 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-from Spells.SpellFactory import SpellFactory
+from CharacterContent.Spells.SpellFactory import SpellFactory
 
-OUTPUT_PY = "Spells/SpellLists.py"
+OUTPUT_PY = "CharacterContent/Spells/SpellLists.py"
 
 # Order classes/schools are emitted in, purely for readable diffs.
 CLASS_ORDER = [

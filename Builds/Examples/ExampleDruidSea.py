@@ -39,7 +39,7 @@ from Combat.Monsters.CR_0.monsters import Crab, GiantSeahorse, Octopus, ReefShar
 from Core.Definitions import Ability, Skill
 from CharacterContent.Features.CharacterFeats import Backgrounds, EpicBoon, GeneralFeats, OriginFeats
 from CharacterContent.Species.Elf import ElfSpeciesBuilder, ElvenLineage
-from Spells.SpellLists import (
+from CharacterContent.Spells.SpellLists import (
     DruidLevel0Spells,
     DruidLevel1Spells,
     DruidLevel2Spells,

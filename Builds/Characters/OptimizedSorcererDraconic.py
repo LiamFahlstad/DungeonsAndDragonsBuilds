@@ -17,7 +17,7 @@ from CharacterContent.Features.CharacterFeats import Backgrounds, GeneralFeats, 
 from CharacterContent.Items import Weapons
 from CharacterContent.Features.SpeciesFeatures import DragonbornFeatures
 from CharacterContent.Species import Dragonborn
-from Spells import SpellLists as SpellDefinitions
+from CharacterContent.Spells import SpellLists as SpellDefinitions
 from StatBlocks.AbilitiesStatBlock import StandardArrayAbilitiesStatBlock
 from StatBlocks.SkillsStatBlock import SorcererSkillsStatBlock
 

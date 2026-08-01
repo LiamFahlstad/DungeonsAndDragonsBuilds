@@ -33,7 +33,7 @@ from Core.Definitions import Ability, Skill
 from CharacterContent.Features.CharacterFeats import Backgrounds, EpicBoon, GeneralFeats, OriginFeats
 from CharacterContent.Items import Items
 from CharacterContent.Species import Aasimar
-from Spells.SpellLists import (
+from CharacterContent.Spells.SpellLists import (
     BardLevel0Spells,
     BardLevel1Spells,
     BardLevel2Spells,

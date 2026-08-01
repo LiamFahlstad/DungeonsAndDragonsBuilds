@@ -19,7 +19,7 @@ from CharacterContent.Features.CharacterFeats import OriginFeats as SpeciesOrigi
 from CharacterContent.Features.CombatFeatures import FightingStyles
 from CharacterContent.Items import Weapons
 from CharacterContent.Species import Human
-from Spells.SpellLists import RangerLevel1Spells
+from CharacterContent.Spells.SpellLists import RangerLevel1Spells
 from StatBlocks.AbilitiesStatBlock import StandardArrayAbilitiesStatBlock
 from StatBlocks.SkillsStatBlock import RangerSkillsStatBlock
 

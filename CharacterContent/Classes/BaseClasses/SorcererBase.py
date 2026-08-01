@@ -10,7 +10,7 @@ from CharacterContent.Items import Weapons
 from CharacterContent.Items import Packs
 from CharacterContent.Features.ClassFeatures import SpellSlots
 from CharacterContent.Features.ClassFeatures.Sorcerer import SorcererFeatures
-from Spells.SpellLists import (
+from CharacterContent.Spells.SpellLists import (
     SorcererLevel0Spells,
     SorcererLevel1Spells,
     SorcererLevel2Spells,

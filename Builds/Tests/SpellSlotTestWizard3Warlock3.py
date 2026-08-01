@@ -22,9 +22,9 @@ from CharacterContent.Classes.SubClasses2024.WizardBladesinger import (
 from Core.Definitions import Ability, Skill
 from CharacterContent.Features.CharacterFeats import Backgrounds, OriginFeats
 from CharacterContent.Items import Weapons
-from Invocations.Definitions import InvocationsLevel0, InvocationsLevel2
+from CharacterContent.Invocations.Definitions import InvocationsLevel0, InvocationsLevel2
 from CharacterContent.Species import Human
-from Spells import SpellLists as SpellDefs
+from CharacterContent.Spells import SpellLists as SpellDefs
 from StatBlocks.AbilitiesStatBlock import StandardArrayAbilitiesStatBlock
 from StatBlocks.SkillsStatBlock import WizardSkillsStatBlock
 

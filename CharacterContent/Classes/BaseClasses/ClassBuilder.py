@@ -13,7 +13,7 @@ from CharacterContent.Items import Items, Packs
 from StatBlocks.AbilitiesStatBlock import AbilitiesStatBlock
 from StatBlocks.SavingThrowsStatBlock import SavingThrowsStatBlock
 from StatBlocks.SkillsStatBlock import ClassSkillsStatBlock
-from ToolProficiencies.ToolProficiencies import ToolProficiency
+from CharacterContent.ToolProficiencies.ToolProficiencies import ToolProficiency
 
 
 @attr.dataclass

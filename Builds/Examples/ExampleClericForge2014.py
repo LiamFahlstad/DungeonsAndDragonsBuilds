@@ -32,7 +32,7 @@ from CharacterContent.Classes.SubClasses2014.ClericForge import (
 from Core.Definitions import Ability, Skill
 from CharacterContent.Features.CharacterFeats import Backgrounds, GeneralFeats, OriginFeats
 from CharacterContent.Species import Dwarf
-from Spells.SpellLists import (
+from CharacterContent.Spells.SpellLists import (
     ClericLevel0Spells,
     ClericLevel1Spells,
     ClericLevel2Spells,

@@ -17,9 +17,9 @@ class SpellFactory:
 
     # Highest priority first; each subsequent path only fills gaps.
     json_paths = (
-        "Spells/spells_dnd2024.json",
-        "Spells/spells_aidedd.json",
-        "Spells/spells_dnd5e.json",
+        "CharacterContent/Spells/spells_dnd2024.json",
+        "CharacterContent/Spells/spells_aidedd.json",
+        "CharacterContent/Spells/spells_dnd5e.json",
     )
     _cache = None
 

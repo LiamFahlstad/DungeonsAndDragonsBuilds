@@ -64,7 +64,7 @@ from StatBlocks.AbilitiesStatBlock import StandardArrayAbilitiesStatBlock
 from StatBlocks.SkillsStatBlock import FighterSkillsStatBlock
 
 # TODO: If your class uses spells (Cleric, Wizard, Bard, Druid, etc.), import spell definitions:
-#   from Spells.SpellLists import (
+#   from CharacterContent.Spells.SpellLists import (
 #       WizardLevel0Spells, WizardLevel1Spells, WizardLevel2Spells, ...
 #   )
 # For Fighter, Monk, Barbarian, Rogue (non-spellcasters), you don't need this
@@ -294,7 +294,7 @@ class YourCharacterNameCharacterBuilder(CharacterBuilder):
 # Classes: CharacterContent/Classes/BaseClasses/
 # Subclasses: CharacterContent/Classes/SubClasses2024/
 # Species: CharacterContent/Species/
-# Spells: Spells/Definitions.py (check spell availability per class/level)
+# Spells: Spells/SpellLists.py (check spell availability per class/level)
 # Feats: CharacterContent/Features/CharacterFeats/OriginFeats.py, GeneralFeats.py
 # Equipment: CharacterContent/Items/Armor/, CharacterContent/Items/Weapons/
 # Skills: StatBlocks/SkillsStatBlock.py for class-specific skill blocks

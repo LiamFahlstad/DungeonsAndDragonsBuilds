@@ -11,7 +11,7 @@ from Builds.CharacterSheetCreator import CharacterSheetData
 from Core.Definitions import PaladinSubclass
 from CharacterContent.Features.SubClassFeatures.Paladin import PaladinGloryFeatures
 from CharacterContent.Features.ClassFeatures.Paladin import PaladinFeatures
-from Spells.SpellLists import (
+from CharacterContent.Spells.SpellLists import (
     BardLevel4Spells,
     ClericLevel1Spells,
     ClericLevel2Spells,

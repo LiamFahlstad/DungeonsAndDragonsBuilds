@@ -93,7 +93,7 @@ class SpellsMixin:
         if not self.selected_character:
             return
 
-        from Spells.SpellFactory import SpellFactory
+        from CharacterContent.Spells.SpellFactory import SpellFactory
 
         if not hasattr(self, "_spells_cache"):
             self._spells_cache = sorted(
@@ -261,7 +261,7 @@ class SpellsMixin:
         if char is None:
             return
 
-        from Spells.SpellFactory import Spell
+        from CharacterContent.Spells.SpellFactory import Spell
 
         # Build tooltip HTML from the spell details
         tags = []

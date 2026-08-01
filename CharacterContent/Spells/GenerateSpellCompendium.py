@@ -11,9 +11,9 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-from Spells.SpellFactory import SpellFactory
+from CharacterContent.Spells.SpellFactory import SpellFactory
 
-OUTPUT_HTML = "Spells/AllSpells.html"
+OUTPUT_HTML = "CharacterContent/Spells/AllSpells.html"
 
 
 def _get_css_style() -> str:

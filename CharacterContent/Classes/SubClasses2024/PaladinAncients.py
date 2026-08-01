@@ -11,7 +11,7 @@ from Builds.CharacterSheetCreator import CharacterSheetData
 from Core.Definitions import PaladinSubclass
 from CharacterContent.Features.SubClassFeatures.Paladin import PaladinAncientsFeatures
 from CharacterContent.Features.ClassFeatures.Paladin import PaladinFeatures
-from Spells.SpellLists import (
+from CharacterContent.Spells.SpellLists import (
     ConjurationLevel1Spells,
     ConjurationLevel2Spells,
     DivinationLevel1Spells,
