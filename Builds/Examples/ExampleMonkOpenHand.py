@@ -2,9 +2,9 @@
 
 import Core.Definitions as Definitions
 from Builds.CharacterBuilder import CharacterBuilder
-from CharacterConfigs.BaseClasses import ClassBuilder
-from CharacterConfigs.BaseClasses.ClassBuilder import StarterClassBuilder
-from CharacterConfigs.BaseClasses.MonkBase import (
+from CharacterContent.Classes.BaseClasses import ClassBuilder
+from CharacterContent.Classes.BaseClasses.ClassBuilder import StarterClassBuilder
+from CharacterContent.Classes.BaseClasses.MonkBase import (
     MonkLevel1,
     MonkLevel2,
     MonkLevel3,
@@ -23,7 +23,7 @@ from CharacterConfigs.BaseClasses.MonkBase import (
     MonkLevel16,
     MonkLevel17,
 )
-from CharacterConfigs.SubClasses2024.MonkOpenHand import (
+from CharacterContent.Classes.SubClasses2024.MonkOpenHand import (
     MonkOpenHandCustomStarterClassArgs,
     MonkOpenHandLevel3,
     MonkOpenHandLevel6,
@@ -31,8 +31,8 @@ from CharacterConfigs.SubClasses2024.MonkOpenHand import (
     MonkOpenHandLevel17,
 )
 from Core.Definitions import Ability, Skill
-from Features.CharacterFeats import Backgrounds, GeneralFeats, OriginFeats
-from SpeciesConfigs import Elf
+from CharacterContent.Features.CharacterFeats import Backgrounds, GeneralFeats, OriginFeats
+from CharacterContent.Species import Elf
 from StatBlocks.AbilitiesStatBlock import StandardArrayAbilitiesStatBlock
 from StatBlocks.SkillsStatBlock import MonkSkillsStatBlock
 

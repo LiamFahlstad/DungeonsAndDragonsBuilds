@@ -1,9 +1,9 @@
 """Example build: Druid Circle of the Sea. Adapted from an optimized reference build to demonstrate this subclass."""
 
 from Builds.CharacterBuilder import CharacterBuilder
-from CharacterConfigs.BaseClasses import ClassBuilder
-from CharacterConfigs.BaseClasses.ClassBuilder import StarterClassBuilder
-from CharacterConfigs.BaseClasses.DruidBase import (
+from CharacterContent.Classes.BaseClasses import ClassBuilder
+from CharacterContent.Classes.BaseClasses.ClassBuilder import StarterClassBuilder
+from CharacterContent.Classes.BaseClasses.DruidBase import (
     DruidLevel1,
     DruidLevel2,
     DruidLevel3,
@@ -25,7 +25,7 @@ from CharacterConfigs.BaseClasses.DruidBase import (
     DruidLevel19,
     DruidLevel20,
 )
-from CharacterConfigs.SubClasses2024.DruidSea import (
+from CharacterContent.Classes.SubClasses2024.DruidSea import (
     DruidSeaCustomStarterClassArgs,
     DruidSeaLevel3,
     DruidSeaLevel5,
@@ -37,8 +37,8 @@ from CharacterConfigs.SubClasses2024.DruidSea import (
 )
 from Combat.Monsters.CR_0.monsters import Crab, GiantSeahorse, Octopus, ReefShark
 from Core.Definitions import Ability, Skill
-from Features.CharacterFeats import Backgrounds, EpicBoon, GeneralFeats, OriginFeats
-from SpeciesConfigs.Elf import ElfSpeciesBuilder, ElvenLineage
+from CharacterContent.Features.CharacterFeats import Backgrounds, EpicBoon, GeneralFeats, OriginFeats
+from CharacterContent.Species.Elf import ElfSpeciesBuilder, ElvenLineage
 from Spells.SpellLists import (
     DruidLevel0Spells,
     DruidLevel1Spells,

@@ -1,23 +1,23 @@
 """Example build: Paladin Oath of the Ancients."""
 
 from Builds.CharacterBuilder import CharacterBuilder
-from CharacterConfigs.BaseClasses import ClassBuilder
-from CharacterConfigs.BaseClasses.ClassBuilder import StarterClassBuilder
-from CharacterConfigs.BaseClasses.PaladinBase import (
+from CharacterContent.Classes.BaseClasses import ClassBuilder
+from CharacterContent.Classes.BaseClasses.ClassBuilder import StarterClassBuilder
+from CharacterContent.Classes.BaseClasses.PaladinBase import (
     PaladinLevel1,
     PaladinLevel2,
     PaladinLevel3,
 )
-from CharacterConfigs.SubClasses2024.PaladinAncients import (
+from CharacterContent.Classes.SubClasses2024.PaladinAncients import (
     AncientsPaladinLevel3,
     PaladinAncientsCustomStarterClassArgs,
 )
 from Core.Definitions import Ability, Skill
-from Features.CharacterFeats import Backgrounds, OriginFeats
-from Features.Combat import FightingStyles
-from Features.Items import Weapons
-from SpeciesConfigs import Elf
-from SpeciesConfigs.Elf import ElvenLineage
+from CharacterContent.Features.CharacterFeats import Backgrounds, OriginFeats
+from CharacterContent.Features.CombatFeatures import FightingStyles
+from CharacterContent.Items import Weapons
+from CharacterContent.Species import Elf
+from CharacterContent.Species.Elf import ElvenLineage
 from Spells.SpellLists import PaladinLevel1Spells
 from StatBlocks.AbilitiesStatBlock import StandardArrayAbilitiesStatBlock
 from StatBlocks.SkillsStatBlock import PaladinSkillsStatBlock

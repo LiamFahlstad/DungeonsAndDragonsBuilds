@@ -1,23 +1,23 @@
 from Builds.CharacterBuilder import CharacterBuilder
-from CharacterConfigs.BaseClasses import ClassBuilder
-from CharacterConfigs.BaseClasses.ClassBuilder import StarterClassBuilder
-from CharacterConfigs.BaseClasses.PaladinBase import (
+from CharacterContent.Classes.BaseClasses import ClassBuilder
+from CharacterContent.Classes.BaseClasses.ClassBuilder import StarterClassBuilder
+from CharacterContent.Classes.BaseClasses.PaladinBase import (
     PaladinLevel1,
     PaladinLevel2,
     PaladinLevel3,
     PaladinLevel4,
     PaladinLevel5,
 )
-from CharacterConfigs.SubClasses2024.PaladinGlory import (
+from CharacterContent.Classes.SubClasses2024.PaladinGlory import (
     PaladinGloryCustomStarterClassArgs,
     PaladinGloryLevel3,
     PaladinGloryLevel5,
 )
 from Core.Definitions import Ability, Skill
-from Features.CharacterFeats import Backgrounds, GeneralFeats, OriginFeats
-from Features.Combat import FightingStyles
-from Features.Items import Weapons
-from SpeciesConfigs import Human
+from CharacterContent.Features.CharacterFeats import Backgrounds, GeneralFeats, OriginFeats
+from CharacterContent.Features.CombatFeatures import FightingStyles
+from CharacterContent.Items import Weapons
+from CharacterContent.Species import Human
 from Spells.SpellLists import PaladinLevel1Spells, PaladinLevel2Spells
 from StatBlocks.AbilitiesStatBlock import StandardArrayAbilitiesStatBlock
 from StatBlocks.SkillsStatBlock import PaladinSkillsStatBlock

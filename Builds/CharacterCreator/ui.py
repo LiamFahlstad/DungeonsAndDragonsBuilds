@@ -1647,7 +1647,7 @@ class CreatorApp(QMainWindow):
 
         origin_box = QGroupBox("Origin feat")
         origin_layout = QVBoxLayout(origin_box)
-        from Features.CharacterFeats import OriginFeats
+        from CharacterContent.Features.CharacterFeats import OriginFeats
 
         self.origin_feat = ClassPickerEditor(
             OriginFeats.OriginFeat, context=self._context()
@@ -1679,7 +1679,7 @@ class CreatorApp(QMainWindow):
         self.add_default_equipment_check.setChecked(True)
         _insert_before_stretch(layout, self.add_default_equipment_check)
 
-        from Features.Items import Armor, Weapons
+        from CharacterContent.Items import Armor, Weapons
 
         self.weapons_list = EquipmentList(
             self, "Weapons", Weapons.AbstractWeapon, self._context()
@@ -1690,7 +1690,7 @@ class CreatorApp(QMainWindow):
         )
         _insert_before_stretch(layout, self.armor_list.box)
 
-        from Features.Items import Items
+        from CharacterContent.Items import Items
 
         self.items_editor = ExprListEditor(
             make_item=lambda: TupleEditor(

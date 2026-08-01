@@ -1,0 +1,451 @@
+from typing import Optional
+
+from Core.Definitions import Ability, CharacterClass, Skill
+from CharacterContent.Features.Core.BaseFeatures import Feature
+from CharacterContent.Features.Core.Improvements import (
+    HitPointsPerLevelBonus,
+    InitiativeProficiency,
+    SkillProficiencyChoice,
+)
+from Spells.SpellLists import (
+    ClericLevel0Spells,
+    ClericLevel1Spells,
+    DruidLevel0Spells,
+    DruidLevel1Spells,
+    WizardLevel0Spells,
+    WizardLevel1Spells,
+)
+from StatBlocks.CharacterStatBlock import CharacterStatBlock
+from Utils import StringUtils
+
+
+class OriginFeat(Feature):
+    def get_spell_casting_ability(self) -> Optional[Ability]:
+        return None
+
+    def get_spells(self) -> list[str]:
+        return []
+
+
+class Skilled(OriginFeat):
+    """Also add proficiency in any combination of three skills or tools of your choice."""
+
+    def __init__(self, skills: list[Skill]):
+        self._choice = SkillProficiencyChoice(
+            skills, list(Skill), count=3, error_prefix="Skilled"
+        )
+        super().__init__(name="Skilled", origin="Origin Feat")
+
+    def apply(self, character_stat_block: CharacterStatBlock):
+        self._choice.apply(character_stat_block)
+
+    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+        choices = ", ".join(skill.value for skill in self._choice.skills)
+        return (
+            "You gain proficiency in any combination of three skills of your choice.\n"
+            f"Choices: {choices}"
+        )
+
+
+class Alert(OriginFeat):
+    def __init__(self):
+        super().__init__(name="Alert", origin="Origin Feat")
+        self._proficiency = InitiativeProficiency()
+
+    def apply(self, character_stat_block: CharacterStatBlock):
+        self._proficiency.apply(character_stat_block)
+
+    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+        return (
+            "Initiative Proficiency. When you roll Initiative, you can add your Proficiency Bonus to the roll.\n"
+            "Initiative Swap. Immediately after you roll Initiative, you can swap your Initiative with the Initiative of one willing ally in the same combat. You can't make this swap if you or the ally has the Incapacitated condition.\n"
+        )
+
+
+class Crafter(OriginFeat):
+    def __init__(self, artisans_tools: list[str]):
+        self.artisans_tools = artisans_tools
+        super().__init__(name="Crafter", origin="Origin Feat")
+
+    def get_tool_choices(self) -> str:
+        tool_map = {
+            "Artisan": "Artisan's Tools\tCrafted Gear",
+            "Carpenter": "Carpenter's Tools\tLadder, Torch",
+            "Leatherworker": "Leatherworker's Tools\tCase, Pouch",
+            "Mason": "Mason's Tools\tBlock and Tackle",
+            "Potter": "Potter's Tools\tJug, Lamp",
+            "Smith": "Smith's Tools\tBall Bearings, Bucket, Caltrops, Grappling Hook, Iron Pot",
+            "Tinker": "Tinker's Tools\tBell, Shovel, Tinder Box",
+            "Weaver": "Weaver's Tools\tBasket, Rope, Net, Tent",
+            "Woodcarver": "Woodcarver's Tools\tClub, Greatclub, Quarterstaff",
+        }
+
+        unknown = [t for t in self.artisans_tools if t not in tool_map]
+        if unknown:
+            raise ValueError(
+                f"Unknown artisan tool(s): {', '.join(unknown)}. "
+                f"Valid choices are: {', '.join(tool_map.keys())}."
+            )
+
+        return "\n".join(f"    * {tool_map[t]}" for t in self.artisans_tools)
+
+    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+        return (
+            "Tool Proficiency. You gain proficiency with three different Artisan's Tools of your choice from the Fast Crafting table.\n"
+            "Discount. Whenever you buy a nonmagical item, you receive a 20 percent discount on it.\n"
+            "Fast Crafting:\n"
+            "When you finish a Long Rest, you can craft one piece of gear from the Fast Crafting table,\n"
+            "provided you have the Artisan's Tools associated with that item and have proficiency with those tools. \n"
+            "The item lasts until you finish another Long Rest, at which point the item falls apart.\n"
+            f"{self.get_tool_choices()}"
+        )
+
+
+class Healer(OriginFeat):
+    def __init__(self):
+        super().__init__(name="Healer", origin="Origin Feat")
+
+    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+        return (
+            "Battle Medic:\n"
+            "  If you have a Healer's Kit, you can expend one use of it and tend to a creature within 5 feet of yourself as a Utilize action.\n"
+            "  That creature can expend one of its Hit Point Dice, and you then roll that die. The creature regains a number of Hit Points equal to the roll plus your Proficiency Bonus.\n"
+            "Healing Rerolls.\n"
+            "  Whenever you roll a die to determine the number of Hit Points you restore with a spell or with this feat's Battle Medic benefit,\n"
+            "  you can reroll the die if it rolls a 1, and you must use the new roll.\n"
+        )
+
+
+class Lucky(OriginFeat):
+    def __init__(self):
+        super().__init__(name="Lucky", origin="Origin Feat")
+
+    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+        proficiency_bonus = character_stat_block.get_proficiency_bonus()
+        description = (
+            "Luck Points. You have a number of Luck Points equal to your Proficiency Bonus and can spend the points on the benefits below. You regain your expended Luck Points when you finish a Long Rest.\n"
+            "Advantage. When you roll a d20 for a D20 Test, you can spend 1 Luck Point to give yourself Advantage on the roll.\n"
+            "Disadvantage. When a creature rolls a d20 for an attack roll against you, you can spend 1 Luck Point to impose Disadvantage on that roll."
+        )
+        return StringUtils.add_boxes(
+            description, proficiency_bonus, regain_all_on="long rest"
+        )
+
+
+class MagicInitiate(OriginFeat):
+    def __init__(
+        self,
+        cantrip_1: str,
+        cantrip_2: str,
+        spell: str,
+        spell_casting_ability: Ability,
+        character_class: CharacterClass,
+    ):
+        if character_class not in [
+            CharacterClass.CLERIC,
+            CharacterClass.DRUID,
+            CharacterClass.WIZARD,
+        ]:
+            raise ValueError("Character class must be Cleric, Druid, or Wizard.")
+
+        cantrips_map = {
+            CharacterClass.CLERIC: ClericLevel0Spells,
+            CharacterClass.DRUID: DruidLevel0Spells,
+            CharacterClass.WIZARD: WizardLevel0Spells,
+        }
+        spells_map = {
+            CharacterClass.CLERIC: ClericLevel1Spells,
+            CharacterClass.DRUID: DruidLevel1Spells,
+            CharacterClass.WIZARD: WizardLevel1Spells,
+        }
+
+        if cantrip_1 not in list(cantrips_map[character_class]):
+            raise ValueError(
+                f"Cantrip 1 must be a valid {character_class.name.title()} cantrip. ({cantrip_1})"
+            )
+        if cantrip_2 not in list(cantrips_map[character_class]):
+            raise ValueError(
+                f"Cantrip 2 must be a valid {character_class.name.title()} cantrip. ({cantrip_2})"
+            )
+        if spell not in list(spells_map[character_class]):
+            raise ValueError(
+                f"Spell must be a valid {character_class.name.title()} level 1 spell. ({spell})"
+            )
+
+        self.character_class = character_class
+        self.cantrip_1 = cantrip_1
+        self.cantrip_2 = cantrip_2
+        self.spell = spell
+        self.spell_casting_ability = spell_casting_ability
+        super().__init__(
+            name=f"Magic Initiate ({self.character_class.value})",
+            origin="Origin Feat",
+        )
+
+    def get_spells(self) -> list[str]:
+        return [self.cantrip_1, self.cantrip_2, self.spell]
+
+    def get_spell_casting_ability(self) -> Ability:
+        return self.spell_casting_ability
+
+    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+        spells = (
+            f"Cantrip 1: {self.cantrip_1}, Cantrip 2: {self.cantrip_2}, "
+            f"Level 1 Spell: {self.spell} (Cast once per long rest without a spell slot)"
+        )
+        return (
+            f"Magic Initiate {self.character_class.name.title()} Spellcasting\n"
+            f"Spell List (always prepared): {spells}\n"
+            "Spell Change. Whenever you gain a new level, you can replace one of the spells you chose for this feat with a different spell of the same level from the chosen spell list.\n\n"
+            "Repeatable. You can take this feat more than once, but you must choose a different spell list each time."
+        )
+
+
+def _resolve_spell_enum(value, enum_type: type) -> str:
+    if isinstance(value, enum_type):
+        return value.value
+    return value
+
+
+class MagicInitiateCleric(MagicInitiate):
+    def __init__(
+        self,
+        cantrip_1: str,
+        cantrip_2: str,
+        spell: str,
+        spell_casting_ability: Ability,
+    ):
+        super().__init__(
+            _resolve_spell_enum(cantrip_1, ClericLevel0Spells),
+            _resolve_spell_enum(cantrip_2, ClericLevel0Spells),
+            _resolve_spell_enum(spell, ClericLevel1Spells),
+            spell_casting_ability,
+            character_class=CharacterClass.CLERIC,
+        )
+
+
+class MagicInitiateDruid(MagicInitiate):
+    def __init__(
+        self,
+        cantrip_1: str,
+        cantrip_2: str,
+        spell: str,
+        spell_casting_ability: Ability,
+    ):
+        super().__init__(
+            _resolve_spell_enum(cantrip_1, DruidLevel0Spells),
+            _resolve_spell_enum(cantrip_2, DruidLevel0Spells),
+            _resolve_spell_enum(spell, DruidLevel1Spells),
+            spell_casting_ability,
+            character_class=CharacterClass.DRUID,
+        )
+
+
+class MagicInitiateWizard(MagicInitiate):
+    def __init__(
+        self,
+        cantrip_1: str,
+        cantrip_2: str,
+        spell: str,
+        spell_casting_ability: Ability,
+    ):
+        super().__init__(
+            _resolve_spell_enum(cantrip_1, WizardLevel0Spells),
+            _resolve_spell_enum(cantrip_2, WizardLevel0Spells),
+            _resolve_spell_enum(spell, WizardLevel1Spells),
+            spell_casting_ability,
+            character_class=CharacterClass.WIZARD,
+        )
+
+
+class Musician(OriginFeat):
+    def __init__(self):
+        super().__init__(name="Musician", origin="Origin Feat")
+
+    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+        return (
+            "Instrument Training: You gain proficiency with three Musical Instruments of your choice.\n"
+            "\n"
+            "Encouraging Song: As you finish a Short or Long Rest, you can play a song on a Musical Instrument with which you have proficiency and give Heroic Inspiration to allies who hear the song. The number of allies you can affect in this way equals your Proficiency Bonus.\n"
+        )
+
+
+class SavageAttacker(OriginFeat):
+    def __init__(self):
+        super().__init__(name="Savage Attacker", origin="Origin Feat")
+
+    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+        return (
+            "You've trained to deal particularly damaging strikes.\n"
+            "Once per turn when you hit a target with a weapon, you can roll the weapon's damage dice twice and use either roll against the target.\n"
+        )
+
+
+class TavernBrawler(OriginFeat):
+    def __init__(self):
+        super().__init__(name="Tavern Brawler", origin="Origin Feat")
+
+    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+        return (
+            "Enhanced Unarmed Strike. When you hit with your Unarmed Strike and deal damage, you can deal Bludgeoning damage equal to 1d4 plus your Strength modifier instead of the normal damage of an Unarmed Strike.\n"
+            "\n"
+            "Damage Rerolls. Whenever you roll a damage die for your Unarmed Strike, you can reroll the die if it rolls a 1, and you must use the new roll.\n"
+            "\n"
+            "Improvised Weaponry. You have proficiency with improvised weapons.\n"
+            "\n"
+            "Push. When you hit a creature with an Unarmed Strike as part of the Attack action on your turn, you can deal damage to the target and also push it 5 feet away from you. You can use this benefit only once per turn.\n"
+        )
+
+
+class Tough(OriginFeat):
+    def __init__(self):
+        self._hp = HitPointsPerLevelBonus(2)
+        super().__init__(name="Tough", origin="Origin Feat")
+
+    def apply(self, character_stat_block: CharacterStatBlock):
+        self._hp.apply(character_stat_block)
+
+    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+        return (
+            "Resilience. You gain 2 additional Hit Points for each level you have. "
+            "Whenever you gain a new level, you gain 2 additional Hit Points."
+        )
+
+
+class CultOfTheDragonInitiate(OriginFeat):
+    def __init__(self):
+        super().__init__(name="Cult of the Dragon Initiate", origin="Origin Feat")
+
+    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+        return (
+            "You gain the following benefits.\n"
+            "Dragon’s Tongue. You know Draconic. If you already know Draconic when you select this feat, you instead learn one language of your choice from the language tables in the Player’s Handbook or chapter 2 of this book.\n"
+            "Dragon’s Terror. You can take a Magic action to instill terror in a creature you can see within 30 feet of yourself. The target must succeed on a Wisdom saving throw (DC 8 plus your Wisdom modifier and Proficiency Bonus) or have the Frightened condition until the end of your next turn. If the target succeeds on the save or when the effect ends for a target, the target is immune to this effect for 24 hours.\n"
+            "Inspired by Fear. When you cause a creature to have the Frightened condition and you are the source of its fear, you can gain Heroic Inspiration if you lack it. Once you use this benefit, you can’t use it again until you finish a Short or Long Rest.\n"
+        )
+
+
+class EmeraldEnclaveFledgling(OriginFeat):
+    def __init__(self):
+        super().__init__(name="Emerald Enclave Fledgling", origin="Origin Feat")
+
+    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+        return (
+            "You gain the following benefits.\n"
+            "Speak with Animals. You always have the Speak with Animals spell prepared and can cast it with any spell slots you have. Intelligence, Wisdom, or Charisma is your spellcasting ability for this spell (choose when you select this feat). When you cast this spell as a Ritual, its duration is 8 hours.\n"
+            "\n"
+            "Tag Team. When you take the Help action, you can switch places with a willing ally within 5 feet of yourself as part of that same action. This movement doesn’t provoke Opportunity Attacks. You can’t use this benefit if the ally has the Incapacitated condition.\n"
+        )
+
+
+class HarperAgent(OriginFeat):
+    def __init__(self):
+        super().__init__(name="Harper Agent", origin="Origin Feat")
+
+    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+        return (
+            "You gain the following benefits.\n"
+            "Thieves’ Cant. You know Thieves’ Cant.\n"
+            "Instrument Training. You gain proficiency with a Musical Instrument of your choice.\n"
+            "Distracting Melody. When you take the Help action to assist an ally’s attack roll, the enemy you’re distracting can be within 30 feet of you, rather than within 5 feet of you, provided the enemy can see or hear you.\n"
+        )
+
+
+class LordsAllianceAgent(OriginFeat):
+    def __init__(self):
+        super().__init__(name="Lords' Alliance Agent", origin="Origin Feat")
+
+    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+        return (
+            "You gain the following benefits.\n"
+            "Inspiring Strike. Once per turn when you score a Critical Hit against a creature, you can choose an ally within 30 feet of yourself who can see or hear you and who lacks Heroic Inspiration. That ally gains Heroic Inspiration.\n"
+            "Reassert Honor. When an enemy you can see deals damage to an ally of yours that is within 5 feet of you, you have Advantage on your next attack roll against that enemy before the end of your next turn.\n"
+        )
+
+
+class PurpleDragonRook(OriginFeat):
+    VALID_SKILLS = [Skill.INSIGHT, Skill.PERFORMANCE, Skill.PERSUASION]
+
+    def __init__(self, entreat_skill: Skill):
+        self._choice = SkillProficiencyChoice(
+            [entreat_skill],
+            self.VALID_SKILLS,
+            count=1,
+            error_prefix="Purple Dragon Rook",
+        )
+        super().__init__(name="Purple Dragon Rook", origin="Origin Feat")
+
+    def apply(self, character_stat_block: CharacterStatBlock):
+        self._choice.apply(character_stat_block)
+
+    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+        skill_name = self._choice.skills[0].value if self._choice.skills else "Insight"
+        return (
+            "You gain the following benefits.\n"
+            f"Entreat. You gain proficiency in {skill_name}.\n"
+            "Rallying Cry. When you roll Initiative and don’t have the Incapacitated condition, you can choose a number of creatures equal to your Proficiency Bonus that you can see within 30 feet of yourself. Those creatures gain Heroic Inspiration.\n"
+            "Once you use this benefit, you can’t do so again until you finish a Long Rest.\n"
+        )
+
+
+class SpellfireSpark(OriginFeat):
+    def __init__(self):
+        super().__init__(name="Spellfire Spark", origin="Origin Feat")
+
+    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+        proficiency_bonus = character_stat_block.get_proficiency_bonus()
+        description = (
+            "You gain the following benefits.\n"
+            "Magic Absorption. Once per turn, when you take damage from a spell or magical effect, you reduce the total damage taken by 1d4. You can’t use this benefit if you have the Incapacitated condition.\n"
+            "Spellfire Flame. You learn the Sacred Flame cantrip. Intelligence, Wisdom, or Charisma is your spellcasting ability for this spell (choose when you select this feat). You can also cast this cantrip as a Bonus Action a number of times equal to your Proficiency Bonus, and you regain all expended uses when you finish a Long Rest."
+        )
+        return StringUtils.add_boxes(
+            description, proficiency_bonus, regain_all_on="long rest"
+        )
+
+
+class TyroOfTheGauntlet(OriginFeat):
+    def __init__(self):
+        super().__init__(name="Tyro of the Gauntlet", origin="Origin Feat")
+
+    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+        return (
+            "You gain the following benefits.\n"
+            "Stand as One. When an ally within 5 feet of you is subjected to an effect that would push or pull it, you can take a Reaction to prevent that ally from being pushed or pulled. To receive this benefit, the ally can’t have the Incapacitated condition.\n"
+            "Vigilant. When you take the Ready action, the next attack roll made against you has Disadvantage before the start of your next turn.\n"
+        )
+
+
+class ZhentarimRuffian(OriginFeat):
+    def __init__(self):
+        super().__init__(name="Zhentarim Ruffian", origin="Origin Feat")
+
+    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+        return (
+            "You gain the following benefits.\n"
+            "Exploit Opening. When you roll damage for an Opportunity Attack, you can roll the damage dice twice and use either roll against the target.\n"
+            "Family First. If you have Heroic Inspiration when you roll Initiative, you can expend it to give yourself and your allies Advantage on that Initiative roll.\n"
+        )
+
+
+class SharpEye(OriginFeat):
+    def __init__(self):
+        super().__init__(name="Sharp Eye", origin="Origin Feat")
+
+    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+        proficiency_bonus = character_stat_block.get_proficiency_bonus()
+        description = "When you take the Search or Study action, you can give yourself Advantage on any ability check made as part of that action. You can use this feature a number of times equal to your Proficiency Bonus, and you regain all expended uses when you finish a Long Rest. If the check fails, the use of this feature isn't expended."
+        return StringUtils.add_boxes(description, proficiency_bonus)
+
+
+class Survivor(OriginFeat):
+    def __init__(self):
+        super().__init__(name="Survivor", origin="Origin Feat")
+
+    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+        return (
+            "You gain the following benefits.\n"
+            "Hypervigilance. Whenever you roll Initiative, you can reroll the d20 if the number rolled is 9 or lower. You must use the new roll.\n"
+            "Steel Yourself. When you fail a saving throw to avoid or end the Charmed or Frightened condition, you can take a Reaction to add a bonus to the roll potentially causing it to succeed. The bonus is equal to your Proficiency Bonus.\n"
+            "Once you take this Reaction, you can't do so again until you finish a Long Rest.\n"
+        )

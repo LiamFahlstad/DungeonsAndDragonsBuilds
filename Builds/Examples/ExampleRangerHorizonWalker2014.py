@@ -1,9 +1,9 @@
 """Example build: Ranger Horizon Walker (2014 rules). Demonstrates the subclass up through level 17."""
 
 from Builds.CharacterBuilder import CharacterBuilder
-from CharacterConfigs.BaseClasses import ClassBuilder
-from CharacterConfigs.BaseClasses.ClassBuilder import StarterClassBuilder
-from CharacterConfigs.BaseClasses.RangerBase import (
+from CharacterContent.Classes.BaseClasses import ClassBuilder
+from CharacterContent.Classes.BaseClasses.ClassBuilder import StarterClassBuilder
+from CharacterContent.Classes.BaseClasses.RangerBase import (
     RangerLevel1,
     RangerLevel2,
     RangerLevel3,
@@ -22,7 +22,7 @@ from CharacterConfigs.BaseClasses.RangerBase import (
     RangerLevel16,
     RangerLevel17,
 )
-from CharacterConfigs.SubClasses2014.RangerHorizonWalker import (
+from CharacterContent.Classes.SubClasses2014.RangerHorizonWalker import (
     RangerHorizonWalkerLevel3,
     RangerHorizonWalkerLevel5,
     RangerHorizonWalkerLevel7,
@@ -34,10 +34,10 @@ from CharacterConfigs.SubClasses2014.RangerHorizonWalker import (
     RangerHorizonWalkerCustomStarterClassArgs,
 )
 from Core.Definitions import Ability, Skill
-from Features.CharacterFeats import Backgrounds, GeneralFeats, OriginFeats
-from Features.Combat import FightingStyles
-from Features.Items import Weapons
-from SpeciesConfigs import Elf, Human
+from CharacterContent.Features.CharacterFeats import Backgrounds, GeneralFeats, OriginFeats
+from CharacterContent.Features.CombatFeatures import FightingStyles
+from CharacterContent.Items import Weapons
+from CharacterContent.Species import Elf, Human
 from Spells.SpellLists import RangerLevel1Spells, RangerLevel2Spells, RangerLevel3Spells, RangerLevel4Spells
 from StatBlocks.AbilitiesStatBlock import StandardArrayAbilitiesStatBlock
 from StatBlocks.SkillsStatBlock import RangerSkillsStatBlock

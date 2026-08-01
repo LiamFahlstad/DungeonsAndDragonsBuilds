@@ -4,16 +4,16 @@ from typing import Optional, TextIO
 
 import Core.Definitions as Definitions
 from Core.Definitions import Ability, DiceRollCondition, Die
-from Features.Combat.FightingStyles import FightingStyle
-from Features.Core.BaseFeatures import Feature
-from Features.Items import Armor
-from Features.Items.Weapons import (
+from CharacterContent.Features.CombatFeatures.FightingStyles import FightingStyle
+from CharacterContent.Features.Core.BaseFeatures import Feature
+from CharacterContent.Items import Armor
+from CharacterContent.Items.Weapons import (
     AbstractWeapon,
     UnarmedStrike,
     WeaponProficiency,
     write_weapons_to_file,
 )
-from Features.Items import Items
+from CharacterContent.Items import Items
 from Invocations.InvocationFactory import InvocationFactory
 from Spells.SpellFactory import SpellFactory
 from StatBlocks.CharacterStatBlock import CharacterStatBlock

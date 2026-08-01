@@ -1,9 +1,9 @@
 """Example build: Ranger Hunter (2014 rules). Demonstrates the subclass up through level 15."""
 
 from Builds.CharacterBuilder import CharacterBuilder
-from CharacterConfigs.BaseClasses import ClassBuilder
-from CharacterConfigs.BaseClasses.ClassBuilder import StarterClassBuilder
-from CharacterConfigs.BaseClasses.RangerBase import (
+from CharacterContent.Classes.BaseClasses import ClassBuilder
+from CharacterContent.Classes.BaseClasses.ClassBuilder import StarterClassBuilder
+from CharacterContent.Classes.BaseClasses.RangerBase import (
     RangerLevel1,
     RangerLevel2,
     RangerLevel3,
@@ -20,7 +20,7 @@ from CharacterConfigs.BaseClasses.RangerBase import (
     RangerLevel14,
     RangerLevel15,
 )
-from CharacterConfigs.SubClasses2014.RangerHunter import (
+from CharacterContent.Classes.SubClasses2014.RangerHunter import (
     RangerHunterLevel3,
     RangerHunterLevel7,
     RangerHunterLevel11,
@@ -28,10 +28,10 @@ from CharacterConfigs.SubClasses2014.RangerHunter import (
     RangerHunterCustomStarterClassArgs,
 )
 from Core.Definitions import Ability, Skill
-from Features.CharacterFeats import Backgrounds, GeneralFeats, OriginFeats
-from Features.Combat import FightingStyles
-from Features.Items import Weapons
-from SpeciesConfigs import Human
+from CharacterContent.Features.CharacterFeats import Backgrounds, GeneralFeats, OriginFeats
+from CharacterContent.Features.CombatFeatures import FightingStyles
+from CharacterContent.Items import Weapons
+from CharacterContent.Species import Human
 from Spells.SpellLists import RangerLevel1Spells, RangerLevel2Spells, RangerLevel3Spells, RangerLevel4Spells
 from StatBlocks.AbilitiesStatBlock import StandardArrayAbilitiesStatBlock
 from StatBlocks.SkillsStatBlock import RangerSkillsStatBlock

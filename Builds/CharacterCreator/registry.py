@@ -26,7 +26,7 @@ def ensure_repo_on_path():
 
 ensure_repo_on_path()
 
-from CharacterConfigs.BaseClasses import ClassBuilder  # noqa: E402
+from CharacterContent.Classes.BaseClasses import ClassBuilder  # noqa: E402
 from Core.Definitions import Skill  # noqa: E402
 
 
@@ -285,12 +285,12 @@ class Registry:
             return self._classes
         base_bases = _base_level_bases()
         result = {}
-        base_dir = REPO_ROOT / "CharacterConfigs" / "BaseClasses"
+        base_dir = REPO_ROOT / "CharacterContent" / "Classes" / "BaseClasses"
         for path in sorted(base_dir.glob("*Base.py")):
             key = path.stem[: -len("Base")]
             try:
                 module = importlib.import_module(
-                    f"CharacterConfigs.BaseClasses.{path.stem}"
+                    f"CharacterContent.Classes.BaseClasses.{path.stem}"
                 )
             except Exception:
                 continue
@@ -328,9 +328,9 @@ class Registry:
         class_keys = sorted(self.classes(), key=len, reverse=True)
         result = {}
         sub_dirs = [
-            REPO_ROOT / "CharacterConfigs" / "SubClasses",
-            REPO_ROOT / "CharacterConfigs" / "SubClasses2014",
-            REPO_ROOT / "CharacterConfigs" / "SubClasses2024",
+            REPO_ROOT / "CharacterContent" / "Classes" / "SubClasses",
+            REPO_ROOT / "CharacterContent" / "Classes" / "SubClasses2014",
+            REPO_ROOT / "CharacterContent" / "Classes" / "SubClasses2024",
         ]
         for sub_dir in sub_dirs:
             if not sub_dir.exists():
@@ -341,7 +341,7 @@ class Registry:
                     continue
                 try:
                     module = importlib.import_module(
-                        f"CharacterConfigs.{package}.{path.stem}"
+                        f"CharacterContent.Classes.{package}.{path.stem}"
                     )
                 except Exception:
                     continue
@@ -387,15 +387,15 @@ class Registry:
         """dict[species builder class name, SpeciesInfo]"""
         if self._species is not None:
             return self._species
-        from SpeciesConfigs.SpeciesBuilder import SpeciesBuilder
+        from CharacterContent.Species.SpeciesBuilder import SpeciesBuilder
 
         result = {}
-        species_dir = REPO_ROOT / "SpeciesConfigs"
+        species_dir = REPO_ROOT / "CharacterContent" / "Species"
         for path in sorted(species_dir.glob("*.py")):
             if path.stem in ("SpeciesBuilder", "__init__"):
                 continue
             try:
-                module = importlib.import_module(f"SpeciesConfigs.{path.stem}")
+                module = importlib.import_module(f"CharacterContent.Species.{path.stem}")
             except Exception:
                 continue
             for cls in _classes_defined_in(module):
@@ -411,7 +411,7 @@ class Registry:
     # ----------------------------------------------------- feats and spells
 
     def feat_module(self, name):
-        return importlib.import_module(f"Features.CharacterFeats.{name}")
+        return importlib.import_module(f"CharacterContent.Features.CharacterFeats.{name}")
 
     def concrete_subclasses(self, base) -> list:
         """Non-abstract subclasses of `base` defined in base's module."""
@@ -462,12 +462,12 @@ class Registry:
             mapping[name] = ("Spells.SpellLists", name)
 
         for name in ("Backgrounds", "EpicBoon", "GeneralFeats", "OriginFeats"):
-            mapping[name] = ("Features.CharacterFeats", name)
+            mapping[name] = ("CharacterContent.Features.CharacterFeats", name)
 
-        mapping["Armor"] = ("Features.Items", "Armor")
-        mapping["Weapons"] = ("Features.Items", "Weapons")
-        mapping["Items"] = ("Features.Items", "Items")
-        mapping["SpellSlots"] = ("Features.ClassFeatures", "SpellSlots")
+        mapping["Armor"] = ("CharacterContent.Items", "Armor")
+        mapping["Weapons"] = ("CharacterContent.Items", "Weapons")
+        mapping["Items"] = ("CharacterContent.Items", "Items")
+        mapping["SpellSlots"] = ("CharacterContent.Features.ClassFeatures", "SpellSlots")
         mapping["ToolProficiency"] = (
             "ToolProficiencies.ToolProficiencies",
             "ToolProficiency",
@@ -489,11 +489,11 @@ class Registry:
                 mapping[name] = ("StatBlocks.SkillsStatBlock", name)
 
         for info in self.species().values():
-            mapping[info.module_name] = ("SpeciesConfigs", info.module_name)
+            mapping[info.module_name] = ("CharacterContent.Species", info.module_name)
 
         # Feature modules referenced inside expressions, e.g.
         # FightingStyles.Defense(), Maneuvers.PrecisionAttack(), GoliathFeatures.
-        features_dir = REPO_ROOT / "Features"
+        features_dir = REPO_ROOT / "CharacterContent" / "Features"
         for package in features_dir.iterdir():
             if not package.is_dir() or package.name.startswith("__"):
                 continue

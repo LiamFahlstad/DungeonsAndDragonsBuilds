@@ -1,8 +1,8 @@
 """Example build: Artificer Alchemist (2014 rules). Demonstrates the subclass through level 17."""
 
 from Builds.CharacterBuilder import CharacterBuilder
-from CharacterConfigs.BaseClasses import ClassBuilder
-from CharacterConfigs.BaseClasses.ArtificerBase import (
+from CharacterContent.Classes.BaseClasses import ClassBuilder
+from CharacterContent.Classes.BaseClasses.ArtificerBase import (
     ArtificerLevel1,
     ArtificerLevel2,
     ArtificerLevel3,
@@ -21,8 +21,8 @@ from CharacterConfigs.BaseClasses.ArtificerBase import (
     ArtificerLevel16,
     ArtificerLevel17,
 )
-from CharacterConfigs.BaseClasses.ClassBuilder import StarterClassBuilder
-from CharacterConfigs.SubClasses2014.ArtificerAlchemist import (
+from CharacterContent.Classes.BaseClasses.ClassBuilder import StarterClassBuilder
+from CharacterContent.Classes.SubClasses2014.ArtificerAlchemist import (
     ArtificerAlchemistCustomStarterClassArgs,
     ArtificerAlchemistLevel3,
     ArtificerAlchemistLevel5,
@@ -32,8 +32,8 @@ from CharacterConfigs.SubClasses2014.ArtificerAlchemist import (
     ArtificerAlchemistLevel17,
 )
 from Core.Definitions import Ability, Skill
-from Features.CharacterFeats import Backgrounds, GeneralFeats, OriginFeats
-from SpeciesConfigs import Gnome
+from CharacterContent.Features.CharacterFeats import Backgrounds, GeneralFeats, OriginFeats
+from CharacterContent.Species import Gnome
 from Spells import SpellLists as SpellDefinitions
 from StatBlocks.AbilitiesStatBlock import StandardArrayAbilitiesStatBlock
 from StatBlocks.SkillsStatBlock import ArtificerSkillsStatBlock

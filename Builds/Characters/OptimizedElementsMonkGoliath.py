@@ -1,15 +1,15 @@
 from Builds.CharacterBuilder import CharacterBuilder
-from CharacterConfigs.BaseClasses import ClassBuilder
-from CharacterConfigs.BaseClasses.ClassBuilder import StarterClassBuilder
-from CharacterConfigs.BaseClasses.MonkBase import MonkLevel1, MonkLevel2, MonkLevel3
-from CharacterConfigs.SubClasses2024.MonkElements import (
+from CharacterContent.Classes.BaseClasses import ClassBuilder
+from CharacterContent.Classes.BaseClasses.ClassBuilder import StarterClassBuilder
+from CharacterContent.Classes.BaseClasses.MonkBase import MonkLevel1, MonkLevel2, MonkLevel3
+from CharacterContent.Classes.SubClasses2024.MonkElements import (
     MonkElementsCustomStarterClassArgs,
     MonkElementsLevel3,
 )
 from Core.Definitions import Ability, Skill
-from Features.CharacterFeats import Backgrounds, OriginFeats
-from Features.SpeciesFeatures import GoliathFeatures
-from SpeciesConfigs import Goliath
+from CharacterContent.Features.CharacterFeats import Backgrounds, OriginFeats
+from CharacterContent.Features.SpeciesFeatures import GoliathFeatures
+from CharacterContent.Species import Goliath
 from StatBlocks.AbilitiesStatBlock import StandardArrayAbilitiesStatBlock
 from StatBlocks.SkillsStatBlock import MonkSkillsStatBlock
 

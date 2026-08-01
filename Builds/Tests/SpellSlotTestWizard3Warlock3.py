@@ -1,29 +1,29 @@
 from Builds.CharacterBuilder import CharacterBuilder
-from CharacterConfigs.BaseClasses import ClassBuilder
-from CharacterConfigs.BaseClasses.ClassBuilder import StarterClassBuilder
-from CharacterConfigs.BaseClasses.WarlockBase import (
+from CharacterContent.Classes.BaseClasses import ClassBuilder
+from CharacterContent.Classes.BaseClasses.ClassBuilder import StarterClassBuilder
+from CharacterContent.Classes.BaseClasses.WarlockBase import (
     WarlockLevel1,
     WarlockLevel2,
     WarlockLevel3,
 )
-from CharacterConfigs.BaseClasses.WizardBase import (
+from CharacterContent.Classes.BaseClasses.WizardBase import (
     WizardLevel1,
     WizardLevel2,
     WizardLevel3,
 )
-from CharacterConfigs.SubClasses2024.WarlockArchfey import (
+from CharacterContent.Classes.SubClasses2024.WarlockArchfey import (
     ArchfeyWarlockLevel3,
     ArchfeyWarlockMulticlassBuilder,
 )
-from CharacterConfigs.SubClasses2024.WizardBladesinger import (
+from CharacterContent.Classes.SubClasses2024.WizardBladesinger import (
     WizardBladeSingerCustomStarterClassArgs,
     WizardBladesingerLevel3,
 )
 from Core.Definitions import Ability, Skill
-from Features.CharacterFeats import Backgrounds, OriginFeats
-from Features.Items import Weapons
+from CharacterContent.Features.CharacterFeats import Backgrounds, OriginFeats
+from CharacterContent.Items import Weapons
 from Invocations.Definitions import InvocationsLevel0, InvocationsLevel2
-from SpeciesConfigs import Human
+from CharacterContent.Species import Human
 from Spells import SpellLists as SpellDefs
 from StatBlocks.AbilitiesStatBlock import StandardArrayAbilitiesStatBlock
 from StatBlocks.SkillsStatBlock import WizardSkillsStatBlock

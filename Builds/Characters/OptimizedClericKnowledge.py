@@ -1,7 +1,7 @@
 from Builds.CharacterBuilder import CharacterBuilder
-from CharacterConfigs.BaseClasses import ClassBuilder
-from CharacterConfigs.BaseClasses.ClassBuilder import StarterClassBuilder
-from CharacterConfigs.BaseClasses.ClericBase import (
+from CharacterContent.Classes.BaseClasses import ClassBuilder
+from CharacterContent.Classes.BaseClasses.ClassBuilder import StarterClassBuilder
+from CharacterContent.Classes.BaseClasses.ClericBase import (
     ClericLevel1,
     ClericLevel2,
     ClericLevel3,
@@ -23,16 +23,16 @@ from CharacterConfigs.BaseClasses.ClericBase import (
     ClericLevel19,
     ClericLevel20,
 )
-from CharacterConfigs.SubClasses2024.ClericKnowledge import (
+from CharacterContent.Classes.SubClasses2024.ClericKnowledge import (
     ClericKnowledgeCustomStarterClassArgs,
     ClericKnowledgeLevel3,
     ClericKnowledgeLevel6,
     ClericKnowledgeLevel17,
 )
 from Core.Definitions import Ability, Skill
-from Features.CharacterFeats import Backgrounds, EpicBoon, GeneralFeats, OriginFeats
-from Features.Items import Armor, Weapons
-from SpeciesConfigs import Warforged
+from CharacterContent.Features.CharacterFeats import Backgrounds, EpicBoon, GeneralFeats, OriginFeats
+from CharacterContent.Items import Armor, Weapons
+from CharacterContent.Species import Warforged
 from Spells.SpellLists import (
     ClericLevel0Spells,
     ClericLevel1Spells,

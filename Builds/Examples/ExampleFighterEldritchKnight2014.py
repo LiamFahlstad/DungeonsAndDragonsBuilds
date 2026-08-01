@@ -1,7 +1,7 @@
 """Example build: Fighter Eldritch Knight (2014 rules)."""
 
 from Builds.CharacterBuilder import CharacterBuilder
-from CharacterConfigs.BaseClasses.FighterBase import (
+from CharacterContent.Classes.BaseClasses.FighterBase import (
     FighterLevel1,
     FighterLevel2,
     FighterLevel3,
@@ -23,11 +23,11 @@ from CharacterConfigs.BaseClasses.FighterBase import (
     FighterLevel19,
     FighterLevel20,
 )
-from CharacterConfigs.BaseClasses.ClassBuilder import (
+from CharacterContent.Classes.BaseClasses.ClassBuilder import (
     BaseClassLevelFeatures,
     StarterClassBuilder,
 )
-from CharacterConfigs.SubClasses2014.FighterEldritchKnight import (
+from CharacterContent.Classes.SubClasses2014.FighterEldritchKnight import (
     FighterEldritchKnightCustomStarterClassArgs,
     FighterEldritchKnightLevel3,
     FighterEldritchKnightLevel7,
@@ -36,10 +36,10 @@ from CharacterConfigs.SubClasses2014.FighterEldritchKnight import (
     FighterEldritchKnightLevel18,
 )
 from Core.Definitions import Ability, Skill
-from Features.CharacterFeats import Backgrounds, EpicBoon, GeneralFeats, OriginFeats
-from Features.Combat import FightingStyles
-from Features.Items import Armor, Weapons
-from SpeciesConfigs import Dwarf
+from CharacterContent.Features.CharacterFeats import Backgrounds, EpicBoon, GeneralFeats, OriginFeats
+from CharacterContent.Features.CombatFeatures import FightingStyles
+from CharacterContent.Items import Armor, Weapons
+from CharacterContent.Species import Dwarf
 from StatBlocks.AbilitiesStatBlock import StandardArrayAbilitiesStatBlock
 from StatBlocks.SkillsStatBlock import FighterSkillsStatBlock
 

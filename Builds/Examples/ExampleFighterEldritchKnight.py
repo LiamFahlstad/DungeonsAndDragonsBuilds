@@ -1,9 +1,9 @@
 """Example build: Fighter Eldritch Knight. Adapted from an optimized reference build to demonstrate this subclass."""
 
 from Builds.CharacterBuilder import CharacterBuilder
-from CharacterConfigs.BaseClasses import ClassBuilder
-from CharacterConfigs.BaseClasses.ClassBuilder import StarterClassBuilder
-from CharacterConfigs.BaseClasses.FighterBase import (
+from CharacterContent.Classes.BaseClasses import ClassBuilder
+from CharacterContent.Classes.BaseClasses.ClassBuilder import StarterClassBuilder
+from CharacterContent.Classes.BaseClasses.FighterBase import (
     FighterLevel1,
     FighterLevel2,
     FighterLevel3,
@@ -23,7 +23,7 @@ from CharacterConfigs.BaseClasses.FighterBase import (
     FighterLevel17,
     FighterLevel18,
 )
-from CharacterConfigs.SubClasses2024.FighterEldritchKnight import (
+from CharacterContent.Classes.SubClasses2024.FighterEldritchKnight import (
     FighterEldritchKnightCustomStarterClassArgs,
     FighterEldritchKnightLevel3,
     FighterEldritchKnightLevel7,
@@ -32,10 +32,10 @@ from CharacterConfigs.SubClasses2024.FighterEldritchKnight import (
     FighterEldritchKnightLevel18,
 )
 from Core.Definitions import Ability, Skill
-from Features.CharacterFeats import Backgrounds, GeneralFeats, OriginFeats
-from Features.Combat import FightingStyles
-from Features.Items import Armor, Weapons
-from SpeciesConfigs import Dwarf
+from CharacterContent.Features.CharacterFeats import Backgrounds, GeneralFeats, OriginFeats
+from CharacterContent.Features.CombatFeatures import FightingStyles
+from CharacterContent.Items import Armor, Weapons
+from CharacterContent.Species import Dwarf
 from StatBlocks.AbilitiesStatBlock import StandardArrayAbilitiesStatBlock
 from StatBlocks.SkillsStatBlock import FighterSkillsStatBlock
 

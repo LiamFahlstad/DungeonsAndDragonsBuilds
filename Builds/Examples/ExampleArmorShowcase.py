@@ -4,24 +4,24 @@ wearer rather than the armor itself (via `improvements=`), so all of it is visib
 together on one character sheet."""
 
 from Builds.CharacterBuilder import CharacterBuilder
-from CharacterConfigs.BaseClasses import ClassBuilder
-from CharacterConfigs.BaseClasses.ClassBuilder import StarterClassBuilder
-from CharacterConfigs.BaseClasses.FighterBase import (
+from CharacterContent.Classes.BaseClasses import ClassBuilder
+from CharacterContent.Classes.BaseClasses.ClassBuilder import StarterClassBuilder
+from CharacterContent.Classes.BaseClasses.FighterBase import (
     FighterLevel1,
     FighterLevel2,
     FighterLevel3,
     FighterLevel4,
     FighterLevel5,
 )
-from CharacterConfigs.SubClasses2024.FighterChampion import (
+from CharacterContent.Classes.SubClasses2024.FighterChampion import (
     FighterChampionCustomStarterClassArgs,
     FighterChampionLevel3,
 )
 from Core.Definitions import Ability, Skill
-from Features.CharacterFeats import Backgrounds, GeneralFeats, OriginFeats
-from Features.Combat import FightingStyles
-from Features.Items import Armor, Weapons
-from SpeciesConfigs import Dwarf
+from CharacterContent.Features.CharacterFeats import Backgrounds, GeneralFeats, OriginFeats
+from CharacterContent.Features.CombatFeatures import FightingStyles
+from CharacterContent.Items import Armor, Weapons
+from CharacterContent.Species import Dwarf
 from StatBlocks.AbilitiesStatBlock import StandardArrayAbilitiesStatBlock
 from StatBlocks.SkillsStatBlock import FighterSkillsStatBlock
 

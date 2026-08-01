@@ -66,7 +66,7 @@ Open `Characters/MyNewBuild.py` in your editor and follow the TODOs.
 
 **Find valid classes:**
 ```
-CharacterConfigs/BaseClasses/
+CharacterContent/Classes/BaseClasses/
 ├── ArtificerBase.py
 ├── BarbarianBase.py
 ├── BardBase.py
@@ -84,7 +84,7 @@ CharacterConfigs/BaseClasses/
 
 **Find valid subclasses** (after choosing your class):
 ```
-CharacterConfigs/SubClasses/
+CharacterContent/Classes/SubClasses/
 ├── FighterChampion.py        # Fighter subclass
 ├── FighterBattleMaster.py     # Fighter subclass
 ├── ClericKnowledge.py         # Cleric subclass
@@ -97,12 +97,12 @@ CharacterConfigs/SubClasses/
 
 ```python
 # Import your class levels
-from CharacterConfigs.BaseClasses.FighterBase import (
+from CharacterContent.Classes.BaseClasses.FighterBase import (
     FighterLevel1, FighterLevel2, FighterLevel3, FighterLevel4,
 )
 
 # Import your subclass levels and starter class args
-from CharacterConfigs.SubClasses2024.FighterChampion import (
+from CharacterContent.Classes.SubClasses2024.FighterChampion import (
     FighterChampionLevel3,
     FighterChampionCustomStarterClassArgs,
 )
@@ -165,7 +165,7 @@ background_skill_proficiencies=Backgrounds.FreeBackgroundSkillProficiency(
 
 **Armor:**
 
-Find valid armor in `Features/Items/Armor/`:
+Find valid armor in `CharacterContent/Items/Armor/`:
 
 ```python
 armor=[
@@ -176,7 +176,7 @@ armor=[
 
 **Weapons:**
 
-Find valid weapons in `Features/Items/Weapons/`:
+Find valid weapons in `CharacterContent/Items/Weapons/`:
 
 ```python
 weapons=[
@@ -194,7 +194,7 @@ For each level up to `base_class_level`, define features and spells.
 **Check what each level requires** by looking at your class file:
 
 ```
-CharacterConfigs/BaseClasses/YourClassBase.py
+CharacterContent/Classes/BaseClasses/YourClassBase.py
 ```
 
 Example (Fighter):
@@ -246,10 +246,10 @@ Check `Spells/Definitions.py` for spell names and availability by class/level.
 
 ### Step 7: Choose Your Species
 
-Find available species in `SpeciesConfigs/`:
+Find available species in `CharacterContent/Species/`:
 
 ```
-SpeciesConfigs/
+CharacterContent/Species/
 ├── Dwarf.py
 ├── Elf.py
 ├── Halfling.py
@@ -260,7 +260,7 @@ SpeciesConfigs/
 Example:
 
 ```python
-from SpeciesConfigs import Dwarf, Elf
+from CharacterContent.Species import Dwarf, Elf
 
 # Simple species
 species_builder=Dwarf.DwarfSpeciesBuilder()
@@ -365,7 +365,7 @@ print(character_data.character_level)
 ### Adding Feats at Level-Up
 
 ```python
-from Features.CharacterFeats import GeneralFeats
+from CharacterContent.Features.CharacterFeats import GeneralFeats
 
 8: PaladinLevel8(
     general_feat=GeneralFeats.AbilityScoreImprovement(
@@ -407,7 +407,7 @@ from Spells.SpellLists import ClericLevel1Spells, ClericLevel2Spells
 - Verify the class name matches (e.g., `FighterLevel3`, not `Fighter3`)
 
 **"TypeError: __init__() missing required keyword argument..."**
-- Check the level class definition in `CharacterConfigs/BaseClasses/YourClassBase.py`
+- Check the level class definition in `CharacterContent/Classes/BaseClasses/YourClassBase.py`
 - Verify you're passing all required parameters
 
 **"No such file or directory: Output/..."**
@@ -417,10 +417,10 @@ from Spells.SpellLists import ClericLevel1Spells, ClericLevel2Spells
 
 - **Definitions**: `Definitions.py` — Enums for CharacterClass, Ability, Skill, etc.
 - **Existing builds**: `Builds/Characters/Optimized*.py` — Examine real examples for your class
-- **Class features**: `CharacterConfigs/BaseClasses/` — See what each level offers
-- **Equipment options**: `Features/Items/Armor/`, `Features/Items/Weapons/`
+- **Class features**: `CharacterContent/Classes/BaseClasses/` — See what each level offers
+- **Equipment options**: `CharacterContent/Items/Armor/`, `CharacterContent/Items/Weapons/`
 - **Spells**: `Spells/Definitions.py` — Available spells by class and level
-- **Feats**: `Features/CharacterFeats/GeneralFeats.py`, `OriginFeats.py`
+- **Feats**: `CharacterContent/Features/CharacterFeats/GeneralFeats.py`, `OriginFeats.py`
 
 ## Questions?
 

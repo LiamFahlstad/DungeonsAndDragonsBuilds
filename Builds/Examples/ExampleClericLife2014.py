@@ -1,9 +1,9 @@
 """Example build: Cleric Life Domain (2014 rules). Demonstrates the subclass up through level 17."""
 
 from Builds.CharacterBuilder import CharacterBuilder
-from CharacterConfigs.BaseClasses import ClassBuilder
-from CharacterConfigs.BaseClasses.ClassBuilder import StarterClassBuilder
-from CharacterConfigs.BaseClasses.ClericBase import (
+from CharacterContent.Classes.BaseClasses import ClassBuilder
+from CharacterContent.Classes.BaseClasses.ClassBuilder import StarterClassBuilder
+from CharacterContent.Classes.BaseClasses.ClericBase import (
     ClericLevel1,
     ClericLevel2,
     ClericLevel3,
@@ -22,7 +22,7 @@ from CharacterConfigs.BaseClasses.ClericBase import (
     ClericLevel16,
     ClericLevel17,
 )
-from CharacterConfigs.SubClasses2014.ClericLife import (
+from CharacterContent.Classes.SubClasses2014.ClericLife import (
     ClericLifeCustomStarterClassArgs,
     ClericLifeLevel3,
     ClericLifeLevel6,
@@ -30,8 +30,8 @@ from CharacterConfigs.SubClasses2014.ClericLife import (
     ClericLifeLevel17,
 )
 from Core.Definitions import Ability, Skill
-from Features.CharacterFeats import Backgrounds, GeneralFeats, OriginFeats
-from SpeciesConfigs import Human
+from CharacterContent.Features.CharacterFeats import Backgrounds, GeneralFeats, OriginFeats
+from CharacterContent.Species import Human
 from Spells.SpellLists import (
     ClericLevel0Spells,
     ClericLevel1Spells,

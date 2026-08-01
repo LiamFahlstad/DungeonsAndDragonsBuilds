@@ -1,7 +1,7 @@
 from Builds.CharacterBuilder import CharacterBuilder
-from CharacterConfigs.BaseClasses import ClassBuilder
-from CharacterConfigs.BaseClasses.ClassBuilder import StarterClassBuilder
-from CharacterConfigs.BaseClasses.DruidBase import (
+from CharacterContent.Classes.BaseClasses import ClassBuilder
+from CharacterContent.Classes.BaseClasses.ClassBuilder import StarterClassBuilder
+from CharacterContent.Classes.BaseClasses.DruidBase import (
     DruidLevel1,
     DruidLevel2,
     DruidLevel3,
@@ -23,7 +23,7 @@ from CharacterConfigs.BaseClasses.DruidBase import (
     DruidLevel19,
     DruidLevel20,
 )
-from CharacterConfigs.SubClasses2024.DruidMoon import (
+from CharacterContent.Classes.SubClasses2024.DruidMoon import (
     DruidMoonCustomStarterClassArgs,
     DruidMoonLevel3,
     DruidMoonLevel5,
@@ -35,8 +35,8 @@ from CharacterConfigs.SubClasses2024.DruidMoon import (
 )
 from Combat.Monsters.CR_1.monsters import BrownBear, DireWolf, GiantSpider, Tiger
 from Core.Definitions import Ability, Skill
-from Features.CharacterFeats import Backgrounds, EpicBoon, GeneralFeats, OriginFeats
-from SpeciesConfigs import Gnome
+from CharacterContent.Features.CharacterFeats import Backgrounds, EpicBoon, GeneralFeats, OriginFeats
+from CharacterContent.Species import Gnome
 from Spells.SpellLists import (
     DruidLevel0Spells,
     DruidLevel1Spells,

@@ -1,7 +1,7 @@
 """Example build: Barbarian Path of the Totem Warrior (2014 rules)."""
 
 from Builds.CharacterBuilder import CharacterBuilder
-from CharacterConfigs.BaseClasses.BarbarianBase import (
+from CharacterContent.Classes.BaseClasses.BarbarianBase import (
     BarbarianLevel1,
     BarbarianLevel2,
     BarbarianLevel3,
@@ -23,11 +23,11 @@ from CharacterConfigs.BaseClasses.BarbarianBase import (
     BarbarianLevel19,
     BarbarianLevel20,
 )
-from CharacterConfigs.BaseClasses.ClassBuilder import (
+from CharacterContent.Classes.BaseClasses.ClassBuilder import (
     BaseClassLevelFeatures,
     StarterClassBuilder,
 )
-from CharacterConfigs.SubClasses2014.BarbarianPathOfTheTotemWarrior import (
+from CharacterContent.Classes.SubClasses2014.BarbarianPathOfTheTotemWarrior import (
     BarbarianTotemWarriorCustomStarterClassArgs,
     BarbarianTotemWarriorLevel3,
     BarbarianTotemWarriorLevel6,
@@ -35,9 +35,9 @@ from CharacterConfigs.SubClasses2014.BarbarianPathOfTheTotemWarrior import (
     BarbarianTotemWarriorLevel14,
 )
 from Core.Definitions import Ability, Skill
-from Features.CharacterFeats import Backgrounds, EpicBoon, GeneralFeats, OriginFeats
-from Features.Items import Weapons
-from SpeciesConfigs import Orc
+from CharacterContent.Features.CharacterFeats import Backgrounds, EpicBoon, GeneralFeats, OriginFeats
+from CharacterContent.Items import Weapons
+from CharacterContent.Species import Orc
 from StatBlocks.AbilitiesStatBlock import StandardArrayAbilitiesStatBlock
 from StatBlocks.SkillsStatBlock import BarbarianSkillsStatBlock
 

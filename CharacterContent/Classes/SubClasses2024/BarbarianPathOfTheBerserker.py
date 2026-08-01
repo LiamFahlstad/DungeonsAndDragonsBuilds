@@ -1,0 +1,94 @@
+from typing import Optional
+
+import attr
+
+from CharacterContent.Classes.BaseClasses import ClassBuilder
+from CharacterContent.Classes.BaseClasses.BarbarianBase import (
+    BarbarianMulticlassBuilder,
+    BarbarianCustomStarterClassArgs,
+)
+from Builds.CharacterSheetCreator import CharacterSheetData
+from Core.Definitions import BarbarianSubclass
+from CharacterContent.Features.SubClassFeatures.Barbarian import BarbarianPathOfTheBerserkerFeatures
+from CharacterContent.Features.ClassFeatures.Barbarian import BarbarianFeatures
+from StatBlocks.SkillsStatBlock import BarbarianSkillsStatBlock
+
+
+@attr.dataclass
+class BarbarianBerserkerLevel3(ClassBuilder.SubclassLevel3):
+
+    def add_features(
+        self,
+        data: CharacterSheetData,
+    ) -> CharacterSheetData:
+        rage: BarbarianFeatures.Rage = data.get_features_by_type(
+            BarbarianFeatures.Rage
+        )[0]
+        rage.extend_feature(BarbarianPathOfTheBerserkerFeatures.Frenzy())
+        return data
+
+
+@attr.dataclass
+class BarbarianBerserkerLevel6(ClassBuilder.SubclassLevel6):
+
+    def add_features(
+        self,
+        data: CharacterSheetData,
+    ) -> CharacterSheetData:
+        rage: BarbarianFeatures.Rage = data.get_features_by_type(
+            BarbarianFeatures.Rage
+        )[0]
+        rage.extend_feature(BarbarianPathOfTheBerserkerFeatures.MindlessRage())
+        return data
+
+
+@attr.dataclass
+class BarbarianBerserkerLevel10(ClassBuilder.SubclassLevel10):
+
+    def add_features(
+        self,
+        data: CharacterSheetData,
+    ) -> CharacterSheetData:
+        data.add_feature(BarbarianPathOfTheBerserkerFeatures.Retaliation())
+        return data
+
+
+@attr.dataclass
+class BarbarianBerserkerLevel14(ClassBuilder.SubclassLevel14):
+
+    def add_features(
+        self,
+        data: CharacterSheetData,
+    ) -> CharacterSheetData:
+        rage: BarbarianFeatures.Rage = data.get_features_by_type(
+            BarbarianFeatures.Rage
+        )[0]
+        rage.extend_feature(BarbarianPathOfTheBerserkerFeatures.IntimidatingPresence())
+        return data
+
+
+class BarbarianBerserkerCustomStarterClassArgs(BarbarianCustomStarterClassArgs):
+    def __init__(
+        self,
+        skills: BarbarianSkillsStatBlock,
+    ):
+        super().__init__(
+            subclass=BarbarianSubclass.PATH_OF_THE_BERSERKER.value,
+            skills=skills,
+        )
+
+
+class BarbarianBerserkerMulticlassBuilder(BarbarianMulticlassBuilder):
+
+    def __init__(
+        self,
+        barbarian_level_features: ClassBuilder.BaseClassLevelFeatures,
+        barbarian_level: int,
+        replace_spells: Optional[dict[str, str]] = None,
+    ):
+        super().__init__(
+            barbarian_level_features=barbarian_level_features,
+            barbarian_level=barbarian_level,
+            subclass=BarbarianSubclass.PATH_OF_THE_BERSERKER.value,
+            replace_spells=replace_spells,
+        )

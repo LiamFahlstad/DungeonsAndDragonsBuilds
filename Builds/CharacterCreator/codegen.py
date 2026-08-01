@@ -35,7 +35,7 @@ def generate(spec: BuildSpec) -> str:
             )
         raise ValueError(
             f"{spec.class_key} has no subclasses implemented yet "
-            f"(no CharacterConfigs/SubClasses2024 module with a "
+            f"(no CharacterContent/Classes/SubClasses2024 module with a "
             f"*CustomStarterClassArgs class), so a build cannot be generated."
         )
     if spec.subclass_key not in registry.subclasses():
@@ -249,13 +249,13 @@ def _imports_source(spec, registry, class_info, subclass_info):
         from_imports.setdefault(module, set()).add(name)
 
     add("Builds.CharacterBuilder", "CharacterBuilder")
-    add("CharacterConfigs.BaseClasses", "ClassBuilder")
-    add("CharacterConfigs.BaseClasses.ClassBuilder", "StarterClassBuilder")
+    add("CharacterContent.Classes.BaseClasses", "ClassBuilder")
+    add("CharacterContent.Classes.BaseClasses.ClassBuilder", "StarterClassBuilder")
     add(
-        f"CharacterConfigs.BaseClasses.{spec.class_key}Base",
+        f"CharacterContent.Classes.BaseClasses.{spec.class_key}Base",
         None,  # placeholder; real names added below
     )
-    from_imports[f"CharacterConfigs.BaseClasses.{spec.class_key}Base"] = {
+    from_imports[f"CharacterContent.Classes.BaseClasses.{spec.class_key}Base"] = {
         cls.__name__ for cls in base_levels.values()
     }
     subclass_names = {cls.__name__ for cls in sub_levels.values()}
@@ -268,7 +268,7 @@ def _imports_source(spec, registry, class_info, subclass_info):
     add("StatBlocks.AbilitiesStatBlock", abilities_class)
 
     species_info = registry.species()[spec.species_class]
-    add("SpeciesConfigs", species_info.module_name)
+    add("CharacterContent.Species", species_info.module_name)
 
     for name in sorted(referenced):
         if name in name_to_import:

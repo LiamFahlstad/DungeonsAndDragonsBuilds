@@ -1,8 +1,8 @@
 """Example build: Barbarian Path of the World Tree. Adapted from an optimized reference build to demonstrate this subclass."""
 
 from Builds.CharacterBuilder import CharacterBuilder
-from CharacterConfigs.BaseClasses import ClassBuilder
-from CharacterConfigs.BaseClasses.BarbarianBase import (
+from CharacterContent.Classes.BaseClasses import ClassBuilder
+from CharacterContent.Classes.BaseClasses.BarbarianBase import (
     BarbarianLevel1,
     BarbarianLevel2,
     BarbarianLevel3,
@@ -24,8 +24,8 @@ from CharacterConfigs.BaseClasses.BarbarianBase import (
     BarbarianLevel19,
     BarbarianLevel20,
 )
-from CharacterConfigs.BaseClasses.ClassBuilder import StarterClassBuilder
-from CharacterConfigs.SubClasses2024.BarbarianPathOfTheWorldTree import (
+from CharacterContent.Classes.BaseClasses.ClassBuilder import StarterClassBuilder
+from CharacterContent.Classes.SubClasses2024.BarbarianPathOfTheWorldTree import (
     BarbarianWorldTreeCustomStarterClassArgs,
     BarbarianWorldTreeLevel3,
     BarbarianWorldTreeLevel6,
@@ -33,10 +33,10 @@ from CharacterConfigs.SubClasses2024.BarbarianPathOfTheWorldTree import (
     BarbarianWorldTreeLevel14,
 )
 from Core.Definitions import Ability, Skill
-from Features.CharacterFeats import Backgrounds, EpicBoon, GeneralFeats, OriginFeats
-from Features.Items import Weapons
-from Features.SpeciesFeatures import GoliathFeatures
-from SpeciesConfigs import Goliath
+from CharacterContent.Features.CharacterFeats import Backgrounds, EpicBoon, GeneralFeats, OriginFeats
+from CharacterContent.Items import Weapons
+from CharacterContent.Features.SpeciesFeatures import GoliathFeatures
+from CharacterContent.Species import Goliath
 from StatBlocks.AbilitiesStatBlock import StandardArrayAbilitiesStatBlock
 from StatBlocks.SkillsStatBlock import BarbarianSkillsStatBlock
 

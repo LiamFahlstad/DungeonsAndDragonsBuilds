@@ -1,9 +1,9 @@
 """Example build: Warlock Celestial Patron. Demonstrates the subclass up through level 14."""
 
 from Builds.CharacterBuilder import CharacterBuilder
-from CharacterConfigs.BaseClasses import ClassBuilder
-from CharacterConfigs.BaseClasses.ClassBuilder import StarterClassBuilder
-from CharacterConfigs.BaseClasses.WarlockBase import (
+from CharacterContent.Classes.BaseClasses import ClassBuilder
+from CharacterContent.Classes.BaseClasses.ClassBuilder import StarterClassBuilder
+from CharacterContent.Classes.BaseClasses.WarlockBase import (
     WarlockLevel1,
     WarlockLevel2,
     WarlockLevel3,
@@ -19,7 +19,7 @@ from CharacterConfigs.BaseClasses.WarlockBase import (
     WarlockLevel13,
     WarlockLevel14,
 )
-from CharacterConfigs.SubClasses2024.WarlockCelestial import (
+from CharacterContent.Classes.SubClasses2024.WarlockCelestial import (
     CelestialWarlockLevel3,
     CelestialWarlockLevel5,
     CelestialWarlockLevel6,
@@ -30,7 +30,7 @@ from CharacterConfigs.SubClasses2024.WarlockCelestial import (
     WarlockCelestialCustomStarterClassArgs,
 )
 from Core.Definitions import Ability, Skill
-from Features.CharacterFeats import Backgrounds, GeneralFeats, OriginFeats
+from CharacterContent.Features.CharacterFeats import Backgrounds, GeneralFeats, OriginFeats
 from Invocations.Definitions import (
     InvocationsLevel0,
     InvocationsLevel2,
@@ -39,7 +39,7 @@ from Invocations.Definitions import (
     InvocationsLevel9,
     InvocationsLevel12,
 )
-from SpeciesConfigs import Human
+from CharacterContent.Species import Human
 from Spells.SpellLists import (
     WarlockLevel0Spells,
     WarlockLevel1Spells,

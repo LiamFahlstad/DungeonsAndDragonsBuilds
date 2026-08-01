@@ -1,8 +1,8 @@
 """Example build: Artificer Armorer (2014 rules). Demonstrates the subclass through level 17."""
 
 from Builds.CharacterBuilder import CharacterBuilder
-from CharacterConfigs.BaseClasses import ClassBuilder
-from CharacterConfigs.BaseClasses.ArtificerBase import (
+from CharacterContent.Classes.BaseClasses import ClassBuilder
+from CharacterContent.Classes.BaseClasses.ArtificerBase import (
     ArtificerLevel1,
     ArtificerLevel2,
     ArtificerLevel3,
@@ -21,8 +21,8 @@ from CharacterConfigs.BaseClasses.ArtificerBase import (
     ArtificerLevel16,
     ArtificerLevel17,
 )
-from CharacterConfigs.BaseClasses.ClassBuilder import StarterClassBuilder
-from CharacterConfigs.SubClasses2014.ArtificerArmorer import (
+from CharacterContent.Classes.BaseClasses.ClassBuilder import StarterClassBuilder
+from CharacterContent.Classes.SubClasses2014.ArtificerArmorer import (
     ArtificerArmorerCustomStarterClassArgs,
     ArtificerArmorerLevel3,
     ArtificerArmorerLevel5,
@@ -32,9 +32,9 @@ from CharacterConfigs.SubClasses2014.ArtificerArmorer import (
     ArtificerArmorerLevel17,
 )
 from Core.Definitions import Ability, Skill
-from Features.CharacterFeats import Backgrounds, GeneralFeats, OriginFeats
-from Features.Items import Armor, Weapons
-from SpeciesConfigs import Dwarf
+from CharacterContent.Features.CharacterFeats import Backgrounds, GeneralFeats, OriginFeats
+from CharacterContent.Items import Armor, Weapons
+from CharacterContent.Species import Dwarf
 from Spells import SpellLists as SpellDefinitions
 from StatBlocks.AbilitiesStatBlock import StandardArrayAbilitiesStatBlock
 from StatBlocks.SkillsStatBlock import ArtificerSkillsStatBlock

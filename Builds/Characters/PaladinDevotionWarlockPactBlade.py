@@ -1,7 +1,7 @@
 from Builds.CharacterBuilder import CharacterBuilder
-from CharacterConfigs.BaseClasses import ClassBuilder
-from CharacterConfigs.BaseClasses.ClassBuilder import StarterClassBuilder
-from CharacterConfigs.BaseClasses.PaladinBase import (
+from CharacterContent.Classes.BaseClasses import ClassBuilder
+from CharacterContent.Classes.BaseClasses.ClassBuilder import StarterClassBuilder
+from CharacterContent.Classes.BaseClasses.PaladinBase import (
     PaladinLevel1,
     PaladinLevel2,
     PaladinLevel3,
@@ -22,8 +22,8 @@ from CharacterConfigs.BaseClasses.PaladinBase import (
     PaladinLevel18,
     PaladinLevel19,
 )
-from CharacterConfigs.BaseClasses.WarlockBase import WarlockLevel1
-from CharacterConfigs.SubClasses2024.PaladinDevotion import (
+from CharacterContent.Classes.BaseClasses.WarlockBase import WarlockLevel1
+from CharacterContent.Classes.SubClasses2024.PaladinDevotion import (
     DevotionPaladinLevel3,
     DevotionPaladinLevel5,
     DevotionPaladinLevel7,
@@ -33,15 +33,15 @@ from CharacterConfigs.SubClasses2024.PaladinDevotion import (
     DevotionPaladinMulticlassBuilder,
     PaladinDevotionCustomStarterClassArgs,
 )
-from CharacterConfigs.SubClasses2024.WarlockArchfey import (
+from CharacterContent.Classes.SubClasses2024.WarlockArchfey import (
     ArchfeyWarlockMulticlassBuilder,
 )
 from Core.Definitions import Ability, Skill
-from Features.CharacterFeats import Backgrounds, EpicBoon, GeneralFeats, OriginFeats
-from Features.Combat import FightingStyles
-from Features.Items import Weapons
+from CharacterContent.Features.CharacterFeats import Backgrounds, EpicBoon, GeneralFeats, OriginFeats
+from CharacterContent.Features.CombatFeatures import FightingStyles
+from CharacterContent.Items import Weapons
 from Invocations.Definitions import InvocationsLevel0
-from SpeciesConfigs import Human
+from CharacterContent.Species import Human
 from Spells.SpellLists import (
     PaladinLevel1Spells,
     PaladinLevel2Spells,

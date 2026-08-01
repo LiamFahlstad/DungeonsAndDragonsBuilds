@@ -1,21 +1,21 @@
 from Builds.CharacterBuilder import CharacterBuilder
-from CharacterConfigs.BaseClasses import ClassBuilder
-from CharacterConfigs.BaseClasses.ClassBuilder import StarterClassBuilder
-from CharacterConfigs.BaseClasses.WizardBase import (
+from CharacterContent.Classes.BaseClasses import ClassBuilder
+from CharacterContent.Classes.BaseClasses.ClassBuilder import StarterClassBuilder
+from CharacterContent.Classes.BaseClasses.WizardBase import (
     WizardLevel1,
     WizardLevel2,
     WizardLevel3,
     WizardLevel4,
     WizardLevel5,
 )
-from CharacterConfigs.SubClasses2024.WizardBladesinger import (
+from CharacterContent.Classes.SubClasses2024.WizardBladesinger import (
     WizardBladeSingerCustomStarterClassArgs,
     WizardBladesingerLevel3,
 )
 from Core.Definitions import Ability, Skill
-from Features.CharacterFeats import Backgrounds, GeneralFeats, OriginFeats
-from Features.Items import Weapons
-from SpeciesConfigs import Human
+from CharacterContent.Features.CharacterFeats import Backgrounds, GeneralFeats, OriginFeats
+from CharacterContent.Items import Weapons
+from CharacterContent.Species import Human
 from Spells import SpellLists as SpellDefs
 from StatBlocks.AbilitiesStatBlock import StandardArrayAbilitiesStatBlock
 from StatBlocks.SkillsStatBlock import WizardSkillsStatBlock

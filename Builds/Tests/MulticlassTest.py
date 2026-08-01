@@ -1,26 +1,26 @@
 import Core.Definitions as Definitions
 from Builds.CharacterBuilder import CharacterBuilder
-from CharacterConfigs.BaseClasses import ClassBuilder
-from CharacterConfigs.BaseClasses.ClassBuilder import StarterClassBuilder
-from CharacterConfigs.BaseClasses.FighterBase import FighterLevel1
-from CharacterConfigs.BaseClasses.WizardBase import (
+from CharacterContent.Classes.BaseClasses import ClassBuilder
+from CharacterContent.Classes.BaseClasses.ClassBuilder import StarterClassBuilder
+from CharacterContent.Classes.BaseClasses.FighterBase import FighterLevel1
+from CharacterContent.Classes.BaseClasses.WizardBase import (
     WizardLevel1,
     WizardLevel2,
     WizardLevel3,
     WizardLevel4,
 )
-from CharacterConfigs.SubClasses2024.FighterBattleMaster import (
+from CharacterContent.Classes.SubClasses2024.FighterBattleMaster import (
     FighterBattleMasterCustomStarterClassArgs,
 )
-from CharacterConfigs.SubClasses2024.WizardBladesinger import (
+from CharacterContent.Classes.SubClasses2024.WizardBladesinger import (
     WizardBladesingerLevel3,
     WizardBladesingerMulticlassBuilder,
 )
 from Core.Definitions import Ability, Skill
-from Features.CharacterFeats import Backgrounds, GeneralFeats, OriginFeats
-from Features.Combat import FightingStyles
-from Features.Items import Weapons
-from SpeciesConfigs import Elf
+from CharacterContent.Features.CharacterFeats import Backgrounds, GeneralFeats, OriginFeats
+from CharacterContent.Features.CombatFeatures import FightingStyles
+from CharacterContent.Items import Weapons
+from CharacterContent.Species import Elf
 from Spells import SpellLists as SpellDefinitions
 from StatBlocks.AbilitiesStatBlock import StandardArrayAbilitiesStatBlock
 from StatBlocks.SkillsStatBlock import FighterSkillsStatBlock

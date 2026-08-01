@@ -2,9 +2,9 @@
 
 import Core.Definitions as Definitions
 from Builds.CharacterBuilder import CharacterBuilder
-from CharacterConfigs.BaseClasses import ClassBuilder
-from CharacterConfigs.BaseClasses.ClassBuilder import StarterClassBuilder
-from CharacterConfigs.BaseClasses.BardBase import (
+from CharacterContent.Classes.BaseClasses import ClassBuilder
+from CharacterContent.Classes.BaseClasses.ClassBuilder import StarterClassBuilder
+from CharacterContent.Classes.BaseClasses.BardBase import (
     BardLevel1,
     BardLevel2,
     BardLevel3,
@@ -20,17 +20,17 @@ from CharacterConfigs.BaseClasses.BardBase import (
     BardLevel13,
     BardLevel14,
 )
-from CharacterConfigs.SubClasses2014.BardLore import (
+from CharacterContent.Classes.SubClasses2014.BardLore import (
     BardLoreCustomStarterClassArgs,
     BardLoreLevel3,
     BardLoreLevel6,
     BardLoreLevel14,
 )
 from Core.Definitions import Ability, Skill
-from Features.CharacterFeats import Backgrounds, GeneralFeats, OriginFeats
-from Features.CharacterFeats import OriginFeats as SpeciesOriginFeats
-from Features.Items import Items
-from SpeciesConfigs import Human
+from CharacterContent.Features.CharacterFeats import Backgrounds, GeneralFeats, OriginFeats
+from CharacterContent.Features.CharacterFeats import OriginFeats as SpeciesOriginFeats
+from CharacterContent.Items import Items
+from CharacterContent.Species import Human
 from Spells.SpellLists import (
     BardLevel0Spells,
     BardLevel1Spells,

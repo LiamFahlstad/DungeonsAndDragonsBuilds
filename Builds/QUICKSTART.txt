@@ -51,13 +51,13 @@ REFERENCE FILES
 
 HELP WITH CHOICES
 =================
-Classes:              CharacterConfigs/BaseClasses/*.py
-Subclasses:           CharacterConfigs/SubClasses/*.py
-Species:              SpeciesConfigs/*.py
+Classes:              CharacterContent/Classes/BaseClasses/*.py
+Subclasses:           CharacterContent/Classes/SubClasses/*.py
+Species:              CharacterContent/Species/*.py
 Abilities/Skills:     Definitions.py
 Spells:               Spells/Definitions.py
-Feats:                Features/CharacterFeats/*.py
-Equipment:            Features/Items/Armor/*.py, Features/Items/Weapons/*.py
+Feats:                CharacterContent/Features/CharacterFeats/*.py
+Equipment:            CharacterContent/Items/Armor/*.py, CharacterContent/Items/Weapons/*.py
 
 QUESTIONS?
 ==========

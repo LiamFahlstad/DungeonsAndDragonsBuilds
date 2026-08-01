@@ -4,16 +4,16 @@ import attr
 
 import Core.Definitions as Definitions
 from Core.Definitions import Ability, ApplyWhen, CharacterClass
-from Features.CharacterFeats import OriginFeats
-from Features.Combat.FightingStyles import (
+from CharacterContent.Features.CharacterFeats import OriginFeats
+from CharacterContent.Features.CombatFeatures.FightingStyles import (
     FightingStyle,
     FightStyleModifier,
     FightStyleWeaponFeature,
 )
-from Features.Core.BaseFeatures import Feature
-from Features.Items.Armor import AbstractArmor
-from Features.Items.Weapons import AbstractWeapon, WeaponProficiency, is_proficient_with
-from Features.Items import Items
+from CharacterContent.Features.Core.BaseFeatures import Feature
+from CharacterContent.Items.Armor import AbstractArmor
+from CharacterContent.Items.Weapons import AbstractWeapon, WeaponProficiency, is_proficient_with
+from CharacterContent.Items import Items
 from StatBlocks.AbilitiesStatBlock import AbilitiesStatBlock
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from StatBlocks.CombatStatBlock import CombatStatBlock

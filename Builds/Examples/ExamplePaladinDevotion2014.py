@@ -1,9 +1,9 @@
 """Example build: Paladin Oath of Devotion (2014 rules)."""
 
 from Builds.CharacterBuilder import CharacterBuilder
-from CharacterConfigs.BaseClasses import ClassBuilder
-from CharacterConfigs.BaseClasses.ClassBuilder import StarterClassBuilder
-from CharacterConfigs.BaseClasses.PaladinBase import (
+from CharacterContent.Classes.BaseClasses import ClassBuilder
+from CharacterContent.Classes.BaseClasses.ClassBuilder import StarterClassBuilder
+from CharacterContent.Classes.BaseClasses.PaladinBase import (
     PaladinLevel1,
     PaladinLevel2,
     PaladinLevel3,
@@ -25,7 +25,7 @@ from CharacterConfigs.BaseClasses.PaladinBase import (
     PaladinLevel19,
     PaladinLevel20,
 )
-from CharacterConfigs.SubClasses2014.PaladinDevotion import (
+from CharacterContent.Classes.SubClasses2014.PaladinDevotion import (
     DevotionPaladinLevel3,
     DevotionPaladinLevel5,
     DevotionPaladinLevel7,
@@ -38,10 +38,10 @@ from CharacterConfigs.SubClasses2014.PaladinDevotion import (
     PaladinDevotionCustomStarterClassArgs,
 )
 from Core.Definitions import Ability, Skill
-from Features.CharacterFeats import Backgrounds, EpicBoon, GeneralFeats, OriginFeats
-from Features.Combat import FightingStyles
-from Features.Items import Weapons
-from SpeciesConfigs import Human
+from CharacterContent.Features.CharacterFeats import Backgrounds, EpicBoon, GeneralFeats, OriginFeats
+from CharacterContent.Features.CombatFeatures import FightingStyles
+from CharacterContent.Items import Weapons
+from CharacterContent.Species import Human
 from Spells.SpellLists import (
     PaladinLevel1Spells,
     PaladinLevel2Spells,

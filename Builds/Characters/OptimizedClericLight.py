@@ -1,7 +1,7 @@
 from Builds.CharacterBuilder import CharacterBuilder
-from CharacterConfigs.BaseClasses import ClassBuilder
-from CharacterConfigs.BaseClasses.ClassBuilder import StarterClassBuilder
-from CharacterConfigs.BaseClasses.ClericBase import (
+from CharacterContent.Classes.BaseClasses import ClassBuilder
+from CharacterContent.Classes.BaseClasses.ClassBuilder import StarterClassBuilder
+from CharacterContent.Classes.BaseClasses.ClericBase import (
     ClericLevel1,
     ClericLevel2,
     ClericLevel3,
@@ -23,15 +23,15 @@ from CharacterConfigs.BaseClasses.ClericBase import (
     ClericLevel19,
     ClericLevel20,
 )
-from CharacterConfigs.SubClasses2024.ClericLight import (
+from CharacterContent.Classes.SubClasses2024.ClericLight import (
     ClericLightCustomStarterClassArgs,
     ClericLightLevel3,
     ClericLightLevel6,
     ClericLightLevel17,
 )
 from Core.Definitions import Ability, Skill
-from Features.CharacterFeats import Backgrounds, EpicBoon, GeneralFeats, OriginFeats
-from SpeciesConfigs import Elf
+from CharacterContent.Features.CharacterFeats import Backgrounds, EpicBoon, GeneralFeats, OriginFeats
+from CharacterContent.Species import Elf
 from Spells.SpellLists import (
     ClericLevel0Spells,
     ClericLevel1Spells,

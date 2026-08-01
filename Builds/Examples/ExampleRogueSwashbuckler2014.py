@@ -2,9 +2,9 @@
 
 import Core.Definitions as Definitions
 from Builds.CharacterBuilder import CharacterBuilder
-from CharacterConfigs.BaseClasses import ClassBuilder
-from CharacterConfigs.BaseClasses.ClassBuilder import StarterClassBuilder
-from CharacterConfigs.BaseClasses.RogueBase import (
+from CharacterContent.Classes.BaseClasses import ClassBuilder
+from CharacterContent.Classes.BaseClasses.ClassBuilder import StarterClassBuilder
+from CharacterContent.Classes.BaseClasses.RogueBase import (
     RogueLevel1,
     RogueLevel2,
     RogueLevel3,
@@ -23,7 +23,7 @@ from CharacterConfigs.BaseClasses.RogueBase import (
     RogueLevel16,
     RogueLevel17,
 )
-from CharacterConfigs.SubClasses2014.RogueSwashbuckler import (
+from CharacterContent.Classes.SubClasses2014.RogueSwashbuckler import (
     RogueSwashbucklerCustomStarterClassArgs,
     RogueSwashbucklerLevel3,
     RogueSwashbucklerLevel9,
@@ -31,10 +31,10 @@ from CharacterConfigs.SubClasses2014.RogueSwashbuckler import (
     RogueSwashbucklerLevel17,
 )
 from Core.Definitions import Ability, Skill
-from Features.CharacterFeats import Backgrounds, GeneralFeats, OriginFeats
-from Features.Items import Armor, Weapons
-from Features.Items import Items
-from SpeciesConfigs import Elf
+from CharacterContent.Features.CharacterFeats import Backgrounds, GeneralFeats, OriginFeats
+from CharacterContent.Items import Armor, Weapons
+from CharacterContent.Items import Items
+from CharacterContent.Species import Elf
 from StatBlocks.AbilitiesStatBlock import StandardArrayAbilitiesStatBlock
 from StatBlocks.SkillsStatBlock import RogueSkillsStatBlock
 

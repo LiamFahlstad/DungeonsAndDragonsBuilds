@@ -3,9 +3,9 @@ Tropical land (Web, Ray of Sickness) and switching to Arid at level 5+ (Fireball
 of Stone) for offense and fire resistance."""
 
 from Builds.CharacterBuilder import CharacterBuilder
-from CharacterConfigs.BaseClasses import ClassBuilder
-from CharacterConfigs.BaseClasses.ClassBuilder import StarterClassBuilder
-from CharacterConfigs.BaseClasses.DruidBase import (
+from CharacterContent.Classes.BaseClasses import ClassBuilder
+from CharacterContent.Classes.BaseClasses.ClassBuilder import StarterClassBuilder
+from CharacterContent.Classes.BaseClasses.DruidBase import (
     DruidLevel1,
     DruidLevel2,
     DruidLevel3,
@@ -27,7 +27,7 @@ from CharacterConfigs.BaseClasses.DruidBase import (
     DruidLevel19,
     DruidLevel20,
 )
-from CharacterConfigs.SubClasses2024.DruidLand import (
+from CharacterContent.Classes.SubClasses2024.DruidLand import (
     DruidLandCustomStarterClassArgs,
     DruidLandLevel3,
     DruidLandLevel5,
@@ -48,11 +48,11 @@ from Combat.Monsters.CR_0.monsters import (
 )
 from Combat.Monsters.CR_1.monsters import GiantOctopus, GiantSpider
 from Core.Definitions import Ability, DruidLandType, Skill
-from Features.CharacterFeats import Backgrounds, EpicBoon, GeneralFeats, OriginFeats
-from Features.ClassFeatures.Druid import DruidFeatures
-from Features.Items import Armor
-from Features.Items import Items
-from SpeciesConfigs import Human
+from CharacterContent.Features.CharacterFeats import Backgrounds, EpicBoon, GeneralFeats, OriginFeats
+from CharacterContent.Features.ClassFeatures.Druid import DruidFeatures
+from CharacterContent.Items import Armor
+from CharacterContent.Items import Items
+from CharacterContent.Species import Human
 from Spells.SpellLists import (
     AbjurationLevel0Spells,
     AbjurationLevel1Spells,

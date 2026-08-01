@@ -1,8 +1,8 @@
 """Example build: Bard College of Spirits. Adapted from an optimized reference build to demonstrate this subclass."""
 
 from Builds import CharacterBuilder
-from CharacterConfigs.BaseClasses import ClassBuilder
-from CharacterConfigs.BaseClasses.BardBase import (
+from CharacterContent.Classes.BaseClasses import ClassBuilder
+from CharacterContent.Classes.BaseClasses.BardBase import (
     BardLevel1,
     BardLevel2,
     BardLevel3,
@@ -24,17 +24,17 @@ from CharacterConfigs.BaseClasses.BardBase import (
     BardLevel19,
     BardLevel20,
 )
-from CharacterConfigs.BaseClasses.ClassBuilder import StarterClassBuilder
-from CharacterConfigs.SubClasses2024.BardSpirits import (
+from CharacterContent.Classes.BaseClasses.ClassBuilder import StarterClassBuilder
+from CharacterContent.Classes.SubClasses2024.BardSpirits import (
     BardSpiritsCustomStarterClassArgs,
     BardSpiritsLevel3,
     BardSpiritsLevel6,
     BardSpiritsLevel14,
 )
 from Core.Definitions import Ability, Skill
-from Features.CharacterFeats import Backgrounds, EpicBoon, GeneralFeats, OriginFeats
-from Features.Items import Items
-from SpeciesConfigs import Aasimar
+from CharacterContent.Features.CharacterFeats import Backgrounds, EpicBoon, GeneralFeats, OriginFeats
+from CharacterContent.Items import Items
+from CharacterContent.Species import Aasimar
 from Spells.SpellLists import (
     BardLevel0Spells,
     BardLevel1Spells,

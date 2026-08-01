@@ -1,9 +1,9 @@
 from typing import Optional
 
 from Core.Definitions import Ability
-from Features.Core.BaseFeatures import Feature
-from Features.Items import Armor, Weapons
-from Features.Items import Items
+from CharacterContent.Features.Core.BaseFeatures import Feature
+from CharacterContent.Items import Armor, Weapons
+from CharacterContent.Items import Items
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 

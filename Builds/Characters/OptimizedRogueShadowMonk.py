@@ -1,7 +1,7 @@
 from Builds.CharacterBuilder import CharacterBuilder
-from CharacterConfigs.BaseClasses import ClassBuilder
-from CharacterConfigs.BaseClasses.ClassBuilder import StarterClassBuilder
-from CharacterConfigs.BaseClasses.MonkBase import (
+from CharacterContent.Classes.BaseClasses import ClassBuilder
+from CharacterContent.Classes.BaseClasses.ClassBuilder import StarterClassBuilder
+from CharacterContent.Classes.BaseClasses.MonkBase import (
     MonkLevel1,
     MonkLevel2,
     MonkLevel3,
@@ -22,11 +22,11 @@ from CharacterConfigs.BaseClasses.MonkBase import (
     MonkLevel18,
     MonkLevel19,
 )
-from CharacterConfigs.BaseClasses.RogueBase import (
+from CharacterContent.Classes.BaseClasses.RogueBase import (
     RogueCustomStarterClassArgs,
     RogueLevel1,
 )
-from CharacterConfigs.SubClasses2024.MonkShadow import (
+from CharacterContent.Classes.SubClasses2024.MonkShadow import (
     MonkShadowLevel3,
     MonkShadowLevel6,
     MonkShadowLevel11,
@@ -34,9 +34,9 @@ from CharacterConfigs.SubClasses2024.MonkShadow import (
     MonkShadowMulticlassBuilder,
 )
 from Core.Definitions import Ability, RogueSubclass, Skill
-from Features.CharacterFeats import Backgrounds, EpicBoon, GeneralFeats, OriginFeats
-from Features.Items import Weapons
-from SpeciesConfigs import Halfing
+from CharacterContent.Features.CharacterFeats import Backgrounds, EpicBoon, GeneralFeats, OriginFeats
+from CharacterContent.Items import Weapons
+from CharacterContent.Species import Halfing
 from StatBlocks.AbilitiesStatBlock import PointBuyAbilitiesStatBlock
 from StatBlocks.SkillsStatBlock import RogueSkillsStatBlock
 

@@ -1,8 +1,8 @@
 """Example build: Bard College of Lore. Adapted from an optimized reference build to demonstrate this subclass."""
 
 from Builds import CharacterBuilder
-from CharacterConfigs.BaseClasses import ClassBuilder
-from CharacterConfigs.BaseClasses.BardBase import (
+from CharacterContent.Classes.BaseClasses import ClassBuilder
+from CharacterContent.Classes.BaseClasses.BardBase import (
     BardLevel1,
     BardLevel2,
     BardLevel3,
@@ -24,16 +24,16 @@ from CharacterConfigs.BaseClasses.BardBase import (
     BardLevel19,
     BardLevel20,
 )
-from CharacterConfigs.BaseClasses.ClassBuilder import StarterClassBuilder
-from CharacterConfigs.SubClasses2024.BardLore import (
+from CharacterContent.Classes.BaseClasses.ClassBuilder import StarterClassBuilder
+from CharacterContent.Classes.SubClasses2024.BardLore import (
     BardLoreCustomStarterClassArgs,
     BardLoreLevel3,
     BardLoreLevel6,
     BardLoreLevel14,
 )
 from Core.Definitions import Ability, Skill
-from Features.CharacterFeats import Backgrounds, EpicBoon, GeneralFeats, OriginFeats
-from SpeciesConfigs import Gnome
+from CharacterContent.Features.CharacterFeats import Backgrounds, EpicBoon, GeneralFeats, OriginFeats
+from CharacterContent.Species import Gnome
 from Spells.SpellLists import (
     BardLevel0Spells,
     BardLevel1Spells,

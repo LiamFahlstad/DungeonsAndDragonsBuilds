@@ -1,22 +1,22 @@
 from Builds.CharacterBuilder import CharacterBuilder
-from CharacterConfigs.BaseClasses import ClassBuilder
-from CharacterConfigs.BaseClasses.ClassBuilder import StarterClassBuilder
-from CharacterConfigs.BaseClasses.SorcererBase import (
+from CharacterContent.Classes.BaseClasses import ClassBuilder
+from CharacterContent.Classes.BaseClasses.ClassBuilder import StarterClassBuilder
+from CharacterContent.Classes.BaseClasses.SorcererBase import (
     SorcererLevel1,
     SorcererLevel2,
     SorcererLevel3,
     SorcererLevel4,
     SorcererLevel5,
 )
-from CharacterConfigs.SubClasses2024.SorcererDraconic import (
+from CharacterContent.Classes.SubClasses2024.SorcererDraconic import (
     SorcererDraconicCustomStarterClassArgs,
     SorcererDraconicLevel3,
 )
 from Core.Definitions import Ability, Skill
-from Features.CharacterFeats import Backgrounds, GeneralFeats, OriginFeats
-from Features.Items import Weapons
-from Features.SpeciesFeatures import DragonbornFeatures
-from SpeciesConfigs import Dragonborn
+from CharacterContent.Features.CharacterFeats import Backgrounds, GeneralFeats, OriginFeats
+from CharacterContent.Items import Weapons
+from CharacterContent.Features.SpeciesFeatures import DragonbornFeatures
+from CharacterContent.Species import Dragonborn
 from Spells import SpellLists as SpellDefinitions
 from StatBlocks.AbilitiesStatBlock import StandardArrayAbilitiesStatBlock
 from StatBlocks.SkillsStatBlock import SorcererSkillsStatBlock

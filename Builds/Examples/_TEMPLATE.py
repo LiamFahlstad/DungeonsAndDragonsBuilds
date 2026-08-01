@@ -19,17 +19,17 @@ Key sections:
 # ============================================================================
 
 from Builds.CharacterBuilder import CharacterBuilder
-from CharacterConfigs.BaseClasses import ClassBuilder
-from CharacterConfigs.BaseClasses.ClassBuilder import StarterClassBuilder
+from CharacterContent.Classes.BaseClasses import ClassBuilder
+from CharacterContent.Classes.BaseClasses.ClassBuilder import StarterClassBuilder
 
 # TODO: Replace 'Fighter' with your class name. Available classes:
-#   - CharacterConfigs/BaseClasses/FighterBase.py → FighterLevel1, FighterLevel2, ...
-#   - CharacterConfigs/BaseClasses/ClericBase.py → ClericLevel1, ClericLevel2, ...
-#   - CharacterConfigs/BaseClasses/WizardBase.py → WizardLevel1, WizardLevel2, ...
-#   - CharacterConfigs/BaseClasses/ has files for all 13 classes: Artificer, Barbarian,
+#   - CharacterContent/Classes/BaseClasses/FighterBase.py → FighterLevel1, FighterLevel2, ...
+#   - CharacterContent/Classes/BaseClasses/ClericBase.py → ClericLevel1, ClericLevel2, ...
+#   - CharacterContent/Classes/BaseClasses/WizardBase.py → WizardLevel1, WizardLevel2, ...
+#   - CharacterContent/Classes/BaseClasses/ has files for all 13 classes: Artificer, Barbarian,
 #     Bard, Cleric, Druid, Fighter, Monk, Paladin, Ranger, Rogue, Sorcerer, Warlock, Wizard
 # Import the level classes for YOUR starter class:
-from CharacterConfigs.BaseClasses.FighterBase import (
+from CharacterContent.Classes.BaseClasses.FighterBase import (
     FighterLevel1,
     FighterLevel2,
     FighterLevel3,
@@ -37,25 +37,25 @@ from CharacterConfigs.BaseClasses.FighterBase import (
 )
 
 # TODO: Replace 'FighterChampion' with your subclass. Available subclasses per class:
-#   Fighter: CharacterConfigs/SubClasses/FighterChampion.py, FighterBattleMaster.py
-#   Cleric: CharacterConfigs/SubClasses/ClericKnowledge.py, ClericLight.py, etc.
-#   Wizard: CharacterConfigs/SubClasses/WizardBladesinger.py, WizardDiviner.py, etc.
-#   See CharacterConfigs/SubClasses/ for all available subclasses
+#   Fighter: CharacterContent/Classes/SubClasses2024/FighterChampion.py, FighterBattleMaster.py
+#   Cleric: CharacterContent/Classes/SubClasses2024/ClericKnowledge.py, ClericLight.py, etc.
+#   Wizard: CharacterContent/Classes/SubClasses2024/WizardBladesinger.py, WizardDiviner.py, etc.
+#   See CharacterContent/Classes/SubClasses2024/ (or SubClasses2014/) for all available subclasses
 # Import your subclass:
-from CharacterConfigs.SubClasses2024.FighterChampion import (
+from CharacterContent.Classes.SubClasses2024.FighterChampion import (
     FighterChampionCustomStarterClassArgs,
     FighterChampionLevel3,
 )
 from Core.Definitions import Ability, Skill
-from Features.CharacterFeats import Backgrounds, GeneralFeats, OriginFeats
-from Features.Combat import FightingStyles
-from Features.Items import Armor, Weapons
+from CharacterContent.Features.CharacterFeats import Backgrounds, GeneralFeats, OriginFeats
+from CharacterContent.Features.CombatFeatures import FightingStyles
+from CharacterContent.Items import Armor, Weapons
 
 # TODO: Replace 'Dwarf' with your desired species. Available species:
-#   CharacterConfigs/SpeciesConfigs/ has: Human, Elf, Dwarf, Halfling, Tiefling, Dragonborn,
+#   CharacterContent/Species/ has: Human, Elf, Dwarf, Halfling, Tiefling, Dragonborn,
 #   Gnome, Orc, Aasimar, Changeling, Dhampir, Goliath, Hexblood, Kalashtar, Khoravar,
 #   Lupin, Reborn, Shifter, Warforged
-from SpeciesConfigs import Dwarf
+from CharacterContent.Species import Dwarf
 from StatBlocks.AbilitiesStatBlock import StandardArrayAbilitiesStatBlock
 
 # TODO: Import your class's skill block. Available skill blocks:
@@ -87,9 +87,9 @@ def get_starter_class_builder():
     - background_ability_bonuses: Ability score increases from background (+2 to one, +1 to another)
     - background_skill_proficiencies: Two bonus skill proficiencies from background
     - add_default_equipment: True = get default class gear, False = customize with armor/weapons
-    - origin_feat: One feat at level 1 from OriginFeats.* (found in Features/CharacterFeats/OriginFeats.py)
-    - armor: List of armor pieces (Features/Equipment/Armor.py)
-    - weapons: List of weapons (Features/Equipment/Weapons.py)
+    - origin_feat: One feat at level 1 from OriginFeats.* (found in CharacterContent/Features/CharacterFeats/OriginFeats.py)
+    - armor: List of armor pieces (CharacterContent/Items/Armor/)
+    - weapons: List of weapons (CharacterContent/Items/Weapons/)
     - base_class_level_features: Per-level features and spells (see below)
     """
 
@@ -97,7 +97,7 @@ def get_starter_class_builder():
         # =====================================================================
         # non_generic_arguments: Subclass-specific configuration
         # =====================================================================
-        # This varies by subclass. Check CharacterConfigs/SubClasses/YourSubclass.py
+        # This varies by subclass. Check CharacterContent/Classes/SubClasses2024/YourSubclass.py
         # for a "CustomStarterClassArgs" class to see what's required.
         # Example: FighterChampion requires skills, Fighter BattleMaster would need maneuvers, etc.
         non_generic_arguments=FighterChampionCustomStarterClassArgs(
@@ -165,13 +165,13 @@ def get_starter_class_builder():
         # =====================================================================
         # origin_feat: One feat from background/origin
         # =====================================================================
-        # TODO: Choose from Features/CharacterFeats/OriginFeats.py
+        # TODO: Choose from CharacterContent/Features/CharacterFeats/OriginFeats.py
         # Examples: Tough(), Alert(), GiftedLeaner(), etc.
         origin_feat=OriginFeats.SavageAttacker(),
         # =====================================================================
         # armor: Your equipped armor pieces
         # =====================================================================
-        # TODO: Choose armor from Features/Equipment/Armor.py
+        # TODO: Choose armor from CharacterContent/Items/Armor/
         # Examples: LeatherArmor(), ChainMailArmor(), PlateArmor(), etc.
         armor=[
             Armor.LeatherArmor(),
@@ -179,7 +179,7 @@ def get_starter_class_builder():
         # =====================================================================
         # weapons: Weapons you carry
         # =====================================================================
-        # TODO: Choose weapons from Features/Equipment/Weapons.py
+        # TODO: Choose weapons from CharacterContent/Items/Weapons/
         # Set player_is_proficient=True if your class has proficiency
         # Set player_has_mastery=True if you have weapon mastery (Fighter-specific)
         weapons=[
@@ -196,12 +196,12 @@ def get_starter_class_builder():
             # Define features for levels 1 through base_class_level
             # TODO: Add a level entry for each level from 1 to base_class_level
             # For each level, construct YourClassLevel#(parameters as required by that level)
-            # Check CharacterConfigs/BaseClasses/YourClassBase.py to see what parameters
+            # Check CharacterContent/Classes/BaseClasses/YourClassBase.py to see what parameters
             # each level class requires.
             base_class_features_by_level={
                 1: FighterLevel1(
                     # Level 1 Fighter requires: weapon_mastery_1, _2, _3, fighting_style
-                    # See CharacterConfigs/BaseClasses/FighterBase.py for details
+                    # See CharacterContent/Classes/BaseClasses/FighterBase.py for details
                     weapon_mastery_1=Weapons.Shortsword(),
                     weapon_mastery_2=Weapons.Scimitar(),
                     weapon_mastery_3=Weapons.Longbow(),
@@ -212,7 +212,7 @@ def get_starter_class_builder():
                 3: FighterLevel3(),
                 4: FighterLevel4(
                     # Level 4 often has feat selection. If your class/level has GeneralFeats,
-                    # import from Features/CharacterFeats/GeneralFeats.py
+                    # import from CharacterContent/Features/CharacterFeats/GeneralFeats.py
                     weapon_mastery=Weapons.Handaxe(),
                     general_feat=GeneralFeats.MountedCombatant(
                         character_level=4,
@@ -224,7 +224,7 @@ def get_starter_class_builder():
             },
             # ----- subclass_features_by_level: Subclass-specific features -----
             # These typically start at level 3 and continue at intervals (7, 10, 14, 17, 20)
-            # TODO: For your subclass, check CharacterConfigs/SubClasses/YourSubclass.py
+            # TODO: For your subclass, check CharacterContent/Classes/SubClasses2024/YourSubclass.py
             # to see which levels have subclass features and what parameters they take
             subclass_features_by_level={
                 3: FighterChampionLevel3(),
@@ -256,7 +256,7 @@ class YourCharacterNameCharacterBuilder(CharacterBuilder):
             # Your main class builder (configured above)
             starter_class_builder=get_starter_class_builder(),
             # TODO: Replace Dwarf with your desired species
-            # Import from SpeciesConfigs/[SpeciesName].py
+            # Import from CharacterContent.Species/[SpeciesName].py
             # Some species have parameters (e.g., Elf has elven_lineage and skill_proficiency)
             # Check the species file to see what's required
             species_builder=Dwarf.DwarfSpeciesBuilder(),
@@ -291,11 +291,11 @@ class YourCharacterNameCharacterBuilder(CharacterBuilder):
 # HELPFUL REFERENCES
 # ============================================================================
 # Definitions: Definitions.py - CharacterClass, Ability, Skill, and class enums
-# Classes: CharacterConfigs/BaseClasses/
-# Subclasses: CharacterConfigs/SubClasses/
-# Species: SpeciesConfigs/
+# Classes: CharacterContent/Classes/BaseClasses/
+# Subclasses: CharacterContent/Classes/SubClasses2024/
+# Species: CharacterContent/Species/
 # Spells: Spells/Definitions.py (check spell availability per class/level)
-# Feats: Features/CharacterFeats/OriginFeats.py, GeneralFeats.py
-# Equipment: Features/Equipment/Armor.py, Weapons.py
+# Feats: CharacterContent/Features/CharacterFeats/OriginFeats.py, GeneralFeats.py
+# Equipment: CharacterContent/Items/Armor/, CharacterContent/Items/Weapons/
 # Skills: StatBlocks/SkillsStatBlock.py for class-specific skill blocks
 # ============================================================================

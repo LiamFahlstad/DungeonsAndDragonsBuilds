@@ -1,12 +1,12 @@
 from typing import Optional
 
-from CharacterConfigs.BaseClasses.ClassBuilder import (
+from CharacterContent.Classes.BaseClasses.ClassBuilder import (
     AppliedLevelFeatures,
     MulticlassBuilder,
     StarterClassBuilder,
 )
 from Builds.CharacterSheetCreator import CharacterSheetData
-from SpeciesConfigs.SpeciesBuilder import SpeciesBuilder
+from CharacterContent.Species.SpeciesBuilder import SpeciesBuilder
 
 
 class CharacterBuilder:

@@ -8,7 +8,7 @@ from PyQt6.QtWidgets import QApplication
 
 import Core.Definitions as Definitions
 from Combat.Definitions import BasicCombatantData, Condition, ExtendedCombatantData, Visibility
-from Features.Items import Armor
+from CharacterContent.Items import Armor
 from .damage_mixin import DamageMixin
 from .conditions_mixin import ConditionsMixin
 from .spells_mixin import SpellsMixin

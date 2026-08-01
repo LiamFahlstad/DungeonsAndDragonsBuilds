@@ -1,9 +1,9 @@
 """Example build: Druid Circle of Spores (2014 rules). Demonstrates the subclass up through level 14."""
 
 from Builds.CharacterBuilder import CharacterBuilder
-from CharacterConfigs.BaseClasses import ClassBuilder
-from CharacterConfigs.BaseClasses.ClassBuilder import StarterClassBuilder
-from CharacterConfigs.BaseClasses.DruidBase import (
+from CharacterContent.Classes.BaseClasses import ClassBuilder
+from CharacterContent.Classes.BaseClasses.ClassBuilder import StarterClassBuilder
+from CharacterContent.Classes.BaseClasses.DruidBase import (
     DruidLevel1,
     DruidLevel2,
     DruidLevel3,
@@ -19,7 +19,7 @@ from CharacterConfigs.BaseClasses.DruidBase import (
     DruidLevel13,
     DruidLevel14,
 )
-from CharacterConfigs.SubClasses2014.DruidSpores import (
+from CharacterContent.Classes.SubClasses2014.DruidSpores import (
     DruidSporesCustomStarterClassArgs,
     DruidSporesLevel3,
     DruidSporesLevel6,
@@ -28,9 +28,9 @@ from CharacterConfigs.SubClasses2014.DruidSpores import (
 )
 from Combat.Monsters.CR_1.monsters import BrownBear, DireWolf, GiantSpider, Tiger
 from Core.Definitions import Ability, Skill
-from Features.CharacterFeats import Backgrounds, GeneralFeats, OriginFeats
-from Features.CharacterFeats import OriginFeats as SpeciesOriginFeats
-from SpeciesConfigs import Human
+from CharacterContent.Features.CharacterFeats import Backgrounds, GeneralFeats, OriginFeats
+from CharacterContent.Features.CharacterFeats import OriginFeats as SpeciesOriginFeats
+from CharacterContent.Species import Human
 from Spells.SpellLists import (
     DruidLevel0Spells,
     DruidLevel1Spells,

@@ -1,23 +1,23 @@
 """Example build: Ranger Gloom Stalker. Adapted from an optimized reference build to demonstrate this subclass."""
 
 from Builds.CharacterBuilder import CharacterBuilder
-from CharacterConfigs.BaseClasses import ClassBuilder
-from CharacterConfigs.BaseClasses.ClassBuilder import StarterClassBuilder
-from CharacterConfigs.BaseClasses.RangerBase import (
+from CharacterContent.Classes.BaseClasses import ClassBuilder
+from CharacterContent.Classes.BaseClasses.ClassBuilder import StarterClassBuilder
+from CharacterContent.Classes.BaseClasses.RangerBase import (
     RangerLevel1,
     RangerLevel2,
     RangerLevel3,
 )
-from CharacterConfigs.SubClasses2024.RangerGloomStalker import (
+from CharacterContent.Classes.SubClasses2024.RangerGloomStalker import (
     RangerGloomStalkerCustomStarterClassArgs,
     RangerGloomStalkerLevel3,
 )
 from Core.Definitions import Ability, Skill
-from Features.CharacterFeats import Backgrounds, OriginFeats
-from Features.Combat import FightingStyles
-from Features.Items import Weapons
-from Features.SpeciesFeatures import DragonbornFeatures
-from SpeciesConfigs import Dragonborn
+from CharacterContent.Features.CharacterFeats import Backgrounds, OriginFeats
+from CharacterContent.Features.CombatFeatures import FightingStyles
+from CharacterContent.Items import Weapons
+from CharacterContent.Features.SpeciesFeatures import DragonbornFeatures
+from CharacterContent.Species import Dragonborn
 from Spells.SpellLists import RangerLevel1Spells
 from StatBlocks.AbilitiesStatBlock import StandardArrayAbilitiesStatBlock
 from StatBlocks.SkillsStatBlock import RangerSkillsStatBlock

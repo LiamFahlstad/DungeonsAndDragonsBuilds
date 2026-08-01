@@ -1,0 +1,369 @@
+from typing import Optional, TypeAlias
+
+import attr
+
+import Core.Definitions as Definitions
+from CharacterContent.Classes.BaseClasses import ClassBuilder
+from Builds.CharacterSheetCreator import CharacterSheetData
+from Core.Definitions import Ability, CharacterClass
+from CharacterContent.Features.CharacterFeats import EpicBoon, GeneralFeats
+from CharacterContent.Items import Armor, Weapons
+from CharacterContent.Items import Packs
+from CharacterContent.Features.ClassFeatures import SpellSlots
+from CharacterContent.Features.ClassFeatures.Cleric import ClericFeatures
+from Spells.SpellLists import (
+    ClericLevel0Spells,
+    ClericLevel1Spells,
+    ClericLevel2Spells,
+    ClericLevel3Spells,
+    ClericLevel4Spells,
+    ClericLevel5Spells,
+    ClericLevel6Spells,
+    ClericLevel7Spells,
+    ClericLevel8Spells,
+    ClericLevel9Spells,
+)
+from StatBlocks.SavingThrowsStatBlock import ClericSavingThrowsStatBlock
+from StatBlocks.SkillsStatBlock import ClericSkillsStatBlock
+
+ClericSpellsUpTo2: TypeAlias = ClericLevel1Spells | ClericLevel2Spells
+
+ClericSpellsUpTo3: TypeAlias = ClericSpellsUpTo2 | ClericLevel3Spells
+
+ClericSpellsUpTo4: TypeAlias = ClericSpellsUpTo3 | ClericLevel4Spells
+
+ClericSpellsUpTo5: TypeAlias = ClericSpellsUpTo4 | ClericLevel5Spells
+
+ClericSpellsUpTo6: TypeAlias = ClericSpellsUpTo5 | ClericLevel6Spells
+
+ClericSpellsUpTo7: TypeAlias = ClericSpellsUpTo6 | ClericLevel7Spells
+
+ClericSpellsUpTo8: TypeAlias = ClericSpellsUpTo7 | ClericLevel8Spells
+
+ClericSpellsUpTo9: TypeAlias = ClericSpellsUpTo8 | ClericLevel9Spells
+
+
+@attr.dataclass
+class ClericLevel1(ClassBuilder.BaseClassLevel1):
+    cantrip_1: ClericLevel0Spells
+    cantrip_2: ClericLevel0Spells
+    cantrip_3: ClericLevel0Spells
+    spell_1: ClericLevel1Spells
+    spell_2: ClericLevel1Spells
+    spell_3: ClericLevel1Spells
+    spell_4: ClericLevel1Spells
+
+    def add_features(
+        self,
+        data: CharacterSheetData,
+    ) -> CharacterSheetData:
+        data.add_feature(ClericFeatures.Spellcasting())
+        data.add_feature(ClericFeatures.DivineOrder())
+        data.add_cantrip(self.cantrip_1)
+        data.add_cantrip(self.cantrip_2)
+        data.add_cantrip(self.cantrip_3)
+        data.add_spell(self.spell_1)
+        data.add_spell(self.spell_2)
+        data.add_spell(self.spell_3)
+        data.add_spell(self.spell_4)
+        return data
+
+
+@attr.dataclass
+class ClericLevel2(ClassBuilder.BaseClassLevel2):
+    spell: ClericLevel1Spells
+
+    def add_features(
+        self,
+        data: CharacterSheetData,
+    ) -> CharacterSheetData:
+        data.add_feature(ClericFeatures.ChannelDivinity())
+        data.add_spell(self.spell)
+        return data
+
+
+@attr.dataclass
+class ClericLevel3(ClassBuilder.BaseClassLevel3):
+    spell: ClericSpellsUpTo2
+
+    def add_features(
+        self,
+        data: CharacterSheetData,
+    ) -> CharacterSheetData:
+        data.add_spell(self.spell)
+        return data
+
+
+@attr.dataclass
+class ClericLevel4(ClassBuilder.BaseClassLevel4):
+    general_feat: GeneralFeats.GeneralFeat
+    cantrip: ClericLevel0Spells
+    spell: ClericSpellsUpTo2
+
+    def add_features(
+        self,
+        data: CharacterSheetData,
+    ) -> CharacterSheetData:
+        self.general_feat.origin = f"Cleric Level {self.level}"
+        data.add_feature(self.general_feat)
+        data.add_cantrip(self.cantrip)
+        data.add_spell(self.spell)
+        return data
+
+
+@attr.dataclass
+class ClericLevel5(ClassBuilder.BaseClassLevel5):
+    spell_1: ClericSpellsUpTo3
+    spell_2: ClericSpellsUpTo3
+
+    def add_features(
+        self,
+        data: CharacterSheetData,
+    ) -> CharacterSheetData:
+        data.add_feature(ClericFeatures.SearUndead())
+        data.add_spell(self.spell_1)
+        data.add_spell(self.spell_2)
+        return data
+
+
+@attr.dataclass
+class ClericLevel6(ClassBuilder.BaseClassLevel6):
+    spell: ClericSpellsUpTo3
+
+    def add_features(
+        self,
+        data: CharacterSheetData,
+    ) -> CharacterSheetData:
+        data.add_spell(self.spell)
+        return data
+
+
+@attr.dataclass
+class ClericLevel7(ClassBuilder.BaseClassLevel7):
+    spell: ClericSpellsUpTo4
+
+    def add_features(
+        self,
+        data: CharacterSheetData,
+    ) -> CharacterSheetData:
+        data.add_feature(ClericFeatures.BlessedStrikes())
+        data.add_spell(self.spell)
+        return data
+
+
+@attr.dataclass
+class ClericLevel8(ClassBuilder.BaseClassLevel8):
+    general_feat: GeneralFeats.GeneralFeat
+    spell: ClericSpellsUpTo4
+
+    def add_features(
+        self,
+        data: CharacterSheetData,
+    ) -> CharacterSheetData:
+        self.general_feat.origin = f"Cleric Level {self.level}"
+        data.add_feature(self.general_feat)
+        data.add_spell(self.spell)
+        return data
+
+
+@attr.dataclass
+class ClericLevel9(ClassBuilder.BaseClassLevel9):
+    spell_1: ClericSpellsUpTo5
+    spell_2: ClericSpellsUpTo5
+
+    def add_features(
+        self,
+        data: CharacterSheetData,
+    ) -> CharacterSheetData:
+        data.add_spell(self.spell_1)
+        data.add_spell(self.spell_2)
+        return data
+
+
+@attr.dataclass
+class ClericLevel10(ClassBuilder.BaseClassLevel10):
+    cantrip: ClericLevel0Spells
+    spell: ClericSpellsUpTo5
+
+    def add_features(
+        self,
+        data: CharacterSheetData,
+    ) -> CharacterSheetData:
+        data.add_cantrip(self.cantrip)
+        data.add_spell(self.spell)
+        data.add_feature(ClericFeatures.DivineIntervention())
+        return data
+
+
+@attr.dataclass
+class ClericLevel11(ClassBuilder.BaseClassLevel11):
+    spell: ClericSpellsUpTo6
+
+    def add_features(
+        self,
+        data: CharacterSheetData,
+    ) -> CharacterSheetData:
+        data.add_spell(self.spell)
+        return data
+
+
+@attr.dataclass
+class ClericLevel12(ClassBuilder.BaseClassLevel12):
+    general_feat: GeneralFeats.GeneralFeat
+
+    def add_features(
+        self,
+        data: CharacterSheetData,
+    ) -> CharacterSheetData:
+        self.general_feat.origin = f"Cleric Level {self.level}"
+        data.add_feature(self.general_feat)
+        return data
+
+
+@attr.dataclass
+class ClericLevel13(ClassBuilder.BaseClassLevel13):
+    spell: ClericSpellsUpTo7
+
+    def add_features(
+        self,
+        data: CharacterSheetData,
+    ) -> CharacterSheetData:
+        data.add_spell(self.spell)
+        return data
+
+
+@attr.dataclass
+class ClericLevel14(ClassBuilder.BaseClassLevel14):
+
+    def add_features(
+        self,
+        data: CharacterSheetData,
+    ) -> CharacterSheetData:
+        blessed_strikes: ClericFeatures.BlessedStrikes = data.get_features_by_type(
+            ClericFeatures.BlessedStrikes
+        )[0]
+        blessed_strikes.extend_feature(ClericFeatures.ImprovedBlessedStrikes())
+        return data
+
+
+@attr.dataclass
+class ClericLevel15(ClassBuilder.BaseClassLevel15):
+    spell: ClericSpellsUpTo8
+
+    def add_features(
+        self,
+        data: CharacterSheetData,
+    ) -> CharacterSheetData:
+        data.add_spell(self.spell)
+        return data
+
+
+@attr.dataclass
+class ClericLevel16(ClassBuilder.BaseClassLevel16):
+    general_feat: GeneralFeats.GeneralFeat
+
+    def add_features(self, data: CharacterSheetData) -> CharacterSheetData:
+        self.general_feat.origin = f"Cleric Level {self.level}"
+        data.add_feature(self.general_feat)
+        return data
+
+
+@attr.dataclass
+class ClericLevel17(ClassBuilder.BaseClassLevel17):
+    spell: ClericSpellsUpTo9
+
+    def add_features(
+        self,
+        data: CharacterSheetData,
+    ) -> CharacterSheetData:
+        data.add_spell(self.spell)
+        return data
+
+
+@attr.dataclass
+class ClericLevel18(ClassBuilder.BaseClassLevel18):
+    spell: ClericSpellsUpTo9
+
+    def add_features(
+        self,
+        data: CharacterSheetData,
+    ) -> CharacterSheetData:
+        data.add_spell(self.spell)
+        return data
+
+
+@attr.dataclass
+class ClericLevel19(ClassBuilder.BaseClassLevel19):
+    epic_boon: EpicBoon.EpicBoon
+    spell: ClericSpellsUpTo9
+
+    def add_features(
+        self,
+        data: CharacterSheetData,
+    ) -> CharacterSheetData:
+        self.epic_boon.origin = f"Cleric Level {self.level}"
+        data.add_feature(self.epic_boon)
+        data.add_spell(self.spell)
+        return data
+
+
+@attr.dataclass
+class ClericLevel20(ClassBuilder.BaseClassLevel20):
+    spell: ClericSpellsUpTo9
+
+    def add_features(self, data: CharacterSheetData) -> CharacterSheetData:
+        divine_intervention: ClericFeatures.DivineIntervention = data.get_features_by_type(
+            ClericFeatures.DivineIntervention
+        )[0]
+        divine_intervention.extend_feature(ClericFeatures.GreaterDivineIntervention())
+        data.add_spell(self.spell)
+        return data
+
+
+class ClericCustomStarterClassArgs(ClassBuilder.CustomStarterClassArgs):
+    def __init__(
+        self,
+        subclass: str,
+        skills: ClericSkillsStatBlock,
+    ):
+        super().__init__(
+            base_class=CharacterClass.CLERIC,
+            subclass=subclass,
+            saving_throws=ClericSavingThrowsStatBlock(),
+            default_equipment=[
+                Armor.ChainShirtArmor(),
+                Armor.ShieldArmor(),
+                Weapons.Mace(),
+            ],
+            skills=skills,
+            armor_proficiencies=[
+                Definitions.ArmorType.LIGHT,
+                Definitions.ArmorType.MEDIUM,
+                Definitions.ArmorType.SHIELD,
+            ],
+            weapon_proficiencies=[Weapons.WeaponProficiency.SIMPLE],
+            spell_casting_ability=Ability.WISDOM,
+            caster_type=SpellSlots.CasterType.FULL_CASTER,
+            default_pack=Packs.PriestsPack(),
+        )
+
+
+class ClericMulticlassBuilder(ClassBuilder.MulticlassBuilder):
+
+    def __init__(
+        self,
+        cleric_level_features: ClassBuilder.BaseClassLevelFeatures,
+        cleric_level: int,
+        subclass: str,
+        replace_spells: Optional[dict[str, str]] = None,
+    ):
+        self.subclass = subclass
+        super().__init__(
+            base_class=CharacterClass.CLERIC,
+            base_class_level_features=cleric_level_features,
+            base_class_level=cleric_level,
+            subclass=subclass,
+            replace_spells=replace_spells,
+            spell_casting_ability=Ability.WISDOM,
+            caster_type=SpellSlots.CasterType.FULL_CASTER,
+        )

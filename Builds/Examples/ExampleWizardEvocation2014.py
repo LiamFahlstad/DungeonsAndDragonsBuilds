@@ -2,9 +2,9 @@
 
 import Core.Definitions as Definitions
 from Builds.CharacterBuilder import CharacterBuilder
-from CharacterConfigs.BaseClasses import ClassBuilder
-from CharacterConfigs.BaseClasses.ClassBuilder import StarterClassBuilder
-from CharacterConfigs.BaseClasses.WizardBase import (
+from CharacterContent.Classes.BaseClasses import ClassBuilder
+from CharacterContent.Classes.BaseClasses.ClassBuilder import StarterClassBuilder
+from CharacterContent.Classes.BaseClasses.WizardBase import (
     WizardLevel1,
     WizardLevel2,
     WizardLevel3,
@@ -20,7 +20,7 @@ from CharacterConfigs.BaseClasses.WizardBase import (
     WizardLevel13,
     WizardLevel14,
 )
-from CharacterConfigs.SubClasses2014.WizardEvocation import (
+from CharacterContent.Classes.SubClasses2014.WizardEvocation import (
     EvocationWizardLevel3,
     EvocationWizardLevel6,
     EvocationWizardLevel10,
@@ -28,8 +28,8 @@ from CharacterConfigs.SubClasses2014.WizardEvocation import (
     WizardEvocationCustomStarterClassArgs,
 )
 from Core.Definitions import Ability, Skill
-from Features.CharacterFeats import Backgrounds, GeneralFeats, OriginFeats
-from SpeciesConfigs import Gnome
+from CharacterContent.Features.CharacterFeats import Backgrounds, GeneralFeats, OriginFeats
+from CharacterContent.Species import Gnome
 from Spells import SpellLists as SpellDefinitions
 from StatBlocks.AbilitiesStatBlock import StandardArrayAbilitiesStatBlock
 from StatBlocks.SkillsStatBlock import WizardSkillsStatBlock

@@ -2,10 +2,10 @@
 
 import Core.Definitions as Definitions
 from Builds.CharacterBuilder import CharacterBuilder
-from CharacterConfigs.BaseClasses import ClassBuilder
-from CharacterConfigs.BaseClasses.ClassBuilder import StarterClassBuilder
-from CharacterConfigs.BaseClasses.MonkBase import MonkLevel1, MonkLevel2, MonkLevel3
-from CharacterConfigs.SubClasses2014.MonkKensei import (
+from CharacterContent.Classes.BaseClasses import ClassBuilder
+from CharacterContent.Classes.BaseClasses.ClassBuilder import StarterClassBuilder
+from CharacterContent.Classes.BaseClasses.MonkBase import MonkLevel1, MonkLevel2, MonkLevel3
+from CharacterContent.Classes.SubClasses2014.MonkKensei import (
     MonkKenseiCustomStarterClassArgs,
     MonkKenseiLevel3,
     MonkKenseiLevel6,
@@ -13,8 +13,8 @@ from CharacterConfigs.SubClasses2014.MonkKensei import (
     MonkKenseiLevel17,
 )
 from Core.Definitions import Ability, Skill
-from Features.CharacterFeats import Backgrounds, OriginFeats
-from SpeciesConfigs import Human
+from CharacterContent.Features.CharacterFeats import Backgrounds, OriginFeats
+from CharacterContent.Species import Human
 from StatBlocks.AbilitiesStatBlock import StandardArrayAbilitiesStatBlock
 from StatBlocks.SkillsStatBlock import MonkSkillsStatBlock
 
