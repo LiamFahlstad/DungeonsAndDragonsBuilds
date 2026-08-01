@@ -7,7 +7,7 @@ from CharacterContent.Classes.BaseClasses.RogueBase import (
     RogueMulticlassBuilder,
     RogueCustomStarterClassArgs,
 )
-from Builds.CharacterSheetCreator import CharacterSheetData
+from Builds.CharacterSheetAccumulator import CharacterSheetData
 from Core.Definitions import RogueSubclass2014
 from CharacterContent.Features.SubClassFeatures2014.Rogue import RogueSwashbucklerFeatures
 from StatBlocks.SkillsStatBlock import RogueSkillsStatBlock

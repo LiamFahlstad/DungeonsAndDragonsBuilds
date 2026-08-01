@@ -33,10 +33,15 @@ from CharacterContent.Classes.SubClasses2024.MonkShadow import (
     MonkShadowLevel17,
     MonkShadowMulticlassBuilder,
 )
-from Core.Definitions import Ability, RogueSubclass, Skill
-from CharacterContent.Features.CharacterFeats import Backgrounds, EpicBoon, GeneralFeats, OriginFeats
+from CharacterContent.Features.CharacterFeats import (
+    Backgrounds,
+    EpicBoon,
+    GeneralFeats,
+    OriginFeats,
+)
 from CharacterContent.Items import Weapons
-from CharacterContent.Species import Halfing
+from CharacterContent.Species import Halfling
+from Core.Definitions import Ability, RogueSubclass, Skill
 from StatBlocks.AbilitiesStatBlock import PointBuyAbilitiesStatBlock
 from StatBlocks.SkillsStatBlock import RogueSkillsStatBlock
 
@@ -179,7 +184,7 @@ class OptimizedRogueShadowMonkCharacterBuilder(CharacterBuilder):
         super().__init__(
             name="Optimized Rogue Shadow Monk",
             starter_class_builder=get_starter_class_builder(),
-            species_builder=Halfing.HalflingSpeciesBuilder(),
+            species_builder=Halfling.HalflingSpeciesBuilder(),
             multiclass_builders=[
                 get_monk_multiclass_builder(),
             ],

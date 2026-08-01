@@ -1,4 +1,4 @@
-from Builds import CharacterSheetCreator
+from Builds import CharacterSheetAccumulator
 from Core.Definitions import CreatureSize, Skill
 from CharacterContent.Features.SpeciesFeatures import ShifterFeatures
 from CharacterContent.Species.SpeciesBuilder import SpeciesBuilder
@@ -19,8 +19,8 @@ class ShifterSpeciesBuilder(SpeciesBuilder):
         assert size in [CreatureSize.MEDIUM, CreatureSize.SMALL]
         self.size = size
 
-    def build(self) -> CharacterSheetCreator.CharacterSheetData:
-        data = CharacterSheetCreator.CharacterSheetData()
+    def build(self) -> CharacterSheetAccumulator.CharacterSheetData:
+        data = CharacterSheetAccumulator.CharacterSheetData()
 
         data.speed = ShifterFeatures.SPEED  # Given by your species
         data.size = self.size  # Given by your species

@@ -1,7 +1,7 @@
 from abc import abstractmethod
 
 import Core.Definitions as Definitions
-from Builds.CharacterSheetCreator import CharacterSheetData
+from Builds.CharacterSheetAccumulator import CharacterSheetData
 
 
 class SpeciesBuilder:

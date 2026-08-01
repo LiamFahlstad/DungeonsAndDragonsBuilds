@@ -1,19 +1,19 @@
-from .improvements import (
+from .Improvements import (
     ArmorImprovement,
     SetArmorClassBase,
     AddArmorClassBonus,
     SetStrengthRequirement,
     SetStealthDisadvantage,
 )
-from .base import AbstractArmor
-from .standard import (
+from .Base import AbstractArmor
+from .Standard import (
     LeatherArmor,
     StuddedLeatherArmor,
     ChainShirtArmor,
     ChainMailArmor,
     ShieldArmor,
 )
-from .magic import (
+from .Magic import (
     ArmorOfProtection,
     DragonscalePlate,
     SentinelsWatchArmor,

@@ -1,4 +1,4 @@
-from Builds import CharacterSheetCreator
+from Builds import CharacterSheetAccumulator
 from Core.Definitions import CreatureSize
 from CharacterContent.Features.SpeciesFeatures import KalashtarFeatures
 from CharacterContent.Species.SpeciesBuilder import SpeciesBuilder
@@ -10,8 +10,8 @@ class KalashtarSpeciesBuilder(SpeciesBuilder):
             name="Kalashtar",
         )
 
-    def build(self) -> CharacterSheetCreator.CharacterSheetData:
-        data = CharacterSheetCreator.CharacterSheetData()
+    def build(self) -> CharacterSheetAccumulator.CharacterSheetData:
+        data = CharacterSheetAccumulator.CharacterSheetData()
 
         data.speed = KalashtarFeatures.SPEED  # Given by your species
         data.size = CreatureSize.MEDIUM  # Given by your species

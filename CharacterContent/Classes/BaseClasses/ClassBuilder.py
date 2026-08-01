@@ -4,7 +4,7 @@ from typing import Optional
 import attr
 
 import Core.Definitions as Definitions
-from Builds.CharacterSheetCreator import CharacterSheetData
+from Builds.CharacterSheetAccumulator import CharacterSheetData
 from Core.Definitions import Ability, CharacterClass
 from CharacterContent.Features.CharacterFeats import Backgrounds, OriginFeats
 from CharacterContent.Items import Armor, Weapons
@@ -13,7 +13,7 @@ from CharacterContent.Items import Items, Packs
 from StatBlocks.AbilitiesStatBlock import AbilitiesStatBlock
 from StatBlocks.SavingThrowsStatBlock import SavingThrowsStatBlock
 from StatBlocks.SkillsStatBlock import ClassSkillsStatBlock
-from CharacterContent.ToolProficiencies.ToolProficiencies import ToolProficiency
+from CharacterContent.ToolProficiencies.Proficiencies import ToolProficiency
 
 
 @attr.dataclass

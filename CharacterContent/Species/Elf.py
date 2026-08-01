@@ -1,6 +1,6 @@
 from enum import Enum
 
-from Builds import CharacterSheetCreator
+from Builds import CharacterSheetAccumulator
 import Core.Definitions as Definitions
 from CharacterContent.Features.SpeciesFeatures import ElfFeatures
 from CharacterContent.Species.SpeciesBuilder import SpeciesBuilder
@@ -41,7 +41,7 @@ class ElfSpeciesBuilder(SpeciesBuilder):
             name="Elf",
         )
 
-    def build(self) -> CharacterSheetCreator.CharacterSheetData:
+    def build(self) -> CharacterSheetAccumulator.CharacterSheetData:
         if self.character_level is None:
             raise ValueError(
                 "Character level must be set before building species data."
@@ -52,7 +52,7 @@ class ElfSpeciesBuilder(SpeciesBuilder):
                 "Spell casting ability must be set before building species data."
             )
 
-        data = CharacterSheetCreator.CharacterSheetData()
+        data = CharacterSheetAccumulator.CharacterSheetData()
 
         data.speed = ElfFeatures.SPEED  # Given by your species
         data.size = ElfFeatures.SIZE  # Given by your species

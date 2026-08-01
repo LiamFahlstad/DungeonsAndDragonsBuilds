@@ -17,7 +17,7 @@ from CharacterContent.Items import Items
 from CharacterContent.Invocations.InvocationFactory import InvocationFactory
 from CharacterContent.Spells.SpellFactory import SpellFactory
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
-from CharacterContent.ToolProficiencies.ToolProficiencies import ToolProficiency
+from CharacterContent.ToolProficiencies.Proficiencies import ToolProficiency
 from Utils import DamageCalculator, StringUtils
 
 

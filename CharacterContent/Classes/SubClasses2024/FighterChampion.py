@@ -7,7 +7,7 @@ from CharacterContent.Classes.BaseClasses.FighterBase import (
     FighterMulticlassBuilder,
     FighterCustomStarterClassArgs,
 )
-from Builds.CharacterSheetCreator import CharacterSheetData
+from Builds.CharacterSheetAccumulator import CharacterSheetData
 from Core.Definitions import FighterSubclass
 from CharacterContent.Features.SubClassFeatures.Fighter import FighterChampionFeatures
 from StatBlocks.SkillsStatBlock import FighterSkillsStatBlock

@@ -1,11 +1,11 @@
-from .base import (
+from .Base import (
     ItemRarity,
     ItemCategory,
     Item,
     ConsumableItem,
 )
-from .currency import Gold, Silver
-from .containers import (
+from .Currency import Gold, Silver
+from .Containers import (
     Quiver,
     Backpack,
     Chest,
@@ -19,7 +19,7 @@ from .containers import (
     CrossbowBoltCase,
     MapOrScrollCase,
 )
-from .tools import (
+from .Tools import (
     ThievesTools,
     Crowbar,
     ClimbersKit,
@@ -33,7 +33,7 @@ from .tools import (
     HuntingTrap,
     PortableRam,
 )
-from .consumables import (
+from .Consumables import (
     Candle,
     FlasksOfOil,
     Rations,
@@ -48,19 +48,19 @@ from .consumables import (
     HolyWater,
     SpellScroll,
 )
-from .ammunition import (
+from .Ammunition import (
     Arrows,
     Bolts,
     SlingBullets,
     FirearmBullets,
 )
-from .focus import (
+from .Focus import (
     ArcaneFocus,
     DruidicFocus,
     HolySymbol,
     ComponentPouch,
 )
-from .clothing import (
+from .Clothing import (
     Costume,
     FineClothes,
     DesertClothing,
@@ -74,7 +74,7 @@ from .clothing import (
     DevilMask,
     BrightFungalCloak,
 )
-from .wondrous import (
+from .Wondrous import (
     RobeOfLevitation,
     HeartseekersCompass,
     MinorDeathNote,
@@ -99,7 +99,7 @@ from .wondrous import (
     HobbyHorse,
     Typewriter,
 )
-from .placeholders import (
+from .Placeholders import (
     AnyMeleeWeaponPlaceholder,
     HeavyArmorPlaceholder,
     MediumArmorPlaceholder,
@@ -107,7 +107,7 @@ from .placeholders import (
     RangedWeaponsPlaceholder,
     RopePlaceholder,
 )
-from .gear import (
+from .Gear import (
     Caltrops,
     BallBearings,
     HoodedLantern,

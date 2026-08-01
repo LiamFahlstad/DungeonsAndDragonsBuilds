@@ -1,4 +1,4 @@
-from Builds import CharacterSheetCreator
+from Builds import CharacterSheetAccumulator
 from Core.Definitions import CreatureSize, Skill
 from CharacterContent.Features.SpeciesFeatures import KhoravarFeatures
 from CharacterContent.Species.SpeciesBuilder import SpeciesBuilder
@@ -20,8 +20,8 @@ class KhoravarSpeciesBuilder(SpeciesBuilder):
         self.size = size
         self.skill_versatility = skill_versatility
 
-    def build(self) -> CharacterSheetCreator.CharacterSheetData:
-        data = CharacterSheetCreator.CharacterSheetData()
+    def build(self) -> CharacterSheetAccumulator.CharacterSheetData:
+        data = CharacterSheetAccumulator.CharacterSheetData()
 
         data.speed = KhoravarFeatures.SPEED  # Given by your species
         data.size = self.size  # Given by your species

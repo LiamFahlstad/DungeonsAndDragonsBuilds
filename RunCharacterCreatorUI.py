@@ -12,7 +12,7 @@ existing build so you can tweak it.
 
 import argparse
 
-from Builds.CharacterCreator import ui
+from Builds.CharacterCreator import Ui as ui
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="D&D character creation UI")

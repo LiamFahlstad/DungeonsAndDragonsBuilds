@@ -3,7 +3,7 @@ from typing import Optional, TypeAlias
 import attr
 
 from CharacterContent.Classes.BaseClasses import ClassBuilder
-from Builds.CharacterSheetCreator import CharacterSheetData
+from Builds.CharacterSheetAccumulator import CharacterSheetData
 from Core.Definitions import Ability, ApplyWhen, CharacterClass, Skill
 from CharacterContent.Features.CharacterFeats import EpicBoon, GeneralFeats
 from CharacterContent.Items import Weapons

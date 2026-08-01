@@ -1,4 +1,4 @@
-from Builds import CharacterSheetCreator
+from Builds import CharacterSheetAccumulator
 from Core.Definitions import CreatureSize
 from CharacterContent.Features.SpeciesFeatures import DhampirFeatures
 from CharacterContent.Species.SpeciesBuilder import SpeciesBuilder
@@ -16,8 +16,8 @@ class DhampirSpeciesBuilder(SpeciesBuilder):
         self.character_level = character_level
         self.size = size
 
-    def build(self) -> CharacterSheetCreator.CharacterSheetData:
-        data = CharacterSheetCreator.CharacterSheetData()
+    def build(self) -> CharacterSheetAccumulator.CharacterSheetData:
+        data = CharacterSheetAccumulator.CharacterSheetData()
 
         data.speed = DhampirFeatures.SPEED  # Given by your species
         data.size = self.size  # Given by your species

@@ -7,7 +7,7 @@ from CharacterContent.Classes.BaseClasses.RangerBase import (
     RangerMulticlassBuilder,
     RangerCustomStarterClassArgs,
 )
-from Builds.CharacterSheetCreator import CharacterSheetData
+from Builds.CharacterSheetAccumulator import CharacterSheetData
 from Core.Definitions import RangerSubclass2014
 from CharacterContent.Features.SubClassFeatures2014.Ranger import RangerHunterFeatures
 from StatBlocks.SkillsStatBlock import RangerSkillsStatBlock

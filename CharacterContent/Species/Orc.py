@@ -1,4 +1,4 @@
-from Builds import CharacterSheetCreator
+from Builds import CharacterSheetAccumulator
 from CharacterContent.Features.SpeciesFeatures import OrcFeatures
 from CharacterContent.Species.SpeciesBuilder import SpeciesBuilder
 
@@ -11,8 +11,8 @@ class OrcSpeciesBuilder(SpeciesBuilder):
             name="Orc",
         )
 
-    def build(self) -> CharacterSheetCreator.CharacterSheetData:
-        data = CharacterSheetCreator.CharacterSheetData()
+    def build(self) -> CharacterSheetAccumulator.CharacterSheetData:
+        data = CharacterSheetAccumulator.CharacterSheetData()
 
         data.speed = OrcFeatures.SPEED  # Given by your species
         data.size = OrcFeatures.SIZE  # Given by your species

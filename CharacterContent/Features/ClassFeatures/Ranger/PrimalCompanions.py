@@ -3,7 +3,7 @@ from typing import Optional
 
 from Combat.Definitions import Alignment, ExtendedCombatantData, MonsterAbility, Size
 from Core.Definitions import Ability, CharacterClass, DamageType
-from CharacterContent.Features.ClassFeatures.CreatureStatBlocks import format_creature_stat_block
+from Utils.CreatureStatBlocks import format_creature_stat_block
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 _PRIMAL_BOND_TRAIT = MonsterAbility(

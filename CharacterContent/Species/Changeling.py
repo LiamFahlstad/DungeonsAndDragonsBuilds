@@ -1,4 +1,4 @@
-from Builds import CharacterSheetCreator
+from Builds import CharacterSheetAccumulator
 from Core.Definitions import CreatureSize, Skill
 from CharacterContent.Features.SpeciesFeatures import ChangelingFeatures
 from CharacterContent.Species.SpeciesBuilder import SpeciesBuilder
@@ -16,8 +16,8 @@ class ChangelingSpeciesBuilder(SpeciesBuilder):
         self.size = size
         self.instinct_skills = instinct_skills
 
-    def build(self) -> CharacterSheetCreator.CharacterSheetData:
-        data = CharacterSheetCreator.CharacterSheetData()
+    def build(self) -> CharacterSheetAccumulator.CharacterSheetData:
+        data = CharacterSheetAccumulator.CharacterSheetData()
 
         data.speed = ChangelingFeatures.SPEED  # Given by your species
         data.size = self.size  # Given by your species

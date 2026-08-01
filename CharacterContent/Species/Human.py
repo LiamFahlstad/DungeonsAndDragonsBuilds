@@ -1,4 +1,4 @@
-from Builds import CharacterSheetCreator
+from Builds import CharacterSheetAccumulator
 import Core.Definitions as Definitions
 from CharacterContent.Features.CharacterFeats import OriginFeats
 from CharacterContent.Features.SpeciesFeatures import HumanFeatures
@@ -17,8 +17,8 @@ class HumanSpeciesBuilder(SpeciesBuilder):
             name="Human",
         )
 
-    def build(self) -> CharacterSheetCreator.CharacterSheetData:
-        data = CharacterSheetCreator.CharacterSheetData()
+    def build(self) -> CharacterSheetAccumulator.CharacterSheetData:
+        data = CharacterSheetAccumulator.CharacterSheetData()
 
         data.speed = HumanFeatures.SPEED  # Given by your species
         data.size = HumanFeatures.SIZE  # Given by your species

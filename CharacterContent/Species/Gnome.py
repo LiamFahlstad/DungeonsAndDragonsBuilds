@@ -1,4 +1,4 @@
-from Builds import CharacterSheetCreator
+from Builds import CharacterSheetAccumulator
 import Core.Definitions as Definitions
 from Core.Definitions import Ability
 from CharacterContent.Features.SpeciesFeatures import GnomeFeatures
@@ -16,8 +16,8 @@ class ForestGnomeSpeciesBuilder(SpeciesBuilder):
             name="Forest Gnome",
         )
 
-    def build(self) -> CharacterSheetCreator.CharacterSheetData:
-        data = CharacterSheetCreator.CharacterSheetData()
+    def build(self) -> CharacterSheetAccumulator.CharacterSheetData:
+        data = CharacterSheetAccumulator.CharacterSheetData()
 
         data.speed = GnomeFeatures.SPEED  # Given by your species
         data.size = GnomeFeatures.SIZE  # Given by your species
@@ -43,8 +43,8 @@ class RockGnomeSpeciesBuilder(SpeciesBuilder):
             name="Rock Gnome",
         )
 
-    def build(self) -> CharacterSheetCreator.CharacterSheetData:
-        data = CharacterSheetCreator.CharacterSheetData()
+    def build(self) -> CharacterSheetAccumulator.CharacterSheetData:
+        data = CharacterSheetAccumulator.CharacterSheetData()
 
         data.speed = GnomeFeatures.SPEED  # Given by your species
         data.size = GnomeFeatures.SIZE  # Given by your species

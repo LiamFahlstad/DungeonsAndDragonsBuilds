@@ -1,7 +1,7 @@
 from typing import Type
 
 from Combat.Definitions import ExtendedCombatantData
-from CharacterContent.Features.ClassFeatures.CreatureStatBlocks import format_creature_stat_block
+from Utils.CreatureStatBlocks import format_creature_stat_block
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 

@@ -1,4 +1,4 @@
-from .enums import (
+from .Enums import (
     WeaponProperty,
     WeaponMastery,
     WeaponType,
@@ -6,7 +6,7 @@ from .enums import (
     WeaponsDamageTypes,
     WeaponsDamageRolls,
 )
-from .improvements import (
+from .Improvements import (
     ExtraDamage,
     WeaponImprovement,
     SetAttackRollBonus,
@@ -19,13 +19,13 @@ from .improvements import (
     AddExtraDamage,
     SetWeaponAbility,
 )
-from .base import (
+from .Base import (
     AbstractWeapon,
     weapon_matches_proficiency,
     is_proficient_with,
     UnarmedStrike,
 )
-from .simple_melee import (
+from .SimpleMelee import (
     Club,
     Dagger,
     Greatclub,
@@ -37,7 +37,7 @@ from .simple_melee import (
     Sickle,
     Spear,
 )
-from .martial_melee import (
+from .MartialMelee import (
     Battleaxe,
     Flail,
     Glaive,
@@ -57,7 +57,7 @@ from .martial_melee import (
     WarPick,
     Whip,
 )
-from .ranged import (
+from .Ranged import (
     Dart,
     LightCrossbow,
     Shortbow,
@@ -69,7 +69,7 @@ from .ranged import (
     Musket,
     Pistol,
 )
-from .magic import (
+from .Magic import (
     Nullblade,
     Bloodletter,
     HuntersHarpoon,
@@ -93,4 +93,4 @@ from .magic import (
     SkirmishersShortsword,
     VanguardsSpear,
 )
-from .writer import write_weapons_to_file
+from .Writer import write_weapons_to_file

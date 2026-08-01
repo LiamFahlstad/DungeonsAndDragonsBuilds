@@ -70,7 +70,7 @@ from CharacterContent.Spells.SpellLists import (
 )
 from StatBlocks.AbilitiesStatBlock import AbilitiesStatBlock
 from StatBlocks.SkillsStatBlock import DruidSkillsStatBlock
-from CharacterContent.ToolProficiencies.ToolProficiencies import HerbalismKit
+from CharacterContent.ToolProficiencies.Proficiencies import HerbalismKit
 
 # Circle land type is chosen independently at each subclass level (3, 5, 7, 9, 10).
 # Tropical early for Web/battlefield control, then Arid from level 5 on for Fireball,

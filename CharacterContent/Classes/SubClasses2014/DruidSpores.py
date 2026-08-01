@@ -7,7 +7,7 @@ from CharacterContent.Classes.BaseClasses.DruidBase import (
     DruidMulticlassBuilder,
     DruidCustomStarterClassArgs,
 )
-from Builds.CharacterSheetCreator import CharacterSheetData
+from Builds.CharacterSheetAccumulator import CharacterSheetData
 from Core.Definitions import DruidSubclass2014
 from CharacterContent.Features.SubClassFeatures2014.Druid import DruidSporesFeatures
 from StatBlocks.SkillsStatBlock import DruidSkillsStatBlock

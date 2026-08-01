@@ -7,7 +7,7 @@ from CharacterContent.Classes.BaseClasses.BardBase import (
     BardMulticlassBuilder,
     BardCustomStarterClassArgs,
 )
-from Builds.CharacterSheetCreator import CharacterSheetData
+from Builds.CharacterSheetAccumulator import CharacterSheetData
 from Core.Definitions import BardSubclass2014, Skill
 from CharacterContent.Features.SubClassFeatures2014.Bard import BardLoreFeatures
 from StatBlocks.SkillsStatBlock import BardSkillsStatBlock

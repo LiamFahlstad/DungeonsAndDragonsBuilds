@@ -5,7 +5,7 @@ from CharacterContent.Classes.BaseClasses.ClassBuilder import (
     MulticlassBuilder,
     StarterClassBuilder,
 )
-from Builds.CharacterSheetCreator import CharacterSheetData
+from Builds.CharacterSheetAccumulator import CharacterSheetData
 from CharacterContent.Species.SpeciesBuilder import SpeciesBuilder
 
 

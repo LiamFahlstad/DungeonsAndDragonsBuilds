@@ -5,7 +5,7 @@ import attr
 import Core.Definitions as Definitions
 from Combat.Definitions import ExtendedCombatantData
 from CharacterContent.Classes.BaseClasses import ClassBuilder
-from Builds.CharacterSheetCreator import CharacterSheetData
+from Builds.CharacterSheetAccumulator import CharacterSheetData
 from Core.Definitions import Ability, CharacterClass
 from CharacterContent.Features.CharacterFeats import EpicBoon, GeneralFeats
 from CharacterContent.Items import Armor, Weapons

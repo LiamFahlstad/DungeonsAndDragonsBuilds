@@ -1,4 +1,4 @@
-from Builds import CharacterSheetCreator
+from Builds import CharacterSheetAccumulator
 from CharacterContent.Features.SpeciesFeatures import DwarfFeatures
 from CharacterContent.Species.SpeciesBuilder import SpeciesBuilder
 
@@ -11,8 +11,8 @@ class DwarfSpeciesBuilder(SpeciesBuilder):
             name="Dwarf",
         )
 
-    def build(self) -> CharacterSheetCreator.CharacterSheetData:
-        data = CharacterSheetCreator.CharacterSheetData()
+    def build(self) -> CharacterSheetAccumulator.CharacterSheetData:
+        data = CharacterSheetAccumulator.CharacterSheetData()
 
         data.speed = DwarfFeatures.SPEED  # Given by your species
         data.size = DwarfFeatures.SIZE  # Given by your species

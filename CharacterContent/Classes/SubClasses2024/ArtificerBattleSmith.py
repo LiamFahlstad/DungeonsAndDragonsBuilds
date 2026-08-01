@@ -7,7 +7,7 @@ from CharacterContent.Classes.BaseClasses.ArtificerBase import (
     ArtificerMulticlassBuilder,
     ArtificerCustomStarterClassArgs,
 )
-from Builds.CharacterSheetCreator import CharacterSheetData
+from Builds.CharacterSheetAccumulator import CharacterSheetData
 from Core.Definitions import ArtificerSubclass
 from CharacterContent.Features.SubClassFeatures.Artificer import ArtificerBattleSmithFeatures
 from CharacterContent.Spells.SpellLists import (

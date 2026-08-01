@@ -7,7 +7,7 @@ from CharacterContent.Classes.BaseClasses.MonkBase import (
     MonkMulticlassBuilder,
     MonkCustomStarterClassArgs,
 )
-from Builds.CharacterSheetCreator import CharacterSheetData
+from Builds.CharacterSheetAccumulator import CharacterSheetData
 from Core.Definitions import Ability, MonkSubclass2014
 from CharacterContent.Features.SubClassFeatures2014.Monk import MonkKenseiFeatures
 from StatBlocks.SkillsStatBlock import MonkSkillsStatBlock

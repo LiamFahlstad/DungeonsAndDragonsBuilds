@@ -7,7 +7,7 @@ from CharacterContent.Classes.BaseClasses.BarbarianBase import (
     BarbarianMulticlassBuilder,
     BarbarianCustomStarterClassArgs,
 )
-from Builds.CharacterSheetCreator import CharacterSheetData
+from Builds.CharacterSheetAccumulator import CharacterSheetData
 from Core.Definitions import BarbarianSubclass2014
 from CharacterContent.Features.SubClassFeatures2014.Barbarian import BarbarianPathOfTheTotemWarriorFeatures
 from CharacterContent.Features.ClassFeatures.Barbarian import BarbarianFeatures
