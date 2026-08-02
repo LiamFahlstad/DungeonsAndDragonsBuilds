@@ -1,23 +1,6 @@
 from .Base import Item, ItemCategory, ItemRarity
 
 
-class Costume(Item):
-    def __init__(self, is_wearing: bool = True):
-        super().__init__(
-            "Costume",
-            rarity=ItemRarity.COMMON,
-            category=ItemCategory.ADVENTURING_GEAR,
-            slots=1,
-            description_text=(
-                "While wearing this costume, you have advantage on ability checks made to "
-                "impersonate the person or type of person it represents."
-            ),
-            is_wearing=is_wearing,
-            is_homebrew=False,
-            value=5,
-        )
-
-
 class BrightFungalCloak(Item):
     def __init__(self, is_wearing: bool = True):
         super().__init__(
@@ -66,36 +49,6 @@ class DevilMask(Item):
             is_wearing=is_wearing,
             is_homebrew=False,
             value=25,
-        )
-
-
-class GarbOfLightAndShadow(Item):
-    def __init__(self, is_wearing: bool = True):
-        super().__init__(
-            "Garb of Light and Shadow",
-            rarity=ItemRarity.COMMON,
-            category=ItemCategory.WONDROUS,
-            weight=None,
-            slots=1,
-            description_text="This garb appeals to Fey from one Domain of Delight, such as the Gloaming Court or the Summer Court. While wearing the garb, you have Advantage on ability checks to influence Fey associated with that Domain of Delight.",
-            is_wearing=is_wearing,
-            is_homebrew=False,
-            value=50,
-        )
-
-
-class GenieRobe(Item):
-    def __init__(self, is_wearing: bool = True):
-        super().__init__(
-            "Genie Robe",
-            rarity=ItemRarity.COMMON,
-            category=ItemCategory.WONDROUS,
-            weight=None,
-            slots=1,
-            description_text="This robe appeals to Elementals associated with a particular Elemental Plane (Air, Earth, Fire, Water). While wearing a Genie Robe, you have Advantage on ability checks made to influence Elementals associated with that plane.",
-            is_wearing=is_wearing,
-            is_homebrew=False,
-            value=50,
         )
 
 

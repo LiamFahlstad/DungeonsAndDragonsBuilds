@@ -1,20 +1,6 @@
-from Core.Definitions import Ability, Skill
-from CharacterContent.Features.Core.Improvements import AbilityScoreBonus, ArmorClassBonus, SkillBonus
+from Core.Definitions import Ability
+from CharacterContent.Features.Core.Improvements import AbilityScoreBonus, ArmorClassBonus
 from .Base import Item, ItemCategory, ItemRarity
-
-
-class Typewriter(Item):
-    def __init__(self):
-        super().__init__(
-            "Typewriter",
-            rarity=ItemRarity.COMMON,
-            category=ItemCategory.MUSICAL_INSTRUMENT,
-            slots=1,
-            description_text=(
-                "A mechanical typewriter that can also be used as a musical instrument, "
-                "producing rhythmic clacking sounds."
-            ),
-        )
 
 
 class NightVisionGoggles(Item):
@@ -22,39 +8,10 @@ class NightVisionGoggles(Item):
         super().__init__(
             "Nightvision Goggles",
             rarity=ItemRarity.UNCOMMON,
-            category=ItemCategory.WONDROUS_ITEM,
+            category=ItemCategory.WONDROUS,
             slots=1,
             description_text="While wearing these goggles, you gain darkvision out to 120 feet.",
             is_wearing=is_wearing,
-        )
-
-
-class ButterflyKnife(Item):
-    def __init__(self):
-        super().__init__(
-            "Butterfly Knife",
-            rarity=ItemRarity.COMMON,
-            category=ItemCategory.WEAPON,
-            slots=1,
-            description_text=(
-                "A small folding knife that can be quickly deployed. "
-                "Functions as a light melee weapon."
-            ),
-        )
-
-
-class Makarov(Item):
-    def __init__(self):
-        super().__init__(
-            "Makarov",
-            rarity=ItemRarity.UNCOMMON,
-            category=ItemCategory.WEAPON,
-            slots=1,
-            description_text=(
-                "In a fantasy realm, this pistol becomes a magical ranged weapon.\n\n"
-                "It has 4 charges. Each shot deals 2d6 + your Dexterity modifier damage. "
-                "The weapon regains all charges after a long rest."
-            ),
         )
 
 
@@ -63,7 +20,7 @@ class HobbyHorse(Item):
         super().__init__(
             "Käpphäst",
             rarity=ItemRarity.UNCOMMON,
-            category=ItemCategory.WONDROUS_ITEM,
+            category=ItemCategory.WONDROUS,
             slots=2,
             description_text=(
                 "A simple hobby horse that transforms into a real mount when brought into a fantasy realm.\n"
@@ -214,21 +171,6 @@ class Kamikaze(Item):
         )
 
 
-class FingerGunRing(Item):
-    def __init__(self, is_wearing: bool = True):
-        super().__init__(
-            "Ring of Finger Guns",
-            rarity=ItemRarity.COMMON,
-            category=ItemCategory.RING,
-            slots=0,
-            description_text=(
-                "While wearing this ring, forming finger guns and saying 'pew' creates a tiny harmless spark "
-                "and sound effect. The spark can light candles but deals no damage."
-            ),
-            is_wearing=is_wearing,
-        )
-
-
 class BadFriendGlasses(Item):
     def __init__(self, is_wearing: bool = True):
         super().__init__(
@@ -249,6 +191,41 @@ class BadFriendGlasses(Item):
 # ══════════════════════════════════════════════════════════════════════════════
 
 
+class GarbOfLightAndShadow(Item):
+    def __init__(self, is_wearing: bool = True):
+        super().__init__(
+            "Garb of Light and Shadow",
+            rarity=ItemRarity.COMMON,
+            category=ItemCategory.WONDROUS,
+            weight=None,
+            slots=1,
+            description_text="This garb appeals to Fey from one Domain of Delight, such as the Gloaming Court or the Summer Court. While wearing the garb, you have Advantage on ability checks to influence Fey associated with that Domain of Delight.",
+            is_wearing=is_wearing,
+            is_homebrew=False,
+            value=50,
+        )
+
+
+class GenieRobe(Item):
+    def __init__(self, is_wearing: bool = True):
+        super().__init__(
+            "Genie Robe",
+            rarity=ItemRarity.COMMON,
+            category=ItemCategory.WONDROUS,
+            weight=None,
+            slots=1,
+            description_text="This robe appeals to Elementals associated with a particular Elemental Plane (Air, Earth, Fire, Water). While wearing a Genie Robe, you have Advantage on ability checks made to influence Elementals associated with that plane.",
+            is_wearing=is_wearing,
+            is_homebrew=False,
+            value=50,
+        )
+
+
+# ══════════════════════════════════════════════════════════════════════════════
+# Mechanical Items (with CharacterImprovements)
+# ══════════════════════════════════════════════════════════════════════════════
+
+
 class CloakOfProtection(Item):
     """A magical cloak that grants +1 AC."""
 
@@ -257,39 +234,13 @@ class CloakOfProtection(Item):
             "Cloak of Protection",
             rarity=ItemRarity.UNCOMMON,
             requires_attunement=True,
-            category=ItemCategory.WONDROUS_ITEM,
+            category=ItemCategory.WONDROUS,
             description_text=(
                 "You gain a +1 bonus to AC while wearing this cloak.\n\n"
                 "This silken cloak shimmers with protective magic and feels warm to the touch."
             ),
             is_wearing=is_wearing,
             improvements=[ArmorClassBonus(1)],
-            is_homebrew=False,
-        )
-
-
-class PlusOneWeapon(Item):
-    """A magical weapon that grants +1 to ability scores (e.g. Dexterity for finesse weapons)."""
-
-    def __init__(
-        self, weapon_name: str = "Longsword", ability: Ability = Ability.DEXTERITY
-    ):
-        self.ability = ability
-        super().__init__(
-            f"+1 {weapon_name}",
-            rarity=ItemRarity.UNCOMMON,
-            category=ItemCategory.WEAPON,
-            description_text=(
-                f"This magical {weapon_name.lower()} grants you a +1 bonus to attack rolls and damage rolls made with it.\n\n"
-                "The blade gleams with enchantment."
-            ),
-            improvements=[
-                AbilityScoreBonus(
-                    bonuses=[(ability, 1)],
-                    total=1,
-                    error_prefix=f"+1 {weapon_name} bonus",
-                )
-            ],
             is_homebrew=False,
         )
 
@@ -302,7 +253,7 @@ class BracersOfArchery(Item):
             "Bracers of Archery",
             rarity=ItemRarity.UNCOMMON,
             requires_attunement=True,
-            category=ItemCategory.WONDROUS_ITEM,
+            category=ItemCategory.WONDROUS,
             description_text=(
                 "While wearing these bracers, you gain a +2 bonus to your Dexterity score.\n\n"
                 "These leather bracers are reinforced with magical sinew, enhancing the wielder's precision."
@@ -327,7 +278,7 @@ class GauntletsOfStrength(Item):
             "Gauntlets of Strength",
             rarity=ItemRarity.RARE,
             requires_attunement=True,
-            category=ItemCategory.WONDROUS_ITEM,
+            category=ItemCategory.WONDROUS,
             slots=0,
             description_text=(
                 "While wearing these gauntlets, your Strength score increases by 2.\n\n"
@@ -341,65 +292,4 @@ class GauntletsOfStrength(Item):
                     error_prefix="Gauntlets of Strength bonus",
                 )
             ],
-        )
-
-
-class RingOfIntellect(Item):
-    """A mystical ring that increases Intelligence by 2."""
-
-    def __init__(self, is_wearing: bool = True):
-        super().__init__(
-            "Ring of Intellect",
-            rarity=ItemRarity.RARE,
-            requires_attunement=True,
-            category=ItemCategory.RING,
-            description_text=(
-                "While wearing this ring, your Intelligence score increases by 2, as does your Intelligence saving throw.\n\n"
-                "This silver ring is inscribed with arcane runes that glow faintly when worn."
-            ),
-            is_wearing=is_wearing,
-            improvements=[
-                AbilityScoreBonus(
-                    bonuses=[(Ability.INTELLIGENCE, 2)],
-                    total=2,
-                    error_prefix="Ring of Intellect bonus",
-                )
-            ],
-        )
-
-
-class RingOfInvestigation(Item):
-    """A ring that grants +1 to Investigation checks."""
-
-    def __init__(self, is_wearing: bool = True):
-        super().__init__(
-            "Ring of Investigation",
-            rarity=ItemRarity.UNCOMMON,
-            requires_attunement=False,
-            category=ItemCategory.RING,
-            description_text=(
-                "While wearing this ring, you gain a +1 bonus to Intelligence (Investigation) checks.\n\n"
-                "A slender copper band set with a tiny magnifying lens that focuses the wearer's attention on overlooked details."
-            ),
-            is_wearing=is_wearing,
-            improvements=[
-                SkillBonus(Skill.INVESTIGATION, 1, source="Ring of Investigation")
-            ],
-        )
-
-
-# Placeholder Craftable Items (TODO: fill in real stats)
-
-
-class LockingSpellbook(Item):
-    def __init__(self):
-        super().__init__(
-            "Locking Spellbook",
-            rarity=ItemRarity.COMMON,
-            category=ItemCategory.GEAR,
-            weight=None,
-            slots=1,
-            description_text="This 100-page leather-bound tome can be used as a Spellbook. It is closed with a lock that comes with a key. As a Utilize action, a creature can try to pick the lock using Thieves' Tools, doing so with a successful DC 15 Dexterity (Sleight of Hand) check.",
-            is_homebrew=False,
-            value=35,
         )

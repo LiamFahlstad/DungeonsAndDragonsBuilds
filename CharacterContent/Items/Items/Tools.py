@@ -6,7 +6,7 @@ class ThievesTools(Item):
         super().__init__(
             "Thieves' Tools",
             rarity=ItemRarity.UNCOMMON,
-            category=ItemCategory.COMMON,
+            category=ItemCategory.TOOL,
             slots=1,
             description_text="Utilize: Pick a lock, or disarm a trap (DEX DC 15)",
             is_homebrew=False,
@@ -68,76 +68,6 @@ class GrapplingHook(Item):
         )
 
 
-class HuntingTrap(Item):
-    def __init__(self):
-        super().__init__(
-            "Hunting Trap",
-            rarity=ItemRarity.COMMON,
-            category=ItemCategory.GEAR,
-            weight=25,
-            slots=1,
-            description_text="As a Utilize action, you can set a Hunting Trap, which is a sawtooth steel ring that snaps shut when a creature steps on a pressure plate in the center. A creature that steps on the plate must succeed on a DC 13 Dexterity saving throw or take 1d4 Piercing damage and have its Speed reduced to 0 until the start of its next turn. A creature can use its action to make a DC 13 Strength (Athletics) check, freeing itself or another creature within its reach on a success.",
-            is_homebrew=False,
-            value=5,
-        )
-
-
-class Ladder(Item):
-    def __init__(self):
-        super().__init__(
-            "Ladder",
-            rarity=ItemRarity.COMMON,
-            category=ItemCategory.GEAR,
-            weight=25,
-            slots=1,
-            description_text="A Ladder is 10 feet tall. You must climb to move up or down it.",
-            is_homebrew=False,
-            value=0.1,
-        )
-
-
-class Lock(Item):
-    def __init__(self):
-        super().__init__(
-            "Lock",
-            rarity=ItemRarity.COMMON,
-            category=ItemCategory.GEAR,
-            weight=1,
-            slots=1,
-            description_text="A Lock comes with a key. Without the key, a creature can use Thieves' Tools to pick this Lock with a successful DC 15 Dexterity (Sleight of Hand) check.",
-            is_homebrew=False,
-            value=10,
-        )
-
-
-class Manacles(Item):
-    def __init__(self):
-        super().__init__(
-            "Manacles",
-            rarity=ItemRarity.COMMON,
-            category=ItemCategory.GEAR,
-            weight=6,
-            slots=1,
-            description_text="As a Utilize action, you can use Manacles to bind an unwilling Small or Medium creature within 5 feet of yourself that has the Grappled, Incapacitated, or Restrained condition if you succeed on a DC 13 Dexterity (Sleight of Hand) check. While bound, a creature has Disadvantage on attack rolls, and the creature is Restrained if the Manacles are attached to a chain or hook that is fixed in place. Escaping the Manacles requires a successful DC 20 Dexterity (Sleight of Hand) check as an action. Bursting them requires a successful DC 25 Strength (Athletics) check as an action. Each set of Manacles comes with a key.",
-            is_homebrew=False,
-            value=2,
-        )
-
-
-class Pole(Item):
-    def __init__(self):
-        super().__init__(
-            "Pole",
-            rarity=ItemRarity.COMMON,
-            category=ItemCategory.GEAR,
-            weight=7,
-            slots=1,
-            description_text="A Pole is 10 feet long. You can use it to touch something up to 10 feet away. If you must make a Strength (Athletics) check as part of a High or Long Jump, you can use the Pole to vault, giving yourself Advantage on the check.",
-            is_homebrew=False,
-            value=0.05,
-        )
-
-
 class PortableRam(Item):
     def __init__(self):
         super().__init__(
@@ -163,4 +93,37 @@ class Shovel(Item):
             description_text="Working for 1 hour, you can use a Shovel to dig a hole that is 5 feet on each side in soil or similar material.",
             is_homebrew=False,
             value=2,
+        )
+
+
+class Tinderbox(Item):
+    def __init__(self):
+        super().__init__(
+            "Tinderbox",
+            rarity=ItemRarity.COMMON,
+            category=ItemCategory.TOOL,
+            slots=0,
+            description_text=(
+                "A small container with flint, fire steel, and tinder used to start fires. "
+                "Lighting a torch, lamp, lantern, or similar exposed fuel takes a bonus action. "
+                "Lighting other fires takes 1 minute."
+            ),
+            is_homebrew=False,
+            value=0.5,
+        )
+
+
+class Mirror(Item):
+    def __init__(self):
+        super().__init__(
+            "Steel Mirror",
+            rarity=ItemRarity.COMMON,
+            category=ItemCategory.TOOL,
+            slots=0,
+            description_text=(
+                "A small handheld mirror useful for personal grooming. It can also be used "
+                "to peek around corners without exposing yourself or to reflect light as a signal."
+            ),
+            is_homebrew=False,
+            value=5,
         )

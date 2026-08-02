@@ -1,7 +1,7 @@
-from .Base import ConsumableItem, ItemCategory, ItemRarity
+from .Base import Item, ItemCategory, ItemRarity
 
 
-class PotionOfHealing(ConsumableItem):
+class PotionOfHealing(Item):
     def __init__(self):
         super().__init__(
             "Potion of Healing",
@@ -14,10 +14,11 @@ class PotionOfHealing(ConsumableItem):
             ),
             is_homebrew=False,
             value=50,
+            is_consumable=True,
         )
 
 
-class GreaterHealingPotion(ConsumableItem):
+class GreaterHealingPotion(Item):
     def __init__(self):
         super().__init__(
             "Greater Healing Potion",
@@ -30,10 +31,11 @@ class GreaterHealingPotion(ConsumableItem):
             ),
             is_homebrew=False,
             value=150,
+            is_consumable=True,
         )
 
 
-class SuperiorHealingPotion(ConsumableItem):
+class SuperiorHealingPotion(Item):
     def __init__(self):
         super().__init__(
             "Superior Healing Potion",
@@ -46,10 +48,11 @@ class SuperiorHealingPotion(ConsumableItem):
             ),
             is_homebrew=False,
             value=500,
+            is_consumable=True,
         )
 
 
-class SupremeHealingPotion(ConsumableItem):
+class SupremeHealingPotion(Item):
     def __init__(self):
         super().__init__(
             "Supreme Healing Potion",
@@ -62,10 +65,11 @@ class SupremeHealingPotion(ConsumableItem):
             ),
             is_homebrew=False,
             value=1500,
+            is_consumable=True,
         )
 
 
-class CleansingPotion(ConsumableItem):
+class CleansingPotion(Item):
     def __init__(self):
         super().__init__(
             "Cleansing Potion",
@@ -78,10 +82,11 @@ class CleansingPotion(ConsumableItem):
             ),
             is_homebrew=True,
             value=150,
+            is_consumable=True,
         )
 
 
-class RefreshingPotion(ConsumableItem):
+class RefreshingPotion(Item):
     def __init__(self):
         super().__init__(
             "Refreshing Potion",
@@ -94,10 +99,11 @@ class RefreshingPotion(ConsumableItem):
             ),
             is_homebrew=True,
             value=150,
+            is_consumable=True,
         )
 
 
-class PotionOfFeatherFall(ConsumableItem):
+class PotionOfFeatherFall(Item):
     def __init__(self):
         super().__init__(
             "Potion of Feather Fall",
@@ -110,10 +116,11 @@ class PotionOfFeatherFall(ConsumableItem):
             ),
             is_homebrew=True,
             value=150,
+            is_consumable=True,
         )
 
 
-class PotionOfInvisibility(ConsumableItem):
+class PotionOfInvisibility(Item):
     def __init__(self):
         super().__init__(
             "Potion of Invisibility",
@@ -126,10 +133,11 @@ class PotionOfInvisibility(ConsumableItem):
             ),
             is_homebrew=True,
             value=500,
+            is_consumable=True,
         )
 
 
-class PotionOfDisguise(ConsumableItem):
+class PotionOfDisguise(Item):
     def __init__(self):
         super().__init__(
             "Potion of Disguise",
@@ -142,10 +150,11 @@ class PotionOfDisguise(ConsumableItem):
             ),
             is_homebrew=True,
             value=150,
+            is_consumable=True,
         )
 
 
-class PotionOfSwiftness(ConsumableItem):
+class PotionOfSwiftness(Item):
     def __init__(self):
         super().__init__(
             "Potion of Swiftness",
@@ -158,10 +167,11 @@ class PotionOfSwiftness(ConsumableItem):
             ),
             is_homebrew=True,
             value=150,
+            is_consumable=True,
         )
 
 
-class PotionOfEnlarge(ConsumableItem):
+class PotionOfEnlarge(Item):
     def __init__(self):
         super().__init__(
             "Potion of Enlarge",
@@ -174,10 +184,11 @@ class PotionOfEnlarge(ConsumableItem):
             ),
             is_homebrew=True,
             value=150,
+            is_consumable=True,
         )
 
 
-class PotionOfTeleportation(ConsumableItem):
+class PotionOfTeleportation(Item):
     def __init__(self):
         super().__init__(
             "Potion of Teleportation",
@@ -190,10 +201,11 @@ class PotionOfTeleportation(ConsumableItem):
             ),
             is_homebrew=True,
             value=500,
+            is_consumable=True,
         )
 
 
-class PotionOfResistance(ConsumableItem):
+class PotionOfResistance(Item):
     def __init__(self):
         super().__init__(
             "Potion of Resistance",
@@ -206,10 +218,11 @@ class PotionOfResistance(ConsumableItem):
             ),
             is_homebrew=True,
             value=150,
+            is_consumable=True,
         )
 
 
-class PotionOfSpeed(ConsumableItem):
+class PotionOfSpeed(Item):
     def __init__(self):
         super().__init__(
             "Potion of Speed",
@@ -222,10 +235,11 @@ class PotionOfSpeed(ConsumableItem):
             ),
             is_homebrew=True,
             value=150,
+            is_consumable=True,
         )
 
 
-class GreaterPotionOfSpeed(ConsumableItem):
+class GreaterPotionOfSpeed(Item):
     def __init__(self):
         super().__init__(
             "Greater Potion of Speed",
@@ -238,10 +252,11 @@ class GreaterPotionOfSpeed(ConsumableItem):
             ),
             is_homebrew=True,
             value=150,
+            is_consumable=True,
         )
 
 
-class PotionOfResolve(ConsumableItem):
+class PotionOfResolve(Item):
     def __init__(self):
         super().__init__(
             "Potion of Resolve",
@@ -254,10 +269,11 @@ class PotionOfResolve(ConsumableItem):
             ),
             is_homebrew=True,
             value=500,
+            is_consumable=True,
         )
 
 
-class PotionOfGuarding(ConsumableItem):
+class PotionOfGuarding(Item):
     def __init__(self):
         super().__init__(
             "Potion of Guarding",
@@ -270,4 +286,5 @@ class PotionOfGuarding(ConsumableItem):
             ),
             is_homebrew=True,
             value=150,
+            is_consumable=True,
         )

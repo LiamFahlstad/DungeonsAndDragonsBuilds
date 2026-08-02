@@ -19,25 +19,22 @@ class ItemRarity(str, Enum):
 
 
 class ItemCategory(str, Enum):
-    ADVENTURING_GEAR = "adventuring gear"
-    AMMUNITION = "ammunition"
-    ARMOR = "armor"
-    CLOTHING = "clothing"
-    COMMON = "common"
-    CONSUMABLE = "consumable"
-    CONTAINER = "container"
-    CURRENCY = "currency"
-    FOCUS = "focus"
-    GEAR = "gear"
-    MUSICAL_INSTRUMENT = "musical instrument"
-    PLACEHOLDER = "placeholder"
-    POTION = "potion"
-    RING = "ring"
-    TOOL = "tool"
-    UTILITY = "utility"
-    WEAPON = "weapon"
-    WONDROUS = "wondrous"
-    WONDROUS_ITEM = "wondrous item"
+    ADVENTURING_GEAR = "adventuring gear"  # general exploration and survival equipment
+    AMMUNITION = "ammunition"  # arrows, bolts, bullets, and other ranged ammo
+    ARMOR = "armor"  # wearable armor
+    CLOTHING = "clothing"  # mundane, non-armor garments
+    COMMON = "common"  # items of no particular interest like paper and pen
+    CONTAINER = "container"  # bags, sacks, and other things that hold items
+    CURRENCY = "currency"  # coins and other forms of money
+    MUSICAL_INSTRUMENT = "musical instrument"  # instruments for playing music
+    POISON = "poison"  # substances applied to weapons or ammunition
+    POTION = "potion"  # drinkable magical liquids
+    SCROLL = "scroll"  # single-use spell scrolls
+    SPELL_FOCUS = "spell focus"  # spellcasting focuses and component pouches
+    TOOL = "tool"  # tools and kits used for skill checks or crafting
+    TRINKETS = "trinkets"  # rings, necklaces, and other small wearable curios
+    WEAPON = "weapon"  # melee and ranged weapons
+    WONDROUS = "wondrous"  # magical items
 
 
 class Item(Feature):
@@ -70,6 +67,7 @@ class Item(Feature):
         is_homebrew: bool = True,
         value: Optional[float] = None,
         is_wearing: Optional[bool] = None,
+        is_consumable: bool = False,
     ):
         # Populated by subclasses that compose CharacterImprovements before
         # calling Item.__init__ (see AbstractWeapon, AbstractArmor) - not
@@ -90,6 +88,7 @@ class Item(Feature):
         # not be displayed.
         self.value = value
         self.is_wearing = is_wearing
+        self.is_consumable = is_consumable
 
     def apply(self, character_stat_block: CharacterStatBlock):
         """Apply all improvements to the character - unless this is a
@@ -144,45 +143,6 @@ class Item(Feature):
         to already exist (see AbstractWeapon / AbstractArmor, which
         initialize it before calling base_stats())."""
         self.character_improvements.append(improvement)
-
-
-# ══════════════════════════════════════════════════════════════════════════════
-# ConsumableItem: Items consumed on use
-# ══════════════════════════════════════════════════════════════════════════════
-
-
-class ConsumableItem(Item):
-    """
-    An item consumed on use (potions, rations, torches, etc.).
-    These items track usage via checkboxes on the character sheet.
-    """
-
-    def __init__(
-        self,
-        name: str,
-        rarity: ItemRarity = ItemRarity.COMMON,
-        category: ItemCategory = ItemCategory.CONSUMABLE,
-        weight: Optional[float] = None,
-        slots: int = 1,
-        description_text: str = "",
-        improvements: Optional[list[CharacterImprovement]] = None,
-        is_homebrew: bool = True,
-        value: Optional[float] = None,
-    ):
-        super().__init__(
-            name=name,
-            rarity=rarity,
-            requires_attunement=False,
-            category=category,
-            weight=weight,
-            slots=slots,
-            description_text=description_text,
-            improvements=improvements,
-            is_homebrew=is_homebrew,
-            value=value,
-        )
-        # Consumables are typically never attuned
-        self.requires_attunement = False
 
 
 # ══════════════════════════════════════════════════════════════════════════════

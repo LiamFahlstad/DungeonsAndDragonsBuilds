@@ -209,7 +209,7 @@ class LeatherworkersTools(ToolProficiency):
             weight=5.0,
             cost=5,
             utilize="Add a design to a leather item (DC 10)",
-            craftables=[Weapons.Sling(), Weapons.Whip(), Items.HideArmor(), Armor.LeatherArmor(), Armor.StuddedLeatherArmor(), Items.Backpack(), Items.CrossbowBoltCase(), Items.MapOrScrollCase(), Items.Parchment(), Items.Pouch(), Items.Quiver(), Items.Waterskin()],
+            craftables=[Weapons.Sling(), Weapons.Whip(), Armor.LeatherArmor(), Armor.StuddedLeatherArmor(), Items.Backpack(), Items.CrossbowBoltCase(), Items.MapOrScrollCase(), Items.Parchment(), Items.Pouch(), Items.Quiver(), Items.Waterskin()],
         )
 
 
@@ -261,7 +261,7 @@ class SmithsTools(ToolProficiency):
             weight=8.0,
             cost=20,
             utilize="Pry open a door or container (DC 20)",
-            craftables=[Items.AnyMeleeWeaponPlaceholder(), Items.MediumArmorPlaceholder(), Items.HeavyArmorPlaceholder(), Items.BallBearings(), Items.Bucket(), Items.Caltrops(), Items.Chain(), Items.Crowbar(), Items.FirearmBullets(), Items.GrapplingHook(), Items.IronPot(), Items.IronSpikes(), Items.SlingBullets()],
+            craftables=[Items.BallBearings(), Items.Bucket(), Items.Caltrops(), Items.Chain(), Items.Crowbar(), Items.GrapplingHook(), Items.IronPot(), Items.IronSpikes()],
         )
 
 
@@ -274,7 +274,7 @@ class TinkersTools(ToolProficiency):
             weight=10.0,
             cost=50,
             utilize="Assemble a Tiny item composed of scrap, which falls apart in 1 minute (DC 20)",
-            craftables=[Weapons.Musket(), Weapons.Pistol(), Items.Bell(), Items.BullseyeLantern(), Items.Flask(), Items.HoodedLantern(), Items.HuntingTrap(), Items.Lock(), Items.Manacles(), Items.MirrorPlaceholder(), Items.Shovel(), Items.SignalWhistle(), Items.Tinderbox()],
+            craftables=[Weapons.Musket(), Weapons.Pistol(), Items.Bell(), Items.BullseyeLantern(), Items.Flask(), Items.HoodedLantern(), Items.HuntingTrap(), Items.Lock(), Items.Manacles(), Items.Mirror(), Items.Shovel(), Items.SignalWhistle(), Items.Tinderbox()],
         )
 
 
@@ -287,7 +287,7 @@ class WeaversTools(ToolProficiency):
             weight=5.0,
             cost=1,
             utilize="Mend a tear in clothing (DC 10), or sew a Tiny design (DC 10)",
-            craftables=[Items.PaddedArmor(), Items.Basket(), Items.Bedroll(), Items.Blanket(), Items.FineClothes(), Items.Net(), Items.Robe(), Items.RopePlaceholder(), Items.Sack(), Items.String(), Items.Tent(), Items.TravelersClothes()],
+            craftables=[Items.Basket(), Items.Bedroll(), Items.Blanket(), Items.FineClothes(), Items.Net(), Items.Robe(), Items.Rope(), Items.Sack(), Items.String(), Items.Tent(), Items.TravelersClothes()],
         )
 
 
@@ -300,7 +300,7 @@ class WoodcarversTools(ToolProficiency):
             weight=5.0,
             cost=1,
             utilize="Carve a pattern in wood (DC 10)",
-            craftables=[Weapons.Club(), Weapons.Greatclub(), Weapons.Quarterstaff(), Items.RangedWeaponsPlaceholder(), Items.ArcaneFocus(), Items.Arrows(), Items.Bolts(), Items.DruidicFocus(), Items.InkPen(), Items.Needles()],
+            craftables=[Weapons.Club(), Weapons.Greatclub(), Weapons.Quarterstaff(), Items.ArcaneFocus(), Items.Arrows(), Items.DruidicFocus(), Items.InkPen()],
         )
 
 

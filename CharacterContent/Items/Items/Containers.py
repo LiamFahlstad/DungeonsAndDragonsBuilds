@@ -1,4 +1,5 @@
 from CharacterContent.Features.Core.Improvements import CarryingCapacityBonus
+
 from .Base import Item, ItemCategory, ItemRarity
 
 
@@ -7,7 +8,7 @@ class Quiver(Item):
         super().__init__(
             "Quiver",
             rarity=ItemRarity.UNCOMMON,
-            category=ItemCategory.COMMON,
+            category=ItemCategory.CONTAINER,
             slots=1,
             description_text="A regular quiver",
             is_homebrew=False,
@@ -38,7 +39,7 @@ class Barrel(Item):
         super().__init__(
             "Barrel",
             rarity=ItemRarity.COMMON,
-            category=ItemCategory.GEAR,
+            category=ItemCategory.CONTAINER,
             weight=70,
             slots=1,
             description_text="A Barrel holds up to 40 gallons of liquid or up to 4 cubic feet of dry goods.",
@@ -52,7 +53,7 @@ class Basket(Item):
         super().__init__(
             "Basket",
             rarity=ItemRarity.COMMON,
-            category=ItemCategory.GEAR,
+            category=ItemCategory.CONTAINER,
             weight=2,
             slots=1,
             description_text="A Basket holds up to 40 pounds within 2 cubic feet.",
@@ -66,7 +67,7 @@ class Bucket(Item):
         super().__init__(
             "Bucket",
             rarity=ItemRarity.COMMON,
-            category=ItemCategory.GEAR,
+            category=ItemCategory.CONTAINER,
             weight=2,
             slots=1,
             description_text="A Bucket holds up to half a cubic foot of contents.",
@@ -100,20 +101,6 @@ class CrossbowBoltCase(Item):
             description_text="A Crossbow Bolt Case holds up to 20 Bolts.",
             is_homebrew=False,
             value=1,
-        )
-
-
-class IronPot(Item):
-    def __init__(self):
-        super().__init__(
-            "Iron Pot",
-            rarity=ItemRarity.COMMON,
-            category=ItemCategory.GEAR,
-            weight=10,
-            slots=1,
-            description_text="An Iron Pot holds up to 1 gallon.",
-            is_homebrew=False,
-            value=2,
         )
 
 
@@ -170,4 +157,59 @@ class Sack(Item):
             description_text="A Sack holds up to 30 pounds within 1 cubic foot.",
             is_homebrew=False,
             value=0.01,
+        )
+
+
+class Waterskin(Item):
+    def __init__(self):
+        super().__init__(
+            "Waterskin",
+            rarity=ItemRarity.COMMON,
+            category=ItemCategory.CONTAINER,
+            slots=1,
+            description_text="Holds up to 4 pints of liquid. Essential for survival, as insufficient water can lead to dehydration.",
+            is_homebrew=False,
+            value=0.2,
+        )
+
+
+class Flask(Item):
+    def __init__(self):
+        super().__init__(
+            "Flask",
+            rarity=ItemRarity.COMMON,
+            category=ItemCategory.CONTAINER,
+            weight=1,
+            slots=1,
+            description_text="A Flask holds up to 1 pint.",
+            is_homebrew=False,
+            value=0.02,
+        )
+
+
+class GlassBottle(Item):
+    def __init__(self):
+        super().__init__(
+            "Glass Bottle",
+            rarity=ItemRarity.COMMON,
+            category=ItemCategory.CONTAINER,
+            weight=2,
+            slots=1,
+            description_text="A Glass Bottle holds up to 1½ pints.",
+            is_homebrew=False,
+            value=2,
+        )
+
+
+class Vial(Item):
+    def __init__(self):
+        super().__init__(
+            "Vial",
+            rarity=ItemRarity.COMMON,
+            category=ItemCategory.CONTAINER,
+            weight=None,
+            slots=1,
+            description_text="A Vial holds up to 4 ounces.",
+            is_homebrew=False,
+            value=1,
         )
