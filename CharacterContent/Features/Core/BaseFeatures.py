@@ -1,7 +1,125 @@
 from typing import TextIO
 
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
-from Utils import StringUtils
+from Utils import Html
+
+FEATURE_CARD_CSS = """/* ── Feature cards ───────────────────────────────────────────────── */
+        .feature-card {
+            border: 1px solid #b89060;
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 0 0 0.55rem 0;
+            max-width: none;
+            padding: 0;
+        }
+
+        .feature-header {
+            display: flex;
+            align-items: baseline;
+            justify-content: space-between;
+            gap: 0.8rem;
+            padding: 5px 10px;
+            border-bottom: 2px solid #9a7040;
+            max-width: none;
+            margin: 0;
+        }
+
+        .feature-name {
+            font-size: 1rem;
+            font-weight: 700;
+            color: #4a3020;
+            letter-spacing: 0.02em;
+        }
+
+        .feature-origin {
+            font-size: 0.75rem;
+            color: #9a7040;
+            font-style: italic;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+
+        .feature-body {
+            padding: 0.4rem 0.7rem;
+            font-size: 0.88rem;
+            max-width: none;
+            margin: 0;
+        }
+
+        .feature-body p {
+            margin: 0.3em 0;
+        }
+
+        .feature-body ul,
+        .feature-body ol {
+            margin: 0.3em 0 0.3em 1.2em;
+        }
+
+        /* Tables embedded inside feature descriptions (e.g. item/plan lists) */
+        .feature-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.82rem;
+            margin: 0.4rem 0;
+        }
+
+        .feature-table td,
+        .feature-table th {
+            border: 1px solid var(--border-color);
+            padding: 3px 7px;
+            vertical-align: top;
+            text-align: left;
+        }
+
+        .feature-table th {
+            color: #3a2c1c;
+            font-weight: 700;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            background: #f4ede0;
+            border-bottom: 2px solid #9a7040;
+        }
+
+        .feature-table tr:nth-child(even) td {
+            background: #faf7f2;
+        }
+
+        /* Feature upgrade blocks (nested inside .feature-body) */
+        .feature-upgrade {
+            margin-top: 0.5rem;
+            border-left: 3px solid #9abbe0;
+            border-radius: 0 3px 3px 0;
+            padding: 0.3rem 0.6rem;
+            max-width: none;
+        }
+
+        .feature-upgrade-label {
+            display: block;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #3a6090;
+            margin-bottom: 0.15rem;
+        }
+
+        .feature-upgrade-body {
+            font-size: 0.85rem;
+            color: #333;
+            max-width: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .inv-source {
+            font-size: 0.75em;
+            color: #999;
+            font-style: italic;
+            margin-top: 0.35em;
+        }
+
+        """
 
 
 class Feature:
@@ -52,7 +170,7 @@ class Feature:
 
     @staticmethod
     def _bolden_line(text: str) -> str:
-        from Utils.StringUtils import _bold_prefix
+        from Utils.Html import _bold_prefix
 
         bolded = _bold_prefix(text, ".", 5)
         if bolded is not None:
@@ -64,8 +182,8 @@ class Feature:
 
     @staticmethod
     def _description_to_html(description: str) -> str:
-        processed = StringUtils.boxes_to_html(description)
-        processed = StringUtils.tables_to_html(processed)
+        processed = Html.boxes_to_html(description)
+        processed = Html.tables_to_html(processed)
 
         BULLET_PREFIXES = [
             ("            > ", 3),
@@ -93,7 +211,7 @@ class Feature:
             for prefix, level in BULLET_PREFIXES:
                 if line.startswith(prefix):
                     bullet_level = level
-                    bullet_text = line[len(prefix):]
+                    bullet_text = line[len(prefix) :]
                     break
 
             if bullet_level > 0:

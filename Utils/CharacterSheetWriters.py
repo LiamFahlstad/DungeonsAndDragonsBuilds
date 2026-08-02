@@ -1,24 +1,25 @@
 import pathlib
-import re
 from typing import Optional, TextIO
 
 import Core.Definitions as Definitions
-from Core.Definitions import Ability, DiceRollCondition, Die
 from CharacterContent.Features.CombatFeatures.FightingStyles import FightingStyle
-from CharacterContent.Features.Core.BaseFeatures import Feature
-from CharacterContent.Items import Armor
+from CharacterContent.Features.Core.BaseFeatures import FEATURE_CARD_CSS, Feature
+from CharacterContent.Invocations.InvocationFactory import InvocationFactory
+from CharacterContent.Items import Armor, Items
 from CharacterContent.Items.Weapons import (
     AbstractWeapon,
     UnarmedStrike,
     WeaponProficiency,
     write_weapons_to_file,
 )
-from CharacterContent.Items import Items
-from CharacterContent.Invocations.InvocationFactory import InvocationFactory
+from CharacterContent.Items.Weapons.Writer import WEAPON_CARD_CSS
 from CharacterContent.Spells.SpellFactory import SpellFactory
-from StatBlocks.CharacterStatBlock import CharacterStatBlock
+from CharacterContent.Spells.SpellFactory.Writer import SPELL_CARD_CSS
 from CharacterContent.ToolProficiencies.Proficiencies import ToolProficiency
-from Utils import DamageCalculator, StringUtils
+from Core.Definitions import Ability, DiceRollCondition, Die
+from StatBlocks.CharacterStatBlock import CharacterStatBlock
+from Utils import DamageCalculator, Html
+from Utils.CreatureStatBlocks import WILDSHAPE_CARD_CSS
 
 
 class HtmlCharacterSheetWriter:
@@ -52,14 +53,6 @@ class HtmlCharacterSheetWriter:
                 weapon.player_has_mastery = True
 
     @staticmethod
-    def _write_table_row(file: TextIO, cells: list, tr_class: str = ""):
-        cls = f" class='{tr_class}'" if tr_class else ""
-        file.write(f"<tr{cls}>")
-        for cell in cells:
-            file.write(f"<td>{cell}</td>")
-        file.write("</tr>\n")
-
-    @staticmethod
     def _description_or_dash(description: str | None) -> str:
         return description if description else "-"
 
@@ -79,54 +72,6 @@ class HtmlCharacterSheetWriter:
             write_fn(item, file)
             if i < len(items) - 1:
                 file.write("<hr>\n")
-
-    @staticmethod
-    def _write_item_table(file: TextIO, title: str, rows: list[tuple[str, str]]):
-        file.write("<table class='item-table'>\n")
-        file.write("<tr>\n")
-        file.write(f"<th class='item-title' colspan='2'>{title}</th>\n")
-        file.write("</tr>\n")
-
-        for label, value in rows:
-            file.write("<tr>")
-            file.write(f"<td class='item-label'>{label}</td>")
-            file.write(f"<td class='item-value'>{value}</td>")
-            file.write("</tr>\n")
-
-        file.write("</table>\n")
-
-    @staticmethod
-    def _write_slot_item_table(
-        file: TextIO, title: str, rows: list[tuple[str, str, int]]
-    ):
-        """Inventory table with slot cost, carry quantity, and left-behind tracking."""
-        file.write("<table class='item-table'>\n")
-        file.write("<tr>\n")
-        file.write(f"<th class='item-title'>{title}</th>\n")
-        file.write("<th class='item-title item-col-narrow'>Slots</th>\n")
-        file.write("<th class='item-title item-col-carry'>Carry</th>\n")
-        file.write("<th class='item-title item-col-leftbehind'>Left Behind</th>\n")
-        file.write("</tr>\n")
-
-        for label, description, slots in rows:
-            plain_label = re.sub(r"<span[^>]*>.*?</span>", "", label)
-            plain_label = re.sub(r"<[^>]*>", "", plain_label).strip()
-            leftbehind_id = (
-                plain_label.replace(" ", "_").replace("(", "").replace(")", "")
-                + "_leftbehind"
-            )
-            file.write("<tr>\n")
-            file.write(
-                f"<td class='item-entry'><strong>{label}</strong><br/>{description}</td>\n"
-            )
-            file.write(f"<td style='text-align: center;'>{slots}</td>\n")
-            file.write("<td></td>\n")
-            file.write(
-                f"<td class='item-leftbehind'><input type='checkbox' id='{leftbehind_id}_check' name='{leftbehind_id}_check'/></td>\n"
-            )
-            file.write("</tr>\n")
-
-        file.write("</table>\n")
 
     @staticmethod
     def _worn_tag(
@@ -270,7 +215,7 @@ class HtmlCharacterSheetWriter:
                 if character.is_proficient_in_saving_throw(ability)
                 else ""
             )
-            self._write_table_row(file, row, tr_class)
+            Html.write_table_row(file, row, tr_class)
 
         file.write("</table>\n<br>\n")
 
@@ -408,7 +353,7 @@ class HtmlCharacterSheetWriter:
                     ),
                     character.get_skill_ability(skill).value,
                 ]
-                self._write_table_row(file, row, tr_class)
+                Html.write_table_row(file, row, tr_class)
 
         if skill_config == Definitions.SkillConfig.HOMEBREW:
             for skill in Definitions.HomeBrewSkill.list_sorted():
@@ -449,7 +394,7 @@ class HtmlCharacterSheetWriter:
                     ),
                     character.get_skill_ability(possible_skills[0]).value,
                 ]
-                self._write_table_row(file, row, tr_class)
+                Html.write_table_row(file, row, tr_class)
 
         file.write("</table>\n<br>\n")
 
@@ -542,7 +487,7 @@ class HtmlCharacterSheetWriter:
                 name, body = desc.split(": ", 1)
             else:
                 name, body = "Fighting Style", desc
-            processed_body = StringUtils.boxes_to_html(body)
+            processed_body = Html.boxes_to_html(body)
             file.write("<div class='feature-card'>\n")
             file.write("<div class='feature-header'>\n")
             file.write(f"<span class='feature-name'>{name}</span>\n")
@@ -585,7 +530,7 @@ class HtmlCharacterSheetWriter:
                 file.write(
                     f"<p><strong>Prerequisite:</strong> {invocation.prerequisite}</p>\n"
                 )
-            processed_desc = StringUtils.boxes_to_html(invocation.description)
+            processed_desc = Html.boxes_to_html(invocation.description)
             for para in processed_desc.split("\n"):
                 if para.strip():
                     file.write(f"<p>{para.strip()}</p>\n")
@@ -596,28 +541,11 @@ class HtmlCharacterSheetWriter:
 
         file.write("<br class='section-gap'>\n")
 
-    @staticmethod
-    def _write_slot_table(slots: dict[int, int], file: TextIO, reset_label: str):
-        file.write("<table class='stat-table'>\n")
-        file.write("<tr>")
-        for level in slots:
-            file.write(f"<th>Level {level}</th>")
-        file.write("</tr>\n<tr>")
-        for count in slots.values():
-            boxes_html = (
-                '<div class="slot-box-group">'
-                + '<span class="slot-box"></span>' * count
-                + "</div>"
-            )
-            file.write(f"<td>{boxes_html}</td>")
-        file.write("</tr>\n</table>\n")
-        file.write(f"<span class='slot-reset-label'>{reset_label}</span>\n")
-
     def _write_pact_magic_slots(self, character: CharacterStatBlock, file: TextIO):
         if not character.pact_magic_slots:
             return
         file.write("<h2>Pact Magic Slots</h2>\n")
-        self._write_slot_table(
+        Html.write_slot_table(
             character.pact_magic_slots, file, "Regained on: Short Rest or Long Rest"
         )
         file.write("<br class='section-gap'>\n")
@@ -627,7 +555,7 @@ class HtmlCharacterSheetWriter:
             return
 
         file.write("<h2>Spell Slots</h2>\n")
-        self._write_slot_table(
+        Html.write_slot_table(
             character.get_spell_slots(), file, "Regained on: Long Rest"
         )
         file.write("<br class='section-gap'>\n")
@@ -758,7 +686,7 @@ class HtmlCharacterSheetWriter:
         for i, (title, rows) in enumerate(sections):
             if i > 0:
                 file.write("<hr>")
-            self._write_slot_item_table(file, title, rows)
+            Html.write_slot_item_table(file, title, rows)
 
         file.write("<br class='section-gap'>\n")
 
@@ -778,1018 +706,18 @@ class HtmlCharacterSheetWriter:
             (tool_proficiency.name, tool_proficiency.get_description(character))
             for tool_proficiency in sorted_tool_proficiencies
         ]
-        self._write_item_table(file, "Other Tool Proficiencies", proficiency_rows)
+        Html.write_item_table(file, "Other Tool Proficiencies", proficiency_rows)
 
         file.write("<br class='section-gap'>\n")
 
     def _get_css_style(self) -> str:
-        return """
-        <style>
-        @import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap');
-
-        :root {
-            --text-color: #222;
-            --muted-color: #555;
-            --border-color: #ddd;
-        }
-
-        html {
-            font-size: 14px;
-        }
-
-        body {
-            font-family: "EB Garamond", Garamond, "Times New Roman", serif;
-            line-height: 1.5;
-            color: var(--text-color);
-            margin: 0;
-            padding: 1.5rem;
-        }
-
-        div {
-            max-width: 700px;
-            margin: 0 auto;
-            padding: 0 0.5rem;
-        }
-
-        p {
-            margin: 0.5em 0;
-        }
-
-        h1 {
-            color: #3a2c1c;
-            border-bottom: 3px solid #9a7040;
-            padding-bottom: 0.2em;
-            margin: 0 0 1rem 0;
-            font-size: 1.6rem;
-            letter-spacing: 0.02em;
-        }
-
-        h2 {
-            color: #3a2c1c;
-            border-bottom: 2px solid #9a7040;
-            padding-bottom: 0.12em;
-            margin: 1.1rem 0 0.4rem 0;
-            font-size: 1.2rem;
-            letter-spacing: 0.02em;
-        }
-
-        ul, ol {
-            margin: 0.5em 0 0.5em 1.2em;
-        }
-
-        @media print {
-            body {
-                padding: 0;
-                font-size: 10pt;
-            }
-
-            div {
-                max-width: 100%;
-            }
-
-            h1, h2, h3 {
-                page-break-after: avoid;
-            }
-
-            p, pre, ul, ol {
-                page-break-inside: auto;
-            }
-
-            .page-break {
-                display: none;
-            }
-
-            /* Collapse inter-section <br> gaps (but not content line breaks) */
-            br.section-gap {
-                display: none;
-            }
-
-            h1 {
-                margin: 0 0 0.3rem 0;
-            }
-
-            h2 {
-                margin: 0.3em 0 0.1em;
-            }
-
-            table.stat-table {
-                margin-bottom: 0.4rem;
-            }
-
-            table.stat-table th,
-            table.stat-table td {
-                padding: 3px 6px;
-            }
-        }
-
-        /* Forces a page break before the element in print/PDF */
-        .print-page-break {
-            break-before: page;
-        }
-
-        /* Side-by-side section layout — overrides the global div rule */
-        .section-row {
-            display: flex;
-            gap: 1.5rem;
-            align-items: flex-start;
-            max-width: none;
-            margin: 0;
-            padding: 0;
-        }
-
-        .section-col {
-            flex: 1;
-            min-width: 0;
-            max-width: none;
-            margin: 0;
-            padding: 0;
-        }
-
-        .section-col table.stat-table {
-            width: 100%;
-        }
-
-        /* Stat tables: general info, combat, abilities, skills, spell slots */
-        table.stat-table {
-            border-collapse: collapse;
-            font-size: 0.85rem;
-            margin: 0 0 0.75rem 0;
-        }
-
-        table.stat-table th,
-        table.stat-table td {
-            border: 1px solid #c4b49a;
-            padding: 5px 10px;
-            vertical-align: middle;
-            text-align: left;
-        }
-
-        table.stat-table th {
-            color: #3a2c1c;
-            font-weight: 700;
-            font-size: 0.78rem;
-            text-transform: uppercase;
-            letter-spacing: 0.06em;
-            white-space: nowrap;
-            border-bottom: 2px solid #3a2c1c;
-        }
-
-        /* Blank, hand-fillable XP column - widened to leave writing room */
-        table.stat-table td.xp-cell {
-            min-width: 4rem;
-        }
-
-        table.stat-table tr.st-proficient td {
-            color: #2e6e3e;
-        }
-
-        table.stat-table tr.st-proficient td:first-child {
-            font-weight: 700;
-        }
-
-        table.stat-table tr.st-expertise td {
-            color: #8a6200;
-        }
-
-        table.stat-table tr.st-expertise td:first-child {
-            font-weight: 700;
-        }
-
-        /* Expertise badge styling */
-        .skill-expertise {
-            display: inline-block;
-            border: 1px solid #d4a747;
-            color: #8a6200;
-            padding: 0 5px;
-            border-radius: 3px;
-            font-weight: 700;
-            font-size: 0.85em;
-        }
-
-        /* Spell slot checkboxes */
-        .slot-box {
-            display: inline-block;
-            width: 1.6em;
-            height: 1.6em;
-            border: 1px solid currentColor;
-            box-sizing: border-box;
-            border-radius: 0.2em;
-            vertical-align: middle;
-        }
-
-        .slot-box-group {
-            display: inline-flex;
-            gap: 0.5em;
-            align-items: center;
-            margin: 0.35em 0;
-        }
-
-        .slot-reset-label {
-            display: block;
-            font-size: 0.75em;
-            font-style: italic;
-            color: #666;
-            margin-top: 0.1em;
-            margin-bottom: 0.4em;
-        }
-
-        /* Item and tool proficiency tables */
-        .item-table {
-            width: 100%;
-            border-collapse: separate;
-            border-spacing: 0 8px;
-            font-size: 0.85rem;
-            margin: 0.25rem 0;
-        }
-
-        .item-table td, .item-table th {
-            border: 1px solid var(--border-color);
-            padding: 3px 5px;
-            vertical-align: top;
-        }
-
-        .item-title {
-            color: #3a6e4a;
-            font-size: 0.78rem;
-            font-weight: 700;
-            text-align: left;
-            text-transform: uppercase;
-            letter-spacing: 0.06em;
-            border-bottom: 2px solid #6a9a7a !important;
-        }
-
-        .item-label {
-            font-weight: 600;
-            white-space: nowrap;
-            width: 1%;
-        }
-
-        .item-value {
-            width: auto;
-        }
-
-        /* Carrying capacity: one column of slot checkboxes per source */
-        .capacity-table {
-            border-collapse: collapse;
-            font-size: 0.85rem;
-            margin: 0.25rem 0 0.5rem 0;
-        }
-
-        .capacity-table th,
-        .capacity-table td {
-            border: 1px solid var(--border-color);
-            padding: 4px 8px;
-            text-align: center;
-            vertical-align: middle;
-        }
-
-        .capacity-table .slot-box-group {
-            flex-wrap: wrap;
-            max-width: 12em;
-        }
-
-        /* Item inventory rows: name + description, wraps normally */
-        .item-entry strong {
-            color: #3a6e4a;
-        }
-
-        .item-col-narrow {
-            width: 3em;
-            text-align: center;
-        }
-
-        .item-col-carry {
-            width: 4.5em;
-            text-align: center;
-        }
-
-        .item-col-leftbehind {
-            width: 9em;
-        }
-
-        .item-leftbehind input[type='checkbox'] {
-            vertical-align: middle;
-        }
-
-        /* Individual item rows styled as cards */
-        .item-table tr:not(:first-child) td {
-            border: 2px solid #a4c8b0;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
-            padding: 5px 7px;
-        }
-
-        .item-table tr:not(:first-child) td:first-child {
-            border-radius: 4px 0 0 4px;
-        }
-
-        .item-table tr:not(:first-child) td:last-child {
-            border-radius: 0 4px 4px 0;
-        }
-
-        /* ── Spell cards ──────────────────────────────────────────────────── */
-        .spells {
-            max-width: 100%;
-        }
-
-        /* Level section header */
-        h3.spell-level-header {
-            font-size: 0.9rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.06em;
-            color: #4a5568;
-            margin: 0.8rem 0 0.3rem 0;
-            padding: 0;
-            border-bottom: 1px solid #c8ccd8;
-        }
-
-        /* Gap between consecutive spell cards */
-        .spell-gap {
-            height: 0;
-            max-width: none;
-            margin: 0;
-            padding: 0;
-            border-bottom: none;
-            display: none;
-        }
-
-        /* Each spell is its own bordered card table */
-        table.spell-card {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 0.85rem;
-            border: 2px solid #a8c4d8;
-            border-radius: 4px;
-            margin: 0 0 8px 0;
-            table-layout: auto;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
-        }
-
-        table.spell-card td,
-        table.spell-card th {
-            border: 1px solid var(--border-color);
-            padding: 3px 7px;
-            vertical-align: top;
-        }
-
-        /* Add bottom border to spell rows for clearer separation within card */
-        table.spell-card tr {
-            border-bottom: 1px solid #ddd;
-        }
-
-        table.spell-card tr:last-child {
-            border-bottom: none;
-        }
-
-        /* Spell name — full-width header row */
-        .spell-name {
-            color: #3a5a7a;
-            font-size: 1rem;
-            font-weight: 700;
-            text-align: left;
-            letter-spacing: 0.02em;
-            padding: 4px 7px;
-            border-bottom: 2px solid #6888a8;
-        }
-
-        /* Quick-stats row — two cells side by side */
-        tr.spell-quickstats td {
-            font-size: 0.82rem;
-            white-space: normal;
-            padding: 3px 7px;
-        }
-
-        .sqs-left {
-            width: 50%;
-        }
-
-        .sqs-right {
-            width: 50%;
-        }
-
-        /* Inline label within quick-stats */
-        .slabel {
-            font-weight: 600;
-            color: var(--muted-color);
-            font-size: 0.78rem;
-            text-transform: uppercase;
-            letter-spacing: 0.04em;
-            margin-right: 2px;
-        }
-
-        /* Bullet separator between quick-stat items */
-        .ssep {
-            color: #aaa;
-            margin: 0 5px;
-        }
-
-        /* Description rows */
-        tr.spell-desc-row td,
-        tr.spell-higher-row td {
-            font-size: 0.8rem;
-            padding: 3px 7px;
-        }
-
-        .sdesc-label {
-            font-weight: 600;
-            white-space: nowrap;
-            width: 1%;
-            color: var(--muted-color);
-            font-size: 0.78rem;
-            text-transform: uppercase;
-            letter-spacing: 0.04em;
-        }
-
-        .sdesc-text {
-            color: #333;
-        }
-
-        /* Higher-level row gets a subtle accent */
-        tr.spell-higher-row td {
-            font-style: italic;
-            color: #3a5a7a;
-        }
-
-        /* Concentration chip — gold */
-        .stag {
-            display: inline-block;
-            border-radius: 3px;
-            padding: 1px 6px;
-            font-size: 0.72rem;
-            font-weight: 600;
-            margin-left: 5px;
-            vertical-align: middle;
-            white-space: nowrap;
-        }
-
-        .stag-concentration {
-            border: 1px solid #c8a227;
-            color: #7a5c00;
-        }
-
-        /* Ritual chip — teal */
-        .stag-ritual {
-            border: 1px solid #2a9d8f;
-            color: #1a5f58;
-        }
-
-        /* ── Weapon cards ─────────────────────────────────────────────── */
-        .weapons {
-            max-width: 100%;
-        }
-
-        /* Gap between consecutive weapon cards */
-        .weapon-gap {
-            display: none;
-        }
-
-        /* Each weapon is its own bordered card table */
-        table.weapon-card {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 0.85rem;
-            border: 2px solid #d4a0a0;
-            border-radius: 4px;
-            margin: 0 0 8px 0;
-            table-layout: auto;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
-        }
-
-        table.weapon-card td,
-        table.weapon-card th {
-            border: 1px solid var(--border-color);
-            padding: 3px 7px;
-            vertical-align: top;
-        }
-
-        /* Weapon name — full-width header row */
-        .weapon-name {
-            color: #8a4a4a;
-            font-size: 1rem;
-            font-weight: 700;
-            text-align: left;
-            letter-spacing: 0.02em;
-            padding: 4px 7px;
-            border-bottom: 2px solid #a06060;
-        }
-
-        /* Quick-stats row — two cells side by side */
-        tr.weapon-quickstats td {
-            font-size: 0.82rem;
-            white-space: normal;
-            padding: 3px 7px;
-        }
-
-        .wqs-left {
-            width: 40%;
-        }
-
-        .wqs-right {
-            width: 60%;
-        }
-
-        /* Inline label within quick-stats */
-        .wlabel {
-            font-weight: 600;
-            color: var(--muted-color);
-            font-size: 0.78rem;
-            text-transform: uppercase;
-            letter-spacing: 0.04em;
-            margin-right: 2px;
-        }
-
-        /* Bullet separator between quick-stat items */
-        .wsep {
-            color: #aaa;
-            margin: 0 5px;
-        }
-
-        /* Properties tag row */
-        tr.weapon-tags-row td {
-            padding: 3px 7px;
-            font-size: 0.82rem;
-        }
-
-        .wlabel-col {
-            font-weight: 600;
-            white-space: nowrap;
-            width: 1%;
-            color: var(--muted-color);
-            font-size: 0.78rem;
-            text-transform: uppercase;
-            letter-spacing: 0.04em;
-        }
-
-        .wtags-cell {
-            padding: 3px 7px;
-        }
-
-        /* Individual property/tag chips */
-        .wtag {
-            display: inline-block;
-            border: 1px solid #c8ccd8;
-            border-radius: 3px;
-            padding: 1px 6px;
-            font-size: 0.78rem;
-            margin-right: 4px;
-            margin-bottom: 2px;
-            white-space: nowrap;
-        }
-
-        /* Mastery chip — active (player has it) */
-        .wtag-mastery {
-            border-color: #9abb9a;
-            color: #3a6e3a;
-            font-weight: 600;
-        }
-
-        /* Mastery chip — inactive (weapon has it but player doesn't) */
-        .wtag-mastery-inactive {
-            border-color: #ccc;
-            color: #999;
-            font-style: italic;
-        }
-
-        /* Wearable item chip — currently worn */
-        .wtag-worn {
-            border-color: #9abb9a;
-            color: #3a6e3a;
-            font-weight: 600;
-        }
-
-        /* Wearable item chip — carried but not worn */
-        .wtag-not-worn {
-            border-color: #ccc;
-            color: #999;
-            font-style: italic;
-        }
-
-        /* Damage type chip, next to the Damage roll — one color per type */
-        .wtag-dmg-slashing, .wtag-dmg-piercing, .wtag-dmg-bludgeoning {
-            border-color: #b0a89a;
-            color: #6a5f4e;
-            font-weight: 600;
-        }
-
-        .wtag-dmg-acid {
-            border-color: #9ab04a;
-            color: #5c7024;
-            font-weight: 600;
-        }
-
-        .wtag-dmg-cold {
-            border-color: #7ab0d8;
-            color: #2a6a9a;
-            font-weight: 600;
-        }
-
-        .wtag-dmg-fire {
-            border-color: #e0955a;
-            color: #b0501a;
-            font-weight: 600;
-        }
-
-        .wtag-dmg-lightning {
-            border-color: #c8a828;
-            color: #8a6a00;
-            font-weight: 600;
-        }
-
-        .wtag-dmg-thunder {
-            border-color: #8a9ab8;
-            color: #445a80;
-            font-weight: 600;
-        }
-
-        .wtag-dmg-necrotic {
-            border-color: #8a5aa0;
-            color: #4a2a5a;
-            font-weight: 600;
-        }
-
-        .wtag-dmg-radiant {
-            border-color: #d8b840;
-            color: #9a7a00;
-            font-weight: 600;
-        }
-
-        .wtag-dmg-poison {
-            border-color: #5a9a5a;
-            color: #2a5a2a;
-            font-weight: 600;
-        }
-
-        .wtag-dmg-psychic {
-            border-color: #d060a8;
-            color: #a0206e;
-            font-weight: 600;
-        }
-
-        .wtag-dmg-force {
-            border-color: #8a7ad8;
-            color: #5a44b0;
-            font-weight: 600;
-        }
-
-        /* Per-property description rows */
-        tr.weapon-prop-row td {
-            font-size: 0.8rem;
-            padding: 2px 7px;
-        }
-
-        .wprop-label {
-            font-weight: 600;
-            white-space: nowrap;
-            width: 1%;
-            color: var(--muted-color);
-        }
-
-        .wprop-desc {
-            color: #444;
-        }
-
-        /* Mastery description row */
-        tr.weapon-mastery-row td {
-            font-size: 0.8rem;
-            padding: 2px 7px;
-        }
-
-        .wmastery-label {
-            font-weight: 600;
-            white-space: nowrap;
-            width: 1%;
-            color: #3a6e3a;
-        }
-
-        .wmastery-desc {
-            color: #3a3a3a;
-        }
-
-        /* Additional description row */
-        tr.weapon-addl-row td {
-            font-size: 0.82rem;
-            padding: 3px 7px;
-            font-style: italic;
-        }
-
-        .waddl-desc {
-            color: #333;
-        }
-
-        /* ── Wild Shape form cards ────────────────────────────────────────── */
-        table.wildshape-card {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 0.85rem;
-            border: 2px solid #8fae6e;
-            border-radius: 4px;
-            margin: 0.4rem 0 8px 0;
-            table-layout: auto;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
-        }
-
-        table.wildshape-card td,
-        table.wildshape-card th {
-            border: 1px solid var(--border-color);
-            padding: 3px 7px;
-            vertical-align: top;
-        }
-
-        .wsf-name {
-            color: #4a6b32;
-            font-size: 1rem;
-            font-weight: 700;
-            text-align: left;
-            letter-spacing: 0.02em;
-            padding: 4px 7px;
-            border-bottom: 2px solid #6f9a4a;
-        }
-
-        .wsf-name .wsf-subtitle {
-            font-size: 0.78rem;
-            font-weight: 400;
-            font-style: italic;
-            color: var(--muted-color);
-            margin-left: 0.5em;
-        }
-
-        .wsf-label-col {
-            font-weight: 600;
-            white-space: nowrap;
-            width: 1%;
-            color: var(--muted-color);
-            font-size: 0.78rem;
-            text-transform: uppercase;
-            letter-spacing: 0.04em;
-        }
-
-        .wsf-value-col {
-            padding: 3px 7px;
-        }
-
-        /* Section divider row, e.g. "Actions", "Traits" */
-        tr.wsf-section th {
-            background: #eef3e6;
-            color: #4a6b32;
-            font-size: 0.78rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            text-align: left;
-            padding: 2px 7px;
-        }
-
-        .wsf-entry-name {
-            font-weight: 600;
-            white-space: nowrap;
-            width: 1%;
-            color: #444;
-        }
-
-        .wsf-entry-desc {
-            color: #333;
-        }
-
-        /* Notes about stats retained from the player rather than the Beast */
-        .wsf-retained {
-            font-style: italic;
-            color: var(--muted-color);
-        }
-
-        /* ── Feature cards ───────────────────────────────────────────────── */
-        .feature-card {
-            border: 1px solid #b89060;
-            border-radius: 4px;
-            overflow: hidden;
-            margin: 0 0 0.55rem 0;
-            max-width: none;
-            padding: 0;
-        }
-
-        .feature-header {
-            display: flex;
-            align-items: baseline;
-            justify-content: space-between;
-            gap: 0.8rem;
-            padding: 5px 10px;
-            border-bottom: 2px solid #9a7040;
-            max-width: none;
-            margin: 0;
-        }
-
-        .feature-name {
-            font-size: 1rem;
-            font-weight: 700;
-            color: #4a3020;
-            letter-spacing: 0.02em;
-        }
-
-        .feature-origin {
-            font-size: 0.75rem;
-            color: #9a7040;
-            font-style: italic;
-            white-space: nowrap;
-            flex-shrink: 0;
-        }
-
-        .feature-body {
-            padding: 0.4rem 0.7rem;
-            font-size: 0.88rem;
-            max-width: none;
-            margin: 0;
-        }
-
-        .feature-body p {
-            margin: 0.3em 0;
-        }
-
-        .feature-body ul,
-        .feature-body ol {
-            margin: 0.3em 0 0.3em 1.2em;
-        }
-
-        /* Tables embedded inside feature descriptions (e.g. item/plan lists) */
-        .feature-table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 0.82rem;
-            margin: 0.4rem 0;
-        }
-
-        .feature-table td,
-        .feature-table th {
-            border: 1px solid var(--border-color);
-            padding: 3px 7px;
-            vertical-align: top;
-            text-align: left;
-        }
-
-        .feature-table th {
-            color: #3a2c1c;
-            font-weight: 700;
-            font-size: 0.75rem;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            background: #f4ede0;
-            border-bottom: 2px solid #9a7040;
-        }
-
-        .feature-table tr:nth-child(even) td {
-            background: #faf7f2;
-        }
-
-        /* Feature upgrade blocks (nested inside .feature-body) */
-        .feature-upgrade {
-            margin-top: 0.5rem;
-            border-left: 3px solid #9abbe0;
-            border-radius: 0 3px 3px 0;
-            padding: 0.3rem 0.6rem;
-            max-width: none;
-        }
-
-        .feature-upgrade-label {
-            display: block;
-            font-size: 0.75rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            color: #3a6090;
-            margin-bottom: 0.15rem;
-        }
-
-        .feature-upgrade-body {
-            font-size: 0.85rem;
-            color: #333;
-            max-width: none;
-            margin: 0;
-            padding: 0;
-        }
-
-        .inv-source {
-            font-size: 0.75em;
-            color: #999;
-            font-style: italic;
-            margin-top: 0.35em;
-        }
-
-        /* ── Weapon hit-probability row ──────────────────────────────────── */
-        tr.weapon-hit-row td {
-            padding: 3px 7px;
-            vertical-align: middle;
-        }
-
-        /* Inner table that holds the AC columns */
-        table.whit-inner {
-            border-collapse: collapse;
-            font-size: 0.75rem;
-            width: 100%;
-        }
-
-        td.whit-cond-label, th.whit-cond-label {
-            font-size: 0.7rem;
-            font-weight: 600;
-            color: #555;
-            white-space: nowrap;
-            padding: 2px 5px;
-            text-align: right;
-            border: none;
-        }
-
-        th.whit-ac {
-            color: #3a2c1c;
-            font-weight: 700;
-            text-align: center;
-            padding: 2px 5px;
-            border: 1px solid #5a4030;
-            white-space: nowrap;
-            min-width: 2.4em;
-            font-size: 0.72rem;
-            letter-spacing: 0.03em;
-        }
-
-        td.whit-pct {
-            text-align: center;
-            padding: 2px 5px;
-            border: 1px solid #ddd;
-            white-space: nowrap;
-            font-variant-numeric: tabular-nums;
-        }
-
-        /* Colour-code the probability cells: green → yellow → red */
-        td.whit-pct[data-pct="100"],
-        td.whit-pct[data-pct="95"],
-        td.whit-pct[data-pct="90"],
-        td.whit-pct[data-pct="85"],
-        td.whit-pct[data-pct="80"] {
-            color: #155724;
-            font-weight: 600;
-        }
-
-        td.whit-pct[data-pct="75"],
-        td.whit-pct[data-pct="70"],
-        td.whit-pct[data-pct="65"],
-        td.whit-pct[data-pct="60"] {
-            color: #856404;
-            font-weight: 600;
-        }
-
-        td.whit-pct[data-pct="55"],
-        td.whit-pct[data-pct="50"],
-        td.whit-pct[data-pct="45"],
-        td.whit-pct[data-pct="40"] {
-            color: #b35900;
-            font-weight: 600;
-        }
-
-        td.whit-pct[data-pct="35"],
-        td.whit-pct[data-pct="30"],
-        td.whit-pct[data-pct="25"],
-        td.whit-pct[data-pct="20"],
-        td.whit-pct[data-pct="15"],
-        td.whit-pct[data-pct="10"],
-        td.whit-pct[data-pct="5"],
-        td.whit-pct[data-pct="0"] {
-            color: #b02a37;
-            font-weight: 600;
-        }
-
-        /* ── Spell save DC fail-probability table ────────────────────────── */
-        table.dc-fail-table {
-            border-collapse: collapse;
-            font-size: 0.75rem;
-            margin: 0 0 0.75rem 0;
-        }
-
-        table.dc-fail-table th.dc-fail-dc-col {
-            color: #3a2c1c;
-            font-weight: 700;
-            font-size: 0.72rem;
-            text-align: left;
-            padding: 2px 8px;
-            border: 1px solid #5a4030;
-            white-space: nowrap;
-            letter-spacing: 0.03em;
-        }
-
-        /* Spell school colors — preserved in print */
-        span[style*="color:"] {
-            print-color-adjust: exact;
-            -webkit-print-color-adjust: exact;
-        }
-
-        /* Spell preparation checkbox */
-        .spell-prep-checkbox {
-            display: inline-block;
-            width: 1.2em;
-            height: 1.2em;
-            border: 1.5px solid #3a5a7a;
-            box-sizing: border-box;
-            border-radius: 2px;
-            vertical-align: middle;
-            margin-right: 0.3em;
-        }
-        </style>
-        """
+        return Html.render_style_block(
+            Html.BASE_CHARACTER_SHEET_CSS,
+            SPELL_CARD_CSS,
+            WEAPON_CARD_CSS,
+            WILDSHAPE_CARD_CSS,
+            FEATURE_CARD_CSS,
+        )
 
     def write_character_sheet(
         self,

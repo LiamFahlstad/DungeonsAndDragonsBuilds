@@ -1,5 +1,86 @@
 from typing import Optional
 
+WILDSHAPE_CARD_CSS = """/* ── Wild Shape form cards ────────────────────────────────────────── */
+        table.wildshape-card {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+            border: 2px solid #8fae6e;
+            border-radius: 4px;
+            margin: 0.4rem 0 8px 0;
+            table-layout: auto;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+        }
+
+        table.wildshape-card td,
+        table.wildshape-card th {
+            border: 1px solid var(--border-color);
+            padding: 3px 7px;
+            vertical-align: top;
+        }
+
+        .wsf-name {
+            color: #4a6b32;
+            font-size: 1rem;
+            font-weight: 700;
+            text-align: left;
+            letter-spacing: 0.02em;
+            padding: 4px 7px;
+            border-bottom: 2px solid #6f9a4a;
+        }
+
+        .wsf-name .wsf-subtitle {
+            font-size: 0.78rem;
+            font-weight: 400;
+            font-style: italic;
+            color: var(--muted-color);
+            margin-left: 0.5em;
+        }
+
+        .wsf-label-col {
+            font-weight: 600;
+            white-space: nowrap;
+            width: 1%;
+            color: var(--muted-color);
+            font-size: 0.78rem;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .wsf-value-col {
+            padding: 3px 7px;
+        }
+
+        /* Section divider row, e.g. "Actions", "Traits" */
+        tr.wsf-section th {
+            background: #eef3e6;
+            color: #4a6b32;
+            font-size: 0.78rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            text-align: left;
+            padding: 2px 7px;
+        }
+
+        .wsf-entry-name {
+            font-weight: 600;
+            white-space: nowrap;
+            width: 1%;
+            color: #444;
+        }
+
+        .wsf-entry-desc {
+            color: #333;
+        }
+
+        /* Notes about stats retained from the player rather than the Beast */
+        .wsf-retained {
+            font-style: italic;
+            color: var(--muted-color);
+        }
+
+        """
 from Combat.Definitions import ExtendedCombatantData
 from Core.Definitions import Ability, Skill
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
@@ -66,7 +147,11 @@ def _speed_text(monster: ExtendedCombatantData) -> str:
         parts.append(f"fly {monster.speed_fly_ft} ft.")
     text = ", ".join(parts)
     if monster.speed_special_rules:
-        text = f"{text} ({monster.speed_special_rules})" if text else monster.speed_special_rules
+        text = (
+            f"{text} ({monster.speed_special_rules})"
+            if text
+            else monster.speed_special_rules
+        )
     return text
 
 
@@ -134,7 +219,9 @@ def format_creature_stat_block(
             mental_parts.append(f"{abbr} {score} ({_fmt_mod(modifier)})")
         rows.append(_row("Int / Wis / Cha", ", ".join(mental_parts)))
 
-        hp_text = f"{monster.hp}" + (f" ({monster.hp_formula})" if monster.hp_formula else "")
+        hp_text = f"{monster.hp}" + (
+            f" ({monster.hp_formula})" if monster.hp_formula else ""
+        )
         rows.append(_row("Hit Points", hp_text))
 
         if monster.languages:
@@ -147,7 +234,9 @@ def format_creature_stat_block(
             own_bonus = None
             if retain_mental_abilities and character_stat_block is not None:
                 try:
-                    own_bonus = character_stat_block.get_skill_modifier(Skill(skill_name))
+                    own_bonus = character_stat_block.get_skill_modifier(
+                        Skill(skill_name)
+                    )
                 except ValueError:
                     own_bonus = None
             if own_bonus is None:
@@ -163,7 +252,11 @@ def format_creature_stat_block(
         for abbr, beast_bonus in monster.saving_throws.items():
             ability = _ABILITY_BY_ABBR.get(abbr)
             own_bonus = None
-            if ability is not None and retain_mental_abilities and character_stat_block is not None:
+            if (
+                ability is not None
+                and retain_mental_abilities
+                and character_stat_block is not None
+            ):
                 own_bonus = character_stat_block.get_saving_throw_modifier(ability)
             if own_bonus is None:
                 save_parts.append(f"{abbr} {_fmt_mod(beast_bonus)}")

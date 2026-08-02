@@ -12,14 +12,15 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from CharacterContent.Spells.SpellFactory import SpellFactory
+from CharacterContent.Spells.SpellFactory.Writer import SPELL_CARD_CSS
+from Utils import Html
 
 OUTPUT_HTML = "CharacterContent/Spells/AllSpells.html"
 
 
 def _get_css_style() -> str:
-    return """
-    <style>
-    @import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap');
+    # Page-specific CSS: font imports and layout (rendered before SPELL_CARD_CSS)
+    page_css = """@import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap');
 
     :root {
         --text-color: #222;
@@ -54,152 +55,11 @@ def _get_css_style() -> str:
         letter-spacing: 0.02em;
     }
 
-    /* Level section header */
-    h3.spell-level-header {
-        font-size: 0.9rem;
-        font-weight: 700;
-        text-transform: uppercase;
-        letter-spacing: 0.06em;
-        color: #4a5568;
-        margin: 1.2rem 0 0.3rem 0;
-        padding: 0;
-        border-bottom: 1px solid #c8ccd8;
-    }
-
     /* Two-column layout for spell cards on wide screens */
     .spells {
         max-width: 100%;
         column-count: 2;
         column-gap: 1rem;
-    }
-
-    h3.spell-level-header {
-        column-span: all;
-    }
-
-    /* Each spell is its own bordered card table */
-    table.spell-card {
-        width: 100%;
-        border-collapse: collapse;
-        font-size: 0.85rem;
-        border: 2px solid #a8c4d8;
-        border-radius: 4px;
-        margin: 0 0 8px 0;
-        table-layout: auto;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
-        break-inside: avoid;
-    }
-
-    table.spell-card td,
-    table.spell-card th {
-        border: 1px solid var(--border-color);
-        padding: 3px 7px;
-        vertical-align: top;
-    }
-
-    table.spell-card tr {
-        border-bottom: 1px solid #ddd;
-    }
-
-    table.spell-card tr:last-child {
-        border-bottom: none;
-    }
-
-    /* Spell name — full-width header row */
-    .spell-name {
-        color: #3a5a7a;
-        font-size: 1rem;
-        font-weight: 700;
-        text-align: left;
-        letter-spacing: 0.02em;
-        padding: 4px 7px;
-        border-bottom: 2px solid #6888a8;
-    }
-
-    /* Quick-stats row — two cells side by side */
-    tr.spell-quickstats td {
-        font-size: 0.82rem;
-        white-space: normal;
-        padding: 3px 7px;
-    }
-
-    .sqs-left {
-        width: 50%;
-    }
-
-    .sqs-right {
-        width: 50%;
-    }
-
-    /* Inline label within quick-stats */
-    .slabel {
-        font-weight: 600;
-        color: var(--muted-color);
-        font-size: 0.78rem;
-        text-transform: uppercase;
-        letter-spacing: 0.04em;
-        margin-right: 2px;
-    }
-
-    /* Bullet separator between quick-stat items */
-    .ssep {
-        color: #aaa;
-        margin: 0 5px;
-    }
-
-    /* Classes row */
-    tr.spell-classes-row td {
-        font-size: 0.78rem;
-        padding: 3px 7px;
-    }
-
-    .sclass-chip {
-        display: inline-block;
-        background: #eef2f7;
-        color: #3a5a7a;
-        border-radius: 3px;
-        padding: 1px 6px;
-        margin: 1px 3px 1px 0;
-        font-size: 0.78rem;
-    }
-
-    /* Description rows */
-    tr.spell-desc-row td,
-    tr.spell-higher-row td {
-        font-size: 0.8rem;
-        padding: 3px 7px;
-    }
-
-    .sdesc-text {
-        color: #333;
-    }
-
-    /* Higher-level row gets a subtle accent */
-    tr.spell-higher-row td {
-        font-style: italic;
-        color: #3a5a7a;
-    }
-
-    /* Concentration / ritual chips */
-    .stag {
-        display: inline-block;
-        border-radius: 3px;
-        padding: 1px 6px;
-        font-size: 0.72rem;
-        font-weight: 600;
-        margin-left: 5px;
-        vertical-align: middle;
-        white-space: nowrap;
-    }
-
-    .stag-concentration {
-        border: 1px solid #c8a227;
-        color: #7a5c00;
-    }
-
-    .stag-ritual {
-        border: 1px solid #2a9d8f;
-        color: #1a5f58;
     }
 
     @media print {
@@ -215,9 +75,22 @@ def _get_css_style() -> str:
         .spells {
             column-count: 1;
         }
+    }"""
+
+    # Page-specific overrides of SPELL_CARD_CSS rules: rendered *after*
+    # SPELL_CARD_CSS so they win the cascade instead of being silently
+    # shadowed by the shared card definitions.
+    page_overrides_css = """h3.spell-level-header {
+        column-span: all;
+        margin: 1.2rem 0 0.3rem 0;
     }
-    </style>
-    """
+
+    /* Spell cards avoid column breaks */
+    table.spell-card {
+        break-inside: avoid;
+    }"""
+
+    return Html.render_style_block(page_css, SPELL_CARD_CSS, page_overrides_css)
 
 
 def write_spell_compendium(output_path: str = OUTPUT_HTML):
