@@ -6,6 +6,7 @@ from Combat.Definitions import (
     ExtendedCombatantData,
     MonsterAbility,
     Size,
+    Skill,
 )
 from Core.Definitions import Ability
 
@@ -81,6 +82,96 @@ class TheMouthThatWalks(ExtendedCombatantData):
             reactions=[],
             legendary_actions=[],
             legendary_resistances=1,
+            lair_actions=[],
+            mythic_actions=[],
+        )
+
+
+class TheHunter(ExtendedCombatantData):
+    def __init__(self):
+        super().__init__(
+            combatant_type="The Hunter",
+            hp=110,
+            ac=15,
+            temp_hp=0,
+            conditions=[],
+            ability_scores={
+                Ability.STRENGTH.short_name: 16,
+                Ability.DEXTERITY.short_name: 18,
+                Ability.CONSTITUTION.short_name: 16,
+                Ability.INTELLIGENCE.short_name: 12,
+                Ability.WISDOM.short_name: 15,
+                Ability.CHARISMA.short_name: 14,
+            },
+            saving_throws={
+                Ability.CONSTITUTION.short_name: 6,
+                Ability.WISDOM.short_name: 5,
+            },
+            spell_slots={},
+            cr="6",
+            monster_type="Humanoid (Cursebound)",
+            alignment=Alignment.NEUTRAL_EVIL,
+            size=Size.MEDIUM,
+            ac_note="worn leathers and curse-hardened grey skin",
+            hp_formula="13d10 + 39",
+            speed_ground_ft=35,
+            speed_fly_ft=None,
+            speed_climb_ft=None,
+            speed_special_rules="",
+            skills={
+                Skill.PERCEPTION: 5,
+                Skill.STEALTH: 7,
+                Skill.INTIMIDATION: 5,
+            },
+            damage_vulnerabilities=[],
+            damage_resistances=[
+                DamageTypeEntry(damage_types=[DamageType.NECROTIC], note=""),
+                DamageTypeEntry(damage_types=[DamageType.POISON], note=""),
+            ],
+            damage_immunities=[],
+            condition_immunities=[
+                Condition.FRIGHTENED,
+            ],
+            senses="darkvision 60 ft., Passive Perception 15",
+            languages="Common, plus a fragment of the old tongue the Curse left behind, which it rarely speaks",
+            traits=[
+                MonsterAbility(
+                    name="Cursebound",
+                    description="The Hunter has absorbed the essence of an Accursed creature into its own flesh, marking it with grey skin, blackened teeth, and eyes like dying embers. It has Resistance to Necrotic and Poison damage, and it is immune to being Frightened.",
+                ),
+                MonsterAbility(
+                    name="Unnerving Calm",
+                    description="The Hunter never raises its voice or its guard. It has Advantage on Charisma (Intimidation) checks. In addition, at the start of each of its turns, the Hunter can choose one creature within 10 feet of it that can see it; that creature must succeed on a DC 15 Wisdom saving throw or have Disadvantage on attack rolls against the Hunter until the start of the Hunter's next turn, unnerved by its stillness.",
+                ),
+                MonsterAbility(
+                    name="Curse Sense",
+                    description="The Hunter always knows the direction and distance to any Accursed or cursed creature within 60 feet of it, even if that creature is hidden, invisible, or behind total cover, and the Hunter has Advantage on attack rolls against such creatures.",
+                ),
+            ],
+            actions=[
+                MonsterAbility(
+                    name="Multiattack",
+                    description="The Hunter makes two Cursed Kris attacks.",
+                ),
+                MonsterAbility(
+                    name="Cursed Kris",
+                    description="Melee Attack Roll: +7, reach 5 ft. Hit: 11 (2d6 + 4) Piercing damage plus 7 (2d6) Necrotic damage as the bound curse feeds through the blade.",
+                ),
+            ],
+            bonus_actions=[
+                MonsterAbility(
+                    name="Marked for the Hunt (Recharge 5-6)",
+                    description="The Hunter fixes its gaze on one creature it can see within 30 feet. Constitution Saving Throw: DC 15, the target. Failure: The target is Marked until the start of the Hunter's next turn. While a creature is Marked this way, the Hunter's attack rolls against it score a Critical Hit on a roll of 19 or 20, and the Marked creature can't benefit from Invisible or Heavily Obscured against the Hunter.",
+                ),
+            ],
+            reactions=[
+                MonsterAbility(
+                    name="Predator's Reflexes",
+                    description="Trigger: A creature the Hunter can see moves within 5 feet of the Hunter. Response: The Hunter makes one Cursed Kris attack against that creature.",
+                ),
+            ],
+            legendary_actions=[],
+            legendary_resistances=0,
             lair_actions=[],
             mythic_actions=[],
         )

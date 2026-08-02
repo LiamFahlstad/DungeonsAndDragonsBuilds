@@ -257,3 +257,77 @@ class SerCaldusTheVowOfSilence(ExtendedCombatantData):
             lair_actions=[],
             mythic_actions=[],
         )
+
+
+class Greypaw(ExtendedCombatantData):
+    def __init__(self):
+        super().__init__(
+            combatant_type="Greypaw",
+            hp=75,
+            ac=13,
+            temp_hp=0,
+            conditions=[],
+            ability_scores={
+                Ability.STRENGTH.short_name: 18,
+                Ability.DEXTERITY.short_name: 13,
+                Ability.CONSTITUTION.short_name: 18,
+                Ability.INTELLIGENCE.short_name: 3,
+                Ability.WISDOM.short_name: 14,
+                Ability.CHARISMA.short_name: 5,
+            },
+            saving_throws={
+                Ability.STRENGTH.short_name: 6,
+                Ability.CONSTITUTION.short_name: 4,
+            },
+            spell_slots={},
+            cr="3",
+            monster_type="Beast (Mutated)",
+            alignment=Alignment.UNALIGNED,
+            size=Size.LARGE,
+            ac_note="Thick Hide",
+            hp_formula="10d10 + 20",
+            speed_ground_ft=40,
+            speed_fly_ft=None,
+            speed_climb_ft=None,
+            speed_special_rules="",
+            skills={
+                Skill.PERCEPTION: 6,
+                Skill.SURVIVAL: 4,
+            },
+            damage_vulnerabilities=[],
+            damage_resistances=[],
+            damage_immunities=[],
+            condition_immunities=[],
+            senses="darkvision 60 ft., keen smell, Passive Perception 16",
+            languages="None",
+            traits=[
+                MonsterAbility(
+                    name="Keen Hearing and Smell",
+                    description="Greypaw has advantage on Wisdom (Perception) checks that rely on hearing or smell.",
+                ),
+                MonsterAbility(
+                    name="Relentless Tracker",
+                    description="Greypaw has advantage on Wisdom (Survival) checks made to track creatures. It can identify a creature by scent after smelling something it touched or wore.",
+                ),
+                MonsterAbility(
+                    name="Bloodied Frenzy",
+                    description="Greypaw has advantage on attacking bloodied creatures.",
+                ),
+            ],
+            actions=[
+                MonsterAbility(
+                    name="Multiattack",
+                    description="Greypaw makes two Bite attacks.",
+                ),
+                MonsterAbility(
+                    name="Bite",
+                    description="Melee Attack Roll: +6, reach 5 ft. Hit: 13 (2d8 + 4) Piercing damage. If the target is a Medium or smaller creature, it must succeed on a DC 14 Strength saving throw or be knocked Prone.",
+                ),
+            ],
+            bonus_actions=[],
+            reactions=[],
+            legendary_actions=[],
+            legendary_resistances=0,
+            lair_actions=[],
+            mythic_actions=[],
+        )
