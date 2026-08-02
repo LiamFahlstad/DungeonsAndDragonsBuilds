@@ -76,22 +76,6 @@ class HealersKit(ConsumableItem):
         )
 
 
-class PotionOfHealing(ConsumableItem):
-    def __init__(self):
-        super().__init__(
-            "Potion of Healing",
-            rarity=ItemRarity.COMMON,
-            category=ItemCategory.CONSUMABLE,
-            slots=1,
-            description_text=(
-                "You regain 2d4 + 2 Hit Points when you drink this potion.\n"
-                "Whatever its potency, the potion's red liquid glimmers when agitated."
-            ),
-            is_homebrew=False,
-            value=50,
-        )
-
-
 class Torch(ConsumableItem):
     def __init__(self):
         super().__init__(

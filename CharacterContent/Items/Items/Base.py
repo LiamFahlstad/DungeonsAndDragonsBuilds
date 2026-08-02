@@ -1,7 +1,11 @@
 from enum import Enum
 from typing import Optional
+
 from CharacterContent.Features.Core.BaseFeatures import Feature
-from CharacterContent.Features.Core.Improvements import ItemImprovement, CharacterImprovement
+from CharacterContent.Features.Core.Improvements import (
+    CharacterImprovement,
+    ItemImprovement,
+)
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
@@ -27,6 +31,7 @@ class ItemCategory(str, Enum):
     GEAR = "gear"
     MUSICAL_INSTRUMENT = "musical instrument"
     PLACEHOLDER = "placeholder"
+    POTION = "potion"
     RING = "ring"
     TOOL = "tool"
     UTILITY = "utility"

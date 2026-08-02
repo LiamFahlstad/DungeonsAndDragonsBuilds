@@ -39,7 +39,6 @@ from .Consumables import (
     Rations,
     Antitoxin,
     HealersKit,
-    PotionOfHealing,
     Torch,
     Beans,
     Acid,
@@ -47,6 +46,25 @@ from .Consumables import (
     BasicPoison,
     HolyWater,
     SpellScroll,
+)
+from .Potions import (
+    PotionOfHealing,
+    GreaterHealingPotion,
+    SuperiorHealingPotion,
+    SupremeHealingPotion,
+    CleansingPotion,
+    RefreshingPotion,
+    PotionOfFeatherFall,
+    PotionOfInvisibility,
+    PotionOfDisguise,
+    PotionOfSwiftness,
+    PotionOfEnlarge,
+    PotionOfTeleportation,
+    PotionOfResistance,
+    PotionOfSpeed,
+    GreaterPotionOfSpeed,
+    PotionOfResolve,
+    PotionOfGuarding,
 )
 from .Ammunition import (
     Arrows,
