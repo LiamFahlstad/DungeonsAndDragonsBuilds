@@ -70,7 +70,7 @@ class WizardLevel1(ClassBuilder.BaseClassLevel1):
 
 @attr.dataclass
 class WizardLevel2(ClassBuilder.BaseClassLevel2):
-    skill: Skill
+    skill_expertise: Skill
     spell: WizardLevel1Spells
 
     def add_features(
@@ -80,7 +80,7 @@ class WizardLevel2(ClassBuilder.BaseClassLevel2):
         # LAST: expertise requires the proficiency to exist already, and it
         # may come from any builder, including the species (merged last).
         data.add_feature(
-            WizardFeatures.Scholar(self.skill),
+            WizardFeatures.Scholar(self.skill_expertise),
             apply_when=ApplyWhen.LAST,
         )
         data.add_spell(self.spell)

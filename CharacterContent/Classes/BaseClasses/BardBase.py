@@ -70,8 +70,8 @@ class BardLevel1(ClassBuilder.BaseClassLevel1):
 @attr.dataclass
 class BardLevel2(ClassBuilder.BaseClassLevel2):
     spell: BardLevel1Spells
-    skill_1: Skill
-    skill_2: Skill
+    skill_expertise_1: Skill
+    skill_expertise_2: Skill
 
     def add_features(
         self,
@@ -80,7 +80,7 @@ class BardLevel2(ClassBuilder.BaseClassLevel2):
         data.add_feature(BardFeatures.JackOfAllTrades(), apply_when=ApplyWhen.LAST)
         data.add_spell(self.spell)
         data.add_feature(
-            BardFeatures.ExpertiseLevel1(skill_1=self.skill_1, skill_2=self.skill_2),
+            BardFeatures.ExpertiseLevel1(skill_1=self.skill_expertise_1, skill_2=self.skill_expertise_2),
             apply_when=ApplyWhen.LAST,
         )
         return data
@@ -177,8 +177,8 @@ class BardLevel8(ClassBuilder.BaseClassLevel8):
 class BardLevel9(ClassBuilder.BaseClassLevel9):
     spell_1: BardSpellsUpTo5
     spell_2: BardSpellsUpTo5
-    skill_1: Skill
-    skill_2: Skill
+    skill_expertise_1: Skill
+    skill_expertise_2: Skill
 
     def add_features(
         self,
@@ -187,7 +187,7 @@ class BardLevel9(ClassBuilder.BaseClassLevel9):
         data.add_spell(self.spell_1)
         data.add_spell(self.spell_2)
         data.add_feature(
-            BardFeatures.ExpertiseLevel1(skill_1=self.skill_1, skill_2=self.skill_2),
+            BardFeatures.ExpertiseLevel1(skill_1=self.skill_expertise_1, skill_2=self.skill_expertise_2),
             apply_when=ApplyWhen.LAST,
         )
         return data

@@ -17,8 +17,8 @@ from StatBlocks.SkillsStatBlock import RogueSkillsStatBlock
 
 @attr.dataclass
 class RogueLevel1(ClassBuilder.BaseClassLevel1):
-    skill_1: Definitions.Skill
-    skill_2: Definitions.Skill
+    skill_expertise_1: Definitions.Skill
+    skill_expertise_2: Definitions.Skill
     weapon_mastery_1: Weapons.AbstractWeapon
     weapon_mastery_2: Weapons.AbstractWeapon
 
@@ -32,7 +32,7 @@ class RogueLevel1(ClassBuilder.BaseClassLevel1):
         # LAST: expertise requires the proficiency to exist already, and it
         # may come from any builder, including the species (merged last).
         data.add_feature(
-            RogueFeatures.Expertise(self.skill_1, self.skill_2),
+            RogueFeatures.Expertise(self.skill_expertise_1, self.skill_expertise_2),
             apply_when=ApplyWhen.LAST,
         )
         data.add_feature(RogueFeatures.SneakAttack())
@@ -81,12 +81,12 @@ class RogueLevel5(ClassBuilder.BaseClassLevel5):
 
 @attr.dataclass
 class RogueLevel6(ClassBuilder.BaseClassLevel6):
-    skill_1: Definitions.Skill
-    skill_2: Definitions.Skill
+    skill_expertise_1: Definitions.Skill
+    skill_expertise_2: Definitions.Skill
 
     def add_features(self, data: CharacterSheetData) -> CharacterSheetData:
         data.add_feature(
-            RogueFeatures.Expertise(self.skill_1, self.skill_2),
+            RogueFeatures.Expertise(self.skill_expertise_1, self.skill_expertise_2),
             apply_when=ApplyWhen.LAST,
         )
         return data

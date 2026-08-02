@@ -101,8 +101,8 @@ def get_starter_class_builder():
                 ),
                 2: BardLevel2(
                     spell=BardLevel1Spells.DISSONANT_WHISPERS,
-                    skill_1=Skill.PERFORMANCE,
-                    skill_2=Skill.ACROBATICS,
+                    skill_expertise_1=Skill.PERFORMANCE,
+                    skill_expertise_2=Skill.ACROBATICS,
                 ),
                 3: BardLevel3(
                     spell=BardLevel2Spells.MIRROR_IMAGE,
@@ -135,8 +135,8 @@ def get_starter_class_builder():
                 9: BardLevel9(
                     spell_1=BardLevel5Spells.ALUSTRIELS_MOONCLOAK,
                     spell_2=BardLevel5Spells.GEAS,
-                    skill_1=Skill.STEALTH,
-                    skill_2=Skill.PERCEPTION,
+                    skill_expertise_1=Skill.STEALTH,
+                    skill_expertise_2=Skill.PERCEPTION,
                 ),
                 10: BardLevel10(
                     cantrip=BardLevel0Spells.VICIOUS_MOCKERY,

@@ -48,10 +48,10 @@ class BarbarianLevel2(ClassBuilder.BaseClassLevel2):
 
 @attr.dataclass
 class BarbarianLevel3(ClassBuilder.BaseClassLevel3):
-    skill: Definitions.Skill
+    skill_proficiency: Definitions.Skill
 
     def add_features(self, data: CharacterSheetData) -> CharacterSheetData:
-        data.add_feature(BarbarianFeatures.PrimalKnowledgeSkillProficiency(self.skill))
+        data.add_feature(BarbarianFeatures.PrimalKnowledgeSkillProficiency(self.skill_proficiency))
         data.add_feature(BarbarianFeatures.PrimalKnowledge())
         return data
 

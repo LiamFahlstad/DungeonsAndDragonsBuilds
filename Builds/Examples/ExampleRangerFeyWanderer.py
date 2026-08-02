@@ -74,7 +74,7 @@ def get_starter_class_builder():
                     spell_2=RangerLevel1Spells.GOODBERRY,
                 ),
                 2: RangerLevel2(
-                    skill=Skill.INSIGHT,
+                    skill_expertise=Skill.INSIGHT,
                     fighting_style=FightingStyles.Archery(),
                     spell=RangerLevel1Spells.ANIMAL_FRIENDSHIP,
                 ),

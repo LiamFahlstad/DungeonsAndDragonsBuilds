@@ -29,8 +29,8 @@ from StatBlocks.SkillsStatBlock import ClericSkillsStatBlock
 
 @attr.dataclass
 class ClericKnowledgeLevel3(ClassBuilder.SubclassLevel3):
-    skill_1: Skill
-    skill_2: Skill
+    skill_proficiency_and_expertise_1: Skill
+    skill_proficiency_and_expertise_2: Skill
 
     def add_features(
         self,
@@ -62,7 +62,9 @@ class ClericKnowledgeLevel3(ClassBuilder.SubclassLevel3):
         )[0]
         channel_divinity.extend_feature(ClericKnowledgeFeatures.MindMagic())
         data.add_feature(
-            ClericKnowledgeFeatures.BlessingsOfKnowledge(self.skill_1, self.skill_2)
+            ClericKnowledgeFeatures.BlessingsOfKnowledge(
+                self.skill_proficiency_and_expertise_1, self.skill_proficiency_and_expertise_2
+            )
         )
         return data
 

@@ -73,7 +73,7 @@ def get_starter_class_builder():
                     spell_2=RangerLevel1Spells.GOODBERRY,
                 ),
                 2: RangerLevel2(
-                    skill=Skill.SURVIVAL,
+                    skill_expertise=Skill.SURVIVAL,
                     fighting_style=FightingStyles.Dueling(),
                     spell=RangerLevel1Spells.ENTANGLE,
                 ),

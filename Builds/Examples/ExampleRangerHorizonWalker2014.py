@@ -94,7 +94,7 @@ def get_starter_class_builder():
                     spell_2=RangerLevel1Spells.GOODBERRY,
                 ),
                 2: RangerLevel2(
-                    skill=Skill.PERCEPTION,
+                    skill_expertise=Skill.PERCEPTION,
                     fighting_style=FightingStyles.Archery(),
                     spell=RangerLevel1Spells.FOG_CLOUD,
                 ),
@@ -124,8 +124,8 @@ def get_starter_class_builder():
                         ]),
                 ),
                 9: RangerLevel9(
-                    skill_1=Skill.SURVIVAL,
-                    skill_2=Skill.PERCEPTION,
+                    skill_expertise_1=Skill.SURVIVAL,
+                    skill_expertise_2=Skill.PERCEPTION,
                     spell_1=RangerLevel3Spells.CONJURE_ANIMALS,
                     spell_2=RangerLevel2Spells.ENHANCE_ABILITY,
                 ),

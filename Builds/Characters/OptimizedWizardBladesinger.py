@@ -76,7 +76,7 @@ def get_starter_class_builder():
                     spell_4=SpellDefinitions.WizardLevel1Spells.SLEEP,
                 ),
                 2: WizardLevel2(
-                    skill=Skill.ARCANA,
+                    skill_expertise=Skill.ARCANA,
                     spell=SpellDefinitions.WizardLevel1Spells.TASHAS_HIDEOUS_LAUGHTER,
                 ),
                 3: WizardLevel3(

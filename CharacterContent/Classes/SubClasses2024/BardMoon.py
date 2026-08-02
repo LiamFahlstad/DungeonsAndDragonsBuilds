@@ -17,14 +17,14 @@ from StatBlocks.SkillsStatBlock import BardSkillsStatBlock
 @attr.dataclass
 class BardMoonLevel3(ClassBuilder.SubclassLevel3):
     cantrip: DruidLevel0Spells
-    skill: Skill
+    skill_proficiency: Skill
 
     def add_features(
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
         data.add_feature(BardMoonFeatures.MoonsInspiration())
-        data.add_feature(BardMoonFeatures.PrimalLore(skill=self.skill))
+        data.add_feature(BardMoonFeatures.PrimalLore(skill=self.skill_proficiency))
         data.add_cantrip(self.cantrip)
         return data
 

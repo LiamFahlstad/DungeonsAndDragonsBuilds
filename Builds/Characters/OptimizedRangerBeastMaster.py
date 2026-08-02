@@ -98,7 +98,7 @@ def get_starter_class_builder():
                     spell_2=RangerLevel1Spells.ENSNARING_STRIKE,
                 ),
                 2: RangerLevel2(
-                    skill=Skill.PERCEPTION,
+                    skill_expertise=Skill.PERCEPTION,
                     fighting_style=FightingStyles.Archery(),
                     spell=RangerLevel1Spells.ANIMAL_FRIENDSHIP,
                 ),
@@ -127,8 +127,8 @@ def get_starter_class_builder():
                     ),
                 ),
                 9: RangerLevel9(
-                    skill_1=Skill.ATHLETICS,
-                    skill_2=Skill.INVESTIGATION,
+                    skill_expertise_1=Skill.ATHLETICS,
+                    skill_expertise_2=Skill.INVESTIGATION,
                     spell_1=RangerLevel3Spells.CONJURE_ANIMALS,
                     spell_2=RangerLevel2Spells.SPIKE_GROWTH,
                 ),

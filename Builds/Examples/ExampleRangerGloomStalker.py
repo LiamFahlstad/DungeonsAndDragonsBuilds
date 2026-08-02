@@ -74,7 +74,7 @@ def get_starter_class_builder():
                     spell_2=RangerLevel1Spells.FOG_CLOUD,
                 ),
                 2: RangerLevel2(
-                    skill=Skill.STEALTH,
+                    skill_expertise=Skill.STEALTH,
                     fighting_style=FightingStyles.Archery(),
                     spell=RangerLevel1Spells.ENTANGLE,
                 ),

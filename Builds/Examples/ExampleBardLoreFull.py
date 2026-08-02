@@ -100,8 +100,8 @@ def get_starter_class_builder():
                 ),
                 2: BardLevel2(
                     spell=BardLevel1Spells.CHARM_PERSON,
-                    skill_1=Skill.PERFORMANCE,
-                    skill_2=Skill.PERSUASION,
+                    skill_expertise_1=Skill.PERFORMANCE,
+                    skill_expertise_2=Skill.PERSUASION,
                 ),
                 3: BardLevel3(
                     spell=BardLevel1Spells.COMPREHEND_LANGUAGES,
@@ -135,8 +135,8 @@ def get_starter_class_builder():
                 9: BardLevel9(
                     spell_1=BardLevel5Spells.ALUSTRIELS_MOONCLOAK,
                     spell_2=BardLevel5Spells.GEAS,
-                    skill_1=Skill.STEALTH,
-                    skill_2=Skill.PERCEPTION,
+                    skill_expertise_1=Skill.STEALTH,
+                    skill_expertise_2=Skill.PERCEPTION,
                 ),
                 10: BardLevel10(
                     cantrip=BardLevel0Spells.VICIOUS_MOCKERY,
@@ -181,9 +181,9 @@ def get_starter_class_builder():
             },
             subclass_features_by_level={
                 3: BardLoreLevel3(
-                    skill_1=Skill.STEALTH,
-                    skill_2=Skill.SLEIGHT_OF_HAND,
-                    skill_3=Skill.ACROBATICS,
+                    skill_proficiency_1=Skill.STEALTH,
+                    skill_proficiency_2=Skill.SLEIGHT_OF_HAND,
+                    skill_proficiency_3=Skill.ACROBATICS,
                 ),
                 6: BardLoreLevel6(
                     spell_1=WizardLevel3Spells.FIREBALL,

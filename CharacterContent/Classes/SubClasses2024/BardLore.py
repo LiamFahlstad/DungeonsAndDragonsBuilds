@@ -17,16 +17,18 @@ from StatBlocks.SkillsStatBlock import BardSkillsStatBlock
 
 @attr.dataclass
 class BardLoreLevel3(ClassBuilder.SubclassLevel3):
-    skill_1: Skill
-    skill_2: Skill
-    skill_3: Skill
+    skill_proficiency_1: Skill
+    skill_proficiency_2: Skill
+    skill_proficiency_3: Skill
 
     def add_features(
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
         data.add_feature(
-            BardLoreFeatures.BonusProficiencies(self.skill_1, self.skill_2, self.skill_3)
+            BardLoreFeatures.BonusProficiencies(
+                self.skill_proficiency_1, self.skill_proficiency_2, self.skill_proficiency_3
+            )
         )
         data.add_feature(BardLoreFeatures.CuttingWords())
         return data

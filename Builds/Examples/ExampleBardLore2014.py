@@ -91,8 +91,8 @@ def get_starter_class_builder():
                 ),
                 2: BardLevel2(
                     spell=BardLevel1Spells.DISSONANT_WHISPERS,
-                    skill_1=Skill.PERFORMANCE,
-                    skill_2=Skill.PERSUASION,
+                    skill_expertise_1=Skill.PERFORMANCE,
+                    skill_expertise_2=Skill.PERSUASION,
                 ),
                 3: BardLevel3(
                     spell=BardLevel2Spells.AID,
@@ -121,8 +121,8 @@ def get_starter_class_builder():
                 9: BardLevel9(
                     spell_1=BardLevel4Spells.CHARM_MONSTER,
                     spell_2=BardLevel4Spells.POLYMORPH,
-                    skill_1=Skill.PERFORMANCE,
-                    skill_2=Skill.PERSUASION,
+                    skill_expertise_1=Skill.PERFORMANCE,
+                    skill_expertise_2=Skill.PERSUASION,
                 ),
                 10: BardLevel10(
                     cantrip=BardLevel0Spells.PRESTIDIGITATION,
@@ -142,9 +142,9 @@ def get_starter_class_builder():
             },
             subclass_features_by_level={
                 3: BardLoreLevel3(
-                    skill_1=Skill.HISTORY,
-                    skill_2=Skill.ARCANA,
-                    skill_3=Skill.INVESTIGATION,
+                    skill_proficiency_1=Skill.HISTORY,
+                    skill_proficiency_2=Skill.ARCANA,
+                    skill_proficiency_3=Skill.INVESTIGATION,
                 ),
                 6: BardLoreLevel6(),
                 14: BardLoreLevel14(),

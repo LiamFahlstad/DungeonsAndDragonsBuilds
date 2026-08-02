@@ -93,8 +93,8 @@ def get_starter_class_builder():
         base_class_level_features=ClassBuilder.BaseClassLevelFeatures(
             base_class_features_by_level={
                 1: RogueLevel1(
-                    skill_1=Definitions.Skill.STEALTH,
-                    skill_2=Definitions.Skill.SLEIGHT_OF_HAND,
+                    skill_expertise_1=Definitions.Skill.STEALTH,
+                    skill_expertise_2=Definitions.Skill.SLEIGHT_OF_HAND,
                     weapon_mastery_1=Weapons.Rapier(),
                     weapon_mastery_2=Weapons.Shortsword(),
                 ),
@@ -106,8 +106,8 @@ def get_starter_class_builder():
                 ),
                 5: RogueLevel5(),
                 6: RogueLevel6(
-                    skill_1=Definitions.Skill.ACROBATICS,
-                    skill_2=Definitions.Skill.ATHLETICS,
+                    skill_expertise_1=Definitions.Skill.ACROBATICS,
+                    skill_expertise_2=Definitions.Skill.ATHLETICS,
                 ),
                 7: RogueLevel7(),
                 8: RogueLevel8(

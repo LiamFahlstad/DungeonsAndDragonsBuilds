@@ -105,8 +105,8 @@ def get_starter_class_builder():
         base_class_level_features=ClassBuilder.BaseClassLevelFeatures(
             base_class_features_by_level={
                 1: RogueLevel1(
-                    skill_1=Skill.ACROBATICS,
-                    skill_2=Skill.STEALTH,
+                    skill_expertise_1=Skill.ACROBATICS,
+                    skill_expertise_2=Skill.STEALTH,
                     weapon_mastery_1=Weapons.Dagger(),
                     weapon_mastery_2=Weapons.Shortbow(),
                 ),

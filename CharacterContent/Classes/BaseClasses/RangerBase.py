@@ -50,14 +50,14 @@ class RangerLevel1(ClassBuilder.BaseClassLevel1):
 
 @attr.dataclass
 class RangerLevel2(ClassBuilder.BaseClassLevel2):
-    skill: Skill
+    skill_expertise: Skill
     fighting_style: FightingStyles.FightingStyle
     spell: RangerLevel1Spells
 
     def add_features(self, data: CharacterSheetData) -> CharacterSheetData:
         data.add_feature(RangerFeatures.DeftExplorerLanguages())
         data.add_feature(
-            RangerFeatures.DeftExplorerExpertise(self.skill), apply_when=ApplyWhen.LAST
+            RangerFeatures.DeftExplorerExpertise(self.skill_expertise), apply_when=ApplyWhen.LAST
         )
         data.add_fighting_style(self.fighting_style)
         data.add_spell(self.spell)
@@ -125,14 +125,14 @@ class RangerLevel8(ClassBuilder.BaseClassLevel8):
 
 @attr.dataclass
 class RangerLevel9(ClassBuilder.BaseClassLevel9):
-    skill_1: Skill
-    skill_2: Skill
+    skill_expertise_1: Skill
+    skill_expertise_2: Skill
     spell_1: RangerLevel1Spells | RangerLevel2Spells | RangerLevel3Spells
     spell_2: RangerLevel1Spells | RangerLevel2Spells | RangerLevel3Spells
 
     def add_features(self, data: CharacterSheetData) -> CharacterSheetData:
         data.add_feature(
-            RangerFeatures.Expertise(self.skill_1, self.skill_2),
+            RangerFeatures.Expertise(self.skill_expertise_1, self.skill_expertise_2),
             apply_when=ApplyWhen.LAST,
         )
         data.add_spell(self.spell_1)

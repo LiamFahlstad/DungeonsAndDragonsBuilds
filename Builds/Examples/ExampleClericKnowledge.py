@@ -183,8 +183,8 @@ def get_starter_class_builder():
             },
             subclass_features_by_level={
                 3: ClericKnowledgeLevel3(
-                    skill_1=Skill.HISTORY,
-                    skill_2=Skill.RELIGION,
+                    skill_proficiency_and_expertise_1=Skill.HISTORY,
+                    skill_proficiency_and_expertise_2=Skill.RELIGION,
                 ),
                 6: ClericKnowledgeLevel6(),
                 17: ClericKnowledgeLevel17(),

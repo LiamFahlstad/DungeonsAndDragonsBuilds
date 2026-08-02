@@ -111,7 +111,7 @@ def get_multiclass_builder():
                     spell_4=SpellDefs.WizardLevel1Spells.ALARM,
                 ),
                 2: WizardLevel2(
-                    skill=Skill.ARCANA,
+                    skill_expertise=Skill.ARCANA,
                     spell=SpellDefs.WizardLevel1Spells.BURNING_HANDS,
                 ),
                 3: WizardLevel3(
