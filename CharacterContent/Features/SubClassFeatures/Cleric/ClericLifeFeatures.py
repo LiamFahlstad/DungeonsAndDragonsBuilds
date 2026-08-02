@@ -3,7 +3,7 @@ from CharacterContent.Features.Core.BaseFeatures import Feature
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
-class DiscipleofLife(Feature):
+class DiscipleOfLife(Feature):
     def __init__(self):
         super().__init__(name="Disciple of Life", origin="Life Domain Cleric Level 3")
 

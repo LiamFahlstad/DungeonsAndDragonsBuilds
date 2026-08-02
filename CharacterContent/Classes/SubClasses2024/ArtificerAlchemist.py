@@ -30,8 +30,8 @@ class ArtificerAlchemistLevel3(ClassBuilder.SubclassLevel3):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(ArtificerAlchemistFeatures.AlchemistToolsOfTheTrade())
-        data.add_feature(ArtificerAlchemistFeatures.AlchemistSpells())
+        data.add_feature(ArtificerAlchemistFeatures.ToolsOfTheTrade())
+        data.add_feature(ArtificerAlchemistFeatures.Spells())
         data.add_feature(ArtificerAlchemistFeatures.ExperimentalElixir())
         data.add_spell(ClericLevel1Spells.HEALING_WORD)
         data.add_spell(WizardLevel1Spells.RAY_OF_SICKNESS)

@@ -1,6 +1,6 @@
 from Core.Definitions import Ability
 from .Base import AbstractWeapon
-from .Enums import WeaponMastery, WeaponProperty, WeaponType, WeaponsDamageRolls, WeaponsDamageTypes
+from .Enums import WeaponMastery, WeaponProperty, WeaponType, WeaponDamageRolls, WeaponDamageTypes
 
 
 class Club(AbstractWeapon):
@@ -10,8 +10,8 @@ class Club(AbstractWeapon):
         self.properties = [WeaponProperty.LIGHT]
         self.mastery = WeaponMastery.SLOW
         self.weapon_type = WeaponType.SIMPLE_MELEE
-        self.damage_type = WeaponsDamageTypes.BLUDGEONING
-        self.damage_roll = WeaponsDamageRolls.D4
+        self.damage_type = WeaponDamageTypes.BLUDGEONING
+        self.damage_roll = WeaponDamageRolls.D4
         self.weight = 2
         self.value = 0.1
 
@@ -23,8 +23,8 @@ class Dagger(AbstractWeapon):
         self.properties = [WeaponProperty.FINESSE, WeaponProperty.LIGHT, WeaponProperty.THROWN]
         self.mastery = WeaponMastery.NICK
         self.weapon_type = WeaponType.SIMPLE_MELEE
-        self.damage_type = WeaponsDamageTypes.PIERCING
-        self.damage_roll = WeaponsDamageRolls.D4
+        self.damage_type = WeaponDamageTypes.PIERCING
+        self.damage_roll = WeaponDamageRolls.D4
         self.weight = 1
         self.value = 2
 
@@ -36,8 +36,8 @@ class Greatclub(AbstractWeapon):
         self.properties = [WeaponProperty.HEAVY, WeaponProperty.TWO_HANDED]
         self.mastery = WeaponMastery.PUSH
         self.weapon_type = WeaponType.SIMPLE_MELEE
-        self.damage_type = WeaponsDamageTypes.BLUDGEONING
-        self.damage_roll = WeaponsDamageRolls.D8
+        self.damage_type = WeaponDamageTypes.BLUDGEONING
+        self.damage_roll = WeaponDamageRolls.D8
         self.weight = 5
         self.value = 0.2
 
@@ -49,8 +49,8 @@ class Handaxe(AbstractWeapon):
         self.properties = [WeaponProperty.LIGHT, WeaponProperty.THROWN]
         self.mastery = WeaponMastery.VEX
         self.weapon_type = WeaponType.SIMPLE_MELEE
-        self.damage_type = WeaponsDamageTypes.SLASHING
-        self.damage_roll = WeaponsDamageRolls.D6
+        self.damage_type = WeaponDamageTypes.SLASHING
+        self.damage_roll = WeaponDamageRolls.D6
         self.weight = 2
         self.value = 5
 
@@ -62,8 +62,8 @@ class Javelin(AbstractWeapon):
         self.properties = [WeaponProperty.THROWN]
         self.mastery = WeaponMastery.SLOW
         self.weapon_type = WeaponType.SIMPLE_MELEE
-        self.damage_type = WeaponsDamageTypes.PIERCING
-        self.damage_roll = WeaponsDamageRolls.D6
+        self.damage_type = WeaponDamageTypes.PIERCING
+        self.damage_roll = WeaponDamageRolls.D6
         self.weight = 2
         self.value = 0.5
 
@@ -75,8 +75,8 @@ class LightHammer(AbstractWeapon):
         self.properties = [WeaponProperty.LIGHT, WeaponProperty.THROWN]
         self.mastery = WeaponMastery.NICK
         self.weapon_type = WeaponType.SIMPLE_MELEE
-        self.damage_type = WeaponsDamageTypes.BLUDGEONING
-        self.damage_roll = WeaponsDamageRolls.D4
+        self.damage_type = WeaponDamageTypes.BLUDGEONING
+        self.damage_roll = WeaponDamageRolls.D4
         self.weight = 2
         self.value = 2
 
@@ -88,8 +88,8 @@ class Mace(AbstractWeapon):
         self.properties = []
         self.mastery = WeaponMastery.SAP
         self.weapon_type = WeaponType.SIMPLE_MELEE
-        self.damage_type = WeaponsDamageTypes.BLUDGEONING
-        self.damage_roll = WeaponsDamageRolls.D6
+        self.damage_type = WeaponDamageTypes.BLUDGEONING
+        self.damage_roll = WeaponDamageRolls.D6
         self.weight = 4
         self.value = 5
 
@@ -101,8 +101,8 @@ class Quarterstaff(AbstractWeapon):
         self.properties = [WeaponProperty.VERSATILE_8]
         self.mastery = WeaponMastery.TOPPLE
         self.weapon_type = WeaponType.SIMPLE_MELEE
-        self.damage_type = WeaponsDamageTypes.BLUDGEONING
-        self.damage_roll = WeaponsDamageRolls.D6
+        self.damage_type = WeaponDamageTypes.BLUDGEONING
+        self.damage_roll = WeaponDamageRolls.D6
         self.weight = 4
         self.value = 0.2
 
@@ -114,8 +114,8 @@ class Sickle(AbstractWeapon):
         self.properties = [WeaponProperty.LIGHT]
         self.mastery = WeaponMastery.NICK
         self.weapon_type = WeaponType.SIMPLE_MELEE
-        self.damage_type = WeaponsDamageTypes.SLASHING
-        self.damage_roll = WeaponsDamageRolls.D4
+        self.damage_type = WeaponDamageTypes.SLASHING
+        self.damage_roll = WeaponDamageRolls.D4
         self.weight = 2
         self.value = 1
 
@@ -127,7 +127,7 @@ class Spear(AbstractWeapon):
         self.properties = [WeaponProperty.VERSATILE_8, WeaponProperty.THROWN]
         self.mastery = WeaponMastery.SAP
         self.weapon_type = WeaponType.SIMPLE_MELEE
-        self.damage_type = WeaponsDamageTypes.PIERCING
-        self.damage_roll = WeaponsDamageRolls.D6
+        self.damage_type = WeaponDamageTypes.PIERCING
+        self.damage_roll = WeaponDamageRolls.D6
         self.weight = 3
         self.value = 1

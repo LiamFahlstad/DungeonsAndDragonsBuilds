@@ -162,7 +162,7 @@ class BarbarianLevel13(ClassBuilder.BaseClassLevel13):
         reckless_attack: BarbarianFeatures.RecklessAttack = data.get_features_by_type(
             BarbarianFeatures.RecklessAttack
         )[0]
-        reckless_attack.extend_feature(BarbarianFeatures.ImprovedBrutalStrike1())
+        reckless_attack.extend_feature(BarbarianFeatures.ImprovedBrutalStrikeLevel13())
         return data
 
 
@@ -204,7 +204,7 @@ class BarbarianLevel17(ClassBuilder.BaseClassLevel17):
         reckless_attack: BarbarianFeatures.RecklessAttack = data.get_features_by_type(
             BarbarianFeatures.RecklessAttack
         )[0]
-        reckless_attack.extend_feature(BarbarianFeatures.ImprovedBrutalStrike2())
+        reckless_attack.extend_feature(BarbarianFeatures.ImprovedBrutalStrikeLevel17())
         return data
 
 

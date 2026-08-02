@@ -3,7 +3,7 @@ from dataclasses import dataclass
 from typing import TYPE_CHECKING, Optional
 from Core.Definitions import Ability
 from CharacterContent.Features.Core.Improvements import ItemImprovement
-from .Enums import WeaponProperty, WeaponsDamageRolls, WeaponsDamageTypes
+from .Enums import WeaponProperty, WeaponDamageRolls, WeaponDamageTypes
 
 if TYPE_CHECKING:
     # AbstractWeapon is only used as a quoted forward-ref annotation below;
@@ -15,8 +15,8 @@ if TYPE_CHECKING:
 @dataclass
 class ExtraDamage:
     """Represents bonus damage added to a weapon attack."""
-    damage_roll: "WeaponsDamageRolls"
-    damage_type: WeaponsDamageTypes
+    damage_roll: "WeaponDamageRolls"
+    damage_type: WeaponDamageTypes
     note: Optional[str] = None  # e.g. "chosen type, activate as bonus action"
 
     def format_damage(self) -> str:
@@ -94,7 +94,7 @@ class AddDamageRollBonus(WeaponImprovement):
 class SetDamageDie(WeaponImprovement):
     """Overrides the weapon's damage die (e.g. upgrading a Longsword to 2d6)."""
 
-    def __init__(self, damage_roll: WeaponsDamageRolls):
+    def __init__(self, damage_roll: WeaponDamageRolls):
         self.damage_roll = damage_roll
 
     def apply(self, weapon: "AbstractWeapon") -> None:
@@ -104,7 +104,7 @@ class SetDamageDie(WeaponImprovement):
 class SetDamageType(WeaponImprovement):
     """Overrides the weapon's damage type (e.g. a frost blade dealing Cold instead of Slashing)."""
 
-    def __init__(self, damage_type: WeaponsDamageTypes):
+    def __init__(self, damage_type: WeaponDamageTypes):
         self.damage_type = damage_type
 
     def apply(self, weapon: "AbstractWeapon") -> None:
@@ -127,8 +127,8 @@ class AddExtraDamage(WeaponImprovement):
 
     def __init__(
         self,
-        damage_roll: WeaponsDamageRolls,
-        damage_type: WeaponsDamageTypes,
+        damage_roll: WeaponDamageRolls,
+        damage_type: WeaponDamageTypes,
         note: Optional[str] = None,
     ):
         self.extra_damage = ExtraDamage(damage_roll=damage_roll, damage_type=damage_type, note=note)

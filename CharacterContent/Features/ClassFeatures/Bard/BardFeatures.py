@@ -47,7 +47,7 @@ class BardicInspiration(Feature):
         )
 
 
-class Expertise1(Feature):
+class ExpertiseLevel1(Feature):
     def __init__(self, skill_1: Skill, skill_2: Skill):
         super().__init__(name="Expertise", origin="Bard Level 1")
         self._choice = SkillExpertiseChoice(
@@ -62,7 +62,7 @@ class Expertise1(Feature):
         return description
 
 
-class Expertise2(Feature):
+class ExpertiseLevel9(Feature):
     def __init__(self, skill_1: Skill, skill_2: Skill):
         super().__init__(name="Expertise", origin="Bard Level 9")
         self._choice = SkillExpertiseChoice(

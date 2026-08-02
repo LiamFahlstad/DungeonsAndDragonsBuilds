@@ -50,7 +50,7 @@ class GuardedMind(Feature):
         return description
 
 
-class BulwarkofForce(Feature):
+class BulwarkOfForce(Feature):
     def __init__(self):
         super().__init__(name="Bulwark of Force", origin="Psi Warrior Fighter Level 15")
 

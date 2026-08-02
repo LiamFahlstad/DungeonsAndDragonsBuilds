@@ -30,8 +30,8 @@ class ArtificerBattleSmithLevel3(ClassBuilder.SubclassLevel3):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(ArtificerBattleSmithFeatures.BattleSmithToolsOfTheTrade())
-        data.add_feature(ArtificerBattleSmithFeatures.BattleSmithSpells())
+        data.add_feature(ArtificerBattleSmithFeatures.ToolsOfTheTrade())
+        data.add_feature(ArtificerBattleSmithFeatures.Spells())
         data.add_feature(ArtificerBattleSmithFeatures.BattleReady())
         data.add_feature(ArtificerBattleSmithFeatures.SteelDefender())
         data.add_spell(PaladinLevel1Spells.HEROISM)
@@ -45,7 +45,7 @@ class ArtificerBattleSmithLevel5(ClassBuilder.SubclassLevel5):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(ArtificerBattleSmithFeatures.BattleSmithExtraAttack())
+        data.add_feature(ArtificerBattleSmithFeatures.ExtraAttack())
         data.add_spell(PaladinLevel2Spells.BRANDING_SMITE)
         data.add_spell(PaladinLevel2Spells.WARDING_BOND)
         return data

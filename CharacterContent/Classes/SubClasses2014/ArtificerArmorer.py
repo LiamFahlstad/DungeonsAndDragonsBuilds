@@ -29,8 +29,8 @@ class ArtificerArmorerLevel3(ClassBuilder.SubclassLevel3):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(ArtificerArmorerFeatures.ArmorerToolsOfTheTrade())
-        data.add_feature(ArtificerArmorerFeatures.ArmorerSpells())
+        data.add_feature(ArtificerArmorerFeatures.ToolsOfTheTrade())
+        data.add_feature(ArtificerArmorerFeatures.Spells())
         data.add_feature(ArtificerArmorerFeatures.ArcaneArmor())
         data.add_feature(ArtificerArmorerFeatures.ArmorModel())
         data.add_spell(SorcererLevel1Spells.MAGIC_MISSILE)
@@ -44,7 +44,7 @@ class ArtificerArmorerLevel5(ClassBuilder.SubclassLevel5):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(ArtificerArmorerFeatures.ArmorerExtraAttack())
+        data.add_feature(ArtificerArmorerFeatures.ExtraAttack())
         data.add_spell(BardLevel2Spells.MIRROR_IMAGE)
         data.add_spell(BardLevel2Spells.SHATTER)
         return data

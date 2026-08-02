@@ -6,7 +6,7 @@ from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
 
-class SpellCasting(Feature):
+class Spellcasting(Feature):
     def __init__(self):
         super().__init__(name="Spell Casting", origin="Ranger Level 1")
 

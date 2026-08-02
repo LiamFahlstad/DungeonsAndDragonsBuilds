@@ -211,7 +211,7 @@ class RelentlessRage(Feature):
         return description
 
 
-class ImprovedBrutalStrike1(Feature):
+class ImprovedBrutalStrikeLevel13(Feature):
     def __init__(self):
         super().__init__(name="Improved Brutal Strike 1", origin="Barbarian Level 13")
 
@@ -236,7 +236,7 @@ class PersistentRage(Feature):
         return description
 
 
-class ImprovedBrutalStrike2(Feature):
+class ImprovedBrutalStrikeLevel17(Feature):
     def __init__(self):
         super().__init__(name="Improved Brutal Strike 2", origin="Barbarian Level 17")
 

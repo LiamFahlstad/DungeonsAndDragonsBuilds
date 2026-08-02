@@ -199,7 +199,7 @@ class ExampleClericKnowledgeCharacterBuilder(CharacterBuilder):
         super().__init__(
             name="Example Knowledge Cleric",
             starter_class_builder=get_starter_class_builder(),
-            species_builder=Warforged.WarForgedSpeciesBuilder(
+            species_builder=Warforged.WarforgedSpeciesBuilder(
                 skill=Skill.MEDICINE,
             ),
         )

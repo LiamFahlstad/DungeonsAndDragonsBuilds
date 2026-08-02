@@ -287,7 +287,7 @@ class WeaversTools(ToolProficiency):
             weight=5.0,
             cost=1,
             utilize="Mend a tear in clothing (DC 10), or sew a Tiny design (DC 10)",
-            craftables=[Items.PaddedArmor(), Items.Basket(), Items.Bedroll(), Items.Blanket(), Items.FineClothes(), Items.Net(), Items.Robe(), Items.RopePlaceholder(), Items.Sack(), Items.StringItem(), Items.Tent(), Items.TravelersClothes()],
+            craftables=[Items.PaddedArmor(), Items.Basket(), Items.Bedroll(), Items.Blanket(), Items.FineClothes(), Items.Net(), Items.Robe(), Items.RopePlaceholder(), Items.Sack(), Items.String(), Items.Tent(), Items.TravelersClothes()],
         )
 
 

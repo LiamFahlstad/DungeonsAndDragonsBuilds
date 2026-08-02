@@ -24,7 +24,7 @@ class ReanimatorSpells(Feature):
         return description
 
 
-class ReanimatorsSkillSet(Feature):
+class ReanimatorSkillSet(Feature):
     def __init__(self):
         super().__init__(
             name="Reanimator's Skill Set", origin="Reanimator Artificer Level 3"

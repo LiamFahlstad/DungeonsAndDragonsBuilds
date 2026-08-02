@@ -5,7 +5,7 @@ from Core.Definitions import Ability, DiceRollCondition, Die
 from CharacterContent.Features.Core.Improvements import ItemImprovement, CharacterImprovement
 from CharacterContent.Items.Items import Item, ItemCategory, ItemRarity
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
-from .Enums import WeaponMastery, WeaponProficiency, WeaponProperty, WeaponType, WeaponsDamageRolls, WeaponsDamageTypes
+from .Enums import WeaponMastery, WeaponProficiency, WeaponProperty, WeaponType, WeaponDamageRolls, WeaponDamageTypes
 from .Improvements import ExtraDamage
 
 
@@ -17,7 +17,7 @@ class AbstractWeapon(Item, ABC):
     - `improvements=[...]` (list[CharacterImprovement], defined in CharacterContent.Features.Core.Improvements):
       character-affecting effects, applied to the wielder's stat block while
       worn - e.g. FlameTongueSword granting +1 Strength, the same mechanism
-      RingOfIntelligence uses in CharacterContent.Items.Items.
+      RingOfIntellect uses in CharacterContent.Items.Items.
     - `weapon_improvements=[...]` (list[ItemImprovement], defined below and in
       CharacterContent.Features.Core.Improvements): typically a WeaponImprovement - a
       weapon-only effect that modifies the weapon itself (damage die/type,
@@ -31,8 +31,8 @@ class AbstractWeapon(Item, ABC):
     ability: Ability
     properties: list[WeaponProperty]
     weapon_type: WeaponType
-    damage_type: WeaponsDamageTypes
-    damage_roll: WeaponsDamageRolls
+    damage_type: WeaponDamageTypes
+    damage_roll: WeaponDamageRolls
 
     def __init__(
         self,
@@ -288,7 +288,7 @@ class UnarmedStrike(AbstractWeapon):
     def __init__(
         self,
         ability: Optional[Ability] = None,
-        damage_roll: Optional[WeaponsDamageRolls] = None,
+        damage_roll: Optional[WeaponDamageRolls] = None,
         **kwargs,
     ):
         if ability is not None and ability not in (
@@ -298,7 +298,7 @@ class UnarmedStrike(AbstractWeapon):
             raise ValueError("Unarmed Strike ability must be STR or DEX.")
         if kwargs.get("player_has_mastery"):
             raise ValueError("Unarmed Strike cannot have weapon mastery.")
-        self._damage_roll_arg: Optional[WeaponsDamageRolls] = damage_roll
+        self._damage_roll_arg: Optional[WeaponDamageRolls] = damage_roll
         super().__init__(ability=ability, **kwargs)
 
     def base_stats(self) -> None:
@@ -307,8 +307,8 @@ class UnarmedStrike(AbstractWeapon):
         self.properties = []
         self.mastery = None
         self.weapon_type = WeaponType.MARTIAL_MELEE
-        self.damage_type = WeaponsDamageTypes.BLUDGEONING
-        self.damage_roll = self._damage_roll_arg or WeaponsDamageRolls.D1
+        self.damage_type = WeaponDamageTypes.BLUDGEONING
+        self.damage_roll = self._damage_roll_arg or WeaponDamageRolls.D1
         self.description_text = (
             "You can replace one attack with a grapple or shove. Grapple: target within reach and no more than one size larger, requires a free hand; make an Athletics check contested by Athletics or Acrobatics; on success, the target’s speed becomes 0, you can move it at half speed, and you can release it at any time; it can repeat the check to escape and automatically fails if incapacitated. "
             "Shove: same limits and check; on success, either knock the target prone or push it 5 ft. "

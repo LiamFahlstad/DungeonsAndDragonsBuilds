@@ -84,7 +84,7 @@ def get_starter_class_builder():
                     spell_4=SpellDefs.WizardLevel1Spells.ALARM,
                 ),
                 2: WizardLevel2(
-                    skill_to_expertise_in=Skill.ARCANA,
+                    skill=Skill.ARCANA,
                     spell=SpellDefs.WizardLevel1Spells.BURNING_HANDS,
                 ),
                 3: WizardLevel3(

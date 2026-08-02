@@ -14,7 +14,7 @@ from CharacterContent.Spells.SpellLists import (
 
 class FiendishLineage(str, Enum):
     ABYSSAL = "Abyssal"
-    Chthonic = "Chthonic"
+    CHTHONIC = "Chthonic"
     Infernal = "Infernal"
 
 
@@ -50,7 +50,7 @@ class TieflingSpeciesBuilder(SpeciesBuilder):
             if self.character_level >= 5:
                 spell_2 = ClericLevel2Spells.HOLD_PERSON
 
-        elif self.fiendish_lineage == FiendishLineage.Chthonic:
+        elif self.fiendish_lineage == FiendishLineage.CHTHONIC:
             cantrip = SorcererLevel0Spells.CHILL_TOUCH
             data.add_feature(TieflingFeatures.FiendishResistance("Necrotic"))
             if self.character_level >= 3:

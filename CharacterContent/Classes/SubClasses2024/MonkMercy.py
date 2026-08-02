@@ -19,7 +19,7 @@ class MonkMercyLevel3(ClassBuilder.SubclassLevel3):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(MonkMercyFeatures.HandofHarm())
+        data.add_feature(MonkMercyFeatures.HandOfHarm())
         data.add_feature(MonkMercyFeatures.HandOfHealing())
         data.add_feature(MonkMercyFeatures.ImplementsOfMercy())
         return data

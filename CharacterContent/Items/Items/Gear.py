@@ -446,7 +446,7 @@ class Spyglass(Item):
         )
 
 
-class StringItem(Item):
+class String(Item):
     def __init__(self):
         super().__init__(
             "String",

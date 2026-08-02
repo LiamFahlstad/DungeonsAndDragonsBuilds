@@ -30,8 +30,8 @@ class ArtificerArtilleristLevel3(ClassBuilder.SubclassLevel3):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(ArtificerArtilleristFeatures.ArtilleristToolsOfTheTrade())
-        data.add_feature(ArtificerArtilleristFeatures.ArtilleristSpells())
+        data.add_feature(ArtificerArtilleristFeatures.ToolsOfTheTrade())
+        data.add_feature(ArtificerArtilleristFeatures.Spells())
         data.add_feature(ArtificerArtilleristFeatures.EldritchCannon())
         data.add_spell(SorcererLevel1Spells.SHIELD)
         data.add_spell(BardLevel1Spells.THUNDERWAVE)

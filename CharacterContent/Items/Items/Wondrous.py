@@ -344,7 +344,7 @@ class GauntletsOfStrength(Item):
         )
 
 
-class RingOfIntelligence(Item):
+class RingOfIntellect(Item):
     """A mystical ring that increases Intelligence by 2."""
 
     def __init__(self, is_wearing: bool = True):

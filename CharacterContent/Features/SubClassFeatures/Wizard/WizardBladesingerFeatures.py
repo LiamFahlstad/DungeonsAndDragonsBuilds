@@ -4,7 +4,7 @@ from CharacterContent.Features.Core.Improvements import SkillProficiencyChoice
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
-class BladesongText(Feature):
+class Bladesong(Feature):
     def __init__(self):
         super().__init__(name="Bladesong", origin="Bladesinger Wizard Level 3")
 

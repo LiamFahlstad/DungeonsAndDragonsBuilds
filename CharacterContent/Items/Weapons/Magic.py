@@ -11,7 +11,7 @@ from CharacterContent.Features.Core.Improvements import (
 )
 from CharacterContent.Items.Items import ItemRarity
 from .Base import AbstractWeapon
-from .Enums import WeaponMastery, WeaponProperty, WeaponType, WeaponsDamageRolls, WeaponsDamageTypes
+from .Enums import WeaponMastery, WeaponProperty, WeaponType, WeaponDamageRolls, WeaponDamageTypes
 from .Improvements import AddAttackRollBonus, AddDamageRollBonus, AddExtraDamage, AddWeaponProperty, ExtraDamage, SetAttackRollBonus, SetDamageDie, SetDamageRollBonus, SetDamageType
 from .MartialMelee import Longsword, Maul, Rapier, Shortsword
 from .Ranged import Longbow
@@ -32,8 +32,8 @@ class Nullblade(AbstractWeapon):
         self.properties = [WeaponProperty.VERSATILE_10]
         self.mastery = WeaponMastery.GRAZE
         self.weapon_type = WeaponType.MARTIAL_MELEE
-        self.damage_type = WeaponsDamageTypes.SLASHING
-        self.damage_roll = WeaponsDamageRolls.D8
+        self.damage_type = WeaponDamageTypes.SLASHING
+        self.damage_roll = WeaponDamageRolls.D8
         self.description_text = description
         self.is_homebrew = True
 
@@ -53,8 +53,8 @@ class Bloodletter(AbstractWeapon):
         self.properties = []
         self.mastery = WeaponMastery.GRAZE
         self.weapon_type = WeaponType.MARTIAL_MELEE
-        self.damage_type = WeaponsDamageTypes.SLASHING
-        self.damage_roll = WeaponsDamageRolls.D8
+        self.damage_type = WeaponDamageTypes.SLASHING
+        self.damage_roll = WeaponDamageRolls.D8
         self.description_text = description
         self.is_homebrew = True
 
@@ -70,8 +70,8 @@ class HuntersHarpoon(AbstractWeapon):
         self.properties = [WeaponProperty.THROWN]
         self.mastery = WeaponMastery.SLOW
         self.weapon_type = WeaponType.MARTIAL_MELEE
-        self.damage_type = WeaponsDamageTypes.PIERCING
-        self.damage_roll = WeaponsDamageRolls.D10
+        self.damage_type = WeaponDamageTypes.PIERCING
+        self.damage_roll = WeaponDamageRolls.D10
         self.description_text = description
         self.is_homebrew = True
 
@@ -88,8 +88,8 @@ class RicochetBlade(AbstractWeapon):
         self.properties = [WeaponProperty.FINESSE]
         self.mastery = WeaponMastery.NICK
         self.weapon_type = WeaponType.MARTIAL_MELEE
-        self.damage_type = WeaponsDamageTypes.SLASHING
-        self.damage_roll = WeaponsDamageRolls.D6
+        self.damage_type = WeaponDamageTypes.SLASHING
+        self.damage_roll = WeaponDamageRolls.D6
         self.description_text = description
         self.is_homebrew = True
 
@@ -106,8 +106,8 @@ class RampagingBlade(AbstractWeapon):
         self.properties = []
         self.mastery = WeaponMastery.CLEAVE
         self.weapon_type = WeaponType.MARTIAL_MELEE
-        self.damage_type = WeaponsDamageTypes.SLASHING
-        self.damage_roll = WeaponsDamageRolls.D8
+        self.damage_type = WeaponDamageTypes.SLASHING
+        self.damage_roll = WeaponDamageRolls.D8
         self.description_text = description
         self.is_homebrew = True
 
@@ -119,16 +119,16 @@ class ElementalSword(AbstractWeapon):
         self.properties = [WeaponProperty.VERSATILE_10]
         self.mastery = WeaponMastery.GRAZE
         self.weapon_type = WeaponType.MARTIAL_MELEE
-        self.damage_type = WeaponsDamageTypes.SLASHING
-        self.damage_roll = WeaponsDamageRolls.D8
+        self.damage_type = WeaponDamageTypes.SLASHING
+        self.damage_roll = WeaponDamageRolls.D8
         self.description_text = (
             "As a bonus action, choose acid, cold, fire, lightning, or thunder. "
             "The weapon deals an extra 1d6 damage of the chosen type on hit."
         )
         self.extra_damage = [
             ExtraDamage(
-                damage_roll=WeaponsDamageRolls.D6,
-                damage_type=WeaponsDamageTypes.FIRE,
+                damage_roll=WeaponDamageRolls.D6,
+                damage_type=WeaponDamageTypes.FIRE,
                 note="chosen type, activate as bonus action",
             )
         ]
@@ -148,8 +148,8 @@ class BloodlustBlade(AbstractWeapon):
         self.properties = []
         self.mastery = WeaponMastery.GRAZE
         self.weapon_type = WeaponType.MARTIAL_MELEE
-        self.damage_type = WeaponsDamageTypes.SLASHING
-        self.damage_roll = WeaponsDamageRolls.D8
+        self.damage_type = WeaponDamageTypes.SLASHING
+        self.damage_roll = WeaponDamageRolls.D8
         self.description_text = description
         self.is_homebrew = True
 
@@ -166,8 +166,8 @@ class CoinflipCutBlade(AbstractWeapon):
         self.properties = [WeaponProperty.FINESSE]
         self.mastery = WeaponMastery.NICK
         self.weapon_type = WeaponType.MARTIAL_MELEE
-        self.damage_type = WeaponsDamageTypes.SLASHING
-        self.damage_roll = WeaponsDamageRolls.D6
+        self.damage_type = WeaponDamageTypes.SLASHING
+        self.damage_roll = WeaponDamageRolls.D6
         self.description_text = description
         self.is_homebrew = True
 
@@ -183,8 +183,8 @@ class Sundersteel(AbstractWeapon):
         self.properties = [WeaponProperty.HEAVY]
         self.mastery = WeaponMastery.CLEAVE
         self.weapon_type = WeaponType.MARTIAL_MELEE
-        self.damage_type = WeaponsDamageTypes.SLASHING
-        self.damage_roll = WeaponsDamageRolls.D12
+        self.damage_type = WeaponDamageTypes.SLASHING
+        self.damage_roll = WeaponDamageRolls.D12
         self.description_text = description
         self.is_homebrew = True
 
@@ -200,8 +200,8 @@ class VampiricEdge(AbstractWeapon):
         self.properties = []
         self.mastery = WeaponMastery.GRAZE
         self.weapon_type = WeaponType.MARTIAL_MELEE
-        self.damage_type = WeaponsDamageTypes.SLASHING
-        self.damage_roll = WeaponsDamageRolls.D8
+        self.damage_type = WeaponDamageTypes.SLASHING
+        self.damage_roll = WeaponDamageRolls.D8
         self.description_text = description
         self.is_homebrew = True
 
@@ -278,7 +278,7 @@ class Colossustrike(Greatclub):
     overridden to something larger than the base weapon's own die."""
 
     def setup_improvements(self) -> None:
-        self.add_weapon_improvement(SetDamageDie(WeaponsDamageRolls.D12x2))
+        self.add_weapon_improvement(SetDamageDie(WeaponDamageRolls.D12x2))
         self.add_weapon_improvement(
             Reskin(
                 "Colossustrike",
@@ -293,7 +293,7 @@ class FrostbrandBlade(Longsword):
     overridden from the base weapon's."""
 
     def setup_improvements(self) -> None:
-        self.add_weapon_improvement(SetDamageType(WeaponsDamageTypes.COLD))
+        self.add_weapon_improvement(SetDamageType(WeaponDamageTypes.COLD))
         self.add_weapon_improvement(
             Reskin(
                 "Frostbrand Blade",
@@ -347,8 +347,8 @@ class StormcallerMace(Mace):
     def setup_improvements(self) -> None:
         self.add_weapon_improvement(
             AddExtraDamage(
-                WeaponsDamageRolls.D6,
-                WeaponsDamageTypes.LIGHTNING,
+                WeaponDamageRolls.D6,
+                WeaponDamageTypes.LIGHTNING,
                 note="crackles with static charge",
             )
         )
@@ -375,8 +375,8 @@ class FlameTongueSword(AbstractWeapon):
         self.properties = [WeaponProperty.VERSATILE_10]
         self.mastery = WeaponMastery.TOPPLE
         self.weapon_type = WeaponType.MARTIAL_MELEE
-        self.damage_type = WeaponsDamageTypes.SLASHING
-        self.damage_roll = WeaponsDamageRolls.D8
+        self.damage_type = WeaponDamageTypes.SLASHING
+        self.damage_roll = WeaponDamageRolls.D8
         self.description_text = (
             "This sword is wreathed in magical flames. "
             "It deals an extra 2d6 fire damage on a hit. "
@@ -384,8 +384,8 @@ class FlameTongueSword(AbstractWeapon):
         )
         self.extra_damage = [
             ExtraDamage(
-                damage_roll=WeaponsDamageRolls.D6x2,
-                damage_type=WeaponsDamageTypes.FIRE,
+                damage_roll=WeaponDamageRolls.D6x2,
+                damage_type=WeaponDamageTypes.FIRE,
                 note="magical flames",
             )
         ]
@@ -401,7 +401,7 @@ class FlameTongueSword(AbstractWeapon):
 class SkirmishersShortsword(Shortsword):
     """A magical Shortsword demonstrating a character-affecting improvement
     (`character_improvements`, i.e. the weapon's own `improvements=` - the
-    same mechanism RingOfIntelligence uses) rather than a WeaponImprovement: it
+    same mechanism RingOfIntellect uses) rather than a WeaponImprovement: it
     hones the wielder's own footwork, not the blade itself."""
 
     def base_stats(self) -> None:

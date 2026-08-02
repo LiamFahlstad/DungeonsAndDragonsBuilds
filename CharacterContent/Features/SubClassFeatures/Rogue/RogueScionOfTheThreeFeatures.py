@@ -47,7 +47,7 @@ class StrikeFear(Feature):
         return description
 
 
-class AuraofMalevolence(Feature):
+class AuraOfMalevolence(Feature):
     def __init__(self):
         super().__init__(
             name="Aura of Malevolence", origin="Scion of the Three Rogue Level 13"

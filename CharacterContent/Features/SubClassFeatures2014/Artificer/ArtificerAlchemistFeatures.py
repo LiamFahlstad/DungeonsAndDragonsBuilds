@@ -4,7 +4,7 @@ from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
 
-class AlchemistToolsOfTheTrade(Feature):
+class ToolsOfTheTrade(Feature):
     def __init__(self):
         super().__init__(name="Tool Proficiency", origin="Alchemist Artificer Level 3")
 
@@ -13,7 +13,7 @@ class AlchemistToolsOfTheTrade(Feature):
         return description
 
 
-class AlchemistSpells(Feature):
+class Spells(Feature):
     def __init__(self):
         super().__init__(name="Alchemist Spells", origin="Alchemist Artificer Level 3")
 

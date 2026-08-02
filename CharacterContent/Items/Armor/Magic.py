@@ -65,7 +65,7 @@ class DragonscalePlate(AbstractArmor):
 class SentinelsWatchArmor(ChainShirtArmor):
     """Magical Chain Shirt demonstrating a character-affecting improvement
     (`character_improvements`, i.e. the armor's own `improvements=` - the
-    same mechanism RingOfIntelligence uses) rather than an ArmorImprovement: it
+    same mechanism RingOfIntellect uses) rather than an ArmorImprovement: it
     sharpens the wearer's own senses, not the armor's AC."""
 
     def base_stats(self) -> None:

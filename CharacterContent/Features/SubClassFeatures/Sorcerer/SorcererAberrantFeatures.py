@@ -5,7 +5,7 @@ from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 class TelepathicSpeech(Feature):
     def __init__(self):
-        super().__init__(name="Telepathic Speech", origin="Aberrant Sorcery Level 3")
+        super().__init__(name="Telepathic Speech", origin="Aberrant Sorcerer Level 3")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -17,7 +17,7 @@ class TelepathicSpeech(Feature):
 
 class PsionicSorcery(Feature):
     def __init__(self):
-        super().__init__(name="Psionic Sorcery", origin="Aberrant Sorcery Level 6")
+        super().__init__(name="Psionic Sorcery", origin="Aberrant Sorcerer Level 6")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "When you cast any level 1+ spell from your Psionic Spells feature, you can cast it by expending a spell slot as normal or by spending a number of Sorcery Points equal to the spell’s level. If you cast the spell using Sorcery Points, it requires no Verbal or Somatic components, and it requires no Material components unless they are consumed by the spell or have a cost specified in it."
@@ -26,16 +26,16 @@ class PsionicSorcery(Feature):
 
 class PsychicDefenses(Feature):
     def __init__(self):
-        super().__init__(name="Psychic Defenses", origin="Aberrant Sorcery Level 6")
+        super().__init__(name="Psychic Defenses", origin="Aberrant Sorcerer Level 6")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "You have Resistance to Psychic damage, and you have Advantage on saving throws to avoid or end the Charmed or Frightened condition."
         return description
 
 
-class RevelationinFlesh(Feature):
+class RevelationInFlesh(Feature):
     def __init__(self):
-        super().__init__(name="Revelation in Flesh", origin="Aberrant Sorcery Level 14")
+        super().__init__(name="Revelation in Flesh", origin="Aberrant Sorcerer Level 14")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -50,7 +50,7 @@ class RevelationinFlesh(Feature):
 
 class WarpingImplosion(Feature):
     def __init__(self):
-        super().__init__(name="Warping Implosion", origin="Aberrant Sorcery Level 18")
+        super().__init__(name="Warping Implosion", origin="Aberrant Sorcerer Level 18")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

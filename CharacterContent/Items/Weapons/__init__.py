@@ -3,8 +3,8 @@ from .Enums import (
     WeaponMastery,
     WeaponType,
     WeaponProficiency,
-    WeaponsDamageTypes,
-    WeaponsDamageRolls,
+    WeaponDamageTypes,
+    WeaponDamageRolls,
 )
 from .Improvements import (
     ExtraDamage,

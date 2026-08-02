@@ -21,7 +21,7 @@ class DungeoneersPack(Pack):
         ]
 
 
-class Entertainers(Pack):
+class EntertainersPack(Pack):
     def get_items(self) -> list[tuple[Items.Item, int]]:
         return [
             (Items.Backpack(), 1),

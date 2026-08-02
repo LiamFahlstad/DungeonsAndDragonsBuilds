@@ -80,7 +80,7 @@ class BardLevel2(ClassBuilder.BaseClassLevel2):
         data.add_feature(BardFeatures.JackOfAllTrades(), apply_when=ApplyWhen.LAST)
         data.add_spell(self.spell)
         data.add_feature(
-            BardFeatures.Expertise1(skill_1=self.skill_1, skill_2=self.skill_2),
+            BardFeatures.ExpertiseLevel1(skill_1=self.skill_1, skill_2=self.skill_2),
             apply_when=ApplyWhen.LAST,
         )
         return data
@@ -187,7 +187,7 @@ class BardLevel9(ClassBuilder.BaseClassLevel9):
         data.add_spell(self.spell_1)
         data.add_spell(self.spell_2)
         data.add_feature(
-            BardFeatures.Expertise1(skill_1=self.skill_1, skill_2=self.skill_2),
+            BardFeatures.ExpertiseLevel1(skill_1=self.skill_1, skill_2=self.skill_2),
             apply_when=ApplyWhen.LAST,
         )
         return data
@@ -352,7 +352,7 @@ class BardCustomStarterClassArgs(ClassBuilder.CustomStarterClassArgs):
             weapon_proficiencies=[Weapons.WeaponProficiency.SIMPLE],
             spell_casting_ability=Ability.CHARISMA,
             caster_type=SpellSlots.CasterType.FULL_CASTER,
-            default_pack=Packs.Entertainers(),
+            default_pack=Packs.EntertainersPack(),
         )
 
 

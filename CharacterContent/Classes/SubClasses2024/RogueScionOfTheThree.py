@@ -47,7 +47,7 @@ class RogueScionOfTheThreeLevel13(ClassBuilder.SubclassLevel13):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(RogueScionOfTheThreeFeatures.AuraofMalevolence())
+        data.add_feature(RogueScionOfTheThreeFeatures.AuraOfMalevolence())
         return data
 
 

@@ -3,7 +3,7 @@ from CharacterContent.Features.Core.BaseFeatures import Feature
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
-class ArtilleristToolsOfTheTrade(Feature):
+class ToolsOfTheTrade(Feature):
     def __init__(self):
         super().__init__(
             name="Tools of the Trade", origin="Artillerist Artificer Level 3"
@@ -19,7 +19,7 @@ class ArtilleristToolsOfTheTrade(Feature):
         return description
 
 
-class ArtilleristSpells(Feature):
+class Spells(Feature):
     def __init__(self):
         super().__init__(
             name="Artillerist Spells", origin="Artillerist Artificer Level 3"

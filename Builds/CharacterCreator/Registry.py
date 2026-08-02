@@ -669,7 +669,7 @@ def signature_params(cls) -> list:
     except (TypeError, ValueError):
         return []
     try:
-        # Resolves quoted annotations (e.g. damage_roll: "WeaponsDamageRolls")
+        # Resolves quoted annotations (e.g. damage_roll: "WeaponDamageRolls")
         # that inspect.signature leaves as strings.
         hints = typing.get_type_hints(cls.__init__)
     except Exception:

@@ -1,29 +1,29 @@
 from Core.Definitions import MONK_HIT_DIE
 from CharacterContent.Features.Core.BaseFeatures import Feature
-from CharacterContent.Items.Weapons import WeaponsDamageRolls
+from CharacterContent.Items.Weapons import WeaponDamageRolls
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 LEVEL_TO_MARTIAL_ARTS_DIE = {
-    1: WeaponsDamageRolls.D6,
-    2: WeaponsDamageRolls.D6,
-    3: WeaponsDamageRolls.D6,
-    4: WeaponsDamageRolls.D6,
-    5: WeaponsDamageRolls.D8,
-    6: WeaponsDamageRolls.D8,
-    7: WeaponsDamageRolls.D8,
-    8: WeaponsDamageRolls.D8,
-    9: WeaponsDamageRolls.D8,
-    10: WeaponsDamageRolls.D8,
-    11: WeaponsDamageRolls.D10,
-    12: WeaponsDamageRolls.D10,
-    13: WeaponsDamageRolls.D10,
-    14: WeaponsDamageRolls.D10,
-    15: WeaponsDamageRolls.D10,
-    16: WeaponsDamageRolls.D10,
-    17: WeaponsDamageRolls.D12,
-    18: WeaponsDamageRolls.D12,
-    19: WeaponsDamageRolls.D12,
-    20: WeaponsDamageRolls.D12,
+    1: WeaponDamageRolls.D6,
+    2: WeaponDamageRolls.D6,
+    3: WeaponDamageRolls.D6,
+    4: WeaponDamageRolls.D6,
+    5: WeaponDamageRolls.D8,
+    6: WeaponDamageRolls.D8,
+    7: WeaponDamageRolls.D8,
+    8: WeaponDamageRolls.D8,
+    9: WeaponDamageRolls.D8,
+    10: WeaponDamageRolls.D8,
+    11: WeaponDamageRolls.D10,
+    12: WeaponDamageRolls.D10,
+    13: WeaponDamageRolls.D10,
+    14: WeaponDamageRolls.D10,
+    15: WeaponDamageRolls.D10,
+    16: WeaponDamageRolls.D10,
+    17: WeaponDamageRolls.D12,
+    18: WeaponDamageRolls.D12,
+    19: WeaponDamageRolls.D12,
+    20: WeaponDamageRolls.D12,
 }
 
 LEVEL_TO_FOCUS_POINTS = {

@@ -4,7 +4,7 @@ from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
 
-class BattleSmithToolsOfTheTrade(Feature):
+class ToolsOfTheTrade(Feature):
     def __init__(self):
         super().__init__(
             name="Tools of the Trade", origin="Battle Smith Artificer Level 3"
@@ -19,7 +19,7 @@ class BattleSmithToolsOfTheTrade(Feature):
         return description
 
 
-class BattleSmithSpells(Feature):
+class Spells(Feature):
     def __init__(self):
         super().__init__(
             name="Battle Smith spells", origin="Battle Smith Artificer Level 3"
@@ -85,7 +85,7 @@ class SteelDefender(Feature):
         return description
 
 
-class BattleSmithExtraAttack(Feature):
+class ExtraAttack(Feature):
     def __init__(self):
         super().__init__(name="Extra Attack", origin="Battle Smith Artificer Level 5")
 

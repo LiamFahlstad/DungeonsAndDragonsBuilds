@@ -10,7 +10,7 @@ class WildMagicSurge(Feature):
         return description
 
 
-class TidesofChaos(Feature):
+class TidesOfChaos(Feature):
     def __init__(self):
         super().__init__(name="Tides of Chaos", origin="Wild Magic Sorcerer Level 3")
 

@@ -53,7 +53,7 @@ class FighterPsiWarriorLevel15(ClassBuilder.SubclassLevel15):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(FighterPsiWarriorFeatures.BulwarkofForce())
+        data.add_feature(FighterPsiWarriorFeatures.BulwarkOfForce())
         return data
 
 

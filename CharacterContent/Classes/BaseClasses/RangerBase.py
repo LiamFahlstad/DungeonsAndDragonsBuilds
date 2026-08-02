@@ -37,7 +37,7 @@ class RangerLevel1(ClassBuilder.BaseClassLevel1):
         data.add_weapon_mastery(self.weapon_mastery_1)
         data.add_weapon_mastery(self.weapon_mastery_2)
 
-        data.add_feature(RangerFeatures.SpellCasting())
+        data.add_feature(RangerFeatures.Spellcasting())
         data.add_feature(RangerFeatures.ReplacingWeaponMasteries())
         data.add_feature(RangerFeatures.FavoredEnemy())
 
@@ -326,7 +326,7 @@ class RangerCustomStarterClassArgs(ClassBuilder.CustomStarterClassArgs):
         )
 
 
-class RangerMulticlassBuilder(ClassBuilder.ClassBuilder):
+class RangerMulticlassBuilder(ClassBuilder.MulticlassBuilder):
 
     def __init__(
         self,
@@ -340,6 +340,7 @@ class RangerMulticlassBuilder(ClassBuilder.ClassBuilder):
             base_class=CharacterClass.RANGER,
             base_class_level_features=ranger_level_features,
             base_class_level=ranger_level,
+            subclass=subclass,
             replace_spells=replace_spells,
             spell_casting_ability=Ability.WISDOM,
             caster_type=SpellSlots.CasterType.HALF_CASTER,

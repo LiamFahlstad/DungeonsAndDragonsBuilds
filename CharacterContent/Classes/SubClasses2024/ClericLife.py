@@ -37,7 +37,7 @@ class ClericLifeLevel3(ClassBuilder.SubclassLevel3):
             ClericFeatures.ChannelDivinity
         )[0]
         channel_divinity.extend_feature(ClericLifeFeatures.PreserveLife())
-        data.add_feature(ClericLifeFeatures.DiscipleofLife())
+        data.add_feature(ClericLifeFeatures.DiscipleOfLife())
         return data
 
 

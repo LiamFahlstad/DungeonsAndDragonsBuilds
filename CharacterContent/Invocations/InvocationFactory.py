@@ -2,6 +2,22 @@ import json
 from typing import TextIO
 
 
+def replace_last(text, old, new):
+    parts = text.rsplit(old, 1)  # split from the right, max 1 split
+    return new.join(parts)
+
+
+def inject_newline(text):
+    while True:
+        try:
+            index = text.index(" . ")
+            text = replace_last(text[:index], ". ", ".\n") + text[index:]
+            text = text.replace(" . ", ":\n")
+        except ValueError:
+            break
+    return text
+
+
 class Invocation:
     """Invocation object that wraps JSON invocation data."""
 
@@ -27,21 +43,6 @@ class Invocation:
     @property
     def description(self):
         text = self._data.get("description")
-
-        def replace_last(text, old, new):
-            parts = text.rsplit(old, 1)  # split from the right, max 1 split
-            return new.join(parts)
-
-        def inject_newline(text):
-            while True:
-                try:
-                    index = text.index(" . ")
-                    text = replace_last(text[:index], ". ", ".\n") + text[index:]
-                    text = text.replace(" . ", ":\n")
-                except ValueError:
-                    break
-            return text
-
         return inject_newline(text)
 
     @property

@@ -131,7 +131,7 @@ class Item(Feature):
 
     def add_character_improvement(self, improvement: CharacterImprovement) -> None:
         """Attach a CharacterImprovement to this item at
-        construction time - the same kind RingOfIntelligence passes via
+        construction time - the same kind RingOfIntellect passes via
         `improvements=`, but composable at the class level. Call from
         base_stats() (or setup_improvements()) to distinguish "this affects
         the wielder/wearer" from add_weapon_improvement/add_armor_improvement,

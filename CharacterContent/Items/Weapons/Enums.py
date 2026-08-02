@@ -85,7 +85,7 @@ class WeaponProficiency(Enum):
     MARTIAL_FINESSE_OR_LIGHT = "Martial weapons with the Finesse or Light property"
 
 
-class WeaponsDamageTypes(Enum):
+class WeaponDamageTypes(Enum):
     SLASHING = "Slashing"
     PIERCING = "Piercing"
     BLUDGEONING = "Bludgeoning"
@@ -101,7 +101,7 @@ class WeaponsDamageTypes(Enum):
     FORCE = "Force"
 
 
-class WeaponsDamageRolls(Enum):
+class WeaponDamageRolls(Enum):
     D1 = "1d1"
     D4 = "1d4"
     D6 = "1d6"

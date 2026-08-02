@@ -21,7 +21,7 @@ class FighterEldritchKnightLevel3(ClassBuilder.SubclassLevel3):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(FighterEldritchKnightFeatures.EldritchKnightSpellcasting())
+        data.add_feature(FighterEldritchKnightFeatures.Spellcasting())
         data.add_feature(FighterEldritchKnightFeatures.WeaponBond())
         return data
 

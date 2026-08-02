@@ -3,7 +3,7 @@ from CharacterContent.Features.Core.BaseFeatures import Feature
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
-class ArmorerToolsOfTheTrade(Feature):
+class ToolsOfTheTrade(Feature):
     def __init__(self):
         super().__init__(name="Tools of the Trade", origin="Armorer Artificer Level 3")
 
@@ -17,7 +17,7 @@ class ArmorerToolsOfTheTrade(Feature):
         return description
 
 
-class ArmorerSpells(Feature):
+class Spells(Feature):
     def __init__(self):
         super().__init__(name="Armorer Spells", origin="Armorer Artificer Level 3")
 
@@ -76,7 +76,7 @@ class ArmorModel(Feature):
         return description
 
 
-class ArmorerExtraAttack(Feature):
+class ExtraAttack(Feature):
     def __init__(self):
         super().__init__(name="Extra Attack", origin="Armorer Artificer Level 5")
 

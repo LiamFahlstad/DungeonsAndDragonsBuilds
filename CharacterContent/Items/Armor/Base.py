@@ -21,7 +21,7 @@ class AbstractArmor(Item, ABC):
     - `improvements=[...]` (list[CharacterImprovement], defined in CharacterContent.Features.Core.Improvements):
       character-affecting effects, applied to the wearer's stat block while
       worn - e.g. DragonscalePlate granting +1 Constitution, the same
-      mechanism RingOfIntelligence uses in CharacterContent.Items.Items.
+      mechanism RingOfIntellect uses in CharacterContent.Items.Items.
     - `armor_improvements=[...]` (list[ItemImprovement], defined below and in
       CharacterContent.Features.Core.Improvements): typically an ArmorImprovement - an
       armor-only effect that modifies the armor itself (AC, ability used for

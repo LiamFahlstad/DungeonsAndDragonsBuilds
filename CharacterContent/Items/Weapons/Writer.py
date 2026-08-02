@@ -3,23 +3,23 @@ from Utils import DamageCalculator, StringUtils
 from Core.Definitions import DiceRollCondition
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from .Base import AbstractWeapon, UnarmedStrike
-from .Enums import WeaponsDamageTypes
+from .Enums import WeaponDamageTypes
 
 
 _DAMAGE_TYPE_CSS_CLASS = {
-    WeaponsDamageTypes.SLASHING: "wtag-dmg-slashing",
-    WeaponsDamageTypes.PIERCING: "wtag-dmg-piercing",
-    WeaponsDamageTypes.BLUDGEONING: "wtag-dmg-bludgeoning",
-    WeaponsDamageTypes.ACID: "wtag-dmg-acid",
-    WeaponsDamageTypes.COLD: "wtag-dmg-cold",
-    WeaponsDamageTypes.FIRE: "wtag-dmg-fire",
-    WeaponsDamageTypes.LIGHTNING: "wtag-dmg-lightning",
-    WeaponsDamageTypes.THUNDER: "wtag-dmg-thunder",
-    WeaponsDamageTypes.NECROTIC: "wtag-dmg-necrotic",
-    WeaponsDamageTypes.RADIANT: "wtag-dmg-radiant",
-    WeaponsDamageTypes.POISON: "wtag-dmg-poison",
-    WeaponsDamageTypes.PSYCHIC: "wtag-dmg-psychic",
-    WeaponsDamageTypes.FORCE: "wtag-dmg-force",
+    WeaponDamageTypes.SLASHING: "wtag-dmg-slashing",
+    WeaponDamageTypes.PIERCING: "wtag-dmg-piercing",
+    WeaponDamageTypes.BLUDGEONING: "wtag-dmg-bludgeoning",
+    WeaponDamageTypes.ACID: "wtag-dmg-acid",
+    WeaponDamageTypes.COLD: "wtag-dmg-cold",
+    WeaponDamageTypes.FIRE: "wtag-dmg-fire",
+    WeaponDamageTypes.LIGHTNING: "wtag-dmg-lightning",
+    WeaponDamageTypes.THUNDER: "wtag-dmg-thunder",
+    WeaponDamageTypes.NECROTIC: "wtag-dmg-necrotic",
+    WeaponDamageTypes.RADIANT: "wtag-dmg-radiant",
+    WeaponDamageTypes.POISON: "wtag-dmg-poison",
+    WeaponDamageTypes.PSYCHIC: "wtag-dmg-psychic",
+    WeaponDamageTypes.FORCE: "wtag-dmg-force",
 }
 
 

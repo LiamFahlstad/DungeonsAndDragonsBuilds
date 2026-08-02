@@ -33,7 +33,7 @@ class ArtificerReanimatorLevel3(ClassBuilder.SubclassLevel3):
         data: CharacterSheetData,
     ) -> CharacterSheetData:
         data.add_feature(ArtificerReanimatorFeatures.ReanimatorSpells())
-        data.add_feature(ArtificerReanimatorFeatures.ReanimatorsSkillSet())
+        data.add_feature(ArtificerReanimatorFeatures.ReanimatorSkillSet())
         data.add_feature(ArtificerReanimatorFeatures.ReanimatedCompanion())
         data.add_cantrip(NecromancyLevel0Spells.SPARE_THE_DYING)
         data.add_spell(NecromancyLevel1Spells.FALSE_LIFE)

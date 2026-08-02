@@ -4,7 +4,7 @@ from CharacterContent.Features.SpeciesFeatures import WarForgedFeatures
 from CharacterContent.Species.SpeciesBuilder import SpeciesBuilder
 
 
-class WarForgedSpeciesBuilder(SpeciesBuilder):
+class WarforgedSpeciesBuilder(SpeciesBuilder):
     def __init__(
         self,
         skill: Skill,

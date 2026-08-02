@@ -22,7 +22,7 @@ class WizardBladesingerLevel3(ClassBuilder.SubclassLevel3):
     ) -> CharacterSheetData:
         if data.armors:
             raise ValueError("Bladesong cannot be used while wearing armor.")
-        data.add_feature(WizardBladesingerFeatures.BladesongText())
+        data.add_feature(WizardBladesingerFeatures.Bladesong())
         data.add_feature(WizardBladesingerFeatures.TrainingInWarAndSong(Skill.ATHLETICS))
         return data
 

@@ -6,7 +6,7 @@ from Utils import StringUtils
 
 class ClockworkSpells(Feature):
     def __init__(self):
-        super().__init__(name="Clockwork Spells", origin="Clockwork Sorcery Level 3")
+        super().__init__(name="Clockwork Spells", origin="Clockwork Sorcerer Level 3")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -32,7 +32,7 @@ class ClockworkSpells(Feature):
 
 class RestoreBalance(Feature):
     def __init__(self):
-        super().__init__(name="Restore Balance", origin="Clockwork Sorcery Level 3")
+        super().__init__(name="Restore Balance", origin="Clockwork Sorcerer Level 3")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         charisma_modifier = character_stat_block.get_ability_modifier(Ability.CHARISMA)
@@ -46,7 +46,7 @@ class RestoreBalance(Feature):
 
 class BastionOfLaw(Feature):
     def __init__(self):
-        super().__init__(name="Bastion of Law", origin="Clockwork Sorcery Level 6")
+        super().__init__(name="Bastion of Law", origin="Clockwork Sorcerer Level 6")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -58,7 +58,7 @@ class BastionOfLaw(Feature):
 
 class TranceOfOrder(Feature):
     def __init__(self):
-        super().__init__(name="Trance of Order", origin="Clockwork Sorcery Level 14")
+        super().__init__(name="Trance of Order", origin="Clockwork Sorcerer Level 14")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -71,7 +71,7 @@ class TranceOfOrder(Feature):
 class ClockworkCavalcade(Feature):
     def __init__(self):
         super().__init__(
-            name="Clockwork Cavalcade", origin="Clockwork Sorcery Level 18"
+            name="Clockwork Cavalcade", origin="Clockwork Sorcerer Level 18"
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:

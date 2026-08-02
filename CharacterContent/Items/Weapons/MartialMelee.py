@@ -1,6 +1,6 @@
 from Core.Definitions import Ability
 from .Base import AbstractWeapon
-from .Enums import WeaponMastery, WeaponProperty, WeaponType, WeaponsDamageRolls, WeaponsDamageTypes
+from .Enums import WeaponMastery, WeaponProperty, WeaponType, WeaponDamageRolls, WeaponDamageTypes
 
 
 class Battleaxe(AbstractWeapon):
@@ -10,8 +10,8 @@ class Battleaxe(AbstractWeapon):
         self.properties = [WeaponProperty.VERSATILE_10]
         self.mastery = WeaponMastery.TOPPLE
         self.weapon_type = WeaponType.MARTIAL_MELEE
-        self.damage_type = WeaponsDamageTypes.SLASHING
-        self.damage_roll = WeaponsDamageRolls.D8
+        self.damage_type = WeaponDamageTypes.SLASHING
+        self.damage_roll = WeaponDamageRolls.D8
         self.weight = 4
         self.value = 10
 
@@ -23,8 +23,8 @@ class Flail(AbstractWeapon):
         self.properties = []
         self.mastery = WeaponMastery.SAP
         self.weapon_type = WeaponType.MARTIAL_MELEE
-        self.damage_type = WeaponsDamageTypes.BLUDGEONING
-        self.damage_roll = WeaponsDamageRolls.D8
+        self.damage_type = WeaponDamageTypes.BLUDGEONING
+        self.damage_roll = WeaponDamageRolls.D8
         self.weight = 2
         self.value = 10
 
@@ -36,8 +36,8 @@ class Glaive(AbstractWeapon):
         self.properties = [WeaponProperty.HEAVY, WeaponProperty.REACH, WeaponProperty.TWO_HANDED]
         self.mastery = WeaponMastery.GRAZE
         self.weapon_type = WeaponType.MARTIAL_MELEE
-        self.damage_type = WeaponsDamageTypes.SLASHING
-        self.damage_roll = WeaponsDamageRolls.D10
+        self.damage_type = WeaponDamageTypes.SLASHING
+        self.damage_roll = WeaponDamageRolls.D10
         self.weight = 6
         self.value = 20
 
@@ -49,8 +49,8 @@ class Greataxe(AbstractWeapon):
         self.properties = [WeaponProperty.HEAVY, WeaponProperty.TWO_HANDED]
         self.mastery = WeaponMastery.CLEAVE
         self.weapon_type = WeaponType.MARTIAL_MELEE
-        self.damage_type = WeaponsDamageTypes.SLASHING
-        self.damage_roll = WeaponsDamageRolls.D12
+        self.damage_type = WeaponDamageTypes.SLASHING
+        self.damage_roll = WeaponDamageRolls.D12
         self.weight = 7
         self.value = 30
 
@@ -62,8 +62,8 @@ class Greatsword(AbstractWeapon):
         self.properties = [WeaponProperty.HEAVY, WeaponProperty.TWO_HANDED]
         self.mastery = WeaponMastery.GRAZE
         self.weapon_type = WeaponType.MARTIAL_MELEE
-        self.damage_type = WeaponsDamageTypes.SLASHING
-        self.damage_roll = WeaponsDamageRolls.D6x2
+        self.damage_type = WeaponDamageTypes.SLASHING
+        self.damage_roll = WeaponDamageRolls.D6x2
         self.weight = 6
         self.value = 50
 
@@ -75,8 +75,8 @@ class Halberd(AbstractWeapon):
         self.properties = [WeaponProperty.HEAVY, WeaponProperty.REACH, WeaponProperty.TWO_HANDED]
         self.mastery = WeaponMastery.CLEAVE
         self.weapon_type = WeaponType.MARTIAL_MELEE
-        self.damage_type = WeaponsDamageTypes.SLASHING
-        self.damage_roll = WeaponsDamageRolls.D10
+        self.damage_type = WeaponDamageTypes.SLASHING
+        self.damage_roll = WeaponDamageRolls.D10
         self.weight = 6
         self.value = 20
 
@@ -88,8 +88,8 @@ class Lance(AbstractWeapon):
         self.properties = [WeaponProperty.HEAVY, WeaponProperty.REACH, WeaponProperty.TWO_HANDED]
         self.mastery = WeaponMastery.TOPPLE
         self.weapon_type = WeaponType.MARTIAL_MELEE
-        self.damage_type = WeaponsDamageTypes.PIERCING
-        self.damage_roll = WeaponsDamageRolls.D10
+        self.damage_type = WeaponDamageTypes.PIERCING
+        self.damage_roll = WeaponDamageRolls.D10
         self.weight = 6
         self.value = 10
 
@@ -101,8 +101,8 @@ class Longsword(AbstractWeapon):
         self.properties = [WeaponProperty.VERSATILE_10]
         self.mastery = WeaponMastery.SAP
         self.weapon_type = WeaponType.MARTIAL_MELEE
-        self.damage_type = WeaponsDamageTypes.SLASHING
-        self.damage_roll = WeaponsDamageRolls.D8
+        self.damage_type = WeaponDamageTypes.SLASHING
+        self.damage_roll = WeaponDamageRolls.D8
         self.weight = 3
         self.value = 15
 
@@ -114,8 +114,8 @@ class Maul(AbstractWeapon):
         self.properties = [WeaponProperty.HEAVY, WeaponProperty.TWO_HANDED]
         self.mastery = WeaponMastery.TOPPLE
         self.weapon_type = WeaponType.MARTIAL_MELEE
-        self.damage_type = WeaponsDamageTypes.BLUDGEONING
-        self.damage_roll = WeaponsDamageRolls.D6x2
+        self.damage_type = WeaponDamageTypes.BLUDGEONING
+        self.damage_roll = WeaponDamageRolls.D6x2
         self.weight = 10
         self.value = 10
 
@@ -127,8 +127,8 @@ class Morningstar(AbstractWeapon):
         self.properties = []
         self.mastery = WeaponMastery.SAP
         self.weapon_type = WeaponType.MARTIAL_MELEE
-        self.damage_type = WeaponsDamageTypes.PIERCING
-        self.damage_roll = WeaponsDamageRolls.D8
+        self.damage_type = WeaponDamageTypes.PIERCING
+        self.damage_roll = WeaponDamageRolls.D8
         self.weight = 4
         self.value = 15
 
@@ -140,8 +140,8 @@ class Pike(AbstractWeapon):
         self.properties = [WeaponProperty.HEAVY, WeaponProperty.REACH, WeaponProperty.TWO_HANDED]
         self.mastery = WeaponMastery.PUSH
         self.weapon_type = WeaponType.MARTIAL_MELEE
-        self.damage_type = WeaponsDamageTypes.PIERCING
-        self.damage_roll = WeaponsDamageRolls.D10
+        self.damage_type = WeaponDamageTypes.PIERCING
+        self.damage_roll = WeaponDamageRolls.D10
         self.weight = 18
         self.value = 5
 
@@ -153,8 +153,8 @@ class Rapier(AbstractWeapon):
         self.properties = [WeaponProperty.FINESSE]
         self.mastery = WeaponMastery.VEX
         self.weapon_type = WeaponType.MARTIAL_MELEE
-        self.damage_type = WeaponsDamageTypes.PIERCING
-        self.damage_roll = WeaponsDamageRolls.D8
+        self.damage_type = WeaponDamageTypes.PIERCING
+        self.damage_roll = WeaponDamageRolls.D8
         self.weight = 2
         self.value = 25
 
@@ -166,8 +166,8 @@ class Scimitar(AbstractWeapon):
         self.properties = [WeaponProperty.FINESSE, WeaponProperty.LIGHT]
         self.mastery = WeaponMastery.NICK
         self.weapon_type = WeaponType.MARTIAL_MELEE
-        self.damage_type = WeaponsDamageTypes.SLASHING
-        self.damage_roll = WeaponsDamageRolls.D6
+        self.damage_type = WeaponDamageTypes.SLASHING
+        self.damage_roll = WeaponDamageRolls.D6
         self.weight = 3
         self.value = 25
 
@@ -179,8 +179,8 @@ class Shortsword(AbstractWeapon):
         self.properties = [WeaponProperty.FINESSE, WeaponProperty.LIGHT]
         self.mastery = WeaponMastery.VEX
         self.weapon_type = WeaponType.MARTIAL_MELEE
-        self.damage_type = WeaponsDamageTypes.PIERCING
-        self.damage_roll = WeaponsDamageRolls.D6
+        self.damage_type = WeaponDamageTypes.PIERCING
+        self.damage_roll = WeaponDamageRolls.D6
         self.weight = 2
         self.value = 25
 
@@ -192,8 +192,8 @@ class Trident(AbstractWeapon):
         self.properties = [WeaponProperty.THROWN, WeaponProperty.VERSATILE_10]
         self.mastery = WeaponMastery.TOPPLE
         self.weapon_type = WeaponType.MARTIAL_MELEE
-        self.damage_type = WeaponsDamageTypes.PIERCING
-        self.damage_roll = WeaponsDamageRolls.D8
+        self.damage_type = WeaponDamageTypes.PIERCING
+        self.damage_roll = WeaponDamageRolls.D8
         self.weight = 4
         self.value = 5
 
@@ -205,8 +205,8 @@ class Warhammer(AbstractWeapon):
         self.properties = [WeaponProperty.VERSATILE_10]
         self.mastery = WeaponMastery.PUSH
         self.weapon_type = WeaponType.MARTIAL_MELEE
-        self.damage_type = WeaponsDamageTypes.BLUDGEONING
-        self.damage_roll = WeaponsDamageRolls.D8
+        self.damage_type = WeaponDamageTypes.BLUDGEONING
+        self.damage_roll = WeaponDamageRolls.D8
         self.weight = 2
         self.value = 15
 
@@ -218,8 +218,8 @@ class WarPick(AbstractWeapon):
         self.properties = [WeaponProperty.VERSATILE_10]
         self.mastery = WeaponMastery.SAP
         self.weapon_type = WeaponType.MARTIAL_MELEE
-        self.damage_type = WeaponsDamageTypes.PIERCING
-        self.damage_roll = WeaponsDamageRolls.D8
+        self.damage_type = WeaponDamageTypes.PIERCING
+        self.damage_roll = WeaponDamageRolls.D8
         self.weight = 2
         self.value = 5
 
@@ -231,7 +231,7 @@ class Whip(AbstractWeapon):
         self.properties = [WeaponProperty.FINESSE, WeaponProperty.REACH]
         self.mastery = WeaponMastery.SLOW
         self.weapon_type = WeaponType.MARTIAL_MELEE
-        self.damage_type = WeaponsDamageTypes.SLASHING
-        self.damage_roll = WeaponsDamageRolls.D4
+        self.damage_type = WeaponDamageTypes.SLASHING
+        self.damage_roll = WeaponDamageRolls.D4
         self.weight = 3
         self.value = 2

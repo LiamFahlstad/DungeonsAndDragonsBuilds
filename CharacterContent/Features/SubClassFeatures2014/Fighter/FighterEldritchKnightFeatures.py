@@ -3,7 +3,7 @@ from CharacterContent.Features.Core.BaseFeatures import Feature
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
-class EldritchKnightSpellcasting(Feature):
+class Spellcasting(Feature):
     def __init__(self):
         super().__init__(name="Spellcasting", origin="Eldritch Knight Fighter Level 3")
 
