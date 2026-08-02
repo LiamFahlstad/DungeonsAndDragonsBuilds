@@ -24,7 +24,7 @@ from StatBlocks.SkillsStatBlock import PaladinSkillsStatBlock
 
 
 @attr.dataclass
-class AncientsPaladinLevel3(ClassBuilder.SubclassLevel3):
+class PaladinAncientsLevel3(ClassBuilder.SubclassLevel3):
 
     def add_features(
         self,
@@ -40,7 +40,7 @@ class AncientsPaladinLevel3(ClassBuilder.SubclassLevel3):
 
 
 @attr.dataclass
-class AncientsPaladinLevel5(ClassBuilder.SubclassLevel5):
+class PaladinAncientsLevel5(ClassBuilder.SubclassLevel5):
 
     def add_features(
         self,
@@ -52,7 +52,7 @@ class AncientsPaladinLevel5(ClassBuilder.SubclassLevel5):
 
 
 @attr.dataclass
-class AncientsPaladinLevel7(ClassBuilder.SubclassLevel7):
+class PaladinAncientsLevel7(ClassBuilder.SubclassLevel7):
 
     def add_features(
         self,
@@ -63,7 +63,7 @@ class AncientsPaladinLevel7(ClassBuilder.SubclassLevel7):
 
 
 @attr.dataclass
-class AncientsPaladinLevel9(ClassBuilder.SubclassLevel9):
+class PaladinAncientsLevel9(ClassBuilder.SubclassLevel9):
 
     def add_features(
         self,
@@ -75,7 +75,7 @@ class AncientsPaladinLevel9(ClassBuilder.SubclassLevel9):
 
 
 @attr.dataclass
-class AncientsPaladinLevel13(ClassBuilder.SubclassLevel13):
+class PaladinAncientsLevel13(ClassBuilder.SubclassLevel13):
 
     def add_features(
         self,
@@ -87,7 +87,7 @@ class AncientsPaladinLevel13(ClassBuilder.SubclassLevel13):
 
 
 @attr.dataclass
-class AncientsPaladinLevel15(ClassBuilder.SubclassLevel15):
+class PaladinAncientsLevel15(ClassBuilder.SubclassLevel15):
 
     def add_features(
         self,
@@ -98,7 +98,7 @@ class AncientsPaladinLevel15(ClassBuilder.SubclassLevel15):
 
 
 @attr.dataclass
-class AncientsPaladinLevel17(ClassBuilder.SubclassLevel17):
+class PaladinAncientsLevel17(ClassBuilder.SubclassLevel17):
 
     def add_features(
         self,
@@ -110,7 +110,7 @@ class AncientsPaladinLevel17(ClassBuilder.SubclassLevel17):
 
 
 @attr.dataclass
-class AncientsPaladinLevel20(ClassBuilder.SubclassLevel20):
+class PaladinAncientsLevel20(ClassBuilder.SubclassLevel20):
 
     def add_features(
         self,
@@ -131,7 +131,7 @@ class PaladinAncientsCustomStarterClassArgs(PaladinCustomStarterClassArgs):
         )
 
 
-class AncientsPaladinMulticlassBuilder(PaladinMulticlassBuilder):
+class PaladinAncientsMulticlassBuilder(PaladinMulticlassBuilder):
 
     def __init__(
         self,

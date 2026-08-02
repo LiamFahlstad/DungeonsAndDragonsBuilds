@@ -9,7 +9,7 @@ from CharacterContent.Classes.BaseClasses.RangerBase import (
     RangerLevel3,
 )
 from CharacterContent.Classes.SubClasses2024.RangerHunter import (
-    HunterRangerLevel3,
+    RangerHunterLevel3,
     RangerHunterCustomStarterClassArgs,
 )
 from Core.Definitions import Ability, Skill
@@ -84,7 +84,7 @@ def get_starter_class_builder():
                 ),
             },
             subclass_features_by_level={
-                3: HunterRangerLevel3(),
+                3: RangerHunterLevel3(),
             },
         ),
         replace_spells={},

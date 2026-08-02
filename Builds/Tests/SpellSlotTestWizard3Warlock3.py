@@ -12,11 +12,11 @@ from CharacterContent.Classes.BaseClasses.WizardBase import (
     WizardLevel3,
 )
 from CharacterContent.Classes.SubClasses2024.WarlockArchfey import (
-    ArchfeyWarlockLevel3,
-    ArchfeyWarlockMulticlassBuilder,
+    WarlockArchfeyLevel3,
+    WarlockArchfeyMulticlassBuilder,
 )
 from CharacterContent.Classes.SubClasses2024.WizardBladesinger import (
-    WizardBladeSingerCustomStarterClassArgs,
+    WizardBladesingerCustomStarterClassArgs,
     WizardBladesingerLevel3,
 )
 from Core.Definitions import Ability, Skill
@@ -36,7 +36,7 @@ from StatBlocks.SkillsStatBlock import WizardSkillsStatBlock
 # Cantrips and spells are chosen to avoid any name collisions between the two classes.
 def get_starter_class_builder():
     return StarterClassBuilder(
-        non_generic_arguments=WizardBladeSingerCustomStarterClassArgs(
+        non_generic_arguments=WizardBladesingerCustomStarterClassArgs(
             skills=WizardSkillsStatBlock(
                 proficiencies={
                     Skill.ARCANA: True,
@@ -99,7 +99,7 @@ def get_starter_class_builder():
 
 
 def get_multiclass_builder():
-    return ArchfeyWarlockMulticlassBuilder(
+    return WarlockArchfeyMulticlassBuilder(
         warlock_level=3,
         warlock_level_features=ClassBuilder.BaseClassLevelFeatures(
             base_class_features_by_level={
@@ -123,7 +123,7 @@ def get_multiclass_builder():
                 ),
             },
             subclass_features_by_level={
-                3: ArchfeyWarlockLevel3(),
+                3: WarlockArchfeyLevel3(),
             },
         ),
     )

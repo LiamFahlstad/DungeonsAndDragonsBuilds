@@ -9,7 +9,7 @@ from CharacterContent.Classes.BaseClasses.RangerBase import (
     RangerLevel3,
 )
 from CharacterContent.Classes.SubClasses2024.RangerFeyWanderer import (
-    FeyWandererRangerLevel3,
+    RangerFeyWandererLevel3,
     RangerFeyWandererCustomStarterClassArgs,
 )
 from Core.Definitions import Ability, Skill
@@ -83,7 +83,7 @@ def get_starter_class_builder():
                 ),
             },
             subclass_features_by_level={
-                3: FeyWandererRangerLevel3(),
+                3: RangerFeyWandererLevel3(),
             },
         ),
         replace_spells={},

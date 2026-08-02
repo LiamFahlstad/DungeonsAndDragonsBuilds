@@ -9,7 +9,7 @@ from CharacterContent.Classes.BaseClasses.PaladinBase import (
     PaladinLevel3,
 )
 from CharacterContent.Classes.SubClasses2024.PaladinAncients import (
-    AncientsPaladinLevel3,
+    PaladinAncientsLevel3,
     PaladinAncientsCustomStarterClassArgs,
 )
 from Core.Definitions import Ability, Skill
@@ -82,7 +82,7 @@ def get_starter_class_builder():
                 ),
             },
             subclass_features_by_level={
-                3: AncientsPaladinLevel3(),
+                3: PaladinAncientsLevel3(),
             },
         ),
         replace_spells={},

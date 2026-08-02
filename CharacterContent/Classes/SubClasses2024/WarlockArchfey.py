@@ -24,7 +24,7 @@ from StatBlocks.SkillsStatBlock import WarlockSkillsStatBlock
 
 
 @attr.dataclass
-class ArchfeyWarlockLevel3(ClassBuilder.SubclassLevel3):
+class WarlockArchfeyLevel3(ClassBuilder.SubclassLevel3):
 
     def add_features(
         self,
@@ -41,7 +41,7 @@ class ArchfeyWarlockLevel3(ClassBuilder.SubclassLevel3):
 
 
 @attr.dataclass
-class ArchfeyWarlockLevel5(ClassBuilder.SubclassLevel5):
+class WarlockArchfeyLevel5(ClassBuilder.SubclassLevel5):
 
     def add_features(
         self,
@@ -53,7 +53,7 @@ class ArchfeyWarlockLevel5(ClassBuilder.SubclassLevel5):
 
 
 @attr.dataclass
-class ArchfeyWarlockLevel6(ClassBuilder.SubclassLevel6):
+class WarlockArchfeyLevel6(ClassBuilder.SubclassLevel6):
 
     def add_features(
         self,
@@ -64,7 +64,7 @@ class ArchfeyWarlockLevel6(ClassBuilder.SubclassLevel6):
 
 
 @attr.dataclass
-class ArchfeyWarlockLevel7(ClassBuilder.SubclassLevel7):
+class WarlockArchfeyLevel7(ClassBuilder.SubclassLevel7):
 
     def add_features(
         self,
@@ -76,7 +76,7 @@ class ArchfeyWarlockLevel7(ClassBuilder.SubclassLevel7):
 
 
 @attr.dataclass
-class ArchfeyWarlockLevel9(ClassBuilder.SubclassLevel9):
+class WarlockArchfeyLevel9(ClassBuilder.SubclassLevel9):
 
     def add_features(
         self,
@@ -88,7 +88,7 @@ class ArchfeyWarlockLevel9(ClassBuilder.SubclassLevel9):
 
 
 @attr.dataclass
-class ArchfeyWarlockLevel10(ClassBuilder.SubclassLevel10):
+class WarlockArchfeyLevel10(ClassBuilder.SubclassLevel10):
 
     def add_features(
         self,
@@ -99,7 +99,7 @@ class ArchfeyWarlockLevel10(ClassBuilder.SubclassLevel10):
 
 
 @attr.dataclass
-class ArchfeyWarlockLevel14(ClassBuilder.SubclassLevel14):
+class WarlockArchfeyLevel14(ClassBuilder.SubclassLevel14):
 
     def add_features(
         self,
@@ -120,7 +120,7 @@ class WarlockArchfeyCustomStarterClassArgs(WarlockCustomStarterClassArgs):
         )
 
 
-class ArchfeyWarlockMulticlassBuilder(WarlockMulticlassBuilder):
+class WarlockArchfeyMulticlassBuilder(WarlockMulticlassBuilder):
 
     def __init__(
         self,

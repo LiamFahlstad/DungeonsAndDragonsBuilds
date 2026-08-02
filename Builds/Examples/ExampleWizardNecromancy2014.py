@@ -21,10 +21,10 @@ from CharacterContent.Classes.BaseClasses.WizardBase import (
     WizardLevel14,
 )
 from CharacterContent.Classes.SubClasses2014.WizardNecromancy import (
-    NecromancyWizardLevel3,
-    NecromancyWizardLevel6,
-    NecromancyWizardLevel10,
-    NecromancyWizardLevel14,
+    WizardNecromancyLevel3,
+    WizardNecromancyLevel6,
+    WizardNecromancyLevel10,
+    WizardNecromancyLevel14,
     WizardNecromancyCustomStarterClassArgs,
 )
 from Core.Definitions import Ability, Skill
@@ -144,10 +144,10 @@ def get_starter_class_builder():
                 ),
             },
             subclass_features_by_level={
-                3: NecromancyWizardLevel3(),
-                6: NecromancyWizardLevel6(),
-                10: NecromancyWizardLevel10(),
-                14: NecromancyWizardLevel14(),
+                3: WizardNecromancyLevel3(),
+                6: WizardNecromancyLevel6(),
+                10: WizardNecromancyLevel10(),
+                14: WizardNecromancyLevel14(),
             },
         ),
         replace_spells={},

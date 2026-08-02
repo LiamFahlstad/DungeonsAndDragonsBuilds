@@ -14,7 +14,7 @@ from StatBlocks.SkillsStatBlock import WizardSkillsStatBlock
 
 
 @attr.dataclass
-class EvocationWizardLevel3(ClassBuilder.SubclassLevel3):
+class WizardEvocationLevel3(ClassBuilder.SubclassLevel3):
 
     def add_features(
         self,
@@ -26,7 +26,7 @@ class EvocationWizardLevel3(ClassBuilder.SubclassLevel3):
 
 
 @attr.dataclass
-class EvocationWizardLevel6(ClassBuilder.SubclassLevel6):
+class WizardEvocationLevel6(ClassBuilder.SubclassLevel6):
 
     def add_features(
         self,
@@ -37,7 +37,7 @@ class EvocationWizardLevel6(ClassBuilder.SubclassLevel6):
 
 
 @attr.dataclass
-class EvocationWizardLevel10(ClassBuilder.SubclassLevel10):
+class WizardEvocationLevel10(ClassBuilder.SubclassLevel10):
 
     def add_features(
         self,
@@ -48,7 +48,7 @@ class EvocationWizardLevel10(ClassBuilder.SubclassLevel10):
 
 
 @attr.dataclass
-class EvocationWizardLevel14(ClassBuilder.SubclassLevel14):
+class WizardEvocationLevel14(ClassBuilder.SubclassLevel14):
 
     def add_features(
         self,
@@ -69,7 +69,7 @@ class WizardEvocationCustomStarterClassArgs(WizardCustomStarterClassArgs):
         )
 
 
-class EvocationWizardMulticlassBuilder(WizardMulticlassBuilder):
+class WizardEvocationMulticlassBuilder(WizardMulticlassBuilder):
 
     def __init__(
         self,

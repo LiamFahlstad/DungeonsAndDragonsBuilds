@@ -14,7 +14,7 @@ from StatBlocks.SkillsStatBlock import WarlockSkillsStatBlock
 
 
 @attr.dataclass
-class HexbladeWarlockLevel3(ClassBuilder.SubclassLevel3):
+class WarlockHexbladeLevel3(ClassBuilder.SubclassLevel3):
 
     def add_features(
         self,
@@ -27,7 +27,7 @@ class HexbladeWarlockLevel3(ClassBuilder.SubclassLevel3):
 
 
 @attr.dataclass
-class HexbladeWarlockLevel6(ClassBuilder.SubclassLevel6):
+class WarlockHexbladeLevel6(ClassBuilder.SubclassLevel6):
 
     def add_features(
         self,
@@ -38,7 +38,7 @@ class HexbladeWarlockLevel6(ClassBuilder.SubclassLevel6):
 
 
 @attr.dataclass
-class HexbladeWarlockLevel10(ClassBuilder.SubclassLevel10):
+class WarlockHexbladeLevel10(ClassBuilder.SubclassLevel10):
 
     def add_features(
         self,
@@ -49,7 +49,7 @@ class HexbladeWarlockLevel10(ClassBuilder.SubclassLevel10):
 
 
 @attr.dataclass
-class HexbladeWarlockLevel14(ClassBuilder.SubclassLevel14):
+class WarlockHexbladeLevel14(ClassBuilder.SubclassLevel14):
 
     def add_features(
         self,
@@ -70,7 +70,7 @@ class WarlockHexbladeCustomStarterClassArgs(WarlockCustomStarterClassArgs):
         )
 
 
-class HexbladeWarlockMulticlassBuilder(WarlockMulticlassBuilder):
+class WarlockHexbladeMulticlassBuilder(WarlockMulticlassBuilder):
 
     def __init__(
         self,

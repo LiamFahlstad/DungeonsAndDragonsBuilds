@@ -15,7 +15,7 @@ from StatBlocks.SkillsStatBlock import WizardSkillsStatBlock
 
 
 @attr.dataclass
-class NecromancyWizardLevel3(ClassBuilder.SubclassLevel3):
+class WizardNecromancyLevel3(ClassBuilder.SubclassLevel3):
 
     def add_features(
         self,
@@ -27,7 +27,7 @@ class NecromancyWizardLevel3(ClassBuilder.SubclassLevel3):
 
 
 @attr.dataclass
-class NecromancyWizardLevel6(ClassBuilder.SubclassLevel6):
+class WizardNecromancyLevel6(ClassBuilder.SubclassLevel6):
 
     def add_features(
         self,
@@ -39,7 +39,7 @@ class NecromancyWizardLevel6(ClassBuilder.SubclassLevel6):
 
 
 @attr.dataclass
-class NecromancyWizardLevel10(ClassBuilder.SubclassLevel10):
+class WizardNecromancyLevel10(ClassBuilder.SubclassLevel10):
 
     def add_features(
         self,
@@ -50,7 +50,7 @@ class NecromancyWizardLevel10(ClassBuilder.SubclassLevel10):
 
 
 @attr.dataclass
-class NecromancyWizardLevel14(ClassBuilder.SubclassLevel14):
+class WizardNecromancyLevel14(ClassBuilder.SubclassLevel14):
 
     def add_features(
         self,
@@ -71,7 +71,7 @@ class WizardNecromancyCustomStarterClassArgs(WizardCustomStarterClassArgs):
         )
 
 
-class NecromancyWizardMulticlassBuilder(WizardMulticlassBuilder):
+class WizardNecromancyMulticlassBuilder(WizardMulticlassBuilder):
 
     def __init__(
         self,

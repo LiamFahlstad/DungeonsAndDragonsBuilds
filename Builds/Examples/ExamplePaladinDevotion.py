@@ -9,7 +9,7 @@ from CharacterContent.Classes.BaseClasses.PaladinBase import (
     PaladinLevel3,
 )
 from CharacterContent.Classes.SubClasses2024.PaladinDevotion import (
-    DevotionPaladinLevel3,
+    PaladinDevotionLevel3,
     PaladinDevotionCustomStarterClassArgs,
 )
 from Core.Definitions import Ability, Skill
@@ -81,7 +81,7 @@ def get_starter_class_builder():
                 ),
             },
             subclass_features_by_level={
-                3: DevotionPaladinLevel3(),
+                3: PaladinDevotionLevel3(),
             },
         ),
         replace_spells={},

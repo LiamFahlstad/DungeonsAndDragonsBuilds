@@ -60,7 +60,7 @@ class WizardBladesingerLevel14(ClassBuilder.SubclassLevel14):
         return data
 
 
-class WizardBladeSingerCustomStarterClassArgs(WizardCustomStarterClassArgs):
+class WizardBladesingerCustomStarterClassArgs(WizardCustomStarterClassArgs):
     def __init__(
         self,
         skills: WizardSkillsStatBlock,

@@ -25,7 +25,7 @@ from StatBlocks.SkillsStatBlock import RangerSkillsStatBlock
 
 
 @attr.dataclass
-class FeyWandererRangerLevel3(ClassBuilder.SubclassLevel3):
+class RangerFeyWandererLevel3(ClassBuilder.SubclassLevel3):
 
     def add_features(
         self,
@@ -39,7 +39,7 @@ class FeyWandererRangerLevel3(ClassBuilder.SubclassLevel3):
 
 
 @attr.dataclass
-class FeyWandererRangerLevel5(ClassBuilder.SubclassLevel5):
+class RangerFeyWandererLevel5(ClassBuilder.SubclassLevel5):
 
     def add_features(
         self,
@@ -50,7 +50,7 @@ class FeyWandererRangerLevel5(ClassBuilder.SubclassLevel5):
 
 
 @attr.dataclass
-class FeyWandererRangerLevel7(ClassBuilder.SubclassLevel7):
+class RangerFeyWandererLevel7(ClassBuilder.SubclassLevel7):
 
     def add_features(
         self,
@@ -61,7 +61,7 @@ class FeyWandererRangerLevel7(ClassBuilder.SubclassLevel7):
 
 
 @attr.dataclass
-class FeyWandererRangerLevel9(ClassBuilder.SubclassLevel9):
+class RangerFeyWandererLevel9(ClassBuilder.SubclassLevel9):
 
     def add_features(
         self,
@@ -72,7 +72,7 @@ class FeyWandererRangerLevel9(ClassBuilder.SubclassLevel9):
 
 
 @attr.dataclass
-class FeyWandererRangerLevel11(ClassBuilder.SubclassLevel11):
+class RangerFeyWandererLevel11(ClassBuilder.SubclassLevel11):
 
     def add_features(
         self,
@@ -83,7 +83,7 @@ class FeyWandererRangerLevel11(ClassBuilder.SubclassLevel11):
 
 
 @attr.dataclass
-class FeyWandererRangerLevel13(ClassBuilder.SubclassLevel13):
+class RangerFeyWandererLevel13(ClassBuilder.SubclassLevel13):
 
     def add_features(
         self,
@@ -94,7 +94,7 @@ class FeyWandererRangerLevel13(ClassBuilder.SubclassLevel13):
 
 
 @attr.dataclass
-class FeyWandererRangerLevel15(ClassBuilder.SubclassLevel15):
+class RangerFeyWandererLevel15(ClassBuilder.SubclassLevel15):
 
     def add_features(
         self,
@@ -105,7 +105,7 @@ class FeyWandererRangerLevel15(ClassBuilder.SubclassLevel15):
 
 
 @attr.dataclass
-class FeyWandererRangerLevel17(ClassBuilder.SubclassLevel17):
+class RangerFeyWandererLevel17(ClassBuilder.SubclassLevel17):
 
     def add_features(
         self,
@@ -127,7 +127,7 @@ class RangerFeyWandererCustomStarterClassArgs(RangerCustomStarterClassArgs):
         )
 
 
-class FeyWandererRangerMulticlassBuilder(RangerMulticlassBuilder):
+class RangerFeyWandererMulticlassBuilder(RangerMulticlassBuilder):
 
     def __init__(
         self,

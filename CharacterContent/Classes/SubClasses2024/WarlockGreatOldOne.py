@@ -25,7 +25,7 @@ from StatBlocks.SkillsStatBlock import WarlockSkillsStatBlock
 
 
 @attr.dataclass
-class GreatOldOneWarlockLevel3(ClassBuilder.SubclassLevel3):
+class WarlockGreatOldOneLevel3(ClassBuilder.SubclassLevel3):
 
     def add_features(
         self,
@@ -42,7 +42,7 @@ class GreatOldOneWarlockLevel3(ClassBuilder.SubclassLevel3):
 
 
 @attr.dataclass
-class GreatOldOneWarlockLevel5(ClassBuilder.SubclassLevel5):
+class WarlockGreatOldOneLevel5(ClassBuilder.SubclassLevel5):
 
     def add_features(
         self,
@@ -54,7 +54,7 @@ class GreatOldOneWarlockLevel5(ClassBuilder.SubclassLevel5):
 
 
 @attr.dataclass
-class GreatOldOneWarlockLevel6(ClassBuilder.SubclassLevel6):
+class WarlockGreatOldOneLevel6(ClassBuilder.SubclassLevel6):
 
     def add_features(
         self,
@@ -65,7 +65,7 @@ class GreatOldOneWarlockLevel6(ClassBuilder.SubclassLevel6):
 
 
 @attr.dataclass
-class GreatOldOneWarlockLevel7(ClassBuilder.SubclassLevel7):
+class WarlockGreatOldOneLevel7(ClassBuilder.SubclassLevel7):
 
     def add_features(
         self,
@@ -77,7 +77,7 @@ class GreatOldOneWarlockLevel7(ClassBuilder.SubclassLevel7):
 
 
 @attr.dataclass
-class GreatOldOneWarlockLevel9(ClassBuilder.SubclassLevel9):
+class WarlockGreatOldOneLevel9(ClassBuilder.SubclassLevel9):
 
     def add_features(
         self,
@@ -89,7 +89,7 @@ class GreatOldOneWarlockLevel9(ClassBuilder.SubclassLevel9):
 
 
 @attr.dataclass
-class GreatOldOneWarlockLevel10(ClassBuilder.SubclassLevel10):
+class WarlockGreatOldOneLevel10(ClassBuilder.SubclassLevel10):
 
     def add_features(
         self,
@@ -101,7 +101,7 @@ class GreatOldOneWarlockLevel10(ClassBuilder.SubclassLevel10):
 
 
 @attr.dataclass
-class GreatOldOneWarlockLevel14(ClassBuilder.SubclassLevel14):
+class WarlockGreatOldOneLevel14(ClassBuilder.SubclassLevel14):
 
     def add_features(
         self,
@@ -122,7 +122,7 @@ class WarlockGreatOldOneCustomStarterClassArgs(WarlockCustomStarterClassArgs):
         )
 
 
-class GreatOldOneWarlockMulticlassBuilder(WarlockMulticlassBuilder):
+class WarlockGreatOldOneMulticlassBuilder(WarlockMulticlassBuilder):
 
     def __init__(
         self,

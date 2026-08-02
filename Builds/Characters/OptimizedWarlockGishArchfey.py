@@ -13,9 +13,9 @@ from CharacterContent.Classes.SubClasses2024.FighterBattleMaster import (
     FighterBattleMasterCustomStarterClassArgs,
 )
 from CharacterContent.Classes.SubClasses2024.WarlockArchfey import (
-    ArchfeyWarlockLevel3,
-    ArchfeyWarlockLevel5,
-    ArchfeyWarlockMulticlassBuilder,
+    WarlockArchfeyLevel3,
+    WarlockArchfeyLevel5,
+    WarlockArchfeyMulticlassBuilder,
 )
 from Core.Definitions import Ability, Skill
 from CharacterContent.Features.CharacterFeats import Backgrounds, GeneralFeats, OriginFeats
@@ -98,7 +98,7 @@ def get_starter_class_builder():
 
 
 def get_multiclass_builder():
-    return ArchfeyWarlockMulticlassBuilder(
+    return WarlockArchfeyMulticlassBuilder(
         warlock_level=5,
         warlock_level_features=ClassBuilder.BaseClassLevelFeatures(
             base_class_features_by_level={
@@ -132,8 +132,8 @@ def get_multiclass_builder():
                 ),
             },
             subclass_features_by_level={
-                3: ArchfeyWarlockLevel3(),
-                5: ArchfeyWarlockLevel5(),
+                3: WarlockArchfeyLevel3(),
+                5: WarlockArchfeyLevel5(),
             },
         ),
         replace_spells={

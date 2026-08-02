@@ -22,7 +22,7 @@ from StatBlocks.SkillsStatBlock import PaladinSkillsStatBlock
 
 
 @attr.dataclass
-class DevotionPaladinLevel3(ClassBuilder.SubclassLevel3):
+class PaladinDevotionLevel3(ClassBuilder.SubclassLevel3):
 
     def add_features(
         self,
@@ -35,7 +35,7 @@ class DevotionPaladinLevel3(ClassBuilder.SubclassLevel3):
 
 
 @attr.dataclass
-class DevotionPaladinLevel5(ClassBuilder.SubclassLevel5):
+class PaladinDevotionLevel5(ClassBuilder.SubclassLevel5):
 
     def add_features(
         self,
@@ -47,7 +47,7 @@ class DevotionPaladinLevel5(ClassBuilder.SubclassLevel5):
 
 
 @attr.dataclass
-class DevotionPaladinLevel7(ClassBuilder.SubclassLevel7):
+class PaladinDevotionLevel7(ClassBuilder.SubclassLevel7):
 
     def add_features(
         self,
@@ -58,7 +58,7 @@ class DevotionPaladinLevel7(ClassBuilder.SubclassLevel7):
 
 
 @attr.dataclass
-class DevotionPaladinLevel9(ClassBuilder.SubclassLevel9):
+class PaladinDevotionLevel9(ClassBuilder.SubclassLevel9):
 
     def add_features(
         self,
@@ -70,7 +70,7 @@ class DevotionPaladinLevel9(ClassBuilder.SubclassLevel9):
 
 
 @attr.dataclass
-class DevotionPaladinLevel13(ClassBuilder.SubclassLevel13):
+class PaladinDevotionLevel13(ClassBuilder.SubclassLevel13):
 
     def add_features(
         self,
@@ -82,7 +82,7 @@ class DevotionPaladinLevel13(ClassBuilder.SubclassLevel13):
 
 
 @attr.dataclass
-class DevotionPaladinLevel15(ClassBuilder.SubclassLevel15):
+class PaladinDevotionLevel15(ClassBuilder.SubclassLevel15):
 
     def add_features(
         self,
@@ -93,7 +93,7 @@ class DevotionPaladinLevel15(ClassBuilder.SubclassLevel15):
 
 
 @attr.dataclass
-class DevotionPaladinLevel17(ClassBuilder.SubclassLevel17):
+class PaladinDevotionLevel17(ClassBuilder.SubclassLevel17):
 
     def add_features(
         self,
@@ -105,7 +105,7 @@ class DevotionPaladinLevel17(ClassBuilder.SubclassLevel17):
 
 
 @attr.dataclass
-class DevotionPaladinLevel20(ClassBuilder.SubclassLevel20):
+class PaladinDevotionLevel20(ClassBuilder.SubclassLevel20):
 
     def add_features(
         self,
@@ -126,7 +126,7 @@ class PaladinDevotionCustomStarterClassArgs(PaladinCustomStarterClassArgs):
         )
 
 
-class DevotionPaladinMulticlassBuilder(PaladinMulticlassBuilder):
+class PaladinDevotionMulticlassBuilder(PaladinMulticlassBuilder):
 
     def __init__(
         self,

@@ -11,7 +11,7 @@ from CharacterContent.Classes.BaseClasses.WizardBase import (
     WizardLevel4,
 )
 from CharacterContent.Classes.SubClasses2024.WizardBladesinger import (
-    WizardBladeSingerCustomStarterClassArgs,
+    WizardBladesingerCustomStarterClassArgs,
     WizardBladesingerLevel3,
 )
 from Core.Definitions import Ability, Skill
@@ -25,7 +25,7 @@ from StatBlocks.SkillsStatBlock import WizardSkillsStatBlock
 
 def get_starter_class_builder():
     return StarterClassBuilder(
-        non_generic_arguments=WizardBladeSingerCustomStarterClassArgs(
+        non_generic_arguments=WizardBladesingerCustomStarterClassArgs(
             skills=WizardSkillsStatBlock(
                 proficiencies={
                     Skill.ARCANA: True,

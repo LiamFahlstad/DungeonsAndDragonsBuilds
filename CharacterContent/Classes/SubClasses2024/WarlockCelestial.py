@@ -23,7 +23,7 @@ from StatBlocks.SkillsStatBlock import WarlockSkillsStatBlock
 
 
 @attr.dataclass
-class CelestialWarlockLevel3(ClassBuilder.SubclassLevel3):
+class WarlockCelestialLevel3(ClassBuilder.SubclassLevel3):
 
     def add_features(
         self,
@@ -41,7 +41,7 @@ class CelestialWarlockLevel3(ClassBuilder.SubclassLevel3):
 
 
 @attr.dataclass
-class CelestialWarlockLevel5(ClassBuilder.SubclassLevel5):
+class WarlockCelestialLevel5(ClassBuilder.SubclassLevel5):
 
     def add_features(
         self,
@@ -53,7 +53,7 @@ class CelestialWarlockLevel5(ClassBuilder.SubclassLevel5):
 
 
 @attr.dataclass
-class CelestialWarlockLevel6(ClassBuilder.SubclassLevel6):
+class WarlockCelestialLevel6(ClassBuilder.SubclassLevel6):
 
     def add_features(
         self,
@@ -64,7 +64,7 @@ class CelestialWarlockLevel6(ClassBuilder.SubclassLevel6):
 
 
 @attr.dataclass
-class CelestialWarlockLevel7(ClassBuilder.SubclassLevel7):
+class WarlockCelestialLevel7(ClassBuilder.SubclassLevel7):
 
     def add_features(
         self,
@@ -76,7 +76,7 @@ class CelestialWarlockLevel7(ClassBuilder.SubclassLevel7):
 
 
 @attr.dataclass
-class CelestialWarlockLevel9(ClassBuilder.SubclassLevel9):
+class WarlockCelestialLevel9(ClassBuilder.SubclassLevel9):
 
     def add_features(
         self,
@@ -88,7 +88,7 @@ class CelestialWarlockLevel9(ClassBuilder.SubclassLevel9):
 
 
 @attr.dataclass
-class CelestialWarlockLevel10(ClassBuilder.SubclassLevel10):
+class WarlockCelestialLevel10(ClassBuilder.SubclassLevel10):
 
     def add_features(
         self,
@@ -99,7 +99,7 @@ class CelestialWarlockLevel10(ClassBuilder.SubclassLevel10):
 
 
 @attr.dataclass
-class CelestialWarlockLevel14(ClassBuilder.SubclassLevel14):
+class WarlockCelestialLevel14(ClassBuilder.SubclassLevel14):
 
     def add_features(
         self,
@@ -120,7 +120,7 @@ class WarlockCelestialCustomStarterClassArgs(WarlockCustomStarterClassArgs):
         )
 
 
-class CelestialWarlockMulticlassBuilder(WarlockMulticlassBuilder):
+class WarlockCelestialMulticlassBuilder(WarlockMulticlassBuilder):
 
     def __init__(
         self,

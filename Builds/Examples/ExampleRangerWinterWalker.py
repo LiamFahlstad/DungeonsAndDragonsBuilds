@@ -10,7 +10,7 @@ from CharacterContent.Classes.BaseClasses.RangerBase import (
 )
 from CharacterContent.Classes.SubClasses2024.RangerWinterWalker import (
     RangerWinterWalkerCustomStarterClassArgs,
-    WinterWalkerRangerLevel3,
+    RangerWinterWalkerLevel3,
 )
 from Core.Definitions import Ability, Skill
 from CharacterContent.Features.CharacterFeats import Backgrounds, OriginFeats
@@ -82,7 +82,7 @@ def get_starter_class_builder():
                 ),
             },
             subclass_features_by_level={
-                3: WinterWalkerRangerLevel3(),
+                3: RangerWinterWalkerLevel3(),
             },
         ),
         replace_spells={},

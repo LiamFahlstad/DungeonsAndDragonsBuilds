@@ -122,7 +122,7 @@ class RangerHorizonWalkerCustomStarterClassArgs(RangerCustomStarterClassArgs):
         )
 
 
-class HorizonWalkerRangerMulticlassBuilder(RangerMulticlassBuilder):
+class RangerHorizonWalkerMulticlassBuilder(RangerMulticlassBuilder):
 
     def __init__(
         self,

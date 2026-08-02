@@ -20,10 +20,10 @@ from CharacterContent.Classes.BaseClasses.WarlockBase import (
     WarlockLevel14,
 )
 from CharacterContent.Classes.SubClasses2014.WarlockHexblade import (
-    HexbladeWarlockLevel3,
-    HexbladeWarlockLevel6,
-    HexbladeWarlockLevel10,
-    HexbladeWarlockLevel14,
+    WarlockHexbladeLevel3,
+    WarlockHexbladeLevel6,
+    WarlockHexbladeLevel10,
+    WarlockHexbladeLevel14,
     WarlockHexbladeCustomStarterClassArgs,
 )
 from Core.Definitions import Ability, Skill
@@ -162,10 +162,10 @@ def get_starter_class_builder():
                 14: WarlockLevel14(),
             },
             subclass_features_by_level={
-                3: HexbladeWarlockLevel3(),
-                6: HexbladeWarlockLevel6(),
-                10: HexbladeWarlockLevel10(),
-                14: HexbladeWarlockLevel14(),
+                3: WarlockHexbladeLevel3(),
+                6: WarlockHexbladeLevel6(),
+                10: WarlockHexbladeLevel10(),
+                14: WarlockHexbladeLevel14(),
             },
         ),
         replace_spells={},

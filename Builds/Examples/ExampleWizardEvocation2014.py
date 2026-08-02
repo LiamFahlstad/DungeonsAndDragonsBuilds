@@ -21,10 +21,10 @@ from CharacterContent.Classes.BaseClasses.WizardBase import (
     WizardLevel14,
 )
 from CharacterContent.Classes.SubClasses2014.WizardEvocation import (
-    EvocationWizardLevel3,
-    EvocationWizardLevel6,
-    EvocationWizardLevel10,
-    EvocationWizardLevel14,
+    WizardEvocationLevel3,
+    WizardEvocationLevel6,
+    WizardEvocationLevel10,
+    WizardEvocationLevel14,
     WizardEvocationCustomStarterClassArgs,
 )
 from Core.Definitions import Ability, Skill
@@ -144,10 +144,10 @@ def get_starter_class_builder():
                 ),
             },
             subclass_features_by_level={
-                3: EvocationWizardLevel3(),
-                6: EvocationWizardLevel6(),
-                10: EvocationWizardLevel10(),
-                14: EvocationWizardLevel14(),
+                3: WizardEvocationLevel3(),
+                6: WizardEvocationLevel6(),
+                10: WizardEvocationLevel10(),
+                14: WizardEvocationLevel14(),
             },
         ),
         replace_spells={},

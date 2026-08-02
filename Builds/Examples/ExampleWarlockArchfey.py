@@ -11,8 +11,8 @@ from CharacterContent.Classes.BaseClasses.WarlockBase import (
     WarlockLevel5,
 )
 from CharacterContent.Classes.SubClasses2024.WarlockArchfey import (
-    ArchfeyWarlockLevel3,
-    ArchfeyWarlockLevel5,
+    WarlockArchfeyLevel3,
+    WarlockArchfeyLevel5,
     WarlockArchfeyCustomStarterClassArgs,
 )
 from Core.Definitions import Ability, Skill
@@ -106,8 +106,8 @@ def get_starter_class_builder():
                 ),
             },
             subclass_features_by_level={
-                3: ArchfeyWarlockLevel3(),
-                5: ArchfeyWarlockLevel5(),
+                3: WarlockArchfeyLevel3(),
+                5: WarlockArchfeyLevel5(),
             },
         ),
         replace_spells={},

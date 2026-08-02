@@ -24,7 +24,7 @@ from StatBlocks.SkillsStatBlock import WarlockSkillsStatBlock
 
 
 @attr.dataclass
-class FiendWarlockLevel3(ClassBuilder.SubclassLevel3):
+class WarlockFiendLevel3(ClassBuilder.SubclassLevel3):
 
     def add_features(
         self,
@@ -40,7 +40,7 @@ class FiendWarlockLevel3(ClassBuilder.SubclassLevel3):
 
 
 @attr.dataclass
-class FiendWarlockLevel5(ClassBuilder.SubclassLevel5):
+class WarlockFiendLevel5(ClassBuilder.SubclassLevel5):
 
     def add_features(
         self,
@@ -52,7 +52,7 @@ class FiendWarlockLevel5(ClassBuilder.SubclassLevel5):
 
 
 @attr.dataclass
-class FiendWarlockLevel6(ClassBuilder.SubclassLevel6):
+class WarlockFiendLevel6(ClassBuilder.SubclassLevel6):
 
     def add_features(
         self,
@@ -63,7 +63,7 @@ class FiendWarlockLevel6(ClassBuilder.SubclassLevel6):
 
 
 @attr.dataclass
-class FiendWarlockLevel7(ClassBuilder.SubclassLevel7):
+class WarlockFiendLevel7(ClassBuilder.SubclassLevel7):
 
     def add_features(
         self,
@@ -75,7 +75,7 @@ class FiendWarlockLevel7(ClassBuilder.SubclassLevel7):
 
 
 @attr.dataclass
-class FiendWarlockLevel9(ClassBuilder.SubclassLevel9):
+class WarlockFiendLevel9(ClassBuilder.SubclassLevel9):
 
     def add_features(
         self,
@@ -87,7 +87,7 @@ class FiendWarlockLevel9(ClassBuilder.SubclassLevel9):
 
 
 @attr.dataclass
-class FiendWarlockLevel10(ClassBuilder.SubclassLevel10):
+class WarlockFiendLevel10(ClassBuilder.SubclassLevel10):
 
     def add_features(
         self,
@@ -98,7 +98,7 @@ class FiendWarlockLevel10(ClassBuilder.SubclassLevel10):
 
 
 @attr.dataclass
-class FiendWarlockLevel14(ClassBuilder.SubclassLevel14):
+class WarlockFiendLevel14(ClassBuilder.SubclassLevel14):
 
     def add_features(
         self,
@@ -119,7 +119,7 @@ class WarlockFiendCustomStarterClassArgs(WarlockCustomStarterClassArgs):
         )
 
 
-class FiendWarlockMulticlassBuilder(WarlockMulticlassBuilder):
+class WarlockFiendMulticlassBuilder(WarlockMulticlassBuilder):
 
     def __init__(
         self,

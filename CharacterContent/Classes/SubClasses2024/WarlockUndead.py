@@ -25,7 +25,7 @@ from StatBlocks.SkillsStatBlock import WarlockSkillsStatBlock
 
 
 @attr.dataclass
-class UndeadWarlockLevel3(ClassBuilder.SubclassLevel3):
+class WarlockUndeadLevel3(ClassBuilder.SubclassLevel3):
 
     def add_features(
         self,
@@ -41,7 +41,7 @@ class UndeadWarlockLevel3(ClassBuilder.SubclassLevel3):
 
 
 @attr.dataclass
-class UndeadWarlockLevel5(ClassBuilder.SubclassLevel5):
+class WarlockUndeadLevel5(ClassBuilder.SubclassLevel5):
 
     def add_features(
         self,
@@ -53,7 +53,7 @@ class UndeadWarlockLevel5(ClassBuilder.SubclassLevel5):
 
 
 @attr.dataclass
-class UndeadWarlockLevel6(ClassBuilder.SubclassLevel6):
+class WarlockUndeadLevel6(ClassBuilder.SubclassLevel6):
 
     def add_features(
         self,
@@ -64,7 +64,7 @@ class UndeadWarlockLevel6(ClassBuilder.SubclassLevel6):
 
 
 @attr.dataclass
-class UndeadWarlockLevel7(ClassBuilder.SubclassLevel7):
+class WarlockUndeadLevel7(ClassBuilder.SubclassLevel7):
 
     def add_features(
         self,
@@ -76,7 +76,7 @@ class UndeadWarlockLevel7(ClassBuilder.SubclassLevel7):
 
 
 @attr.dataclass
-class UndeadWarlockLevel9(ClassBuilder.SubclassLevel9):
+class WarlockUndeadLevel9(ClassBuilder.SubclassLevel9):
 
     def add_features(
         self,
@@ -88,7 +88,7 @@ class UndeadWarlockLevel9(ClassBuilder.SubclassLevel9):
 
 
 @attr.dataclass
-class UndeadWarlockLevel10(ClassBuilder.SubclassLevel10):
+class WarlockUndeadLevel10(ClassBuilder.SubclassLevel10):
 
     def add_features(
         self,
@@ -99,7 +99,7 @@ class UndeadWarlockLevel10(ClassBuilder.SubclassLevel10):
 
 
 @attr.dataclass
-class UndeadWarlockLevel14(ClassBuilder.SubclassLevel14):
+class WarlockUndeadLevel14(ClassBuilder.SubclassLevel14):
 
     def add_features(
         self,
@@ -120,7 +120,7 @@ class WarlockUndeadCustomStarterClassArgs(WarlockCustomStarterClassArgs):
         )
 
 
-class UndeadWarlockMulticlassBuilder(WarlockMulticlassBuilder):
+class WarlockUndeadMulticlassBuilder(WarlockMulticlassBuilder):
 
     def __init__(
         self,

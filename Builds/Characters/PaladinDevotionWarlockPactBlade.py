@@ -24,17 +24,17 @@ from CharacterContent.Classes.BaseClasses.PaladinBase import (
 )
 from CharacterContent.Classes.BaseClasses.WarlockBase import WarlockLevel1
 from CharacterContent.Classes.SubClasses2024.PaladinDevotion import (
-    DevotionPaladinLevel3,
-    DevotionPaladinLevel5,
-    DevotionPaladinLevel7,
-    DevotionPaladinLevel9,
-    DevotionPaladinLevel13,
-    DevotionPaladinLevel17,
-    DevotionPaladinMulticlassBuilder,
+    PaladinDevotionLevel3,
+    PaladinDevotionLevel5,
+    PaladinDevotionLevel7,
+    PaladinDevotionLevel9,
+    PaladinDevotionLevel13,
+    PaladinDevotionLevel17,
+    PaladinDevotionMulticlassBuilder,
     PaladinDevotionCustomStarterClassArgs,
 )
 from CharacterContent.Classes.SubClasses2024.WarlockArchfey import (
-    ArchfeyWarlockMulticlassBuilder,
+    WarlockArchfeyMulticlassBuilder,
 )
 from Core.Definitions import Ability, Skill
 from CharacterContent.Features.CharacterFeats import Backgrounds, EpicBoon, GeneralFeats, OriginFeats
@@ -123,7 +123,7 @@ def get_starter_class_builder():
 
 
 def get_warlock_multiclass_builder():
-    return ArchfeyWarlockMulticlassBuilder(
+    return WarlockArchfeyMulticlassBuilder(
         warlock_level=1,
         warlock_level_features=ClassBuilder.BaseClassLevelFeatures(
             base_class_features_by_level={
@@ -142,7 +142,7 @@ def get_warlock_multiclass_builder():
 
 
 def get_paladin_multiclass_builder():
-    return DevotionPaladinMulticlassBuilder(
+    return PaladinDevotionMulticlassBuilder(
         paladin_level_features=ClassBuilder.BaseClassLevelFeatures(
             base_class_features_by_level={
                 # Level 1 is granted by the starter class builder; the
@@ -216,12 +216,12 @@ def get_paladin_multiclass_builder():
                 ),
             },
             subclass_features_by_level={
-                3: DevotionPaladinLevel3(),
-                5: DevotionPaladinLevel5(),
-                7: DevotionPaladinLevel7(),
-                9: DevotionPaladinLevel9(),
-                13: DevotionPaladinLevel13(),
-                17: DevotionPaladinLevel17(),
+                3: PaladinDevotionLevel3(),
+                5: PaladinDevotionLevel5(),
+                7: PaladinDevotionLevel7(),
+                9: PaladinDevotionLevel9(),
+                13: PaladinDevotionLevel13(),
+                17: PaladinDevotionLevel17(),
             },
         ),
         paladin_level=19,

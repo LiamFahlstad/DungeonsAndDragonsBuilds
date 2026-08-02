@@ -26,7 +26,7 @@ from StatBlocks.SkillsStatBlock import RangerSkillsStatBlock
 
 
 @attr.dataclass
-class WinterWalkerRangerLevel3(ClassBuilder.SubclassLevel3):
+class RangerWinterWalkerLevel3(ClassBuilder.SubclassLevel3):
 
     def add_features(
         self,
@@ -40,7 +40,7 @@ class WinterWalkerRangerLevel3(ClassBuilder.SubclassLevel3):
 
 
 @attr.dataclass
-class WinterWalkerRangerLevel5(ClassBuilder.SubclassLevel5):
+class RangerWinterWalkerLevel5(ClassBuilder.SubclassLevel5):
 
     def add_features(
         self,
@@ -51,7 +51,7 @@ class WinterWalkerRangerLevel5(ClassBuilder.SubclassLevel5):
 
 
 @attr.dataclass
-class WinterWalkerRangerLevel7(ClassBuilder.SubclassLevel7):
+class RangerWinterWalkerLevel7(ClassBuilder.SubclassLevel7):
 
     def add_features(
         self,
@@ -62,7 +62,7 @@ class WinterWalkerRangerLevel7(ClassBuilder.SubclassLevel7):
 
 
 @attr.dataclass
-class WinterWalkerRangerLevel9(ClassBuilder.SubclassLevel9):
+class RangerWinterWalkerLevel9(ClassBuilder.SubclassLevel9):
 
     def add_features(
         self,
@@ -73,7 +73,7 @@ class WinterWalkerRangerLevel9(ClassBuilder.SubclassLevel9):
 
 
 @attr.dataclass
-class WinterWalkerRangerLevel11(ClassBuilder.SubclassLevel11):
+class RangerWinterWalkerLevel11(ClassBuilder.SubclassLevel11):
 
     def add_features(
         self,
@@ -84,7 +84,7 @@ class WinterWalkerRangerLevel11(ClassBuilder.SubclassLevel11):
 
 
 @attr.dataclass
-class WinterWalkerRangerLevel13(ClassBuilder.SubclassLevel13):
+class RangerWinterWalkerLevel13(ClassBuilder.SubclassLevel13):
 
     def add_features(
         self,
@@ -95,7 +95,7 @@ class WinterWalkerRangerLevel13(ClassBuilder.SubclassLevel13):
 
 
 @attr.dataclass
-class WinterWalkerRangerLevel15(ClassBuilder.SubclassLevel15):
+class RangerWinterWalkerLevel15(ClassBuilder.SubclassLevel15):
 
     def add_features(
         self,
@@ -106,7 +106,7 @@ class WinterWalkerRangerLevel15(ClassBuilder.SubclassLevel15):
 
 
 @attr.dataclass
-class WinterWalkerRangerLevel17(ClassBuilder.SubclassLevel17):
+class RangerWinterWalkerLevel17(ClassBuilder.SubclassLevel17):
 
     def add_features(
         self,
@@ -127,7 +127,7 @@ class RangerWinterWalkerCustomStarterClassArgs(RangerCustomStarterClassArgs):
         )
 
 
-class WinterWalkerRangerMulticlassBuilder(RangerMulticlassBuilder):
+class RangerWinterWalkerMulticlassBuilder(RangerMulticlassBuilder):
 
     def __init__(
         self,

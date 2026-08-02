@@ -23,7 +23,7 @@ from StatBlocks.SkillsStatBlock import PaladinSkillsStatBlock
 
 
 @attr.dataclass
-class OathbreakerPaladinLevel3(ClassBuilder.SubclassLevel3):
+class PaladinOathbreakerLevel3(ClassBuilder.SubclassLevel3):
 
     def add_features(
         self,
@@ -38,7 +38,7 @@ class OathbreakerPaladinLevel3(ClassBuilder.SubclassLevel3):
 
 
 @attr.dataclass
-class OathbreakerPaladinLevel5(ClassBuilder.SubclassLevel5):
+class PaladinOathbreakerLevel5(ClassBuilder.SubclassLevel5):
 
     def add_features(
         self,
@@ -50,7 +50,7 @@ class OathbreakerPaladinLevel5(ClassBuilder.SubclassLevel5):
 
 
 @attr.dataclass
-class OathbreakerPaladinLevel7(ClassBuilder.SubclassLevel7):
+class PaladinOathbreakerLevel7(ClassBuilder.SubclassLevel7):
 
     def add_features(
         self,
@@ -61,7 +61,7 @@ class OathbreakerPaladinLevel7(ClassBuilder.SubclassLevel7):
 
 
 @attr.dataclass
-class OathbreakerPaladinLevel9(ClassBuilder.SubclassLevel9):
+class PaladinOathbreakerLevel9(ClassBuilder.SubclassLevel9):
 
     def add_features(
         self,
@@ -73,7 +73,7 @@ class OathbreakerPaladinLevel9(ClassBuilder.SubclassLevel9):
 
 
 @attr.dataclass
-class OathbreakerPaladinLevel13(ClassBuilder.SubclassLevel13):
+class PaladinOathbreakerLevel13(ClassBuilder.SubclassLevel13):
 
     def add_features(
         self,
@@ -85,7 +85,7 @@ class OathbreakerPaladinLevel13(ClassBuilder.SubclassLevel13):
 
 
 @attr.dataclass
-class OathbreakerPaladinLevel15(ClassBuilder.SubclassLevel15):
+class PaladinOathbreakerLevel15(ClassBuilder.SubclassLevel15):
 
     def add_features(
         self,
@@ -96,7 +96,7 @@ class OathbreakerPaladinLevel15(ClassBuilder.SubclassLevel15):
 
 
 @attr.dataclass
-class OathbreakerPaladinLevel17(ClassBuilder.SubclassLevel17):
+class PaladinOathbreakerLevel17(ClassBuilder.SubclassLevel17):
 
     def add_features(
         self,
@@ -108,7 +108,7 @@ class OathbreakerPaladinLevel17(ClassBuilder.SubclassLevel17):
 
 
 @attr.dataclass
-class OathbreakerPaladinLevel18(ClassBuilder.SubclassLevel18):
+class PaladinOathbreakerLevel18(ClassBuilder.SubclassLevel18):
 
     def add_features(
         self,
@@ -122,7 +122,7 @@ class OathbreakerPaladinLevel18(ClassBuilder.SubclassLevel18):
 
 
 @attr.dataclass
-class OathbreakerPaladinLevel20(ClassBuilder.SubclassLevel20):
+class PaladinOathbreakerLevel20(ClassBuilder.SubclassLevel20):
 
     def add_features(
         self,

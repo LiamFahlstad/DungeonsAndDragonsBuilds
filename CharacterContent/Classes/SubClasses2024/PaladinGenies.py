@@ -24,7 +24,7 @@ from StatBlocks.SkillsStatBlock import PaladinSkillsStatBlock
 
 
 @attr.dataclass
-class GeniesPaladinLevel3(ClassBuilder.SubclassLevel3):
+class PaladinGeniesLevel3(ClassBuilder.SubclassLevel3):
 
     def add_features(
         self,
@@ -42,7 +42,7 @@ class GeniesPaladinLevel3(ClassBuilder.SubclassLevel3):
 
 
 @attr.dataclass
-class GeniesPaladinLevel5(ClassBuilder.SubclassLevel5):
+class PaladinGeniesLevel5(ClassBuilder.SubclassLevel5):
 
     def add_features(
         self,
@@ -54,7 +54,7 @@ class GeniesPaladinLevel5(ClassBuilder.SubclassLevel5):
 
 
 @attr.dataclass
-class GeniesPaladinLevel7(ClassBuilder.SubclassLevel7):
+class PaladinGeniesLevel7(ClassBuilder.SubclassLevel7):
 
     def add_features(
         self,
@@ -65,7 +65,7 @@ class GeniesPaladinLevel7(ClassBuilder.SubclassLevel7):
 
 
 @attr.dataclass
-class GeniesPaladinLevel9(ClassBuilder.SubclassLevel9):
+class PaladinGeniesLevel9(ClassBuilder.SubclassLevel9):
 
     def add_features(
         self,
@@ -77,7 +77,7 @@ class GeniesPaladinLevel9(ClassBuilder.SubclassLevel9):
 
 
 @attr.dataclass
-class GeniesPaladinLevel13(ClassBuilder.SubclassLevel13):
+class PaladinGeniesLevel13(ClassBuilder.SubclassLevel13):
 
     def add_features(
         self,
@@ -89,7 +89,7 @@ class GeniesPaladinLevel13(ClassBuilder.SubclassLevel13):
 
 
 @attr.dataclass
-class GeniesPaladinLevel15(ClassBuilder.SubclassLevel15):
+class PaladinGeniesLevel15(ClassBuilder.SubclassLevel15):
 
     def add_features(
         self,
@@ -100,7 +100,7 @@ class GeniesPaladinLevel15(ClassBuilder.SubclassLevel15):
 
 
 @attr.dataclass
-class GeniesPaladinLevel17(ClassBuilder.SubclassLevel17):
+class PaladinGeniesLevel17(ClassBuilder.SubclassLevel17):
 
     def add_features(
         self,
@@ -112,7 +112,7 @@ class GeniesPaladinLevel17(ClassBuilder.SubclassLevel17):
 
 
 @attr.dataclass
-class GeniesPaladinLevel20(ClassBuilder.SubclassLevel20):
+class PaladinGeniesLevel20(ClassBuilder.SubclassLevel20):
 
     def add_features(
         self,
@@ -133,7 +133,7 @@ class PaladinGeniesCustomStarterClassArgs(PaladinCustomStarterClassArgs):
         )
 
 
-class GeniesPaladinMulticlassBuilder(PaladinMulticlassBuilder):
+class PaladinGeniesMulticlassBuilder(PaladinMulticlassBuilder):
 
     def __init__(
         self,
