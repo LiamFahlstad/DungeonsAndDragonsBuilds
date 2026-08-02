@@ -22,6 +22,7 @@ class ItemCategory(str, Enum):
     ADVENTURING_GEAR = "adventuring gear"  # general exploration and survival equipment
     AMMUNITION = "ammunition"  # arrows, bolts, bullets, and other ranged ammo
     ARMOR = "armor"  # wearable armor
+    CARRYING_GEAR = "carrying gear"  # worn items that increase carrying capacity
     CLOTHING = "clothing"  # mundane, non-armor garments
     COMMON = "common"  # items of no particular interest like paper and pen
     CONTAINER = "container"  # bags, sacks, and other things that hold items

@@ -45,6 +45,12 @@ from .AdventuringGear import (
 from .Ammunition import (
     Arrows,
 )
+from .CarryingGear import (
+    Pouch,
+    Satchel,
+    SidePack,
+    Backpack,
+)
 from .Clothing import (
     BrightFungalCloak,
     DesertClothing,
@@ -65,7 +71,6 @@ from .Common import (
 )
 from .Containers import (
     Quiver,
-    Backpack,
     Barrel,
     Basket,
     Bucket,
@@ -73,7 +78,6 @@ from .Containers import (
     CrossbowBoltCase,
     Jug,
     MapOrScrollCase,
-    Pouch,
     Sack,
     Waterskin,
     Flask,

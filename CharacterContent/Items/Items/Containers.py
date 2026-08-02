@@ -1,5 +1,3 @@
-from CharacterContent.Features.Core.Improvements import CarryingCapacityBonus
-
 from .Base import Item, ItemCategory, ItemRarity
 
 
@@ -16,24 +14,6 @@ class Quiver(Item):
         )
 
 
-class Backpack(Item):
-    def __init__(self, is_wearing: bool = True):
-        super().__init__(
-            "Backpack",
-            rarity=ItemRarity.COMMON,
-            category=ItemCategory.CONTAINER,
-            slots=1,
-            description_text=(
-                "A backpack that can hold up to 30 pounds of gear within 1 cubic foot. "
-                "It can also be strapped to a mount as a saddlebag."
-            ),
-            improvements=[CarryingCapacityBonus(10, source="Backpack")],
-            is_wearing=is_wearing,
-            is_homebrew=False,
-            value=2,
-        )
-
-
 class Barrel(Item):
     def __init__(self):
         super().__init__(
@@ -41,7 +21,7 @@ class Barrel(Item):
             rarity=ItemRarity.COMMON,
             category=ItemCategory.CONTAINER,
             weight=70,
-            slots=1,
+            slots=5,
             description_text="A Barrel holds up to 40 gallons of liquid or up to 4 cubic feet of dry goods.",
             is_homebrew=False,
             value=2,
@@ -83,7 +63,7 @@ class Chest(Item):
             rarity=ItemRarity.COMMON,
             category=ItemCategory.CONTAINER,
             weight=25,
-            slots=1,
+            slots=3,
             description_text="A Chest holds up to 12 cubic feet of contents.",
             is_homebrew=False,
             value=5,
@@ -129,20 +109,6 @@ class MapOrScrollCase(Item):
             description_text="A Map or Scroll Case holds up to 10 sheets of paper or 5 sheets of parchment.",
             is_homebrew=False,
             value=1,
-        )
-
-
-class Pouch(Item):
-    def __init__(self):
-        super().__init__(
-            "Pouch",
-            rarity=ItemRarity.COMMON,
-            category=ItemCategory.CONTAINER,
-            weight=1,
-            slots=1,
-            description_text="A Pouch holds up to 6 pounds within one-fifth of a cubic foot.",
-            is_homebrew=False,
-            value=0.5,
         )
 
 

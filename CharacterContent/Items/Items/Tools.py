@@ -47,7 +47,7 @@ class ClimbersKit(Item):
             rarity=ItemRarity.COMMON,
             category=ItemCategory.TOOL,
             weight=12,
-            slots=1,
+            slots=2,
             description_text="A Climber's Kit includes boot tips, gloves, pitons, and a harness. As a Utilize action, you can use the Climber's Kit to anchor yourself; when you do, you can't fall more than 25 feet from the anchor point, and you can't move more than 25 feet from there without undoing the anchor as a Bonus Action.",
             is_homebrew=False,
             value=25,
@@ -75,7 +75,7 @@ class PortableRam(Item):
             rarity=ItemRarity.COMMON,
             category=ItemCategory.TOOL,
             weight=35,
-            slots=1,
+            slots=3,
             description_text="You can use a Portable Ram to break down doors. When doing so, you gain a +4 bonus to the Strength check. One other character can help you use the ram, giving you Advantage on this check.",
             is_homebrew=False,
             value=4,
@@ -102,7 +102,7 @@ class Tinderbox(Item):
             "Tinderbox",
             rarity=ItemRarity.COMMON,
             category=ItemCategory.TOOL,
-            slots=0,
+            slots=1,
             description_text=(
                 "A small container with flint, fire steel, and tinder used to start fires. "
                 "Lighting a torch, lamp, lantern, or similar exposed fuel takes a bonus action. "
@@ -119,7 +119,7 @@ class Mirror(Item):
             "Steel Mirror",
             rarity=ItemRarity.COMMON,
             category=ItemCategory.TOOL,
-            slots=0,
+            slots=1,
             description_text=(
                 "A small handheld mirror useful for personal grooming. It can also be used "
                 "to peek around corners without exposing yourself or to reflect light as a signal."

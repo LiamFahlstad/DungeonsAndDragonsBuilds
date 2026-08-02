@@ -88,7 +88,7 @@ class MinorDeathNote(Item):
             "Minor Death Note",
             rarity=ItemRarity.COMMON,
             category=ItemCategory.WONDROUS,
-            slots=0,
+            slots=1,
             description_text=(
                 "When you write a creature's name in this notebook, that creature immediately receives "
                 "a papercut. The effect can only occur once per creature. Harmless, but very annoying."
@@ -102,7 +102,7 @@ class CoinOfTwoFacedJustice(Item):
             "Coin of Two-Faced Justice",
             rarity=ItemRarity.UNCOMMON,
             category=ItemCategory.WONDROUS,
-            slots=0,
+            slots=1,
             description_text=(
                 "As a bonus action, call and flip this coin. If you call it correctly, you gain advantage "
                 "on your next roll; otherwise, you have disadvantage. This effect does not stack and cannot "
@@ -279,7 +279,7 @@ class GauntletsOfStrength(Item):
             rarity=ItemRarity.RARE,
             requires_attunement=True,
             category=ItemCategory.WONDROUS,
-            slots=0,
+            slots=1,
             description_text=(
                 "While wearing these gauntlets, your Strength score increases by 2.\n\n"
                 "These steel gauntlets hum with raw, restrained power."

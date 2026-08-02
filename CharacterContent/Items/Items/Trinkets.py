@@ -9,7 +9,7 @@ class FingerGunRing(Item):
             "Ring of Finger Guns",
             rarity=ItemRarity.COMMON,
             category=ItemCategory.TRINKETS,
-            slots=0,
+            slots=1,
             description_text=(
                 "While wearing this ring, forming finger guns and saying 'pew' creates a tiny harmless spark "
                 "and sound effect. The spark can light candles but deals no damage."
