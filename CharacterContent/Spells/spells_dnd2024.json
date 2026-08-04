@@ -578,6 +578,22 @@
         "description": "You create a wall of whirling blades made of magical energy. The wall appears within range and lasts for the duration. You make a straight wall up to 100 feet long, 20 feet high, and 5 feet thick, or a ringed wall up to 60 feet in diameter, 20 feet high, and 5 feet thick. The wall provides Three-Quarters Cover, and its space is Difficult Terrain.\nAny creature in the wall’s space makes a Dexterity saving throw, taking 6d10 Force damage on a failed save or half as much damage on a successful one. A creature also makes that save if it enters the wall’s space or ends it turn there. A creature makes that save only once per turn.",
         "source": "Player's Handbook"
     },
+    "Blade of Disaster": {
+        "name": "Blade of Disaster",
+        "level": 9,
+        "school": "Conjuration",
+        "classes": [
+            "Sorcerer",
+            "Warlock",
+            "Wizard"
+        ],
+        "casting_time": "Bonus Action",
+        "range": "60 feet",
+        "components": "V, S",
+        "duration": "Concentration, up to 1 minute",
+        "description": "You create a 3-foot-long blade-shaped planar rift that lasts for the duration. The rift appears within range in a space of your choice, and you can immediately make up to two melee spell attacks, each one against a creature or object within 5 feet of the rift. On a hit, the target takes 10d6 Force damage. This attack scores a Critical Hit if the number on the d20 is 18 or higher.\nAs a Bonus Action on your later turns, you can move the rift up to 60 feet and repeat the two attacks against a creature or an object within 5 feet of it. You can direct the attacks at the same target or at different ones.\nThe blade can harmlessly pass through any barrier, including ones created by spells like Wall of Force .",
+        "source": "Forgotten Realms - Heroes of Faerun"
+    },
     "Blade Ward": {
         "name": "Blade Ward",
         "level": 0,
@@ -594,22 +610,6 @@
         "duration": "Concentration, up to 1 minute",
         "description": "Whenever a creature makes an attack roll against you before the spell ends, the attacker subtracts 1d4 from the attack roll.",
         "source": "Player's Handbook"
-    },
-    "Blade of Disaster": {
-        "name": "Blade of Disaster",
-        "level": 9,
-        "school": "Conjuration",
-        "classes": [
-            "Sorcerer",
-            "Warlock",
-            "Wizard"
-        ],
-        "casting_time": "Bonus Action",
-        "range": "60 feet",
-        "components": "V, S",
-        "duration": "Concentration, up to 1 minute",
-        "description": "You create a 3-foot-long blade-shaped planar rift that lasts for the duration. The rift appears within range in a space of your choice, and you can immediately make up to two melee spell attacks, each one against a creature or object within 5 feet of the rift. On a hit, the target takes 10d6 Force damage. This attack scores a Critical Hit if the number on the d20 is 18 or higher.\nAs a Bonus Action on your later turns, you can move the rift up to 60 feet and repeat the two attacks against a creature or an object within 5 feet of it. You can direct the attacks at the same target or at different ones.\nThe blade can harmlessly pass through any barrier, including ones created by spells like Wall of Force .",
-        "source": "Forgotten Realms - Heroes of Faerun"
     },
     "Bless": {
         "name": "Bless",
@@ -1369,6 +1369,21 @@
         "description": "You create 45 pounds of food and 30 gallons of fresh water on the ground or in containers within range - both useful in fending off the hazards of malnutrition and dehydration. The food is bland but nourishing and looks like a food of your choice, and the water is clean. The food spoils after 24 hours if uneaten.",
         "source": "Player's Handbook"
     },
+    "Create or Destroy Water": {
+        "name": "Create or Destroy Water",
+        "level": 1,
+        "school": "Transmutation",
+        "classes": [
+            "Cleric",
+            "Druid"
+        ],
+        "casting_time": "Action",
+        "range": "30 feet",
+        "components": "V, S, M (a mix of water and sand)",
+        "duration": "Instantaneous",
+        "description": "You do one of the following:\nCreate Water. You create up to 10 gallons of clean water within range in an open container. Alternatively, the water falls as rain in a 30-foot Cube within range, extinguishing exposed flames there.\nDestroy Water. You destroy up to 10 gallons of water in an open container within range. Alternatively, you destroy fog in a 30-foot Cube within range.\nUsing a Higher-Level Spell Slot. You create or destroy 10 additional gallons of water, or the size of the Cube increases by 5 feet, for each spell slot level above 1.",
+        "source": "Player's Handbook"
+    },
     "Create Undead": {
         "name": "Create Undead",
         "level": 6,
@@ -1383,21 +1398,6 @@
         "components": "V, S, M (one 150+ GP black onyx stone for each corpse)",
         "duration": "Instantaneous",
         "description": "You can cast this spell only at night. Choose up to three corpses of Medium or Small Humanoids within range. Each one becomes a Ghoul under your control (see the Monster Manual for its stat block).\nAs a Bonus Action on each of your turns, you can mentally command any creature you animated with this spell if the creature is within 120 feet of you (if you control multiple creatures, you can command any of them at the same time, issuing the same command to them). You decide what action the creature will take and where it will move on its next turn, or you can issue a general command, such as to guard a particular place. If you issue no commands, the creature takes the Dodge action and moves only to avoid harm. Once given an order, the creature continues to follow the order until its task is complete.\nThe creature is under your control for 24 hours, after which it stops obeying any command you’ve given it. To maintain control of the creature for another 24 hours, you must cast this spell on the creature before the current 24-hour period ends. This use of the spell reasserts your control over up to three creatures you have animated with this spell rather than animating new ones.\nUsing a Higher-Level Spell Slot. If you use a level 7 spell slot, you can animate or reassert control over four Ghouls. If you use a level 8 spell slot, you can animate or reassert control over five Ghouls or two Ghasts or Wights. If you use a level 9 spell slot, you can animate or reassert control over six Ghouls, three Ghasts or Wights, or two Mummies. See the Monster Manual for these stat blocks.",
-        "source": "Player's Handbook"
-    },
-    "Create or Destroy Water": {
-        "name": "Create or Destroy Water",
-        "level": 1,
-        "school": "Transmutation",
-        "classes": [
-            "Cleric",
-            "Druid"
-        ],
-        "casting_time": "Action",
-        "range": "30 feet",
-        "components": "V, S, M (a mix of water and sand)",
-        "duration": "Instantaneous",
-        "description": "You do one of the following:\nCreate Water. You create up to 10 gallons of clean water within range in an open container. Alternatively, the water falls as rain in a 30-foot Cube within range, extinguishing exposed flames there.\nDestroy Water. You destroy up to 10 gallons of water in an open container within range. Alternatively, you destroy fog in a 30-foot Cube within range.\nUsing a Higher-Level Spell Slot. You create or destroy 10 additional gallons of water, or the size of the Cube increases by 5 feet, for each spell slot level above 1.",
         "source": "Player's Handbook"
     },
     "Creation": {
@@ -2361,22 +2361,6 @@
         "description": "You summon an otherworldly being that appears as a loyal steed in an unoccupied space of your choice within range. This creature uses the Otherworldly Steed stat block. If you already have a steed from this spell, the steed is replaced by the new one.\nThe steed resembles a Large, rideable animal of your choice, such as a horse, a camel, a dire wolf, or an elk. Whenever you cast the spell, choose the steed’s creature type—Celestial, Fey, or Fiend—which determines certain traits in the stat block.\nCombat. The steed is an ally to you and your allies. In combat, it shares your Initiative count, and it functions as a controlled mount while you ride it (as defined in the rules on mounted combat). If you have the Incapacitated condition, the steed takes its turn immediately after yours and acts independently, focusing on protecting you.\nDisappearance of the Steed. The steed disappears if it drops to 0 Hit Points or if you die. When it disappears, it leaves behind anything it was wearing or carrying. If you cast this spell again, you decide whether you summon the steed that disappeared or a different one.\nUsing a Higher-Level Spell Slot. Use the spell slot’s level for the spell’s level in the stat block.",
         "source": "Player's Handbook"
     },
-    "Find Traps": {
-        "name": "Find Traps",
-        "level": 2,
-        "school": "Divination",
-        "classes": [
-            "Cleric",
-            "Druid",
-            "Ranger"
-        ],
-        "casting_time": "Action",
-        "range": "120 feet",
-        "components": "V, S",
-        "duration": "Instantaneous",
-        "description": "You sense any trap within range that is within line of sight. A trap, for the purpose of this spell, includes any object or mechanism that was created to cause damage or other danger. Thus, the spell would sense the Alarm or Glyph of Warding spell or a mechanical pit trap, but it wouldn’t reveal a natural weakness in the floor, an unstable ceiling, or a hidden sinkhole.\nThis spell reveals that a trap is present but not its location. You do learn the general nature of the danger posed by a trap you sense.",
-        "source": "Player's Handbook"
-    },
     "Find the Path": {
         "name": "Find the Path",
         "level": 6,
@@ -2391,6 +2375,22 @@
         "components": "V, S, M (a set of divination tools - such as cards or runes - worth 100+ GP)",
         "duration": "Concentration, up to 1 day",
         "description": "You magically sense the most direct physical route to a location you name. You must be familiar with the location, and the spell fails if you name a destination on another plane of existence, a moving destination (such as a mobile fortress), or an unspecific destination (such as “a green dragon’s lair”).\nFor the duration, as long as you are on the same plane of existence as the destination, you know how far it is and in what direction it lies. Whenever you face a choice of paths along the way there, you know which path is the most direct.",
+        "source": "Player's Handbook"
+    },
+    "Find Traps": {
+        "name": "Find Traps",
+        "level": 2,
+        "school": "Divination",
+        "classes": [
+            "Cleric",
+            "Druid",
+            "Ranger"
+        ],
+        "casting_time": "Action",
+        "range": "120 feet",
+        "components": "V, S",
+        "duration": "Instantaneous",
+        "description": "You sense any trap within range that is within line of sight. A trap, for the purpose of this spell, includes any object or mechanism that was created to cause damage or other danger. Thus, the spell would sense the Alarm or Glyph of Warding spell or a mechanical pit trap, but it wouldn’t reveal a natural weakness in the floor, an unstable ceiling, or a hidden sinkhole.\nThis spell reveals that a trap is present but not its location. You do learn the general nature of the danger posed by a trap you sense.",
         "source": "Player's Handbook"
     },
     "Finger of Death": {
@@ -4151,6 +4151,20 @@
         "description": "You conjure a phantom watchdog in an unoccupied space that you can see within range. The hound remains for the duration or until the two of you are more than 300 feet apart from each other.\nNo one but you can see the hound, and it is intangible and invulnerable. When a Small or larger creature comes within 30 feet of it without first speaking the password that you specify when you cast this spell, the hound starts barking loudly. The hound has Truesight with a range of 30 feet.\nAt the start of each of your turns, the hound attempts to bite one enemy within 5 feet of it. That enemy must succeed on a Dexterity saving throw or take 4d8 Force damage.\nOn your later turns, you can take a Magic action to move the hound up to 30 feet.",
         "source": "Player's Handbook"
     },
+    "Mordenkainen's Lucubration": {
+        "name": "Mordenkainen's Lucubration",
+        "level": 5,
+        "school": "Divination",
+        "classes": [
+            "Wizard"
+        ],
+        "casting_time": "Action",
+        "range": "Self",
+        "components": "V, S",
+        "duration": "Instantaneous",
+        "description": "You recover up to two expended spell slots of level 2 or lower.\nUsing a Higher-Level Spell Slot. The maximum level of spell slots you can recover increases to level 3 (if cast with a level 6-7 spell slot) or level 4 (if cast with a level 8+ spell slot).",
+        "source": "Arcana Unleashed 2026"
+    },
     "Mordenkainen's Magnificent Mansion": {
         "name": "Mordenkainen's Magnificent Mansion",
         "level": 7,
@@ -4982,10 +4996,10 @@
         ],
         "casting_time": "Action",
         "range": "60 feet",
-        "components": "S, M (Metallic flakes and a pinch of phosphorus)",
+        "components": "S, M (metallic flakes and a pinch of phosphorus)",
         "duration": "Instantaneous",
         "description": "You create and hurl a pulsing orb of energy at one creature within range. Make a ranged spell attack against the target. On a hit, the target takes 3d4 Radiant damage. Hit or miss, the orb then explodes in a flash of light. The target and each creature within 10 feet of it make a Constitution saving throw. On a failed save, a creature has the Blinded condition until the end of its next turn.\nUsing a Higher-Level Spell Slot. The damage increases by 1d4 for each spell slot level above 2.",
-        "source": "D&D Beyond Drops - June 2026"
+        "source": "Ravenloft - The Horrors Within 2026"
     },
     "Searing Smite": {
         "name": "Searing Smite",
@@ -5448,6 +5462,23 @@
         "duration": "Concentration, up to 10 minutes",
         "description": "Protective spirits flit around you in a 15-foot Emanation for the duration. If you are good or neutral, their spectral form appears angelic or fey (your choice). If you are evil, they appear fiendish.\nWhen you cast this spell, you can designate creatures to be unaffected by it. Any other creature’s Speed is halved in the Emanation, and whenever the Emanation enters a creature’s space and whenever a creature enters the Emanation or ends its turn there, the creature must make a Wisdom saving throw. On a failed save, the creature takes 3d8 Radiant damage (if you are good or neutral) or 3d8 Necrotic damage (if you are evil). On a successful save, the creature takes half as much damage. A creature makes this save only once per turn.\nUsing a Higher-Level Spell Slot. The damage increases by 1d8 for each spell slot level above 3.",
         "source": "Player's Handbook"
+    },
+    "Spirit Lantern": {
+        "name": "Spirit Lantern",
+        "level": 5,
+        "school": "Necromancy",
+        "classes": [
+            "Artificer",
+            "Cleric",
+            "Warlock",
+            "Wizard"
+        ],
+        "casting_time": "Action",
+        "range": "Self",
+        "components": "V, S, M (a black lantern)",
+        "duration": "10 minutes",
+        "description": "You conjure a floating, ghostly black lantern that hovers above you and sheds Dim Light in a 60-foot radius. When an enemy dies within this Dim Light, a fragment of the creature's soul flies into the lantern. The lantern can hold a number of soul fragments equal to your spellcasting ability modifier, and those fragments dissipate when the spell ends. As a Bonus Action, you can expend a soul fragment to create one of the following effects.\nDrain Life. The soul fragment darts at a creature of your choice that you can see within 60 feet of yourself. The target makes a Constitution saving throw, taking Necrotic damage equal to 4d8 plus your spellcasting ability modifier on a failed save or half as much damage on a successful one.\nRepair Undead. The soul fragment flies into an Undead creature of your choice that you can see within 60 feet of yourself. That creature regains Hit Points equal to 4d8 plus your spellcasting ability modifier.\nWard Ally. The soul fragment darts around a creature of your choice that you can see within 60 feet of yourself. Other creatures have Disadvantage on attack rolls against the chosen creature until the start of your next turn.",
+        "source": "Arcana Unleashed 2026"
     },
     "Spiritual Weapon": {
         "name": "Spiritual Weapon",
@@ -6088,7 +6119,7 @@
         "components": "V, S",
         "duration": "Concentration, up to 1 minute",
         "description": "You touch a willing creature. Until the spell ends, the target’s skin hardens into a tortoise shell, and the target gains a +3 bonus to AC. If the target moves, the bonus becomes +1 instead until the start of its next turn.",
-        "source": "D&D Beyond Drops - June 2026"
+        "source": "Ravenloft - The Horrors Within 2026"
     },
     "Transport via Plants": {
         "name": "Transport via Plants",
@@ -6271,10 +6302,10 @@
         ],
         "casting_time": "Action",
         "range": "120 feet",
-        "components": "V/S/M (a fragment of a meteor)",
+        "components": "V, S, M (a fragment of a meteor, not consumed)",
         "duration": "Instantaneous",
         "description": "You conjure forth a fragment of a dark star and launch it at one creature that you can see within range. Make a ranged spell attack against the target. On a hit, the target takes 6d12 Necrotic damage. At the end of the target’s next turn, it takes 3d12 Necrotic damage, and you regain Hit Points equal to the amount of Necrotic damage dealt.\nUsing a Higher-Level Spell Slot. The damage (both initial and later) increases by 1d12 for each spell slot level above 7.",
-        "source": "D&D Beyond Drops - June 2026"
+        "source": "Ravenloft - The Horrors Within 2026"
     },
     "Wall of Fire": {
         "name": "Wall of Fire",
@@ -6509,6 +6540,22 @@
         "duration": "Concentration, up to 1 minute",
         "description": "A beam of crackling energy lances toward a creature within range, forming a sustained arc of lightning between you and the target. Make a ranged spell attack against it. On a hit, the target takes 2d12 Lightning damage.\nOn each of your subsequent turns, you can take a Bonus Action to deal 1d12 Lightning damage to the target automatically, even if the first attack missed.\nThe spell ends if the target is ever outside the spell’s range or if it has Total Cover from you.\nUsing a Higher-Level Spell Slot. The initial damage increases by 1d12 for each spell slot level above 1.",
         "source": "Player's Handbook"
+    },
+    "Wither and Bloom": {
+        "name": "Wither and Bloom",
+        "level": 2,
+        "school": "Necromancy",
+        "classes": [
+            "Druid",
+            "Sorcerer",
+            "Wizard"
+        ],
+        "casting_time": "Action",
+        "range": "60 feet",
+        "components": "V, S, M (a withered vine twisted into a loop)",
+        "duration": "Instantaneous",
+        "description": "You invoke both death and life in a 10-foot-radius Sphere centered on a point within range. Each creature of your choice in that area makes a Constitution saving throw, taking 3d6 Necrotic damage on a failed save or half as much damage on a successful one. Nonmagical plants in that area that aren't creatures, such as trees and shrubs, wither.\nIn addition, one creature of your choice in that area can roll one of its unexpended Hit Point Dice and regain a number of Hit Points equal to the roll plus your spellcasting ability modifier. That die is then expended.\nUsing a Higher-Level Spell Slot. The damage increases by 1d6 for each spell slot level above 2. The number of Hit Point Dice that can be rolled and expended increases by one for each spell slot level above 2. You add your spellcasting modifier to the number of Hit Points regained by this spell only once, regardless of the number of Hit Point Dice rolled and expended.",
+        "source": "Arcana Unleashed 2026"
     },
     "Word of Radiance": {
         "name": "Word of Radiance",

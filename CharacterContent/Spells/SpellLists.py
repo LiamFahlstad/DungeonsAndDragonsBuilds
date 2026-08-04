@@ -362,6 +362,7 @@ class ArtificerLevel5Spells(str, Enum):
     CREATION = "Creation"
     GREATER_RESTORATION = "Greater Restoration"
     SKILL_EMPOWERMENT = "Skill Empowerment"
+    SPIRIT_LANTERN = "Spirit Lantern"
     TRANSMUTE_ROCK = "Transmute Rock"
     WALL_OF_STONE = "Wall of Stone"
 
@@ -627,6 +628,7 @@ class WizardLevel5Spells(str, Enum):
     LEGEND_LORE = "Legend Lore"
     MISLEAD = "Mislead"
     MODIFY_MEMORY = "Modify Memory"
+    MORDENKAINENS_LUCUBRATION = "Mordenkainen's Lucubration"
     NEGATIVE_ENERGY_FLOOD = "Negative Energy Flood"
     PASSWALL = "Passwall"
     PLANAR_BINDING = "Planar Binding"
@@ -635,6 +637,7 @@ class WizardLevel5Spells(str, Enum):
     SEEMING = "Seeming"
     SKILL_EMPOWERMENT = "Skill Empowerment"
     SONGALS_ELEMENTAL_SUFFUSION = "Songal's Elemental Suffusion"
+    SPIRIT_LANTERN = "Spirit Lantern"
     STEEL_WIND_STRIKE = "Steel Wind Strike"
     SUMMON_DRACONIC_SPIRIT = "Summon Draconic Spirit"
     SUMMON_DRAGON = "Summon Dragon"
@@ -1050,6 +1053,7 @@ class ClericLevel5Spells(str, Enum):
     PLANAR_BINDING = "Planar Binding"
     RAISE_DEAD = "Raise Dead"
     SCRYING = "Scrying"
+    SPIRIT_LANTERN = "Spirit Lantern"
     SUMMON_CELESTIAL = "Summon Celestial"
 
 class ClericLevel6Spells(str, Enum):
@@ -1556,6 +1560,7 @@ class WarlockLevel5Spells(str, Enum):
     NEGATIVE_ENERGY_FLOOD = "Negative Energy Flood"
     PLANAR_BINDING = "Planar Binding"
     SCRYING = "Scrying"
+    SPIRIT_LANTERN = "Spirit Lantern"
     SYNAPTIC_STATIC = "Synaptic Static"
     TELEPORTATION_CIRCLE = "Teleportation Circle"
     WALL_OF_LIGHT = "Wall of Light"
@@ -1859,6 +1864,7 @@ class DivinationLevel5Spells(str, Enum):
     COMMUNE_WITH_NATURE = "Commune with Nature"
     CONTACT_OTHER_PLANE = "Contact Other Plane"
     LEGEND_LORE = "Legend Lore"
+    MORDENKAINENS_LUCUBRATION = "Mordenkainen's Lucubration"
     RARYS_TELEPATHIC_BOND = "Rary's Telepathic Bond"
     SCRYING = "Scrying"
 
@@ -2171,6 +2177,7 @@ class NecromancyLevel5Spells(str, Enum):
     NEGATIVE_ENERGY_FLOOD = "Negative Energy Flood"
     RAISE_DEAD = "Raise Dead"
     REINCARNATE = "Reincarnate"
+    SPIRIT_LANTERN = "Spirit Lantern"
 
 class NecromancyLevel6Spells(str, Enum):
     CIRCLE_OF_DEATH = "Circle of Death"
