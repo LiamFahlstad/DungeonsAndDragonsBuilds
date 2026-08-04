@@ -280,6 +280,7 @@ class WizardSubclass(str, Enum):
     EVOKER = "Evoker"
     ILLUSIONIST = "Illusionist"
     BLADESINGER = "Bladesinger"
+    TRANSMUTER = "Transmuter"
 
 
 class WizardSubclass2014(str, Enum):
