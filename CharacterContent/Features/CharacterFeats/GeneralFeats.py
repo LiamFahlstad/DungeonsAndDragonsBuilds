@@ -1,6 +1,11 @@
-from Core.Definitions import Ability, Skill
+from Core.Definitions import Ability, DamageType, Skill
 from CharacterContent.Features.Core.BaseFeatures import Feature
-from CharacterContent.Features.Core.Improvements import AbilityScoreBonus, SkillExpertiseChoice, SkillProficiencyChoice
+from CharacterContent.Features.Core.Improvements import (
+    AbilityScoreBonus,
+    ElementalResistance,
+    SkillExpertiseChoice,
+    SkillProficiencyChoice,
+)
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
@@ -1109,4 +1114,87 @@ class Watchers(GeneralFeat):
             "Heightened Suspicion. Whenever you take the Search action, you can roll 1d4 and add the number rolled to any ability check made as part of that action.\n"
             "Incessant Watchers. You have Disadvantage on saving throws made against the Scrying spell.\n"
             "In addition, immediately after you make a D20 Test and roll a 1 on the d20, paranoia threatens to overwhelm you. Make a Wisdom saving throw (DC 13 plus your Proficiency Bonus). On a failed save, you have Disadvantage on D20 Tests for 1 minute. You can repeat the save at the end of each of your turns, ending the effect early on a success."
+        )
+
+
+# ---------------------------------------------------------------------------
+# Arcana Unleashed 2026 General Feats
+# ---------------------------------------------------------------------------
+
+
+class ElementalFamiliar(_AbilityScoreFeat):
+    _NAME = "Elemental Familiar"
+    _ORIGIN = "General Feat Level 4+ (Arcana Unleashed 2026)"
+    _ABILITIES = tuple(Ability)
+
+    def __init__(self, character_level: int, ability: Ability, damage_type: DamageType):
+        valid_types = (
+            DamageType.ACID,
+            DamageType.COLD,
+            DamageType.FIRE,
+            DamageType.LIGHTNING,
+            DamageType.THUNDER,
+        )
+        if damage_type not in valid_types:
+            valid_str = ", ".join(dt.value for dt in valid_types)
+            raise ValueError(
+                f"Elemental Familiar damage type must be one of: {valid_str}."
+            )
+        self.damage_type = damage_type
+        self._resistance = ElementalResistance(damage_type)
+        super().__init__(character_level, ability)
+
+    def apply(self, character_stat_block: CharacterStatBlock):
+        super().apply(character_stat_block)
+        self._resistance.apply(character_stat_block)
+
+    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+        return (
+            f"General Feat (Prerequisite: Level 4+, Familiar Friend Feat)\n"
+            "You gain the following benefits.\n"
+            "Ability Score Increase. Increase one ability score of your choice by 1, to a maximum of 20.\n"
+            "Elemental Energy. You learn how to imbue your familiar with elemental power. When you cast the Find Familiar spell, choose Acid, Cold, Fire, Lightning, or Thunder damage. Your familiar is imbued with this energy until you cast Find Familiar again, granting it the following benefits:\n"
+            "Elemental Resistance. Your familiar has Resistance to the chosen damage type.\n"
+            f"Energy Pulse. As a Bonus Action, you command your familiar to unleash a burst of elemental energy. Your familiar must be within 120 feet of you and take a Reaction to unleash this burst. Each creature in a 5-foot Emanation originating from your familiar makes a Dexterity saving throw (DC 8 plus your spellcasting ability modifier for the Find Familiar spell and your Proficiency Bonus). On a failed save, a creature takes 2d4 damage of the chosen type, and if the creature is Medium or smaller, it has the Prone condition."
+        )
+
+
+class SpellResistant(_AbilityScoreFeat):
+    _NAME = "Spell Resistant"
+    _ORIGIN = "General Feat Level 4+ (Arcana Unleashed 2026)"
+    _ABILITIES = (Ability.DEXTERITY, Ability.CONSTITUTION)
+
+    def __init__(
+        self, character_level: int, ability: Ability, resistance_damage_type: DamageType
+    ):
+        valid_types = (
+            DamageType.NECROTIC,
+            DamageType.PSYCHIC,
+            DamageType.RADIANT,
+            DamageType.THUNDER,
+        )
+        if resistance_damage_type not in valid_types:
+            valid_str = ", ".join(dt.value for dt in valid_types)
+            raise ValueError(
+                f"Spell Resistant damage type must be one of: {valid_str}."
+            )
+        self.resistance_damage_type = resistance_damage_type
+        self._resistance = ElementalResistance(resistance_damage_type)
+        super().__init__(character_level, ability)
+
+    def apply(self, character_stat_block: CharacterStatBlock):
+        super().apply(character_stat_block)
+        self._resistance.apply(character_stat_block)
+
+    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+        proficiency_bonus = character_stat_block.get_proficiency_bonus()
+        description = (
+            "General Feat (Prerequisite: Level 4+)\n"
+            "You gain the following benefits.\n"
+            "Ability Score Increase. Increase your Dexterity or Constitution score by 1, to a maximum of 20.\n"
+            "Magical Resilience. You have Resistance to one of the following damage types (choose when you gain this feat): Necrotic, Psychic, Radiant, or Thunder.\n"
+            "Magic Resistant. When you would fail a saving throw against a spell or magical effect, you can roll 1d6 and add the number rolled to the save's total, potentially turning the failure into a success. You can use this benefit a number of times equal to your Proficiency Bonus, and you regain all expended uses when you finish a Long Rest."
+        )
+        return StringUtils.add_boxes(
+            description, proficiency_bonus, regain_all_on="long rest"
         )

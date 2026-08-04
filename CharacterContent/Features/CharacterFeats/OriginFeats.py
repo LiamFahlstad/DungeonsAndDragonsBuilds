@@ -338,6 +338,40 @@ class EmeraldEnclaveFledgling(OriginFeat):
         )
 
 
+class FamiliarFriend(OriginFeat):
+    def __init__(self, spell_casting_ability: Ability):
+        if spell_casting_ability not in (
+            Ability.INTELLIGENCE,
+            Ability.WISDOM,
+            Ability.CHARISMA,
+        ):
+            raise ValueError(
+                "Familiar Friend spellcasting ability must be Intelligence, Wisdom, or Charisma."
+            )
+        self.spell_casting_ability = spell_casting_ability
+        super().__init__(name="Familiar Friend", origin="Arcana Unleashed 2026")
+
+    def get_spells(self) -> list[str]:
+        return ["Find Familiar"]
+
+    def get_spell_casting_ability(self) -> Ability:
+        return self.spell_casting_ability
+
+    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+        proficiency_bonus = character_stat_block.get_proficiency_bonus()
+        description = (
+            "You gain the following benefits.\n"
+            "Faithful Companion. You always have the Find Familiar spell prepared. "
+            f"{self.spell_casting_ability.value} is your spellcasting ability for this spell. "
+            "You can cast it once without a spell slot or Material components, and you regain the ability to cast it in this way when you finish a Long Rest. You can also cast the spell using any spell slots you have.\n"
+            "Fortified Familiar. When you cast the Find Familiar spell, your familiar’s Hit Point maximum and current Hit Points are increased by an amount equal to twice your character level.\n"
+            "Helpful Friend. When you make an ability check using a skill in which you have proficiency while your familiar is within 5 feet of you, you gain Advantage on the check."
+        )
+        return StringUtils.add_boxes(
+            description, proficiency_bonus, regain_all_on="long rest"
+        )
+
+
 class HarperAgent(OriginFeat):
     def __init__(self):
         super().__init__(name="Harper Agent", origin="Origin Feat")
