@@ -205,6 +205,7 @@ class PaladinSubclass2014(str, Enum):
     DEVOTION = "Oath of Devotion"
     VENGEANCE = "Oath of Vengeance"
     REDEMPTION = "Oath of Redemption"
+    CONQUEST = "Oath of Conquest"
 
 
 class ClericSubclass(str, Enum):
@@ -240,6 +241,7 @@ class RogueSubclass2014(str, Enum):
     SWASHBUCKLER = "Swashbuckler"
     THIEF = "Thief"
     MASTERMIND = "Mastermind"
+    SCOUT = "Scout"
 
 
 class BardSubclass(str, Enum):
@@ -256,6 +258,7 @@ class BardSubclass(str, Enum):
 class BardSubclass2014(str, Enum):
     ELOQUENCE = "College of Eloquence"
     LORE = "College of Lore"
+    WHISPERS = "College of Whispers"
 
 
 class DruidSubclass(str, Enum):
@@ -295,6 +298,8 @@ class WizardSubclass2014(str, Enum):
     CONJURATION = "Conjuration"
     ENCHANTMENT = "Enchantment"
     ORDER_OF_SCRIBES = "Order of Scribes"
+    CHRONURGY = "Chronurgy"
+    GRAVITURGY = "Graviturgy"
 
 
 class SorcererSubclass(str, Enum):
@@ -326,6 +331,15 @@ class WarlockSubclass2014(str, Enum):
     THE_ARCHFEY = "The Archfey"
     THE_GREAT_OLD_ONE = "The Great Old One"
     THE_FATHOMLESS = "The Fathomless"
+    THE_GENIE = "The Genie"
+    THE_UNDYING = "The Undying"
+
+
+class WarlockGenieKind(str, Enum):
+    DAO = "Dao"
+    DJINNI = "Djinni"
+    EFREETI = "Efreeti"
+    MARID = "Marid"
 
 
 class FighterSubclass(str, Enum):
@@ -342,6 +356,8 @@ class FighterSubclass2014(str, Enum):
     BATTLE_MASTER = "Battle Master"
     ELDRITCH_KNIGHT = "Eldritch Knight"
     CAVALIER = "Cavalier"
+    ARCANE_ARCHER = "Arcane Archer"
+    ECHO_KNIGHT = "Echo Knight"
 
 
 class RangerSubclass(str, Enum):
@@ -356,6 +372,8 @@ class RangerSubclass(str, Enum):
 class RangerSubclass2014(str, Enum):
     HORIZON_WALKER = "Horizon Walker"
     HUNTER = "Hunter"
+    SWARMKEEPER = "Swarmkeeper"
+    MONSTER_SLAYER = "Monster Slayer"
 
 
 class MonkSubclass(str, Enum):
@@ -369,6 +387,7 @@ class MonkSubclass(str, Enum):
 class MonkSubclass2014(str, Enum):
     KENSEI = "Kensei"
     SUN_SOUL = "Sun Soul"
+    ASTRAL_SELF = "Astral Self"
 
 
 class BarbarianSubclass(str, Enum):

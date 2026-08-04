@@ -1,0 +1,186 @@
+"""Example build: Ranger Swarmkeeper (2014 rules). Demonstrates the subclass up through level 17."""
+
+from Builds.CharacterBuilder import CharacterBuilder
+from CharacterContent.Classes.BaseClasses import ClassBuilder
+from CharacterContent.Classes.BaseClasses.ClassBuilder import StarterClassBuilder
+from CharacterContent.Classes.BaseClasses.RangerBase import (
+    RangerLevel1,
+    RangerLevel2,
+    RangerLevel3,
+    RangerLevel4,
+    RangerLevel5,
+    RangerLevel6,
+    RangerLevel7,
+    RangerLevel8,
+    RangerLevel9,
+    RangerLevel10,
+    RangerLevel11,
+    RangerLevel12,
+    RangerLevel13,
+    RangerLevel14,
+    RangerLevel15,
+    RangerLevel16,
+    RangerLevel17,
+)
+from CharacterContent.Classes.SubClasses2014.RangerSwarmkeeper import (
+    RangerSwarmkeeperLevel3,
+    RangerSwarmkeeperLevel5,
+    RangerSwarmkeeperLevel7,
+    RangerSwarmkeeperLevel9,
+    RangerSwarmkeeperLevel11,
+    RangerSwarmkeeperLevel13,
+    RangerSwarmkeeperLevel15,
+    RangerSwarmkeeperLevel17,
+    RangerSwarmkeeperCustomStarterClassArgs,
+)
+from Core.Definitions import Ability, Skill
+from CharacterContent.Features.CharacterFeats import Backgrounds, GeneralFeats, OriginFeats
+from CharacterContent.Features.CombatFeatures import FightingStyles
+from CharacterContent.Items import Weapons
+from CharacterContent.Species import Elf, Human
+from CharacterContent.Spells.SpellLists import RangerLevel1Spells, RangerLevel2Spells, RangerLevel3Spells, RangerLevel4Spells
+from StatBlocks.AbilitiesStatBlock import StandardArrayAbilitiesStatBlock
+from StatBlocks.SkillsStatBlock import RangerSkillsStatBlock
+
+
+def get_starter_class_builder():
+    return StarterClassBuilder(
+        non_generic_arguments=RangerSwarmkeeperCustomStarterClassArgs(
+            skills=RangerSkillsStatBlock(
+                proficiencies={
+                    Skill.ANIMAL_HANDLING: False,
+                    Skill.ATHLETICS: False,
+                    Skill.INSIGHT: False,
+                    Skill.INVESTIGATION: False,
+                    Skill.NATURE: True,
+                    Skill.PERCEPTION: True,
+                    Skill.STEALTH: False,
+                    Skill.SURVIVAL: True,
+                }
+            ),
+        ),
+        base_class_level=17,
+        # Distribute 15, 14, 13, 12, 10, 8 among your abilities.
+        abilities=StandardArrayAbilitiesStatBlock(
+            strength=10,
+            dexterity=14,
+            constitution=13,
+            intelligence=8,
+            wisdom=15,
+            charisma=12,
+        ),
+        background_ability_bonuses=Backgrounds.FreeBackgroundAbilityBonus(
+            [
+                (Ability.DEXTERITY, 1),
+                (Ability.WISDOM, 2),
+            ]
+        ),
+        background_skill_proficiencies=Backgrounds.FreeBackgroundSkillProficiency(
+            [
+                Skill.SURVIVAL,
+                Skill.INSIGHT,
+            ]
+        ),
+        add_default_equipment=True,
+        origin_feat=OriginFeats.Alert(),
+        armor=[],
+        weapons=[],
+        base_class_level_features=ClassBuilder.BaseClassLevelFeatures(
+            base_class_features_by_level={
+                1: RangerLevel1(
+                    weapon_mastery_1=Weapons.Longbow(),
+                    weapon_mastery_2=Weapons.Shortsword(),
+                    spell_1=RangerLevel1Spells.DETECT_MAGIC,
+                    spell_2=RangerLevel1Spells.GOODBERRY,
+                ),
+                2: RangerLevel2(
+                    skill_expertise=Skill.PERCEPTION,
+                    fighting_style=FightingStyles.Archery(),
+                    spell=RangerLevel1Spells.FOG_CLOUD,
+                ),
+                3: RangerLevel3(
+                    spell=RangerLevel1Spells.ENSNARING_STRIKE,
+                ),
+                4: RangerLevel4(
+                    general_feat=GeneralFeats.AbilityScoreImprovement(
+                        bonuses=[
+                            (Ability.WISDOM, 1),
+                            (Ability.DEXTERITY, 1),
+                        ]),
+                    spell=RangerLevel1Spells.LONGSTRIDER,
+                ),
+                5: RangerLevel5(
+                    spell=RangerLevel2Spells.PASS_WITHOUT_TRACE,
+                ),
+                6: RangerLevel6(),
+                7: RangerLevel7(
+                    spell=RangerLevel2Spells.SPIKE_GROWTH,
+                ),
+                8: RangerLevel8(
+                    general_feat=GeneralFeats.AbilityScoreImprovement(
+                        bonuses=[
+                            (Ability.WISDOM, 1),
+                            (Ability.CONSTITUTION, 1),
+                        ]),
+                ),
+                9: RangerLevel9(
+                    skill_expertise_1=Skill.SURVIVAL,
+                    skill_expertise_2=Skill.NATURE,
+                    spell_1=RangerLevel3Spells.CONJURE_ANIMALS,
+                    spell_2=RangerLevel2Spells.ENHANCE_ABILITY,
+                ),
+                10: RangerLevel10(),
+                11: RangerLevel11(
+                    spell=RangerLevel3Spells.LIGHTNING_ARROW,
+                ),
+                12: RangerLevel12(
+                    general_feat=GeneralFeats.AbilityScoreImprovement(
+                        bonuses=[
+                            (Ability.WISDOM, 1),
+                            (Ability.DEXTERITY, 1),
+                        ]),
+                ),
+                13: RangerLevel13(
+                    spell=RangerLevel4Spells.LOCATE_CREATURE,
+                ),
+                14: RangerLevel14(),
+                15: RangerLevel15(
+                    spell=RangerLevel4Spells.GUARDIAN_OF_NATURE,
+                ),
+                16: RangerLevel16(
+                    general_feat=GeneralFeats.AbilityScoreImprovement(
+                        bonuses=[
+                            (Ability.WISDOM, 1),
+                            (Ability.CONSTITUTION, 1),
+                        ]),
+                ),
+                17: RangerLevel17(
+                    spell_1=RangerLevel2Spells.GUST_OF_WIND,
+                    spell_2=RangerLevel3Spells.WATER_WALK,
+                ),
+            },
+            subclass_features_by_level={
+                3: RangerSwarmkeeperLevel3(),
+                5: RangerSwarmkeeperLevel5(),
+                7: RangerSwarmkeeperLevel7(),
+                9: RangerSwarmkeeperLevel9(),
+                11: RangerSwarmkeeperLevel11(),
+                13: RangerSwarmkeeperLevel13(),
+                15: RangerSwarmkeeperLevel15(),
+                17: RangerSwarmkeeperLevel17(),
+            },
+        ),
+        replace_spells={},
+    )
+
+
+class ExampleRangerSwarmkeeper2014CharacterBuilder(CharacterBuilder):
+    def __init__(self):
+        super().__init__(
+            name="Example Ranger Swarmkeeper",
+            starter_class_builder=get_starter_class_builder(),
+            species_builder=Human.HumanSpeciesBuilder(
+                skill_proficiency=Skill.ANIMAL_HANDLING,
+                origin_feat=OriginFeats.Alert(),
+            ),
+        )
