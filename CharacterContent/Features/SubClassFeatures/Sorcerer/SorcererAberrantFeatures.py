@@ -3,6 +3,23 @@ from CharacterContent.Features.Core.BaseFeatures import Feature
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
+class PsionicSpells(Feature):
+    def __init__(self):
+        super().__init__(name="Psionic Spells", origin="Aberrant Sorcerer Level 3")
+
+    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+        description = (
+            "When you reach a Sorcerer level specified in the Psionic Spells table, you thereafter always have the listed spells prepared.\n"
+            "Psionic Spells\n"
+            "Sorcerer Level	Spells\n"
+            "3	Arms of Hadar, Calm Emotions, Detect Thoughts, Dissonant Whispers, Mind Sliver\n"
+            "5	Hunger of Hadar, Sending\n"
+            "7	Evard's Black Tentacles, Summon Aberration\n"
+            "9	Rary's Telepathic Bond, Telekinesis"
+        )
+        return description
+
+
 class TelepathicSpeech(Feature):
     def __init__(self):
         super().__init__(name="Telepathic Speech", origin="Aberrant Sorcerer Level 3")

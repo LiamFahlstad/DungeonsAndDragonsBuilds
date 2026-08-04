@@ -222,6 +222,8 @@ class ClericSubclass2014(str, Enum):
     FORGE = "Forge"
     LIFE = "Life"
     DEATH = "Death"
+    NATURE = "Nature"
+    TEMPEST = "Tempest"
 
 
 class RogueSubclass(str, Enum):
@@ -236,6 +238,7 @@ class RogueSubclass(str, Enum):
 class RogueSubclass2014(str, Enum):
     SWASHBUCKLER = "Swashbuckler"
     THIEF = "Thief"
+    MASTERMIND = "Mastermind"
 
 
 class BardSubclass(str, Enum):
@@ -286,6 +289,10 @@ class WizardSubclass(str, Enum):
 class WizardSubclass2014(str, Enum):
     NECROMANCY = "Necromancy"
     EVOCATION = "Evocation"
+    ABJURATION = "Abjuration"
+    ILLUSION = "Illusion"
+    CONJURATION = "Conjuration"
+    ENCHANTMENT = "Enchantment"
 
 
 class SorcererSubclass(str, Enum):
@@ -313,6 +320,8 @@ class WarlockSubclass(str, Enum):
 class WarlockSubclass2014(str, Enum):
     HEXBLADE = "Hexblade"
     FIEND = "Fiend"
+    THE_ARCHFEY = "The Archfey"
+    THE_GREAT_OLD_ONE = "The Great Old One"
 
 
 class FighterSubclass(str, Enum):
@@ -328,6 +337,7 @@ class FighterSubclass2014(str, Enum):
     CHAMPION = "Champion"
     BATTLE_MASTER = "Battle Master"
     ELDRITCH_KNIGHT = "Eldritch Knight"
+    CAVALIER = "Cavalier"
 
 
 class RangerSubclass(str, Enum):
