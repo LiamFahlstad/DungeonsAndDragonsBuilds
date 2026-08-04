@@ -204,6 +204,7 @@ class PaladinSubclass2014(str, Enum):
     OATHBREAKER = "Oathbreaker"
     DEVOTION = "Oath of Devotion"
     VENGEANCE = "Oath of Vengeance"
+    REDEMPTION = "Oath of Redemption"
 
 
 class ClericSubclass(str, Enum):
@@ -293,6 +294,7 @@ class WizardSubclass2014(str, Enum):
     ILLUSION = "Illusion"
     CONJURATION = "Conjuration"
     ENCHANTMENT = "Enchantment"
+    ORDER_OF_SCRIBES = "Order of Scribes"
 
 
 class SorcererSubclass(str, Enum):
@@ -307,6 +309,7 @@ class SorcererSubclass(str, Enum):
 class SorcererSubclass2014(str, Enum):
     STORM = "Storm"
     DRACONIC = "Draconic"
+    DIVINE_SOUL = "Divine Soul"
 
 
 class WarlockSubclass(str, Enum):
@@ -322,6 +325,7 @@ class WarlockSubclass2014(str, Enum):
     FIEND = "Fiend"
     THE_ARCHFEY = "The Archfey"
     THE_GREAT_OLD_ONE = "The Great Old One"
+    THE_FATHOMLESS = "The Fathomless"
 
 
 class FighterSubclass(str, Enum):
@@ -364,6 +368,7 @@ class MonkSubclass(str, Enum):
 
 class MonkSubclass2014(str, Enum):
     KENSEI = "Kensei"
+    SUN_SOUL = "Sun Soul"
 
 
 class BarbarianSubclass(str, Enum):
@@ -376,6 +381,13 @@ class BarbarianSubclass(str, Enum):
 class BarbarianSubclass2014(str, Enum):
     PATH_OF_THE_TOTEM_WARRIOR = "Path of the Totem Warrior"
     PATH_OF_THE_BERSERKER = "Path of the Berserker"
+    PATH_OF_THE_STORM_HERALD = "Path of the Storm Herald"
+
+
+class BarbarianStormEnvironment(str, Enum):
+    DESERT = "Desert"
+    SEA = "Sea"
+    TUNDRA = "Tundra"
 
 
 class CreatureSize(str, Enum):
