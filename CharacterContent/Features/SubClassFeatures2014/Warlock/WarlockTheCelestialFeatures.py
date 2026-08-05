@@ -1,0 +1,88 @@
+from Core.Definitions import Ability, WARLOCK_HIT_DIE
+from CharacterContent.Features.Core.BaseFeatures import Feature
+from StatBlocks.CharacterStatBlock import CharacterStatBlock
+from Utils import StringUtils
+
+
+class CelestialExpandedSpells(Feature):
+    def __init__(self):
+        super().__init__(
+            name="Expanded Spell List", origin="The Celestial Patron Warlock Level 3"
+        )
+
+    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+        description = (
+            "The Celestial lets you choose from an expanded list of spells when you learn a Warlock spell. The following spells are added to the Warlock spell list for you.\n"
+            "Celestial Expanded Spells\n"
+            "Spell Level\tSpells\n"
+            "1st\tCure Wounds, Guiding Bolt\n"
+            "2nd\tFlaming Sphere, Lesser Restoration\n"
+            "3rd\tDaylight, Revivify\n"
+            "4th\tGuardian of Faith, Wall of Fire\n"
+            "5th\tFlame Strike, Greater Restoration"
+        )
+        return description
+
+
+class BonusCantrips(Feature):
+    def __init__(self):
+        super().__init__(
+            name="Bonus Cantrips", origin="The Celestial Patron Warlock Level 3"
+        )
+
+    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+        description = "You learn the Light and Sacred Flame cantrips. They count as Warlock cantrips for you, but they don't count against your number of cantrips known."
+        return description
+
+
+class HealingLight(Feature):
+    def __init__(self):
+        super().__init__(
+            name="Healing Light", origin="The Celestial Patron Warlock Level 3"
+        )
+
+    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+        description = (
+            "You gain the ability to channel celestial energy to heal wounds. You have a pool of d6s that you spend to fuel this healing. The number of dice in the pool equals 1 + your Warlock level.\n"
+            "As a Bonus Action, you can heal one creature you can see within 60 feet of you, spending dice from the pool. The maximum number of dice you can spend at once equals your Charisma modifier (minimum of one die). Roll the dice you spend, add them together, and restore a number of Hit Points equal to the total.\n"
+            "Your pool regains all expended dice when you finish a Long Rest."
+        )
+        return description
+
+
+class RadiantSoul(Feature):
+    def __init__(self):
+        super().__init__(
+            name="Radiant Soul", origin="The Celestial Patron Warlock Level 6"
+        )
+
+    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+        description = "Your link to the Celestial allows you to serve as a conduit for radiant energy. You have resistance to radiant damage, and when you cast a spell that deals radiant or fire damage, you add your Charisma modifier to one radiant or fire damage roll of that spell against one of its targets."
+        return description
+
+
+class CelestialResistance(Feature):
+    def __init__(self):
+        super().__init__(
+            name="Celestial Resistance", origin="The Celestial Patron Warlock Level 10"
+        )
+
+    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+        description = (
+            "You gain temporary hit points whenever you finish a Short or Long Rest. These temporary hit points equal your Warlock level + your Charisma modifier. Additionally, choose up to five creatures you can see at the end of the rest. Those creatures each gain temporary hit points equal to half your Warlock level + your Charisma modifier."
+        )
+        return description
+
+
+class SearingVengeance(Feature):
+    def __init__(self):
+        super().__init__(
+            name="Searing Vengeance", origin="The Celestial Patron Warlock Level 14"
+        )
+
+    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+        description = (
+            "The radiant energy you channel allows you to resist death. When you have to make a death saving throw at the start of your turn, you can instead spring back to your feet with a burst of radiant energy. You regain hit points equal to half your hit point maximum, and then you stand up if you so choose. Each creature of your choice that is within 30 feet of you takes radiant damage equal to 2d8 + your Charisma modifier, and is blinded until the end of the current turn.\n"
+            "Once you use this feature, you can't use it again until you finish a Long Rest."
+        )
+        return StringUtils.add_boxes(description, 1, regain_all_on="long rest")
