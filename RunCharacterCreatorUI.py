@@ -2,7 +2,7 @@
 
 Usage:
     python RunCharacterCreatorUI.py
-    python RunCharacterCreatorUI.py --load-build Builds/Characters/OptimizedBarbarianBerserker.py
+    python RunCharacterCreatorUI.py --load-build Builds/Characters/Y2024_Barbarian_Berserker_YmiraSkullcrusher.py
 
 Pick a class, subclass, level, species, skills, feats, spells and equipment,
 then press "Generate" to write a runnable build file into
@@ -19,7 +19,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "--load-build",
         metavar="PATH",
-        help="Preload an existing build file, e.g. Builds/Characters/OptimizedBarbarianBerserker.py",
+        help="Preload an existing build file, e.g. Builds/Characters/Y2024_Barbarian_Berserker_YmiraSkullcrusher.py",
     )
     args = parser.parse_args()
 

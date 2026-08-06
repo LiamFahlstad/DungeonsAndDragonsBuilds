@@ -51,6 +51,9 @@ class CharacterBuilder:
 
         # Set character name
         character_sheet_data.character_name = self.name
+        character_sheet_data.is_example = type(self).__module__.startswith(
+            "Builds.Examples"
+        )
 
         # Return final character sheet data
         return character_sheet_data

@@ -1,4 +1,4 @@
-"""Parses an existing build file (e.g. Builds/Characters/OptimizedBarbarianBerserker.py)
+"""Parses an existing build file (e.g. Builds/Characters/Y2024_Barbarian_Berserker_YmiraSkullcrusher.py)
 into a BuildSpec so the UI can preload it.
 
 Works on the source AST (no import of the build) and degrades gracefully:

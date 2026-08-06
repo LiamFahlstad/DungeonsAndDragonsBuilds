@@ -1,3 +1,4 @@
+import Core.Definitions as Definitions
 from Core.Definitions import Ability, Skill
 from CharacterContent.Features.Core.Improvements import (
     AbilityScoreBonus,
@@ -18,9 +19,6 @@ from .Standard import ChainMailArmor, ChainShirtArmor, ShieldArmor
 class ArmorOfProtection(AbstractArmor):
     """Magical chain mail that grants an additional +1 to AC."""
 
-    def __init__(self, **kwargs):
-        super().__init__(slots=2, **kwargs)
-
     def base_stats(self) -> None:
         self.name = "Armor of Protection"
         self.base_ac = 16
@@ -35,6 +33,7 @@ class ArmorOfProtection(AbstractArmor):
             "A magical suit of chain mail. While wearing it, you gain a +1 bonus to AC "
             "on top of its base AC of 16."
         )
+        self.armor_type = Definitions.ArmorType.HEAVY
 
 
 class DragonscalePlate(AbstractArmor):
@@ -53,6 +52,7 @@ class DragonscalePlate(AbstractArmor):
             "with iridescent light and radiates a faint warmth. A wearer attuned to it "
             "gains a +1 bonus to Constitution and resistance to one damage type of your choice."
         )
+        self.armor_type = Definitions.ArmorType.MEDIUM
         self.add_character_improvement(
             AbilityScoreBonus(
                 [(Ability.CONSTITUTION, 1)],

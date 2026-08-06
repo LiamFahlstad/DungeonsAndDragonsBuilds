@@ -39,6 +39,7 @@ class CharacterSheetData:
     character_name: Optional[str] = None
     character_subclass: Optional[str] = None
     base_class: Optional[CharacterClass] = None
+    is_example: bool = False
     level_per_class: dict[CharacterClass, int] = attr.Factory(dict)
     # Which class a given total character level was taken in, e.g. {1: FIGHTER,
     # 2: FIGHTER, 3: WIZARD}. Populated by ClassBuilder.create() as builders are
@@ -371,9 +372,13 @@ class CharacterSheetData:
             raise ValueError("Character name must be set to generate file path.")
         if self.character_subclass is None:
             raise ValueError("Character subclass must be set to generate file path.")
+        if self.base_class is None:
+            raise ValueError("Base class must be set to generate file path.")
+        example_prefix = "example_" if self.is_example else ""
         return (
-            f"Output/{self._slugify_name(self.character_name)}_"
-            f"{self.character_subclass.lower()}_level_{self.character_level}_character_sheet.html"
+            f"Output/{example_prefix}{self.base_class.lower()}_"
+            f"{self.character_subclass.lower()}_level_{self.character_level}_"
+            f"{self._slugify_name(self.character_name)}_character_sheet.html"
         )
 
     def merge_with(self, other: "CharacterSheetData"):

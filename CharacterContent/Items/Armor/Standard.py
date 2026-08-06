@@ -1,4 +1,6 @@
+import Core.Definitions as Definitions
 from Core.Definitions import Ability
+
 from .Base import AbstractArmor
 
 
@@ -11,6 +13,7 @@ class LeatherArmor(AbstractArmor):
         self.ac_ability = Ability.DEXTERITY
         self.weight = 10
         self.value = 10
+        self.armor_type = Definitions.ArmorType.LIGHT
 
 
 class StuddedLeatherArmor(AbstractArmor):
@@ -22,6 +25,7 @@ class StuddedLeatherArmor(AbstractArmor):
         self.ac_ability = Ability.DEXTERITY
         self.weight = 13
         self.value = 45
+        self.armor_type = Definitions.ArmorType.LIGHT
 
 
 class ChainShirtArmor(AbstractArmor):
@@ -33,13 +37,11 @@ class ChainShirtArmor(AbstractArmor):
         self.ac_ability = Ability.DEXTERITY
         self.weight = 20
         self.value = 50
+        self.armor_type = Definitions.ArmorType.MEDIUM
 
 
 class ChainMailArmor(AbstractArmor):
     """Heavy armor made of interlocking metal rings."""
-
-    def __init__(self, **kwargs):
-        super().__init__(slots=2, **kwargs)  # Heavier armor takes more space
 
     def base_stats(self) -> None:
         self.name = "Chain Mail Armor"
@@ -49,6 +51,7 @@ class ChainMailArmor(AbstractArmor):
         self.stealth_disadvantage = True
         self.weight = 55
         self.value = 75
+        self.armor_type = Definitions.ArmorType.HEAVY
 
 
 class ShieldArmor(AbstractArmor):
@@ -62,6 +65,7 @@ class ShieldArmor(AbstractArmor):
         self.ac_bonus = 2
         self.weight = 6
         self.value = 10
+        self.armor_type = Definitions.ArmorType.SHIELD
 
 
 # ──────────────────────────────────────────────────────────────────────────────

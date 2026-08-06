@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 from typing import Optional
+import Core.Definitions as Definitions
 from Core.Definitions import Ability
 from CharacterContent.Features.Core.Improvements import (
     ArmorClassBonus,
@@ -35,10 +36,17 @@ class AbstractArmor(Item, ABC):
     base_ac: int
     ac_ability: Optional[Ability]
 
+    # Item slots occupied by each armor weight class when carried.
+    _SLOTS_BY_ARMOR_TYPE: dict[Optional[Definitions.ArmorType], int] = {
+        Definitions.ArmorType.LIGHT: 1,
+        Definitions.ArmorType.MEDIUM: 2,
+        Definitions.ArmorType.HEAVY: 3,
+    }
+
     def __init__(
         self,
         is_wearing: bool = True,
-        slots: int = 1,
+        slots: Optional[int] = None,
         improvements: Optional[list[CharacterImprovement]] = None,
         armor_improvements: Optional[list[ItemImprovement]] = None,
     ):
@@ -55,6 +63,7 @@ class AbstractArmor(Item, ABC):
         self.is_homebrew: bool = False
         self.rarity: ItemRarity = ItemRarity.COMMON
         self.requires_attunement: bool = False
+        self.armor_type: Optional[Definitions.ArmorType] = None
         # Character-affecting CharacterImprovements innate to this armor (e.g. a +1
         # bonus granted by owning Dragonscale Plate). Distinct from
         # ArmorImprovement, which modifies the armor itself, not the wearer.
@@ -66,13 +75,19 @@ class AbstractArmor(Item, ABC):
             self.add_armor_improvement(armor_improvement)
         self.setup_improvements()
 
+        resolved_slots = (
+            slots
+            if slots is not None
+            else self._SLOTS_BY_ARMOR_TYPE.get(self.armor_type, 1)
+        )
+
         super().__init__(
             name=self.name,
             rarity=self.rarity,
             requires_attunement=self.requires_attunement,
             category=ItemCategory.ARMOR,
             weight=self.weight,
-            slots=slots,
+            slots=resolved_slots,
             description_text=self.description_text,
             improvements=self.character_improvements + list(improvements or []),
             is_wearing=is_wearing,

@@ -1,7 +1,7 @@
 """PyQt6 character creation UI.
 
 Launch with:  python Builds/CharacterCreatorUI.py
-Preload:      python Builds/CharacterCreatorUI.py --load-build Builds/Characters/OptimizedBarbarianBerserker.py
+Preload:      python Builds/CharacterCreatorUI.py --load-build Builds/Characters/Y2024_Barbarian_Berserker_YmiraSkullcrusher.py
 
 "Generate" writes a normal build file under Builds/GeneratedBuilds/ and
 verifies it by importing it and running .build() in a subprocess.

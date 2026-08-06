@@ -1,8 +1,8 @@
 from Builds.CharacterBuilder import CharacterSheetData
-from Builds.Characters.OptimizedClericLight import OptimizedClericLightCharacterBuilder
-from Builds.Characters.OptimizedPaladinVengeance import OptimizedPaladinVengeanceCharacterBuilder
-from Builds.Characters.OptimizedRogueAssassin import OptimizedRogueAssassinCharacterBuilder
-from Builds.Characters.OptimizedWizardBladesinger import OptimizedWizardBladesingerCharacterBuilder
+from Builds.Characters.Y2024_Cleric_Light_SolenneBrightward import Y2024ClericLightSolenneBrightwardCharacterBuilder
+from Builds.Characters.Y2024_Paladin_Vengeance_NadiaIronvow import Y2024PaladinVengeanceNadiaIronvowCharacterBuilder
+from Builds.Characters.Y2024_Rogue_Assassin_LysandraNightblade import Y2024RogueAssassinLysandraNightbladeCharacterBuilder
+from Builds.Characters.Y2024_Wizard_Bladesinger_IlyanaBladesong import Y2024WizardBladesingerIlyanaBladesongCharacterBuilder
 from Combat import Combatants
 from Combat.Monsters.CR_0.monsters_homebrew import (
     Accursed,
@@ -25,10 +25,10 @@ from Combat.Monsters.CR_6.monsters_homebrew import TheMouthThatWalks
 
 def get_players() -> list[CharacterSheetData]:
     return [
-        OptimizedPaladinVengeanceCharacterBuilder().build(),
-        OptimizedWizardBladesingerCharacterBuilder().build(),
-        OptimizedClericLightCharacterBuilder().build(),
-        OptimizedRogueAssassinCharacterBuilder().build(),
+        Y2024PaladinVengeanceNadiaIronvowCharacterBuilder().build(),
+        Y2024WizardBladesingerIlyanaBladesongCharacterBuilder().build(),
+        Y2024ClericLightSolenneBrightwardCharacterBuilder().build(),
+        Y2024RogueAssassinLysandraNightbladeCharacterBuilder().build(),
     ]
 
 

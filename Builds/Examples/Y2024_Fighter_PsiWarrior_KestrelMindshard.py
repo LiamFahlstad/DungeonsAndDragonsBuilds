@@ -1,0 +1,165 @@
+"""Example build: Fighter Psi Warrior. Adapted from an optimized reference build to demonstrate this subclass."""
+
+from Builds.CharacterBuilder import CharacterBuilder
+from CharacterContent.Classes.BaseClasses import ClassBuilder
+from CharacterContent.Classes.BaseClasses.ClassBuilder import StarterClassBuilder
+from CharacterContent.Classes.BaseClasses.FighterBase import (
+    FighterLevel1,
+    FighterLevel2,
+    FighterLevel3,
+    FighterLevel4,
+    FighterLevel5,
+    FighterLevel6,
+    FighterLevel7,
+    FighterLevel8,
+    FighterLevel9,
+    FighterLevel10,
+    FighterLevel11,
+    FighterLevel12,
+    FighterLevel13,
+    FighterLevel14,
+    FighterLevel15,
+    FighterLevel16,
+    FighterLevel17,
+    FighterLevel18,
+)
+from CharacterContent.Classes.SubClasses2024.FighterPsiWarrior import (
+    FighterPsiWarriorCustomStarterClassArgs,
+    FighterPsiWarriorLevel3,
+    FighterPsiWarriorLevel7,
+    FighterPsiWarriorLevel10,
+    FighterPsiWarriorLevel15,
+    FighterPsiWarriorLevel18,
+)
+from Core.Definitions import Ability, Skill
+from CharacterContent.Features.CharacterFeats import Backgrounds, GeneralFeats, OriginFeats
+from CharacterContent.Features.CombatFeatures import FightingStyles
+from CharacterContent.Items import Armor, Weapons
+from CharacterContent.Species import Human
+from StatBlocks.AbilitiesStatBlock import StandardArrayAbilitiesStatBlock
+from StatBlocks.SkillsStatBlock import FighterSkillsStatBlock
+
+
+def get_starter_class_builder():
+    fighter_level = 18
+    return StarterClassBuilder(
+        non_generic_arguments=FighterPsiWarriorCustomStarterClassArgs(
+            skills=FighterSkillsStatBlock(
+                proficiencies={
+                    Skill.ACROBATICS: False,
+                    Skill.ANIMAL_HANDLING: False,
+                    Skill.ATHLETICS: True,
+                    Skill.HISTORY: False,
+                    Skill.INSIGHT: True,
+                    Skill.INTIMIDATION: False,
+                    Skill.PERCEPTION: False,
+                    Skill.SURVIVAL: False,
+                }
+            ),
+        ),
+        base_class_level=fighter_level,
+        # Distribute 15, 14, 13, 12, 10, 8 among your abilities.
+        abilities=StandardArrayAbilitiesStatBlock(
+            strength=15,
+            dexterity=12,
+            constitution=14,
+            intelligence=13,
+            wisdom=10,
+            charisma=8,
+        ),
+        background_ability_bonuses=Backgrounds.FreeBackgroundAbilityBonus(
+            [
+                (Ability.STRENGTH, 1),
+                (Ability.INTELLIGENCE, 2),
+            ]
+        ),
+        background_skill_proficiencies=Backgrounds.FreeBackgroundSkillProficiency(
+            [
+                Skill.ARCANA,
+                Skill.PERCEPTION,
+            ]
+        ),
+        add_default_equipment=False,
+        origin_feat=OriginFeats.Tough(),
+        armor=[
+            Armor.ChainMailArmor(),
+        ],
+        weapons=[
+            Weapons.Longsword(),
+            Weapons.Greatsword(),
+        ],
+        base_class_level_features=ClassBuilder.BaseClassLevelFeatures(
+            base_class_features_by_level={
+                1: FighterLevel1(
+                    weapon_mastery_1=Weapons.Longsword(),
+                    weapon_mastery_2=Weapons.Flail(),
+                    weapon_mastery_3=Weapons.Greatsword(),
+                    fighting_style=FightingStyles.Defense(),
+                ),
+                2: FighterLevel2(),
+                3: FighterLevel3(),
+                4: FighterLevel4(
+                    weapon_mastery=Weapons.Handaxe(),
+                    general_feat=GeneralFeats.AbilityScoreImprovement(
+                        bonuses=[(Ability.INTELLIGENCE, 2)]),
+                ),
+                5: FighterLevel5(),
+                6: FighterLevel6(
+                    general_feat=GeneralFeats.AbilityScoreImprovement(
+                        bonuses=[(Ability.STRENGTH, 2)]),
+                ),
+                7: FighterLevel7(),
+                8: FighterLevel8(
+                    general_feat=GeneralFeats.AbilityScoreImprovement(
+                        bonuses=[(Ability.INTELLIGENCE, 2)]),
+                ),
+                9: FighterLevel9(),
+                10: FighterLevel10(
+                    weapon_mastery=Weapons.Rapier(),
+                ),
+                11: FighterLevel11(),
+                12: FighterLevel12(
+                    general_feat=GeneralFeats.AbilityScoreImprovement(
+                        bonuses=[(Ability.STRENGTH, 2)]),
+                ),
+                13: FighterLevel13(),
+                14: FighterLevel14(
+                    general_feat=GeneralFeats.AbilityScoreImprovement(
+                        bonuses=[(Ability.CONSTITUTION, 2)]),
+                ),
+                15: FighterLevel15(),
+                16: FighterLevel16(
+                    weapon_mastery=Weapons.Warhammer(),
+                    general_feat=GeneralFeats.AbilityScoreImprovement(
+                        bonuses=[(Ability.INTELLIGENCE, 2)]),
+                ),
+                17: FighterLevel17(),
+                18: FighterLevel18(),
+            },
+            subclass_features_by_level={
+                3: FighterPsiWarriorLevel3(),
+                7: FighterPsiWarriorLevel7(),
+                10: FighterPsiWarriorLevel10(),
+                15: FighterPsiWarriorLevel15(),
+                18: FighterPsiWarriorLevel18(),
+            },
+        ),
+    )
+
+
+class Y2024FighterPsiWarriorKestrelMindshardCharacterBuilder(CharacterBuilder):
+    def __init__(self):
+        super().__init__(
+            name="Kestrel Mindshard",
+            starter_class_builder=get_starter_class_builder(),
+            species_builder=Human.HumanSpeciesBuilder(
+                skill_proficiency=Skill.SURVIVAL,
+                origin_feat=OriginFeats.Skilled(
+                    skills=[
+                        Skill.PERSUASION,
+                        Skill.INVESTIGATION,
+                        Skill.HISTORY,
+                    ]
+                ),
+            ),
+        )

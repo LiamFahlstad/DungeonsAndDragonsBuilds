@@ -3,7 +3,7 @@
 import Combat.Campaigns.CurseOfTheLich.Encounters as CurseOfTheLichEncounters
 import Combat.Campaigns.GrimsCastle.Encounters as GrimsCastleEncounters
 import Combat.Campaigns.TimeLoop.Encounters as TimeLoopEncounters
-from Builds.Characters.OptimizedPaladinVengeance import OptimizedPaladinVengeanceCharacterBuilder
+from Builds.Characters.Y2024_Paladin_Vengeance_NadiaIronvow import Y2024PaladinVengeanceNadiaIronvowCharacterBuilder
 from Combat.Monsters.CR_24 import AncientRedDragon
 from Combat.Scenario import CombatScenario
 
@@ -24,7 +24,7 @@ TIME_LOOP_SQUARE = _register(
             + GrimsCastleEncounters.get_bull()
             + [AncientRedDragon()]
         ),
-        character_sheets=lambda: [OptimizedPaladinVengeanceCharacterBuilder().build()],
+        character_sheets=lambda: [Y2024PaladinVengeanceNadiaIronvowCharacterBuilder().build()],
     )
 )
 
@@ -34,7 +34,7 @@ TIME_LOOP_DRUNK_OXE = _register(
         combatants=lambda: (
             TimeLoopEncounters.get_players() + TimeLoopEncounters.get_drunk_oxe_combatants()
         ),
-        character_sheets=lambda: [OptimizedPaladinVengeanceCharacterBuilder().build()],
+        character_sheets=lambda: [Y2024PaladinVengeanceNadiaIronvowCharacterBuilder().build()],
     )
 )
 

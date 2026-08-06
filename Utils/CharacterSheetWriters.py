@@ -634,11 +634,11 @@ class HtmlCharacterSheetWriter:
         )
         file.write("<table class='capacity-table'>\n")
         file.write("<tr>\n")
-        for source, slots in character.carrying_capacity_sources:
+        for source, slots in character.get_carrying_capacity_sources():
             file.write(f"<th class='item-title'>{source} ({slots})</th>\n")
         file.write("</tr>\n")
         file.write("<tr>\n")
-        for _source, slots in character.carrying_capacity_sources:
+        for _source, slots in character.get_carrying_capacity_sources():
             slot_boxes = "<span class='slot-box'></span>" * slots
             file.write(f"<td><span class='slot-box-group'>{slot_boxes}</span></td>\n")
         file.write("</tr>\n")

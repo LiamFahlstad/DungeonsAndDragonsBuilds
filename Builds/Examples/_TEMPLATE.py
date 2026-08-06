@@ -246,7 +246,7 @@ class YourCharacterNameCharacterBuilder(CharacterBuilder):
     Your character builder. Replace 'YourCharacterName' with a unique class name
     following the pattern: [BuildName]CharacterBuilder
 
-    Example: OptimizedFighterChampionCharacterBuilder, MyCustomBardLoreCharacterBuilder, etc.
+    Example: Y2024FighterChampionOsricIronheartCharacterBuilder, MyCustomBardLoreCharacterBuilder, etc.
     """
 
     def __init__(self):
