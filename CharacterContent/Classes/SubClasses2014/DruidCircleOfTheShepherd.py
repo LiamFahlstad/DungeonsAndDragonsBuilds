@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, cast
 
 import attr
 
@@ -46,7 +46,12 @@ class DruidShepherdLevel10(ClassBuilder.SubclassLevel10):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(DruidShepherdFeatures.GuardianSpirit())
+        spirit_totem: DruidShepherdFeatures.SpiritTotem = cast(
+            DruidShepherdFeatures.SpiritTotem, data.get_features_by_type(
+                DruidShepherdFeatures.SpiritTotem
+            )[0]
+        )
+        spirit_totem.extend_feature(DruidShepherdFeatures.GuardianSpirit())
         return data
 
 

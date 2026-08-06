@@ -60,7 +60,10 @@ class WarlockGreatOldOneLevel6(ClassBuilder.SubclassLevel6):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(WarlockGreatOldOneFeatures.ClairvoyantCombatant())
+        awakened_mind: WarlockGreatOldOneFeatures.AwakenedMind = (
+            data.get_features_by_type(WarlockGreatOldOneFeatures.AwakenedMind)[0]
+        )
+        awakened_mind.extend_feature(WarlockGreatOldOneFeatures.ClairvoyantCombatant())
         return data
 
 

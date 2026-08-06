@@ -9,6 +9,7 @@ from CharacterContent.Classes.BaseClasses.WarlockBase import (
 )
 from Builds.CharacterSheetAccumulator import CharacterSheetData
 from Core.Definitions import WarlockSubclass
+from CharacterContent.Features.ClassFeatures.Warlock import WarlockFeatures
 from CharacterContent.Features.SubClassFeatures.Warlock import WarlockCelestialFeatures
 from CharacterContent.Spells.SpellLists import (
     ClericLevel0Spells,
@@ -94,7 +95,10 @@ class WarlockCelestialLevel10(ClassBuilder.SubclassLevel10):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(WarlockCelestialFeatures.CelestialResilience())
+        magical_cunning: WarlockFeatures.MagicalCunning = data.get_features_by_type(
+            WarlockFeatures.MagicalCunning
+        )[0]
+        magical_cunning.extend_feature(WarlockCelestialFeatures.CelestialResilience())
         return data
 
 

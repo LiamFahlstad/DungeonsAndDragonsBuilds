@@ -9,6 +9,7 @@ from CharacterContent.Classes.BaseClasses.BarbarianBase import (
 )
 from Builds.CharacterSheetAccumulator import CharacterSheetData
 from Core.Definitions import BarbarianSubclass2014
+from CharacterContent.Features.ClassFeatures.Barbarian import BarbarianFeatures
 from CharacterContent.Features.SubClassFeatures2014.Barbarian import BarbarianPathOfTheBattleragerFeatures
 from StatBlocks.SkillsStatBlock import BarbarianSkillsStatBlock
 
@@ -31,7 +32,10 @@ class BarbarianBattleragerLevel6(ClassBuilder.SubclassLevel6):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(BarbarianPathOfTheBattleragerFeatures.RecklessAbandon())
+        reckless_attack: BarbarianFeatures.RecklessAttack = data.get_features_by_type(
+            BarbarianFeatures.RecklessAttack
+        )[0]
+        reckless_attack.extend_feature(BarbarianPathOfTheBattleragerFeatures.RecklessAbandon())
         return data
 
 
@@ -42,7 +46,10 @@ class BarbarianBattleragerLevel10(ClassBuilder.SubclassLevel10):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(BarbarianPathOfTheBattleragerFeatures.BattleragerCharge())
+        rage: BarbarianFeatures.Rage = data.get_features_by_type(
+            BarbarianFeatures.Rage
+        )[0]
+        rage.extend_feature(BarbarianPathOfTheBattleragerFeatures.BattleragerCharge())
         return data
 
 
@@ -53,7 +60,12 @@ class BarbarianBattleragerLevel14(ClassBuilder.SubclassLevel14):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(BarbarianPathOfTheBattleragerFeatures.SpikedRetribution())
+        battlerager_armor: BarbarianPathOfTheBattleragerFeatures.BattleragerArmor = (
+            data.get_features_by_type(
+                BarbarianPathOfTheBattleragerFeatures.BattleragerArmor
+            )[0]
+        )
+        battlerager_armor.extend_feature(BarbarianPathOfTheBattleragerFeatures.SpikedRetribution())
         return data
 
 

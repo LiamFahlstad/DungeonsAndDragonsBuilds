@@ -150,7 +150,10 @@ class WizardTransmuterLevel14(ClassBuilder.SubclassLevel14):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(WizardTransmuterFeatures.MasterTransmuter())
+        transmuters_stone: WizardTransmuterFeatures.TransmutersStone = (
+            data.get_features_by_type(WizardTransmuterFeatures.TransmutersStone)[0]
+        )
+        transmuters_stone.extend_feature(WizardTransmuterFeatures.MasterTransmuter())
         return data
 
 

@@ -54,7 +54,10 @@ class ClericTrickeryLevel6(ClassBuilder.SubclassLevel6):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(ClericTrickeryFeatures.TrickstersTransposition())
+        channel_divinity: ClericFeatures.ChannelDivinity = data.get_features_by_type(
+            ClericFeatures.ChannelDivinity
+        )[0]
+        channel_divinity.extend_feature(ClericTrickeryFeatures.TrickstersTransposition())
         return data
 
 
@@ -89,7 +92,10 @@ class ClericTrickeryLevel17(ClassBuilder.SubclassLevel17):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(ClericTrickeryFeatures.ImprovedDuplicity())
+        channel_divinity: ClericFeatures.ChannelDivinity = data.get_features_by_type(
+            ClericFeatures.ChannelDivinity
+        )[0]
+        channel_divinity.extend_feature(ClericTrickeryFeatures.ImprovedDuplicity())
         return data
 
 

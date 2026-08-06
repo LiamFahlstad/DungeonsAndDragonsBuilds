@@ -48,7 +48,10 @@ class MonkElementsLevel11(ClassBuilder.SubclassLevel11):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(MonkElementsFeatures.StrideOfTheElements())
+        monks_focus: MonkFeatures.MonksFocus = data.get_features_by_type(
+            MonkFeatures.MonksFocus
+        )[0]
+        monks_focus.extend_feature(MonkElementsFeatures.StrideOfTheElements())
         return data
 
 
@@ -59,7 +62,10 @@ class MonkElementsLevel17(ClassBuilder.SubclassLevel17):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(MonkElementsFeatures.ElementalEpitome())
+        monks_focus: MonkFeatures.MonksFocus = data.get_features_by_type(
+            MonkFeatures.MonksFocus
+        )[0]
+        monks_focus.extend_feature(MonkElementsFeatures.ElementalEpitome())
         return data
 
 

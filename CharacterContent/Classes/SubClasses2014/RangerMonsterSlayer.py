@@ -52,7 +52,10 @@ class RangerMonsterSlayerLevel7(ClassBuilder.SubclassLevel7):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(RangerMonsterSlayerFeatures.SupernaturalDefense())
+        slayers_prey: RangerMonsterSlayerFeatures.SlayersPrey = data.get_features_by_type(
+            RangerMonsterSlayerFeatures.SlayersPrey
+        )[0]
+        slayers_prey.extend_feature(RangerMonsterSlayerFeatures.SupernaturalDefense())
         return data
 
 
@@ -96,7 +99,10 @@ class RangerMonsterSlayerLevel15(ClassBuilder.SubclassLevel15):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(RangerMonsterSlayerFeatures.SlayersCounter())
+        slayers_prey: RangerMonsterSlayerFeatures.SlayersPrey = data.get_features_by_type(
+            RangerMonsterSlayerFeatures.SlayersPrey
+        )[0]
+        slayers_prey.extend_feature(RangerMonsterSlayerFeatures.SlayersCounter())
         return data
 
 

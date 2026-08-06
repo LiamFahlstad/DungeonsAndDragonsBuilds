@@ -10,6 +10,7 @@ from CharacterContent.Classes.BaseClasses.BardBase import (
 from Builds.CharacterSheetAccumulator import CharacterSheetData
 from Core.Definitions import BardSubclass
 from CharacterContent.Features.SubClassFeatures.Bard import BardValorFeatures
+from CharacterContent.Features.ClassFeatures.Bard import BardFeatures
 from StatBlocks.SkillsStatBlock import BardSkillsStatBlock
 
 
@@ -19,7 +20,10 @@ class BardValorLevel3(ClassBuilder.SubclassLevel3):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(BardValorFeatures.CombatInspiration())
+        bardic_inspiration: BardFeatures.BardicInspiration = data.get_features_by_type(
+            BardFeatures.BardicInspiration
+        )[0]
+        bardic_inspiration.extend_feature(BardValorFeatures.CombatInspiration())
         data.add_feature(BardValorFeatures.MartialTraining())
         return data
 

@@ -10,6 +10,7 @@ from CharacterContent.Classes.BaseClasses.PaladinBase import (
 from Builds.CharacterSheetAccumulator import CharacterSheetData
 from Core.Definitions import PaladinSubclass
 from CharacterContent.Features.SubClassFeatures.Paladin import PaladinDevotionFeatures
+from CharacterContent.Features.ClassFeatures.Paladin import PaladinFeatures
 from CharacterContent.Spells.SpellLists import (
     ClericLevel1Spells,
     ClericLevel2Spells,
@@ -28,7 +29,10 @@ class PaladinDevotionLevel3(ClassBuilder.SubclassLevel3):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(PaladinDevotionFeatures.SacredWeapon())
+        channel_divinity_feature: PaladinFeatures.ChannelDivinity = (
+            data.get_features_by_type(PaladinFeatures.ChannelDivinity)[0]
+        )
+        channel_divinity_feature.extend_feature(PaladinDevotionFeatures.SacredWeapon())
         data.add_spell(ClericLevel1Spells.PROTECTION_FROM_EVIL_AND_GOOD)
         data.add_spell(PaladinLevel1Spells.SHIELD_OF_FAITH)
         return data
@@ -53,7 +57,10 @@ class PaladinDevotionLevel7(ClassBuilder.SubclassLevel7):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(PaladinDevotionFeatures.AuraOfDevotion())
+        aura_of_protection: PaladinFeatures.AuraOfProtection = (
+            data.get_features_by_type(PaladinFeatures.AuraOfProtection)[0]
+        )
+        aura_of_protection.extend_feature(PaladinDevotionFeatures.AuraOfDevotion())
         return data
 
 
@@ -88,7 +95,10 @@ class PaladinDevotionLevel15(ClassBuilder.SubclassLevel15):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(PaladinDevotionFeatures.SmiteOfProtection())
+        aura_of_protection: PaladinFeatures.AuraOfProtection = (
+            data.get_features_by_type(PaladinFeatures.AuraOfProtection)[0]
+        )
+        aura_of_protection.extend_feature(PaladinDevotionFeatures.SmiteOfProtection())
         return data
 
 
@@ -111,7 +121,10 @@ class PaladinDevotionLevel20(ClassBuilder.SubclassLevel20):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(PaladinDevotionFeatures.HolyNimbus())
+        aura_of_protection: PaladinFeatures.AuraOfProtection = (
+            data.get_features_by_type(PaladinFeatures.AuraOfProtection)[0]
+        )
+        aura_of_protection.extend_feature(PaladinDevotionFeatures.HolyNimbus())
         return data
 
 

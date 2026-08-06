@@ -9,6 +9,7 @@ from CharacterContent.Classes.BaseClasses.SorcererBase import (
 )
 from Builds.CharacterSheetAccumulator import CharacterSheetData
 from Core.Definitions import SorcererSubclass
+from CharacterContent.Features.ClassFeatures.Sorcerer import SorcererFeatures
 from CharacterContent.Features.SubClassFeatures.Sorcerer import SorcererSpellfireFeatures
 from CharacterContent.Spells.SpellLists import (
     AbjurationLevel1Spells,
@@ -89,7 +90,10 @@ class SorcererSpellfireLevel14(ClassBuilder.SubclassLevel14):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(SorcererSpellfireFeatures.HonedSpellfire())
+        spellfire_burst: SorcererSpellfireFeatures.SpellfireBurst = data.get_features_by_type(
+            SorcererSpellfireFeatures.SpellfireBurst
+        )[0]
+        spellfire_burst.extend_feature(SorcererSpellfireFeatures.HonedSpellfire())
         return data
 
 
@@ -99,7 +103,10 @@ class SorcererSpellfireLevel18(ClassBuilder.SubclassLevel18):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(SorcererSpellfireFeatures.CrownOfSpellfire())
+        innate_sorcery: SorcererFeatures.InnateSorcery = data.get_features_by_type(
+            SorcererFeatures.InnateSorcery
+        )[0]
+        innate_sorcery.extend_feature(SorcererSpellfireFeatures.CrownOfSpellfire())
         return data
 
 

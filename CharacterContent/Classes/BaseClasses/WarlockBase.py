@@ -349,7 +349,12 @@ class WarlockLevel19(ClassBuilder.BaseClassLevel19):
 class WarlockLevel20(ClassBuilder.BaseClassLevel20):
 
     def add_features(self, data: CharacterSheetData) -> CharacterSheetData:
-        data.add_feature(WarlockFeatures.EldritchMaster())
+        magical_cunning: WarlockFeatures.MagicalCunning = cast(
+            WarlockFeatures.MagicalCunning, data.get_features_by_type(
+                WarlockFeatures.MagicalCunning
+            )[0]
+        )
+        magical_cunning.extend_feature(WarlockFeatures.EldritchMaster())
         return data
 
 

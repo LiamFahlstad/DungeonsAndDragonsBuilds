@@ -32,7 +32,12 @@ class WizardOrderOfScribesLevel6(ClassBuilder.SubclassLevel6):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(WizardOrderOfScribesFeatures.ManifestMind())
+        awakened_spellbook: WizardOrderOfScribesFeatures.AwakenedSpellbook = (
+            data.get_features_by_type(
+                WizardOrderOfScribesFeatures.AwakenedSpellbook
+            )[0]
+        )
+        awakened_spellbook.extend_feature(WizardOrderOfScribesFeatures.ManifestMind())
         return data
 
 
@@ -43,7 +48,12 @@ class WizardOrderOfScribesLevel10(ClassBuilder.SubclassLevel10):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(WizardOrderOfScribesFeatures.MasterScriviner())
+        awakened_spellbook: WizardOrderOfScribesFeatures.AwakenedSpellbook = (
+            data.get_features_by_type(
+                WizardOrderOfScribesFeatures.AwakenedSpellbook
+            )[0]
+        )
+        awakened_spellbook.extend_feature(WizardOrderOfScribesFeatures.MasterScriviner())
         return data
 
 
@@ -54,7 +64,12 @@ class WizardOrderOfScribesLevel14(ClassBuilder.SubclassLevel14):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(WizardOrderOfScribesFeatures.OneWithTheWord())
+        awakened_spellbook: WizardOrderOfScribesFeatures.AwakenedSpellbook = (
+            data.get_features_by_type(
+                WizardOrderOfScribesFeatures.AwakenedSpellbook
+            )[0]
+        )
+        awakened_spellbook.extend_feature(WizardOrderOfScribesFeatures.OneWithTheWord())
         return data
 
 

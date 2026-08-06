@@ -120,7 +120,10 @@ class ClericLevel5(ClassBuilder.BaseClassLevel5):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(ClericFeatures.SearUndead())
+        channel_divinity: ClericFeatures.ChannelDivinity = data.get_features_by_type(
+            ClericFeatures.ChannelDivinity
+        )[0]
+        channel_divinity.extend_feature(ClericFeatures.SearUndead())
         data.add_spell(self.spell_1)
         data.add_spell(self.spell_2)
         return data

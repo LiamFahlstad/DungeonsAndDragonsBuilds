@@ -101,7 +101,10 @@ class DruidMoonLevel14(ClassBuilder.SubclassLevel14):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(DruidMoonFeatures.LunarForm())
+        moonlight_step: DruidMoonFeatures.MoonlightStep = data.get_features_by_type(
+            DruidMoonFeatures.MoonlightStep
+        )[0]
+        moonlight_step.extend_feature(DruidMoonFeatures.LunarForm())
         return data
 
 

@@ -65,7 +65,10 @@ class FighterEchoKnightLevel18(ClassBuilder.SubclassLevel18):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(FighterEchoKnightFeatures.LegionOfOne())
+        manifest_echo: FighterEchoKnightFeatures.ManifestEcho = data.get_features_by_type(
+            FighterEchoKnightFeatures.ManifestEcho
+        )[0]
+        manifest_echo.extend_feature(FighterEchoKnightFeatures.LegionOfOne())
         return data
 
 

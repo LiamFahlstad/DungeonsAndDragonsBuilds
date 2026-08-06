@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, cast
 
 import attr
 
@@ -36,7 +36,12 @@ class RangerDrakewardenLevel7(ClassBuilder.SubclassLevel7):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(RangerDrakewardenFeatures.BondOfFangAndScale())
+        drake_companion: RangerDrakewardenFeatures.DrakeCompanion = cast(
+            RangerDrakewardenFeatures.DrakeCompanion, data.get_features_by_type(
+                RangerDrakewardenFeatures.DrakeCompanion
+            )[0]
+        )
+        drake_companion.extend_feature(RangerDrakewardenFeatures.BondOfFangAndScale())
         return data
 
 
@@ -58,7 +63,12 @@ class RangerDrakewardenLevel15(ClassBuilder.SubclassLevel15):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(RangerDrakewardenFeatures.PerfectedBond())
+        drake_companion: RangerDrakewardenFeatures.DrakeCompanion = cast(
+            RangerDrakewardenFeatures.DrakeCompanion, data.get_features_by_type(
+                RangerDrakewardenFeatures.DrakeCompanion
+            )[0]
+        )
+        drake_companion.extend_feature(RangerDrakewardenFeatures.PerfectedBond())
         return data
 
 

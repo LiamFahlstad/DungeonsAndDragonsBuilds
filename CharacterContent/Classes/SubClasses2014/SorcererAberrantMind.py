@@ -61,7 +61,10 @@ class SorcererAberrantMindLevel6(ClassBuilder.SubclassLevel6):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(SorcererAberrantMindFeatures.PsionicSorcery())
+        psionic_spells: SorcererAberrantMindFeatures.PsionicSpells = data.get_features_by_type(
+            SorcererAberrantMindFeatures.PsionicSpells
+        )[0]
+        psionic_spells.extend_feature(SorcererAberrantMindFeatures.PsionicSorcery())
         data.add_feature(SorcererAberrantMindFeatures.PsychicDefenses())
         return data
 

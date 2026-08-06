@@ -30,7 +30,10 @@ class BardLoreLevel3(ClassBuilder.SubclassLevel3):
                 self.skill_proficiency_1, self.skill_proficiency_2, self.skill_proficiency_3
             )
         )
-        data.add_feature(BardLoreFeatures.CuttingWords())
+        bardic_inspiration: BardFeatures.BardicInspiration = data.get_features_by_type(
+            BardFeatures.BardicInspiration
+        )[0]
+        bardic_inspiration.extend_feature(BardLoreFeatures.CuttingWords())
         return data
 
 

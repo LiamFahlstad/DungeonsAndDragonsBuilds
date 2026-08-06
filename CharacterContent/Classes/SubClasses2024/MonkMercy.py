@@ -31,7 +31,10 @@ class MonkMercyLevel6(ClassBuilder.SubclassLevel6):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(MonkMercyFeatures.PhysiciansTouch())
+        hand_of_harm: MonkMercyFeatures.HandOfHarm = data.get_features_by_type(
+            MonkMercyFeatures.HandOfHarm
+        )[0]
+        hand_of_harm.extend_feature(MonkMercyFeatures.PhysiciansTouch())
         return data
 
 

@@ -65,7 +65,7 @@ class FighterBattleMasterLevel10(ClassBuilder.SubclassLevel10):
         )[0]
         combat_superiority.extend_feature(self.maneuver_1)
         combat_superiority.extend_feature(self.maneuver_2)
-        data.add_feature(FighterBattleMasterFeatures.ImprovedCombatSuperiority())
+        combat_superiority.extend_feature(FighterBattleMasterFeatures.ImprovedCombatSuperiority())
         return data
 
 
@@ -94,7 +94,10 @@ class FighterBattleMasterLevel18(ClassBuilder.SubclassLevel18):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(FighterBattleMasterFeatures.GreaterCombatSuperiority())
+        combat_superiority: FighterBattleMasterFeatures.CombatSuperiority = data.get_features_by_type(
+            FighterBattleMasterFeatures.CombatSuperiority
+        )[0]
+        combat_superiority.extend_feature(FighterBattleMasterFeatures.GreaterCombatSuperiority())
         return data
 
 

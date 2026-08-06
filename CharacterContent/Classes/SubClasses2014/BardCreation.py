@@ -10,6 +10,7 @@ from CharacterContent.Classes.BaseClasses.BardBase import (
 from Builds.CharacterSheetAccumulator import CharacterSheetData
 from Core.Definitions import BardSubclass2014
 from CharacterContent.Features.SubClassFeatures2014.Bard import BardCreationFeatures
+from CharacterContent.Features.ClassFeatures.Bard import BardFeatures
 from StatBlocks.SkillsStatBlock import BardSkillsStatBlock
 
 
@@ -20,7 +21,10 @@ class BardCreationLevel3(ClassBuilder.SubclassLevel3):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(BardCreationFeatures.MoteOfPotential())
+        bardic_inspiration: BardFeatures.BardicInspiration = data.get_features_by_type(
+            BardFeatures.BardicInspiration
+        )[0]
+        bardic_inspiration.extend_feature(BardCreationFeatures.MoteOfPotential())
         data.add_feature(BardCreationFeatures.PerformanceOfCreation())
         return data
 
@@ -43,7 +47,10 @@ class BardCreationLevel14(ClassBuilder.SubclassLevel14):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(BardCreationFeatures.CreativeCrescendo())
+        performance_of_creation: BardCreationFeatures.PerformanceOfCreation = data.get_features_by_type(
+            BardCreationFeatures.PerformanceOfCreation
+        )[0]
+        performance_of_creation.extend_feature(BardCreationFeatures.CreativeCrescendo())
         return data
 
 

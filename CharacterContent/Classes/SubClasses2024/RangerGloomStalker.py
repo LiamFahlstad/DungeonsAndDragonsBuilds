@@ -78,7 +78,10 @@ class RangerGloomStalkerLevel11(ClassBuilder.SubclassLevel11):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(RangerGloomStalkerFeatures.StalkersFlurry())
+        dread_ambusher: RangerGloomStalkerFeatures.DreadAmbusher = (
+            data.get_features_by_type(RangerGloomStalkerFeatures.DreadAmbusher)[0]
+        )
+        dread_ambusher.extend_feature(RangerGloomStalkerFeatures.StalkersFlurry())
         return data
 
 

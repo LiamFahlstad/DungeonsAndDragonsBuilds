@@ -10,6 +10,7 @@ from CharacterContent.Classes.BaseClasses.RogueBase import (
 from Builds.CharacterSheetAccumulator import CharacterSheetData
 from Core.Definitions import RogueSubclass2014
 from CharacterContent.Features.SubClassFeatures2014.Rogue import RogueSwashbucklerFeatures
+from CharacterContent.Features.ClassFeatures.Rogue import RogueFeatures
 from StatBlocks.SkillsStatBlock import RogueSkillsStatBlock
 
 
@@ -21,7 +22,10 @@ class RogueSwashbucklerLevel3(ClassBuilder.SubclassLevel3):
         data: CharacterSheetData,
     ) -> CharacterSheetData:
         data.add_feature(RogueSwashbucklerFeatures.FancyFootwork())
-        data.add_feature(RogueSwashbucklerFeatures.RakishAudacity())
+        sneak_attack_feature: RogueFeatures.SneakAttack = data.get_features_by_type(
+            RogueFeatures.SneakAttack
+        )[0]
+        sneak_attack_feature.extend_feature(RogueSwashbucklerFeatures.RakishAudacity())
         return data
 
 

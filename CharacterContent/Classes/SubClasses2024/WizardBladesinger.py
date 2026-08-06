@@ -45,7 +45,10 @@ class WizardBladesingerLevel10(ClassBuilder.SubclassLevel10):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(WizardBladesingerFeatures.SongOfDefense())
+        bladesong: WizardBladesingerFeatures.Bladesong = data.get_features_by_type(
+            WizardBladesingerFeatures.Bladesong
+        )[0]
+        bladesong.extend_feature(WizardBladesingerFeatures.SongOfDefense())
         return data
 
 

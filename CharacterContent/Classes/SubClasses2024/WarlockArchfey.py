@@ -59,7 +59,10 @@ class WarlockArchfeyLevel6(ClassBuilder.SubclassLevel6):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(WarlockArchfeyFeatures.MistyEscape())
+        steps_of_the_fey: WarlockArchfeyFeatures.StepsOfTheFey = data.get_features_by_type(
+            WarlockArchfeyFeatures.StepsOfTheFey
+        )[0]
+        steps_of_the_fey.extend_feature(WarlockArchfeyFeatures.MistyEscape())
         return data
 
 

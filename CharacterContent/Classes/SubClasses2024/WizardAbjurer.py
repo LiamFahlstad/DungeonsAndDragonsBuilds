@@ -75,7 +75,10 @@ class AbjurerWizardLevel6(ClassBuilder.SubclassLevel6):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(WizardAbjurerFeatures.ProjectedWard())
+        arcane_ward: WizardAbjurerFeatures.ArcaneWard = data.get_features_by_type(
+            WizardAbjurerFeatures.ArcaneWard
+        )[0]
+        arcane_ward.extend_feature(WizardAbjurerFeatures.ProjectedWard())
         return data
 
 

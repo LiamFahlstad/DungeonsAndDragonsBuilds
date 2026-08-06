@@ -58,7 +58,10 @@ class DruidSeaLevel6(ClassBuilder.SubclassLevel6):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(DruidSeaFeatures.AquaticAffinity())
+        wrath_of_the_sea: DruidSeaFeatures.WrathOfTheSea = data.get_features_by_type(
+            DruidSeaFeatures.WrathOfTheSea
+        )[0]
+        wrath_of_the_sea.extend_feature(DruidSeaFeatures.AquaticAffinity())
         return data
 
 
@@ -93,7 +96,10 @@ class DruidSeaLevel10(ClassBuilder.SubclassLevel10):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(DruidSeaFeatures.Stormborn())
+        wrath_of_the_sea: DruidSeaFeatures.WrathOfTheSea = data.get_features_by_type(
+            DruidSeaFeatures.WrathOfTheSea
+        )[0]
+        wrath_of_the_sea.extend_feature(DruidSeaFeatures.Stormborn())
         return data
 
 
@@ -104,7 +110,10 @@ class DruidSeaLevel14(ClassBuilder.SubclassLevel14):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(DruidSeaFeatures.OceanicGift())
+        wrath_of_the_sea: DruidSeaFeatures.WrathOfTheSea = data.get_features_by_type(
+            DruidSeaFeatures.WrathOfTheSea
+        )[0]
+        wrath_of_the_sea.extend_feature(DruidSeaFeatures.OceanicGift())
         return data
 
 

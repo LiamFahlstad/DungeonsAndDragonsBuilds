@@ -10,6 +10,7 @@ from CharacterContent.Classes.BaseClasses.BardBase import (
 from Builds.CharacterSheetAccumulator import CharacterSheetData
 from Core.Definitions import BardSubclass2014
 from CharacterContent.Features.SubClassFeatures2014.Bard import BardEloquenceFeatures
+from CharacterContent.Features.ClassFeatures.Bard import BardFeatures
 from StatBlocks.SkillsStatBlock import BardSkillsStatBlock
 
 
@@ -21,7 +22,10 @@ class BardEloquenceLevel3(ClassBuilder.SubclassLevel3):
         data: CharacterSheetData,
     ) -> CharacterSheetData:
         data.add_feature(BardEloquenceFeatures.SilverTongue())
-        data.add_feature(BardEloquenceFeatures.UnsettlingWords())
+        bardic_inspiration: BardFeatures.BardicInspiration = data.get_features_by_type(
+            BardFeatures.BardicInspiration
+        )[0]
+        bardic_inspiration.extend_feature(BardEloquenceFeatures.UnsettlingWords())
         return data
 
 
@@ -32,7 +36,10 @@ class BardEloquenceLevel6(ClassBuilder.SubclassLevel6):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(BardEloquenceFeatures.UnfailingInspiration())
+        bardic_inspiration: BardFeatures.BardicInspiration = data.get_features_by_type(
+            BardFeatures.BardicInspiration
+        )[0]
+        bardic_inspiration.extend_feature(BardEloquenceFeatures.UnfailingInspiration())
         data.add_feature(BardEloquenceFeatures.UniversalSpeech())
         return data
 
@@ -44,7 +51,10 @@ class BardEloquenceLevel14(ClassBuilder.SubclassLevel14):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(BardEloquenceFeatures.InfectiousInspiration())
+        bardic_inspiration: BardFeatures.BardicInspiration = data.get_features_by_type(
+            BardFeatures.BardicInspiration
+        )[0]
+        bardic_inspiration.extend_feature(BardEloquenceFeatures.InfectiousInspiration())
         return data
 
 

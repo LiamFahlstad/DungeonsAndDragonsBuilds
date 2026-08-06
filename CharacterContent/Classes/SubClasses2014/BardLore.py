@@ -10,6 +10,7 @@ from CharacterContent.Classes.BaseClasses.BardBase import (
 from Builds.CharacterSheetAccumulator import CharacterSheetData
 from Core.Definitions import BardSubclass2014, Skill
 from CharacterContent.Features.SubClassFeatures2014.Bard import BardLoreFeatures
+from CharacterContent.Features.ClassFeatures.Bard import BardFeatures
 from StatBlocks.SkillsStatBlock import BardSkillsStatBlock
 
 
@@ -28,7 +29,10 @@ class BardLoreLevel3(ClassBuilder.SubclassLevel3):
                 self.skill_proficiency_1, self.skill_proficiency_2, self.skill_proficiency_3
             )
         )
-        data.add_feature(BardLoreFeatures.CuttingWords())
+        bardic_inspiration: BardFeatures.BardicInspiration = data.get_features_by_type(
+            BardFeatures.BardicInspiration
+        )[0]
+        bardic_inspiration.extend_feature(BardLoreFeatures.CuttingWords())
         return data
 
 
@@ -50,7 +54,10 @@ class BardLoreLevel14(ClassBuilder.SubclassLevel14):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(BardLoreFeatures.PeerlessSkill())
+        bardic_inspiration: BardFeatures.BardicInspiration = data.get_features_by_type(
+            BardFeatures.BardicInspiration
+        )[0]
+        bardic_inspiration.extend_feature(BardLoreFeatures.PeerlessSkill())
         return data
 
 

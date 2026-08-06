@@ -46,7 +46,10 @@ class FighterArcaneArcherLevel15(ClassBuilder.SubclassLevel15):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(FighterArcaneArcherFeatures.EverReadyShot())
+        arcane_shot: FighterArcaneArcherFeatures.ArcaneShot = data.get_features_by_type(
+            FighterArcaneArcherFeatures.ArcaneShot
+        )[0]
+        arcane_shot.extend_feature(FighterArcaneArcherFeatures.EverReadyShot())
         return data
 
 

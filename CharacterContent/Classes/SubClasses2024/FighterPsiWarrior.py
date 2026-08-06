@@ -31,7 +31,10 @@ class FighterPsiWarriorLevel7(ClassBuilder.SubclassLevel7):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(FighterPsiWarriorFeatures.TelekineticAdept())
+        psionic_power: FighterPsiWarriorFeatures.PsionicPower = (
+            data.get_features_by_type(FighterPsiWarriorFeatures.PsionicPower)[0]
+        )
+        psionic_power.extend_feature(FighterPsiWarriorFeatures.TelekineticAdept())
         return data
 
 

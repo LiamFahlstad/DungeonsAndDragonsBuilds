@@ -80,7 +80,10 @@ class ArtificerBattleSmithLevel15(ClassBuilder.SubclassLevel15):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(ArtificerBattleSmithFeatures.ImprovedDefender())
+        arcane_jolt: ArtificerBattleSmithFeatures.ArcaneJolt = data.get_features_by_type(
+            ArtificerBattleSmithFeatures.ArcaneJolt
+        )[0]
+        arcane_jolt.extend_feature(ArtificerBattleSmithFeatures.ImprovedDefender())
         return data
 
 

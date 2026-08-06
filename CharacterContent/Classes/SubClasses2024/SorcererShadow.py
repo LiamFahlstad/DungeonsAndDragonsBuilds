@@ -9,6 +9,7 @@ from CharacterContent.Classes.BaseClasses.SorcererBase import (
 )
 from Builds.CharacterSheetAccumulator import CharacterSheetData
 from Core.Definitions import SorcererSubclass
+from CharacterContent.Features.ClassFeatures.Sorcerer import SorcererFeatures
 from CharacterContent.Features.SubClassFeatures.Sorcerer import SorcererShadowFeatures
 from CharacterContent.Spells.SpellLists import (
     AbjurationLevel2Spells,
@@ -99,7 +100,10 @@ class SorcererShadowLevel18(ClassBuilder.SubclassLevel18):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(SorcererShadowFeatures.UmbralForm())
+        innate_sorcery: SorcererFeatures.InnateSorcery = data.get_features_by_type(
+            SorcererFeatures.InnateSorcery
+        )[0]
+        innate_sorcery.extend_feature(SorcererShadowFeatures.UmbralForm())
         return data
 
 

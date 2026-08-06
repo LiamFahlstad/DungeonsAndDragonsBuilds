@@ -2,13 +2,12 @@ from typing import Optional
 
 import attr
 
+from Builds.CharacterSheetAccumulator import CharacterSheetData
 from CharacterContent.Classes.BaseClasses import ClassBuilder
 from CharacterContent.Classes.BaseClasses.SorcererBase import (
-    SorcererMulticlassBuilder,
     SorcererCustomStarterClassArgs,
+    SorcererMulticlassBuilder,
 )
-from Builds.CharacterSheetAccumulator import CharacterSheetData
-from Core.Definitions import SorcererSubclass
 from CharacterContent.Features.SubClassFeatures.Sorcerer import SorcererAberrantFeatures
 from CharacterContent.Spells.SpellLists import (
     ConjurationLevel1Spells,
@@ -22,6 +21,7 @@ from CharacterContent.Spells.SpellLists import (
     EnchantmentLevel2Spells,
     TransmutationLevel5Spells,
 )
+from Core.Definitions import SorcererSubclass
 from StatBlocks.SkillsStatBlock import SorcererSkillsStatBlock
 
 
@@ -58,7 +58,10 @@ class SorcererAberrantLevel6(ClassBuilder.SubclassLevel6):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(SorcererAberrantFeatures.PsionicSorcery())
+        psionic_spells: SorcererAberrantFeatures.PsionicSpells = (
+            data.get_features_by_type(SorcererAberrantFeatures.PsionicSpells)[0]
+        )
+        psionic_spells.extend_feature(SorcererAberrantFeatures.PsionicSorcery())
         data.add_feature(SorcererAberrantFeatures.PsychicDefenses())
         return data
 

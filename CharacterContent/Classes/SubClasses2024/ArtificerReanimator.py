@@ -47,7 +47,14 @@ class ArtificerReanimatorLevel5(ClassBuilder.SubclassLevel5):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(ArtificerReanimatorFeatures.StrangeModifications())
+        reanimated_companion: ArtificerReanimatorFeatures.ReanimatedCompanion = (
+            data.get_features_by_type(
+                ArtificerReanimatorFeatures.ReanimatedCompanion
+            )[0]
+        )
+        reanimated_companion.extend_feature(
+            ArtificerReanimatorFeatures.StrangeModifications()
+        )
         data.add_spell(BardLevel2Spells.BLINDNESS_DEAFNESS)
         data.add_spell(ArtificerLevel2Spells.ENHANCE_ABILITY)
         return data
@@ -59,8 +66,17 @@ class ArtificerReanimatorLevel9(ClassBuilder.SubclassLevel9):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(ArtificerReanimatorFeatures.ImprovedReanimation())
-        data.add_feature(ArtificerReanimatorFeatures.MacabreModifications())
+        reanimated_companion: ArtificerReanimatorFeatures.ReanimatedCompanion = (
+            data.get_features_by_type(
+                ArtificerReanimatorFeatures.ReanimatedCompanion
+            )[0]
+        )
+        reanimated_companion.extend_feature(
+            ArtificerReanimatorFeatures.ImprovedReanimation()
+        )
+        reanimated_companion.extend_feature(
+            ArtificerReanimatorFeatures.MacabreModifications()
+        )
         data.add_spell(ClericLevel3Spells.ANIMATE_DEAD)
         data.add_spell(SorcererLevel3Spells.LIGHTNING_BOLT)
         return data

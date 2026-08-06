@@ -122,7 +122,10 @@ class SorcererLevel5(ClassBuilder.BaseClassLevel5):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(SorcererFeatures.SorcerousRestoration())
+        font_of_magic: SorcererFeatures.FontOfMagic = data.get_features_by_type(
+            SorcererFeatures.FontOfMagic
+        )[0]
+        font_of_magic.extend_feature(SorcererFeatures.SorcerousRestoration())
         data.add_spell(self.spell_1)
         data.add_spell(self.spell_2)
         return data
@@ -148,7 +151,10 @@ class SorcererLevel7(ClassBuilder.BaseClassLevel7):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(SorcererFeatures.SorceryIncarnate())
+        innate_sorcery: SorcererFeatures.InnateSorcery = data.get_features_by_type(
+            SorcererFeatures.InnateSorcery
+        )[0]
+        innate_sorcery.extend_feature(SorcererFeatures.SorceryIncarnate())
         data.add_spell(self.spell)
         return data
 
@@ -309,7 +315,10 @@ class SorcererLevel20(ClassBuilder.BaseClassLevel20):
     spell: SorcererSpellsUpTo9
 
     def add_features(self, data: CharacterSheetData) -> CharacterSheetData:
-        data.add_feature(SorcererFeatures.ArcaneApotheosis())
+        innate_sorcery: SorcererFeatures.InnateSorcery = data.get_features_by_type(
+            SorcererFeatures.InnateSorcery
+        )[0]
+        innate_sorcery.extend_feature(SorcererFeatures.ArcaneApotheosis())
         data.add_spell(self.spell)
         return data
 

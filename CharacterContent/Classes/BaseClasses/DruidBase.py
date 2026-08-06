@@ -125,7 +125,10 @@ class DruidLevel5(ClassBuilder.BaseClassLevel5):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(DruidFeatures.WildResurgence())
+        wild_shape: DruidFeatures.WildShape = data.get_features_by_type(
+            DruidFeatures.WildShape
+        )[0]
+        wild_shape.extend_feature(DruidFeatures.WildResurgence())
         data.add_spell(self.spell_1)
         data.add_spell(self.spell_2)
         return data
@@ -292,7 +295,10 @@ class DruidLevel18(ClassBuilder.BaseClassLevel18):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(DruidFeatures.BeastSpells())
+        wild_shape: DruidFeatures.WildShape = data.get_features_by_type(
+            DruidFeatures.WildShape
+        )[0]
+        wild_shape.extend_feature(DruidFeatures.BeastSpells())
         data.add_spell(self.spell)
         return data
 
@@ -317,7 +323,10 @@ class DruidLevel20(ClassBuilder.BaseClassLevel20):
     spell: DruidSpellsUpTo9
 
     def add_features(self, data: CharacterSheetData) -> CharacterSheetData:
-        data.add_feature(DruidFeatures.Archdruid())
+        wild_shape: DruidFeatures.WildShape = data.get_features_by_type(
+            DruidFeatures.WildShape
+        )[0]
+        wild_shape.extend_feature(DruidFeatures.Archdruid())
         data.add_spell(self.spell)
         return data
 

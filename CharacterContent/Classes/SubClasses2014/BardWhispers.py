@@ -10,6 +10,7 @@ from CharacterContent.Classes.BaseClasses.BardBase import (
 from Builds.CharacterSheetAccumulator import CharacterSheetData
 from Core.Definitions import BardSubclass2014
 from CharacterContent.Features.SubClassFeatures2014.Bard import BardWhispersFeatures
+from CharacterContent.Features.ClassFeatures.Bard import BardFeatures
 from StatBlocks.SkillsStatBlock import BardSkillsStatBlock
 
 
@@ -20,7 +21,10 @@ class BardWhispersLevel3(ClassBuilder.SubclassLevel3):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(BardWhispersFeatures.PsychicBlades())
+        bardic_inspiration: BardFeatures.BardicInspiration = data.get_features_by_type(
+            BardFeatures.BardicInspiration
+        )[0]
+        bardic_inspiration.extend_feature(BardWhispersFeatures.PsychicBlades())
         data.add_feature(BardWhispersFeatures.WordsOfTerror())
         return data
 

@@ -116,7 +116,10 @@ class FighterLevel9(ClassBuilder.BaseClassLevel9):
         data: CharacterSheetData,
     ) -> CharacterSheetData:
         data.add_feature(FighterFeatures.Indomitable())
-        data.add_feature(FighterFeatures.TacticalMaster())
+        weapon_mastery: FighterFeatures.WeaponMastery = data.get_features_by_type(
+            FighterFeatures.WeaponMastery
+        )[0]
+        weapon_mastery.extend_feature(FighterFeatures.TacticalMaster())
         return data
 
 

@@ -58,7 +58,10 @@ class PaladinAncientsLevel7(ClassBuilder.SubclassLevel7):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(PaladinAncientsFeatures.AuraOfWarding())
+        aura_of_protection: PaladinFeatures.AuraOfProtection = (
+            data.get_features_by_type(PaladinFeatures.AuraOfProtection)[0]
+        )
+        aura_of_protection.extend_feature(PaladinAncientsFeatures.AuraOfWarding())
         return data
 
 
@@ -116,7 +119,10 @@ class PaladinAncientsLevel20(ClassBuilder.SubclassLevel20):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(PaladinAncientsFeatures.ElderChampion())
+        aura_of_protection: PaladinFeatures.AuraOfProtection = (
+            data.get_features_by_type(PaladinFeatures.AuraOfProtection)[0]
+        )
+        aura_of_protection.extend_feature(PaladinAncientsFeatures.ElderChampion())
         return data
 
 

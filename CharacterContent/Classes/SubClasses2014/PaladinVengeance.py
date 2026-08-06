@@ -93,7 +93,10 @@ class PaladinVengeanceLevel15(ClassBuilder.SubclassLevel15):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(PaladinVengeanceFeatures.SoulOfVengeance())
+        vow_of_enmity: PaladinVengeanceFeatures.VowOfEnmity = data.get_features_by_type(
+            PaladinVengeanceFeatures.VowOfEnmity
+        )[0]
+        vow_of_enmity.extend_feature(PaladinVengeanceFeatures.SoulOfVengeance())
         return data
 
 

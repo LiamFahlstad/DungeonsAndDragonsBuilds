@@ -75,7 +75,10 @@ class RangerSwarmkeeperLevel11(ClassBuilder.SubclassLevel11):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(RangerSwarmkeeperFeatures.MightySwarm())
+        gathered_swarm: RangerSwarmkeeperFeatures.GatheredSwarm = data.get_features_by_type(
+            RangerSwarmkeeperFeatures.GatheredSwarm
+        )[0]
+        gathered_swarm.extend_feature(RangerSwarmkeeperFeatures.MightySwarm())
         return data
 
 

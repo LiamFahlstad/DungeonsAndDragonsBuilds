@@ -32,7 +32,10 @@ class MonkKenseiLevel6(ClassBuilder.SubclassLevel6):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(MonkKenseiFeatures.MagicKenseiWeapons())
+        kensei_weapons: MonkKenseiFeatures.KenseiWeapons = data.get_features_by_type(
+            MonkKenseiFeatures.KenseiWeapons
+        )[0]
+        kensei_weapons.extend_feature(MonkKenseiFeatures.MagicKenseiWeapons())
         data.add_feature(MonkKenseiFeatures.DeftStrike())
         return data
 

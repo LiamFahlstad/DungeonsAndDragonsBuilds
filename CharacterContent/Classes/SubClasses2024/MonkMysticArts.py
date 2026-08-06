@@ -10,6 +10,7 @@ from CharacterContent.Classes.BaseClasses.MonkBase import (
 from Builds.CharacterSheetAccumulator import CharacterSheetData
 from Core.Definitions import Ability, MonkSubclass
 from CharacterContent.Features.ClassFeatures import SpellSlots
+from CharacterContent.Features.ClassFeatures.Monk import MonkFeatures
 from CharacterContent.Features.SubClassFeatures.Monk import MonkMysticArtsFeatures
 from StatBlocks.SkillsStatBlock import MonkSkillsStatBlock
 
@@ -31,7 +32,10 @@ class MonkMysticArtsLevel6(ClassBuilder.SubclassLevel6):
         data: CharacterSheetData,
     ) -> CharacterSheetData:
         data.add_feature(MonkMysticArtsFeatures.MysticFightingStyle())
-        data.add_feature(MonkMysticArtsFeatures.MysticFocus())
+        monks_focus: MonkFeatures.MonksFocus = data.get_features_by_type(
+            MonkFeatures.MonksFocus
+        )[0]
+        monks_focus.extend_feature(MonkMysticArtsFeatures.MysticFocus())
         return data
 
 

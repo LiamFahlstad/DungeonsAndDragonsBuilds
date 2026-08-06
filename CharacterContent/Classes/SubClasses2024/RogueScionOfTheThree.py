@@ -47,7 +47,10 @@ class RogueScionOfTheThreeLevel13(ClassBuilder.SubclassLevel13):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(RogueScionOfTheThreeFeatures.AuraOfMalevolence())
+        bloodthirst: RogueScionOfTheThreeFeatures.Bloodthirst = data.get_features_by_type(
+            RogueScionOfTheThreeFeatures.Bloodthirst
+        )[0]
+        bloodthirst.extend_feature(RogueScionOfTheThreeFeatures.AuraOfMalevolence())
         return data
 
 

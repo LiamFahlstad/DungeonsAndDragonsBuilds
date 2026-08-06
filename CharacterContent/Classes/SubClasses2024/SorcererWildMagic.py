@@ -20,7 +20,10 @@ class SorcererWildMagicLevel3(ClassBuilder.SubclassLevel3):
         data: CharacterSheetData,
     ) -> CharacterSheetData:
         data.add_feature(SorcererWildMagicFeatures.WildMagicSurge())
-        data.add_feature(SorcererWildMagicFeatures.WildMagicSurgeTable())
+        wild_magic_surge: SorcererWildMagicFeatures.WildMagicSurge = data.get_features_by_type(
+            SorcererWildMagicFeatures.WildMagicSurge
+        )[0]
+        wild_magic_surge.extend_feature(SorcererWildMagicFeatures.WildMagicSurgeTable())
         data.add_feature(SorcererWildMagicFeatures.TidesOfChaos())
         return data
 
@@ -41,7 +44,10 @@ class SorcererWildMagicLevel14(ClassBuilder.SubclassLevel14):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(SorcererWildMagicFeatures.ControlledChaos())
+        wild_magic_surge: SorcererWildMagicFeatures.WildMagicSurge = data.get_features_by_type(
+            SorcererWildMagicFeatures.WildMagicSurge
+        )[0]
+        wild_magic_surge.extend_feature(SorcererWildMagicFeatures.ControlledChaos())
         return data
 
 
@@ -51,7 +57,10 @@ class SorcererWildMagicLevel18(ClassBuilder.SubclassLevel18):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(SorcererWildMagicFeatures.TamedSurge())
+        wild_magic_surge: SorcererWildMagicFeatures.WildMagicSurge = data.get_features_by_type(
+            SorcererWildMagicFeatures.WildMagicSurge
+        )[0]
+        wild_magic_surge.extend_feature(SorcererWildMagicFeatures.TamedSurge())
         return data
 
 

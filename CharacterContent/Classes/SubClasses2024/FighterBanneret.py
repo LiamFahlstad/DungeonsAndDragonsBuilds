@@ -9,6 +9,7 @@ from CharacterContent.Classes.BaseClasses.FighterBase import (
 )
 from Builds.CharacterSheetAccumulator import CharacterSheetData
 from Core.Definitions import FighterSubclass
+from CharacterContent.Features.ClassFeatures.Fighter import FighterFeatures
 from CharacterContent.Features.SubClassFeatures.Fighter import FighterBanneretFeatures
 from StatBlocks.SkillsStatBlock import FighterSkillsStatBlock
 
@@ -32,7 +33,10 @@ class FighterBanneretLevel7(ClassBuilder.SubclassLevel7):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(FighterBanneretFeatures.TeamTactics())
+        group_recovery: FighterBanneretFeatures.GroupRecovery = data.get_features_by_type(
+            FighterBanneretFeatures.GroupRecovery
+        )[0]
+        group_recovery.extend_feature(FighterBanneretFeatures.TeamTactics())
         return data
 
 
@@ -43,7 +47,10 @@ class FighterBanneretLevel10(ClassBuilder.SubclassLevel10):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(FighterBanneretFeatures.RallyingSurge())
+        action_surge: FighterFeatures.ActionSurge = data.get_features_by_type(
+            FighterFeatures.ActionSurge
+        )[0]
+        action_surge.extend_feature(FighterBanneretFeatures.RallyingSurge())
         return data
 
 
@@ -54,7 +61,10 @@ class FighterBanneretLevel15(ClassBuilder.SubclassLevel15):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(FighterBanneretFeatures.SharedResilience())
+        indomitable: FighterFeatures.Indomitable = data.get_features_by_type(
+            FighterFeatures.Indomitable
+        )[0]
+        indomitable.extend_feature(FighterBanneretFeatures.SharedResilience())
         return data
 
 

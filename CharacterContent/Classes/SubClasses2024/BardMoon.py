@@ -10,6 +10,7 @@ from CharacterContent.Classes.BaseClasses.BardBase import (
 from Builds.CharacterSheetAccumulator import CharacterSheetData
 from Core.Definitions import BardSubclass, Skill
 from CharacterContent.Features.SubClassFeatures.Bard import BardMoonFeatures
+from CharacterContent.Features.ClassFeatures.Bard import BardFeatures
 from CharacterContent.Spells.SpellLists import DruidLevel0Spells, DruidLevel2Spells
 from StatBlocks.SkillsStatBlock import BardSkillsStatBlock
 
@@ -23,7 +24,10 @@ class BardMoonLevel3(ClassBuilder.SubclassLevel3):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(BardMoonFeatures.MoonsInspiration())
+        bardic_inspiration: BardFeatures.BardicInspiration = data.get_features_by_type(
+            BardFeatures.BardicInspiration
+        )[0]
+        bardic_inspiration.extend_feature(BardMoonFeatures.MoonsInspiration())
         data.add_feature(BardMoonFeatures.PrimalLore(skill=self.skill_proficiency))
         data.add_cantrip(self.cantrip)
         return data
@@ -47,7 +51,10 @@ class BardMoonLevel14(ClassBuilder.SubclassLevel14):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(BardMoonFeatures.EventidesSplendor())
+        bardic_inspiration: BardFeatures.BardicInspiration = data.get_features_by_type(
+            BardFeatures.BardicInspiration
+        )[0]
+        bardic_inspiration.extend_feature(BardMoonFeatures.EventidesSplendor())
         return data
 
 

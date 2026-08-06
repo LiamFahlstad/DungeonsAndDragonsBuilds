@@ -132,7 +132,10 @@ class MonkLevel10(ClassBuilder.BaseClassLevel10):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(MonkFeatures.HeightenedFocus())
+        monks_focus: MonkFeatures.MonksFocus = data.get_features_by_type(
+            MonkFeatures.MonksFocus
+        )[0]
+        monks_focus.extend_feature(MonkFeatures.HeightenedFocus())
         data.add_feature(MonkFeatures.SelfRestoration())
         return data
 
@@ -165,7 +168,10 @@ class MonkLevel13(ClassBuilder.BaseClassLevel13):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(MonkFeatures.DeflectEnergy())
+        monks_focus: MonkFeatures.MonksFocus = data.get_features_by_type(
+            MonkFeatures.MonksFocus
+        )[0]
+        monks_focus.extend_feature(MonkFeatures.DeflectEnergy())
         return data
 
 

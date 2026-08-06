@@ -56,7 +56,10 @@ class ClericOrderLevel17(ClassBuilder.SubclassLevel17):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(ClericOrderFeatures.OrdersWrath())
+        divine_strike: ClericOrderFeatures.DivineStrike = data.get_features_by_type(
+            ClericOrderFeatures.DivineStrike
+        )[0]
+        divine_strike.extend_feature(ClericOrderFeatures.OrdersWrath())
         return data
 
 

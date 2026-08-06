@@ -10,6 +10,7 @@ from CharacterContent.Classes.BaseClasses.FighterBase import (
 from Builds.CharacterSheetAccumulator import CharacterSheetData
 from Core.Definitions import FighterSubclass2014
 from CharacterContent.Features.SubClassFeatures2014.Fighter import FighterChampionFeatures
+from CharacterContent.Features.ClassFeatures.Fighter import FighterFeatures
 from StatBlocks.SkillsStatBlock import FighterSkillsStatBlock
 
 
@@ -42,7 +43,10 @@ class FighterChampionLevel10(ClassBuilder.SubclassLevel10):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(FighterChampionFeatures.AdditionalFightingStyle())
+        fighting_style: FighterFeatures.FightingStyle = data.get_features_by_type(
+            FighterFeatures.FightingStyle
+        )[0]
+        fighting_style.extend_feature(FighterChampionFeatures.AdditionalFightingStyle())
         return data
 
 
@@ -53,7 +57,10 @@ class FighterChampionLevel15(ClassBuilder.SubclassLevel15):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(FighterChampionFeatures.SuperiorCritical())
+        improved_critical: FighterChampionFeatures.ImprovedCritical = data.get_features_by_type(
+            FighterChampionFeatures.ImprovedCritical
+        )[0]
+        improved_critical.extend_feature(FighterChampionFeatures.SuperiorCritical())
         return data
 
 

@@ -10,6 +10,7 @@ from CharacterContent.Classes.BaseClasses.BarbarianBase import (
 from Builds.CharacterSheetAccumulator import CharacterSheetData
 from Core.Definitions import BarbarianSubclass2014
 from CharacterContent.Features.SubClassFeatures2014.Barbarian import BarbarianPathOfTheAncestralGuardianFeatures
+from CharacterContent.Features.ClassFeatures.Barbarian import BarbarianFeatures
 from StatBlocks.SkillsStatBlock import BarbarianSkillsStatBlock
 
 
@@ -20,7 +21,10 @@ class BarbarianAncestralGuardianLevel3(ClassBuilder.SubclassLevel3):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(BarbarianPathOfTheAncestralGuardianFeatures.AncestralProtectors())
+        rage: BarbarianFeatures.Rage = data.get_features_by_type(
+            BarbarianFeatures.Rage
+        )[0]
+        rage.extend_feature(BarbarianPathOfTheAncestralGuardianFeatures.AncestralProtectors())
         return data
 
 
@@ -31,7 +35,10 @@ class BarbarianAncestralGuardianLevel6(ClassBuilder.SubclassLevel6):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(BarbarianPathOfTheAncestralGuardianFeatures.SpiritShield())
+        rage: BarbarianFeatures.Rage = data.get_features_by_type(
+            BarbarianFeatures.Rage
+        )[0]
+        rage.extend_feature(BarbarianPathOfTheAncestralGuardianFeatures.SpiritShield())
         return data
 
 
@@ -53,7 +60,10 @@ class BarbarianAncestralGuardianLevel14(ClassBuilder.SubclassLevel14):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(BarbarianPathOfTheAncestralGuardianFeatures.VengefulAncestors())
+        rage: BarbarianFeatures.Rage = data.get_features_by_type(
+            BarbarianFeatures.Rage
+        )[0]
+        rage.extend_feature(BarbarianPathOfTheAncestralGuardianFeatures.VengefulAncestors())
         return data
 
 

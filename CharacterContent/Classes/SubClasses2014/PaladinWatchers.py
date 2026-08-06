@@ -10,6 +10,7 @@ from CharacterContent.Classes.BaseClasses.PaladinBase import (
 from Builds.CharacterSheetAccumulator import CharacterSheetData
 from Core.Definitions import PaladinSubclass2014
 from CharacterContent.Features.SubClassFeatures2014.Paladin import PaladinWatchersFeatures
+from CharacterContent.Features.ClassFeatures.Paladin import PaladinFeatures
 from CharacterContent.Spells.SpellLists import (
     PaladinLevel1Spells,
     RangerLevel1Spells,
@@ -30,8 +31,11 @@ class PaladinWatchersLevel3(ClassBuilder.SubclassLevel3):
         data: CharacterSheetData,
     ) -> CharacterSheetData:
         data.add_feature(PaladinWatchersFeatures.WatchersSpells())
-        data.add_feature(PaladinWatchersFeatures.WatchersWill())
-        data.add_feature(PaladinWatchersFeatures.AbjureTheExtraplanar())
+        channel_divinity_feature: PaladinFeatures.ChannelDivinity = (
+            data.get_features_by_type(PaladinFeatures.ChannelDivinity)[0]
+        )
+        channel_divinity_feature.extend_feature(PaladinWatchersFeatures.WatchersWill())
+        channel_divinity_feature.extend_feature(PaladinWatchersFeatures.AbjureTheExtraplanar())
         data.add_spell(PaladinLevel1Spells.DETECT_MAGIC)
         data.add_spell(RangerLevel1Spells.ALARM)
         return data

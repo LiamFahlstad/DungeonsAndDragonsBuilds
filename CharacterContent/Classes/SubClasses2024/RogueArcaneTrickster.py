@@ -10,6 +10,7 @@ from CharacterContent.Classes.BaseClasses.RogueBase import (
 from Builds.CharacterSheetAccumulator import CharacterSheetData
 from Core.Definitions import RogueSubclass
 from CharacterContent.Features.ClassFeatures import SpellSlots
+from CharacterContent.Features.ClassFeatures.Rogue import RogueFeatures
 from CharacterContent.Features.SubClassFeatures.Rogue import RogueArcaneTricksterFeatures
 from StatBlocks.SkillsStatBlock import RogueSkillsStatBlock
 
@@ -44,7 +45,12 @@ class RogueArcaneTricksterLevel13(ClassBuilder.SubclassLevel13):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(RogueArcaneTricksterFeatures.VersatileTrickster())
+        sneak_attack_feature: RogueFeatures.SneakAttack = data.get_features_by_type(
+            RogueFeatures.SneakAttack
+        )[0]
+        sneak_attack_feature.extend_feature(
+            RogueArcaneTricksterFeatures.VersatileTrickster()
+        )
         return data
 
 

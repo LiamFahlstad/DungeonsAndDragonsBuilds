@@ -34,7 +34,10 @@ class WarlockFathomlessLevel6(ClassBuilder.SubclassLevel6):
         data: CharacterSheetData,
     ) -> CharacterSheetData:
         data.add_feature(WarlockFathomlessFeatures.OceanicSoul())
-        data.add_feature(WarlockFathomlessFeatures.GuardianCoil())
+        tentacle_of_the_deep: WarlockFathomlessFeatures.TentacleOfTheDeep = data.get_features_by_type(
+            WarlockFathomlessFeatures.TentacleOfTheDeep
+        )[0]
+        tentacle_of_the_deep.extend_feature(WarlockFathomlessFeatures.GuardianCoil())
         return data
 
 

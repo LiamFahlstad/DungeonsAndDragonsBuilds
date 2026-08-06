@@ -54,7 +54,10 @@ class WizardDivinationLevel14(ClassBuilder.SubclassLevel14):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(WizardDivinationFeatures.GreaterPortent())
+        portent: WizardDivinationFeatures.Portent = data.get_features_by_type(
+            WizardDivinationFeatures.Portent
+        )[0]
+        portent.extend_feature(WizardDivinationFeatures.GreaterPortent())
         return data
 
 

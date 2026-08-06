@@ -10,6 +10,7 @@ from CharacterContent.Classes.BaseClasses.SorcererBase import (
 from Builds.CharacterSheetAccumulator import CharacterSheetData
 from Core.Definitions import SorcererSubclass2014
 from CharacterContent.Features.SubClassFeatures2014.Sorcerer import SorcererDivineSoulFeatures
+from CharacterContent.Features.ClassFeatures.Sorcerer import SorcererFeatures
 from StatBlocks.SkillsStatBlock import SorcererSkillsStatBlock
 
 
@@ -20,7 +21,10 @@ class SorcererDivineSoulLevel3(ClassBuilder.SubclassLevel3):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(SorcererDivineSoulFeatures.DivineMagic())
+        spellcasting: SorcererFeatures.Spellcasting = data.get_features_by_type(
+            SorcererFeatures.Spellcasting
+        )[0]
+        spellcasting.extend_feature(SorcererDivineSoulFeatures.DivineMagic())
         data.add_feature(SorcererDivineSoulFeatures.FavoredByTheGods())
         return data
 

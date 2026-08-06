@@ -60,7 +60,12 @@ class PaladinGeniesLevel7(ClassBuilder.SubclassLevel7):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(PaladinGeniesFeatures.AuraOfElementalShielding())
+        aura_of_protection: PaladinFeatures.AuraOfProtection = (
+            data.get_features_by_type(PaladinFeatures.AuraOfProtection)[0]
+        )
+        aura_of_protection.extend_feature(
+            PaladinGeniesFeatures.AuraOfElementalShielding()
+        )
         return data
 
 

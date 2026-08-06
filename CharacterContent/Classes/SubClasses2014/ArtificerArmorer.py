@@ -56,7 +56,10 @@ class ArtificerArmorerLevel9(ClassBuilder.SubclassLevel9):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(ArtificerArmorerFeatures.ArmorModifications())
+        arcane_armor: ArtificerArmorerFeatures.ArcaneArmor = data.get_features_by_type(
+            ArtificerArmorerFeatures.ArcaneArmor
+        )[0]
+        arcane_armor.extend_feature(ArtificerArmorerFeatures.ArmorModifications())
         data.add_spell(BardLevel3Spells.HYPNOTIC_PATTERN)
         data.add_spell(SorcererLevel3Spells.LIGHTNING_BOLT)
         return data
@@ -79,7 +82,10 @@ class ArtificerArmorerLevel15(ClassBuilder.SubclassLevel15):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(ArtificerArmorerFeatures.PerfectedArmor())
+        armor_model: ArtificerArmorerFeatures.ArmorModel = data.get_features_by_type(
+            ArtificerArmorerFeatures.ArmorModel
+        )[0]
+        armor_model.extend_feature(ArtificerArmorerFeatures.PerfectedArmor())
         return data
 
 

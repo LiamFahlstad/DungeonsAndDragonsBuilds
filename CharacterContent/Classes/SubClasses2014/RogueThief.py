@@ -10,6 +10,7 @@ from CharacterContent.Classes.BaseClasses.RogueBase import (
 from Builds.CharacterSheetAccumulator import CharacterSheetData
 from Core.Definitions import RogueSubclass2014
 from CharacterContent.Features.SubClassFeatures2014.Rogue import RogueThiefFeatures
+from CharacterContent.Features.ClassFeatures.Rogue import RogueFeatures
 from StatBlocks.SkillsStatBlock import RogueSkillsStatBlock
 
 
@@ -20,7 +21,10 @@ class RogueThiefLevel3(ClassBuilder.SubclassLevel3):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(RogueThiefFeatures.FastHands())
+        cunning_action: RogueFeatures.CunningAction = data.get_features_by_type(
+            RogueFeatures.CunningAction
+        )[0]
+        cunning_action.extend_feature(RogueThiefFeatures.FastHands())
         data.add_feature(RogueThiefFeatures.SecondStoryWork())
         return data
 

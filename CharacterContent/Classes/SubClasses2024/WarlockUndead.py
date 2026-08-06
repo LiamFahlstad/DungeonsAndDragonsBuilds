@@ -105,7 +105,10 @@ class WarlockUndeadLevel14(ClassBuilder.SubclassLevel14):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(WarlockUndeadFeatures.SuperiorDread())
+        form_of_dread: WarlockUndeadFeatures.FormOfDread = data.get_features_by_type(
+            WarlockUndeadFeatures.FormOfDread
+        )[0]
+        form_of_dread.extend_feature(WarlockUndeadFeatures.SuperiorDread())
         return data
 
 

@@ -9,6 +9,7 @@ from CharacterContent.Classes.BaseClasses.RogueBase import (
 )
 from Builds.CharacterSheetAccumulator import CharacterSheetData
 from Core.Definitions import RogueSubclass
+from CharacterContent.Features.ClassFeatures.Rogue import RogueFeatures
 from CharacterContent.Features.SubClassFeatures.Rogue import RoguePhantomFeatures
 from StatBlocks.SkillsStatBlock import RogueSkillsStatBlock
 
@@ -20,7 +21,10 @@ class RoguePhantomLevel3(ClassBuilder.SubclassLevel3):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(RoguePhantomFeatures.WailsFromTheGrave())
+        sneak_attack_feature: RogueFeatures.SneakAttack = data.get_features_by_type(
+            RogueFeatures.SneakAttack
+        )[0]
+        sneak_attack_feature.extend_feature(RoguePhantomFeatures.WailsFromTheGrave())
         data.add_feature(RoguePhantomFeatures.WhispersOfTheDead())
         return data
 
