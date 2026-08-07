@@ -1,7 +1,7 @@
 
 from Core.Definitions import Ability, RANGER_HIT_DIE, Skill
 from CharacterContent.Features.Core.BaseFeatures import Feature
-from CharacterContent.Features.Core.Improvements import SkillExpertiseChoice
+from CharacterContent.Features.Core.Improvements import SkillExpertiseChoice, SpeedBonus
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
@@ -119,6 +119,9 @@ class ExtraAttack(Feature):
 class Roving(Feature):
     def __init__(self):
         super().__init__(name="Roving", origin="Ranger Level 6", skippable_in_concise=True)
+
+    def apply(self, character_stat_block: CharacterStatBlock):
+        SpeedBonus(10).apply(character_stat_block)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "Your speed increases by 10 feet while you aren't wearing Heavy Armor. You also have a Climb speed and a Swim Speed equal to your Speed."

@@ -1,5 +1,6 @@
-from Core.Definitions import Skill
+from Core.Definitions import Ability, Skill
 from CharacterContent.Features.Core.BaseFeatures import Feature
+from CharacterContent.Features.Core.Improvements import SavingThrowAdvantage
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
@@ -9,6 +10,10 @@ SPEED = 30  # Given by your species
 class DualMind(Feature):
     def __init__(self):
         super().__init__(name="Dual Mind", origin="Kalashtar Trait")
+        self._advantage = SavingThrowAdvantage([Ability.WISDOM, Ability.CHARISMA])
+
+    def apply(self, character_stat_block: CharacterStatBlock):
+        self._advantage.apply(character_stat_block)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         return "You have Advantage on Wisdom and Charisma saving throws."

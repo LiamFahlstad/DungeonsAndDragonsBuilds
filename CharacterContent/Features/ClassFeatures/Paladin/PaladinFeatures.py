@@ -1,6 +1,7 @@
 import Core.Definitions as Definitions
 from Core.Definitions import PALADIN_HIT_DIE, Ability
 from CharacterContent.Features.Core.BaseFeatures import Feature
+from CharacterContent.Features.Core.Improvements import SavingThrowBonus
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
@@ -168,6 +169,11 @@ class FaithfulSteed(Feature):
 class AuraOfProtection(Feature):
     def __init__(self):
         super().__init__(name="Aura of Protection", origin="Paladin Level 6")
+
+    def apply(self, character_stat_block: CharacterStatBlock):
+        cha_mod = character_stat_block.get_ability_modifier(Ability.CHARISMA)
+        bonus = max(1, cha_mod)
+        SavingThrowBonus(list(Ability), bonus).apply(character_stat_block)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

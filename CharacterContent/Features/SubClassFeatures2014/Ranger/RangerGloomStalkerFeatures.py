@@ -2,7 +2,7 @@ from typing import Optional
 
 from Core.Definitions import Ability, RANGER_HIT_DIE
 from CharacterContent.Features.Core.BaseFeatures import Feature
-from CharacterContent.Features.Core.Improvements import SavingThrowProficiencyChoice
+from CharacterContent.Features.Core.Improvements import InitiativeBonus, SavingThrowProficiencyChoice
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
@@ -28,6 +28,10 @@ class GloomStalkerMagic(Feature):
 class DreadAmbusher(Feature):
     def __init__(self):
         super().__init__(name="Dread Ambusher", origin="Gloom Stalker Ranger Level 3")
+
+    def apply(self, character_stat_block: CharacterStatBlock):
+        wisdom_modifier = character_stat_block.get_ability_modifier(Ability.WISDOM)
+        InitiativeBonus(wisdom_modifier).apply(character_stat_block)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         wisdom_modifier = character_stat_block.get_ability_modifier(Ability.WISDOM)

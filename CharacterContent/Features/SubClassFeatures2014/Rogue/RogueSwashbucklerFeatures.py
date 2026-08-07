@@ -1,5 +1,6 @@
-from Core.Definitions import ROGUE_HIT_DIE
+from Core.Definitions import Ability, ROGUE_HIT_DIE
 from CharacterContent.Features.Core.BaseFeatures import Feature
+from CharacterContent.Features.Core.Improvements import InitiativeBonus
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
@@ -31,6 +32,19 @@ class RakishAudacity(Feature):
             "All the other rules for Sneak Attack still apply to you."
         )
         return description
+
+
+class RakishAudacityBonus(Feature):
+    """Mechanical half of Rakish Audacity, kept separate from the descriptive
+    RakishAudacity feature since extend_feature()'d features never get apply()
+    called on them - this one must be add_feature()'d directly."""
+
+    def __init__(self):
+        super().__init__(skippable_in_concise=True)
+
+    def apply(self, character_stat_block: CharacterStatBlock):
+        cha_mod = character_stat_block.get_ability_modifier(Ability.CHARISMA)
+        InitiativeBonus(cha_mod).apply(character_stat_block)
 
 
 class Panache(Feature):

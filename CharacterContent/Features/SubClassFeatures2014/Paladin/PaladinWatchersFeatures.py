@@ -1,5 +1,6 @@
 from Core.Definitions import Ability
 from CharacterContent.Features.Core.BaseFeatures import Feature
+from CharacterContent.Features.Core.Improvements import InitiativeProficiency
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
@@ -63,6 +64,9 @@ class AbjureTheExtraplanar(Feature):
 class AuraOfTheSentinel(Feature):
     def __init__(self):
         super().__init__(name="Aura of the Sentinel", origin="Oath of the Watchers Paladin Level 7")
+
+    def apply(self, character_stat_block: CharacterStatBlock):
+        InitiativeProficiency().apply(character_stat_block)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         proficiency_bonus = character_stat_block.get_proficiency_bonus()

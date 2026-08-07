@@ -5,7 +5,7 @@ import attr
 import Core.Definitions as Definitions
 from CharacterContent.Classes.BaseClasses import ClassBuilder
 from Builds.CharacterSheetAccumulator import CharacterSheetData
-from Core.Definitions import Ability, CharacterClass
+from Core.Definitions import Ability, ApplyWhen, CharacterClass
 from CharacterContent.Features.CharacterFeats import EpicBoon, GeneralFeats
 from CharacterContent.Features.CombatFeatures import FightingStyles
 from CharacterContent.Items import Armor, Weapons
@@ -109,7 +109,7 @@ class PaladinLevel5(ClassBuilder.BaseClassLevel5):
 class PaladinLevel6(ClassBuilder.BaseClassLevel6):
 
     def add_features(self, data: CharacterSheetData) -> CharacterSheetData:
-        data.add_feature(PaladinFeatures.AuraOfProtection())
+        data.add_feature(PaladinFeatures.AuraOfProtection(), apply_when=ApplyWhen.LAST)
         return data
 
 

@@ -1,5 +1,7 @@
-from Core.Definitions import SORCERER_HIT_DIE
+import Core.Definitions as Definitions
+from Core.Definitions import Ability, SORCERER_HIT_DIE
 from CharacterContent.Features.Core.BaseFeatures import Feature
+from CharacterContent.Features.Core.Improvements import MultiAbilityArmorClass
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
@@ -23,6 +25,14 @@ class DraconicSpells(Feature):
 class DraconicResilience(Feature):
     def __init__(self):
         super().__init__(name="Draconic Resilience", origin="Draconic Sorcerer Level 3")
+        self._ac = MultiAbilityArmorClass(10, [Ability.DEXTERITY, Ability.CHARISMA])
+
+    def apply(self, character_stat_block: CharacterStatBlock):
+        sorcerer_level = character_stat_block.get_class_level(
+            Definitions.CharacterClass.SORCERER
+        )
+        character_stat_block.combat.hit_points_bonus += sorcerer_level
+        self._ac.apply(character_stat_block)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

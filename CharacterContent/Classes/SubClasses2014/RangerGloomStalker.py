@@ -8,7 +8,7 @@ from CharacterContent.Classes.BaseClasses.RangerBase import (
     RangerCustomStarterClassArgs,
 )
 from Builds.CharacterSheetAccumulator import CharacterSheetData
-from Core.Definitions import RangerSubclass2014
+from Core.Definitions import ApplyWhen, RangerSubclass2014
 from CharacterContent.Features.SubClassFeatures2014.Ranger import RangerGloomStalkerFeatures
 from CharacterContent.Spells.SpellLists import (
     WizardLevel1Spells,
@@ -28,7 +28,7 @@ class RangerGloomStalkerLevel3(ClassBuilder.SubclassLevel3):
         data: CharacterSheetData,
     ) -> CharacterSheetData:
         data.add_feature(RangerGloomStalkerFeatures.GloomStalkerMagic())
-        data.add_feature(RangerGloomStalkerFeatures.DreadAmbusher())
+        data.add_feature(RangerGloomStalkerFeatures.DreadAmbusher(), apply_when=ApplyWhen.LAST)
         data.add_feature(RangerGloomStalkerFeatures.UmbralSight())
         data.add_spell(WizardLevel1Spells.DISGUISE_SELF)
         return data

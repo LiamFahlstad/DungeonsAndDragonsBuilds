@@ -8,7 +8,7 @@ from CharacterContent.Classes.BaseClasses.RangerBase import (
     RangerCustomStarterClassArgs,
 )
 from Builds.CharacterSheetAccumulator import CharacterSheetData
-from Core.Definitions import RangerSubclass
+from Core.Definitions import ApplyWhen, RangerSubclass
 from CharacterContent.Features.SubClassFeatures.Ranger import RangerHollowWardenFeatures
 from CharacterContent.Spells.SpellLists import (
     IllusionLevel3Spells,
@@ -57,6 +57,7 @@ class RangerHollowWardenLevel7(ClassBuilder.SubclassLevel7):
             )[0]
         )
         wrath_of_the_wild.extend_feature(RangerHollowWardenFeatures.HungeringMight())
+        data.add_feature(RangerHollowWardenFeatures.HungeringMightBonus(), apply_when=ApplyWhen.LAST)
         return data
 
 

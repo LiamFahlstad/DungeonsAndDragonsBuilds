@@ -1,6 +1,7 @@
 
 from Core.Definitions import Ability, RANGER_HIT_DIE
 from CharacterContent.Features.Core.BaseFeatures import Feature
+from CharacterContent.Features.Core.Improvements import InitiativeBonus
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
@@ -8,6 +9,10 @@ from Utils import StringUtils
 class DreadAmbusher(Feature):
     def __init__(self):
         super().__init__(name="Dread Ambusher", origin="Gloom Stalker Ranger Level 3")
+
+    def apply(self, character_stat_block: CharacterStatBlock):
+        wis_mod = character_stat_block.get_ability_modifier(Ability.WISDOM)
+        InitiativeBonus(wis_mod).apply(character_stat_block)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         wis_mod = character_stat_block.get_ability_modifier(Ability.WISDOM)

@@ -1,7 +1,7 @@
 import Core.Definitions as Definitions
 from Core.Definitions import MONK_HIT_DIE
 from CharacterContent.Features.Core.BaseFeatures import Feature
-from CharacterContent.Features.Core.Improvements import MultiAbilityArmorClass
+from CharacterContent.Features.Core.Improvements import MultiAbilityArmorClass, SpeedBonus
 from CharacterContent.Items.Weapons import WeaponDamageRolls
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
@@ -167,9 +167,41 @@ class StepOfTheWind(Feature):
             return "You can take the Dash action as a Bonus Action. Alternatively, you can expend 1 Focus Point to take both the Disengage and Dash actions as a Bonus Action, and your jump distance is doubled for the turn. When you expend a Focus Point to use Step of the Wind, you can choose a willing creature within 5 feet of yourself that is Large or smaller. You move the creature with you until the end of your turn. The creature's movement doesn't provoke Opportunity Attacks."
 
 
+LEVEL_TO_UNARMORED_MOVEMENT_BONUS = {
+    1: 0,
+    2: 10,
+    3: 10,
+    4: 10,
+    5: 10,
+    6: 15,
+    7: 15,
+    8: 15,
+    9: 15,
+    10: 20,
+    11: 20,
+    12: 20,
+    13: 20,
+    14: 25,
+    15: 25,
+    16: 25,
+    17: 25,
+    18: 30,
+    19: 30,
+    20: 30,
+}
+
+
 class UnarmoredMovement(Feature):
     def __init__(self):
         super().__init__(name="Unarmored Movement", origin="Monk Level 2", skippable_in_concise=True)
+
+    def apply(self, character_stat_block: CharacterStatBlock):
+        monk_level = character_stat_block.get_class_level(
+            Definitions.CharacterClass.MONK
+        )
+        bonus = LEVEL_TO_UNARMORED_MOVEMENT_BONUS.get(monk_level, 0)
+        if bonus:
+            SpeedBonus(bonus).apply(character_stat_block)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "Your speed increases by 10 feet while you aren't wearing armor or wielding a Shield. This bonus increases when you reach certain Monk levels, as shown on the Monk Features table."

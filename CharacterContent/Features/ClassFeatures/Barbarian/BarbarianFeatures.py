@@ -1,7 +1,7 @@
 import Core.Definitions as Definitions
 from Core.Definitions import Ability, BARBARIAN_HIT_DIE, Skill
 from CharacterContent.Features.Core.BaseFeatures import Feature
-from CharacterContent.Features.Core.Improvements import MultiAbilityArmorClass, SavingThrowAdvantage, SkillProficiencyChoice
+from CharacterContent.Features.Core.Improvements import InitiativeRollCondition, MultiAbilityArmorClass, SavingThrowAdvantage, SkillProficiencyChoice, SpeedBonus
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
@@ -176,9 +176,24 @@ class FastMovement(Feature):
         return description
 
 
+class FastMovementBonus(Feature):
+    """Mechanical half of Fast Movement, kept separate from the descriptive
+    FastMovement feature since extend_feature()'d features never get apply()
+    called on them - this one must be add_feature()'d directly."""
+
+    def __init__(self):
+        super().__init__(skippable_in_concise=True)
+
+    def apply(self, character_stat_block: CharacterStatBlock):
+        SpeedBonus(10).apply(character_stat_block)
+
+
 class FeralInstinct(Feature):
     def __init__(self):
         super().__init__(name="Feral Instinct", origin="Barbarian Level 7", skippable_in_concise=True)
+
+    def apply(self, character_stat_block: CharacterStatBlock):
+        InitiativeRollCondition(Definitions.DiceRollCondition.ADVANTAGE).apply(character_stat_block)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

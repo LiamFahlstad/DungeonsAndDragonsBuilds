@@ -74,6 +74,7 @@ class BarbarianLevel5(ClassBuilder.BaseClassLevel5):
             data.get_features_by_type(BarbarianFeatures.UnarmoredDefenseText)[0]
         )
         unarmored_defense_text.extend_feature(BarbarianFeatures.FastMovement())
+        data.add_feature(BarbarianFeatures.FastMovementBonus())
         data.add_feature(BarbarianFeatures.ExtraAttack())
         return data
 

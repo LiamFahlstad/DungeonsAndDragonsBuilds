@@ -8,7 +8,7 @@ from CharacterContent.Classes.BaseClasses.RogueBase import (
     RogueCustomStarterClassArgs,
 )
 from Builds.CharacterSheetAccumulator import CharacterSheetData
-from Core.Definitions import RogueSubclass2014
+from Core.Definitions import ApplyWhen, RogueSubclass2014
 from CharacterContent.Features.SubClassFeatures2014.Rogue import RogueSwashbucklerFeatures
 from CharacterContent.Features.ClassFeatures.Rogue import RogueFeatures
 from StatBlocks.SkillsStatBlock import RogueSkillsStatBlock
@@ -26,6 +26,7 @@ class RogueSwashbucklerLevel3(ClassBuilder.SubclassLevel3):
             RogueFeatures.SneakAttack
         )[0]
         sneak_attack_feature.extend_feature(RogueSwashbucklerFeatures.RakishAudacity())
+        data.add_feature(RogueSwashbucklerFeatures.RakishAudacityBonus(), apply_when=ApplyWhen.LAST)
         return data
 
 

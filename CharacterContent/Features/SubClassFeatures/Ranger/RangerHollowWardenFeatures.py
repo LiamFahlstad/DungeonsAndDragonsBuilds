@@ -1,6 +1,7 @@
 
-from Core.Definitions import RANGER_HIT_DIE
+from Core.Definitions import RANGER_HIT_DIE, Ability
 from CharacterContent.Features.Core.BaseFeatures import Feature
+from CharacterContent.Features.Core.Improvements import SavingThrowBonus
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
@@ -50,6 +51,20 @@ class HungeringMight(Feature):
             "In addition, once per turn when you hit a creature with an attack roll while you are transformed using Wrath of the Wild, you regain a number of Hit Points equal to 1d10 plus your Wisdom modifier, provided you are Bloodied when you hit."
         )
         return description
+
+
+class HungeringMightBonus(Feature):
+    """Mechanical half of Hungering Might, kept separate from the descriptive
+    HungeringMight feature since extend_feature()'d features never get apply()
+    called on them - this one must be add_feature()'d directly."""
+
+    def __init__(self):
+        super().__init__(skippable_in_concise=True)
+
+    def apply(self, character_stat_block: CharacterStatBlock):
+        wisdom_mod = character_stat_block.get_ability_modifier(Ability.WISDOM)
+        bonus = max(1, wisdom_mod)
+        SavingThrowBonus([Ability.CONSTITUTION], bonus).apply(character_stat_block)
 
 
 class RotAndViolence(Feature):
