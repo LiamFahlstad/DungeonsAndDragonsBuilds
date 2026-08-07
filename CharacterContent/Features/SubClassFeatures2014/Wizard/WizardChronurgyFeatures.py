@@ -1,3 +1,4 @@
+from Core import Definitions
 from Core.Definitions import Ability, WIZARD_HIT_DIE
 from CharacterContent.Features.Core.BaseFeatures import Feature
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
@@ -40,6 +41,19 @@ class MomentaryStasis(Feature):
             f"You can use this feature a number of times equal to your Intelligence modifier ({uses}, a minimum of once). You regain all expended uses when you finish a long rest."
         )
         return StringUtils.add_boxes(description, uses, regain_all_on="long rest")
+
+    def get_table_description(self, character_stat_block: CharacterStatBlock) -> list[tuple[str, str]]:
+        int_mod = character_stat_block.get_ability_modifier(Ability.INTELLIGENCE)
+        uses = max(1, int_mod)
+        return [
+            ("Action", "Action"),
+            ("Target", "Large or smaller creature within 60 feet"),
+            ("Save", "Constitution saving throw vs spell save DC"),
+            ("Effect", "Incapacitated, speed 0, encased in field"),
+            ("Duration", "Until end of your next turn or until takes damage"),
+            ("Uses", f"Int modifier ({uses}, minimum 1)"),
+            ("Recharge", "Long rest"),
+        ]
 
 
 class ArcaneAbeyance(Feature):

@@ -17,6 +17,18 @@ class MagicAwareness(Feature):
         )
         return StringUtils.add_boxes(description, proficiency_bonus, regain_all_on="long rest")
 
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        proficiency_bonus = character_stat_block.get_proficiency_bonus()
+        return [
+            ("Action", "Action"),
+            ("Range", "60 feet (not through total cover)"),
+            ("Duration", "Until end of your next turn"),
+            ("Detects", "Spells (learn school of magic) and magic items"),
+            ("Uses", f"Proficiency bonus ({proficiency_bonus}) per long rest"),
+        ]
+
 
 class WildSurge(Feature):
     def __init__(self):

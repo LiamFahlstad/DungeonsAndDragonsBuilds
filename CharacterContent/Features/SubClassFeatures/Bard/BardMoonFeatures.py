@@ -18,6 +18,14 @@ class MoonsInspiration(Feature):
         )
         return description
 
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        return [
+            ("Inspired Eclipse", "When giving Bardic Inspiration, gain Invisible condition and teleport up to 30 feet; invisibility ends at start of next turn or after you attack/deal damage/cast spell"),
+            ("Lunar Vitality", "Once per turn when restoring HP with a spell, expend Bardic Inspiration die to increase HP restored by that die roll; target gains 10 feet Speed until end of its next turn"),
+        ]
+
 
 class PrimalLore(Feature):
     def __init__(self, skill: Skill):
@@ -62,6 +70,16 @@ class BlessingOfMoonlight(Feature):
             "Once you use this feature to modify a casting of Moonbeam, you can't use it again until you finish a Long Rest."
         )
         return description
+
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        return [
+            ("Always Prepared", "Moonbeam"),
+            ("Trigger", "Cast Moonbeam"),
+            ("Effect", "You glow faintly, shed Dim Light 5 feet; when creature fails save against Moonbeam, another creature within 60 feet regains 2d4 HP"),
+            ("Recharge", "Long Rest"),
+        ]
 
 
 class EventidesSplendor(Feature):

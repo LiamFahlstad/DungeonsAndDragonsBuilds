@@ -82,6 +82,19 @@ class GiantsMight(Feature):
         )
         return StringUtils.add_boxes(description, proficiency_bonus, regain_all_on="long rest")
 
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        proficiency_bonus = character_stat_block.get_proficiency_bonus()
+
+        return [
+            ("Action", "Bonus action"),
+            ("Duration", "1 minute"),
+            ("Benefits", "Become Large (if smaller); advantage on Strength checks/saves; +1d6 damage once per turn"),
+            ("Uses", f"{proficiency_bonus} (proficiency bonus)"),
+            ("Regain", "Long rest"),
+        ]
+
 
 class RunicShield(Feature):
     def __init__(self):
@@ -98,6 +111,19 @@ class RunicShield(Feature):
             f"You can use this feature {proficiency_bonus} times, and you regain all expended uses when you finish a long rest."
         )
         return StringUtils.add_boxes(description, proficiency_bonus, regain_all_on="long rest")
+
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        proficiency_bonus = character_stat_block.get_proficiency_bonus()
+
+        return [
+            ("Trigger", "Ally within 60 feet is hit by an attack"),
+            ("Action", "Reaction"),
+            ("Effect", "Force attacker to reroll d20"),
+            ("Uses", f"{proficiency_bonus} (proficiency bonus)"),
+            ("Regain", "Long rest"),
+        ]
 
 
 class GreatStature(Feature):

@@ -54,6 +54,16 @@ class UseMagicDevice(Feature):
         )
         return description
 
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        return [
+            ("Attunement", "Can attune to up to 4 magic items at once"),
+            ("Charges", "Roll 1d6 when using item property with charges; on 6, don't expend"),
+            ("Scrolls (Cantrip/Level 1)", "Cast any Spell Scroll reliably using Intelligence"),
+            ("Scrolls (Level 2+)", "Intelligence (Arcana) check (DC 10 + spell level); success casts, failure destroys"),
+        ]
+
 
 class ThiefsReflexes(Feature):
     def __init__(self):

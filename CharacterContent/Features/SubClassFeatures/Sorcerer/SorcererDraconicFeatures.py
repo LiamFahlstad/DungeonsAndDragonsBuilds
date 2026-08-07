@@ -55,6 +55,16 @@ class DragonWings(Feature):
         )
         return description
 
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        return [
+            ("Action", "Bonus Action"),
+            ("Duration", "1 hour or dismiss (no action)"),
+            ("Benefit", "Fly Speed 60 feet"),
+            ("Recharge", "Long Rest or 3 Sorcery Points"),
+        ]
+
 
 class DragonCompanion(Feature):
     def __init__(self):

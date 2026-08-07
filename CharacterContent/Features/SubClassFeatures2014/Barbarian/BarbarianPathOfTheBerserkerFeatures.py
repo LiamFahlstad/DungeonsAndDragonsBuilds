@@ -1,3 +1,4 @@
+import Core.Definitions as Definitions
 from CharacterContent.Features.Core.BaseFeatures import Feature
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
@@ -11,6 +12,16 @@ class Frenzy(Feature):
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "You can go into a frenzy when you rage. If you do so, for the duration of your rage you can make a single melee weapon attack as a bonus action on each of your turns after this one. When your rage ends, you suffer one level of exhaustion."
         return description
+
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        return [
+            ("Trigger", "When you rage, choose to enter frenzy"),
+            ("Benefit", "Make one melee weapon attack as bonus action each turn"),
+            ("Duration", "For the duration of your rage"),
+            ("Cost", "One level of exhaustion when rage ends"),
+        ]
 
 
 class MindlessRage(Feature):
@@ -37,6 +48,22 @@ class IntimidatingPresence(Feature):
             "If the creature succeeds on its saving throw, you can't use this feature on that creature again for 24 hours."
         )
         return description
+
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        proficiency_bonus = character_stat_block.get_proficiency_bonus()
+        charisma_modifier = character_stat_block.get_ability_modifier(Definitions.Ability.CHARISMA)
+        dc = 8 + proficiency_bonus + charisma_modifier
+        return [
+            ("Action", "Action"),
+            ("Range", "30 feet (creature must see/hear you)"),
+            ("Save", f"Wisdom DC {dc}"),
+            ("On Failure", "Frightened until end of your next turn"),
+            ("Extend", "Use action on subsequent turns to extend"),
+            ("Ends If", "Creature ends turn out of sight or >60 feet away"),
+            ("Cooldown", "24 hours if save succeeds"),
+        ]
 
 
 class Retaliation(Feature):

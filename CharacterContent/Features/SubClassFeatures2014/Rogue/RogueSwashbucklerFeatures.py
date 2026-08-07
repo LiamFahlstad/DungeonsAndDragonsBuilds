@@ -53,6 +53,15 @@ class Panache(Feature):
         )
         return description
 
+    def get_table_description(self, character_stat_block: CharacterStatBlock) -> list[tuple[str, str]]:
+        return [
+            ("Action", "Action"),
+            ("Check", "Charisma (Persuasion) vs. target's Wisdom (Insight)"),
+            ("Requirements", "Target can hear you, share a language"),
+            ("If Hostile & Success", "Target has disadvantage on attacks except against you; can't make opportunity attacks except against you; lasts 1 minute or until ally attacks/affects it or you're > 60 ft apart"),
+            ("If Non-Hostile & Success", "Target is charmed by you for 1 minute, regards you as friendly acquaintance; ends if you do anything harmful to it"),
+        ]
+
 
 class ElegantManeuver(Feature):
     def __init__(self):

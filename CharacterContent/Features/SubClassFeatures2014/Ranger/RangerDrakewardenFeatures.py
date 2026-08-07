@@ -162,6 +162,23 @@ class DrakesBreath(Feature):
         )
         return StringUtils.add_boxes(description, uses, regain_all_on="long rest")
 
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        ranger_level = character_stat_block.get_class_level(CharacterClass.RANGER)
+        proficiency_bonus = character_stat_block.get_proficiency_bonus()
+        wisdom_modifier = character_stat_block.get_ability_modifier(Ability.WISDOM)
+        spell_save_dc = 8 + proficiency_bonus + wisdom_modifier
+        damage = "10d6" if ranger_level >= 15 else "8d6"
+        return [
+            ("What", "Exhale a cone of damaging breath"),
+            ("Action", "Action"),
+            ("Range", "30-foot cone"),
+            ("Save", f"Dexterity save vs. spell save DC {spell_save_dc}"),
+            ("Damage", f"{damage} on failed save, half on success"),
+            ("Recharge", "Long rest (or 3rd+ spell slot)"),
+        ]
+
 
 class PerfectedBond(Feature):
     def __init__(self):

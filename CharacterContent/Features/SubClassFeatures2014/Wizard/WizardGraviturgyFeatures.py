@@ -1,3 +1,4 @@
+from Core import Definitions
 from Core.Definitions import Ability, WIZARD_HIT_DIE
 from CharacterContent.Features.Core.BaseFeatures import Feature
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
@@ -58,3 +59,15 @@ class EventHorizon(Feature):
             "Once you use this feature, you can't do so again until you finish a long rest or until you expend a spell slot of 3rd level or higher on it."
         )
         return StringUtils.add_boxes(description, 1, regain_all_on="long rest")
+
+    def get_table_description(self, character_stat_block: CharacterStatBlock) -> list[tuple[str, str]]:
+        return [
+            ("Action", "Action"),
+            ("Duration", "1 minute or until concentration ends"),
+            ("Range", "30 feet"),
+            ("Trigger", "Hostile creature starts its turn within range"),
+            ("Save", "Strength saving throw vs spell save DC"),
+            ("On Fail", "2d10 force damage, speed 0 until start of next turn"),
+            ("On Success", "Half damage, movement costs 2 extra feet per foot"),
+            ("Recharge", "Long rest or 3rd+ level spell slot"),
+        ]

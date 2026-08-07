@@ -86,6 +86,14 @@ class ExplosiveCannon(Feature):
         )
         return description
 
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        return [
+            ("Detonate", "When cannon takes damage, take a Reaction to detonate it (within 60 feet). Creatures within 20 feet make a Dexterity saving throw or take 3d10 Force damage."),
+            ("Firepower", "Cannon's damage rolls and Protector's Temporary Hit Points each increase by 1d8"),
+        ]
+
 
 class FortifiedPosition(Feature):
     def __init__(self):
@@ -100,3 +108,11 @@ class FortifiedPosition(Feature):
             "Shimmering Field Projection. You and your allies have Half Cover while within 10 feet of your Eldritch Cannon."
         )
         return description
+
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        return [
+            ("Double Firepower", "Have two cannons simultaneously; create both with same Magic action; activate both with same Bonus Action"),
+            ("Shimmering Field Projection", "You and allies have Half Cover within 10 feet of an Eldritch Cannon"),
+        ]

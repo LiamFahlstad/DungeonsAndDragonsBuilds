@@ -12,6 +12,17 @@ class GuidedStrike(Feature):
         description = "When you or a creature within 30 feet of you misses with an attack roll, you can expend one use of your Channel Divinity and give that roll a +10 bonus, potentially causing it to hit. When you use this feature to benefit another creature's attack roll, you must take a Reaction to do so."
         return description
 
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        return [
+            ("What", "Add +10 to a missed attack roll"),
+            ("Trigger", "Reaction (for others) or no action (for self)"),
+            ("Cost", "Channel Divinity"),
+            ("Range", "30 feet for other creatures"),
+            ("Effect", "Attack may hit after bonus applied"),
+        ]
+
 
 class WarDomainSpells(Feature):
     def __init__(self):
@@ -34,6 +45,19 @@ class WarPriest(Feature):
             description, uses, regain_all_on="short or long rest"
         )
 
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        wisdom_modifier = character_stat_block.get_ability_modifier(Ability.WISDOM)
+        uses = max(1, wisdom_modifier)
+        return [
+            ("What", "Make one extra attack"),
+            ("Trigger", "Bonus Action"),
+            ("Attack Type", "Weapon or Unarmed Strike"),
+            ("Uses", f"{uses} (Wisdom modifier, minimum 1)"),
+            ("Recharge", "Short or Long Rest"),
+        ]
+
 
 class WarGodsBlessing(Feature):
     def __init__(self):
@@ -42,6 +66,17 @@ class WarGodsBlessing(Feature):
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "You can expend a use of your Channel Divinity to cast Shield of Faith or Spiritual Weapon rather than expending a spell slot. When you cast either spell in this way, the spell doesn't require Concentration. Instead the spell lasts for 1 minute, but it ends early if you cast that spell again, have the Incapacitated condition, or die."
         return description
+
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        return [
+            ("What", "Cast Shield of Faith or Spiritual Weapon"),
+            ("Cost", "Channel Divinity (instead of spell slot)"),
+            ("Concentration", "Not required"),
+            ("Duration", "1 minute"),
+            ("Ending", "Ends early if cast again, Incapacitated, or die"),
+        ]
 
 
 class AvatarOfBattle(Feature):

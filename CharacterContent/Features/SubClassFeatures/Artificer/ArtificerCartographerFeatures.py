@@ -69,6 +69,16 @@ class MappingMagic(Feature):
         )
         return StringUtils.add_boxes(description, uses, regain_all_on="long rest")
 
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        intelligence_modifier = character_stat_block.get_ability_modifier(Ability.INTELLIGENCE)
+        uses = max(1, intelligence_modifier)
+        return [
+            ("Illuminated Cartography", f"Cast Faerie Fire without slot ({uses} times, regain on long rest)"),
+            ("Portal Jump", "Spend half Speed to teleport within 10 ft of you or within 5 ft of map-holder within 30 ft"),
+        ]
+
 
 class GuidedPrecision(Feature):
     def __init__(self):
@@ -108,3 +118,11 @@ class SuperiorAtlas(Feature):
             "Unerring Path. If you are one of the map holders for your Adventurer's Atlas, you can cast Find the Path without expending a spell slot, without preparing the spell, and without needing spell components. Once you use this benefit, you can't use it again until you finish a Long Rest."
         )
         return description
+
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        return [
+            ("Safe Haven", "When reduced to 0 HP (not killed), destroy map to restore HP = 2 × Artificer level and teleport within 5 ft of you or another map-holder"),
+            ("Unerring Path", "Cast Find the Path with no slot, preparation, or components (1/LR)"),
+        ]

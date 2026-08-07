@@ -138,6 +138,21 @@ class CauterizingFlames(Feature):
         )
         return StringUtils.add_boxes(description, proficiency_bonus, regain_all_on="long rest")
 
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        proficiency_bonus = character_stat_block.get_proficiency_bonus()
+        wisdom_modifier = character_stat_block.get_ability_modifier(Ability.WISDOM)
+        return [
+            ("Trigger", "Small or larger creature dies within 30 feet of you or spirit"),
+            ("Flame Duration", "1 minute"),
+            ("Action", "Reaction when creature enters flame space"),
+            ("Effect", f"Heal or damage creature: 2d10 + {wisdom_modifier}"),
+            ("Damage Type", "Fire"),
+            ("Uses", f"Proficiency bonus ({proficiency_bonus})"),
+            ("Regain", "Long rest"),
+        ]
+
 
 class BlazingRevival(Feature):
     def __init__(self):
@@ -150,3 +165,12 @@ class BlazingRevival(Feature):
             "Once you use this feature, you can't use it again until you finish a long rest."
         )
         return StringUtils.add_boxes(description, 1, regain_all_on="long rest")
+
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        return [
+            ("Trigger", "Reduced to 0 HP and unconscious; spirit within 120 feet"),
+            ("Effect", "Spirit drops to 0 HP; you regain half your max HP and stand up"),
+            ("Regain", "Long rest"),
+        ]

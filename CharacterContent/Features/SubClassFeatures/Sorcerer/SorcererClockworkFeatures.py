@@ -55,6 +55,17 @@ class BastionOfLaw(Feature):
         )
         return description
 
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        return [
+            ("Action", "Magic action"),
+            ("Cost", "1–5 Sorcery Points"),
+            ("Range", "30 feet"),
+            ("Effect", "Create d8s equal to points spent; creature can expend to reduce damage"),
+            ("Duration", "Until Long Rest or use again"),
+        ]
+
 
 class TranceOfOrder(Feature):
     def __init__(self):
@@ -66,6 +77,17 @@ class TranceOfOrder(Feature):
             "Once you use this feature, you can’t use it again until you finish a Long Rest unless you spend 5 Sorcery Points (no action required) to restore your use of it."
         )
         return description
+
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        return [
+            ("Action", "Bonus Action"),
+            ("Duration", "1 minute"),
+            ("Benefit 1", "Attack rolls against you can’t benefit from Advantage"),
+            ("Benefit 2", "Treat d20 rolls of 9 or lower as 10"),
+            ("Recharge", "Long Rest or 5 Sorcery Points"),
+        ]
 
 
 class ClockworkCavalcade(Feature):

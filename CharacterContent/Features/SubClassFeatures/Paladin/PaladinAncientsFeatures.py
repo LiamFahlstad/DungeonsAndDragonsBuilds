@@ -13,6 +13,15 @@ class NaturesWrath(Feature):
         description = "As a Magic action, you can expend one use of your Channel Divinity to conjure spectral vines around nearby creatures. Each creature of your choice that you can see within 15 feet of yourself must succeed on a Strength saving throw or have the Restrained condition for 1 minute. A Restrained creature repeats the save at the end of each of its turns, ending the effect on a success."
         return description
 
+    def get_table_description(self, character_stat_block: CharacterStatBlock) -> list[tuple[str, str]]:
+        return [
+            ("Action", "Magic action"),
+            ("Cost", "1 Channel Divinity use"),
+            ("Range", "15 feet"),
+            ("Save", "Strength"),
+            ("Effect", "Restrained condition for 1 minute (repeats save at end of turn)"),
+        ]
+
 
 class OathOfTheAncientsSpells(Feature):
     def __init__(self):

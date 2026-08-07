@@ -81,6 +81,14 @@ class FeyReinforcements(Feature):
         )
         return description
 
+    def get_table_description(self, character_stat_block: CharacterStatBlock) -> list[tuple[str, str]]:
+        return [
+            ("Spell", "Summon Fey"),
+            ("Material Components", "Waived"),
+            ("Cost", "1 use per Long Rest (no spell slot)"),
+            ("Concentration", "Optional (no Concentration = 1 minute duration)"),
+        ]
+
 
 class MistyWanderer(Feature):
     def __init__(self):
@@ -94,3 +102,13 @@ class MistyWanderer(Feature):
             "In addition, whenever you cast Misty Step, you can bring along one willing creature you can see within 5 feet of yourself. That creature teleports to an unoccupied space of your choice within 5 feet of your destination space."
         )
         return StringUtils.add_boxes(description, uses, regain_all_on="long rest")
+
+    def get_table_description(self, character_stat_block: CharacterStatBlock) -> list[tuple[str, str]]:
+        wis_mod = character_stat_block.get_ability_modifier(Ability.WISDOM)
+        uses = max(1, wis_mod)
+        return [
+            ("Spell", "Misty Step"),
+            ("Cost", "No spell slot"),
+            ("Uses", f"{uses} per Long Rest"),
+            ("Effect", "Teleport up to 30 feet; can bring 1 willing creature within 5 feet with you"),
+        ]

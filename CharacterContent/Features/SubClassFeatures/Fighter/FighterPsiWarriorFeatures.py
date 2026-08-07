@@ -1,4 +1,4 @@
-from Core.Definitions import FIGHTER_HIT_DIE
+from Core.Definitions import FIGHTER_HIT_DIE, Ability
 from CharacterContent.Features.Core.BaseFeatures import Feature
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
@@ -60,6 +60,17 @@ class BulwarkOfForce(Feature):
             "Once you use this feature, you can’t do so again until you finish a Long Rest unless you expend a Psionic Energy Die (no action required) to restore your use of it."
         )
         return description
+
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        return [
+            ("Action", "Bonus Action"),
+            ("Range", "30 feet"),
+            ("Targets", f"Up to {max(1, character_stat_block.get_ability_modifier(Ability.INTELLIGENCE))} creatures"),
+            ("Effect", "Half Cover for 1 minute or until Incapacitated"),
+            ("Recharge", "Long Rest, or expend Psionic Energy Die"),
+        ]
 
 
 class TelekineticMaster(Feature):

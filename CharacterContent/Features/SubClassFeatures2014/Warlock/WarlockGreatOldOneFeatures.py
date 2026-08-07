@@ -48,6 +48,17 @@ class EntropicWard(Feature):
         )
         return StringUtils.add_boxes(description, 1, regain_all_on="short or long rest")
 
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        return [
+            ("Trigger", "Creature makes attack roll against you"),
+            ("Type", "Reaction"),
+            ("Effect", "Impose Disadvantage on the roll"),
+            ("Bonus", "If misses, your next attack on it has Advantage (by end of next turn)"),
+            ("Recharge", "Short or long rest"),
+        ]
+
 
 class ThoughtShield(Feature):
     def __init__(self):
@@ -72,3 +83,13 @@ class CreateThrall(Feature):
             "You can communicate telepathically with the charmed creature as long as the two of you are on the same plane of existence."
         )
         return description
+
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        return [
+            ("Action", "Action to touch Incapacitated Humanoid"),
+            ("Effect", "Charm target"),
+            ("Duration", "Until Remove Curse, Charmed removed, or feature used again"),
+            ("Bonus", "Telepathic communication on same plane"),
+        ]

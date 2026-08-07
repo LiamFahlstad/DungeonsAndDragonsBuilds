@@ -1,4 +1,5 @@
-from Core.Definitions import WARLOCK_HIT_DIE
+from Core.Definitions import WARLOCK_HIT_DIE, Ability
+import Core.Definitions as Definitions
 from CharacterContent.Features.Core.BaseFeatures import Feature
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
@@ -26,6 +27,24 @@ class HealingLight(Feature):
             "As a Bonus Action, you can heal yourself or one creature you can see within 60 feet of yourself, expending dice from the pool. The maximum number of dice you can expend at once equals your Charisma modifier (minimum of one die). Roll the dice you expend, and restore a number of Hit Points equal to the roll's total. Your pool regains all expended dice when you finish a Long Rest."
         )
         return description
+
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        warlock_level = character_stat_block.get_class_level(
+            Definitions.CharacterClass.WARLOCK
+        )
+        charisma_modifier = character_stat_block.get_ability_modifier(Ability.CHARISMA)
+        max_dice = max(1, charisma_modifier)
+        pool_size = 1 + warlock_level
+        return [
+            ("Pool", f"{pool_size} d6"),
+            ("Action", "Bonus Action"),
+            ("Range", "Self or creature within 60 feet"),
+            ("Max Dice", f"{max_dice} at once"),
+            ("Effect", "Restore HP equal to dice rolled"),
+            ("Recharge", "Long Rest"),
+        ]
 
 
 class RadiantSoul(Feature):
@@ -60,3 +79,13 @@ class SearingVengeance(Feature):
             "Once you use this feature, you can't use it again until you finish a Long Rest."
         )
         return description
+
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        return [
+            ("Trigger", "You or ally within 60 feet about to fail Death Save"),
+            ("Target Effect", "Regain half max HP; end Prone condition"),
+            ("Area Effect", "Enemies within 30 feet take 2d8 + Charisma Radiant damage and Blinded until end of turn"),
+            ("Recharge", "Long Rest"),
+        ]

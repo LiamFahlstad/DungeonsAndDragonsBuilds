@@ -39,6 +39,19 @@ class UnleashIncarnation(Feature):
         )
         return StringUtils.add_boxes(description, uses, regain_all_on="long rest")
 
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        constitution_modifier = character_stat_block.get_ability_modifier(Ability.CONSTITUTION)
+        uses = max(1, constitution_modifier)
+
+        return [
+            ("Trigger", "You take the Attack action"),
+            ("Effect", "Make one additional melee attack from echo's position"),
+            ("Uses", f"{uses} (Constitution modifier, minimum 1)"),
+            ("Regain", "Long rest"),
+        ]
+
 
 class EchoAvatar(Feature):
     def __init__(self):
@@ -48,6 +61,16 @@ class EchoAvatar(Feature):
         description = "Starting at 7th level, you can temporarily transfer your consciousness to your echo. As an action, you can see through your echo's eyes and hear through its ears. During this time, you are deafened and blinded. You can sustain this effect for up to 10 minutes, and you can end it at any time (requires no action). While your echo is being used in this way, it can be up to 1,000 feet away from you without being destroyed."
         return description
 
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        return [
+            ("Action", "Action"),
+            ("Effect", "See/hear through echo; you are deafened and blinded"),
+            ("Duration", "Up to 10 minutes (can end at any time)"),
+            ("Range", "Echo can be up to 1,000 feet away without being destroyed"),
+        ]
+
 
 class ShadowMartyr(Feature):
     def __init__(self):
@@ -56,6 +79,16 @@ class ShadowMartyr(Feature):
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "Starting at 10th level, you can make your echo throw itself in front of an attack directed at another creature that you can see. Before the attack roll is made, you can use your reaction to teleport the echo to an unoccupied space within 5 feet of the targeted creature. The attack roll that triggered the reaction is instead made against your echo.\n\nOnce you use this feature, you can't use it again until you finish a short or long rest."
         return StringUtils.add_boxes(description, 1, regain_all_on="short or long rest")
+
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        return [
+            ("Trigger", "Attack directed at creature you can see"),
+            ("Action", "Reaction (before attack roll)"),
+            ("Effect", "Teleport echo to 5 ft of target; attack targets echo instead"),
+            ("Uses", "1 per short or long rest"),
+        ]
 
 
 class ReclaimPotential(Feature):
@@ -71,6 +104,20 @@ class ReclaimPotential(Feature):
             "You can use this feature a number of times equal to your Constitution modifier (a minimum of once). You regain all expended uses when you finish a long rest."
         )
         return StringUtils.add_boxes(description, uses, regain_all_on="long rest")
+
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        constitution_modifier = character_stat_block.get_ability_modifier(Ability.CONSTITUTION)
+        uses = max(1, constitution_modifier)
+
+        return [
+            ("Trigger", "Echo destroyed by taking damage"),
+            ("Effect", "Gain 2d6 + your Constitution modifier temporary HP"),
+            ("Condition", "Only if you don't already have temporary HP"),
+            ("Uses", f"{uses} (Constitution modifier, minimum 1)"),
+            ("Regain", "Long rest"),
+        ]
 
 
 class LegionOfOne(Feature):

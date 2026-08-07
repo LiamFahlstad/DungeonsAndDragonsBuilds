@@ -31,6 +31,15 @@ class WholenessOfBody(Feature):
         )
         return StringUtils.add_boxes(description, 1, regain_all_on="long rest")
 
+    def get_table_description(self, character_stat_block: CharacterStatBlock) -> list[tuple[str, str]]:
+        monk_level = character_stat_block.get_class_level(Definitions.CharacterClass.MONK)
+        healing = monk_level * 3
+        return [
+            ("Action", "Action"),
+            ("Healing", f"3 × monk level ({healing} hp)"),
+            ("Uses", "1 per long rest"),
+        ]
+
 
 class Tranquility(Feature):
     def __init__(self):
@@ -58,3 +67,15 @@ class QuiveringPalm(Feature):
             "You can have only one creature under the effect of this feature at a time. You can choose to end the vibrations harmlessly without using an action."
         )
         return description
+
+    def get_table_description(self, character_stat_block: CharacterStatBlock) -> list[tuple[str, str]]:
+        monk_level = character_stat_block.get_class_level(Definitions.CharacterClass.MONK)
+        return [
+            ("Trigger", "Hit with unarmed strike"),
+            ("Cost", "3 ki points"),
+            ("Duration", f"{monk_level} days"),
+            ("Save", "Constitution (to end vibrations)"),
+            ("Effect on Fail", "Reduced to 0 hit points"),
+            ("Effect on Success", "10d10 necrotic damage"),
+            ("Limit", "Only one creature at a time"),
+        ]

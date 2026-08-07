@@ -54,3 +54,14 @@ class Overchannel(Feature):
             "Each time you use this feature again before finishing a Long Rest, the Necrotic damage per spell level increases by 1d12."
         )
         return description
+
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        return [
+            ("What", "Deal maximum damage with spell"),
+            ("Eligible Spells", "Wizard spell, level 1-5 slot, deals damage"),
+            ("Cost", "First use free; subsequent: 2d12 necrotic/slot level (escalates +1d12 per use)"),
+            ("Damage Type", "Necrotic (ignores Resistance and Immunity)"),
+            ("Recharge", "Long Rest"),
+        ]

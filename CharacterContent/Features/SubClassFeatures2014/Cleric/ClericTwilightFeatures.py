@@ -1,3 +1,4 @@
+import Core.Definitions as Definitions
 from Core.Definitions import Ability
 from CharacterContent.Features.Core.BaseFeatures import Feature
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
@@ -44,6 +45,20 @@ class EyesOfNight(Feature):
         )
         return description
 
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        wis_mod = character_stat_block.get_ability_modifier(Ability.WISDOM)
+        creatures = max(1, wis_mod)
+        return [
+            ("Personal Darkvision", "300 feet"),
+            ("Action", "Action"),
+            ("Sharing Range", "10 feet"),
+            ("Targets to Share", f"Wisdom modifier (minimum 1) – {creatures}"),
+            ("Shared Duration", "1 hour"),
+            ("Recharge", "Long rest (or expend a spell slot)"),
+        ]
+
 
 class VigilantBlessing(Feature):
     def __init__(self):
@@ -70,6 +85,18 @@ class TwilightSanctuaryChannelDivinity(Feature):
         )
         return description
 
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        return [
+            ("Action", "Action"),
+            ("Area", "30-foot radius sphere centered on you"),
+            ("Light", "Dim light"),
+            ("Movement", "Moves with you"),
+            ("Duration", "1 minute or until you are incapacitated or die"),
+            ("Effect per Turn", "Choose: grant 1d6 + cleric level temp HP, or remove charmed/frightened"),
+        ]
+
 
 class StepsOfNight(Feature):
     def __init__(self):
@@ -82,6 +109,19 @@ class StepsOfNight(Feature):
         )
         return StringUtils.add_boxes(description, proficiency_bonus, regain_all_on="long rest")
 
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        proficiency_bonus = character_stat_block.get_proficiency_bonus()
+        return [
+            ("Action", "Bonus action"),
+            ("Condition", "In dim light or darkness"),
+            ("Effect", "Flying speed = walking speed"),
+            ("Duration", "1 minute"),
+            ("Uses", f"Proficiency bonus ({proficiency_bonus})"),
+            ("Recharge", "Long rest"),
+        ]
+
 
 class DivineStrike(Feature):
     def __init__(self):
@@ -90,6 +130,19 @@ class DivineStrike(Feature):
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "You gain the ability to infuse your weapon strikes with divine energy. Once on each of your turns when you hit a creature with a weapon attack, you can cause the attack to deal an extra 1d8 radiant damage. When you reach 14th level, the extra damage increases to 2d8."
         return description
+
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        cleric_level = character_stat_block.get_class_level(
+            Definitions.CharacterClass.CLERIC
+        )
+        damage = "2d8" if cleric_level >= 14 else "1d8"
+        return [
+            ("Trigger", "On weapon attack hit (once per turn)"),
+            ("Damage Type", "Radiant"),
+            ("Damage", f"{damage} radiant"),
+        ]
 
 
 class TwilightShroud(Feature):

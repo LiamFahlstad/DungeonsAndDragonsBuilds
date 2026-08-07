@@ -32,6 +32,15 @@ class ConqueringPresence(Feature):
         )
         return description
 
+    def get_table_description(self, character_stat_block: CharacterStatBlock) -> list[tuple[str, str]]:
+        return [
+            ("What", "Exude terrifying presence"),
+            ("Action", "Action"),
+            ("Range", "30 feet"),
+            ("Save", "Wisdom"),
+            ("Effect", "Frightened for 1 minute; can repeat save at end of each turn"),
+        ]
+
 
 class GuidedStrike(Feature):
     def __init__(self):
@@ -42,6 +51,13 @@ class GuidedStrike(Feature):
             "You can use your Channel Divinity to strike with supernatural accuracy. When you make an attack roll, you can use your Channel Divinity to gain a +10 bonus to the roll. You make this choice after you see the roll, but before the DM says whether the attack hits or misses."
         )
         return description
+
+    def get_table_description(self, character_stat_block: CharacterStatBlock) -> list[tuple[str, str]]:
+        return [
+            ("What", "Gain accuracy bonus to attack roll"),
+            ("Effect", "+10 to attack roll"),
+            ("Timing", "After seeing roll, before DM announces hit/miss"),
+        ]
 
 
 class AuraOfConquest(Feature):
@@ -58,6 +74,16 @@ class AuraOfConquest(Feature):
             "At 18th level, the range of this aura increases to 30 feet."
         )
         return description
+
+    def get_table_description(self, character_stat_block: CharacterStatBlock) -> list[tuple[str, str]]:
+        half_paladin_level = character_stat_block.character_level // 2
+        range_text = "10 feet (30 at 18th level)"
+        return [
+            ("Range", range_text),
+            ("Condition", "When creature is frightened of you"),
+            ("Speed Effect", "Reduced to 0"),
+            ("Damage", f"Psychic damage = half paladin level ({half_paladin_level})"),
+        ]
 
 
 class AuraOfConquestExpansion(Feature):

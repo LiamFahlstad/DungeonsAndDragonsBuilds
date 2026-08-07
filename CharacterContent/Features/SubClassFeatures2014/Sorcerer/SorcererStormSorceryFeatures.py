@@ -1,3 +1,4 @@
+import Core.Definitions as Definitions
 from Core.Definitions import SORCERER_HIT_DIE
 from CharacterContent.Features.Core.BaseFeatures import Feature
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
@@ -59,6 +60,18 @@ class StormsFury(Feature):
             "When you are hit by a melee attack, you can use your reaction to deal lightning damage to the attacker. The damage equals your sorcerer level. The attacker must also make a Strength saving throw against your sorcerer spell save DC. On a failed save, the attacker is pushed in a straight line up to 20 feet away from you."
         )
         return StringUtils.add_boxes(description, 1, regain_all_on="long rest")
+
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        sorcerer_level = character_stat_block.get_class_level(Definitions.CharacterClass.SORCERER)
+        return [
+            ("Trigger", "Hit by melee attack"),
+            ("Action", "Reaction"),
+            ("Damage", f"{sorcerer_level} lightning damage"),
+            ("Save", "Strength saving throw vs spell save DC"),
+            ("On Failed Save", "Pushed up to 20 feet away"),
+        ]
 
 
 class WindSoul(Feature):

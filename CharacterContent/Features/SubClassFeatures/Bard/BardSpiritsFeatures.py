@@ -60,6 +60,16 @@ class EmpoweredChanneling(Feature):
         )
         return description
 
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        return [
+            ("Power from Beyond", "Once per turn when casting Bard spell with slot (damage/heal), roll 1d6; add to one damage roll or total HP restored"),
+            ("Always Prepared", "Spirit Guardians"),
+            ("Cast Free", "Once per Long Rest without spell slot"),
+            ("Spiritual Modification", "When casting Spirit Guardians, grant Half Cover to you and allies in spell's Emanation; recharge Short or Long Rest"),
+        ]
+
 
 class MysticalConnection(Feature):
     def __init__(self):

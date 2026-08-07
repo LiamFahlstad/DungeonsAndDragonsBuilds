@@ -72,6 +72,16 @@ class ShadowStep(Feature):
         description = "While entirely within Dim Light or Darkness, you can use a Bonus Action to teleport up to 60 feet to an unoccupied space you can see that is also in Dim Light or Darkness. You then have Advantage on the next melee attack you make before the end of the current turn."
         return description
 
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        return [
+            ("Action", "Bonus Action"),
+            ("Range", "60 feet"),
+            ("Condition", "Must start and end in Dim Light or Darkness"),
+            ("Effect", "Advantage on next melee attack before end of turn"),
+        ]
+
 
 class ImprovedShadowStep(Feature):
     def __init__(self):
@@ -98,3 +108,16 @@ class CloakOfShadows(Feature):
             "Shadow Flurry. You can use your Flurry of Blows without expending any Focus Points."
         )
         return description
+
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        return [
+            ("Action", "Magic action"),
+            ("Condition", "Must be entirely within Dim Light or Darkness"),
+            ("Cost", "3 Focus Points"),
+            ("Duration", "1 minute (ends if Incapacitated or end turn in Bright Light)"),
+            ("Invisibility", "You have the Invisible condition"),
+            ("Partially Incorporeal", "Move through occupied spaces as Difficult Terrain"),
+            ("Shadow Flurry", "Use Flurry of Blows without expending Focus Points"),
+        ]

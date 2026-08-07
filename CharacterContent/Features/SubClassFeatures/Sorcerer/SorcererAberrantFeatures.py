@@ -75,3 +75,16 @@ class WarpingImplosion(Feature):
             "Once you use this feature, you can’t do so again until you finish a Long Rest unless you spend 5 Sorcery Points (no action required) to restore your use of it."
         )
         return description
+
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        return [
+            ("Action", "Magic action"),
+            ("Range", "120 feet (teleport destination)"),
+            ("Effect Area", "30-foot radius around former position"),
+            ("Save", "Strength save (spell save DC)"),
+            ("Failed Save", "3d10 Force damage + pulled to former space"),
+            ("Successful Save", "Half damage only"),
+            ("Recharge", "Long Rest or 5 Sorcery Points"),
+        ]

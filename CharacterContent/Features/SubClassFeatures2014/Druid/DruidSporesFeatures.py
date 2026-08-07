@@ -67,6 +67,21 @@ class FungalInfestation(Feature):
         )
         return StringUtils.add_boxes(description, uses, regain_all_on="long rest")
 
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        wisdom_mod = character_stat_block.get_ability_modifier(Ability.WISDOM)
+        uses = max(1, wisdom_mod)
+        return [
+            ("Trigger", "Small or Medium beast/humanoid dies within 10 feet"),
+            ("Action", "Reaction"),
+            ("Effect", "Animate corpse as zombie with 1 HP (uses Zombie stat block)"),
+            ("Duration", "1 hour"),
+            ("Control", "Obeys mental commands; only Attack action available"),
+            ("Uses", f"Wisdom modifier ({uses})"),
+            ("Regain", "Long rest"),
+        ]
+
 
 class SpreadingSpores(Feature):
     def __init__(self):

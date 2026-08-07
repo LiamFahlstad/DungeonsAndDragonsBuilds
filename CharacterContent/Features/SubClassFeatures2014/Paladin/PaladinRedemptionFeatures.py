@@ -43,6 +43,15 @@ class RebukeTheViolent(Feature):
         )
         return description
 
+    def get_table_description(self, character_stat_block: CharacterStatBlock) -> list[tuple[str, str]]:
+        return [
+            ("Trigger", "Attacker within 30 feet hits another creature"),
+            ("Action", "Reaction"),
+            ("Save", "Wisdom"),
+            ("Damage (fail)", "Radiant = damage dealt"),
+            ("Damage (success)", "Half damage dealt"),
+        ]
+
 
 class AuraOfTheGuardian(Feature):
     def __init__(self):
@@ -53,6 +62,15 @@ class AuraOfTheGuardian(Feature):
             "You can shield your allies from harm at the cost of your own health. When a creature within 10 feet of you takes damage, you can use your reaction to magically take that damage, instead of that creature taking it. This feature doesn't transfer any other effects that might accompany the damage, and this damage can't be reduced in any way."
         )
         return description
+
+    def get_table_description(self, character_stat_block: CharacterStatBlock) -> list[tuple[str, str]]:
+        return [
+            ("Range", "10 feet (30 at 18th level)"),
+            ("Trigger", "Creature takes damage"),
+            ("Action", "Reaction"),
+            ("Effect", "You take damage instead of creature"),
+            ("Limitation", "Damage can't be reduced; doesn't transfer other effects"),
+        ]
 
 
 class AuraOfTheGuardianExpansion(Feature):
@@ -73,6 +91,14 @@ class ProtectiveSpirit(Feature):
             "A holy presence mends your wounds in combat. You regain hit points equal to 1d6 + half your Paladin level if you end your turn in combat with fewer than half of your hit points remaining and you aren't incapacitated."
         )
         return description
+
+    def get_table_description(self, character_stat_block: CharacterStatBlock) -> list[tuple[str, str]]:
+        half_level = character_stat_block.character_level // 2
+        return [
+            ("Trigger", "End turn in combat with < half HP"),
+            ("Effect", f"Regain 1d6 + {half_level} HP"),
+            ("Condition", "Not incapacitated"),
+        ]
 
 
 class EmissaryOfRedemption(Feature):

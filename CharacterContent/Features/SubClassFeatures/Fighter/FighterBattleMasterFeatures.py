@@ -82,6 +82,16 @@ class KnowYourEnemy(Feature):
         )
         return description
 
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        return [
+            ("Action", "Bonus Action"),
+            ("Range", "30 feet"),
+            ("Effect", "Learn creature’s Immunities, Resistances, Vulnerabilities"),
+            ("Recharge", "Long Rest, or expend Superiority Die"),
+        ]
+
 
 class ImprovedCombatSuperiority(Feature):
     def __init__(self):

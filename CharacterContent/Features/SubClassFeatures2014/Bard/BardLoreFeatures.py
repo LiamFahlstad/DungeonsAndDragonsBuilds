@@ -27,6 +27,19 @@ class CuttingWords(Feature):
         description = "You learn how to use your wit to distract, confuse, and otherwise sap the confidence and competence of others. When a creature that you can see within 60 feet of you makes an attack roll, an ability check, or a damage roll, you can use your reaction to expend one of your uses of Bardic Inspiration, rolling a Bardic Inspiration die and subtracting the number rolled from the creature's roll. You can choose to use this feature after the creature makes its roll, but before the DM determines whether the attack roll or ability check succeeds or fails, or before the creature deals its damage. The creature is immune if it can't hear you or if it's immune to being charmed."
         return description
 
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        return [
+            ("Reaction", "Use your reaction"),
+            ("Cost", "1 Bardic Inspiration use"),
+            ("Range", "60 feet"),
+            ("Trigger", "Creature makes attack roll, ability check, or damage roll"),
+            ("Effect", "Subtract Bardic Inspiration die roll from the creature's roll"),
+            ("Timing", "After creature rolls, before success is determined"),
+            ("Requirement", "Creature can hear you; isn't charmed-immune"),
+        ]
+
 
 class AdditionalMagicalSecrets(Feature):
     def __init__(self):
@@ -46,3 +59,13 @@ class PeerlessSkill(Feature):
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "When you make an ability check, you can expend one use of Bardic Inspiration. Roll a Bardic Inspiration die and add the number rolled to your ability check. You can choose to do so after you roll the die for the ability check, but before the DM tells you whether you succeed or fail."
         return description
+
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        return [
+            ("What", "Add Bardic Inspiration to your ability check"),
+            ("Cost", "1 Bardic Inspiration use"),
+            ("Effect", "Roll die, add result to your ability check"),
+            ("Timing", "After rolling die, before success is determined"),
+        ]

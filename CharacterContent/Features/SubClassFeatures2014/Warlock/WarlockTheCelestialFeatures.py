@@ -49,6 +49,18 @@ class HealingLight(Feature):
         )
         return description
 
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        return [
+            ("Action", "Bonus Action"),
+            ("Range", "60 feet"),
+            ("Resource", "Pool of d6s = 1 + Warlock level"),
+            ("Cost", "Up to Charisma modifier dice (min 1)"),
+            ("Effect", "Heal target HP equal to dice total"),
+            ("Recharge", "Long rest"),
+        ]
+
 
 class RadiantSoul(Feature):
     def __init__(self):
@@ -73,6 +85,16 @@ class CelestialResistance(Feature):
         )
         return description
 
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        return [
+            ("Trigger", "Finish short or long rest"),
+            ("Your Temp HP", "Warlock level + Charisma modifier"),
+            ("Others Temp HP", "Half Warlock level + Charisma modifier"),
+            ("Who", "Up to 5 creatures you can see"),
+        ]
+
 
 class SearingVengeance(Feature):
     def __init__(self):
@@ -86,3 +108,16 @@ class SearingVengeance(Feature):
             "Once you use this feature, you can't use it again until you finish a Long Rest."
         )
         return StringUtils.add_boxes(description, 1, regain_all_on="long rest")
+
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        return [
+            ("Trigger", "Death saving throw at start of turn"),
+            ("Effect", "Regain HP = half hit point maximum"),
+            ("Action", "Stand up (optional)"),
+            ("Area", "30 feet around you"),
+            ("Damage", "2d8 + Charisma modifier Radiant"),
+            ("Condition", "Blinded until end of current turn"),
+            ("Recharge", "Long rest"),
+        ]

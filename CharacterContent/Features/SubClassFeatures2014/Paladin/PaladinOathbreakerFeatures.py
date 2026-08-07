@@ -35,6 +35,17 @@ class ControlUndead(Feature):
         )
         return description
 
+    def get_table_description(self, character_stat_block: CharacterStatBlock) -> list[tuple[str, str]]:
+        return [
+            ("What", "Control undead creature"),
+            ("Action", "Action"),
+            ("Cost", "1 Channel Divinity use"),
+            ("Range", "30 feet"),
+            ("Save", "Wisdom"),
+            ("Effect", "Obey commands for 24 hours"),
+            ("Immunity", "CR ≥ Paladin level"),
+        ]
+
 
 class DreadfulAspect(Feature):
     def __init__(self):
@@ -46,6 +57,17 @@ class DreadfulAspect(Feature):
             "Each creature of your choice within 30 feet of you must make a Wisdom saving throw if it can see you. On a failed save, the target is frightened of you for 1 minute. If a creature frightened by this effect ends its turn more than 30 feet away from you, it can attempt another Wisdom saving throw to end the effect on it."
         )
         return description
+
+    def get_table_description(self, character_stat_block: CharacterStatBlock) -> list[tuple[str, str]]:
+        return [
+            ("What", "Channel magical menace"),
+            ("Action", "Action"),
+            ("Cost", "1 Channel Divinity use"),
+            ("Range", "30 feet (can see you)"),
+            ("Save", "Wisdom"),
+            ("Effect", "Frightened for 1 minute"),
+            ("Recheck", "Can retry save if > 30 feet away at end of turn"),
+        ]
 
 
 class AuraOfHate(Feature):
@@ -94,3 +116,14 @@ class DreadLord(Feature):
             "After activating the aura, you can't do so again until you finish a long rest."
         )
         return StringUtils.add_boxes(description, 1, regain_all_on="long rest")
+
+    def get_table_description(self, character_stat_block: CharacterStatBlock) -> list[tuple[str, str]]:
+        return [
+            ("Action", "Action"),
+            ("Duration", "1 minute"),
+            ("Light Effect", "Bright light → dim light in 30 feet"),
+            ("Enemy Damage", "4d10 psychic to frightened enemies starting turn"),
+            ("Shadow Veil", "Disadvantage on attacks vs shadowed creatures"),
+            ("Shadow Attack", "Bonus action, melee spell attack, 3d10 + CHA necrotic"),
+            ("Recharge", "Long rest"),
+        ]

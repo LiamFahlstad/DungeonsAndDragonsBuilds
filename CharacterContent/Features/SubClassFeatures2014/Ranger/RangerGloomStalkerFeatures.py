@@ -38,6 +38,17 @@ class DreadAmbusher(Feature):
         )
         return description
 
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        wisdom_modifier = character_stat_block.get_ability_modifier(Ability.WISDOM)
+        return [
+            ("Initiative Bonus", f"Wisdom modifier ({wisdom_modifier:+})"),
+            ("First Turn Effect", "Walking speed +10 ft (until end of turn)"),
+            ("Bonus Attack", "One additional attack on Attack action"),
+            ("Attack Damage", "+1d8 damage of weapon's type on hit"),
+        ]
+
 
 class UmbralSight(Feature):
     def __init__(self):

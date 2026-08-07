@@ -1,5 +1,5 @@
 
-from Core.Definitions import Ability, RANGER_HIT_DIE
+from Core.Definitions import Ability, CharacterClass, RANGER_HIT_DIE
 from CharacterContent.Features.Core.BaseFeatures import Feature
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
@@ -62,6 +62,19 @@ class FortifyingSoul(Feature):
         )
         return description
 
+    def get_table_description(self, character_stat_block: CharacterStatBlock) -> list[tuple[str, str]]:
+        wis_mod = character_stat_block.get_ability_modifier(Ability.WISDOM)
+        ranger_level = character_stat_block.get_class_level(CharacterClass.RANGER)
+        targets = max(1, wis_mod)
+        healing = f"1d10 + {ranger_level}"
+        return [
+            ("Action", "Magic action"),
+            ("Targets", f"Up to {targets} creatures"),
+            ("Healing", healing),
+            ("Secondary Effect", "Advantage on Frightened saves for 1 hour"),
+            ("Recharge", "Long Rest"),
+        ]
+
 
 class ChillingRetribution(Feature):
     def __init__(self):
@@ -77,6 +90,17 @@ class ChillingRetribution(Feature):
             "You can use this feature a number of times equal to your Wisdom modifier (minimum of once), and you regain all expended uses when you finish a Long Rest."
         )
         return StringUtils.add_boxes(description, uses, regain_all_on="long rest")
+
+    def get_table_description(self, character_stat_block: CharacterStatBlock) -> list[tuple[str, str]]:
+        wis_mod = character_stat_block.get_ability_modifier(Ability.WISDOM)
+        uses = max(1, wis_mod)
+        return [
+            ("Trigger", "Creature hits you with attack roll"),
+            ("Action", "Reaction"),
+            ("Save", "Wisdom save vs. spell save DC"),
+            ("Effect on Failure", "Stunned until end of your next turn (Speed 0)"),
+            ("Uses", f"{uses} per Long Rest"),
+        ]
 
 
 class FrozenHaunt(Feature):

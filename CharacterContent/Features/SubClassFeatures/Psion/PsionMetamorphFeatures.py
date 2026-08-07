@@ -1,4 +1,4 @@
-from Core.Definitions import PSION_HIT_DIE
+from Core.Definitions import PSION_HIT_DIE, Ability
 from CharacterContent.Features.Core.BaseFeatures import Feature
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
@@ -37,6 +37,19 @@ class MutableForm(Feature):
             "the spell's range 10 feet."
         )
         return description
+
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        return [
+            ("Activation", "Bonus Action"),
+            ("Cost", "1 Psionic Energy Die"),
+            ("Temp HP", "Roll die + INT modifier (minimum 1)"),
+            ("Duration", "1 minute"),
+            ("Reach Bonus", "+5 feet"),
+            ("Speed Bonus", "+5 feet"),
+            ("Touch Range", "10 feet (for touch spells with action casting time)"),
+        ]
 
 
 class OrganicWeapons(Feature):

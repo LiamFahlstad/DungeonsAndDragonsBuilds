@@ -130,3 +130,18 @@ class HandOfUltimateMercy(Feature):
             "Once you use this feature, you can't use it again until you finish a Long Rest."
         )
         return description
+
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        wisdom_modifier = character_stat_block.get_ability_modifier(
+            Definitions.Ability.WISDOM
+        )
+        return [
+            ("Action", "Magic action"),
+            ("Cost", "5 Focus Points"),
+            ("Target", "Corpse of creature dead within 24 hours"),
+            ("Hit Points Restored", f"4d10 + {wisdom_modifier:+d} (Wisdom)"),
+            ("Conditions Removed", "Blinded, Deafened, Paralyzed, Poisoned, Stunned"),
+            ("Recharge", "Once per Long Rest"),
+        ]

@@ -37,6 +37,17 @@ class FeyPresence(Feature):
         )
         return StringUtils.add_boxes(description, 1, regain_all_on="short or long rest")
 
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        return [
+            ("Action", "Action"),
+            ("Range", "10-foot cube from you"),
+            ("Save", "Wisdom against Warlock spell save DC"),
+            ("Effect", "Charmed or frightened (your choice) until end of next turn"),
+            ("Recharge", "Short or long rest"),
+        ]
+
 
 class MistyEscape(Feature):
     def __init__(self):
@@ -50,6 +61,17 @@ class MistyEscape(Feature):
             "Once you use this feature, you can't use it again until you finish a Short or Long Rest."
         )
         return StringUtils.add_boxes(description, 1, regain_all_on="short or long rest")
+
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        return [
+            ("Trigger", "When you take damage"),
+            ("Type", "Reaction"),
+            ("Effect", "Turn Invisible and teleport up to 60 feet"),
+            ("Duration", "Invisible until start of next turn or until you attack or cast a spell"),
+            ("Recharge", "Short or long rest"),
+        ]
 
 
 class BeguilingDefenses(Feature):
@@ -76,3 +98,15 @@ class DarkDelirium(Feature):
             "You must finish a Short or Long Rest before you can use this feature again."
         )
         return StringUtils.add_boxes(description, 1, regain_all_on="short or long rest")
+
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        return [
+            ("Action", "Action"),
+            ("Range", "60 feet"),
+            ("Save", "Wisdom against Warlock spell save DC"),
+            ("Effect", "Charmed or frightened (your choice) for 1 minute"),
+            ("Concentration", "Yes; breaks on creature damage"),
+            ("Recharge", "Short or long rest"),
+        ]

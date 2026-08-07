@@ -63,6 +63,19 @@ class MoonlightStep(Feature):
         )
         return StringUtils.add_boxes(description, uses, regain_all_on="long rest")
 
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        wisdom_modifier = character_stat_block.get_ability_modifier(Ability.WISDOM)
+        uses = max(1, wisdom_modifier)
+        return [
+            ("What", "Teleport up to 30 feet in burst of moonlight"),
+            ("Casting Time", "Bonus Action"),
+            ("Effect", "Advantage on next attack roll before end of turn"),
+            ("Uses", f"{uses} per Long Rest (based on Wisdom modifier)"),
+            ("Restore", "Spend level 2+ spell slot per use (no action required)"),
+        ]
+
 
 class LunarForm(Feature):
     def __init__(self):

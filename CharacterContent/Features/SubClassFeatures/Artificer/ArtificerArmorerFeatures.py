@@ -49,6 +49,15 @@ class ArcaneArmor(Feature):
         )
         return description
 
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        return [
+            ("No Strength Requirement", "Arcane Armor has no Strength requirement"),
+            ("Quick Don and Doff", "Don or doff as a Utilize action; can't be removed against your will"),
+            ("Spellcasting Focus", "Use Arcane Armor as Spellcasting Focus for your Artificer spells"),
+        ]
+
 
 class ArmorModel(Feature):
     def __init__(self):

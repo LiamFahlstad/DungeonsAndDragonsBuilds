@@ -44,6 +44,17 @@ class BeastsOfIllOmen(Feature):
         )
         return description
 
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        return [
+            ("Action", "Bonus Action"),
+            ("Cost", "3 Sorcery Points"),
+            ("Spell", "Summon Beast (no slot, no prepare, no Material)"),
+            ("Effect", "Enemies within 5 feet of beast have Disadvantage on spell saves"),
+            ("Concentration", "Removable; 1 minute duration; ends early if cast again"),
+        ]
+
 
 class ShadowWalk(Feature):
     def __init__(self):

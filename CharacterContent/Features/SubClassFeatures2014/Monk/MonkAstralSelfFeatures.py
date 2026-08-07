@@ -21,6 +21,17 @@ class ArmsOfTheAstralSelf(Feature):
         )
         return description
 
+    def get_table_description(self, character_stat_block: CharacterStatBlock) -> list[tuple[str, str]]:
+        return [
+            ("Action", "Bonus action"),
+            ("Cost", "1 ki point"),
+            ("Duration", "10 minutes"),
+            ("Range", "10 feet"),
+            ("Save", "Dexterity"),
+            ("Damage", "2d (force, where d = Martial Arts die)"),
+            ("Benefits", "Use Wisdom for Strength checks/saves, reach +5 ft, use Wisdom for attack/damage rolls with arms"),
+        ]
+
 
 class VisageOfTheAstralSelf(Feature):
     def __init__(self):
@@ -75,3 +86,12 @@ class AwakenedAstralSelf(Feature):
             "Astral Barrage. Whenever you use the Extra Attack feature to attack twice, you can instead attack three times if all the attacks are made with your astral arms."
         )
         return description
+
+    def get_table_description(self, character_stat_block: CharacterStatBlock) -> list[tuple[str, str]]:
+        return [
+            ("Action", "Bonus action"),
+            ("Cost", "5 ki points"),
+            ("Duration", "10 minutes"),
+            ("AC Bonus", "+2"),
+            ("Extra Attacks", "3 attacks with Extra Attack (instead of 2) if all use astral arms"),
+        ]

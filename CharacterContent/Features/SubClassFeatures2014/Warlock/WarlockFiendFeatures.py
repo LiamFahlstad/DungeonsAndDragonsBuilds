@@ -48,6 +48,16 @@ class DarkOnesOwnLuck(Feature):
         )
         return StringUtils.add_boxes(description, 1, regain_all_on="short or long rest")
 
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        return [
+            ("Trigger", "Ability check or saving throw"),
+            ("Effect", "Add d10 to the roll"),
+            ("Timing", "After seeing roll, before effects"),
+            ("Recharge", "Short or long rest"),
+        ]
+
 
 class FiendishResilience(Feature):
     def __init__(self):
@@ -73,3 +83,14 @@ class HurlThroughHell(Feature):
             "Once you use this feature, you can't use it again until you finish a Long Rest."
         )
         return StringUtils.add_boxes(description, 1, regain_all_on="long rest")
+
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        return [
+            ("Trigger", "Hit a creature with an attack"),
+            ("Effect", "Transport target through lower planes"),
+            ("Duration", "Until end of your next turn"),
+            ("Damage", "10d10 Psychic if target is not a fiend"),
+            ("Recharge", "Long rest"),
+        ]

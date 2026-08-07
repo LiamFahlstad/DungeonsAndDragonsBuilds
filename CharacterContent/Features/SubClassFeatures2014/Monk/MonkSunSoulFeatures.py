@@ -39,6 +39,18 @@ class SearingArcStrike(Feature):
         )
         return description
 
+    def get_table_description(self, character_stat_block: CharacterStatBlock) -> list[tuple[str, str]]:
+        monk_level = character_stat_block.get_class_level(Definitions.CharacterClass.MONK)
+        max_ki_spent = monk_level // 2
+        return [
+            ("Trigger", "After you take the Attack action on your turn"),
+            ("Action", "Bonus action"),
+            ("Base Cost", "2 ki points"),
+            ("Spell", "Burning Hands"),
+            ("Upcasting", "+1 level per additional ki point"),
+            ("Max Ki", f"Half monk level ({max_ki_spent})"),
+        ]
+
 
 class SearingSunburst(Feature):
     def __init__(self):
@@ -53,6 +65,17 @@ class SearingSunburst(Feature):
             "You can increase the sphere's damage by spending ki points. Each point you spend, up to a maximum of 3, increases the damage by 2d6."
         )
         return description
+
+    def get_table_description(self, character_stat_block: CharacterStatBlock) -> list[tuple[str, str]]:
+        return [
+            ("Action", "Action"),
+            ("Range", "150 feet (target point)"),
+            ("Area", "20-foot-radius sphere"),
+            ("Save", "Constitution"),
+            ("Base Damage", "2d6 radiant (failed save)"),
+            ("Extra Damage", "+2d6 per ki point (max 3 ki)"),
+            ("Cover", "Total opaque cover negates save requirement"),
+        ]
 
 
 class SunShield(Feature):

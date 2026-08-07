@@ -73,6 +73,18 @@ class GloriousDefense(Feature):
         )
         return StringUtils.add_boxes(description, uses, regain_all_on="long rest")
 
+    def get_table_description(self, character_stat_block: CharacterStatBlock) -> list[tuple[str, str]]:
+        charisma_modifier = character_stat_block.get_ability_modifier(Ability.CHARISMA)
+        uses = max(1, charisma_modifier)
+        return [
+            ("Trigger", "You or ally within 10 ft is hit by attack roll"),
+            ("Action", "Reaction"),
+            ("AC Bonus", "+Charisma modifier (minimum +1)"),
+            ("Range", "10 feet for trigger, weapon range for counterattack"),
+            ("Counterattack", "If attack misses, make one weapon attack against attacker"),
+            ("Uses", f"{uses} per Long Rest"),
+        ]
+
 
 class LivingLegend(Feature):
     def __init__(self):

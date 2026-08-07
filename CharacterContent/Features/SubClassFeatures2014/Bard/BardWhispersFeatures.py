@@ -27,6 +27,25 @@ class PsychicBlades(Feature):
         )
         return description
 
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        if character_stat_block.character_level < 5:
+            psychic_damage = "2d6"
+        elif character_stat_block.character_level < 10:
+            psychic_damage = "3d6"
+        elif character_stat_block.character_level < 15:
+            psychic_damage = "5d6"
+        else:
+            psychic_damage = "8d6"
+
+        return [
+            ("Trigger", "Hit a creature with a weapon attack"),
+            ("Cost", "1 Bardic Inspiration use"),
+            ("Damage", f"{psychic_damage} psychic"),
+            ("Limit", "Once per round on your turn"),
+        ]
+
 
 class WordsOfTerror(Feature):
     def __init__(self):
@@ -83,3 +102,16 @@ class ShadowLore(Feature):
             "Once you use this feature, you can't use it again until you finish a long rest."
         )
         return StringUtils.add_boxes(description, 1, regain_all_on="long rest")
+
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        return [
+            ("Action", "Action"),
+            ("Range", "30 feet"),
+            ("Target", "One creature you can see"),
+            ("Save", "Wisdom save vs Spell Save DC"),
+            ("Effect (Fail)", "Charmed for 8 hours or until attacked/damaged; obeys your commands"),
+            ("Effect (Success)", "No effect"),
+            ("Cost", "Reusable with long rest"),
+        ]

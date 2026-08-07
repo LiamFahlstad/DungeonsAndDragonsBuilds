@@ -1,3 +1,4 @@
+import Core.Definitions as Definitions
 from Core.Definitions import Ability
 from CharacterContent.Features.Core.BaseFeatures import Feature
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
@@ -57,6 +58,18 @@ class OrdersDemandChannelDivinity(Feature):
         )
         return description
 
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        return [
+            ("Action", "Action"),
+            ("Range", "30 feet"),
+            ("Target", "Creatures you can see or hear"),
+            ("Save", "Wisdom saving throw"),
+            ("Duration", "Until end of your next turn or until takes damage"),
+            ("Effect", "Charmed; optionally drop held items"),
+        ]
+
 
 class EmbodimentOfTheLaw(Feature):
     def __init__(self):
@@ -72,6 +85,18 @@ class EmbodimentOfTheLaw(Feature):
         )
         return StringUtils.add_boxes(description, uses, regain_all_on="long rest")
 
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        wis_mod = character_stat_block.get_ability_modifier(Ability.WISDOM)
+        uses = max(1, wis_mod)
+        return [
+            ("Applies to", "Enchantment spells with 1st+ level slot"),
+            ("Casting Time Change", "To 1 bonus action (if normally 1 action)"),
+            ("Uses", f"Wisdom modifier (minimum 1) – {uses}"),
+            ("Recharge", "Long rest"),
+        ]
+
 
 class DivineStrike(Feature):
     def __init__(self):
@@ -80,6 +105,19 @@ class DivineStrike(Feature):
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "You gain the ability to infuse your weapon strikes with divine energy. Once on each of your turns when you hit a creature with a weapon attack, you can cause the attack to deal an extra 1d8 psychic damage to the target. When you reach 14th level, the extra damage increases to 2d8."
         return description
+
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        cleric_level = character_stat_block.get_class_level(
+            Definitions.CharacterClass.CLERIC
+        )
+        damage = "2d8" if cleric_level >= 14 else "1d8"
+        return [
+            ("Trigger", "On weapon attack hit (once per turn)"),
+            ("Damage Type", "Psychic"),
+            ("Damage", f"{damage} psychic"),
+        ]
 
 
 class OrdersWrath(Feature):

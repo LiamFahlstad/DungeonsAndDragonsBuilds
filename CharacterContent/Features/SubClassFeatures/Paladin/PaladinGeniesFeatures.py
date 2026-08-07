@@ -85,6 +85,19 @@ class ElementalRebuke(Feature):
         )
         return StringUtils.add_boxes(description, uses, regain_all_on="long rest")
 
+    def get_table_description(self, character_stat_block: CharacterStatBlock) -> list[tuple[str, str]]:
+        charisma_modifier = character_stat_block.get_ability_modifier(Ability.CHARISMA)
+        uses = max(1, charisma_modifier)
+        return [
+            ("Trigger", "You are hit by an attack roll"),
+            ("Action", "Reaction"),
+            ("Damage Reduction", "Halve attack damage (round down)"),
+            ("Save", "Dexterity against spell save DC"),
+            ("Damage on Fail", "2d10 + Charisma modifier (Acid, Cold, Fire, Lightning, or Thunder)"),
+            ("Damage on Success", "Half damage"),
+            ("Uses", f"{uses} per Long Rest"),
+        ]
+
 
 class NobleScion(Feature):
     def __init__(self):

@@ -61,6 +61,20 @@ class UniversalSpeech(Feature):
         )
         return StringUtils.add_boxes(description, 1, regain_all_on="long rest")
 
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        cha_mod = character_stat_block.get_ability_modifier(Ability.CHARISMA)
+        creatures = max(1, cha_mod)
+        return [
+            ("Action", "Action"),
+            ("Range", "60 feet"),
+            ("Targets", f"Up to {creatures} creature{'s' if creatures != 1 else ''}"),
+            ("Effect", "Chosen creatures understand you regardless of language"),
+            ("Duration", "1 hour"),
+            ("Cost", "Reusable with long rest, or spell slot to repeat"),
+        ]
+
 
 class InfectiousInspiration(Feature):
     def __init__(self):

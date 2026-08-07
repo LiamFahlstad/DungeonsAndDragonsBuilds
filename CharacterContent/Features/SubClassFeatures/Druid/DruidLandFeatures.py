@@ -39,6 +39,28 @@ class LandsAid(Feature):
         )
         return description
 
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        druid_level = character_stat_block.get_class_level(
+            Definitions.CharacterClass.DRUID
+        )
+        if druid_level >= 14:
+            damage_healing = "4d6"
+        elif druid_level >= 10:
+            damage_healing = "3d6"
+        else:
+            damage_healing = "2d6"
+        return [
+            ("What", "Create flowers and thorns in a 10-foot Sphere"),
+            ("Casting Time", "Magic action"),
+            ("Cost", "1 use of Wild Shape"),
+            ("Range", "60 feet"),
+            ("Save", "Constitution vs. your spell save DC"),
+            ("Damage", f"{damage_healing} Necrotic (half on save)"),
+            ("Healing", f"{damage_healing} HP to one creature of your choice"),
+        ]
+
 
 class NaturalRecovery(Feature):
     def __init__(self):
@@ -82,3 +104,17 @@ class NaturesSanctuary(Feature):
             "As a Bonus Action, you can move the Cube up to 60 feet to ground within 120 feet of yourself."
         )
         return description
+
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        return [
+            ("What", "Create spectral trees and vines in a 15-foot Cube"),
+            ("Casting Time", "Magic action"),
+            ("Cost", "1 use of Wild Shape"),
+            ("Range", "120 feet"),
+            ("Duration", "1 minute (until Incapacitated/dead)"),
+            ("Benefit", "Half Cover for you and allies"),
+            ("Resistance", "Allies gain your Nature's Ward resistance"),
+            ("Bonus Action", "Move Cube up to 60 feet"),
+        ]

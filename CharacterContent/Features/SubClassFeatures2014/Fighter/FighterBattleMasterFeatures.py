@@ -45,6 +45,34 @@ class CombatSuperiority(Feature):
             description, number_of_superiority_die, regain_all_on="short or long rest"
         )
 
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        if character_stat_block.character_level < 7:
+            number_of_superiority_die = 4
+        elif character_stat_block.character_level < 15:
+            number_of_superiority_die = 5
+        else:
+            number_of_superiority_die = 6
+
+        if character_stat_block.character_level < 10:
+            superiority_die = "1d8"
+        elif character_stat_block.character_level < 18:
+            superiority_die = "1d10"
+        else:
+            superiority_die = "1d12"
+
+        proficiency_bonus = character_stat_block.get_proficiency_bonus()
+        str_mod = character_stat_block.get_ability_modifier(Ability.STRENGTH)
+        dex_mod = character_stat_block.get_ability_modifier(Ability.DEXTERITY)
+        maneuver_save_dc = 8 + proficiency_bonus + max(str_mod, dex_mod)
+
+        return [
+            ("Superiority Dice", f"{number_of_superiority_die} {superiority_die}s"),
+            ("Save DC", f"{maneuver_save_dc} (STR or DEX mod, your choice)"),
+            ("Regain", "Short or long rest"),
+        ]
+
 
 class StudentOfWar(Feature):
     def __init__(self):

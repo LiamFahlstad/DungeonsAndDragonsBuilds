@@ -28,6 +28,14 @@ class HourOfReaping(Feature):
         )
         return description
 
+    def get_table_description(self, character_stat_block: CharacterStatBlock) -> list[tuple[str, str]]:
+        return [
+            ("Action", "Action"),
+            ("Range", "30 feet (creatures that can see you)"),
+            ("Save", "Wisdom"),
+            ("Effect", "Frightened until end of your next turn"),
+        ]
+
 
 class MasteryOfDeath(Feature):
     def __init__(self):
@@ -49,3 +57,12 @@ class TouchOfTheLongDeath(Feature):
             "Your touch can channel the energy of death into a creature. As an action, you touch one creature within 5 feet of you, and you expend 1 to 10 ki points. The target must make a Constitution saving throw, and it takes 2d10 necrotic damage per ki point spent on a failed save, or half as much damage on a successful one."
         )
         return description
+
+    def get_table_description(self, character_stat_block: CharacterStatBlock) -> list[tuple[str, str]]:
+        return [
+            ("Action", "Action"),
+            ("Range", "Touch (5 feet)"),
+            ("Cost", "1-10 ki points"),
+            ("Save", "Constitution"),
+            ("Damage", "2d10 necrotic per ki point spent (failed save); half on success"),
+        ]

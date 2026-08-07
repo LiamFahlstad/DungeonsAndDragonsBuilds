@@ -47,6 +47,24 @@ class TentacleOfTheDeep(Feature):
         )
         return StringUtils.add_boxes(description, proficiency_bonus, regain_all_on="long rest")
 
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        warlock_level = character_stat_block.get_class_level(
+            Definitions.CharacterClass.WARLOCK
+        )
+        proficiency_bonus = character_stat_block.get_proficiency_bonus()
+        damage = "2d8" if warlock_level >= 10 else "1d8"
+        return [
+            ("Action", "Bonus action to summon"),
+            ("Range", "60 feet from you"),
+            ("Attack", f"Melee spell attack within 10 feet of tentacle"),
+            ("Damage", f"{damage} cold + 10 feet speed reduction"),
+            ("Movement", "Bonus action to move up to 30 feet, repeat attack"),
+            ("Uses", f"Proficiency bonus ({proficiency_bonus})"),
+            ("Recharge", "Long rest"),
+        ]
+
 
 class GiftOfTheSea(Feature):
     def __init__(self):
@@ -88,6 +106,19 @@ class GuardianCoil(Feature):
         )
         return description
 
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        warlock_level = character_stat_block.get_class_level(
+            Definitions.CharacterClass.WARLOCK
+        )
+        damage = "2d8" if warlock_level >= 10 else "1d8"
+        return [
+            ("Trigger", "Damage taken within 10 feet of tentacle"),
+            ("Type", "Reaction"),
+            ("Effect", f"Reduce damage to chosen creature by {damage}"),
+        ]
+
 
 class GraspingTentacles(Feature):
     def __init__(self):
@@ -106,6 +137,20 @@ class GraspingTentacles(Feature):
         )
         return StringUtils.add_boxes(description, 1, regain_all_on="long rest")
 
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        warlock_level = character_stat_block.get_class_level(
+            Definitions.CharacterClass.WARLOCK
+        )
+        return [
+            ("Spell", "Evard's Black Tentacles"),
+            ("Counts", "Warlock spell, doesn't count against known"),
+            ("Casting", "Once per long rest without spell slot"),
+            ("Temp HP", f"Warlock level ({warlock_level})"),
+            ("Concentration", "Damage can't break it"),
+        ]
+
 
 class FathomlessPlunge(Feature):
     def __init__(self):
@@ -120,3 +165,15 @@ class FathomlessPlunge(Feature):
             "Once you use this feature, you can't use it again until you finish a short or long rest."
         )
         return StringUtils.add_boxes(description, 1, regain_all_on="short or long rest")
+
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        return [
+            ("Action", "Action"),
+            ("Range", "See creatures within 30 feet"),
+            ("Effect", "Teleport self + up to 5 willing creatures"),
+            ("Distance", "Up to 1 mile"),
+            ("Destination", "Body of water (pond size+) or within 30 feet"),
+            ("Recharge", "Short or long rest"),
+        ]

@@ -39,6 +39,18 @@ class SpiritShield(Feature):
         )
         return description
 
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        barbarian_level = character_stat_block.get_class_level(Definitions.CharacterClass.BARBARIAN)
+        dice = _spirit_shield_dice(barbarian_level)
+        return [
+            ("When", "You're raging; another creature within 30 feet takes damage"),
+            ("Action", "Reaction"),
+            ("Effect", f"Reduce that damage by {dice}"),
+            ("Duration", "Ends when your rage ends"),
+        ]
+
 
 class ConsultTheSpirits(Feature):
     def __init__(self):
@@ -51,6 +63,17 @@ class ConsultTheSpirits(Feature):
             "After you cast either spell in this way, you can't use this feature again until you finish a short or long rest."
         )
         return StringUtils.add_boxes(description, 1, regain_all_on="short or long rest")
+
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        return [
+            ("Spells", "Augury or Clairvoyance"),
+            ("Cost", "No spell slot or material components"),
+            ("Casting Ability", "Wisdom"),
+            ("Clairvoyance", "Summons ancestral spirit, not sensor"),
+            ("Recharge", "Short or long rest"),
+        ]
 
 
 class VengefulAncestors(Feature):

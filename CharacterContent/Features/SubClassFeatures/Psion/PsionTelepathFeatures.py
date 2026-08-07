@@ -1,4 +1,4 @@
-from Core.Definitions import PSION_HIT_DIE
+from Core.Definitions import PSION_HIT_DIE, Ability
 from CharacterContent.Features.Core.BaseFeatures import Feature
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
@@ -53,6 +53,18 @@ class BulwarkMind(Feature):
             "Incapacitated condition."
         )
         return description
+
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        return [
+            ("Activation", "Start of turn"),
+            ("Cost", "1 Psionic Energy Die"),
+            ("Duration", "10 minutes"),
+            ("Damage Resistance", "Psychic damage"),
+            ("Saving Throw Bonus", "Add die roll to INT/WIS/CHA saves (die doesn't expend)"),
+            ("Restriction", "Not while Incapacitated"),
+        ]
 
 
 class PotentThoughts(Feature):

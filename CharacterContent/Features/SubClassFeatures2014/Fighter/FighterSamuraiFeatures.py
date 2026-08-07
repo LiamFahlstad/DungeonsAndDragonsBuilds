@@ -56,6 +56,24 @@ class FightingSpirit(Feature):
         )
         return StringUtils.add_boxes(description, uses, regain_all_on="long rest")
 
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        fighter_level = character_stat_block.get_class_level(CharacterClass.FIGHTER)
+        temporary_hit_points = 5
+        if fighter_level >= 15:
+            temporary_hit_points = 15
+        elif fighter_level >= 10:
+            temporary_hit_points = 10
+
+        return [
+            ("Action", "Bonus action"),
+            ("Effect", "Advantage on all weapon attacks until end of turn"),
+            ("Temporary HP", f"{temporary_hit_points} (increases to 10 at 10th level, 15 at 15th)"),
+            ("Uses", "3"),
+            ("Regain", "Long rest"),
+        ]
+
 
 class ElegantCourtier(Feature):
     def __init__(self, alternate_saving_throw: Optional[Ability] = None):
@@ -111,3 +129,14 @@ class StrengthBeforeDeath(Feature):
             "Once you use this feature, you can't use it again until you finish a long rest."
         )
         return StringUtils.add_boxes(description, uses, regain_all_on="long rest")
+
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        return [
+            ("Trigger", "Take damage reducing you to 0 HP"),
+            ("Action", "Reaction"),
+            ("Effect", "Delay unconsciousness; take an extra turn"),
+            ("Conditions", "Death saves still apply; 3 failures still kills"),
+            ("Uses", "1 per long rest"),
+        ]

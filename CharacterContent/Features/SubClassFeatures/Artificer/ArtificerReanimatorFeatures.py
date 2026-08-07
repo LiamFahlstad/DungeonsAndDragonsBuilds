@@ -72,6 +72,14 @@ class StrangeModifications(Feature):
         )
         return description
 
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        return [
+            ("Arcane Conduit", "Cast spells from companion's space (use own senses); +INT mod to Evocation/Necromancy spell damage (1/turn)"),
+            ("Ferocity", "Companion's Dreadful Swipe damage die increases to 1d6"),
+        ]
+
 
 class ImprovedReanimation(Feature):
     def __init__(self):
@@ -114,3 +122,12 @@ class RefinedReanimation(Feature):
             "Superior Modifications. Whenever you create a Reanimated Companion, the companion now gains three options for Strange Modifications."
         )
         return description
+
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        return [
+            ("Facilitated Revival", "Cast Raise Dead with no slot or components (1/LR)"),
+            ("Life Transfer", "React to damage to gain HP = companion's current HP; companion dies"),
+            ("Superior Modifications", "Companions gain three modification options"),
+        ]

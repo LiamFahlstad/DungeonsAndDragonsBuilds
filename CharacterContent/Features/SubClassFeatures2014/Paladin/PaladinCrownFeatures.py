@@ -32,6 +32,16 @@ class ChampionChallenge(Feature):
         )
         return description
 
+    def get_table_description(self, character_stat_block: CharacterStatBlock) -> list[tuple[str, str]]:
+        return [
+            ("What", "Issue challenging compulsion"),
+            ("Action", "Bonus action"),
+            ("Range", "30 feet"),
+            ("Save", "Wisdom"),
+            ("Effect", "Can't willingly move > 30 feet away from you"),
+            ("Ends", "You incapacitated/dead, or creature > 30 feet away"),
+        ]
+
 
 class TurnTheTide(Feature):
     def __init__(self):
@@ -45,6 +55,17 @@ class TurnTheTide(Feature):
         )
         return description
 
+    def get_table_description(self, character_stat_block: CharacterStatBlock) -> list[tuple[str, str]]:
+        charisma_modifier = character_stat_block.get_ability_modifier(Ability.CHARISMA)
+        healing = max(1, charisma_modifier)
+        return [
+            ("What", "Bolster injured creatures"),
+            ("Action", "Bonus action"),
+            ("Range", "30 feet (hearing distance)"),
+            ("Effect", f"Regain 1d6 + {healing} HP"),
+            ("Condition", "Must have ≤ half HP"),
+        ]
+
 
 class DivineAllegiance(Feature):
     def __init__(self):
@@ -55,6 +76,14 @@ class DivineAllegiance(Feature):
             "When a creature within 5 feet of you takes damage, you can use your reaction to magically substitute your own health for that of the target creature, causing that creature not to take the damage. Instead, you take the damage. This damage to you can't be reduced or prevented in any way."
         )
         return description
+
+    def get_table_description(self, character_stat_block: CharacterStatBlock) -> list[tuple[str, str]]:
+        return [
+            ("Trigger", "Creature within 5 feet takes damage"),
+            ("Action", "Reaction"),
+            ("Effect", "You take damage instead of creature"),
+            ("Limitation", "Damage can't be reduced or prevented"),
+        ]
 
 
 class UnyieldingSaint(Feature):

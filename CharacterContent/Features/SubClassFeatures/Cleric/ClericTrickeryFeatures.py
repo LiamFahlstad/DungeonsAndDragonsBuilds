@@ -13,6 +13,16 @@ class BlessingOfTheTrickster(Feature):
         description = "As a Magic action, you can choose yourself or a willing creature within 30 feet of yourself to have Advantage on Dexterity (Stealth) checks. This blessing lasts until you finish a Long Rest or you use this feature again."
         return description
 
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        return [
+            ("What", "Grant Advantage on Stealth checks"),
+            ("Trigger", "Magic action"),
+            ("Target", "Self or willing creature within 30 feet"),
+            ("Duration", "Until Long Rest or use again"),
+        ]
+
 
 class TrickeryDomainSpells(Feature):
     def __init__(self):

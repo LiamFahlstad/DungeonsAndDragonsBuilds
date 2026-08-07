@@ -18,6 +18,19 @@ class Frenzy(Feature):
         description = f"If you use Reckless Attack while your Rage is active, you deal extra damage to the first target you hit on your turn with a Strength-based attack. To determine the extra damage, roll a number of d6s equal to your Rage Damage bonus ({rage_damage_bonus}), and add them together. The damage has the same type as the weapon or Unarmed Strike used for the attack."
         return description
 
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        rage_damage_bonus = get_rage_damage_bonus(
+            character_stat_block.get_class_level(Definitions.CharacterClass.BARBARIAN)
+        )
+        return [
+            ("Trigger", "Use Reckless Attack during Rage"),
+            ("Effect", f"Extra {rage_damage_bonus}d6 damage on first hit"),
+            ("Damage Type", "Same as weapon or Unarmed Strike"),
+            ("Uses", "First target hit per turn"),
+        ]
+
 
 class MindlessRage(Feature):
     def __init__(self):
@@ -54,3 +67,19 @@ class IntimidatingPresence(Feature):
             "Once you use this feature, you can't use it again until you finish a Long Rest unless you expend a use of your Rage (no action required) to restore your use of it."
         )
         return description
+
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        strength_modifier = character_stat_block.get_ability_modifier(
+            Definitions.Ability.STRENGTH
+        )
+        proficiency_bonus = character_stat_block.get_proficiency_bonus()
+        dc = 8 + strength_modifier + proficiency_bonus
+        return [
+            ("Action", "Bonus Action"),
+            ("Range", "30-foot Emanation"),
+            ("Save", f"Wisdom save, DC {dc}"),
+            ("On Failure", "Frightened for 1 minute"),
+            ("Recharge", "Long Rest or expend Rage use"),
+        ]

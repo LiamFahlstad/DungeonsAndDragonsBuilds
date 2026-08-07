@@ -34,6 +34,15 @@ class AbjureEnemy(Feature):
         )
         return description
 
+    def get_table_description(self, character_stat_block: CharacterStatBlock) -> list[tuple[str, str]]:
+        return [
+            ("Action", "Action"),
+            ("Range", "60 feet"),
+            ("Save", "Wisdom (disadvantage for fiends/undead)"),
+            ("Effect (fail)", "Frightened for 1 min or until takes damage; speed 0"),
+            ("Effect (success)", "Speed halved for 1 min or until takes damage"),
+        ]
+
 
 class VowOfEnmity(Feature):
     def __init__(self):

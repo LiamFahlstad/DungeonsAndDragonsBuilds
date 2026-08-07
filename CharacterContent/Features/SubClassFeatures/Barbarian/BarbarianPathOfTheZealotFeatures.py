@@ -1,3 +1,4 @@
+import Core.Definitions as Definitions
 from Core.Definitions import BARBARIAN_HIT_DIE
 from CharacterContent.Features.Core.BaseFeatures import Feature
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
@@ -13,6 +14,20 @@ class DivineFury(Feature):
         description = "You can channel divine power into your strikes. On each of your turns while your Rage is active, the first creature you hit with a weapon or an Unarmed Strike takes extra damage equal to 1d6 plus half your Barbarian level (round down). The extra damage is Necrotic or Radiant; you choose the type each time you deal the damage."
         return description
 
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        barbarian_level = character_stat_block.get_class_level(
+            Definitions.CharacterClass.BARBARIAN
+        )
+        half_level = barbarian_level // 2
+        return [
+            ("Trigger", "First hit per turn while Rage active"),
+            ("Extra Damage", f"1d6 + {half_level}"),
+            ("Damage Type", "Necrotic or Radiant (your choice)"),
+            ("Requirement", "Weapon or Unarmed Strike"),
+        ]
+
 
 class WarriorOfTheGods(Feature):
     def __init__(self):
@@ -24,9 +39,30 @@ class WarriorOfTheGods(Feature):
         description = (
             "A divine entity helps ensure you can continue the fight. You have a pool of four d12s that you can spend to heal yourself. As a Bonus Action, you can expend dice from the pool, roll them, and regain a number of Hit Points equal to the roll’s total.\n"
             "Your pool regains all expended dice when you finish a Long Rest.\n"
-            "The pool's maximum number of dice increases by one when you reach Barbarian levels 6 (5 dice), 12 (6 dice), and 17 (7 dice)."
+            "The pool’s maximum number of dice increases by one when you reach Barbarian levels 6 (5 dice), 12 (6 dice), and 17 (7 dice)."
         )
         return description
+
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        barbarian_level = character_stat_block.get_class_level(
+            Definitions.CharacterClass.BARBARIAN
+        )
+        if barbarian_level < 6:
+            pool_size = 4
+        elif barbarian_level < 12:
+            pool_size = 5
+        elif barbarian_level < 17:
+            pool_size = 6
+        else:
+            pool_size = 7
+        return [
+            ("Action", "Bonus Action"),
+            ("Pool Size", f"{pool_size} d12s (level {barbarian_level})"),
+            ("Effect", "Expend dice, roll, regain HP"),
+            ("Recharge", "Long Rest"),
+        ]
 
 
 class FanaticalFocus(Feature):
@@ -52,6 +88,18 @@ class ZealousPresence(Feature):
             "Once you use this feature, you can’t use it again until you finish a Long Rest unless you expend a use of your Rage (no action required) to restore your use of it."
         )
         return description
+
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        return [
+            ("Action", "Bonus Action"),
+            ("Range", "60 feet"),
+            ("Affected Creatures", "Up to 10 others"),
+            ("Effect", "Advantage on attacks and saves"),
+            ("Duration", "Until start of next turn"),
+            ("Recharge", "Long Rest or expend Rage use"),
+        ]
 
 
 class RageOfTheGods(Feature):

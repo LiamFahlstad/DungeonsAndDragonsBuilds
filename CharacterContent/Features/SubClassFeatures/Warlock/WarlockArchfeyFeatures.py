@@ -1,4 +1,5 @@
 from Core.Definitions import Ability, WARLOCK_HIT_DIE
+import Core.Definitions as Definitions
 from CharacterContent.Features.Core.BaseFeatures import Feature
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
@@ -57,6 +58,17 @@ class BeguilingDefenses(Feature):
             "In addition, immediately after a creature you can see hits you with an attack roll, you can take a Reaction to reduce the damage you take by half (round down), and you can force the attacker to make a Wisdom saving throw against your spell save DC. On a failed save, the attacker takes Psychic damage equal to the damage you take. Once you use this Reaction, you can't use it again until you finish a Long Rest unless you expend a Pact Magic spell slot (no action required) to restore your use of it."
         )
         return description
+
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        return [
+            ("Passive", "Immunity to Charmed condition"),
+            ("Trigger", "Creature hits you with attack roll"),
+            ("Reaction Effect", "Reduce damage by half (round down); force Wisdom save DC"),
+            ("Save Effect", "On fail: attacker takes Psychic damage = damage you took"),
+            ("Recharge", "Long Rest or expend Pact Magic spell slot"),
+        ]
 
 
 class BewitchingMagic(Feature):

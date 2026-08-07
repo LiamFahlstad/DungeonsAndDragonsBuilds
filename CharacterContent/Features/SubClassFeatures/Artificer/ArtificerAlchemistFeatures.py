@@ -95,3 +95,12 @@ class ChemicalMastery(Feature):
             "Conjured Cauldron. You can cast Tasha's Bubbling Cauldron without expending a spell slot, without preparing the spell, and without Material components, provided you use Alchemist's Supplies as the Spellcasting Focus. Once you use this feature, you can't use it again until you finish a Long Rest."
         )
         return description
+
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        return [
+            ("Alchemical Eruption", "When you cast an Artificer spell dealing Acid, Fire, or Poison damage, also deal 2d8 Force damage. Once per turn."),
+            ("Chemical Resistance", "Resistance to Acid and Poison damage; Immunity to Poisoned condition"),
+            ("Conjured Cauldron", "Cast Tasha's Bubbling Cauldron with no slot, preparation, or components (Alchemist's Supplies as focus). 1/LR"),
+        ]

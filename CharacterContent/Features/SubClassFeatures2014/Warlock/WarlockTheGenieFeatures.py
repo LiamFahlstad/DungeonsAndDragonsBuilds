@@ -85,6 +85,20 @@ class ElementalGift(Feature):
         )
         return StringUtils.add_boxes(description, proficiency_bonus, regain_all_on="long rest")
 
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        proficiency_bonus = character_stat_block.get_proficiency_bonus()
+        damage_type = _WRATH_DAMAGE_TYPE[self.kind]
+        return [
+            ("Resistance", f"{damage_type.capitalize()} damage"),
+            ("Action", "Bonus action for flying speed"),
+            ("Flying Speed", "30 feet"),
+            ("Duration", "10 minutes (can hover)"),
+            ("Uses", f"Proficiency bonus ({proficiency_bonus})"),
+            ("Recharge", "Long rest"),
+        ]
+
 
 class SanctuaryVessel(Feature):
     def __init__(self):
@@ -117,3 +131,16 @@ class LimitedWish(Feature):
             "Once you use this feature, you can't use it again until you finish 1d4 long rests."
         )
         return StringUtils.add_boxes(description, 1, regain_all_on="1d4 long rests")
+
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        return [
+            ("Action", "Action (speak to Genie's Vessel)"),
+            ("Spell Level", "6th level or lower"),
+            ("Casting Time", "1 action"),
+            ("Source", "Any class's spell list"),
+            ("Requirements", "Don't need to meet spell requirements"),
+            ("Components", "Costly components waived"),
+            ("Recharge", "1d4 long rests"),
+        ]

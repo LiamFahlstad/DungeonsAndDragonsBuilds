@@ -22,6 +22,20 @@ class BalmOfTheSummerCourt(Feature):
         )
         return StringUtils.add_boxes(description, druid_level, regain_all_on="long rest")
 
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        druid_level = character_stat_block.get_class_level(Definitions.CharacterClass.DRUID)
+        half_druid_level = max(1, druid_level // 2)
+        return [
+            ("What", "Heal an ally within 120 feet"),
+            ("Action", "Bonus action"),
+            ("Pool", f"{druid_level}d6 fey energy"),
+            ("Cost", f"Spend up to {half_druid_level} dice"),
+            ("Effect", "Roll spent dice; target regains HP equal to total + 1 temp HP per die"),
+            ("Regain", "Long rest"),
+        ]
+
 
 class HearthOfMoonlightAndShadow(Feature):
     def __init__(self):
@@ -51,6 +65,18 @@ class HiddenPaths(Feature):
             "You can use this feature a number of times equal to your Wisdom modifier (minimum of once), and you regain all expended uses of it when you finish a long rest."
         )
         return StringUtils.add_boxes(description, uses, regain_all_on="long rest")
+
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        wisdom_mod = character_stat_block.get_ability_modifier(Definitions.Ability.WISDOM)
+        uses = max(1, wisdom_mod)
+        return [
+            ("Self", "Bonus action; teleport up to 60 feet"),
+            ("Ally", "Action; teleport willing creature you touch up to 30 feet"),
+            ("Uses", f"Wisdom modifier ({uses})"),
+            ("Regain", "Long rest"),
+        ]
 
 
 class WalkerInDreams(Feature):

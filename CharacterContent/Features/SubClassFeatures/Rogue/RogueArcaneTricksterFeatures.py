@@ -66,3 +66,15 @@ class SpellThief(Feature):
             "Once you steal a spell with this feature, you can't use this feature again until you finish a Long Rest."
         )
         return description
+
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        return [
+            ("Trigger", "Creature casts spell targeting you or including you in area"),
+            ("Action", "Reaction"),
+            ("Save", "Intelligence (DC = your spell save DC)"),
+            ("Effect", "Negate spell; steal spell knowledge if level 1+ and castable by you"),
+            ("Duration", "8 hours (you have spell prepared; creature can't cast)"),
+            ("Limitation", "Once per Long Rest"),
+        ]

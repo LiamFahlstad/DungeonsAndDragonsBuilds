@@ -89,6 +89,18 @@ class ElementalBurst(Feature):
         )
         return description
 
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        return [
+            ("Action", "Magic action"),
+            ("Cost", "2 Focus Points"),
+            ("Area", "20-foot-radius Sphere, 120 feet away"),
+            ("Damage Types", "Acid, Cold, Fire, Lightning, or Thunder (your choice)"),
+            ("Save", "Dexterity"),
+            ("Damage", "3 Martial Arts die on failed save, half on successful save"),
+        ]
+
 
 class StrideOfTheElements(Feature):
     def __init__(self):

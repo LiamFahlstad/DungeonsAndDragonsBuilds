@@ -1,4 +1,4 @@
-from Core.Definitions import Ability
+from Core.Definitions import Ability, CharacterClass
 from CharacterContent.Features.Core.BaseFeatures import Feature
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
@@ -40,6 +40,23 @@ class UnwaveringMark(Feature):
         )
         return StringUtils.add_boxes(description, uses, regain_all_on="long rest")
 
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        strength_modifier = character_stat_block.get_ability_modifier(Ability.STRENGTH)
+        uses = max(1, strength_modifier)
+        fighter_level = character_stat_block.get_class_level(CharacterClass.FIGHTER)
+        extra_damage = fighter_level // 2
+
+        return [
+            ("Trigger", "Hit a creature with melee weapon attack"),
+            ("Mark Effect", "Disadvantage on attacks not targeting you (5 ft, until end of your next turn)"),
+            ("Bonus Action", "Make special melee attack against marked creature with advantage"),
+            ("Extra Damage", f"{extra_damage} (half your fighter level)"),
+            ("Uses", f"{uses} (Strength modifier, minimum 1)"),
+            ("Regain", "Long rest"),
+        ]
+
 
 class WardingManeuver(Feature):
     def __init__(self):
@@ -53,6 +70,20 @@ class WardingManeuver(Feature):
             "You can use this feature a number of times equal to your Constitution modifier (a minimum of once), and you regain all expended uses of it when you finish a long rest."
         )
         return StringUtils.add_boxes(description, uses, regain_all_on="long rest")
+
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        constitution_modifier = character_stat_block.get_ability_modifier(Ability.CONSTITUTION)
+        uses = max(1, constitution_modifier)
+
+        return [
+            ("Trigger", "You or ally within 5 feet is hit by an attack"),
+            ("Action", "Reaction (must wield melee weapon or shield)"),
+            ("Effect", "Roll 1d8, add to target's AC; or resistance if still hits"),
+            ("Uses", f"{uses} (Constitution modifier, minimum 1)"),
+            ("Regain", "Long rest"),
+        ]
 
 
 class HoldTheLine(Feature):
@@ -76,6 +107,19 @@ class FerociousCharger(Feature):
             f"You can run down your foes, whether you're mounted or not. If you move at least 10 feet in a straight line right before attacking a creature and you hit it with the attack, that target must succeed on a Strength saving throw (DC {dc}) or be knocked prone. You can use this feature only once on each of your turns."
         )
         return description
+
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        proficiency_bonus = character_stat_block.get_proficiency_bonus()
+        strength_modifier = character_stat_block.get_ability_modifier(Ability.STRENGTH)
+        dc = 8 + proficiency_bonus + strength_modifier
+
+        return [
+            ("Trigger", "Move 10+ feet in straight line, then hit with attack"),
+            ("Effect", f"Target must succeed on Strength save (DC {dc}) or be knocked prone"),
+            ("Frequency", "Once per turn"),
+        ]
 
 
 class VigilantDefender(Feature):

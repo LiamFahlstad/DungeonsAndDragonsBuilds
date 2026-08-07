@@ -1,3 +1,4 @@
+import Core.Definitions as Definitions
 from Core.Definitions import SORCERER_HIT_DIE
 from CharacterContent.Features.Core.BaseFeatures import Feature
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
@@ -36,6 +37,19 @@ class TelepathicSpeech(Feature):
         )
         return description
 
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        charisma_modifier = character_stat_block.get_ability_modifier(Definitions.Ability.CHARISMA)
+        sorcerer_level = character_stat_block.get_class_level(Definitions.CharacterClass.SORCERER)
+        return [
+            ("Action", "Bonus action"),
+            ("Range", "30 feet"),
+            ("Distance", f"Charisma modifier miles (min 1 mile) = {max(1, charisma_modifier)} mile(s)"),
+            ("Duration", f"{sorcerer_level} minute(s)"),
+            ("Ends Early", "If incapacitated, dead, or you form another connection"),
+        ]
+
 
 class PsionicSorcery(Feature):
     def __init__(self):
@@ -46,6 +60,17 @@ class PsionicSorcery(Feature):
             "When you cast any spell of 1st level or higher from your Psionic Spells feature, you can cast it by expending a spell slot as normal or by spending a number of sorcery points equal to the spell's level. If you cast the spell using sorcery points, it requires no verbal or somatic components, and it requires no material components, unless they are consumed by the spell."
         )
         return description
+
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        return [
+            ("What", "Cast spells from Psionic Spells (1st level or higher)"),
+            ("Cost", "Spell slot OR sorcery points equal to spell level"),
+            ("Verbal Component", "Not required if using sorcery points"),
+            ("Somatic Component", "Not required if using sorcery points"),
+            ("Material Component", "Waived if using sorcery points (unless consumed)"),
+        ]
 
 
 class PsychicDefenses(Feature):
@@ -84,3 +109,15 @@ class WarpingImplosion(Feature):
             "Once you use this feature, you can't do so again until you finish a long rest, unless you spend 5 sorcery points to use it again."
         )
         return description
+
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        return [
+            ("Action", "Action"),
+            ("Teleport Range", "120 feet"),
+            ("Save", "Strength saving throw vs spell save DC"),
+            ("On Failed Save", "3d10 force damage and pulled to your former space"),
+            ("On Successful Save", "Half damage, not pulled"),
+            ("Recharge", "Long rest or 5 sorcery points"),
+        ]

@@ -58,6 +58,19 @@ class WrithingTide(Feature):
         )
         return StringUtils.add_boxes(description, proficiency_bonus, regain_all_on="long rest")
 
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        proficiency_bonus = character_stat_block.get_proficiency_bonus()
+        return [
+            ("What", "Gain flying speed from swarm"),
+            ("Action", "Bonus action"),
+            ("Effect", "Flying speed 10 ft, can hover"),
+            ("Duration", "1 minute or until incapacitated"),
+            ("Uses", f"{proficiency_bonus}"),
+            ("Recharge", "Long rest"),
+        ]
+
 
 class MightySwarm(Feature):
     def __init__(self):
@@ -85,3 +98,16 @@ class SwarmingDispersal(Feature):
             f"You can use this feature a number of times equal to your proficiency bonus ({proficiency_bonus}), and you regain all expended uses when you finish a long rest."
         )
         return StringUtils.add_boxes(description, proficiency_bonus, regain_all_on="long rest")
+
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        proficiency_bonus = character_stat_block.get_proficiency_bonus()
+        return [
+            ("What", "Discorporate into swarm"),
+            ("Action", "Reaction"),
+            ("Condition", "When you take damage"),
+            ("Effect", "Resistance to that damage, teleport to unoccupied space within 30 ft"),
+            ("Uses", f"{proficiency_bonus}"),
+            ("Recharge", "Long rest"),
+        ]

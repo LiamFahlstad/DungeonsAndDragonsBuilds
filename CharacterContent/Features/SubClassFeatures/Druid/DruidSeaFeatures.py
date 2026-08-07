@@ -1,5 +1,5 @@
 
-from Core.Definitions import DRUID_HIT_DIE
+from Core.Definitions import Ability, DRUID_HIT_DIE
 from CharacterContent.Features.Core.BaseFeatures import Feature
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
@@ -27,6 +27,20 @@ class WrathOfTheSea(Feature):
             "When you manifest the Emanation and as a Bonus Action on your subsequent turns, you can choose another creature you can see in the Emanation. The target must succeed on a Constitution saving throw against your spell save DC or take Cold damage and, if the creature is Large or smaller, be pushed up to 15 feet away from you. To determine this damage, roll a number of d6s equal to your Wisdom modifier (minimum of one die)."
         )
         return description
+
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        wisdom_modifier = character_stat_block.get_ability_modifier(Ability.WISDOM)
+        damage_dice = max(1, wisdom_modifier)
+        return [
+            ("What", "Create 5-foot ocean spray Emanation"),
+            ("Casting Time", "Bonus Action"),
+            ("Cost", "1 use of Wild Shape"),
+            ("Duration", "10 minutes (until dismissed/Incapacitated)"),
+            ("Damage", f"{damage_dice}d6 Cold (vs. Constitution save)"),
+            ("Push", "Large or smaller creatures 15 feet away (on failed save)"),
+        ]
 
 
 class AquaticAffinity(Feature):

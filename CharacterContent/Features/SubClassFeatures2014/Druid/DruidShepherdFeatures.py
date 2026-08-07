@@ -74,3 +74,14 @@ class FaithfulSummons(Feature):
             "Once you use this feature, you can't use it again until you finish a long rest."
         )
         return StringUtils.add_boxes(description, 1, regain_all_on="long rest")
+
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        return [
+            ("Trigger", "Reduced to 0 HP or incapacitated against your will"),
+            ("Effect", "Cast Conjure Animals (9th-level); summon four CR 2 or lower beasts within 20 feet"),
+            ("Behavior", "Without commands, beasts protect you and attack foes"),
+            ("Duration", "1 hour, no concentration; dismiss as free action"),
+            ("Regain", "Long rest"),
+        ]

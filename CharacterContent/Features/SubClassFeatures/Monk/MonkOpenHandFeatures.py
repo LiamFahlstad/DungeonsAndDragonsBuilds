@@ -67,6 +67,15 @@ class OpenHandTechnique(Feature):
         )
         return description
 
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        return [
+            ("Addle", "Target can't make Opportunity Attacks until start of next turn"),
+            ("Push", "Strength save or pushed up to 15 feet away"),
+            ("Topple", "Dexterity save or Prone condition"),
+        ]
+
 
 class WholenessOfBody(Feature):
     def __init__(self):
@@ -109,3 +118,19 @@ class QuiveringPalm(Feature):
             "You can have only one creature under the effect of this feature at a time. You can end the vibrations harmlessly (no action required)."
         )
         return description
+
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        monk_level = character_stat_block.get_class_level(
+            Definitions.CharacterClass.MONK
+        )
+        return [
+            ("Trigger", "Hit with Unarmed Strike"),
+            ("Cost", "4 Focus Points"),
+            ("Duration", f"{monk_level} days"),
+            ("Activation", "Action required to end (or forgo Attack)"),
+            ("Save", "Constitution (to take damage)"),
+            ("Damage", "10d12 Force on failed save, half on successful save"),
+            ("Special", "Only one creature at a time; can end harmlessly with no action"),
+        ]

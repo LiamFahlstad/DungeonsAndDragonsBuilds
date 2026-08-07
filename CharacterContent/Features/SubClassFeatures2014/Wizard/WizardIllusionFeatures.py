@@ -1,3 +1,4 @@
+from Core import Definitions
 from Core.Definitions import WIZARD_HIT_DIE
 from CharacterContent.Features.Core.BaseFeatures import Feature
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
@@ -45,6 +46,14 @@ class IllusorySelf(Feature):
         )
         return StringUtils.add_boxes(description, 1, regain_all_on="short or long rest")
 
+    def get_table_description(self, character_stat_block: CharacterStatBlock) -> list[tuple[str, str]]:
+        return [
+            ("Trigger", "Creature makes attack roll against you"),
+            ("Action", "Reaction"),
+            ("Effect", "Interpose illusory duplicate, attack misses, illusion dissipates"),
+            ("Recharge", "Short or long rest"),
+        ]
+
 
 class IllusoryReality(Feature):
     def __init__(self):
@@ -56,3 +65,13 @@ class IllusoryReality(Feature):
             "The object can't deal damage or otherwise directly harm anyone."
         )
         return description
+
+    def get_table_description(self, character_stat_block: CharacterStatBlock) -> list[tuple[str, str]]:
+        return [
+            ("Trigger", "Cast illusion spell of 1st level or higher"),
+            ("Action", "Bonus action on your turn"),
+            ("Target", "One inanimate, nonmagical object in the illusion"),
+            ("Effect", "Object becomes real"),
+            ("Duration", "1 minute"),
+            ("Limitation", "Can't deal damage or directly harm anyone"),
+        ]

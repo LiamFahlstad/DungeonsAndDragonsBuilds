@@ -50,6 +50,17 @@ class PathToTheGrave(Feature):
         )
         return description
 
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        return [
+            ("What", "Curse one creature within 30 feet"),
+            ("Trigger", "Bonus Action, Holy Symbol, Channel Divinity"),
+            ("Duration", "Until start of your next turn"),
+            ("Effect", "Disadvantage on attack rolls and saving throws"),
+            ("Bonus", "Extra Necrotic or Radiant damage (Cleric level) when hit"),
+        ]
+
 
 class SentinelAtDeathsDoor(Feature):
     def __init__(self):
@@ -65,6 +76,19 @@ class SentinelAtDeathsDoor(Feature):
             "You can use this feature a number of times equal to your Wisdom modifier (minimum of once). You regain all expended uses when you finish a Long Rest."
         )
         return StringUtils.add_boxes(description, uses, regain_all_on="long rest")
+
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        wisdom_modifier = character_stat_block.get_ability_modifier(Ability.WISDOM)
+        uses = max(1, wisdom_modifier)
+        return [
+            ("What", "Halve incoming attack damage"),
+            ("Trigger", "Reaction when you or Bloodied creature within 60 feet is hit"),
+            ("Effect", "Halve damage (round down); cancel Critical Hit effects"),
+            ("Uses", f"{uses} (Wisdom modifier, minimum 1)"),
+            ("Recharge", "Long Rest"),
+        ]
 
 
 class DivineReaper(Feature):

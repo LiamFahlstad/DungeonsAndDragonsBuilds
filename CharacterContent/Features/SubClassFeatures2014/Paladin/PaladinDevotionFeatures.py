@@ -33,6 +33,16 @@ class SacredWeapon(Feature):
         )
         return description
 
+    def get_table_description(self, character_stat_block: CharacterStatBlock) -> list[tuple[str, str]]:
+        return [
+            ("Action", "Action"),
+            ("Duration", "1 minute"),
+            ("Attack Bonus", "+CHA mod (min +1)"),
+            ("Light Effect", "Bright 20 feet, dim 40 feet"),
+            ("Magical", "Weapon becomes magical for duration"),
+            ("Ends", "End action, drop weapon, or fall unconscious"),
+        ]
+
 
 class TurnTheUnholy(Feature):
     def __init__(self):
@@ -87,3 +97,13 @@ class HolyNimbus(Feature):
             "Once you use this feature, you can't use it again until you finish a long rest."
         )
         return StringUtils.add_boxes(description, 1, regain_all_on="long rest")
+
+    def get_table_description(self, character_stat_block: CharacterStatBlock) -> list[tuple[str, str]]:
+        return [
+            ("Action", "Action"),
+            ("Duration", "1 minute"),
+            ("Light", "Bright 30 feet, dim 60 feet"),
+            ("Enemy Damage", "10 radiant to enemies starting turn in bright light"),
+            ("Saving Throws", "Advantage against fiends/undead spells"),
+            ("Recharge", "Long rest"),
+        ]

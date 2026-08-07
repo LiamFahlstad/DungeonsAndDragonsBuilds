@@ -1,3 +1,4 @@
+import Core.Definitions as Definitions
 from Core.Definitions import Ability
 from CharacterContent.Features.Core.BaseFeatures import Feature
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
@@ -25,6 +26,21 @@ class WrathOfTheStorm(Feature):
             "You can use this feature a number of times equal to your Wisdom modifier (a minimum of once). You regain all expended uses when you finish a long rest."
         )
         return StringUtils.add_boxes(description, uses, regain_all_on="long rest")
+
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        wis_mod = character_stat_block.get_ability_modifier(Ability.WISDOM)
+        uses = max(1, wis_mod)
+        return [
+            ("Trigger", "When creature within 5 feet hits you with attack"),
+            ("Action", "Reaction"),
+            ("Save", "Dexterity saving throw"),
+            ("Damage (Failed)", "2d8 lightning or thunder (your choice)"),
+            ("Damage (Successful)", "Half damage"),
+            ("Uses", f"Wisdom modifier (minimum 1) – {uses}"),
+            ("Recharge", "Long rest"),
+        ]
 
 
 class TempestDomainSpells(Feature):
@@ -73,6 +89,19 @@ class DivineStrike(Feature):
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "You gain the ability to infuse your weapon strikes with divine energy. Once on each of your turns when you hit a creature with a weapon attack, you can cause the attack to deal an extra 1d8 thunder damage to the target. When you reach 14th level, the extra damage increases to 2d8."
         return description
+
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        cleric_level = character_stat_block.get_class_level(
+            Definitions.CharacterClass.CLERIC
+        )
+        damage = "2d8" if cleric_level >= 14 else "1d8"
+        return [
+            ("Trigger", "On weapon attack hit (once per turn)"),
+            ("Damage Type", "Thunder"),
+            ("Damage", f"{damage} thunder"),
+        ]
 
 
 class Stormborn(Feature):

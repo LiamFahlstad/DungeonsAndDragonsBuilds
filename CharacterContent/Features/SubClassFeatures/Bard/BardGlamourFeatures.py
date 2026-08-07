@@ -17,6 +17,18 @@ class BeguilingMagic(Feature):
         )
         return description
 
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        return [
+            ("Always Prepared", "Charm Person, Mirror Image"),
+            ("Trigger", "After casting Enchantment or Illusion spell with spell slot"),
+            ("Target", "Creature you can see within 60 feet"),
+            ("Save", "Wisdom save vs. your spell save DC"),
+            ("Effect", "Failed save: Charmed or Frightened condition (your choice) for 1 minute; repeats save at end of each turn"),
+            ("Recharge", "Long Rest (restore early by expending 1 Bardic Inspiration)"),
+        ]
+
 
 class MantleOfInspiration(Feature):
     def __init__(self):
@@ -27,6 +39,17 @@ class MantleOfInspiration(Feature):
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "You can weave fey magic into a song or dance to fill others with vigor. As a Bonus Action, you can expend a use of Bardic Inspiration, rolling a Bardic Inspiration die. When you do so, choose a number of other creatures within 60 feet of yourself, up to a number equal to your Charisma modifier (minimum of one creature). Each of those creatures gains a number of Temporary Hit Points equal to two times the number rolled on the Bardic Inspiration die, and then each can use its Reaction to move up to its Speed without provoking Opportunity Attacks."
         return description
+
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        return [
+            ("Action", "Bonus Action"),
+            ("Cost", "1 use of Bardic Inspiration"),
+            ("Targets", "Up to Charisma modifier creatures (minimum 1) within 60 feet"),
+            ("Temporary HP", "2 × the number rolled on Bardic Inspiration die"),
+            ("Movement", "Each target can use Reaction to move up to its Speed without provoking Opportunity Attacks"),
+        ]
 
 
 class MantleOfMajesty(Feature):
@@ -44,6 +67,17 @@ class MantleOfMajesty(Feature):
         )
         return description
 
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        return [
+            ("Always Prepared", "Command"),
+            ("Action", "Bonus Action (first cast); Bonus Action (subsequent casts during effect)"),
+            ("Duration", "1 minute or until Concentration ends"),
+            ("Effect", "Cast Command without spell slot; creatures Charmed by you auto-fail its save"),
+            ("Recharge", "Long Rest (restore early with level 3+ spell slot)"),
+        ]
+
 
 class UnbreakableMajesty(Feature):
     def __init__(self):
@@ -57,3 +91,15 @@ class UnbreakableMajesty(Feature):
             "Once you assume this majestic presence, you can't do so again until you finish a Short or Long Rest."
         )
         return description
+
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        return [
+            ("Action", "Bonus Action"),
+            ("Duration", "1 minute or until you have Incapacitated condition"),
+            ("Trigger", "Creature hits you with attack roll for first time on a turn"),
+            ("Save", "Charisma save vs. your spell save DC"),
+            ("Effect", "Failed save: attack misses; creature recoils"),
+            ("Recharge", "Short or Long Rest"),
+        ]

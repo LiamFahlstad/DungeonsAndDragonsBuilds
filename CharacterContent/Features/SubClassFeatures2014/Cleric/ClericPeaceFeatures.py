@@ -43,6 +43,20 @@ class EmboldeningBond(Feature):
         )
         return StringUtils.add_boxes(description, proficiency_bonus, regain_all_on="long rest")
 
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        proficiency_bonus = character_stat_block.get_proficiency_bonus()
+        return [
+            ("Action", "Action"),
+            ("Range", "30 feet"),
+            ("Targets", f"Willing creatures (up to {proficiency_bonus})"),
+            ("Duration", "10 minutes or until you use this feature again"),
+            ("Bonus", "+1d4 to attack roll, ability check, or saving throw (once per turn)"),
+            ("Uses", f"Proficiency bonus ({proficiency_bonus})"),
+            ("Recharge", "Long rest"),
+        ]
+
 
 class BalmOfPeaceChannelDivinity(Feature):
     def __init__(self):
@@ -54,6 +68,17 @@ class BalmOfPeaceChannelDivinity(Feature):
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "You can use your Channel Divinity to make your very presence a soothing balm. As an action, you can move up to your speed, without provoking opportunity attacks, and when you move within 5 feet of any other creature during this action, you can restore a number of hit points to that creature equal to 2d6 + your Wisdom modifier (minimum of 1 hit point). A creature can receive this healing only once whenever you take this action."
         return description
+
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        return [
+            ("Action", "Action"),
+            ("Movement", "Up to your speed (no opportunity attacks)"),
+            ("Healing per Creature", "2d6 + Wisdom modifier (minimum 1)"),
+            ("Range of Healing", "Within 5 feet of you during movement"),
+            ("Limit", "Once per creature per action"),
+        ]
 
 
 class ProtectiveBond(Feature):

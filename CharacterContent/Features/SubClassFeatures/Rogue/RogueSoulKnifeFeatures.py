@@ -88,6 +88,17 @@ class PsychicVeil(Feature):
         )
         return description
 
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        return [
+            ("Action", "Magic action"),
+            ("Effect", "Gain Invisible condition"),
+            ("Duration", "1 hour or until you dismiss"),
+            ("Ends Early", "When you deal damage or force a save"),
+            ("Recharge", "Long Rest (or expend 1 Psionic Energy Die)"),
+        ]
+
 
 class RendMind(Feature):
     def __init__(self):
@@ -99,3 +110,14 @@ class RendMind(Feature):
             "Once you use this feature, you can't do so again until you finish a Long Rest unless you expend three Psionic Energy Dice (no action required) to restore your use of it."
         )
         return description
+
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        return [
+            ("Trigger", "Use Psychic Blades to deal Sneak Attack damage"),
+            ("Save", "Wisdom (DC 8 + Dexterity modifier + Proficiency Bonus)"),
+            ("Effect", "Stunned for 1 minute on failed save"),
+            ("Repeat Save", "End of target's turn (success ends effect)"),
+            ("Recharge", "Long Rest (or expend 3 Psionic Energy Dice)"),
+        ]

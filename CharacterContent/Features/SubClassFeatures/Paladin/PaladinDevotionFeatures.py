@@ -37,6 +37,17 @@ class SacredWeapon(Feature):
         )
         return description
 
+    def get_table_description(self, character_stat_block: CharacterStatBlock) -> list[tuple[str, str]]:
+        return [
+            ("Trigger", "Use Attack action"),
+            ("Cost", "1 Channel Divinity use"),
+            ("Duration", "10 minutes or until used again"),
+            ("Attack Bonus", "+Charisma modifier (minimum +1)"),
+            ("Damage", "Normal type or Radiant"),
+            ("Light", "Bright Light 20 ft, Dim Light 20 ft beyond"),
+            ("Ending", "Early (no action required), or if not carrying weapon"),
+        ]
+
 
 class AuraOfDevotion(Feature):
     def __init__(self):

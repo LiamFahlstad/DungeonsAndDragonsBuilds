@@ -1,4 +1,4 @@
-from Core.Definitions import Ability, RANGER_HIT_DIE
+from Core.Definitions import Ability, CharacterClass, RANGER_HIT_DIE
 from CharacterContent.Features.Core.BaseFeatures import Feature
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
@@ -38,6 +38,16 @@ class DetectPortal(Feature):
         )
         return StringUtils.add_boxes(description, 1, regain_all_on="short or long rest")
 
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        return [
+            ("What", "Detect closest planar portal"),
+            ("Action", "Action"),
+            ("Range", "1 mile"),
+            ("Recharge", "Short or long rest"),
+        ]
+
 
 class PlanarWarrior(Feature):
     def __init__(self):
@@ -51,6 +61,19 @@ class PlanarWarrior(Feature):
             "As a bonus action, choose one creature you can see within 30 feet of you. The next time you hit that creature on this turn with a weapon attack, all damage dealt by the attack becomes force damage, and the creature takes an extra 1d8 force damage from the attack. When you reach 11th level in this class, the extra damage increases to 2d8."
         )
         return description
+
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        ranger_level = character_stat_block.get_class_level(CharacterClass.RANGER)
+        extra_damage = "2d8" if ranger_level >= 11 else "1d8"
+        return [
+            ("What", "Convert next hit to force damage"),
+            ("Action", "Bonus action"),
+            ("Range", "30 feet"),
+            ("Condition", "Next hit on this turn"),
+            ("Effect", "All damage becomes force; extra " + extra_damage + " force damage"),
+        ]
 
 
 class EtherealStep(Feature):

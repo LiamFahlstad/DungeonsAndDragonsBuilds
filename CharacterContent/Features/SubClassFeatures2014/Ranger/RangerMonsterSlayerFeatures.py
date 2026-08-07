@@ -1,4 +1,4 @@
-from Core.Definitions import Ability, RANGER_HIT_DIE
+from Core.Definitions import Ability, CharacterClass, RANGER_HIT_DIE
 from CharacterContent.Features.Core.BaseFeatures import Feature
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
@@ -36,6 +36,20 @@ class HuntersSense(Feature):
         )
         return StringUtils.add_boxes(description, uses, regain_all_on="long rest")
 
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        wisdom_modifier = character_stat_block.get_ability_modifier(Ability.WISDOM)
+        uses = max(1, wisdom_modifier)
+        return [
+            ("What", "Discern damage immunities/resistances/vulnerabilities"),
+            ("Action", "Action"),
+            ("Range", "60 feet"),
+            ("Effect", "Learn creature's damage properties"),
+            ("Uses", f"{uses}"),
+            ("Recharge", "Long rest"),
+        ]
+
 
 class SlayersPrey(Feature):
     def __init__(self):
@@ -48,6 +62,17 @@ class SlayersPrey(Feature):
             "This benefit lasts until you finish a short or long rest. It ends early if you designate a different creature."
         )
         return description
+
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        return [
+            ("What", "Designate one creature as prey"),
+            ("Action", "Bonus action"),
+            ("Range", "60 feet"),
+            ("Effect", "Extra 1d6 damage on first hit per turn"),
+            ("Duration", "Until short or long rest (ends early if redesignate)"),
+        ]
 
 
 class SupernaturalDefense(Feature):
@@ -70,6 +95,21 @@ class MagicUsersNemesis(Feature):
             "Once you use this feature, you can't use it again until you finish a short or long rest."
         )
         return StringUtils.add_boxes(description, 1, regain_all_on="short or long rest")
+
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        proficiency_bonus = character_stat_block.get_proficiency_bonus()
+        wisdom_modifier = character_stat_block.get_ability_modifier(Ability.WISDOM)
+        spell_save_dc = 8 + proficiency_bonus + wisdom_modifier
+        return [
+            ("What", "Foil spell or teleport"),
+            ("Action", "Reaction"),
+            ("Range", "60 feet"),
+            ("Save", f"Wisdom save vs. spell save DC {spell_save_dc}"),
+            ("Effect", "Spell or teleport fails"),
+            ("Recharge", "Short or long rest"),
+        ]
 
 
 class SlayersCounter(Feature):

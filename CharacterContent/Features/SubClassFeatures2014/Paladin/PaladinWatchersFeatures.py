@@ -35,6 +35,17 @@ class WatchersWill(Feature):
         )
         return description
 
+    def get_table_description(self, character_stat_block: CharacterStatBlock) -> list[tuple[str, str]]:
+        charisma_modifier = character_stat_block.get_ability_modifier(Ability.CHARISMA)
+        creature_count = max(1, charisma_modifier)
+        return [
+            ("Action", "Action"),
+            ("Range", "30 feet"),
+            ("Targets", f"Up to {creature_count} creatures plus yourself"),
+            ("Duration", "1 minute"),
+            ("Effect", "Advantage on INT, WIS, CHA saves"),
+        ]
+
 
 class AbjureTheExtraplanar(Feature):
     def __init__(self):
@@ -63,6 +74,15 @@ class AuraOfTheSentinel(Feature):
         )
         return description
 
+    def get_table_description(self, character_stat_block: CharacterStatBlock) -> list[tuple[str, str]]:
+        proficiency_bonus = character_stat_block.get_proficiency_bonus()
+        return [
+            ("Range", "10 feet (30 at 18th level)"),
+            ("Trigger", "Roll initiative"),
+            ("Effect", f"+{proficiency_bonus} to initiative"),
+            ("Condition", "Not incapacitated"),
+        ]
+
 
 class AuraOfTheSentinelExpansion(Feature):
     def __init__(self):
@@ -84,6 +104,14 @@ class VigilantRebuke(Feature):
             f"2d8 + your Charisma modifier ({charisma_modifier}) force damage to the creature that forced the saving throw."
         )
         return description
+
+    def get_table_description(self, character_stat_block: CharacterStatBlock) -> list[tuple[str, str]]:
+        charisma_modifier = character_stat_block.get_ability_modifier(Ability.CHARISMA)
+        return [
+            ("Trigger", "You or ally within 30 feet succeeds on INT/WIS/CHA save"),
+            ("Action", "Reaction"),
+            ("Effect", f"2d8 + {charisma_modifier} force damage to caster"),
+        ]
 
 
 class MortalBulwark(Feature):

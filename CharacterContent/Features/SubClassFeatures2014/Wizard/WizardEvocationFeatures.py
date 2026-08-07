@@ -1,3 +1,4 @@
+from Core import Definitions
 from Core.Definitions import WIZARD_HIT_DIE
 from CharacterContent.Features.Core.BaseFeatures import Feature
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
@@ -53,3 +54,13 @@ class Overchannel(Feature):
             "The first time you do so, you suffer no adverse effect. If you use this feature again before you finish a long rest, you take 2d12 necrotic damage for each level of the spell, immediately after you cast it. Each time you use this feature again before finishing a long rest, the necrotic damage per spell level increases by 1d12. This damage ignores resistance and immunity."
         )
         return description
+
+    def get_table_description(self, character_stat_block: CharacterStatBlock) -> list[tuple[str, str]]:
+        return [
+            ("Trigger", "Cast wizard spell of 1st-5th level that deals damage"),
+            ("Effect", "Deal maximum damage with that spell"),
+            ("1st Use", "No adverse effect"),
+            ("2nd+ Use", "2d12 necrotic damage per spell level (scales +1d12 each use)"),
+            ("Damage Properties", "Ignores resistance and immunity"),
+            ("Recharge", "Long rest"),
+        ]

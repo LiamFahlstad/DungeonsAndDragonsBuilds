@@ -1,4 +1,5 @@
 from Core.Definitions import Ability, WARLOCK_HIT_DIE
+import Core.Definitions as Definitions
 from CharacterContent.Features.Core.BaseFeatures import Feature
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
@@ -39,6 +40,19 @@ class DarkOnesOwnLuck(Feature):
         )
         return StringUtils.add_boxes(description, uses, regain_all_on="long rest")
 
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        charisma_modifier = character_stat_block.get_ability_modifier(Ability.CHARISMA)
+        uses = max(1, charisma_modifier)
+        return [
+            ("When", "Ability check or saving throw (after seeing roll)"),
+            ("Effect", "Add 1d10 to your roll"),
+            ("Limit", "No more than once per roll"),
+            ("Uses", f"{uses} per Long Rest"),
+            ("Recharge", "Long Rest"),
+        ]
+
 
 class FiendishResilience(Feature):
     def __init__(self):
@@ -63,3 +77,14 @@ class HurlThroughHell(Feature):
             "Once you use this feature, you can't use it again until you finish a Long Rest unless you expend a Pact Magic spell slot (no action required) to restore your use of it."
         )
         return description
+
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        return [
+            ("Frequency", "Once per turn"),
+            ("Trigger", "Hit creature with attack roll"),
+            ("Save", "Charisma save DC"),
+            ("Effect on Fail", "8d10 Psychic damage (non-Fiends only); Incapacitated until end of your next turn"),
+            ("Recharge", "Long Rest or expend Pact Magic spell slot"),
+        ]

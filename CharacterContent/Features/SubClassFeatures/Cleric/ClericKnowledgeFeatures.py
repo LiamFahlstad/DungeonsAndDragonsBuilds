@@ -56,6 +56,17 @@ class MindMagic(Feature):
         description = "As a Magic action, you can expend one use of your Channel Divinity to manifest your magical knowledge. Choose one spell from the Divination school on the Knowledge Domain Spells table that you have prepared. As part of that action, you cast that spell without expending a spell slot or needing Material components."
         return description
 
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        return [
+            ("What", "Cast Divination spell from Knowledge Domain table"),
+            ("Trigger", "Magic action, Channel Divinity"),
+            ("Components", "None (Material components waived)"),
+            ("Cost", "No spell slot required"),
+            ("Special", "Spell must be prepared"),
+        ]
+
 
 class UnfetteredMind(Feature):
     def __init__(self):
@@ -93,3 +104,14 @@ class DivineForeknowledge(Feature):
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "As a Bonus Action, you magically expand your mind to the future. For 1 hour, you have Advantage on D20 Tests. Once you use this feature, you can't use it again until you finish a Long Rest. You can also restore your use of this feature by expending a level 6+ spell slot (no action required)."
         return description
+
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        return [
+            ("What", "Gain Advantage on all D20 Tests"),
+            ("Trigger", "Bonus Action"),
+            ("Duration", "1 hour"),
+            ("Recharge", "Long Rest"),
+            ("Alternative", "Expend level 6+ spell slot (no action)"),
+        ]

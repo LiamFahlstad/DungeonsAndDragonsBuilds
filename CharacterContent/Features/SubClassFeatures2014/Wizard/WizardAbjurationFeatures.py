@@ -1,3 +1,4 @@
+from Core import Definitions
 from Core.Definitions import Ability, WIZARD_HIT_DIE
 from CharacterContent.Features.Core.BaseFeatures import Feature
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
@@ -24,6 +25,20 @@ class ArcaneWard(Feature):
             "Once you create the ward, you can't create it again until you finish a long rest."
         )
         return description
+
+    def get_table_description(self, character_stat_block: CharacterStatBlock) -> list[tuple[str, str]]:
+        wizard_level = character_stat_block.get_class_level(
+            Definitions.CharacterClass.WIZARD
+        )
+        int_mod = character_stat_block.get_ability_modifier(Ability.INTELLIGENCE)
+        ward_hp = 2 * wizard_level + int_mod
+        return [
+            ("Trigger", "Cast an abjuration spell of 1st level or higher"),
+            ("Ward HP", f"2 × wizard level + Int modifier = {ward_hp}"),
+            ("Protection", "Ward absorbs all damage until 0 HP, then you take remaining"),
+            ("Recharge", "Regains HP equal to 2 × spell level when you cast abjuration spell"),
+            ("Limit", "Once per long rest"),
+        ]
 
 
 class ProjectedWard(Feature):

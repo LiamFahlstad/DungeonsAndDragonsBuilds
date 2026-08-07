@@ -35,6 +35,14 @@ class InfiltrationExpertise(Feature):
         )
         return description
 
+    def get_table_description(self, character_stat_block: CharacterStatBlock) -> list[tuple[str, str]]:
+        return [
+            ("Time", "7 days"),
+            ("Cost", "25 gp"),
+            ("What", "Create a false identity with history, profession, and affiliations"),
+            ("Effect", "Creatures believe you are that person until given obvious reason not to"),
+        ]
+
 
 class Impostor(Feature):
     def __init__(self):
@@ -47,6 +55,14 @@ class Impostor(Feature):
             "Your ruse is indiscernible to the casual observer. If a wary creature suspects something is amiss, you have advantage on any Charisma (Deception) check you make to avoid detection."
         )
         return description
+
+    def get_table_description(self, character_stat_block: CharacterStatBlock) -> list[tuple[str, str]]:
+        return [
+            ("Time", "At least 3 hours of observation"),
+            ("Study", "Speech patterns, handwriting, mannerisms"),
+            ("Effect", "Ruse is indiscernible to casual observer"),
+            ("Detection", "Advantage on Charisma (Deception) checks if creature suspects deception"),
+        ]
 
 
 class DeathStrike(Feature):
@@ -61,3 +77,13 @@ class DeathStrike(Feature):
             f"You become a master of instant death. When you attack and hit a creature that is surprised, it must make a Constitution saving throw (DC {dc}). On a failed save, double the damage of your attack against the creature."
         )
         return description
+
+    def get_table_description(self, character_stat_block: CharacterStatBlock) -> list[tuple[str, str]]:
+        dexterity_modifier = character_stat_block.get_ability_modifier(Ability.DEXTERITY)
+        proficiency_bonus = character_stat_block.get_proficiency_bonus()
+        dc = 8 + dexterity_modifier + proficiency_bonus
+        return [
+            ("Trigger", "Attack and hit a surprised creature"),
+            ("Save", f"Constitution saving throw DC {dc}"),
+            ("On Failed Save", "Double the damage of your attack"),
+        ]

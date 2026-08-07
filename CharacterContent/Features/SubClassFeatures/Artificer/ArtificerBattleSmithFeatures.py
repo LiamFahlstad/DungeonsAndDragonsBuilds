@@ -51,6 +51,14 @@ class BattleReady(Feature):
         )
         return description
 
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        return [
+            ("Arcane Empowerment", "Use Intelligence modifier for attack and damage rolls with magic weapons"),
+            ("Weapon Knowledge", "Proficiency with Martial weapons; use any proficient weapon as Spellcasting Focus"),
+        ]
+
 
 class SteelDefender(Feature):
     def __init__(self):
@@ -123,3 +131,11 @@ class ImprovedDefender(Feature):
             "Improved Deflection. Whenever your Steel Defender uses its Deflect Attack, the attacker takes Force damage equal to 1d4 plus your Intelligence modifier."
         )
         return description
+
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        return [
+            ("Improved Jolt", "Arcane Jolt's damage and healing both increase to 4d6"),
+            ("Improved Deflection", "When Steel Defender uses Deflect Attack, attacker takes Force damage = 1d4 + INT mod"),
+        ]

@@ -1,3 +1,4 @@
+from Core import Definitions
 from Core.Definitions import WIZARD_HIT_DIE
 from CharacterContent.Features.Core.BaseFeatures import Feature
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
@@ -59,3 +60,14 @@ class CommandUndead(Feature):
             "Intelligent undead are harder to control in this way. If the target has an Intelligence of 8 or higher, it has advantage on the saving throw. If it fails the saving throw and has an Intelligence of 12 or higher, it can repeat the saving throw at the end of every hour until it succeeds and breaks free."
         )
         return description
+
+    def get_table_description(self, character_stat_block: CharacterStatBlock) -> list[tuple[str, str]]:
+        return [
+            ("Action", "Action"),
+            ("Target", "One undead within 60 feet that you can see"),
+            ("Save", "Charisma saving throw vs spell save DC"),
+            ("On Success", "Can't use on this undead again"),
+            ("On Fail", "Becomes friendly, obeys your commands until used again"),
+            ("Int 8+", "Has advantage on save"),
+            ("Int 12+", "Can repeat save at end of every hour"),
+        ]

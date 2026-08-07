@@ -116,6 +116,16 @@ class SharpenTheBlade(Feature):
         )
         return description
 
+    def get_table_description(self, character_stat_block: CharacterStatBlock) -> list[tuple[str, str]]:
+        return [
+            ("Action", "Bonus action"),
+            ("Cost", "1-3 ki points"),
+            ("Target", "One kensei weapon you touch"),
+            ("Bonus", "Equal to ki points spent (to attack and damage rolls)"),
+            ("Duration", "1 minute or until you use this feature again"),
+            ("Restriction", "No effect on magic weapons with existing bonuses"),
+        ]
+
 
 class UnearringAccuracy(Feature):
     def __init__(self):
