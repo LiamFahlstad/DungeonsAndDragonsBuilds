@@ -33,6 +33,16 @@ class InnateSorcery(Feature):
         )
         return StringUtils.add_boxes(description, 2, regain_all_on="long rest")
 
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        return [
+            ("Activation", "Bonus Action"),
+            ("Duration", "1 minute"),
+            ("Uses", "2 (regain on Long Rest)"),
+            ("Effect", "Spell save DC +1; Advantage on Sorcerer spell attack rolls"),
+        ]
+
 
 class FontOfMagic(Feature):
     def __init__(self):

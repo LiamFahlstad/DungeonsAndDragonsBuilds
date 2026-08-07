@@ -141,6 +141,20 @@ def tables_to_html(description: str) -> str:
     return "\n".join(new_lines)
 
 
+def key_value_table_to_html(rows: list[tuple[str, str]]) -> str:
+    """Render label/value pairs as a two-column feature table, label cells as headers.
+
+    Unlike tables_to_html (which infers header vs. data rows from a tab-separated
+    block), every row here is a distinct label/value pair, so the label is always
+    a <th> rather than only the first row.
+    """
+    lines = ["<table class='feature-table'>"]
+    for label, value in rows:
+        lines.append(f"<tr><th>{label}</th><td>{value}</td></tr>")
+    lines.append("</table>")
+    return "\n".join(lines)
+
+
 def bolden_text_html(text: str) -> str:
     new_lines = []
 

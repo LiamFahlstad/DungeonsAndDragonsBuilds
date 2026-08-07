@@ -162,6 +162,19 @@ class FlashofGenius(Feature):
         )
         return StringUtils.add_boxes(description, uses, regain_all_on="long rest")
 
+    def get_table_description(self, character_stat_block: CharacterStatBlock) -> list[tuple[str, str]]:
+        intelligence_modifier = character_stat_block.get_ability_modifier(
+            Ability.INTELLIGENCE
+        )
+        bonus = max(1, intelligence_modifier)
+        uses = max(1, intelligence_modifier)
+        return [
+            ("Trigger", "Creature within 30 feet fails ability check or saving throw"),
+            ("Action", "Reaction"),
+            ("Bonus", f"+{bonus}"),
+            ("Uses", f"{uses} per Long Rest"),
+        ]
+
 
 class MagicItemAdept(Feature):
     def __init__(self):

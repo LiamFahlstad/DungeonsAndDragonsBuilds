@@ -111,6 +111,16 @@ class RecklessAttack(Feature):
         description = "You can throw aside all concern for defense to attack with increased ferocity. When you make your first attack roll on your turn, you can decide to attack recklessly. Doing so gives you Advantage on attack rolls using Strength until the start of your next turn, but attack rolls against you have Advantage during that time."
         return description
 
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        return [
+            ("Trigger", "First attack roll of your turn"),
+            ("Benefit", "Advantage on attack rolls using Strength"),
+            ("Cost", "Attack rolls against you have Advantage"),
+            ("Duration", "Until start of your next turn"),
+        ]
+
 
 class PrimalKnowledgeSkillProficiency(Feature):
     SKILL_POOL = [
@@ -209,6 +219,19 @@ class RelentlessRage(Feature):
             "Each time you use this feature after the first, the DC increases by 5. When you finish a Short or Long Rest, the DC resets to 10."
         )
         return description
+
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        barbarian_level = character_stat_block.get_class_level(
+            Definitions.CharacterClass.BARBARIAN
+        )
+        return [
+            ("Trigger", "Drop to 0 Hit Points during Rage"),
+            ("Save", "DC 10 Constitution saving throw"),
+            ("Effect on Success", f"Regain Hit Points equal to 2 × your Barbarian level ({2 * barbarian_level} HP)"),
+            ("Scaling", "DC increases by 5 each use; resets on Short or Long Rest"),
+        ]
 
 
 class ImprovedBrutalStrikeLevel13(Feature):

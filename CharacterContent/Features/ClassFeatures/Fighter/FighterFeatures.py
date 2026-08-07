@@ -38,6 +38,22 @@ class SecondWind(Feature):
             base_text, uses, regain_x_on=(1, "short rest"), regain_all_on="long rest"
         )
 
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        uses = 2
+        if character_stat_block.character_level >= 4:
+            uses = 3
+        if character_stat_block.character_level >= 10:
+            uses = 4
+        return [
+            ("What", "Regain hit points"),
+            ("Action", "Bonus Action"),
+            ("Effect", "1d10 + Fighter level"),
+            ("Uses", f"{uses}"),
+            ("Recharge", "1 use per short rest, all per long rest"),
+        ]
+
 
 class WeaponMastery(Feature):
     def __init__(self):
@@ -65,6 +81,20 @@ class ActionSurge(Feature):
             description, uses, regain_all_on="short or long rest"
         )
 
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        uses = 2 if character_stat_block.character_level >= 17 else 1
+        recharge = "Short or long rest"
+        if character_stat_block.character_level >= 17:
+            recharge = "Short or long rest (max 1 per turn)"
+        return [
+            ("What", "Take one additional action"),
+            ("Restriction", "Cannot be Magic action"),
+            ("Uses", f"{uses}"),
+            ("Recharge", recharge),
+        ]
+
 
 class TacticalMind(Feature):
     def __init__(self):
@@ -73,6 +103,16 @@ class TacticalMind(Feature):
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "You have a mind for tactics on and off the battlefield. When you fail an ability check, you can expend a use of your Second Wind to push yourself toward success. Rather than regaining Hit Points, you roll 1d10 and add the number rolled to the ability check, potentially turning it into a success. If the check still fails, this use of Second Wind isn’t expended."
         return description
+
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        return [
+            ("When", "When you fail an ability check"),
+            ("Cost", "1 Second Wind use"),
+            ("Effect", "Roll 1d10 and add it to the check"),
+            ("Special", "If still fails, use isn’t expended"),
+        ]
 
 
 class ExtraAttack(Feature):
@@ -109,6 +149,22 @@ class Indomitable(Feature):
             "You can use this feature twice before a Long Rest starting at level 13 and three times before a Long Rest starting at level 17."
         )
         return StringUtils.add_boxes(description, uses, regain_all_on="long rest")
+
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        if character_stat_block.character_level >= 17:
+            uses = 3
+        elif character_stat_block.character_level >= 13:
+            uses = 2
+        else:
+            uses = 1
+        return [
+            ("What", "Reroll a failed saving throw"),
+            ("Bonus", "Fighter level"),
+            ("Uses", f"{uses}"),
+            ("Recharge", "Long rest"),
+        ]
 
 
 class TacticalMaster(Feature):

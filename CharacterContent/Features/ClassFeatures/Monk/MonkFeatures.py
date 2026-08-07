@@ -209,6 +209,26 @@ class DeflectAttacks(Feature):
             )
             return description
 
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        monk_level = character_stat_block.get_class_level(
+            Definitions.CharacterClass.MONK
+        )
+        dex_modifier = character_stat_block.get_ability_modifier(
+            Definitions.Ability.DEXTERITY
+        )
+        damage_types = "any type" if monk_level >= 13 else "Bludgeoning, Piercing, or Slashing"
+        return [
+            ("Trigger", f"Hit by {damage_types} attack"),
+            ("Action", "Reaction"),
+            ("Reduction", f"1d10 + {dex_modifier:+d} (DEX) + {monk_level} (level)"),
+            ("Redirect Cost", "1 Focus Point (if damage reduced to 0)"),
+            ("Redirect Range", "5 ft (melee) or 60 ft (ranged, not behind Total Cover)"),
+            ("Redirect Save", "Dexterity"),
+            ("Redirect Damage", "2 Martial Arts die + DEX modifier, same type as attack"),
+        ]
+
 
 class SlowFall(Feature):
     def __init__(self):

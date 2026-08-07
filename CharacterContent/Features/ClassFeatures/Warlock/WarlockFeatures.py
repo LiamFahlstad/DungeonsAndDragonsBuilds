@@ -47,6 +47,14 @@ class MagicalCunning(Feature):
         description = "You can perform an esoteric rite for 1 minute. At the end of it, you regain expended Pact Magic spell slots but no more than a number equal to half your maximum (round up). Once you use this feature, you can't do so again until you finish a Long Rest."
         return description
 
+    def get_table_description(self, character_stat_block: CharacterStatBlock) -> list[tuple[str, str]]:
+        return [
+            ("Action", "Perform an esoteric rite"),
+            ("Duration", "1 minute"),
+            ("Effect", "Regain expended Pact Magic spell slots up to half your maximum (round up)"),
+            ("Recharge", "Once per Long Rest"),
+        ]
+
 
 class ContactPatron(Feature):
     def __init__(self):
@@ -58,6 +66,14 @@ class ContactPatron(Feature):
             "Once you cast the spell with this feature, you can't do so in this way again until you finish a Long Rest."
         )
         return description
+
+    def get_table_description(self, character_stat_block: CharacterStatBlock) -> list[tuple[str, str]]:
+        return [
+            ("Spell", "Contact Other Plane (always prepared)"),
+            ("Casting", "Cast without expending a spell slot"),
+            ("Saving Throw", "Automatically succeed"),
+            ("Recharge", "Once per Long Rest"),
+        ]
 
 
 class MysticArcanum(Feature):

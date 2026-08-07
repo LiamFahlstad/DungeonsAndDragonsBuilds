@@ -71,6 +71,16 @@ class SteadyAim(Feature):
         description = "As a Bonus Action, you give yourself Advantage on your next attack roll on your current turn. You can use this feature only if you haven't moved during this turn, and after you use it, your Speed is 0 until the end of the current turn."
         return description
 
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        return [
+            ("Action", "Bonus Action"),
+            ("Effect", "Advantage on next attack roll this turn"),
+            ("Prerequisite", "Haven't moved this turn"),
+            ("After Using", "Speed becomes 0 until end of turn"),
+        ]
+
 
 class CunningStrike(Feature):
     def __init__(self):
@@ -177,3 +187,12 @@ class StrokeOfLuck(Feature):
             "Once you use this feature, you can't use it again until you finish a Short or Long Rest."
         )
         return description
+
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        return [
+            ("Trigger", "You fail a d20 Test"),
+            ("Effect", "Turn the roll into a 20"),
+            ("Recharge", "Short or Long Rest"),
+        ]

@@ -46,6 +46,28 @@ class BardicInspiration(Feature):
             description, max(1, charisma_modifier), regain_all_on="long rest"
         )
 
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        charisma_modifier = character_stat_block.get_ability_modifier(Ability.CHARISMA)
+        bard_level = character_stat_block.get_class_level(Definitions.CharacterClass.BARD)
+        if bard_level >= 15:
+            die = "d12"
+        elif bard_level >= 10:
+            die = "d10"
+        elif bard_level >= 5:
+            die = "d8"
+        else:
+            die = "d6"
+        return [
+            ("Action", "Bonus Action"),
+            ("Range", "60 feet"),
+            ("Inspiration Die", die),
+            ("Uses", f"{max(1, charisma_modifier)} per Long Rest"),
+            ("Duration", "1 hour (until creature fails a D20 Test)"),
+            ("Effect", "Creature adds die result to d20 to potentially turn failure into success"),
+        ]
+
 
 class ExpertiseLevel1(Feature):
     def __init__(self, skill_1: Skill, skill_2: Skill):
@@ -101,6 +123,14 @@ class FontOfInspiration(Feature):
         )
         return description
 
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        return [
+            ("Regain Uses On", "Short or Long Rest"),
+            ("Alternative Cost", "1 spell slot (no action required)"),
+        ]
+
 
 class Countercharm(Feature):
     def __init__(self):
@@ -109,6 +139,15 @@ class Countercharm(Feature):
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "You can use musical notes or words of power to disrupt mind-influencing effects. If you or a creature within 30 feet of you fails a saving throw against an effect that applies the Charmed or Frightened condition, you can take a Reaction to cause the save to be rerolled, and the new roll has Advantage."
         return description
+
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        return [
+            ("Trigger", "Creature within 30 feet fails save vs Charmed or Frightened"),
+            ("Action", "Reaction"),
+            ("Effect", "Reroll save with Advantage"),
+        ]
 
 
 class MagicalSecrets(Feature):

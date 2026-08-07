@@ -241,7 +241,9 @@ class CharacterSheetData:
             raise ValueError(f"Tool proficiency {tool_proficiency} already added.")
 
     def create_character_sheet(
-        self, skill_config: Definitions.SkillConfig = Definitions.SkillConfig.DEFAULT
+        self,
+        skill_config: Definitions.SkillConfig = Definitions.SkillConfig.DEFAULT,
+        use_table_descriptions: bool = False,
     ):
         if any(
             field is None
@@ -263,7 +265,7 @@ class CharacterSheetData:
         CharacterSheetWriters.HtmlCharacterSheetWriter().write_character_sheet(
             skill_config=skill_config,
             character=self.setup_character_stat_block(),
-            output_path=self.get_file_path(),
+            output_path=self.get_file_path(use_table_descriptions),
             armors=self.armors,
             armor_proficiencies=self.armor_proficiencies,
             weapon_proficiencies=self.weapon_proficiencies,
@@ -276,6 +278,7 @@ class CharacterSheetData:
             items=self.items,
             tool_proficiencies=self.tool_proficiencies,
             experience_points=self.experience_points,
+            use_table_descriptions=use_table_descriptions,
         )
 
     def setup_character_stat_block(self) -> CharacterStatBlock:
@@ -367,7 +370,7 @@ class CharacterSheetData:
         character = self.setup_character_stat_block()
         return character.calculate_attack_bonus_for_ability(ability)
 
-    def get_file_path(self) -> str:
+    def get_file_path(self, use_table_descriptions: bool = False) -> str:
         if self.character_name is None:
             raise ValueError("Character name must be set to generate file path.")
         if self.character_subclass is None:
@@ -375,10 +378,11 @@ class CharacterSheetData:
         if self.base_class is None:
             raise ValueError("Base class must be set to generate file path.")
         example_prefix = "example_" if self.is_example else ""
+        table_suffix = "_table" if use_table_descriptions else ""
         return (
             f"Output/{example_prefix}{self.base_class.lower()}_"
             f"{self.character_subclass.lower()}_level_{self.character_level}_"
-            f"{self._slugify_name(self.character_name)}_character_sheet.html"
+            f"{self._slugify_name(self.character_name)}{table_suffix}_character_sheet.html"
         )
 
     def merge_with(self, other: "CharacterSheetData"):

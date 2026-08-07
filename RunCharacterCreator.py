@@ -108,10 +108,21 @@ if __name__ == "__main__":
         help="Create character sheets for all example builds in Builds/Examples instead "
         "of the default builds in RunCharacterCreator.py.",
     )
+    parser.add_argument(
+        "--table-descriptions",
+        action="store_true",
+        help="Render feature descriptions as concise label/value tables (via "
+        "Feature.get_table_description) instead of the original prose text. Features "
+        "without a table version fall back to their normal description. Output files "
+        "get a '_table' suffix.",
+    )
     args = parser.parse_args()
 
     skill_config = Definitions.SkillConfig.DEFAULT
     builds = ExampleSelector.builds() if args.example else BuildSelector.builds()
     for build_class in builds.values():
         character_sheet_data = build_class.build()
-        character_sheet_data.create_character_sheet(skill_config=skill_config)
+        character_sheet_data.create_character_sheet(
+            skill_config=skill_config,
+            use_table_descriptions=args.table_descriptions,
+        )

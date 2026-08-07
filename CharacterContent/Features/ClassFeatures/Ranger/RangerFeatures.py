@@ -19,6 +19,15 @@ class Spellcasting(Feature):
         )
         return description
 
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        return [
+            ("Spell Replacement", "One spell each Long Rest"),
+            ("Spell Slots", "Regain all on Long Rest"),
+            ("Spellcasting Ability", "Wisdom"),
+        ]
+
 
 class ReplacingWeaponMasteries(Feature):
     def __init__(self):
@@ -52,6 +61,26 @@ class FavoredEnemy(Feature):
         return StringUtils.add_boxes(
             description, free_hunters_mark_uses, regain_all_on="long rest"
         )
+
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        if character_stat_block.character_level < 5:
+            free_hunters_mark_uses = 2
+        elif character_stat_block.character_level < 9:
+            free_hunters_mark_uses = 3
+        elif character_stat_block.character_level < 13:
+            free_hunters_mark_uses = 4
+        elif character_stat_block.character_level < 17:
+            free_hunters_mark_uses = 5
+        else:
+            free_hunters_mark_uses = 6
+
+        return [
+            ("Spell", "Hunter's Mark (always prepared)"),
+            ("Free Uses", f"{free_hunters_mark_uses}"),
+            ("Regain", "Long Rest"),
+        ]
 
 
 class DeftExplorerExpertise(Feature):
@@ -127,6 +156,17 @@ class Tireless(Feature):
         )
         return StringUtils.add_boxes(description, uses, regain_all_on="long rest")
 
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        wis_mod = character_stat_block.get_ability_modifier(Ability.WISDOM)
+        uses = max(1, wis_mod)
+        return [
+            ("Temporary Hit Points", f"1d8 + Wisdom modifier (Magic Action)"),
+            ("THPs Uses", f"{uses}, regain on Long Rest"),
+            ("Exhaustion Reduction", "Decrease by 1 on Short Rest"),
+        ]
+
 
 class RelentlessHunter(Feature):
     def __init__(self):
@@ -149,6 +189,18 @@ class NaturesVeil(Feature):
             f"You can use this feature a number of times equal to your Wisdom modifier (minimum of once) ({uses}), and you regain all expended uses when you finish a Long Rest."
         )
         return StringUtils.add_boxes(description, uses, regain_all_on="long rest")
+
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        wis_mod = character_stat_block.get_ability_modifier(Ability.WISDOM)
+        uses = max(1, wis_mod)
+        return [
+            ("Action", "Bonus Action"),
+            ("Effect", "Invisible condition"),
+            ("Duration", "Until end of your next turn"),
+            ("Uses", f"{uses}, regain on Long Rest"),
+        ]
 
 
 class PreciseHunter(Feature):

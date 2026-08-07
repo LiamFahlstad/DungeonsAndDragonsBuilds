@@ -1,3 +1,4 @@
+import Core.Definitions as Definitions
 from Core.Definitions import Skill, WIZARD_HIT_DIE
 from CharacterContent.Features.Core.BaseFeatures import Feature
 from CharacterContent.Features.Core.Improvements import SkillExpertiseChoice
@@ -23,6 +24,20 @@ class ArcaneRecovery(Feature):
             "Once you use this feature, you can't do so again until you finish a Long Rest."
         )
         return text
+
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        wizard_level = character_stat_block.get_class_level(
+            Definitions.CharacterClass.WIZARD
+        )
+        max_combined = (wizard_level + 1) // 2  # Round up division
+        return [
+            ("When", "Finish a Short Rest"),
+            ("Maximum Slot Levels", f"Combined level ≤ {max_combined}"),
+            ("Slot Restrictions", "None can be level 6 or higher"),
+            ("Recharge", "Once per Long Rest"),
+        ]
 
 
 class Scholar(Feature):
@@ -69,6 +84,18 @@ class SpellMastery(Feature):
             "Whenever you finish a Long Rest, you can study your spellbook and replace one of those spells with an eligible spell of the same level from the book."
         )
         return text
+
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        return [
+            ("Choose", "One level 1 spell and one level 2 spell from spellbook"),
+            ("Requirements", "Chosen spells must have casting time of an action"),
+            ("Prepared", "Always"),
+            ("Cast at Lowest Level", "No spell slot required"),
+            ("Cast at Higher Level", "Expend spell slot"),
+            ("Refresh", "Long Rest; swap one spell of same level"),
+        ]
 
 
 class SignatureSpells(Feature):

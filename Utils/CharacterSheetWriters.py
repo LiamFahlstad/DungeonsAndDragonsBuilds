@@ -441,10 +441,16 @@ class HtmlCharacterSheetWriter:
         return breakdown
 
     def _write_features(
-        self, character: CharacterStatBlock, file: TextIO, features: list[Feature]
+        self,
+        character: CharacterStatBlock,
+        file: TextIO,
+        features: list[Feature],
+        use_table_descriptions: bool = False,
     ):
         text_features = [
-            f for f in features if f.get_description(character) is not None
+            f
+            for f in features
+            if f.render_html_description(character, use_table_descriptions) is not None
         ]
         if not text_features:
             return
@@ -454,7 +460,7 @@ class HtmlCharacterSheetWriter:
 
         file.write("<div>\n")
         for feature in sorted_features:
-            feature.write_to_file(character, file)
+            feature.write_to_file(character, file, use_table_descriptions)
         file.write("</div>\n<br class='section-gap'>\n")
 
     def _write_weapons(
@@ -736,6 +742,7 @@ class HtmlCharacterSheetWriter:
         items: list[tuple[Items.Item, int]],
         tool_proficiencies: list[ToolProficiency],
         experience_points: int = 0,
+        use_table_descriptions: bool = False,
     ):
         output_path_obj = pathlib.Path(output_path)
         output_path_obj.parent.mkdir(parents=True, exist_ok=True)
@@ -751,7 +758,7 @@ class HtmlCharacterSheetWriter:
             self._write_abilities(character, file)
             self._write_skills(character, file, skill_config)
             file.write("<div class='print-page-break'></div>\n")
-            self._write_features(character, file, features)
+            self._write_features(character, file, features, use_table_descriptions)
             self._write_weapons(character, file, weapons, weapon_masteries)
             self._write_fighting_styles(character, file, fighting_styles)
             self._write_invocations(character, file, invocations)

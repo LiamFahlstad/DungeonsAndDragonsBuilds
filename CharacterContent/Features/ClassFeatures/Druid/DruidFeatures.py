@@ -29,6 +29,16 @@ class Spellcasting(Feature):
         )
         return description
 
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        return [
+            ("Replacing Cantrips", "Change one when you gain a Druid level"),
+            ("Replacing Spells", "Change one when you finish a Long Rest"),
+            ("Regaining Spell Slots", "Regain all expended slots on Long Rest"),
+            ("Spellcasting Ability", "Wisdom"),
+        ]
+
 
 class Druidic(Feature):
     def __init__(self):
@@ -120,6 +130,17 @@ class WildCompanion(Feature):
             "When you cast the spell in this way, the familiar is Fey and disappears when you finish a Long Rest."
         )
         return description
+
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        return [
+            ("What", "Cast Find Familiar by expending a spell slot or a use of Wild Shape"),
+            ("Casting Time", "Magic action"),
+            ("Cost", "1 spell slot or 1 Wild Shape use"),
+            ("Components", "None (Material components waived)"),
+            ("Duration", "Familiar is Fey; disappears on Long Rest"),
+        ]
 
 
 class WildResurgence(Feature):

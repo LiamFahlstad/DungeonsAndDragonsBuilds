@@ -139,11 +139,40 @@ class Feature:
     def get_description(self, character_stat_block: CharacterStatBlock) -> str | None:
         return None
 
-    def write_to_file(self, character_stat_block: CharacterStatBlock, file: TextIO):
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]] | None:
+        """Override to provide a concise label/value table version of the description
+        (e.g. [("What", "..."), ("Casting Time", "...")]), used when table descriptions
+        are requested. Return None to fall back to get_description()."""
+        return None
+
+    def render_html_description(
+        self, character_stat_block: CharacterStatBlock, use_table_description: bool
+    ) -> str | None:
+        if use_table_description:
+            table_rows = self.get_table_description(character_stat_block)
+            if table_rows is not None:
+                return Html.highlight_damage_types(
+                    Html.key_value_table_to_html(table_rows)
+                )
+
         description = self.get_description(character_stat_block)
         if description is None:
+            return None
+        return self._description_to_html(description)
+
+    def write_to_file(
+        self,
+        character_stat_block: CharacterStatBlock,
+        file: TextIO,
+        use_table_description: bool = False,
+    ):
+        html_description = self.render_html_description(
+            character_stat_block, use_table_description
+        )
+        if html_description is None:
             return
-        html_description = self._description_to_html(description)
 
         file.write("<div class='feature-card'>\n")
         file.write("<div class='feature-header'>\n")
@@ -154,10 +183,11 @@ class Feature:
         file.write(f"{html_description}\n")
 
         for extension in self.extensions:
-            ext_description = extension.get_description(character_stat_block)
-            if ext_description is None:
+            ext_html = extension.render_html_description(
+                character_stat_block, use_table_description
+            )
+            if ext_html is None:
                 continue
-            ext_html = self._description_to_html(ext_description)
             file.write(
                 f"<div class='feature-upgrade'>\n"
                 f"<span class='feature-upgrade-label'>{extension.origin}: {extension.name}</span>\n"
