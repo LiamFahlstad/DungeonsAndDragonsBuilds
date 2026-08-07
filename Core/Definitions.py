@@ -459,6 +459,29 @@ class DamageType(str, Enum):
     THUNDER = "Thunder"
 
 
+# Damage type color mapping (mirrors Spell.SCHOOL_COLORS)
+DAMAGE_TYPE_COLORS: dict[str, str] = {
+    "Acid": "#7CB342",
+    "Bludgeoning": "#795548",
+    "Cold": "#4FC3F7",
+    "Fire": "#FF5722",
+    "Force": "#BA68C8",
+    "Lightning": "#FFC107",
+    "Necrotic": "#4A148C",
+    "Piercing": "#9E9E9E",
+    "Poison": "#43A047",
+    "Psychic": "#EC407A",
+    "Radiant": "#FFD54F",
+    "Slashing": "#B71C1C",
+    "Thunder": "#3F51B5",
+}
+
+
+def get_damage_type_color(damage_type: str) -> str:
+    """Return the color hex code for a damage type, or a default gray if unknown."""
+    return DAMAGE_TYPE_COLORS.get(damage_type, "#999999")
+
+
 class ArmorType(str, Enum):
     LIGHT = "Light"
     MEDIUM = "Medium"

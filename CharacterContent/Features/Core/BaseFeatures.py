@@ -237,4 +237,4 @@ class Feature:
         result = "\n".join(html_parts)
         if result and not result.endswith("\n"):
             result += "\n"
-        return result
+        return Html.highlight_damage_types(result)

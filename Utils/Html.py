@@ -1,6 +1,14 @@
 """Generic HTML generation primitives and character sheet CSS fragments."""
 
+import re
 from typing import TextIO
+
+from Core.Definitions import DAMAGE_TYPE_COLORS
+
+_DAMAGE_TYPE_PATTERN = re.compile(
+    r"\b(" + "|".join(re.escape(name) for name in DAMAGE_TYPE_COLORS) + r")\b",
+    re.IGNORECASE,
+)
 
 # Reset sentinel markers for slot recovery labels
 RESET_PREFIX = "[RESET:"
@@ -166,6 +174,17 @@ def bolden_text_html(text: str) -> str:
         new_lines.append(line)
 
     return "\n".join(new_lines)
+
+
+def highlight_damage_types(html: str) -> str:
+    """Wrap every mention of a damage type word in a color-coded span."""
+
+    def _replace(match: re.Match) -> str:
+        word = match.group(0)
+        color = DAMAGE_TYPE_COLORS.get(word.capitalize(), "#999999")
+        return f"<span style='color: {color}; print-color-adjust: exact;'>{word}</span>"
+
+    return _DAMAGE_TYPE_PATTERN.sub(_replace, html)
 
 
 def write_table_row(file: TextIO, cells: list, tr_class: str = ""):
