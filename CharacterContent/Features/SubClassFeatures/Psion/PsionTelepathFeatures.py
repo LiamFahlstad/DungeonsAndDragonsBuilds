@@ -118,3 +118,12 @@ class ScrambleMinds(Feature):
             "rolling to determine its behavior."
         )
         return description
+
+    def get_concise_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> str:
+        return (
+            "Cast Confusion without slot by expending 4 Psionic Energy Dice. Spell's radius becomes 30 feet, "
+            "choose one creature to auto-succeed on save, and you pick each creature's confused behavior each turn "
+            "(instead of rolling)."
+        )

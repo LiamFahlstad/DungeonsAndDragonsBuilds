@@ -91,3 +91,14 @@ class AvengingAngel(Feature):
             "Frightful Aura. Whenever an enemy starts its turn in your Aura of Protection, that creature must succeed on a Wisdom saving throw or have the Frightened condition for 1 minute or until it takes any damage. Attack rolls against the Frightened creature have Advantage."
         )
         return description
+
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        return [
+            ("Action", "Bonus Action"),
+            ("Duration", "10 minutes (or until ended)"),
+            ("Recharge", "Once per Long Rest (or spend level 5 spell slot)"),
+            ("Flight", "Fly Speed 60 ft, can hover"),
+            ("Frightful Aura", "Enemies at turn start in aura save Wisdom or Frightened for 1 min (or until damaged); attack rolls against Frightened have Advantage"),
+        ]

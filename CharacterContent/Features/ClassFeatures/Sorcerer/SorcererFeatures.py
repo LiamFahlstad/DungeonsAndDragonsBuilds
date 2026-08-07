@@ -19,6 +19,16 @@ class Spellcasting(Feature):
         )
         return description
 
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        return [
+            ("Replacing Cantrips", "Change one when you gain a Sorcerer level"),
+            ("Replacing Spells", "Change one when you gain a Sorcerer level"),
+            ("Regaining Spell Slots", "All expended slots return on Long Rest"),
+            ("Spellcasting Ability", "Charisma"),
+        ]
+
 
 class InnateSorcery(Feature):
     def __init__(self):

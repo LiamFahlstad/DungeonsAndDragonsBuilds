@@ -1,5 +1,5 @@
 import pathlib
-from typing import Optional, TextIO
+from typing import Literal, Optional, TextIO
 
 import Core.Definitions as Definitions
 from CharacterContent.Features.CombatFeatures.FightingStyles import FightingStyle
@@ -445,12 +445,12 @@ class HtmlCharacterSheetWriter:
         character: CharacterStatBlock,
         file: TextIO,
         features: list[Feature],
-        use_table_descriptions: bool = False,
+        description_mode: Literal["table", "concise"] | None = None,
     ):
         text_features = [
             f
             for f in features
-            if f.render_html_description(character, use_table_descriptions) is not None
+            if f.render_html_description(character, description_mode) is not None
         ]
         if not text_features:
             return
@@ -460,7 +460,7 @@ class HtmlCharacterSheetWriter:
 
         file.write("<div>\n")
         for feature in sorted_features:
-            feature.write_to_file(character, file, use_table_descriptions)
+            feature.write_to_file(character, file, description_mode)
         file.write("</div>\n<br class='section-gap'>\n")
 
     def _write_weapons(
@@ -742,7 +742,7 @@ class HtmlCharacterSheetWriter:
         items: list[tuple[Items.Item, int]],
         tool_proficiencies: list[ToolProficiency],
         experience_points: int = 0,
-        use_table_descriptions: bool = False,
+        description_mode: Literal["table", "concise"] | None = None,
     ):
         output_path_obj = pathlib.Path(output_path)
         output_path_obj.parent.mkdir(parents=True, exist_ok=True)
@@ -758,7 +758,7 @@ class HtmlCharacterSheetWriter:
             self._write_abilities(character, file)
             self._write_skills(character, file, skill_config)
             file.write("<div class='print-page-break'></div>\n")
-            self._write_features(character, file, features, use_table_descriptions)
+            self._write_features(character, file, features, description_mode)
             self._write_weapons(character, file, weapons, weapon_masteries)
             self._write_fighting_styles(character, file, fighting_styles)
             self._write_invocations(character, file, invocations)

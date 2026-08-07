@@ -104,3 +104,13 @@ class ClockworkCavalcade(Feature):
             "Dispel. Every spell of level 6 and lower ends on creatures and objects of your choice in the Cube."
         )
         return description
+
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        return [
+            ("Action", "Magic action"),
+            ("Area", "30-foot Cube from you"),
+            ("Effects", "Heal up to 100 HP (distributed), repair all damaged objects, dispel spells level 6 and lower"),
+            ("Recharge", "Long Rest or 7 Sorcery Points"),
+        ]

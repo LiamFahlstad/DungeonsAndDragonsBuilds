@@ -100,3 +100,15 @@ class MasterTransmuter(Feature):
             "    * Restore Youth: You touch one willing creature as part of this Magic action, and the target's Exhaustion level, if any, decreases to 0, and it permanently appears 3d10 years younger, to a minimum of young adulthood."
         )
         return description
+
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        return [
+            ("Action", "Magic action; stone crumbles after use unless prevented"),
+            ("Cost", "Stone use (or expend level 7+ slot to prevent crumbling)"),
+            ("Major Transformation", "Transmute nonmagical object (≤10 ft cube or 8×5 ft cubes) to similar object, 10 min handling"),
+            ("Panacea", "Touch creature: regain half max HP, cure contagions/curses, end Poisoned/Petrified"),
+            ("Restore Life", "Cast Raise Dead without slot, stone replaces components"),
+            ("Restore Youth", "Touch willing: end Exhaustion, age permanently 3d10 years younger (min adulthood)"),
+        ]

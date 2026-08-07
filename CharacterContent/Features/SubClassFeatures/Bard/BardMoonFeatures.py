@@ -95,3 +95,11 @@ class EventidesSplendor(Feature):
             "Vibrance of the Full Moon. When you use Lunar Vitality, you can roll 1d6 and use the number rolled in place of expending a Bardic Inspiration die."
         )
         return description
+
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        return [
+            ("Shadow of the New Moon", "When using Inspired Eclipse, recipient gains Invisible condition and Reaction to teleport up to 30 feet; stays Invisible until start of next turn"),
+            ("Vibrance of the Full Moon", "When using Lunar Vitality, roll 1d6 and use in place of expending Bardic Inspiration die"),
+        ]

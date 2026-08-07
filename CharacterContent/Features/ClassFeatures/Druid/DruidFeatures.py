@@ -154,6 +154,14 @@ class WildResurgence(Feature):
         )
         return description
 
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        return [
+            ("Option 1", "Expend spell slot (no action, once per turn) if no Wild Shape uses left → gain 1 Wild Shape use"),
+            ("Option 2", "Expend 1 Wild Shape use (no action, once per Long Rest) → gain 1 level 1 spell slot"),
+        ]
+
 
 class ElementalFury(Feature):
     def __init__(self):
@@ -167,6 +175,14 @@ class ElementalFury(Feature):
         )
         return description
 
+    def get_concise_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> str:
+        return (
+            "Choose one: Potent Spellcasting (add your Wisdom modifier to Druid cantrip damage) or Primal Strike "
+            "(once per turn when you hit with a weapon or Beast form attack, deal an extra 1d8 Cold, Fire, Lightning, or Thunder damage of your choice)."
+        )
+
 
 class ImprovedElementalFury(Feature):
     def __init__(self):
@@ -179,6 +195,14 @@ class ImprovedElementalFury(Feature):
             "Primal Strike. The extra damage of your Primal Strike increases to 2d8."
         )
         return description
+
+    def get_concise_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> str:
+        return (
+            "Your Elemental Fury improves: Potent Spellcasting's cantrips with 10+ ft range gain +300 ft range, "
+            "or Primal Strike's extra damage becomes 2d8."
+        )
 
 
 class BeastSpells(Feature):
@@ -202,3 +226,12 @@ class Archdruid(Feature):
             "Longevity. The primal magic that you wield causes you to age more slowly. For every ten years that pass, your body ages only one year."
         )
         return description
+
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        return [
+            ("Evergreen Wild Shape", "On Initiative roll with no Wild Shape uses left: regain 1 use"),
+            ("Nature Magician", "Convert unexpended Wild Shape uses to spell slot (no action, 2 spell levels per use, once per Long Rest)"),
+            ("Longevity", "Age 1 year for every 10 years that pass"),
+        ]

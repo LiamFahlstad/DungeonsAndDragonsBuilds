@@ -83,3 +83,15 @@ class HolyNimbus(Feature):
             "Sunlight. The aura is filled with Bright Light that is sunlight."
         )
         return description
+
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        return [
+            ("Action", "Bonus Action"),
+            ("Duration", "10 minutes (or until ended)"),
+            ("Recharge", "Once per Long Rest (or spend level 5 spell slot)"),
+            ("Holy Ward", "Advantage on saves against Fiends and Undead"),
+            ("Radiant Damage", "Enemies at turn start in aura take Charisma modifier + Proficiency Bonus Radiant damage"),
+            ("Sunlight", "Aura is filled with Bright Light (counts as sunlight)"),
+        ]

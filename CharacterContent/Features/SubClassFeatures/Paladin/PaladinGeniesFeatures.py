@@ -20,6 +20,18 @@ class ElementalSmite(Feature):
         )
         return description
 
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        return [
+            ("Trigger", "Cast Divine Smite"),
+            ("Cost", "1 Channel Divinity use"),
+            ("Dao's Crush", "Target Grappled (escape DC = spell save DC), Restrained while Grappled"),
+            ("Djinni's Escape", "Teleport within 30 ft, semi-incorporeal until end of next turn; Resist B/P/S, Immune to Grappled/Prone/Restrained"),
+            ("Efreeti's Fury", "Target takes 2d4 Fire; fire jumps to another creature within 30 ft for 2d4 Fire"),
+            ("Marid's Surge", "Target and up to 10-ft Emanation of creatures save Strength; on fail, pushed 15 ft and Prone"),
+        ]
+
 
 class GenieSpells(Feature):
     def __init__(self):

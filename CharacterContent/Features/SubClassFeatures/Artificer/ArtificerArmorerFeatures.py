@@ -107,6 +107,14 @@ class ImprovedArmorer(Feature):
         )
         return description
 
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        return [
+            ("Armor Replication", "Learn additional Replicate Magic Item plan in Armor category; create additional item in Armor category"),
+            ("Improved Arsenal", "+1 bonus to attack and damage rolls with Arcane Armor model's special weapon"),
+        ]
+
 
 class PerfectedArmor(Feature):
     def __init__(self):

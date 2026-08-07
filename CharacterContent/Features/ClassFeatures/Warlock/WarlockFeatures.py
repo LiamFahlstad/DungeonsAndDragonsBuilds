@@ -17,6 +17,11 @@ class ReplacingEldritchInvocations(Feature):
         )
         return description
 
+    def get_concise_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> str:
+        return "Whenever you gain a Warlock level, replace one invocation with another you qualify for (unless it's a prerequisite). Gain additional invocations at higher levels. Cannot pick the same invocation twice unless its description says otherwise."
+
 
 class ReplacingCantripsAndSpells(Feature):
     def __init__(self):

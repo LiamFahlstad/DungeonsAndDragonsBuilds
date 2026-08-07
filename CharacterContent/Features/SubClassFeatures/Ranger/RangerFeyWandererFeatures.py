@@ -67,6 +67,14 @@ class BeguilingTwist(Feature):
         )
         return description
 
+    def get_concise_description(self, character_stat_block: CharacterStatBlock) -> str:
+        return (
+            "You have advantage on saving throws against Charmed or Frightened conditions. "
+            "When you or a creature you can see within 120 feet succeeds on such a save, you can use a Reaction "
+            "to force another creature within 120 feet to save against your spell save DC; on a failure, "
+            "it is charmed or frightened (your choice) for 1 minute."
+        )
+
 
 class FeyReinforcements(Feature):
     def __init__(self):

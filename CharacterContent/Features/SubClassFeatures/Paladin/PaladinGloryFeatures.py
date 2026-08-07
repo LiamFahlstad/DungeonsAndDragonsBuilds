@@ -98,3 +98,15 @@ class LivingLegend(Feature):
             "Unerring Strike. Once on each of your turns when you make an attack roll with a weapon and miss, you can cause that attack to hit instead."
         )
         return description
+
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        return [
+            ("Action", "Bonus Action"),
+            ("Duration", "10 minutes"),
+            ("Recharge", "Once per Long Rest (or spend level 5 spell slot)"),
+            ("Charismatic", "Advantage on all Charisma checks"),
+            ("Saving Throw Reroll", "As Reaction, reroll failed save (must use new result)"),
+            ("Unerring Strike", "Once per turn, when you miss with weapon attack, cause it to hit instead"),
+        ]

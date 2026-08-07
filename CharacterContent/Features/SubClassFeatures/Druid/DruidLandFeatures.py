@@ -75,6 +75,19 @@ class NaturalRecovery(Feature):
         )
         return description
 
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        druid_level = character_stat_block.get_class_level(
+            Definitions.CharacterClass.DRUID
+        )
+        max_slot_level_sum = (druid_level + 1) // 2
+        return [
+            ("Ability 1", "Cast one prepared Circle Spell without slot (1/Long Rest)"),
+            ("Ability 2", f"Short Rest: recover spell slots (max combined level {max_slot_level_sum}, no level 6+)"),
+            ("Slot Recovery Recharge", "Long Rest"),
+        ]
+
 
 class NaturesWard(Feature):
     def __init__(self, land_type: Definitions.DruidLandType):

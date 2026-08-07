@@ -32,6 +32,11 @@ class SneakAttack(Feature):
         )
         return description
 
+    def get_concise_description(self, character_stat_block: CharacterStatBlock) -> str:
+        return (
+            "Once per turn, add 1d6 extra damage (same type as weapon) to an attack using a Finesse or Ranged weapon if you have Advantage on the roll. Alternatively, you don't need Advantage if an ally is within 5 feet of the target (ally not Incapacitated, and you don't have Disadvantage). Damage increases with Rogue levels."
+        )
+
 
 class ThievesCant(Feature):
     def __init__(self):
@@ -102,6 +107,18 @@ class CunningStrike(Feature):
         )
         return description
 
+    def get_table_description(self, character_stat_block: CharacterStatBlock) -> list[tuple[str, str]]:
+        saving_throw = (
+            8
+            + character_stat_block.get_ability_modifier(Ability.DEXTERITY)
+            + character_stat_block.get_proficiency_bonus()
+        )
+        return [
+            ("Poison (Cost: 1d6)", f"Target makes Constitution save (DC {saving_throw}) or gains Poisoned condition for 1 minute. Requires Poisoner's Kit."),
+            ("Trip (Cost: 1d6)", f"Target Large or smaller makes Dexterity save (DC {saving_throw}) or gains Prone condition"),
+            ("Withdraw (Cost: 1d6)", "Move up to half your speed without provoking Opportunity Attacks"),
+        ]
+
 
 class UncannyDodge(Feature):
     def __init__(self):
@@ -151,6 +168,13 @@ class DeviousStrikes(Feature):
             "Obscure (Cost: 3d6). The target must succeed on a Dexterity saving throw, or it has the Blinded condition until the end of its next turn."
         )
         return description
+
+    def get_table_description(self, character_stat_block: CharacterStatBlock) -> list[tuple[str, str]]:
+        return [
+            ("Daze (Cost: 2d6)", "Target makes Constitution save or can only move, take an action, or take a Bonus Action on its next turn (not multiple)"),
+            ("Knock Out (Cost: 6d6)", "Target makes Constitution save or gains Unconscious condition for 1 minute or until taking damage (repeats save at end of turn)"),
+            ("Obscure (Cost: 3d6)", "Target makes Dexterity save or gains Blinded condition until end of its next turn"),
+        ]
 
 
 class SlipperyMind(Feature):

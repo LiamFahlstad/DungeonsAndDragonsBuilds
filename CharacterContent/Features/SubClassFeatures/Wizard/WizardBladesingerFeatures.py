@@ -20,6 +20,19 @@ class Bladesong(Feature):
         )
         return description
 
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        int_mod = character_stat_block.get_ability_modifier(Ability.INTELLIGENCE)
+        return [
+            ("Activation", "Bonus Action (while no armor or Shield)"),
+            ("Duration", "1 minute (ends if Incapacitated, don armor/Shield, or use two hands on attack)"),
+            ("Uses", f"{int_mod} per Long Rest (minimum 1); +1 from Arcane Recovery"),
+            ("Agility", f"AC +{int_mod} (min +1), Speed +10 ft, Advantage on Acrobatics"),
+            ("Bladework", f"Use INT mod ({int_mod}) for attack and damage rolls"),
+            ("Focus", f"Add INT mod ({int_mod}) to CON saves for Concentration"),
+        ]
+
 
 class TrainingInWarAndSong(Feature):
     VALID_SKILLS = [

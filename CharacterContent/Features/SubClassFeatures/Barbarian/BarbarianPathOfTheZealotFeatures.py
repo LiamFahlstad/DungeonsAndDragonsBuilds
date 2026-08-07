@@ -110,10 +110,25 @@ class RageOfTheGods(Feature):
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
-            "When you activate your Rage, you can assume the form of a divine warrior. This form lasts for 1 minute or until you drop to 0 Hit Points. Once you use this feature, you can't do so again until you finish a Long Rest.\n"
+            "When you activate your Rage, you can assume the form of a divine warrior. This form lasts for 1 minute or until you drop to 0 Hit Points. Once you use this feature, you can’t do so again until you finish a Long Rest.\n"
             "While in this form, you gain the benefits below.\n"
             "Flight. You have a Fly Speed equal to your Speed and can hover.\n"
             "Resistance. You have Resistance to Necrotic, Psychic, and Radiant damage.\n"
             "Revivification. When a creature within 30 feet of you would drop to 0 Hit Points, you can take a Reaction to expend a use of your Rage to instead change the target’s Hit Points to a number equal to your Barbarian level."
         )
         return description
+
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        barbarian_level = character_stat_block.get_class_level(
+            Definitions.CharacterClass.BARBARIAN
+        )
+        return [
+            ("Activation", "When you activate your Rage"),
+            ("Duration", "1 minute (or until you drop to 0 HP)"),
+            ("Recharge", "Long Rest"),
+            ("Flight", "Fly Speed equal to your Speed, can hover"),
+            ("Resistance", "Necrotic, Psychic, and Radiant damage"),
+            ("Revivification", f"Reaction within 30 ft, expend Rage use: restore HP to {barbarian_level}"),
+        ]

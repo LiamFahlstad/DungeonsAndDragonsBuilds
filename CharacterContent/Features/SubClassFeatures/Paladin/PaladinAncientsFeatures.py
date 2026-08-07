@@ -83,3 +83,15 @@ class ElderChampion(Feature):
             "Swift Spells. Whenever you cast a spell that has a casting time of an action, you can cast it using a Bonus Action instead."
         )
         return description
+
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        return [
+            ("Action", "Bonus Action"),
+            ("Duration", "1 minute (or until ended)"),
+            ("Recharge", "Once per Long Rest (or spend level 5 spell slot)"),
+            ("Diminish Defiance", "Enemies in aura have Disadvantage on saves against your spells and Channel Divinity"),
+            ("Regeneration", "Regain 10 HP at start of each turn"),
+            ("Swift Spells", "Cast spells with action casting time as Bonus Action instead"),
+        ]

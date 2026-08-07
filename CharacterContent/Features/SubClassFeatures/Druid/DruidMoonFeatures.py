@@ -18,6 +18,23 @@ class CircleForms(Feature):
         )
         return description
 
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        import Core.Definitions as Definitions
+        druid_level = character_stat_block.get_class_level(
+            Definitions.CharacterClass.DRUID
+        )
+        max_cr = druid_level // 3
+        wisdom_modifier = character_stat_block.get_ability_modifier(Ability.WISDOM)
+        ac = 13 + wisdom_modifier
+        temp_hp = 3 * druid_level
+        return [
+            ("Max Challenge Rating", f"Druid level / 3 (currently {max_cr})"),
+            ("Armor Class", f"13 + Wisdom modifier (currently {ac})"),
+            ("Temporary Hit Points", f"3 × Druid level (currently {temp_hp})"),
+        ]
+
 
 class CircleOfTheMoonSpells(Feature):
     def __init__(self):
@@ -88,3 +105,11 @@ class LunarForm(Feature):
             "Shared Moonlight. Whenever you use Moonlight Step, you can also teleport one willing creature. That creature must be within 10 feet of you, and you teleport it to an unoccupied space you can see within 10 feet of your destination space."
         )
         return description
+
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        return [
+            ("Improved Lunar Radiance", "Once per turn, +2d10 Radiant damage to Wild Shape attack"),
+            ("Shared Moonlight", "Moonlight Step: teleport one willing creature within 10 feet to within 10 feet of destination"),
+        ]

@@ -1,4 +1,4 @@
-from Core.Definitions import SORCERER_HIT_DIE
+from Core.Definitions import Ability, CharacterClass, SORCERER_HIT_DIE
 from CharacterContent.Features.Core.BaseFeatures import Feature
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
@@ -30,6 +30,19 @@ class TelepathicSpeech(Feature):
             "The telepathic connection lasts for a number of minutes equal to your Sorcerer level. It ends early if you use this ability to form a connection with a different creature."
         )
         return description
+
+    def get_table_description(self, character_stat_block: CharacterStatBlock) -> list[tuple[str, str]]:
+        charisma_modifier = character_stat_block.get_ability_modifier(Ability.CHARISMA)
+        sorcerer_level = character_stat_block.get_class_level(CharacterClass.SORCERER)
+        distance = max(1, charisma_modifier)
+        return [
+            ("Trigger", "Bonus Action"),
+            ("Range", "30 feet (to establish)"),
+            ("Distance", f"{distance} mile(s) apart"),
+            ("Effect", "Telepathic communication (must share a language)"),
+            ("Duration", f"{sorcerer_level} minutes"),
+            ("Ending", "Establish connection with different creature"),
+        ]
 
 
 class PsionicSorcery(Feature):

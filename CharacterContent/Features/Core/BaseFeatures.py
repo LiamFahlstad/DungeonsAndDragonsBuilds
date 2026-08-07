@@ -1,4 +1,4 @@
-from typing import TextIO
+from typing import Literal, TextIO
 
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import Html
@@ -125,6 +125,9 @@ FEATURE_CARD_CSS = """/* ── Feature cards ───────────�
 class Feature:
     """A single feature type. Override apply() to modify the stat block, get_description() to render a card, or both."""
 
+    # Optional alternate renderings: get_table_description() and get_concise_description()
+    # both fall back to get_description() when they return None.
+
     def __init__(self, name: str | None = None, origin: str | None = None):
         self.name = name if name is not None else type(self).__name__
         self.origin = origin
@@ -147,15 +150,30 @@ class Feature:
         are requested. Return None to fall back to get_description()."""
         return None
 
-    def render_html_description(
-        self, character_stat_block: CharacterStatBlock, use_table_description: bool
+    def get_concise_description(
+        self, character_stat_block: CharacterStatBlock
     ) -> str | None:
-        if use_table_description:
+        """Override to provide a short prose summary of the description (a sentence
+        or two, same formatting rules as get_description), used when concise
+        descriptions are requested. Return None to fall back to get_description()."""
+        return None
+
+    def render_html_description(
+        self,
+        character_stat_block: CharacterStatBlock,
+        description_mode: Literal["table", "concise"] | None = None,
+    ) -> str | None:
+        if description_mode == "table":
             table_rows = self.get_table_description(character_stat_block)
             if table_rows is not None:
                 return Html.highlight_damage_types(
                     Html.key_value_table_to_html(table_rows)
                 )
+
+        if description_mode == "concise":
+            concise_description = self.get_concise_description(character_stat_block)
+            if concise_description is not None:
+                return self._description_to_html(concise_description)
 
         description = self.get_description(character_stat_block)
         if description is None:
@@ -166,10 +184,10 @@ class Feature:
         self,
         character_stat_block: CharacterStatBlock,
         file: TextIO,
-        use_table_description: bool = False,
+        description_mode: Literal["table", "concise"] | None = None,
     ):
         html_description = self.render_html_description(
-            character_stat_block, use_table_description
+            character_stat_block, description_mode
         )
         if html_description is None:
             return
@@ -184,7 +202,7 @@ class Feature:
 
         for extension in self.extensions:
             ext_html = extension.render_html_description(
-                character_stat_block, use_table_description
+                character_stat_block, description_mode
             )
             if ext_html is None:
                 continue

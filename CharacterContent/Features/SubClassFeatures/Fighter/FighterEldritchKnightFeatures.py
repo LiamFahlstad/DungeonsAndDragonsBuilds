@@ -34,6 +34,18 @@ class WarBond(Feature):
         )
         return description
 
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        return [
+            ("Bonding Ritual", "1 hour (can be during Short Rest)"),
+            ("Ritual Requirements", "Weapon within reach, touch at conclusion"),
+            ("Bond Failure", "Another Fighter bonded or weapon is attuned magic item"),
+            ("Cannot Be Disarmed", "Unless you have Incapacitated condition"),
+            ("Summoning", "Bonus Action (if on same plane)"),
+            ("Maximum Bonds", "2 bonded weapons, summon only 1 at a time"),
+        ]
+
 
 class WarMagic(Feature):
     def __init__(self):
