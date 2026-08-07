@@ -46,7 +46,7 @@ class UmbralSight(Feature):
 
 class IronMind(Feature):
     def __init__(self):
-        super().__init__(name="Iron Mind", origin="Gloom Stalker Ranger Level 7")
+        super().__init__(name="Iron Mind", origin="Gloom Stalker Ranger Level 7", skippable_in_concise=True)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "You have honed your ability to resist mind-altering powers. You gain proficiency in Wisdom saving throws. If you already have this proficiency, you instead gain proficiency in Intelligence or Charisma saving throws (your choice)."

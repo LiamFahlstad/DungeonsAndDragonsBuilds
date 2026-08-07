@@ -47,7 +47,7 @@ class TrainingInWarAndSong(Feature):
             [skill], self.VALID_SKILLS, count=1, error_prefix="Training in War and Song"
         )
         super().__init__(
-            name="Training in War and Song", origin="Bladesinger Wizard Level 3"
+            name="Training in War and Song", origin="Bladesinger Wizard Level 3", skippable_in_concise=True
         )
 
     def apply(self, character_stat_block: CharacterStatBlock):

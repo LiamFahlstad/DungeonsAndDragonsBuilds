@@ -51,7 +51,7 @@ class Scholar(Feature):
     ]
 
     def __init__(self, skill: Skill):
-        super().__init__(name="Scholar", origin="Wizard Level 2")
+        super().__init__(name="Scholar", origin="Wizard Level 2", skippable_in_concise=True)
         self._expertise = SkillExpertiseChoice(
             [skill],
             self.SKILL_POOL,

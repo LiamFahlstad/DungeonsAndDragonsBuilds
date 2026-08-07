@@ -6,7 +6,7 @@ from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 class Expertise(Feature):
     def __init__(self, skill_1: Skill, skill_2: Skill):
-        super().__init__(name="Expertise", origin="Rogue Level 1")
+        super().__init__(name="Expertise", origin="Rogue Level 1", skippable_in_concise=True)
         self._choice = SkillExpertiseChoice(
             [skill_1, skill_2], list(Skill), count=2, error_prefix="Rogue Expertise"
         )
@@ -179,7 +179,7 @@ class DeviousStrikes(Feature):
 
 class SlipperyMind(Feature):
     def __init__(self):
-        super().__init__(name="Slippery Mind", origin="Rogue Level 15")
+        super().__init__(name="Slippery Mind", origin="Rogue Level 15", skippable_in_concise=True)
         self._choice = SavingThrowProficiencyChoice(
             [Ability.WISDOM, Ability.CHARISMA], list(Ability), count=2,
             error_prefix="Slippery Mind"

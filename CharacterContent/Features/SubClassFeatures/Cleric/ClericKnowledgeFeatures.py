@@ -6,7 +6,7 @@ from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 class BlessingsOfKnowledge(Feature):
     def __init__(self, skill_1: Skill, skill_2: Skill):
-        super().__init__(name="Blessings of Knowledge", origin="Knowledge Domain Cleric Level 3")
+        super().__init__(name="Blessings of Knowledge", origin="Knowledge Domain Cleric Level 3", skippable_in_concise=True)
         self._skill_1 = skill_1
         self._skill_2 = skill_2
         allowed_skills = [

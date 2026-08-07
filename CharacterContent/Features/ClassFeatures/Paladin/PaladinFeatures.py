@@ -247,7 +247,7 @@ class RestoringTouch(Feature):
 
 class AuraExpansion(Feature):
     def __init__(self):
-        super().__init__(name="Aura Expansion", origin="Paladin Level 18")
+        super().__init__(name="Aura Expansion", origin="Paladin Level 18", skippable_in_concise=True)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "Your Aura of Protection is now a 30-foot Emanation."

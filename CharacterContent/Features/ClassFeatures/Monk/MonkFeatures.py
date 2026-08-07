@@ -94,6 +94,7 @@ class UnarmoredDefenseText(Feature):
 
 class UnarmoredDefense(Feature):
     def __init__(self):
+        super().__init__(skippable_in_concise=True)
         self._ac = MultiAbilityArmorClass(10, [Definitions.Ability.DEXTERITY, Definitions.Ability.WISDOM])
 
     def apply(self, character_stat_block: CharacterStatBlock):
@@ -168,7 +169,7 @@ class StepOfTheWind(Feature):
 
 class UnarmoredMovement(Feature):
     def __init__(self):
-        super().__init__(name="Unarmored Movement", origin="Monk Level 2")
+        super().__init__(name="Unarmored Movement", origin="Monk Level 2", skippable_in_concise=True)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "Your speed increases by 10 feet while you aren't wearing armor or wielding a Shield. This bonus increases when you reach certain Monk levels, as shown on the Monk Features table."
@@ -324,7 +325,7 @@ class DeflectEnergy(Feature):
 
 class DisciplinedSurvivorSavingThrows(Feature):
     def __init__(self):
-        super().__init__(name="Disciplined Survivor", origin="Monk Level 14")
+        super().__init__(name="Disciplined Survivor", origin="Monk Level 14", skippable_in_concise=True)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "Your physical and mental discipline grant you proficiency in all saving throws.\n"
@@ -360,7 +361,7 @@ class SuperiorDefense(Feature):
 
 class BodyAndMind(Feature):
     def __init__(self):
-        super().__init__(name="Body and Mind", origin="Monk Level 20")
+        super().__init__(name="Body and Mind", origin="Monk Level 20", skippable_in_concise=True)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "You have developed your body and mind to new heights. Your Dexterity and Wisdom scores increase by 4, to a maximum of 25."

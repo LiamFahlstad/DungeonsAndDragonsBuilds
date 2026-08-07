@@ -130,7 +130,7 @@ class SpellSlots(Feature):
     ) -> None:
         self.caster_type = caster_type
         self.character_class = character_class
-        super().__init__(name="Spell Slots", origin=f"{character_class.value} Spellcasting")
+        super().__init__(name="Spell Slots", origin=f"{character_class.value} Spellcasting", skippable_in_concise=True)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         caster_map = {

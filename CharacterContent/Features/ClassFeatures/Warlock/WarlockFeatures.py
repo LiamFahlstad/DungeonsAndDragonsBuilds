@@ -37,7 +37,7 @@ class ReplacingCantripsAndSpells(Feature):
 
 class RegainingSpellSlots(Feature):
     def __init__(self):
-        super().__init__(name="Regaining Spell Slots", origin="Warlock Level 1")
+        super().__init__(name="Regaining Spell Slots", origin="Warlock Level 1", skippable_in_concise=True)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "You regain all expended Pact Magic spell slots when you finish a Short or Long Rest."

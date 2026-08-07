@@ -7,7 +7,7 @@ from Utils import StringUtils
 class ToolsOfTheTrade(Feature):
     def __init__(self):
         super().__init__(
-            name="Tools of the Trade", origin="Battle Smith Artificer Level 3"
+            name="Tools of the Trade", origin="Battle Smith Artificer Level 3", skippable_in_concise=True
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:

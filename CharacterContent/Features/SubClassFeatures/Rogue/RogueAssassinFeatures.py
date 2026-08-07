@@ -27,7 +27,7 @@ class Assassinate(Feature):
 
 class AssassinsTools(Feature):
     def __init__(self):
-        super().__init__(name="Assassin's Tools", origin="Assassin Rogue Level 3")
+        super().__init__(name="Assassin's Tools", origin="Assassin Rogue Level 3", skippable_in_concise=True)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "You gain a Disguise Kit and a Poisoner's Kit, and you have proficiency with them."

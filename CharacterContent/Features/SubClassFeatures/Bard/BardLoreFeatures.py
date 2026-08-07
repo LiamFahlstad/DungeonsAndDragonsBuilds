@@ -6,7 +6,7 @@ from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 class BonusProficiencies(Feature):
     def __init__(self, skill_1: Skill, skill_2: Skill, skill_3: Skill):
-        super().__init__(name="Bonus Proficiencies", origin="College of Lore Bard Level 3")
+        super().__init__(name="Bonus Proficiencies", origin="College of Lore Bard Level 3", skippable_in_concise=True)
         self._proficiency = SkillProficiencyChoice(
             [skill_1, skill_2, skill_3], list(Skill), count=3
         )

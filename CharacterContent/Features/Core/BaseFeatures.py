@@ -128,10 +128,19 @@ class Feature:
     # Optional alternate renderings: get_table_description() and get_concise_description()
     # both fall back to get_description() when they return None.
 
-    def __init__(self, name: str | None = None, origin: str | None = None):
+    def __init__(
+        self,
+        name: str | None = None,
+        origin: str | None = None,
+        skippable_in_concise: bool = False,
+    ):
         self.name = name if name is not None else type(self).__name__
         self.origin = origin
         self.extensions: list["Feature"] = []
+        # Set True for features that only modify the stat block (e.g. a flat bonus
+        # or a resource pool) where the prose description adds nothing on a
+        # concise/table character sheet. Full-mode sheets always show it.
+        self.skippable_in_concise = skippable_in_concise
 
     def extend_feature(self, feature: "Feature"):
         self.extensions.append(feature)
@@ -163,6 +172,9 @@ class Feature:
         character_stat_block: CharacterStatBlock,
         description_mode: Literal["table", "concise"] | None = None,
     ) -> str | None:
+        if description_mode is not None and self.skippable_in_concise:
+            return None
+
         if description_mode == "table":
             table_rows = self.get_table_description(character_stat_block)
             if table_rows is not None:

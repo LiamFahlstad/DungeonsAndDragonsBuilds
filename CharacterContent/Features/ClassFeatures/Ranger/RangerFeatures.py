@@ -85,7 +85,7 @@ class FavoredEnemy(Feature):
 
 class DeftExplorerExpertise(Feature):
     def __init__(self, skill: Skill):
-        super().__init__(name="Deft Explorer Expertise", origin="Deft Explorer Ranger Level 2")
+        super().__init__(name="Deft Explorer Expertise", origin="Deft Explorer Ranger Level 2", skippable_in_concise=True)
         self.skill = skill
         self._choice = SkillExpertiseChoice(
             [skill], list(Skill), count=1, error_prefix="Deft Explorer Expertise"
@@ -100,7 +100,7 @@ class DeftExplorerExpertise(Feature):
 
 class DeftExplorerLanguages(Feature):
     def __init__(self):
-        super().__init__(name="Deft Explorer", origin="Ranger Level 2")
+        super().__init__(name="Deft Explorer", origin="Ranger Level 2", skippable_in_concise=True)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "Languages.: You know two languages of your choice from the language tables in chapter 2."
@@ -118,7 +118,7 @@ class ExtraAttack(Feature):
 
 class Roving(Feature):
     def __init__(self):
-        super().__init__(name="Roving", origin="Ranger Level 6")
+        super().__init__(name="Roving", origin="Ranger Level 6", skippable_in_concise=True)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "Your speed increases by 10 feet while you aren't wearing Heavy Armor. You also have a Climb speed and a Swim Speed equal to your Speed."
@@ -127,7 +127,7 @@ class Roving(Feature):
 
 class Expertise(Feature):
     def __init__(self, skill_1: Skill, skill_2: Skill):
-        super().__init__(name="Expertise", origin="Ranger Level 7")
+        super().__init__(name="Expertise", origin="Ranger Level 7", skippable_in_concise=True)
         self.skill_1 = skill_1
         self.skill_2 = skill_2
         self._choice = SkillExpertiseChoice(
@@ -223,7 +223,7 @@ class FeralSenses(Feature):
 
 class FoeSlayer(Feature):
     def __init__(self):
-        super().__init__(name="Foe Slayer", origin="Ranger Level 20")
+        super().__init__(name="Foe Slayer", origin="Ranger Level 20", skippable_in_concise=True)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "The damage die of your Hunter's Mark is a d10 rather than a d6."

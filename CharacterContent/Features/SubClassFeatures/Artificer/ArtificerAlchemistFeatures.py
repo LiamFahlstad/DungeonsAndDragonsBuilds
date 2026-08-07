@@ -7,7 +7,7 @@ from Utils import StringUtils
 class ToolsOfTheTrade(Feature):
     def __init__(self):
         super().__init__(
-            name="Tools of the Trade", origin="Alchemist Artificer Level 3"
+            name="Tools of the Trade", origin="Alchemist Artificer Level 3", skippable_in_concise=True
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -63,7 +63,7 @@ class ExperimentalElixir(Feature):
 
 class AlchemicalSavant(Feature):
     def __init__(self):
-        super().__init__(name="Alchemical Savant", origin="Alchemist Artificer Level 5")
+        super().__init__(name="Alchemical Savant", origin="Alchemist Artificer Level 5", skippable_in_concise=True)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "Whenever you cast a spell using your Alchemist's Supplies as the Spellcasting Focus, you gain a bonus to one roll of the spell. That roll must restore Hit Points or be a damage roll that deals Acid, Fire, or Poison damage. The bonus equals your Intelligence modifier (minimum bonus of +1)."

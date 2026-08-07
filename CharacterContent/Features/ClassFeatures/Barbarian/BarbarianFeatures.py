@@ -97,6 +97,7 @@ class DangerSenseText(Feature):
 
 class DangerSense(Feature):
     def __init__(self):
+        super().__init__(skippable_in_concise=True)
         self._advantage = SavingThrowAdvantage([Ability.DEXTERITY])
 
     def apply(self, character_stat_block: CharacterStatBlock):
@@ -166,7 +167,7 @@ class ExtraAttack(Feature):
 
 class FastMovement(Feature):
     def __init__(self):
-        super().__init__(name="Fast Movement", origin="Barbarian Level 5")
+        super().__init__(name="Fast Movement", origin="Barbarian Level 5", skippable_in_concise=True)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -177,7 +178,7 @@ class FastMovement(Feature):
 
 class FeralInstinct(Feature):
     def __init__(self):
-        super().__init__(name="Feral Instinct", origin="Barbarian Level 7")
+        super().__init__(name="Feral Instinct", origin="Barbarian Level 7", skippable_in_concise=True)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -279,7 +280,7 @@ class IndomitableMight(Feature):
 
 class PrimalChampion(Feature):
     def __init__(self):
-        super().__init__(name="Primal Champion", origin="Barbarian Level 20")
+        super().__init__(name="Primal Champion", origin="Barbarian Level 20", skippable_in_concise=True)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "You embody primal power. Your Strength and Constitution scores increase by 4, to a maximum of 25."
