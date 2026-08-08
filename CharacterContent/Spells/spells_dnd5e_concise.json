@@ -7,13 +7,37 @@
     "name": "Acid Splash",
     "concise_description": "One target (or two targets within 5 feet of each other) makes a Dexterity save or takes 1d6 acid damage (+1d6 at 5th/11th/17th level)."
   },
+  "Aganazzar's Scorcher": {
+    "name": "Aganazzar's Scorcher",
+    "concise_description": "A line of roaring flame 30 feet long and 5 feet wide emanates from you in a direction you choose. Each creature in the line must make a Dexterity saving throw."
+  },
+  "Aid": {
+    "name": "Aid",
+    "concise_description": "Your spell bolsters your allies with toughness and resolve. Choose up to three creatures within range."
+  },
+  "Air Bubble": {
+    "name": "Air Bubble",
+    "concise_description": "You create a spectral globe around the head of a willing creature you can see within range. The globe is filled with fresh air that lasts until the spell ends."
+  },
   "Alarm": {
     "name": "Alarm",
     "concise_description": "Wards a door, window, or up to a 20-foot cube; alerts you when a Tiny or larger creature (other than ones you designate) touches or enters the area, either mentally within 1 mile (waking you if asleep) or audibly as a bell for 10 seconds within 60 feet."
   },
+  "Alter Self": {
+    "name": "Alter Self",
+    "concise_description": "You assume a different form. When you cast the spell, choose one of the following options, the effects of which last for the duration of the spell."
+  },
   "Animal Friendship": {
     "name": "Animal Friendship",
     "concise_description": "Target beast (Intelligence 3 or lower) makes a Wisdom save or is charmed by you for the duration; ends early if you or a companion harms it (+1 target per slot above 1st)."
+  },
+  "Animal Messenger": {
+    "name": "Animal Messenger",
+    "concise_description": "By means of this spell, you use an animal to deliver a message. Choose a Tiny beast you can see within range, such as a squirrel, a blue jay, or a bat."
+  },
+  "Arcane Lock": {
+    "name": "Arcane Lock",
+    "concise_description": "You touch a closed door, window, gate, chest, or other entryway, and it becomes locked for the duration. You and the creatures you designate when you cast this spell can open the object normally."
   },
   "Armor of Agathys": {
     "name": "Armor of Agathys",
@@ -23,13 +47,25 @@
     "name": "Arms of Hadar",
     "concise_description": "Each creature within 10 feet makes a Strength save, taking 2d6 necrotic damage and losing reactions until its next turn on a fail, or half damage with no other effect on a success (+1d6 per slot above 1st)."
   },
+  "Augury": {
+    "name": "Augury",
+    "concise_description": "By casting gem-inlaid sticks, rolling dragon bones, laying out ornate cards, or employing some other divining tool, you receive an omen from an otherworldly entity about the results of a specific course of action that you plan to take within the next 30 minutes. The DM chooses from the following ..."
+  },
   "Bane": {
     "name": "Bane",
     "concise_description": "Up to three creatures make Charisma saves; each that fails must subtract a rolled d4 from its attack rolls and saving throws until the spell ends (+1 target per slot above 1st)."
   },
+  "Barkskin": {
+    "name": "Barkskin",
+    "concise_description": "You touch a willing creature. Until the spell ends, the target's skin has a rough, bark-like appearance, and the target's AC can't be less than 16,..."
+  },
   "Beast Bond": {
     "name": "Beast Bond",
     "concise_description": "Telepathic link with a touched friendly/charmed beast (fails if its Int is 4+) while in line of sight; it can share simple emotions/concepts and gains advantage on attacks against creatures within 5 feet of you that it can see."
+  },
+  "Beast Sense": {
+    "name": "Beast Sense",
+    "concise_description": "You touch a willing beast. For the duration of the spell, you can use your action to see through the beast's eyes and hear what it hears, and continue to do so until you use your action to return to your normal senses."
   },
   "Blade Ward": {
     "name": "Blade Ward",
@@ -39,13 +75,33 @@
     "name": "Bless",
     "concise_description": "Up to three creatures add a rolled d4 to attack rolls and saving throws made before the spell ends (+1 target per slot above 1st)."
   },
+  "Blindness/Deafness": {
+    "name": "Blindness/Deafness",
+    "concise_description": "You can blind or deafen a foe. Choose one creature that you can see within range to make a Constitution saving throw."
+  },
+  "Blur": {
+    "name": "Blur",
+    "concise_description": "Your body becomes blurred, shifting and wavering to all who can see you. For the duration, any creature has disadvantage on attack rolls against you."
+  },
   "Booming Blade": {
     "name": "Booming Blade",
     "concise_description": "Melee weapon attack against a creature within 5 feet; on hit, normal weapon damage, and the target takes 1d8 thunder damage if it willingly moves 5+ feet before the start of your next turn (both the extra melee damage and the movement damage scale up at 5th/11th/17th level)."
   },
+  "Borrowed Knowledge": {
+    "name": "Borrowed Knowledge",
+    "concise_description": "You draw on knowledge from spirits of the past. Choose one skill in which you lack proficiency."
+  },
+  "Branding Smite": {
+    "name": "Branding Smite",
+    "concise_description": "The next time you hit a creature with a weapon attack before this spell ends, the weapon gleams with astral radiance as you strike. The attack deals an extra 2d6 radiant damage to the target, which becomes visible if it is invisible, and the target sheds dim light in a 5-foot radius and can't bec..."
+  },
   "Burning Hands": {
     "name": "Burning Hands",
     "concise_description": "Each creature in a 15-foot cone makes a Dexterity save, taking 3d6 fire damage on a fail or half on a success; ignites unattended flammable objects in the area (+1d6 per slot above 1st)."
+  },
+  "Calm Emotions": {
+    "name": "Calm Emotions",
+    "concise_description": "You attempt to suppress strong emotions in a group of people. Each humanoid in a 20-foot-radius sphere centered on a point you choose within range must make a Charisma saving throw; a creature can choose to fail this saving throw if it wishes."
   },
   "Catapult": {
     "name": "Catapult",
@@ -75,6 +131,10 @@
     "name": "Chromatic Orb",
     "concise_description": "Ranged spell attack (choose acid, cold, fire, lightning, poison, or thunder) dealing 3d8 damage of the chosen type on a hit (+1d8 per slot above 1st)."
   },
+  "Cloud of Daggers": {
+    "name": "Cloud of Daggers",
+    "concise_description": "You fill the air with spinning daggers in a cube 5 feet on each side, centered on a point you choose within range. A creature takes 4d4 slashing damage when it enters the spell's area for the first time on a turn or starts its turn there."
+  },
   "Color Spray": {
     "name": "Color Spray",
     "concise_description": "Roll 6d10 as a pool of hit points; creatures in a 15-foot cone (lowest current HP first, ignoring unconscious creatures or ones that can't see) are blinded until the end of your next turn as their HP is subtracted from the pool, until it runs out (+2d10 per slot above 1st)."
@@ -91,9 +151,17 @@
     "name": "Comprehend Languages",
     "concise_description": "Understand any spoken language you hear and any written language you touch (about 1 minute per page); doesn't decode non-linguistic secret messages or glyphs."
   },
+  "Continual Flame": {
+    "name": "Continual Flame",
+    "concise_description": "A flame, equivalent in brightness to a torch, springs forth from an object that you touch. The effect looks like a regular flame, but it creates no heat and doesn't use oxygen."
+  },
   "Control Flames": {
     "name": "Control Flames",
     "concise_description": "Choose a nonmagical flame in a 5-foot cube and: expand it 5 feet (if fuel is present), extinguish it, double/halve its light radius or change its color (1 hour), or shape it into simple animated forms (1 hour); up to three non-instantaneous effects can be active at once, each dismissible as an action."
+  },
+  "Cordon of Arrows": {
+    "name": "Cordon of Arrows",
+    "concise_description": "You plant four pieces of nonmagical ammunition – arrows or crossbow bolts – in the ground within range and lay magic upon them to protect an area. Until the spell ends, whenever a creature other than you comes within 30 feet of the ammunition for the first time on a turn or ends its turn there, o..."
   },
   "Create Bonfire": {
     "name": "Create Bonfire",
@@ -103,6 +171,10 @@
     "name": "Create or Destroy Water",
     "concise_description": "Create up to 10 gallons of water (or rain in a 30-foot cube, extinguishing exposed flames) or destroy up to 10 gallons of water (or fog in a 30-foot cube) (+10 gallons or +5-foot cube per slot above 1st)."
   },
+  "Crown of Madness": {
+    "name": "Crown of Madness",
+    "concise_description": "One humanoid of your choice that you can see within range must succeed on a Wisdom saving throw or become charmed by you for the duration. While the target is charmed in this way, a twisted crown of jagged iron appears on its head, and a madness glows in its eyes."
+  },
   "Cure Wounds": {
     "name": "Cure Wounds",
     "concise_description": "Touched creature regains 1d8 + spellcasting modifier hit points; no effect on undead/constructs (+1d8 per slot above 1st)."
@@ -110,6 +182,14 @@
   "Dancing Lights": {
     "name": "Dancing Lights",
     "concise_description": "Create up to four torch-sized lights (or combine into one Medium humanoid glow) shedding dim light in a 10-foot radius; move them up to 60 feet as a bonus action, each staying within 20 feet of another or winking out."
+  },
+  "Darkness": {
+    "name": "Darkness",
+    "concise_description": "Magical darkness spreads from a point you choose within range to fill a 15-foot radius sphere for the duration. The darkness spreads around corners."
+  },
+  "Darkvision": {
+    "name": "Darkvision",
+    "concise_description": "You touch a willing creature to grant it the ability to see in the dark. For the duration, that creature has darkvision out to a range of 60 feet."
   },
   "Detect Evil and Good": {
     "name": "Detect Evil and Good",
@@ -122,6 +202,10 @@
   "Detect Poison and Disease": {
     "name": "Detect Poison and Disease",
     "concise_description": "Sense the presence, location, and identity of poisons, poisonous creatures, and diseases within 30 feet (blocked by 1 ft stone, 1 in metal, thin lead, or 3 ft wood/dirt)."
+  },
+  "Detect Thoughts": {
+    "name": "Detect Thoughts",
+    "concise_description": "For the duration, you can read the thoughts of certain creatures. When you cast the spell and as your action on each turn until the spell ends, you can focus your mind on any one creature that you can see within 30 feet of you."
   },
   "Disguise Self": {
     "name": "Disguise Self",
@@ -139,13 +223,25 @@
     "name": "Divine Favor",
     "concise_description": "Your weapon attacks deal an extra 1d4 radiant damage on a hit for the duration."
   },
+  "Dragon's Breath": {
+    "name": "Dragon's Breath",
+    "concise_description": "You touch one willing creature and imbue it with the power to spew magical energy from its mouth, provided it has one. Choose acid, cold, fire, lightning, or poison."
+  },
   "Druidcraft": {
     "name": "Druidcraft",
     "concise_description": "Choose one: predict local weather 24 hours out (harmless sensory effect, 1 round); instantly bloom a flower/seed pod/leaf bud; create a harmless instantaneous sensory effect in a 5-foot cube; or light/snuff a small flame."
   },
+  "Dust Devil": {
+    "name": "Dust Devil",
+    "concise_description": "Choose an unoccupied 5-foot cube of air that you can see within range. An elemental force that resembles a dust devil appears in the cube and lasts for the spell's duration."
+  },
   "Earth Tremor": {
     "name": "Earth Tremor",
     "concise_description": "Each creature other than you within 10 feet makes a Dexterity save, taking 1d6 bludgeoning damage and falling prone on a fail; loose ground in the area becomes difficult terrain (+1d6 per slot above 1st)."
+  },
+  "Earthbind": {
+    "name": "Earthbind",
+    "concise_description": "Choose one creature you can see within range. Yellow strips of magical energy loop around the creature."
   },
   "Eldritch Blast": {
     "name": "Eldritch Blast",
@@ -155,6 +251,14 @@
     "name": "Encode Thoughts",
     "concise_description": "Create a tangible 'thought strand' holding a memory, idea, or message from your mind (or thoughts you're reading via another effect); casting this spell again while holding a strand instantly conveys its contents to you."
   },
+  "Enhance Ability": {
+    "name": "Enhance Ability",
+    "concise_description": "You touch a creature and bestow upon it a magical enhancement. Choose one of the following effects; the target gains the effect until the spell ends."
+  },
+  "Enlarge/Reduce": {
+    "name": "Enlarge/Reduce",
+    "concise_description": "You cause a creature or an object you can see within range to grow larger or smaller for the duration. Choose either a creature or an object that is neither worn nor carried."
+  },
   "Ensnaring Strike": {
     "name": "Ensnaring Strike",
     "concise_description": "Next weapon hit before the spell ends forces a Strength save (advantage if Large or larger) or the target is restrained by vines until it or another creature succeeds a Strength check vs your spell save DC; while restrained, it takes 1d6 piercing damage at the start of each of its turns (+1d6 per slot above 1st)."
@@ -162,6 +266,10 @@
   "Entangle": {
     "name": "Entangle",
     "concise_description": "Creates difficult terrain in a 20-foot square; creatures present when cast make a Strength save or are restrained until they succeed a Strength check vs your spell save DC."
+  },
+  "Enthrall": {
+    "name": "Enthrall",
+    "concise_description": "You weave a distracting string of words, causing creatures of your choice that you can see within range and that can hear you to make a Wisdom saving throw. Any creature that can't be charmed succeeds on this saving throw automatically, and if you or your companions are fighting a creature, it ha..."
   },
   "Expeditious Retreat": {
     "name": "Expeditious Retreat",
@@ -183,13 +291,37 @@
     "name": "Find Familiar",
     "concise_description": "Summon a familiar spirit (celestial, fey, or fiend, your choice) with the statistics of a chosen small animal form; it acts on its own initiative, can't attack, and disappears at 0 HP (returning when recast). You can communicate with it telepathically within 100 feet, and as an action see/hear through it (blinding/deafening yourself) until the start of your next turn. A touch-range spell you cast can be delivered through it as its reaction if within 100 feet. Only one familiar at a time; recasting lets it change form instead of summoning anew."
   },
+  "Find Steed": {
+    "name": "Find Steed",
+    "concise_description": "You summon a spirit that assumes the form of an unusually intelligent, strong, and loyal steed, creating a long-lasting bond with it. Appearing in an unoccupied space within range, the steed takes on a form that you choose: a warhorse, a pony, a camel, an elk, or a mastiff."
+  },
+  "Find Traps": {
+    "name": "Find Traps",
+    "concise_description": "You sense the presence of any trap within range that is within line of sight. A trap, for the purpose of this spell, includes anything that would inflict a sudden or unexpected effect you consider harmful or undesirable, which was specifically intended as such by its creator."
+  },
   "Fire Bolt": {
     "name": "Fire Bolt",
     "concise_description": "Ranged spell attack dealing 1d10 fire damage; ignites unattended flammable objects (+1d10 at 5th/11th/17th level)."
   },
+  "Flame Blade": {
+    "name": "Flame Blade",
+    "concise_description": "You evoke a fiery blade in your free hand. The blade is similar in size and shape to a scimitar, and it lasts for the duration."
+  },
+  "Flaming Sphere": {
+    "name": "Flaming Sphere",
+    "concise_description": "A 5-foot-diameter sphere of fire appears in an unoccupied space of your choice within range and lasts for the duration. Any creature that ends its turn within 5 feet of the sphere must make a Dexterity saving throw."
+  },
+  "Flock of Familiars": {
+    "name": "Flock of Familiars",
+    "concise_description": "You temporarily summon three familiars – spirits that take animal forms of your choice. Each familiar uses the same rules and options for a familiar conjured by the Find Familiar spell."
+  },
   "Fog Cloud": {
     "name": "Fog Cloud",
     "concise_description": "Creates a 20-foot-radius heavily obscuring fog sphere until dispersed by a moderate wind (10+ mph) or the duration ends (+20-foot radius per slot above 1st)."
+  },
+  "Fortune's Favor": {
+    "name": "Fortune's Favor",
+    "concise_description": "You impart latent luck to yourself or one willing creature you can see within range. When the chosen creature makes an attack roll, an ability check, or a saving throw before the spell ends, it can dismiss this spell on itself to roll an additional d20 and choose which of the d20s to use."
   },
   "Friends": {
     "name": "Friends",
@@ -203,9 +335,17 @@
     "name": "Frostbite",
     "concise_description": "Target makes a Constitution save or takes 1d6 cold damage and has disadvantage on its next weapon attack roll before the end of its next turn (+1d6 at 5th/11th/17th level)."
   },
+  "Gentle Repose": {
+    "name": "Gentle Repose",
+    "concise_description": "You touch a corpse or other remains. For the duration, the target is protected from decay and can't become undead."
+  },
   "Gift of Alacrity": {
     "name": "Gift of Alacrity",
     "concise_description": "Touched willing creature adds 1d8 to its initiative rolls for the duration."
+  },
+  "Gift of Gab": {
+    "name": "Gift of Gab",
+    "concise_description": "When you cast this spell, you skillfully reshape the memories of listeners in your immediate area, so that each creature of your choice within 5 feet of you forgets everything you said within the last 6 seconds. Those creatures then remember that you actually said the words you speak as the verba..."
   },
   "Goodberry": {
     "name": "Goodberry",
@@ -231,13 +371,25 @@
     "name": "Gust",
     "concise_description": "Choose one: a Medium or smaller creature makes a Strength save or is pushed 5 feet away from you; push an unattended object (up to 5 lb) 10 feet without dealing damage; or create a harmless sensory effect using air."
   },
+  "Gust of Wind": {
+    "name": "Gust of Wind",
+    "concise_description": "A line of strong wind 60 feet long and 10 feet wide blasts from you in a direction you choose for the spell's duration. Each creature that starts its turn in the line must succeed on a Strength saving throw or be pushed 15 feet away from you in a direction following the line."
+  },
   "Hail of Thorns": {
     "name": "Hail of Thorns",
     "concise_description": "Next ranged weapon hit before the spell ends also forces the target and each creature within 5 feet of it to make a Dexterity save, taking 1d10 piercing damage on a fail or half on a success (+1d10 per slot above 1st, max 6d10)."
   },
+  "Healing Spirit": {
+    "name": "Healing Spirit",
+    "concise_description": "You call forth a nature spirit to soothe the wounded. The intangible spirit appears in a space that is a 5-foot cube you can see within range."
+  },
   "Healing Word": {
     "name": "Healing Word",
     "concise_description": "Target regains 1d4 + spellcasting modifier hit points; no effect on undead/constructs (+1d4 per slot above 1st)."
+  },
+  "Heat Metal": {
+    "name": "Heat Metal",
+    "concise_description": "Choose a manufactured metal object, such as a metal weapon or a suit of heavy or medium metal armor, that you can see within range. You cause the object to glow red-hot."
   },
   "Hellish Rebuke": {
     "name": "Hellish Rebuke",
@@ -250,6 +402,10 @@
   "Hex": {
     "name": "Hex",
     "concise_description": "Target takes an extra 1d6 necrotic damage whenever you hit it, and has disadvantage on ability checks with one chosen ability, until the spell ends; if it drops to 0 HP you can retarget with a bonus action on a later turn; Remove Curse ends it early (concentration can extend to 8 hours with a 3rd/4th-level slot, 24 hours with a 5th+-level slot)."
+  },
+  "Hold Person": {
+    "name": "Hold Person",
+    "concise_description": "Choose a humanoid that you can see within range. The target must succeed on a Wisdom saving throw or be paralyzed for the duration."
   },
   "Hunter's Mark": {
     "name": "Hunter's Mark",
@@ -267,6 +423,10 @@
     "name": "Illusory Script",
     "concise_description": "Written text appears normal to you and creatures you designate, or as an entirely different message you choose (in a language you know) to everyone else, and is otherwise unintelligible. Dispelling destroys both the real script and the illusion; truesight reads the hidden message."
   },
+  "Immovable Object": {
+    "name": "Immovable Object",
+    "concise_description": "You touch an object that weighs no more than 10 pounds and cause it to become magically fixed in place. You and the creatures you designate when you cast this spell can move the object normally."
+  },
   "Infestation": {
     "name": "Infestation",
     "concise_description": "Target makes a Constitution save or takes 1d6 poison damage and is forced 5 feet in a random direction (no opportunity attacks provoked; blocked movement is negated) (+1d6 at 5th/11th/17th level)."
@@ -274,6 +434,14 @@
   "Inflict Wounds": {
     "name": "Inflict Wounds",
     "concise_description": "Melee spell attack dealing 3d10 necrotic damage on a hit (+1d10 per slot above 1st)."
+  },
+  "Invisibility": {
+    "name": "Invisibility",
+    "concise_description": "A creature you touch becomes invisible until the spell ends. Anything the target is wearing or carrying is invisible as long as it is on the target's person."
+  },
+  "Jim's Glowing Coin": {
+    "name": "Jim's Glowing Coin",
+    "concise_description": "When you cast the spell, you hurl the coin that is the spell's material component to any spot within range. The coin lights up as if under the effect of a light spell."
   },
   "Jim's Magic Missile": {
     "name": "Jim's Magic Missile",
@@ -283,6 +451,22 @@
     "name": "Jump",
     "concise_description": "Touched creature's jump distance triples until the spell ends."
   },
+  "Kinetic Jaunt": {
+    "name": "Kinetic Jaunt",
+    "concise_description": "You magically empower your movement with dancelike steps, giving yourself the following benefits for the duration:\nYour walking speed increases by 10 feet. You don't provoke opportunity attacks."
+  },
+  "Knock": {
+    "name": "Knock",
+    "concise_description": "Choose an object that you can see within range. The object can be a door, a box, a chest, a set of manacles, a padlock, or another object that contains a mundane or magical means that prevents access."
+  },
+  "Lesser Restoration": {
+    "name": "Lesser Restoration",
+    "concise_description": "You touch a creature and can end either one disease or one condition afflicting it. The condition can be blinded, deafened, paralyzed, or poisoned."
+  },
+  "Levitate": {
+    "name": "Levitate",
+    "concise_description": "One creature or loose object of your choice that you can see within range rises vertically, up to 20 feet, and remains suspended there for the duration. The spell can levitate a target that weighs up to 500 pounds."
+  },
   "Light": {
     "name": "Light",
     "concise_description": "Touched object (max 10 ft) sheds bright light 20 feet and dim light 20 feet further, in a color of your choice, until dismissed, recast, or fully covered; if held/worn by a hostile creature, that creature can avoid the effect with a Dexterity save."
@@ -290,6 +474,14 @@
   "Lightning Lure": {
     "name": "Lightning Lure",
     "concise_description": "Target within 15 feet makes a Strength save or is pulled up to 10 feet toward you, taking 1d8 lightning damage if it ends within 5 feet of you (+1d8 at 5th/11th/17th level)."
+  },
+  "Locate Animals or Plants": {
+    "name": "Locate Animals or Plants",
+    "concise_description": "Describe or name a specific kind of beast or plant. Concentrating on the voice of nature in your surroundings, you learn the direction and distance to the closest creature or plant of that kind within 5 miles, if any are present."
+  },
+  "Locate Object": {
+    "name": "Locate Object",
+    "concise_description": "Describe or name an object that is familiar to you. You sense the direction to the object's location, as long as that object is within 1,000 feet of you."
   },
   "Longstrider": {
     "name": "Longstrider",
@@ -307,13 +499,29 @@
     "name": "Magic Missile",
     "concise_description": "Creates 3 darts of force that automatically hit (no attack roll); each dart deals 1d4+1 force damage, split among targets as you choose (+1 dart per slot above 1st)."
   },
+  "Magic Mouth": {
+    "name": "Magic Mouth",
+    "concise_description": "You implant a message within an object in range, a message that is uttered when a trigger condition is met. Choose an object that you can see and that isn't being worn or carried by another creature."
+  },
   "Magic Stone": {
     "name": "Magic Stone",
     "concise_description": "Imbue up to three pebbles; thrown or sling-hurled as a ranged spell attack (60 ft if thrown; if someone else attacks, they use your spellcasting modifier instead of theirs) dealing 1d6 + spellcasting modifier bludgeoning damage on a hit; the effect ends on the stone after use, or early on any stones if you recast."
   },
+  "Magic Weapon": {
+    "name": "Magic Weapon",
+    "concise_description": "You touch a nonmagical weapon. Until the spell ends, that weapon becomes a magic weapon with a +1 bonus to attack rolls and damage rolls."
+  },
   "Magnify Gravity": {
     "name": "Magnify Gravity",
     "concise_description": "Each creature in a 10-foot-radius sphere makes a Constitution save, taking 2d8 force damage and having its speed halved until the end of its next turn on a fail, or half damage with no speed reduction on a success; until your next turn, moving an unattended object in the sphere requires a Strength check vs your spell save DC (+1d8 per slot above 1st)."
+  },
+  "Maximillian's Earthen Grasp": {
+    "name": "Maximillian's Earthen Grasp",
+    "concise_description": "You choose a 5-foot-square unoccupied space on the ground that you can see within range. A Medium hand made from compacted soil rises there and reaches for one creature you can see within 5 feet of it."
+  },
+  "Melf's Acid Arrow": {
+    "name": "Melf's Acid Arrow",
+    "concise_description": "A shimmering green arrow streaks toward a target within range and bursts in a spray of acid. Make a ranged spell attack against the target."
   },
   "Mending": {
     "name": "Mending",
@@ -327,17 +535,53 @@
     "name": "Mind Sliver",
     "concise_description": "Target makes an Intelligence save or takes 1d6 psychic damage and subtracts 1d4 from its next saving throw before the end of your next turn (+1d6 at 5th/11th/17th level)."
   },
+  "Mind Spike": {
+    "name": "Mind Spike",
+    "concise_description": "You reach into the mind of one creature you can see within range. The target must make a Wisdom saving throw, taking 3d8 psychic damage on a failed save, or half as much damage on a successful one."
+  },
   "Minor Illusion": {
     "name": "Minor Illusion",
     "concise_description": "Create a sound (whisper to scream) or a static image (max 5-foot cube, no other sensory effects) that lasts the duration or until dismissed/recast; physical interaction, or an Intelligence (Investigation) check vs your spell save DC by an examining creature, reveals it as illusory."
+  },
+  "Mirror Image": {
+    "name": "Mirror Image",
+    "concise_description": "Three illusory duplicates of yourself appear in your space. Until the spell ends, the duplicates move with you and mimic your actions, shifting position so it's impossible to track which image is real."
+  },
+  "Misty Step": {
+    "name": "Misty Step",
+    "concise_description": "Briefly surrounded by silvery mist, you teleport up to 30 feet to an unoccupied space that you can see."
   },
   "Mold Earth": {
     "name": "Mold Earth",
     "concise_description": "Choose a 5-foot cube of earth/stone within range and: excavate/move loose earth up to 5 feet (no damage); etch shapes/words/patterns (1 hour); or make ground difficult or normal terrain (1 hour); up to two non-instantaneous effects can be active at once, each dismissible as an action."
   },
+  "Moonbeam": {
+    "name": "Moonbeam",
+    "concise_description": "A silvery beam of pale light shines down in a 5-foot radius, 40-foot-high cylinder centered on a point within range. Until the spell ends, dim light fills the cylinder."
+  },
+  "Nathair's Mischief": {
+    "name": "Nathair's Mischief",
+    "concise_description": "You fill a 20-foot cube you can see within range with fey and draconic magic. Roll on the Mischievous Surge table to determine the magical effect produced, and roll again at the start of each of your turns until the spell ends."
+  },
+  "Nystul's Magic Aura": {
+    "name": "Nystul's Magic Aura",
+    "concise_description": "You place an illusion on a creature or an object you touch so that divination spells reveal false information about it. The target can be a willing creature or an object that isn't being carried or worn by another creature."
+  },
+  "Pass without Trace": {
+    "name": "Pass without Trace",
+    "concise_description": "A veil of shadows and silence radiates from you, masking you and your companions from detection. For the duration, each creature you choose within 30 feet of you (including you) has a +10 bonus to Dexterity (Stealth) checks and can't be tracked except by magical means."
+  },
+  "Phantasmal Force": {
+    "name": "Phantasmal Force",
+    "concise_description": "You craft an illusion that takes root in the mind of a creature that you can see within range. The target must make an Intelligence saving throw."
+  },
   "Poison Spray": {
     "name": "Poison Spray",
     "concise_description": "Target makes a Constitution save or takes 1d12 poison damage (+1d12 at 5th/11th/17th level)."
+  },
+  "Prayer of Healing": {
+    "name": "Prayer of Healing",
+    "concise_description": "Up to six creatures of your choice that you can see within range each regain hit points equal to 2d8 + your spellcasting ability modifier. This spell has no effect on undead or constructs."
   },
   "Prestidigitation": {
     "name": "Prestidigitation",
@@ -355,9 +599,21 @@
     "name": "Protection from Evil and Good",
     "concise_description": "Touched willing creature gains, against aberrations, celestials, elementals, fey, fiends, and undead until the spell ends: those creatures have disadvantage attacking it, and it can't be charmed/frightened/possessed by them (advantage on a new save if already so affected)."
   },
+  "Protection from Poison": {
+    "name": "Protection from Poison",
+    "concise_description": "You touch a creature. If it is poisoned, you neutralize the poison."
+  },
   "Purify Food and Drink": {
     "name": "Purify Food and Drink",
     "concise_description": "Purifies all nonmagical food and drink in a 5-foot-radius sphere, removing poison and disease."
+  },
+  "Pyrotechnics": {
+    "name": "Pyrotechnics",
+    "concise_description": "Choose an area of flame that you can see and that can fit within a 5-foot cube within range. You can extinguish the fire in that area, and you create either fireworks or smoke."
+  },
+  "Ray of Enfeeblement": {
+    "name": "Ray of Enfeeblement",
+    "concise_description": "A black beam of enervating energy springs from your finger toward a creature within range. Make a ranged spell attack against the target."
   },
   "Ray of Frost": {
     "name": "Ray of Frost",
@@ -371,6 +627,14 @@
     "name": "Resistance",
     "concise_description": "Touched willing creature can add a rolled d4 to one saving throw of its choice before the spell ends (once)."
   },
+  "Rime's Binding Ice": {
+    "name": "Rime's Binding Ice",
+    "concise_description": "A burst of cold energy emanates from you in a 30-foot cone. Each creature in that area must make a Constitution saving throw."
+  },
+  "Rope Trick": {
+    "name": "Rope Trick",
+    "concise_description": "You touch a length of rope that is up to 60 feet long. One end of the rope then rises into the air until the whole rope hangs perpendicular to the ground."
+  },
   "Sacred Flame": {
     "name": "Sacred Flame",
     "concise_description": "Target makes a Dexterity save (gains no benefit from cover) or takes 1d8 radiant damage (+1d8 at 5th/11th/17th level)."
@@ -383,13 +647,29 @@
     "name": "Sapping Sting",
     "concise_description": "Target makes a Constitution save or takes 1d4 necrotic damage and falls prone (+1d4 at 5th/11th/17th level)."
   },
+  "Scorching Ray": {
+    "name": "Scorching Ray",
+    "concise_description": "You create three rays of fire and hurl them at targets within range. You can hurl them at one target or several."
+  },
   "Searing Smite": {
     "name": "Searing Smite",
     "concise_description": "Next melee hit before the spell ends deals an extra 1d6 fire damage and ignites the target; at the start of each of its turns it makes a Constitution save, taking 1d6 fire damage on a fail or ending the spell on a success (also ends if the flames are doused) (+1d6 initial damage per slot above 1st)."
   },
+  "See Invisibility": {
+    "name": "See Invisibility",
+    "concise_description": "For the duration, you see invisible creatures and objects as if they were visible, and you can see into the Ethereal Plane. Ethereal creatures and ..."
+  },
+  "Shadow Blade": {
+    "name": "Shadow Blade",
+    "concise_description": "You weave together threads of shadow to create a sword of solidified gloom in your hand. This magic sword lasts until the spell ends."
+  },
   "Shape Water": {
     "name": "Shape Water",
     "concise_description": "Choose a 5-foot cube of water within range and: move/redirect it up to 5 feet (no damage); shape and animate it (1 hour); change its color/opacity (1 hour); or freeze it if no creatures are present (thaws in 1 hour); up to two non-instantaneous effects can be active at once, each dismissible as an action."
+  },
+  "Shatter": {
+    "name": "Shatter",
+    "concise_description": "A sudden loud ringing noise, painfully intense, erupts from a point of your choice within range. Each creature in a 10-foot-radius sphere centered on that point must make a Constitution saving throw."
   },
   "Shield": {
     "name": "Shield",
@@ -407,6 +687,10 @@
     "name": "Shocking Grasp",
     "concise_description": "Melee spell attack (advantage if target wears metal armor) dealing 1d8 lightning damage; target can't take reactions until the start of its next turn (+1d8 at 5th/11th/17th level)."
   },
+  "Silence": {
+    "name": "Silence",
+    "concise_description": "For the duration, no sound can be created within or pass through a 20-foot-radius sphere centered on a point you choose within range. Any creature or object entirely inside the sphere is immune to thunder damage, and creatures are deafened while entirely inside it."
+  },
   "Silent Image": {
     "name": "Silent Image",
     "concise_description": "Creates a purely visual image (max 15-foot cube) that you can move within range as an action, altering its appearance to seem natural; physical interaction, or an Intelligence (Investigation) check vs your spell save DC by an examining creature, reveals it as illusory (and lets that creature see through it)."
@@ -414,6 +698,10 @@
   "Silvery Barbs": {
     "name": "Silvery Barbs",
     "concise_description": "Reaction: the triggering creature must reroll its d20 and use the lower result; you then grant a creature of your choice (including yourself) advantage on its next attack roll, ability check, or saving throw within 1 minute (only one such empowerment active at a time)."
+  },
+  "Skywrite": {
+    "name": "Skywrite",
+    "concise_description": "You cause up to ten words to form in a part of the sky you can see. The words appear to be made of cloud and remain in place for the spell's duration."
   },
   "Sleep": {
     "name": "Sleep",
@@ -423,6 +711,10 @@
     "name": "Snare",
     "concise_description": "Creates a nearly invisible trap (Intelligence (Investigation) check vs your spell save DC to spot) in a 5-foot-radius circle; a Small/Medium/Large creature that enters makes a Dexterity save or is hoisted upside down 3 feet up and restrained. A restrained creature can save at the end of each of its turns, or anyone can use an action for an Intelligence (Arcana) check vs your spell save DC, to end the restraint; the spell ends once no one is restrained after triggering."
   },
+  "Snilloc's Snowball Swarm": {
+    "name": "Snilloc's Snowball Swarm",
+    "concise_description": "A flurry of magic snowballs erupts from a point you choose within range. Each creature in a 5-foot-radius sphere centered on that point must make a Dexterity saving throw."
+  },
   "Spare the Dying": {
     "name": "Spare the Dying",
     "concise_description": "Touched creature at 0 hit points becomes stable; no effect on undead/constructs."
@@ -430,6 +722,30 @@
   "Speak with Animals": {
     "name": "Speak with Animals",
     "concise_description": "Comprehend and verbally communicate with beasts for the duration; they can share information (limited by their intelligence) about nearby locations/monsters perceived within the past day, and might be persuaded to help."
+  },
+  "Spider Climb": {
+    "name": "Spider Climb",
+    "concise_description": "Until the spell ends, one willing creature you touch gains the ability to move up, down, and across vertical surfaces and upside down along ceilings, while leaving its hands free. The target also gains a climbing speed equal to its walking speed."
+  },
+  "Spike Growth": {
+    "name": "Spike Growth",
+    "concise_description": "The ground in a 20-foot radius centered on a point within range twists and sprouts hard spikes and thorns. The area becomes difficult terrain for the duration."
+  },
+  "Spiritual Weapon": {
+    "name": "Spiritual Weapon",
+    "concise_description": "You create a floating, spectral weapon within range that lasts for the duration or until you cast this spell again. When you cast the spell, you can make a melee spell attack against a creature within 5 feet of the weapon."
+  },
+  "Spray of Cards": {
+    "name": "Spray of Cards",
+    "concise_description": "You spray a 15-foot cone of spectral cards. Each creature in that area must make a Dexterity saving throw."
+  },
+  "Suggestion": {
+    "name": "Suggestion",
+    "concise_description": "You suggest a course of activity (limited to a sentence or two) and magically influence a creature you can see within range that can hear and understand you. Creatures that can't be charmed are immune to this effect."
+  },
+  "Summon Beast": {
+    "name": "Summon Beast",
+    "concise_description": "You call forth a bestial spirit. It manifests in an unoccupied space that you can see within range."
   },
   "Sword Burst": {
     "name": "Sword Burst",
@@ -442,6 +758,10 @@
   "Tasha's Hideous Laughter": {
     "name": "Tasha's Hideous Laughter",
     "concise_description": "Target (Intelligence 4 or lower is unaffected) makes a Wisdom save or falls prone, incapacitated and unable to stand, for the duration; it repeats the save at the end of each turn and whenever it takes damage (advantage if triggered by damage), ending the spell on a success."
+  },
+  "Tasha's Mind Whip": {
+    "name": "Tasha's Mind Whip",
+    "concise_description": "You psychically lash out at one creature you can see within range. The target must make an Intelligence saving throw."
   },
   "Tenser's Floating Disk": {
     "name": "Tenser's Floating Disk",
@@ -483,9 +803,33 @@
     "name": "Vicious Mockery",
     "concise_description": "Target, if it can hear you, makes a Wisdom save or takes 1d4 psychic damage and has disadvantage on its next attack roll before the end of its next turn (+1d4 at 5th/11th/17th level)."
   },
+  "Vortex Warp": {
+    "name": "Vortex Warp",
+    "concise_description": "You magically twist space around another creature you can see within range. The target must succeed on a Constitution saving throw (the target can choose to fail), or the target is teleported to an unoccupied space of your choice that you can see within range."
+  },
+  "Warding Bond": {
+    "name": "Warding Bond",
+    "concise_description": "This spell wards a willing creature you touch and creates a mystic connection between you and the target until the spell ends. While the target is within 60 feet of you, it gains a +1 bonus to AC and saving throws, and it has resistance to all damage."
+  },
+  "Warding Wind": {
+    "name": "Warding Wind",
+    "concise_description": "A strong wind (20 miles per hour) blows around you in a 10-foot radius and moves with you, remaining centered on you. The wind lasts for the spell's duration."
+  },
+  "Warp Sense": {
+    "name": "Warp Sense",
+    "concise_description": "For the duration, you sense the presence of portals, even inactive ones, within 30 feet of yourself. If you detect a portal in this way, you can use your action to study it."
+  },
+  "Web": {
+    "name": "Web",
+    "concise_description": "You conjure a mass of thick, sticky webbing at a point of your choice within range. The webs fill a 20-foot cube from that point for the duration."
+  },
   "Witch Bolt": {
     "name": "Witch Bolt",
     "concise_description": "Ranged spell attack dealing 1d12 lightning damage; on each of your later turns you can use your action to automatically deal 1d12 lightning damage again, ending if you act otherwise or the target leaves range or gains total cover (+1d12 initial damage per slot above 1st)."
+  },
+  "Wither and Bloom": {
+    "name": "Wither and Bloom",
+    "concise_description": "You invoke both death and life upon a 10-foot-radius sphere centered on a point within range. Each creature of your choice in that area must make a Constitution saving throw, taking 2d6 necrotic damage on a failed save, or half as much damage on a successful one."
   },
   "Word of Radiance": {
     "name": "Word of Radiance",
@@ -495,8 +839,16 @@
     "name": "Wrathful Smite",
     "concise_description": "Next melee hit during the spell's duration deals an extra 1d6 psychic damage; target also makes a Wisdom save or is frightened of you until the spell ends (it can end the spell early with an action and a Wisdom check vs your spell save DC)."
   },
+  "Wristpocket": {
+    "name": "Wristpocket",
+    "concise_description": "You flick your wrist, causing one object in your hand to vanish. The object, which only you can be holding and can weigh no more than 5 pounds, is transported to an extradimensional space, where it remains for the duration."
+  },
   "Zephyr Strike": {
     "name": "Zephyr Strike",
     "concise_description": "Your movement doesn't provoke opportunity attacks for the duration; once before it ends, gain advantage on one weapon attack (extra 1d8 force damage on a hit) and your walking speed increases by 30 feet until the end of that turn, whether you hit or miss."
+  },
+  "Zone of Truth": {
+    "name": "Zone of Truth",
+    "concise_description": "You create a magical zone that guards against deception in a 15-foot-radius sphere centered on a point of your choice within range. Until the spell ends, a creature that enters the spell's area for the first time on a turn or starts its turn there must make a Charisma saving throw."
   }
 }

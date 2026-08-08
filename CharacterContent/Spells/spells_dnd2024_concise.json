@@ -1,4 +1,284 @@
 {
+  "Aid": {
+    "name": "Aid",
+    "concise_description": "Up to 3 willing creatures gain +5 to max HP and current HP for 8 hours (+5 per slot level above 2)."
+  },
+  "Alter Self": {
+    "name": "Alter Self",
+    "concise_description": "Assume aquatic gills/webs for swim speed, alter appearance, or grow natural weapons (1d6 damage), all with magic modifier."
+  },
+  "Animal Messenger": {
+    "name": "Animal Messenger",
+    "concise_description": "Tiny beast makes Cha save or attempts to deliver 25-word message up to 25 mi/day (50 if flying) for 24h (+48h per slot above 2)."
+  },
+  "Arcane Lock": {
+    "name": "Arcane Lock",
+    "concise_description": "Lock closed door/container magically; can't be picked; designate creatures to unlock despite lock; or set password (5 ft range) to unlock 1 minute."
+  },
+  "Arcane Vigor": {
+    "name": "Arcane Vigor",
+    "concise_description": "Roll 1-2 of your unexpended Hit Dice and regain HP equal to rolls plus spellcasting modifier (expends dice used; +1 die per slot above 2)."
+  },
+  "Augury": {
+    "name": "Augury",
+    "concise_description": "DM gives omen about action taken within 30 min (Weal, Woe, Weal and Woe, or Nothing); 25% fail chance per casting after first before long rest."
+  },
+  "Barkskin": {
+    "name": "Barkskin",
+    "concise_description": "Touch willing creature; AC becomes 17 if lower, skin assumes bark appearance for 1 hour."
+  },
+  "Beast Sense": {
+    "name": "Beast Sense",
+    "concise_description": "Touch willing beast; perceive through its senses including special senses for up to 1 hour (conc)."
+  },
+  "Blindness/Deafness": {
+    "name": "Blindness/Deafness",
+    "concise_description": "One creature makes Con save or gains Blinded or Deafened condition for 1 min (repeats save each turn; +1 target per slot above 2)."
+  },
+  "Blur": {
+    "name": "Blur",
+    "concise_description": "You gain Disadvantage on attack rolls against you for 1 min (conc); blind/truesight immunity to effect."
+  },
+  "Calm Emotions": {
+    "name": "Calm Emotions",
+    "concise_description": "Creatures in 20-ft-radius sphere make Cha save or gain immunity to Charmed/Frightened, or become indifferent to hostiles until taking damage."
+  },
+  "Cloud of Daggers": {
+    "name": "Cloud of Daggers",
+    "concise_description": "5-ft cube of spinning daggers deals 4d4 Slashing damage on entry/turn/ending turn there; you can move it 30 ft/turn (+2d4 per slot above 2)."
+  },
+  "Continual Flame": {
+    "name": "Continual Flame",
+    "concise_description": "Touched object generates bright light 20 ft, dim 20 ft beyond, creates no heat, lasts indefinitely; can't be extinguished."
+  },
+  "Cordon of Arrows": {
+    "name": "Cordon of Arrows",
+    "concise_description": "Up to 4 nonmagical arrows/bolts in your space; creature entering 30-ft area triggers one to strike (Dex save or 2d4 Piercing damage) (+2 ammo per slot above 2)."
+  },
+  "Crown of Madness": {
+    "name": "Crown of Madness",
+    "concise_description": "One humanoid makes Wis save or becomes Charmed; must use action to make melee attack on creature you choose each turn; repeats save end of turn; you maintain concentration."
+  },
+  "Darkness": {
+    "name": "Darkness",
+    "concise_description": "15-ft-radius sphere of magical darkness from point or object; darkvision and nonmagical light can't see through; dispels spell light level 2 or lower."
+  },
+  "Darkvision": {
+    "name": "Darkvision",
+    "concise_description": "Touch willing creature; gain Darkvision 150 ft for 8 hours."
+  },
+  "Death Armor": {
+    "name": "Death Armor",
+    "concise_description": "One creature you touch gains Advantage on death saves and deals 2d4 Necrotic to melee attacker once per turn within 5 ft for 1 hour."
+  },
+  "Deryan's Helpful Homunculi": {
+    "name": "Deryan's Helpful Homunculi",
+    "concise_description": "Summon intangible construct spirits; halve crafting time when crafting item with proficient tools for 8 hours."
+  },
+  "Detect Thoughts": {
+    "name": "Detect Thoughts",
+    "concise_description": "Sense thoughts 30 ft away (blocked by 1 ft stone/wood, 1 in metal, lead sheet), or read surface thoughts with Wis save (DC) for deeper probe; target knows you probe."
+  },
+  "Dragon's Breath": {
+    "name": "Dragon's Breath",
+    "concise_description": "Touch willing creature; choose Acid/Cold/Fire/Lightning/Poison; can exhale 15-ft cone, Dex save or 3d6 chosen type damage (+1d6 per slot above 2)."
+  },
+  "Elminster's Elusion": {
+    "name": "Elminster's Elusion",
+    "concise_description": "Advantage on saving throws against spells/magic; if you succeed against spell that deals half damage on save, take no damage instead for 10 min (conc)."
+  },
+  "Enhance Ability": {
+    "name": "Enhance Ability",
+    "concise_description": "Touch creature; choose ability; Advantage on checks using that ability for 1 hour (conc; +1 target per slot above 2)."
+  },
+  "Enlarge/Reduce": {
+    "name": "Enlarge/Reduce",
+    "concise_description": "Creature or object makes Con save or is enlarged (size +1, +advantage Str, +1d4 damage) or reduced (size -1, -advantage Str, -1d4 damage) for 1 min (conc)."
+  },
+  "Enthrall": {
+    "name": "Enthrall",
+    "concise_description": "Creatures in 60 ft make Wis save; fail = -10 Wis (Perception) and passive perception until spell ends; fighting creatures auto-succeed."
+  },
+  "Find Steed": {
+    "name": "Find Steed",
+    "concise_description": "Summon Large otherworldly steed (Celestial/Fey/Fiend type chosen) in unoccupied space within 30 ft; your controlled mount."
+  },
+  "Find Traps": {
+    "name": "Find Traps",
+    "concise_description": "Sense any trap 120 ft, line of sight; reveals presence but not location; gives general danger nature."
+  },
+  "Flame Blade": {
+    "name": "Flame Blade",
+    "concise_description": "Create fiery blade in hand (lasts 10 min conc); magic action to attack (3d6 Fire + spell mod; +1d6 per slot above 2); sheds bright/dim light 10 ft."
+  },
+  "Flaming Sphere": {
+    "name": "Flaming Sphere",
+    "concise_description": "5-ft sphere of fire in unoccupied ground space; creatures within 5 ft end turn make Dex save or take 2d6 Fire damage; move 30 ft/turn as bonus action (+1d6 per slot above 2)."
+  },
+  "Gentle Repose": {
+    "name": "Gentle Repose",
+    "concise_description": "Touch corpse; protect from decay, can't become Undead for 10 days; extends time limit on resurrection spells."
+  },
+  "Gust of Wind": {
+    "name": "Gust of Wind",
+    "concise_description": "60-ft line 10 ft wide; creatures make Str save or pushed 15 ft away; difficult terrain approaching you; extinguish unprotected flames; 50% protected flames 10 min (conc)."
+  },
+  "Heat Metal": {
+    "name": "Heat Metal",
+    "concise_description": "Choose metal object/armor within 60 ft; glows red-hot, creatures touching take 2d8 Fire damage; can repeat as bonus action each turn; holders make Con save or drop it (+1d8 per slot above 2)."
+  },
+  "Hold Person": {
+    "name": "Hold Person",
+    "concise_description": "One humanoid makes Wis save or Paralyzed for 1 min (conc; repeats save end of turn; +1 humanoid per slot above 2)."
+  },
+  "Homunculus Servant": {
+    "name": "Homunculus Servant",
+    "concise_description": "Summon special homunculus using stat block within 10 ft; shares initiative, takes turn after you, obeys commands for duration; higher slots use that level for stat block."
+  },
+  "Invisibility": {
+    "name": "Invisibility",
+    "concise_description": "Touch creature; Invisible condition until spell ends; ends when target attacks, deals damage, or casts spell (+1 target per slot above 2)."
+  },
+  "Knock": {
+    "name": "Knock",
+    "concise_description": "One mundane lock/stuck object opens/unlocks; if multiple locks, only one; Arcane Lock suppressed 10 min; loud audible 300 ft away."
+  },
+  "Lesser Restoration": {
+    "name": "Lesser Restoration",
+    "concise_description": "Touch creature; end one condition: Blinded, Deafened, Paralyzed, or Poisoned."
+  },
+  "Levitate": {
+    "name": "Levitate",
+    "concise_description": "One creature/object up to 500 lbs rises 20 ft and stays aloft for 10 min (conc); unwilling creature makes Con save; target climbs fixed surfaces to move."
+  },
+  "Locate Animals or Plants": {
+    "name": "Locate Animals or Plants",
+    "concise_description": "Learn direction/distance to nearest creature/plant of named kind within 5 miles."
+  },
+  "Locate Object": {
+    "name": "Locate Object",
+    "concise_description": "Learn direction to familiar object within 1,000 ft (or object of particular kind); sense movement; lead blocks line."
+  },
+  "Magic Mouth": {
+    "name": "Magic Mouth",
+    "concise_description": "Implant message (25 words) in object on trigger; message plays in your voice until trigger; when you cast, choose if it repeats or one-time."
+  },
+  "Magic Weapon": {
+    "name": "Magic Weapon",
+    "concise_description": "Nonmagical weapon touched becomes +1 bonus to attack/damage for 1 hour; if you cast again, spell ends (+1 bonus tier per 3+ levels: +2 at 3-5, +3 at 6+)."
+  },
+  "Melf's Acid Arrow": {
+    "name": "Melf's Acid Arrow",
+    "concise_description": "Ranged spell attack; hit = 4d4 Acid damage + 2d4 more at end of target's next turn; miss = half initial damage only (+1d4 per slot above 2)."
+  },
+  "Mind Spike": {
+    "name": "Mind Spike",
+    "concise_description": "One creature makes Wis save or takes 3d8 Psychic damage; fail = always know its location until spell ends, can't hide, gains no benefit from invisibility (+1d8 per slot above 2)."
+  },
+  "Mirror Image": {
+    "name": "Mirror Image",
+    "concise_description": "Three illusory copies appear; when hit, roll d6/duplicate—on 3+, hit copy instead and destroy it; spell ends when all destroyed; blind/blindsight/truesight immune."
+  },
+  "Misty Step": {
+    "name": "Misty Step",
+    "concise_description": "Teleport up to 30 ft to unoccupied space you can see."
+  },
+  "Moonbeam": {
+    "name": "Moonbeam",
+    "concise_description": "5-ft-radius, 40-ft-high cylinder of pale light; creatures make Con save or take 2d10 Radiant, revert from polymorph until leaving cylinder; move 60 ft/turn (+1d10 per slot above 2)."
+  },
+  "Nystul's Magic Aura": {
+    "name": "Nystul's Magic Aura",
+    "concise_description": "Illusion on willing creature/object; mask creature as different type for spells, or false aura on object (magical/nonmagical/school) for 24h (or until dispelled if cast same target daily 30 days)."
+  },
+  "Pass without Trace": {
+    "name": "Pass without Trace",
+    "concise_description": "30-ft emanation around you; you and chosen creatures gain +10 Dex (Stealth) and leave no tracks for 1 hour (conc)."
+  },
+  "Phantasmal Force": {
+    "name": "Phantasmal Force",
+    "concise_description": "Creature makes Int save or perceives phantasm (up to 10-ft cube) only they see for 1 min (conc); can deal up to 2d8 Psychic if hazardous; target can investigate (Investigation check DC)."
+  },
+  "Prayer of Healing": {
+    "name": "Prayer of Healing",
+    "concise_description": "Up to 5 creatures within range gain short rest benefits and regain 2d8 HP; can't affect same creature until long rest (+1d8 per slot above 2)."
+  },
+  "Protection from Poison": {
+    "name": "Protection from Poison",
+    "concise_description": "End Poisoned condition on creature touched; Advantage on saves to avoid/end Poisoned and Resistance to Poison damage for 1 hour."
+  },
+  "Ray of Enfeeblement": {
+    "name": "Ray of Enfeeblement",
+    "concise_description": "Creature makes Con save; success = Disadvantage next attack until start of your turn; fail = Disadvantage Str checks/saves and subtract 1d8 damage rolls for 1 min (conc, repeats save end of turn)."
+  },
+  "Rope Trick": {
+    "name": "Rope Trick",
+    "concise_description": "Rope becomes perpendicular with invisible 3x5-ft portal to extradimensional space; hold 8 medium/smaller creatures; attacks/spells can't cross portal; creatures see out for 1 hour."
+  },
+  "Scorching Ray": {
+    "name": "Scorching Ray",
+    "concise_description": "Hurl three fiery rays at one or more targets; ranged spell attack each = 2d6 Fire damage hit (+1 ray per slot above 2)."
+  },
+  "Searing Orb": {
+    "name": "Searing Orb",
+    "concise_description": "Ranged spell attack; hit = 3d4 Radiant damage; then area explosion 10-ft radius—all make Con save or Blinded until end of next turn (+1d4 per slot above 2)."
+  },
+  "See Invisibility": {
+    "name": "See Invisibility",
+    "concise_description": "See invisible creatures/objects as visible and into Ethereal Plane (ghostly appearance) for 1 hour."
+  },
+  "Shatter": {
+    "name": "Shatter",
+    "concise_description": "10-ft-radius sphere from point; creatures make Con save or take 3d8 Thunder damage; constructs have Disadvantage; nonmagical objects also take damage (+1d8 per slot above 2)."
+  },
+  "Shining Smite": {
+    "name": "Shining Smite",
+    "concise_description": "Target of your melee attack takes extra 2d6 Radiant; sheds bright light 5 ft, attack rolls have Advantage, can't be invisible until spell ends (1 min conc; +1d6 per slot above 2)."
+  },
+  "Silence": {
+    "name": "Silence",
+    "concise_description": "20-ft-radius sphere; no sound created/pass through; creatures inside immune to Thunder, Deafened; can't cast verbal spells 10 min (conc)."
+  },
+  "Spider Climb": {
+    "name": "Spider Climb",
+    "concise_description": "Willing creature can move up/down/across vertical surfaces and ceilings, climb speed = speed for 1 hour (conc; +1 target per slot above 2)."
+  },
+  "Spike Growth": {
+    "name": "Spike Growth",
+    "concise_description": "20-ft-radius sphere of spikes/thorns becomes difficult terrain; creatures take 2d4 Piercing per 5 ft traveled; camouflaged; requires Perception check to spot 10 min (conc)."
+  },
+  "Spiritual Weapon": {
+    "name": "Spiritual Weapon",
+    "concise_description": "Create floating weapon within 60 ft; make melee spell attack 1d8 Force + mod; bonus action move 20 ft and attack again each turn for 1 min (conc; +1d8 per slot above 2)."
+  },
+  "Suggestion": {
+    "name": "Suggestion",
+    "concise_description": "One creature makes Wis save or accepts suggestion (25 words max, sounds reasonable) and tries to complete it reasonably for 8 hours; ends if takes damage."
+  },
+  "Summon Beast": {
+    "name": "Summon Beast",
+    "concise_description": "Summon bestial spirit using stat block within range; you control it; higher slots use that level for stat block."
+  },
+  "Tortoise Shell": {
+    "name": "Tortoise Shell",
+    "concise_description": "Willing creature's skin hardens; +3 AC bonus for 1 hour; disadvantage on Speed/climbing if heavy armor."
+  },
+  "Warding Bond": {
+    "name": "Warding Bond",
+    "concise_description": "Create mystic link with willing creature; both gain +1 AC while within 60 ft; any damage to target you take instead (can't reduce below 1 HP); break requires dispel or within range until spell ends."
+  },
+  "Web": {
+    "name": "Web",
+    "concise_description": "20-ft cube of sticky webs; difficult terrain; creatures start turn there make Dex save or restrained until escape (DC); webs destroyed if 5+ damage/turn."
+  },
+  "Wither and Bloom": {
+    "name": "Wither and Bloom",
+    "concise_description": "10-ft-radius sphere; creatures make Con save or take 2d6 Necrotic, gain temporary necrotic resistance; or make save take 2d6 Radiant, regain temporary 2d6 HP."
+  },
+  "Zone of Truth": {
+    "name": "Zone of Truth",
+    "concise_description": "15-ft-radius sphere; creatures make Cha save or can't lie for duration; creatures know spell is in effect."
+  },
   "Acid Splash": {
     "name": "Acid Splash",
     "concise_description": "Creates an acidic bubble; each creature in a 5-foot-radius Sphere makes a Dexterity save or takes 1d6 Acid damage. (+1d6 at 5th/11th/17th level)"
