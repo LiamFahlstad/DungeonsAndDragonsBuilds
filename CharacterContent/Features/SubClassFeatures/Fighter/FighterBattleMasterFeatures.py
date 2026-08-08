@@ -61,6 +61,20 @@ class CombatSuperiority(Feature):
         )
         return description
 
+    def get_concise_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> str:
+        str_mod = character_stat_block.get_ability_modifier(Ability.STRENGTH)
+        dex_mod = character_stat_block.get_ability_modifier(Ability.DEXTERITY)
+        saving_throw = (
+            8 + max(str_mod, dex_mod) + character_stat_block.get_proficiency_bonus()
+        )
+        return (
+            f"Learn maneuvers fueled by Superiority Dice (4 d8s at level 3, 5 at level 7, 6 at level 15). "
+            f"Learn 3 maneuvers at level 3, then 2 more at levels 7, 10, and 15; can replace one on level gain. "
+            f"Use one maneuver per attack, regain all dice on short or long rest. Maneuver save DC = {saving_throw}."
+        )
+
 
 class StudentOfWar(Feature):
     def __init__(self):

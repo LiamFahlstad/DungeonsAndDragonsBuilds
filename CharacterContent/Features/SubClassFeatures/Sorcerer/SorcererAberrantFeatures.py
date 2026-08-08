@@ -56,7 +56,7 @@ class PsionicSorcery(Feature):
 
 class PsychicDefenses(Feature):
     def __init__(self):
-        super().__init__(name="Psychic Defenses", origin="Aberrant Sorcerer Level 6")
+        super().__init__(name="Psychic Defenses", origin="Aberrant Sorcerer Level 6", skippable_in_concise=True)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "You have Resistance to Psychic damage, and you have Advantage on saving throws to avoid or end the Charmed or Frightened condition."

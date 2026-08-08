@@ -68,6 +68,9 @@ class UnarmoredDefenseText(Feature):
 
 class UnarmoredDefense(Feature):
     def __init__(self):
+        super().__init__(
+            name="Unarmored Defense", origin="Barbarian Level 1", skippable_in_concise=True
+        )
         self._ac = MultiAbilityArmorClass(10, [Ability.DEXTERITY, Ability.CONSTITUTION])
 
     def apply(self, character_stat_block: CharacterStatBlock):
@@ -134,6 +137,9 @@ class PrimalKnowledgeSkillProficiency(Feature):
     ]
 
     def __init__(self, skill: Skill):
+        super().__init__(
+            name="Primal Knowledge", origin="Barbarian Level 3", skippable_in_concise=True
+        )
         self._proficiency = SkillProficiencyChoice(
             [skill],
             self.SKILL_POOL,

@@ -47,7 +47,8 @@ class OathOfTheAncientsSpells(Feature):
 class AuraOfWarding(Feature):
     def __init__(self):
         super().__init__(
-            name="Aura of Warding", origin="Oath of the Ancients Paladin Level 7"
+            name="Aura of Warding", origin="Oath of the Ancients Paladin Level 7",
+            skippable_in_concise=True
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -67,6 +68,12 @@ class UndyingSentinel(Feature):
             "Additionally, you can't be aged magically, and you cease visibly aging."
         )
         return description
+
+    def get_concise_description(self, character_stat_block: CharacterStatBlock) -> str:
+        return (
+            "When reduced to 0 HP and not killed, drop to 1 HP instead and regain 3× your Paladin level HP (1/Long Rest). "
+            "Additionally, you can't be aged magically and stop visibly aging."
+        )
 
 
 class ElderChampion(Feature):

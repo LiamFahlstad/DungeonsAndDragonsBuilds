@@ -91,6 +91,19 @@ class ReboundingField(Feature):
         )
         return description
 
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        int_mod = character_stat_block.get_ability_modifier(Ability.INTELLIGENCE)
+        return [
+            ("Trigger", "Cast Shield as reaction to attack hit and cause it to miss"),
+            ("Cost", "1 Psionic Energy Die"),
+            ("Save", "Dexterity saving throw"),
+            ("On Failed Save", f"Attacker takes [die roll + INT mod ({int_mod})] Force damage"),
+            ("On Successful Save", "Attacker takes half damage"),
+            ("Temp HP", "You gain temp HP equal to damage dealt"),
+        ]
+
 
 class EnhancedTelekineticCrush(Feature):
     def __init__(self):
@@ -110,6 +123,16 @@ class EnhancedTelekineticCrush(Feature):
         )
         return description
 
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        return [
+            ("Spell", "Telekinetic Crush"),
+            ("Cost", "1 Psionic Energy Die"),
+            ("Speed Effect", "Speed halved until start of next turn (save doesn't prevent)"),
+            ("Damage Bonus", "Roll die and add to one damage roll of spell"),
+        ]
+
 
 class HeightenedTelekinesis(Feature):
     def __init__(self):
@@ -128,3 +151,13 @@ class HeightenedTelekinesis(Feature):
             "casting, and you can concentrate on another spell as normal."
         )
         return description
+
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        return [
+            ("Spell", "Telekinesis"),
+            ("Resource Cost", "4 Psionic Energy Dice (instead of spell slot)"),
+            ("Optional: Remove Concentration", "Spell no longer requires Concentration"),
+            ("If No Concentration", "Duration becomes 1 minute; you can concentrate on another spell"),
+        ]

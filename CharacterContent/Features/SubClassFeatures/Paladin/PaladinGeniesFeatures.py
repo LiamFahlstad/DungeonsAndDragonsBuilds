@@ -124,3 +124,12 @@ class NobleScion(Feature):
             "Minor Wish. When you or an ally in your Aura of Protection fails a D20 Test, you can take a Reaction to make you or that ally succeed instead."
         )
         return description
+
+    def get_table_description(self, character_stat_block: CharacterStatBlock) -> list[tuple[str, str]]:
+        return [
+            ("Action", "Bonus Action"),
+            ("Duration", "10 minutes (or until ended)"),
+            ("Recharge", "Once per Long Rest (or spend level 5 spell slot)"),
+            ("Flight", "Fly Speed 60 feet, can hover"),
+            ("Minor Wish", "Reaction: when you or ally in aura fails D20 Test, make them succeed instead"),
+        ]

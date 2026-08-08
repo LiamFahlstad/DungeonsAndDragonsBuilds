@@ -19,6 +19,17 @@ class MindInfiltrator(Feature):
         )
         return description
 
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        return [
+            ("Spell", "Detect Thoughts"),
+            ("Cost", "1 Psionic Energy Die"),
+            ("No Components", "Spell components waived"),
+            ("No Concentration", "Spell doesn't require Concentration"),
+            ("Stealth on Read Thoughts", "Target doesn't know you're probing (if fails save)"),
+        ]
+
 
 class TelepathicDistraction(Feature):
     def __init__(self):
@@ -96,6 +107,16 @@ class TelepathicBolstering(Feature):
             "the attack hits."
         )
         return description
+
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        return [
+            ("Trigger", "You or ally within telepathy range fails check or misses attack"),
+            ("Action", "Reaction"),
+            ("Effect", "Roll Psionic Energy Die and add to d20 roll"),
+            ("Cost", "1 Psionic Energy Die (expended only if success)"),
+        ]
 
 
 class ScrambleMinds(Feature):

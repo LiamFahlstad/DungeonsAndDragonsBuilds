@@ -81,7 +81,7 @@ class WarGodsBlessing(Feature):
 
 class AvatarOfBattle(Feature):
     def __init__(self):
-        super().__init__(name="Avatar of Battle", origin="War Domain Cleric Level 17")
+        super().__init__(name="Avatar of Battle", origin="War Domain Cleric Level 17", skippable_in_concise=True)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

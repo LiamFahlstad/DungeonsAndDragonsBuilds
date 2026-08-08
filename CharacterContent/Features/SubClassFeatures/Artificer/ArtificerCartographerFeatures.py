@@ -54,6 +54,16 @@ class AdventurersAtlas(Feature):
         )
         return description
 
+    def get_table_description(self, character_stat_block: CharacterStatBlock) -> list[tuple[str, str]]:
+        intelligence_modifier = character_stat_block.get_ability_modifier(Ability.INTELLIGENCE)
+        max_creatures = 1 + intelligence_modifier
+        return [
+            ("Trigger", f"End of Long Rest; touch {max_creatures} creatures (min 2)"),
+            ("Duration", "Until recreated or you die"),
+            ("Awareness", "Map holders add 1d4 to Initiative rolls"),
+            ("Positioning", "Map holders see each other (same plane); can target spells through obstacles"),
+        ]
+
 
 class MappingMagic(Feature):
     def __init__(self):

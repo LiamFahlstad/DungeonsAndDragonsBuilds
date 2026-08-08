@@ -19,6 +19,20 @@ class VitalityOfTheTree(Feature):
         )
         return description
 
+    def get_concise_description(self, character_stat_block: CharacterStatBlock) -> str:
+        barbarian_level = character_stat_block.get_class_level(
+            Definitions.CharacterClass.BARBARIAN
+        )
+        from CharacterContent.Features.ClassFeatures.Barbarian.BarbarianFeatures import (
+            get_rage_damage_bonus,
+        )
+        rage_damage = get_rage_damage_bonus(barbarian_level)
+        return (
+            f"When you activate your Rage, gain Temporary Hit Points equal to your Barbarian level ({barbarian_level}). "
+            f"At the start of each of your turns while Raging, choose a creature within 10 feet to grant Temporary Hit Points equal to {rage_damage}d6 "
+            f"(these vanish when your Rage ends)."
+        )
+
 
 class BranchesOfTheTree(Feature):
     def __init__(self):

@@ -94,6 +94,19 @@ class WholenessOfBody(Feature):
         )
         return StringUtils.add_boxes(description, uses, regain_all_on="long rest")
 
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        wisdom_modifier = character_stat_block.get_ability_modifier(
+            Definitions.Ability.WISDOM
+        )
+        uses = max(1, wisdom_modifier)
+        return [
+            ("Action", "Bonus Action"),
+            ("Effect", f"Roll Martial Arts die + {wisdom_modifier:+d} (Wisdom) Hit Points (minimum 1)"),
+            ("Uses", f"{uses}/Long Rest"),
+        ]
+
 
 class FleetStep(Feature):
     def __init__(self):

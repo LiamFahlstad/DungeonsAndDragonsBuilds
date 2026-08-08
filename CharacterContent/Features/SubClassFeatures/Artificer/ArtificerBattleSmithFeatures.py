@@ -117,6 +117,16 @@ class ArcaneJolt(Feature):
         )
         return StringUtils.add_boxes(description, uses, regain_all_on="long rest")
 
+    def get_table_description(self, character_stat_block: CharacterStatBlock) -> list[tuple[str, str]]:
+        intelligence_modifier = character_stat_block.get_ability_modifier(Ability.INTELLIGENCE)
+        uses = max(1, intelligence_modifier)
+        return [
+            ("Trigger", "When you or Steel Defender hits with a magic weapon"),
+            ("Destructive Energy", "Target takes extra 2d6 Force damage"),
+            ("Restorative Energy", "Restore 2d6 HP to creature within 30 feet"),
+            ("Uses", f"{uses}/LR, at most once per turn"),
+        ]
+
 
 class ImprovedDefender(Feature):
     def __init__(self):

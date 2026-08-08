@@ -117,6 +117,16 @@ class FleshWeaver(Feature):
         )
         return description
 
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        return [
+            ("Activation", "When using Mutable Form"),
+            ("Cost", "1 additional Psionic Energy Die"),
+            ("Organic Defense", "+2 bonus to AC"),
+            ("Empowered Healing", "When casting healing spell, expend die and add roll to HP regained"),
+        ]
+
 
 class ImprovedMutableForm(Feature):
     def __init__(self):

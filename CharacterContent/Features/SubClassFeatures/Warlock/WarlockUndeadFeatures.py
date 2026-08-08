@@ -64,6 +64,14 @@ class NecroticHusk(Feature):
         )
         return description
 
+    def get_concise_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> str:
+        return (
+            "Gain Resistance to Necrotic damage (Immunity while Form of Dread). "
+            "When you drop to 0 HP and don't die, trigger area effect: creatures in 30-foot Emanation make CON save (DC your spell save), taking 2d10 + CHA Necrotic damage on fail (half on success); you regain HP to twice your Warlock level and gain 1 Exhaustion (recharge Short or Long Rest)."
+        )
+
 
 class SuperiorDread(Feature):
     def __init__(self):
@@ -77,3 +85,10 @@ class SuperiorDread(Feature):
             "Profane Casting. Whenever you cast a Warlock spell from the Conjuration or Necromancy school, you cast it without any Verbal, Somatic, or Material components, except Material components that are costly or consumed."
         )
         return description
+
+    def get_concise_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> str:
+        return (
+            "While Form of Dread active: gain Resistance to Bludgeoning/Piercing/Slashing, Fly Speed equal to your Speed with hover (moving through creatures and objects as difficult terrain but taking 1d10 Force if ending turn inside), and cast Conjuration or Necromancy Warlock spells without components (except costly or consumed Material)."
+        )

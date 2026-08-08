@@ -5,7 +5,7 @@ from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 class KnightlyEnvoy(Feature):
     def __init__(self):
-        super().__init__(name="Knightly Envoy", origin="Banneret Fighter Level 3")
+        super().__init__(name="Knightly Envoy", origin="Banneret Fighter Level 3", skippable_in_concise=True)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -89,7 +89,7 @@ class SharedResilience(Feature):
 
 class InspiringCommander(Feature):
     def __init__(self):
-        super().__init__(name="Inspiring Commander", origin="Banneret Fighter Level 18")
+        super().__init__(name="Inspiring Commander", origin="Banneret Fighter Level 18", skippable_in_concise=True)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

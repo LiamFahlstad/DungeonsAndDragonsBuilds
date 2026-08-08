@@ -72,6 +72,20 @@ class HandOfHealing(Feature):
         )
         return description
 
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        wisdom_modifier = character_stat_block.get_ability_modifier(
+            Definitions.Ability.WISDOM
+        )
+        return [
+            ("Action", "Magic action"),
+            ("Cost", "1 Focus Point"),
+            ("Range", "Touch"),
+            ("Effect", f"Restore 1 Martial Arts die + {wisdom_modifier:+d} (Wisdom) Hit Points"),
+            ("Special", "Can replace one Unarmed Strike in Flurry of Blows without spending Focus Point"),
+        ]
+
 
 class ImplementsOfMercy(Feature):
     def __init__(self):

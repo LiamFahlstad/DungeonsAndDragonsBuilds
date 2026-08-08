@@ -92,7 +92,7 @@ class NaturalRecovery(Feature):
 class NaturesWard(Feature):
     def __init__(self, land_type: Definitions.DruidLandType):
         super().__init__(
-            name="Nature's Ward", origin="Circle of the Land Druid Level 10"
+            name="Nature's Ward", origin="Circle of the Land Druid Level 10", skippable_in_concise=True
         )
         self.land_type = land_type
 

@@ -24,7 +24,7 @@ class DraconicSpells(Feature):
 
 class DraconicResilience(Feature):
     def __init__(self):
-        super().__init__(name="Draconic Resilience", origin="Draconic Sorcerer Level 3")
+        super().__init__(name="Draconic Resilience", origin="Draconic Sorcerer Level 3", skippable_in_concise=True)
         self._ac = MultiAbilityArmorClass(10, [Ability.DEXTERITY, Ability.CHARISMA])
 
     def apply(self, character_stat_block: CharacterStatBlock):

@@ -66,6 +66,11 @@ class CelestialResilience(Feature):
         description = "You gain Temporary Hit Points whenever you use your Magical Cunning feature or finish a Short or Long Rest. These Temporary Hit Points equal your Warlock level plus your Charisma modifier. Additionally, choose up to five creatures you can see when you gain the points. Those creatures each gain Temporary Hit Points equal to half your Warlock level plus your Charisma modifier."
         return description
 
+    def get_concise_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> str:
+        return "Gain temp HP (Warlock level + CHA mod) when using Magical Cunning or finishing Short or Long Rest; you can grant half that amount to up to 5 creatures you can see."
+
 
 class SearingVengeance(Feature):
     def __init__(self):
