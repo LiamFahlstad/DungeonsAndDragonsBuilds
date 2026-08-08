@@ -172,6 +172,11 @@ def format_creature_stat_block(
         f'<span class="wsf-subtitle">CR {monster.cr} &middot; {_monster_type_text(monster)}</span></th></tr>'
     ]
 
+    if monster.description:
+        rows.append(
+            f'<tr><td colspan="2" style="font-style: italic;">{monster.description}</td></tr>'
+        )
+
     ac_text = f"{monster.ac}" + (f" ({monster.ac_note})" if monster.ac_note else "")
     rows.append(_row("Armor Class", ac_text))
 

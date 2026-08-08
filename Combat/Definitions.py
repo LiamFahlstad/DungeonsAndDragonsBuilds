@@ -197,6 +197,7 @@ class ExtendedCombatantData(BasicCombatantData):
     condition_immunities: Optional[list[Condition]] = None
     senses: str = ""
     languages: str = ""
+    description: str = ""  # freeform flavor text / notes about the monster
     traits: Optional[list[MonsterAbility]] = None  # special traits / passive abilities
     actions: Optional[list[MonsterAbility]] = None  # standard action entries
     bonus_actions: Optional[list[MonsterAbility]] = None  # bonus actions (some monsters)

@@ -129,6 +129,7 @@ def generate_monster_class(monster: dict) -> str:
             condition_immunities={cond_immune_str},
             senses="{monster.get('senses', '')}",
             languages="{monster.get('languages', '')}",
+            description={monster.get('description', '')!r},
             traits={traits_str},
             actions={actions_str},
             bonus_actions={bonus_actions_str},

@@ -485,6 +485,12 @@ class DialogsMixin:
                 if char.get(key):
                     add_field(label, char[key])
 
+            if char.get("description"):
+                desc_lbl = QLabel(char["description"])
+                desc_lbl.setWordWrap(True)
+                desc_lbl.setStyleSheet("font-style: italic; color: #c0c0c0;")
+                lay.addWidget(desc_lbl)
+
             if char.get("skills"):
                 add_header("Skills")
                 td = "border:1px solid #0f3460;padding:2px 8px;"

@@ -214,6 +214,7 @@ class CombatAppQt(
                     "condition_immunities": combatant.condition_immunities,
                     "senses": combatant.senses,
                     "languages": combatant.languages,
+                    "description": combatant.description,
                     "traits": combatant.traits,
                     "actions": combatant.actions,
                     "bonus_actions": combatant.bonus_actions,
