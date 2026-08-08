@@ -8,7 +8,7 @@ SIZE = CreatureSize.SMALL  # Given by your species
 
 class Brave(Feature):
     def __init__(self):
-        super().__init__(name="Brave", origin="Halfling Trait")
+        super().__init__(name="Brave", origin="Halfling Trait", skippable_in_concise=True)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         return "You have Advantage on saving throws you make to avoid or end the Frightened condition."
@@ -16,7 +16,7 @@ class Brave(Feature):
 
 class HalflingNimbleness(Feature):
     def __init__(self):
-        super().__init__(name="Halfling Nimbleness", origin="Halfling Trait")
+        super().__init__(name="Halfling Nimbleness", origin="Halfling Trait", skippable_in_concise=True)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         return "You can move through the space of any creature that is a size larger than you, but you can't stop in the same space."
@@ -24,7 +24,7 @@ class HalflingNimbleness(Feature):
 
 class Luck(Feature):
     def __init__(self):
-        super().__init__(name="Luck", origin="Halfling Trait")
+        super().__init__(name="Luck", origin="Halfling Trait", skippable_in_concise=True)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         text = "When you roll a 1 on the d20 of a D20 Test, you can reroll the die, and you must use the new roll."
@@ -33,7 +33,7 @@ class Luck(Feature):
 
 class NaturallyStealthy(Feature):
     def __init__(self):
-        super().__init__(name="Naturally Stealthy", origin="Halfling Trait")
+        super().__init__(name="Naturally Stealthy", origin="Halfling Trait", skippable_in_concise=True)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         text = "You can take the Hide action even when you are obscured only by a creature that is at least one size larger than you."

@@ -9,7 +9,7 @@ SIZE = CreatureSize.MEDIUM  # Given by your species
 
 class ConstructResilience(Feature):
     def __init__(self):
-        super().__init__(name="Construct Resilience", origin="Warforged Trait")
+        super().__init__(name="Construct Resilience", origin="Warforged Trait", skippable_in_concise=True)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         return "You have Resistance to Poison damage. You also have Advantage on saving throws to avoid or end the Poisoned condition."
@@ -25,7 +25,7 @@ class SentrysRest(Feature):
 
 class Tireless(Feature):
     def __init__(self):
-        super().__init__(name="Tireless", origin="Warforged Trait")
+        super().__init__(name="Tireless", origin="Warforged Trait", skippable_in_concise=True)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         return "You don’t gain Exhaustion levels from dehydration, malnutrition, or suffocation."
@@ -33,7 +33,7 @@ class Tireless(Feature):
 
 class IntegratedProtection(Feature):
     def __init__(self):
-        super().__init__(name="Integrated Protection", origin="Warforged Trait")
+        super().__init__(name="Integrated Protection", origin="Warforged Trait", skippable_in_concise=True)
         self._bonus = ArmorClassBonus(1)
 
     def apply(self, character_stat_block: CharacterStatBlock):
@@ -46,7 +46,7 @@ class IntegratedProtection(Feature):
 class SpecializedDesign(Feature):
     def __init__(self, skill: Skill):
         self.skill = skill
-        super().__init__(name="Specialized Design", origin="Warforged Trait")
+        super().__init__(name="Specialized Design", origin="Warforged Trait", skippable_in_concise=True)
         self._choice = SkillProficiencyChoice(
             [skill], list(Skill), count=1, error_prefix="SpecializedDesign"
         )

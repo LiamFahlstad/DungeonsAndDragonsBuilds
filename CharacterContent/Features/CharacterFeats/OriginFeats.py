@@ -34,7 +34,7 @@ class Skilled(OriginFeat):
         self._choice = SkillProficiencyChoice(
             skills, list(Skill), count=3, error_prefix="Skilled"
         )
-        super().__init__(name="Skilled", origin="Origin Feat")
+        super().__init__(name="Skilled", origin="Origin Feat", skippable_in_concise=True)
 
     def apply(self, character_stat_block: CharacterStatBlock):
         self._choice.apply(character_stat_block)
@@ -300,7 +300,7 @@ class TavernBrawler(OriginFeat):
 class Tough(OriginFeat):
     def __init__(self):
         self._hp = HitPointsPerLevelBonus(2)
-        super().__init__(name="Tough", origin="Origin Feat")
+        super().__init__(name="Tough", origin="Origin Feat", skippable_in_concise=True)
 
     def apply(self, character_stat_block: CharacterStatBlock):
         self._hp.apply(character_stat_block)

@@ -27,7 +27,7 @@ class DamageResistance(Feature):
     def __init__(self, dragon_color: DragonColor):
         self.color = dragon_color
         self.damage_type = get_damage_type_from_color(dragon_color)
-        super().__init__(name="Damage Resistance", origin="Dragonborn Trait")
+        super().__init__(name="Damage Resistance", origin="Dragonborn Trait", skippable_in_concise=True)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         return f"You have Resistance against {self.damage_type.value} damage because your Draconic Ancestry is {self.color.value} dragon."
@@ -60,6 +60,34 @@ class BreathWeapon(Feature):
             f"You can use this Breath Weapon a number of times equal to your Proficiency Bonus ({proficiency_bonus}), and you regain all expended uses when you finish a Long Rest."
         )
         return StringUtils.add_boxes(text, proficiency_bonus)
+
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        constitution_modifier = character_stat_block.get_ability_modifier(
+            Ability.CONSTITUTION
+        )
+        proficiency_bonus = character_stat_block.get_proficiency_bonus()
+
+        if character_stat_block.character_level < 5:
+            damage = "1d10"
+        elif character_stat_block.character_level < 11:
+            damage = "2d10"
+        elif character_stat_block.character_level < 17:
+            damage = "3d10"
+        else:
+            damage = "4d10"
+
+        save_dc = 8 + constitution_modifier + proficiency_bonus
+
+        return [
+            ("Trigger", "Replace one attack when taking Attack action"),
+            ("Shape", "15-foot Cone or 30-foot Line (5 feet wide)"),
+            ("Save", f"Dexterity DC {save_dc} (8 + CON mod + proficiency)"),
+            ("Damage", f"{damage} {self.damage_type.value}"),
+            ("Effect", "Full damage on failed save, half on success"),
+            ("Uses", f"{proficiency_bonus} per Long Rest"),
+        ]
 
 
 class DraconicFlight(Feature):

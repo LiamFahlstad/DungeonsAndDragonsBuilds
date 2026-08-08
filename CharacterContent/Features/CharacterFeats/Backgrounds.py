@@ -9,7 +9,7 @@ class FreeBackgroundAbilityBonus(Feature):
 
     def __init__(self, bonuses: list[tuple[Ability, int]]):
         self._bonus = AbilityScoreBonus(bonuses, total=3, error_prefix="Free Background Ability Bonus")
-        super().__init__(name="Free Background Ability Bonus", origin="Background")
+        super().__init__(name="Free Background Ability Bonus", origin="Background", skippable_in_concise=True)
 
     def apply(self, character_stat_block: CharacterStatBlock):
         self._bonus.apply(character_stat_block)
@@ -35,7 +35,7 @@ class FreeBackgroundSkillProficiency(Feature):
             count=2,
             error_prefix="Free Background Skill Proficiency",
         )
-        super().__init__(name="Free Background Skill Proficiency", origin="Background")
+        super().__init__(name="Free Background Skill Proficiency", origin="Background", skippable_in_concise=True)
 
     def apply(self, character_stat_block: CharacterStatBlock):
         self._choice.apply(character_stat_block)

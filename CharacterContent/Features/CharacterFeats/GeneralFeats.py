@@ -451,6 +451,10 @@ class Resilient(_AbilityScoreFeat):
     _NAME = "Resilient"
     _ABILITIES = tuple(Ability)  # any ability is valid
 
+    def __init__(self, character_level: int, ability: Ability):
+        super().__init__(character_level, ability)
+        self.skippable_in_concise = True
+
     def apply(self, character_stat_block: CharacterStatBlock):
         super().apply(character_stat_block)
         character_stat_block.add_proficiency_in_saving_throw(self.ability)
@@ -546,6 +550,7 @@ class SkillExpert(_AbilityScoreFeat):
             [skill], list(Skill), count=1, error_prefix="Skill Expert"
         )
         super().__init__(character_level, ability)
+        self.skippable_in_concise = True
 
     def apply(self, character_stat_block: CharacterStatBlock):
         super().apply(character_stat_block)

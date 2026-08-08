@@ -8,7 +8,7 @@ SPEED = 30  # Given by your species
 
 class EscapedDeath(Feature):
     def __init__(self):
-        super().__init__(name="Escaped Death", origin="Reborn Trait")
+        super().__init__(name="Escaped Death", origin="Reborn Trait", skippable_in_concise=True)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         return "You have Advantage on Death Saving Throws."
@@ -34,11 +34,17 @@ class RebornKnowledge(Feature):
         )
         return description
 
+    def get_concise_description(self, character_stat_block: CharacterStatBlock) -> str:
+        proficiency_bonus = character_stat_block.get_proficiency_bonus()
+        return (
+            f"Gain proficiency in one skill of your choice. When you fail an ability check, add 1d6 to the roll to potentially turn it into a success ({proficiency_bonus} uses per Long Rest)."
+        )
+
 
 class RebornKnowledgeSkill(Feature):
     def __init__(self, skill: Skill):
         self.skill = skill
-        super().__init__(name="Reborn Knowledge", origin="Reborn Trait")
+        super().__init__(name="Reborn Knowledge", origin="Reborn Trait", skippable_in_concise=True)
         self._choice = SkillProficiencyChoice(
             [skill], list(Skill), count=1, error_prefix="RebornKnowledgeSkill"
         )
@@ -52,7 +58,7 @@ class RebornKnowledgeSkill(Feature):
 
 class StrangeEndurance(Feature):
     def __init__(self):
-        super().__init__(name="Strange Endurance", origin="Reborn Trait")
+        super().__init__(name="Strange Endurance", origin="Reborn Trait", skippable_in_concise=True)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "You have Resistance to one of the following damage types of your choice: Cold, Necrotic, or Poison."
