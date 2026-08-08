@@ -4,7 +4,7 @@ from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 class BonusProficiencies(Feature):
     def __init__(self):
-        super().__init__(name="Bonus Proficiencies", origin="Way of the Drunken Master Monk Level 3")
+        super().__init__(name="Bonus Proficiencies", origin="Way of the Drunken Master Monk Level 3", skippable_in_concise=True)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

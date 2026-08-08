@@ -110,7 +110,7 @@ class KnowYourEnemy(Feature):
 class ImprovedCombatSuperiority(Feature):
     def __init__(self):
         super().__init__(
-            name="Improved Combat Superiority", origin="Battle Master Fighter Level 10"
+            name="Improved Combat Superiority", origin="Battle Master Fighter Level 10", skippable_in_concise=True
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -130,7 +130,7 @@ class Relentless(Feature):
 class UltimateCombatSuperiority(Feature):
     def __init__(self):
         super().__init__(
-            name="Ultimate Combat Superiority", origin="Battle Master Fighter Level 18"
+            name="Ultimate Combat Superiority", origin="Battle Master Fighter Level 18", skippable_in_concise=True
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:

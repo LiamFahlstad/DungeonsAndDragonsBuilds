@@ -101,6 +101,24 @@ class Metamagic(Feature):
         )
         return description
 
+    def get_concise_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> str:
+        sorcerer_level = character_stat_block.get_class_level(
+            Definitions.CharacterClass.SORCERER
+        )
+        if sorcerer_level < 10:
+            metamagic_options = 2
+        elif sorcerer_level < 17:
+            metamagic_options = 4
+        else:
+            metamagic_options = 6
+        return (
+            f"You know {metamagic_options} Metamagic options to modify spells by spending Sorcery Points. "
+            f"Use only one per spell cast (unless noted otherwise). Replace one option at each level up; "
+            f"gain 2 more at level 10 and 2 more at level 17."
+        )
+
 
 class SorcerousRestoration(Feature):
     def __init__(self):

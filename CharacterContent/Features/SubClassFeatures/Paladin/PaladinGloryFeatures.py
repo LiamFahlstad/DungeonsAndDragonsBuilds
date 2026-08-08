@@ -12,6 +12,15 @@ class InspiringSmite(Feature):
         description = "Immediately after you cast Divine Smite, you can expend one use of your Channel Divinity and distribute Temporary Hit Points to creatures of your choice within 30 feet of yourself, which can include you. The total number of Temporary Hit Points equals 2d8 plus your Paladin level, divided among the chosen creatures however you like."
         return description
 
+    def get_table_description(self, character_stat_block: CharacterStatBlock) -> list[tuple[str, str]]:
+        return [
+            ("Trigger", "Immediately after you cast Divine Smite"),
+            ("Cost", "1 Channel Divinity use"),
+            ("Range", "30 feet"),
+            ("Temporary HP", "2d8 + your Paladin level (total)"),
+            ("Distribution", "Allocate among chosen creatures however you wish (can include yourself)"),
+        ]
+
 
 class GlorySpells(Feature):
     def __init__(self):

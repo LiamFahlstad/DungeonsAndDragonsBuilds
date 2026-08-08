@@ -149,7 +149,7 @@ class PsionicReserves(Feature):
 
 class EpicBoon(Feature):
     def __init__(self):
-        super().__init__(name="Epic Boon", origin="Psion Level 19")
+        super().__init__(name="Epic Boon", origin="Psion Level 19", skippable_in_concise=True)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

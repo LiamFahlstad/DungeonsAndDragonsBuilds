@@ -127,6 +127,13 @@ class DrakeCompanion(Feature):
         )
         return StringUtils.add_boxes(description, uses, regain_all_on="long rest")
 
+    def get_concise_description(self, character_stat_block: CharacterStatBlock) -> str:
+        return (
+            "Summon a friendly drake within 30 feet as an action (choose a damage type for its Draconic Essence). "
+            "The drake shares your initiative and acts after you, taking only the Dodge action unless you use a bonus action to command it. "
+            "It remains until reduced to 0 HP, resummoned, or you die; recharge with long rest or by expending a 1st-level spell slot."
+        )
+
 
 class BondOfFangAndScale(Feature):
     def __init__(self):

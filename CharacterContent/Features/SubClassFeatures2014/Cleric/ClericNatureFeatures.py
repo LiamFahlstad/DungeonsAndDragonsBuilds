@@ -5,7 +5,7 @@ from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 class AcolyteOfNature(Feature):
     def __init__(self):
-        super().__init__(name="Acolyte of Nature", origin="Nature Domain Cleric Level 3")
+        super().__init__(name="Acolyte of Nature", origin="Nature Domain Cleric Level 3", skippable_in_concise=True)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -16,7 +16,7 @@ class AcolyteOfNature(Feature):
 
 class BonusProficiency(Feature):
     def __init__(self):
-        super().__init__(name="Bonus Proficiency", origin="Nature Domain Cleric Level 3")
+        super().__init__(name="Bonus Proficiency", origin="Nature Domain Cleric Level 3", skippable_in_concise=True)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "You gain proficiency with heavy armor."

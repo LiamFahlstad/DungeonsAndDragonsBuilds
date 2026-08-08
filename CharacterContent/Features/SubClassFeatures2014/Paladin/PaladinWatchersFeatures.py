@@ -90,7 +90,7 @@ class AuraOfTheSentinel(Feature):
 
 class AuraOfTheSentinelExpansion(Feature):
     def __init__(self):
-        super().__init__(name="Aura of the Sentinel Expansion", origin="Oath of the Watchers Paladin Level 18")
+        super().__init__(name="Aura of the Sentinel Expansion", origin="Oath of the Watchers Paladin Level 18", skippable_in_concise=True)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "The range of your Aura of the Sentinel increases to 30 feet."
@@ -132,3 +132,14 @@ class MortalBulwark(Feature):
             "Once you use this bonus action, you can't use it again until you finish a long rest, unless you expend a 5th-level spell slot to use it again."
         )
         return StringUtils.add_boxes(description, 1, regain_all_on="long rest")
+
+    def get_table_description(self, character_stat_block: CharacterStatBlock) -> list[tuple[str, str]]:
+        return [
+            ("What", "Manifest divine power for defense"),
+            ("Action", "Bonus action"),
+            ("Duration", "1 minute"),
+            ("Truesight", "120-foot range"),
+            ("Attack Advantage", "Against aberrations, celestials, elementals, fey, fiends"),
+            ("Banishment", "Hit forces CHA save vs spell DC; fail = banish to native plane; success = can't banish for 24 hours"),
+            ("Recharge", "Long rest (or 5th-level slot to use again)"),
+        ]

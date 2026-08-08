@@ -5,7 +5,7 @@ from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 class BonusProficiency(Feature):
     def __init__(self):
-        super().__init__(name="Bonus Proficiency", origin="Death Domain Cleric Level 3")
+        super().__init__(name="Bonus Proficiency", origin="Death Domain Cleric Level 3", skippable_in_concise=True)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "You gain proficiency with martial weapons."
@@ -72,7 +72,7 @@ class TouchOfDeathChannelDivinity(Feature):
 class InescapableDestruction(Feature):
     def __init__(self):
         super().__init__(
-            name="Inescapable Destruction", origin="Death Domain Cleric Level 6"
+            name="Inescapable Destruction", origin="Death Domain Cleric Level 6", skippable_in_concise=True
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:

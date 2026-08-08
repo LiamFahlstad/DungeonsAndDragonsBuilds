@@ -89,6 +89,17 @@ class BeguilingDefenses(Feature):
         description = "Your patron teaches you how to turn the mind-affecting magic of your enemies against them. You are immune to being charmed, and when another creature attempts to charm you, you can use your Reaction to attempt to turn the charm back on that creature. The creature must succeed on a Wisdom saving throw against your Warlock spell save DC or be charmed by you for 1 minute or until the creature takes any damage."
         return description
 
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        return [
+            ("Trigger", "Creature attempts to charm you"),
+            ("Type", "Reaction"),
+            ("Save", "Wisdom against Warlock spell save DC"),
+            ("Effect", "Target is charmed by you"),
+            ("Duration", "1 minute or until target takes damage"),
+        ]
+
 
 class DarkDelirium(Feature):
     def __init__(self):

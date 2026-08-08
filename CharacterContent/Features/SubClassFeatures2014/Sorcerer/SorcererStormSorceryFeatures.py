@@ -12,7 +12,7 @@ from Utils import StringUtils
 
 class WindSpeaker(Feature):
     def __init__(self):
-        super().__init__(name="Wind Speaker", origin="Storm Sorcery Sorcerer Level 3")
+        super().__init__(name="Wind Speaker", origin="Storm Sorcery Sorcerer Level 3", skippable_in_concise=True)
         self._language = GrantLanguage(Language.PRIMORDIAL, self.name)
 
     def apply(self, character_stat_block: CharacterStatBlock):

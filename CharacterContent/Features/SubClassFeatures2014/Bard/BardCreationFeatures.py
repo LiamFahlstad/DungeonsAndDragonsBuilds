@@ -8,6 +8,17 @@ class MoteOfPotential(Feature):
     def __init__(self):
         super().__init__(name="Mote of Potential", origin="College of Creation Bard Level 3")
 
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        return [
+            ("Trigger", "Give a creature a Bardic Inspiration die"),
+            ("Mote Effect: Ability Check", "Roll die again, choose which roll to use"),
+            ("Mote Effect: Attack Roll", "Targets within 5 ft make CON save or take thunder damage equal to die roll"),
+            ("Mote Effect: Saving Throw", "Creature gains temp HP equal to die roll + CHA modifier (min 1)"),
+            ("Duration", "Until Bardic Inspiration die is lost"),
+        ]
+
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
             "When you join the College of Creation at 3rd level, whenever you give a creature a Bardic Inspiration die, you can utter a note from the Song of Creation to create a Tiny mote of potential, which orbits within 5 feet of that creature. The mote is intangible and invulnerable, and it lasts until the Bardic Inspiration die is lost. The mote looks like a musical note, a star, a flower, or another symbol of art or life that you choose.\n"

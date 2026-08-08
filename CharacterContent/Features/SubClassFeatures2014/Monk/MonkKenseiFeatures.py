@@ -72,7 +72,7 @@ class KenseiShot(Feature):
 
 class WayOfTheBrush(Feature):
     def __init__(self):
-        super().__init__(name="Way of the Brush", origin="Way of the Kensei Monk Level 3")
+        super().__init__(name="Way of the Brush", origin="Way of the Kensei Monk Level 3", skippable_in_concise=True)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

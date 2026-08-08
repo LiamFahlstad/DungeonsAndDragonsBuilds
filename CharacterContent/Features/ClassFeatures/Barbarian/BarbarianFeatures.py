@@ -88,6 +88,13 @@ class WeaponMastery(Feature):
         )
         return description
 
+    def get_concise_description(self, character_stat_block: CharacterStatBlock) -> str:
+        return (
+            "You master 2 kinds of Simple or Martial Melee weapons of your choice and can "
+            "change one choice on long rest. At higher Barbarian levels, you gain the ability "
+            "to use the mastery properties of additional weapon kinds."
+        )
+
 
 class DangerSenseText(Feature):
     def __init__(self):

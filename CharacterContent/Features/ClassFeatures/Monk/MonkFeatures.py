@@ -333,6 +333,15 @@ class HeightenedFocus(Feature):
         )
         return description
 
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        return [
+            ("Flurry of Blows", "Expend 1 Focus Point to make three Unarmed Strikes as a Bonus Action"),
+            ("Patient Defense", "Expend 1 Focus Point to gain Temporary Hit Points equal to two Martial Arts die rolls"),
+            ("Step of the Wind", "Expend 1 Focus Point to move a willing creature (Large or smaller) within 5 ft; doesn't provoke Opportunity Attacks"),
+        ]
+
 
 class SelfRestoration(Feature):
     def __init__(self):

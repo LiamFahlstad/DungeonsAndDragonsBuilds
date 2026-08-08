@@ -104,3 +104,13 @@ class SignatureSpells(Feature):
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         return "Choose two level 3 spells in your spellbook as your signature spells. You always have these spells prepared, and you can cast each of them once at level 3 without expending a spell slot. When you do so, you can't cast them in this way again until you finish a Short or Long Rest. To cast either spell at a higher level, you must expend a spell slot."
+
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        return [
+            ("Choose", "Two level 3 spells from spellbook"),
+            ("Prepared", "Always"),
+            ("Cast at Level 3", "Once per Short or Long Rest without slot"),
+            ("Cast at Higher Level", "Expend spell slot"),
+        ]

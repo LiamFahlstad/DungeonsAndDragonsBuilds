@@ -10,6 +10,7 @@ class BonusProficiencies(Feature):
         super().__init__(
             name="Bonus Proficiencies",
             origin="Rune Knight Fighter Level 3",
+            skippable_in_concise=True,
         )
         self._language = GrantLanguage(Language.GIANT, self.name)
 

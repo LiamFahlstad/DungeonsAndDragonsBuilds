@@ -6,7 +6,7 @@ from Utils import StringUtils
 
 class DivinationSavant(Feature):
     def __init__(self):
-        super().__init__(name="Divination Savant", origin="Divination Wizard Level 3")
+        super().__init__(name="Divination Savant", origin="Divination Wizard Level 3", skippable_in_concise=True)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "The gold and time you must spend to copy a Divination spell into your spellbook is halved."

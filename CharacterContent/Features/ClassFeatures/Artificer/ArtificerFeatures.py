@@ -231,3 +231,9 @@ class SoulOfArtifice(Feature):
             "Magical Guidance. When you finish a Short Rest, you regain all expended uses of your Flash of Genius if you have Attunement to at least one magic item."
         )
         return description
+
+    def get_table_description(self, character_stat_block: CharacterStatBlock) -> list[tuple[str, str]]:
+        return [
+            ("Cheat Death", "When reduced to 0 HP, disintegrate any number of Uncommon or Rare items you created; gain 20 HP per item disintegrated"),
+            ("Magical Guidance", "When finishing a Short Rest while attuned to ≥1 item, regain all Flash of Genius uses"),
+        ]

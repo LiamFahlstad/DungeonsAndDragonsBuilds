@@ -69,7 +69,7 @@ class UmbralSight(Feature):
 
 class IronMind(Feature):
     def __init__(self, alternate_saving_throw: Optional[Ability] = None):
-        super().__init__(name="Iron Mind", origin="Gloom Stalker Ranger Level 7")
+        super().__init__(name="Iron Mind", origin="Gloom Stalker Ranger Level 7", skippable_in_concise=True)
         self._alternate_saving_throw = alternate_saving_throw
         ability = alternate_saving_throw if alternate_saving_throw is not None else Ability.WISDOM
         self._proficiency_choice = SavingThrowProficiencyChoice(

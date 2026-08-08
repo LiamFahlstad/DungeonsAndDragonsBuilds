@@ -7,7 +7,7 @@ from Utils import StringUtils
 
 class ArcaneArcherLore(Feature):
     def __init__(self, skill: Skill, cantrip: str):
-        super().__init__(name="Arcane Archer Lore", origin="Arcane Archer Fighter Level 3")
+        super().__init__(name="Arcane Archer Lore", origin="Arcane Archer Fighter Level 3", skippable_in_concise=True)
         self._skill = skill
         self._cantrip = cantrip
         self._proficiency_choice = SkillProficiencyChoice(

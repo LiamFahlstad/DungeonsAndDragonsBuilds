@@ -6,7 +6,7 @@ from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 class EvocationSavant(Feature):
     def __init__(self):
-        super().__init__(name="Evocation Savant", origin="Evocation Wizard Level 3")
+        super().__init__(name="Evocation Savant", origin="Evocation Wizard Level 3", skippable_in_concise=True)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "The gold and time you must spend to copy an Evocation spell into your spellbook is halved."
@@ -36,7 +36,7 @@ class PotentCantrip(Feature):
 class EmpoweredEvocation(Feature):
     def __init__(self):
         super().__init__(
-            name="Empowered Evocation", origin="Evocation Wizard Level 10"
+            name="Empowered Evocation", origin="Evocation Wizard Level 10", skippable_in_concise=True
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:

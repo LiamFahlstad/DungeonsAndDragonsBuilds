@@ -12,7 +12,7 @@ from Utils import StringUtils
 
 class BonusProficiency(Feature):
     def __init__(self, skill: Optional[Skill] = None, language: Optional[str] = None):
-        super().__init__(name="Bonus Proficiency", origin="Samurai Fighter Level 3")
+        super().__init__(name="Bonus Proficiency", origin="Samurai Fighter Level 3", skippable_in_concise=True)
         self._skill = skill
         self._language = language
         self._proficiency_choice = None

@@ -21,6 +21,15 @@ class EldritchKnightSpellcasting(Feature):
         )
         return description
 
+    def get_concise_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> str:
+        return (
+            "Know two Wizard cantrips (gaining another at level 10), replacing them as you level. "
+            "Prepare level 1+ Wizard spells (3 initially, scaling with levels), regaining all spell slots on long rest. "
+            "Intelligence is your spellcasting ability; use an Arcane Focus as your spellcasting focus."
+        )
+
 
 class WarBond(Feature):
     def __init__(self):

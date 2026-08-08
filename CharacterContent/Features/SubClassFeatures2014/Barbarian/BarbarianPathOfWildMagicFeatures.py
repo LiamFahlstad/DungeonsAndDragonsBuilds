@@ -85,6 +85,11 @@ class UnstableBacklash(Feature):
         )
         return description
 
+    def get_concise_description(self, character_stat_block: CharacterStatBlock) -> str:
+        return (
+            "When you take damage or fail a save while raging, use a Reaction to roll on the Wild Magic table and produce that effect (replaces your current effect)."
+        )
+
 
 class ControlledSurge(Feature):
     def __init__(self):

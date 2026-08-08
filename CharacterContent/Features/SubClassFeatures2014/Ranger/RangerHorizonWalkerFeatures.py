@@ -89,6 +89,16 @@ class EtherealStep(Feature):
         )
         return StringUtils.add_boxes(description, 1, regain_all_on="short or long rest")
 
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        return [
+            ("What", "Cast Etherealness spell"),
+            ("Action", "Bonus action"),
+            ("Effect", "Ethereal Plane; lasts until end of current turn"),
+            ("Recharge", "Short or long rest"),
+        ]
+
 
 class DistantStrike(Feature):
     def __init__(self):

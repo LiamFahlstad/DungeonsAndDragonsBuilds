@@ -35,7 +35,8 @@ class Frenzy(Feature):
 class MindlessRage(Feature):
     def __init__(self):
         super().__init__(
-            name="Mindless Rage", origin="Path Of The Berserker Barbarian Level 6"
+            name="Mindless Rage", origin="Path Of The Berserker Barbarian Level 6",
+            skippable_in_concise=True
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:

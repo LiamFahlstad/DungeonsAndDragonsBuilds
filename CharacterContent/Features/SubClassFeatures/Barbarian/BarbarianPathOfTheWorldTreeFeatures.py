@@ -72,6 +72,12 @@ class BatteringRoots(Feature):
         description = "During your turn, your reach is 10 feet greater with any Melee weapon that has the Heavy or Versatile property, as tendrils of the World Tree extend from you. When you hit with such a weapon on your turn, you can activate the Push or Topple mastery property in addition to a different mastery property you're using with that weapon."
         return description
 
+    def get_concise_description(self, character_stat_block: CharacterStatBlock) -> str:
+        return (
+            "Your reach increases by 10 feet with Heavy or Versatile melee weapons. "
+            "When you hit with such a weapon, you can add the Push or Topple mastery property to another mastery property you're using with that weapon."
+        )
+
 
 class TravelAlongTheTree(Feature):
     def __init__(self):

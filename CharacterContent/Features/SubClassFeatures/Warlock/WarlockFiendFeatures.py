@@ -57,7 +57,7 @@ class DarkOnesOwnLuck(Feature):
 class FiendishResilience(Feature):
     def __init__(self):
         super().__init__(
-            name="Fiendish Resilience", origin="Fiend Patron Warlock Level 10"
+            name="Fiendish Resilience", origin="Fiend Patron Warlock Level 10", skippable_in_concise=True
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:

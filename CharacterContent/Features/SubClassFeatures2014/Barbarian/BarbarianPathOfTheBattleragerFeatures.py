@@ -18,6 +18,12 @@ class BattleragerArmor(Feature):
         )
         return description
 
+    def get_concise_description(self, character_stat_block: CharacterStatBlock) -> str:
+        return (
+            "While raging and wearing spiked armor, use a Bonus Action to make a melee spike attack (1d4 piercing) within 5 feet. "
+            "When you grapple a creature, it takes 3 piercing damage if successful."
+        )
+
 
 class RecklessAbandon(Feature):
     def __init__(self):
@@ -50,3 +56,8 @@ class SpikedRetribution(Feature):
             "Starting at 14th level, when a creature within 5 feet of you hits you with a melee attack, the attacker takes 3 piercing damage if you are raging, aren't incapacitated, and are wearing spiked armor."
         )
         return description
+
+    def get_concise_description(self, character_stat_block: CharacterStatBlock) -> str:
+        return (
+            "When a creature within 5 feet hits you with a melee attack, the attacker takes 3 piercing damage if you're raging, not incapacitated, and wearing spiked armor."
+        )

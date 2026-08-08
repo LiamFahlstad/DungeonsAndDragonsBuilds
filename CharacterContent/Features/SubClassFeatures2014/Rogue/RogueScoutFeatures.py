@@ -17,7 +17,7 @@ class Skirmisher(Feature):
 
 class Survivalist(Feature):
     def __init__(self):
-        super().__init__(name="Survivalist", origin="Scout Rogue Level 3")
+        super().__init__(name="Survivalist", origin="Scout Rogue Level 3", skippable_in_concise=True)
         self._proficiency = SkillProficiency([Skill.NATURE, Skill.SURVIVAL])
         self._expertise = SkillExpertise([Skill.NATURE, Skill.SURVIVAL])
 
@@ -34,7 +34,7 @@ class Survivalist(Feature):
 
 class SuperiorMobility(Feature):
     def __init__(self):
-        super().__init__(name="Superior Mobility", origin="Scout Rogue Level 9")
+        super().__init__(name="Superior Mobility", origin="Scout Rogue Level 9", skippable_in_concise=True)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "At 9th level, your walking speed increases by 10 feet. If you have a climbing or swimming speed, this increase applies to that speed as well."

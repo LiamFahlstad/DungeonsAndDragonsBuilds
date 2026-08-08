@@ -7,7 +7,7 @@ from Utils import StringUtils
 
 class BonusProficiencies(Feature):
     def __init__(self):
-        super().__init__(name="Bonus Proficiencies", origin="Order Domain Cleric Level 3")
+        super().__init__(name="Bonus Proficiencies", origin="Order Domain Cleric Level 3", skippable_in_concise=True)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "You gain proficiency with heavy armor. You also gain proficiency in the Intimidation or Persuasion skill (your choice)."
@@ -127,3 +127,6 @@ class OrdersWrath(Feature):
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "Enemies you designate for destruction wilt under the combined efforts of you and your allies. If you deal your Divine Strike damage to a creature on your turn, you can curse that creature until the start of your next turn. The next time one of your allies hits the cursed creature with an attack, the target also takes 2d8 psychic damage, and the curse ends. You can curse a creature in this way only once per turn."
         return description
+
+    def get_concise_description(self, character_stat_block: CharacterStatBlock) -> str:
+        return "When you deal Divine Strike damage, curse the target until start of your next turn. The next time an ally hits it, the target also takes 2d8 psychic damage and the curse ends (once per turn)."

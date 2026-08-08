@@ -94,6 +94,13 @@ class MysticArcanum(Feature):
         )
         return description
 
+    def get_concise_description(self, character_stat_block: CharacterStatBlock) -> str:
+        return (
+            "Choose a level 6 Warlock spell as an arcanum; cast it once per Long Rest without expending a spell slot. "
+            "Gain additional arcanum spells (level 7 at 13th, level 8 at 15th, level 9 at 17th). "
+            "You can replace any arcanum spell when you gain a Warlock level."
+        )
+
 
 class EldritchMaster(Feature):
     def __init__(self):

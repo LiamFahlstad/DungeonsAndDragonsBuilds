@@ -4,7 +4,7 @@ from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 class ArcaneInitiate(Feature):
     def __init__(self):
-        super().__init__(name="Arcane Initiate", origin="Arcana Domain Cleric Level 3")
+        super().__init__(name="Arcane Initiate", origin="Arcana Domain Cleric Level 3", skippable_in_concise=True)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "You gain proficiency in the Arcana skill, and you gain two cantrips of your choice from the wizard spell list. For you, these cantrips count as cleric cantrips."
@@ -64,7 +64,7 @@ class SpellBreaker(Feature):
 
 class PotentSpellcasting(Feature):
     def __init__(self):
-        super().__init__(name="Potent Spellcasting", origin="Arcana Domain Cleric Level 8")
+        super().__init__(name="Potent Spellcasting", origin="Arcana Domain Cleric Level 8", skippable_in_concise=True)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "You add your Wisdom modifier to the damage you deal with any cleric cantrip."
@@ -73,7 +73,7 @@ class PotentSpellcasting(Feature):
 
 class ArcaneMastery(Feature):
     def __init__(self):
-        super().__init__(name="Arcane Mastery", origin="Arcana Domain Cleric Level 17")
+        super().__init__(name="Arcane Mastery", origin="Arcana Domain Cleric Level 17", skippable_in_concise=True)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "You choose four spells from the wizard spell list, one from each of the following levels: 6th, 7th, 8th, and 9th. You add them to your list of domain spells. Like your other domain spells, they are always prepared and count as cleric spells for you."

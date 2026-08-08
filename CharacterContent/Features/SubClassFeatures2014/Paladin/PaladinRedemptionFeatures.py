@@ -114,3 +114,11 @@ class EmissaryOfRedemption(Feature):
             "If you attack a creature, cast a spell on it, or deal damage to it by any means but this feature, neither benefit works against that creature until you finish a long rest."
         )
         return description
+
+    def get_table_description(self, character_stat_block: CharacterStatBlock) -> list[tuple[str, str]]:
+        return [
+            ("What", "Avatar of peace"),
+            ("Resistance", "All damage from creatures"),
+            ("Damage Return", "Creatures that hit you take radiant damage = half damage to you"),
+            ("Deactivation", "If you attack/spell/damage a creature: benefits don't work against it for 24 hours"),
+        ]

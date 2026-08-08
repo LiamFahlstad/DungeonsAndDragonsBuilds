@@ -88,7 +88,7 @@ class AuraOfConquest(Feature):
 
 class AuraOfConquestExpansion(Feature):
     def __init__(self):
-        super().__init__(name="Aura of Conquest Expansion", origin="Oath of Conquest Paladin Level 18")
+        super().__init__(name="Aura of Conquest Expansion", origin="Oath of Conquest Paladin Level 18", skippable_in_concise=True)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "The range of your Aura of Conquest increases to 30 feet."
@@ -122,3 +122,14 @@ class InvincibleConqueror(Feature):
             "Once you use this feature, you can't use it again until you finish a long rest."
         )
         return StringUtils.add_boxes(description, 1, regain_all_on="long rest")
+
+    def get_table_description(self, character_stat_block: CharacterStatBlock) -> list[tuple[str, str]]:
+        return [
+            ("What", "Avatar of conquest"),
+            ("Action", "Action"),
+            ("Duration", "1 minute"),
+            ("Resistance", "Resistance to all damage"),
+            ("Extra Attack", "Additional attack with Attack action"),
+            ("Critical Hits", "Critical hit on 19-20"),
+            ("Recharge", "Long rest"),
+        ]

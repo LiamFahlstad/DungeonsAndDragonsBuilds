@@ -89,3 +89,14 @@ class AvengingAngel(Feature):
             "Once you use this feature, you can't use it again until you finish a long rest."
         )
         return StringUtils.add_boxes(description, 1, regain_all_on="long rest")
+
+    def get_table_description(self, character_stat_block: CharacterStatBlock) -> list[tuple[str, str]]:
+        return [
+            ("What", "Transform into avenging avatar"),
+            ("Action", "Action"),
+            ("Duration", "1 hour"),
+            ("Flight", "Gain wings and 60-foot flying speed"),
+            ("Aura", "Menace aura in 30-foot radius"),
+            ("Aura Effect", "Enemies first entering/starting turn: WIS save or frightened 1 min; attacks vs frightened have advantage"),
+            ("Recharge", "Long rest"),
+        ]

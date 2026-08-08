@@ -6,7 +6,7 @@ from Utils import StringUtils
 
 class ToolsOfTheTrade(Feature):
     def __init__(self):
-        super().__init__(name="Tool Proficiency", origin="Battle Smith Artificer Level 3")
+        super().__init__(name="Tool Proficiency", origin="Battle Smith Artificer Level 3", skippable_in_concise=True)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "When you adopt this specialization at 3rd level, you gain proficiency with smith's tools. If you already have this proficiency, you gain proficiency with one other type of artisan's tools of your choice."

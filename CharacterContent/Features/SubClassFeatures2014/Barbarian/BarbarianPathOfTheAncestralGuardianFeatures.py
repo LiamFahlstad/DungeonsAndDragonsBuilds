@@ -22,6 +22,11 @@ class AncestralProtectors(Feature):
         )
         return description
 
+    def get_concise_description(self, character_stat_block: CharacterStatBlock) -> str:
+        return (
+            "When you rage, spectral warriors target the first creature you hit each turn. That target has disadvantage on attacks not against you; creatures it hits gain resistance to the damage dealt."
+        )
+
 
 class SpiritShield(Feature):
     def __init__(self):

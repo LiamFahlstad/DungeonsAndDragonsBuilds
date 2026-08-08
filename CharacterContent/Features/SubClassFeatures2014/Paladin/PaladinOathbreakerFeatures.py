@@ -72,7 +72,7 @@ class DreadfulAspect(Feature):
 
 class AuraOfHate(Feature):
     def __init__(self):
-        super().__init__(name="Aura of Hate", origin="Oathbreaker Paladin Level 7")
+        super().__init__(name="Aura of Hate", origin="Oathbreaker Paladin Level 7", skippable_in_concise=True)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -96,7 +96,7 @@ class AuraOfHateExpansion(Feature):
 class SupernaturalResistance(Feature):
     def __init__(self):
         super().__init__(
-            name="Supernatural Resistance", origin="Oathbreaker Paladin Level 15"
+            name="Supernatural Resistance", origin="Oathbreaker Paladin Level 15", skippable_in_concise=True
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:

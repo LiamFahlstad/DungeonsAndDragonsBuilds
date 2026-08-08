@@ -64,6 +64,17 @@ class ElementalAttunement(Feature):
         )
         return description
 
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        return [
+            ("Trigger", "Start of your turn"),
+            ("Cost", "1 Focus Point"),
+            ("Duration", "10 minutes or until Incapacitated"),
+            ("Reach", "Unarmed Strikes gain 10-foot increased reach"),
+            ("Elemental Strikes", "Change damage type to Acid/Cold/Fire/Lightning/Thunder; target Strength save or moved 10 feet"),
+        ]
+
 
 class ManipulateElements(Feature):
     def __init__(self):

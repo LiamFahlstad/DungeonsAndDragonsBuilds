@@ -6,7 +6,7 @@ from Utils import StringUtils
 
 class BonusProficiency(Feature):
     def __init__(self):
-        super().__init__(name="Bonus Proficiency", origin="Cavalier Fighter Level 3")
+        super().__init__(name="Bonus Proficiency", origin="Cavalier Fighter Level 3", skippable_in_concise=True)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "You gain proficiency in one of the following skills of your choice: Animal Handling, History, Insight, Performance, or Persuasion. Alternatively, you learn one language of your choice."

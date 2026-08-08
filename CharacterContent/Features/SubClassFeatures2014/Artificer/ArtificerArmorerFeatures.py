@@ -5,7 +5,7 @@ from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 class ToolsOfTheTrade(Feature):
     def __init__(self):
-        super().__init__(name="Tools of the Trade", origin="Armorer Artificer Level 3")
+        super().__init__(name="Tools of the Trade", origin="Armorer Artificer Level 3", skippable_in_concise=True)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "When you adopt this specialization at 3rd level, you gain proficiency with heavy armor. You also gain proficiency with smith's tools. If you already have this tool proficiency, you gain proficiency with one other type of artisan's tools of your choice."

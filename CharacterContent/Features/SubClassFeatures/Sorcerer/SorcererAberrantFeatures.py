@@ -82,6 +82,17 @@ class RevelationInFlesh(Feature):
         )
         return description
 
+    def get_table_description(self, character_stat_block: CharacterStatBlock) -> list[tuple[str, str]]:
+        return [
+            ("Action", "Bonus Action"),
+            ("Cost", "1+ Sorcery Points (1 per benefit)"),
+            ("Duration", "10 minutes"),
+            ("Aquatic Adaptation", "Swim Speed = 2x Speed, breathe underwater"),
+            ("Glistening Flight", "Fly Speed = Speed, can hover"),
+            ("See the Invisible", "See Invisible creatures within 60 feet"),
+            ("Wormlike Movement", "Move through 1-inch spaces, escape restraints/grapple"),
+        ]
+
 
 class WarpingImplosion(Feature):
     def __init__(self):

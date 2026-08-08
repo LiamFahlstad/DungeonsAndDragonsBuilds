@@ -69,7 +69,7 @@ class TentacleOfTheDeep(Feature):
 class GiftOfTheSea(Feature):
     def __init__(self):
         super().__init__(
-            name="Gift of the Sea", origin="The Fathomless Patron Warlock Level 3"
+            name="Gift of the Sea", origin="The Fathomless Patron Warlock Level 3", skippable_in_concise=True
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:

@@ -98,7 +98,7 @@ class SpreadingSpores(Feature):
 
 class FungalBody(Feature):
     def __init__(self):
-        super().__init__(name="Fungal Body", origin="Circle of Spores Druid Level 14")
+        super().__init__(name="Fungal Body", origin="Circle of Spores Druid Level 14", skippable_in_concise=True)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

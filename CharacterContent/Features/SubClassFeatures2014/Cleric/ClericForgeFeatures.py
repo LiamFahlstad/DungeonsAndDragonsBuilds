@@ -9,7 +9,7 @@ from Utils import StringUtils
 class BonusProficiencies(Feature):
     def __init__(self):
         super().__init__(
-            name="Bonus Proficiencies", origin="Forge Domain Cleric Level 3"
+            name="Bonus Proficiencies", origin="Forge Domain Cleric Level 3", skippable_in_concise=True
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -27,6 +27,19 @@ class BlessingOfTheForge(Feature):
             "Once you use this feature, you can't use it again until you finish a long rest."
         )
         return StringUtils.add_boxes(description, 1, regain_all_on="long rest")
+
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        return [
+            ("Trigger", "At end of long rest"),
+            ("Action", "Touch"),
+            ("Target", "One nonmagical armor or weapon"),
+            ("Bonus", "+1 to AC (armor) or +1 to attack and damage (weapon)"),
+            ("Duration", "Until end of next long rest or until you die"),
+            ("Uses", "1"),
+            ("Recharge", "Long rest"),
+        ]
 
 
 class ForgeDomainSpells(Feature):
@@ -66,7 +79,7 @@ class ArtisansBlessingChannelDivinity(Feature):
 
 class SoulOfTheForge(Feature):
     def __init__(self):
-        super().__init__(name="Soul of the Forge", origin="Forge Domain Cleric Level 6")
+        super().__init__(name="Soul of the Forge", origin="Forge Domain Cleric Level 6", skippable_in_concise=True)
         self._resistance = DamageResistance(DamageType.FIRE, self.name)
 
     def apply(self, character_stat_block: CharacterStatBlock):
@@ -109,7 +122,7 @@ class DivineStrike(Feature):
 class SaintOfForgeAndFire(Feature):
     def __init__(self):
         super().__init__(
-            name="Saint of Forge and Fire", origin="Forge Domain Cleric Level 17"
+            name="Saint of Forge and Fire", origin="Forge Domain Cleric Level 17", skippable_in_concise=True
         )
         # Only the fire immunity is unconditional; the bludgeoning/piercing/
         # slashing resistance is gated on wearing heavy armor AND only

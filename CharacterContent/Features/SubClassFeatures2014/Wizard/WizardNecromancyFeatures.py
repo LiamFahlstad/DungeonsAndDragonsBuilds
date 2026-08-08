@@ -6,7 +6,7 @@ from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 class NecromancySavant(Feature):
     def __init__(self):
-        super().__init__(name="Necromancy Savant", origin="Necromancy Wizard Level 3")
+        super().__init__(name="Necromancy Savant", origin="Necromancy Wizard Level 3", skippable_in_concise=True)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "The gold and time you must spend to copy a Necromancy spell into your spellbook is halved."
@@ -42,7 +42,7 @@ class UndeadThralls(Feature):
 class InuredToUndeath(Feature):
     def __init__(self):
         super().__init__(
-            name="Inured to Undeath", origin="Necromancy Wizard Level 10"
+            name="Inured to Undeath", origin="Necromancy Wizard Level 10", skippable_in_concise=True
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:

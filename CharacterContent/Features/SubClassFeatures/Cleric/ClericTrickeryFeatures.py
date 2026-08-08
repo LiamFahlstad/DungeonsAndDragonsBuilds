@@ -50,6 +50,18 @@ class InvokeDuplicity(Feature):
         )
         return description
 
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        return [
+            ("What", "Create visual illusion of yourself"),
+            ("Trigger", "Bonus Action, Channel Divinity"),
+            ("Range", "30 feet away; lasts 1 minute"),
+            ("Cast Spells", "From illusion's space (using your own senses)"),
+            ("Distraction", "Advantage on attacks when within 5 feet of illusion"),
+            ("Move Illusion", "Bonus Action to move up to 30 feet (within 120 feet)"),
+        ]
+
 
 class TrickstersTransposition(Feature):
     def __init__(self):
@@ -75,3 +87,11 @@ class ImprovedDuplicity(Feature):
             "Healing Illusion. When the illusion ends, you or a creature of your choice within 5 feet of it regains a number of Hit Points equal to your Cleric level."
         )
         return description
+
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        return [
+            ("Shared Distraction", "You and allies have Advantage on attacks vs creature within 5 feet of illusion"),
+            ("Healing Illusion", "When illusion ends, you or nearby creature within 5 feet regains HP = Cleric level"),
+        ]

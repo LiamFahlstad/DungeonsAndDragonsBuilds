@@ -8,7 +8,7 @@ from Utils import StringUtils
 
 class Spellcasting(Feature):
     def __init__(self):
-        super().__init__(name="Spellcasting", origin="Bard Level 1")
+        super().__init__(name="Spellcasting", origin="Bard Level 1", skippable_in_concise=True)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -71,7 +71,7 @@ class BardicInspiration(Feature):
 
 class ExpertiseLevel1(Feature):
     def __init__(self, skill_1: Skill, skill_2: Skill):
-        super().__init__(name="Expertise", origin="Bard Level 1")
+        super().__init__(name="Expertise", origin="Bard Level 1", skippable_in_concise=True)
         self._choice = SkillExpertiseChoice(
             [skill_1, skill_2], list(Skill), count=2, error_prefix="Bard Expertise"
         )
@@ -86,7 +86,7 @@ class ExpertiseLevel1(Feature):
 
 class ExpertiseLevel9(Feature):
     def __init__(self, skill_1: Skill, skill_2: Skill):
-        super().__init__(name="Expertise", origin="Bard Level 9")
+        super().__init__(name="Expertise", origin="Bard Level 9", skippable_in_concise=True)
         self._choice = SkillExpertiseChoice(
             [skill_1, skill_2], list(Skill), count=2, error_prefix="Bard Expertise"
         )
@@ -101,7 +101,7 @@ class ExpertiseLevel9(Feature):
 
 class JackOfAllTrades(Feature):
     def __init__(self):
-        super().__init__(name="Jack of All Trades", origin="Bard Level 2")
+        super().__init__(name="Jack of All Trades", origin="Bard Level 2", skippable_in_concise=True)
         self._bonus = JackOfAllTradesBonus()
 
     def apply(self, character_stat_block: CharacterStatBlock):

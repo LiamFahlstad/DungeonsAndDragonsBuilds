@@ -71,6 +71,9 @@ class SmiteOfProtection(Feature):
         description = "Your magical smite now radiates protective energy. Whenever you cast Divine Smite, you and your allies have Half Cover while in your Aura of Protection. The aura has this benefit until the start of your next turn."
         return description
 
+    def get_concise_description(self, character_stat_block: CharacterStatBlock) -> str:
+        return "When you cast Divine Smite, you and allies in your Aura of Protection gain Half Cover until the start of your next turn."
+
 
 class HolyNimbus(Feature):
     def __init__(self):

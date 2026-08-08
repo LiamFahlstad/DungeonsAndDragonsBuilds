@@ -51,6 +51,18 @@ class WordsOfTerror(Feature):
     def __init__(self):
         super().__init__(name="Words of Terror", origin="College of Whispers Bard Level 3")
 
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        return [
+            ("Requirement", "Speak to humanoid alone for 1+ minute"),
+            ("Trigger", "End of conversation"),
+            ("Save", "Wisdom save vs Spell Save DC"),
+            ("Effect (Fail)", "Frightened of you or creature of your choice for 1 hour (or until attacked/damaged)"),
+            ("Effect (Success)", "Target has no hint of attempt"),
+            ("Recharge", "Short or long rest"),
+        ]
+
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
             "At 3rd level, you learn to infuse innocent-seeming words with an insidious magic that can inspire terror.\n"

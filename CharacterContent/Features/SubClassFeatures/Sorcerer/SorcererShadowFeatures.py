@@ -85,3 +85,12 @@ class UmbralForm(Feature):
             "Shadow Resilience. You have Resistance to all damage except Force and Radiant damage."
         )
         return description
+
+    def get_table_description(self, character_stat_block: CharacterStatBlock) -> list[tuple[str, str]]:
+        return [
+            ("Trigger", "Use Innate Sorcery"),
+            ("Duration", "While Innate Sorcery active or until dismissed (no action)"),
+            ("Incorporeal Movement", "Move through creatures/objects (Difficult Terrain); 1d10 Force damage if turn ends inside"),
+            ("Shadow Resilience", "Resistance to all damage except Force and Radiant"),
+            ("Recharge", "Long Rest or 6 Sorcery Points"),
+        ]
