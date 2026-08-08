@@ -1,6 +1,6 @@
-from Core.Definitions import Ability, CreatureSize
+from Core.Definitions import Ability, CreatureSize, Sense
 from CharacterContent.Features.Core.BaseFeatures import Feature
-from CharacterContent.Features.Core.Improvements import SavingThrowAdvantage
+from CharacterContent.Features.Core.Improvements import SavingThrowAdvantage, GrantSense
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
@@ -11,6 +11,10 @@ SIZE = CreatureSize.SMALL  # Given by your species
 class Darkvision(Feature):
     def __init__(self):
         super().__init__(name="Darkvision", origin="Gnome Trait")
+        self._sense = GrantSense(Sense.DARKVISION, 60, self.name)
+
+    def apply(self, character_stat_block: CharacterStatBlock):
+        self._sense.apply(character_stat_block)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         return "You have Darkvision with a range of 60 feet."

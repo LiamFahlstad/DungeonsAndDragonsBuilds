@@ -1,5 +1,6 @@
-from Core.Definitions import CreatureSize
+from Core.Definitions import CreatureSize, Sense
 from CharacterContent.Features.Core.BaseFeatures import Feature
+from CharacterContent.Features.Core.Improvements import GrantSense
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 SPEED = 30  # Given by your species
@@ -19,6 +20,10 @@ class Darkvision(Feature):
     def __init__(self, distance: int):
         self.distance = distance
         super().__init__(name="Darkvision", origin="Tiefling Trait")
+        self._sense = GrantSense(Sense.DARKVISION, self.distance, self.name)
+
+    def apply(self, character_stat_block: CharacterStatBlock):
+        self._sense.apply(character_stat_block)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         return f"You have Darkvision with a range of {self.distance} feet."

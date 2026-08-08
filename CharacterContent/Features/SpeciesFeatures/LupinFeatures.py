@@ -1,6 +1,6 @@
-from Core.Definitions import Skill
+from Core.Definitions import Skill, Sense
 from CharacterContent.Features.Core.BaseFeatures import Feature
-from CharacterContent.Features.Core.Improvements import SkillProficiencyChoice
+from CharacterContent.Features.Core.Improvements import SkillProficiencyChoice, GrantSense
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
@@ -10,6 +10,10 @@ SPEED = 30  # Given by your species
 class Darkvision(Feature):
     def __init__(self):
         super().__init__(name="Darkvision", origin="Lupin Trait")
+        self._sense = GrantSense(Sense.DARKVISION, 60, self.name)
+
+    def apply(self, character_stat_block: CharacterStatBlock):
+        self._sense.apply(character_stat_block)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         return "You have Darkvision with a range of 60 feet."

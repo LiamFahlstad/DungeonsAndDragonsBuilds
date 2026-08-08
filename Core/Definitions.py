@@ -489,6 +489,64 @@ class ArmorType(str, Enum):
     SHIELD = "Shield"
 
 
+###### RESISTANCES, SENSES, AND LANGUAGES ######
+
+
+class Language(str, Enum):
+    COMMON = "Common"
+    COMMON_SIGN_LANGUAGE = "Common Sign Language"
+    DRACONIC = "Draconic"
+    DWARVISH = "Dwarvish"
+    ELVISH = "Elvish"
+    GIANT = "Giant"
+    GNOMISH = "Gnomish"
+    GOBLIN = "Goblin"
+    HALFLING = "Halfling"
+    ORC = "Orc"
+    ABYSSAL = "Abyssal"
+    CELESTIAL = "Celestial"
+    DEEP_SPEECH = "Deep Speech"
+    INFERNAL = "Infernal"
+    PRIMORDIAL = "Primordial"
+    SYLVAN = "Sylvan"
+    UNDERCOMMON = "Undercommon"
+    DRUIDIC = "Druidic"
+    THIEVES_CANT = "Thieves' Cant"
+
+    @staticmethod
+    def list_sorted() -> list["Language"]:
+        return sorted(Language, key=lambda language: language.value)
+
+
+class Sense(str, Enum):
+    DARKVISION = "Darkvision"
+    BLINDSIGHT = "Blindsight"
+    TREMORSENSE = "Tremorsense"
+    TRUESIGHT = "Truesight"
+
+
+class Condition(str, Enum):
+    BLINDED = "Blinded"
+    CHARMED = "Charmed"
+    DEAFENED = "Deafened"
+    EXHAUSTION = "Exhaustion"
+    FRIGHTENED = "Frightened"
+    GRAPPLED = "Grappled"
+    INCAPACITATED = "Incapacitated"
+    INVISIBLE = "Invisible"
+    PARALYZED = "Paralyzed"
+    PETRIFIED = "Petrified"
+    POISONED = "Poisoned"
+    PRONE = "Prone"
+    RESTRAINED = "Restrained"
+    STUNNED = "Stunned"
+    UNCONSCIOUS = "Unconscious"
+
+    @staticmethod
+    def list_sorted() -> list["Condition"]:
+        return sorted(Condition, key=lambda condition: condition.value)
+
+
 class ApplyWhen(str, Enum):
     IMMEDIATE = "immediate"
     LAST = "last"

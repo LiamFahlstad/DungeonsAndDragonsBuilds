@@ -100,11 +100,22 @@ class HtmlCharacterSheetWriter:
     ):
         file.write("<h2>General Info</h2>\n")
 
+        languages = ", ".join(
+            language.value
+            for language in sorted(character.languages, key=lambda lang: lang.value)
+        )
+        senses = ", ".join(
+            f"{sense.value} {character.senses[sense]} ft."
+            for sense in sorted(character.senses, key=lambda s: s.value)
+        )
+
         rows = [
             ("Name", character.name, ""),
             ("Levels per class", self._format_class_level_history(character), ""),
             ("Subclass", character.character_subclass, ""),
             ("Prof. Bonus", character.get_proficiency_bonus(), ""),
+            ("Languages", languages, ""),
+            ("Senses", senses, ""),
             # Left blank (regardless of experience_points) so the player can
             # fill it in by hand; xp-cell widens the column to leave room.
             ("XP", "", "xp-cell"),
@@ -144,6 +155,39 @@ class HtmlCharacterSheetWriter:
         ):
             initiative += f" ({character.initiative_roll_condition.value})"
 
+        resistance_immunity_groups = []
+        if character.damage_resistances:
+            resistance_immunity_groups.append(
+                "Resistant: "
+                + ", ".join(
+                    damage_type.value
+                    for damage_type in sorted(
+                        character.damage_resistances, key=lambda d: d.value
+                    )
+                )
+            )
+        if character.damage_immunities:
+            resistance_immunity_groups.append(
+                "Immune: "
+                + ", ".join(
+                    damage_type.value
+                    for damage_type in sorted(
+                        character.damage_immunities, key=lambda d: d.value
+                    )
+                )
+            )
+        if character.condition_immunities:
+            resistance_immunity_groups.append(
+                "Condition Immune: "
+                + ", ".join(
+                    condition.value
+                    for condition in sorted(
+                        character.condition_immunities, key=lambda c: c.value
+                    )
+                )
+            )
+        resistances_and_immunities = "; ".join(resistance_immunity_groups)
+
         rows = [
             ("Max HP", character.calculate_hit_points()),
             ("AC", ac),
@@ -158,6 +202,7 @@ class HtmlCharacterSheetWriter:
             ("Initiative", initiative),
             ("Speed (ft)", character.combat.speed),
             ("Size", character.combat.size.value),
+            ("Resistances / Immunities", resistances_and_immunities),
         ]
 
         file.write("<table class='stat-table'>\n<tr>")

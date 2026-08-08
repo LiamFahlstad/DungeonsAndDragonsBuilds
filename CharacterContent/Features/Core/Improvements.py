@@ -29,7 +29,15 @@ A CharacterImprovement falls into one of three categories:
 from abc import ABC, abstractmethod
 from typing import Optional
 
-from Core.Definitions import Ability, DamageType, DiceRollCondition, Skill
+from Core.Definitions import (
+    Ability,
+    Condition,
+    DamageType,
+    DiceRollCondition,
+    Language,
+    Sense,
+    Skill,
+)
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
@@ -425,20 +433,94 @@ class StrengthRequirement(CharacterImprovement):
             raise ValueError(f"Strength score must be at least {self.min_score}.")
 
 
+# ── Resistances, immunities, senses, and languages ────────────────────────────
+
+
+class DamageResistance(CharacterImprovement):
+    """Grants resistance to a damage type. `source` names where the
+    resistance comes from (e.g. the feature or item name) on the character
+    sheet."""
+
+    def __init__(self, damage_type: DamageType, source: str):
+        self.damage_type = damage_type
+        self.source = source
+
+    def apply(self, character_stat_block: CharacterStatBlock):
+        character_stat_block.add_damage_resistance(self.damage_type, self.source)
+
+
+class DamageImmunity(CharacterImprovement):
+    """Grants immunity to a damage type. `source` names where the immunity
+    comes from on the character sheet."""
+
+    def __init__(self, damage_type: DamageType, source: str):
+        self.damage_type = damage_type
+        self.source = source
+
+    def apply(self, character_stat_block: CharacterStatBlock):
+        character_stat_block.add_damage_immunity(self.damage_type, self.source)
+
+
+class ConditionImmunity(CharacterImprovement):
+    """Grants immunity to a condition. `source` names where the immunity
+    comes from on the character sheet."""
+
+    def __init__(self, condition: Condition, source: str):
+        self.condition = condition
+        self.source = source
+
+    def apply(self, character_stat_block: CharacterStatBlock):
+        character_stat_block.add_condition_immunity(self.condition, self.source)
+
+
+class GrantSense(CharacterImprovement):
+    """Grants a special sense (e.g. Darkvision) out to `range_feet`. Granting
+    the same sense again from a different source keeps the larger range."""
+
+    def __init__(self, sense: Sense, range_feet: int, source: str):
+        self.sense = sense
+        self.range_feet = range_feet
+        self.source = source
+
+    def apply(self, character_stat_block: CharacterStatBlock):
+        character_stat_block.add_sense(self.sense, self.range_feet, self.source)
+
+
+class GrantLanguage(CharacterImprovement):
+    """Grants knowledge of a language. `source` names where the language
+    comes from (e.g. species or feat name) on the character sheet."""
+
+    def __init__(self, language: Language, source: str):
+        self.language = language
+        self.source = source
+
+    def apply(self, character_stat_block: CharacterStatBlock):
+        character_stat_block.add_language(self.language, self.source)
+
+
 # ── Informational-only item improvements ─────────────────────────────────────
 # The mechanics below have no automated hook in this engine: no incoming-
-# damage pipeline, no resistance/vulnerability/immunity tracking, no
-# current-HP or "Bloodied" state, no critical-hit-range model, no per-target
-# combat state, and no spell-slot expenditure/recovery tracking during play
-# (spell_slots is a static max-by-level table, not a live tracker). Each
-# still exists as a concrete, named CharacterImprovement - so a magic item can
-# reference a real, discoverable class and store its flavor parameters -
-# but apply() is intentionally a no-op; the effect must be tracked manually
-# at the table. This mirrors the "informational card, no computation"
-# pattern used elsewhere for effects this codebase can't compute
+# damage pipeline, no current-HP or "Bloodied" state, no critical-hit-range
+# model, no per-target combat state, and no spell-slot expenditure/recovery
+# tracking during play (spell_slots is a static max-by-level table, not a
+# live tracker). Each still exists as a concrete, named CharacterImprovement -
+# so a magic item can reference a real, discoverable class and store its
+# flavor parameters - but apply() is intentionally a no-op; the effect must
+# be tracked manually at the table. This mirrors the "informational card, no
+# computation" pattern used elsewhere for effects this codebase can't compute
 # automatically (e.g. FightingStyles.Interception/Protection, both marked
 # "(calculate manually)"; SpeciesFeatures.DwarfFeatures.DwarvenResilience,
 # a Feature with a description but no apply() override at all).
+#
+# Note: resistance/immunity to damage types and conditions ARE tracked (see
+# DamageResistance/DamageImmunity/ConditionImmunity above) and shown on the
+# character sheet - but only as a record of what the character has, not as a
+# live incoming-damage pipeline that automatically halves/nullifies damage
+# rolled elsewhere in the engine. ElementalResistance below stays
+# informational-only rather than reusing DamageResistance because its
+# existing call sites (GeneralFeats.ElementalFamiliar) grant resistance to a
+# summoned familiar, not the wielding character - applying it to the
+# character's own stat block would misattribute the effect.
 
 
 class InformationalImprovement(CharacterImprovement):

@@ -42,6 +42,16 @@ class CharacterStatBlock:
         self.spell_save_dc_bonus = 0
         # (source, slots) pairs; bonus sources only (Person is computed dynamically)
         self.carrying_capacity_sources: list[tuple[str, int]] = []
+        # (damage_type -> [source, ...]) grants of resistance/immunity to damage
+        self.damage_resistances: dict[Definitions.DamageType, list[str]] = {}
+        self.damage_immunities: dict[Definitions.DamageType, list[str]] = {}
+        # (condition -> [source, ...]) grants of immunity to a condition
+        self.condition_immunities: dict[Definitions.Condition, list[str]] = {}
+        # (sense -> best range in feet) plus every (range, source) pair granted
+        self.senses: dict[Definitions.Sense, int] = {}
+        self.sense_sources: dict[Definitions.Sense, list[tuple[int, str]]] = {}
+        # (language -> [source, ...]) grants of a known language
+        self.languages: dict[Definitions.Language, list[str]] = {}
 
     @property
     def character_level(self) -> int:
@@ -219,3 +229,55 @@ class CharacterStatBlock:
         if self.spell_slots is None:
             raise ValueError("Character does not have spell slots.")
         return self.spell_slots
+
+    def add_damage_resistance(self, damage_type: Definitions.DamageType, source: str) -> None:
+        self.damage_resistances.setdefault(damage_type, []).append(source)
+
+    def add_damage_immunity(self, damage_type: Definitions.DamageType, source: str) -> None:
+        self.damage_immunities.setdefault(damage_type, []).append(source)
+
+    def is_resistant_to_damage(self, damage_type: Definitions.DamageType) -> bool:
+        return damage_type in self.damage_resistances
+
+    def is_immune_to_damage(self, damage_type: Definitions.DamageType) -> bool:
+        return damage_type in self.damage_immunities
+
+    def get_damage_resistance_sources(
+        self, damage_type: Definitions.DamageType
+    ) -> list[str]:
+        return self.damage_resistances.get(damage_type, [])
+
+    def get_damage_immunity_sources(
+        self, damage_type: Definitions.DamageType
+    ) -> list[str]:
+        return self.damage_immunities.get(damage_type, [])
+
+    def add_condition_immunity(self, condition: Definitions.Condition, source: str) -> None:
+        self.condition_immunities.setdefault(condition, []).append(source)
+
+    def is_immune_to_condition(self, condition: Definitions.Condition) -> bool:
+        return condition in self.condition_immunities
+
+    def get_condition_immunity_sources(
+        self, condition: Definitions.Condition
+    ) -> list[str]:
+        return self.condition_immunities.get(condition, [])
+
+    def add_sense(self, sense: Definitions.Sense, range_feet: int, source: str) -> None:
+        self.sense_sources.setdefault(sense, []).append((range_feet, source))
+        self.senses[sense] = max(self.senses.get(sense, 0), range_feet)
+
+    def get_sense_range(self, sense: Definitions.Sense) -> int:
+        return self.senses.get(sense, 0)
+
+    def get_sense_sources(self, sense: Definitions.Sense) -> list[tuple[int, str]]:
+        return self.sense_sources.get(sense, [])
+
+    def add_language(self, language: Definitions.Language, source: str) -> None:
+        self.languages.setdefault(language, []).append(source)
+
+    def knows_language(self, language: Definitions.Language) -> bool:
+        return language in self.languages
+
+    def get_language_sources(self, language: Definitions.Language) -> list[str]:
+        return self.languages.get(language, [])
