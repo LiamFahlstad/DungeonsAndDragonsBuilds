@@ -1,5 +1,6 @@
-from Core.Definitions import FIGHTER_HIT_DIE, Ability
+from Core.Definitions import FIGHTER_HIT_DIE, Ability, Condition
 from CharacterContent.Features.Core.BaseFeatures import Feature
+from CharacterContent.Features.Core.Improvements import ConditionImmunity
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
@@ -90,6 +91,14 @@ class SharedResilience(Feature):
 class InspiringCommander(Feature):
     def __init__(self):
         super().__init__(name="Inspiring Commander", origin="Banneret Fighter Level 18", skippable_in_concise=True)
+        self._immunities = [
+            ConditionImmunity(Condition.CHARMED, self.name),
+            ConditionImmunity(Condition.FRIGHTENED, self.name),
+        ]
+
+    def apply(self, character_stat_block: CharacterStatBlock):
+        for immunity in self._immunities:
+            immunity.apply(character_stat_block)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

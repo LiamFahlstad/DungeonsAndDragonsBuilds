@@ -1,6 +1,7 @@
-from Core.Definitions import Ability, WARLOCK_HIT_DIE
+from Core.Definitions import Ability, Condition, WARLOCK_HIT_DIE
 import Core.Definitions as Definitions
 from CharacterContent.Features.Core.BaseFeatures import Feature
+from CharacterContent.Features.Core.Improvements import ConditionImmunity
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
@@ -51,6 +52,10 @@ class BeguilingDefenses(Feature):
         super().__init__(
             name="Beguiling Defenses", origin="Archfey Patron Warlock Level 10"
         )
+        self._immunity = ConditionImmunity(Condition.CHARMED, self.name)
+
+    def apply(self, character_stat_block: CharacterStatBlock):
+        self._immunity.apply(character_stat_block)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

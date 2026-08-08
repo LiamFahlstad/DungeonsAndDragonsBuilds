@@ -1,6 +1,7 @@
-from Core.Definitions import WARLOCK_HIT_DIE, Ability
+from Core.Definitions import WARLOCK_HIT_DIE, Ability, DamageType
 import Core.Definitions as Definitions
 from CharacterContent.Features.Core.BaseFeatures import Feature
+from CharacterContent.Features.Core.Improvements import DamageResistance
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
@@ -50,6 +51,10 @@ class HealingLight(Feature):
 class RadiantSoul(Feature):
     def __init__(self):
         super().__init__(name="Radiant Soul", origin="Celestial Patron Warlock Level 6")
+        self._resistance = DamageResistance(DamageType.RADIANT, self.name)
+
+    def apply(self, character_stat_block: CharacterStatBlock):
+        self._resistance.apply(character_stat_block)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "Your link to your patron allows you to serve as a conduit for radiant energy. You have Resistance to Radiant damage. Once per turn, when a spell you cast deals Radiant or Fire damage, you can add your Charisma modifier to that spell's damage against one of the spell's targets."

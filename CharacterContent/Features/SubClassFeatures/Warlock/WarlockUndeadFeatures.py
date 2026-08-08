@@ -1,5 +1,6 @@
-from Core.Definitions import Ability, WARLOCK_HIT_DIE
+from Core.Definitions import Ability, DamageType, WARLOCK_HIT_DIE
 from CharacterContent.Features.Core.BaseFeatures import Feature
+from CharacterContent.Features.Core.Improvements import DamageResistance
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
@@ -54,6 +55,13 @@ class GraveTouched(Feature):
 class NecroticHusk(Feature):
     def __init__(self):
         super().__init__(name="Necrotic Husk", origin="Undead Patron Warlock Level 10")
+        # Only the base Resistance is unconditional; the upgrade to Immunity
+        # while using Form of Dread is conditional/temporary and stays
+        # prose-only.
+        self._resistance = DamageResistance(DamageType.NECROTIC, self.name)
+
+    def apply(self, character_stat_block: CharacterStatBlock):
+        self._resistance.apply(character_stat_block)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

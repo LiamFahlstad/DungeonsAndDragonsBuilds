@@ -1,6 +1,6 @@
-from Core.Definitions import Ability, Skill
+from Core.Definitions import Ability, DamageType, Skill
 from CharacterContent.Features.Core.BaseFeatures import Feature
-from CharacterContent.Features.Core.Improvements import SavingThrowAdvantage
+from CharacterContent.Features.Core.Improvements import DamageResistance, SavingThrowAdvantage
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
@@ -22,6 +22,10 @@ class DualMind(Feature):
 class MentalDiscipline(Feature):
     def __init__(self):
         super().__init__(name="Mental Discipline", origin="Kalashtar Trait", skippable_in_concise=True)
+        self._resistance = DamageResistance(DamageType.PSYCHIC, self.name)
+
+    def apply(self, character_stat_block: CharacterStatBlock):
+        self._resistance.apply(character_stat_block)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         return "You have Resistance to Psychic damage."

@@ -1,6 +1,10 @@
-from Core.Definitions import CreatureSize, Skill
+from Core.Definitions import CreatureSize, DamageType, Skill
 from CharacterContent.Features.Core.BaseFeatures import Feature
-from CharacterContent.Features.Core.Improvements import ArmorClassBonus, SkillProficiencyChoice
+from CharacterContent.Features.Core.Improvements import (
+    ArmorClassBonus,
+    DamageResistance,
+    SkillProficiencyChoice,
+)
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 SPEED = 30  # Given by your species
@@ -10,6 +14,10 @@ SIZE = CreatureSize.MEDIUM  # Given by your species
 class ConstructResilience(Feature):
     def __init__(self):
         super().__init__(name="Construct Resilience", origin="Warforged Trait", skippable_in_concise=True)
+        self._resistance = DamageResistance(DamageType.POISON, self.name)
+
+    def apply(self, character_stat_block: CharacterStatBlock):
+        self._resistance.apply(character_stat_block)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         return "You have Resistance to Poison damage. You also have Advantage on saving throws to avoid or end the Poisoned condition."

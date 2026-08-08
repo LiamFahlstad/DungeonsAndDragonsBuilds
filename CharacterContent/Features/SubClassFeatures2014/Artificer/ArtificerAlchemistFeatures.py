@@ -1,5 +1,6 @@
-from Core.Definitions import ARTIFICER_HIT_DIE, Ability
+from Core.Definitions import ARTIFICER_HIT_DIE, Ability, Condition, DamageType
 from CharacterContent.Features.Core.BaseFeatures import Feature
+from CharacterContent.Features.Core.Improvements import ConditionImmunity, DamageResistance
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
@@ -80,6 +81,16 @@ class RestorativeReagents(Feature):
 class ChemicalMastery(Feature):
     def __init__(self):
         super().__init__(name="Chemical Mastery", origin="Alchemist Artificer Level 15")
+        self._resistances = [
+            DamageResistance(DamageType.ACID, self.name),
+            DamageResistance(DamageType.POISON, self.name),
+        ]
+        self._immunity = ConditionImmunity(Condition.POISONED, self.name)
+
+    def apply(self, character_stat_block: CharacterStatBlock):
+        for resistance in self._resistances:
+            resistance.apply(character_stat_block)
+        self._immunity.apply(character_stat_block)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

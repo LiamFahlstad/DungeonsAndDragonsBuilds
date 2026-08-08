@@ -1,8 +1,10 @@
-from Core.Definitions import Ability, DamageType, Skill
+from Core.Definitions import Ability, DamageType, Sense, Skill
 from CharacterContent.Features.Core.BaseFeatures import Feature
 from CharacterContent.Features.Core.Improvements import (
     AbilityScoreBonus,
+    DamageResistance,
     ElementalResistance,
+    GrantSense,
     SkillExpertiseChoice,
     SkillProficiencyChoice,
 )
@@ -573,6 +575,14 @@ class Skulker(_AbilityScoreFeat):
     _NAME = "Skulker"
     _ABILITIES = (Ability.DEXTERITY,)
 
+    def __init__(self, character_level: int, ability: Ability):
+        super().__init__(character_level, ability)
+        self._sense = GrantSense(Sense.BLINDSIGHT, 10, self._NAME)
+
+    def apply(self, character_stat_block: CharacterStatBlock):
+        super().apply(character_stat_block)
+        self._sense.apply(character_stat_block)
+
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         return (
             "Prerequisite: Level 4+, Dexterity 13+\n"
@@ -921,6 +931,10 @@ class DarkGift(GeneralFeat):
             name="Dark Gift",
             origin="General Feat Ravenloft Campaign",
         )
+        self._sense = GrantSense(Sense.BLINDSIGHT, 15, self.name)
+
+    def apply(self, character_stat_block: CharacterStatBlock):
+        self._sense.apply(character_stat_block)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         return (
@@ -1184,7 +1198,7 @@ class SpellResistant(_AbilityScoreFeat):
                 f"Spell Resistant damage type must be one of: {valid_str}."
             )
         self.resistance_damage_type = resistance_damage_type
-        self._resistance = ElementalResistance(resistance_damage_type)
+        self._resistance = DamageResistance(resistance_damage_type, self._NAME)
         super().__init__(character_level, ability)
 
     def apply(self, character_stat_block: CharacterStatBlock):

@@ -1,6 +1,6 @@
-from Core.Definitions import BARD_HIT_DIE, Skill
+from Core.Definitions import BARD_HIT_DIE, Language, Skill
 from CharacterContent.Features.Core.BaseFeatures import Feature
-from CharacterContent.Features.Core.Improvements import SkillProficiencyChoice
+from CharacterContent.Features.Core.Improvements import GrantLanguage, SkillProficiencyChoice
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
@@ -45,9 +45,11 @@ class PrimalLore(Feature):
             count=1,
             error_prefix="Primal Lore",
         )
+        self._language = GrantLanguage(Language.DRUIDIC, self.name)
 
     def apply(self, character_stat_block: CharacterStatBlock):
         self._proficiency_choice.apply(character_stat_block)
+        self._language.apply(character_stat_block)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

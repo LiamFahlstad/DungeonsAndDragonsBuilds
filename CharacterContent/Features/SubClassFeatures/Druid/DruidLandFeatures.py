@@ -1,7 +1,8 @@
 
 import Core.Definitions as Definitions
-from Core.Definitions import DRUID_HIT_DIE
+from Core.Definitions import DRUID_HIT_DIE, Condition, DamageType
 from CharacterContent.Features.Core.BaseFeatures import Feature
+from CharacterContent.Features.Core.Improvements import ConditionImmunity, DamageResistance
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
@@ -95,6 +96,14 @@ class NaturesWard(Feature):
             name="Nature's Ward", origin="Circle of the Land Druid Level 10", skippable_in_concise=True
         )
         self.land_type = land_type
+        self._condition_immunity = ConditionImmunity(Condition.POISONED, self.name)
+        self._resistance = DamageResistance(
+            DamageType(_LAND_TYPE_RESISTANCE[self.land_type]), self.name
+        )
+
+    def apply(self, character_stat_block: CharacterStatBlock):
+        self._condition_immunity.apply(character_stat_block)
+        self._resistance.apply(character_stat_block)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         resistance = _LAND_TYPE_RESISTANCE[self.land_type]

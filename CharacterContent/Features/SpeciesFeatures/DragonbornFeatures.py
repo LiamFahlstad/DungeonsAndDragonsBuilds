@@ -3,6 +3,9 @@ from enum import Enum
 import Core.Definitions as Definitions
 from Core.Definitions import Ability, CreatureSize
 from CharacterContent.Features.Core.BaseFeatures import Feature
+from CharacterContent.Features.Core.Improvements import (
+    DamageResistance as DamageResistanceImprovement,
+)
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
@@ -28,6 +31,10 @@ class DamageResistance(Feature):
         self.color = dragon_color
         self.damage_type = get_damage_type_from_color(dragon_color)
         super().__init__(name="Damage Resistance", origin="Dragonborn Trait", skippable_in_concise=True)
+        self._resistance = DamageResistanceImprovement(self.damage_type, self.name)
+
+    def apply(self, character_stat_block: CharacterStatBlock):
+        self._resistance.apply(character_stat_block)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         return f"You have Resistance against {self.damage_type.value} damage because your Draconic Ancestry is {self.color.value} dragon."

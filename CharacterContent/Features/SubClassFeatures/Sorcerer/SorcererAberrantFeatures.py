@@ -1,5 +1,6 @@
-from Core.Definitions import Ability, CharacterClass, SORCERER_HIT_DIE
+from Core.Definitions import Ability, CharacterClass, DamageType, SORCERER_HIT_DIE
 from CharacterContent.Features.Core.BaseFeatures import Feature
+from CharacterContent.Features.Core.Improvements import DamageResistance
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
@@ -57,6 +58,10 @@ class PsionicSorcery(Feature):
 class PsychicDefenses(Feature):
     def __init__(self):
         super().__init__(name="Psychic Defenses", origin="Aberrant Sorcerer Level 6", skippable_in_concise=True)
+        self._resistance = DamageResistance(DamageType.PSYCHIC, self.name)
+
+    def apply(self, character_stat_block: CharacterStatBlock):
+        self._resistance.apply(character_stat_block)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "You have Resistance to Psychic damage, and you have Advantage on saving throws to avoid or end the Charmed or Frightened condition."

@@ -1,4 +1,4 @@
-from Core.Definitions import DRUID_HIT_DIE
+from Core.Definitions import DRUID_HIT_DIE, Language
 from enum import Enum
 from typing import Type
 
@@ -6,6 +6,7 @@ import Core.Definitions as Definitions
 from Combat.Definitions import ExtendedCombatantData
 from CharacterContent.Features.ClassFeatures.Druid.WildShapeForms import format_wild_shape_form
 from CharacterContent.Features.Core.BaseFeatures import Feature
+from CharacterContent.Features.Core.Improvements import GrantLanguage
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
@@ -43,6 +44,10 @@ class Spellcasting(Feature):
 class Druidic(Feature):
     def __init__(self):
         super().__init__(name="Druidic", origin="Druid Level 1")
+        self._language = GrantLanguage(Language.DRUIDIC, self.name)
+
+    def apply(self, character_stat_block: CharacterStatBlock):
+        self._language.apply(character_stat_block)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

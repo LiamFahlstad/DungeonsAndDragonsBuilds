@@ -1,5 +1,7 @@
 import Core.Definitions as Definitions
+from Core.Definitions import DamageType
 from CharacterContent.Features.Core.BaseFeatures import Feature
+from CharacterContent.Features.Core.Improvements import DamageImmunity, DamageResistance
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
@@ -65,6 +67,10 @@ class ArtisansBlessingChannelDivinity(Feature):
 class SoulOfTheForge(Feature):
     def __init__(self):
         super().__init__(name="Soul of the Forge", origin="Forge Domain Cleric Level 6")
+        self._resistance = DamageResistance(DamageType.FIRE, self.name)
+
+    def apply(self, character_stat_block: CharacterStatBlock):
+        self._resistance.apply(character_stat_block)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -105,6 +111,14 @@ class SaintOfForgeAndFire(Feature):
         super().__init__(
             name="Saint of Forge and Fire", origin="Forge Domain Cleric Level 17"
         )
+        # Only the fire immunity is unconditional; the bludgeoning/piercing/
+        # slashing resistance is gated on wearing heavy armor AND only
+        # applies to nonmagical attacks (no magical/nonmagical qualifier
+        # exists on DamageResistance), so it stays prose-only.
+        self._immunity = DamageImmunity(DamageType.FIRE, self.name)
+
+    def apply(self, character_stat_block: CharacterStatBlock):
+        self._immunity.apply(character_stat_block)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

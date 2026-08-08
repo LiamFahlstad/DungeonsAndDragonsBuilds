@@ -1,5 +1,6 @@
-from Core.Definitions import Ability, CLERIC_HIT_DIE
+from Core.Definitions import Ability, CLERIC_HIT_DIE, DamageType
 from CharacterContent.Features.Core.BaseFeatures import Feature
+from CharacterContent.Features.Core.Improvements import DamageResistance
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
@@ -82,6 +83,15 @@ class WarGodsBlessing(Feature):
 class AvatarOfBattle(Feature):
     def __init__(self):
         super().__init__(name="Avatar of Battle", origin="War Domain Cleric Level 17", skippable_in_concise=True)
+        self._resistances = [
+            DamageResistance(DamageType.BLUDGEONING, self.name),
+            DamageResistance(DamageType.PIERCING, self.name),
+            DamageResistance(DamageType.SLASHING, self.name),
+        ]
+
+    def apply(self, character_stat_block: CharacterStatBlock):
+        for resistance in self._resistances:
+            resistance.apply(character_stat_block)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

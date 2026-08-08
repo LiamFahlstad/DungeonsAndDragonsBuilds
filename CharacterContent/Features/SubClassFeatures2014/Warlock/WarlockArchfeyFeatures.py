@@ -1,5 +1,6 @@
-from Core.Definitions import Ability, WARLOCK_HIT_DIE
+from Core.Definitions import Ability, Condition, WARLOCK_HIT_DIE
 from CharacterContent.Features.Core.BaseFeatures import Feature
+from CharacterContent.Features.Core.Improvements import ConditionImmunity
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
@@ -79,6 +80,10 @@ class BeguilingDefenses(Feature):
         super().__init__(
             name="Beguiling Defenses", origin="The Archfey Patron Warlock Level 10"
         )
+        self._immunity = ConditionImmunity(Condition.CHARMED, self.name)
+
+    def apply(self, character_stat_block: CharacterStatBlock):
+        self._immunity.apply(character_stat_block)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "Your patron teaches you how to turn the mind-affecting magic of your enemies against them. You are immune to being charmed, and when another creature attempts to charm you, you can use your Reaction to attempt to turn the charm back on that creature. The creature must succeed on a Wisdom saving throw against your Warlock spell save DC or be charmed by you for 1 minute or until the creature takes any damage."

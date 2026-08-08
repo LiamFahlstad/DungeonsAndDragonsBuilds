@@ -1,5 +1,7 @@
 import Core.Definitions as Definitions
+from Core.Definitions import Language
 from CharacterContent.Features.Core.BaseFeatures import Feature
+from CharacterContent.Features.Core.Improvements import GrantLanguage
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
@@ -7,6 +9,10 @@ from Utils import StringUtils
 class SpeechOfTheWoods(Feature):
     def __init__(self):
         super().__init__(name="Speech of the Woods", origin="Circle of the Shepherd Druid Level 3")
+        self._language = GrantLanguage(Language.SYLVAN, self.name)
+
+    def apply(self, character_stat_block: CharacterStatBlock):
+        self._language.apply(character_stat_block)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

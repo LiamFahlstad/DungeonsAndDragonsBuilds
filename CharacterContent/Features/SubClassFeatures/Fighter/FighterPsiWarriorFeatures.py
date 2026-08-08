@@ -1,5 +1,6 @@
-from Core.Definitions import FIGHTER_HIT_DIE, Ability
+from Core.Definitions import FIGHTER_HIT_DIE, Ability, DamageType
 from CharacterContent.Features.Core.BaseFeatures import Feature
+from CharacterContent.Features.Core.Improvements import DamageResistance
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
@@ -44,6 +45,10 @@ class TelekineticAdept(Feature):
 class GuardedMind(Feature):
     def __init__(self):
         super().__init__(name="Guarded Mind", origin="Psi Warrior Fighter Level 10")
+        self._resistance = DamageResistance(DamageType.PSYCHIC, self.name)
+
+    def apply(self, character_stat_block: CharacterStatBlock):
+        self._resistance.apply(character_stat_block)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "You have Resistance to Psychic damage. Moreover, if you start your turn with the Charmed or Frightened condition, you can expend a Psionic Energy Die (no action required) and end every effect on yourself giving you those conditions."

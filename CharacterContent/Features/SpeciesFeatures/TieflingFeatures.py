@@ -1,6 +1,6 @@
-from Core.Definitions import CreatureSize, Sense
+from Core.Definitions import CreatureSize, DamageType, Sense
 from CharacterContent.Features.Core.BaseFeatures import Feature
-from CharacterContent.Features.Core.Improvements import GrantSense
+from CharacterContent.Features.Core.Improvements import DamageResistance, GrantSense
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 SPEED = 30  # Given by your species
@@ -11,6 +11,10 @@ class FiendishResistance(Feature):
     def __init__(self, damage_type: str):
         self.damage_type = damage_type
         super().__init__(name="Fiendish Resistance", origin="Tiefling Trait")
+        self._resistance = DamageResistance(DamageType(damage_type), self.name)
+
+    def apply(self, character_stat_block: CharacterStatBlock):
+        self._resistance.apply(character_stat_block)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         return f"You have Resistance to {self.damage_type} damage."

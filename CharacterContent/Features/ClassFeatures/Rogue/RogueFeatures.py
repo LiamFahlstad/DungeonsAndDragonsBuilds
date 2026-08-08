@@ -1,6 +1,10 @@
-from Core.Definitions import Ability, ROGUE_HIT_DIE, Skill
+from Core.Definitions import Ability, Language, ROGUE_HIT_DIE, Skill
 from CharacterContent.Features.Core.BaseFeatures import Feature
-from CharacterContent.Features.Core.Improvements import SavingThrowProficiencyChoice, SkillExpertiseChoice
+from CharacterContent.Features.Core.Improvements import (
+    GrantLanguage,
+    SavingThrowProficiencyChoice,
+    SkillExpertiseChoice,
+)
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
@@ -41,6 +45,13 @@ class SneakAttack(Feature):
 class ThievesCant(Feature):
     def __init__(self):
         super().__init__(name="Thieves' Cant", origin="Rogue Level 1")
+        # Only the fixed Thieves' Cant grant is wired; the "one other
+        # language of your choice" half is a player choice not recorded
+        # anywhere in this class.
+        self._language = GrantLanguage(Language.THIEVES_CANT, self.name)
+
+    def apply(self, character_stat_block: CharacterStatBlock):
+        self._language.apply(character_stat_block)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "You picked up various languages in the communities where you plied your roguish talents. You know Thieves' Cant and one other language of your choice, which you choose from the language tables in Chapter 2."

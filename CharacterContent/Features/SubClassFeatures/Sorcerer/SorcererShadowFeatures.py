@@ -1,5 +1,6 @@
-from Core.Definitions import SORCERER_HIT_DIE
+from Core.Definitions import SORCERER_HIT_DIE, Sense
 from CharacterContent.Features.Core.BaseFeatures import Feature
+from CharacterContent.Features.Core.Improvements import GrantSense
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
@@ -23,6 +24,14 @@ class ShadowSpells(Feature):
 class PowerOfShadow(Feature):
     def __init__(self):
         super().__init__(name="Power of Shadow", origin="Shadow Sorcerer Level 3")
+        self._senses = [
+            GrantSense(Sense.DARKVISION, 120, self.name),
+            GrantSense(Sense.BLINDSIGHT, 10, self.name),
+        ]
+
+    def apply(self, character_stat_block: CharacterStatBlock):
+        for sense in self._senses:
+            sense.apply(character_stat_block)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

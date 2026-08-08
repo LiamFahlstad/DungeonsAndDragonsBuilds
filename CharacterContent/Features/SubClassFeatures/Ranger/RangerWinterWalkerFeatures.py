@@ -1,6 +1,7 @@
 
-from Core.Definitions import Ability, CharacterClass, RANGER_HIT_DIE
+from Core.Definitions import Ability, CharacterClass, DamageType, RANGER_HIT_DIE
 from CharacterContent.Features.Core.BaseFeatures import Feature
+from CharacterContent.Features.Core.Improvements import DamageResistance
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
@@ -8,6 +9,10 @@ from Utils import StringUtils
 class FrigidExplorer(Feature):
     def __init__(self):
         super().__init__(name="Frigid Explorer", origin="Winter Walker Ranger Level 3")
+        self._resistance = DamageResistance(DamageType.COLD, self.name)
+
+    def apply(self, character_stat_block: CharacterStatBlock):
+        self._resistance.apply(character_stat_block)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

@@ -1,6 +1,11 @@
 import Core.Definitions as Definitions
-from Core.Definitions import SORCERER_HIT_DIE
+from Core.Definitions import SORCERER_HIT_DIE, DamageType, Language
 from CharacterContent.Features.Core.BaseFeatures import Feature
+from CharacterContent.Features.Core.Improvements import (
+    DamageImmunity,
+    DamageResistance,
+    GrantLanguage,
+)
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
@@ -8,6 +13,10 @@ from Utils import StringUtils
 class WindSpeaker(Feature):
     def __init__(self):
         super().__init__(name="Wind Speaker", origin="Storm Sorcery Sorcerer Level 3")
+        self._language = GrantLanguage(Language.PRIMORDIAL, self.name)
+
+    def apply(self, character_stat_block: CharacterStatBlock):
+        self._language.apply(character_stat_block)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -30,6 +39,14 @@ class TempestuousMagic(Feature):
 class HeartOfTheStorm(Feature):
     def __init__(self):
         super().__init__(name="Heart of the Storm", origin="Storm Sorcery Sorcerer Level 6")
+        self._resistances = [
+            DamageResistance(DamageType.LIGHTNING, self.name),
+            DamageResistance(DamageType.THUNDER, self.name),
+        ]
+
+    def apply(self, character_stat_block: CharacterStatBlock):
+        for resistance in self._resistances:
+            resistance.apply(character_stat_block)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -77,6 +94,14 @@ class StormsFury(Feature):
 class WindSoul(Feature):
     def __init__(self):
         super().__init__(name="Wind Soul", origin="Storm Sorcery Sorcerer Level 18")
+        self._immunities = [
+            DamageImmunity(DamageType.LIGHTNING, self.name),
+            DamageImmunity(DamageType.THUNDER, self.name),
+        ]
+
+    def apply(self, character_stat_block: CharacterStatBlock):
+        for immunity in self._immunities:
+            immunity.apply(character_stat_block)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

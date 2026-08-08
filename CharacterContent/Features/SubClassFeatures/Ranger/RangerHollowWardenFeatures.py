@@ -1,7 +1,7 @@
 
-from Core.Definitions import RANGER_HIT_DIE, Ability
+from Core.Definitions import RANGER_HIT_DIE, Ability, Condition
 from CharacterContent.Features.Core.BaseFeatures import Feature
-from CharacterContent.Features.Core.Improvements import SavingThrowBonus
+from CharacterContent.Features.Core.Improvements import ConditionImmunity, SavingThrowBonus
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
@@ -85,6 +85,10 @@ class RotAndViolence(Feature):
 class AncientMight(Feature):
     def __init__(self):
         super().__init__(name="Ancient Might", origin="Hollow Warden Ranger Level 15")
+        self._immunity = ConditionImmunity(Condition.EXHAUSTION, self.name)
+
+    def apply(self, character_stat_block: CharacterStatBlock):
+        self._immunity.apply(character_stat_block)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
