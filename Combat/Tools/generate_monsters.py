@@ -13,6 +13,7 @@ from Combat.Tools.monster_enum_format import (
     format_condition_list,
     format_damage_entries,
     format_skills,
+    parse_creature_type,
     parse_monster_type,
     parse_speed,
 )
@@ -69,6 +70,9 @@ def generate_monster_class(monster: dict) -> str:
     size_name, monster_type_text, alignment_name, type_flags = parse_monster_type(
         monster.get("type", "")
     )
+    creature_type_name, monster_type_note, creature_type_flags = parse_creature_type(
+        monster_type_text
+    )
     ground_ft, fly_ft, climb_ft, speed_special, speed_flags = parse_speed(
         monster.get("speed", "")
     )
@@ -80,6 +84,7 @@ def generate_monster_class(monster: dict) -> str:
         ("damage immunity", unmapped_immune),
         ("condition immunity", unmapped_conditions),
         ("monster type", type_flags),
+        ("creature type", creature_type_flags),
         ("speed", speed_flags),
     ):
         if unmapped:
@@ -89,6 +94,9 @@ def generate_monster_class(monster: dict) -> str:
 
     size_str = f"Size.{size_name}" if size_name else "None"
     alignment_str = f"Alignment.{alignment_name}" if alignment_name else "None"
+    creature_type_str = (
+        f"MonsterType.{creature_type_name}" if creature_type_name else "None"
+    )
 
     traits_str = format_ability_list(monster.get("traits", []))
     actions_str = format_ability_list(monster.get("actions", []))
@@ -113,7 +121,8 @@ def generate_monster_class(monster: dict) -> str:
             saving_throws={saving_throws_str},
             spell_slots={{}},
             cr="{monster.get('cr', '')}",
-            monster_type={monster_type_text!r},
+            monster_type={creature_type_str},
+            monster_type_note={monster_type_note!r},
             alignment={alignment_str},
             size={size_str},
             ac_note="{monster.get('ac_note', '')}",
@@ -165,6 +174,7 @@ from Combat.Definitions import (
     DamageTypeEntry,
     ExtendedCombatantData,
     MonsterAbility,
+    MonsterType,
     Size,
     Skill,
 )

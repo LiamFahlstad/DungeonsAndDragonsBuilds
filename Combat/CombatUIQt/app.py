@@ -199,6 +199,7 @@ class CombatAppQt(
                 {
                     "cr": combatant.cr,
                     "monster_type": combatant.monster_type,
+                    "monster_type_note": combatant.monster_type_note,
                     "alignment": combatant.alignment,
                     "size": combatant.size,
                     "ac_note": combatant.ac_note,

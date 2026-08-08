@@ -1,4 +1,4 @@
-from Combat.Definitions import Alignment, Condition, DamageTypeEntry, ExtendedCombatantData, MonsterAbility, Size
+from Combat.Definitions import Alignment, Condition, DamageTypeEntry, ExtendedCombatantData, MonsterAbility, MonsterType, Size
 from Core.Definitions import Ability, CharacterClass, DamageType
 from CharacterContent.Features.Core.BaseFeatures import Feature
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
@@ -27,7 +27,7 @@ def _build_wildfire_spirit(druid_level: int, proficiency_bonus: int, spell_attac
         saving_throws={},
         spell_slots={},
         cr="—",
-        monster_type="Elemental",
+        monster_type=MonsterType.ELEMENTAL,
         alignment=Alignment.UNALIGNED,
         size=Size.SMALL,
         ac_note="natural armor",

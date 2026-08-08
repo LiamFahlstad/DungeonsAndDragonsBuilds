@@ -6,6 +6,7 @@ from Combat.Definitions import (
     DamageTypeEntry,
     ExtendedCombatantData,
     MonsterAbility,
+    MonsterType,
     Size,
     Skill,
 )
@@ -24,7 +25,7 @@ class Tarrasque(ExtendedCombatantData):
             saving_throws={Ability.DEXTERITY.short_name: 9, Ability.INTELLIGENCE.short_name: 5, Ability.WISDOM.short_name: 9, Ability.CHARISMA.short_name: 9},
             spell_slots={},
             cr="30",
-            monster_type='Monstrosity (Titan)',
+            monster_type=MonsterType.MONSTROSITY, monster_type_note='Titan',
             alignment=Alignment.UNALIGNED,
             size=Size.GARGANTUAN,
             ac_note="",

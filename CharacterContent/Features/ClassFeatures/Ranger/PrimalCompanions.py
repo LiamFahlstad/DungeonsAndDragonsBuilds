@@ -1,7 +1,7 @@
 from enum import Enum
 from typing import Optional
 
-from Combat.Definitions import Alignment, ExtendedCombatantData, MonsterAbility, Size
+from Combat.Definitions import Alignment, ExtendedCombatantData, MonsterAbility, MonsterType, Size
 from Core.Definitions import Ability, CharacterClass, DamageType
 from Utils.CreatureStatBlocks import format_creature_stat_block
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
@@ -69,7 +69,7 @@ class BeastOfTheLand(ExtendedCombatantData):
             saving_throws={},
             spell_slots={},
             cr="None",
-            monster_type="Beast",
+            monster_type=MonsterType.BEAST,
             alignment=Alignment.NEUTRAL,
             size=Size.MEDIUM,
             ac_note="13 plus your Wisdom modifier",
@@ -127,7 +127,7 @@ class BeastOfTheSea(ExtendedCombatantData):
             saving_throws={},
             spell_slots={},
             cr="None",
-            monster_type="Beast",
+            monster_type=MonsterType.BEAST,
             alignment=Alignment.NEUTRAL,
             size=Size.MEDIUM,
             ac_note="13 plus your Wisdom modifier",
@@ -187,7 +187,7 @@ class BeastOfTheSky(ExtendedCombatantData):
             saving_throws={},
             spell_slots={},
             cr="None",
-            monster_type="Beast",
+            monster_type=MonsterType.BEAST,
             alignment=Alignment.NEUTRAL,
             size=Size.SMALL,
             ac_note="13 plus your Wisdom modifier",

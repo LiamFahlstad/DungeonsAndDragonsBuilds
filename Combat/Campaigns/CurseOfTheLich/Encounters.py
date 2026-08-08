@@ -1,13 +1,21 @@
 from Builds.CharacterBuilder import CharacterSheetData
-from Builds.Characters.Y2024_Cleric_Light_SolenneBrightward import Y2024ClericLightSolenneBrightwardCharacterBuilder
-from Builds.Characters.Y2024_Paladin_Vengeance_NadiaIronvow import Y2024PaladinVengeanceNadiaIronvowCharacterBuilder
-from Builds.Characters.Y2024_Rogue_Assassin_LysandraNightblade import Y2024RogueAssassinLysandraNightbladeCharacterBuilder
-from Builds.Characters.Y2024_Wizard_Bladesinger_IlyanaBladesong import Y2024WizardBladesingerIlyanaBladesongCharacterBuilder
+from Builds.Characters.Y2024_Cleric_Light_SolenneBrightward import (
+    Y2024ClericLightSolenneBrightwardCharacterBuilder,
+)
+from Builds.Characters.Y2024_Paladin_Vengeance_NadiaIronvow import (
+    Y2024PaladinVengeanceNadiaIronvowCharacterBuilder,
+)
+from Builds.Characters.Y2024_Rogue_Assassin_LysandraNightblade import (
+    Y2024RogueAssassinLysandraNightbladeCharacterBuilder,
+)
+from Builds.Characters.Y2024_Wizard_Bladesinger_IlyanaBladesong import (
+    Y2024WizardBladesingerIlyanaBladesongCharacterBuilder,
+)
 from Combat import Combatants
 from Combat.Monsters.CR_0.monsters_homebrew import (
     Accursed,
-    AccursedBrute,
-    AccursedWarden,
+    ArmoredAccursed,
+    PhysicalAccursed,
 )
 from Combat.Monsters.CR_1.monsters_homebrew import CommonCultist, SisterAshNumberSeven
 from Combat.Monsters.CR_2.monsters_homebrew import (
@@ -68,10 +76,10 @@ def get_black_tongues_ritual_combatants() -> list[Combatants.BasicCombatantData]
     priest = PriestOfTheBlackTongues()
     priest.set_name("Priest of the Black Tongues")
 
-    brute = AccursedBrute()
+    brute = PhysicalAccursed()
     brute.set_name("Accursed Brute")
 
-    warden = AccursedWarden()
+    warden = ArmoredAccursed()
     warden.set_name("Accursed Warden")
 
     accursed_group = AccursedGroupLarge()

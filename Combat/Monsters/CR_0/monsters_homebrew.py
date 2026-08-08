@@ -5,6 +5,7 @@ from Combat.Definitions import (
     DamageTypeEntry,
     ExtendedCombatantData,
     MonsterAbility,
+    MonsterType,
     Size,
 )
 from Core.Definitions import Ability
@@ -29,7 +30,7 @@ class Accursed(ExtendedCombatantData):
             saving_throws={},
             spell_slots={},
             cr="1/8",
-            monster_type="Undead",
+            monster_type=MonsterType.UNDEAD, monster_type_note='',
             alignment=Alignment.NEUTRAL_EVIL,
             size=Size.MEDIUM,
             ac_note="",
@@ -61,10 +62,10 @@ class Accursed(ExtendedCombatantData):
         )
 
 
-class AccursedBrute(ExtendedCombatantData):
+class PhysicalAccursed(ExtendedCombatantData):
     def __init__(self):
         super().__init__(
-            combatant_type="Accursed Brute",
+            combatant_type="Physical Accursed",
             hp=16,
             ac=10,
             temp_hp=0,
@@ -80,7 +81,7 @@ class AccursedBrute(ExtendedCombatantData):
             saving_throws={},
             spell_slots={},
             cr="1/4",
-            monster_type="Undead",
+            monster_type=MonsterType.UNDEAD, monster_type_note='',
             alignment=Alignment.NEUTRAL_EVIL,
             size=Size.MEDIUM,
             ac_note="",
@@ -92,10 +93,8 @@ class AccursedBrute(ExtendedCombatantData):
             skills={},
             damage_vulnerabilities=[],
             damage_resistances=[],
-            damage_immunities=[
-                DamageTypeEntry(damage_types=[DamageType.POISON], note=""),
-            ],
-            condition_immunities=[Condition.EXHAUSTION, Condition.POISONED],
+            damage_immunities=[],
+            condition_immunities=[Condition.EXHAUSTION],
             senses="Passive Perception 8",
             languages="Maybe understand the language it knew in life but can't speak",
             traits=[
@@ -119,7 +118,7 @@ class AccursedBrute(ExtendedCombatantData):
         )
 
 
-class AccursedWarden(ExtendedCombatantData):
+class ArmoredAccursed(ExtendedCombatantData):
     def __init__(self):
         super().__init__(
             combatant_type="Accursed Warden",
@@ -138,7 +137,7 @@ class AccursedWarden(ExtendedCombatantData):
             saving_throws={},
             spell_slots={},
             cr="1/2",
-            monster_type="Undead",
+            monster_type=MonsterType.UNDEAD, monster_type_note='',
             alignment=Alignment.NEUTRAL_EVIL,
             size=Size.MEDIUM,
             ac_note="",
@@ -201,7 +200,7 @@ class TheLivingSymbolOfNoctra(ExtendedCombatantData):
             saving_throws={},
             spell_slots={},
             cr="1/8",
-            monster_type="Humanoid (Cultist)",
+            monster_type=MonsterType.HUMANOID, monster_type_note='Cultist',
             alignment=Alignment.UNALIGNED,
             size=Size.MEDIUM,
             ac_note="",

@@ -6,6 +6,7 @@ from Combat.Definitions import (
     DamageTypeEntry,
     ExtendedCombatantData,
     MonsterAbility,
+    MonsterType,
     Size,
     Skill,
 )
@@ -24,7 +25,7 @@ class Balor(ExtendedCombatantData):
             saving_throws={Ability.CONSTITUTION.short_name: 12, Ability.WISDOM.short_name: 9},
             spell_slots={},
             cr="19",
-            monster_type='Fiend (Demon)',
+            monster_type=MonsterType.FIEND, monster_type_note='Demon',
             alignment=Alignment.CHAOTIC_EVIL,
             size=Size.HUGE,
             ac_note="",

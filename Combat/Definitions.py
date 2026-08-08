@@ -51,6 +51,23 @@ class Size(str, Enum):
     GARGANTUAN = "Gargantuan"
 
 
+class MonsterType(str, Enum):
+    ABERRATION = "Aberration"
+    BEAST = "Beast"
+    CELESTIAL = "Celestial"
+    CONSTRUCT = "Construct"
+    DRAGON = "Dragon"
+    ELEMENTAL = "Elemental"
+    FEY = "Fey"
+    FIEND = "Fiend"
+    GIANT = "Giant"
+    HUMANOID = "Humanoid"
+    MONSTROSITY = "Monstrosity"
+    OOZE = "Ooze"
+    PLANT = "Plant"
+    UNDEAD = "Undead"
+
+
 class Alignment(str, Enum):
     LAWFUL_GOOD = "Lawful Good"
     NEUTRAL_GOOD = "Neutral Good"
@@ -181,7 +198,8 @@ class ExtendedCombatantData(BasicCombatantData):
     """Extended combatant data with additional monster stat block information."""
 
     cr: str = ""
-    monster_type: str = ""  # e.g. "Dragon (Metallic)" -- creature type/subtype only
+    monster_type: Optional[MonsterType] = None
+    monster_type_note: str = ""  # e.g. "Metallic" or "Swarm of Tiny" -- subtype/swarm qualifier alongside monster_type
     alignment: Optional[Alignment] = None
     size: Optional[Size] = None
     ac_note: str = ""  # e.g. "natural armor"

@@ -5,6 +5,7 @@ from Combat.Definitions import (
     DamageTypeEntry,
     ExtendedCombatantData,
     MonsterAbility,
+    MonsterType,
     Size,
     Skill,
 )
@@ -33,7 +34,7 @@ class MarshalVirel(ExtendedCombatantData):
             },
             spell_slots={},
             cr="4",
-            monster_type="Humanoid (Yellow Cape)",
+            monster_type=MonsterType.HUMANOID, monster_type_note='Yellow Cape',
             alignment=Alignment.LAWFUL_NEUTRAL,
             size=Size.MEDIUM,
             ac_note="breastplate",

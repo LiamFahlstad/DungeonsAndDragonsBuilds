@@ -6,6 +6,7 @@ from Combat.Definitions import (
     DamageTypeEntry,
     ExtendedCombatantData,
     MonsterAbility,
+    MonsterType,
     Size,
     Skill,
 )
@@ -24,7 +25,7 @@ class Demilich(ExtendedCombatantData):
             saving_throws={Ability.CONSTITUTION.short_name: 6, Ability.INTELLIGENCE.short_name: 11, Ability.WISDOM.short_name: 9},
             spell_slots={},
             cr="18",
-            monster_type='Undead',
+            monster_type=MonsterType.UNDEAD, monster_type_note='',
             alignment=Alignment.NEUTRAL_EVIL,
             size=Size.TINY,
             ac_note="",

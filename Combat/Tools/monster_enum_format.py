@@ -227,6 +227,83 @@ def parse_monster_type(raw: str) -> tuple[str, str, str, list[str]]:
     return size_name, rest.strip(), alignment_name, flags
 
 
+_CREATURE_TYPE_TO_ENUM = {
+    "aberration": "ABERRATION",
+    "beast": "BEAST",
+    "celestial": "CELESTIAL",
+    "construct": "CONSTRUCT",
+    "dragon": "DRAGON",
+    "elemental": "ELEMENTAL",
+    "fey": "FEY",
+    "fiend": "FIEND",
+    "giant": "GIANT",
+    "humanoid": "HUMANOID",
+    "monstrosity": "MONSTROSITY",
+    "ooze": "OOZE",
+    "plant": "PLANT",
+    "undead": "UNDEAD",
+}
+
+_SWARM_RE = re.compile(r"^swarm of (?P<swsize>\w+) (?P<type>\w+)$", re.IGNORECASE)
+_CREATURE_TYPE_PAREN_RE = re.compile(r"^(?P<base>.+?)\s*\((?P<note>[^)]*)\)$")
+
+
+def _singularize_creature_type(word: str) -> str:
+    """'Fiends' -> 'fiend', 'Monstrosities' -> 'monstrosity', 'Undead' -> 'undead'."""
+    lw = word.lower()
+    if lw in _CREATURE_TYPE_TO_ENUM:
+        return lw
+    if lw.endswith("ies"):
+        candidate = lw[:-3] + "y"
+        if candidate in _CREATURE_TYPE_TO_ENUM:
+            return candidate
+    if lw.endswith("s"):
+        candidate = lw[:-1]
+        if candidate in _CREATURE_TYPE_TO_ENUM:
+            return candidate
+    return lw
+
+
+def parse_creature_type(raw: str) -> tuple[str, str, list[str]]:
+    """'Dragon (Metallic)' -> ('DRAGON', 'Metallic', []).
+    'Swarm of Tiny Beasts' -> ('BEAST', 'Swarm of Tiny', []).
+    'swarm of Medium Fiends (Devil)' -> ('FIEND', 'Swarm of Medium; Devil', []).
+
+    Type is a MonsterType enum *name* (or "" if unparseable, e.g. a
+    "Celestial or Fey or Fiend (Your Choice)" multi-type entry); note carries
+    the parenthetical subtype and/or swarm-size qualifier as free text. On a
+    failed parse the full raw text is preserved as the note and flagged for
+    manual review, same as the other parse_* helpers in this module.
+    """
+    raw = raw.strip()
+    if not raw:
+        return "", "", []
+    flags: list[str] = []
+    note_parts: list[str] = []
+    working = raw
+
+    m_paren = _CREATURE_TYPE_PAREN_RE.match(working)
+    if m_paren:
+        working = m_paren.group("base").strip()
+        note_parts.append(m_paren.group("note").strip())
+
+    m_swarm = _SWARM_RE.match(working)
+    if m_swarm:
+        singular = _singularize_creature_type(m_swarm.group("type"))
+        enum_name = _CREATURE_TYPE_TO_ENUM.get(singular)
+        note_parts.insert(0, f"Swarm of {m_swarm.group('swsize')}")
+        if enum_name:
+            return enum_name, "; ".join(note_parts), flags
+        flags.append(f"unmapped swarm creature type: {raw!r}")
+        return "", raw, flags
+
+    enum_name = _CREATURE_TYPE_TO_ENUM.get(working.lower())
+    if enum_name:
+        return enum_name, "; ".join(note_parts), flags
+    flags.append(f"unmapped creature type: {raw!r}")
+    return "", raw, flags
+
+
 _SPEED_BARE_RE = re.compile(r"^(\d+)\s*ft\.?$", re.IGNORECASE)
 _SPEED_KEYWORD_RE = re.compile(r"^(climb|fly|swim|burrow)\s+(\d+)\s*ft\.?\s*(\(.*\))?$", re.IGNORECASE)
 

@@ -6,6 +6,7 @@ from Combat.Definitions import (
     DamageTypeEntry,
     ExtendedCombatantData,
     MonsterAbility,
+    MonsterType,
     Size,
     Skill,
 )
@@ -24,7 +25,7 @@ class Colossus(ExtendedCombatantData):
             saving_throws={Ability.DEXTERITY.short_name: 8, Ability.WISDOM.short_name: 8},
             spell_slots={},
             cr="25",
-            monster_type='Construct (Titan)',
+            monster_type=MonsterType.CONSTRUCT, monster_type_note='Titan',
             alignment=Alignment.UNALIGNED,
             size=Size.GARGANTUAN,
             ac_note="",

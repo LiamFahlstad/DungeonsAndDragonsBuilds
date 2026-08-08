@@ -5,6 +5,7 @@ from Combat.Definitions import (
     DamageTypeEntry,
     ExtendedCombatantData,
     MonsterAbility,
+    MonsterType,
     Size,
     Skill,
 )
@@ -23,7 +24,7 @@ class TheBellSaint(ExtendedCombatantData):
             saving_throws={},
             spell_slots={},
             cr="9",
-            size=Size.HUGE, monster_type='Undead', alignment=Alignment.UNALIGNED,
+            size=Size.HUGE, monster_type=MonsterType.UNDEAD, monster_type_note='', alignment=Alignment.UNALIGNED,
             ac_note="natural armor",
             hp_formula="17d12+51",
             speed_ground_ft=10, speed_fly_ft=None, speed_climb_ft=None, speed_special_rules='',

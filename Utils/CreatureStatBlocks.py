@@ -124,12 +124,37 @@ def _entry_row(name: str, description: str) -> str:
     return f'<tr><td class="wsf-entry-name">{name}</td><td class="wsf-entry-desc">{description}</td></tr>'
 
 
+def _creature_type_text(monster: ExtendedCombatantData) -> str:
+    """'Beast' + note 'Swarm of Tiny' -> 'Swarm of Tiny Beasts'; 'Dragon' + note
+    'Metallic' -> 'Dragon (Metallic)'; no monster_type -> the note verbatim (a
+    multi-type entry like 'Celestial or Fey or Fiend (Your Choice)')."""
+    if not monster.monster_type:
+        return monster.monster_type_note
+    creature_text = _display(monster.monster_type)
+    swarm_prefix = ""
+    extra_notes = []
+    for segment in (monster.monster_type_note or "").split("; "):
+        segment = segment.strip()
+        if not segment:
+            continue
+        if segment.lower().startswith("swarm of"):
+            swarm_prefix = segment
+        else:
+            extra_notes.append(segment)
+    if swarm_prefix:
+        creature_text = f"{swarm_prefix} {creature_text}s"
+    if extra_notes:
+        creature_text = f"{creature_text} ({', '.join(extra_notes)})"
+    return creature_text
+
+
 def _monster_type_text(monster: ExtendedCombatantData) -> str:
     parts = []
     if monster.size:
         parts.append(_display(monster.size))
-    if monster.monster_type:
-        parts.append(monster.monster_type)
+    creature_text = _creature_type_text(monster)
+    if creature_text:
+        parts.append(creature_text)
     text = " ".join(parts)
     if monster.alignment:
         alignment_text = _display(monster.alignment)

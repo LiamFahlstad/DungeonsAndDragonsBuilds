@@ -1,6 +1,6 @@
 from typing import Optional
 
-from Combat.Definitions import Alignment, DamageTypeEntry, ExtendedCombatantData, MonsterAbility, Size
+from Combat.Definitions import Alignment, DamageTypeEntry, ExtendedCombatantData, MonsterAbility, MonsterType, Size
 from Core.Definitions import Ability, CharacterClass, DamageType
 from CharacterContent.Features.Core.BaseFeatures import Feature
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
@@ -62,7 +62,7 @@ def _build_drake(
         saving_throws={"Dex": 1 + proficiency_bonus, "Wis": 2 + proficiency_bonus},
         spell_slots={},
         cr=str(proficiency_bonus),
-        monster_type="Dragon",
+        monster_type=MonsterType.DRAGON,
         alignment=Alignment.NEUTRAL,
         size=size,
         ac_note="natural armor",

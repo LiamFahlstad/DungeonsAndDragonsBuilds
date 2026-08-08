@@ -40,12 +40,39 @@ def _ability_entry(ab) -> tuple[str, str]:
     return ab.name, ab.description
 
 
+def _creature_type_text(char: dict) -> str:
+    """'Beast' + note 'Swarm of Tiny' -> 'Swarm of Tiny Beasts'; 'Dragon' + note
+    'Metallic' -> 'Dragon (Metallic)'; no monster_type -> the note verbatim (a
+    multi-type entry like 'Celestial or Fey or Fiend (Your Choice)')."""
+    monster_type = char.get("monster_type")
+    note = char.get("monster_type_note") or ""
+    if not monster_type:
+        return note
+    creature_text = _display(monster_type)
+    swarm_prefix = ""
+    extra_notes = []
+    for segment in note.split("; "):
+        segment = segment.strip()
+        if not segment:
+            continue
+        if segment.lower().startswith("swarm of"):
+            swarm_prefix = segment
+        else:
+            extra_notes.append(segment)
+    if swarm_prefix:
+        creature_text = f"{swarm_prefix} {creature_text}s"
+    if extra_notes:
+        creature_text = f"{creature_text} ({', '.join(extra_notes)})"
+    return creature_text
+
+
 def _monster_type_text(char: dict) -> str:
     parts = []
     if char.get("size"):
         parts.append(_display(char["size"]))
-    if char.get("monster_type"):
-        parts.append(char["monster_type"])
+    creature_text = _creature_type_text(char)
+    if creature_text:
+        parts.append(creature_text)
     text = " ".join(parts)
     if char.get("alignment"):
         alignment_text = _display(char["alignment"])
