@@ -1,0 +1,410 @@
+{
+  "Acid Splash": {
+    "name": "Acid Splash",
+    "concise_description": "Creates an acidic bubble; each creature in a 5-foot-radius Sphere makes a Dexterity save or takes 1d6 Acid damage. (+1d6 at 5th/11th/17th level)"
+  },
+  "Alarm": {
+    "name": "Alarm",
+    "concise_description": "Wards a door, window, or up to a 20-foot Cube; alerts you (audibly within 60 feet, or mentally within 1 mile) when an undesignated creature touches or enters it."
+  },
+  "Animal Friendship": {
+    "name": "Animal Friendship",
+    "concise_description": "Target Beast makes a Wisdom save or is Charmed for the duration; ends early if you or an ally damages it. (+1 target per slot level above 1)"
+  },
+  "Armor of Agathys": {
+    "name": "Armor of Agathys",
+    "concise_description": "Gain 5 Temporary Hit Points; any creature that hits you with a melee attack while you have them takes 5 Cold damage; ends early if the Temporary Hit Points are gone. (+5 THP and +5 Cold damage per slot level above 1)"
+  },
+  "Arms of Hadar": {
+    "name": "Arms of Hadar",
+    "concise_description": "Each creature in a 10-foot Emanation from you makes a Strength save, taking 2d6 Necrotic damage and losing Reactions until the start of its next turn on a failure, or half damage only on a success. (+1d6 per slot level above 1)"
+  },
+  "Bane": {
+    "name": "Bane",
+    "concise_description": "Up to three creatures make a Charisma save; on a failure, each subtracts 1d4 from attack rolls and saving throws for the duration. (+1 target per slot level above 1)"
+  },
+  "Blade Ward": {
+    "name": "Blade Ward",
+    "concise_description": "Until the spell ends, attackers subtract 1d4 from attack rolls made against you."
+  },
+  "Bless": {
+    "name": "Bless",
+    "concise_description": "Up to three creatures add 1d4 to attack rolls and saving throws for the duration. (+1 target per slot level above 1)"
+  },
+  "Burning Hands": {
+    "name": "Burning Hands",
+    "concise_description": "Each creature in a 15-foot Cone makes a Dexterity save, taking 3d6 Fire damage on a failure or half on a success; unattended flammable objects in the area ignite. (+1d6 per slot level above 1)"
+  },
+  "Buzzing Bee": {
+    "name": "Buzzing Bee",
+    "concise_description": "A spectral bee hovers near a target within 120 feet, giving it Disadvantage on Perception and Stealth checks and Concentration saves, and denying it the benefit of the Invisible condition, until the spell ends or the target leaves range."
+  },
+  "Charm Person": {
+    "name": "Charm Person",
+    "concise_description": "Target Humanoid makes a Wisdom save (with Advantage if you or allies are fighting it) or is Charmed and Friendly to you until the spell ends or you/allies damage it; it knows it was charmed when the effect ends. (+1 target per slot level above 1)"
+  },
+  "Chill Touch": {
+    "name": "Chill Touch",
+    "concise_description": "Melee spell attack for 1d10 Necrotic damage; on a hit, the target can't regain Hit Points until the end of your next turn. (+1d10 at 5th/11th/17th level)"
+  },
+  "Chromatic Orb": {
+    "name": "Chromatic Orb",
+    "concise_description": "Ranged spell attack (choose Acid, Cold, Fire, Lightning, Poison, or Thunder) for 3d8 damage; if two or more damage dice match, the orb leaps to a new target within 30 feet with a fresh attack and damage roll. (+1d8 per slot level above 1; can leap a number of times equal to the slot level with a level 2+ slot, each target only once)"
+  },
+  "Color Spray": {
+    "name": "Color Spray",
+    "concise_description": "Each creature in a 15-foot Cone makes a Constitution save or is Blinded until the end of your next turn."
+  },
+  "Command": {
+    "name": "Command",
+    "concise_description": "Target makes a Wisdom save or obeys a one-word command on its next turn: Approach, Drop, Flee, Grovel (falls Prone), or Halt (no movement/action/bonus action). (+1 target per slot level above 1)"
+  },
+  "Compelled Duel": {
+    "name": "Compelled Duel",
+    "concise_description": "Target makes a Wisdom save or has Disadvantage on attacks against creatures other than you and can't willingly move more than 30 feet from you; ends if you attack another creature, cast a spell on another enemy, an ally damages the target, or you end your turn more than 30 feet away."
+  },
+  "Comprehend Languages": {
+    "name": "Comprehend Languages",
+    "concise_description": "You understand any spoken, signed, or (while touching it) written language for the duration, though this doesn't decode ciphers or hidden messages."
+  },
+  "Create or Destroy Water": {
+    "name": "Create or Destroy Water",
+    "concise_description": "Create up to 10 gallons of water (or rain in a 30-foot Cube, extinguishing flames) or destroy up to 10 gallons of water/fog in a 30-foot Cube. (+10 gallons, or +5 feet to the Cube, per slot level above 1)"
+  },
+  "Cure Wounds": {
+    "name": "Cure Wounds",
+    "concise_description": "Touched creature regains 2d8 + spellcasting modifier Hit Points. (+2d8 per slot level above 1)"
+  },
+  "Dancing Lights": {
+    "name": "Dancing Lights",
+    "concise_description": "Create up to four torch-sized lights (or combine into one Medium humanoid shape) that shed Dim Light in a 10-foot radius and can be moved up to 60 feet as a Bonus Action; lights must stay within 20 feet of each other and within the spell's range."
+  },
+  "Detect Evil and Good": {
+    "name": "Detect Evil and Good",
+    "concise_description": "Sense the location and presence of Hallow within 30 feet of any Aberration, Celestial, Elemental, Fey, Fiend, or Undead for the duration; blocked by 1 foot of stone/dirt/wood, 1 inch of metal, or thin lead."
+  },
+  "Detect Magic": {
+    "name": "Detect Magic",
+    "concise_description": "Sense magical effects within 30 feet for the duration; using the Magic action reveals an aura on a visible creature/object and, if spell-created, its school. Blocked by 1 foot of stone/dirt/wood, 1 inch of metal, or thin lead."
+  },
+  "Detect Poison and Disease": {
+    "name": "Detect Poison and Disease",
+    "concise_description": "Sense the location and kind of poisons, venomous creatures, and magical contagions within 30 feet for the duration; blocked by 1 foot of stone/dirt/wood, 1 inch of metal, or thin lead."
+  },
+  "Disguise Self": {
+    "name": "Disguise Self",
+    "concise_description": "Alter your appearance (including gear), within 1 foot of your height and reasonably lighter/heavier while keeping your basic limb arrangement, until the spell ends; the illusion doesn't survive touch, and a Study action with a successful Intelligence (Investigation) check against your save DC reveals it."
+  },
+  "Dissonant Whispers": {
+    "name": "Dissonant Whispers",
+    "concise_description": "Target makes a Wisdom save, taking 3d6 Psychic damage and being forced to use its Reaction to flee by the safest route on a failure, or half damage only on a success. (+1d6 per slot level above 1)"
+  },
+  "Divine Favor": {
+    "name": "Divine Favor",
+    "concise_description": "Until the spell ends, your weapon attacks deal an extra 1d4 Radiant damage on a hit."
+  },
+  "Divine Smite": {
+    "name": "Divine Smite",
+    "concise_description": "Target takes an extra 2d8 Radiant damage from the attack (+1d8 if a Fiend or Undead). (+1d8 per slot level above 1)"
+  },
+  "Druidcraft": {
+    "name": "Druidcraft",
+    "concise_description": "Create a minor nature effect: predict the next 24 hours' weather (a 1-round sensory effect), instantly bloom a plant, create a harmless sensory effect within a 5-foot Cube, or light/snuff a small flame."
+  },
+  "Eldritch Blast": {
+    "name": "Eldritch Blast",
+    "concise_description": "Ranged spell attack for 1d10 Force damage. (Gains an additional beam, each with its own attack roll and targetable separately, at 5th/11th/17th level)"
+  },
+  "Elementalism": {
+    "name": "Elementalism",
+    "concise_description": "Create a minor elemental effect within range: stir air and close doors in a 5-foot Cube, cover a 5-foot area with dust/sand or write a word in it, create scented smoke/embers in a 5-foot Cube, create a light mist or a cup of water in a 5-foot Cube, or sculpt a 1-foot Cube of dirt/sand/fire/smoke/mist/water into a crude shape for 1 hour."
+  },
+  "Ensnaring Strike": {
+    "name": "Ensnaring Strike",
+    "concise_description": "On a hit, target makes a Strength save (Advantage if Large or larger) or has the Restrained condition until it escapes with a successful Strength (Athletics) check against your save DC or the spell ends; while Restrained, it takes 1d6 Piercing damage at the start of each of its turns. (+1d6 per slot level above 1)"
+  },
+  "Entangle": {
+    "name": "Entangle",
+    "concise_description": "Plants fill a 20-foot square, turning it into Difficult Terrain for the duration; each creature there when cast (other than you) makes a Strength save or has the Restrained condition until it escapes with a successful Strength (Athletics) check against your save DC."
+  },
+  "Expeditious Retreat": {
+    "name": "Expeditious Retreat",
+    "concise_description": "Take the Dash action, then take Dash again as a Bonus Action on later turns until the spell ends."
+  },
+  "Faerie Fire": {
+    "name": "Faerie Fire",
+    "concise_description": "Objects in a 20-foot Cube are outlined in light of your choice; creatures there are outlined too unless they succeed on a Dexterity save. Outlined creatures/objects shed Dim Light in a 10-foot radius, can't benefit from Invisible, and are attacked with Advantage by anyone who can see them, for the duration."
+  },
+  "False Life": {
+    "name": "False Life",
+    "concise_description": "Gain 2d4 + 4 Temporary Hit Points. (+5 THP per slot level above 1)"
+  },
+  "Feather Fall": {
+    "name": "Feather Fall",
+    "concise_description": "Up to five falling creatures within range fall at 60 feet per round until the spell ends; a creature that lands before then takes no fall damage, and the spell ends for it."
+  },
+  "Find Familiar": {
+    "name": "Find Familiar",
+    "concise_description": "Summon a Celestial/Fey/Fiend familiar in an animal form (Bat, Cat, Frog, Hawk, Lizard, Octopus, Owl, Rat, Raven, Spider, Weasel, or CR 0 Beast) that acts independently but obeys you, rolls its own Initiative, and can't attack. While within 100 feet, you can communicate telepathically and, as a Bonus Action, see/hear through it; it can also deliver touch spells (using its Reaction). It disappears at 0 HP and can be recalled/dismissed as a Magic action; you can have only one familiar at a time."
+  },
+  "Fire Bolt": {
+    "name": "Fire Bolt",
+    "concise_description": "Ranged spell attack for 1d10 Fire damage; an unattended flammable target ignites on a hit. (+1d10 at 5th/11th/17th level)"
+  },
+  "Fog Cloud": {
+    "name": "Fog Cloud",
+    "concise_description": "Creates a 20-foot-radius Sphere of fog (Heavily Obscured) for the duration or until dispersed by a strong wind. (+20-foot radius per slot level above 1)"
+  },
+  "Friends": {
+    "name": "Friends",
+    "concise_description": "Target makes a Wisdom save or is Charmed for the duration (automatic success if not a Humanoid, if you're fighting it, or if charmed by you within the last 24 hours); ends early if the target takes damage or you attack, deal damage, or force a save on anyone, and it knows it was charmed when the effect ends."
+  },
+  "Goodberry": {
+    "name": "Goodberry",
+    "concise_description": "Create ten berries; a Bonus Action to eat one restores 1 Hit Point and provides a day's nourishment. Uneaten berries vanish when the spell ends."
+  },
+  "Grease": {
+    "name": "Grease",
+    "concise_description": "A 10-foot square becomes Difficult Terrain for the duration; creatures standing there when cast, entering it, or ending their turn there must succeed on a Dexterity save or fall Prone."
+  },
+  "Guidance": {
+    "name": "Guidance",
+    "concise_description": "Touched creature adds 1d4 to ability checks with a chosen skill until the spell ends."
+  },
+  "Guiding Bolt": {
+    "name": "Guiding Bolt",
+    "concise_description": "Ranged spell attack for 4d6 Radiant damage; on a hit, the next attack against the target before the end of your next turn has Advantage. (+1d6 per slot level above 1)"
+  },
+  "Hail of Thorns": {
+    "name": "Hail of Thorns",
+    "concise_description": "On a hit with a Ranged weapon, the target and each creature within 5 feet make a Dexterity save, taking 1d10 Piercing damage on a failure or half on a success. (+1d10 per slot level above 1)"
+  },
+  "Healing Word": {
+    "name": "Healing Word",
+    "concise_description": "Target within range regains 2d4 + spellcasting modifier Hit Points. (+2d4 per slot level above 1)"
+  },
+  "Hellish Rebuke": {
+    "name": "Hellish Rebuke",
+    "concise_description": "Triggering creature makes a Dexterity save, taking 2d10 Fire damage on a failure or half on a success. (+1d10 per slot level above 1)"
+  },
+  "Heroism": {
+    "name": "Heroism",
+    "concise_description": "Touched willing creature is immune to Frightened and gains Temporary Hit Points equal to your spellcasting modifier at the start of each of its turns, until the spell ends. (+1 target per slot level above 1)"
+  },
+  "Hex": {
+    "name": "Hex",
+    "concise_description": "Curse a target: you deal an extra 1d6 Necrotic damage on a hit and it has Disadvantage on ability checks with one chosen ability, until the spell ends; if it drops to 0 HP, you can move the curse to a new target as a Bonus Action on a later turn. (Concentration extends to 4 hours with a 2nd-level slot, 8 hours with 3rd-4th, 24 hours with 5th+)"
+  },
+  "Hunter's Mark": {
+    "name": "Hunter's Mark",
+    "concise_description": "Mark a target: you deal an extra 1d6 Force damage on a hit and have Advantage on Perception/Survival checks to find it, until the spell ends; if it drops to 0 HP, you can move the mark to a new target as a Bonus Action. (Concentration extends to 8 hours with a 3rd-4th-level slot, 24 hours with 5th+)"
+  },
+  "Ice Knife": {
+    "name": "Ice Knife",
+    "concise_description": "Ranged spell attack for 1d10 Piercing damage; hit or miss, the shard then explodes and the target plus each creature within 5 feet make a Dexterity save, taking 2d6 Cold damage on a failure or half on a success. (+1d6 Cold damage per slot level above 1)"
+  },
+  "Identify": {
+    "name": "Identify",
+    "concise_description": "Touching an object throughout the casting reveals its magical properties, Attunement requirement, charges, active spells, and (if applicable) the spell that created it; touching a creature instead reveals any spells currently affecting it."
+  },
+  "Illusory Script": {
+    "name": "Illusory Script",
+    "concise_description": "Writing you inscribe appears normal to you and designated readers but unintelligible (or altered in meaning/handwriting/language) to others, for the duration; the illusion vanishes if dispelled, and Truesight reveals the true message."
+  },
+  "Inflict Wounds": {
+    "name": "Inflict Wounds",
+    "concise_description": "Touched creature makes a Constitution save, taking 2d10 Necrotic damage on a failure or half on a success. (+1d10 per slot level above 1)"
+  },
+  "Insidious Rhythm": {
+    "name": "Insidious Rhythm",
+    "concise_description": "Target makes a Wisdom save or gets Disadvantage on Intelligence checks and Concentration saves, repeating the save at the end of each of its turns (ending the spell on a success). (+1 target per slot level above 1)"
+  },
+  "Jump": {
+    "name": "Jump",
+    "concise_description": "Touched willing creature can jump up to 30 feet by spending 10 feet of movement, once per turn, until the spell ends. (+1 target per slot level above 1)"
+  },
+  "Light": {
+    "name": "Light",
+    "concise_description": "Touched Large or smaller unattended object sheds Bright Light in a 20-foot radius and Dim Light for 20 feet beyond, in a color of your choice, until the spell ends or is recast; covering the object blocks the light."
+  },
+  "Longstrider": {
+    "name": "Longstrider",
+    "concise_description": "Touched creature's Speed increases by 10 feet until the spell ends. (+1 target per slot level above 1)"
+  },
+  "Mage Armor": {
+    "name": "Mage Armor",
+    "concise_description": "Touched willing unarmored creature's base AC becomes 13 + Dexterity modifier until the spell ends or it dons armor."
+  },
+  "Mage Hand": {
+    "name": "Mage Hand",
+    "concise_description": "Create a spectral hand within range that can manipulate objects, open unlocked doors/containers, or move items (up to 10 lbs, no attacks or magic items), controllable as a Magic action and movable up to 30 feet; vanishes beyond 30 feet of you or if recast."
+  },
+  "Magic Missile": {
+    "name": "Magic Missile",
+    "concise_description": "Create three darts, each dealing 1d4+1 Force damage to a creature of your choice, striking simultaneously. (+1 dart per slot level above 1)"
+  },
+  "Mending": {
+    "name": "Mending",
+    "concise_description": "Repairs a single break or tear no larger than 1 foot in a touched object, leaving no trace (can physically repair, but not re-enchant, a magic item)."
+  },
+  "Message": {
+    "name": "Message",
+    "concise_description": "Point at a target within range; only it hears your whispered message and can whisper a reply only you hear. Can be cast through solid barriers you know the target is behind; blocked by magical silence or by 1 foot of stone/metal/wood or a thin sheet of lead."
+  },
+  "Mind Sliver": {
+    "name": "Mind Sliver",
+    "concise_description": "Target makes an Intelligence save or takes 1d6 Psychic damage and subtracts 1d4 from its next saving throw before the end of your next turn. (+1d6 at 5th/11th/17th level)"
+  },
+  "Minor Illusion": {
+    "name": "Minor Illusion",
+    "concise_description": "Create a sound (whisper to scream) or a static image (no larger than a 5-foot Cube, no sound/smell) within range for the duration; a Study action with a successful Intelligence (Investigation) check against your save DC reveals it as illusory, and physical interaction with an image reveals it too."
+  },
+  "Poison Spray": {
+    "name": "Poison Spray",
+    "concise_description": "Ranged spell attack for 1d12 Poison damage. (+1d12 at 5th/11th/17th level)"
+  },
+  "Prestidigitation": {
+    "name": "Prestidigitation",
+    "concise_description": "Create a minor magical effect within range (harmless sensory effect, light/snuff a small flame, clean/soil a 1-cubic-foot object, chill/warm/flavor 1 cubic foot of material for 1 hour, mark a surface for 1 hour, or create a handheld nonmagical trinket/illusory image lasting until the end of your next turn); up to three non-instantaneous effects can be active at once."
+  },
+  "Produce Flame": {
+    "name": "Produce Flame",
+    "concise_description": "A flame in your hand sheds Bright Light in a 20-foot radius and Dim Light for 20 feet beyond, for the duration; as a Magic action, you can hurl it as a ranged spell attack for 1d8 Fire damage. (+1d8 at 5th/11th/17th level)"
+  },
+  "Protection from Evil and Good": {
+    "name": "Protection from Evil and Good",
+    "concise_description": "Touched willing creature gains, for the duration, Disadvantage against it on attacks by Aberrations/Celestials/Elementals/Fey/Fiends/Undead, immunity to being possessed/Charmed/Frightened by them, and Advantage on new saves if already affected by such an effect."
+  },
+  "Purify Food and Drink": {
+    "name": "Purify Food and Drink",
+    "concise_description": "Removes poison and rot from nonmagical food and drink in a 5-foot-radius Sphere within range."
+  },
+  "Ray of Frost": {
+    "name": "Ray of Frost",
+    "concise_description": "Ranged spell attack for 1d8 Cold damage; on a hit, the target's Speed is reduced by 10 feet until the start of your next turn. (+1d8 at 5th/11th/17th level)"
+  },
+  "Ray of Sickness": {
+    "name": "Ray of Sickness",
+    "concise_description": "Ranged spell attack for 2d8 Poison damage; on a hit, the target also has the Poisoned condition until the end of your next turn. (+1d8 per slot level above 1)"
+  },
+  "Resistance": {
+    "name": "Resistance",
+    "concise_description": "Touched willing creature chooses a damage type; damage of that type is reduced by 1d4 (once per turn) until the spell ends."
+  },
+  "Sacred Flame": {
+    "name": "Sacred Flame",
+    "concise_description": "Target makes a Dexterity save (gaining no benefit from Half or Three-Quarters Cover) or takes 1d8 Radiant damage. (+1d8 at 5th/11th/17th level)"
+  },
+  "Sanctuary": {
+    "name": "Sanctuary",
+    "concise_description": "Warded creature: any attacker or spellcaster targeting it must succeed on a Wisdom save or redirect/lose the attack or spell (doesn't block area effects), until the spell ends or the warded creature attacks, casts a spell, or deals damage."
+  },
+  "Searing Smite": {
+    "name": "Searing Smite",
+    "concise_description": "Target takes an extra 1d6 Fire damage from the attack, then 1d6 Fire damage at the start of each of its turns until it succeeds on a Constitution save (ending the spell). (+1d6 to all the damage per slot level above 1)"
+  },
+  "Shield": {
+    "name": "Shield",
+    "concise_description": "Until the start of your next turn, gain +5 AC (including against the triggering attack) and take no damage from Magic Missile."
+  },
+  "Shield of Faith": {
+    "name": "Shield of Faith",
+    "concise_description": "Target within range gains a +2 bonus to AC for the duration."
+  },
+  "Shillelagh": {
+    "name": "Shillelagh",
+    "concise_description": "For the duration, a held Club or Quarterstaff uses your spellcasting ability for its melee attack and damage rolls, its damage die becomes a d8, and its damage can be Force or its normal type; ends early if recast or the weapon is dropped. (Damage die becomes d10/d12/2d6 at 5th/11th/17th level)"
+  },
+  "Shocking Grasp": {
+    "name": "Shocking Grasp",
+    "concise_description": "Melee spell attack for 1d8 Lightning damage; on a hit, the target can't take Opportunity Attacks until the start of its next turn. (+1d8 at 5th/11th/17th level)"
+  },
+  "Silent Image": {
+    "name": "Silent Image",
+    "concise_description": "Create a purely visual image (no larger than a 15-foot Cube) within range for the duration, movable as a Magic action; physical interaction reveals it as illusory, and a Study action with a successful Intelligence (Investigation) check against your save DC lets a creature see through it."
+  },
+  "Sleep": {
+    "name": "Sleep",
+    "concise_description": "Each creature you choose in a 5-foot-radius Sphere makes a Wisdom save or has the Incapacitated condition until the end of its next turn, then repeats the save or falls Unconscious for the duration; ends early on damage or if an adjacent creature spends an action to wake it. Creatures immune to Exhaustion or that don't sleep auto-succeed."
+  },
+  "Sorcerous Burst": {
+    "name": "Sorcerous Burst",
+    "concise_description": "Ranged spell attack for 1d8 damage of a chosen type (Acid, Cold, Fire, Lightning, Poison, Psychic, or Thunder); rolling an 8 lets you add another d8 (repeatable), up to your spellcasting modifier in extra dice. (+1d8 at 5th/11th/17th level)"
+  },
+  "Spare the Dying": {
+    "name": "Spare the Dying",
+    "concise_description": "A creature within range at 0 Hit Points (not dead) becomes Stable. (Range doubles to 30/60/120 feet at 5th/11th/17th level)"
+  },
+  "Speak with Animals": {
+    "name": "Speak with Animals",
+    "concise_description": "For the duration, you can understand and speak with Beasts and use Influence action skill options on them; most can share info about nearby locations and monsters perceived within the past day."
+  },
+  "Spellfire Flare": {
+    "name": "Spellfire Flare",
+    "concise_description": "Ranged spell attack (target gets no benefit from Half or Three-Quarters Cover) for 2d10 Radiant damage. (+1 blast, each with a separate attack roll, per slot level above 1)"
+  },
+  "Starry Wisp": {
+    "name": "Starry Wisp",
+    "concise_description": "Ranged spell attack for 1d8 Radiant damage; on a hit, the target sheds Dim Light in a 10-foot radius and can't benefit from Invisible until the end of your next turn. (+1d8 at 5th/11th/17th level)"
+  },
+  "Tasha's Hideous Laughter": {
+    "name": "Tasha's Hideous Laughter",
+    "concise_description": "Target makes a Wisdom save or has the Prone and Incapacitated conditions (laughing uncontrollably, unable to stand) for the duration, repeating the save (with Advantage if triggered by damage) at the end of each turn and whenever it takes damage. (+1 target per slot level above 1)"
+  },
+  "Tenser's Floating Disk": {
+    "name": "Tenser's Floating Disk",
+    "concise_description": "Creates a 3-foot-diameter force disk that floats 3 feet up, holds up to 500 lbs (spell ends if overloaded), and follows within 20 feet of you across most terrain, for the duration; ends if it's ever more than 100 feet from you."
+  },
+  "Thaumaturgy": {
+    "name": "Thaumaturgy",
+    "concise_description": "Create a minor supernatural effect within range: alter your eyes for 1 minute, triple your voice's volume for 1 minute (with Advantage on Intimidation), flicker/change flames for 1 minute, instantly slam/open an unlocked door or window, create an instantaneous sound, or cause harmless ground tremors for 1 minute; up to three 1-minute effects can be active at once."
+  },
+  "Thorn Whip": {
+    "name": "Thorn Whip",
+    "concise_description": "Melee spell attack for 1d6 Piercing damage; on a hit against a Large or smaller creature, you can pull it up to 10 feet closer to you. (+1d6 at 5th/11th/17th level)"
+  },
+  "Thunderclap": {
+    "name": "Thunderclap",
+    "concise_description": "Each creature in a 5-foot Emanation from you makes a Constitution save or takes 1d6 Thunder damage; audible up to 100 feet away. (+1d6 at 5th/11th/17th level)"
+  },
+  "Thunderous Smite": {
+    "name": "Thunderous Smite",
+    "concise_description": "Target takes an extra 2d6 Thunder damage from the attack (audible within 300 feet); if a creature, it also makes a Strength save or is pushed 10 feet and knocked Prone. (+1d6 per slot level above 1)"
+  },
+  "Thunderwave": {
+    "name": "Thunderwave",
+    "concise_description": "Each creature in a 15-foot Cube from you makes a Constitution save, taking 2d8 Thunder damage and being pushed 10 feet on a failure, or half damage only on a success; unsecured objects in the area are also pushed 10 feet, audible within 300 feet. (+1d8 per slot level above 1)"
+  },
+  "Toll the Dead": {
+    "name": "Toll the Dead",
+    "concise_description": "Target makes a Wisdom save or takes 1d8 Necrotic damage (1d12 instead if it's missing any Hit Points). (+1 die at 5th/11th/17th level)"
+  },
+  "True Strike": {
+    "name": "True Strike",
+    "concise_description": "Make one weapon attack using your spellcasting ability for the attack and damage rolls; damage can be Radiant or the weapon's normal type. (Gains extra Radiant damage — 1d6/2d6/3d6 — at 5th/11th/17th level)"
+  },
+  "Unseen Servant": {
+    "name": "Unseen Servant",
+    "concise_description": "Creates an Invisible, mindless force servant (AC 10, 1 HP, Strength 2, can't attack) that follows simple commands, moving up to 15 feet and interacting with objects once per turn as a Bonus Action, until it drops to 0 HP, moves more than 60 feet from you, or the spell ends."
+  },
+  "Vicious Mockery": {
+    "name": "Vicious Mockery",
+    "concise_description": "Target makes a Wisdom save or takes 1d6 Psychic damage and has Disadvantage on its next attack roll before the end of its next turn. (+1d6 at 5th/11th/17th level)"
+  },
+  "Wardaway": {
+    "name": "Wardaway",
+    "concise_description": "Target makes a Constitution save (Constructs and Undead auto-succeed), taking 2d4 Force damage, having its Speed halved until the start of your next turn, and being limited to only an action or a Bonus Action on its next turn on a failure, or half damage only on a success. (+2d4 per slot level above 1)"
+  },
+  "Witch Bolt": {
+    "name": "Witch Bolt",
+    "concise_description": "Ranged spell attack for 2d12 Lightning damage; on subsequent turns, a Bonus Action deals 1d12 Lightning damage automatically (even if the first attack missed), until the target leaves range or gains Total Cover, or the spell ends. (+1d12 initial damage per slot level above 1)"
+  },
+  "Word of Radiance": {
+    "name": "Word of Radiance",
+    "concise_description": "Each creature you choose in a 5-foot Emanation from you makes a Constitution save or takes 1d6 Radiant damage. (+1d6 at 5th/11th/17th level)"
+  },
+  "Wrathful Smite": {
+    "name": "Wrathful Smite",
+    "concise_description": "Target takes an extra 1d6 Necrotic damage from the attack and makes a Wisdom save or has the Frightened condition, repeating the save at the end of each of its turns (ending the spell on a success). (+1d6 per slot level above 1)"
+  }
+}
