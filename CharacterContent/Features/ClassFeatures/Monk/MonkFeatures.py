@@ -1,7 +1,7 @@
 import Core.Definitions as Definitions
-from Core.Definitions import MONK_HIT_DIE
+from Core.Definitions import MONK_HIT_DIE, Ability
 from CharacterContent.Features.Core.BaseFeatures import Feature
-from CharacterContent.Features.Core.Improvements import MultiAbilityArmorClass, SpeedBonus
+from CharacterContent.Features.Core.Improvements import MultiAbilityArmorClass, SpeedBonus, SavingThrowProficiency, AbilityScoreBonus
 from CharacterContent.Items.Weapons import WeaponDamageRolls
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
@@ -367,6 +367,17 @@ class DeflectEnergy(Feature):
 class DisciplinedSurvivorSavingThrows(Feature):
     def __init__(self):
         super().__init__(name="Disciplined Survivor", origin="Monk Level 14", skippable_in_concise=True)
+        self._proficiencies = SavingThrowProficiency([
+            Ability.STRENGTH,
+            Ability.DEXTERITY,
+            Ability.CONSTITUTION,
+            Ability.INTELLIGENCE,
+            Ability.WISDOM,
+            Ability.CHARISMA,
+        ])
+
+    def apply(self, character_stat_block: CharacterStatBlock):
+        self._proficiencies.apply(character_stat_block)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "Your physical and mental discipline grant you proficiency in all saving throws.\n"
@@ -403,6 +414,13 @@ class SuperiorDefense(Feature):
 class BodyAndMind(Feature):
     def __init__(self):
         super().__init__(name="Body and Mind", origin="Monk Level 20", skippable_in_concise=True)
+        self._bonuses = AbilityScoreBonus([
+            (Ability.DEXTERITY, 4),
+            (Ability.WISDOM, 4),
+        ], total=8)
+
+    def apply(self, character_stat_block: CharacterStatBlock):
+        self._bonuses.apply(character_stat_block)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "You have developed your body and mind to new heights. Your Dexterity and Wisdom scores increase by 4, to a maximum of 25."

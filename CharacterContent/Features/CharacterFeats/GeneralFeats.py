@@ -59,7 +59,7 @@ class AbilityScoreImprovement(GeneralFeat):
 
     def __init__(self, bonuses: list[tuple[Ability, int]]):
         self._bonus = AbilityScoreBonus(bonuses, total=2, error_prefix="Ability Score Improvement")
-        super().__init__(name="Ability Score Improvement", origin="General Feat Level 4+")
+        super().__init__(name="Ability Score Improvement", origin="General Feat Level 4+", skippable_in_concise=True)
 
     def apply(self, character_stat_block: CharacterStatBlock):
         self._bonus.apply(character_stat_block)
@@ -263,6 +263,10 @@ class HeavilyArmored(_AbilityScoreFeat):
     _NAME = "Heavily Armored"
     _ABILITIES = (Ability.CONSTITUTION, Ability.STRENGTH)
 
+    def __init__(self, character_level: int, ability: Ability):
+        super().__init__(character_level, ability)
+        self.skippable_in_concise = True
+
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         return (
             "Prerequisite: Level 4+, Medium Armor Training\n"
@@ -316,6 +320,10 @@ class LightlyArmored(_AbilityScoreFeat):
     _NAME = "Lightly Armored"
     _ABILITIES = (Ability.STRENGTH, Ability.DEXTERITY)
 
+    def __init__(self, character_level: int, ability: Ability):
+        super().__init__(character_level, ability)
+        self.skippable_in_concise = True
+
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         return (
             "Prerequisite: Level 4+\n"
@@ -343,6 +351,10 @@ class MartialWeaponTraining(_AbilityScoreFeat):
     _NAME = "Martial Weapon Training"
     _ABILITIES = (Ability.STRENGTH, Ability.DEXTERITY)
 
+    def __init__(self, character_level: int, ability: Ability):
+        super().__init__(character_level, ability)
+        self.skippable_in_concise = True
+
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         return (
             "Prerequisite: Level 4+\n"
@@ -368,6 +380,10 @@ class MediumArmorMaster(_AbilityScoreFeat):
 class ModeratelyArmored(_AbilityScoreFeat):
     _NAME = "Moderately Armored"
     _ABILITIES = (Ability.STRENGTH, Ability.DEXTERITY)
+
+    def __init__(self, character_level: int, ability: Ability):
+        super().__init__(character_level, ability)
+        self.skippable_in_concise = True
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         return (

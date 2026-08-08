@@ -9,7 +9,7 @@ SIZE = CreatureSize.MEDIUM  # Given by your species
 
 class Resourceful(Feature):
     def __init__(self):
-        super().__init__(name="Resourceful", origin="Human Trait", skippable_in_concise=True)
+        super().__init__(name="Resourceful", origin="Human Trait")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         return "You gain Heroic Inspiration whenever you finish a Long Rest.\n"
@@ -32,7 +32,7 @@ class Skillful(Feature):
 
 class Versatile(Feature):
     def __init__(self):
-        super().__init__(name="Versatile", origin="Human Trait", skippable_in_concise=True)
+        super().__init__(name="Versatile", origin="Human Trait")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         return "You gain an Origin feat of your choice (see 'Feats'). Skilled is recommended.\n"

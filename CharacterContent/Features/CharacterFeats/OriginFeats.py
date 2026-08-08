@@ -131,6 +131,18 @@ class Lucky(OriginFeat):
             description, proficiency_bonus, regain_all_on="long rest"
         )
 
+    def get_concise_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> str:
+        proficiency_bonus = character_stat_block.get_proficiency_bonus()
+        description = (
+            "You have a number of Luck Points equal to your Proficiency Bonus and regain them when you finish a Long Rest. "
+            "Spend 1 Luck Point to give yourself Advantage on a d20 roll, or spend 1 Luck Point to impose Disadvantage on an attack roll against you."
+        )
+        return StringUtils.add_boxes(
+            description, proficiency_bonus, regain_all_on="long rest"
+        )
+
 
 class MagicInitiate(OriginFeat):
     def __init__(

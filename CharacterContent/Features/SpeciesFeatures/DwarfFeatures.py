@@ -10,7 +10,7 @@ SIZE = CreatureSize.MEDIUM  # Given by your species
 
 class Darkvision(Feature):
     def __init__(self):
-        super().__init__(name="Darkvision", origin="Dwarf Trait")
+        super().__init__(name="Darkvision", origin="Dwarf Trait", skippable_in_concise=True)
         self._sense = GrantSense(Sense.DARKVISION, 120, self.name)
 
     def apply(self, character_stat_block: CharacterStatBlock):
@@ -30,7 +30,7 @@ class DwarvenResilience(Feature):
 
 class DwarvenToughness(Feature):
     def __init__(self):
-        super().__init__(name="Dwarven Toughness", origin="Dwarf Trait")
+        super().__init__(name="Dwarven Toughness", origin="Dwarf Trait", skippable_in_concise=True)
         self._hp = HitPointsPerLevelBonus(1)
 
     def apply(self, character_stat_block: CharacterStatBlock):

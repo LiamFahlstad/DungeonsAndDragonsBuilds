@@ -33,7 +33,7 @@ class SentrysRest(Feature):
 
 class Tireless(Feature):
     def __init__(self):
-        super().__init__(name="Tireless", origin="Warforged Trait", skippable_in_concise=True)
+        super().__init__(name="Tireless", origin="Warforged Trait")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         return "You don’t gain Exhaustion levels from dehydration, malnutrition, or suffocation."

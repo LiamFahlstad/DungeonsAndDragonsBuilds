@@ -7,7 +7,7 @@ from Utils import StringUtils
 
 class IllusionSavant(Feature):
     def __init__(self):
-        super().__init__(name="Illusion Savant", origin="Illusion Wizard Level 3", skippable_in_concise=True)
+        super().__init__(name="Illusion Savant", origin="Illusion Wizard Level 3")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "The gold and time you must spend to copy an Illusion spell into your spellbook is halved."

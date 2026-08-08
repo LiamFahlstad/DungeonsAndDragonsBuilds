@@ -5,7 +5,7 @@ from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 class DivinationSavant(Feature):
     def __init__(self):
-        super().__init__(name="Divination Savant", origin="Diviner Wizard Level 3", skippable_in_concise=True)
+        super().__init__(name="Divination Savant", origin="Diviner Wizard Level 3")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -25,6 +25,16 @@ class Portent(Feature):
             "Each foretelling roll can be used only once. When you finish a Long Rest, you lose any unused foretelling rolls."
         )
         return description
+
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        return [
+            ("Trigger", "Finish Long Rest"),
+            ("Rolls", "Roll 2d20 and record the numbers"),
+            ("Usage", "Replace any D20 Test (yours or seen creature) before the roll; once per turn"),
+            ("Expiration", "Each roll can be used once only; unused rolls lost at Long Rest"),
+        ]
 
 
 class ExpertDivination(Feature):

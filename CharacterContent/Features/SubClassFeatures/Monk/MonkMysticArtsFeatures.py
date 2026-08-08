@@ -53,7 +53,7 @@ LEVEL_TO_FOCUS_POINTS = {
 class MysticArtsSpellcasting(Feature):
     def __init__(self):
         super().__init__(
-            name="Spellcasting", origin="Warrior of the Mystic Arts Monk Level 3", skippable_in_concise=True
+            name="Spellcasting", origin="Warrior of the Mystic Arts Monk Level 3"
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:

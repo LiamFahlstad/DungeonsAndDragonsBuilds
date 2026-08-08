@@ -6,7 +6,7 @@ from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 class AbjurationSavant(Feature):
     def __init__(self):
-        super().__init__(name="Abjuration Savant", origin="Abjuration Wizard Level 3", skippable_in_concise=True)
+        super().__init__(name="Abjuration Savant", origin="Abjuration Wizard Level 3")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "The gold and time you must spend to copy an Abjuration spell into your spellbook is halved."
@@ -52,7 +52,7 @@ class ProjectedWard(Feature):
 
 class ImprovedAbjuration(Feature):
     def __init__(self):
-        super().__init__(name="Improved Abjuration", origin="Abjuration Wizard Level 10", skippable_in_concise=True)
+        super().__init__(name="Improved Abjuration", origin="Abjuration Wizard Level 10")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "When you cast an abjuration spell that requires you to make an ability check as a part of casting that spell (as in Counterspell and Dispel Magic), you add your proficiency bonus to that ability check."
@@ -61,7 +61,7 @@ class ImprovedAbjuration(Feature):
 
 class SpellResistance(Feature):
     def __init__(self):
-        super().__init__(name="Spell Resistance", origin="Abjuration Wizard Level 14", skippable_in_concise=True)
+        super().__init__(name="Spell Resistance", origin="Abjuration Wizard Level 14")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

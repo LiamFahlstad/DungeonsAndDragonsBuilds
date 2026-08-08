@@ -42,7 +42,7 @@ class SupremeSneak(Feature):
 
 class UseMagicDevice(Feature):
     def __init__(self):
-        super().__init__(name="Use Magic Device", origin="Thief Rogue Level 13", skippable_in_concise=True)
+        super().__init__(name="Use Magic Device", origin="Thief Rogue Level 13")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

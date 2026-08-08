@@ -28,7 +28,7 @@ class LargeForm(Feature):
 
 class PowerfulBuild(Feature):
     def __init__(self):
-        super().__init__(name="Goliath Nimbleness", origin="Goliath Trait", skippable_in_concise=True)
+        super().__init__(name="Goliath Nimbleness", origin="Goliath Trait")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         return "You have Advantage on any ability check you make to end the Grappled condition. You also count as one size larger when determining your carrying capacity."

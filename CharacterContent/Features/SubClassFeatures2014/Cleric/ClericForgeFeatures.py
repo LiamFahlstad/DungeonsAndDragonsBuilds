@@ -9,7 +9,7 @@ from Utils import StringUtils
 class BonusProficiencies(Feature):
     def __init__(self):
         super().__init__(
-            name="Bonus Proficiencies", origin="Forge Domain Cleric Level 3", skippable_in_concise=True
+            name="Bonus Proficiencies", origin="Forge Domain Cleric Level 3"
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:

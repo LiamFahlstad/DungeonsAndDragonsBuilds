@@ -100,7 +100,7 @@ class DeftExplorerExpertise(Feature):
 
 class DeftExplorerLanguages(Feature):
     def __init__(self):
-        super().__init__(name="Deft Explorer", origin="Ranger Level 2", skippable_in_concise=True)
+        super().__init__(name="Deft Explorer", origin="Ranger Level 2")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "Languages.: You know two languages of your choice from the language tables in chapter 2."
@@ -226,7 +226,7 @@ class FeralSenses(Feature):
 
 class FoeSlayer(Feature):
     def __init__(self):
-        super().__init__(name="Foe Slayer", origin="Ranger Level 20", skippable_in_concise=True)
+        super().__init__(name="Foe Slayer", origin="Ranger Level 20")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "The damage die of your Hunter's Mark is a d10 rather than a d6."

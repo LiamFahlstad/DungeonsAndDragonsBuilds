@@ -78,7 +78,7 @@ class TwinklingConstellations(Feature):
 class FullOfStars(Feature):
     def __init__(self):
         super().__init__(
-            name="Full of Stars", origin="Circle of the Stars Druid Level 14", skippable_in_concise=True
+            name="Full of Stars", origin="Circle of the Stars Druid Level 14"
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:

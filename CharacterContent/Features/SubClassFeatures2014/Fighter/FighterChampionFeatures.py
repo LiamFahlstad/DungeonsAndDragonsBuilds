@@ -33,7 +33,7 @@ class RemarkableAthlete(Feature):
 class AdditionalFightingStyle(Feature):
     def __init__(self):
         super().__init__(
-            name="Additional Fighting Style", origin="Champion Fighter Level 10", skippable_in_concise=True
+            name="Additional Fighting Style", origin="Champion Fighter Level 10"
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:

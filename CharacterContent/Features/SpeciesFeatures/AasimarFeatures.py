@@ -9,7 +9,7 @@ SIZE = CreatureSize.MEDIUM  # Given by your species
 
 class CelestialResistance(Feature):
     def __init__(self):
-        super().__init__(name="Celestial Resistance", origin="Aasimar Trait")
+        super().__init__(name="Celestial Resistance", origin="Aasimar Trait", skippable_in_concise=True)
         self._resistances = [
             DamageResistance(DamageType.NECROTIC, self.name),
             DamageResistance(DamageType.RADIANT, self.name),
@@ -25,7 +25,7 @@ class CelestialResistance(Feature):
 
 class Darkvision(Feature):
     def __init__(self):
-        super().__init__(name="Darkvision", origin="Aasimar Trait")
+        super().__init__(name="Darkvision", origin="Aasimar Trait", skippable_in_concise=True)
         self._sense = GrantSense(Sense.DARKVISION, 60, self.name)
 
     def apply(self, character_stat_block: CharacterStatBlock):

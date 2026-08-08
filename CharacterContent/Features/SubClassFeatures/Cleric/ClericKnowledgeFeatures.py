@@ -71,7 +71,7 @@ class MindMagic(Feature):
 class UnfetteredMind(Feature):
     def __init__(self):
         super().__init__(
-            name="Unfettered Mind", origin="Knowledge Domain Cleric Level 6"
+            name="Unfettered Mind", origin="Knowledge Domain Cleric Level 6", skippable_in_concise=True
         )
 
     def apply(self, character_stat_block: CharacterStatBlock):

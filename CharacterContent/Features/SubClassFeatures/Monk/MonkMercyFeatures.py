@@ -1,6 +1,7 @@
 import Core.Definitions as Definitions
-from Core.Definitions import MONK_HIT_DIE
+from Core.Definitions import MONK_HIT_DIE, Skill
 from CharacterContent.Features.Core.BaseFeatures import Feature
+from CharacterContent.Features.Core.Improvements import SkillProficiency
 from CharacterContent.Items.Weapons import WeaponDamageRolls
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
@@ -90,8 +91,12 @@ class HandOfHealing(Feature):
 class ImplementsOfMercy(Feature):
     def __init__(self):
         super().__init__(
-            name="Implements of Mercy", origin="Warrior of Mercy Monk Level 3", skippable_in_concise=True
+            name="Implements of Mercy", origin="Warrior of Mercy Monk Level 3"
         )
+        self._skill_proficiencies = SkillProficiency([Skill.INSIGHT, Skill.MEDICINE])
+
+    def apply(self, character_stat_block: CharacterStatBlock):
+        self._skill_proficiencies.apply(character_stat_block)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "You gain proficiency in the Insight and Medicine skills and proficiency with the Herbalism Kit."

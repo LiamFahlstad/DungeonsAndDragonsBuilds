@@ -24,7 +24,7 @@ class PeaceDomainSpells(Feature):
 
 class ImplementOfPeace(Feature):
     def __init__(self):
-        super().__init__(name="Implement of Peace", origin="Peace Domain Cleric Level 3", skippable_in_concise=True)
+        super().__init__(name="Implement of Peace", origin="Peace Domain Cleric Level 3")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "You gain proficiency in the Insight, Performance, or Persuasion skill (your choice)."
@@ -92,7 +92,7 @@ class ProtectiveBond(Feature):
 
 class PotentSpellcasting(Feature):
     def __init__(self):
-        super().__init__(name="Potent Spellcasting", origin="Peace Domain Cleric Level 8", skippable_in_concise=True)
+        super().__init__(name="Potent Spellcasting", origin="Peace Domain Cleric Level 8")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "You add your Wisdom modifier to the damage you deal with any cleric cantrip."

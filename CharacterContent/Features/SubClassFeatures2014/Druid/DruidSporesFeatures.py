@@ -1,5 +1,6 @@
-from Core.Definitions import Ability
+from Core.Definitions import Ability, Condition
 from CharacterContent.Features.Core.BaseFeatures import Feature
+from CharacterContent.Features.Core.Improvements import ConditionImmunity
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
@@ -99,6 +100,16 @@ class SpreadingSpores(Feature):
 class FungalBody(Feature):
     def __init__(self):
         super().__init__(name="Fungal Body", origin="Circle of Spores Druid Level 14", skippable_in_concise=True)
+        self._immunities = [
+            ConditionImmunity(Condition.BLINDED, self.name),
+            ConditionImmunity(Condition.DEAFENED, self.name),
+            ConditionImmunity(Condition.FRIGHTENED, self.name),
+            ConditionImmunity(Condition.POISONED, self.name),
+        ]
+
+    def apply(self, character_stat_block: CharacterStatBlock):
+        for immunity in self._immunities:
+            immunity.apply(character_stat_block)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

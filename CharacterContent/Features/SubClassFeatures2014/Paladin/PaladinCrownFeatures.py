@@ -88,7 +88,7 @@ class DivineAllegiance(Feature):
 
 class UnyieldingSaint(Feature):
     def __init__(self):
-        super().__init__(name="Unyielding Saint", origin="Oath of the Crown Paladin Level 15", skippable_in_concise=True)
+        super().__init__(name="Unyielding Saint", origin="Oath of the Crown Paladin Level 15")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "You have advantage on saving throws to avoid becoming paralyzed or stunned."

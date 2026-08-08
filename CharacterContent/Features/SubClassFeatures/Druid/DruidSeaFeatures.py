@@ -46,7 +46,7 @@ class WrathOfTheSea(Feature):
 class AquaticAffinity(Feature):
     def __init__(self):
         super().__init__(
-            name="Aquatic Affinity", origin="Circle of the Sea Druid Level 6", skippable_in_concise=True
+            name="Aquatic Affinity", origin="Circle of the Sea Druid Level 6"
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:

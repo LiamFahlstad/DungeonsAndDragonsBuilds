@@ -6,7 +6,7 @@ from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 class ConjurationSavant(Feature):
     def __init__(self):
-        super().__init__(name="Conjuration Savant", origin="Conjuration Wizard Level 3", skippable_in_concise=True)
+        super().__init__(name="Conjuration Savant", origin="Conjuration Wizard Level 3")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "The gold and time you must spend to copy a Conjuration spell into your spellbook is halved."
@@ -58,7 +58,7 @@ class BenignTransportation(Feature):
 
 class FocusedConjuration(Feature):
     def __init__(self):
-        super().__init__(name="Focused Conjuration", origin="Conjuration Wizard Level 10", skippable_in_concise=True)
+        super().__init__(name="Focused Conjuration", origin="Conjuration Wizard Level 10")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "While you are concentrating on a conjuration spell, your concentration can't be broken as a result of taking damage."
@@ -67,7 +67,7 @@ class FocusedConjuration(Feature):
 
 class DurableSummons(Feature):
     def __init__(self):
-        super().__init__(name="Durable Summons", origin="Conjuration Wizard Level 14", skippable_in_concise=True)
+        super().__init__(name="Durable Summons", origin="Conjuration Wizard Level 14")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "Any creature that you summon or create with a conjuration spell has 30 temporary hit points."

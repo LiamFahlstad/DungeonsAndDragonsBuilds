@@ -52,8 +52,7 @@ class SacredWeapon(Feature):
 class AuraOfDevotion(Feature):
     def __init__(self):
         super().__init__(
-            name="Aura of Devotion", origin="Oath of Devotion Paladin Level 7",
-            skippable_in_concise=True
+            name="Aura of Devotion", origin="Oath of Devotion Paladin Level 7"
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:

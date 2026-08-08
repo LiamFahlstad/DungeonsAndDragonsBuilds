@@ -20,7 +20,7 @@ class ChronalShift(Feature):
 
 class TemporalAwareness(Feature):
     def __init__(self):
-        super().__init__(name="Temporal Awareness", origin="Chronurgy Wizard Level 3", skippable_in_concise=True)
+        super().__init__(name="Temporal Awareness", origin="Chronurgy Wizard Level 3")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         int_mod = character_stat_block.get_ability_modifier(Ability.INTELLIGENCE)

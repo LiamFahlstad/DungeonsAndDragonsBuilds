@@ -178,7 +178,7 @@ class FlashofGenius(Feature):
 
 class MagicItemAdept(Feature):
     def __init__(self):
-        super().__init__(name="Magic Item Adept", origin="Artificer Level 10", skippable_in_concise=True)
+        super().__init__(name="Magic Item Adept", origin="Artificer Level 10")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "You can now attune to up to four magic items at once."
@@ -213,7 +213,7 @@ class AdvancedArtifice(Feature):
 
 class MagicItemMaster(Feature):
     def __init__(self):
-        super().__init__(name="Magic Item Master", origin="Artificer Level 18", skippable_in_concise=True)
+        super().__init__(name="Magic Item Master", origin="Artificer Level 18")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "You can now attune to up to six magic items at once."

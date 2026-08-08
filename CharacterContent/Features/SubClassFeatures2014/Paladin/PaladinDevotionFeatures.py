@@ -58,7 +58,7 @@ class TurnTheUnholy(Feature):
 
 class AuraOfDevotion(Feature):
     def __init__(self):
-        super().__init__(name="Aura of Devotion", origin="Oath of Devotion Paladin Level 7", skippable_in_concise=True)
+        super().__init__(name="Aura of Devotion", origin="Oath of Devotion Paladin Level 7")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "You and friendly creatures within 10 feet of you can't be charmed while you are conscious."
@@ -78,7 +78,7 @@ class AuraOfDevotionExpansion(Feature):
 
 class PurityOfSpirit(Feature):
     def __init__(self):
-        super().__init__(name="Purity of Spirit", origin="Oath of Devotion Paladin Level 15", skippable_in_concise=True)
+        super().__init__(name="Purity of Spirit", origin="Oath of Devotion Paladin Level 15")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "You are always under the effects of a Protection from Evil and Good spell."

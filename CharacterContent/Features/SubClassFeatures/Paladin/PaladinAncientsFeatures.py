@@ -47,8 +47,7 @@ class OathOfTheAncientsSpells(Feature):
 class AuraOfWarding(Feature):
     def __init__(self):
         super().__init__(
-            name="Aura of Warding", origin="Oath of the Ancients Paladin Level 7",
-            skippable_in_concise=True
+            name="Aura of Warding", origin="Oath of the Ancients Paladin Level 7"
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:

@@ -76,7 +76,7 @@ class CombatSuperiority(Feature):
 
 class StudentOfWar(Feature):
     def __init__(self):
-        super().__init__(name="Student of War", origin="Battle Master Fighter Level 3", skippable_in_concise=True)
+        super().__init__(name="Student of War", origin="Battle Master Fighter Level 3")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "At 3rd level, you gain proficiency with one type of artisan's tools of your choice."

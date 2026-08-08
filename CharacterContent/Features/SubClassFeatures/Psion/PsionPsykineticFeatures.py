@@ -5,7 +5,7 @@ from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 class StrongerTelekinesis(Feature):
     def __init__(self):
-        super().__init__(name="Stronger Telekinesis", origin="Psykinetic Psion Level 3", skippable_in_concise=True)
+        super().__init__(name="Stronger Telekinesis", origin="Psykinetic Psion Level 3")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

@@ -36,7 +36,7 @@ class RemarkableAthlete(Feature):
 class AdditionalFightingStyle(Feature):
     def __init__(self):
         super().__init__(
-            name="Additional Fighting Style", origin="Champion Fighter Level 7", skippable_in_concise=True
+            name="Additional Fighting Style", origin="Champion Fighter Level 7"
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -55,7 +55,7 @@ class HeroicWarrior(Feature):
 
 class SuperiorCritical(Feature):
     def __init__(self):
-        super().__init__(name="Superior Critical", origin="Champion Fighter Level 15", skippable_in_concise=True)
+        super().__init__(name="Superior Critical", origin="Champion Fighter Level 15")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "Your attack rolls with weapons and Unarmed Strikes can now score a Critical Hit on a roll of 18-20 on the d20."

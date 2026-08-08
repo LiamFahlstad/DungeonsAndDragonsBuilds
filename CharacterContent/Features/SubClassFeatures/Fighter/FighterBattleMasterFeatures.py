@@ -78,7 +78,7 @@ class CombatSuperiority(Feature):
 
 class StudentOfWar(Feature):
     def __init__(self):
-        super().__init__(name="Student of War", origin="Battle Master Fighter Level 3", skippable_in_concise=True)
+        super().__init__(name="Student of War", origin="Battle Master Fighter Level 3")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "You gain proficiency with one type of Artisan’s Tools of your choice, and you gain proficiency in one skill of your choice from the skills available to Fighters at level 1."
@@ -110,7 +110,7 @@ class KnowYourEnemy(Feature):
 class ImprovedCombatSuperiority(Feature):
     def __init__(self):
         super().__init__(
-            name="Improved Combat Superiority", origin="Battle Master Fighter Level 10", skippable_in_concise=True
+            name="Improved Combat Superiority", origin="Battle Master Fighter Level 10"
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -130,7 +130,7 @@ class Relentless(Feature):
 class UltimateCombatSuperiority(Feature):
     def __init__(self):
         super().__init__(
-            name="Ultimate Combat Superiority", origin="Battle Master Fighter Level 18", skippable_in_concise=True
+            name="Ultimate Combat Superiority", origin="Battle Master Fighter Level 18"
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:

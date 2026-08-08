@@ -8,7 +8,7 @@ from Utils import StringUtils
 
 class Spellcasting(Feature):
     def __init__(self):
-        super().__init__(name="Spellcasting", origin="Bard Level 1", skippable_in_concise=True)
+        super().__init__(name="Spellcasting", origin="Bard Level 1")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

@@ -7,7 +7,7 @@ from Utils import StringUtils
 
 class BonusProficiencies(Feature):
     def __init__(self):
-        super().__init__(name="Bonus Proficiencies", origin="Order Domain Cleric Level 3", skippable_in_concise=True)
+        super().__init__(name="Bonus Proficiencies", origin="Order Domain Cleric Level 3")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "You gain proficiency with heavy armor. You also gain proficiency in the Intimidation or Persuasion skill (your choice)."

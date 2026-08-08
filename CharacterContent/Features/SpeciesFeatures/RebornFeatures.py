@@ -8,7 +8,7 @@ SPEED = 30  # Given by your species
 
 class EscapedDeath(Feature):
     def __init__(self):
-        super().__init__(name="Escaped Death", origin="Reborn Trait", skippable_in_concise=True)
+        super().__init__(name="Escaped Death", origin="Reborn Trait")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         return "You have Advantage on Death Saving Throws."
@@ -58,7 +58,7 @@ class RebornKnowledgeSkill(Feature):
 
 class StrangeEndurance(Feature):
     def __init__(self):
-        super().__init__(name="Strange Endurance", origin="Reborn Trait", skippable_in_concise=True)
+        super().__init__(name="Strange Endurance", origin="Reborn Trait")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "You have Resistance to one of the following damage types of your choice: Cold, Necrotic, or Poison."

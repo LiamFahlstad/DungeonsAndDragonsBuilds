@@ -6,7 +6,7 @@ from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 class EnchantmentSavant(Feature):
     def __init__(self):
-        super().__init__(name="Enchantment Savant", origin="Enchantment Wizard Level 3", skippable_in_concise=True)
+        super().__init__(name="Enchantment Savant", origin="Enchantment Wizard Level 3")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "The gold and time you must spend to copy an Enchantment spell into your spellbook is halved."
@@ -65,7 +65,7 @@ class InstinctiveCharm(Feature):
 
 class SplitEnchantment(Feature):
     def __init__(self):
-        super().__init__(name="Split Enchantment", origin="Enchantment Wizard Level 10", skippable_in_concise=True)
+        super().__init__(name="Split Enchantment", origin="Enchantment Wizard Level 10")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "When you cast an enchantment spell of 1st level or higher that targets only one creature, you can have it target a second creature."

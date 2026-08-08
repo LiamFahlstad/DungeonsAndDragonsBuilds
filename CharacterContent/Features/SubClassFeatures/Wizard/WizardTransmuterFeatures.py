@@ -6,7 +6,7 @@ from Utils import StringUtils
 
 class TransmutationSavant(Feature):
     def __init__(self):
-        super().__init__(name="Transmutation Savant", origin="Transmuter Wizard Level 3", skippable_in_concise=True)
+        super().__init__(name="Transmutation Savant", origin="Transmuter Wizard Level 3")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

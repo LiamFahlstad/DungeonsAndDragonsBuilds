@@ -6,7 +6,7 @@ from StatBlocks.CharacterStatBlock import CharacterStatBlock
 class ToolsOfTheTrade(Feature):
     def __init__(self):
         super().__init__(
-            name="Tools of the Trade", origin="Artillerist Artificer Level 3", skippable_in_concise=True
+            name="Tools of the Trade", origin="Artillerist Artificer Level 3"
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -62,7 +62,7 @@ class EldritchCannon(Feature):
 
 class ArcaneFirearm(Feature):
     def __init__(self):
-        super().__init__(name="Arcane Firearm", origin="Artillerist Artificer Level 5", skippable_in_concise=True)
+        super().__init__(name="Arcane Firearm", origin="Artillerist Artificer Level 5")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

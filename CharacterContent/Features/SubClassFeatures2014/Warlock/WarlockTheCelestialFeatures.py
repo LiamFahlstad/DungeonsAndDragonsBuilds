@@ -27,7 +27,7 @@ class CelestialExpandedSpells(Feature):
 class BonusCantrips(Feature):
     def __init__(self):
         super().__init__(
-            name="Bonus Cantrips", origin="The Celestial Patron Warlock Level 3", skippable_in_concise=True
+            name="Bonus Cantrips", origin="The Celestial Patron Warlock Level 3"
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:

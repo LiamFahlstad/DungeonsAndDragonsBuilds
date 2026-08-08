@@ -48,7 +48,7 @@ class SpiritTotem(Feature):
 
 class MightySummoner(Feature):
     def __init__(self):
-        super().__init__(name="Mighty Summoner", origin="Circle of the Shepherd Druid Level 6", skippable_in_concise=True)
+        super().__init__(name="Mighty Summoner", origin="Circle of the Shepherd Druid Level 6")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -62,7 +62,7 @@ class MightySummoner(Feature):
 
 class GuardianSpirit(Feature):
     def __init__(self):
-        super().__init__(name="Guardian Spirit", origin="Circle of the Shepherd Druid Level 10", skippable_in_concise=True)
+        super().__init__(name="Guardian Spirit", origin="Circle of the Shepherd Druid Level 10")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "Your Spirit Totem safeguards the beasts and fey that you call forth with your magic. When a beast or fey that you summoned or created with a spell ends its turn in your Spirit Totem aura, that creature regains a number of hit points equal to half your druid level."

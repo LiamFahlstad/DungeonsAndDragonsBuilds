@@ -88,7 +88,7 @@ class AuraOfConquest(Feature):
 
 class AuraOfConquestExpansion(Feature):
     def __init__(self):
-        super().__init__(name="Aura of Conquest Expansion", origin="Oath of Conquest Paladin Level 18", skippable_in_concise=True)
+        super().__init__(name="Aura of Conquest Expansion", origin="Oath of Conquest Paladin Level 18")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "The range of your Aura of Conquest increases to 30 feet."
