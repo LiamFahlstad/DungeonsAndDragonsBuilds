@@ -4,7 +4,19 @@ from typing import Optional
 
 from attr import dataclass
 
-from Core.Definitions import Skill
+from Core.Definitions import Ability, Skill
+
+
+def _normalize_ability_keyed_dict(d: Optional[dict]) -> dict:
+    """Allow `Ability` enum members as dict keys (e.g. `{Ability.STRENGTH: 10}`)
+    alongside plain short-name strings (`{"STR": 10}`), collapsing both to
+    short-name string keys — the form the rest of the combat pipeline expects."""
+    if not d:
+        return {}
+    return {
+        (key.short_name if isinstance(key, Ability) else key): value
+        for key, value in d.items()
+    }
 
 
 class Action(str, Enum):
@@ -151,10 +163,8 @@ class BasicCombatantData:
     def __attrs_post_init__(self):
         if self.spell_slots is None:
             self.spell_slots = {}
-        if self.ability_scores is None:
-            self.ability_scores = {}
-        if self.saving_throws is None:
-            self.saving_throws = {}
+        self.ability_scores = _normalize_ability_keyed_dict(self.ability_scores)
+        self.saving_throws = _normalize_ability_keyed_dict(self.saving_throws)
         if self.max_hp is None:
             self.max_hp = self.hp
         if self.visibility_states is None:

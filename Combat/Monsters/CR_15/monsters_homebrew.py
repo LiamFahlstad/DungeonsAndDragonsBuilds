@@ -20,7 +20,7 @@ class TheHeadlessDragon(ExtendedCombatantData):
             ac=19,
             temp_hp=0,
             conditions=[],
-            ability_scores={Ability.STRENGTH.short_name: 23, Ability.DEXTERITY.short_name: 14, Ability.CONSTITUTION.short_name: 21, Ability.INTELLIGENCE.short_name: 5, Ability.WISDOM.short_name: 13, Ability.CHARISMA.short_name: 17},
+            ability_scores={Ability.STRENGTH: 23, Ability.DEXTERITY: 14, Ability.CONSTITUTION: 21, Ability.INTELLIGENCE: 5, Ability.WISDOM: 13, Ability.CHARISMA: 17},
             saving_throws={},
             spell_slots={},
             cr="15",

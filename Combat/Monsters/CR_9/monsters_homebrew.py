@@ -20,7 +20,7 @@ class TheBellSaint(ExtendedCombatantData):
             ac=17,
             temp_hp=0,
             conditions=[],
-            ability_scores={Ability.STRENGTH.short_name: 20, Ability.DEXTERITY.short_name: 8, Ability.CONSTITUTION.short_name: 18, Ability.INTELLIGENCE.short_name: 6, Ability.WISDOM.short_name: 15, Ability.CHARISMA.short_name: 16},
+            ability_scores={Ability.STRENGTH: 20, Ability.DEXTERITY: 8, Ability.CONSTITUTION: 18, Ability.INTELLIGENCE: 6, Ability.WISDOM: 15, Ability.CHARISMA: 16},
             saving_throws={},
             spell_slots={},
             cr="9",

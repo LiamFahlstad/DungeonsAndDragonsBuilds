@@ -82,14 +82,14 @@ _CONDITION_NAME_TO_ENUM = {
 
 
 def format_ability_scores(d: dict) -> str:
-    """{"Str": 20, ...} -> '{Ability.STRENGTH.short_name: 20, ...}'."""
+    """{"Str": 20, ...} -> '{Ability.STRENGTH: 20, ...}'."""
     if not d:
         return "{}"
     items = []
     for key, value in d.items():
         enum_name = _ABILITY_ABBR_TO_ENUM.get(str(key).strip().lower())
         if enum_name:
-            items.append(f"Ability.{enum_name}.short_name: {value!r}")
+            items.append(f"Ability.{enum_name}: {value!r}")
         else:
             items.append(f"{key!r}: {value!r}")
     return "{" + ", ".join(items) + "}"
