@@ -1,5 +1,6 @@
 import argparse
 
+import Combat.CombatantGroups as CombatantGroups
 import Combat.Scenarios as Scenarios
 from Combat.CombatUIQt import CombatAppQt
 
@@ -8,25 +9,48 @@ if __name__ == "__main__":
     parser.add_argument(
         "--scenario",
         choices=sorted(Scenarios.SCENARIOS.keys()),
-        default="time_loop_square",
-        help="Combat scenario to run (default: time_loop_square)",
+        default=None,
+        help="Combat scenario to run. Omit to run without an encounter "
+        "(e.g. an out-of-combat adventure session when combined with --player-log).",
     )
     parser.add_argument(
         "--log",
         default=None,
-        help="Path to a CombatLogs/*.json file to resume from, "
+        help="Path to a Combat/CombatLogs/*.json file to resume from, "
         "picking up the combatants' HP/conditions/round where that log left off",
+    )
+    parser.add_argument(
+        "--player-log",
+        default=None,
+        help="Path to a persistent player log JSON file (e.g. Combat/PlayerLogs/main_party.json). "
+        "The 'Players' combatant group is loaded, preloading HP/conditions/etc. from the most "
+        "recent session, and every action taken against a player is appended to this file "
+        "across runs. A new session entry ('encounter' if --scenario is given, else 'adventure') "
+        "is started each run.",
     )
     args = parser.parse_args()
 
-    scenario = Scenarios.SCENARIOS[args.scenario]
-    combatants = scenario.build_combatants()
-    character_sheets = scenario.build_character_sheets()
+    if args.scenario is None and not args.player_log:
+        args.scenario = "time_loop_square"
+
+    scenario = Scenarios.SCENARIOS[args.scenario] if args.scenario else None
+    combatants = scenario.build_combatants() if scenario else []
+    character_sheets = scenario.build_character_sheets() if scenario else []
+
+    if args.player_log:
+        players_group = CombatantGroups.get_players_group()
+        player_names = {cs.character_name for cs in players_group}
+        character_sheets = [
+            cs for cs in character_sheets if cs.character_name not in player_names
+        ]
+        character_sheets = players_group + character_sheets
 
     app = CombatAppQt(
         combatants=combatants,
         character_sheets=character_sheets,
-        combatants_per_column=scenario.combatants_per_column,
+        combatants_per_column=scenario.combatants_per_column if scenario else 4,
         resume_log_path=args.log,
+        player_log_path=args.player_log,
+        scenario_name=args.scenario,
     )
     app.run()

@@ -52,6 +52,8 @@ class CombatAppQt(
         character_sheets: list,
         combatants_per_column: int = 4,
         resume_log_path: str | None = None,
+        player_log_path: str | None = None,
+        scenario_name: str | None = None,
     ):
         self.combatants_per_column = combatants_per_column
         self._resume_log_path = resume_log_path
@@ -75,10 +77,17 @@ class CombatAppQt(
         self.initiative_order: list[dict] = []
         self.current_turn_idx: int = 0
 
+        # --- Persistent player log: preload player state, start a new session ---
+        self.player_log_file = Path(player_log_path) if player_log_path else None
+        self._scenario_name = scenario_name
+        self.player_log_data: dict = {"sessions": []}
+        if self.player_log_file:
+            self._init_player_log()
+
         log_dir = Path("Combat/CombatLogs")
         log_dir.mkdir(exist_ok=True)
         timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-        self.log_file = log_dir / f"combat_log_{timestamp}.json"
+        self.log_file = log_dir / f"encounter_log_{timestamp}.json"
         self._write_log({})
 
         # card widget registry: maps id(char_dict) -> QFrame

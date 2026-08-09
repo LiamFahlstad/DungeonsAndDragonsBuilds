@@ -286,9 +286,18 @@ class WindowMixin:
         undo_btn.clicked.connect(self._undo_last)
         panel_layout.addWidget(undo_btn)
 
-        log_btn = QPushButton("Open Current Log")
+        log_status_label = QLabel(self._log_status_text())
+        log_status_label.setWordWrap(True)
+        log_status_label.setStyleSheet("color: #a0a0b0; font-size: 11px;")
+        panel_layout.addWidget(log_status_label)
+
+        log_btn = QPushButton("Encounter Log")
         log_btn.clicked.connect(self._show_current_log)
         panel_layout.addWidget(log_btn)
+
+        player_log_btn = QPushButton("Player Log")
+        player_log_btn.clicked.connect(self._show_player_log)
+        panel_layout.addWidget(player_log_btn)
 
         stats_btn = QPushButton("Statistics")
         stats_btn.clicked.connect(self._show_statistics)
