@@ -23,6 +23,7 @@ from .logging_mixin import LoggingMixin
 from .spells_mixin import SpellsMixin
 from .stats import _default_stats
 from .styles import QSS
+from .timer_mixin import TimerMixin
 from .turns_mixin import TurnsMixin
 from .window_mixin import WindowMixin
 
@@ -35,6 +36,7 @@ class CombatAppQt(
     CardsMixin,
     LoggingMixin,
     DialogsMixin,
+    TimerMixin,
     WindowMixin,
 ):
     ACTION_ECONOMY_TYPES: list[str] = ["Action", "Bonus Action", "Reaction"]
@@ -84,6 +86,9 @@ class CombatAppQt(
 
         # initiative input registry: maps id(char_dict) -> QLineEdit
         self._initiative_inputs: dict = {}
+
+        # Initialize timers
+        self._init_timers()
 
     def _add_from_character_sheet(self, character_sheet):
         from CharacterContent.Spells.SpellFactory import SpellFactory
@@ -238,4 +243,5 @@ class CombatAppQt(
             self._load_log_from_path(self._resume_log_path)
 
         self._window.show()
+        self._start_session_timer()
         sys.exit(app.exec())

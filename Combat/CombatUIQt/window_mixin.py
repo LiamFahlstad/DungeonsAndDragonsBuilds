@@ -111,6 +111,10 @@ class WindowMixin:
         )
         panel_layout.addWidget(self.round_label)
 
+        # Timer section
+        panel_layout.addWidget(self._build_timer_section())
+        panel_layout.addWidget(self._make_divider())
+
         # Initiative tracker container (hidden during initiative phase, shown during combat)
         self._init_tracker_container = QWidget()
         self._init_tracker_container.hide()
