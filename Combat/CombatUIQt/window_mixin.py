@@ -104,14 +104,7 @@ class WindowMixin:
         self._cast_spell_btn.clicked.connect(self._show_cast_spell_dialog)
         panel_layout.addWidget(self._cast_spell_btn)
 
-        # Round indicator
-        self.round_label = QLabel(f"Round {self.round_number}")
-        self.round_label.setStyleSheet(
-            "color: #c9a84c; font-weight: bold; font-size: 12px;"
-        )
-        panel_layout.addWidget(self.round_label)
-
-        # Timer section
+        # Round indicator + session/player timers (compact, combined rows)
         panel_layout.addWidget(self._build_timer_section())
         panel_layout.addWidget(self._make_divider())
 
