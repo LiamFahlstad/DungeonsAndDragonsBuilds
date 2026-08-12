@@ -35,10 +35,14 @@ class LoggingMixin:
         self.log_file.write_text(json.dumps(data, indent=2, cls=_CombatJSONEncoder))
         self._write_player_log()
 
-    def _current_turn_name(self) -> str | None:
+    def _current_turn_character(self) -> dict | None:
         if self.phase != "COMBAT" or not self.initiative_order:
             return None
-        return self.initiative_order[self.current_turn_idx]["name"]
+        return self.initiative_order[self.current_turn_idx]
+
+    def _current_turn_name(self) -> str | None:
+        char = self._current_turn_character()
+        return char["name"] if char else None
 
     def _find_character_by_name(self, name: str) -> dict | None:
         for char in self.characters:
@@ -72,13 +76,15 @@ class LoggingMixin:
         if not self.history:
             return
         action, value = self.history[-1]
-        # Damage/Heal are applied to the target; every other tracked action
-        # (conditions, spell slots, death saves) is applied to the source.
-        char = (
-            self.target_character
-            if action in (Action.DAMAGE, Action.HEAL)
-            else self.selected_character
-        )
+        # Damage/Heal/ADD_TEMP_HP are applied to whichever character the value dict
+        # names as target_name (recorded at apply-time, not the current UI selection —
+        # the user may have re-targeted since); every other tracked action (conditions,
+        # spell slots, death saves) is applied to the source.
+        if action in (Action.DAMAGE, Action.HEAL, Action.ADD_TEMP_HP):
+            target_name = value.get("target_name") if isinstance(value, dict) else None
+            char = self._find_character_by_name(target_name) if target_name else None
+        else:
+            char = self.selected_character
         if not char:
             return
         data = json.loads(self.log_file.read_text())
@@ -163,6 +169,11 @@ class LoggingMixin:
                 char["stats"]["deaths"] = max(char["stats"].get("deaths", 0) - 1, 0)
         elif action == Action.DEATH_SAVE_SUCCESS:
             char["death_saves_success"] = max(char.get("death_saves_success", 0) - 1, 0)
+        elif action == Action.ADD_TEMP_HP:
+            if isinstance(value, dict):
+                char["temp_hp"] -= value["amount"]
+            else:
+                char["temp_hp"] -= value
 
         if action in (Action.DAMAGE, Action.HEAL):
             self._apply_bloodied_condition(char)
@@ -189,7 +200,7 @@ class LoggingMixin:
         self.round_number = data.get("round_number", 1)
         self.history = []
         self.selected_character = None
-        self.target_character = None
+        self.target_characters = []
         self.selected_label.setText("Source: None")
         self.target_label.setText("Target: None")
         self.round_label.setText(f"Round {self.round_number}")
@@ -323,7 +334,10 @@ class LoggingMixin:
         elif action == Action.DEATH_SAVE_SUCCESS:
             char["death_saves_success"] = min(char.get("death_saves_success", 0) + 1, 3)
         elif action == Action.ADD_TEMP_HP:
-            char["temp_hp"] = char.get("temp_hp", 0) + value
+            if isinstance(value, dict):
+                char["temp_hp"] = char.get("temp_hp", 0) + value["amount"]
+            else:
+                char["temp_hp"] = char.get("temp_hp", 0) + value
 
     def _write_player_log(self):
         if not self.player_log_file:

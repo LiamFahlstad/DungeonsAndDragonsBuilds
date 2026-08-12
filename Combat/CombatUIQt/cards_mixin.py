@@ -44,7 +44,7 @@ class CardsMixin:
             and self.initiative_order
             and self.initiative_order[self.current_turn_idx] is char
         )
-        is_target = char is self.target_character
+        is_target = any(char is t for t in self.target_characters)
         return is_source, is_active, is_target
 
     def _apply_card_state_properties(self, card: QFrame, char: dict, death_state: str):
@@ -496,7 +496,9 @@ class CardsMixin:
 
         # --- Click to select: left = source, right = target ---
         card.mousePressEvent = lambda event, c=char: (
-            self._select_target_character(c)
+            self._select_target_character(
+                c, additive=bool(event.modifiers() & Qt.KeyboardModifier.ShiftModifier)
+            )
             if event.button() == Qt.MouseButton.RightButton
             else self._select_character(c)
         )

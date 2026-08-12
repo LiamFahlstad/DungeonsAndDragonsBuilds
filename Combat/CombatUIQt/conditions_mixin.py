@@ -55,11 +55,12 @@ class ConditionsMixin:
         self._remove_condition_from(self.selected_character, Condition.CONCENTRATING.value)
 
     def _shortcut_clear_target_conditions(self):
-        """Keyboard shortcut 'Ctrl+Shift+C': remove every condition from the target."""
-        if not self.target_character:
+        """Keyboard shortcut 'Ctrl+Shift+C': remove every condition from every target."""
+        if not self.target_characters:
             return
-        for cond in list(self.target_character.get("conditions", [])):
-            self._remove_condition_from(self.target_character, cond)
+        for target in list(self.target_characters):
+            for cond in list(target.get("conditions", [])):
+                self._remove_condition_from(target, cond)
 
     def _add_action_use(self, action_type: str):
         """Log a use of Action/Bonus Action/Reaction for the source, this round.

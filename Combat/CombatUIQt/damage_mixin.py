@@ -71,72 +71,73 @@ class DamageMixin:
         self._do_apply_damage(check_resistance=True)
 
     def _do_apply_damage(self, check_resistance: bool):
-        if not self.target_character:
+        if not self.target_characters:
             return
         try:
-            dmg = int(self.damage_input.text())
+            dmg_input = int(self.damage_input.text())
         except ValueError:
             return
 
-        target = self.target_character
-
-        source = self.selected_character
+        source = self.selected_character or self._current_turn_character()
         source_name = source["name"] if source is not None else None
 
-        outcome = None
-        if check_resistance:
-            damage_type = self.damage_type_combo.currentData()
-            if damage_type is not None:
+        damage_type = self.damage_type_combo.currentData() if check_resistance else None
+
+        for target in list(self.target_characters):
+            dmg = dmg_input
+            outcome = None
+            if check_resistance and damage_type is not None:
                 dmg, outcome = self._damage_type_modifier(target, dmg, damage_type)
 
-        pre_hp = target["hp"]
-        pre_temp = target["temp_hp"]
+            pre_hp = target["hp"]
+            pre_temp = target["temp_hp"]
 
-        temp_reduction = min(target["temp_hp"], dmg)
-        target["temp_hp"] -= temp_reduction
-        target["hp"] -= dmg - temp_reduction
+            temp_reduction = min(target["temp_hp"], dmg)
+            target["temp_hp"] -= temp_reduction
+            target["hp"] -= dmg - temp_reduction
 
-        hp_delta = target["hp"] - pre_hp
-        temp_delta = target["temp_hp"] - pre_temp
+            hp_delta = target["hp"] - pre_hp
+            temp_delta = target["temp_hp"] - pre_temp
 
-        knockout = pre_hp > 0 and target["hp"] <= 0
+            knockout = pre_hp > 0 and target["hp"] <= 0
 
-        target.setdefault("stats", _default_stats())
-        target["stats"]["damage_taken"] = target["stats"].get("damage_taken", 0) + dmg
-        if knockout:
-            target["stats"]["times_downed"] = target["stats"].get("times_downed", 0) + 1
-
-        if source is not None:
-            source.setdefault("stats", _default_stats())
-            source["stats"]["damage_dealt"] = source["stats"].get("damage_dealt", 0) + dmg
+            target.setdefault("stats", _default_stats())
+            target["stats"]["damage_taken"] = target["stats"].get("damage_taken", 0) + dmg
             if knockout:
-                source["stats"]["knockouts"] = source["stats"].get("knockouts", 0) + 1
+                target["stats"]["times_downed"] = target["stats"].get("times_downed", 0) + 1
 
-        damage_value = {
-            "hp_delta": hp_delta,
-            "temp_delta": temp_delta,
-            "dmg": dmg,
-            "source_name": source_name,
-            "knockout": knockout,
-            "outcome": outcome,
-        }
-        self.history.append((Action.DAMAGE, damage_value))
-        source_suffix = f" from {source_name}" if source_name else ""
-        outcome_suffix = f" ({outcome})" if outcome else ""
-        self._log_event(
-            f"{target['name']} takes {dmg} damage{source_suffix}{outcome_suffix}",
-            character=target["name"],
-            action=Action.DAMAGE,
-            value=damage_value,
-        )
+            if source is not None:
+                source.setdefault("stats", _default_stats())
+                source["stats"]["damage_dealt"] = source["stats"].get("damage_dealt", 0) + dmg
+                if knockout:
+                    source["stats"]["knockouts"] = source["stats"].get("knockouts", 0) + 1
 
-        # Auto-apply bloodied condition
-        self._apply_bloodied_condition(target)
+            damage_value = {
+                "hp_delta": hp_delta,
+                "temp_delta": temp_delta,
+                "dmg": dmg,
+                "source_name": source_name,
+                "target_name": target["name"],
+                "knockout": knockout,
+                "outcome": outcome,
+            }
+            self.history.append((Action.DAMAGE, damage_value))
+            source_suffix = f" from {source_name}" if source_name else ""
+            outcome_suffix = f" ({outcome})" if outcome else ""
+            self._log_event(
+                f"{target['name']} takes {dmg} damage{source_suffix}{outcome_suffix}",
+                character=target["name"],
+                action=Action.DAMAGE,
+                value=damage_value,
+            )
 
-        self._rebuild_card(target)
+            # Auto-apply bloodied condition
+            self._apply_bloodied_condition(target)
 
-        if "Concentrating" in target.get("conditions", []):
-            self._concentration_check_dialog(target, dmg)
+            self._rebuild_card(target)
+
+            if "Concentrating" in target.get("conditions", []):
+                self._concentration_check_dialog(target, dmg)
 
     def _con_save_mod(self, char: dict) -> int:
         """Return the CON saving throw modifier for a character."""
@@ -275,53 +276,55 @@ class DamageMixin:
         dialog.exec()
 
     def _apply_heal(self):
-        if not self.target_character:
+        if not self.target_characters:
             return
         try:
             heal = int(self.heal_input.text())
         except ValueError:
             return
 
-        char = self.target_character
-        was_downed = self._char_death_state(char) != "alive"
-
-        source = self.selected_character
+        source = self.selected_character or self._current_turn_character()
         source_name = source["name"] if source is not None else None
 
-        pre_hp = char["hp"]
-        char["hp"] = min(char["hp"] + heal, char["max_hp"])
-        actual_heal = char["hp"] - pre_hp
+        for char in list(self.target_characters):
+            was_downed = self._char_death_state(char) != "alive"
 
-        char.setdefault("stats", _default_stats())
-        char["stats"]["healing_received"] = char["stats"].get("healing_received", 0) + actual_heal
-        if source is not None:
-            source.setdefault("stats", _default_stats())
-            source["stats"]["healing_done"] = source["stats"].get("healing_done", 0) + actual_heal
+            pre_hp = char["hp"]
+            char["hp"] = min(char["hp"] + heal, char["max_hp"])
+            actual_heal = char["hp"] - pre_hp
 
-        heal_value = {"heal": actual_heal, "source_name": source_name}
-        self.history.append((Action.HEAL, heal_value))
+            char.setdefault("stats", _default_stats())
+            char["stats"]["healing_received"] = char["stats"].get("healing_received", 0) + actual_heal
+            if source is not None:
+                source.setdefault("stats", _default_stats())
+                source["stats"]["healing_done"] = source["stats"].get("healing_done", 0) + actual_heal
 
-        if was_downed and char["hp"] > 0:
-            char["death_saves_fail"] = 0
-            char["death_saves_success"] = 0
-            self._log_event(
-                f"{char['name']} is resurrected with {char['hp']} HP",
-                character=char["name"],
-                action=Action.HEAL,
-                value=heal_value,
-            )
-        else:
-            self._log_event(
-                f"{char['name']} heals {heal} HP",
-                character=char["name"],
-                action=Action.HEAL,
-                value=heal_value,
-            )
+            heal_value = {"heal": actual_heal, "source_name": source_name, "target_name": char["name"]}
+            self.history.append((Action.HEAL, heal_value))
 
-        # Auto-apply bloodied condition
-        self._apply_bloodied_condition(char)
+            source_suffix = f" from {source_name}" if source_name else ""
 
-        self._rebuild_card(char)
+            if was_downed and char["hp"] > 0:
+                char["death_saves_fail"] = 0
+                char["death_saves_success"] = 0
+                self._log_event(
+                    f"{char['name']} is resurrected with {char['hp']} HP{source_suffix}",
+                    character=char["name"],
+                    action=Action.HEAL,
+                    value=heal_value,
+                )
+            else:
+                self._log_event(
+                    f"{char['name']} heals {actual_heal} HP{source_suffix}",
+                    character=char["name"],
+                    action=Action.HEAL,
+                    value=heal_value,
+                )
+
+            # Auto-apply bloodied condition
+            self._apply_bloodied_condition(char)
+
+            self._rebuild_card(char)
 
     def _apply_failed_death_save(self, char: dict):
         if self._char_death_state(char) != "dying":
@@ -375,20 +378,29 @@ class DamageMixin:
         self._refresh_selected_card()
 
     def _apply_temp_hp(self):
-        if not self.selected_character:
+        if not self.target_characters:
             return
         try:
             amount = int(self.temp_hp_input.text())
         except ValueError:
             return
 
-        old = self.selected_character.get("temp_hp", 0)
-        self.selected_character["temp_hp"] = old + amount
-        self._log_event(
-            f"{self.selected_character['name']} gains {amount} temp HP "
-            f"(total {self.selected_character['temp_hp']})",
-            character=self.selected_character["name"],
-            action=Action.ADD_TEMP_HP,
-            value=amount,
-        )
-        self._refresh_selected_card()
+        source = self.selected_character or self._current_turn_character()
+        source_name = source["name"] if source is not None else None
+
+        for target in list(self.target_characters):
+            old = target.get("temp_hp", 0)
+            target["temp_hp"] = old + amount
+
+            temp_hp_value = {"amount": amount, "source_name": source_name, "target_name": target["name"]}
+            self.history.append((Action.ADD_TEMP_HP, temp_hp_value))
+
+            source_suffix = f" from {source_name}" if source_name else ""
+            self._log_event(
+                f"{target['name']} gains {amount} temp HP{source_suffix} "
+                f"(total {target['temp_hp']})",
+                character=target["name"],
+                action=Action.ADD_TEMP_HP,
+                value=temp_hp_value,
+            )
+            self._rebuild_card(target)

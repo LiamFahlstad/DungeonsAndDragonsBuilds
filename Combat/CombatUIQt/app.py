@@ -70,7 +70,7 @@ class CombatAppQt(
         self.conditions = Condition.list_all()
         self.visibility_states = Visibility.list_all()
         self.selected_character: dict | None = None
-        self.target_character: dict | None = None
+        self.target_characters: list[dict] = []
         self.round_number = 1
         self.history: list[tuple] = []
 

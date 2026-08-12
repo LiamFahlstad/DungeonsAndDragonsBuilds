@@ -33,9 +33,33 @@ class WindowMixin:
         self._cast_spell_btn.setEnabled(True)
         self._refresh_cards()
 
-    def _select_target_character(self, char: dict):
-        self.target_character = char
-        self.target_label.setText(f"Target: {char['name']}")
+    def _select_target_character(self, char: dict, additive: bool = False):
+        if additive:
+            if any(char is t for t in self.target_characters):
+                self.target_characters = [t for t in self.target_characters if t is not char]
+            else:
+                self.target_characters.append(char)
+        else:
+            self.target_characters = [char]
+        self._update_target_label()
+        self._refresh_cards()
+
+    def _update_target_label(self):
+        if not self.target_characters:
+            self.target_label.setText("Target: None")
+        elif len(self.target_characters) == 1:
+            self.target_label.setText(f"Target: {self.target_characters[0]['name']}")
+        else:
+            names = ", ".join(t["name"] for t in self.target_characters)
+            self.target_label.setText(f"Targets: {names}")
+
+    def _clear_selection(self):
+        self.selected_character = None
+        self.selected_label.setText("Source: None")
+        self._more_info_btn.setEnabled(False)
+        self._cast_spell_btn.setEnabled(False)
+        self.target_characters = []
+        self.target_label.setText("Target: None")
         self._refresh_cards()
 
     def _build_window(self):
@@ -375,6 +399,10 @@ class WindowMixin:
         # Ctrl+Z: Undo Last Action
         self._undo_shortcut = QShortcut(QKeySequence("Ctrl+Z"), self._window)
         self._undo_shortcut.activated.connect(self._undo_last)
+
+        # Escape: clear source and target selection
+        self._clear_selection_shortcut = QShortcut(QKeySequence(Qt.Key.Key_Escape), self._window)
+        self._clear_selection_shortcut.activated.connect(self._clear_selection)
 
         # Enter / Return: Next Combatant / Next Round
         self._next_turn_shortcuts = [
