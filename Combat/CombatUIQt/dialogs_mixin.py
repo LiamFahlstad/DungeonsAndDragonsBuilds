@@ -22,7 +22,7 @@ import Core.Definitions as Definitions
 from Combat.Definitions import ConditionRule, DamageType
 from Combat.Rules import Rule, group_by_category, load_rules
 
-from .stats import damage_dealt_key
+from .stats import SPELL_SLOT_LEVELS, damage_dealt_key, damage_taken_key, spell_slots_used_key
 from .styles import QSS
 
 
@@ -599,35 +599,70 @@ class DialogsMixin:
 
         tabs = QTabWidget()
 
+        # Damage/Spells columns are bounded (fixed DamageType/level sets), so they can
+        # be built once and reused for both the Encounter and Players tabs. Column
+        # "key" is either a flat stats key (str) or a nested-dict lookup (key, name).
         damage_columns = (
             [("Damage Dealt", "damage_dealt")]
-            + [
-                (f"Dealt: {dtype.value}", damage_dealt_key(dtype.value))
-                for dtype in DamageType
-            ]
+            + [(f"Dealt: {dtype.value}", damage_dealt_key(dtype.value)) for dtype in DamageType]
             + [("Damage Taken", "damage_taken")]
+            + [(f"Taken: {dtype.value}", damage_taken_key(dtype.value)) for dtype in DamageType]
         )
-
-        categories = [
-            ("Damage", damage_columns),
-            ("Healing", [
-                ("Healing Done", "healing_done"),
-                ("Healing Received", "healing_received"),
-                ("Temp HP Granted", "temp_hp_granted"),
-                ("Temp HP Received", "temp_hp_received"),
-            ]),
-            ("Conditions", [("Conditions Applied", "conditions_applied")]),
-            ("Spells", [("Spell Slots Used", "spell_slots_used")]),
-            ("Outcomes", [
-                ("Knockouts", "knockouts"),
-                ("Times Downed", "times_downed"),
-                ("Deaths", "deaths"),
-            ]),
+        healing_columns = [
+            ("Healing Done", "healing_done"),
+            ("Healing Received", "healing_received"),
+            ("Temp HP Granted", "temp_hp_granted"),
+            ("Temp HP Received", "temp_hp_received"),
         ]
+        spell_columns = [("Spell Slots Used", "spell_slots_used")] + [
+            (f"Level {level}", spell_slots_used_key(level)) for level in SPELL_SLOT_LEVELS
+        ]
+        outcome_columns = [
+            ("Knockouts", "knockouts"),
+            ("Times Downed", "times_downed"),
+            ("Deaths", "deaths"),
+        ]
+
+        def _stats_for(characters, stats_dict_or_none, char):
+            if stats_dict_or_none is not None:
+                return stats_dict_or_none.get(char.get("name", ""), {})
+            return char.get("stats") or {}
+
+        def _condition_columns(characters, stats_dict_or_none):
+            """Conditions are open-ended (spells can apply custom pseudo-conditions by
+            name), so their columns are computed per-tab from whichever condition
+            names actually show up for these characters, instead of a fixed list."""
+            names = set()
+            for char in characters:
+                stats = _stats_for(characters, stats_dict_or_none, char)
+                names.update(stats.get("conditions_given_by_name", {}).keys())
+                names.update(stats.get("conditions_received_by_name", {}).keys())
+            sorted_names = sorted(names)
+            return (
+                [("Given (Total)", "conditions_given"), ("Received (Total)", "conditions_received")]
+                + [(f"Given: {name}", ("conditions_given_by_name", name)) for name in sorted_names]
+                + [(f"Received: {name}", ("conditions_received_by_name", name)) for name in sorted_names]
+            )
+
+        # (label, columns_fn) — columns_fn(characters, stats_dict_or_none) -> [(header, key), ...]
+        categories = [
+            ("Damage", lambda *_: damage_columns),
+            ("Healing", lambda *_: healing_columns),
+            ("Conditions", _condition_columns),
+            ("Spells", lambda *_: spell_columns),
+            ("Outcomes", lambda *_: outcome_columns),
+        ]
+
+        def _column_value(stats, key):
+            """key is either a flat stats key, or a (dict_key, name) nested lookup."""
+            if isinstance(key, tuple):
+                dict_key, name = key
+                return stats.get(dict_key, {}).get(name, 0)
+            return stats.get(key, 0)
 
         # Helper function to build a stat table widget for a single category
         def _build_table_widget(characters, stats_dict_or_none, columns, is_players_tab=False):
-            """Build a scrollable table for the given characters and (header, stat_key)
+            """Build a scrollable table for the given characters and (header, key)
             columns. If is_players_tab and no player log, return a label instead."""
             if is_players_tab and not self.player_log_file:
                 lbl = QLabel(
@@ -651,13 +686,10 @@ class DialogsMixin:
                 grid.addWidget(lbl, 0, col)
 
             for row, char in enumerate(characters, start=1):
-                if stats_dict_or_none is not None:
-                    # players tab: pull from stats_dict_or_none
-                    stats = stats_dict_or_none.get(char.get("name", ""), {})
-                else:
-                    # encounter tab: pull from char["stats"]
-                    stats = char.get("stats") or {}
-                values = [char.get("name", "")] + [stats.get(key, 0) for _, key in columns]
+                stats = _stats_for(characters, stats_dict_or_none, char)
+                values = [char.get("name", "")] + [
+                    _column_value(stats, key) for _, key in columns
+                ]
                 for col, value in enumerate(values):
                     lbl = QLabel(str(value))
                     if col == 0:
@@ -669,14 +701,16 @@ class DialogsMixin:
             return scroll
 
         # Encounter tabs (this fight only), one per category
-        for label, columns in categories:
+        for label, columns_fn in categories:
+            columns = columns_fn(self.characters, None)
             tab = _build_table_widget(self.characters, None, columns, is_players_tab=False)
             tabs.addTab(tab, f"Encounter - {label}")
 
         # Player tabs (lifetime aggregates), one per category
         stats_by_name = self._compute_player_log_stats()
         players = [c for c in self.characters if c.get("_is_player")]
-        for label, columns in categories:
+        for label, columns_fn in categories:
+            columns = columns_fn(players, stats_by_name)
             tab = _build_table_widget(players, stats_by_name, columns, is_players_tab=True)
             tabs.addTab(tab, f"Players - {label}")
 

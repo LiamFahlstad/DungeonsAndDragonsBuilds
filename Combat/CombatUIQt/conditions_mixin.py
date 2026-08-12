@@ -1,7 +1,7 @@
 """Conditions mixin for CombatAppQt."""
 
 from Combat.Definitions import Action, Condition
-from .stats import _default_stats
+from .stats import _default_stats, increment_condition_count
 
 
 class ConditionsMixin:
@@ -11,8 +11,13 @@ class ConditionsMixin:
         if cond not in char["conditions"]:
             char["conditions"].append(cond)
             char.setdefault("stats", _default_stats())
-            char["stats"]["conditions_applied"] = char["stats"].get("conditions_applied", 0) + 1
+            char["stats"]["conditions_received"] = char["stats"].get("conditions_received", 0) + 1
+            increment_condition_count(char["stats"], "conditions_received_by_name", cond)
             source_name = source["name"] if source is not None else None
+            if source is not None:
+                source.setdefault("stats", _default_stats())
+                source["stats"]["conditions_given"] = source["stats"].get("conditions_given", 0) + 1
+                increment_condition_count(source["stats"], "conditions_given_by_name", cond)
             cond_value = {"condition": cond, "source_name": source_name, "target_name": char["name"]}
             self.history.append((Action.ADD_CONDITION, cond_value))
             source_suffix = (
