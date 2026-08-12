@@ -84,6 +84,10 @@ def _speed_text(char: dict) -> str:
     parts = []
     if char.get("speed_ground_ft") is not None:
         parts.append(f"{char['speed_ground_ft']} ft.")
+    elif char.get("speed") not in (None, ""):
+        # Player characters store ground speed as a plain "speed" int, not
+        # the speed_ground_ft/climb/fly breakdown monsters use.
+        parts.append(f"{char['speed']} ft.")
     if char.get("speed_climb_ft") is not None:
         parts.append(f"climb {char['speed_climb_ft']} ft.")
     if char.get("speed_fly_ft") is not None:

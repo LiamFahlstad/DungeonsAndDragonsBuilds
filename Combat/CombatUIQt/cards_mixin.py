@@ -13,6 +13,7 @@ from PyQt6.QtWidgets import (
 )
 
 from Combat.Definitions import ConditionRule
+from .dialogs_mixin import _damage_entry_text, _speed_text
 
 
 class CardsMixin:
@@ -255,9 +256,14 @@ class CardsMixin:
 
         layout.addLayout(hp_row)
 
-        # --- AC ---
-        ac_lbl = QLabel(f"AC: {char['ac']}")
+        # --- AC / Speed ---
+        ac_speed_text = f"AC: {char['ac']}"
+        speed_text = _speed_text(char)
+        if speed_text:
+            ac_speed_text = f"{ac_speed_text}   Speed: {speed_text}"
+        ac_lbl = QLabel(ac_speed_text)
         ac_lbl.setObjectName("secondary")
+        ac_lbl.setWordWrap(True)
         layout.addWidget(ac_lbl)
 
         # --- Conditions ---
@@ -335,6 +341,34 @@ class CardsMixin:
                 vis_row.addWidget(vis_badge)
             vis_row.addStretch()
             layout.addLayout(vis_row)
+
+        # --- Damage resistances / immunities / vulnerabilities ---
+        defense_rows = [
+            ("Vulnerable", char.get("damage_vulnerabilities") or [], "#e74c3c"),
+            ("Resist", char.get("damage_resistances") or [], "#4caf82"),
+            ("Immune", char.get("damage_immunities") or [], "#4a9fc4"),
+        ]
+        defense_rows = [(label, entries, color) for label, entries, color in defense_rows if entries]
+        if defense_rows or char.get("condition_immunities"):
+            sep_def = QFrame()
+            sep_def.setFrameShape(QFrame.Shape.HLine)
+            sep_def.setStyleSheet("color: #0f3460;")
+            layout.addWidget(sep_def)
+            for label, entries, color in defense_rows:
+                text = "; ".join(_damage_entry_text(e) for e in entries)
+                def_lbl = QLabel(f"{label}: {text}")
+                def_lbl.setStyleSheet(f"color: {color}; font-size: 10px;")
+                def_lbl.setWordWrap(True)
+                layout.addWidget(def_lbl)
+            if char.get("condition_immunities"):
+                cond_immune_text = ", ".join(
+                    c.value if hasattr(c, "value") else str(c)
+                    for c in char["condition_immunities"]
+                )
+                cond_immune_lbl = QLabel(f"Cond. Immune: {cond_immune_text}")
+                cond_immune_lbl.setStyleSheet("color: #4a9fc4; font-size: 10px;")
+                cond_immune_lbl.setWordWrap(True)
+                layout.addWidget(cond_immune_lbl)
 
         # --- Spell slots ---
         slots = {k: v for k, v in (char.get("spell_slots") or {}).items() if v > 0}
