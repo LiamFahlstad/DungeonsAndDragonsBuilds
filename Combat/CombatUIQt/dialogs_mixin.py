@@ -588,7 +588,7 @@ class DialogsMixin:
         'Current Encounter' and 'Players' (lifetime aggregates)."""
         dlg = QDialog(self._window)
         dlg.setWindowTitle("Statistics")
-        dlg.setMinimumSize(760, 480)
+        dlg.setMinimumSize(1150, 520)
         dlg.setStyleSheet(QSS)
 
         outer = QVBoxLayout(dlg)
@@ -619,14 +619,17 @@ class DialogsMixin:
 
             headers = [
                 "Name",
-                "Dmg Dealt",
-                "Dmg Taken",
-                "Heal Done",
-                "Heal Received",
+                "Damage Dealt",
+                "Damage Taken",
+                "Healing Done",
+                "Healing Received",
+                "Temp HP Granted",
+                "Temp HP Received",
+                "Conditions Applied",
+                "Spell Slots Used",
                 "Knockouts",
                 "Times Downed",
                 "Deaths",
-                "Status",
             ]
             for col, text in enumerate(headers):
                 lbl = QLabel(text)
@@ -640,17 +643,19 @@ class DialogsMixin:
                 else:
                     # current_encounter_tab: pull from char["stats"]
                     stats = char.get("stats") or {}
-                status = self._char_death_state(char)
                 values = [
                     char.get("name", ""),
                     stats.get("damage_dealt", 0),
                     stats.get("damage_taken", 0),
                     stats.get("healing_done", 0),
                     stats.get("healing_received", 0),
+                    stats.get("temp_hp_granted", 0),
+                    stats.get("temp_hp_received", 0),
+                    stats.get("conditions_applied", 0),
+                    stats.get("spell_slots_used", 0),
                     stats.get("knockouts", 0),
                     stats.get("times_downed", 0),
                     stats.get("deaths", 0),
-                    status,
                 ]
                 for col, value in enumerate(values):
                     lbl = QLabel(str(value))

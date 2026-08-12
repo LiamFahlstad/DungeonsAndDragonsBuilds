@@ -17,7 +17,7 @@ from Combat.Monsters.CR_0.monsters_homebrew import (
     ArmoredAccursed,
     PhysicalAccursed,
 )
-from Combat.Monsters.CR_1.monsters_homebrew import CommonCultist, SisterAshNumberSeven
+from Combat.Monsters.CR_1.monsters_homebrew import CommonCultist
 from Combat.Monsters.CR_2.monsters_homebrew import (
     AccursedGroupLarge,
     PriestOfTheBlackTongues,
@@ -53,10 +53,7 @@ def get_black_tongues_skirmish_combatants() -> list[Combatants.BasicCombatantDat
     accursed2 = Accursed()
     accursed2.set_name("Accursed 2")
 
-    sister_ash = SisterAshNumberSeven()
-    sister_ash.set_name("Sister Ash - Number Seven")
-
-    return [cultist1, cultist2, accursed1, accursed2, sister_ash]
+    return [cultist1, cultist2, accursed1, accursed2]
 
 
 def get_yellow_capes_patrol_combatants() -> list[Combatants.BasicCombatantData]:

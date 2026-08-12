@@ -13,6 +13,7 @@ from PyQt6.QtWidgets import (
 )
 
 from Combat.Definitions import Action, Condition
+from .stats import _default_stats
 from .styles import QSS
 
 
@@ -26,6 +27,10 @@ class SpellsMixin:
             return
         old = self.selected_character["spell_slots"][level]
         self.selected_character["spell_slots"][level] = max(old - 1, 0)
+        self.selected_character.setdefault("stats", _default_stats())
+        self.selected_character["stats"]["spell_slots_used"] = (
+            self.selected_character["stats"].get("spell_slots_used", 0) + 1
+        )
         self.history.append((Action.REMOVE_SPELL_SLOT, level))
         self._log_event(
             f"{self.selected_character['name']} uses a Level {level} spell slot",

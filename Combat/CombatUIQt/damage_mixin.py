@@ -392,6 +392,12 @@ class DamageMixin:
             old = target.get("temp_hp", 0)
             target["temp_hp"] = old + amount
 
+            target.setdefault("stats", _default_stats())
+            target["stats"]["temp_hp_received"] = target["stats"].get("temp_hp_received", 0) + amount
+            if source is not None:
+                source.setdefault("stats", _default_stats())
+                source["stats"]["temp_hp_granted"] = source["stats"].get("temp_hp_granted", 0) + amount
+
             temp_hp_value = {"amount": amount, "source_name": source_name, "target_name": target["name"]}
             self.history.append((Action.ADD_TEMP_HP, temp_hp_value))
 

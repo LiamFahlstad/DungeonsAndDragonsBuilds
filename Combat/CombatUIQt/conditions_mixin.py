@@ -1,6 +1,7 @@
 """Conditions mixin for CombatAppQt."""
 
 from Combat.Definitions import Action, Condition
+from .stats import _default_stats
 
 
 class ConditionsMixin:
@@ -9,6 +10,8 @@ class ConditionsMixin:
     def _add_condition_to(self, char: dict, cond: str):
         if cond not in char["conditions"]:
             char["conditions"].append(cond)
+            char.setdefault("stats", _default_stats())
+            char["stats"]["conditions_applied"] = char["stats"].get("conditions_applied", 0) + 1
             self.history.append((Action.ADD_CONDITION, cond))
             self._log_event(
                 f"{char['name']} gains {cond}",

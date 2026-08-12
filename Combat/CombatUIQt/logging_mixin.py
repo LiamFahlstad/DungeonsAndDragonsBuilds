@@ -155,11 +155,19 @@ class LoggingMixin:
         elif action == Action.ADD_CONDITION:
             if value in char["conditions"]:
                 char["conditions"].remove(value)
+            char.setdefault("stats", _default_stats())
+            char["stats"]["conditions_applied"] = max(
+                char["stats"].get("conditions_applied", 0) - 1, 0
+            )
         elif action == Action.REMOVE_CONDITION:
             if value not in char["conditions"]:
                 char["conditions"].append(value)
         elif action == Action.REMOVE_SPELL_SLOT:
             char["spell_slots"][value] = char["spell_slots"].get(value, 0) + 1
+            char.setdefault("stats", _default_stats())
+            char["stats"]["spell_slots_used"] = max(
+                char["stats"].get("spell_slots_used", 0) - 1, 0
+            )
         elif action == Action.ADD_SPELL_SLOT:
             char["spell_slots"][value] = max(char["spell_slots"].get(value, 0) - 1, 0)
         elif action == Action.DEATH_SAVE_FAIL:
@@ -171,7 +179,20 @@ class LoggingMixin:
             char["death_saves_success"] = max(char.get("death_saves_success", 0) - 1, 0)
         elif action == Action.ADD_TEMP_HP:
             if isinstance(value, dict):
-                char["temp_hp"] -= value["amount"]
+                amount = value["amount"]
+                char["temp_hp"] -= amount
+                char.setdefault("stats", _default_stats())
+                char["stats"]["temp_hp_received"] = max(
+                    char["stats"].get("temp_hp_received", 0) - amount, 0
+                )
+                source_name = value.get("source_name")
+                if source_name:
+                    source = self._find_character_by_name(source_name)
+                    if source is not None:
+                        source.setdefault("stats", _default_stats())
+                        source["stats"]["temp_hp_granted"] = max(
+                            source["stats"].get("temp_hp_granted", 0) - amount, 0
+                        )
             else:
                 char["temp_hp"] -= value
 
@@ -319,6 +340,8 @@ class LoggingMixin:
         elif action == Action.ADD_CONDITION:
             if value not in char["conditions"]:
                 char["conditions"].append(value)
+            char.setdefault("stats", _default_stats())
+            char["stats"]["conditions_applied"] = char["stats"].get("conditions_applied", 0) + 1
         elif action == Action.REMOVE_CONDITION:
             if value in char["conditions"]:
                 char["conditions"].remove(value)
@@ -326,6 +349,8 @@ class LoggingMixin:
             char["spell_slots"][value] = char["spell_slots"].get(value, 0) + 1
         elif action == Action.REMOVE_SPELL_SLOT:
             char["spell_slots"][value] = max(char["spell_slots"].get(value, 0) - 1, 0)
+            char.setdefault("stats", _default_stats())
+            char["stats"]["spell_slots_used"] = char["stats"].get("spell_slots_used", 0) + 1
         elif action == Action.DEATH_SAVE_FAIL:
             char["death_saves_fail"] = min(char.get("death_saves_fail", 0) + 1, 3)
             if char["death_saves_fail"] >= 3:
@@ -335,7 +360,18 @@ class LoggingMixin:
             char["death_saves_success"] = min(char.get("death_saves_success", 0) + 1, 3)
         elif action == Action.ADD_TEMP_HP:
             if isinstance(value, dict):
-                char["temp_hp"] = char.get("temp_hp", 0) + value["amount"]
+                amount = value["amount"]
+                char["temp_hp"] = char.get("temp_hp", 0) + amount
+                char.setdefault("stats", _default_stats())
+                char["stats"]["temp_hp_received"] = char["stats"].get("temp_hp_received", 0) + amount
+                source_name = value.get("source_name")
+                if source_name:
+                    source = self._find_character_by_name(source_name)
+                    if source is not None:
+                        source.setdefault("stats", _default_stats())
+                        source["stats"]["temp_hp_granted"] = (
+                            source["stats"].get("temp_hp_granted", 0) + amount
+                        )
             else:
                 char["temp_hp"] = char.get("temp_hp", 0) + value
 
@@ -385,6 +421,16 @@ class LoggingMixin:
                             stats_for(source_name)["healing_done"] += value["heal"]
                     elif action == Action.DEATH_SAVE_FAIL and character and value:
                         stats_for(character)["deaths"] += 1
+                    elif action == Action.ADD_TEMP_HP and character:
+                        amount = value["amount"] if isinstance(value, dict) else value
+                        stats_for(character)["temp_hp_received"] += amount
+                        source_name = value.get("source_name") if isinstance(value, dict) else None
+                        if source_name:
+                            stats_for(source_name)["temp_hp_granted"] += amount
+                    elif action == Action.ADD_CONDITION and character:
+                        stats_for(character)["conditions_applied"] += 1
+                    elif action == Action.REMOVE_SPELL_SLOT and character:
+                        stats_for(character)["spell_slots_used"] += 1
         return stats_by_name
 
     def _write_player_log(self):
