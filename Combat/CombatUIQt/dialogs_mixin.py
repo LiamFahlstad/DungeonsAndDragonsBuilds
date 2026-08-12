@@ -584,8 +584,9 @@ class DialogsMixin:
         dlg.exec()
 
     def _show_statistics(self):
-        """Display battle statistics for every combatant in two tabs:
-        'Current Encounter' and 'Players' (lifetime aggregates)."""
+        """Display battle statistics for every combatant, split into an 'Encounter'
+        group (this fight only) and a 'Players' group (lifetime aggregates), each
+        broken into one tab per stat category so wide tables don't get cramped."""
         dlg = QDialog(self._window)
         dlg.setWindowTitle("Statistics")
         dlg.setMinimumSize(1150, 520)
@@ -595,13 +596,29 @@ class DialogsMixin:
         outer.setContentsMargins(14, 14, 14, 14)
         outer.setSpacing(10)
 
-        # Create tab widget
         tabs = QTabWidget()
 
-        # Helper function to build a stat table widget
-        def _build_table_widget(characters, stats_dict_or_none, is_players_tab=False):
-            """Build a scrollable table for the given characters and stats dict.
-            If is_players_tab and no player log, return a label instead."""
+        categories = [
+            ("Damage", [("Damage Dealt", "damage_dealt"), ("Damage Taken", "damage_taken")]),
+            ("Healing", [
+                ("Healing Done", "healing_done"),
+                ("Healing Received", "healing_received"),
+                ("Temp HP Granted", "temp_hp_granted"),
+                ("Temp HP Received", "temp_hp_received"),
+            ]),
+            ("Conditions", [("Conditions Applied", "conditions_applied")]),
+            ("Spells", [("Spell Slots Used", "spell_slots_used")]),
+            ("Outcomes", [
+                ("Knockouts", "knockouts"),
+                ("Times Downed", "times_downed"),
+                ("Deaths", "deaths"),
+            ]),
+        ]
+
+        # Helper function to build a stat table widget for a single category
+        def _build_table_widget(characters, stats_dict_or_none, columns, is_players_tab=False):
+            """Build a scrollable table for the given characters and (header, stat_key)
+            columns. If is_players_tab and no player log, return a label instead."""
             if is_players_tab and not self.player_log_file:
                 lbl = QLabel(
                     "No player log active — run with --player-log to track the party across sessions."
@@ -617,20 +634,7 @@ class DialogsMixin:
             grid.setHorizontalSpacing(14)
             grid.setVerticalSpacing(6)
 
-            headers = [
-                "Name",
-                "Damage Dealt",
-                "Damage Taken",
-                "Healing Done",
-                "Healing Received",
-                "Temp HP Granted",
-                "Temp HP Received",
-                "Conditions Applied",
-                "Spell Slots Used",
-                "Knockouts",
-                "Times Downed",
-                "Deaths",
-            ]
+            headers = ["Name"] + [header for header, _ in columns]
             for col, text in enumerate(headers):
                 lbl = QLabel(text)
                 lbl.setStyleSheet("color: #c9a84c; font-weight: bold;")
@@ -638,25 +642,12 @@ class DialogsMixin:
 
             for row, char in enumerate(characters, start=1):
                 if stats_dict_or_none is not None:
-                    # players_tab: pull from stats_dict_or_none
+                    # players tab: pull from stats_dict_or_none
                     stats = stats_dict_or_none.get(char.get("name", ""), {})
                 else:
-                    # current_encounter_tab: pull from char["stats"]
+                    # encounter tab: pull from char["stats"]
                     stats = char.get("stats") or {}
-                values = [
-                    char.get("name", ""),
-                    stats.get("damage_dealt", 0),
-                    stats.get("damage_taken", 0),
-                    stats.get("healing_done", 0),
-                    stats.get("healing_received", 0),
-                    stats.get("temp_hp_granted", 0),
-                    stats.get("temp_hp_received", 0),
-                    stats.get("conditions_applied", 0),
-                    stats.get("spell_slots_used", 0),
-                    stats.get("knockouts", 0),
-                    stats.get("times_downed", 0),
-                    stats.get("deaths", 0),
-                ]
+                values = [char.get("name", "")] + [stats.get(key, 0) for _, key in columns]
                 for col, value in enumerate(values):
                     lbl = QLabel(str(value))
                     if col == 0:
@@ -667,15 +658,17 @@ class DialogsMixin:
             scroll.setWidget(content)
             return scroll
 
-        # Tab 1: Current Encounter
-        tab1 = _build_table_widget(self.characters, None, is_players_tab=False)
-        tabs.addTab(tab1, "Current Encounter")
+        # Encounter tabs (this fight only), one per category
+        for label, columns in categories:
+            tab = _build_table_widget(self.characters, None, columns, is_players_tab=False)
+            tabs.addTab(tab, f"Encounter - {label}")
 
-        # Tab 2: Players (lifetime)
+        # Player tabs (lifetime aggregates), one per category
         stats_by_name = self._compute_player_log_stats()
         players = [c for c in self.characters if c.get("_is_player")]
-        tab2 = _build_table_widget(players, stats_by_name, is_players_tab=True)
-        tabs.addTab(tab2, "Players")
+        for label, columns in categories:
+            tab = _build_table_widget(players, stats_by_name, columns, is_players_tab=True)
+            tabs.addTab(tab, f"Players - {label}")
 
         outer.addWidget(tabs)
 
