@@ -95,15 +95,18 @@ class WindowMixin:
         self.target_label.setWordWrap(True)
         panel_layout.addWidget(self.target_label)
 
+        info_cast_row = QHBoxLayout()
+        info_cast_row.setSpacing(6)
         self._more_info_btn = QPushButton("More Info")
         self._more_info_btn.setEnabled(False)
         self._more_info_btn.clicked.connect(self._show_more_info)
-        panel_layout.addWidget(self._more_info_btn)
+        info_cast_row.addWidget(self._more_info_btn)
 
         self._cast_spell_btn = QPushButton("Cast Spell")
         self._cast_spell_btn.setEnabled(False)
         self._cast_spell_btn.clicked.connect(self._show_cast_spell_dialog)
-        panel_layout.addWidget(self._cast_spell_btn)
+        info_cast_row.addWidget(self._cast_spell_btn)
+        panel_layout.addLayout(info_cast_row)
 
         # Round indicator + session/player timers (compact, combined rows)
         panel_layout.addWidget(self._build_timer_section())
@@ -136,25 +139,31 @@ class WindowMixin:
 
         # Damage section
         left_col.addWidget(self._section_header("Damage"))
+        dmg_input_row = QHBoxLayout()
+        dmg_input_row.setSpacing(4)
         self.damage_input = QLineEdit()
         self.damage_input.setPlaceholderText("Amount...")
-        left_col.addWidget(self.damage_input)
         self.damage_input.returnPressed.connect(self._apply_damage)
+        dmg_input_row.addWidget(self.damage_input, stretch=2)
 
         self.damage_type_combo = QComboBox()
         self.damage_type_combo.addItem("— Type —", None)
         for dtype in DamageType:
             self.damage_type_combo.addItem(dtype.value, dtype.value)
-        left_col.addWidget(self.damage_type_combo)
+        dmg_input_row.addWidget(self.damage_type_combo, stretch=3)
+        left_col.addLayout(dmg_input_row)
 
-        dmg_btn = QPushButton("Apply Damage")
+        dmg_btn_row = QHBoxLayout()
+        dmg_btn_row.setSpacing(4)
+        dmg_btn = QPushButton("Apply")
         dmg_btn.setObjectName("primaryBtn")
         dmg_btn.clicked.connect(self._apply_damage)
-        left_col.addWidget(dmg_btn)
+        dmg_btn_row.addWidget(dmg_btn)
 
-        dmg_checked_btn = QPushButton("Apply Damage (Check Resistances)")
+        dmg_checked_btn = QPushButton("Apply (Check Resist)")
         dmg_checked_btn.clicked.connect(self._apply_damage_checked)
-        left_col.addWidget(dmg_checked_btn)
+        dmg_btn_row.addWidget(dmg_checked_btn)
+        left_col.addLayout(dmg_btn_row)
 
         left_col.addWidget(self._make_divider())
 
@@ -191,6 +200,25 @@ class WindowMixin:
         temp_hp_btn.setObjectName("tempHpBtn")
         temp_hp_btn.clicked.connect(self._apply_temp_hp)
         left_col.addWidget(temp_hp_btn)
+
+        left_col.addWidget(self._make_divider())
+
+        # d20 roll section (advantage / neutral / disadvantage)
+        left_col.addWidget(self._section_header("d20 Roll"))
+        roll_row = QHBoxLayout()
+        roll_row.setSpacing(4)
+        self.roll_mode_combo = QComboBox()
+        self.roll_mode_combo.addItems(["Neutral", "Advantage", "Disadvantage"])
+        roll_row.addWidget(self.roll_mode_combo, stretch=2)
+        roll_btn = QPushButton("Roll")
+        roll_btn.clicked.connect(self._roll_d20)
+        roll_row.addWidget(roll_btn, stretch=1)
+        left_col.addLayout(roll_row)
+
+        self.roll_result_label = QLabel("")
+        self.roll_result_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.roll_result_label.setStyleSheet("font-size: 16px; font-weight: bold;")
+        left_col.addWidget(self.roll_result_label)
 
         left_col.addStretch()
 

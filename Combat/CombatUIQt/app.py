@@ -20,6 +20,7 @@ from .conditions_mixin import ConditionsMixin
 from .damage_mixin import DamageMixin
 from .dialogs_mixin import DialogsMixin
 from .logging_mixin import LoggingMixin
+from .rolls_mixin import RollsMixin
 from .spells_mixin import SpellsMixin
 from .stats import _default_stats
 from .styles import QSS
@@ -37,6 +38,7 @@ class CombatAppQt(
     LoggingMixin,
     DialogsMixin,
     TimerMixin,
+    RollsMixin,
     WindowMixin,
 ):
     ACTION_ECONOMY_TYPES: list[str] = ["Action", "Bonus Action", "Reaction"]
