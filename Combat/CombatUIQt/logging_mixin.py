@@ -9,7 +9,7 @@ from PyQt6.QtWidgets import QDialog, QMessageBox, QPushButton, QTextEdit, QVBoxL
 
 from Combat.Definitions import Action
 
-from .stats import STAT_KEYS, _default_stats
+from .stats import STAT_KEYS, _default_stats, damage_dealt_key
 
 
 class _CombatJSONEncoder(json.JSONEncoder):
@@ -106,6 +106,7 @@ class LoggingMixin:
                 temp_delta = value["temp_delta"]
                 dmg = value["dmg"]
                 source_name = value.get("source_name")
+                damage_type = value.get("damage_type")
                 knockout = value.get("knockout", False)
 
                 char["hp"] -= hp_delta
@@ -127,6 +128,11 @@ class LoggingMixin:
                         source["stats"]["damage_dealt"] = max(
                             source["stats"].get("damage_dealt", 0) - dmg, 0
                         )
+                        if damage_type:
+                            type_key = damage_dealt_key(damage_type)
+                            source["stats"][type_key] = max(
+                                source["stats"].get(type_key, 0) - dmg, 0
+                            )
                         if knockout:
                             source["stats"]["knockouts"] = max(
                                 source["stats"].get("knockouts", 0) - 1, 0
@@ -336,6 +342,11 @@ class LoggingMixin:
                     source["stats"]["damage_dealt"] = (
                         source["stats"].get("damage_dealt", 0) + value["dmg"]
                     )
+                    if value.get("damage_type"):
+                        type_key = damage_dealt_key(value["damage_type"])
+                        source["stats"][type_key] = (
+                            source["stats"].get(type_key, 0) + value["dmg"]
+                        )
                     if value.get("knockout"):
                         source["stats"]["knockouts"] = source["stats"].get("knockouts", 0) + 1
             self._apply_bloodied_condition(char)
@@ -434,6 +445,9 @@ class LoggingMixin:
                         source_name = value.get("source_name")
                         if source_name:
                             stats_for(source_name)["damage_dealt"] += value["dmg"]
+                            if value.get("damage_type"):
+                                type_key = damage_dealt_key(value["damage_type"])
+                                stats_for(source_name)[type_key] += value["dmg"]
                             if value.get("knockout"):
                                 stats_for(source_name)["knockouts"] += 1
                     elif action == Action.HEAL and character:

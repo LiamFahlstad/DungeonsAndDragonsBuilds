@@ -19,9 +19,10 @@ from PyQt6.QtWidgets import (
 )
 
 import Core.Definitions as Definitions
-from Combat.Definitions import ConditionRule
+from Combat.Definitions import ConditionRule, DamageType
 from Combat.Rules import Rule, group_by_category, load_rules
 
+from .stats import damage_dealt_key
 from .styles import QSS
 
 
@@ -598,8 +599,17 @@ class DialogsMixin:
 
         tabs = QTabWidget()
 
+        damage_columns = (
+            [("Damage Dealt", "damage_dealt")]
+            + [
+                (f"Dealt: {dtype.value}", damage_dealt_key(dtype.value))
+                for dtype in DamageType
+            ]
+            + [("Damage Taken", "damage_taken")]
+        )
+
         categories = [
-            ("Damage", [("Damage Dealt", "damage_dealt"), ("Damage Taken", "damage_taken")]),
+            ("Damage", damage_columns),
             ("Healing", [
                 ("Healing Done", "healing_done"),
                 ("Healing Received", "healing_received"),

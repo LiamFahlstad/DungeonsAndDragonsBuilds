@@ -14,7 +14,7 @@ from PyQt6.QtWidgets import (
 )
 
 from Combat.Definitions import Action
-from .stats import _default_stats
+from .stats import _default_stats, damage_dealt_key
 from .styles import QSS
 
 
@@ -122,6 +122,9 @@ class DamageMixin:
             if source is not None:
                 source.setdefault("stats", _default_stats())
                 source["stats"]["damage_dealt"] = source["stats"].get("damage_dealt", 0) + dmg
+                if damage_type:
+                    type_key = damage_dealt_key(damage_type)
+                    source["stats"][type_key] = source["stats"].get(type_key, 0) + dmg
                 if knockout:
                     source["stats"]["knockouts"] = source["stats"].get("knockouts", 0) + 1
 
