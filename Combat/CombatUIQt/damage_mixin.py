@@ -8,6 +8,7 @@ from PyQt6.QtWidgets import (
     QHBoxLayout,
     QLabel,
     QLineEdit,
+    QMessageBox,
     QPushButton,
     QVBoxLayout,
 )
@@ -91,6 +92,10 @@ class DamageMixin:
 
         damage_type = self.damage_type_combo.currentData()
 
+        if damage_type is None:
+            QMessageBox.warning(self._window, "Error", "Select a damage type before applying damage.")
+            return
+
         for target in list(self.target_characters):
             dmg = dmg_input
             outcome = None
@@ -148,6 +153,8 @@ class DamageMixin:
 
             if "Concentrating" in target.get("conditions", []):
                 self._concentration_check_dialog(target, dmg)
+
+        self.damage_type_combo.setCurrentIndex(0)
 
     def _con_save_mod(self, char: dict) -> int:
         """Return the CON saving throw modifier for a character."""
