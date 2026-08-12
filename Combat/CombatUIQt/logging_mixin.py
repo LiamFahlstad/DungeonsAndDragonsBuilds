@@ -339,6 +339,54 @@ class LoggingMixin:
             else:
                 char["temp_hp"] = char.get("temp_hp", 0) + value
 
+    def _compute_player_log_stats(self) -> dict[str, dict]:
+        """Aggregate lifetime stats per character name from every session in the
+        player log (mirrors the forward-apply logic in _apply_replay_action, but
+        accumulates into plain stat dicts instead of mutating character objects)."""
+        stats_by_name: dict[str, dict] = {}
+
+        def stats_for(name: str) -> dict:
+            return stats_by_name.setdefault(name, _default_stats())
+
+        if not self.player_log_file:
+            return stats_by_name
+
+        for session in self.player_log_data.get("sessions", []):
+            round_keys = sorted(
+                (
+                    k
+                    for k in session
+                    if k.startswith("round_") and k.split("_", 1)[1].isdigit()
+                ),
+                key=lambda k: int(k.split("_", 1)[1]),
+            )
+            for key in round_keys:
+                for entry in session[key]:
+                    if not isinstance(entry, dict) or "action" not in entry:
+                        continue
+                    action = entry["action"]
+                    value = entry["value"]
+                    character = entry.get("character")
+                    if action == Action.DAMAGE and character:
+                        s = stats_for(character)
+                        s["damage_taken"] += value["dmg"]
+                        if value.get("knockout"):
+                            s["times_downed"] += 1
+                        source_name = value.get("source_name")
+                        if source_name:
+                            stats_for(source_name)["damage_dealt"] += value["dmg"]
+                            if value.get("knockout"):
+                                stats_for(source_name)["knockouts"] += 1
+                    elif action == Action.HEAL and character:
+                        s = stats_for(character)
+                        s["healing_received"] += value["heal"]
+                        source_name = value.get("source_name")
+                        if source_name:
+                            stats_for(source_name)["healing_done"] += value["heal"]
+                    elif action == Action.DEATH_SAVE_FAIL and character and value:
+                        stats_for(character)["deaths"] += 1
+        return stats_by_name
+
     def _write_player_log(self):
         if not self.player_log_file:
             return

@@ -10,6 +10,7 @@ from PyQt6.QtWidgets import (
     QLineEdit,
     QPushButton,
     QScrollArea,
+    QTabWidget,
     QTextEdit,
     QTreeWidget,
     QTreeWidgetItem,
@@ -583,62 +584,95 @@ class DialogsMixin:
         dlg.exec()
 
     def _show_statistics(self):
-        """Display battle statistics for every combatant."""
+        """Display battle statistics for every combatant in two tabs:
+        'Current Encounter' and 'Players' (lifetime aggregates)."""
         dlg = QDialog(self._window)
         dlg.setWindowTitle("Statistics")
-        dlg.setMinimumSize(760, 400)
+        dlg.setMinimumSize(760, 480)
         dlg.setStyleSheet(QSS)
 
         outer = QVBoxLayout(dlg)
         outer.setContentsMargins(14, 14, 14, 14)
         outer.setSpacing(10)
 
-        scroll = QScrollArea()
-        scroll.setWidgetResizable(True)
-        content = QWidget()
-        grid = QGridLayout(content)
-        grid.setHorizontalSpacing(14)
-        grid.setVerticalSpacing(6)
+        # Create tab widget
+        tabs = QTabWidget()
 
-        headers = [
-            "Name",
-            "Dmg Dealt",
-            "Dmg Taken",
-            "Heal Done",
-            "Heal Received",
-            "Knockouts",
-            "Times Downed",
-            "Deaths",
-            "Status",
-        ]
-        for col, text in enumerate(headers):
-            lbl = QLabel(text)
-            lbl.setStyleSheet("color: #c9a84c; font-weight: bold;")
-            grid.addWidget(lbl, 0, col)
+        # Helper function to build a stat table widget
+        def _build_table_widget(characters, stats_dict_or_none, is_players_tab=False):
+            """Build a scrollable table for the given characters and stats dict.
+            If is_players_tab and no player log, return a label instead."""
+            if is_players_tab and not self.player_log_file:
+                lbl = QLabel(
+                    "No player log active — run with --player-log to track the party across sessions."
+                )
+                lbl.setWordWrap(True)
+                lbl.setAlignment(Qt.AlignmentFlag.AlignCenter)
+                return lbl
 
-        for row, char in enumerate(self.characters, start=1):
-            stats = char.get("stats") or {}
-            status = self._char_death_state(char)
-            values = [
-                char.get("name", ""),
-                stats.get("damage_dealt", 0),
-                stats.get("damage_taken", 0),
-                stats.get("healing_done", 0),
-                stats.get("healing_received", 0),
-                stats.get("knockouts", 0),
-                stats.get("times_downed", 0),
-                stats.get("deaths", 0),
-                status,
+            scroll = QScrollArea()
+            scroll.setWidgetResizable(True)
+            content = QWidget()
+            grid = QGridLayout(content)
+            grid.setHorizontalSpacing(14)
+            grid.setVerticalSpacing(6)
+
+            headers = [
+                "Name",
+                "Dmg Dealt",
+                "Dmg Taken",
+                "Heal Done",
+                "Heal Received",
+                "Knockouts",
+                "Times Downed",
+                "Deaths",
+                "Status",
             ]
-            for col, value in enumerate(values):
-                lbl = QLabel(str(value))
-                if col == 0:
-                    lbl.setStyleSheet("color: #eaeaea; font-weight: bold;")
-                grid.addWidget(lbl, row, col)
+            for col, text in enumerate(headers):
+                lbl = QLabel(text)
+                lbl.setStyleSheet("color: #c9a84c; font-weight: bold;")
+                grid.addWidget(lbl, 0, col)
 
-        grid.setColumnStretch(len(headers), 1)
-        scroll.setWidget(content)
-        outer.addWidget(scroll)
+            for row, char in enumerate(characters, start=1):
+                if stats_dict_or_none is not None:
+                    # players_tab: pull from stats_dict_or_none
+                    stats = stats_dict_or_none.get(char.get("name", ""), {})
+                else:
+                    # current_encounter_tab: pull from char["stats"]
+                    stats = char.get("stats") or {}
+                status = self._char_death_state(char)
+                values = [
+                    char.get("name", ""),
+                    stats.get("damage_dealt", 0),
+                    stats.get("damage_taken", 0),
+                    stats.get("healing_done", 0),
+                    stats.get("healing_received", 0),
+                    stats.get("knockouts", 0),
+                    stats.get("times_downed", 0),
+                    stats.get("deaths", 0),
+                    status,
+                ]
+                for col, value in enumerate(values):
+                    lbl = QLabel(str(value))
+                    if col == 0:
+                        lbl.setStyleSheet("color: #eaeaea; font-weight: bold;")
+                    grid.addWidget(lbl, row, col)
+
+            grid.setColumnStretch(len(headers), 1)
+            scroll.setWidget(content)
+            return scroll
+
+        # Tab 1: Current Encounter
+        tab1 = _build_table_widget(self.characters, None, is_players_tab=False)
+        tabs.addTab(tab1, "Current Encounter")
+
+        # Tab 2: Players (lifetime)
+        stats_by_name = self._compute_player_log_stats()
+        players = [c for c in self.characters if c.get("_is_player")]
+        tab2 = _build_table_widget(players, stats_by_name, is_players_tab=True)
+        tabs.addTab(tab2, "Players")
+
+        outer.addWidget(tabs)
 
         close_btn = QPushButton("Close")
         close_btn.clicked.connect(dlg.accept)
