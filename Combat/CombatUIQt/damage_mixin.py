@@ -17,8 +17,37 @@ from .stats import _default_stats
 from .styles import QSS
 
 
+def _damage_type_value(t) -> str:
+    return t.value if hasattr(t, "value") else str(t)
+
+
+def _entry_damage_types(entry) -> list:
+    if isinstance(entry, dict):
+        return entry.get("damage_types", [])
+    return getattr(entry, "damage_types", [])
+
+
 class DamageMixin:
     """Mixin for damage and healing related methods."""
+
+    def _damage_type_modifier(self, target: dict, dmg: int, damage_type: str):
+        """Check target's damage immunities/resistances/vulnerabilities against
+        damage_type and return (applied_dmg, outcome), outcome being one of
+        'immune', 'resisted', 'vulnerable', or None."""
+
+        def has_type(entries) -> bool:
+            for entry in entries or []:
+                if any(_damage_type_value(t) == damage_type for t in _entry_damage_types(entry)):
+                    return True
+            return False
+
+        if has_type(target.get("damage_immunities")):
+            return 0, "immune"
+        if has_type(target.get("damage_resistances")):
+            return dmg // 2, "resisted"
+        if has_type(target.get("damage_vulnerabilities")):
+            return dmg * 2, "vulnerable"
+        return dmg, None
 
     def _apply_bloodied_condition(self, char: dict):
         """Auto-apply/remove Bloodied condition based on HP threshold."""
@@ -33,6 +62,15 @@ class DamageMixin:
             char["conditions"].remove("Bloodied")
 
     def _apply_damage(self):
+        """Apply damage as-is, with no resistance/vulnerability/immunity checks."""
+        self._do_apply_damage(check_resistance=False)
+
+    def _apply_damage_checked(self):
+        """Apply damage after checking the target's resistances/vulnerabilities/immunities
+        against the selected damage type."""
+        self._do_apply_damage(check_resistance=True)
+
+    def _do_apply_damage(self, check_resistance: bool):
         if not self.target_character:
             return
         try:
@@ -44,6 +82,12 @@ class DamageMixin:
 
         source = self.selected_character
         source_name = source["name"] if source is not None else None
+
+        outcome = None
+        if check_resistance:
+            damage_type = self.damage_type_combo.currentData()
+            if damage_type is not None:
+                dmg, outcome = self._damage_type_modifier(target, dmg, damage_type)
 
         pre_hp = target["hp"]
         pre_temp = target["temp_hp"]
@@ -74,11 +118,13 @@ class DamageMixin:
             "dmg": dmg,
             "source_name": source_name,
             "knockout": knockout,
+            "outcome": outcome,
         }
         self.history.append((Action.DAMAGE, damage_value))
         source_suffix = f" from {source_name}" if source_name else ""
+        outcome_suffix = f" ({outcome})" if outcome else ""
         self._log_event(
-            f"{target['name']} takes {dmg} damage{source_suffix}",
+            f"{target['name']} takes {dmg} damage{source_suffix}{outcome_suffix}",
             character=target["name"],
             action=Action.DAMAGE,
             value=damage_value,

@@ -19,6 +19,7 @@ from PyQt6.QtWidgets import (
     QWidget,
 )
 
+from Combat.Definitions import DamageType
 from .styles import QSS
 
 
@@ -139,10 +140,21 @@ class WindowMixin:
         self.damage_input.setPlaceholderText("Amount...")
         left_col.addWidget(self.damage_input)
         self.damage_input.returnPressed.connect(self._apply_damage)
+
+        self.damage_type_combo = QComboBox()
+        self.damage_type_combo.addItem("— Type —", None)
+        for dtype in DamageType:
+            self.damage_type_combo.addItem(dtype.value, dtype.value)
+        left_col.addWidget(self.damage_type_combo)
+
         dmg_btn = QPushButton("Apply Damage")
         dmg_btn.setObjectName("primaryBtn")
         dmg_btn.clicked.connect(self._apply_damage)
         left_col.addWidget(dmg_btn)
+
+        dmg_checked_btn = QPushButton("Apply Damage (Check Resistances)")
+        dmg_checked_btn.clicked.connect(self._apply_damage_checked)
+        left_col.addWidget(dmg_checked_btn)
 
         left_col.addWidget(self._make_divider())
 
