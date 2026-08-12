@@ -49,17 +49,25 @@ class DamageMixin:
             return dmg * 2, "vulnerable"
         return dmg, None
 
-    def _apply_bloodied_condition(self, char: dict):
-        """Auto-apply/remove Bloodied condition based on HP threshold."""
+    def _apply_bloodied_condition(self, char: dict, source: dict | None = None):
+        """Auto-apply/remove Bloodied condition based on HP threshold. Pass
+        `source` (the damage dealer/healer) to log the change with a source,
+        same as any other condition; omit it for silent resyncs (undo, replay)."""
         max_hp = char.get("max_hp", 1)
         hp = char.get("hp", 0)
         is_bloodied = "Bloodied" in char.get("conditions", [])
         should_be_bloodied = hp > 0 and hp <= max_hp / 2
 
         if should_be_bloodied and not is_bloodied:
-            char["conditions"].append("Bloodied")
+            if source is not None:
+                self._add_condition_to(char, "Bloodied", source=source)
+            else:
+                char["conditions"].append("Bloodied")
         elif not should_be_bloodied and is_bloodied:
-            char["conditions"].remove("Bloodied")
+            if source is not None:
+                self._remove_condition_from(char, "Bloodied", source=source)
+            else:
+                char["conditions"].remove("Bloodied")
 
     def _apply_damage(self):
         """Apply damage as-is, with no resistance/vulnerability/immunity checks."""
@@ -133,8 +141,8 @@ class DamageMixin:
                 value=damage_value,
             )
 
-            # Auto-apply bloodied condition
-            self._apply_bloodied_condition(target)
+            # Auto-apply bloodied condition, attributed to whoever dealt the damage
+            self._apply_bloodied_condition(target, source=source)
 
             self._rebuild_card(target)
 
@@ -260,11 +268,19 @@ class DamageMixin:
             if roll < dc:
                 if "Concentrating" in char.get("conditions", []):
                     char["conditions"].remove("Concentrating")
+                # Concentration is always lost by the caster's own failed save,
+                # so the caster is both source and target here.
+                cond_value = {
+                    "condition": "Concentrating",
+                    "source_name": name,
+                    "target_name": name,
+                }
+                self.history.append((Action.REMOVE_CONDITION, cond_value))
                 self._log_event(
                     f"{name} loses concentration (DC {dc}, rolled {roll})",
                     character=name,
                     action=Action.REMOVE_CONDITION,
-                    value="Concentrating",
+                    value=cond_value,
                 )
                 self._refresh_selected_card()
             dialog.accept()
@@ -323,8 +339,8 @@ class DamageMixin:
                     value=heal_value,
                 )
 
-            # Auto-apply bloodied condition
-            self._apply_bloodied_condition(char)
+            # Auto-apply bloodied condition, attributed to whoever healed
+            self._apply_bloodied_condition(char, source=source)
 
             self._rebuild_card(char)
 

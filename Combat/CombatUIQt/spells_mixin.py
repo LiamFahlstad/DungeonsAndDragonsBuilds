@@ -246,16 +246,8 @@ class SpellsMixin:
         self._log_event(f"{char['name']} casts {spell.name}")
 
         if spell.is_concentration:
-            conditions = char.setdefault("conditions", [])
-            if Condition.CONCENTRATING.value not in conditions:
-                conditions.append(Condition.CONCENTRATING.value)
-                self.history.append((Action.ADD_CONDITION, Condition.CONCENTRATING.value))
-                self._log_event(
-                    f"{char['name']} gains {Condition.CONCENTRATING.value}",
-                    character=char["name"],
-                    action=Action.ADD_CONDITION,
-                    value=Condition.CONCENTRATING.value,
-                )
+            # Self-applied — the caster is always the source of their own concentration.
+            self._add_condition_to(char, Condition.CONCENTRATING.value, source=char)
 
         duration = spell.duration_seconds
         if duration:
@@ -306,5 +298,6 @@ class SpellsMixin:
             spell.school
         )
 
-        # Add the spell name as a condition
-        self._add_condition_to(char, spell.name)
+        # Add the spell name as a condition (self-applied, same as this method's
+        # existing single-combatant scope)
+        self._add_condition_to(char, spell.name, source=char)

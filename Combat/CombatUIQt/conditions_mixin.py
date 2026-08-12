@@ -7,55 +7,78 @@ from .stats import _default_stats
 class ConditionsMixin:
     """Mixin for condition and visibility management."""
 
-    def _add_condition_to(self, char: dict, cond: str):
+    def _add_condition_to(self, char: dict, cond: str, source: dict | None = None):
         if cond not in char["conditions"]:
             char["conditions"].append(cond)
             char.setdefault("stats", _default_stats())
             char["stats"]["conditions_applied"] = char["stats"].get("conditions_applied", 0) + 1
-            self.history.append((Action.ADD_CONDITION, cond))
+            source_name = source["name"] if source is not None else None
+            cond_value = {"condition": cond, "source_name": source_name, "target_name": char["name"]}
+            self.history.append((Action.ADD_CONDITION, cond_value))
+            source_suffix = (
+                f" from {source_name}" if source_name and source_name != char["name"] else ""
+            )
             self._log_event(
-                f"{char['name']} gains {cond}",
+                f"{char['name']} gains {cond}{source_suffix}",
                 character=char["name"],
                 action=Action.ADD_CONDITION,
-                value=cond,
+                value=cond_value,
             )
             self._rebuild_card(char)
 
-    def _remove_condition_from(self, char: dict, cond: str):
+    def _remove_condition_from(self, char: dict, cond: str, source: dict | None = None):
         if cond in char["conditions"]:
             char["conditions"].remove(cond)
             char.get("spell_condition_descriptions", {}).pop(cond, None)
             char.get("spell_condition_colors", {}).pop(cond, None)
-            self.history.append((Action.REMOVE_CONDITION, cond))
+            source_name = source["name"] if source is not None else None
+            cond_value = {"condition": cond, "source_name": source_name, "target_name": char["name"]}
+            self.history.append((Action.REMOVE_CONDITION, cond_value))
+            source_suffix = (
+                f" from {source_name}" if source_name and source_name != char["name"] else ""
+            )
             self._log_event(
-                f"{char['name']} loses {cond}",
+                f"{char['name']} loses {cond}{source_suffix}",
                 character=char["name"],
                 action=Action.REMOVE_CONDITION,
-                value=cond,
+                value=cond_value,
             )
             self._rebuild_card(char)
 
     def _add_condition(self):
-        if not self.selected_character:
+        """Add the selected condition to every target, attributed to the source
+        (mirrors Damage/Heal/Temp HP's source → target model)."""
+        if not self.target_characters:
             return
-        self._add_condition_to(self.selected_character, self.condition_combo.currentText())
+        source = self.selected_character or self._current_turn_character()
+        cond = self.condition_combo.currentText()
+        for target in list(self.target_characters):
+            self._add_condition_to(target, cond, source=source)
 
     def _remove_condition(self):
-        if not self.selected_character:
+        if not self.target_characters:
             return
-        self._remove_condition_from(self.selected_character, self.condition_combo.currentText())
+        source = self.selected_character or self._current_turn_character()
+        cond = self.condition_combo.currentText()
+        for target in list(self.target_characters):
+            self._remove_condition_from(target, cond, source=source)
 
     def _shortcut_add_concentration(self):
-        """Keyboard shortcut 'C': add Concentrating to the source."""
+        """Keyboard shortcut 'C': the source starts Concentrating. Self-applied —
+        a caster is always the source of their own concentration."""
         if not self.selected_character:
             return
-        self._add_condition_to(self.selected_character, Condition.CONCENTRATING.value)
+        self._add_condition_to(
+            self.selected_character, Condition.CONCENTRATING.value, source=self.selected_character
+        )
 
     def _shortcut_remove_concentration(self):
         """Keyboard shortcut 'Ctrl+C': remove Concentrating from the source."""
         if not self.selected_character:
             return
-        self._remove_condition_from(self.selected_character, Condition.CONCENTRATING.value)
+        self._remove_condition_from(
+            self.selected_character, Condition.CONCENTRATING.value, source=self.selected_character
+        )
 
     def _shortcut_clear_target_conditions(self):
         """Keyboard shortcut 'Ctrl+Shift+C': remove every condition from every target."""

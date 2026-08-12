@@ -76,11 +76,17 @@ class LoggingMixin:
         if not self.history:
             return
         action, value = self.history[-1]
-        # Damage/Heal/ADD_TEMP_HP are applied to whichever character the value dict
-        # names as target_name (recorded at apply-time, not the current UI selection —
-        # the user may have re-targeted since); every other tracked action (conditions,
-        # spell slots, death saves) is applied to the source.
-        if action in (Action.DAMAGE, Action.HEAL, Action.ADD_TEMP_HP):
+        # Damage/Heal/ADD_TEMP_HP/conditions are applied to whichever character the
+        # value dict names as target_name (recorded at apply-time, not the current UI
+        # selection — the user may have re-targeted since); every other tracked action
+        # (spell slots, death saves) is applied to the source.
+        if action in (
+            Action.DAMAGE,
+            Action.HEAL,
+            Action.ADD_TEMP_HP,
+            Action.ADD_CONDITION,
+            Action.REMOVE_CONDITION,
+        ):
             target_name = value.get("target_name") if isinstance(value, dict) else None
             char = self._find_character_by_name(target_name) if target_name else None
         else:
@@ -153,15 +159,17 @@ class LoggingMixin:
             else:
                 char["hp"] -= value
         elif action == Action.ADD_CONDITION:
-            if value in char["conditions"]:
-                char["conditions"].remove(value)
+            cond = value["condition"] if isinstance(value, dict) else value
+            if cond in char["conditions"]:
+                char["conditions"].remove(cond)
             char.setdefault("stats", _default_stats())
             char["stats"]["conditions_applied"] = max(
                 char["stats"].get("conditions_applied", 0) - 1, 0
             )
         elif action == Action.REMOVE_CONDITION:
-            if value not in char["conditions"]:
-                char["conditions"].append(value)
+            cond = value["condition"] if isinstance(value, dict) else value
+            if cond not in char["conditions"]:
+                char["conditions"].append(cond)
         elif action == Action.REMOVE_SPELL_SLOT:
             char["spell_slots"][value] = char["spell_slots"].get(value, 0) + 1
             char.setdefault("stats", _default_stats())
@@ -350,13 +358,16 @@ class LoggingMixin:
                     )
             self._apply_bloodied_condition(char)
         elif action == Action.ADD_CONDITION:
-            if value not in char["conditions"]:
-                char["conditions"].append(value)
+            # Older logs stored the condition name as a plain string.
+            cond = value["condition"] if isinstance(value, dict) else value
+            if cond not in char["conditions"]:
+                char["conditions"].append(cond)
             char.setdefault("stats", _default_stats())
             char["stats"]["conditions_applied"] = char["stats"].get("conditions_applied", 0) + 1
         elif action == Action.REMOVE_CONDITION:
-            if value in char["conditions"]:
-                char["conditions"].remove(value)
+            cond = value["condition"] if isinstance(value, dict) else value
+            if cond in char["conditions"]:
+                char["conditions"].remove(cond)
         elif action == Action.ADD_SPELL_SLOT:
             char["spell_slots"][value] = char["spell_slots"].get(value, 0) + 1
         elif action == Action.REMOVE_SPELL_SLOT:
