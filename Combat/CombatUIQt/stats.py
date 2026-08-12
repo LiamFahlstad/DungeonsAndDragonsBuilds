@@ -14,6 +14,7 @@ STAT_KEYS = (
     "conditions_given",
     "conditions_received",
     "spell_slots_used",
+    "spells_cast",
     "knockouts",
     "times_downed",
     "deaths",
@@ -21,9 +22,14 @@ STAT_KEYS = (
     f"damage_taken_{dtype.name.lower()}" for dtype in DamageType
 ) + tuple(f"spell_slots_used_{level}" for level in SPELL_SLOT_LEVELS)
 
-# Per-condition breakdowns are open-ended (spells can apply custom pseudo-conditions
-# by name), so they're tracked as name -> count dicts instead of flat STAT_KEYS entries.
-DICT_STAT_KEYS = ("conditions_given_by_name", "conditions_received_by_name")
+# Per-condition and per-spell breakdowns are open-ended (spells can apply custom
+# pseudo-conditions by name, and the spell list isn't a fixed enum), so they're
+# tracked as name -> count dicts instead of flat STAT_KEYS entries.
+DICT_STAT_KEYS = (
+    "conditions_given_by_name",
+    "conditions_received_by_name",
+    "spells_cast_by_name",
+)
 
 
 def _default_stats() -> dict:
@@ -48,15 +54,15 @@ def spell_slots_used_key(level: int) -> str:
     return f"spell_slots_used_{level}"
 
 
-def increment_condition_count(stats: dict, dict_key: str, cond: str):
-    """Increment stats[dict_key][cond], creating the nested dict/entry as needed."""
+def increment_named_stat(stats: dict, dict_key: str, name: str):
+    """Increment stats[dict_key][name], creating the nested dict/entry as needed."""
     by_name = stats.setdefault(dict_key, {})
-    by_name[cond] = by_name.get(cond, 0) + 1
+    by_name[name] = by_name.get(name, 0) + 1
 
 
-def decrement_condition_count(stats: dict, dict_key: str, cond: str):
-    """Decrement stats[dict_key][cond] (undo counterpart of increment_condition_count),
+def decrement_named_stat(stats: dict, dict_key: str, name: str):
+    """Decrement stats[dict_key][name] (undo counterpart of increment_named_stat),
     never going below 0."""
     by_name = stats.setdefault(dict_key, {})
-    if by_name.get(cond, 0) > 0:
-        by_name[cond] -= 1
+    if by_name.get(name, 0) > 0:
+        by_name[name] -= 1

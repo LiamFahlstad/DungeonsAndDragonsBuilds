@@ -13,7 +13,7 @@ from PyQt6.QtWidgets import (
 )
 
 from Combat.Definitions import Action, Condition
-from .stats import _default_stats, spell_slots_used_key
+from .stats import _default_stats, increment_named_stat, spell_slots_used_key
 from .styles import QSS
 
 
@@ -247,7 +247,17 @@ class SpellsMixin:
         if char is None:
             return
 
-        self._log_event(f"{char['name']} casts {spell.name}")
+        char.setdefault("stats", _default_stats())
+        char["stats"]["spells_cast"] = char["stats"].get("spells_cast", 0) + 1
+        increment_named_stat(char["stats"], "spells_cast_by_name", spell.name)
+        cast_value = {"spell_name": spell.name}
+        self.history.append((Action.CAST_SPELL, cast_value))
+        self._log_event(
+            f"{char['name']} casts {spell.name}",
+            character=char["name"],
+            action=Action.CAST_SPELL,
+            value=cast_value,
+        )
 
         if spell.is_concentration:
             # Self-applied — the caster is always the source of their own concentration.

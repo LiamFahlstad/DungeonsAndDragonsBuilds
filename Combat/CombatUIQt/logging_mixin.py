@@ -15,8 +15,8 @@ from .stats import (
     _default_stats,
     damage_dealt_key,
     damage_taken_key,
-    decrement_condition_count,
-    increment_condition_count,
+    decrement_named_stat,
+    increment_named_stat,
     spell_slots_used_key,
 )
 
@@ -186,7 +186,7 @@ class LoggingMixin:
             char["stats"]["conditions_received"] = max(
                 char["stats"].get("conditions_received", 0) - 1, 0
             )
-            decrement_condition_count(char["stats"], "conditions_received_by_name", cond)
+            decrement_named_stat(char["stats"], "conditions_received_by_name", cond)
             source_name = value.get("source_name") if isinstance(value, dict) else None
             if source_name:
                 source = self._find_character_by_name(source_name)
@@ -195,7 +195,7 @@ class LoggingMixin:
                     source["stats"]["conditions_given"] = max(
                         source["stats"].get("conditions_given", 0) - 1, 0
                     )
-                    decrement_condition_count(source["stats"], "conditions_given_by_name", cond)
+                    decrement_named_stat(source["stats"], "conditions_given_by_name", cond)
         elif action == Action.REMOVE_CONDITION:
             cond = value["condition"] if isinstance(value, dict) else value
             if cond not in char["conditions"]:
@@ -210,6 +210,11 @@ class LoggingMixin:
             char["stats"][level_key] = max(char["stats"].get(level_key, 0) - 1, 0)
         elif action == Action.ADD_SPELL_SLOT:
             char["spell_slots"][value] = max(char["spell_slots"].get(value, 0) - 1, 0)
+        elif action == Action.CAST_SPELL:
+            spell_name = value["spell_name"] if isinstance(value, dict) else value
+            char.setdefault("stats", _default_stats())
+            char["stats"]["spells_cast"] = max(char["stats"].get("spells_cast", 0) - 1, 0)
+            decrement_named_stat(char["stats"], "spells_cast_by_name", spell_name)
         elif action == Action.DEATH_SAVE_FAIL:
             char["death_saves_fail"] = max(char.get("death_saves_fail", 0) - 1, 0)
             if value:
@@ -408,7 +413,7 @@ class LoggingMixin:
                 char["conditions"].append(cond)
             char.setdefault("stats", _default_stats())
             char["stats"]["conditions_received"] = char["stats"].get("conditions_received", 0) + 1
-            increment_condition_count(char["stats"], "conditions_received_by_name", cond)
+            increment_named_stat(char["stats"], "conditions_received_by_name", cond)
             source_name = value.get("source_name") if isinstance(value, dict) else None
             if source_name:
                 source = self._find_character_by_name(source_name)
@@ -417,7 +422,7 @@ class LoggingMixin:
                     source["stats"]["conditions_given"] = (
                         source["stats"].get("conditions_given", 0) + 1
                     )
-                    increment_condition_count(source["stats"], "conditions_given_by_name", cond)
+                    increment_named_stat(source["stats"], "conditions_given_by_name", cond)
         elif action == Action.REMOVE_CONDITION:
             cond = value["condition"] if isinstance(value, dict) else value
             if cond in char["conditions"]:
@@ -430,6 +435,11 @@ class LoggingMixin:
             char["stats"]["spell_slots_used"] = char["stats"].get("spell_slots_used", 0) + 1
             level_key = spell_slots_used_key(value)
             char["stats"][level_key] = char["stats"].get(level_key, 0) + 1
+        elif action == Action.CAST_SPELL:
+            spell_name = value["spell_name"] if isinstance(value, dict) else value
+            char.setdefault("stats", _default_stats())
+            char["stats"]["spells_cast"] = char["stats"].get("spells_cast", 0) + 1
+            increment_named_stat(char["stats"], "spells_cast_by_name", spell_name)
         elif action == Action.DEATH_SAVE_FAIL:
             char["death_saves_fail"] = min(char.get("death_saves_fail", 0) + 1, 3)
             if char["death_saves_fail"] >= 3:
@@ -515,14 +525,14 @@ class LoggingMixin:
                         cond = value["condition"] if isinstance(value, dict) else value
                         target_stats = stats_for(character)
                         target_stats["conditions_received"] += 1
-                        increment_condition_count(
+                        increment_named_stat(
                             target_stats, "conditions_received_by_name", cond
                         )
                         source_name = value.get("source_name") if isinstance(value, dict) else None
                         if source_name:
                             source_stats = stats_for(source_name)
                             source_stats["conditions_given"] += 1
-                            increment_condition_count(
+                            increment_named_stat(
                                 source_stats, "conditions_given_by_name", cond
                             )
                     elif action == Action.REMOVE_SPELL_SLOT and character:
@@ -531,6 +541,11 @@ class LoggingMixin:
                         level = value if isinstance(value, int) else None
                         if level is not None:
                             s[spell_slots_used_key(level)] += 1
+                    elif action == Action.CAST_SPELL and character:
+                        spell_name = value["spell_name"] if isinstance(value, dict) else value
+                        s = stats_for(character)
+                        s["spells_cast"] += 1
+                        increment_named_stat(s, "spells_cast_by_name", spell_name)
         return stats_by_name
 
     def _write_player_log(self):

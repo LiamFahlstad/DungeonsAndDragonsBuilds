@@ -26,6 +26,7 @@ class Action(str, Enum):
     REMOVE_CONDITION = "remove_condition"
     ADD_SPELL_SLOT = "add_spell_slot"
     REMOVE_SPELL_SLOT = "remove_spell_slot"
+    CAST_SPELL = "cast_spell"
     DEATH_SAVE_FAIL = "death_save_fail"
     DEATH_SAVE_SUCCESS = "death_save_success"
     ADD_TEMP_HP = "add_temp_hp"

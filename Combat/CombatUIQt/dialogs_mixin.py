@@ -614,9 +614,6 @@ class DialogsMixin:
             ("Temp HP Granted", "temp_hp_granted"),
             ("Temp HP Received", "temp_hp_received"),
         ]
-        spell_columns = [("Spell Slots Used", "spell_slots_used")] + [
-            (f"Level {level}", spell_slots_used_key(level)) for level in SPELL_SLOT_LEVELS
-        ]
         outcome_columns = [
             ("Knockouts", "knockouts"),
             ("Times Downed", "times_downed"),
@@ -644,12 +641,28 @@ class DialogsMixin:
                 + [(f"Received: {name}", ("conditions_received_by_name", name)) for name in sorted_names]
             )
 
+        def _spell_columns(characters, stats_dict_or_none):
+            """Spell slot levels are a fixed 1-9 range, but which spells were actually
+            cast is open-ended, so the per-spell columns are computed per-tab like
+            Conditions above."""
+            names = set()
+            for char in characters:
+                stats = _stats_for(characters, stats_dict_or_none, char)
+                names.update(stats.get("spells_cast_by_name", {}).keys())
+            sorted_names = sorted(names)
+            return (
+                [("Spell Slots Used", "spell_slots_used")]
+                + [(f"Level {level}", spell_slots_used_key(level)) for level in SPELL_SLOT_LEVELS]
+                + [("Spells Cast", "spells_cast")]
+                + [(f"Cast: {name}", ("spells_cast_by_name", name)) for name in sorted_names]
+            )
+
         # (label, columns_fn) — columns_fn(characters, stats_dict_or_none) -> [(header, key), ...]
         categories = [
             ("Damage", lambda *_: damage_columns),
             ("Healing", lambda *_: healing_columns),
             ("Conditions", _condition_columns),
-            ("Spells", lambda *_: spell_columns),
+            ("Spells", _spell_columns),
             ("Outcomes", lambda *_: outcome_columns),
         ]
 
