@@ -10,7 +10,12 @@ class ConditionsMixin:
         if cond not in char["conditions"]:
             char["conditions"].append(cond)
             self.history.append((Action.ADD_CONDITION, cond))
-            self._log_event(f"{char['name']} gains {cond}")
+            self._log_event(
+                f"{char['name']} gains {cond}",
+                character=char["name"],
+                action=Action.ADD_CONDITION,
+                value=cond,
+            )
             self._rebuild_card(char)
 
     def _remove_condition_from(self, char: dict, cond: str):
@@ -19,7 +24,12 @@ class ConditionsMixin:
             char.get("spell_condition_descriptions", {}).pop(cond, None)
             char.get("spell_condition_colors", {}).pop(cond, None)
             self.history.append((Action.REMOVE_CONDITION, cond))
-            self._log_event(f"{char['name']} loses {cond}")
+            self._log_event(
+                f"{char['name']} loses {cond}",
+                character=char["name"],
+                action=Action.REMOVE_CONDITION,
+                value=cond,
+            )
             self._rebuild_card(char)
 
     def _add_condition(self):

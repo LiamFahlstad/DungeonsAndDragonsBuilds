@@ -68,20 +68,21 @@ class DamageMixin:
             if knockout:
                 source["stats"]["knockouts"] = source["stats"].get("knockouts", 0) + 1
 
-        self.history.append(
-            (
-                Action.DAMAGE,
-                {
-                    "hp_delta": hp_delta,
-                    "temp_delta": temp_delta,
-                    "dmg": dmg,
-                    "source_name": source_name,
-                    "knockout": knockout,
-                },
-            )
-        )
+        damage_value = {
+            "hp_delta": hp_delta,
+            "temp_delta": temp_delta,
+            "dmg": dmg,
+            "source_name": source_name,
+            "knockout": knockout,
+        }
+        self.history.append((Action.DAMAGE, damage_value))
         source_suffix = f" from {source_name}" if source_name else ""
-        self._log_event(f"{target['name']} takes {dmg} damage{source_suffix}")
+        self._log_event(
+            f"{target['name']} takes {dmg} damage{source_suffix}",
+            character=target["name"],
+            action=Action.DAMAGE,
+            value=damage_value,
+        )
 
         # Auto-apply bloodied condition
         self._apply_bloodied_condition(target)
@@ -210,7 +211,12 @@ class DamageMixin:
             if roll < dc:
                 if "Concentrating" in char.get("conditions", []):
                     char["conditions"].remove("Concentrating")
-                self._log_event(f"{name} loses concentration (DC {dc}, rolled {roll})")
+                self._log_event(
+                    f"{name} loses concentration (DC {dc}, rolled {roll})",
+                    character=name,
+                    action=Action.REMOVE_CONDITION,
+                    value="Concentrating",
+                )
                 self._refresh_selected_card()
             dialog.accept()
 
@@ -246,22 +252,25 @@ class DamageMixin:
             source.setdefault("stats", _default_stats())
             source["stats"]["healing_done"] = source["stats"].get("healing_done", 0) + actual_heal
 
-        self.history.append(
-            (
-                Action.HEAL,
-                {
-                    "heal": actual_heal,
-                    "source_name": source_name,
-                },
-            )
-        )
+        heal_value = {"heal": actual_heal, "source_name": source_name}
+        self.history.append((Action.HEAL, heal_value))
 
         if was_downed and char["hp"] > 0:
             char["death_saves_fail"] = 0
             char["death_saves_success"] = 0
-            self._log_event(f"{char['name']} is resurrected with {char['hp']} HP")
+            self._log_event(
+                f"{char['name']} is resurrected with {char['hp']} HP",
+                character=char["name"],
+                action=Action.HEAL,
+                value=heal_value,
+            )
         else:
-            self._log_event(f"{char['name']} heals {heal} HP")
+            self._log_event(
+                f"{char['name']} heals {heal} HP",
+                character=char["name"],
+                action=Action.HEAL,
+                value=heal_value,
+            )
 
         # Auto-apply bloodied condition
         self._apply_bloodied_condition(char)
@@ -280,11 +289,19 @@ class DamageMixin:
             char["stats"]["deaths"] = char["stats"].get("deaths", 0) + 1
         self.history.append((Action.DEATH_SAVE_FAIL, newly_dead))
         if char["death_saves_fail"] >= 3:
-            self._log_event(f"{char['name']} has died (3 failed death saves)")
+            self._log_event(
+                f"{char['name']} has died (3 failed death saves)",
+                character=char["name"],
+                action=Action.DEATH_SAVE_FAIL,
+                value=newly_dead,
+            )
         else:
             self._log_event(
                 f"{char['name']} fails a death save "
-                f"({char['death_saves_fail']}/3 fails)"
+                f"({char['death_saves_fail']}/3 fails)",
+                character=char["name"],
+                action=Action.DEATH_SAVE_FAIL,
+                value=newly_dead,
             )
         self._refresh_selected_card()
 
@@ -295,11 +312,19 @@ class DamageMixin:
         char["death_saves_success"] = min(char.get("death_saves_success", 0) + 1, 3)
         self.history.append((Action.DEATH_SAVE_SUCCESS, None))
         if char["death_saves_success"] >= 3:
-            self._log_event(f"{char['name']} stabilizes (3 successful death saves)")
+            self._log_event(
+                f"{char['name']} stabilizes (3 successful death saves)",
+                character=char["name"],
+                action=Action.DEATH_SAVE_SUCCESS,
+                value=None,
+            )
         else:
             self._log_event(
                 f"{char['name']} succeeds a death save "
-                f"({char['death_saves_success']}/3 successes)"
+                f"({char['death_saves_success']}/3 successes)",
+                character=char["name"],
+                action=Action.DEATH_SAVE_SUCCESS,
+                value=None,
             )
         self._refresh_selected_card()
 
@@ -315,6 +340,9 @@ class DamageMixin:
         self.selected_character["temp_hp"] = old + amount
         self._log_event(
             f"{self.selected_character['name']} gains {amount} temp HP "
-            f"(total {self.selected_character['temp_hp']})"
+            f"(total {self.selected_character['temp_hp']})",
+            character=self.selected_character["name"],
+            action=Action.ADD_TEMP_HP,
+            value=amount,
         )
         self._refresh_selected_card()

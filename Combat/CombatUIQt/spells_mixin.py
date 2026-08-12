@@ -28,7 +28,10 @@ class SpellsMixin:
         self.selected_character["spell_slots"][level] = max(old - 1, 0)
         self.history.append((Action.REMOVE_SPELL_SLOT, level))
         self._log_event(
-            f"{self.selected_character['name']} uses a Level {level} spell slot"
+            f"{self.selected_character['name']} uses a Level {level} spell slot",
+            character=self.selected_character["name"],
+            action=Action.REMOVE_SPELL_SLOT,
+            value=level,
         )
         self._refresh_selected_card()
 
@@ -40,7 +43,10 @@ class SpellsMixin:
         self.selected_character["spell_slots"][level] = old + 1
         self.history.append((Action.ADD_SPELL_SLOT, level))
         self._log_event(
-            f"{self.selected_character['name']} regains a Level {level} spell slot"
+            f"{self.selected_character['name']} regains a Level {level} spell slot",
+            character=self.selected_character["name"],
+            action=Action.ADD_SPELL_SLOT,
+            value=level,
         )
         self._refresh_selected_card()
 
@@ -239,7 +245,12 @@ class SpellsMixin:
             if Condition.CONCENTRATING.value not in conditions:
                 conditions.append(Condition.CONCENTRATING.value)
                 self.history.append((Action.ADD_CONDITION, Condition.CONCENTRATING.value))
-                self._log_event(f"{char['name']} gains {Condition.CONCENTRATING.value}")
+                self._log_event(
+                    f"{char['name']} gains {Condition.CONCENTRATING.value}",
+                    character=char["name"],
+                    action=Action.ADD_CONDITION,
+                    value=Condition.CONCENTRATING.value,
+                )
 
         duration = spell.duration_seconds
         if duration:

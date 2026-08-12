@@ -46,14 +46,26 @@ class LoggingMixin:
                 return char
         return None
 
-    def _log_event(self, text: str, note_turn: bool = True):
+    def _log_event(
+        self,
+        text: str,
+        note_turn: bool = True,
+        character: str | None = None,
+        action=None,
+        value=None,
+    ):
         data = json.loads(self.log_file.read_text())
         key = f"round_{self.round_number}"
         turn_name = self._current_turn_name() if note_turn else None
         entry = f"[{turn_name}'s turn] {text}" if turn_name else text
         data.setdefault(key, []).append(entry)
         if self.player_log_file:
-            self.player_log_data["sessions"][-1].setdefault(key, []).append(entry)
+            player_entry = {"text": entry}
+            if action is not None:
+                player_entry["character"] = character
+                player_entry["action"] = action
+                player_entry["value"] = value
+            self.player_log_data["sessions"][-1].setdefault(key, []).append(player_entry)
         self._write_log(data)
 
     def _undo_last(self):
@@ -189,8 +201,9 @@ class LoggingMixin:
         self._switch_to_combat()
 
     def _init_player_log(self):
-        """Load (or create) the persistent player log, preload player state from the
-        most recent session, and start a new session entry for this run."""
+        """Load (or create) the persistent player log, reconstruct current player
+        state by replaying every recorded action onto the freshly-built default
+        characters, and start a new session entry for this run."""
         self.player_log_file.parent.mkdir(parents=True, exist_ok=True)
         if self.player_log_file.exists():
             self.player_log_data = json.loads(self.player_log_file.read_text())
@@ -198,26 +211,7 @@ class LoggingMixin:
             self.player_log_data = {"sessions": []}
 
         sessions = self.player_log_data.setdefault("sessions", [])
-        if sessions:
-            last_state = {c["name"]: c for c in sessions[-1].get("combatants", [])}
-            for char in self.characters:
-                if not char.get("_is_player"):
-                    continue
-                prior = last_state.get(char["name"])
-                if not prior:
-                    continue
-                for key in (
-                    "hp",
-                    "temp_hp",
-                    "conditions",
-                    "visibility_states",
-                    "death_saves_fail",
-                    "death_saves_success",
-                    "stats",
-                    "spell_slots",
-                ):
-                    if key in prior:
-                        char[key] = prior[key]
+        self._replay_player_log(sessions)
 
         session_type = "encounter" if self._scenario_name else "adventure"
         sessions.append(
@@ -226,20 +220,116 @@ class LoggingMixin:
                 "scenario": self._scenario_name,
                 "started_at": datetime.now().isoformat(timespec="seconds"),
                 "round_number": self.round_number,
-                "combatants": [],
             }
         )
+
+    def _replay_player_log(self, sessions: list[dict]):
+        """Reconstruct current player state from the log history. Older sessions
+        (pre-dating this action-log format) stored a full character snapshot per
+        session instead — apply those as a coarse state overwrite for backward
+        compatibility, then replay any structured actions on top."""
+        players_by_name = {c["name"]: c for c in self.characters if c.get("_is_player")}
+        if not players_by_name:
+            return
+        mutable_keys = (
+            "hp",
+            "temp_hp",
+            "conditions",
+            "visibility_states",
+            "death_saves_fail",
+            "death_saves_success",
+            "stats",
+            "spell_slots",
+        )
+        for session in sessions:
+            for snapshot in session.get("combatants", []):
+                char = players_by_name.get(snapshot.get("name"))
+                if char is None:
+                    continue
+                for key in mutable_keys:
+                    if key in snapshot:
+                        char[key] = snapshot[key]
+
+            round_keys = sorted(
+                (
+                    k
+                    for k in session
+                    if k.startswith("round_") and k.split("_", 1)[1].isdigit()
+                ),
+                key=lambda k: int(k.split("_", 1)[1]),
+            )
+            for key in round_keys:
+                for entry in session[key]:
+                    if not isinstance(entry, dict) or "action" not in entry:
+                        continue
+                    char = players_by_name.get(entry.get("character"))
+                    if char is None:
+                        continue
+                    self._apply_replay_action(char, entry["action"], entry["value"])
+
+    def _apply_replay_action(self, char: dict, action: str, value):
+        """Forward-apply one recorded player-log action to a character (the
+        replay counterpart of _undo_last, which reverses the same actions)."""
+        if action == Action.DAMAGE:
+            char["hp"] += value["hp_delta"]
+            char["temp_hp"] += value["temp_delta"]
+            char.setdefault("stats", _default_stats())
+            char["stats"]["damage_taken"] = char["stats"].get("damage_taken", 0) + value["dmg"]
+            if value.get("knockout"):
+                char["stats"]["times_downed"] = char["stats"].get("times_downed", 0) + 1
+            if value.get("source_name"):
+                source = self._find_character_by_name(value["source_name"])
+                if source is not None:
+                    source.setdefault("stats", _default_stats())
+                    source["stats"]["damage_dealt"] = (
+                        source["stats"].get("damage_dealt", 0) + value["dmg"]
+                    )
+                    if value.get("knockout"):
+                        source["stats"]["knockouts"] = source["stats"].get("knockouts", 0) + 1
+            self._apply_bloodied_condition(char)
+        elif action == Action.HEAL:
+            was_downed = self._char_death_state(char) != "alive"
+            char["hp"] += value["heal"]
+            char.setdefault("stats", _default_stats())
+            char["stats"]["healing_received"] = (
+                char["stats"].get("healing_received", 0) + value["heal"]
+            )
+            if was_downed and char["hp"] > 0:
+                char["death_saves_fail"] = 0
+                char["death_saves_success"] = 0
+            if value.get("source_name"):
+                source = self._find_character_by_name(value["source_name"])
+                if source is not None:
+                    source.setdefault("stats", _default_stats())
+                    source["stats"]["healing_done"] = (
+                        source["stats"].get("healing_done", 0) + value["heal"]
+                    )
+            self._apply_bloodied_condition(char)
+        elif action == Action.ADD_CONDITION:
+            if value not in char["conditions"]:
+                char["conditions"].append(value)
+        elif action == Action.REMOVE_CONDITION:
+            if value in char["conditions"]:
+                char["conditions"].remove(value)
+        elif action == Action.ADD_SPELL_SLOT:
+            char["spell_slots"][value] = char["spell_slots"].get(value, 0) + 1
+        elif action == Action.REMOVE_SPELL_SLOT:
+            char["spell_slots"][value] = max(char["spell_slots"].get(value, 0) - 1, 0)
+        elif action == Action.DEATH_SAVE_FAIL:
+            char["death_saves_fail"] = min(char.get("death_saves_fail", 0) + 1, 3)
+            if char["death_saves_fail"] >= 3:
+                char.setdefault("stats", _default_stats())
+                char["stats"]["deaths"] = char["stats"].get("deaths", 0) + 1
+        elif action == Action.DEATH_SAVE_SUCCESS:
+            char["death_saves_success"] = min(char.get("death_saves_success", 0) + 1, 3)
+        elif action == Action.ADD_TEMP_HP:
+            char["temp_hp"] = char.get("temp_hp", 0) + value
 
     def _write_player_log(self):
         if not self.player_log_file:
             return
         session = self.player_log_data["sessions"][-1]
         session["round_number"] = self.round_number
-        session["combatants"] = [
-            {k: v for k, v in c.items() if not k.startswith("_")}
-            for c in self.characters
-            if c.get("_is_player")
-        ]
         self.player_log_file.write_text(
             json.dumps(self.player_log_data, indent=2, cls=_CombatJSONEncoder)
         )
@@ -361,7 +451,8 @@ class LoggingMixin:
                 round_num = key.split("_", 1)[1]
                 lines.append(f"  Round {round_num}")
                 for event in session[key]:
-                    lines.append(f"    • {event}")
+                    event_text = event.get("text", "") if isinstance(event, dict) else event
+                    lines.append(f"    • {event_text}")
             lines.append("")
         text.setPlainText(
             "\n".join(lines).rstrip() if lines else "No player log data yet."
