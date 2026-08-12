@@ -81,7 +81,7 @@ class DamageMixin:
         source = self.selected_character or self._current_turn_character()
         source_name = source["name"] if source is not None else None
 
-        damage_type = self.damage_type_combo.currentData() if check_resistance else None
+        damage_type = self.damage_type_combo.currentData()
 
         for target in list(self.target_characters):
             dmg = dmg_input
@@ -116,16 +116,18 @@ class DamageMixin:
                 "hp_delta": hp_delta,
                 "temp_delta": temp_delta,
                 "dmg": dmg,
+                "damage_type": damage_type,
                 "source_name": source_name,
                 "target_name": target["name"],
                 "knockout": knockout,
                 "outcome": outcome,
             }
             self.history.append((Action.DAMAGE, damage_value))
+            type_prefix = f" {damage_type}" if damage_type else ""
             source_suffix = f" from {source_name}" if source_name else ""
             outcome_suffix = f" ({outcome})" if outcome else ""
             self._log_event(
-                f"{target['name']} takes {dmg} damage{source_suffix}{outcome_suffix}",
+                f"{target['name']} takes {dmg}{type_prefix} damage{source_suffix}{outcome_suffix}",
                 character=target["name"],
                 action=Action.DAMAGE,
                 value=damage_value,

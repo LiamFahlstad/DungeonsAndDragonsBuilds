@@ -213,4 +213,4 @@ __marimo__/
 .claude/*
 
 # Combat logs
-CombatLogs/*
+Combat/CombatLogs/*.json

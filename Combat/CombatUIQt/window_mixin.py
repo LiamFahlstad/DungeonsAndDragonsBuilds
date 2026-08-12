@@ -2,7 +2,7 @@
 
 import sys
 from PyQt6.QtCore import Qt
-from PyQt6.QtGui import QKeySequence, QShortcut
+from PyQt6.QtGui import QColor, QKeySequence, QShortcut
 from PyQt6.QtWidgets import (
     QApplication,
     QComboBox,
@@ -20,6 +20,7 @@ from PyQt6.QtWidgets import (
 )
 
 from Combat.Definitions import DamageType
+from Core.Definitions import get_damage_type_color
 from .styles import QSS
 
 
@@ -174,6 +175,24 @@ class WindowMixin:
         self.damage_type_combo.addItem("— Type —", None)
         for dtype in DamageType:
             self.damage_type_combo.addItem(dtype.value, dtype.value)
+            self.damage_type_combo.setItemData(
+                self.damage_type_combo.count() - 1,
+                QColor(get_damage_type_color(dtype.value)),
+                Qt.ItemDataRole.ForegroundRole,
+            )
+
+        def _update_damage_type_combo_color():
+            dtype_value = self.damage_type_combo.currentData()
+            color = get_damage_type_color(dtype_value) if dtype_value else "#eaeaea"
+            self.damage_type_combo.setStyleSheet(
+                f"QComboBox {{ color: {color}; font-weight: bold; }}"
+            )
+
+        self.damage_type_combo.currentIndexChanged.connect(
+            lambda _index: _update_damage_type_combo_color()
+        )
+        _update_damage_type_combo_color()
+
         dmg_input_row.addWidget(self.damage_type_combo, stretch=3)
         left_col.addLayout(dmg_input_row)
 
