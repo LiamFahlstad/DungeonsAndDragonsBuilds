@@ -214,3 +214,12 @@ __marimo__/
 
 # Combat logs
 Combat/CombatLogs/*.json
+# ...except the persistent per-scenario encounter logs referenced by CHEATSHEET.md
+!Combat/CombatLogs/time_loop_square.json
+!Combat/CombatLogs/time_loop_drunk_oxe.json
+!Combat/CombatLogs/grims_castle_bull.json
+!Combat/CombatLogs/curse_of_the_lich_black_tongues_skirmish.json
+!Combat/CombatLogs/curse_of_the_lich_yellow_capes_patrol.json
+!Combat/CombatLogs/curse_of_the_lich_black_tongues_ritual.json
+!Combat/CombatLogs/curse_of_the_lich_yellow_capes_last_stand.json
+!Combat/CombatLogs/curse_of_the_lich_mouth_that_walks.json

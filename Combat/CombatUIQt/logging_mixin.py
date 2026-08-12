@@ -213,7 +213,19 @@ class LoggingMixin:
         if "combatants" not in data:
             QMessageBox.warning(self._window, "Error", "No combatants key in log file.")
             return
-        self.characters = data["combatants"]
+        saved_combatants = data["combatants"]
+        if not saved_combatants:
+            # Empty starter log (e.g. a scenario's persistent log before its first
+            # session) — nothing to resume. Behave exactly like a fresh run and
+            # just log to this path from now on instead of a fresh timestamped one.
+            self.log_file = Path(path)
+            self._write_log({})
+            return
+        # Saved logs only ever contain non-player combatants (see _write_log),
+        # so splice them back in alongside whatever players are already loaded
+        # rather than replacing self.characters outright.
+        players = [c for c in self.characters if c.get("_is_player")]
+        self.characters = players + saved_combatants
         for char in self.characters:
             stats = char.setdefault("stats", {})
             for key in STAT_KEYS:
