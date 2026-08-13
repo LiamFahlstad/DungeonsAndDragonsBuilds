@@ -56,7 +56,7 @@ class AdventurersAtlas(Feature):
 
     def get_table_description(self, character_stat_block: CharacterStatBlock) -> list[tuple[str, str]]:
         intelligence_modifier = character_stat_block.get_ability_modifier(Ability.INTELLIGENCE)
-        max_creatures = 1 + intelligence_modifier
+        max_creatures = max(2, 1 + intelligence_modifier)
         return [
             ("Trigger", f"End of Long Rest; touch {max_creatures} creatures (min 2)"),
             ("Duration", "Until recreated or you die"),
