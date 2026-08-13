@@ -22,7 +22,7 @@ SPELL_CARD_CSS = """/* ── Spell entries ────────────
         /* Each spell, stacked without an outer box */
         .spell-entry {
             font-size: 0.85rem;
-            padding: 0.35rem 0;
+            padding: 0.4rem 0;
             max-width: none;
         }
 
@@ -41,17 +41,10 @@ SPELL_CARD_CSS = """/* ── Spell entries ────────────
             margin: 0 0 0.2rem 0;
         }
 
-        /* Quick-stats — two flexible columns, wrapping if the page is narrow */
+        /* Quick-stats — a single flowing line, wrapping naturally if narrow */
         .spell-quickstats {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.15rem 1.2rem;
             font-size: 0.82rem;
             margin: 0 0 0.2rem 0;
-        }
-
-        .sqs-left, .sqs-right {
-            flex: 1 1 45%;
         }
 
         /* Inline label within quick-stats */
@@ -166,17 +159,10 @@ def write_spell_to_file(
     if is_ritual:
         tags_html += "<span class='stag stag-ritual'>Ritual</span> "
 
-    # ── Quick-stats cells ────────────────────────────────────────────────
-    # Left ~35%: level, school, components
+    # ── Quick-stats ─────────────────────────────────────────────────────
+    # Level, school, casting time, range, duration, and components all flow
+    # on one line rather than being split into separate halves.
     school_color = spell.get_school_color(spell.school)
-    left_cell = (
-        f"<span class='slabel'>{level_label}</span>"
-        f"<span class='ssep'>·</span>"
-        f"<span class='slabel'>School</span> <span style='color: {school_color}; print-color-adjust: exact; -webkit-print-color-adjust: exact;'>{spell.school}</span>"
-        f"<span class='ssep'>·</span>"
-        f"<span class='slabel'>Components</span> {spell.components}"
-    )
-    # Right ~65%: casting time, range, duration
     duration_display = spell.duration
     if is_concentration:
         # Strip the "Concentration, " prefix for display; the tag already shows it
@@ -185,12 +171,18 @@ def write_spell_to_file(
             if spell.duration.lower().startswith("concentration, ")
             else spell.duration
         )
-    right_cell = (
+    quickstats_html = (
+        f"<span class='slabel'>{level_label}</span>"
+        f"<span class='ssep'>·</span>"
+        f"<span class='slabel'>School</span> <span style='color: {school_color}; print-color-adjust: exact; -webkit-print-color-adjust: exact;'>{spell.school}</span>"
+        f"<span class='ssep'>·</span>"
         f"<span class='slabel'>Cast</span> {spell.casting_time}"
         f"<span class='ssep'>·</span>"
         f"<span class='slabel'>Range</span> {spell.range}"
         f"<span class='ssep'>·</span>"
         f"<span class='slabel'>Duration</span> {duration_display}"
+        f"<span class='ssep'>·</span>"
+        f"<span class='slabel'>Components</span> {spell.components}"
     )
 
     # ── Classes row (optional) ─────────────────────────────────────────────
@@ -219,12 +211,7 @@ def write_spell_to_file(
     )
 
     # Quick-stats
-    file.write(
-        f"<div class='spell-quickstats'>"
-        f"<span class='sqs-left'>{left_cell}</span>"
-        f"<span class='sqs-right'>{right_cell}</span>"
-        f"</div>\n"
-    )
+    file.write(f"<div class='spell-quickstats'>{quickstats_html}</div>\n")
 
     # Classes (if requested)
     if classes_html:

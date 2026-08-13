@@ -30,7 +30,7 @@ WEAPON_CARD_CSS = """/* ── Weapon entries ───────────�
         /* Each weapon, stacked without an outer box */
         .weapon-entry {
             font-size: 0.85rem;
-            padding: 0.35rem 0;
+            padding: 0.4rem 0;
             max-width: none;
         }
 

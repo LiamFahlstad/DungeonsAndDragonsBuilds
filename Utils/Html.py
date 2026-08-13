@@ -515,7 +515,7 @@ BASE_CHARACTER_SHEET_CSS = """
             text-align: left;
             text-transform: uppercase;
             letter-spacing: 0.06em;
-            border-bottom: 2px solid #6a9a7a !important;
+            border-bottom: 1px solid #6a9a7a !important;
         }
 
         .item-label {
@@ -551,6 +551,9 @@ BASE_CHARACTER_SHEET_CSS = """
         /* Item inventory rows: name + description, wraps normally */
         .item-entry strong {
             color: #3a6e4a;
+            font-size: 1rem;
+            font-weight: 700;
+            letter-spacing: 0.02em;
         }
 
         .item-col-narrow {
@@ -574,8 +577,8 @@ BASE_CHARACTER_SHEET_CSS = """
         /* Individual item rows separated by a line rather than a full border */
         .item-table tr:not(:first-child) td {
             border: none;
-            border-bottom: 1px solid #a4c8b0;
-            padding: 5px 7px;
+            border-bottom: 2px solid #a4c8b0;
+            padding: 6px 7px;
         }
 
         .item-table tr:last-child td {

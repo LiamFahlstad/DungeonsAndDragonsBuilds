@@ -5,14 +5,14 @@ from Utils import Html
 
 FEATURE_CARD_CSS = """/* ── Feature cards ───────────────────────────────────────────────── */
         .feature-card {
-            margin: 0 0 0.55rem 0;
+            margin: 0 0 0.4rem 0;
             max-width: none;
-            padding: 0 0 0.55rem 0;
+            padding: 0 0 0.4rem 0;
         }
 
         .feature-card + .feature-card {
-            border-top: 3px solid #9a7040;
-            padding-top: 0.55rem;
+            border-top: 2px solid #9a7040;
+            padding-top: 0.4rem;
         }
 
         .feature-header {
