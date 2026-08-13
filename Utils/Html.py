@@ -497,8 +497,7 @@ BASE_CHARACTER_SHEET_CSS = """
         /* Item and tool proficiency tables */
         .item-table {
             width: 100%;
-            border-collapse: separate;
-            border-spacing: 0 8px;
+            border-collapse: collapse;
             font-size: 0.85rem;
             margin: 0.25rem 0;
         }
@@ -572,19 +571,15 @@ BASE_CHARACTER_SHEET_CSS = """
             vertical-align: middle;
         }
 
-        /* Individual item rows styled as cards */
+        /* Individual item rows separated by a line rather than a full border */
         .item-table tr:not(:first-child) td {
-            border: 2px solid #a4c8b0;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+            border: none;
+            border-bottom: 1px solid #a4c8b0;
             padding: 5px 7px;
         }
 
-        .item-table tr:not(:first-child) td:first-child {
-            border-radius: 4px 0 0 4px;
-        }
-
-        .item-table tr:not(:first-child) td:last-child {
-            border-radius: 0 4px 4px 0;
+        .item-table tr:last-child td {
+            border-bottom: none;
         }
 
         

@@ -22,59 +22,48 @@ _DAMAGE_TYPE_CSS_CLASS = {
     WeaponDamageTypes.FORCE: "wtag-dmg-force",
 }
 
-WEAPON_CARD_CSS = """/* ── Weapon cards ─────────────────────────────────────────────── */
+WEAPON_CARD_CSS = """/* ── Weapon entries ───────────────────────────────────────────── */
         .weapons {
             max-width: 100%;
         }
 
-        /* Gap between consecutive weapon cards */
-        .weapon-gap {
-            display: none;
-        }
-
-        /* Each weapon is its own bordered card table */
-        table.weapon-card {
-            width: 100%;
-            border-collapse: collapse;
+        /* Each weapon, stacked without an outer box */
+        .weapon-entry {
             font-size: 0.85rem;
-            border: 2px solid #d4a0a0;
-            border-radius: 4px;
-            margin: 0 0 8px 0;
-            table-layout: auto;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+            padding: 0.35rem 0;
+            max-width: none;
         }
 
-        table.weapon-card td,
-        table.weapon-card th {
-            border: 1px solid var(--border-color);
-            padding: 3px 7px;
-            vertical-align: top;
+        /* Separator line between consecutive weapons */
+        .weapon-entry + .weapon-entry {
+            border-top: 2px solid #a06060;
         }
 
-        /* Weapon name — full-width header row */
+        /* Weapon name */
         .weapon-name {
+            display: block;
             color: #8a4a4a;
             font-size: 1rem;
             font-weight: 700;
-            text-align: left;
             letter-spacing: 0.02em;
-            padding: 4px 7px;
-            border-bottom: 2px solid #a06060;
+            margin: 0 0 0.2rem 0;
         }
 
-        /* Quick-stats row — two cells side by side */
-        tr.weapon-quickstats td {
+        /* Quick-stats — two flexible columns, wrapping if the page is narrow */
+        .weapon-quickstats {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.15rem 1.2rem;
             font-size: 0.82rem;
-            white-space: normal;
-            padding: 3px 7px;
+            margin: 0 0 0.2rem 0;
         }
 
         .wqs-left {
-            width: 40%;
+            flex: 1 1 35%;
         }
 
         .wqs-right {
-            width: 60%;
+            flex: 1 1 55%;
         }
 
         /* Inline label within quick-stats */
@@ -93,24 +82,23 @@ WEAPON_CARD_CSS = """/* ── Weapon cards ────────────
             margin: 0 5px;
         }
 
-        /* Properties tag row */
-        tr.weapon-tags-row td {
-            padding: 3px 7px;
+        /* Properties tag section */
+        .weapon-tags {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: baseline;
+            gap: 0.3rem;
             font-size: 0.82rem;
+            margin: 0.15rem 0 0 0;
         }
 
         .wlabel-col {
             font-weight: 600;
             white-space: nowrap;
-            width: 1%;
             color: var(--muted-color);
             font-size: 0.78rem;
             text-transform: uppercase;
             letter-spacing: 0.04em;
-        }
-
-        .wtags-cell {
-            padding: 3px 7px;
         }
 
         /* Individual property/tag chips */
@@ -220,16 +208,18 @@ WEAPON_CARD_CSS = """/* ── Weapon cards ────────────
             font-weight: 600;
         }
 
-        /* Per-property description rows */
-        tr.weapon-prop-row td {
+        /* Per-property description */
+        .weapon-prop {
+            display: flex;
+            gap: 0.5rem;
             font-size: 0.8rem;
-            padding: 2px 7px;
+            margin: 0.1rem 0 0 0;
         }
 
         .wprop-label {
             font-weight: 600;
             white-space: nowrap;
-            width: 1%;
+            flex-shrink: 0;
             color: var(--muted-color);
         }
 
@@ -237,16 +227,18 @@ WEAPON_CARD_CSS = """/* ── Weapon cards ────────────
             color: #444;
         }
 
-        /* Mastery description row */
-        tr.weapon-mastery-row td {
+        /* Mastery description */
+        .weapon-mastery {
+            display: flex;
+            gap: 0.5rem;
             font-size: 0.8rem;
-            padding: 2px 7px;
+            margin: 0.1rem 0 0 0;
         }
 
         .wmastery-label {
             font-weight: 600;
             white-space: nowrap;
-            width: 1%;
+            flex-shrink: 0;
             color: #3a6e3a;
         }
 
@@ -254,22 +246,26 @@ WEAPON_CARD_CSS = """/* ── Weapon cards ────────────
             color: #3a3a3a;
         }
 
-        /* Additional description row */
-        tr.weapon-addl-row td {
+        /* Additional description */
+        .weapon-addl {
+            display: flex;
+            gap: 0.5rem;
             font-size: 0.82rem;
-            padding: 3px 7px;
             font-style: italic;
+            margin: 0.1rem 0 0 0;
         }
 
         .waddl-desc {
             color: #333;
         }
 
-        
-/* ── Weapon hit-probability row ──────────────────────────────────── */
-        tr.weapon-hit-row td {
-            padding: 3px 7px;
-            vertical-align: middle;
+
+/* ── Weapon hit-probability ──────────────────────────────────────── */
+        .weapon-hit {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin: 0.2rem 0 0 0;
         }
 
         """
@@ -309,21 +305,19 @@ def _write_single_weapon(
         if weapon.player_has_mastery:
             mastery_label += " ✓"
 
-    file.write("<table class='weapon-card'>\n")
+    file.write("<div class='weapon-entry'>\n")
 
-    # ── Weapon name header ──────────────────────────────────────────────────
+    # ── Weapon name ──────────────────────────────────────────────────────────
     wielded_tag = ""
     if not isinstance(weapon, UnarmedStrike):
         if weapon.is_wearing:
             wielded_tag = " <span class='wtag wtag-worn'>Wielded</span>"
         else:
             wielded_tag = " <span class='wtag wtag-not-worn'>Not wielded</span>"
-    file.write(
-        f"<tr><th class='weapon-name' colspan='2'>{weapon.name}{wielded_tag}</th></tr>\n"
-    )
+    file.write(f"<span class='weapon-name'>{weapon.name}{wielded_tag}</span>\n")
 
-    # ── Quick-stats row ─────────────────────────────────────────────────────
-    # Two cells: left = type/category info, right = roll info
+    # ── Quick-stats ──────────────────────────────────────────────────────────
+    # Left = type/category info, right = roll info
     type_cell = (
         f"{weapon.weapon_type.value}"
         f"<span class='wsep'>·</span>"
@@ -339,13 +333,13 @@ def _write_single_weapon(
         f"<span class='wlabel'>Damage</span> {damage_roll_str}{damage_type_tag}"
     )
     file.write(
-        f"<tr class='weapon-quickstats'>"
-        f"<td class='wqs-left'>{type_cell}</td>"
-        f"<td class='wqs-right'>{roll_cell}</td>"
-        f"</tr>\n"
+        f"<div class='weapon-quickstats'>"
+        f"<span class='wqs-left'>{type_cell}</span>"
+        f"<span class='wqs-right'>{roll_cell}</span>"
+        f"</div>\n"
     )
 
-    # ── Hit probability row ─────────────────────────────────────────────────
+    # ── Hit probability ──────────────────────────────────────────────────────
     conditions = [
         ("Normal", DamageCalculator.DiceRollCondition.NEUTRAL),
         ("Adv.", DamageCalculator.DiceRollCondition.ADVANTAGE),
@@ -372,13 +366,13 @@ def _write_single_weapon(
         f"</table>"
     )
     file.write(
-        f"<tr class='weapon-hit-row'>"
-        f"<td class='wlabel-col'>Hit % by AC</td>"
-        f"<td class='whit-cell'>{inner_table}</td>"
-        f"</tr>\n"
+        f"<div class='weapon-hit'>"
+        f"<span class='wlabel-col'>Hit % by AC</span>"
+        f"<span class='whit-cell'>{inner_table}</span>"
+        f"</div>\n"
     )
 
-    # ── Properties row ──────────────────────────────────────────────────────
+    # ── Properties ───────────────────────────────────────────────────────────
     if weapon.properties or mastery_label:
         tags_html = ""
         for prop in weapon.properties:
@@ -391,10 +385,10 @@ def _write_single_weapon(
             )
             tags_html += f"<span class='{mastery_cls}'>Mastery: {mastery_label}</span>"
         file.write(
-            f"<tr class='weapon-tags-row'>"
-            f"<td class='wlabel-col'>Properties</td>"
-            f"<td class='wtags-cell'>{tags_html.strip()}</td>"
-            f"</tr>\n"
+            f"<div class='weapon-tags'>"
+            f"<span class='wlabel-col'>Properties</span>"
+            f"<span>{tags_html.strip()}</span>"
+            f"</div>\n"
         )
 
     # ── Per-property descriptions ────────────────────────────────────────────
@@ -402,10 +396,10 @@ def _write_single_weapon(
         prop_desc_processed = Html.boxes_to_html(prop.description)
         prop_desc_html = prop_desc_processed.replace("\n", "<br>")
         file.write(
-            f"<tr class='weapon-prop-row'>"
-            f"<td class='wprop-label'>{prop.value}</td>"
-            f"<td class='wprop-desc'>{prop_desc_html}</td>"
-            f"</tr>\n"
+            f"<div class='weapon-prop'>"
+            f"<span class='wprop-label'>{prop.value}</span>"
+            f"<span class='wprop-desc'>{prop_desc_html}</span>"
+            f"</div>\n"
         )
 
     # ── Mastery description (only if the player has mastery) ────────────────
@@ -413,10 +407,10 @@ def _write_single_weapon(
         mastery_desc_processed = Html.boxes_to_html(weapon.mastery.description)
         mastery_desc_html = mastery_desc_processed.replace("\n", "<br>")
         file.write(
-            f"<tr class='weapon-mastery-row'>"
-            f"<td class='wmastery-label'>Mastery — {weapon.mastery.value}</td>"
-            f"<td class='wmastery-desc'>{mastery_desc_html}</td>"
-            f"</tr>\n"
+            f"<div class='weapon-mastery'>"
+            f"<span class='wmastery-label'>Mastery — {weapon.mastery.value}</span>"
+            f"<span class='wmastery-desc'>{mastery_desc_html}</span>"
+            f"</div>\n"
         )
 
     # ── Additional description ───────────────────────────────────────────────
@@ -425,13 +419,13 @@ def _write_single_weapon(
         desc_processed = Html.boxes_to_html(weapon.description_text)
         desc_html = desc_processed.replace("\n", "<br>")
         file.write(
-            f"<tr class='weapon-addl-row'>"
-            f"<td class='wlabel-col'>Notes</td>"
-            f"<td class='waddl-desc'>{desc_html}</td>"
-            f"</tr>\n"
+            f"<div class='weapon-addl'>"
+            f"<span class='wlabel-col'>Notes</span>"
+            f"<span class='waddl-desc'>{desc_html}</span>"
+            f"</div>\n"
         )
 
-    file.write("</table>\n")
+    file.write("</div>\n")
 
 
 def write_weapons_to_file(
@@ -445,9 +439,7 @@ def write_weapons_to_file(
     file.write("<div class='weapons'>\n")
     file.write("<h2>Weapons</h2>\n")
 
-    for i, weapon in enumerate(weapons):
-        if i > 0:
-            file.write("<div class='weapon-gap'></div>\n")
+    for weapon in weapons:
         _write_single_weapon(weapon, character_stat_block, file)
 
     file.write("</div>\n")

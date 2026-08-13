@@ -2,7 +2,7 @@ from typing import TYPE_CHECKING, TextIO
 
 from Utils import Html
 
-SPELL_CARD_CSS = """/* ── Spell cards ──────────────────────────────────────────────────── */
+SPELL_CARD_CSS = """/* ── Spell entries ────────────────────────────────────────────────── */
         .spells {
             max-width: 100%;
         }
@@ -19,68 +19,39 @@ SPELL_CARD_CSS = """/* ── Spell cards ────────────�
             border-bottom: 1px solid #c8ccd8;
         }
 
-        /* Gap between consecutive spell cards */
-        .spell-gap {
-            height: 0;
-            max-width: none;
-            margin: 0;
-            padding: 0;
-            border-bottom: none;
-            display: none;
-        }
-
-        /* Each spell is its own bordered card table */
-        table.spell-card {
-            width: 100%;
-            border-collapse: collapse;
+        /* Each spell, stacked without an outer box */
+        .spell-entry {
             font-size: 0.85rem;
-            border: 2px solid #a8c4d8;
-            border-radius: 4px;
-            margin: 0 0 8px 0;
-            table-layout: auto;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+            padding: 0.35rem 0;
+            max-width: none;
         }
 
-        table.spell-card td,
-        table.spell-card th {
-            border: 1px solid var(--border-color);
-            padding: 3px 7px;
-            vertical-align: top;
+        /* Separator line between consecutive spells */
+        .spell-entry + .spell-entry {
+            border-top: 2px solid #6888a8;
         }
 
-        /* Add bottom border to spell rows for clearer separation within card */
-        table.spell-card tr {
-            border-bottom: 1px solid #ddd;
-        }
-
-        table.spell-card tr:last-child {
-            border-bottom: none;
-        }
-
-        /* Spell name — full-width header row */
+        /* Spell name */
         .spell-name {
+            display: block;
             color: #3a5a7a;
             font-size: 1rem;
             font-weight: 700;
-            text-align: left;
             letter-spacing: 0.02em;
-            padding: 4px 7px;
-            border-bottom: 2px solid #6888a8;
+            margin: 0 0 0.2rem 0;
         }
 
-        /* Quick-stats row — two cells side by side */
-        tr.spell-quickstats td {
+        /* Quick-stats — two flexible columns, wrapping if the page is narrow */
+        .spell-quickstats {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.15rem 1.2rem;
             font-size: 0.82rem;
-            white-space: normal;
-            padding: 3px 7px;
+            margin: 0 0 0.2rem 0;
         }
 
-        .sqs-left {
-            width: 50%;
-        }
-
-        .sqs-right {
-            width: 50%;
+        .sqs-left, .sqs-right {
+            flex: 1 1 45%;
         }
 
         /* Inline label within quick-stats */
@@ -99,10 +70,10 @@ SPELL_CARD_CSS = """/* ── Spell cards ────────────�
             margin: 0 5px;
         }
 
-        /* Classes row (only rendered when show_classes=True) */
-        tr.spell-classes-row td {
+        /* Classes list (only rendered when show_classes=True) */
+        .spell-classes {
             font-size: 0.78rem;
-            padding: 3px 7px;
+            margin: 0 0 0.2rem 0;
         }
 
         .sclass-chip {
@@ -115,29 +86,16 @@ SPELL_CARD_CSS = """/* ── Spell cards ────────────�
             font-size: 0.78rem;
         }
 
-        /* Description rows */
-        tr.spell-desc-row td,
-        tr.spell-higher-row td {
+        /* Description */
+        .spell-desc,
+        .spell-higher {
             font-size: 0.8rem;
-            padding: 3px 7px;
-        }
-
-        .sdesc-label {
-            font-weight: 600;
-            white-space: nowrap;
-            width: 1%;
-            color: var(--muted-color);
-            font-size: 0.78rem;
-            text-transform: uppercase;
-            letter-spacing: 0.04em;
-        }
-
-        .sdesc-text {
             color: #333;
+            margin: 0.2rem 0 0 0;
         }
 
-        /* Higher-level row gets a subtle accent */
-        tr.spell-higher-row td {
+        /* Higher-level note / ruling get a subtle accent */
+        .spell-higher {
             font-style: italic;
             color: #3a5a7a;
         }
@@ -250,57 +208,43 @@ def write_spell_to_file(
     ):  # Don't show checkbox for cantrips
         spell_name_display = f"<span class='spell-prep-checkbox'></span> {spell.name}"
 
-    # ── Write card ───────────────────────────────────────────────────────
-    file.write("<table class='spell-card'>\n")
+    # ── Write entry ──────────────────────────────────────────────────────
+    file.write("<div class='spell-entry'>\n")
 
-    # Name header row (full width)
+    # Name
     file.write(
-        f"<tr><th class='spell-name' colspan='2'>{spell_name_display}"
+        f"<span class='spell-name'>{spell_name_display}"
         f"{(' ' + tags_html.strip()) if tags_html else ''}"
-        f"</th></tr>\n"
+        f"</span>\n"
     )
 
-    # Quick-stats row
+    # Quick-stats
     file.write(
-        f"<tr class='spell-quickstats'>"
-        f"<td class='sqs-left'>{left_cell}</td>"
-        f"<td class='sqs-right'>{right_cell}</td>"
-        f"</tr>\n"
+        f"<div class='spell-quickstats'>"
+        f"<span class='sqs-left'>{left_cell}</span>"
+        f"<span class='sqs-right'>{right_cell}</span>"
+        f"</div>\n"
     )
 
-    # Classes row (if requested)
+    # Classes (if requested)
     if classes_html:
-        file.write(
-            f"<tr class='spell-classes-row'>"
-            f"<td colspan='2'>{classes_html}</td>"
-            f"</tr>\n"
-        )
+        file.write(f"<div class='spell-classes'>{classes_html}</div>\n")
 
-    # Description row
-    file.write(
-        f"<tr class='spell-desc-row'>"
-        f"<td class='sdesc-text' colspan='2'>{main_desc}</td>"
-        f"</tr>\n"
-    )
+    # Description
+    file.write(f"<div class='spell-desc'>{main_desc}</div>\n")
 
-    # Higher-level row (if present)
+    # Higher-level note (if present)
     if higher_level_html:
-        file.write(
-            f"<tr class='spell-higher-row'>"
-            f"<td class='sdesc-text' colspan='2'>{higher_level_html}</td>"
-            f"</tr>\n"
-        )
+        file.write(f"<div class='spell-higher'>{higher_level_html}</div>\n")
 
-    # Additional ruling row (if present) - e.g. a Channel Divinity option
+    # Additional ruling (if present) - e.g. a Channel Divinity option
     # that lets this specific character cast the spell without a slot.
     if spell.additional_ruling:
         ruling_html = Html.bolden_text_html(
             Html.boxes_to_html(spell.additional_ruling.strip())
         ).replace("\n", "<br>")
         file.write(
-            f"<tr class='spell-higher-row'>"
-            f"<td class='sdesc-text' colspan='2'><strong>Ruling.</strong> {ruling_html}</td>"
-            f"</tr>\n"
+            f"<div class='spell-higher'><strong>Ruling.</strong> {ruling_html}</div>\n"
         )
 
-    file.write("</table>\n")
+    file.write("</div>\n")

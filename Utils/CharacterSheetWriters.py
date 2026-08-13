@@ -695,9 +695,7 @@ class HtmlCharacterSheetWriter:
         for level, group in groupby(sorted_spells, key=lambda s: s.level):
             level_label = "Cantrips" if level == 0 else f"Level {level} Spells"
             file.write(f"<h3 class='spell-level-header'>{level_label}</h3>\n")
-            for i, spell in enumerate(group):
-                if i > 0:
-                    file.write("<div class='spell-gap'></div>\n")
+            for spell in group:
                 spell.write_to_file(file, show_preparation_checkbox=show_prep_checkbox)
 
         file.write("</div>\n")

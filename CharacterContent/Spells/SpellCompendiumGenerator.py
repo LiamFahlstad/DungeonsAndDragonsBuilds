@@ -85,8 +85,8 @@ def _get_css_style() -> str:
         margin: 1.2rem 0 0.3rem 0;
     }
 
-    /* Spell cards avoid column breaks */
-    table.spell-card {
+    /* Spell entries avoid column breaks */
+    .spell-entry {
         break-inside: avoid;
     }"""
 
