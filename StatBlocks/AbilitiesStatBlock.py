@@ -138,6 +138,17 @@ class PointBuyAbilitiesStatBlock(AbilitiesStatBlock):
 
     @staticmethod
     def _point_cost(score: int) -> int:
+        """
+        Point costs:
+            8  -> 0
+            9  -> 1
+            10 -> 2
+            11 -> 3
+            12 -> 4
+            13 -> 5
+            14 -> 7
+            15 -> 9
+        """
         if score <= 13:
             return score - 8
         return 5 + 2 * (score - 13)
