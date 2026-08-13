@@ -34,7 +34,7 @@ from Core.Definitions import Ability, Skill
 from CharacterContent.Features.CharacterFeats import Backgrounds, GeneralFeats, OriginFeats
 from CharacterContent.Items import Armor, Weapons
 from CharacterContent.Items import Items
-from CharacterContent.ToolProficiencies.Proficiencies import ThievesTools as ThievesToolsProficiency
+from CharacterContent.ToolProficiencies.Proficiencies import ThievesTools as ThievesToolsProficiency, DisguiseKit as DisguiseKitProficiency, PoisonersKit as PoisonersKitProficiency
 from CharacterContent.Species import Human
 from StatBlocks.AbilitiesStatBlock import StandardArrayAbilitiesStatBlock
 from StatBlocks.SkillsStatBlock import RogueSkillsStatBlock
@@ -91,9 +91,6 @@ def get_starter_class_builder():
         items=[
             (Items.ThievesTools(), 1),
         ],
-        tool_proficiencies=[
-            ThievesToolsProficiency(),
-        ],
         base_class_level_features=ClassBuilder.BaseClassLevelFeatures(
             base_class_features_by_level={
                 1: RogueLevel1(
@@ -144,6 +141,8 @@ def get_starter_class_builder():
                 17: RogueAssassinLevel17(),
             },
         ),
+        tool_proficiencies=[ThievesToolsProficiency(), DisguiseKitProficiency(),
+            PoisonersKitProficiency()],
     )
 
 

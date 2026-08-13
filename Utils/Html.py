@@ -675,10 +675,23 @@ BASE_CHARACTER_SHEET_CSS = """
             font-weight: 700;
             font-size: 0.72rem;
             text-align: left;
+            vertical-align: middle;
             padding: 2px 8px;
             border: 1px solid #5a4030;
             white-space: nowrap;
             letter-spacing: 0.03em;
+        }
+
+        /* Condition sub-label (Normal/Adv./Disadv.) under a merged bonus cell */
+        table.dc-fail-table th.dc-fail-cond-col {
+            color: var(--muted-color);
+            font-weight: 600;
+            font-style: italic;
+            font-size: 0.68rem;
+            text-align: left;
+            padding: 2px 8px;
+            border: 1px solid #ddd;
+            white-space: nowrap;
         }
 
         /* Spell school colors — preserved in print */
@@ -697,5 +710,74 @@ BASE_CHARACTER_SHEET_CSS = """
             border-radius: 2px;
             vertical-align: middle;
             margin-right: 0.3em;
+        }
+
+        /* ── Spellcasting headline: Ability / DC / Attack stat tiles ────── */
+        .spell-headline {
+            max-width: 100%;
+            margin: 0.4rem 0 0.9rem 0;
+        }
+
+        .spell-headline-group {
+            display: flex;
+            gap: 0.6rem;
+            flex-wrap: wrap;
+            max-width: none;
+            margin: 0 0 0.5rem 0;
+            padding: 0;
+        }
+
+        .spell-stat-tile {
+            display: inline-flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 0.1rem;
+            min-width: 5em;
+            max-width: none;
+            margin: 0;
+            padding: 0.25rem 0.6rem;
+            border: 1px solid #b89060;
+            border-radius: 4px;
+        }
+
+        .spell-stat-label {
+            font-size: 0.6rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: #6a5636;
+            white-space: nowrap;
+        }
+
+        .spell-stat-value {
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: #3a2c1c;
+            line-height: 1.15;
+        }
+
+        .spell-stat-value.spell-stat-ability {
+            font-size: 1rem;
+        }
+
+        /* Probability tables are reference material, not the headline stat */
+        .spell-tables-secondary {
+            max-width: 100%;
+            margin: 0 0 0.75rem 0;
+        }
+
+        .spell-tables-secondary .spell-tables-caption {
+            max-width: none;
+            margin: 0 0 0.25rem 0;
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--muted-color);
+        }
+
+        .spell-tables-secondary table.dc-fail-table {
+            opacity: 0.85;
         }
         """

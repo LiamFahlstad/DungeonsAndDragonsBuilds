@@ -46,6 +46,7 @@ from CharacterContent.Spells.SpellLists import (
 )
 from StatBlocks.AbilitiesStatBlock import StandardArrayAbilitiesStatBlock
 from StatBlocks.SkillsStatBlock import ClericSkillsStatBlock
+from CharacterContent.ToolProficiencies.Proficiencies import CalligraphersSupplies
 
 
 def get_starter_class_builder():
@@ -190,6 +191,7 @@ def get_starter_class_builder():
                 17: ClericKnowledgeLevel17(),
             },
         ),
+        tool_proficiencies=[CalligraphersSupplies()],
         replace_spells={ClericLevel1Spells.HEALING_WORD: ClericLevel2Spells.AUGURY},
     )
 

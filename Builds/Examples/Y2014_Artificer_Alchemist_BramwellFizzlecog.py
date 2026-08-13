@@ -37,6 +37,7 @@ from CharacterContent.Species import Gnome
 from CharacterContent.Spells import SpellLists as SpellDefinitions
 from StatBlocks.AbilitiesStatBlock import StandardArrayAbilitiesStatBlock
 from StatBlocks.SkillsStatBlock import ArtificerSkillsStatBlock
+from CharacterContent.ToolProficiencies.Proficiencies import AlchemistsSupplies
 
 
 def get_starter_class_builder():
@@ -163,6 +164,7 @@ def get_starter_class_builder():
                 17: ArtificerAlchemistLevel17(),
             },
         ),
+        tool_proficiencies=[AlchemistsSupplies()],
     )
 
 

@@ -42,6 +42,7 @@ from CharacterContent.Items import Armor, Weapons
 from CharacterContent.Species import Human
 from StatBlocks.AbilitiesStatBlock import StandardArrayAbilitiesStatBlock
 from StatBlocks.SkillsStatBlock import FighterSkillsStatBlock
+from CharacterContent.ToolProficiencies.Proficiencies import SmithsTools
 
 
 def get_starter_class_builder():
@@ -176,6 +177,7 @@ def get_starter_class_builder():
                 18: FighterBattleMasterLevel18(),
             },
         ),
+        tool_proficiencies=[SmithsTools()],
     )
 
 

@@ -46,6 +46,7 @@ from CharacterContent.Spells.SpellLists import (
 )
 from StatBlocks.AbilitiesStatBlock import StandardArrayAbilitiesStatBlock
 from StatBlocks.SkillsStatBlock import ClericSkillsStatBlock
+from CharacterContent.ToolProficiencies.Proficiencies import SmithsTools
 
 
 def get_starter_class_builder():
@@ -172,6 +173,7 @@ def get_starter_class_builder():
                 17: ClericForgeLevel17(),
             },
         ),
+        tool_proficiencies=[SmithsTools()],
         replace_spells={},
     )
 

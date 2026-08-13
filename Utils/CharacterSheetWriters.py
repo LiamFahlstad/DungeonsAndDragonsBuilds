@@ -264,6 +264,49 @@ class HtmlCharacterSheetWriter:
 
         file.write("</table>\n<br>\n")
 
+    def _write_spellcasting_headline(
+        self,
+        character: CharacterStatBlock,
+        file: TextIO,
+        casting_abilities: list[Ability],
+    ):
+        """Prominent Ability / Save DC / Attack modifier tiles, one row per
+        spellcasting ability. The probability breakdown tables that follow
+        are reference material, so they're rendered smaller and muted.
+        """
+        file.write("<div class='spell-headline'>\n")
+        for ability in casting_abilities:
+            dc = character.calculate_difficulty_class_for_ability(ability)
+            attack_bonus = character.calculate_attack_bonus_for_ability(ability)
+            file.write("<div class='spell-headline-group'>\n")
+            file.write(
+                "<div class='spell-stat-tile'>"
+                "<span class='spell-stat-label'>Spellcasting Ability</span>"
+                f"<span class='spell-stat-value spell-stat-ability'>{ability.value}</span>"
+                "</div>\n"
+            )
+            file.write(
+                "<div class='spell-stat-tile'>"
+                "<span class='spell-stat-label'>Spell Save DC</span>"
+                f"<span class='spell-stat-value'>{dc}</span>"
+                "</div>\n"
+            )
+            file.write(
+                "<div class='spell-stat-tile'>"
+                "<span class='spell-stat-label'>Spell Attack Modifier</span>"
+                f"<span class='spell-stat-value'>{attack_bonus:+}</span>"
+                "</div>\n"
+            )
+            file.write("</div>\n")
+        file.write("</div>\n")
+
+        file.write("<div class='spell-tables-secondary'>\n")
+        file.write(
+            "<p class='spell-tables-caption'>Save &amp; attack probability reference</p>\n"
+        )
+        self._write_save_dc_probabilities(character, file, casting_abilities)
+        file.write("</div>\n")
+
     def _write_save_dc_probabilities(
         self,
         character: CharacterStatBlock,
@@ -319,7 +362,7 @@ class HtmlCharacterSheetWriter:
 
         file.write("<table class='dc-fail-table'>\n")
         file.write(
-            "<tr><th class='dc-fail-dc-col'>Spell Attack (Hit %)</th><th class='dc-fail-dc-col'></th>"
+            "<tr><th class='dc-fail-dc-col' colspan='2'>Spell Attack (Hit %)</th>"
         )
         for ac in ac_range:
             file.write(f"<th class='whit-ac'>AC {ac}</th>")
@@ -331,10 +374,12 @@ class HtmlCharacterSheetWriter:
             bonus_label = f"{sign}{attack_bonus} ({abilities_label})"
             for i, (cond_label, condition) in enumerate(spell_attack_conditions):
                 row_header = (
-                    f"<th class='dc-fail-dc-col'>{bonus_label if i == 0 else ''}</th>"
+                    f"<th class='dc-fail-dc-col' rowspan='{len(spell_attack_conditions)}'>{bonus_label}</th>"
+                    if i == 0
+                    else ""
                 )
                 file.write(
-                    f"<tr>{row_header}<th class='dc-fail-dc-col'>{cond_label}</th>"
+                    f"<tr>{row_header}<th class='dc-fail-cond-col'>{cond_label}</th>"
                 )
                 for ac in ac_range:
                     prob = DamageCalculator.probability_of_success(
@@ -625,14 +670,7 @@ class HtmlCharacterSheetWriter:
             {ability for _, ability, _ in spells},
             key=lambda a: a.value,
         )
-        label = (
-            "Spellcasting Abilities"
-            if len(casting_abilities) > 1
-            else "Spellcasting Ability"
-        )
-        abilities_str = ", ".join(a.value for a in casting_abilities)
-        file.write(f"<p><strong>{label}:</strong> {abilities_str}</p>\n")
-        self._write_save_dc_probabilities(character, file, casting_abilities)
+        self._write_spellcasting_headline(character, file, casting_abilities)
         file.write("<div class='spells'>\n")
 
         created_spells = [

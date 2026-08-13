@@ -35,6 +35,7 @@ from CharacterContent.Features.CharacterFeats import Backgrounds, GeneralFeats, 
 from CharacterContent.Species import Elf
 from StatBlocks.AbilitiesStatBlock import StandardArrayAbilitiesStatBlock
 from StatBlocks.SkillsStatBlock import MonkSkillsStatBlock
+from CharacterContent.ToolProficiencies.Proficiencies import HerbalismKit
 
 
 def get_starter_class_builder():
@@ -127,6 +128,7 @@ def get_starter_class_builder():
                 17: MonkMercyLevel17(),
             },
         ),
+        tool_proficiencies=[HerbalismKit()],
     )
 
 
