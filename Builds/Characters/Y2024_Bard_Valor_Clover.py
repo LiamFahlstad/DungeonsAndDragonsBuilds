@@ -20,7 +20,7 @@ from CharacterContent.Classes.SubClasses2024.BardValor import (
     BardValorLevel3,
 )
 from CharacterContent.Features.CharacterFeats import Backgrounds, OriginFeats
-from CharacterContent.Items import Armor, Weapons
+from CharacterContent.Items import Armor, Items, Weapons
 from CharacterContent.Species import Human
 from CharacterContent.Spells.SpellLists import (
     BardLevel0Spells,
@@ -89,6 +89,11 @@ def get_starter_class_builder():
         ],
         weapons=[
             Weapons.Rapier(player_is_proficient=True, ability=Ability.DEXTERITY),
+        ],
+        items=[
+            (Items.Lute(), 1),
+            (Items.Drum(), 1),
+            (Items.Flute(), 1),
         ],
         tool_proficiencies=[
             Lute(),

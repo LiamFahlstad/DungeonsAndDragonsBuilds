@@ -7,8 +7,10 @@ class ThievesTools(Item):
             "Thieves' Tools",
             rarity=ItemRarity.UNCOMMON,
             category=ItemCategory.TOOL,
+            weight=1.0,
             slots=1,
-            description_text="Utilize: Pick a lock, or disarm a trap (DEX DC 15)",
+            value=25,
+            description_text="Ability: Dexterity. Utilize: Pick a lock (DC 15), or disarm a trap (DC 15).",
             is_homebrew=False,
         )
 
@@ -126,4 +128,49 @@ class Mirror(Item):
             ),
             is_homebrew=False,
             value=5,
+        )
+
+
+class NavigatorsTools(Item):
+    def __init__(self):
+        super().__init__(
+            "Navigator's Tools", rarity=ItemRarity.COMMON, category=ItemCategory.TOOL,
+            weight=2.0, slots=1, value=25, is_homebrew=False,
+            description_text="Ability: Wisdom. Utilize: Plot a course (DC 10), or determine position by stargazing (DC 15).",
+        )
+
+
+class PoisonersKit(Item):
+    def __init__(self):
+        super().__init__(
+            "Poisoner's Kit", rarity=ItemRarity.UNCOMMON, category=ItemCategory.TOOL,
+            weight=2.0, slots=1, value=50, is_homebrew=False,
+            description_text="Ability: Intelligence. Utilize: Detect a poisoned object (DC 10).",
+        )
+
+
+class HerbalismKit(Item):
+    def __init__(self):
+        super().__init__(
+            "Herbalism Kit", rarity=ItemRarity.COMMON, category=ItemCategory.TOOL,
+            weight=3.0, slots=1, value=5, is_homebrew=False,
+            description_text="Ability: Intelligence. Utilize: Identify a plant (DC 10).",
+        )
+
+
+class DisguiseKit(Item):
+    def __init__(self):
+        super().__init__(
+            "Disguise Kit", rarity=ItemRarity.COMMON, category=ItemCategory.TOOL,
+            weight=3.0, slots=1, value=25, is_homebrew=False,
+            description_text="Ability: Charisma. Utilize: Apply makeup (DC 10).",
+        )
+
+
+class ForgeryKit(Item):
+    def __init__(self):
+        super().__init__(
+            "Forgery Kit", rarity=ItemRarity.COMMON, category=ItemCategory.TOOL,
+            weight=5.0, slots=1, value=15, is_homebrew=False,
+            description_text="Ability: Dexterity. Utilize: Mimic 10 or fewer words of someone else's handwriting (DC 15), or duplicate a wax seal (DC 20).",
         )

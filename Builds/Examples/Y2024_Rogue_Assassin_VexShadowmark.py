@@ -20,6 +20,7 @@ from Core.Definitions import Ability, Skill
 from CharacterContent.Features.CharacterFeats import Backgrounds, GeneralFeats, OriginFeats
 from CharacterContent.Items import Armor, Weapons
 from CharacterContent.Items import Items
+from CharacterContent.ToolProficiencies.Proficiencies import ThievesTools as ThievesToolsProficiency
 from CharacterContent.Species import Elf
 from StatBlocks.AbilitiesStatBlock import StandardArrayAbilitiesStatBlock
 from StatBlocks.SkillsStatBlock import RogueSkillsStatBlock
@@ -80,6 +81,9 @@ def get_starter_class_builder():
             (Items.Arrows(), 20),
             (Items.Quiver(), 1),
             (Items.ThievesTools(), 1),
+        ],
+        tool_proficiencies=[
+            ThievesToolsProficiency(),
         ],
         base_class_level_features=ClassBuilder.BaseClassLevelFeatures(
             base_class_features_by_level={

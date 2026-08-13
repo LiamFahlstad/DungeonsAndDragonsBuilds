@@ -42,6 +42,25 @@ from .AdventuringGear import (
     Pole,
     LockingSpellbook,
 )
+from .ArtisansTools import (
+    AlchemistsSupplies,
+    BrewersSupplies,
+    CalligraphersSupplies,
+    CarpentersTools,
+    CartographersTools,
+    CobblersTools,
+    CooksUtensils,
+    GlassblowersTools,
+    JewelersTools,
+    LeatherworkersTools,
+    MasonsTools,
+    PaintersSupplies,
+    PottersTools,
+    SmithsTools,
+    TinkersTools,
+    WeaversTools,
+    WoodcarversTools,
+)
 from .Ammunition import (
     Arrows,
     CrossbowBolts,
@@ -64,6 +83,12 @@ from .Clothing import (
     FineClothes,
     Robe,
     TravelersClothes,
+)
+from .GamingSets import (
+    Dice,
+    Dragonchess,
+    PlayingCards,
+    ThreeDragonAnte,
 )
 from .Common import (
     Ink,
@@ -93,6 +118,16 @@ from .Currency import (
 )
 from .MusicalInstruments import (
     Typewriter,
+    Bagpipes,
+    Drum,
+    Dulcimer,
+    Flute,
+    Horn,
+    Lute,
+    Lyre,
+    PanFlute,
+    Shawm,
+    Viol,
 )
 from .Poisons import (
     BasicPoison,
@@ -135,6 +170,11 @@ from .Tools import (
     Shovel,
     Tinderbox,
     Mirror,
+    NavigatorsTools,
+    PoisonersKit,
+    HerbalismKit,
+    DisguiseKit,
+    ForgeryKit,
 )
 from .Trinkets import (
     FingerGunRing,

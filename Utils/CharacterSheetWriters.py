@@ -752,14 +752,33 @@ class HtmlCharacterSheetWriter:
 
         file.write("<h2>Tool Proficiencies</h2>\n")
 
-        sorted_tool_proficiencies = sorted(tool_proficiencies, key=lambda x: x.name)
-        proficiency_rows = [
-            (tool_proficiency.name, tool_proficiency.get_description(character))
-            for tool_proficiency in sorted_tool_proficiencies
-        ]
-        Html.write_item_table(file, "Other Tool Proficiencies", proficiency_rows)
+        headers = ["Tool", "Modifier", "Breakdown", "Ability", "Craft"]
+        file.write("<table class='stat-table'>\n<tr>")
+        for header in headers:
+            file.write(f"<th>{header}</th>")
+        file.write("</tr>\n")
 
-        file.write("<br class='section-gap'>\n")
+        proficiency_bonus = character.get_proficiency_bonus()
+        sorted_tool_proficiencies = sorted(tool_proficiencies, key=lambda x: x.name)
+        for tool_proficiency in sorted_tool_proficiencies:
+            ability_modifier = character.get_ability_modifier(tool_proficiency.ability)
+            total = ability_modifier + proficiency_bonus
+            breakdown = f"{ability_modifier} + {proficiency_bonus} (proficiency)"
+            craft = (
+                ", ".join(item.name for item in tool_proficiency.craftables)
+                if tool_proficiency.craftables
+                else "-"
+            )
+            row = [
+                tool_proficiency.name,
+                f"{total:+}",
+                breakdown,
+                tool_proficiency.ability.value,
+                craft,
+            ]
+            Html.write_table_row(file, row, "st-proficient")
+
+        file.write("</table>\n<br class='section-gap'>\n")
 
     def _get_css_style(self) -> str:
         return Html.render_style_block(
