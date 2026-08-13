@@ -106,7 +106,7 @@ def get_starter_class_builder():
     )
 
 
-class Y2024ArtificerCartographerPetraGearhollowCharacterBuilder(CharacterBuilder):
+class Y2024ArtificerCartographerObmarStalskaggCharacterBuilder(CharacterBuilder):
     def __init__(self):
         super().__init__(
             name="Obmar Stålskägg",

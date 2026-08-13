@@ -1,4 +1,3 @@
-from Core.Definitions import ROGUE_HIT_DIE
 from CharacterContent.Features.Core.BaseFeatures import Feature
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
@@ -13,15 +12,31 @@ class Spellcasting(Feature):
             "Cantrips. You know three cantrips: Mage Hand and two other cantrips of your choice from the Wizard spell list (see that class's section for its list). Mind Sliver and Minor Illusion are recommended.\n"
             "Whenever you gain a Rogue level, you can replace one of your cantrips, except Mage Hand, with another Wizard cantrip of your choice.\n"
             "When you reach Rogue level 10, you learn another Wizard cantrip of your choice.\n"
-            "Spell Slots. You regain all expended spell slots when you finish a Long Rest.\n"
+            "Spell Slots. The Arcane Trickster Spellcasting table shows how many spell slots you have to cast your level 1+ spells. You regain all expended spell slots when you finish a Long Rest.\n"
             "Prepared Spells of Level 1+. You prepare a list of the level 1+ spells that are available for you to cast with this feature. To start, choose three level 1 Wizard spells. Charm Person, Disguise Self and Fog Cloud are recommended.\n"
             "The number of spells on your list increases as you gain Rogue levels, as shown in the Prepared Spells column of the Arcane Trickster Spellcasting table. Whenever that number increases, choose additional Wizard spells until the number of spells on your list matches the number in the Arcane Trickster Spellcasting table. The chosen spells must be of a level for which you have spell slots. For example, if you're a level 7 Rogue, your list of prepared spells can include five Wizard spells of level 1 or 2 in any combination.\n"
             "Changing Your Prepared Spells. Whenever you gain a Rogue level, you can replace one spell on your list with another Wizard spell for which you have spell slots.\n"
-            "Spellcasting Ability. Intelligence is your spellcasting ability for your Wizard spells.\n"
-            "Spellcasting Focus. You can use an Arcane Focus as a Spellcasting Focus for your Wizard spells.\n"
-            "Restriction. Aside from Mage Hand, the spells you choose for this feature must be Enchantment or Illusion spells, unless they are among a short list of exceptions such as Alarm, Detect Magic, Feather Fall, Find Familiar and Knock."
+            "Spellcasting Ability. Intelligence is your Spellcasting ability for your Wizard Spells.\n"
+            "Spellcasting Focus. You can use an Arcane Focus as a Spellcasting Focus for your Wizard Spells."
         )
         return description
+
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        return [
+            ("Spellcasting Ability", "Intelligence"),
+            ("Cantrips Known", "3 + 1 at Rogue level 10 (Mage Hand mandatory)"),
+            ("Spellcasting Focus", "Arcane Focus allowed"),
+            (
+                "Spell Slots",
+                "See Arcane Trickster Spellcasting table (recover on Long Rest)",
+            ),
+            (
+                "Prepared Spells",
+                "See Arcane Trickster Spellcasting table (scale by Rogue level)",
+            ),
+        ]
 
 
 class MageHandLegerdemain(Feature):
@@ -74,7 +89,10 @@ class SpellThief(Feature):
             ("Trigger", "Creature casts spell targeting you or including you in area"),
             ("Action", "Reaction"),
             ("Save", "Intelligence (DC = your spell save DC)"),
-            ("Effect", "Negate spell; steal spell knowledge if level 1+ and castable by you"),
+            (
+                "Effect",
+                "Negate spell; steal spell knowledge if level 1+ and castable by you",
+            ),
             ("Duration", "8 hours (you have spell prepared; creature can't cast)"),
             ("Limitation", "Once per Long Rest"),
         ]
