@@ -31,7 +31,8 @@ class CommonCultist(ExtendedCombatantData):
             saving_throws={},
             spell_slots={},
             cr="1",
-            monster_type=MonsterType.HUMANOID, monster_type_note='Cultist',
+            monster_type=MonsterType.HUMANOID,
+            monster_type_note="Cultist",
             alignment=Alignment.NEUTRAL_EVIL,
             size=Size.MEDIUM,
             ac_note="scavenged padding",
@@ -83,87 +84,6 @@ class CommonCultist(ExtendedCombatantData):
         )
 
 
-class SisterAshNumberSeven(ExtendedCombatantData):
-    def __init__(self):
-        super().__init__(
-            combatant_type="Sister Ash - Number Seven",
-            hp=32,
-            ac=14,
-            temp_hp=0,
-            conditions=[],
-            ability_scores={
-                Ability.STRENGTH: 12,
-                Ability.DEXTERITY: 16,
-                Ability.CONSTITUTION: 14,
-                Ability.INTELLIGENCE: 13,
-                Ability.WISDOM: 15,
-                Ability.CHARISMA: 16,
-            },
-            saving_throws={Ability.WISDOM: 4},
-            spell_slots={},
-            cr="1",
-            monster_type=MonsterType.HUMANOID, monster_type_note='Cultist',
-            alignment=Alignment.NEUTRAL_EVIL,
-            size=Size.MEDIUM,
-            ac_note="studded leather",
-            hp_formula="5d8+10",
-            speed_ground_ft=30,
-            speed_fly_ft=None,
-            speed_climb_ft=None,
-            speed_special_rules="",
-            skills={
-                Skill.ACROBATICS: 5,
-                Skill.INSIGHT: 4,
-                Skill.PERSUASION: 5,
-            },
-            damage_vulnerabilities=[],
-            damage_resistances=[],
-            damage_immunities=[],
-            condition_immunities=[Condition.FRIGHTENED],
-            senses="Passive Perception 12",
-            languages="Common",
-            traits=[
-                MonsterAbility(
-                    name="The Severing of Names",
-                    description="Sister Ash burned every ledger, seal, and portrait bearing her birth name during her Severing rite, and answers now only to her number. Any divination or effect that seeks her out by her former name automatically fails to locate or identify her.",
-                ),
-                MonsterAbility(
-                    name="Fear Unlearned",
-                    description="Sister Ash's composure was forged in the dueling courts and council chambers of her old life, long before she ever heard Noc'tra whispered. She can't be Frightened, and unlike the curse-marked cultists above her, this fearlessness is entirely her own.",
-                ),
-                MonsterAbility(
-                    name="The Curse Is Watching",
-                    description="Those near Sister Ash sometimes swear the shadows linger on her a moment longer than the light allows, as if something patient were taking her measure. She has noticed nothing. Yet.",
-                ),
-            ],
-            actions=[
-                MonsterAbility(
-                    name="Multiattack",
-                    description="Sister Ash makes two Rapier attacks.",
-                ),
-                MonsterAbility(
-                    name="Rapier",
-                    description="Melee Attack Roll: +5, reach 5 ft. Hit: 7 (1d8 + 3) Piercing damage.",
-                ),
-                MonsterAbility(
-                    name="Dagger",
-                    description="Melee or Ranged Attack Roll: +5, reach 5 ft. or range 20/60 ft. Hit: 6 (1d4 + 3) Piercing damage.",
-                ),
-            ],
-            bonus_actions=[],
-            reactions=[
-                MonsterAbility(
-                    name="Duelist's Guard",
-                    description="In response to being hit by a melee attack, Sister Ash adds 2 to her AC against that attack, possibly causing it to miss.",
-                ),
-            ],
-            legendary_actions=[],
-            legendary_resistances=0,
-            lair_actions=[],
-            mythic_actions=[],
-        )
-
-
 class AccursedGroupSmall(ExtendedCombatantData):
     def __init__(self):
         super().__init__(
@@ -183,7 +103,8 @@ class AccursedGroupSmall(ExtendedCombatantData):
             saving_throws={},
             spell_slots={},
             cr="1",
-            monster_type=MonsterType.UNDEAD, monster_type_note='',
+            monster_type=MonsterType.UNDEAD,
+            monster_type_note="",
             alignment=Alignment.NEUTRAL_EVIL,
             size=Size.LARGE,
             ac_note="",
@@ -257,7 +178,8 @@ class CurseCracked(ExtendedCombatantData):
             saving_throws={},
             spell_slots={},
             cr="1",
-            monster_type=MonsterType.UNDEAD, monster_type_note='',
+            monster_type=MonsterType.UNDEAD,
+            monster_type_note="",
             alignment=Alignment.NEUTRAL_EVIL,
             size=Size.MEDIUM,
             ac_note="unnaturally cracked hide",
@@ -268,7 +190,14 @@ class CurseCracked(ExtendedCombatantData):
             speed_special_rules="",
             skills={},
             damage_vulnerabilities=[
-                DamageTypeEntry(damage_types=[DamageType.BLUDGEONING, DamageType.PIERCING, DamageType.SLASHING], note=""),
+                DamageTypeEntry(
+                    damage_types=[
+                        DamageType.BLUDGEONING,
+                        DamageType.PIERCING,
+                        DamageType.SLASHING,
+                    ],
+                    note="",
+                ),
             ],
             damage_resistances=[
                 DamageTypeEntry(damage_types=[DamageType.FORCE], note=""),
@@ -326,7 +255,8 @@ class CurseBodyBroken(ExtendedCombatantData):
             saving_throws={},
             spell_slots={},
             cr="1",
-            monster_type=MonsterType.UNDEAD, monster_type_note='',
+            monster_type=MonsterType.UNDEAD,
+            monster_type_note="",
             alignment=Alignment.NEUTRAL_EVIL,
             size=Size.MEDIUM,
             ac_note="grotesquely warped bone and hide",
@@ -340,7 +270,14 @@ class CurseBodyBroken(ExtendedCombatantData):
                 DamageTypeEntry(damage_types=[DamageType.PSYCHIC], note=""),
             ],
             damage_resistances=[
-                DamageTypeEntry(damage_types=[DamageType.BLUDGEONING, DamageType.PIERCING, DamageType.SLASHING], note=""),
+                DamageTypeEntry(
+                    damage_types=[
+                        DamageType.BLUDGEONING,
+                        DamageType.PIERCING,
+                        DamageType.SLASHING,
+                    ],
+                    note="",
+                ),
             ],
             damage_immunities=[],
             condition_immunities=[],
@@ -403,7 +340,8 @@ class CurseMindBroken(ExtendedCombatantData):
             saving_throws={},
             spell_slots={},
             cr="1",
-            monster_type=MonsterType.UNDEAD, monster_type_note='',
+            monster_type=MonsterType.UNDEAD,
+            monster_type_note="",
             alignment=Alignment.NEUTRAL_EVIL,
             size=Size.MEDIUM,
             ac_note="curse-flesh where a face should be",
@@ -426,7 +364,7 @@ class CurseMindBroken(ExtendedCombatantData):
             traits=[
                 MonsterAbility(
                     name="Leaking Curse",
-                    description="Immediately after a creature hits the Curse Mind Broken with a melee attack, raw curse-energy lashes out from the wound. That creature takes 3 (1d6) Force damage.",
+                    description="Immediately after a creature hits the Curse Mind Broken with a melee attack, raw curse-energy lashes out from the wound. That creature takes 3 (1d6) Psychic damage.",
                 ),
                 MonsterAbility(
                     name="Broken Mind",
