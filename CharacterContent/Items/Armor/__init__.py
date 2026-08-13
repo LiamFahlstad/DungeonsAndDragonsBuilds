@@ -7,10 +7,18 @@ from .Improvements import (
 )
 from .Base import AbstractArmor
 from .Standard import (
+    PaddedArmor,
     LeatherArmor,
     StuddedLeatherArmor,
+    HideArmor,
     ChainShirtArmor,
+    ScaleMailArmor,
+    BreastplateArmor,
+    HalfPlateArmor,
+    RingMailArmor,
     ChainMailArmor,
+    SplintArmor,
+    PlateArmor,
     ShieldArmor,
 )
 from .Magic import (

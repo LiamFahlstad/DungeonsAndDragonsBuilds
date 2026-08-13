@@ -44,6 +44,9 @@ from .AdventuringGear import (
 )
 from .Ammunition import (
     Arrows,
+    CrossbowBolts,
+    SlingBullets,
+    BlowgunNeedles,
 )
 from .CarryingGear import (
     Pouch,
