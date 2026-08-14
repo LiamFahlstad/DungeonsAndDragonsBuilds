@@ -275,6 +275,7 @@ def _write_single_weapon(
     weapon: AbstractWeapon,
     character_stat_block: CharacterStatBlock,
     file: TextIO,
+    include_probability_tables: bool = False,
 ):
     attack_bonus_int = weapon.calculate_total_attack_roll_bonus_int(
         character_stat_block
@@ -340,37 +341,38 @@ def _write_single_weapon(
     )
 
     # ── Hit probability ──────────────────────────────────────────────────────
-    conditions = [
-        ("Normal", DamageCalculator.DiceRollCondition.NEUTRAL),
-        ("Adv.", DamageCalculator.DiceRollCondition.ADVANTAGE),
-        ("Disadv.", DamageCalculator.DiceRollCondition.DISADVANTAGE),
-    ]
-    hit_probs_normal = weapon.calculate_hit_probabilities(character_stat_block)
-    inner_header = "".join(
-        f"<th class='whit-ac'>{ac}</th>" for ac, _ in hit_probs_normal
-    )
-    inner_rows = ""
-    for label, cond in conditions:
-        hit_probs = weapon.calculate_hit_probabilities(
-            character_stat_block, condition=cond
+    if include_probability_tables:
+        conditions = [
+            ("Normal", DamageCalculator.DiceRollCondition.NEUTRAL),
+            ("Adv.", DamageCalculator.DiceRollCondition.ADVANTAGE),
+            ("Disadv.", DamageCalculator.DiceRollCondition.DISADVANTAGE),
+        ]
+        hit_probs_normal = weapon.calculate_hit_probabilities(character_stat_block)
+        inner_header = "".join(
+            f"<th class='whit-ac'>{ac}</th>" for ac, _ in hit_probs_normal
         )
-        cells = "".join(
-            f"<td class='whit-pct' data-pct='{round(round(prob * 100) / 5) * 5}'>{prob * 100:.0f}%</td>"
-            for _, prob in hit_probs
+        inner_rows = ""
+        for label, cond in conditions:
+            hit_probs = weapon.calculate_hit_probabilities(
+                character_stat_block, condition=cond
+            )
+            cells = "".join(
+                f"<td class='whit-pct' data-pct='{round(round(prob * 100) / 5) * 5}'>{prob * 100:.0f}%</td>"
+                for _, prob in hit_probs
+            )
+            inner_rows += f"<tr><td class='whit-cond-label'>{label}</td>{cells}</tr>"
+        inner_table = (
+            f"<table class='whit-inner'>"
+            f"<tr><th class='whit-cond-label'></th>{inner_header}</tr>"
+            f"{inner_rows}"
+            f"</table>"
         )
-        inner_rows += f"<tr><td class='whit-cond-label'>{label}</td>{cells}</tr>"
-    inner_table = (
-        f"<table class='whit-inner'>"
-        f"<tr><th class='whit-cond-label'></th>{inner_header}</tr>"
-        f"{inner_rows}"
-        f"</table>"
-    )
-    file.write(
-        f"<div class='weapon-hit'>"
-        f"<span class='wlabel-col'>Hit % by AC</span>"
-        f"<span class='whit-cell'>{inner_table}</span>"
-        f"</div>\n"
-    )
+        file.write(
+            f"<div class='weapon-hit'>"
+            f"<span class='wlabel-col'>Hit % by AC</span>"
+            f"<span class='whit-cell'>{inner_table}</span>"
+            f"</div>\n"
+        )
 
     # ── Properties ───────────────────────────────────────────────────────────
     if weapon.properties or mastery_label:
@@ -432,6 +434,7 @@ def write_weapons_to_file(
     weapons: list[AbstractWeapon],
     character_stat_block: CharacterStatBlock,
     file: TextIO,
+    include_probability_tables: bool = False,
 ):
     if not weapons:
         return
@@ -440,6 +443,6 @@ def write_weapons_to_file(
     file.write("<h2>Weapons</h2>\n")
 
     for weapon in weapons:
-        _write_single_weapon(weapon, character_stat_block, file)
+        _write_single_weapon(weapon, character_stat_block, file, include_probability_tables)
 
     file.write("</div>\n")

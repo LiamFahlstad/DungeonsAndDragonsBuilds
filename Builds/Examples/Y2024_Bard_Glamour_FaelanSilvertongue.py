@@ -48,6 +48,7 @@ from CharacterContent.Spells.SpellLists import (
     BardLevel9Spells,
 )
 from StatBlocks.AbilitiesStatBlock import StandardArrayAbilitiesStatBlock
+from CharacterContent.ToolProficiencies.Proficiencies import Flute, Lyre, Viol
 from StatBlocks.SkillsStatBlock import BardSkillsStatBlock
 
 
@@ -89,6 +90,11 @@ def get_starter_class_builder():
         armor=[],
         weapons=[],
         items=[(Items.Typewriter(), 1)],
+        tool_proficiencies=[
+            Lyre(),
+            Viol(),
+            Flute(),
+        ],
         base_class_level_features=ClassBuilder.BaseClassLevelFeatures(
             base_class_features_by_level={
                 1: BardLevel1(

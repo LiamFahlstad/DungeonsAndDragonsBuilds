@@ -49,6 +49,7 @@ from CharacterContent.Spells.SpellLists import (
     DruidLevel9Spells,
 )
 from StatBlocks.AbilitiesStatBlock import StandardArrayAbilitiesStatBlock
+from CharacterContent.ToolProficiencies.Proficiencies import HerbalismKit
 from StatBlocks.SkillsStatBlock import DruidSkillsStatBlock
 
 
@@ -94,6 +95,7 @@ def get_starter_class_builder():
         origin_feat=OriginFeats.Tough(),
         armor=[],
         weapons=[],
+        tool_proficiencies=[HerbalismKit()],
         base_class_level_features=ClassBuilder.BaseClassLevelFeatures(
             base_class_features_by_level={
                 1: DruidLevel1(

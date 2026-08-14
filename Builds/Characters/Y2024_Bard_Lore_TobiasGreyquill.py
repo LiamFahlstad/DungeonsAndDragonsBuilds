@@ -46,6 +46,7 @@ from CharacterContent.Spells.SpellLists import (
     ClericLevel3Spells,
     WizardLevel3Spells,
 )
+from CharacterContent.ToolProficiencies.Proficiencies import Flute, Lute, Viol
 from StatBlocks.AbilitiesStatBlock import StandardArrayAbilitiesStatBlock
 from StatBlocks.SkillsStatBlock import BardSkillsStatBlock
 
@@ -87,6 +88,11 @@ def get_starter_class_builder():
         origin_feat=OriginFeats.Tough(),
         armor=[],
         weapons=[],
+        tool_proficiencies=[
+            Lute(),
+            Viol(),
+            Flute(),
+        ],
         base_class_level_features=ClassBuilder.BaseClassLevelFeatures(
             base_class_features_by_level={
                 1: BardLevel1(

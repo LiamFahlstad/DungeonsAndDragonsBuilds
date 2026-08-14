@@ -16,6 +16,7 @@ from Core.Definitions import Ability, Skill
 from CharacterContent.Features.CharacterFeats import Backgrounds, OriginFeats
 from CharacterContent.Species import Human
 from StatBlocks.AbilitiesStatBlock import StandardArrayAbilitiesStatBlock
+from CharacterContent.ToolProficiencies.Proficiencies import Flute
 from StatBlocks.SkillsStatBlock import MonkSkillsStatBlock
 
 
@@ -62,6 +63,7 @@ def get_starter_class_builder():
         origin_feat=OriginFeats.Alert(),
         armor=[],
         weapons=[],
+        tool_proficiencies=[Flute()],
         base_class_level_features=ClassBuilder.BaseClassLevelFeatures(
             base_class_features_by_level={
                 1: MonkLevel1(),

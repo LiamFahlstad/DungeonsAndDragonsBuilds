@@ -269,6 +269,7 @@ class HtmlCharacterSheetWriter:
         character: CharacterStatBlock,
         file: TextIO,
         casting_abilities: list[Ability],
+        include_probability_tables: bool = False,
     ):
         """Prominent Ability / Save DC / Attack modifier tiles, one row per
         spellcasting ability. The probability breakdown tables that follow
@@ -300,12 +301,13 @@ class HtmlCharacterSheetWriter:
             file.write("</div>\n")
         file.write("</div>\n")
 
-        file.write("<div class='spell-tables-secondary'>\n")
-        file.write(
-            "<p class='spell-tables-caption'>Save &amp; attack probability reference</p>\n"
-        )
-        self._write_save_dc_probabilities(character, file, casting_abilities)
-        file.write("</div>\n")
+        if include_probability_tables:
+            file.write("<div class='spell-tables-secondary'>\n")
+            file.write(
+                "<p class='spell-tables-caption'>Save &amp; attack probability reference</p>\n"
+            )
+            self._write_save_dc_probabilities(character, file, casting_abilities)
+            file.write("</div>\n")
 
     def _write_save_dc_probabilities(
         self,
@@ -548,7 +550,7 @@ class HtmlCharacterSheetWriter:
         file.write("<h2>Features</h2>\n")
         sorted_features = sorted(text_features, key=self._sort_features_key)
 
-        file.write("<div>\n")
+        file.write("<div class='features'>\n")
         for feature in sorted_features:
             feature.write_to_file(character, file, description_mode)
         file.write("</div>\n<br class='section-gap'>\n")
@@ -559,12 +561,13 @@ class HtmlCharacterSheetWriter:
         file: TextIO,
         weapons: list[AbstractWeapon],
         weapon_masteries: list[AbstractWeapon],
+        include_probability_tables: bool = False,
     ):
         if not weapons:
             return
 
         self._apply_weapon_masteries(weapons, weapon_masteries)
-        write_weapons_to_file(weapons, character, file)
+        write_weapons_to_file(weapons, character, file, include_probability_tables)
 
     def _write_fighting_styles(
         self,
@@ -661,6 +664,7 @@ class HtmlCharacterSheetWriter:
         character: CharacterStatBlock,
         file: TextIO,
         spells: list[tuple[str, Ability, Optional[str]]],
+        include_probability_tables: bool = False,
     ):
         if not spells:
             return
@@ -670,7 +674,7 @@ class HtmlCharacterSheetWriter:
             {ability for _, ability, _ in spells},
             key=lambda a: a.value,
         )
-        self._write_spellcasting_headline(character, file, casting_abilities)
+        self._write_spellcasting_headline(character, file, casting_abilities, include_probability_tables)
         file.write("<div class='spells'>\n")
 
         created_spells = [
@@ -843,6 +847,7 @@ class HtmlCharacterSheetWriter:
         tool_proficiencies: list[ToolProficiency],
         experience_points: int = 0,
         description_mode: Literal["table", "concise"] | None = None,
+        include_probability_tables: bool = False,
     ):
         output_path_obj = pathlib.Path(output_path)
         output_path_obj.parent.mkdir(parents=True, exist_ok=True)
@@ -859,11 +864,11 @@ class HtmlCharacterSheetWriter:
             self._write_skills(character, file, skill_config)
             file.write("<div class='print-page-break'></div>\n")
             self._write_features(character, file, features, description_mode)
-            self._write_weapons(character, file, weapons, weapon_masteries)
+            self._write_weapons(character, file, weapons, weapon_masteries, include_probability_tables)
             self._write_fighting_styles(character, file, fighting_styles)
             self._write_invocations(character, file, invocations)
             self._write_pact_magic_slots(character, file)
             self._write_spell_slots(character, file)
-            self._write_spells(character, file, spells)
+            self._write_spells(character, file, spells, include_probability_tables)
             self._write_items(character, file, armors, weapons, items)
             self._write_tool_proficiencies(character, file, tool_proficiencies)

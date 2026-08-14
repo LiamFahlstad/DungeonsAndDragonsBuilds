@@ -244,6 +244,7 @@ class CharacterSheetData:
         self,
         skill_config: Definitions.SkillConfig = Definitions.SkillConfig.DEFAULT,
         description_mode: Literal["table", "concise"] | None = None,
+        include_probability_tables: bool = False,
     ):
         if any(
             field is None
@@ -279,6 +280,7 @@ class CharacterSheetData:
             tool_proficiencies=self.tool_proficiencies,
             experience_points=self.experience_points,
             description_mode=description_mode,
+            include_probability_tables=include_probability_tables,
         )
 
     def setup_character_stat_block(self) -> CharacterStatBlock:

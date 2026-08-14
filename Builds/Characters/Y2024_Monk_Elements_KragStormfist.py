@@ -11,6 +11,7 @@ from CharacterContent.Features.CharacterFeats import Backgrounds, OriginFeats
 from CharacterContent.Features.SpeciesFeatures import GoliathFeatures
 from CharacterContent.Species import Goliath
 from StatBlocks.AbilitiesStatBlock import StandardArrayAbilitiesStatBlock
+from CharacterContent.ToolProficiencies.Proficiencies import Drum
 from StatBlocks.SkillsStatBlock import MonkSkillsStatBlock
 
 
@@ -59,6 +60,7 @@ def get_starter_class_builder():
         origin_feat=OriginFeats.TavernBrawler(),
         armor=[],
         weapons=[],
+        tool_proficiencies=[Drum()],
         base_class_level_features=ClassBuilder.BaseClassLevelFeatures(
             base_class_features_by_level={
                 1: MonkLevel1(),

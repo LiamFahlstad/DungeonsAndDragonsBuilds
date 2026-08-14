@@ -38,7 +38,11 @@ from CharacterContent.Species import Dwarf
 from CharacterContent.Spells import SpellLists as SpellDefinitions
 from StatBlocks.AbilitiesStatBlock import StandardArrayAbilitiesStatBlock
 from StatBlocks.SkillsStatBlock import ArtificerSkillsStatBlock
-from CharacterContent.ToolProficiencies.Proficiencies import SmithsTools
+from CharacterContent.ToolProficiencies.Proficiencies import (
+    SmithsTools,
+    ThievesTools,
+    TinkersTools,
+)
 
 
 def get_starter_class_builder():
@@ -167,7 +171,7 @@ def get_starter_class_builder():
                 17: ArtificerBattleSmithLevel17(),
             },
         ),
-        tool_proficiencies=[SmithsTools()],
+        tool_proficiencies=[SmithsTools(), ThievesTools(), TinkersTools()],
     )
 
 

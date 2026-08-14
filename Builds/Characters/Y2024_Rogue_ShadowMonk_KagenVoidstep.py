@@ -43,6 +43,7 @@ from CharacterContent.Items import Weapons
 from CharacterContent.Species import Halfling
 from Core.Definitions import Ability, RogueSubclass, Skill
 from StatBlocks.AbilitiesStatBlock import PointBuyAbilitiesStatBlock
+from CharacterContent.ToolProficiencies.Proficiencies import ThievesTools
 from StatBlocks.SkillsStatBlock import RogueSkillsStatBlock
 
 
@@ -102,6 +103,7 @@ def get_starter_class_builder():
         weapons=[
             Weapons.Shortbow(),
         ],
+        tool_proficiencies=[ThievesTools()],
         base_class_level_features=ClassBuilder.BaseClassLevelFeatures(
             base_class_features_by_level={
                 1: RogueLevel1(

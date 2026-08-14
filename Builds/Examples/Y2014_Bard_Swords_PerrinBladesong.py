@@ -40,6 +40,7 @@ from CharacterContent.Spells.SpellLists import (
     BardLevel4Spells,
 )
 from StatBlocks.AbilitiesStatBlock import StandardArrayAbilitiesStatBlock
+from CharacterContent.ToolProficiencies.Proficiencies import Bagpipes, Drum, Horn
 from StatBlocks.SkillsStatBlock import BardSkillsStatBlock
 
 
@@ -81,6 +82,11 @@ def get_starter_class_builder():
         armor=[],
         weapons=[
             Weapons.Rapier(player_has_mastery=True),
+        ],
+        tool_proficiencies=[
+            Drum(),
+            Horn(),
+            Bagpipes(),
         ],
         base_class_level_features=ClassBuilder.BaseClassLevelFeatures(
             base_class_features_by_level={

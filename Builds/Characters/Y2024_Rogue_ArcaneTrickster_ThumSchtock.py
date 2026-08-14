@@ -22,6 +22,7 @@ from CharacterContent.Spells.SpellLists import (
 )
 from Core.Definitions import Ability, Skill
 from StatBlocks.AbilitiesStatBlock import PointBuyAbilitiesStatBlock
+from CharacterContent.ToolProficiencies.Proficiencies import ThievesTools
 from StatBlocks.SkillsStatBlock import RogueSkillsStatBlock
 
 
@@ -83,6 +84,7 @@ def get_starter_class_builder():
             (Items.Gold(), 38),
             (Items.Silver(), 5),
         ],
+        tool_proficiencies=[ThievesTools()],
         base_class_level_features=ClassBuilder.BaseClassLevelFeatures(
             base_class_features_by_level={
                 1: RogueLevel1(

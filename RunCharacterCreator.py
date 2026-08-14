@@ -133,6 +133,11 @@ if __name__ == "__main__":
         "version fall back to their normal description. Output files get a "
         "'_concise' or '_table' suffix accordingly.",
     )
+    parser.add_argument(
+        "--probability-tables",
+        action="store_true",
+        help="Include DC-save / spell-attack / weapon-attack success rate reference tables.",
+    )
     args = parser.parse_args()
 
     skill_config = Definitions.SkillConfig.DEFAULT
@@ -142,4 +147,5 @@ if __name__ == "__main__":
         character_sheet_data.create_character_sheet(
             skill_config=skill_config,
             description_mode=args.concise,
+            include_probability_tables=args.probability_tables,
         )

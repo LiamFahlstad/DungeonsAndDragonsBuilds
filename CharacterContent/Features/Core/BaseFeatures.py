@@ -4,6 +4,10 @@ from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import Html
 
 FEATURE_CARD_CSS = """/* ── Feature cards ───────────────────────────────────────────────── */
+        .features {
+            max-width: 100%;
+        }
+
         .feature-card {
             margin: 0 0 0.4rem 0;
             max-width: none;
@@ -26,11 +30,31 @@ FEATURE_CARD_CSS = """/* ── Feature cards ───────────�
             margin: 0;
         }
 
+        .feature-name-group {
+            display: flex;
+            align-items: baseline;
+            gap: 0.5rem;
+        }
+
         .feature-name {
             font-size: 1rem;
             font-weight: 700;
             color: #4a3020;
             letter-spacing: 0.02em;
+        }
+
+        /* Shown on full-mode sheets for features normally skipped in concise
+           mode — flags at a glance that there's nothing here to actively track. */
+        .feature-passive-tag {
+            display: inline-block;
+            font-size: 0.68rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--muted-color);
+            border: 1px solid #bbb;
+            border-radius: 3px;
+            padding: 1px 6px;
         }
 
         .feature-origin {
@@ -206,9 +230,22 @@ class Feature:
         if html_description is None:
             return
 
+        # A skippable-in-concise feature that's still showing means we're on a
+        # full-mode sheet — flag it as passive so the player knows there's
+        # nothing here to actively track.
+        passive_tag = (
+            "<span class='feature-passive-tag'>Passive</span>"
+            if description_mode is None and self.skippable_in_concise
+            else ""
+        )
+
         file.write("<div class='feature-card'>\n")
         file.write("<div class='feature-header'>\n")
+        file.write("<span class='feature-name-group'>\n")
         file.write(f"<span class='feature-name'>{self.name}</span>\n")
+        if passive_tag:
+            file.write(f"{passive_tag}\n")
+        file.write("</span>\n")
         file.write(f"<span class='feature-origin'>{self.origin}</span>\n")
         file.write("</div>\n")
         file.write("<div class='feature-body'>\n")
@@ -220,9 +257,14 @@ class Feature:
             )
             if ext_html is None:
                 continue
+            ext_passive_tag = (
+                " <span class='feature-passive-tag'>Passive</span>"
+                if description_mode is None and extension.skippable_in_concise
+                else ""
+            )
             file.write(
                 f"<div class='feature-upgrade'>\n"
-                f"<span class='feature-upgrade-label'>{extension.origin}: {extension.name}</span>\n"
+                f"<span class='feature-upgrade-label'>{extension.origin}: {extension.name}{ext_passive_tag}</span>\n"
                 f"<div class='feature-upgrade-body'>{ext_html}</div>\n"
                 f"</div>\n"
             )
