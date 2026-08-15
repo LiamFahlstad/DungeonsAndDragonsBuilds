@@ -3,6 +3,7 @@ from typing import Any, Literal, Optional
 import attr
 
 import Core.Definitions as Definitions
+from Builds.EquipmentHandler import EquipmentEntry
 from CharacterContent.Features.CharacterFeats import OriginFeats
 from CharacterContent.Features.CombatFeatures.FightingStyles import (
     FightingStyle,
@@ -17,13 +18,13 @@ from CharacterContent.Items.Weapons import (
     WeaponProficiency,
     is_proficient_with,
 )
+from CharacterContent.ToolProficiencies.Proficiencies import ToolProficiency
 from Core.Definitions import Ability, ApplyWhen, CharacterClass
 from StatBlocks.AbilitiesStatBlock import AbilitiesStatBlock
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from StatBlocks.CombatStatBlock import CombatStatBlock
 from StatBlocks.SavingThrowsStatBlock import SavingThrowsStatBlock
 from StatBlocks.SkillsStatBlock import SkillsStatBlock
-from CharacterContent.ToolProficiencies.Proficiencies import ToolProficiency
 from Utils import CharacterSheetWriters
 
 # Scalar values merge_with treats as "not set": an incoming value equal to one
@@ -67,8 +68,25 @@ class CharacterSheetData:
     armor_proficiencies: set[Definitions.ArmorType] = attr.Factory(set)
     weapon_proficiencies: set[WeaponProficiency] = attr.Factory(set)
     items: list[tuple[Items.Item, int]] = attr.Factory(list)  # (item_name, quantity)
+    # Same gear as armors/weapons/items above, grouped into labeled batches
+    # (Starting Equipment, then whatever adventuring gear was added later via
+    # an EquipmentHandler - see Builds/EquipmentHandler.py) so the sheet can
+    # show where each item came from. armors/weapons/items stay the flat
+    # lists everything else (AC, attacks, carrying capacity) reads.
+    equipment_entries: list[EquipmentEntry] = attr.Factory(list)
     tool_proficiencies: list[ToolProficiency] = attr.Factory(list)
     experience_points: int = 0
+    # GP left over after "buying" the base class's granted starting gear at
+    # listed prices, from that class's flat Starting Equipment gold option.
+    # Set once, by CharacterBuilder.build() from its EquipmentHandler - a
+    # multiclass dip never grants starting gold again.
+    starting_gold: Optional[float] = None
+    # The entry in equipment_entries representing Starting Equipment
+    # specifically, passed to the writer alongside equipment_entries (not put
+    # on CharacterStatBlock - that's a StatBlocks-layer class that shouldn't
+    # need to import an EquipmentEntry type from the Builds layer) so it can
+    # check `entry is starting_equipment_entry` instead of matching on label.
+    starting_equipment_entry: Optional[EquipmentEntry] = None
     _character_cached: Optional[CharacterStatBlock] = None
 
     # Records (apply_when, feature) in the order add_feature was called.
@@ -276,7 +294,8 @@ class CharacterSheetData:
             fighting_styles=self.fighting_styles,
             invocations=self.invocations,
             spells=self.spells,
-            items=self.items,
+            equipment_entries=self.equipment_entries,
+            starting_equipment_entry=self.starting_equipment_entry,
             tool_proficiencies=self.tool_proficiencies,
             experience_points=self.experience_points,
             description_mode=description_mode,
@@ -333,6 +352,7 @@ class CharacterSheetData:
             saving_throws=self.saving_throws,
             spell_casting_ability=self.spell_casting_ability,
             spell_slots=self.spell_slots,
+            starting_gold=self.starting_gold,
         )
 
         # Apply every IMMEDIATE feature (in call order) before any LAST

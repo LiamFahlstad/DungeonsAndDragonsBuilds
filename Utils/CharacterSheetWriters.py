@@ -2,6 +2,7 @@ import pathlib
 from typing import Literal, Optional, TextIO
 
 import Core.Definitions as Definitions
+from Builds.EquipmentHandler import EquipmentEntry
 from CharacterContent.Features.CombatFeatures.FightingStyles import FightingStyle
 from CharacterContent.Features.Core.BaseFeatures import FEATURE_CARD_CSS, Feature
 from CharacterContent.Invocations.InvocationFactory import InvocationFactory
@@ -705,15 +706,104 @@ class HtmlCharacterSheetWriter:
         file.write("</div>\n")
         file.write("<br class='section-gap'>\n")
 
+    @staticmethod
+    def _item_type_rarity_value(item: Items.Item, quantity: int = 1) -> tuple[str, str, str, str]:
+        value = item.get_value_display()
+        sell_value = item.get_sell_value_display()
+        prefix = f"{quantity} x " if quantity != 1 else ""
+        return (
+            item.category.value.title(),
+            item.rarity.value.title(),
+            f"{prefix}{value}" if value else "-",
+            f"{prefix}{sell_value}" if sell_value else "-",
+        )
+
+    @staticmethod
+    def _acquisition_tag(
+        item: Items.Item, entry: EquipmentEntry, is_starting_equipment: bool
+    ) -> str:
+        """Chip marking an adventuring-gear item as bought (with the amount
+        paid) or found; omitted for Starting Equipment, where the concept
+        doesn't apply - that gear's cost is already reflected in Starting
+        Gold, not tracked per item."""
+        if is_starting_equipment:
+            return ""
+        for purchased_item, price in entry.purchases:
+            if purchased_item is item:
+                price_display = (
+                    f"{int(price)} GP" if price == int(price) else f"{price:g} GP"
+                )
+                return f" <span class='wtag wtag-worn'>Paid: {price_display}</span>"
+        return " <span class='wtag wtag-not-worn'>Found</span>"
+
+    def _build_item_sections(
+        self, entry: EquipmentEntry, is_starting_equipment: bool
+    ) -> list[tuple[str, list[tuple[str, str, int, str, str, str, str]]]]:
+        """(title, [(label, description, slots, type, rarity, value,
+        sell_value), ...]) per non-empty Armor/Weapons/Other items table, in
+        the same slot-table format. Rows are sorted by item type."""
+        sections = []
+        if entry.armors:
+            sorted_armors = sorted(entry.armors, key=lambda a: (a.category.value, a.name))
+            armor_rows = [
+                (
+                    f"{armor.name}{self._worn_tag(armor)}"
+                    f"{self._acquisition_tag(armor, entry, is_starting_equipment)}",
+                    self._description_or_dash(armor.description_text),
+                    armor.slots,
+                    *self._item_type_rarity_value(armor),
+                )
+                for armor in sorted_armors
+            ]
+            sections.append(("Armor", armor_rows))
+
+        if entry.weapons:
+            sorted_weapons = sorted(
+                (w for w in entry.weapons if not isinstance(w, UnarmedStrike)),
+                key=lambda w: (w.category.value, w.name),
+            )
+            weapon_rows = [
+                (
+                    f"{weapon.name}{self._worn_tag(weapon, 'Wielded', 'Not wielded')}"
+                    f"{self._acquisition_tag(weapon, entry, is_starting_equipment)}",
+                    self._description_or_dash(weapon.description_text),
+                    weapon.slots,
+                    *self._item_type_rarity_value(weapon),
+                )
+                for weapon in sorted_weapons
+            ]
+            if weapon_rows:
+                sections.append(("Weapons", weapon_rows))
+
+        if entry.items:
+            sorted_items = sorted(entry.items, key=lambda x: (x[0].category.value, x[0].name))
+            item_rows = [
+                (
+                    f"{item.name} ({quantity}){self._worn_tag(item)}"
+                    f"{self._acquisition_tag(item, entry, is_starting_equipment)}",
+                    item.description_text,
+                    item.slots,
+                    *self._item_type_rarity_value(item, quantity),
+                )
+                for item, quantity in sorted_items
+            ]
+            sections.append(("Other items", item_rows))
+
+        return sections
+
     def _write_items(
         self,
         character: CharacterStatBlock,
         file: TextIO,
-        armors: list[Armor.AbstractArmor],
-        weapons: list[AbstractWeapon],
-        items: list[tuple[Items.Item, int]],
+        equipment_entries: list[EquipmentEntry],
+        starting_equipment_entry: Optional[EquipmentEntry],
     ):
-        if not items and not armors and not weapons:
+        non_empty_entries = [
+            entry
+            for entry in equipment_entries
+            if entry.armors or entry.weapons or entry.items
+        ]
+        if not non_empty_entries:
             return
 
         file.write("<h2>Items</h2>\n")
@@ -735,49 +825,19 @@ class HtmlCharacterSheetWriter:
         file.write("</tr>\n")
         file.write("</table>\n")
 
-        # Each section renders in the same slot-table format:
-        # (title, [(label, description, slots), ...])
-        sections = []
-        if armors:
-            armor_rows = [
-                (
-                    f"{armor.name}{self._worn_tag(armor)}",
-                    self._description_or_dash(armor.description_text),
-                    armor.slots,
-                )
-                for armor in armors
-            ]
-            sections.append(("Armor", armor_rows))
+        for entry in non_empty_entries:
+            is_starting_equipment = entry is starting_equipment_entry
+            file.write(f"<h3>{entry.label}</h3>\n")
+            if is_starting_equipment and character.starting_gold is not None:
+                gold = max(0.0, character.starting_gold)
+                gold_display = f"{int(gold)} GP" if gold == int(gold) else f"{gold:g} GP"
+                file.write(f"<p><strong>Starting Gold:</strong> {gold_display}</p>\n")
 
-        if weapons:
-            weapon_rows = [
-                (
-                    f"{weapon.name}{self._worn_tag(weapon, 'Wielded', 'Not wielded')}",
-                    self._description_or_dash(weapon.description_text),
-                    weapon.slots,
-                )
-                for weapon in weapons
-                if not isinstance(weapon, UnarmedStrike)
-            ]
-            if weapon_rows:
-                sections.append(("Weapons", weapon_rows))
-
-        if items:
-            sorted_items = sorted(items, key=lambda x: x[0].name)
-            item_rows = [
-                (
-                    f"{item.name} ({quantity}){self._worn_tag(item)}",
-                    item.description_text,
-                    item.slots,
-                )
-                for item, quantity in sorted_items
-            ]
-            sections.append(("Other items", item_rows))
-
-        for i, (title, rows) in enumerate(sections):
-            if i > 0:
-                file.write("<hr>")
-            Html.write_slot_item_table(file, title, rows)
+            sections = self._build_item_sections(entry, is_starting_equipment)
+            for i, (title, rows) in enumerate(sections):
+                if i > 0:
+                    file.write("<hr>")
+                Html.write_slot_item_table(file, title, rows)
 
         file.write("<br class='section-gap'>\n")
 
@@ -843,7 +903,8 @@ class HtmlCharacterSheetWriter:
         fighting_styles: list[FightingStyle],
         invocations: list[str],
         spells: list[tuple[str, Ability, Optional[str]]],
-        items: list[tuple[Items.Item, int]],
+        equipment_entries: list[EquipmentEntry],
+        starting_equipment_entry: Optional[EquipmentEntry],
         tool_proficiencies: list[ToolProficiency],
         experience_points: int = 0,
         description_mode: Literal["table", "concise"] | None = None,
@@ -870,5 +931,5 @@ class HtmlCharacterSheetWriter:
             self._write_pact_magic_slots(character, file)
             self._write_spell_slots(character, file)
             self._write_spells(character, file, spells, include_probability_tables)
-            self._write_items(character, file, armors, weapons, items)
+            self._write_items(character, file, equipment_entries, starting_equipment_entry)
             self._write_tool_proficiencies(character, file, tool_proficiencies)

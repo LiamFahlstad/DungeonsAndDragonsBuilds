@@ -493,40 +493,12 @@ class StarterClassBuilder(ClassBuilder):
         for weapon_proficiency in self.weapon_proficiencies or []:
             data.add_weapon_proficiency(weapon_proficiency)
 
-        if not any(isinstance(item, Weapons.UnarmedStrike) for item in self.default_equipment):
-            data.add_weapon(Weapons.UnarmedStrike(player_is_proficient=True))
-
-        # Explicit body armor replaces the default one (a character can only
-        # wear one armor at a time); default shields still apply.
-        has_explicit_body_armor = any(not a.is_shield for a in (self.armor or []))
-        if self.add_default_equipment:
-            for item in self.default_equipment:
-                if isinstance(item, Weapons.AbstractWeapon):
-                    data.add_weapon(item)
-                elif isinstance(item, Armor.AbstractArmor):
-                    if item.is_shield or not has_explicit_body_armor:
-                        data.add_armor(item)
-
-        # The starting pack (Dungeoneer's, Explorer's, ...) is granted
-        # regardless of add_default_equipment: a character always gets it,
-        # even when the build picks its own weapons/armor instead of the
-        # class's default equipment option.
-        if self.default_pack is not None:
-            for pack_item, quantity in self.default_pack.get_items():
-                data.add_item(pack_item, quantity)
-
-        if self.armor is not None:
-            for a in self.armor:
-                data.add_armor(a)
-
-        if self.weapons is not None:
-            for w in self.weapons:
-                data.add_weapon(w)
-
-        if self.items is not None:
-            for item, quantity in self.items:
-                data.add_item(item, quantity)
-
+        # Equipment (default_equipment/default_pack/add_default_equipment/
+        # armor/weapons/items, plus starting_gold) is handled by
+        # CharacterBuilder via an EquipmentHandler (see Builds/
+        # EquipmentHandler.py), not here - this builder only stores those
+        # values (see properties above and __init__) for CharacterBuilder to
+        # read when it constructs the handler.
         for tool_proficiency in self.tool_proficiencies or []:
             data.add_tool_proficiency(tool_proficiency)
 

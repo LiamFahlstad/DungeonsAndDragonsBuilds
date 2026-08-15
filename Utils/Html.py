@@ -224,19 +224,27 @@ def write_item_table(file: TextIO, title: str, rows: list[tuple[str, str]]):
     file.write("</table>\n")
 
 
-def write_slot_item_table(file: TextIO, title: str, rows: list[tuple[str, str, int]]):
-    """Inventory table with slot cost, carry quantity, and left-behind tracking."""
+def write_slot_item_table(
+    file: TextIO, title: str, rows: list[tuple[str, str, int, str, str, str, str]]
+):
+    """Inventory table with type, rarity, value, sell value, slot cost, carry
+    quantity, and left-behind tracking. Each row is (label, description,
+    slots, item_type, rarity, value_display, sell_value_display)."""
     import re
 
     file.write("<table class='item-table'>\n")
     file.write("<tr>\n")
     file.write(f"<th class='item-title'>{title}</th>\n")
+    file.write("<th class='item-title item-col-medium'>Type</th>\n")
+    file.write("<th class='item-title item-col-medium'>Rarity</th>\n")
+    file.write("<th class='item-title item-col-medium'>Value</th>\n")
+    file.write("<th class='item-title item-col-medium'>Sell Value</th>\n")
     file.write("<th class='item-title item-col-narrow'>Slots</th>\n")
     file.write("<th class='item-title item-col-carry'>Carry</th>\n")
     file.write("<th class='item-title item-col-leftbehind'>Left Behind</th>\n")
     file.write("</tr>\n")
 
-    for label, description, slots in rows:
+    for label, description, slots, item_type, rarity, value, sell_value in rows:
         plain_label = re.sub(r"<span[^>]*>.*?</span>", "", label)
         plain_label = re.sub(r"<[^>]*>", "", plain_label).strip()
         leftbehind_id = (
@@ -247,6 +255,10 @@ def write_slot_item_table(file: TextIO, title: str, rows: list[tuple[str, str, i
         file.write(
             f"<td class='item-entry'><strong>{label}</strong><br/>{description}</td>\n"
         )
+        file.write(f"<td style='text-align: center;'>{item_type}</td>\n")
+        file.write(f"<td style='text-align: center;'>{rarity}</td>\n")
+        file.write(f"<td style='text-align: center;'>{value}</td>\n")
+        file.write(f"<td style='text-align: center;'>{sell_value}</td>\n")
         file.write(f"<td style='text-align: center;'>{slots}</td>\n")
         file.write("<td></td>\n")
         file.write(
@@ -558,6 +570,11 @@ BASE_CHARACTER_SHEET_CSS = """
 
         .item-col-narrow {
             width: 3em;
+            text-align: center;
+        }
+
+        .item-col-medium {
+            width: 5.5em;
             text-align: center;
         }
 
