@@ -40,15 +40,18 @@ class CharacterBuilder:
         armor: Optional[list[Armor.AbstractArmor | Bought]] = None,
         weapons: Optional[list[Weapons.AbstractWeapon | Bought]] = None,
         items: Optional[list[tuple[Items.Item | Bought, int]]] = None,
+        gold: float = 0,
     ) -> "CharacterBuilder":
         """Record gear earned after character creation (loot, purchases, ...)
         as its own labeled entry on the sheet, separate from Starting
         Equipment. Call as many times as needed, e.g. once per adventure.
         Items are found by default; wrap one in Bought(item) - or
         Bought(item, price=X) to override the amount paid - to mark it as
-        purchased instead."""
+        purchased instead. Pass gold=X for a net GP change from this entry
+        that isn't tied to a specific item (loot found, a cost paid) -
+        positive gains, negative spends."""
         self.equipment_handler.add_adventuring_gear(
-            label, armor=armor, weapons=weapons, items=items
+            label, armor=armor, weapons=weapons, items=items, gold=gold
         )
         return self
 
@@ -65,6 +68,13 @@ class CharacterBuilder:
         unambiguous reference to something from Starting Equipment
         specifically, or otherwise pass the specific instance instead."""
         self.equipment_handler.drop_item(item)
+        return self
+
+    def consume_item(self, item_type: type, quantity: int = 1) -> "CharacterBuilder":
+        """Reduce a stackable item's quantity (use 1 of 5 potions, fire 3 of
+        20 arrows) instead of dropping the whole stack. See
+        EquipmentHandler.consume_item()."""
+        self.equipment_handler.consume_item(item_type, quantity)
         return self
 
     def get_starting_item(
@@ -118,6 +128,7 @@ class CharacterBuilder:
             self.equipment_handler.starting_equipment_entry
         )
         character_sheet_data.starting_gold = self.equipment_handler.starting_gold
+        character_sheet_data.current_gold = self.equipment_handler.current_gold
         for armor in self.equipment_handler.armors:
             character_sheet_data.add_armor(armor)
         for weapon in self.equipment_handler.weapons:

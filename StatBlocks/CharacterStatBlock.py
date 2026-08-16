@@ -23,6 +23,7 @@ class CharacterStatBlock:
         spell_slots: Optional[dict[int, int]] = None,
         class_by_character_level: Optional[dict[int, CharacterClass]] = None,
         starting_gold: Optional[float] = None,
+        current_gold: Optional[float] = None,
     ):
         self.name = name
         self.character_subclass = character_subclass
@@ -36,6 +37,7 @@ class CharacterStatBlock:
         self.spell_casting_ability = spell_casting_ability
         self.spell_slots = spell_slots
         self.starting_gold = starting_gold
+        self.current_gold = current_gold
         self.pact_magic_slots: dict[int, int] = {}
         self._caster_registry: dict = {}
         self.initiative_proficiency = False

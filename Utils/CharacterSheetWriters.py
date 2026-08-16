@@ -719,8 +719,11 @@ class HtmlCharacterSheetWriter:
         )
 
     @staticmethod
+    def _format_gold(value: float) -> str:
+        return f"{int(value)} GP" if value == int(value) else f"{value:g} GP"
+
     def _acquisition_tag(
-        item: Items.Item, entry: EquipmentEntry, is_starting_equipment: bool
+        self, item: Items.Item, entry: EquipmentEntry, is_starting_equipment: bool
     ) -> str:
         """Chip marking an adventuring-gear item as bought (with the amount
         paid) or found; omitted for Starting Equipment, where the concept
@@ -730,9 +733,7 @@ class HtmlCharacterSheetWriter:
             return ""
         for purchased_item, price in entry.purchases:
             if purchased_item is item:
-                price_display = (
-                    f"{int(price)} GP" if price == int(price) else f"{price:g} GP"
-                )
+                price_display = self._format_gold(price)
                 return f" <span class='wtag wtag-worn'>Paid: {price_display}</span>"
         return " <span class='wtag wtag-not-worn'>Found</span>"
 
@@ -801,12 +802,18 @@ class HtmlCharacterSheetWriter:
         non_empty_entries = [
             entry
             for entry in equipment_entries
-            if entry.armors or entry.weapons or entry.items
+            if entry.armors or entry.weapons or entry.items or entry.gold
         ]
         if not non_empty_entries:
             return
 
         file.write("<h2>Items</h2>\n")
+
+        if character.current_gold is not None:
+            file.write(
+                f"<p><strong>Current Gold:</strong> "
+                f"{self._format_gold(max(0.0, character.current_gold))}</p>\n"
+            )
 
         # Write carrying capacity: one checkbox per slot, one column per source
         carrying_capacity = character.get_carrying_capacity()
@@ -829,9 +836,13 @@ class HtmlCharacterSheetWriter:
             is_starting_equipment = entry is starting_equipment_entry
             file.write(f"<h3>{entry.label}</h3>\n")
             if is_starting_equipment and character.starting_gold is not None:
-                gold = max(0.0, character.starting_gold)
-                gold_display = f"{int(gold)} GP" if gold == int(gold) else f"{gold:g} GP"
-                file.write(f"<p><strong>Starting Gold:</strong> {gold_display}</p>\n")
+                file.write(
+                    f"<p><strong>Starting Gold:</strong> "
+                    f"{self._format_gold(max(0.0, character.starting_gold))}</p>\n"
+                )
+            elif entry.gold:
+                sign = "+" if entry.gold > 0 else "-"
+                file.write(f"<p><strong>Gold:</strong> {sign}{self._format_gold(abs(entry.gold))}</p>\n")
 
             sections = self._build_item_sections(entry, is_starting_equipment)
             for i, (title, rows) in enumerate(sections):

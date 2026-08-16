@@ -81,6 +81,11 @@ class CharacterSheetData:
     # Set once, by CharacterBuilder.build() from its EquipmentHandler - a
     # multiclass dip never grants starting gold again.
     starting_gold: Optional[float] = None
+    # Running GP total after starting gold plus every gold=/Bought(...)
+    # delta recorded via add_adventuring_gear since. Set once by
+    # CharacterBuilder.build() from its EquipmentHandler.current_gold - see
+    # Builds/EquipmentHandler.py.
+    current_gold: Optional[float] = None
     # The entry in equipment_entries representing Starting Equipment
     # specifically, passed to the writer alongside equipment_entries (not put
     # on CharacterStatBlock - that's a StatBlocks-layer class that shouldn't
@@ -353,6 +358,7 @@ class CharacterSheetData:
             spell_casting_ability=self.spell_casting_ability,
             spell_slots=self.spell_slots,
             starting_gold=self.starting_gold,
+            current_gold=self.current_gold,
         )
 
         # Apply every IMMEDIATE feature (in call order) before any LAST

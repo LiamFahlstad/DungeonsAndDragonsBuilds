@@ -51,6 +51,11 @@ class EquipmentEntry:
     purchases: list[tuple[Armor.AbstractArmor | Weapons.AbstractWeapon | Items.Item, float]] = (
         attr.Factory(list)
     )
+    # Net GP gained (positive - loot, quest reward, sold something off the
+    # sheet) or spent on a non-item cost (negative - lodging, bribes,
+    # training) recorded directly on this entry, on top of whatever
+    # Bought(...) purchases above already deduct.
+    gold: float = 0
 
 # Each class's flat starting gold - the last "Choose A/B/..." alternative in
 # its Starting Equipment line in SourceTexts/ClassTexts/<class>.txt (e.g.
@@ -96,8 +101,7 @@ def _unwrap_bought(
 class EquipmentHandler:
     """Owns everything item-related for a single character build: starting
     equipment, starting gold, adventuring gear picked up over time, and
-    dropping items. Not yet wired into the build pipeline - see module
-    docstring."""
+    dropping items."""
 
     def __init__(self):
         self._entries: list[EquipmentEntry] = []
@@ -173,13 +177,16 @@ class EquipmentHandler:
         armor: Optional[list[Armor.AbstractArmor | Bought]] = None,
         weapons: Optional[list[Weapons.AbstractWeapon | Bought]] = None,
         items: Optional[list[tuple[Items.Item | Bought, int]]] = None,
+        gold: float = 0,
     ) -> EquipmentEntry:
         """Record gear picked up after character creation as its own labeled
         entry, separate from Starting Equipment. Call as many times as
         needed, e.g. once per adventure. Items are found by default; wrap
         one in Bought(item) - or Bought(item, price=X) to override the
-        amount paid - to mark it as purchased instead."""
-        entry = EquipmentEntry(label=label)
+        amount paid - to mark it as purchased instead. Pass gold=X for a
+        net GP change from this entry that isn't tied to a specific item
+        (loot found, a cost paid) - positive gains, negative spends."""
+        entry = EquipmentEntry(label=label, gold=gold)
         for a in armor or []:
             unwrapped, price = _unwrap_bought(a)
             entry.armors.append(unwrapped)
@@ -257,6 +264,32 @@ class EquipmentHandler:
             entry.weapons = [w for w in entry.weapons if w is not item]
             entry.items = [(i, q) for i, q in entry.items if i is not item]
 
+    def consume_item(self, item_type: type, quantity: int = 1) -> None:
+        """Reduce a stackable item's quantity (use 1 of 5 potions, fire 3 of
+        20 arrows) instead of dropping the whole stack. Decrements from
+        whichever entries hold it, in the order they were added, removing an
+        entry's row entirely once its share hits zero. Raises ValueError if
+        fewer than `quantity` are owned anywhere."""
+        total_owned = sum(q for i, q in self.items if type(i) is item_type)
+        if total_owned < quantity:
+            raise ValueError(
+                f"Only {total_owned} {item_type.__name__} owned, cannot consume {quantity}."
+            )
+        remaining = quantity
+        for entry in self._entries:
+            if remaining <= 0:
+                break
+            new_items = []
+            for item, q in entry.items:
+                if remaining > 0 and type(item) is item_type:
+                    take = min(q, remaining)
+                    remaining -= take
+                    if q - take > 0:
+                        new_items.append((item, q - take))
+                else:
+                    new_items.append((item, q))
+            entry.items = new_items
+
     @property
     def starting_equipment_entry(self) -> Optional[EquipmentEntry]:
         return self._starting_entry
@@ -296,3 +329,17 @@ class EquipmentHandler:
     @property
     def starting_gold(self) -> Optional[float]:
         return self._starting_gold
+
+    @property
+    def current_gold(self) -> Optional[float]:
+        """Starting gold, plus every add_adventuring_gear(gold=...) delta
+        since, minus every Bought(...) purchase price recorded since - the
+        character's running GP total. Starting Equipment's own cost is
+        already netted out of starting_gold, so it contributes 0 here."""
+        if self._starting_gold is None:
+            return None
+        total = self._starting_gold
+        for entry in self._entries:
+            total += entry.gold
+            total -= sum(price for _item, price in entry.purchases)
+        return total
