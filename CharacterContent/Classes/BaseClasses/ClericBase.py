@@ -3,14 +3,12 @@ from typing import Optional, TypeAlias
 import attr
 
 import Core.Definitions as Definitions
-from CharacterContent.Classes.BaseClasses import ClassBuilder
 from Builds.CharacterSheetAccumulator import CharacterSheetData
-from Core.Definitions import Ability, CharacterClass
+from CharacterContent.Classes.BaseClasses import ClassBuilder
 from CharacterContent.Features.CharacterFeats import EpicBoon, GeneralFeats
-from CharacterContent.Items import Armor, Weapons
-from CharacterContent.Items import Packs
 from CharacterContent.Features.ClassFeatures import SpellSlots
 from CharacterContent.Features.ClassFeatures.Cleric import ClericFeatures
+from CharacterContent.Items import Armor, Packs, Weapons
 from CharacterContent.Spells.SpellLists import (
     ClericLevel0Spells,
     ClericLevel1Spells,
@@ -23,6 +21,7 @@ from CharacterContent.Spells.SpellLists import (
     ClericLevel8Spells,
     ClericLevel9Spells,
 )
+from Core.Definitions import Ability, CharacterClass
 from StatBlocks.SavingThrowsStatBlock import ClericSavingThrowsStatBlock
 from StatBlocks.SkillsStatBlock import ClericSkillsStatBlock
 
@@ -315,9 +314,9 @@ class ClericLevel20(ClassBuilder.BaseClassLevel20):
     spell: ClericSpellsUpTo9
 
     def add_features(self, data: CharacterSheetData) -> CharacterSheetData:
-        divine_intervention: ClericFeatures.DivineIntervention = data.get_features_by_type(
-            ClericFeatures.DivineIntervention
-        )[0]
+        divine_intervention: ClericFeatures.DivineIntervention = (
+            data.get_features_by_type(ClericFeatures.DivineIntervention)[0]
+        )
         divine_intervention.extend_feature(ClericFeatures.GreaterDivineIntervention())
         data.add_spell(self.spell)
         return data
