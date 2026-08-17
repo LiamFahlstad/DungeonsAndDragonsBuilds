@@ -400,6 +400,42 @@ BASE_CHARACTER_SHEET_CSS = """
             break-before: page;
         }
 
+        /* Cross-links between the per-character-folder pages (character,
+           per-level features, weapons, spells, items). Hidden when printing
+           since it's pure navigation, not sheet content. */
+        .page-nav {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.4rem 0.9rem;
+            margin: 0 0 1rem 0;
+            padding: 0.4rem 0.6rem;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            background-color: #fafafa;
+            font-size: 0.8rem;
+        }
+
+        .page-nav a {
+            color: #3a6e4a;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .page-nav a:hover {
+            text-decoration: underline;
+        }
+
+        .page-nav .page-nav-current {
+            color: var(--muted-color);
+            font-weight: 600;
+        }
+
+        @media print {
+            .page-nav {
+                display: none;
+            }
+        }
+
         /* Side-by-side section layout — overrides the global div rule */
         .section-row {
             display: flex;

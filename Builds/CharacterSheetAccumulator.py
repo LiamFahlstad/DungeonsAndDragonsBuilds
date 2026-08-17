@@ -286,10 +286,10 @@ class CharacterSheetData:
                 "All fields except weapon_masteries and fighting_styles must be set."
             )
 
-        CharacterSheetWriters.HtmlCharacterSheetWriter().write_character_sheet(
+        CharacterSheetWriters.HtmlCharacterSheetWriter().write_character_sheet_pages(
             skill_config=skill_config,
             character=self.setup_character_stat_block(),
-            output_path=self.get_file_path(description_mode),
+            output_folder=self.get_output_folder(description_mode),
             armors=self.armors,
             armor_proficiencies=self.armor_proficiencies,
             weapon_proficiencies=self.weapon_proficiencies,
@@ -398,7 +398,7 @@ class CharacterSheetData:
         character = self.setup_character_stat_block()
         return character.calculate_attack_bonus_for_ability(ability)
 
-    def get_file_path(
+    def get_output_folder(
         self, description_mode: Literal["table", "concise"] | None = None
     ) -> str:
         if self.character_name is None:
@@ -411,8 +411,8 @@ class CharacterSheetData:
         mode_suffix = f"_{description_mode}" if description_mode else ""
         return (
             f"Output/{example_prefix}{self.base_class.lower()}_"
-            f"{self.character_subclass.lower()}_level_{self.character_level}_"
-            f"{self._slugify_name(self.character_name)}{mode_suffix}_character_sheet.html"
+            f"{self.character_subclass.lower()}_"
+            f"{self._slugify_name(self.character_name)}{mode_suffix}"
         )
 
     def merge_with(self, other: "CharacterSheetData"):

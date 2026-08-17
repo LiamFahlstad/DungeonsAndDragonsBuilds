@@ -42,6 +42,32 @@ class HtmlCharacterSheetWriter:
         return (0, 0, feat_name)
 
     @staticmethod
+    def _feature_level(feat: Feature) -> int:
+        """Level parsed from origin text (e.g. 'Monk Level 3', 'Necromancy
+        Wizard Level 6') for bucketing into per-level feature pages. Features
+        without a parseable level (background, species, origin feats) are
+        bucketed under level 1, where they were granted."""
+        origin = getattr(feat, "origin", "") or ""
+        if "Level " in origin:
+            try:
+                return int(origin.split("Level ")[1].split()[0])
+            except (ValueError, IndexError):
+                return 1
+        return 1
+
+    @staticmethod
+    def _write_nav(file: TextIO, current_path: str, pages: list[tuple[str, str]]):
+        depth = current_path.count("/")
+        prefix = "../" * depth
+        file.write("<div class='page-nav'>\n")
+        for label, path in pages:
+            if path == current_path:
+                file.write(f"<span class='page-nav-current'>{label}</span>\n")
+            else:
+                file.write(f"<a href='{prefix}{path}'>{label}</a>\n")
+        file.write("</div>\n")
+
+    @staticmethod
     def _apply_weapon_masteries(
         weapons: list[AbstractWeapon], weapon_masteries: list[AbstractWeapon]
     ):
@@ -577,29 +603,6 @@ class HtmlCharacterSheetWriter:
             breakdown += f", {condition_text}"
         return breakdown
 
-    def _write_features(
-        self,
-        character: CharacterStatBlock,
-        file: TextIO,
-        features: list[Feature],
-        description_mode: Literal["table", "concise"] | None = None,
-    ):
-        text_features = [
-            f
-            for f in features
-            if f.render_html_description(character, description_mode) is not None
-        ]
-        if not text_features:
-            return
-
-        file.write("<h2>Features</h2>\n")
-        sorted_features = sorted(text_features, key=self._sort_features_key)
-
-        file.write("<div class='features'>\n")
-        for feature in sorted_features:
-            feature.write_to_file(character, file, description_mode)
-        file.write("</div>\n<br class='section-gap'>\n")
-
     def _write_weapons(
         self,
         character: CharacterStatBlock,
@@ -944,11 +947,11 @@ class HtmlCharacterSheetWriter:
             FEATURE_CARD_CSS,
         )
 
-    def write_character_sheet(
+    def write_character_sheet_pages(
         self,
         skill_config: Definitions.SkillConfig,
         character: CharacterStatBlock,
-        output_path: str,
+        output_folder: str,
         armors: list[Armor.AbstractArmor],
         armor_proficiencies: set[Definitions.ArmorType],
         weapon_proficiencies: set[WeaponProficiency],
@@ -965,12 +968,197 @@ class HtmlCharacterSheetWriter:
         description_mode: Literal["table", "concise"] | None = None,
         include_probability_tables: bool = False,
     ):
-        output_path_obj = pathlib.Path(output_path)
-        output_path_obj.parent.mkdir(parents=True, exist_ok=True)
-        with open(output_path_obj, "w", encoding="utf-8") as file:
+        output_folder_obj = pathlib.Path(output_folder)
+        output_folder_obj.mkdir(parents=True, exist_ok=True)
+        (output_folder_obj / "features").mkdir(parents=True, exist_ok=True)
+
+        text_features = [
+            f
+            for f in features
+            if f.render_html_description(character, description_mode) is not None
+        ]
+        features_by_level: dict[int, list[Feature]] = {}
+        for feature in text_features:
+            features_by_level.setdefault(self._feature_level(feature), []).append(
+                feature
+            )
+
+        has_weapons_page = bool(weapons) or bool(fighting_styles)
+        has_spells_page = (
+            bool(invocations)
+            or bool(character.pact_magic_slots)
+            or bool(character.spell_slots)
+            or bool(spells)
+        )
+        non_empty_equipment_entries = [
+            entry
+            for entry in equipment_entries
+            if entry.armors or entry.weapons or entry.items or entry.gold
+        ]
+        has_items_page = bool(non_empty_equipment_entries) or bool(tool_proficiencies)
+
+        pages: list[tuple[str, str]] = [
+            ("Character", "character.html"),
+            ("Full Sheet", "full_character_sheet.html"),
+        ]
+        for level in sorted(features_by_level):
+            pages.append(
+                (f"Level {level} Features", f"features/level_{level:02d}.html")
+            )
+        if has_weapons_page:
+            pages.append(("Weapons", "weapons.html"))
+        if has_spells_page:
+            pages.append(("Spells", "spells.html"))
+        if has_items_page:
+            pages.append(("Items", "items.html"))
+
+        self._write_character_page(
+            output_folder_obj / "character.html",
+            "character.html",
+            pages,
+            character,
+            armors,
+            armor_proficiencies,
+            weapon_proficiencies,
+            skill_config,
+        )
+
+        self._write_full_page(
+            output_folder_obj / "full_character_sheet.html",
+            "full_character_sheet.html",
+            pages,
+            character,
+            armors,
+            armor_proficiencies,
+            weapon_proficiencies,
+            skill_config,
+            text_features,
+            description_mode,
+            weapons,
+            weapon_masteries,
+            fighting_styles,
+            invocations,
+            spells,
+            equipment_entries,
+            starting_equipment_entry,
+            tool_proficiencies,
+            include_probability_tables,
+        )
+
+        for level, level_features in features_by_level.items():
+            page_path = f"features/level_{level:02d}.html"
+            sorted_level_features = sorted(
+                level_features, key=lambda f: getattr(f, "name", "")
+            )
+            self._write_features_page(
+                output_folder_obj / page_path,
+                page_path,
+                pages,
+                character,
+                level,
+                sorted_level_features,
+                description_mode,
+            )
+
+        if has_weapons_page:
+            self._write_weapons_page(
+                output_folder_obj / "weapons.html",
+                "weapons.html",
+                pages,
+                character,
+                weapons,
+                weapon_masteries,
+                fighting_styles,
+                include_probability_tables,
+            )
+
+        if has_spells_page:
+            self._write_spells_page(
+                output_folder_obj / "spells.html",
+                "spells.html",
+                pages,
+                character,
+                invocations,
+                spells,
+                include_probability_tables,
+            )
+
+        if has_items_page:
+            self._write_items_page(
+                output_folder_obj / "items.html",
+                "items.html",
+                pages,
+                character,
+                equipment_entries,
+                starting_equipment_entry,
+                tool_proficiencies,
+            )
+
+    def _write_character_page(
+        self,
+        path: pathlib.Path,
+        page_path: str,
+        pages: list[tuple[str, str]],
+        character: CharacterStatBlock,
+        armors: list[Armor.AbstractArmor],
+        armor_proficiencies: set[Definitions.ArmorType],
+        weapon_proficiencies: set[WeaponProficiency],
+        skill_config: Definitions.SkillConfig,
+    ):
+        with open(path, "w", encoding="utf-8") as file:
             file.write(self._get_css_style())
+            self._write_nav(file, page_path, pages)
             file.write(
-                f"<h1>{character.name} - Level {character.character_level} {character.base_class.value}</h1>\n"
+                f"<h1>{character.name} - Level {character.character_level} "
+                f"{character.base_class.value}</h1>\n"
+            )
+            self._write_status_section(file)
+            self._write_overview(
+                character, file, armors, armor_proficiencies, weapon_proficiencies
+            )
+            file.write("<h2>Abilities and Skills</h2>\n")
+            file.write("<div class='section-row'>\n")
+            file.write("<div class='section-col section-col-abilities'>\n")
+            self._write_abilities(character, file)
+            file.write("</div>\n")
+            file.write("<div class='section-col section-col-skills'>\n")
+            self._write_skills(character, file, skill_config)
+            file.write("</div>\n")
+            file.write("</div>\n")
+
+    def _write_full_page(
+        self,
+        path: pathlib.Path,
+        page_path: str,
+        pages: list[tuple[str, str]],
+        character: CharacterStatBlock,
+        armors: list[Armor.AbstractArmor],
+        armor_proficiencies: set[Definitions.ArmorType],
+        weapon_proficiencies: set[WeaponProficiency],
+        skill_config: Definitions.SkillConfig,
+        text_features: list[Feature],
+        description_mode: Literal["table", "concise"] | None,
+        weapons: list[AbstractWeapon],
+        weapon_masteries: list[AbstractWeapon],
+        fighting_styles: list[FightingStyle],
+        invocations: list[str],
+        spells: list[tuple[str, Ability, Optional[str]]],
+        equipment_entries: list[EquipmentEntry],
+        starting_equipment_entry: Optional[EquipmentEntry],
+        tool_proficiencies: list[ToolProficiency],
+        include_probability_tables: bool,
+    ):
+        """Aggregated single-file sheet with every section, same content as
+        the split pages combined — kept alongside them so the player can
+        still print (or view) the whole character at once when they want to,
+        while the split pages remain the ones that don't need reprinting on
+        every level-up."""
+        with open(path, "w", encoding="utf-8") as file:
+            file.write(self._get_css_style())
+            self._write_nav(file, page_path, pages)
+            file.write(
+                f"<h1>{character.name} - Level {character.character_level} "
+                f"{character.base_class.value}</h1>\n"
             )
             self._write_status_section(file)
             self._write_overview(
@@ -986,12 +1174,101 @@ class HtmlCharacterSheetWriter:
             file.write("</div>\n")
             file.write("</div>\n")
             file.write("<div class='print-page-break'></div>\n")
-            self._write_features(character, file, features, description_mode)
-            self._write_weapons(character, file, weapons, weapon_masteries, include_probability_tables)
+
+            if text_features:
+                file.write("<h2>Features</h2>\n")
+                sorted_features = sorted(text_features, key=self._sort_features_key)
+                file.write("<div class='features'>\n")
+                for feature in sorted_features:
+                    feature.write_to_file(character, file, description_mode)
+                file.write("</div>\n<br class='section-gap'>\n")
+
+            self._write_weapons(
+                character, file, weapons, weapon_masteries, include_probability_tables
+            )
             self._write_fighting_styles(character, file, fighting_styles)
             self._write_invocations(character, file, invocations)
             self._write_pact_magic_slots(character, file)
             self._write_spell_slots(character, file)
             self._write_spells(character, file, spells, include_probability_tables)
-            self._write_items(character, file, equipment_entries, starting_equipment_entry)
+            self._write_items(
+                character, file, equipment_entries, starting_equipment_entry
+            )
+            self._write_tool_proficiencies(character, file, tool_proficiencies)
+
+    def _write_features_page(
+        self,
+        path: pathlib.Path,
+        page_path: str,
+        pages: list[tuple[str, str]],
+        character: CharacterStatBlock,
+        level: int,
+        level_features: list[Feature],
+        description_mode: Literal["table", "concise"] | None,
+    ):
+        with open(path, "w", encoding="utf-8") as file:
+            file.write(self._get_css_style())
+            self._write_nav(file, page_path, pages)
+            file.write(f"<h1>{character.name} - Level {level} Features</h1>\n")
+            file.write("<div class='features'>\n")
+            for feature in level_features:
+                feature.write_to_file(character, file, description_mode)
+            file.write("</div>\n")
+
+    def _write_weapons_page(
+        self,
+        path: pathlib.Path,
+        page_path: str,
+        pages: list[tuple[str, str]],
+        character: CharacterStatBlock,
+        weapons: list[AbstractWeapon],
+        weapon_masteries: list[AbstractWeapon],
+        fighting_styles: list[FightingStyle],
+        include_probability_tables: bool,
+    ):
+        with open(path, "w", encoding="utf-8") as file:
+            file.write(self._get_css_style())
+            self._write_nav(file, page_path, pages)
+            file.write(f"<h1>{character.name} - Weapons</h1>\n")
+            self._write_weapons(
+                character, file, weapons, weapon_masteries, include_probability_tables
+            )
+            self._write_fighting_styles(character, file, fighting_styles)
+
+    def _write_spells_page(
+        self,
+        path: pathlib.Path,
+        page_path: str,
+        pages: list[tuple[str, str]],
+        character: CharacterStatBlock,
+        invocations: list[str],
+        spells: list[tuple[str, Ability, Optional[str]]],
+        include_probability_tables: bool,
+    ):
+        with open(path, "w", encoding="utf-8") as file:
+            file.write(self._get_css_style())
+            self._write_nav(file, page_path, pages)
+            file.write(f"<h1>{character.name} - Spells</h1>\n")
+            self._write_invocations(character, file, invocations)
+            self._write_pact_magic_slots(character, file)
+            self._write_spell_slots(character, file)
+            self._write_spells(character, file, spells, include_probability_tables)
+
+    def _write_items_page(
+        self,
+        path: pathlib.Path,
+        page_path: str,
+        pages: list[tuple[str, str]],
+        character: CharacterStatBlock,
+        equipment_entries: list[EquipmentEntry],
+        starting_equipment_entry: Optional[EquipmentEntry],
+        tool_proficiencies: list[ToolProficiency],
+    ):
+        with open(path, "w", encoding="utf-8") as file:
+            file.write(self._get_css_style())
+            self._write_nav(file, page_path, pages)
+            file.write(f"<h1>{character.name} - Items</h1>\n")
+            self._write_items(
+                character, file, equipment_entries, starting_equipment_entry
+            )
             self._write_tool_proficiencies(character, file, tool_proficiencies)
