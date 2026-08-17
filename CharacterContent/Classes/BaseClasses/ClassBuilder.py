@@ -279,6 +279,7 @@ class BaseClassLevelFeatures:
                     continue
                 applied_levels.add(key)
 
+                data.set_current_grant_level(level)
                 data = features.add_features(data=data)
         return data
 

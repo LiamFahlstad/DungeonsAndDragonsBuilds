@@ -56,7 +56,7 @@ class CharacterSheetData:
 
     features: list[Feature] = attr.Factory(list)
     invocations: list[str] = attr.Factory(list)
-    spells: list[tuple[str, Ability, Optional[str]]] = attr.Factory(list)
+    spells: list[tuple[str, Ability, Optional[str], int]] = attr.Factory(list)
     spell_casting_ability: Optional[Ability] = None
 
     spell_slots: dict[int, int] = attr.Factory(dict)
@@ -93,6 +93,14 @@ class CharacterSheetData:
     # check `entry is starting_equipment_entry` instead of matching on label.
     starting_equipment_entry: Optional[EquipmentEntry] = None
     _character_cached: Optional[CharacterStatBlock] = None
+    # Class-relative level currently being applied by
+    # BaseClassLevelFeatures.add_features, used to tag each spell/cantrip
+    # with the level it was granted on (see set_current_grant_level). Defaults
+    # to 1, matching the convention _feature_level uses for features whose
+    # origin can't be parsed - this covers spells granted outside the
+    # per-level class flow (species spells, origin feat spells via
+    # add_origin_feat, etc).
+    _current_grant_level: int = 1
 
     # Records (apply_when, feature) in the order add_feature was called.
     # Unlike `features` (ordered for display - newest IMMEDIATE feature
@@ -153,6 +161,12 @@ class CharacterSheetData:
         self._invalidate_cache()
         self.class_by_character_level[character_level] = character_class
 
+    def set_current_grant_level(self, level: int) -> None:
+        """Set the class-relative level that subsequent add_spell/add_cantrip
+        calls will be tagged with. Called by BaseClassLevelFeatures.add_features
+        right before invoking each per-level add_features method."""
+        self._current_grant_level = level
+
     def add_armor(self, armor: AbstractArmor):
         self._invalidate_cache()
         self.armors.append(armor)
@@ -194,7 +208,9 @@ class CharacterSheetData:
         if spell in [s[0] for s in self.spells]:
             raise ValueError(f"Spell {spell} already added.")
         self._invalidate_cache()
-        self.spells.append((spell, spell_casting_ability, additional_ruling))
+        self.spells.append(
+            (spell, spell_casting_ability, additional_ruling, self._current_grant_level)
+        )
 
     def add_cantrip(
         self,
@@ -208,7 +224,9 @@ class CharacterSheetData:
         if cantrip in [s[0] for s in self.spells]:
             raise ValueError(f"Cantrip {cantrip} already added.")
         self._invalidate_cache()
-        self.spells.append((cantrip, spell_casting_ability, additional_ruling))
+        self.spells.append(
+            (cantrip, spell_casting_ability, additional_ruling, self._current_grant_level)
+        )
 
     def replace_spells(self, replace_spells: dict[str, str]):
         for old_spell, new_spell in replace_spells.items():
@@ -223,7 +241,7 @@ class CharacterSheetData:
     ):
         new_spells = []
         success = False
-        for spell_name, spell_ability, additional_ruling in self.spells:
+        for spell_name, spell_ability, additional_ruling, grant_level in self.spells:
             if spell_name == old_spell:
                 new_spells.append(
                     (
@@ -234,11 +252,14 @@ class CharacterSheetData:
                             if new_additional_ruling is not None
                             else additional_ruling
                         ),
+                        grant_level,
                     )
                 )
                 success = True
             else:
-                new_spells.append((spell_name, spell_ability, additional_ruling))
+                new_spells.append(
+                    (spell_name, spell_ability, additional_ruling, grant_level)
+                )
         if not success:
             raise ValueError(f"Spell {old_spell} not found to replace.")
         self._invalidate_cache()

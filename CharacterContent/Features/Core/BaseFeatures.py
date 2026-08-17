@@ -103,12 +103,7 @@ FEATURE_CARD_CSS = """/* ── Feature cards ───────────�
             font-size: 0.75rem;
             text-transform: uppercase;
             letter-spacing: 0.05em;
-            background: #f4ede0;
             border-bottom: 2px solid #9a7040;
-        }
-
-        .feature-table tr:nth-child(even) td {
-            background: #faf7f2;
         }
 
         /* Feature upgrade blocks (nested inside .feature-body) */

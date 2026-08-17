@@ -224,25 +224,17 @@ def write_item_table(file: TextIO, title: str, rows: list[tuple[str, str]]):
     file.write("</table>\n")
 
 
-def write_slot_item_table(
+def write_item_cards(
     file: TextIO, title: str, rows: list[tuple[str, str, int, str, str, str, str]]
 ):
-    """Inventory table with type, rarity, value, sell value, slot cost, carry
-    quantity, and left-behind tracking. Each row is (label, description,
-    slots, item_type, rarity, value_display, sell_value_display)."""
+    """Inventory items rendered as stacked cards (matching the weapon-entry
+    visual language) with type, rarity, value, sell value, slot cost, and
+    left-behind tracking. Each row is (label, description, slots, item_type,
+    rarity, value_display, sell_value_display)."""
     import re
 
-    file.write("<table class='item-table'>\n")
-    file.write("<tr>\n")
-    file.write(f"<th class='item-title'>{title}</th>\n")
-    file.write("<th class='item-title item-col-medium'>Type</th>\n")
-    file.write("<th class='item-title item-col-medium'>Rarity</th>\n")
-    file.write("<th class='item-title item-col-medium'>Value</th>\n")
-    file.write("<th class='item-title item-col-medium'>Sell Value</th>\n")
-    file.write("<th class='item-title item-col-narrow'>Slots</th>\n")
-    file.write("<th class='item-title item-col-carry'>Carry</th>\n")
-    file.write("<th class='item-title item-col-leftbehind'>Left Behind</th>\n")
-    file.write("</tr>\n")
+    file.write(f"<h3>{title}</h3>\n")
+    file.write("<div class='gear-list'>\n")
 
     for label, description, slots, item_type, rarity, value, sell_value in rows:
         plain_label = re.sub(r"<span[^>]*>.*?</span>", "", label)
@@ -251,22 +243,41 @@ def write_slot_item_table(
             plain_label.replace(" ", "_").replace("(", "").replace(")", "")
             + "_leftbehind"
         )
-        file.write("<tr>\n")
-        file.write(
-            f"<td class='item-entry'><strong>{label}</strong><br/>{description}</td>\n"
-        )
-        file.write(f"<td style='text-align: center;'>{item_type}</td>\n")
-        file.write(f"<td style='text-align: center;'>{rarity}</td>\n")
-        file.write(f"<td style='text-align: center;'>{value}</td>\n")
-        file.write(f"<td style='text-align: center;'>{sell_value}</td>\n")
-        file.write(f"<td style='text-align: center;'>{slots}</td>\n")
-        file.write("<td></td>\n")
-        file.write(
-            f"<td class='item-leftbehind'><input type='checkbox' id='{leftbehind_id}_check' name='{leftbehind_id}_check'/></td>\n"
-        )
-        file.write("</tr>\n")
 
-    file.write("</table>\n")
+        file.write("<div class='gear-entry'>\n")
+
+        # ── Name row + left-behind checkbox ──────────────────────────────
+        file.write("<div class='gear-header'>\n")
+        file.write(f"<span class='gear-name'>{label}</span>\n")
+        file.write(
+            f"<label class='gear-leftbehind' for='{leftbehind_id}_check'>Left behind"
+            f"<input type='checkbox' id='{leftbehind_id}_check' name='{leftbehind_id}_check'/></label>\n"
+        )
+        file.write("</div>\n")
+
+        # ── Quick-stats ───────────────────────────────────────────────────
+        type_cell = f"{item_type}<span class='gsep'>·</span>{rarity}"
+        value_cell = (
+            f"<span class='glabel'>Value</span> {value}"
+            f"<span class='gsep'>·</span>"
+            f"<span class='glabel'>Sell</span> {sell_value}"
+            f"<span class='gsep'>·</span>"
+            f"<span class='glabel'>Slots</span> {slots}"
+        )
+        file.write(
+            f"<div class='gear-quickstats'>"
+            f"<span class='gqs-left'>{type_cell}</span>"
+            f"<span class='gqs-right'>{value_cell}</span>"
+            f"</div>\n"
+        )
+
+        # ── Description ──────────────────────────────────────────────────
+        if description and description != "-":
+            file.write(f"<div class='gear-desc'>{description}</div>\n")
+
+        file.write("</div>\n")
+
+    file.write("</div>\n")
 
 
 def write_slot_table(slots: dict[int, int], file: TextIO, reset_label: str):
@@ -525,12 +536,10 @@ BASE_CHARACTER_SHEET_CSS = """
             padding: 0.3rem 0.4rem;
             border: 1px solid #c4b49a;
             border-radius: 6px;
-            background: #fdfaf5;
         }
 
         .ability-tile.st-proficient {
             border-color: #6a9a7a;
-            background: #f4faf5;
         }
 
         .ability-tile-name {
@@ -688,69 +697,94 @@ BASE_CHARACTER_SHEET_CSS = """
             width: auto;
         }
 
-        /* Carrying capacity: one column of slot checkboxes per source */
-        .capacity-table {
-            border-collapse: collapse;
+        /* ── Inventory item cards ─────────────────────────────────────── */
+        /* Two-column flow so short entries (most armor/weapons/gear) pack
+           tightly instead of each spanning the full page width - mirrors
+           .skills-columns. */
+        .gear-list {
+            column-count: 2;
+            column-gap: 1.2rem;
+        }
+
+        .gear-entry {
             font-size: 0.85rem;
-            margin: 0.25rem 0 0.5rem 0;
+            padding: 0.35rem 0;
+            max-width: none;
+            break-inside: avoid;
+            -webkit-column-break-inside: avoid;
+            border-bottom: 1px solid #cde0d2;
         }
 
-        .capacity-table th,
-        .capacity-table td {
-            border: 1px solid var(--border-color);
-            padding: 4px 8px;
-            text-align: center;
-            vertical-align: middle;
-        }
-
-        .capacity-table .slot-box-group {
+        /* Name row: item name on the left, left-behind checkbox on the
+           right - wraps if a long name and the checkbox don't both fit in
+           a narrow column. */
+        .gear-header {
+            display: flex;
             flex-wrap: wrap;
-            max-width: 12em;
+            justify-content: space-between;
+            align-items: baseline;
+            gap: 0.15rem 0.5rem;
         }
 
-        /* Item inventory rows: name + description, wraps normally */
-        .item-entry strong {
+        .gear-name {
             color: #3a6e4a;
             font-size: 1rem;
             font-weight: 700;
             letter-spacing: 0.02em;
         }
 
-        .item-col-narrow {
-            width: 3em;
-            text-align: center;
+        .gear-leftbehind {
+            font-size: 0.78rem;
+            color: var(--muted-color);
+            white-space: nowrap;
         }
 
-        .item-col-medium {
-            width: 5.5em;
-            text-align: center;
-        }
-
-        .item-col-carry {
-            width: 4.5em;
-            text-align: center;
-        }
-
-        .item-col-leftbehind {
-            width: 9em;
-        }
-
-        .item-leftbehind input[type='checkbox'] {
+        .gear-leftbehind input[type='checkbox'] {
             vertical-align: middle;
+            margin-left: 3px;
         }
 
-        /* Individual item rows separated by a line rather than a full border */
-        .item-table tr:not(:first-child) td {
-            border: none;
-            border-bottom: 2px solid #a4c8b0;
-            padding: 6px 7px;
+        /* Quick-stats — flexible columns, wrapping if the page is narrow */
+        .gear-quickstats {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.15rem 1.2rem;
+            font-size: 0.82rem;
+            margin: 0.2rem 0 0 0;
         }
 
-        .item-table tr:last-child td {
-            border-bottom: none;
+        .gqs-left {
+            flex: 1 1 35%;
         }
 
-        
+        .gqs-right {
+            flex: 1 1 55%;
+        }
+
+        /* Inline label within quick-stats */
+        .glabel {
+            font-weight: 600;
+            color: var(--muted-color);
+            font-size: 0.78rem;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            margin-right: 2px;
+        }
+
+        /* Bullet separator between quick-stat items */
+        .gsep {
+            color: #aaa;
+            margin: 0 5px;
+        }
+
+        /* Description line */
+        .gear-desc {
+            font-size: 0.82rem;
+            color: #444;
+            margin: 0.15rem 0 0 0;
+        }
+
+
 /* Inner table that holds the AC columns */
         table.whit-inner {
             border-collapse: collapse;
@@ -970,7 +1004,6 @@ BASE_CHARACTER_SHEET_CSS = """
             padding: 0.3rem 0.7rem;
             border: 1px solid #b89060;
             border-radius: 6px;
-            background: #fdfaf5;
         }
 
         .stat-tile-label {
@@ -1002,7 +1035,6 @@ BASE_CHARACTER_SHEET_CSS = """
             padding: 0.4rem 1rem;
             border-width: 2px;
             border-color: #9a3a3a;
-            background: #fdf3f3;
         }
 
         .stat-tile-hero .stat-tile-value {
@@ -1018,13 +1050,19 @@ BASE_CHARACTER_SHEET_CSS = """
             padding: 0.4rem 0.6rem;
             border: 1px solid var(--border-color);
             border-radius: 4px;
-            background-color: #fafafa;
         }
 
         .od-label {
             font-weight: 600;
             color: #3a2c1c;
             margin-right: 0.25rem;
+        }
+
+        /* A carrying-capacity source can have many slots - let its box
+           group wrap instead of forcing one long unbroken row. */
+        .overview-detail .slot-box-group {
+            flex-wrap: wrap;
+            max-width: 12em;
         }
 
         .xp-blank {
@@ -1043,7 +1081,6 @@ BASE_CHARACTER_SHEET_CSS = """
             padding: 0.5rem 0.6rem;
             border: 1px solid var(--border-color);
             border-radius: 4px;
-            background-color: #fafafa;
         }
 
         .status-row {

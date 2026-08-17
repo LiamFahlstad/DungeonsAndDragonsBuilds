@@ -53,7 +53,6 @@ WILDSHAPE_CARD_CSS = """/* ── Wild Shape form cards ────────
 
         /* Section divider row, e.g. "Actions", "Traits" */
         tr.wsf-section th {
-            background: #eef3e6;
             color: #4a6b32;
             font-size: 0.78rem;
             font-weight: 700;
@@ -61,6 +60,7 @@ WILDSHAPE_CARD_CSS = """/* ── Wild Shape form cards ────────
             letter-spacing: 0.05em;
             text-align: left;
             padding: 2px 7px;
+            border-bottom: 2px solid #6f9a4a;
         }
 
         .wsf-entry-name {

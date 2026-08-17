@@ -71,7 +71,7 @@ SPELL_CARD_CSS = """/* ── Spell entries ────────────
 
         .sclass-chip {
             display: inline-block;
-            background: #eef2f7;
+            border: 1px solid #a8c0d8;
             color: #3a5a7a;
             border-radius: 3px;
             padding: 1px 6px;

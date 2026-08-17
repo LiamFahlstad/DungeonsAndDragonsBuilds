@@ -56,6 +56,12 @@ class HtmlCharacterSheetWriter:
         return 1
 
     @staticmethod
+    def _spell_level(spell: tuple[str, Ability, Optional[str], int]) -> int:
+        """Class-relative level a spell/cantrip was granted on, mirroring
+        _feature_level - see CharacterSheetData._current_grant_level."""
+        return spell[3]
+
+    @staticmethod
     def _write_nav(file: TextIO, current_path: str, pages: list[tuple[str, str]]):
         depth = current_path.count("/")
         prefix = "../" * depth
@@ -707,31 +713,11 @@ class HtmlCharacterSheetWriter:
         )
         file.write("<br class='section-gap'>\n")
 
-    def _write_spells(
-        self,
-        character: CharacterStatBlock,
-        file: TextIO,
-        spells: list[tuple[str, Ability, Optional[str]]],
-        include_probability_tables: bool = False,
-    ):
-        if not spells:
-            return
-
-        file.write("<h2>Spells</h2>\n")
-        casting_abilities = sorted(
-            {ability for _, ability, _ in spells},
-            key=lambda a: a.value,
-        )
-        self._write_spellcasting_headline(character, file, casting_abilities, include_probability_tables)
-        file.write("<div class='spells'>\n")
-
-        created_spells = [
-            SpellFactory.create(spell_name, spell_casting_ability, additional_ruling)
-            for spell_name, spell_casting_ability, additional_ruling in spells
-        ]
-        sorted_spells = sorted(created_spells, key=lambda s: (s.level, s.name))
-
-        # Determine if character is a prepared-caster class
+    @staticmethod
+    def _spell_prep_checkbox_class(character: CharacterStatBlock) -> bool:
+        """Whether spell cards for this character should show a
+        preparation checkbox (true for classes that prepare spells daily
+        from a known list, rather than simply knowing a fixed set)."""
         prepared_caster_classes = {
             Definitions.CharacterClass.CLERIC,
             Definitions.CharacterClass.DRUID,
@@ -739,7 +725,30 @@ class HtmlCharacterSheetWriter:
             Definitions.CharacterClass.PALADIN,
             Definitions.CharacterClass.ARTIFICER,
         }
-        show_prep_checkbox = character.base_class in prepared_caster_classes
+        return character.base_class in prepared_caster_classes
+
+    def _write_spell_cards(
+        self,
+        character: CharacterStatBlock,
+        file: TextIO,
+        spells: list[tuple[str, Ability, Optional[str], int]],
+    ):
+        """Write the '<div class='spells'>' block of individual spell cards
+        (grouped by spell level with a header per group) for the given
+        subset of spells. Does not write the spellcasting headline or the
+        surrounding <h2> - callers are responsible for those."""
+        if not spells:
+            return
+
+        file.write("<div class='spells'>\n")
+
+        created_spells = [
+            SpellFactory.create(spell_name, spell_casting_ability, additional_ruling)
+            for spell_name, spell_casting_ability, additional_ruling, _grant_level in spells
+        ]
+        sorted_spells = sorted(created_spells, key=lambda s: (s.level, s.name))
+
+        show_prep_checkbox = self._spell_prep_checkbox_class(character)
 
         # Group by level and emit a level header before each group
         from itertools import groupby
@@ -751,6 +760,24 @@ class HtmlCharacterSheetWriter:
                 spell.write_to_file(file, show_preparation_checkbox=show_prep_checkbox)
 
         file.write("</div>\n")
+
+    def _write_spells(
+        self,
+        character: CharacterStatBlock,
+        file: TextIO,
+        spells: list[tuple[str, Ability, Optional[str], int]],
+        include_probability_tables: bool = False,
+    ):
+        if not spells:
+            return
+
+        file.write("<h2>Spells</h2>\n")
+        casting_abilities = sorted(
+            {ability for _, ability, _, _ in spells},
+            key=lambda a: a.value,
+        )
+        self._write_spellcasting_headline(character, file, casting_abilities, include_probability_tables)
+        self._write_spell_cards(character, file, spells)
         file.write("<br class='section-gap'>\n")
 
     @staticmethod
@@ -856,46 +883,51 @@ class HtmlCharacterSheetWriter:
 
         file.write("<h2>Items</h2>\n")
 
+        # Wallet + carrying capacity as compact chips (matching the Overview
+        # detail-chip pattern) instead of a paragraph and a bordered table.
+        carrying_capacity = character.get_carrying_capacity()
+        file.write("<div class='overview-details'>\n")
         if character.current_gold is not None:
             file.write(
-                f"<p><strong>Current Gold:</strong> "
-                f"{self._format_gold(max(0.0, character.current_gold))}</p>\n"
+                f"<span class='overview-detail'><span class='od-label'>Current Gold</span>"
+                f"{self._format_gold(max(0.0, character.current_gold))}</span>\n"
             )
-
-        # Write carrying capacity: one checkbox per slot, one column per source
-        carrying_capacity = character.get_carrying_capacity()
         file.write(
-            f"<p><strong>Carrying Capacity ({carrying_capacity} slots):</strong></p>\n"
+            f"<span class='overview-detail'><span class='od-label'>Carrying Capacity</span>"
+            f"{carrying_capacity} slots</span>\n"
         )
-        file.write("<table class='capacity-table'>\n")
-        file.write("<tr>\n")
         for source, slots in character.get_carrying_capacity_sources():
-            file.write(f"<th class='item-title'>{source} ({slots})</th>\n")
-        file.write("</tr>\n")
-        file.write("<tr>\n")
-        for _source, slots in character.get_carrying_capacity_sources():
             slot_boxes = "<span class='slot-box'></span>" * slots
-            file.write(f"<td><span class='slot-box-group'>{slot_boxes}</span></td>\n")
-        file.write("</tr>\n")
-        file.write("</table>\n")
+            file.write(
+                f"<span class='overview-detail'><span class='od-label'>{source} ({slots})</span>"
+                f"<span class='slot-box-group'>{slot_boxes}</span></span>\n"
+            )
+        file.write("</div>\n")
 
         for entry in non_empty_entries:
             is_starting_equipment = entry is starting_equipment_entry
             file.write(f"<h3>{entry.label}</h3>\n")
             if is_starting_equipment and character.starting_gold is not None:
                 file.write(
-                    f"<p><strong>Starting Gold:</strong> "
-                    f"{self._format_gold(max(0.0, character.starting_gold))}</p>\n"
+                    "<div class='overview-details'>\n"
+                    f"<span class='overview-detail'><span class='od-label'>Starting Gold</span>"
+                    f"{self._format_gold(max(0.0, character.starting_gold))}</span>\n"
+                    "</div>\n"
                 )
             elif entry.gold:
                 sign = "+" if entry.gold > 0 else "-"
-                file.write(f"<p><strong>Gold:</strong> {sign}{self._format_gold(abs(entry.gold))}</p>\n")
+                file.write(
+                    "<div class='overview-details'>\n"
+                    f"<span class='overview-detail'><span class='od-label'>Gold</span>"
+                    f"{sign}{self._format_gold(abs(entry.gold))}</span>\n"
+                    "</div>\n"
+                )
 
             sections = self._build_item_sections(entry, is_starting_equipment)
             for i, (title, rows) in enumerate(sections):
                 if i > 0:
                     file.write("<hr>")
-                Html.write_slot_item_table(file, title, rows)
+                Html.write_item_cards(file, title, rows)
 
         file.write("<br class='section-gap'>\n")
 
@@ -960,7 +992,7 @@ class HtmlCharacterSheetWriter:
         weapon_masteries: list[AbstractWeapon],
         fighting_styles: list[FightingStyle],
         invocations: list[str],
-        spells: list[tuple[str, Ability, Optional[str]]],
+        spells: list[tuple[str, Ability, Optional[str], int]],
         equipment_entries: list[EquipmentEntry],
         starting_equipment_entry: Optional[EquipmentEntry],
         tool_proficiencies: list[ToolProficiency],
@@ -983,13 +1015,17 @@ class HtmlCharacterSheetWriter:
                 feature
             )
 
+        spells_by_level: dict[int, list[tuple[str, Ability, Optional[str], int]]] = {}
+        for spell in spells:
+            spells_by_level.setdefault(self._spell_level(spell), []).append(spell)
+
+        # A level page is needed for any level that grants a displayed
+        # feature OR a spell/cantrip - a level that only grants spells
+        # (no feature with a rendered description) would otherwise be
+        # missed entirely.
+        level_page_levels = sorted(set(features_by_level) | set(spells_by_level))
+
         has_weapons_page = bool(weapons) or bool(fighting_styles)
-        has_spells_page = (
-            bool(invocations)
-            or bool(character.pact_magic_slots)
-            or bool(character.spell_slots)
-            or bool(spells)
-        )
         non_empty_equipment_entries = [
             entry
             for entry in equipment_entries
@@ -1001,14 +1037,12 @@ class HtmlCharacterSheetWriter:
             ("Character", "character.html"),
             ("Full Sheet", "full_character_sheet.html"),
         ]
-        for level in sorted(features_by_level):
+        for level in level_page_levels:
             pages.append(
                 (f"Level {level} Features", f"features/level_{level:02d}.html")
             )
         if has_weapons_page:
             pages.append(("Weapons", "weapons.html"))
-        if has_spells_page:
-            pages.append(("Spells", "spells.html"))
         if has_items_page:
             pages.append(("Items", "items.html"))
 
@@ -1021,6 +1055,9 @@ class HtmlCharacterSheetWriter:
             armor_proficiencies,
             weapon_proficiencies,
             skill_config,
+            invocations,
+            spells,
+            include_probability_tables,
         )
 
         self._write_full_page(
@@ -1045,11 +1082,12 @@ class HtmlCharacterSheetWriter:
             include_probability_tables,
         )
 
-        for level, level_features in features_by_level.items():
+        for level in level_page_levels:
             page_path = f"features/level_{level:02d}.html"
             sorted_level_features = sorted(
-                level_features, key=lambda f: getattr(f, "name", "")
+                features_by_level.get(level, []), key=lambda f: getattr(f, "name", "")
             )
+            level_spells = spells_by_level.get(level, [])
             self._write_features_page(
                 output_folder_obj / page_path,
                 page_path,
@@ -1058,6 +1096,7 @@ class HtmlCharacterSheetWriter:
                 level,
                 sorted_level_features,
                 description_mode,
+                level_spells,
             )
 
         if has_weapons_page:
@@ -1069,17 +1108,6 @@ class HtmlCharacterSheetWriter:
                 weapons,
                 weapon_masteries,
                 fighting_styles,
-                include_probability_tables,
-            )
-
-        if has_spells_page:
-            self._write_spells_page(
-                output_folder_obj / "spells.html",
-                "spells.html",
-                pages,
-                character,
-                invocations,
-                spells,
                 include_probability_tables,
             )
 
@@ -1104,6 +1132,9 @@ class HtmlCharacterSheetWriter:
         armor_proficiencies: set[Definitions.ArmorType],
         weapon_proficiencies: set[WeaponProficiency],
         skill_config: Definitions.SkillConfig,
+        invocations: list[str],
+        spells: list[tuple[str, Ability, Optional[str], int]],
+        include_probability_tables: bool,
     ):
         with open(path, "w", encoding="utf-8") as file:
             file.write(self._get_css_style())
@@ -1120,11 +1151,24 @@ class HtmlCharacterSheetWriter:
             file.write("<div class='section-row'>\n")
             file.write("<div class='section-col section-col-abilities'>\n")
             self._write_abilities(character, file)
+            if spells:
+                casting_abilities = sorted(
+                    {ability for _, ability, _, _ in spells},
+                    key=lambda a: a.value,
+                )
+                file.write("<br class='section-gap'>\n")
+                self._write_spellcasting_headline(
+                    character, file, casting_abilities, include_probability_tables
+                )
             file.write("</div>\n")
             file.write("<div class='section-col section-col-skills'>\n")
             self._write_skills(character, file, skill_config)
             file.write("</div>\n")
             file.write("</div>\n")
+
+            self._write_invocations(character, file, invocations)
+            self._write_pact_magic_slots(character, file)
+            self._write_spell_slots(character, file)
 
     def _write_full_page(
         self,
@@ -1142,7 +1186,7 @@ class HtmlCharacterSheetWriter:
         weapon_masteries: list[AbstractWeapon],
         fighting_styles: list[FightingStyle],
         invocations: list[str],
-        spells: list[tuple[str, Ability, Optional[str]]],
+        spells: list[tuple[str, Ability, Optional[str], int]],
         equipment_entries: list[EquipmentEntry],
         starting_equipment_entry: Optional[EquipmentEntry],
         tool_proficiencies: list[ToolProficiency],
@@ -1205,6 +1249,7 @@ class HtmlCharacterSheetWriter:
         level: int,
         level_features: list[Feature],
         description_mode: Literal["table", "concise"] | None,
+        level_spells: list[tuple[str, Ability, Optional[str], int]],
     ):
         with open(path, "w", encoding="utf-8") as file:
             file.write(self._get_css_style())
@@ -1214,6 +1259,11 @@ class HtmlCharacterSheetWriter:
             for feature in level_features:
                 feature.write_to_file(character, file, description_mode)
             file.write("</div>\n")
+
+            if level_spells:
+                file.write("<h2>Spells Gained</h2>\n")
+                self._write_spell_cards(character, file, level_spells)
+                file.write("<br class='section-gap'>\n")
 
     def _write_weapons_page(
         self,
@@ -1234,25 +1284,6 @@ class HtmlCharacterSheetWriter:
                 character, file, weapons, weapon_masteries, include_probability_tables
             )
             self._write_fighting_styles(character, file, fighting_styles)
-
-    def _write_spells_page(
-        self,
-        path: pathlib.Path,
-        page_path: str,
-        pages: list[tuple[str, str]],
-        character: CharacterStatBlock,
-        invocations: list[str],
-        spells: list[tuple[str, Ability, Optional[str]]],
-        include_probability_tables: bool,
-    ):
-        with open(path, "w", encoding="utf-8") as file:
-            file.write(self._get_css_style())
-            self._write_nav(file, page_path, pages)
-            file.write(f"<h1>{character.name} - Spells</h1>\n")
-            self._write_invocations(character, file, invocations)
-            self._write_pact_magic_slots(character, file)
-            self._write_spell_slots(character, file)
-            self._write_spells(character, file, spells, include_probability_tables)
 
     def _write_items_page(
         self,
