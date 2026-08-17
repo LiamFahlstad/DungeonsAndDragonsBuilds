@@ -96,10 +96,95 @@ class HtmlCharacterSheetWriter:
             for start, end, character_class in character.get_class_level_segments()
         )
 
-    def _write_general_info(
-        self, character: CharacterStatBlock, file: TextIO, experience_points: int = 0
+    def _write_status_section(self, file: TextIO):
+        """Write pen-fillable status trackers: Inspiration, Death Saves, Conditions.
+
+        The sheet is meant to be printed and marked by hand, so these are plain
+        empty boxes (matching the .pen-box used for spell slots elsewhere) rather
+        than interactive <input type='checkbox'> elements.
+        """
+        file.write("<div class='status-section'>\n")
+
+        file.write("<div class='status-row'>\n")
+
+        file.write("<span class='status-chip status-chip-inspiration'>")
+        file.write("<span class='pen-box'></span>Inspiration</span>\n")
+
+        file.write("<span class='status-chip status-chip-deathsave'>")
+        file.write("<span class='status-chip-label'>Death Save &mdash; Success</span>")
+        file.write("<span class='pen-box'></span>" * 3)
+        file.write("</span>\n")
+
+        file.write("<span class='status-chip status-chip-deathsave'>")
+        file.write("<span class='status-chip-label'>Failure</span>")
+        file.write("<span class='pen-box'></span>" * 3)
+        file.write("</span>\n")
+
+        file.write("</div>\n")
+
+        file.write("<div class='conditions-row'>\n")
+        for condition in Definitions.Condition.list_sorted():
+            file.write(
+                f"<span class='status-chip'><span class='pen-box'></span>{condition.value}</span>\n"
+            )
+        file.write("</div>\n")
+
+        file.write("</div>\n")
+
+    @staticmethod
+    def _stat_tile(label: str, value, sub: str = "", hero: bool = False) -> str:
+        classes = "stat-tile stat-tile-hero" if hero else "stat-tile"
+        sub_html = f"<span class='stat-tile-sub'>{sub}</span>" if sub else ""
+        return (
+            f"<div class='{classes}'>"
+            f"<span class='stat-tile-label'>{label}</span>"
+            f"<span class='stat-tile-value'>{value}</span>"
+            f"{sub_html}"
+            "</div>\n"
+        )
+
+    def _write_overview(
+        self,
+        character: CharacterStatBlock,
+        file: TextIO,
+        armors: list[Armor.AbstractArmor],
+        armor_proficiencies: set[Definitions.ArmorType],
+        weapon_proficiencies: set[WeaponProficiency],
     ):
-        file.write("<h2>General Info</h2>\n")
+        """Character overview: large tiles for the stats checked constantly
+        in play (HP above all, then AC/Initiative/Speed/Prof. Bonus), with
+        everything else — class, proficiencies, languages, senses — as
+        compact reference chips below. The player already knows their class;
+        they don't already know today's HP total.
+        """
+        file.write("<h2>Overview</h2>\n")
+        file.write("<div class='overview-section'>\n")
+
+        ac = character.calculate_armor_class()
+        ac_sub = f"w/o Shield {ac - 2}" if self._has_shield_armor(armors) else ""
+
+        initiative_sub = ""
+        if character.initiative_roll_condition in (
+            Definitions.DiceRollCondition.ADVANTAGE,
+            Definitions.DiceRollCondition.DISADVANTAGE,
+        ):
+            initiative_sub = character.initiative_roll_condition.value
+
+        file.write("<div class='overview-tiles'>\n")
+        file.write(
+            self._stat_tile("Max HP", character.calculate_hit_points(), hero=True)
+        )
+        file.write(self._stat_tile("AC", ac, sub=ac_sub))
+        file.write(
+            self._stat_tile(
+                "Initiative", f"{character.initiative:+}", sub=initiative_sub
+            )
+        )
+        file.write(self._stat_tile("Speed", f"{character.combat.speed} ft"))
+        file.write(
+            self._stat_tile("Prof. Bonus", f"{character.get_proficiency_bonus():+}")
+        )
+        file.write("</div>\n")
 
         languages = ", ".join(
             language.value
@@ -109,52 +194,6 @@ class HtmlCharacterSheetWriter:
             f"{sense.value} {character.senses[sense]} ft."
             for sense in sorted(character.senses, key=lambda s: s.value)
         )
-
-        rows = [
-            ("Name", character.name, ""),
-            ("Levels per class", self._format_class_level_history(character), ""),
-            ("Subclass", character.character_subclass, ""),
-            ("Prof. Bonus", character.get_proficiency_bonus(), ""),
-            ("Languages", languages, ""),
-            ("Senses", senses, ""),
-            # Left blank (regardless of experience_points) so the player can
-            # fill it in by hand; xp-cell widens the column to leave room.
-            ("XP", "", "xp-cell"),
-        ]
-
-        file.write("<table class='stat-table'>\n<tr>")
-        for field, _, css_class in rows:
-            cls = f" class='{css_class}'" if css_class else ""
-            file.write(f"<th{cls}>{field}</th>")
-        file.write("</tr>\n<tr>")
-        for _, value, css_class in rows:
-            cls = f" class='{css_class}'" if css_class else ""
-            file.write(f"<td{cls}>{value}</td>")
-        file.write("</tr>\n</table>\n<br class='section-gap'>\n")
-
-    def _write_combat_stats(
-        self,
-        character: CharacterStatBlock,
-        file: TextIO,
-        armors: list[Armor.AbstractArmor],
-        armor_proficiencies: set[Definitions.ArmorType],
-        weapon_proficiencies: set[WeaponProficiency],
-    ):
-        file.write("<h2>Combat Stats</h2>\n")
-
-        ac = character.calculate_armor_class()
-        if self._has_shield_armor(armors):
-            ac = f"{ac} (w/ Shield) / {ac - 2}"
-
-        initiative = f"d20 + {character.initiative}"
-        if character.initiative_proficiency:
-            initiative += f" ({character.abilities.get_modifier(Ability.DEXTERITY)} dex modifier + {character.get_proficiency_bonus()} Proficiency Bonus)"
-
-        if character.initiative_roll_condition in (
-            Definitions.DiceRollCondition.ADVANTAGE,
-            Definitions.DiceRollCondition.DISADVANTAGE,
-        ):
-            initiative += f" ({character.initiative_roll_condition.value})"
 
         resistance_immunity_groups = []
         if character.damage_resistances:
@@ -189,81 +228,73 @@ class HtmlCharacterSheetWriter:
             )
         resistances_and_immunities = "; ".join(resistance_immunity_groups)
 
-        rows = [
-            ("Max HP", character.calculate_hit_points()),
-            ("AC", ac),
-            (
-                "Armor Prof.",
-                ", ".join(sorted([a.value for a in armor_proficiencies])),
-            ),
+        details = [
+            ("Class", self._format_class_level_history(character)),
+            ("Subclass", character.character_subclass),
+            ("Size", character.combat.size.value),
+            ("Armor Prof.", ", ".join(sorted(a.value for a in armor_proficiencies))),
             (
                 "Weapon Prof.",
-                ", ".join(sorted([wp.value for wp in weapon_proficiencies])),
+                ", ".join(sorted(wp.value for wp in weapon_proficiencies)),
             ),
-            ("Initiative", initiative),
-            ("Speed (ft)", character.combat.speed),
-            ("Size", character.combat.size.value),
+            ("Languages", languages),
+            ("Senses", senses),
             ("Resistances / Immunities", resistances_and_immunities),
         ]
 
-        file.write("<table class='stat-table'>\n<tr>")
-        for field, _ in rows:
-            file.write(f"<th>{field}</th>")
-        file.write("</tr>\n<tr>")
-        for _, value in rows:
-            file.write(f"<td>{value}</td>")
-        file.write("</tr>\n</table>\n<br class='section-gap'>\n")
+        file.write("<div class='overview-details'>\n")
+        for label, value in details:
+            if not value:
+                continue
+            file.write(
+                f"<span class='overview-detail'><span class='od-label'>{label}</span>{value}</span>\n"
+            )
+        # Left blank so the player can fill it in by hand.
+        file.write(
+            "<span class='overview-detail'><span class='od-label'>XP</span>"
+            "<span class='xp-blank'></span></span>\n"
+        )
+        file.write("</div>\n")
+
+        file.write("</div>\n<br class='section-gap'>\n")
 
     def _write_abilities(self, character: CharacterStatBlock, file: TextIO):
-        file.write("<h2>Abilities</h2>\n")
-
-        headers = [
-            "Ability",
-            "Score",
-            "Mod",
-            "Saving Throw",
-            "DC",
-            "ATK Bonus",
-        ]
-
-        file.write("<table class='stat-table'>\n")
-
-        file.write("<tr>")
-        for header in headers:
-            file.write(f"<th>{header}</th>")
-        file.write("</tr>\n")
-
+        """Ability tiles, not a table: the modifier is what gets added to
+        rolls constantly, so it's the large number on each tile. The raw
+        score is secondary (you rarely reference it directly), and Save —
+        relevant on any saving throw — is a small footer line rather than
+        its own column.
+        """
         proficiency_bonus = character.get_proficiency_bonus()
+
+        file.write("<div class='ability-tiles'>\n")
 
         for ability in Ability:
             ability_mod = character.get_ability_modifier(ability)
+            proficient = character.is_proficient_in_saving_throw(ability)
 
-            saving_throw_text = f"{ability_mod:+}"
-            if character.is_proficient_in_saving_throw(ability):
-                saving_throw_text += f" + {proficiency_bonus} (Proficient)"
+            save_total = ability_mod + (proficiency_bonus if proficient else 0)
+            saving_throw_text = f"{save_total:+}"
             if character.has_advantage_in_saving_throw(ability):
-                saving_throw_text += " (Advantage)"
+                saving_throw_text += " (Adv)"
 
-            ability_dc = character.calculate_difficulty_class_for_ability(ability)
-            ability_attack_bonus = character.calculate_attack_bonus_for_ability(ability)
-
-            row = [
-                ability.short_name,
-                character.get_ability_score(ability),
-                f"{ability_mod:+}",
-                saving_throw_text,
-                f"{ability_dc}",
-                f"{ability_attack_bonus:+}",
-            ]
-
-            tr_class = (
-                "st-proficient"
-                if character.is_proficient_in_saving_throw(ability)
-                else ""
+            tile_class = "ability-tile st-proficient" if proficient else "ability-tile"
+            file.write(f"<div class='{tile_class}'>\n")
+            file.write(
+                f"<span class='ability-tile-name'>{ability.short_name}</span>\n"
             )
-            Html.write_table_row(file, row, tr_class)
+            file.write(
+                f"<span class='ability-tile-mod'>{ability_mod:+}</span>\n"
+            )
+            file.write(
+                f"<span class='ability-tile-score'>{character.get_ability_score(ability)}</span>\n"
+            )
+            file.write(
+                f"<span class='ability-tile-extra'>Save {saving_throw_text}</span>\n"
+            )
+            file.write("</div>\n")
 
-        file.write("</table>\n<br>\n")
+        file.write("</div>\n")
 
     def _write_spellcasting_headline(
         self,
@@ -406,47 +437,33 @@ class HtmlCharacterSheetWriter:
         file: TextIO,
         skill_config: Definitions.SkillConfig,
     ):
-        file.write("<h2>Skills</h2>\n")
-
-        headers = [
-            "Skill",
-            "Modifier",
-            "Breakdown",
-            "Ability",
-        ]
-
-        file.write("<table class='stat-table'>\n")
-
-        file.write("<tr>")
-        for header in headers:
-            file.write(f"<th>{header}</th>")
-        file.write("</tr>\n")
+        """Skill list, not a table: the modifier is bold and right-aligned
+        since it's the number checked during play, while the arithmetic
+        breakdown is a small muted line underneath for reference rather than
+        its own column. Flows into two CSS columns so eighteen skills don't
+        dominate the page height.
+        """
+        file.write("<div class='skills-columns'>\n")
 
         if skill_config == Definitions.SkillConfig.DEFAULT:
             for skill in Definitions.Skill.list_sorted():
                 proficient = character.is_proficient_in_skill(skill)
                 has_expertise = character.has_expertise_in_skill(skill)
-
-                if has_expertise:
-                    tr_class = "st-expertise"
-                elif proficient:
-                    tr_class = "st-proficient"
-                else:
-                    tr_class = ""
-
                 condition = character.get_skill_roll_condition(skill)
                 reasons = character.get_skill_roll_condition_reasons(skill)
-                row = [
-                    skill.value,
-                    self._modifier_with_condition(
+                self._write_skill_entry(
+                    file,
+                    name=skill.value,
+                    ability=character.get_skill_ability(skill),
+                    modifier_text=self._modifier_with_condition(
                         character.get_skill_modifier(skill), condition
                     ),
-                    self._skill_modifier_breakdown(
+                    breakdown=self._skill_modifier_breakdown(
                         character, skill, condition, reasons
                     ),
-                    character.get_skill_ability(skill).value,
-                ]
-                Html.write_table_row(file, row, tr_class)
+                    proficient=proficient,
+                    has_expertise=has_expertise,
+                )
 
         if skill_config == Definitions.SkillConfig.HOMEBREW:
             for skill in Definitions.HomeBrewSkill.list_sorted():
@@ -461,13 +478,6 @@ class HtmlCharacterSheetWriter:
                     character.has_expertise_in_skill(s) for s in possible_skills
                 )
 
-                if has_expertise:
-                    tr_class = "st-expertise"
-                elif proficient:
-                    tr_class = "st-proficient"
-                else:
-                    tr_class = ""
-
                 # Breakdown follows the default skill that yields the best modifier
                 best_skill = max(possible_skills, key=character.get_skill_modifier)
                 condition = self._resolve_homebrew_roll_condition(roll_conditions)
@@ -477,19 +487,53 @@ class HtmlCharacterSheetWriter:
                     if character.get_skill_roll_condition(s) == condition
                     for reason in character.get_skill_roll_condition_reasons(s)
                 ]
-                row = [
-                    skill.value,
-                    self._modifier_with_condition(
+                self._write_skill_entry(
+                    file,
+                    name=skill.value,
+                    ability=character.get_skill_ability(possible_skills[0]),
+                    modifier_text=self._modifier_with_condition(
                         character.get_skill_modifier(best_skill), condition
                     ),
-                    self._skill_modifier_breakdown(
+                    breakdown=self._skill_modifier_breakdown(
                         character, best_skill, condition, reasons
                     ),
-                    character.get_skill_ability(possible_skills[0]).value,
-                ]
-                Html.write_table_row(file, row, tr_class)
+                    proficient=proficient,
+                    has_expertise=has_expertise,
+                )
 
-        file.write("</table>\n<br>\n")
+        file.write("</div>\n")
+
+    @staticmethod
+    def _write_skill_entry(
+        file: TextIO,
+        name: str,
+        ability: Ability,
+        modifier_text: str,
+        breakdown: str,
+        proficient: bool,
+        has_expertise: bool,
+    ) -> None:
+        entry_class = "skill-entry"
+        if has_expertise:
+            entry_class += " st-expertise"
+        elif proficient:
+            entry_class += " st-proficient"
+
+        expertise_badge = (
+            "<span class='skill-expertise'>EXP</span>" if has_expertise else ""
+        )
+
+        file.write(f"<div class='{entry_class}'>\n")
+        file.write("<div class='skill-entry-top'>\n")
+        file.write(
+            f"<span class='skill-name'>{name}"
+            f"<span class='skill-ability-tag'>{ability.short_name}</span>"
+            f"{expertise_badge}</span>\n"
+        )
+        file.write(f"<span class='skill-mod'>{modifier_text}</span>\n")
+        file.write("</div>\n")
+        file.write(f"<div class='skill-breakdown'>{breakdown}</div>\n")
+        file.write("</div>\n")
 
     @staticmethod
     def _modifier_with_condition(
@@ -928,12 +972,19 @@ class HtmlCharacterSheetWriter:
             file.write(
                 f"<h1>{character.name} - Level {character.character_level} {character.base_class.value}</h1>\n"
             )
-            self._write_general_info(character, file, experience_points)
-            self._write_combat_stats(
+            self._write_status_section(file)
+            self._write_overview(
                 character, file, armors, armor_proficiencies, weapon_proficiencies
             )
+            file.write("<h2>Abilities and Skills</h2>\n")
+            file.write("<div class='section-row'>\n")
+            file.write("<div class='section-col section-col-abilities'>\n")
             self._write_abilities(character, file)
+            file.write("</div>\n")
+            file.write("<div class='section-col section-col-skills'>\n")
             self._write_skills(character, file, skill_config)
+            file.write("</div>\n")
+            file.write("</div>\n")
             file.write("<div class='print-page-break'></div>\n")
             self._write_features(character, file, features, description_mode)
             self._write_weapons(character, file, weapons, weapon_masteries, include_probability_tables)

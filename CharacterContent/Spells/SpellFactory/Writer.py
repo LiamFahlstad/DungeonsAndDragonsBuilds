@@ -156,6 +156,9 @@ def write_spell_to_file(
     tags_html = ""
     if is_concentration:
         tags_html += "<span class='stag stag-concentration'>Concentration</span> "
+        # Add concentration checkbox for interactive tracking
+        concentration_id = f"spell_{spell.name.lower().replace(' ', '_').replace('-', '_').replace(chr(39), '')}_concentration_check"
+        tags_html += f"<span class='spell-concentration-checkbox'><input type='checkbox' id='{concentration_id}' name='{concentration_id}'/><label for='{concentration_id}' style='font-size: 0.75rem; margin: 0;'>Active</label></span> "
     if is_ritual:
         tags_html += "<span class='stag stag-ritual'>Ritual</span> "
 

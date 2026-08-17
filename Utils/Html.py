@@ -418,11 +418,17 @@ BASE_CHARACTER_SHEET_CSS = """
             padding: 0;
         }
 
-        .section-col table.stat-table {
-            width: 100%;
+        /* Abilities tiles are naturally narrower than the two-column skill
+           list, which wants the extra room for its longer skill names. */
+        .section-col-abilities {
+            flex: 0.85;
         }
 
-        /* Stat tables: general info, combat, abilities, skills, spell slots */
+        .section-col-skills {
+            flex: 1.15;
+        }
+
+        /* Stat table: spell slots */
         table.stat-table {
             border-collapse: collapse;
             font-size: 0.85rem;
@@ -447,24 +453,11 @@ BASE_CHARACTER_SHEET_CSS = """
             border-bottom: 2px solid #3a2c1c;
         }
 
-        /* Blank, hand-fillable XP column - widened to leave writing room */
-        table.stat-table td.xp-cell {
-            min-width: 4rem;
-        }
-
         table.stat-table tr.st-proficient td {
             color: #2e6e3e;
         }
 
         table.stat-table tr.st-proficient td:first-child {
-            font-weight: 700;
-        }
-
-        table.stat-table tr.st-expertise td {
-            color: #8a6200;
-        }
-
-        table.stat-table tr.st-expertise td:first-child {
             font-weight: 700;
         }
 
@@ -477,6 +470,125 @@ BASE_CHARACTER_SHEET_CSS = """
             border-radius: 3px;
             font-weight: 700;
             font-size: 0.85em;
+        }
+
+        /* ── Ability tiles ────────────────────────────────────────────────
+           The modifier is what gets added to rolls constantly, so it's the
+           large number; score/save/DC/ATK are secondary reference info. */
+        .ability-tiles {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.4rem;
+        }
+
+        .ability-tile {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.05rem;
+            padding: 0.3rem 0.4rem;
+            border: 1px solid #c4b49a;
+            border-radius: 6px;
+            background: #fdfaf5;
+        }
+
+        .ability-tile.st-proficient {
+            border-color: #6a9a7a;
+            background: #f4faf5;
+        }
+
+        .ability-tile-name {
+            font-size: 0.68rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: #6a5636;
+        }
+
+        .ability-tile-mod {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #3a2c1c;
+            line-height: 1.1;
+        }
+
+        .ability-tile.st-proficient .ability-tile-mod {
+            color: #2e6e3e;
+        }
+
+        .ability-tile-score {
+            font-size: 0.68rem;
+            color: #7a6a50;
+        }
+
+        .ability-tile-extra {
+            font-size: 0.62rem;
+            color: #7a6a50;
+            white-space: nowrap;
+            margin-top: 0.15rem;
+        }
+
+        /* ── Skill list ───────────────────────────────────────────────────
+           Flows into two CSS columns instead of one long table so eighteen
+           skills don't dominate the page height. */
+        .skills-columns {
+            column-count: 2;
+            column-gap: 0.9rem;
+        }
+
+        .skill-entry {
+            break-inside: avoid;
+            -webkit-column-break-inside: avoid;
+            padding: 0.15rem 0;
+            border-bottom: 1px solid #eee;
+            font-size: 0.8rem;
+        }
+
+        .skill-entry-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            gap: 0.4rem;
+        }
+
+        .skill-name {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .skill-ability-tag {
+            font-size: 0.65rem;
+            font-weight: 600;
+            color: var(--muted-color);
+            margin-left: 0.3rem;
+        }
+
+        .skill-mod {
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        .skill-entry.st-proficient .skill-mod,
+        .skill-entry.st-proficient .skill-name {
+            color: #2e6e3e;
+        }
+
+        .skill-entry.st-expertise .skill-mod,
+        .skill-entry.st-expertise .skill-name {
+            color: #8a6200;
+        }
+
+        .skill-entry .skill-expertise {
+            margin-left: 0.3rem;
+            font-size: 0.6rem;
+            padding: 0 3px;
+        }
+
+        .skill-breakdown {
+            font-size: 0.68rem;
+            font-style: italic;
+            color: var(--muted-color);
         }
 
         /* Spell slot checkboxes */
@@ -794,5 +906,170 @@ BASE_CHARACTER_SHEET_CSS = """
 
         .spell-tables-secondary table.dc-fail-table {
             opacity: 0.85;
+        }
+
+        /* ── Overview: HP/AC/Initiative/Speed/Prof. tiles + detail chips ────
+           Table-free by design. Stats glanced at constantly in play (HP
+           above all) get large tiles; everything else the player already
+           knows (class, proficiencies, languages...) is a compact chip. */
+        .overview-section {
+            margin: 0.5rem 0 0.75rem 0;
+        }
+
+        .overview-tiles {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: flex-end;
+            gap: 0.6rem;
+            margin: 0 0 0.5rem 0;
+        }
+
+        .stat-tile {
+            display: inline-flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 0.1rem;
+            min-width: 4.2em;
+            padding: 0.3rem 0.7rem;
+            border: 1px solid #b89060;
+            border-radius: 6px;
+            background: #fdfaf5;
+        }
+
+        .stat-tile-label {
+            font-size: 0.62rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: #6a5636;
+            white-space: nowrap;
+        }
+
+        .stat-tile-value {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #3a2c1c;
+            line-height: 1.2;
+            white-space: nowrap;
+        }
+
+        .stat-tile-sub {
+            font-size: 0.62rem;
+            color: #7a6a50;
+            white-space: nowrap;
+        }
+
+        /* HP is checked constantly during play — give it outsized emphasis */
+        .stat-tile-hero {
+            min-width: 5.5em;
+            padding: 0.4rem 1rem;
+            border-width: 2px;
+            border-color: #9a3a3a;
+            background: #fdf3f3;
+        }
+
+        .stat-tile-hero .stat-tile-value {
+            font-size: 2.1rem;
+            color: #7a2020;
+        }
+
+        .overview-details {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.3rem 1.2rem;
+            font-size: 0.8rem;
+            padding: 0.4rem 0.6rem;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            background-color: #fafafa;
+        }
+
+        .od-label {
+            font-weight: 600;
+            color: #3a2c1c;
+            margin-right: 0.25rem;
+        }
+
+        .xp-blank {
+            display: inline-block;
+            min-width: 4rem;
+            border-bottom: 1px solid #999;
+        }
+
+        /* ── Status Section (Inspiration, Death Saves, Conditions) ──────────
+           Pen-fillable, not interactive — the sheet is meant to be printed
+           and marked by hand, so these reuse the .pen-box square (same idea
+           as .slot-box for spell slots) instead of real form controls. Chips
+           wrap freely so the row packs to fit whatever width is available. */
+        .status-section {
+            margin: 0.5rem 0 0.75rem 0;
+            padding: 0.5rem 0.6rem;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            background-color: #fafafa;
+        }
+
+        .status-row {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 0.4rem 1.5rem;
+            padding-bottom: 0.45rem;
+            margin-bottom: 0.45rem;
+            border-bottom: 1px solid #ddd0b8;
+        }
+
+        .conditions-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.35rem 0.9rem;
+        }
+
+        .status-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+            font-size: 0.85rem;
+            white-space: nowrap;
+        }
+
+        .status-chip-inspiration {
+            font-weight: 600;
+            color: #3a2c1c;
+        }
+
+        .status-chip-label {
+            font-weight: 600;
+            font-size: 0.8rem;
+            color: #3a2c1c;
+            margin-right: 0.1rem;
+        }
+
+        .pen-box {
+            display: inline-block;
+            width: 0.85em;
+            height: 0.85em;
+            border: 1px solid currentColor;
+            box-sizing: border-box;
+            border-radius: 0.15em;
+            vertical-align: middle;
+            flex-shrink: 0;
+        }
+
+        /* ── Spell Concentration Checkbox ────────────────────────────────── */
+        .spell-concentration-checkbox {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+            margin-left: 0.4rem;
+            vertical-align: middle;
+        }
+
+        .spell-concentration-checkbox input[type='checkbox'] {
+            width: 1em;
+            height: 1em;
+            cursor: pointer;
+            vertical-align: middle;
         }
         """
