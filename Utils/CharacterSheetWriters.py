@@ -19,6 +19,7 @@ from CharacterContent.Spells.SpellFactory.Writer import SPELL_CARD_CSS
 from CharacterContent.ToolProficiencies.Proficiencies import ToolProficiency
 from Core.Definitions import Ability, DiceRollCondition, Die
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
+from StatBlocks.SkillsStatBlock import SkillsStatBlock
 from Utils import DamageCalculator, Html
 from Utils.CreatureStatBlocks import WILDSHAPE_CARD_CSS
 
@@ -1169,6 +1170,145 @@ class HtmlCharacterSheetWriter:
             self._write_invocations(character, file, invocations)
             self._write_pact_magic_slots(character, file)
             self._write_spell_slots(character, file)
+
+    def write_blank_character_template(self, output_folder: str):
+        """Write a class-agnostic, unfilled version of character.html - the
+        Overview/Abilities/Skills page - for a player who wants to print a
+        blank sheet and fill it in by hand rather than generate one from a
+        build. No CharacterStatBlock involved: every value is a blank
+        fill-in line (see .blank-fill in Html.py) instead of computed data,
+        and build-specific content (features, spellcasting, equipment) is
+        skipped entirely since none of it applies until a character exists.
+        """
+        output_folder_obj = pathlib.Path(output_folder)
+        output_folder_obj.mkdir(parents=True, exist_ok=True)
+        path = output_folder_obj / "character.html"
+
+        blank_skills = SkillsStatBlock()
+        blank_sm = "<span class='blank-fill blank-fill-sm'></span>"
+
+        with open(path, "w", encoding="utf-8") as file:
+            file.write(self._get_css_style())
+            file.write(
+                "<h1><span class='blank-fill blank-fill-xl'></span> - Level "
+                "<span class='blank-fill blank-fill-sm'></span> "
+                "<span class='blank-fill blank-fill-lg'></span></h1>\n"
+            )
+            self._write_status_section(file)
+
+            # ── Overview ─────────────────────────────────────────────────
+            file.write("<h2>Overview</h2>\n")
+            file.write("<div class='overview-section'>\n")
+
+            file.write("<div class='overview-tiles'>\n")
+            file.write(self._stat_tile("Max HP", blank_sm, hero=True))
+            file.write(self._stat_tile("AC", blank_sm))
+            file.write(self._stat_tile("Initiative", blank_sm))
+            file.write(self._stat_tile("Speed", f"{blank_sm} ft"))
+            file.write(self._stat_tile("Prof. Bonus", blank_sm))
+            file.write("</div>\n")
+
+            file.write("<div class='overview-details'>\n")
+            for label in (
+                "Class",
+                "Subclass",
+                "Size",
+                "Armor Prof.",
+                "Weapon Prof.",
+                "Languages",
+                "Senses",
+                "Resistances / Immunities",
+            ):
+                file.write(
+                    f"<span class='overview-detail'><span class='od-label'>{label}</span>"
+                    f"<span class='blank-fill blank-fill-lg'></span></span>\n"
+                )
+            file.write(
+                "<span class='overview-detail'><span class='od-label'>XP</span>"
+                "<span class='xp-blank'></span></span>\n"
+            )
+            file.write("</div>\n")
+
+            file.write("</div>\n<br class='section-gap'>\n")
+
+            # ── Abilities and Skills ─────────────────────────────────────
+            file.write("<h2>Abilities and Skills</h2>\n")
+            file.write("<div class='section-row'>\n")
+
+            file.write("<div class='section-col section-col-abilities'>\n")
+            file.write("<div class='ability-tiles'>\n")
+            for ability in Ability:
+                file.write("<div class='ability-tile'>\n")
+                file.write(
+                    f"<span class='ability-tile-name'>{ability.short_name}</span>\n"
+                )
+                file.write(f"<span class='ability-tile-mod'>{blank_sm}</span>\n")
+                file.write(f"<span class='ability-tile-score'>{blank_sm}</span>\n")
+                file.write(f"<span class='ability-tile-extra'>Save {blank_sm}</span>\n")
+                file.write("</div>\n")
+            file.write("</div>\n")
+
+            # Spellcasting headline, placed with the abilities like on a
+            # real character.html - shown generically in case the player
+            # ends up a spellcaster, not tied to any specific ability.
+            file.write("<br class='section-gap'>\n")
+            file.write("<div class='spell-headline'>\n")
+            file.write("<div class='spell-headline-group'>\n")
+            file.write(
+                "<div class='spell-stat-tile'>"
+                "<span class='spell-stat-label'>Spellcasting Ability</span>"
+                f"<span class='spell-stat-value spell-stat-ability'>{blank_sm}</span>"
+                "</div>\n"
+            )
+            file.write(
+                "<div class='spell-stat-tile'>"
+                "<span class='spell-stat-label'>Spell Save DC</span>"
+                f"<span class='spell-stat-value'>{blank_sm}</span>"
+                "</div>\n"
+            )
+            file.write(
+                "<div class='spell-stat-tile'>"
+                "<span class='spell-stat-label'>Spell Attack Modifier</span>"
+                f"<span class='spell-stat-value'>{blank_sm}</span>"
+                "</div>\n"
+            )
+            file.write("</div>\n")
+            file.write("</div>\n")
+
+            file.write("</div>\n")
+
+            file.write("<div class='section-col section-col-skills'>\n")
+            file.write("<div class='skills-columns'>\n")
+            for skill in Definitions.Skill.list_sorted():
+                ability = blank_skills.get_skill_ability(skill)
+                file.write("<div class='skill-entry'>\n")
+                file.write("<div class='skill-entry-top'>\n")
+                file.write(
+                    f"<span class='skill-name'>{skill.value}"
+                    f"<span class='skill-ability-tag'>{ability.short_name}</span></span>\n"
+                )
+                file.write(f"<span class='skill-mod'>{blank_sm}</span>\n")
+                file.write("</div>\n")
+                file.write(
+                    "<div class='skill-breakdown'>"
+                    "<span class='pen-box'></span> Proficient &nbsp; "
+                    "<span class='pen-box'></span> Expertise"
+                    "</div>\n"
+                )
+                file.write("</div>\n")
+            file.write("</div>\n")
+            file.write("</div>\n")
+
+            file.write("</div>\n")
+
+            # Blank Spell Slots table, levels 1-9 with a generic 4 boxes
+            # each - shown in case the player ends up a spellcaster, since
+            # real slot counts depend on class/level neither of which a
+            # blank template has.
+            file.write("<h2>Spell Slots</h2>\n")
+            Html.write_slot_table(
+                {level: 4 for level in range(1, 10)}, file, "Regained on: Long Rest"
+            )
 
     def _write_full_page(
         self,

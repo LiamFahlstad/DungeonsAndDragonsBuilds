@@ -281,19 +281,18 @@ def write_item_cards(
 
 
 def write_slot_table(slots: dict[int, int], file: TextIO, reset_label: str):
-    file.write("<table class='stat-table'>\n")
-    file.write("<tr>")
-    for level in slots:
-        file.write(f"<th>Level {level}</th>")
-    file.write("</tr>\n<tr>")
-    for count in slots.values():
+    file.write("<div class='slot-grid'>\n")
+    for level, count in slots.items():
+        file.write(f"  <div class='slot-level'>\n")
+        file.write(f"    <div class='slot-level-label'>Level {level}</div>\n")
         boxes_html = (
             '<div class="slot-box-group">'
             + '<span class="slot-box"></span>' * count
             + "</div>"
         )
-        file.write(f"<td>{boxes_html}</td>")
-    file.write("</tr>\n</table>\n")
+        file.write(f"    {boxes_html}\n")
+        file.write(f"  </div>\n")
+    file.write("</div>\n")
     file.write(f"<span class='slot-reset-label'>{reset_label}</span>\n")
 
 
@@ -476,6 +475,32 @@ BASE_CHARACTER_SHEET_CSS = """
         }
 
         /* Stat table: spell slots */
+        .slot-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem 1.25rem;
+            margin: 0 0 0.5rem 0;
+        }
+
+        .slot-level {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .slot-level-label {
+            color: #3a2c1c;
+            font-weight: 700;
+            font-size: 0.78rem;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            margin-bottom: 0.2rem;
+        }
+
+        .slot-level .slot-box-group {
+            margin: 0;
+        }
+
         table.stat-table {
             border-collapse: collapse;
             font-size: 0.85rem;
@@ -1068,7 +1093,34 @@ BASE_CHARACTER_SHEET_CSS = """
         .xp-blank {
             display: inline-block;
             min-width: 4rem;
+            height: 1.2em;
             border-bottom: 1px solid #999;
+        }
+
+        /* ── Blank fill-in lines (blank character template) ─────────────────
+           Same idea as .xp-blank - an underline instead of a value, for a
+           printable sheet meant to be filled out by hand. Sized variants
+           for the different field widths a blank template needs. An empty
+           element with only a border-bottom has no content to give it
+           height, so it collapses to a hairline with nothing to write in -
+           an explicit height keeps room above the line. */
+        .blank-fill {
+            display: inline-block;
+            min-width: 4rem;
+            height: 1.2em;
+            border-bottom: 1px solid #999;
+        }
+
+        .blank-fill-sm {
+            min-width: 2rem;
+        }
+
+        .blank-fill-lg {
+            min-width: 8rem;
+        }
+
+        .blank-fill-xl {
+            min-width: 14rem;
         }
 
         /* ── Status Section (Inspiration, Death Saves, Conditions) ──────────

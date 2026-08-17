@@ -45,6 +45,7 @@ from Builds.Tests import (
     SpellSlotTestWizard3Warlock3,
 )
 from Builds.CharacterBuilder import CharacterBuilder
+from Utils.CharacterSheetWriters import HtmlCharacterSheetWriter
 
 
 class BuildSelector:
@@ -149,3 +150,5 @@ if __name__ == "__main__":
             description_mode=args.concise,
             include_probability_tables=args.probability_tables,
         )
+
+    HtmlCharacterSheetWriter().write_blank_character_template("Output/_blank_template")
