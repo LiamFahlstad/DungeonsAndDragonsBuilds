@@ -782,15 +782,20 @@ class HtmlCharacterSheetWriter:
         file.write("<br class='section-gap'>\n")
 
     @staticmethod
-    def _item_type_rarity_value(item: Items.Item, quantity: int = 1) -> tuple[str, str, str, str]:
+    def _item_type_rarity_value(item: Items.Item, quantity: int = 1) -> tuple[str, str, str]:
         value = item.get_value_display()
         sell_value = item.get_sell_value_display()
         prefix = f"{quantity} x " if quantity != 1 else ""
+        if value and sell_value:
+            buy_amount = value.removesuffix(" GP")
+            sell_amount = sell_value.removesuffix(" GP")
+            price = f"{prefix}{buy_amount}/{sell_amount} GP"
+        else:
+            price = "-"
         return (
             item.category.value.title(),
             item.rarity.value.title(),
-            f"{prefix}{value}" if value else "-",
-            f"{prefix}{sell_value}" if sell_value else "-",
+            price,
         )
 
     @staticmethod
@@ -814,10 +819,10 @@ class HtmlCharacterSheetWriter:
 
     def _build_item_sections(
         self, entry: EquipmentEntry, is_starting_equipment: bool
-    ) -> list[tuple[str, list[tuple[str, str, int, str, str, str, str]]]]:
-        """(title, [(label, description, slots, type, rarity, value,
-        sell_value), ...]) per non-empty Armor/Weapons/Other items table, in
-        the same slot-table format. Rows are sorted by item type."""
+    ) -> list[tuple[str, list[tuple[str, str, int, str, str, str]]]]:
+        """(title, [(label, description, slots, type, rarity, price), ...])
+        per non-empty Armor/Weapons/Other items table, in the same
+        slot-table format. Rows are sorted by item type."""
         sections = []
         if entry.armors:
             sorted_armors = sorted(entry.armors, key=lambda a: (a.category.value, a.name))
@@ -884,15 +889,23 @@ class HtmlCharacterSheetWriter:
 
         file.write("<h2>Items</h2>\n")
 
-        # Wallet + carrying capacity as compact chips (matching the Overview
-        # detail-chip pattern) instead of a paragraph and a bordered table.
+        # Wallet pinned to the left, carrying capacity (total + a compact
+        # per-source pip breakdown) pinned to the right - keeps the row
+        # tidy instead of one flat chip list wrapping unevenly.
         carrying_capacity = character.get_carrying_capacity()
-        file.write("<div class='overview-details'>\n")
+        file.write("<div class='wallet-carry-row'>\n")
+        file.write("<div class='wallet-block'>\n")
         if character.current_gold is not None:
             file.write(
-                f"<span class='overview-detail'><span class='od-label'>Current Gold</span>"
+                f"<span class='overview-detail'><span class='od-label'>Starting Gold</span>"
                 f"{self._format_gold(max(0.0, character.current_gold))}</span>\n"
             )
+        file.write(
+            "<span class='overview-detail'><span class='od-label'>Current Gold</span>"
+            "<span class='xp-blank'></span></span>\n"
+        )
+        file.write("</div>\n")
+        file.write("<div class='carrying-block'>\n")
         file.write(
             f"<span class='overview-detail'><span class='od-label'>Carrying Capacity</span>"
             f"{carrying_capacity} slots</span>\n"
@@ -900,22 +913,16 @@ class HtmlCharacterSheetWriter:
         for source, slots in character.get_carrying_capacity_sources():
             slot_boxes = "<span class='slot-box'></span>" * slots
             file.write(
-                f"<span class='overview-detail'><span class='od-label'>{source} ({slots})</span>"
+                f"<span class='carrying-source'><span class='cs-label'>{source} ({slots})</span>"
                 f"<span class='slot-box-group'>{slot_boxes}</span></span>\n"
             )
+        file.write("</div>\n")
         file.write("</div>\n")
 
         for entry in non_empty_entries:
             is_starting_equipment = entry is starting_equipment_entry
             file.write(f"<h3>{entry.label}</h3>\n")
-            if is_starting_equipment and character.starting_gold is not None:
-                file.write(
-                    "<div class='overview-details'>\n"
-                    f"<span class='overview-detail'><span class='od-label'>Starting Gold</span>"
-                    f"{self._format_gold(max(0.0, character.starting_gold))}</span>\n"
-                    "</div>\n"
-                )
-            elif entry.gold:
+            if entry.gold:
                 sign = "+" if entry.gold > 0 else "-"
                 file.write(
                     "<div class='overview-details'>\n"

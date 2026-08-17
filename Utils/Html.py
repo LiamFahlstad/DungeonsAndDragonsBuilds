@@ -225,50 +225,44 @@ def write_item_table(file: TextIO, title: str, rows: list[tuple[str, str]]):
 
 
 def write_item_cards(
-    file: TextIO, title: str, rows: list[tuple[str, str, int, str, str, str, str]]
+    file: TextIO, title: str, rows: list[tuple[str, str, int, str, str, str]]
 ):
     """Inventory items rendered as stacked cards (matching the weapon-entry
-    visual language) with type, rarity, value, sell value, slot cost, and
-    left-behind tracking. Each row is (label, description, slots, item_type,
-    rarity, value_display, sell_value_display)."""
+    visual language) with type, rarity, buy/sell price, slot cost, and
+    carrying tracking. Each row is (label, description, slots, item_type,
+    rarity, price_display)."""
     import re
 
     file.write(f"<h3>{title}</h3>\n")
     file.write("<div class='gear-list'>\n")
 
-    for label, description, slots, item_type, rarity, value, sell_value in rows:
+    for label, description, slots, item_type, rarity, price in rows:
         plain_label = re.sub(r"<span[^>]*>.*?</span>", "", label)
         plain_label = re.sub(r"<[^>]*>", "", plain_label).strip()
-        leftbehind_id = (
+        carrying_id = (
             plain_label.replace(" ", "_").replace("(", "").replace(")", "")
-            + "_leftbehind"
+            + "_carrying"
         )
 
         file.write("<div class='gear-entry'>\n")
 
-        # ── Name row + left-behind checkbox ──────────────────────────────
+        # ── Title row: item name + carrying checkbox always stay
+        # together on one line. Quick-stats flow as their own wrapping
+        # line below, as a single unit instead of being split apart. ───
         file.write("<div class='gear-header'>\n")
         file.write(f"<span class='gear-name'>{label}</span>\n")
         file.write(
-            f"<label class='gear-leftbehind' for='{leftbehind_id}_check'>Left behind"
-            f"<input type='checkbox' id='{leftbehind_id}_check' name='{leftbehind_id}_check'/></label>\n"
+            f"<label class='gear-carrying' for='{carrying_id}_check'>Carrying"
+            f"<input type='checkbox' id='{carrying_id}_check' name='{carrying_id}_check'/></label>\n"
         )
         file.write("</div>\n")
-
-        # ── Quick-stats ───────────────────────────────────────────────────
-        type_cell = f"{item_type}<span class='gsep'>·</span>{rarity}"
-        value_cell = (
-            f"<span class='glabel'>Value</span> {value}"
-            f"<span class='gsep'>·</span>"
-            f"<span class='glabel'>Sell</span> {sell_value}"
-            f"<span class='gsep'>·</span>"
-            f"<span class='glabel'>Slots</span> {slots}"
-        )
         file.write(
-            f"<div class='gear-quickstats'>"
-            f"<span class='gqs-left'>{type_cell}</span>"
-            f"<span class='gqs-right'>{value_cell}</span>"
-            f"</div>\n"
+            f"<div class='gear-meta'>{item_type}"
+            f"<span class='gsep'>·</span>{rarity}"
+            f"<span class='gsep'>·</span>"
+            f"<span class='glabel'>Buy/Sell</span> {price}"
+            f"<span class='gsep'>·</span>"
+            f"<span class='glabel'>Slots</span> {slots}</div>\n"
         )
 
         # ── Description ──────────────────────────────────────────────────
@@ -740,15 +734,14 @@ BASE_CHARACTER_SHEET_CSS = """
             border-bottom: 1px solid #cde0d2;
         }
 
-        /* Name row: item name on the left, left-behind checkbox on the
-           right - wraps if a long name and the checkbox don't both fit in
-           a narrow column. */
+        /* Title row: item name and carrying checkbox always stay on
+           the same line, pinned to opposite ends. */
         .gear-header {
             display: flex;
-            flex-wrap: wrap;
+            flex-wrap: nowrap;
             justify-content: space-between;
             align-items: baseline;
-            gap: 0.15rem 0.5rem;
+            gap: 0.5rem;
         }
 
         .gear-name {
@@ -758,32 +751,23 @@ BASE_CHARACTER_SHEET_CSS = """
             letter-spacing: 0.02em;
         }
 
-        .gear-leftbehind {
+        /* Quick-stats flow as one wrapping unit below the title, instead
+           of being split into separate left/right halves. */
+        .gear-meta {
+            color: var(--muted-color);
+            font-size: 0.82rem;
+            margin: 0.1rem 0 0 0;
+        }
+
+        .gear-carrying {
             font-size: 0.78rem;
             color: var(--muted-color);
             white-space: nowrap;
         }
 
-        .gear-leftbehind input[type='checkbox'] {
+        .gear-carrying input[type='checkbox'] {
             vertical-align: middle;
             margin-left: 3px;
-        }
-
-        /* Quick-stats — flexible columns, wrapping if the page is narrow */
-        .gear-quickstats {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.15rem 1.2rem;
-            font-size: 0.82rem;
-            margin: 0.2rem 0 0 0;
-        }
-
-        .gqs-left {
-            flex: 1 1 35%;
-        }
-
-        .gqs-right {
-            flex: 1 1 55%;
         }
 
         /* Inline label within quick-stats */
@@ -1083,11 +1067,59 @@ BASE_CHARACTER_SHEET_CSS = """
             margin-right: 0.25rem;
         }
 
-        /* A carrying-capacity source can have many slots - let its box
-           group wrap instead of forcing one long unbroken row. */
-        .overview-detail .slot-box-group {
+        /* Wallet (left) / carrying capacity (right) header row above the
+           item cards - a two-sided layout instead of one flat chip list. */
+        .wallet-carry-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
             flex-wrap: wrap;
-            max-width: 12em;
+            gap: 0.4rem 1.2rem;
+            font-size: 0.88rem;
+            margin: 0 0 0.4rem 0;
+        }
+
+        /* Starting Gold (computed) above Current Gold (blank line for the
+           player to pen in as it changes during play). */
+        .wallet-block {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 0.2rem;
+        }
+
+        .carrying-block {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 0.2rem;
+        }
+
+        /* Per-source slot pips - smaller and right-aligned so several
+           carrying-capacity sources stack compactly instead of sprawling
+           into wide chips. */
+        .carrying-source {
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+            font-size: 0.82rem;
+            color: var(--muted-color);
+        }
+
+        .cs-label {
+            white-space: nowrap;
+        }
+
+        .carrying-source .slot-box {
+            width: 0.85em;
+            height: 0.85em;
+        }
+
+        .carrying-source .slot-box-group {
+            gap: 0.22em;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+            max-width: 10em;
         }
 
         .xp-blank {
