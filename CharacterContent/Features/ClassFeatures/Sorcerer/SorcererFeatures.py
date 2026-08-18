@@ -79,6 +79,18 @@ class FontOfMagic(Feature):
         )
         return StringUtils.add_boxes(description, sorcery_points, regain_all_on="long rest")
 
+    def get_resource_tiles(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, list[tuple[str, str]]]]:
+        points_by_level = {level: str(level) for level in range(2, 21)}
+        steps = [
+            (f"Lv {level_range}", value)
+            for level_range, value in StringUtils.compress_level_progression(
+                points_by_level
+            )
+        ]
+        return [("Sorcery Points", steps)]
+
 
 class Metamagic(Feature):
     def __init__(self):
@@ -100,6 +112,25 @@ class Metamagic(Feature):
             "Whenever you gain a Sorcerer level, you can replace one of your Metamagic options with one you don't know. You gain two more options at Sorcerer level 10 and two more at Sorcerer level 17."
         )
         return description
+
+    def get_resource_tiles(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, list[tuple[str, str]]]]:
+        options_by_level = {}
+        for level in range(2, 21):
+            if level < 10:
+                options_by_level[level] = 2
+            elif level < 17:
+                options_by_level[level] = 4
+            else:
+                options_by_level[level] = 6
+        steps = [
+            (f"Lv {level_range}", str(value))
+            for level_range, value in StringUtils.compress_level_progression(
+                options_by_level
+            )
+        ]
+        return [("Metamagic Options Known", steps)]
 
     def get_concise_description(
         self, character_stat_block: CharacterStatBlock

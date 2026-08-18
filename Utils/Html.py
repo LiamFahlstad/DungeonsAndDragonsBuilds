@@ -1097,6 +1097,27 @@ BASE_CHARACTER_SHEET_CSS = """
             color: #7a2020;
         }
 
+        /* Class-resource tiles (e.g. Martial Arts die, Focus Points) - a
+           class's signature numbers, called out like HP but in their own
+           accent color so they don't compete with HP for urgency. Smaller
+           than the overview tiles since these sit inside a feature card
+           rather than at the top of the sheet. */
+        .stat-tile-resource {
+            min-width: 3em;
+            padding: 0.2rem 0.5rem;
+            border-width: 2px;
+            border-color: #4a7a4a;
+        }
+
+        .stat-tile-resource .stat-tile-label {
+            font-size: 0.56rem;
+        }
+
+        .stat-tile-resource .stat-tile-value {
+            font-size: 1rem;
+            color: #2a5a2a;
+        }
+
         .overview-details {
             display: flex;
             flex-wrap: wrap;

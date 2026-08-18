@@ -24,6 +24,30 @@ def wrap_text(description: str, max_sentence_length: int, html: bool = False) ->
     return "\n".join(new_parts)
 
 
+def compress_level_progression(
+    level_to_value: dict, max_level: int = 20
+) -> list[tuple[str, str]]:
+    """Collapse a level->value mapping into compact (level range, value)
+    pairs, merging consecutive levels that share the same value into one
+    range - e.g. {1: "1d6", 2: "1d6", 3: "1d6", 4: "1d6", 5: "1d8", ...}
+    becomes [("1-4", "1d6"), ("5-...", "1d8"), ...]. Used to show a
+    feature's full level progression (e.g. a martial arts die stepping up)
+    in a compact strip rather than one row per level.
+    """
+    levels = sorted(level for level in level_to_value if 1 <= level <= max_level)
+    ranges: list[list] = []
+    for level in levels:
+        value = str(level_to_value[level])
+        if ranges and ranges[-1][2] == value and ranges[-1][1] == level - 1:
+            ranges[-1][1] = level
+        else:
+            ranges.append([level, level, value])
+    return [
+        (str(start) if start == end else f"{start}-{end}", value)
+        for start, end, value in ranges
+    ]
+
+
 def add_boxes(
     description: str,
     box_count: int,

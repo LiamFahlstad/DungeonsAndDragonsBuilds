@@ -6,6 +6,7 @@ from CharacterContent.Features.Core.Improvements import (
     SkillExpertiseChoice,
 )
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
+from Utils import StringUtils
 
 
 class Expertise(Feature):
@@ -35,6 +36,18 @@ class SneakAttack(Feature):
             "The extra damage increases as you gain Rogue levels, as shown in the Sneak Attack column of the Rogue Features table."
         )
         return description
+
+    def get_resource_tiles(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, list[tuple[str, str]]]]:
+        dice_by_level = {level: f"{(level + 1) // 2}d6" for level in range(1, 21)}
+        steps = [
+            (f"Lv {level_range}", value)
+            for level_range, value in StringUtils.compress_level_progression(
+                dice_by_level
+            )
+        ]
+        return [("Sneak Attack Damage", steps)]
 
     def get_concise_description(self, character_stat_block: CharacterStatBlock) -> str:
         return (

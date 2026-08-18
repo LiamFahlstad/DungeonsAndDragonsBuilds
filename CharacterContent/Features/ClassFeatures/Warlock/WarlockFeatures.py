@@ -1,6 +1,7 @@
 from Core.Definitions import WARLOCK_HIT_DIE
 from CharacterContent.Features.Core.BaseFeatures import Feature
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
+from Utils import StringUtils
 
 
 class ReplacingEldritchInvocations(Feature):
@@ -21,6 +22,21 @@ class ReplacingEldritchInvocations(Feature):
         self, character_stat_block: CharacterStatBlock
     ) -> str:
         return "Whenever you gain a Warlock level, replace one invocation with another you qualify for (unless it's a prerequisite). Gain additional invocations at higher levels. Cannot pick the same invocation twice unless its description says otherwise."
+
+    def get_resource_tiles(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, list[tuple[str, str]]]]:
+        invocations_known_by_level = {
+            1: 1, 2: 3, 3: 3, 4: 3, 5: 5, 6: 5, 7: 6, 8: 6, 9: 7, 10: 7,
+            11: 7, 12: 8, 13: 8, 14: 8, 15: 9, 16: 9, 17: 9, 18: 10, 19: 10, 20: 10,
+        }
+        steps = [
+            (f"Lv {level_range}", str(value))
+            for level_range, value in StringUtils.compress_level_progression(
+                invocations_known_by_level
+            )
+        ]
+        return [("Eldritch Invocations Known", steps)]
 
 
 class ReplacingCantripsAndSpells(Feature):

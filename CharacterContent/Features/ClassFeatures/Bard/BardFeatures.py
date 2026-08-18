@@ -46,6 +46,27 @@ class BardicInspiration(Feature):
             description, max(1, charisma_modifier), regain_all_on="long rest"
         )
 
+    def get_resource_tiles(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, list[tuple[str, str]]]]:
+        die_by_level = {}
+        for level in range(1, 21):
+            if level >= 15:
+                die_by_level[level] = "1d12"
+            elif level >= 10:
+                die_by_level[level] = "1d10"
+            elif level >= 5:
+                die_by_level[level] = "1d8"
+            else:
+                die_by_level[level] = "1d6"
+        steps = [
+            (f"Lv {level_range}", value)
+            for level_range, value in StringUtils.compress_level_progression(
+                die_by_level
+            )
+        ]
+        return [("Bardic Inspiration Die", steps)]
+
     def get_table_description(
         self, character_stat_block: CharacterStatBlock
     ) -> list[tuple[str, str]]:

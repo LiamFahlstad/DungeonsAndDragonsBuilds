@@ -112,6 +112,25 @@ class WildShape(Feature):
             description, uses, regain_x_on=(1, "short rest"), regain_all_on="long rest"
         )
 
+    def get_resource_tiles(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, list[tuple[str, str]]]]:
+        uses_by_level = {}
+        for level in range(2, 21):
+            if level >= 17:
+                uses_by_level[level] = 4
+            elif level >= 6:
+                uses_by_level[level] = 3
+            else:
+                uses_by_level[level] = 2
+        steps = [
+            (f"Lv {level_range}", str(value))
+            for level_range, value in StringUtils.compress_level_progression(
+                uses_by_level
+            )
+        ]
+        return [("Wild Shape Uses", steps)]
+
 
 class AdditionalWildShapeForms(Feature):
     def __init__(self, known_forms: list[Type[ExtendedCombatantData]], origin: str):

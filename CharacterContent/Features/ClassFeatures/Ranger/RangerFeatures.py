@@ -62,6 +62,29 @@ class FavoredEnemy(Feature):
             description, free_hunters_mark_uses, regain_all_on="long rest"
         )
 
+    def get_resource_tiles(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, list[tuple[str, str]]]]:
+        uses_by_level = {}
+        for level in range(1, 21):
+            if level < 5:
+                uses_by_level[level] = 2
+            elif level < 9:
+                uses_by_level[level] = 3
+            elif level < 13:
+                uses_by_level[level] = 4
+            elif level < 17:
+                uses_by_level[level] = 5
+            else:
+                uses_by_level[level] = 6
+        steps = [
+            (f"Lv {level_range}", str(value))
+            for level_range, value in StringUtils.compress_level_progression(
+                uses_by_level
+            )
+        ]
+        return [("Free Hunter's Mark Uses", steps)]
+
     def get_table_description(
         self, character_stat_block: CharacterStatBlock
     ) -> list[tuple[str, str]]:

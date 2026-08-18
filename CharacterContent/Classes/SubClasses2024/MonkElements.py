@@ -2,15 +2,15 @@ from typing import Optional
 
 import attr
 
+from Builds.CharacterSheetAccumulator import CharacterSheetData
 from CharacterContent.Classes.BaseClasses import ClassBuilder
 from CharacterContent.Classes.BaseClasses.MonkBase import (
-    MonkMulticlassBuilder,
     MonkCustomStarterClassArgs,
+    MonkMulticlassBuilder,
 )
-from Builds.CharacterSheetAccumulator import CharacterSheetData
-from Core.Definitions import Ability, MonkSubclass
-from CharacterContent.Features.SubClassFeatures.Monk import MonkElementsFeatures
 from CharacterContent.Features.ClassFeatures.Monk import MonkFeatures
+from CharacterContent.Features.SubClassFeatures.Monk import MonkElementsFeatures
+from Core.Definitions import Ability, MonkSubclass
 from StatBlocks.SkillsStatBlock import MonkSkillsStatBlock
 
 

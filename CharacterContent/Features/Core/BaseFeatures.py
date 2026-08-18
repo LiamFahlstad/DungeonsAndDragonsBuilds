@@ -81,6 +81,37 @@ FEATURE_CARD_CSS = """/* ── Feature cards ───────────�
             margin: 0.3em 0 0.3em 1.2em;
         }
 
+        /* Core resource numbers (e.g. Martial Arts die, Focus Points) called
+           out at the top of a feature's own card - reuses .stat-tile /
+           .stat-tile-resource from the base sheet CSS, just laid out to fit
+           inside a card instead of the overview row. The sheet isn't
+           reprinted every level-up, so every level's value is shown as an
+           equally-weighted box - there's no "current level" callout, since
+           that would go stale the moment the player levels up without a
+           reprint. */
+        .feature-resource-section {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            margin: 0 0 0.5rem 0;
+        }
+
+        .feature-resource-group-label {
+            display: block;
+            font-size: 0.68rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #6a5636;
+            margin-bottom: 0.2rem;
+        }
+
+        .feature-resource-tiles {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.4rem;
+        }
+
         /* Tables embedded inside feature descriptions (e.g. item/plan lists) */
         .feature-table {
             width: 100%;
@@ -188,6 +219,24 @@ class Feature:
         descriptions are requested. Return None to fall back to get_description()."""
         return None
 
+    def get_resource_tiles(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, list[tuple[str, str]]]] | None:
+        """Override to surface this feature's core numbers as small stat
+        tiles at the top of its own feature card (visually the same idea as
+        the Max HP tile, sized down to fit a card) for resources checked
+        constantly in play - e.g. a martial arts die size or a resource
+        point total. Returns a list of (group_label, steps) tuples, where
+        steps is a list of (step_label, value) pairs - typically one tile
+        per level or level-range, e.g. [("Martial Arts Die",
+        [("Lv 1-4", "1d6"), ("Lv 5-10", "1d8"), ...])], commonly built from
+        StringUtils.compress_level_progression(). Every step is shown with
+        equal weight and no "current level" is called out: the generated
+        page isn't reprinted on every level-up, so a step highlighted as
+        "current" at generation time would silently go stale. Return None
+        (default) for features with no resource tile at all."""
+        return None
+
     def render_html_description(
         self,
         character_stat_block: CharacterStatBlock,
@@ -244,6 +293,22 @@ class Feature:
         file.write(f"<span class='feature-origin'>{self.origin}</span>\n")
         file.write("</div>\n")
         file.write("<div class='feature-body'>\n")
+
+        resource_tiles = self.get_resource_tiles(character_stat_block)
+        if resource_tiles:
+            file.write("<div class='feature-resource-section'>\n")
+            for group_label, steps in resource_tiles:
+                file.write("<div class='feature-resource-group'>\n")
+                file.write(
+                    f"<span class='feature-resource-group-label'>{group_label}</span>\n"
+                )
+                file.write("<div class='feature-resource-tiles'>\n")
+                for step_label, value in steps:
+                    file.write(self._resource_tile_html(step_label, value))
+                file.write("</div>\n")
+                file.write("</div>\n")
+            file.write("</div>\n")
+
         file.write(f"{html_description}\n")
 
         for extension in self.extensions:
@@ -266,6 +331,15 @@ class Feature:
 
         file.write("</div>\n")
         file.write("</div>\n")
+
+    @staticmethod
+    def _resource_tile_html(label: str, value) -> str:
+        return (
+            "<div class='stat-tile stat-tile-resource'>"
+            f"<span class='stat-tile-label'>{label}</span>"
+            f"<span class='stat-tile-value'>{value}</span>"
+            "</div>\n"
+        )
 
     @staticmethod
     def _bolden_line(text: str) -> str:

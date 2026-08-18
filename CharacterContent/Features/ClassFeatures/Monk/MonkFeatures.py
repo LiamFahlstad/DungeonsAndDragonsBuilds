@@ -1,8 +1,13 @@
 import Core.Definitions as Definitions
-from Core.Definitions import MONK_HIT_DIE, Ability
 from CharacterContent.Features.Core.BaseFeatures import Feature
-from CharacterContent.Features.Core.Improvements import MultiAbilityArmorClass, SpeedBonus, SavingThrowProficiency, AbilityScoreBonus
+from CharacterContent.Features.Core.Improvements import (
+    AbilityScoreBonus,
+    MultiAbilityArmorClass,
+    SavingThrowProficiency,
+    SpeedBonus,
+)
 from CharacterContent.Items.Weapons import WeaponDamageRolls
+from Core.Definitions import Ability
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
@@ -75,6 +80,20 @@ class MartialArts(Feature):
         )
         return description
 
+    def get_resource_tiles(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, list[tuple[str, str]]]]:
+        die_values = {
+            level: die.value for level, die in LEVEL_TO_MARTIAL_ARTS_DIE.items()
+        }
+        steps = [
+            (f"Lv {level_range}", value)
+            for level_range, value in StringUtils.compress_level_progression(
+                die_values
+            )
+        ]
+        return [("Martial Arts Die", steps)]
+
 
 class UnarmoredDefenseText(Feature):
     def __init__(self):
@@ -95,7 +114,9 @@ class UnarmoredDefenseText(Feature):
 class UnarmoredDefense(Feature):
     def __init__(self):
         super().__init__(skippable_in_concise=True)
-        self._ac = MultiAbilityArmorClass(10, [Definitions.Ability.DEXTERITY, Definitions.Ability.WISDOM])
+        self._ac = MultiAbilityArmorClass(
+            10, [Definitions.Ability.DEXTERITY, Definitions.Ability.WISDOM]
+        )
 
     def apply(self, character_stat_block: CharacterStatBlock):
         self._ac.apply(character_stat_block)
@@ -123,6 +144,22 @@ class MonksFocus(Feature):
         return StringUtils.add_boxes(
             description, focus_points, regain_all_on="short or long rest"
         )
+
+    def get_resource_tiles(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, list[tuple[str, str]]]]:
+        # Monk's Focus isn't granted until level 2, so level 1 (always 0) is
+        # left out of the progression rather than shown as a misleading step.
+        focus_points_from_level_2 = {
+            level: value for level, value in LEVEL_TO_FOCUS_POINTS.items() if level >= 2
+        }
+        steps = [
+            (f"Lv {level_range}", value)
+            for level_range, value in StringUtils.compress_level_progression(
+                focus_points_from_level_2
+            )
+        ]
+        return [("Focus Points", steps)]
 
 
 class FlurryOfBlows(Feature):
@@ -193,7 +230,9 @@ LEVEL_TO_UNARMORED_MOVEMENT_BONUS = {
 
 class UnarmoredMovement(Feature):
     def __init__(self):
-        super().__init__(name="Unarmored Movement", origin="Monk Level 2", skippable_in_concise=True)
+        super().__init__(
+            name="Unarmored Movement", origin="Monk Level 2", skippable_in_concise=True
+        )
 
     def apply(self, character_stat_block: CharacterStatBlock):
         monk_level = character_stat_block.get_class_level(
@@ -251,15 +290,23 @@ class DeflectAttacks(Feature):
         dex_modifier = character_stat_block.get_ability_modifier(
             Definitions.Ability.DEXTERITY
         )
-        damage_types = "any type" if monk_level >= 13 else "Bludgeoning, Piercing, or Slashing"
+        damage_types = (
+            "any type" if monk_level >= 13 else "Bludgeoning, Piercing, or Slashing"
+        )
         return [
             ("Trigger", f"Hit by {damage_types} attack"),
             ("Action", "Reaction"),
             ("Reduction", f"1d10 + {dex_modifier:+d} (DEX) + {monk_level} (level)"),
             ("Redirect Cost", "1 Focus Point (if damage reduced to 0)"),
-            ("Redirect Range", "5 ft (melee) or 60 ft (ranged, not behind Total Cover)"),
+            (
+                "Redirect Range",
+                "5 ft (melee) or 60 ft (ranged, not behind Total Cover)",
+            ),
             ("Redirect Save", "Dexterity"),
-            ("Redirect Damage", "2 Martial Arts die + DEX modifier, same type as attack"),
+            (
+                "Redirect Damage",
+                "2 Martial Arts die + DEX modifier, same type as attack",
+            ),
         ]
 
 
@@ -337,9 +384,18 @@ class HeightenedFocus(Feature):
         self, character_stat_block: CharacterStatBlock
     ) -> list[tuple[str, str]]:
         return [
-            ("Flurry of Blows", "Expend 1 Focus Point to make three Unarmed Strikes as a Bonus Action"),
-            ("Patient Defense", "Expend 1 Focus Point to gain Temporary Hit Points equal to two Martial Arts die rolls"),
-            ("Step of the Wind", "Expend 1 Focus Point to move a willing creature (Large or smaller) within 5 ft; doesn't provoke Opportunity Attacks"),
+            (
+                "Flurry of Blows",
+                "Expend 1 Focus Point to make three Unarmed Strikes as a Bonus Action",
+            ),
+            (
+                "Patient Defense",
+                "Expend 1 Focus Point to gain Temporary Hit Points equal to two Martial Arts die rolls",
+            ),
+            (
+                "Step of the Wind",
+                "Expend 1 Focus Point to move a willing creature (Large or smaller) within 5 ft; doesn't provoke Opportunity Attacks",
+            ),
         ]
 
 
@@ -366,15 +422,21 @@ class DeflectEnergy(Feature):
 
 class DisciplinedSurvivorSavingThrows(Feature):
     def __init__(self):
-        super().__init__(name="Disciplined Survivor", origin="Monk Level 14", skippable_in_concise=True)
-        self._proficiencies = SavingThrowProficiency([
-            Ability.STRENGTH,
-            Ability.DEXTERITY,
-            Ability.CONSTITUTION,
-            Ability.INTELLIGENCE,
-            Ability.WISDOM,
-            Ability.CHARISMA,
-        ])
+        super().__init__(
+            name="Disciplined Survivor",
+            origin="Monk Level 14",
+            skippable_in_concise=True,
+        )
+        self._proficiencies = SavingThrowProficiency(
+            [
+                Ability.STRENGTH,
+                Ability.DEXTERITY,
+                Ability.CONSTITUTION,
+                Ability.INTELLIGENCE,
+                Ability.WISDOM,
+                Ability.CHARISMA,
+            ]
+        )
 
     def apply(self, character_stat_block: CharacterStatBlock):
         self._proficiencies.apply(character_stat_block)
@@ -413,11 +475,16 @@ class SuperiorDefense(Feature):
 
 class BodyAndMind(Feature):
     def __init__(self):
-        super().__init__(name="Body and Mind", origin="Monk Level 20", skippable_in_concise=True)
-        self._bonuses = AbilityScoreBonus([
-            (Ability.DEXTERITY, 4),
-            (Ability.WISDOM, 4),
-        ], total=8)
+        super().__init__(
+            name="Body and Mind", origin="Monk Level 20", skippable_in_concise=True
+        )
+        self._bonuses = AbilityScoreBonus(
+            [
+                (Ability.DEXTERITY, 4),
+                (Ability.WISDOM, 4),
+            ],
+            total=8,
+        )
 
     def apply(self, character_stat_block: CharacterStatBlock):
         self._bonuses.apply(character_stat_block)

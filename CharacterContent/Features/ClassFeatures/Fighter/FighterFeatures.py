@@ -81,6 +81,20 @@ class ActionSurge(Feature):
             description, uses, regain_all_on="short or long rest"
         )
 
+    def get_resource_tiles(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, list[tuple[str, str]]]]:
+        uses_by_level = {
+            level: (2 if level >= 17 else 1) for level in range(2, 21)
+        }
+        steps = [
+            (f"Lv {level_range}", str(value))
+            for level_range, value in StringUtils.compress_level_progression(
+                uses_by_level
+            )
+        ]
+        return [("Action Surge Uses", steps)]
+
     def get_table_description(
         self, character_stat_block: CharacterStatBlock
     ) -> list[tuple[str, str]]:

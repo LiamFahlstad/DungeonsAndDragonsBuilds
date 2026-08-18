@@ -144,6 +144,20 @@ class ChannelDivinity(Feature):
 
         return description
 
+    def get_resource_tiles(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, list[tuple[str, str]]]]:
+        uses_by_level = {
+            level: (3 if level >= 11 else 2) for level in range(3, 21)
+        }
+        steps = [
+            (f"Lv {level_range}", str(value))
+            for level_range, value in StringUtils.compress_level_progression(
+                uses_by_level
+            )
+        ]
+        return [("Channel Divinity Uses", steps)]
+
 
 class ExtraAttack(Feature):
     def __init__(self):

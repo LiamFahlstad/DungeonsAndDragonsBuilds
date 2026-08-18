@@ -49,6 +49,41 @@ class Rage(Feature):
             regain_all_on="long rest",
         )
 
+    def get_resource_tiles(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, list[tuple[str, str]]]]:
+        rage_uses_by_level = {}
+        rage_damage_by_level = {}
+        for level in range(1, 21):
+            if level <= 2:
+                rage_uses_by_level[level] = 2
+            elif level <= 5:
+                rage_uses_by_level[level] = 3
+            elif level <= 11:
+                rage_uses_by_level[level] = 4
+            elif level <= 16:
+                rage_uses_by_level[level] = 5
+            else:
+                rage_uses_by_level[level] = 6
+            rage_damage_by_level[level] = f"+{get_rage_damage_bonus(level)}"
+
+        uses_steps = [
+            (f"Lv {level_range}", str(value))
+            for level_range, value in StringUtils.compress_level_progression(
+                rage_uses_by_level
+            )
+        ]
+        damage_steps = [
+            (f"Lv {level_range}", value)
+            for level_range, value in StringUtils.compress_level_progression(
+                rage_damage_by_level
+            )
+        ]
+        return [
+            ("Rage Uses", uses_steps),
+            ("Rage Damage", damage_steps),
+        ]
+
 
 class UnarmoredDefenseText(Feature):
     def __init__(self):
