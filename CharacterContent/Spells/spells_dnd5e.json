@@ -74,10 +74,10 @@
         "ritual": false,
         "classes": [
             "Artificer",
-            "Bard (Optional)",
+            "Bard",
             "Cleric",
             "Paladin",
-            "Ranger (Optional)"
+            "Ranger"
         ],
         "casting_time": "1 action",
         "range": "30 feet",
@@ -277,7 +277,7 @@
         "school": "Enchantment",
         "ritual": false,
         "classes": [
-            "Bard (Optional)",
+            "Bard",
             "Druid",
             "Wizard"
         ],
@@ -409,8 +409,8 @@
         "ritual": true,
         "classes": [
             "Cleric",
-            "Druid (Optional)",
-            "Wizard (Optional)"
+            "Druid",
+            "Wizard"
         ],
         "casting_time": "1 minute",
         "range": "Self",
@@ -425,7 +425,7 @@
         "school": "Abjuration",
         "ritual": false,
         "classes": [
-            "Cleric (Optional)",
+            "Cleric",
             "Paladin"
         ],
         "casting_time": "1 action",
@@ -441,7 +441,7 @@
         "school": "Abjuration",
         "ritual": false,
         "classes": [
-            "Cleric (Optional)",
+            "Cleric",
             "Paladin"
         ],
         "casting_time": "1 action",
@@ -457,8 +457,8 @@
         "school": "Evocation",
         "ritual": false,
         "classes": [
-            "Cleric (Optional)",
-            "Druid (Optional)",
+            "Cleric",
+            "Druid",
             "Paladin"
         ],
         "casting_time": "1 action",
@@ -621,7 +621,7 @@
         "ritual": false,
         "classes": [
             "Artificer",
-            "Sorcerer (Optional)",
+            "Sorcerer",
             "Wizard"
         ],
         "casting_time": "1 action",
@@ -670,9 +670,9 @@
         "school": "Conjuration",
         "ritual": false,
         "classes": [
-            "Sorcerer (Optional)",
-            "Warlock (Optional)",
-            "Wizard (Optional)"
+            "Sorcerer",
+            "Warlock",
+            "Wizard"
         ],
         "casting_time": "1 bonus action",
         "range": "60 feet",
@@ -804,9 +804,9 @@
         "ritual": false,
         "classes": [
             "Artificer",
-            "Sorcerer (Optional)",
-            "Warlock (Optional)",
-            "Wizard (Optional)"
+            "Sorcerer",
+            "Warlock",
+            "Wizard"
         ],
         "casting_time": "1 action",
         "range": "Self (5-foot radius)",
@@ -1169,7 +1169,7 @@
         "school": "Illusion",
         "ritual": false,
         "classes": [
-            "Bard (Optional)",
+            "Bard",
             "Sorcerer",
             "Wizard"
         ],
@@ -1186,7 +1186,7 @@
         "school": "Enchantment",
         "ritual": false,
         "classes": [
-            "Bard (Optional)",
+            "Bard",
             "Cleric",
             "Paladin"
         ],
@@ -1282,7 +1282,7 @@
         "school": "Evocation",
         "ritual": false,
         "classes": [
-            "Druid (Optional)",
+            "Druid",
             "Sorcerer",
             "Wizard"
         ],
@@ -1491,7 +1491,7 @@
         "classes": [
             "Artificer",
             "Cleric",
-            "Druid (Optional)",
+            "Druid",
             "Wizard"
         ],
         "casting_time": "1 action",
@@ -1961,7 +1961,7 @@
         "school": "Conjuration",
         "ritual": false,
         "classes": [
-            "Sorcerer (Optional)",
+            "Sorcerer",
             "Warlock",
             "Wizard"
         ],
@@ -2190,8 +2190,8 @@
         "ritual": true,
         "classes": [
             "Cleric",
-            "Druid (Optional)",
-            "Wizard (Optional)"
+            "Druid",
+            "Wizard"
         ],
         "casting_time": "1 action",
         "range": "Self",
@@ -2237,7 +2237,7 @@
         "ritual": false,
         "classes": [
             "Druid",
-            "Ranger (Optional)",
+            "Ranger",
             "Sorcerer"
         ],
         "casting_time": "1 action",
@@ -2353,10 +2353,10 @@
         "school": "Conjuration",
         "ritual": false,
         "classes": [
-            "Bard (Optional)",
-            "Sorcerer (Optional)",
-            "Warlock (Optional)",
-            "Wizard (Optional)"
+            "Bard",
+            "Sorcerer",
+            "Warlock",
+            "Wizard"
         ],
         "casting_time": "10 minutes",
         "range": "20 feet",
@@ -2505,9 +2505,9 @@
         "ritual": false,
         "classes": [
             "Artificer",
-            "Druid (Optional)",
+            "Druid",
             "Paladin",
-            "Ranger (Optional)"
+            "Ranger"
         ],
         "casting_time": "1 action",
         "range": "Touch",
@@ -2574,9 +2574,9 @@
             "Bard",
             "Cleric",
             "Druid",
-            "Ranger (Optional)",
+            "Ranger",
             "Sorcerer",
-            "Wizard (Optional)"
+            "Wizard"
         ],
         "casting_time": "1 action",
         "range": "Touch",
@@ -2592,8 +2592,8 @@
         "ritual": false,
         "classes": [
             "Artificer",
-            "Bard (Optional)",
-            "Druid (Optional)",
+            "Bard",
+            "Druid",
             "Sorcerer",
             "Wizard"
         ],
@@ -2626,7 +2626,7 @@
         "ritual": false,
         "classes": [
             "Druid",
-            "Ranger (Optional)"
+            "Ranger"
         ],
         "casting_time": "1 action",
         "range": "90 feet",
@@ -3009,8 +3009,8 @@
         "school": "Evocation",
         "ritual": false,
         "classes": [
-            "Druid (Optional)",
-            "Sorcerer (Optional)",
+            "Druid",
+            "Sorcerer",
             "Wizard"
         ],
         "casting_time": "1 action",
@@ -3095,7 +3095,7 @@
         "ritual": false,
         "classes": [
             "Druid",
-            "Sorcerer (Optional)"
+            "Sorcerer"
         ],
         "casting_time": "1 bonus action",
         "range": "Self",
@@ -3126,7 +3126,7 @@
         "ritual": false,
         "classes": [
             "Druid",
-            "Sorcerer (Optional)",
+            "Sorcerer",
             "Wizard"
         ],
         "casting_time": "1 action",
@@ -3142,8 +3142,8 @@
         "school": "Transmutation",
         "ritual": false,
         "classes": [
-            "Druid (Optional)",
-            "Sorcerer (Optional)",
+            "Druid",
+            "Sorcerer",
             "Warlock",
             "Wizard"
         ],
@@ -3398,7 +3398,7 @@
         "classes": [
             "Cleric",
             "Sorcerer",
-            "Warlock (Optional)",
+            "Warlock",
             "Wizard"
         ],
         "casting_time": "1 action",
@@ -3451,7 +3451,7 @@
         "ritual": true,
         "classes": [
             "Cleric",
-            "Paladin (Optional)",
+            "Paladin",
             "Wizard"
         ],
         "casting_time": "1 action",
@@ -3626,7 +3626,7 @@
         "ritual": false,
         "classes": [
             "Artificer",
-            "Sorcerer (Optional)",
+            "Sorcerer",
             "Wizard"
         ],
         "casting_time": "1 action",
@@ -3663,7 +3663,7 @@
             "Bard",
             "Cleric",
             "Druid",
-            "Ranger (Optional)"
+            "Ranger"
         ],
         "casting_time": "1 action",
         "range": "Touch",
@@ -3679,9 +3679,9 @@
         "ritual": false,
         "classes": [
             "Artificer",
-            "Sorcerer (Optional)",
-            "Warlock (Optional)",
-            "Wizard (Optional)"
+            "Sorcerer",
+            "Warlock",
+            "Wizard"
         ],
         "casting_time": "1 action",
         "range": "Self (5-foot radius)",
@@ -3793,7 +3793,7 @@
         "ritual": false,
         "classes": [
             "Druid",
-            "Ranger (Optional)",
+            "Ranger",
             "Sorcerer",
             "Wizard"
         ],
@@ -3971,7 +3971,7 @@
         "school": "Conjuration",
         "ritual": false,
         "classes": [
-            "Bard (Optional)",
+            "Bard",
             "Cleric",
             "Druid"
         ],
@@ -4266,7 +4266,7 @@
         "school": "Conjuration",
         "ritual": false,
         "classes": [
-            "Druid (Optional)",
+            "Druid",
             "Sorcerer",
             "Wizard"
         ],
@@ -4371,7 +4371,7 @@
         "range": "30 feet",
         "components": "V",
         "duration": "Concentration, up to 1 hour",
-        "description": "For the duration, you or one willing creature you can see within range has resistance to psychic damage, as well as advantage on Intelligence, Wisdom, and Charisma saving throws.\nAt Higher Levels. When you cast this spell using a spell slot of 4th level or higher, you can target one additional creature for each slot level above 3rd. The creatures must be within 30 feet of each other when you target them.\nSpell Lists: Artificer , Bard (Optional) , Sorcerer (Optional) , Warlock (Optional) , Wizard (Optional)",
+        "description": "For the duration, you or one willing creature you can see within range has resistance to psychic damage, as well as advantage on Intelligence, Wisdom, and Charisma saving throws.\nAt Higher Levels. When you cast this spell using a spell slot of 4th level or higher, you can target one additional creature for each slot level above 3rd. The creatures must be within 30 feet of each other when you target them.\nSpell Lists: Artificer , Bard (Optional) , Sorcerer (Optional) , Warlock (Optional) , Wizard",
         "source": "Tasha's Cauldron of Everything"
     },
     "Investiture of Flame": {
@@ -4720,9 +4720,9 @@
         "ritual": false,
         "classes": [
             "Artificer",
-            "Sorcerer (Optional)",
-            "Warlock (Optional)",
-            "Wizard (Optional)"
+            "Sorcerer",
+            "Warlock",
+            "Wizard"
         ],
         "casting_time": "1 action",
         "range": "Self (15-foot radius)",
@@ -4964,8 +4964,8 @@
         "classes": [
             "Artificer",
             "Paladin",
-            "Ranger (Optional)",
-            "Sorcerer (Optional)",
+            "Ranger",
+            "Sorcerer",
             "Wizard"
         ],
         "casting_time": "1 bonus action",
@@ -5046,7 +5046,7 @@
         "school": "Evocation",
         "ritual": false,
         "classes": [
-            "Bard (Optional)",
+            "Bard",
             "Cleric"
         ],
         "casting_time": "1 bonus action",
@@ -5130,7 +5130,7 @@
         "classes": [
             "Cleric",
             "Druid",
-            "Ranger (Optional)"
+            "Ranger"
         ],
         "casting_time": "1 action",
         "range": "Touch",
@@ -5278,9 +5278,9 @@
         "school": "Enchantment",
         "ritual": false,
         "classes": [
-            "Sorcerer (Optional)",
-            "Warlock (Optional)",
-            "Wizard (Optional)"
+            "Sorcerer",
+            "Warlock",
+            "Wizard"
         ],
         "casting_time": "1 action",
         "range": "60 feet",
@@ -5347,7 +5347,7 @@
         "school": "Illusion",
         "ritual": false,
         "classes": [
-            "Bard (Optional)",
+            "Bard",
             "Sorcerer",
             "Warlock",
             "Wizard"
@@ -5366,7 +5366,7 @@
         "ritual": false,
         "classes": [
             "Bard",
-            "Warlock (Optional)",
+            "Warlock",
             "Wizard"
         ],
         "casting_time": "1 action",
@@ -5606,7 +5606,7 @@
         "school": "Evocation",
         "ritual": false,
         "classes": [
-            "Sorcerer (Optional)",
+            "Sorcerer",
             "Wizard"
         ],
         "casting_time": "1 action",
@@ -5702,7 +5702,7 @@
         "school": "Illusion",
         "ritual": false,
         "classes": [
-            "Bard (Optional)",
+            "Bard",
             "Wizard"
         ],
         "casting_time": "1 action",
@@ -5751,7 +5751,7 @@
             "Bard",
             "Cleric",
             "Druid",
-            "Warlock (Optional)",
+            "Warlock",
             "Wizard"
         ],
         "casting_time": "1 hour",
@@ -5841,7 +5841,7 @@
         "ritual": false,
         "classes": [
             "Bard",
-            "Cleric (Optional)"
+            "Cleric"
         ],
         "casting_time": "1 action",
         "range": "Touch",
@@ -5910,7 +5910,7 @@
         "ritual": false,
         "classes": [
             "Cleric",
-            "Paladin (Optional)"
+            "Paladin"
         ],
         "casting_time": "10 minutes",
         "range": "30 feet",
@@ -5991,7 +5991,7 @@
         "school": "Abjuration",
         "ritual": false,
         "classes": [
-            "Bard (Optional)",
+            "Bard",
             "Wizard"
         ],
         "casting_time": "1 action",
@@ -6075,7 +6075,7 @@
         "ritual": false,
         "classes": [
             "Cleric",
-            "Druid (Optional)",
+            "Druid",
             "Paladin",
             "Warlock",
             "Wizard"
@@ -6198,7 +6198,7 @@
         "school": "Divination",
         "ritual": true,
         "classes": [
-            "Bard (Optional)",
+            "Bard",
             "Wizard"
         ],
         "casting_time": "1 action",
@@ -6413,9 +6413,9 @@
         "classes": [
             "Artificer",
             "Cleric",
-            "Druid (Optional)",
+            "Druid",
             "Paladin",
-            "Ranger (Optional)"
+            "Ranger"
         ],
         "casting_time": "1 action",
         "range": "Touch",
@@ -6561,7 +6561,7 @@
         "ritual": false,
         "classes": [
             "Paladin",
-            "Ranger (Optional)"
+            "Ranger"
         ],
         "casting_time": "1 bonus action",
         "range": "Self",
@@ -6943,7 +6943,7 @@
         "school": "Transmutation",
         "ritual": false,
         "classes": [
-            "Bard (Optional)",
+            "Bard",
             "Sorcerer",
             "Wizard"
         ],
@@ -7045,7 +7045,7 @@
         "classes": [
             "Bard",
             "Cleric",
-            "Wizard (Optional)"
+            "Wizard"
         ],
         "casting_time": "1 action",
         "range": "10 feet",
@@ -7126,10 +7126,10 @@
         "school": "Necromancy",
         "ritual": false,
         "classes": [
-            "Cleric (Optional)",
-            "Paladin (Optional)",
-            "Warlock (Optional)",
-            "Wizard (Optional)"
+            "Cleric",
+            "Paladin",
+            "Warlock",
+            "Wizard"
         ],
         "casting_time": "1 bonus action",
         "range": "Self",
@@ -7328,8 +7328,8 @@
         "school": "Conjuration",
         "ritual": false,
         "classes": [
-            "Warlock (Optional)",
-            "Wizard (Optional)"
+            "Warlock",
+            "Wizard"
         ],
         "casting_time": "1 action",
         "range": "90 feet",
@@ -7344,8 +7344,8 @@
         "school": "Conjuration",
         "ritual": false,
         "classes": [
-            "Druid (Optional)",
-            "Ranger (Optional)"
+            "Druid",
+            "Ranger"
         ],
         "casting_time": "1 action",
         "range": "90 feet",
@@ -7360,8 +7360,8 @@
         "school": "Conjuration",
         "ritual": false,
         "classes": [
-            "Cleric (Optional)",
-            "Paladin (Optional)"
+            "Cleric",
+            "Paladin"
         ],
         "casting_time": "1 action",
         "range": "90 feet",
@@ -7377,7 +7377,7 @@
         "ritual": false,
         "classes": [
             "Artificer",
-            "Wizard (Optional)"
+            "Wizard"
         ],
         "casting_time": "1 action",
         "range": "90 feet",
@@ -7409,9 +7409,9 @@
         "school": "Conjuration",
         "ritual": false,
         "classes": [
-            "Druid (Optional)",
-            "Ranger (Optional)",
-            "Wizard (Optional)"
+            "Druid",
+            "Ranger",
+            "Wizard"
         ],
         "casting_time": "1 action",
         "range": "90 feet",
@@ -7426,10 +7426,10 @@
         "school": "Conjuration",
         "ritual": false,
         "classes": [
-            "Druid (Optional)",
-            "Ranger (Optional)",
-            "Warlock (Optional)",
-            "Wizard (Optional)"
+            "Druid",
+            "Ranger",
+            "Warlock",
+            "Wizard"
         ],
         "casting_time": "1 action",
         "range": "90 feet",
@@ -7444,8 +7444,8 @@
         "school": "Conjuration",
         "ritual": false,
         "classes": [
-            "Warlock (Optional)",
-            "Wizard (Optional)"
+            "Warlock",
+            "Wizard"
         ],
         "casting_time": "1 action",
         "range": "90 feet",
@@ -7460,7 +7460,7 @@
         "school": "Conjuration",
         "ritual": false,
         "classes": [
-            "Warlock (Optional)",
+            "Warlock",
             "Wizard"
         ],
         "casting_time": "1 action",
@@ -7492,8 +7492,8 @@
         "school": "Conjuration",
         "ritual": false,
         "classes": [
-            "Warlock (Optional)",
-            "Wizard (Optional)"
+            "Warlock",
+            "Wizard"
         ],
         "casting_time": "1 action",
         "range": "90 feet",
@@ -7508,8 +7508,8 @@
         "school": "Necromancy",
         "ritual": false,
         "classes": [
-            "Warlock (Optional)",
-            "Wizard (Optional)"
+            "Warlock",
+            "Wizard"
         ],
         "casting_time": "1 action",
         "range": "90 feet",
@@ -7524,7 +7524,7 @@
         "school": "Evocation",
         "ritual": false,
         "classes": [
-            "Cleric (Optional)",
+            "Cleric",
             "Druid",
             "Sorcerer",
             "Wizard"
@@ -7542,7 +7542,7 @@
         "school": "Evocation",
         "ritual": false,
         "classes": [
-            "Cleric (Optional)",
+            "Cleric",
             "Druid",
             "Sorcerer",
             "Wizard"
@@ -7576,9 +7576,9 @@
         "ritual": false,
         "classes": [
             "Artificer",
-            "Sorcerer (Optional)",
-            "Warlock (Optional)",
-            "Wizard (Optional)"
+            "Sorcerer",
+            "Warlock",
+            "Wizard"
         ],
         "casting_time": "1 action",
         "range": "Self (5-foot radius)",
@@ -7595,7 +7595,7 @@
         "classes": [
             "Bard",
             "Cleric",
-            "Druid (Optional)",
+            "Druid",
             "Wizard"
         ],
         "casting_time": "1 minute",
@@ -7630,8 +7630,8 @@
         "ritual": false,
         "classes": [
             "Artificer",
-            "Sorcerer (Optional)",
-            "Wizard (Optional)"
+            "Sorcerer",
+            "Wizard"
         ],
         "casting_time": "1 action",
         "range": "Self (30-foot line)",
@@ -7662,8 +7662,8 @@
         "school": "Enchantment",
         "ritual": false,
         "classes": [
-            "Sorcerer (Optional)",
-            "Wizard (Optional)"
+            "Sorcerer",
+            "Wizard"
         ],
         "casting_time": "1 action",
         "range": "90 feet",
@@ -7678,9 +7678,9 @@
         "school": "Transmutation",
         "ritual": false,
         "classes": [
-            "Sorcerer (Optional)",
-            "Warlock (Optional)",
-            "Wizard (Optional)"
+            "Sorcerer",
+            "Warlock",
+            "Wizard"
         ],
         "casting_time": "1 bonus action",
         "range": "Self",
@@ -7745,7 +7745,7 @@
         "classes": [
             "Bard",
             "Sorcerer",
-            "Warlock (Optional)",
+            "Warlock",
             "Wizard"
         ],
         "casting_time": "1 minute",
@@ -8183,7 +8183,7 @@
         "school": "Necromancy",
         "ritual": false,
         "classes": [
-            "Sorcerer (Optional)",
+            "Sorcerer",
             "Warlock",
             "Wizard"
         ],
@@ -8378,7 +8378,7 @@
         "ritual": false,
         "classes": [
             "Cleric",
-            "Paladin (Optional)"
+            "Paladin"
         ],
         "casting_time": "1 action",
         "range": "Touch",
@@ -8500,7 +8500,7 @@
         "school": "Illusion",
         "ritual": false,
         "classes": [
-            "Warlock (Optional)",
+            "Warlock",
             "Wizard"
         ],
         "casting_time": "1 action",
