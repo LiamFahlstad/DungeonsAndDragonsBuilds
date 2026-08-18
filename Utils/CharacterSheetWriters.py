@@ -898,7 +898,7 @@ class HtmlCharacterSheetWriter:
         if character.current_gold is not None:
             file.write(
                 f"<span class='overview-detail'><span class='od-label'>Starting Gold</span>"
-                f"{self._format_gold(max(0.0, character.current_gold))}</span>\n"
+                f"{self._format_gold(character.current_gold)}</span>\n"
             )
         file.write(
             "<span class='overview-detail'><span class='od-label'>Current Gold</span>"
@@ -949,12 +949,7 @@ class HtmlCharacterSheetWriter:
             return
 
         file.write("<h2>Tool Proficiencies</h2>\n")
-
-        headers = ["Tool", "Modifier", "Breakdown", "Ability", "Craft"]
-        file.write("<table class='stat-table'>\n<tr>")
-        for header in headers:
-            file.write(f"<th>{header}</th>")
-        file.write("</tr>\n")
+        file.write("<div class='tool-list'>\n")
 
         proficiency_bonus = character.get_proficiency_bonus()
         sorted_tool_proficiencies = sorted(tool_proficiencies, key=lambda x: x.name)
@@ -965,18 +960,23 @@ class HtmlCharacterSheetWriter:
             craft = (
                 ", ".join(item.name for item in tool_proficiency.craftables)
                 if tool_proficiency.craftables
-                else "-"
+                else None
             )
-            row = [
-                tool_proficiency.name,
-                f"{total:+}",
-                breakdown,
-                tool_proficiency.ability.value,
-                craft,
-            ]
-            Html.write_table_row(file, row, "st-proficient")
 
-        file.write("</table>\n<br class='section-gap'>\n")
+            file.write("<div class='tool-entry st-proficient'>\n")
+            file.write("<div class='tool-entry-top'>\n")
+            file.write(
+                f"<span class='tool-name'>{tool_proficiency.name}"
+                f"<span class='skill-ability-tag'>{tool_proficiency.ability.short_name}</span></span>\n"
+            )
+            file.write(f"<span class='tool-mod'>{total:+}</span>\n")
+            file.write("</div>\n")
+            file.write(f"<div class='skill-breakdown'>{breakdown}</div>\n")
+            if craft:
+                file.write(f"<div class='tool-craft'><span class='glabel'>Craft</span> {craft}</div>\n")
+            file.write("</div>\n")
+
+        file.write("</div>\n<br class='section-gap'>\n")
 
     def _get_css_style(self) -> str:
         return Html.render_style_block(

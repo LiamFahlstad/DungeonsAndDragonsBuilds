@@ -470,8 +470,8 @@ BASE_CHARACTER_SHEET_CSS = """
 
         /* Stat table: spell slots */
         .slot-grid {
-            display: flex;
-            flex-wrap: wrap;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
             gap: 0.5rem 1.25rem;
             margin: 0 0 0.5rem 0;
         }
@@ -653,6 +653,52 @@ BASE_CHARACTER_SHEET_CSS = """
             font-size: 0.68rem;
             font-style: italic;
             color: var(--muted-color);
+        }
+
+        /* ── Tool proficiencies ──────────────────────────────────────────
+           Same flowing card language as .skill-entry, since a tool row is
+           the same shape (name + ability tag + modifier + breakdown), plus
+           an optional craft line. */
+        .tool-list {
+            column-count: 2;
+            column-gap: 0.9rem;
+        }
+
+        .tool-entry {
+            break-inside: avoid;
+            -webkit-column-break-inside: avoid;
+            padding: 0.15rem 0;
+            border-bottom: 1px solid #eee;
+            font-size: 0.8rem;
+        }
+
+        .tool-entry-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            gap: 0.4rem;
+        }
+
+        .tool-name {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .tool-mod {
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        .tool-entry.st-proficient .tool-mod,
+        .tool-entry.st-proficient .tool-name {
+            color: #2e6e3e;
+        }
+
+        .tool-craft {
+            font-size: 0.68rem;
+            color: var(--muted-color);
+            margin-top: 0.1rem;
         }
 
         /* Spell slot checkboxes */
