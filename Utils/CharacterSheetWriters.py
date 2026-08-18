@@ -4,7 +4,7 @@ from typing import Literal, Optional, TextIO
 import Core.Definitions as Definitions
 from Builds.EquipmentHandler import EquipmentEntry
 from CharacterContent.Features.CombatFeatures.FightingStyles import FightingStyle
-from CharacterContent.Features.Core.BaseFeatures import FEATURE_CARD_CSS, Feature
+from CharacterContent.Features.Core.BaseFeatures import FEATURE_CARD_CSS, Feature, parse_feature_level
 from CharacterContent.Invocations.InvocationFactory import InvocationFactory
 from CharacterContent.Items import Armor, Items
 from CharacterContent.Items.Weapons import (
@@ -49,12 +49,7 @@ class HtmlCharacterSheetWriter:
         without a parseable level (background, species, origin feats) are
         bucketed under level 1, where they were granted."""
         origin = getattr(feat, "origin", "") or ""
-        if "Level " in origin:
-            try:
-                return int(origin.split("Level ")[1].split()[0])
-            except (ValueError, IndexError):
-                return 1
-        return 1
+        return parse_feature_level(origin)
 
     @staticmethod
     def _spell_level(spell: tuple[str, Ability, Optional[str], int]) -> int:
@@ -1027,11 +1022,25 @@ class HtmlCharacterSheetWriter:
         for spell in spells:
             spells_by_level.setdefault(self._spell_level(spell), []).append(spell)
 
+        # Build a bucket of extensions (feature enhancements) that appear on their
+        # own level pages as standalone cards. Skip extensions whose level <= parent
+        # level (already nested on the parent's page via write_to_file's max_level filtering).
+        extensions_by_level: dict[int, list[tuple[Feature, Feature]]] = {}
+        for feature in features:  # Iterate full list, not just text_features
+            parent_level = self._feature_level(feature)
+            for extension in feature.extensions:
+                ext_level = self._feature_level(extension)
+                if ext_level <= parent_level:
+                    continue  # Already shown nested on the parent's page
+                if extension.render_html_description(character, description_mode) is None:
+                    continue
+                extensions_by_level.setdefault(ext_level, []).append((feature, extension))
+
         # A level page is needed for any level that grants a displayed
         # feature OR a spell/cantrip - a level that only grants spells
         # (no feature with a rendered description) would otherwise be
         # missed entirely.
-        level_page_levels = sorted(set(features_by_level) | set(spells_by_level))
+        level_page_levels = sorted(set(features_by_level) | set(spells_by_level) | set(extensions_by_level))
 
         has_weapons_page = bool(weapons) or bool(fighting_styles)
         non_empty_equipment_entries = [
@@ -1096,6 +1105,7 @@ class HtmlCharacterSheetWriter:
                 features_by_level.get(level, []), key=lambda f: getattr(f, "name", "")
             )
             level_spells = spells_by_level.get(level, [])
+            level_extensions = extensions_by_level.get(level, [])
             self._write_features_page(
                 output_folder_obj / page_path,
                 page_path,
@@ -1105,6 +1115,7 @@ class HtmlCharacterSheetWriter:
                 sorted_level_features,
                 description_mode,
                 level_spells,
+                level_extensions,
             )
 
         if has_weapons_page:
@@ -1397,14 +1408,20 @@ class HtmlCharacterSheetWriter:
         level_features: list[Feature],
         description_mode: Literal["table", "concise"] | None,
         level_spells: list[tuple[str, Ability, Optional[str], int]],
+        level_extensions: list[tuple[Feature, Feature]] | None = None,
     ):
+        if level_extensions is None:
+            level_extensions = []
+
         with open(path, "w", encoding="utf-8") as file:
             file.write(self._get_css_style())
             self._write_nav(file, page_path, pages)
             file.write(f"<h1>{character.name} - Level {level} Features</h1>\n")
             file.write("<div class='features'>\n")
             for feature in level_features:
-                feature.write_to_file(character, file, description_mode)
+                feature.write_to_file(character, file, description_mode, max_level=level)
+            for parent, extension in sorted(level_extensions, key=lambda pe: pe[1].name):
+                extension.write_extension_card_to_file(character, file, parent.name, description_mode)
             file.write("</div>\n")
 
             if level_spells:

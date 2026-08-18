@@ -3,6 +3,18 @@ from typing import Literal, TextIO
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import Html
 
+
+def parse_feature_level(origin: str | None) -> int:
+    """Parse the level from a feature's origin string (e.g. 'Bard Level 3' -> 3).
+    Features without a parseable level (background, species, origin feats) default to 1."""
+    if not origin or "Level " not in origin:
+        return 1
+    try:
+        return int(origin.split("Level ")[1].split()[0])
+    except (ValueError, IndexError):
+        return 1
+
+
 FEATURE_CARD_CSS = """/* ── Feature cards ───────────────────────────────────────────────── */
         .features {
             max-width: 100%;
@@ -267,6 +279,7 @@ class Feature:
         character_stat_block: CharacterStatBlock,
         file: TextIO,
         description_mode: Literal["table", "concise"] | None = None,
+        max_level: int | None = None,
     ):
         html_description = self.render_html_description(
             character_stat_block, description_mode
@@ -312,6 +325,20 @@ class Feature:
         file.write(f"{html_description}\n")
 
         for extension in self.extensions:
+            ext_level = parse_feature_level(extension.origin)
+            parent_level = parse_feature_level(self.origin)
+
+            # When writing to a per-level shard (max_level set), skip extensions
+            # whose origin level exceeds the page's level. Full pages (max_level=None)
+            # always show all extensions.
+            if max_level is not None:
+                if ext_level > max_level:
+                    continue
+                # Skip extensions that are being rendered as standalone cards on this
+                # page (ext_level > parent_level means they'll appear separately)
+                if ext_level > parent_level:
+                    continue
+
             ext_html = extension.render_html_description(
                 character_stat_block, description_mode
             )
@@ -328,6 +355,56 @@ class Feature:
                 f"<div class='feature-upgrade-body'>{ext_html}</div>\n"
                 f"</div>\n"
             )
+
+        file.write("</div>\n")
+        file.write("</div>\n")
+
+    def write_extension_card_to_file(
+        self,
+        character_stat_block: CharacterStatBlock,
+        file: TextIO,
+        parent_name: str,
+        description_mode: Literal["table", "concise"] | None = None,
+    ):
+        """Write an extension (that is, an enhancement to a parent feature) as a
+        standalone feature card on its own level page, visually flagged as extending
+        the parent. Reuses the existing .feature-upgrade CSS classes for consistent
+        blue-label styling."""
+        html_description = self.render_html_description(
+            character_stat_block, description_mode
+        )
+        if html_description is None:
+            return
+
+        passive_tag = (
+            "<span class='feature-passive-tag'>Passive</span>"
+            if description_mode is None and self.skippable_in_concise
+            else ""
+        )
+
+        file.write("<div class='feature-card'>\n")
+        file.write("<div class='feature-header'>\n")
+        file.write("<span class='feature-name-group'>\n")
+        file.write(f"<span class='feature-name'>{self.name}</span>\n")
+        if passive_tag:
+            file.write(f"{passive_tag}\n")
+        file.write("</span>\n")
+        file.write(f"<span class='feature-origin'>{self.origin}</span>\n")
+        file.write("</div>\n")
+        file.write("<div class='feature-body'>\n")
+
+        # Write the extension as an upgrade block with the parent feature name
+        ext_passive_tag = (
+            " <span class='feature-passive-tag'>Passive</span>"
+            if description_mode is None and self.skippable_in_concise
+            else ""
+        )
+        file.write(
+            f"<div class='feature-upgrade'>\n"
+            f"<span class='feature-upgrade-label'>{parent_name} Feature Extension{ext_passive_tag}</span>\n"
+            f"<div class='feature-upgrade-body'>{html_description}</div>\n"
+            f"</div>\n"
+        )
 
         file.write("</div>\n")
         file.write("</div>\n")
