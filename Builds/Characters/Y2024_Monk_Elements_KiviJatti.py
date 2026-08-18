@@ -72,7 +72,7 @@ def get_starter_class_builder():
         background_skill_proficiencies=Backgrounds.FreeBackgroundSkillProficiency(
             [
                 Skill.PERCEPTION,
-                Skill.SURVIVAL,
+                Skill.ATHLETICS,
             ]
         ),
         add_default_equipment=False,
@@ -84,7 +84,6 @@ def get_starter_class_builder():
                 ability=Ability.DEXTERITY,
                 damage_roll=martial_arts_die,
             ),
-            Weapons.Quarterstaff(),
             Weapons.Dagger(),
         ],
         tool_proficiencies=[

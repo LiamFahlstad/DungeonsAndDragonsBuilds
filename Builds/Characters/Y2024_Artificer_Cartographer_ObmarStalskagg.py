@@ -1,4 +1,4 @@
-from Builds.CharacterBuilder import Bought, CharacterBuilder
+from Builds.CharacterBuilder import CharacterBuilder
 from CharacterContent.Classes.BaseClasses import ClassBuilder
 from CharacterContent.Classes.BaseClasses.ArtificerBase import (
     ArtificerLevel1,
@@ -11,7 +11,7 @@ from CharacterContent.Classes.SubClasses2024.ArtificerCartographer import (
     ArtificerCartographerLevel3,
 )
 from CharacterContent.Features.CharacterFeats import Backgrounds, OriginFeats
-from CharacterContent.Items import Armor, Items, Weapons
+from CharacterContent.Items import Armor, Weapons
 from CharacterContent.Species import Dwarf
 from CharacterContent.Spells import SpellLists as SpellDefinitions
 from CharacterContent.ToolProficiencies.Proficiencies import (
@@ -113,28 +113,3 @@ class Y2024ArtificerCartographerObmarStalskaggCharacterBuilder(CharacterBuilder)
             starter_class_builder=get_starter_class_builder(),
             species_builder=Dwarf.DwarfSpeciesBuilder(),
         )
-
-        # Example usage: gear picked up after character creation gets its own
-        # labeled entry on the sheet, separate from Starting Equipment. Call
-        # add_adventuring_gear() again for each later haul. Items are found
-        # by default (the Compass); wrap one in Bought(item) to mark it as
-        # purchased instead - Bought(item, price=X) overrides the amount
-        # paid, e.g. the 3 maps haggled down to 2 GP total instead of the
-        # usual 1 GP each.
-        self.add_adventuring_gear(
-            "Charted the Sunken Archive (Level 3)",
-            weapons=[Bought(Weapons.Dagger())],  # replaced the one dropped below, full price
-            items=[
-                (Items.HeartseekersCompass(), 1),
-                (Bought(Items.Map(), price=2), 3),
-            ],
-        )
-
-        # Example usage: drop_item() removes an item from the sheet and from
-        # AC/attack calculations, while the code that added it stays in this
-        # file as a record of what Obmar used to carry. Obmar now has two
-        # Daggers (the starting one and the bought replacement above), so
-        # dropping by class would be ambiguous - get_starting_item() scopes
-        # the lookup to Starting Equipment specifically, so it stays
-        # unambiguous regardless of what adventuring gear added afterward.
-        self.drop_item(self.get_starting_item(Weapons.Dagger))

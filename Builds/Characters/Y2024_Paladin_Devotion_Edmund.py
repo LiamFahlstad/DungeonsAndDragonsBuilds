@@ -1,10 +1,12 @@
 """
-Skeleton build for Edmund's Paladin (level 3, Oath of Devotion).
+Build for Edmund's Paladin (level 3, Oath of Devotion), based on the
+2026-08-16 planning chat with the player.
 
-This is a minimal starting point, not a finished build. Every line marked
-TODO is a placeholder value you should replace with your own choice. See
-Y2024_Paladin_Glory_BalderSunoath.py in this same folder for a fully
-worked out, higher-level example of the same class.
+The background's ability bonus is only pinned down as "+1 Strength" in that
+chat; the other +2 of the required +3 total is assumed here as +1 Dexterity
+/ +1 Wisdom (the Sailor background's ability triad, which also matches the
+Navigator's Tools proficiency and the Perception skill pick). Confirm with
+Edmund's player and adjust if that's not what they meant.
 """
 
 from Builds.CharacterBuilder import CharacterBuilder
@@ -19,12 +21,13 @@ from CharacterContent.Classes.SubClasses2024.PaladinDevotion import (
     PaladinDevotionCustomStarterClassArgs,
     PaladinDevotionLevel3,
 )
-from Core.Definitions import Ability, Skill
 from CharacterContent.Features.CharacterFeats import Backgrounds, OriginFeats
 from CharacterContent.Features.CombatFeatures import FightingStyles
-from CharacterContent.Items import Weapons
-from CharacterContent.Species import Dwarf
+from CharacterContent.Items import Armor, Items, Weapons
+from CharacterContent.Species import Tiefling
 from CharacterContent.Spells.SpellLists import PaladinLevel1Spells
+from CharacterContent.ToolProficiencies.Proficiencies import NavigatorsTools
+from Core.Definitions import Ability, Skill
 from StatBlocks.AbilitiesStatBlock import PointBuyAbilitiesStatBlock
 from StatBlocks.SkillsStatBlock import PaladinSkillsStatBlock
 
@@ -34,64 +37,66 @@ def get_starter_class_builder():
         non_generic_arguments=PaladinDevotionCustomStarterClassArgs(
             skills=PaladinSkillsStatBlock(
                 proficiencies={
-                    # TODO: pick exactly 2 skills as True, from: Athletics,
-                    # Insight, Intimidation, Medicine, Persuasion, Religion.
                     Skill.ATHLETICS: True,
-                    Skill.RELIGION: True,
+                    Skill.INSIGHT: True,
                 }
             ),
         ),
         base_class_level=3,
-        # TODO: Point Buy - spend exactly 27 points across your six abilities.
-        # Each score must be between 8 and 15. Costs per score:
-        #   8 -> 0 pts   10 -> 2 pts   12 -> 4 pts   14 -> 7 pts
-        #   9 -> 1 pt    11 -> 3 pts   13 -> 5 pts   15 -> 9 pts
         abilities=PointBuyAbilitiesStatBlock(
             strength=15,
-            dexterity=10,
+            dexterity=12,
             constitution=13,
             intelligence=8,
-            wisdom=12,
+            wisdom=10,
             charisma=14,
         ),
-        # TODO: replace with your actual background's ability bonuses (PHB background list).
+        # See module docstring: only the +1 Strength is confirmed from chat.
         background_ability_bonuses=Backgrounds.FreeBackgroundAbilityBonus(
             [
                 (Ability.STRENGTH, 2),
-                (Ability.CHARISMA, 1),
+                (Ability.CONSTITUTION, 1),
             ]
         ),
-        # TODO: replace with your actual background's skill proficiencies.
         background_skill_proficiencies=Backgrounds.FreeBackgroundSkillProficiency(
             [
-                Skill.INTIMIDATION,
-                Skill.MEDICINE,
+                Skill.SURVIVAL,
+                Skill.PERCEPTION,
             ]
         ),
-        add_default_equipment=True,
-        # TODO: choose your origin feat (PHB feat list). Tough is a simple, safe placeholder.
+        add_default_equipment=False,
         origin_feat=OriginFeats.Tough(),
-        armor=[],
-        weapons=[],
+        # No default equipment, so armor/weapons are spelled out explicitly.
+        armor=[Armor.ChainMailArmor(), Armor.ShieldArmor()],
+        weapons=[Weapons.Longsword(), Weapons.Dagger()],
+        items=[
+            (Items.HolySymbol(), 1),
+            (Items.Bedroll(), 1),
+            (Items.Tinderbox(), 1),
+            (Items.NavigatorsTools(), 1),
+            (Items.InkPen(), 1),
+            (Items.Paper(), 1),
+            (Items.Map(), 1),
+            (Items.Rations(), 3),
+        ],
+        tool_proficiencies=[NavigatorsTools()],
         base_class_level_features=ClassBuilder.BaseClassLevelFeatures(
             base_class_features_by_level={
                 1: PaladinLevel1(
-                    # TODO: choose 2 weapons to gain Weapon Mastery with.
-                    weapon_mastery_1=Weapons.Handaxe(),
-                    weapon_mastery_2=Weapons.LightHammer(),
-                    # TODO: choose your 2 prepared level 1 spells.
-                    spell_1=PaladinLevel1Spells.DETECT_POISON_AND_DISEASE,
+                    # Sap and Nick weapon masteries, both on weapons he
+                    # actually carries: Longsword (Sap) and Dagger (Nick).
+                    weapon_mastery_1=Weapons.Longsword(),
+                    weapon_mastery_2=Weapons.Dagger(),
+                    spell_1=PaladinLevel1Spells.CURE_WOUNDS,
                     spell_2=PaladinLevel1Spells.DIVINE_FAVOR,
                 ),
                 2: PaladinLevel2(
-                    # TODO: choose your Fighting Style.
+                    # TODO: choose your Fighting Style (not mentioned in chat).
                     fighting_style=FightingStyles.Defense(),
-                    # TODO: choose a spell to add to your prepared list.
-                    spell=PaladinLevel1Spells.BLESS,
+                    spell=PaladinLevel1Spells.CEREMONY,
                 ),
                 3: PaladinLevel3(
-                    # TODO: choose a spell to add to your prepared list.
-                    spell=PaladinLevel1Spells.DETECT_MAGIC,
+                    spell=PaladinLevel1Spells.BLESS,
                 ),
             },
             subclass_features_by_level={
@@ -104,10 +109,15 @@ def get_starter_class_builder():
 class Y2024PaladinDevotionEdmundCharacterBuilder(CharacterBuilder):
     def __init__(self):
         super().__init__(
-            # TODO: replace with your character's name.
+            # Not spoken in-fiction yet (a written/drawn nickname), but this
+            # is the name used for the sheet and party-facing purposes.
             name="Edmund",
             starter_class_builder=get_starter_class_builder(),
-            # TODO: choose your species. Dwarf is used here as a simple
-            # placeholder with no extra sub-choices required.
-            species_builder=Dwarf.DwarfSpeciesBuilder(),
+            # Chthonic Tiefling: resistance to necrotic damage, the
+            # Thaumaturgy cantrip (from Otherworldly Presence), plus the
+            # Chill Touch cantrip and False Life spell from Fiendish Legacy.
+            species_builder=Tiefling.TieflingSpeciesBuilder(
+                character_level=3,
+                fiendish_lineage=Tiefling.FiendishLineage.CHTHONIC,
+            ),
         )

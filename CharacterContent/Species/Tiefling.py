@@ -69,11 +69,11 @@ class TieflingSpeciesBuilder(SpeciesBuilder):
         else:
             raise ValueError(f"Invalid fiendish lineage: {self.fiendish_lineage}")
 
-        data.add_cantrip(cantrip)
+        data.add_cantrip(cantrip, self.spell_casting_ability)
         if spell_1 is not None:
-            data.add_spell(spell_1)
+            data.add_spell(spell_1, self.spell_casting_ability)
         if spell_2 is not None:
-            data.add_spell(spell_2)
+            data.add_spell(spell_2, self.spell_casting_ability)
         data.add_feature(
             TieflingFeatures.FiendishLegacy(
                 cantrip=cantrip, spell_1=spell_1, spell_2=spell_2
