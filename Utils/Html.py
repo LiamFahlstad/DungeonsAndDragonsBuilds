@@ -14,6 +14,19 @@ _DAMAGE_TYPE_PATTERN = re.compile(
 RESET_PREFIX = "[RESET:"
 RESET_SUFFIX = "]"
 
+# Box-count sentinel markers - encode both the current and max box counts so
+# rendering can defer to render time which one to draw (current on the full
+# sheet, max on a level shard page). Format: [BOXES:current:max]
+BOXES_PREFIX = "[BOXES:"
+BOXES_SUFFIX = "]"
+
+# Current-value-formula sentinel marker - a short plain-English note on how to
+# derive the build's real "current" count from the max shown on a level shard
+# page (where the boxes render the formula's ceiling, not the current value).
+# Only rendered when use_max=True; consumed and discarded otherwise.
+CURRENT_PREFIX = "[CURRENT:"
+CURRENT_SUFFIX = "]"
+
 
 def _bold_prefix(line: str, separator: str, max_words: int):
     if separator not in line:
@@ -34,18 +47,21 @@ def _is_reset_sentinel_line(line: str) -> bool:
     return stripped.startswith(RESET_PREFIX) and stripped.endswith(RESET_SUFFIX)
 
 
-def boxes_to_html(description: str) -> str:
+def boxes_to_html(description: str, use_max: bool = False) -> str:
     def normalize_box_line(line: str) -> str:
         stripped = line.strip()
         if stripped.endswith("<br>"):
             stripped = stripped[:-4].rstrip()
         return stripped
 
-    def box_count(line: str, token: str) -> int:
-        parts = line.split()
-        if parts and all(part == token for part in parts):
-            return len(parts)
-        return 0
+    def parse_box_counts(line: str) -> tuple[int, int] | None:
+        """Return (box_count, max_box_count) if *line* is a box sentinel, else None."""
+        normalized = normalize_box_line(line)
+        if normalized.startswith(BOXES_PREFIX) and normalized.endswith(BOXES_SUFFIX):
+            inner = normalized[len(BOXES_PREFIX) : -len(BOXES_SUFFIX)]
+            current_str, max_str = inner.split(":")
+            return int(current_str), int(max_str)
+        return None
 
     def parse_reset_label(line: str) -> str | None:
         """Return the reset label text if *line* is a reset sentinel, else None."""
@@ -54,46 +70,80 @@ def boxes_to_html(description: str) -> str:
             return normalized[len(RESET_PREFIX) : -len(RESET_SUFFIX)]
         return None
 
+    def parse_current_formula(line: str) -> str | None:
+        """Return the current-value-formula text if *line* is a current sentinel, else None."""
+        normalized = normalize_box_line(line)
+        if normalized.startswith(CURRENT_PREFIX) and normalized.endswith(
+            CURRENT_SUFFIX
+        ):
+            return normalized[len(CURRENT_PREFIX) : -len(CURRENT_SUFFIX)]
+        return None
+
     lines = description.split("\n")
     new_lines = []
     index = 0
 
     while index < len(lines):
-        top_line = normalize_box_line(lines[index])
-        top_count = box_count(top_line, "⬜")
+        box_counts = parse_box_counts(lines[index])
 
-        if top_count:
+        if box_counts is not None:
+            box_count, max_box_count = box_counts
+            top_count = max_box_count if use_max else box_count
             boxes_html = '<span class="slot-box"></span>' * top_count
+            consumed = 1  # the box line itself
 
-            # Peek at the next line to see if it carries a reset label.
+            # Peek at the following lines, in order, for an optional reset-label
+            # sentinel and then an optional current-value-formula sentinel.
+            # Either, both, or neither may be present.
             reset_label = None
-            if index + 1 < len(lines):
-                reset_label = parse_reset_label(lines[index + 1])
+            if index + consumed < len(lines):
+                reset_label = parse_reset_label(lines[index + consumed])
+                if reset_label is not None:
+                    consumed += 1
 
+            current_formula = None
+            if index + consumed < len(lines):
+                current_formula = parse_current_formula(lines[index + consumed])
+                if current_formula is not None:
+                    consumed += 1
+
+            extra_html_parts = []
             if reset_label is not None:
                 # Capitalize the reset label for proper sentence formatting
                 capitalized_label = (
                     reset_label[0].upper() + reset_label[1:] if reset_label else ""
                 )
-                reset_html = (
+                extra_html_parts.append(
                     f'<span class="slot-reset-label">{capitalized_label}.</span>'
                 )
+            if current_formula is not None and use_max:
+                # Only meaningful on level shard pages, where the boxes above
+                # show the formula's ceiling rather than the build's current
+                # value - not rendered on the full sheet, where the boxes
+                # already show the current value directly.
+                extra_html_parts.append(
+                    f'<span class="slot-reset-label">{current_formula}</span>'
+                )
+
+            if extra_html_parts:
                 new_lines.append(
                     '<div class="slot-box-group">'
                     + boxes_html
                     + "</div>"
                     + "\n"
-                    + reset_html
+                    + "\n".join(extra_html_parts)
                 )
-                index += 2  # consume both the box line and the reset sentinel
             else:
                 new_lines.append('<div class="slot-box-group">' + boxes_html + "</div>")
-                index += 1
+            index += consumed
             continue
 
-        # Skip bare reset sentinel lines that appear without a preceding box line
-        # (shouldn't normally happen, but guard against it).
-        if parse_reset_label(lines[index]) is not None:
+        # Skip bare reset/current sentinel lines that appear without a preceding
+        # box line (shouldn't normally happen, but guard against it).
+        if (
+            parse_reset_label(lines[index]) is not None
+            or parse_current_formula(lines[index]) is not None
+        ):
             index += 1
             continue
 

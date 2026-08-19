@@ -53,12 +53,15 @@ def add_boxes(
     box_count: int,
     regain_all_on: str = None,
     regain_x_on: tuple = None,
+    max_box_count: int | None = None,
+    current_formula: str | None = None,
 ) -> str:
     """Append box symbols to *description*.
 
     Args:
         description: The feature text to append boxes to.
-        box_count: How many checkbox symbols to add.
+        box_count: How many checkbox symbols to add (the "current"/build
+            value, used on the full character sheet).
         regain_all_on: Optional reset cadence label for full recovery, e.g.
             ``"long rest"``, ``"short rest"``, or ``"dawn"``. When supplied a
             note is rendered beneath the boxes in the HTML output.
@@ -66,14 +69,38 @@ def add_boxes(
             recovery on a shorter rest, e.g. ``(2, "short rest")``. If both
             this and ``regain_all_on`` are provided, the description will be
             "Regain <N> on <cadence>, all on <regain_all_on>".
+        max_box_count: Optional ceiling value used instead of box_count on
+            per-level feature shard pages, which are generated once and never
+            regenerated as the player levels up in play - so they show the
+            maximum the underlying formula could ever reach, letting the
+            player track on paper how many of those boxes they can currently
+            use. Defaults to box_count (no current/max distinction) when
+            omitted. Must be >= box_count.
+        current_formula: Optional short plain-English fragment describing how
+            the build's real "current" count is derived (e.g. "equal to your
+            Monk level."). Only rendered on level shard pages (where the
+            boxes above show max_box_count rather than box_count), directly
+            beneath the boxes/reset label, so the player can work out their
+            real current count by hand. Ignored on the full character sheet,
+            where the boxes already show the current count directly.
     """
-    from Utils.Html import RESET_PREFIX, RESET_SUFFIX
+    from Utils.Html import (
+        BOXES_PREFIX,
+        BOXES_SUFFIX,
+        CURRENT_PREFIX,
+        CURRENT_SUFFIX,
+        RESET_PREFIX,
+        RESET_SUFFIX,
+    )
 
-    box_symbol = "⬜"
+    if max_box_count is None:
+        max_box_count = box_count
+    if max_box_count < box_count:
+        raise ValueError(
+            f"max_box_count ({max_box_count}) must be >= box_count ({box_count})"
+        )
 
-    boxes = " ".join([box_symbol] * box_count)
-
-    result = f"{description}\n{boxes}\n"
+    result = f"{description}\n{BOXES_PREFIX}{box_count}:{max_box_count}{BOXES_SUFFIX}\n"
 
     # Determine the reset label to append
     reset_label = None
@@ -103,5 +130,8 @@ def add_boxes(
 
     if reset_label is not None:
         result += f"{RESET_PREFIX}{reset_label}{RESET_SUFFIX}\n"
+
+    if current_formula is not None:
+        result += f"{CURRENT_PREFIX}{current_formula}{CURRENT_SUFFIX}\n"
 
     return result
