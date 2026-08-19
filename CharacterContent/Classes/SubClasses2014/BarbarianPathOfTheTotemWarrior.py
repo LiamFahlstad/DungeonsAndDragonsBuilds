@@ -8,9 +8,14 @@ from CharacterContent.Classes.BaseClasses.BarbarianBase import (
     BarbarianCustomStarterClassArgs,
 )
 from Builds.CharacterSheetAccumulator import CharacterSheetData
-from Core.Definitions import BarbarianSubclass2014
+from Core.Definitions import Ability, BarbarianSubclass2014
 from CharacterContent.Features.SubClassFeatures2014.Barbarian import BarbarianPathOfTheTotemWarriorFeatures
 from CharacterContent.Features.ClassFeatures.Barbarian import BarbarianFeatures
+from CharacterContent.Spells.SpellLists import (
+    DruidLevel1Spells,
+    DruidLevel2Spells,
+    DruidLevel5Spells,
+)
 from StatBlocks.SkillsStatBlock import BarbarianSkillsStatBlock
 
 
@@ -22,6 +27,16 @@ class BarbarianTotemWarriorLevel3(ClassBuilder.SubclassLevel3):
         data: CharacterSheetData,
     ) -> CharacterSheetData:
         data.add_feature(BarbarianPathOfTheTotemWarriorFeatures.SpiritSeeker())
+        data.add_spell(
+            DruidLevel2Spells.BEAST_SENSE,
+            Ability.WISDOM,
+            additional_ruling="Ritual only",
+        )
+        data.add_spell(
+            DruidLevel1Spells.SPEAK_WITH_ANIMALS,
+            Ability.WISDOM,
+            additional_ruling="Ritual only",
+        )
         rage: BarbarianFeatures.Rage = data.get_features_by_type(
             BarbarianFeatures.Rage
         )[0]
@@ -48,6 +63,11 @@ class BarbarianTotemWarriorLevel10(ClassBuilder.SubclassLevel10):
         data: CharacterSheetData,
     ) -> CharacterSheetData:
         data.add_feature(BarbarianPathOfTheTotemWarriorFeatures.SpiritWalker())
+        data.add_spell(
+            DruidLevel5Spells.COMMUNE_WITH_NATURE,
+            Ability.WISDOM,
+            additional_ruling="Ritual only",
+        )
         return data
 
 

@@ -8,9 +8,14 @@ from CharacterContent.Classes.BaseClasses.BarbarianBase import (
     BarbarianCustomStarterClassArgs,
 )
 from Builds.CharacterSheetAccumulator import CharacterSheetData
-from Core.Definitions import BarbarianSubclass
+from Core.Definitions import Ability, BarbarianSubclass
 from CharacterContent.Features.SubClassFeatures.Barbarian import BarbarianPathOfTheWildHeartFeatures
 from CharacterContent.Features.ClassFeatures.Barbarian import BarbarianFeatures
+from CharacterContent.Spells.SpellLists import (
+    DruidLevel1Spells,
+    DruidLevel2Spells,
+    DruidLevel5Spells,
+)
 from StatBlocks.SkillsStatBlock import BarbarianSkillsStatBlock
 
 
@@ -22,6 +27,16 @@ class BarbarianWildHeartLevel3(ClassBuilder.SubclassLevel3):
         data: CharacterSheetData,
     ) -> CharacterSheetData:
         data.add_feature(BarbarianPathOfTheWildHeartFeatures.AnimalSpeaker())
+        data.add_spell(
+            DruidLevel2Spells.BEAST_SENSE,
+            Ability.WISDOM,
+            additional_ruling="Ritual only",
+        )
+        data.add_spell(
+            DruidLevel1Spells.SPEAK_WITH_ANIMALS,
+            Ability.WISDOM,
+            additional_ruling="Ritual only",
+        )
         rage: BarbarianFeatures.Rage = data.get_features_by_type(
             BarbarianFeatures.Rage
         )[0]
@@ -48,6 +63,11 @@ class BarbarianWildHeartLevel10(ClassBuilder.SubclassLevel10):
         data: CharacterSheetData,
     ) -> CharacterSheetData:
         data.add_feature(BarbarianPathOfTheWildHeartFeatures.NatureSpeaker())
+        data.add_spell(
+            DruidLevel5Spells.COMMUNE_WITH_NATURE,
+            Ability.WISDOM,
+            additional_ruling="Ritual only",
+        )
         return data
 
 

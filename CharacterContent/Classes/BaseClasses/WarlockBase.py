@@ -197,6 +197,7 @@ class WarlockLevel9(ClassBuilder.BaseClassLevel9):
         data: CharacterSheetData,
     ) -> CharacterSheetData:
         data.add_feature(WarlockFeatures.ContactPatron())
+        data.add_spell(WarlockLevel5Spells.CONTACT_OTHER_PLANE)
         data.add_spell(self.spell)
         data.add_invocation(self.eldritch_invocation)
         return data

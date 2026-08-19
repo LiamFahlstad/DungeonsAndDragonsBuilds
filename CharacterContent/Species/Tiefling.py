@@ -4,6 +4,7 @@ from Builds import CharacterSheetAccumulator
 from CharacterContent.Features.SpeciesFeatures import TieflingFeatures
 from CharacterContent.Species.SpeciesBuilder import SpeciesBuilder
 from CharacterContent.Spells.SpellLists import (
+    ClericLevel0Spells,
     ClericLevel2Spells,
     SorcererLevel0Spells,
     SorcererLevel1Spells,
@@ -38,6 +39,7 @@ class TieflingSpeciesBuilder(SpeciesBuilder):
 
         data.add_feature(TieflingFeatures.Darkvision(60))
         data.add_feature(TieflingFeatures.OtherworldlyPresence())
+        data.add_cantrip(ClericLevel0Spells.THAUMATURGY, self.spell_casting_ability)
 
         spell_1 = None
         spell_2 = None

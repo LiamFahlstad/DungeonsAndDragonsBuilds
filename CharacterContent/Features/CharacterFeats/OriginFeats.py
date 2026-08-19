@@ -338,13 +338,29 @@ class CultOfTheDragonInitiate(OriginFeat):
 
 
 class EmeraldEnclaveFledgling(OriginFeat):
-    def __init__(self):
+    def __init__(self, spell_casting_ability: Ability):
+        if spell_casting_ability not in (
+            Ability.INTELLIGENCE,
+            Ability.WISDOM,
+            Ability.CHARISMA,
+        ):
+            raise ValueError(
+                "Emerald Enclave Fledgling spellcasting ability must be Intelligence, Wisdom, or Charisma."
+            )
+        self.spell_casting_ability = spell_casting_ability
         super().__init__(name="Emerald Enclave Fledgling", origin="Origin Feat")
+
+    def get_spells(self) -> list[str]:
+        return [DruidLevel1Spells.SPEAK_WITH_ANIMALS]
+
+    def get_spell_casting_ability(self) -> Ability:
+        return self.spell_casting_ability
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         return (
             "You gain the following benefits.\n"
-            "Speak with Animals. You always have the Speak with Animals spell prepared and can cast it with any spell slots you have. Intelligence, Wisdom, or Charisma is your spellcasting ability for this spell (choose when you select this feat). When you cast this spell as a Ritual, its duration is 8 hours.\n"
+            "Speak with Animals. You always have the Speak with Animals spell prepared and can cast it with any spell slots you have. "
+            f"{self.spell_casting_ability.value} is your spellcasting ability for this spell. When you cast this spell as a Ritual, its duration is 8 hours.\n"
             "\n"
             "Tag Team. When you take the Help action, you can switch places with a willing ally within 5 feet of yourself as part of that same action. This movement doesn’t provoke Opportunity Attacks. You can’t use this benefit if the ally has the Incapacitated condition.\n"
         )

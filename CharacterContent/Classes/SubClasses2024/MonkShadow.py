@@ -11,6 +11,7 @@ from Builds.CharacterSheetAccumulator import CharacterSheetData
 from Core.Definitions import Ability, MonkSubclass
 from CharacterContent.Features.SubClassFeatures.Monk import MonkShadowFeatures
 from CharacterContent.Features.ClassFeatures.Monk import MonkFeatures
+from CharacterContent.Spells.SpellLists import EvocationLevel2Spells, IllusionLevel0Spells
 from StatBlocks.SkillsStatBlock import MonkSkillsStatBlock
 
 
@@ -24,6 +25,12 @@ class MonkShadowLevel3(ClassBuilder.SubclassLevel3):
             MonkFeatures.MonksFocus
         )[0]
         monks_focus.extend_feature(MonkShadowFeatures.ShadowArts())
+        data.add_spell(
+            EvocationLevel2Spells.DARKNESS,
+            Ability.WISDOM,
+            additional_ruling="Cast by expending 1 Focus Point instead of a spell slot",
+        )
+        data.add_cantrip(IllusionLevel0Spells.MINOR_ILLUSION, Ability.WISDOM)
         return data
 
 

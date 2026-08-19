@@ -139,7 +139,7 @@ def get_starter_class_builder():
                     spell=WarlockLevel4Spells.DIMENSION_DOOR,
                 ),
                 9: WarlockLevel9(
-                    spell=WarlockLevel5Spells.CONTACT_OTHER_PLANE,
+                    spell=WarlockLevel5Spells.HOLD_MONSTER,
                     eldritch_invocation=InvocationsLevel9.LIFEDRINKER,
                 ),
                 10: WarlockLevel10(

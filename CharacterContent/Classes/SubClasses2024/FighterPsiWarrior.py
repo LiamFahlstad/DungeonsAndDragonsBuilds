@@ -8,8 +8,9 @@ from CharacterContent.Classes.BaseClasses.FighterBase import (
     FighterCustomStarterClassArgs,
 )
 from Builds.CharacterSheetAccumulator import CharacterSheetData
-from Core.Definitions import FighterSubclass
+from Core.Definitions import Ability, FighterSubclass
 from CharacterContent.Features.SubClassFeatures.Fighter import FighterPsiWarriorFeatures
+from CharacterContent.Spells.SpellLists import WizardLevel5Spells
 from StatBlocks.SkillsStatBlock import FighterSkillsStatBlock
 
 
@@ -68,6 +69,11 @@ class FighterPsiWarriorLevel18(ClassBuilder.SubclassLevel18):
         data: CharacterSheetData,
     ) -> CharacterSheetData:
         data.add_feature(FighterPsiWarriorFeatures.TelekineticMaster())
+        data.add_spell(
+            WizardLevel5Spells.TELEKINESIS,
+            Ability.INTELLIGENCE,
+            additional_ruling="Always prepared; cast without a spell slot or components",
+        )
         return data
 
 

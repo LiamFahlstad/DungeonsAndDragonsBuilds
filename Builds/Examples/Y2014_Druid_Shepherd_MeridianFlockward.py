@@ -92,7 +92,7 @@ def get_starter_class_builder():
                     cantrip_1=DruidLevel0Spells.GUIDANCE,
                     cantrip_2=DruidLevel0Spells.DRUIDCRAFT,
                     spell_1=DruidLevel1Spells.ANIMAL_FRIENDSHIP,
-                    spell_2=DruidLevel1Spells.SPEAK_WITH_ANIMALS,
+                    spell_2=DruidLevel1Spells.CURE_WOUNDS,
                     spell_3=DruidLevel1Spells.ENTANGLE,
                     spell_4=DruidLevel1Spells.GOODBERRY,
                 ),

@@ -60,6 +60,9 @@ class DruidLevel1(ClassBuilder.BaseClassLevel1):
     ) -> CharacterSheetData:
         data.add_feature(DruidFeatures.Spellcasting())
         data.add_feature(DruidFeatures.Druidic())
+        data.add_spell(
+            DruidLevel1Spells.SPEAK_WITH_ANIMALS, additional_ruling="Always prepared"
+        )
         data.add_feature(DruidFeatures.PrimalOrder(order=self.primal_order))
         if self.primal_order == DruidFeatures.PrimalOrderType.WARDEN:
             data.add_armor_proficiency(Definitions.ArmorType.MEDIUM)

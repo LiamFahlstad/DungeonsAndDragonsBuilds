@@ -10,6 +10,7 @@ from CharacterContent.Classes.BaseClasses.MonkBase import (
 )
 from CharacterContent.Features.ClassFeatures.Monk import MonkFeatures
 from CharacterContent.Features.SubClassFeatures.Monk import MonkElementsFeatures
+from CharacterContent.Spells.SpellLists import DruidLevel0Spells
 from Core.Definitions import Ability, MonkSubclass
 from StatBlocks.SkillsStatBlock import MonkSkillsStatBlock
 
@@ -25,6 +26,7 @@ class MonkElementsLevel3(ClassBuilder.SubclassLevel3):
         )[0]
         monks_focus.extend_feature(MonkElementsFeatures.ElementalAttunement())
         data.add_feature(MonkElementsFeatures.ManipulateElements())
+        data.add_cantrip(DruidLevel0Spells.ELEMENTALISM, Ability.WISDOM)
         return data
 
 

@@ -99,6 +99,7 @@ class WarlockGreatOldOneLevel10(ClassBuilder.SubclassLevel10):
         data: CharacterSheetData,
     ) -> CharacterSheetData:
         data.add_feature(WarlockGreatOldOneFeatures.EldritchHex())
+        data.add_spell(WarlockLevel1Spells.HEX, additional_ruling="Always prepared")
         data.add_feature(WarlockGreatOldOneFeatures.ThoughtShield())
         return data
 
