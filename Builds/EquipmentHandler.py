@@ -143,11 +143,9 @@ class EquipmentHandler:
                     if equipment_item.is_shield or not has_explicit_body_armor:
                         starting_armor.append(equipment_item)
 
-        # The starting pack (Dungeoneer's, Explorer's, ...) is granted
-        # regardless of add_default_equipment: a character always gets it,
-        # even when the build picks its own weapons/armor instead of the
-        # class's default equipment option.
-        if default_pack is not None:
+        # The starting pack (Dungeoneer's, Explorer's, ...) is part of default
+        # equipment and is only granted when add_default_equipment is True.
+        if add_default_equipment and default_pack is not None:
             starting_items.extend(default_pack.get_items())
 
         starting_armor.extend(armor or [])
