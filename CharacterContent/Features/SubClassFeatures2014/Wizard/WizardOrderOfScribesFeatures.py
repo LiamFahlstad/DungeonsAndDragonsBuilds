@@ -55,7 +55,7 @@ class ManifestMind(Feature):
             "\n"
             "Once you conjure the mind, you can't do so again until you finish a long rest, unless you expend a spell slot of any level to conjure it again."
         )
-        return StringUtils.add_boxes(description, proficiency_bonus, regain_all_on="long rest")
+        return StringUtils.add_boxes(description, proficiency_bonus, regain_all_on="long rest", max_box_count=6, current_formula="Current amount: equal to your proficiency bonus.")
 
 
 class MasterScriviner(Feature):

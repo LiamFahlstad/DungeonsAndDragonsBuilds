@@ -109,7 +109,15 @@ class WildShape(Feature):
             "\nKnown Forms:\n" + known_forms_lines
         )
         return StringUtils.add_boxes(
-            description, uses, regain_x_on=(1, "short rest"), regain_all_on="long rest"
+            description,
+            uses,
+            regain_x_on=(1, "short rest"),
+            regain_all_on="long rest",
+            max_box_count=4,
+            current_formula=(
+                "Current amount: determined by your Druid level — 2 uses at "
+                "levels 2-5, 3 at 6-16, 4 at 17+."
+            ),
         )
 
     def get_resource_tiles(

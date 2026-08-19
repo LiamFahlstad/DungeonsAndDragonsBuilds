@@ -83,7 +83,7 @@ class ElementalGift(Feature):
             "\n"
             f"You have chosen the {self.kind.value} kind, so you have resistance to {damage_type} damage. You can use the flying speed bonus action a number of times equal to your proficiency bonus ({proficiency_bonus})."
         )
-        return StringUtils.add_boxes(description, proficiency_bonus, regain_all_on="long rest")
+        return StringUtils.add_boxes(description, proficiency_bonus, regain_all_on="long rest", max_box_count=6, current_formula="Current amount: equal to your proficiency bonus.")
 
     def get_table_description(
         self, character_stat_block: CharacterStatBlock

@@ -62,7 +62,15 @@ class ChannelDivinity(Feature):
             "Turn Undead. As a Magic action, you present your Holy Symbol and censure Undead creatures. Each Undead of your choice within 30 feet of you must make a Wisdom saving throw. If the creature fails its save, it has the Frightened and Incapacitated conditions for 1 minute. For that duration, it tries to move as far from you as it can on its turns. This effect ends early on the creature if it takes any damage, if you have the Incapacitated condition, or if you die."
         )
         return StringUtils.add_boxes(
-            description, uses, regain_x_on=(1, "short rest"), regain_all_on="long rest"
+            description,
+            uses,
+            regain_x_on=(1, "short rest"),
+            regain_all_on="long rest",
+            max_box_count=4,
+            current_formula=(
+                "Current amount: determined by your character level — 2 uses "
+                "at levels 1-5, 3 at 6-17, 4 at 18+."
+            ),
         )
 
     def get_resource_tiles(

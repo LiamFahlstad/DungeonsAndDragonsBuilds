@@ -776,7 +776,11 @@ class FairyTrickster(_AbilityScoreFeat):
             "You can use this benefit a number of times equal to your Proficiency Bonus, and you regain all expended uses when you finish a Long Rest."
         )
         return StringUtils.add_boxes(
-            description, proficiency_bonus, regain_all_on="long rest"
+            description,
+            proficiency_bonus,
+            regain_all_on="long rest",
+            max_box_count=6,
+            current_formula="Current amount: equal to your proficiency bonus.",
         )
 
 
@@ -849,7 +853,11 @@ class MythalTouched(_AbilityScoreFeat):
             "20: The triggering spell dissipates with no effect, and the action used to cast it is wasted. If cast with a spell slot, the slot isn't expended."
         )
         return StringUtils.add_boxes(
-            description, proficiency_bonus, regain_all_on="long rest"
+            description,
+            proficiency_bonus,
+            regain_all_on="long rest",
+            max_box_count=6,
+            current_formula="Current amount: equal to your proficiency bonus.",
         )
 
 
@@ -883,7 +891,11 @@ class PurpleDragonCommandant(_AbilityScoreFeat):
             "Last Stand. You have Advantage on attack rolls while Bloodied."
         )
         return StringUtils.add_boxes(
-            description, proficiency_bonus, regain_all_on="long rest"
+            description,
+            proficiency_bonus,
+            regain_all_on="long rest",
+            max_box_count=6,
+            current_formula="Current amount: equal to your proficiency bonus.",
         )
 
 
@@ -1001,7 +1013,11 @@ class GatheredWhispers(GeneralFeat):
             " * Voices from Beyond. Immediately after you make a D20 Test and roll a 1 on the d20, the haunting whispers rise to a ghastly volume. Make a Wisdom saving throw (DC 13 plus your Proficiency Bonus). On a failed save, you have the Deafened condition until the end of your next turn. While Deafened, you have Disadvantage on ability checks and attack rolls."
         )
         return StringUtils.add_boxes(
-            description, proficiency_bonus, regain_all_on="long rest"
+            description,
+            proficiency_bonus,
+            regain_all_on="long rest",
+            max_box_count=6,
+            current_formula="Current amount: equal to your proficiency bonus.",
         )
 
 
@@ -1029,7 +1045,11 @@ class LivingShadow(GeneralFeat):
             "7-8\tYou have the Prone condition, and your turn ends."
         )
         return StringUtils.add_boxes(
-            description, proficiency_bonus, regain_all_on="long rest"
+            description,
+            proficiency_bonus,
+            regain_all_on="long rest",
+            max_box_count=6,
+            current_formula="Current amount: equal to your proficiency bonus.",
         )
 
 
@@ -1052,7 +1072,11 @@ class MistWalker(GeneralFeat):
             "Poisoned Roots. When you finish a Long Rest, the world around you in a 10-mile radius becomes a siphon that leeches away at your vitality. Whenever you finish a Short Rest in that area, make a Constitution saving throw (DC 13 plus your Proficiency Bonus). On a failed save, you get no benefits from finishing that rest."
         )
         return StringUtils.add_boxes(
-            description, proficiency_bonus, regain_all_on="long rest"
+            description,
+            proficiency_bonus,
+            regain_all_on="long rest",
+            max_box_count=6,
+            current_formula="Current amount: equal to your proficiency bonus.",
         )
 
 
@@ -1084,7 +1108,11 @@ class SecondSkin(GeneralFeat):
             "6\tSeeing someone who resembles a specific individual\n"
         )
         return StringUtils.add_boxes(
-            description, proficiency_bonus, regain_all_on="long rest"
+            description,
+            proficiency_bonus,
+            regain_all_on="long rest",
+            max_box_count=6,
+            current_formula="Current amount: equal to your proficiency bonus.",
         )
 
 
@@ -1110,7 +1138,11 @@ class SymbioticBeing(GeneralFeat):
             "At the DM's discretion, you might make this saving throw whenever you act contrary to the symbiote's agenda."
         )
         return StringUtils.add_boxes(
-            description, proficiency_bonus, regain_all_on="long rest"
+            description,
+            proficiency_bonus,
+            regain_all_on="long rest",
+            max_box_count=6,
+            current_formula="Current amount: equal to your proficiency bonus.",
         )
 
 
@@ -1231,5 +1263,9 @@ class SpellResistant(_AbilityScoreFeat):
             "Magic Resistant. When you would fail a saving throw against a spell or magical effect, you can roll 1d6 and add the number rolled to the save's total, potentially turning the failure into a success. You can use this benefit a number of times equal to your Proficiency Bonus, and you regain all expended uses when you finish a Long Rest."
         )
         return StringUtils.add_boxes(
-            description, proficiency_bonus, regain_all_on="long rest"
+            description,
+            proficiency_bonus,
+            regain_all_on="long rest",
+            max_box_count=6,
+            current_formula="Current amount: equal to your proficiency bonus.",
         )

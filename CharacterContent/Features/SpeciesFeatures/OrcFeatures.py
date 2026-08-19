@@ -33,7 +33,7 @@ class AdrenalineRush(Feature):
             f"You can take the Dash action as a Bonus Action. When you do so, you gain a number of Temporary Hit Points equal to your Proficiency Bonus ({proficiency_bonus}).\n"
             f"You can use this trait a number of times equal to your Proficiency Bonus ({proficiency_bonus}), and you regain all expended uses when you finish a Short or Long Rest."
         )
-        return StringUtils.add_boxes(text, proficiency_bonus)
+        return StringUtils.add_boxes(text, proficiency_bonus, max_box_count=6, current_formula="Current amount: equal to your proficiency bonus.")
 
 
 class RelentlessEndurance(Feature):

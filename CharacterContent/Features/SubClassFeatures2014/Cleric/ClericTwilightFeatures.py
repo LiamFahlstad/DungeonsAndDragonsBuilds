@@ -107,7 +107,7 @@ class StepsOfNight(Feature):
         description = (
             "You can draw on the mystical power of night to rise into the air. As a bonus action when you are in dim light or darkness, you can magically give yourself a flying speed equal to your walking speed for 1 minute. You can use this bonus action a number of times equal to your proficiency bonus, and you regain all expended uses when you finish a long rest."
         )
-        return StringUtils.add_boxes(description, proficiency_bonus, regain_all_on="long rest")
+        return StringUtils.add_boxes(description, proficiency_bonus, regain_all_on="long rest", max_box_count=6, current_formula="Current amount: equal to your proficiency bonus.")
 
     def get_table_description(
         self, character_stat_block: CharacterStatBlock

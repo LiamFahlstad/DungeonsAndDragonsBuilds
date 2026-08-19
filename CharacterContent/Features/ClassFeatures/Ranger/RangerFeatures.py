@@ -59,7 +59,14 @@ class FavoredEnemy(Feature):
             f"You can cast it {free_hunters_mark_uses} times without expending a spell slot, and you regain all expended uses of this ability when you finish a Long Rest.\n"
         )
         return StringUtils.add_boxes(
-            description, free_hunters_mark_uses, regain_all_on="long rest"
+            description,
+            free_hunters_mark_uses,
+            regain_all_on="long rest",
+            max_box_count=6,
+            current_formula=(
+                "Current amount: determined by your character level — 2 uses "
+                "at levels 1-4, 3 at 5-8, 4 at 9-12, 5 at 13-16, 6 at 17+."
+            ),
         )
 
     def get_resource_tiles(

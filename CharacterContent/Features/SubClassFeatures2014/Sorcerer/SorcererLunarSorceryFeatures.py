@@ -52,7 +52,7 @@ class LunarBoons(Feature):
             "\n"
             f"Whenever you use Metamagic on a spell of a school of magic associated with your current Lunar Embodiment phase, you can reduce the sorcery points spent by 1 (minimum 0). You can reduce the sorcery points spent for your Metamagic a number of times equal to your proficiency bonus ({proficiency_bonus}), and you regain all expended uses when you finish a long rest."
         )
-        return StringUtils.add_boxes(description, proficiency_bonus, regain_all_on="long rest")
+        return StringUtils.add_boxes(description, proficiency_bonus, regain_all_on="long rest", max_box_count=6, current_formula="Current amount: equal to your proficiency bonus.")
 
 
 class WaxingAndWaning(Feature):

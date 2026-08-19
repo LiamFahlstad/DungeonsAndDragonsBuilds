@@ -66,7 +66,7 @@ class BreathWeapon(Feature):
             f"On a failed save, a creature takes {damage} {self.damage_type} damage because your Draconic Ancestry is {self.color.value} dragon. On a successful save, a creature takes half as much damage.\n"
             f"You can use this Breath Weapon a number of times equal to your Proficiency Bonus ({proficiency_bonus}), and you regain all expended uses when you finish a Long Rest."
         )
-        return StringUtils.add_boxes(text, proficiency_bonus)
+        return StringUtils.add_boxes(text, proficiency_bonus, max_box_count=6, current_formula="Current amount: equal to your proficiency bonus.")
 
     def get_table_description(
         self, character_stat_block: CharacterStatBlock

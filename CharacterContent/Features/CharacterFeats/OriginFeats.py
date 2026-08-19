@@ -128,7 +128,11 @@ class Lucky(OriginFeat):
             "Disadvantage. When a creature rolls a d20 for an attack roll against you, you can spend 1 Luck Point to impose Disadvantage on that roll."
         )
         return StringUtils.add_boxes(
-            description, proficiency_bonus, regain_all_on="long rest"
+            description,
+            proficiency_bonus,
+            regain_all_on="long rest",
+            max_box_count=6,
+            current_formula="Current amount: equal to your proficiency bonus.",
         )
 
     def get_concise_description(
@@ -140,7 +144,11 @@ class Lucky(OriginFeat):
             "Spend 1 Luck Point to give yourself Advantage on a d20 roll, or spend 1 Luck Point to impose Disadvantage on an attack roll against you."
         )
         return StringUtils.add_boxes(
-            description, proficiency_bonus, regain_all_on="long rest"
+            description,
+            proficiency_bonus,
+            regain_all_on="long rest",
+            max_box_count=6,
+            current_formula="Current amount: equal to your proficiency bonus.",
         )
 
 
@@ -396,7 +404,11 @@ class FamiliarFriend(OriginFeat):
             "Helpful Friend. When you make an ability check using a skill in which you have proficiency while your familiar is within 5 feet of you, you gain Advantage on the check."
         )
         return StringUtils.add_boxes(
-            description, proficiency_bonus, regain_all_on="long rest"
+            description,
+            proficiency_bonus,
+            regain_all_on="long rest",
+            max_box_count=6,
+            current_formula="Current amount: equal to your proficiency bonus.",
         )
 
 
@@ -462,7 +474,11 @@ class SpellfireSpark(OriginFeat):
             "Spellfire Flame. You learn the Sacred Flame cantrip. Intelligence, Wisdom, or Charisma is your spellcasting ability for this spell (choose when you select this feat). You can also cast this cantrip as a Bonus Action a number of times equal to your Proficiency Bonus, and you regain all expended uses when you finish a Long Rest."
         )
         return StringUtils.add_boxes(
-            description, proficiency_bonus, regain_all_on="long rest"
+            description,
+            proficiency_bonus,
+            regain_all_on="long rest",
+            max_box_count=6,
+            current_formula="Current amount: equal to your proficiency bonus.",
         )
 
 
@@ -497,7 +513,7 @@ class SharpEye(OriginFeat):
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         proficiency_bonus = character_stat_block.get_proficiency_bonus()
         description = "When you take the Search or Study action, you can give yourself Advantage on any ability check made as part of that action. You can use this feature a number of times equal to your Proficiency Bonus, and you regain all expended uses when you finish a Long Rest. If the check fails, the use of this feature isn't expended."
-        return StringUtils.add_boxes(description, proficiency_bonus)
+        return StringUtils.add_boxes(description, proficiency_bonus, max_box_count=6, current_formula="Current amount: equal to your proficiency bonus.")
 
 
 class Survivor(OriginFeat):

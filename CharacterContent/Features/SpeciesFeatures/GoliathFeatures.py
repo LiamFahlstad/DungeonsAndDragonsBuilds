@@ -55,4 +55,4 @@ class GiantAncestry(Feature):
             text += "When you take damage from a creature within 60 feet of you, you can take a Reaction to deal 1d8 Thunder damage to that creature.\n"
         proficiency_bonus = character_stat_block.get_proficiency_bonus()
         text += f"You can use the benefit a number of times equal to your Proficiency Bonus ({proficiency_bonus}), and you regain all expended uses when you finish a Long Rest"
-        return StringUtils.add_boxes(text, proficiency_bonus)
+        return StringUtils.add_boxes(text, proficiency_bonus, max_box_count=6, current_formula="Current amount: equal to your proficiency bonus.")

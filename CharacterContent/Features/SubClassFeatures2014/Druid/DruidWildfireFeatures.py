@@ -136,7 +136,13 @@ class CauterizingFlames(Feature):
             "\n"
             "You can use this reaction a number of times equal to your proficiency bonus, and you regain all expended uses when you finish a long rest."
         )
-        return StringUtils.add_boxes(description, proficiency_bonus, regain_all_on="long rest")
+        return StringUtils.add_boxes(
+            description,
+            proficiency_bonus,
+            regain_all_on="long rest",
+            max_box_count=6,
+            current_formula="Current amount: equal to your proficiency bonus.",
+        )
 
     def get_table_description(
         self, character_stat_block: CharacterStatBlock

@@ -58,4 +58,4 @@ class VampiricBite(Feature):
             "Strengthen. You gain a bonus to the next ability check or attack roll you make within the next minute; the bonus is equal to the Piercing damage dealt.\n"
             f"You can empower yourself with this trait a number of times equal to your Proficiency Bonus ({proficiency_bonus}), and you regain all expended uses when you finish a Long Rest."
         )
-        return StringUtils.add_boxes(description, proficiency_bonus)
+        return StringUtils.add_boxes(description, proficiency_bonus, max_box_count=6, current_formula="Current amount: equal to your proficiency bonus.")

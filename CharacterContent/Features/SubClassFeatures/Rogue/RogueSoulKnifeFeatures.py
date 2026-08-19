@@ -44,6 +44,11 @@ class PsionicPower(Feature):
             number_of_dice,
             regain_x_on=(1, "short rest"),
             regain_all_on="long rest",
+            max_box_count=12,
+            current_formula=(
+                "Current amount: determined by your Rogue level — 4 dice "
+                "below level 5, 6 at 5-8, 8 at 9-12, 10 at 13-16, 12 at 17+."
+            ),
         )
 
 

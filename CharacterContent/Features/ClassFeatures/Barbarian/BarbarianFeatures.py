@@ -47,6 +47,11 @@ class Rage(Feature):
             rage_usages,
             regain_x_on=(1, "short rest"),
             regain_all_on="long rest",
+            max_box_count=6,
+            current_formula=(
+                "Current amount: determined by your Barbarian level — 2 uses at "
+                "levels 1-2, 3 at 3-5, 4 at 6-11, 5 at 12-16, 6 at 17-20."
+            ),
         )
 
     def get_resource_tiles(

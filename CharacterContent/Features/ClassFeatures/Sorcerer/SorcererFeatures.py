@@ -77,7 +77,13 @@ class FontOfMagic(Feature):
             "           4        |         6          |           7           \n"
             "           5        |         7          |           9           "
         )
-        return StringUtils.add_boxes(description, sorcery_points, regain_all_on="long rest")
+        return StringUtils.add_boxes(
+            description,
+            sorcery_points,
+            regain_all_on="long rest",
+            max_box_count=20,
+            current_formula="Current amount: equal to your Sorcerer level.",
+        )
 
     def get_resource_tiles(
         self, character_stat_block: CharacterStatBlock

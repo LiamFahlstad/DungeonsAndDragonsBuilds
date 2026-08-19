@@ -35,7 +35,15 @@ class SecondWind(Feature):
         )
 
         return StringUtils.add_boxes(
-            base_text, uses, regain_x_on=(1, "short rest"), regain_all_on="long rest"
+            base_text,
+            uses,
+            regain_x_on=(1, "short rest"),
+            regain_all_on="long rest",
+            max_box_count=4,
+            current_formula=(
+                "Current amount: determined by your character level — 2 uses "
+                "at levels 1-3, 3 at 4-9, 4 at 10+."
+            ),
         )
 
     def get_table_description(
@@ -78,7 +86,13 @@ class ActionSurge(Feature):
             "Once you use this feature, you can’t do so again until you finish a Short or Long Rest. Starting at level 17, you can use it twice before a rest but only once on a turn."
         )
         return StringUtils.add_boxes(
-            description, uses, regain_all_on="short or long rest"
+            description,
+            uses,
+            regain_all_on="short or long rest",
+            max_box_count=2,
+            current_formula=(
+                "Current amount: 1 use below character level 17, 2 uses at 17+."
+            ),
         )
 
     def get_resource_tiles(
@@ -162,7 +176,16 @@ class Indomitable(Feature):
             "If you fail a saving throw, you can reroll it with a bonus equal to your Fighter level. You must use the new roll, and you can’t use this feature again until you finish a Long Rest.\n"
             "You can use this feature twice before a Long Rest starting at level 13 and three times before a Long Rest starting at level 17."
         )
-        return StringUtils.add_boxes(description, uses, regain_all_on="long rest")
+        return StringUtils.add_boxes(
+            description,
+            uses,
+            regain_all_on="long rest",
+            max_box_count=3,
+            current_formula=(
+                "Current amount: determined by your character level — 1 use "
+                "below level 13, 2 at 13-16, 3 at 17+."
+            ),
+        )
 
     def get_table_description(
         self, character_stat_block: CharacterStatBlock

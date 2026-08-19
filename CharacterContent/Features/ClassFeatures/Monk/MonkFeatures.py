@@ -88,9 +88,7 @@ class MartialArts(Feature):
         }
         steps = [
             (f"Lv {level_range}", value)
-            for level_range, value in StringUtils.compress_level_progression(
-                die_values
-            )
+            for level_range, value in StringUtils.compress_level_progression(die_values)
         ]
         return [("Martial Arts Die", steps)]
 
@@ -142,7 +140,11 @@ class MonksFocus(Feature):
             "Known features:\n"
         )
         return StringUtils.add_boxes(
-            description, focus_points, regain_all_on="short or long rest"
+            description,
+            focus_points,
+            regain_all_on="short or long rest",
+            max_box_count=LEVEL_TO_FOCUS_POINTS[20],
+            current_formula="Current amount: equal to your Monk level.",
         )
 
     def get_resource_tiles(

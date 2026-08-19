@@ -124,6 +124,10 @@ class ChannelDivinity(Feature):
             usages,
             regain_x_on=(1, "short rest"),
             regain_all_on="long rest",
+            max_box_count=3,
+            current_formula=(
+                "Current amount: 2 uses below character level 11, 3 at 11+."
+            ),
         )
 
         if "Divine Sense" in self.spells:

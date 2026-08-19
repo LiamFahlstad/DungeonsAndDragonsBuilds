@@ -42,7 +42,14 @@ class CombatSuperiority(Feature):
             "Maneuvers:"
         )
         return StringUtils.add_boxes(
-            description, number_of_superiority_die, regain_all_on="short or long rest"
+            description,
+            number_of_superiority_die,
+            regain_all_on="short or long rest",
+            max_box_count=6,
+            current_formula=(
+                "Current amount: determined by your character level — 4 dice "
+                "below level 7, 5 at 7-14, 6 at 15+."
+            ),
         )
 
     def get_table_description(

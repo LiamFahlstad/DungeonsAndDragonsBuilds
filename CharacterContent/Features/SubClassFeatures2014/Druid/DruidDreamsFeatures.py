@@ -20,7 +20,13 @@ class BalmOfTheSummerCourt(Feature):
             "\n"
             f"At your current Druid level, your pool contains {druid_level}d6, and you can spend up to {half_druid_level} of those dice at once."
         )
-        return StringUtils.add_boxes(description, druid_level, regain_all_on="long rest")
+        return StringUtils.add_boxes(
+            description,
+            druid_level,
+            regain_all_on="long rest",
+            max_box_count=20,
+            current_formula="Current amount: equal to your Druid level.",
+        )
 
     def get_table_description(
         self, character_stat_block: CharacterStatBlock
