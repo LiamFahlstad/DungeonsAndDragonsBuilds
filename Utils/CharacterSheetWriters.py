@@ -1488,3 +1488,35 @@ class HtmlCharacterSheetWriter:
                 include_probability_tables,
             )
             self._write_tool_proficiencies(character, file, tool_proficiencies)
+
+    def write_item_sheet(
+        self,
+        title: str,
+        output_path: str,
+        armors: Optional[list[Armor.AbstractArmor]] = None,
+        weapons: Optional[list[AbstractWeapon]] = None,
+        items: Optional[list[tuple[Items.Item, int]]] = None,
+    ):
+        """Generate a standalone item sheet HTML page showing a fixed set of
+        items (armor/weapons/other) without character context or mechanics."""
+        if armors is None:
+            armors = []
+        if weapons is None:
+            weapons = []
+        if items is None:
+            items = []
+
+        entry = EquipmentEntry(label=title, armors=armors, weapons=weapons, items=items)
+
+        output_file = pathlib.Path(output_path)
+        output_file.parent.mkdir(parents=True, exist_ok=True)
+
+        with open(output_file, "w", encoding="utf-8") as file:
+            file.write(Html.render_style_block(Html.BASE_CHARACTER_SHEET_CSS))
+            file.write(f"<h1>{title}</h1>\n")
+
+            sections = self._build_item_sections(entry, is_starting_equipment=True)
+            for i, (section_title, rows) in enumerate(sections):
+                if i > 0:
+                    file.write("<hr>")
+                Html.write_item_cards(file, section_title, rows)
