@@ -39,8 +39,13 @@ class ReanimatorSkillSet(Feature):
             "You can modify the spell this way a number of times equal to your Intelligence modifier (minimum of once), and you regain all expended uses when you finish a Long Rest. The Lightning damage of this feature increases by 1d4 when you reach Artificer levels 11 (3d4) and 17 (4d4).\n"
             "Reanimator's Tools. You gain proficiency with Alchemist's Supplies. If you already have this proficiency, you gain proficiency with one other type of Artisan's Tools of your choice."
         )
-        return StringUtils.add_boxes(description, uses, regain_all_on="long rest")
-
+        return StringUtils.add_boxes(
+            description,
+            uses,
+            regain_all_on="long rest",
+            max_box_count=10,
+            current_formula="Current amount: equal to your Intelligence modifier.",
+        )
 
 class ReanimatedCompanion(Feature):
     def __init__(self):

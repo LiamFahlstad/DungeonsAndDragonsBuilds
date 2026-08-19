@@ -37,7 +37,13 @@ class UnleashIncarnation(Feature):
             "\n"
             "You can use this feature a number of times equal to your Constitution modifier (a minimum of once). You regain all expended uses when you finish a long rest."
         )
-        return StringUtils.add_boxes(description, uses, regain_all_on="long rest")
+        return StringUtils.add_boxes(
+            description,
+            uses,
+            regain_all_on="long rest",
+            max_box_count=10,
+            current_formula="Current amount: equal to your Constitution modifier.",
+        )
 
     def get_table_description(
         self, character_stat_block: CharacterStatBlock
@@ -103,7 +109,13 @@ class ReclaimPotential(Feature):
             "\n"
             "You can use this feature a number of times equal to your Constitution modifier (a minimum of once). You regain all expended uses when you finish a long rest."
         )
-        return StringUtils.add_boxes(description, uses, regain_all_on="long rest")
+        return StringUtils.add_boxes(
+            description,
+            uses,
+            regain_all_on="long rest",
+            max_box_count=10,
+            current_formula="Current amount: equal to your Constitution modifier.",
+        )
 
     def get_table_description(
         self, character_stat_block: CharacterStatBlock

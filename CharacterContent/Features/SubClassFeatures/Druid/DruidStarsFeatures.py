@@ -17,7 +17,13 @@ class StarMap(Feature):
             "While holding the map, you have the Guidance and Guiding Bolt spells prepared, and you can cast Guiding Bolt without expending a spell slot. You can cast it in that way a number of times equal to your Wisdom modifier (minimum of once), and you regain all expended uses when you finish a Long Rest.\n"
             "If you lose the map, you can perform a 1-hour ceremony to magically create a replacement. This ceremony can be performed during a Short or Long Rest, and it destroys the previous map."
         )
-        return StringUtils.add_boxes(description, uses, regain_all_on="long rest")
+        return StringUtils.add_boxes(
+            description,
+            uses,
+            regain_all_on="long rest",
+            max_box_count=10,
+            current_formula="Current amount: equal to your Wisdom modifier.",
+        )
 
     def get_concise_description(
         self, character_stat_block: CharacterStatBlock
@@ -58,7 +64,13 @@ class CosmicOmen(Feature):
             "Woe (Odd). Whenever a creature you can see within 30 feet of you is about to make a D20 Test, you can take a Reaction to roll 1d6 and subtract the number rolled from the total.\n"
             "You can use this Reaction a number of times equal to your Wisdom modifier (minimum of once), and you regain all expended uses when you finish a Long Rest."
         )
-        return StringUtils.add_boxes(description, uses, regain_all_on="long rest")
+        return StringUtils.add_boxes(
+            description,
+            uses,
+            regain_all_on="long rest",
+            max_box_count=10,
+            current_formula="Current amount: equal to your Wisdom modifier.",
+        )
 
 
 class TwinklingConstellations(Feature):

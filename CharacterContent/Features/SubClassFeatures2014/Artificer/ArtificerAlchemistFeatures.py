@@ -75,8 +75,13 @@ class RestorativeReagents(Feature):
             "Whenever a creature drinks an experimental elixir you created, the creature gains temporary hit points equal to 2d6 + your Intelligence modifier (minimum of 1 temporary hit point).\n"
             "You can cast Lesser Restoration without expending a spell slot and without preparing the spell, provided you use alchemist's supplies as the spellcasting focus. You can do so a number of times equal to your Intelligence modifier (minimum of once), and you regain all expended uses when you finish a long rest."
         )
-        return StringUtils.add_boxes(description, uses, regain_all_on="long rest")
-
+        return StringUtils.add_boxes(
+            description,
+            uses,
+            regain_all_on="long rest",
+            max_box_count=10,
+            current_formula="Current amount: equal to your Intelligence modifier.",
+        )
 
 class ChemicalMastery(Feature):
     def __init__(self):

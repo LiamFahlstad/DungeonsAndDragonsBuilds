@@ -78,7 +78,13 @@ class MoonlightStep(Feature):
             "You magically transport yourself, reappearing amid a burst of moonlight. As a Bonus Action, you teleport up to 30 feet to an unoccupied space you can see, and you have Advantage on the next attack roll you make before the end of this turn.\n"
             "You can use this feature a number of times equal to your Wisdom modifier (minimum of once), and you regain all expended uses when you finish a Long Rest. You can also regain uses by expending a level 2+ spell slot for each use you want to restore (no action required)."
         )
-        return StringUtils.add_boxes(description, uses, regain_all_on="long rest")
+        return StringUtils.add_boxes(
+            description,
+            uses,
+            regain_all_on="long rest",
+            max_box_count=10,
+            current_formula="Current amount: equal to your Wisdom modifier.",
+        )
 
     def get_table_description(
         self, character_stat_block: CharacterStatBlock

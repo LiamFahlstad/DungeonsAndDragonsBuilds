@@ -134,8 +134,13 @@ class FlurryOfHealingAndHarm(Feature):
             "In addition, when you make an Unarmed Strike with Flurry of Blows and deal damage, you can use Hand of Harm with that strike without expending a Focus Point for Hand of Harm. You can still use Hand of Harm only once per turn.\n"
             "You can use these benefits a total number of times equal to your Wisdom modifier (minimum of once). You regain all expended uses when you finish a Long Rest."
         )
-        return StringUtils.add_boxes(description, uses, regain_all_on="long rest")
-
+        return StringUtils.add_boxes(
+            description,
+            uses,
+            regain_all_on="long rest",
+            max_box_count=10,
+            current_formula="Current amount: equal to your Wisdom modifier.",
+        )
 
 class HandOfUltimateMercy(Feature):
     def __init__(self):

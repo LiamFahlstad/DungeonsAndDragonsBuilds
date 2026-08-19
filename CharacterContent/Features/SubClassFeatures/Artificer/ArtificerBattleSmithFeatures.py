@@ -115,7 +115,13 @@ class ArcaneJolt(Feature):
             "Restorative Energy. Choose one creature or object you can see within 30 feet of the target. Healing energy flows into the chosen recipient, restoring 2d6 Hit Points to it.\n"
             "You can use this energy a number of times equal to your Intelligence modifier (minimum of once), but you can do so no more than once per turn. You regain all expended uses when you finish a Long Rest."
         )
-        return StringUtils.add_boxes(description, uses, regain_all_on="long rest")
+        return StringUtils.add_boxes(
+            description,
+            uses,
+            regain_all_on="long rest",
+            max_box_count=10,
+            current_formula="Current amount: equal to your Intelligence modifier.",
+        )
 
     def get_table_description(self, character_stat_block: CharacterStatBlock) -> list[tuple[str, str]]:
         intelligence_modifier = character_stat_block.get_ability_modifier(Ability.INTELLIGENCE)

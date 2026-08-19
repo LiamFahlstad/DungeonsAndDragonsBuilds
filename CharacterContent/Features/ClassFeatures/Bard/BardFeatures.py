@@ -43,7 +43,11 @@ class BardicInspiration(Feature):
             "    * At Higher Levels. Your Bardic Inspiration die changes when you reach certain Bard levels, as shown in the Bardic Die column of the Bard Features table. The die becomes a d8 at level 5, a d10 at level 10, and a d12 at level 15.\n"
         )
         return StringUtils.add_boxes(
-            description, max(1, charisma_modifier), regain_all_on="long rest"
+            description,
+            max(1, charisma_modifier),
+            regain_all_on="long rest",
+            max_box_count=10,
+            current_formula="Current amount: equal to your Charisma modifier.",
         )
 
     def get_resource_tiles(

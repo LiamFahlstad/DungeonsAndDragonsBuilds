@@ -81,8 +81,13 @@ class RestorativeReagents(Feature):
         intelligence_modifier = character_stat_block.get_ability_modifier(Ability.INTELLIGENCE)
         uses = max(1, intelligence_modifier)
         description = "You can cast Lesser Restoration without expending a spell slot and without preparing the spell, provided you use Alchemist's Supplies as the Spellcasting Focus. You can do so a number of times equal to your Intelligence modifier (minimum of once), and you regain all expended uses when you finish a Long Rest."
-        return StringUtils.add_boxes(description, uses, regain_all_on="long rest")
-
+        return StringUtils.add_boxes(
+            description,
+            uses,
+            regain_all_on="long rest",
+            max_box_count=10,
+            current_formula="Current amount: equal to your Intelligence modifier.",
+        )
 
 class ChemicalMastery(Feature):
     def __init__(self):

@@ -18,8 +18,13 @@ class FormOfDread(Feature):
             "Fearless Form. You have Immunity to the Frightened condition. If you are Frightened when you transform, the condition immediately ends for you.\n"
             "Frightful Avatar. Once per turn, when you hit a creature with an attack roll, you can force it to make a Wisdom saving throw against your spell save DC. On a failed save, the target has the Frightened condition until the end of your next turn."
         )
-        return StringUtils.add_boxes(description, uses, regain_all_on="long rest")
-
+        return StringUtils.add_boxes(
+            description,
+            uses,
+            regain_all_on="long rest",
+            max_box_count=10,
+            current_formula="Current amount: equal to your Charisma modifier.",
+        )
 
 class UndeadSpells(Feature):
     def __init__(self):

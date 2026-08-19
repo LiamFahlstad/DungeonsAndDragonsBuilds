@@ -43,7 +43,11 @@ class WarPriest(Feature):
         uses = max(1, wisdom_modifier)
         description = "As a Bonus Action, you can make one attack with a weapon or an Unarmed Strike. You can use this Bonus Action a number of times equal to your Wisdom modifier (minimum of once). You regain all expended uses when you finish a Short or Long Rest."
         return StringUtils.add_boxes(
-            description, uses, regain_all_on="short or long rest"
+            description,
+            uses,
+            regain_all_on="short or long rest",
+            max_box_count=10,
+            current_formula="Current amount: equal to your Wisdom modifier.",
         )
 
     def get_table_description(
