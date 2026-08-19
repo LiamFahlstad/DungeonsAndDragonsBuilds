@@ -873,16 +873,29 @@ class HtmlCharacterSheetWriter:
         file: TextIO,
         equipment_entries: list[EquipmentEntry],
         starting_equipment_entry: Optional[EquipmentEntry],
+        weapons: list[AbstractWeapon],
+        weapon_masteries: list[AbstractWeapon],
+        include_probability_tables: bool = False,
     ):
         non_empty_entries = [
             entry
             for entry in equipment_entries
             if entry.armors or entry.weapons or entry.items or entry.gold
         ]
-        if not non_empty_entries:
+        if not non_empty_entries and not weapons:
             return
 
         file.write("<h2>Items</h2>\n")
+
+        # Attack-card weapons are the first subsection within Items, ahead
+        # of the wallet/carrying-capacity row and the equipment entries.
+        self._write_weapons(
+            character, file, weapons, weapon_masteries, include_probability_tables
+        )
+
+        if not non_empty_entries:
+            file.write("<br class='section-gap'>\n")
+            return
 
         # Wallet pinned to the left, carrying capacity (total + a compact
         # per-source pip breakdown) pinned to the right - keeps the row
@@ -1042,13 +1055,15 @@ class HtmlCharacterSheetWriter:
         # missed entirely.
         level_page_levels = sorted(set(features_by_level) | set(spells_by_level) | set(extensions_by_level))
 
-        has_weapons_page = bool(weapons) or bool(fighting_styles)
+        has_fighting_styles_page = bool(fighting_styles)
         non_empty_equipment_entries = [
             entry
             for entry in equipment_entries
             if entry.armors or entry.weapons or entry.items or entry.gold
         ]
-        has_items_page = bool(non_empty_equipment_entries) or bool(tool_proficiencies)
+        has_items_page = (
+            bool(non_empty_equipment_entries) or bool(tool_proficiencies) or bool(weapons)
+        )
 
         pages: list[tuple[str, str]] = [
             ("Character", "character.html"),
@@ -1058,8 +1073,8 @@ class HtmlCharacterSheetWriter:
             pages.append(
                 (f"Level {level} Features", f"features/level_{level:02d}.html")
             )
-        if has_weapons_page:
-            pages.append(("Weapons", "weapons.html"))
+        if has_fighting_styles_page:
+            pages.append(("Fighting Styles", "fighting_styles.html"))
         if has_items_page:
             pages.append(("Items", "items.html"))
 
@@ -1118,16 +1133,13 @@ class HtmlCharacterSheetWriter:
                 level_extensions,
             )
 
-        if has_weapons_page:
-            self._write_weapons_page(
-                output_folder_obj / "weapons.html",
-                "weapons.html",
+        if has_fighting_styles_page:
+            self._write_fighting_styles_page(
+                output_folder_obj / "fighting_styles.html",
+                "fighting_styles.html",
                 pages,
                 character,
-                weapons,
-                weapon_masteries,
                 fighting_styles,
-                include_probability_tables,
             )
 
         if has_items_page:
@@ -1139,6 +1151,9 @@ class HtmlCharacterSheetWriter:
                 equipment_entries,
                 starting_equipment_entry,
                 tool_proficiencies,
+                weapons,
+                weapon_masteries,
+                include_probability_tables,
             )
 
     def _write_character_page(
@@ -1385,16 +1400,19 @@ class HtmlCharacterSheetWriter:
                     feature.write_to_file(character, file, description_mode)
                 file.write("</div>\n<br class='section-gap'>\n")
 
-            self._write_weapons(
-                character, file, weapons, weapon_masteries, include_probability_tables
-            )
             self._write_fighting_styles(character, file, fighting_styles)
             self._write_invocations(character, file, invocations)
             self._write_pact_magic_slots(character, file)
             self._write_spell_slots(character, file)
             self._write_spells(character, file, spells, include_probability_tables)
             self._write_items(
-                character, file, equipment_entries, starting_equipment_entry
+                character,
+                file,
+                equipment_entries,
+                starting_equipment_entry,
+                weapons,
+                weapon_masteries,
+                include_probability_tables,
             )
             self._write_tool_proficiencies(character, file, tool_proficiencies)
 
@@ -1429,24 +1447,18 @@ class HtmlCharacterSheetWriter:
                 self._write_spell_cards(character, file, level_spells)
                 file.write("<br class='section-gap'>\n")
 
-    def _write_weapons_page(
+    def _write_fighting_styles_page(
         self,
         path: pathlib.Path,
         page_path: str,
         pages: list[tuple[str, str]],
         character: CharacterStatBlock,
-        weapons: list[AbstractWeapon],
-        weapon_masteries: list[AbstractWeapon],
         fighting_styles: list[FightingStyle],
-        include_probability_tables: bool,
     ):
         with open(path, "w", encoding="utf-8") as file:
             file.write(self._get_css_style())
             self._write_nav(file, page_path, pages)
-            file.write(f"<h1>{character.name} - Weapons</h1>\n")
-            self._write_weapons(
-                character, file, weapons, weapon_masteries, include_probability_tables
-            )
+            file.write(f"<h1>{character.name} - Fighting Styles</h1>\n")
             self._write_fighting_styles(character, file, fighting_styles)
 
     def _write_items_page(
@@ -1458,12 +1470,21 @@ class HtmlCharacterSheetWriter:
         equipment_entries: list[EquipmentEntry],
         starting_equipment_entry: Optional[EquipmentEntry],
         tool_proficiencies: list[ToolProficiency],
+        weapons: list[AbstractWeapon],
+        weapon_masteries: list[AbstractWeapon],
+        include_probability_tables: bool,
     ):
         with open(path, "w", encoding="utf-8") as file:
             file.write(self._get_css_style())
             self._write_nav(file, page_path, pages)
             file.write(f"<h1>{character.name} - Items</h1>\n")
             self._write_items(
-                character, file, equipment_entries, starting_equipment_entry
+                character,
+                file,
+                equipment_entries,
+                starting_equipment_entry,
+                weapons,
+                weapon_masteries,
+                include_probability_tables,
             )
             self._write_tool_proficiencies(character, file, tool_proficiencies)
