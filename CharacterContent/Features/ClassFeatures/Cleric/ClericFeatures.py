@@ -1,5 +1,7 @@
-from Core.Definitions import CLERIC_HIT_DIE
+import Core.Definitions as Definitions
+from Core.Definitions import Ability, Skill
 from CharacterContent.Features.Core.BaseFeatures import Feature
+from CharacterContent.Features.Core.Improvements import SkillBonus
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
@@ -29,16 +31,30 @@ class Spellcasting(Feature):
         ]
 
 
-class DivineOrder(Feature):
+class DivineOrderProtector(Feature):
     def __init__(self):
-        super().__init__(name="Divine Order", origin="Cleric Level 1")
+        super().__init__(name="Divine Order: Protector", origin="Cleric Level 1")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        description = (
-            "You have dedicated yourself to one of the following sacred roles of your choice.\n"
-            "Protector: Trained for battle, you gain proficiency with Martial weapons and training with Heavy armor.\n"
-            "Thaumaturge: You know one extra cantrip from the Cleric spell list. In addition, your mystical connection to the divine gives you a bonus to your Intelligence (Arcana or Religion) checks. The bonus equals your Wisdom modifier (minimum of +1)."
-        )
+        description = "Trained for battle, you gain proficiency with Martial weapons and training with Heavy armor."
+        return description
+
+
+class DivineOrderThaumaturge(Feature):
+    def __init__(self, extra_cantrip: str):
+        super().__init__(name="Divine Order: Thaumaturge", origin="Cleric Level 1")
+        self.extra_cantrip = extra_cantrip
+
+    def apply(self, character_stat_block: CharacterStatBlock):
+        wisdom_modifier = character_stat_block.get_ability_modifier(Ability.WISDOM)
+        bonus = max(1, wisdom_modifier)
+        SkillBonus(Skill.ARCANA, bonus, source=self.name).apply(character_stat_block)
+        SkillBonus(Skill.RELIGION, bonus, source=self.name).apply(character_stat_block)
+
+    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+        wisdom_modifier = character_stat_block.get_ability_modifier(Ability.WISDOM)
+        bonus = max(1, wisdom_modifier)
+        description = f"You know one extra cantrip from the Cleric spell list: {self.extra_cantrip}. Your mystical connection to the divine gives you a bonus to your Intelligence (Arcana or Religion) checks equal to your Wisdom modifier (total +{bonus})."
         return description
 
 
@@ -127,7 +143,10 @@ class DivineIntervention(Feature):
         self, character_stat_block: CharacterStatBlock
     ) -> list[tuple[str, str]]:
         return [
-            ("What", "Cast any Cleric spell of level 5 or lower (no Reaction required)"),
+            (
+                "What",
+                "Cast any Cleric spell of level 5 or lower (no Reaction required)",
+            ),
             ("Casting Time", "Magic action"),
             ("Cost", "No spell slot or Material components"),
             ("Recharge", "Long Rest"),

@@ -16,20 +16,21 @@ from CharacterContent.Classes.BaseClasses.ClericBase import (
     ClericLevel1,
     ClericLevel2,
     ClericLevel3,
+    DivineOrderThaumaturgeChoice,
 )
 from CharacterContent.Classes.SubClasses2024.ClericLight import (
     ClericLightCustomStarterClassArgs,
     ClericLightLevel3,
 )
-from Core.Definitions import Ability, Skill
 from CharacterContent.Features.CharacterFeats import Backgrounds, OriginFeats
-from CharacterContent.ToolProficiencies.Proficiencies import CooksUtensils
 from CharacterContent.Species import Dwarf
 from CharacterContent.Spells.SpellLists import (
     ClericLevel0Spells,
     ClericLevel1Spells,
     ClericLevel2Spells,
 )
+from CharacterContent.ToolProficiencies.Proficiencies import CooksUtensils
+from Core.Definitions import Ability, Skill
 from StatBlocks.AbilitiesStatBlock import PointBuyAbilitiesStatBlock
 from StatBlocks.SkillsStatBlock import ClericSkillsStatBlock
 
@@ -103,6 +104,9 @@ def get_starter_class_builder():
                     spell_2=ClericLevel1Spells.CURE_WOUNDS,
                     spell_3=ClericLevel1Spells.GUIDING_BOLT,
                     spell_4=ClericLevel1Spells.SHIELD_OF_FAITH,
+                    divine_order=DivineOrderThaumaturgeChoice(
+                        extra_cantrip=ClericLevel0Spells.SPARE_THE_DYING
+                    ),
                 ),
                 2: ClericLevel2(
                     spell=ClericLevel2Spells.SILENCE,

@@ -21,6 +21,8 @@ from CharacterContent.Classes.BaseClasses.ClericBase import (
     ClericLevel15,
     ClericLevel16,
     ClericLevel17,
+    DivineOrderProtectorChoice,
+    DivineOrderThaumaturgeChoice,
 )
 from CharacterContent.Classes.SubClasses2014.ClericNature import (
     ClericNatureCustomStarterClassArgs,
@@ -30,7 +32,11 @@ from CharacterContent.Classes.SubClasses2014.ClericNature import (
     ClericNatureLevel17,
 )
 from Core.Definitions import Ability, Skill
-from CharacterContent.Features.CharacterFeats import Backgrounds, GeneralFeats, OriginFeats
+from CharacterContent.Features.CharacterFeats import (
+    Backgrounds,
+    GeneralFeats,
+    OriginFeats,
+)
 from CharacterContent.Species import Human
 from CharacterContent.Spells.SpellLists import (
     ClericLevel0Spells,
@@ -97,6 +103,7 @@ def get_starter_class_builder():
                     spell_2=ClericLevel1Spells.BLESS,
                     spell_3=ClericLevel1Spells.HEALING_WORD,
                     spell_4=ClericLevel1Spells.CREATE_OR_DESTROY_WATER,
+                    divine_order=DivineOrderProtectorChoice(),
                 ),
                 2: ClericLevel2(
                     spell=ClericLevel1Spells.DETECT_MAGIC,
@@ -108,7 +115,8 @@ def get_starter_class_builder():
                     general_feat=GeneralFeats.AbilityScoreImprovement(
                         [
                             (Ability.WISDOM, 2),
-                        ]),
+                        ]
+                    ),
                     cantrip=ClericLevel0Spells.THAUMATURGY,
                     spell=ClericLevel2Spells.PRAYER_OF_HEALING,
                 ),
@@ -126,7 +134,8 @@ def get_starter_class_builder():
                     general_feat=GeneralFeats.AbilityScoreImprovement(
                         [
                             (Ability.WISDOM, 2),
-                        ]),
+                        ]
+                    ),
                     spell=ClericLevel4Spells.STICKS_TO_SNAKES,
                 ),
                 9: ClericLevel9(
@@ -144,7 +153,8 @@ def get_starter_class_builder():
                     general_feat=GeneralFeats.AbilityScoreImprovement(
                         [
                             (Ability.CONSTITUTION, 2),
-                        ]),
+                        ]
+                    ),
                 ),
                 13: ClericLevel13(
                     spell=ClericLevel7Spells.FIRE_STORM,

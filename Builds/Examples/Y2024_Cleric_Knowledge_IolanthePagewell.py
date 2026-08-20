@@ -24,6 +24,8 @@ from CharacterContent.Classes.BaseClasses.ClericBase import (
     ClericLevel18,
     ClericLevel19,
     ClericLevel20,
+    DivineOrderProtectorChoice,
+    DivineOrderThaumaturgeChoice,
 )
 from CharacterContent.Classes.SubClasses2024.ClericKnowledge import (
     ClericKnowledgeCustomStarterClassArgs,
@@ -32,7 +34,12 @@ from CharacterContent.Classes.SubClasses2024.ClericKnowledge import (
     ClericKnowledgeLevel17,
 )
 from Core.Definitions import Ability, Skill
-from CharacterContent.Features.CharacterFeats import Backgrounds, EpicBoon, GeneralFeats, OriginFeats
+from CharacterContent.Features.CharacterFeats import (
+    Backgrounds,
+    EpicBoon,
+    GeneralFeats,
+    OriginFeats,
+)
 from CharacterContent.Items import Armor, Weapons
 from CharacterContent.Species import Warforged
 from CharacterContent.Spells.SpellLists import (
@@ -105,6 +112,7 @@ def get_starter_class_builder():
                     spell_2=ClericLevel1Spells.BLESS,
                     spell_3=ClericLevel1Spells.CURE_WOUNDS,
                     spell_4=ClericLevel1Spells.GUIDING_BOLT,
+                    divine_order=DivineOrderProtectorChoice(),
                 ),
                 2: ClericLevel2(
                     spell=ClericLevel1Spells.SANCTUARY,
@@ -134,7 +142,8 @@ def get_starter_class_builder():
                     general_feat=GeneralFeats.AbilityScoreImprovement(
                         [
                             (Ability.CONSTITUTION, 2),
-                        ]),
+                        ]
+                    ),
                     spell=ClericLevel4Spells.FREEDOM_OF_MOVEMENT,
                 ),
                 9: ClericLevel9(
@@ -153,7 +162,8 @@ def get_starter_class_builder():
                         [
                             (Ability.WISDOM, 1),
                             (Ability.CONSTITUTION, 1),
-                        ]),
+                        ]
+                    ),
                 ),
                 13: ClericLevel13(
                     spell=ClericLevel7Spells.CONJURE_CELESTIAL,

@@ -21,6 +21,8 @@ from CharacterContent.Classes.BaseClasses.ClericBase import (
     ClericLevel15,
     ClericLevel16,
     ClericLevel17,
+    DivineOrderProtectorChoice,
+    DivineOrderThaumaturgeChoice,
 )
 from CharacterContent.Classes.SubClasses2014.ClericOrder import (
     ClericOrderCustomStarterClassArgs,
@@ -30,7 +32,11 @@ from CharacterContent.Classes.SubClasses2014.ClericOrder import (
     ClericOrderLevel17,
 )
 from Core.Definitions import Ability, Skill
-from CharacterContent.Features.CharacterFeats import Backgrounds, GeneralFeats, OriginFeats
+from CharacterContent.Features.CharacterFeats import (
+    Backgrounds,
+    GeneralFeats,
+    OriginFeats,
+)
 from CharacterContent.Species import Human
 from CharacterContent.Spells.SpellLists import (
     ClericLevel0Spells,
@@ -97,6 +103,7 @@ def get_starter_class_builder():
                     spell_2=ClericLevel1Spells.BLESS,
                     spell_3=ClericLevel1Spells.SHIELD_OF_FAITH,
                     spell_4=ClericLevel1Spells.SANCTUARY,
+                    divine_order=DivineOrderProtectorChoice(),
                 ),
                 2: ClericLevel2(
                     spell=ClericLevel1Spells.DETECT_EVIL_AND_GOOD,

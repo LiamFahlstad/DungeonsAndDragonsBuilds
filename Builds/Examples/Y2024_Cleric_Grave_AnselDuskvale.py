@@ -24,6 +24,8 @@ from CharacterContent.Classes.BaseClasses.ClericBase import (
     ClericLevel18,
     ClericLevel19,
     ClericLevel20,
+    DivineOrderProtectorChoice,
+    DivineOrderThaumaturgeChoice,
 )
 from CharacterContent.Classes.SubClasses2024.ClericGrave import (
     ClericGraveCustomStarterClassArgs,
@@ -35,7 +37,12 @@ from CharacterContent.Classes.SubClasses2024.ClericGrave import (
     ClericGraveLevel17,
 )
 from Core.Definitions import Ability, Skill
-from CharacterContent.Features.CharacterFeats import Backgrounds, EpicBoon, GeneralFeats, OriginFeats
+from CharacterContent.Features.CharacterFeats import (
+    Backgrounds,
+    EpicBoon,
+    GeneralFeats,
+    OriginFeats,
+)
 from CharacterContent.Species import Elf
 from CharacterContent.Spells.SpellLists import (
     ClericLevel0Spells,
@@ -101,6 +108,7 @@ def get_starter_class_builder():
                     spell_2=ClericLevel1Spells.BANE,
                     spell_3=ClericLevel1Spells.INFLICT_WOUNDS,
                     spell_4=ClericLevel1Spells.GUIDING_BOLT,
+                    divine_order=DivineOrderProtectorChoice(),
                 ),
                 2: ClericLevel2(
                     spell=ClericLevel1Spells.HEALING_WORD,

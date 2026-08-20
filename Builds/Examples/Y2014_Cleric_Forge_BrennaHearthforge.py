@@ -21,6 +21,8 @@ from CharacterContent.Classes.BaseClasses.ClericBase import (
     ClericLevel15,
     ClericLevel16,
     ClericLevel17,
+    DivineOrderProtectorChoice,
+    DivineOrderThaumaturgeChoice,
 )
 from CharacterContent.Classes.SubClasses2014.ClericForge import (
     ClericForgeCustomStarterClassArgs,
@@ -30,7 +32,11 @@ from CharacterContent.Classes.SubClasses2014.ClericForge import (
     ClericForgeLevel17,
 )
 from Core.Definitions import Ability, Skill
-from CharacterContent.Features.CharacterFeats import Backgrounds, GeneralFeats, OriginFeats
+from CharacterContent.Features.CharacterFeats import (
+    Backgrounds,
+    GeneralFeats,
+    OriginFeats,
+)
 from CharacterContent.Species import Dwarf
 from CharacterContent.Spells.SpellLists import (
     ClericLevel0Spells,
@@ -98,6 +104,7 @@ def get_starter_class_builder():
                     spell_2=ClericLevel1Spells.BLESS,
                     spell_3=ClericLevel1Spells.SHIELD_OF_FAITH,
                     spell_4=ClericLevel1Spells.DETECT_MAGIC,
+                    divine_order=DivineOrderProtectorChoice(),
                 ),
                 2: ClericLevel2(
                     spell=ClericLevel1Spells.COMMAND,
@@ -110,7 +117,8 @@ def get_starter_class_builder():
                         [
                             (Ability.STRENGTH, 1),
                             (Ability.CONSTITUTION, 1),
-                        ]),
+                        ]
+                    ),
                     cantrip=ClericLevel0Spells.TOLL_THE_DEAD,
                     spell=ClericLevel2Spells.ENHANCE_ABILITY,
                 ),
@@ -128,7 +136,8 @@ def get_starter_class_builder():
                     general_feat=GeneralFeats.AbilityScoreImprovement(
                         [
                             (Ability.WISDOM, 2),
-                        ]),
+                        ]
+                    ),
                     spell=ClericLevel4Spells.FREEDOM_OF_MOVEMENT,
                 ),
                 9: ClericLevel9(
@@ -147,7 +156,8 @@ def get_starter_class_builder():
                         [
                             (Ability.CONSTITUTION, 1),
                             (Ability.WISDOM, 1),
-                        ]),
+                        ]
+                    ),
                 ),
                 13: ClericLevel13(
                     spell=ClericLevel7Spells.CONJURE_CELESTIAL,

@@ -43,6 +43,16 @@ ClericSpellsUpTo9: TypeAlias = ClericSpellsUpTo8 | ClericLevel9Spells
 
 
 @attr.dataclass
+class DivineOrderProtectorChoice:
+    pass
+
+
+@attr.dataclass
+class DivineOrderThaumaturgeChoice:
+    extra_cantrip: ClericLevel0Spells
+
+
+@attr.dataclass
 class ClericLevel1(ClassBuilder.BaseClassLevel1):
     cantrip_1: ClericLevel0Spells
     cantrip_2: ClericLevel0Spells
@@ -51,13 +61,24 @@ class ClericLevel1(ClassBuilder.BaseClassLevel1):
     spell_2: ClericLevel1Spells
     spell_3: ClericLevel1Spells
     spell_4: ClericLevel1Spells
+    divine_order: DivineOrderProtectorChoice | DivineOrderThaumaturgeChoice
 
     def add_features(
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
         data.add_feature(ClericFeatures.Spellcasting())
-        data.add_feature(ClericFeatures.DivineOrder())
+        if isinstance(self.divine_order, DivineOrderThaumaturgeChoice):
+            data.add_feature(
+                ClericFeatures.DivineOrderThaumaturge(
+                    extra_cantrip=self.divine_order.extra_cantrip
+                )
+            )
+            data.add_cantrip(self.divine_order.extra_cantrip)
+        else:
+            data.add_feature(ClericFeatures.DivineOrderProtector())
+            data.add_weapon_proficiency(Weapons.WeaponProficiency.MARTIAL)
+            data.add_armor_proficiency(Definitions.ArmorType.HEAVY)
         data.add_cantrip(self.cantrip_1)
         data.add_cantrip(self.cantrip_2)
         data.add_cantrip(self.cantrip_3)

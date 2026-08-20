@@ -22,6 +22,8 @@ from CharacterContent.Classes.BaseClasses.ClericBase import (
     ClericLevel18,
     ClericLevel19,
     ClericLevel20,
+    DivineOrderProtectorChoice,
+    DivineOrderThaumaturgeChoice,
 )
 from CharacterContent.Classes.SubClasses2024.ClericLight import (
     ClericLightCustomStarterClassArgs,
@@ -30,7 +32,12 @@ from CharacterContent.Classes.SubClasses2024.ClericLight import (
     ClericLightLevel17,
 )
 from Core.Definitions import Ability, Skill
-from CharacterContent.Features.CharacterFeats import Backgrounds, EpicBoon, GeneralFeats, OriginFeats
+from CharacterContent.Features.CharacterFeats import (
+    Backgrounds,
+    EpicBoon,
+    GeneralFeats,
+    OriginFeats,
+)
 from CharacterContent.Species import Elf
 from CharacterContent.Spells.SpellLists import (
     ClericLevel0Spells,
@@ -96,6 +103,7 @@ def get_starter_class_builder():
                     spell_2=ClericLevel1Spells.BANE,
                     spell_3=ClericLevel1Spells.CREATE_OR_DESTROY_WATER,
                     spell_4=ClericLevel1Spells.GUIDING_BOLT,
+                    divine_order=DivineOrderProtectorChoice(),
                 ),
                 2: ClericLevel2(
                     spell=ClericLevel1Spells.BLESS,
