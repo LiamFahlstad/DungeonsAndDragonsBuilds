@@ -1331,6 +1331,20 @@ BASE_CHARACTER_SHEET_CSS = """
             flex-shrink: 0;
         }
 
+        /* Current-HP blank on the HP tile: an underline (same treatment as
+           .blank-fill) rather than a pen-box square, since HP values can
+           run to two or three digits. */
+        .hp-blank {
+            display: inline-block;
+            width: 1.4em;
+            height: 1.2em;
+            border-bottom: 1px solid #999;
+        }
+
+        .hp-slash {
+            font-weight: 400;
+        }
+
         /* ── Spell Concentration Checkbox ────────────────────────────────── */
         .spell-concentration-checkbox {
             display: inline-flex;

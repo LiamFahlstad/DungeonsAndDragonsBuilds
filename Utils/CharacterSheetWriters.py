@@ -171,6 +171,19 @@ class HtmlCharacterSheetWriter:
             "</div>\n"
         )
 
+    @staticmethod
+    def _stat_tile_hp(label: str, value) -> str:
+        """Render HP tile with format: blank/max_hp for player to fill in current HP."""
+        return (
+            f"<div class='stat-tile stat-tile-hero'>"
+            f"<span class='stat-tile-label'>{label}</span>"
+            f"<span class='stat-tile-value'>"
+            f"<span class='hp-blank'></span>"
+            f"<span class='hp-slash'>/</span>{value}"
+            f"</span>"
+            "</div>\n"
+        )
+
     def _write_overview(
         self,
         character: CharacterStatBlock,
@@ -200,7 +213,7 @@ class HtmlCharacterSheetWriter:
 
         file.write("<div class='overview-tiles'>\n")
         file.write(
-            self._stat_tile("Max HP", character.calculate_hit_points(), hero=True)
+            self._stat_tile_hp("HP", character.calculate_hit_points())
         )
         file.write(self._stat_tile("AC", ac, sub=ac_sub))
         file.write(
@@ -1234,7 +1247,7 @@ class HtmlCharacterSheetWriter:
             file.write("<div class='overview-section'>\n")
 
             file.write("<div class='overview-tiles'>\n")
-            file.write(self._stat_tile("Max HP", blank_sm, hero=True))
+            file.write(self._stat_tile_hp("HP", blank_sm))
             file.write(self._stat_tile("AC", blank_sm))
             file.write(self._stat_tile("Initiative", blank_sm))
             file.write(self._stat_tile("Speed", f"{blank_sm} ft"))
