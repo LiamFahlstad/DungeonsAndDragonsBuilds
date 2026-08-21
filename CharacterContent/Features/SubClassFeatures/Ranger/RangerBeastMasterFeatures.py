@@ -11,7 +11,7 @@ class PrimalCompanion(Feature):
     def __init__(self, companion_type: CompanionType, damage_type: Optional[DamageType] = None):
         self.companion_type = companion_type
         self.damage_type = damage_type
-        super().__init__(name="Primal Companion", origin="Beast Master Ranger Level 3", action_type="bonus_action")
+        super().__init__(name="Primal Companion", origin="Beast Master Ranger Level 3", action_type="bonus_action", range="5 Feet")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -55,7 +55,7 @@ class BestialFury(Feature):
 
 class ShareSpells(Feature):
     def __init__(self):
-        super().__init__(name="Share Spells", origin="Beast Master Ranger Level 15")
+        super().__init__(name="Share Spells", origin="Beast Master Ranger Level 15", range="30 Feet")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "When you cast a spell targeting yourself, you can also affect your Primal Companion beast with the spell if the beast is within 30 feet of you."

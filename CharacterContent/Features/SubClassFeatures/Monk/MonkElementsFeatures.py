@@ -90,7 +90,7 @@ class ManipulateElements(Feature):
 class ElementalBurst(Feature):
     def __init__(self):
         super().__init__(
-            name="Elemental Burst", origin="Warrior of the Elements Monk Level 6", action_type="action"
+            name="Elemental Burst", origin="Warrior of the Elements Monk Level 6", action_type="action", range="20-Foot-Radius Sphere"
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -128,7 +128,7 @@ class StrideOfTheElements(Feature):
 class ElementalEpitome(Feature):
     def __init__(self):
         super().__init__(
-            name="Elemental Epitome", origin="Warrior of the Elements Monk Level 17"
+            name="Elemental Epitome", origin="Warrior of the Elements Monk Level 17", range="5 Feet"
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:

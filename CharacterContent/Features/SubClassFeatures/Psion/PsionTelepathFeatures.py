@@ -121,7 +121,7 @@ class TelepathicBolstering(Feature):
 
 class ScrambleMinds(Feature):
     def __init__(self):
-        super().__init__(name="Scramble Minds", origin="Telepath Psion Level 14")
+        super().__init__(name="Scramble Minds", origin="Telepath Psion Level 14", range="30-Foot Radius")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

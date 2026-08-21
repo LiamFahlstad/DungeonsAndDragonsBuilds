@@ -62,7 +62,7 @@ class PrimalLore(Feature):
 class BlessingOfMoonlight(Feature):
     def __init__(self):
         super().__init__(
-            name="Blessing of Moonlight", origin="College of the Moon Bard Level 6"
+            name="Blessing of Moonlight", origin="College of the Moon Bard Level 6", range="60 Feet"
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:

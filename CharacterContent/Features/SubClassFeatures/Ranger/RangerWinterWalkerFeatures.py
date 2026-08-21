@@ -110,7 +110,7 @@ class ChillingRetribution(Feature):
 
 class FrozenHaunt(Feature):
     def __init__(self):
-        super().__init__(name="Frozen Haunt", origin="Winter Walker Ranger Level 15")
+        super().__init__(name="Frozen Haunt", origin="Winter Walker Ranger Level 15", range="15-Foot Emanation")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

@@ -23,7 +23,7 @@ class Spellcasting(Feature):
 
 class BardicInspiration(Feature):
     def __init__(self):
-        super().__init__(name="Bardic Inspiration", origin="Bard Level 1", action_type="bonus_action", duration="1 Hour")
+        super().__init__(name="Bardic Inspiration", origin="Bard Level 1", action_type="bonus_action", duration="1 Hour", range="60 Feet")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         charisma_modifier = character_stat_block.get_ability_modifier(Ability.CHARISMA)
@@ -159,7 +159,7 @@ class FontOfInspiration(Feature):
 
 class Countercharm(Feature):
     def __init__(self):
-        super().__init__(name="Countercharm", origin="Bard Level 7", action_type="reaction")
+        super().__init__(name="Countercharm", origin="Bard Level 7", action_type="reaction", range="30 Feet")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "You can use musical notes or words of power to disrupt mind-influencing effects. If you or a creature within 30 feet of you fails a saving throw against an effect that applies the Charmed or Frightened condition, you can take a Reaction to cause the save to be rerolled, and the new roll has Advantage."
@@ -195,7 +195,7 @@ class SuperiorInspiration(Feature):
 
 class WordsOfCreation(Feature):
     def __init__(self):
-        super().__init__(name="Words of Creation", origin="Bard Level 20")
+        super().__init__(name="Words of Creation", origin="Bard Level 20", range="10 Feet")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "You have mastered two of the Words of Creation: the words of life and death. You therefore always have the Power Word: Heal and Power Word: Kill spells prepared. When you cast either spell, you can target a second creature with it if that creature is within 10 feet of the first target."

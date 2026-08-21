@@ -5,7 +5,7 @@ from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 class PsionicPower(Feature):
     def __init__(self):
-        super().__init__(name="Psionic Power", origin="Psion Level 1")
+        super().__init__(name="Psionic Power", origin="Psion Level 1", range="30 Feet")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

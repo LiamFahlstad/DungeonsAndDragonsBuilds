@@ -26,7 +26,7 @@ class OathOfDevotionSpells(Feature):
 class SacredWeapon(Feature):
     def __init__(self):
         super().__init__(
-            name="Sacred Weapon", origin="Oath of Devotion Paladin Level 3", duration="10 Minutes or Until Used Again"
+            name="Sacred Weapon", origin="Oath of Devotion Paladin Level 3", duration="10 Minutes or Until Used Again", range="20-Foot Radius"
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:

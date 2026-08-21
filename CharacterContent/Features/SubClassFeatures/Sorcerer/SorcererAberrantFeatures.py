@@ -23,7 +23,7 @@ class PsionicSpells(Feature):
 
 class TelepathicSpeech(Feature):
     def __init__(self):
-        super().__init__(name="Telepathic Speech", origin="Aberrant Sorcerer Level 3", action_type="bonus_action", duration="Minutes Equal to Sorcerer Level")
+        super().__init__(name="Telepathic Speech", origin="Aberrant Sorcerer Level 3", action_type="bonus_action", duration="Minutes Equal to Sorcerer Level", range="30 Feet")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -96,7 +96,7 @@ class RevelationInFlesh(Feature):
 
 class WarpingImplosion(Feature):
     def __init__(self):
-        super().__init__(name="Warping Implosion", origin="Aberrant Sorcerer Level 18", action_type="action")
+        super().__init__(name="Warping Implosion", origin="Aberrant Sorcerer Level 18", action_type="action", range="120 Feet")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

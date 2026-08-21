@@ -44,7 +44,7 @@ class BreathWeapon(Feature):
     def __init__(self, dragon_color: DragonColor):
         self.color = dragon_color
         self.damage_type = get_damage_type_from_color(dragon_color)
-        super().__init__(name="Breath Weapon", origin="Dragonborn Trait")
+        super().__init__(name="Breath Weapon", origin="Dragonborn Trait", range="15-Foot Cone or 30-Foot Line")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         constitution_modifier = character_stat_block.get_ability_modifier(

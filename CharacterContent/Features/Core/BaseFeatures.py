@@ -120,6 +120,21 @@ FEATURE_CARD_CSS = """/* ── Feature cards ───────────�
             padding: 1px 6px;
         }
 
+        /* Flags a feature's range/area (e.g. "30 Feet", "20-Foot Cone", "Self")
+           the same way .feature-duration-tag flags duration. Free-text, own
+           neutral color distinct from the other chips. */
+        .feature-range-tag {
+            display: inline-block;
+            font-size: 0.68rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            border: 1px solid #2a8f96;
+            color: #227277;
+            border-radius: 3px;
+            padding: 1px 6px;
+        }
+
         .feature-card.is-passive .feature-name {
             color: var(--muted-color);
         }
@@ -258,6 +273,7 @@ class Feature:
         skippable_in_concise: bool = False,
         action_type: Literal["action", "bonus_action", "reaction"] | None = None,
         duration: str | None = None,
+        range: str | None = None,
     ):
         self.name = name if name is not None else type(self).__name__
         self.origin = origin
@@ -274,6 +290,10 @@ class Feature:
         # "1 Minute or Until Incapacitated") so the card can flag it at a glance.
         # Leave None for instantaneous effects and always-on passives.
         self.duration = duration
+        # Set for features whose effect has a stated range or area (e.g. "30 Feet",
+        # "20-Foot Cone", "Self") so the card can flag it at a glance. Leave None
+        # for features with no meaningful range (e.g. pure passives).
+        self.range = range
 
     def extend_feature(self, feature: "Feature"):
         self.extensions.append(feature)
@@ -375,6 +395,7 @@ class Feature:
 
         action_tag = self._action_tag_html(self.action_type)
         duration_tag = self._duration_tag_html(self.duration)
+        range_tag = self._range_tag_html(self.range)
 
         card_class = "feature-card is-passive" if passive_tag else "feature-card"
         file.write(f"<div class='{card_class}'>\n")
@@ -387,6 +408,8 @@ class Feature:
             file.write(f"{action_tag}\n")
         if duration_tag:
             file.write(f"{duration_tag}\n")
+        if range_tag:
+            file.write(f"{range_tag}\n")
         file.write("</span>\n")
         file.write(f"<span class='feature-origin'>{self.origin}</span>\n")
         file.write("</div>\n")
@@ -438,9 +461,11 @@ class Feature:
             ext_action_tag = f" {ext_action_tag}" if ext_action_tag else ""
             ext_duration_tag = self._duration_tag_html(extension.duration)
             ext_duration_tag = f" {ext_duration_tag}" if ext_duration_tag else ""
+            ext_range_tag = self._range_tag_html(extension.range)
+            ext_range_tag = f" {ext_range_tag}" if ext_range_tag else ""
             file.write(
                 f"<div class='feature-upgrade'>\n"
-                f"<span class='feature-upgrade-label'>{extension.origin}: {extension.name}{ext_passive_tag}{ext_action_tag}{ext_duration_tag}</span>\n"
+                f"<span class='feature-upgrade-label'>{extension.origin}: {extension.name}{ext_passive_tag}{ext_action_tag}{ext_duration_tag}{ext_range_tag}</span>\n"
                 f"<div class='feature-upgrade-body'>{ext_html}</div>\n"
                 f"</div>\n"
             )
@@ -481,12 +506,15 @@ class Feature:
         file.write(f"<span class='feature-name'>{self.name}</span>\n")
         action_tag = self._action_tag_html(self.action_type)
         duration_tag = self._duration_tag_html(self.duration)
+        range_tag = self._range_tag_html(self.range)
         if passive_tag:
             file.write(f"{passive_tag}\n")
         if action_tag:
             file.write(f"{action_tag}\n")
         if duration_tag:
             file.write(f"{duration_tag}\n")
+        if range_tag:
+            file.write(f"{range_tag}\n")
         file.write("</span>\n")
         file.write(f"<span class='feature-origin'>{self.origin}</span>\n")
         file.write("</div>\n")
@@ -525,6 +553,12 @@ class Feature:
         if duration is None:
             return ""
         return f"<span class='feature-duration-tag'>Duration: {duration}</span>"
+
+    @staticmethod
+    def _range_tag_html(range: str | None) -> str:
+        if range is None:
+            return ""
+        return f"<span class='feature-range-tag'>Range: {range}</span>"
 
     @staticmethod
     def _resource_tile_html(label: str, value) -> str:

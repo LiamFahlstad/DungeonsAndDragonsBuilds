@@ -19,7 +19,7 @@ class Channeler(Feature):
 class SpiritsFromBeyond(Feature):
     def __init__(self):
         super().__init__(
-            name="Spirits from Beyond", origin="College of Spirits Bard Level 3"
+            name="Spirits from Beyond", origin="College of Spirits Bard Level 3", range="30 Feet"
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:

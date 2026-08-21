@@ -79,7 +79,7 @@ class FanaticalFocus(Feature):
 class ZealousPresence(Feature):
     def __init__(self):
         super().__init__(
-            name="Zealous Presence", origin="Path Of The Zealot Barbarian Level 10", action_type="bonus_action", duration="Until Start of Your Next Turn"
+            name="Zealous Presence", origin="Path Of The Zealot Barbarian Level 10", action_type="bonus_action", duration="Until Start of Your Next Turn", range="60 Feet"
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -105,7 +105,7 @@ class ZealousPresence(Feature):
 class RageOfTheGods(Feature):
     def __init__(self):
         super().__init__(
-            name="Rage of the Gods", origin="Path Of The Zealot Barbarian Level 14", duration="1 Minute or Until You Drop to 0 Hit Points"
+            name="Rage of the Gods", origin="Path Of The Zealot Barbarian Level 14", duration="1 Minute or Until You Drop to 0 Hit Points", range="30 Feet"
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:

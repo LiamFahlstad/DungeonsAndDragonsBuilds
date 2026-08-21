@@ -19,7 +19,7 @@ class CelestialSpells(Feature):
 class HealingLight(Feature):
     def __init__(self):
         super().__init__(
-            name="Healing Light", origin="Celestial Patron Warlock Level 3", action_type="bonus_action"
+            name="Healing Light", origin="Celestial Patron Warlock Level 3", action_type="bonus_action", range="60 Feet"
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -80,7 +80,7 @@ class CelestialResilience(Feature):
 class SearingVengeance(Feature):
     def __init__(self):
         super().__init__(
-            name="Searing Vengeance", origin="Celestial Patron Warlock Level 14"
+            name="Searing Vengeance", origin="Celestial Patron Warlock Level 14", range="60 Feet"
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:

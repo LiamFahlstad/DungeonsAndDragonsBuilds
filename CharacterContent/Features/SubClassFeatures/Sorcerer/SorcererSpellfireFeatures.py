@@ -22,7 +22,7 @@ class SpellfireSpells(Feature):
 
 class SpellfireBurst(Feature):
     def __init__(self):
-        super().__init__(name="Spellfire Burst", origin="Spellfire Sorcerer Level 3")
+        super().__init__(name="Spellfire Burst", origin="Spellfire Sorcerer Level 3", range="30 Feet")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

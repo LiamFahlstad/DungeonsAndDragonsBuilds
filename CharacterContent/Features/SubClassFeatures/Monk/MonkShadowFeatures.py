@@ -66,7 +66,7 @@ class ShadowArts(Feature):
 
 class ShadowStep(Feature):
     def __init__(self):
-        super().__init__(name="Shadow Step", origin="Warrior of Shadow Monk Level 6", action_type="bonus_action")
+        super().__init__(name="Shadow Step", origin="Warrior of Shadow Monk Level 6", action_type="bonus_action", range="60 Feet")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "While entirely within Dim Light or Darkness, you can use a Bonus Action to teleport up to 60 feet to an unoccupied space you can see that is also in Dim Light or Darkness. You then have Advantage on the next melee attack you make before the end of the current turn."

@@ -6,7 +6,7 @@ from Utils import StringUtils
 
 class Bloodthirst(Feature):
     def __init__(self):
-        super().__init__(name="Bloodthirst", origin="Scion of the Three Rogue Level 3", action_type="reaction")
+        super().__init__(name="Bloodthirst", origin="Scion of the Three Rogue Level 3", action_type="reaction", range="30 Feet")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         intelligence_modifier = character_stat_block.get_ability_modifier(
@@ -82,7 +82,7 @@ class StrikeFear(Feature):
 class AuraOfMalevolence(Feature):
     def __init__(self):
         super().__init__(
-            name="Aura of Malevolence", origin="Scion of the Three Rogue Level 13"
+            name="Aura of Malevolence", origin="Scion of the Three Rogue Level 13", range="10 Feet"
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:

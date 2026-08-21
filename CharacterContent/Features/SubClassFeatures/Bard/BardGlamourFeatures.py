@@ -6,7 +6,7 @@ from StatBlocks.CharacterStatBlock import CharacterStatBlock
 class BeguilingMagic(Feature):
     def __init__(self):
         super().__init__(
-            name="Beguiling Magic", origin="College of Glamour Bard Level 3", duration="1 Minute"
+            name="Beguiling Magic", origin="College of Glamour Bard Level 3", duration="1 Minute", range="60 Feet"
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -33,7 +33,7 @@ class BeguilingMagic(Feature):
 class MantleOfInspiration(Feature):
     def __init__(self):
         super().__init__(
-            name="Mantle of Inspiration", origin="College of Glamour Bard Level 3", action_type="bonus_action"
+            name="Mantle of Inspiration", origin="College of Glamour Bard Level 3", action_type="bonus_action", range="60 Feet"
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:

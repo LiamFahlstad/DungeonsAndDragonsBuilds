@@ -59,7 +59,7 @@ class GraveTouched(Feature):
 
 class NecroticHusk(Feature):
     def __init__(self):
-        super().__init__(name="Necrotic Husk", origin="Undead Patron Warlock Level 10")
+        super().__init__(name="Necrotic Husk", origin="Undead Patron Warlock Level 10", range="30-Foot Emanation")
         # Only the base Resistance is unconditional; the upgrade to Immunity
         # while using Form of Dread is conditional/temporary and stays
         # prose-only.

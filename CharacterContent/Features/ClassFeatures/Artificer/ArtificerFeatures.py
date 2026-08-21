@@ -22,7 +22,7 @@ class Spellcasting(Feature):
 
 class TinkersMagic(Feature):
     def __init__(self):
-        super().__init__(name="Tinker's Magic", origin="Artificer Level 1", action_type="action", duration="Until Long Rest")
+        super().__init__(name="Tinker's Magic", origin="Artificer Level 1", action_type="action", duration="Until Long Rest", range="5 Feet")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         intelligence_modifier = character_stat_block.get_ability_modifier(
@@ -154,7 +154,7 @@ class MagicItemTinker(Feature):
 
 class FlashofGenius(Feature):
     def __init__(self):
-        super().__init__(name="Flash of Genius", origin="Artificer Level 7", action_type="reaction")
+        super().__init__(name="Flash of Genius", origin="Artificer Level 7", action_type="reaction", range="30 Feet")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         intelligence_modifier = character_stat_block.get_ability_modifier(

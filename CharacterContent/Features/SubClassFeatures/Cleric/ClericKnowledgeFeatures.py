@@ -1,12 +1,19 @@
-from Core.Definitions import Ability, CLERIC_HIT_DIE, Skill
 from CharacterContent.Features.Core.BaseFeatures import Feature
-from CharacterContent.Features.Core.Improvements import SkillProficiencyChoice, SkillExpertiseChoice
+from CharacterContent.Features.Core.Improvements import (
+    SkillExpertiseChoice,
+    SkillProficiencyChoice,
+)
+from Core.Definitions import Ability, Skill
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
 class BlessingsOfKnowledge(Feature):
     def __init__(self, skill_1: Skill, skill_2: Skill):
-        super().__init__(name="Blessings of Knowledge", origin="Knowledge Domain Cleric Level 3", skippable_in_concise=True)
+        super().__init__(
+            name="Blessings of Knowledge",
+            origin="Knowledge Domain Cleric Level 3",
+            skippable_in_concise=True,
+        )
         self._skill_1 = skill_1
         self._skill_2 = skill_2
         allowed_skills = [
@@ -50,7 +57,11 @@ class KnowledgeDomainSpells(Feature):
 
 class MindMagic(Feature):
     def __init__(self):
-        super().__init__(name="Mind Magic", origin="Knowledge Domain Cleric Level 3", action_type="action")
+        super().__init__(
+            name="Mind Magic",
+            origin="Knowledge Domain Cleric Level 3",
+            action_type="action",
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "As a Magic action, you can expend one use of your Channel Divinity to manifest your magical knowledge. Choose one spell from the Divination school on the Knowledge Domain Spells table that you have prepared. As part of that action, you cast that spell without expending a spell slot or needing Material components."
@@ -71,7 +82,10 @@ class MindMagic(Feature):
 class UnfetteredMind(Feature):
     def __init__(self):
         super().__init__(
-            name="Unfettered Mind", origin="Knowledge Domain Cleric Level 6", skippable_in_concise=True
+            name="Unfettered Mind",
+            origin="Knowledge Domain Cleric Level 6",
+            skippable_in_concise=False,
+            range="60 Feet",
         )
 
     def apply(self, character_stat_block: CharacterStatBlock):
@@ -80,8 +94,13 @@ class UnfetteredMind(Feature):
             character_stat_block.add_proficiency_in_saving_throw(Ability.INTELLIGENCE)
         else:
             # If already proficient in Intelligence, find the first ability not proficient and add it
-            abilities = [Ability.STRENGTH, Ability.DEXTERITY, Ability.CONSTITUTION,
-                        Ability.WISDOM, Ability.CHARISMA]
+            abilities = [
+                Ability.STRENGTH,
+                Ability.DEXTERITY,
+                Ability.CONSTITUTION,
+                Ability.WISDOM,
+                Ability.CHARISMA,
+            ]
             for ability in abilities:
                 if not character_stat_block.saving_throws.is_proficient(ability):
                     character_stat_block.add_proficiency_in_saving_throw(ability)
@@ -98,7 +117,10 @@ class UnfetteredMind(Feature):
 class DivineForeknowledge(Feature):
     def __init__(self):
         super().__init__(
-            name="Divine Foreknowledge", origin="Knowledge Domain Cleric Level 17", action_type="bonus_action", duration="1 Hour"
+            name="Divine Foreknowledge",
+            origin="Knowledge Domain Cleric Level 17",
+            action_type="bonus_action",
+            duration="1 Hour",
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:

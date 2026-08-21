@@ -51,6 +51,7 @@ class HealingHands(Feature):
             name="Healing Hands",
             origin="Aasimar Trait",
             action_type="action",
+            range="Touch",
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:

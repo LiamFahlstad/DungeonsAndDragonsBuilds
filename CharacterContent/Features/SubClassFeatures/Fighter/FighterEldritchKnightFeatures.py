@@ -79,7 +79,7 @@ class EldritchStrike(Feature):
 class ArcaneCharge(Feature):
     def __init__(self):
         super().__init__(
-            name="Arcane Charge", origin="Eldritch Knight Fighter Level 15"
+            name="Arcane Charge", origin="Eldritch Knight Fighter Level 15", range="30 Feet"
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:

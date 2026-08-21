@@ -58,7 +58,7 @@ class OtherworldlyGlamour(Feature):
 
 class BeguilingTwist(Feature):
     def __init__(self):
-        super().__init__(name="Beguiling Twist", origin="Fey Wanderer Ranger Level 7", action_type="reaction", duration="1 Minute")
+        super().__init__(name="Beguiling Twist", origin="Fey Wanderer Ranger Level 7", action_type="reaction", duration="1 Minute", range="120 Feet")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -100,7 +100,7 @@ class FeyReinforcements(Feature):
 
 class MistyWanderer(Feature):
     def __init__(self):
-        super().__init__(name="Misty Wanderer", origin="Fey Wanderer Ranger Level 15")
+        super().__init__(name="Misty Wanderer", origin="Fey Wanderer Ranger Level 15", range="5 Feet")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         wis_mod = character_stat_block.get_ability_modifier(Ability.WISDOM)

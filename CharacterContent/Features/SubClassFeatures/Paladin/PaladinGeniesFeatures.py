@@ -7,7 +7,7 @@ from Utils import StringUtils
 class ElementalSmite(Feature):
     def __init__(self):
         super().__init__(
-            name="Elemental Smite", origin="Oath of the Noble Genies Paladin Level 3"
+            name="Elemental Smite", origin="Oath of the Noble Genies Paladin Level 3", range="30 Feet"
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:

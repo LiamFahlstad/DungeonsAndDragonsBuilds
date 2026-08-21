@@ -67,7 +67,7 @@ class AdventurersAtlas(Feature):
 
 class MappingMagic(Feature):
     def __init__(self):
-        super().__init__(name="Mapping Magic", origin="Cartographer Artificer Level 3")
+        super().__init__(name="Mapping Magic", origin="Cartographer Artificer Level 3", range="30 Feet")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         intelligence_modifier = character_stat_block.get_ability_modifier(Ability.INTELLIGENCE)
@@ -113,7 +113,7 @@ class GuidedPrecision(Feature):
 class IngeniousMovement(Feature):
     def __init__(self):
         super().__init__(
-            name="Ingenious Movement", origin="Cartographer Artificer Level 9"
+            name="Ingenious Movement", origin="Cartographer Artificer Level 9", range="30 Feet"
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:

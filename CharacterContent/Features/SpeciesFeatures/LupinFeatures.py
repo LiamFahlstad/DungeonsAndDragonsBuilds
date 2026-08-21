@@ -33,7 +33,7 @@ class FeralPounce(Feature):
 
 class Howl(Feature):
     def __init__(self):
-        super().__init__(name="Howl", origin="Lupin Trait", action_type="bonus_action", duration="Until Start of Next Turn")
+        super().__init__(name="Howl", origin="Lupin Trait", action_type="bonus_action", duration="Until Start of Next Turn", range="15-Foot Radius")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         proficiency_bonus = character_stat_block.get_proficiency_bonus()

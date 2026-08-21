@@ -247,7 +247,7 @@ class PreciseHunter(Feature):
 
 class FeralSenses(Feature):
     def __init__(self):
-        super().__init__(name="Feral Senses", origin="Ranger Level 18")
+        super().__init__(name="Feral Senses", origin="Ranger Level 18", range="30 Feet")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "Your connection to the forces of nature grants you Blindsight with a range of 30 feet."

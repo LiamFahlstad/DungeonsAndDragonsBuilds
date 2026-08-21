@@ -26,7 +26,7 @@ class OathOfVengeanceSpells(Feature):
 class VowOfEnmity(Feature):
     def __init__(self):
         super().__init__(
-            name="Vow of Enmity", origin="Oath of Vengeance Paladin Level 3", duration="1 Minute or Until Used Again"
+            name="Vow of Enmity", origin="Oath of Vengeance Paladin Level 3", duration="1 Minute or Until Used Again", range="30 Feet"
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:

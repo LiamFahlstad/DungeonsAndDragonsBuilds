@@ -60,7 +60,7 @@ class DivineOrderThaumaturge(Feature):
 
 class ChannelDivinity(Feature):
     def __init__(self):
-        super().__init__(name="Channel Divinity", origin="Cleric Level 2", action_type="action", duration="1 Minute")
+        super().__init__(name="Channel Divinity", origin="Cleric Level 2", action_type="action", duration="1 Minute", range="30 Feet")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         if character_stat_block.character_level >= 18:
@@ -171,7 +171,7 @@ class ImprovedDivineStrike(Feature):
 
 class ImprovedPotentSpellcasting(Feature):
     def __init__(self):
-        super().__init__(name="Improved Potent Spellcasting", origin="Cleric Level 14")
+        super().__init__(name="Improved Potent Spellcasting", origin="Cleric Level 14", range="60 Feet")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         wisdom_modifier = character_stat_block.get_ability_modifier(Ability.WISDOM)

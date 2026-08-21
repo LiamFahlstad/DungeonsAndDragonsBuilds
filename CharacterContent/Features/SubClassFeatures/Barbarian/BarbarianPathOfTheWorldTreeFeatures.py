@@ -9,6 +9,7 @@ class VitalityOfTheTree(Feature):
         super().__init__(
             name="Vitality of the Tree",
             origin="Path Of The World Tree Barbarian Level 3",
+            range="10 Feet",
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -40,6 +41,7 @@ class BranchesOfTheTree(Feature):
             name="Branches of the Tree",
             origin="Path Of The World Tree Barbarian Level 6",
             action_type="reaction",
+            range="30 Feet",
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -86,6 +88,7 @@ class TravelAlongTheTree(Feature):
             name="Travel along the Tree",
             origin="Path Of The World Tree Barbarian Level 14",
             action_type="bonus_action",
+            range="60 Feet",
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:

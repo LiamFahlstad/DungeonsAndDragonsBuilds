@@ -46,7 +46,7 @@ class MindlessRage(Feature):
 class Retaliation(Feature):
     def __init__(self):
         super().__init__(
-            name="Retaliation", origin="Path Of The Berserker Barbarian Level 10", action_type="reaction"
+            name="Retaliation", origin="Path Of The Berserker Barbarian Level 10", action_type="reaction", range="5 Feet"
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -61,6 +61,7 @@ class IntimidatingPresence(Feature):
             origin="Path Of The Berserker Barbarian Level 14",
             action_type="bonus_action",
             duration="1 Minute",
+            range="30-Foot Emanation",
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:

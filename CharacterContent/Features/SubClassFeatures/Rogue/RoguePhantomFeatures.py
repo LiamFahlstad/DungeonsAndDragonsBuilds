@@ -6,7 +6,7 @@ from Utils import StringUtils
 
 class WailsFromTheGrave(Feature):
     def __init__(self):
-        super().__init__(name="Wails from the Grave", origin="Phantom Rogue Level 3")
+        super().__init__(name="Wails from the Grave", origin="Phantom Rogue Level 3", range="30 Feet")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         dexterity_modifier = character_stat_block.get_ability_modifier(
@@ -52,7 +52,7 @@ class WhispersOfTheDead(Feature):
 
 class TokensOfTheDeparted(Feature):
     def __init__(self):
-        super().__init__(name="Tokens of the Departed", origin="Phantom Rogue Level 9")
+        super().__init__(name="Tokens of the Departed", origin="Phantom Rogue Level 9", range="30 Feet")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

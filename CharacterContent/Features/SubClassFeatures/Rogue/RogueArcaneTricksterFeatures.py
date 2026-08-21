@@ -62,7 +62,7 @@ class MagicalAmbush(Feature):
 class VersatileTrickster(Feature):
     def __init__(self):
         super().__init__(
-            name="Versatile Trickster", origin="Arcane Trickster Rogue Level 13"
+            name="Versatile Trickster", origin="Arcane Trickster Rogue Level 13", range="5 Feet"
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:

@@ -164,7 +164,7 @@ class ImprovedMutableForm(Feature):
 
 class LifeBendingWeapons(Feature):
     def __init__(self):
-        super().__init__(name="Life-bending Weapons", origin="Metamorph Psion Level 14")
+        super().__init__(name="Life-bending Weapons", origin="Metamorph Psion Level 14", range="30-Foot Emanation")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

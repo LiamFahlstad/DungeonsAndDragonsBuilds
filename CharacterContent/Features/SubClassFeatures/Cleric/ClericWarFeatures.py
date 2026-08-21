@@ -7,7 +7,7 @@ from Utils import StringUtils
 
 class GuidedStrike(Feature):
     def __init__(self):
-        super().__init__(name="Guided Strike", origin="War Domain Cleric Level 3", action_type="reaction")
+        super().__init__(name="Guided Strike", origin="War Domain Cleric Level 3", action_type="reaction", range="30 Feet")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "When you or a creature within 30 feet of you misses with an attack roll, you can expend one use of your Channel Divinity and give that roll a +10 bonus, potentially causing it to hit. When you use this feature to benefit another creature's attack roll, you must take a Reaction to do so."

@@ -18,7 +18,7 @@ class CircleOfTheSeaSpells(Feature):
 class WrathOfTheSea(Feature):
     def __init__(self):
         super().__init__(
-            name="Wrath of the Sea", origin="Circle of the Sea Druid Level 3", action_type="bonus_action", duration="10 Minutes or Until Dismissed/Incapacitated"
+            name="Wrath of the Sea", origin="Circle of the Sea Druid Level 3", action_type="bonus_action", duration="10 Minutes or Until Dismissed/Incapacitated", range="5-Foot Emanation"
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -72,7 +72,7 @@ class Stormborn(Feature):
 
 class OceanicGift(Feature):
     def __init__(self):
-        super().__init__(name="Oceanic Gift", origin="Circle of the Sea Druid Level 14")
+        super().__init__(name="Oceanic Gift", origin="Circle of the Sea Druid Level 14", range="60 Feet")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

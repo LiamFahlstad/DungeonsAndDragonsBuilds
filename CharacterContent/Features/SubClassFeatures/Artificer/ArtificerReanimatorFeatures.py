@@ -27,7 +27,7 @@ class ReanimatorSpells(Feature):
 class ReanimatorSkillSet(Feature):
     def __init__(self):
         super().__init__(
-            name="Reanimator's Skill Set", origin="Reanimator Artificer Level 3"
+            name="Reanimator's Skill Set", origin="Reanimator Artificer Level 3", range="10-Foot Emanation"
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -50,7 +50,7 @@ class ReanimatorSkillSet(Feature):
 class ReanimatedCompanion(Feature):
     def __init__(self):
         super().__init__(
-            name="Reanimated Companion", origin="Reanimator Artificer Level 3", action_type="action", duration="Until Long Rest"
+            name="Reanimated Companion", origin="Reanimator Artificer Level 3", action_type="action", duration="Until Long Rest", range="5 Feet"
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -66,7 +66,7 @@ class ReanimatedCompanion(Feature):
 class StrangeModifications(Feature):
     def __init__(self):
         super().__init__(
-            name="Strange Modifications", origin="Reanimator Artificer Level 5"
+            name="Strange Modifications", origin="Reanimator Artificer Level 5", range="120 Feet"
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
