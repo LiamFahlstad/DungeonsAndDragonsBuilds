@@ -31,7 +31,7 @@ class Darkvision(Feature):
 class Shifting(Feature):
     def __init__(self, shift_form: ShiftForm):
         self.shift_form = shift_form
-        super().__init__(name="Shifting", origin="Shifter Trait")
+        super().__init__(name="Shifting", origin="Shifter Trait", action_type="bonus_action", duration="1 Minute")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

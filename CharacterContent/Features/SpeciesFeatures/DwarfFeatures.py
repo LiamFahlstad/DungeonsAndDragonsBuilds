@@ -42,7 +42,7 @@ class DwarvenToughness(Feature):
 
 class Stonecunning(Feature):
     def __init__(self):
-        super().__init__(name="Stonecunning", origin="Dwarf Trait")
+        super().__init__(name="Stonecunning", origin="Dwarf Trait", action_type="bonus_action", duration="10 Minutes")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         proficiency_bonus = character_stat_block.get_proficiency_bonus()

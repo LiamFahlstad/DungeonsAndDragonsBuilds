@@ -25,6 +25,7 @@ class AdrenalineRush(Feature):
         super().__init__(
             name="Adrenaline Rush",
             origin="Orc Trait",
+            action_type="bonus_action",
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:

@@ -50,6 +50,7 @@ class HealingHands(Feature):
         super().__init__(
             name="Healing Hands",
             origin="Aasimar Trait",
+            action_type="action",
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -59,7 +60,7 @@ class HealingHands(Feature):
 
 class CelestialRevelation(Feature):
     def __init__(self):
-        super().__init__(name="Celestial Revelation", origin="Aasimar Trait")
+        super().__init__(name="Celestial Revelation", origin="Aasimar Trait", action_type="bonus_action", duration="1 Minute")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         proficiency_bonus = character_stat_block.get_proficiency_bonus()
