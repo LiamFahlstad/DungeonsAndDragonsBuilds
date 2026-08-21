@@ -69,6 +69,20 @@ FEATURE_CARD_CSS = """/* ── Feature cards ───────────�
             padding: 1px 6px;
         }
 
+        /* Dims passive feature cards so the eye is drawn to features that
+           need active tracking, without hiding the passive ones entirely. */
+        .feature-card.is-passive {
+            opacity: 0.62;
+        }
+
+        .feature-card.is-passive .feature-name {
+            color: var(--muted-color);
+        }
+
+        .feature-card.is-passive .feature-origin {
+            color: #a89a80;
+        }
+
         .feature-origin {
             font-size: 0.75rem;
             color: #9a7040;
@@ -304,7 +318,8 @@ class Feature:
             else ""
         )
 
-        file.write("<div class='feature-card'>\n")
+        card_class = "feature-card is-passive" if passive_tag else "feature-card"
+        file.write(f"<div class='{card_class}'>\n")
         file.write("<div class='feature-header'>\n")
         file.write("<span class='feature-name-group'>\n")
         file.write(f"<span class='feature-name'>{self.name}</span>\n")
@@ -393,7 +408,8 @@ class Feature:
             else ""
         )
 
-        file.write("<div class='feature-card'>\n")
+        card_class = "feature-card is-passive" if passive_tag else "feature-card"
+        file.write(f"<div class='{card_class}'>\n")
         file.write("<div class='feature-header'>\n")
         file.write("<span class='feature-name-group'>\n")
         file.write(f"<span class='feature-name'>{self.name}</span>\n")

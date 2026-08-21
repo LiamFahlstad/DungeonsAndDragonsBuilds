@@ -33,14 +33,15 @@ class HtmlCharacterSheetWriter:
     def _sort_features_key(feat: Feature):
         feat_name = getattr(feat, "name", feat.__class__.__name__)
         feat_origin = getattr(feat, "origin", "")
+        is_passive = getattr(feat, "skippable_in_concise", False)
         if "Level " in feat_origin:
             parts = feat_origin.split("Level ")
             try:
                 level_num = int(parts[1].split()[0])
             except (ValueError, IndexError):
                 level_num = 0
-            return (1, level_num, feat_name)
-        return (0, 0, feat_name)
+            return (is_passive, 1, level_num, feat_name)
+        return (is_passive, 0, 0, feat_name)
 
     @staticmethod
     def _feature_level(feat: Feature) -> int:
@@ -1130,7 +1131,11 @@ class HtmlCharacterSheetWriter:
         for level in level_page_levels:
             page_path = f"features/level_{level:02d}.html"
             sorted_level_features = sorted(
-                features_by_level.get(level, []), key=lambda f: getattr(f, "name", "")
+                features_by_level.get(level, []),
+                key=lambda f: (
+                    getattr(f, "skippable_in_concise", False),
+                    getattr(f, "name", ""),
+                ),
             )
             level_spells = spells_by_level.get(level, [])
             level_extensions = extensions_by_level.get(level, [])
@@ -1451,7 +1456,14 @@ class HtmlCharacterSheetWriter:
             file.write("<div class='features'>\n")
             for feature in level_features:
                 feature.write_to_file(character, file, description_mode, max_level=level)
-            for parent, extension in sorted(level_extensions, key=lambda pe: pe[1].name):
+            sorted_level_extensions = sorted(
+                level_extensions,
+                key=lambda pe: (
+                    getattr(pe[1], "skippable_in_concise", False),
+                    pe[1].name,
+                ),
+            )
+            for parent, extension in sorted_level_extensions:
                 extension.write_extension_card_to_file(character, file, parent.name, description_mode)
             file.write("</div>\n")
 
