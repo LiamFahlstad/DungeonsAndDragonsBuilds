@@ -4,6 +4,7 @@ from Builds.CharacterBuilder import CharacterBuilder
 from CharacterContent.Classes.BaseClasses import ClassBuilder
 from CharacterContent.Classes.BaseClasses.ClassBuilder import StarterClassBuilder
 from CharacterContent.Classes.BaseClasses.DruidBase import (
+    PotentSpellcastingChoice,
     DruidLevel1,
     DruidLevel2,
     DruidLevel3,
@@ -28,7 +29,11 @@ from CharacterContent.Classes.SubClasses2014.DruidSpores import (
 )
 from Combat.Monsters.CR_1.monsters import BrownBear, DireWolf, GiantSpider, Tiger
 from Core.Definitions import Ability, Skill
-from CharacterContent.Features.CharacterFeats import Backgrounds, GeneralFeats, OriginFeats
+from CharacterContent.Features.CharacterFeats import (
+    Backgrounds,
+    GeneralFeats,
+    OriginFeats,
+)
 from CharacterContent.Features.CharacterFeats import OriginFeats as SpeciesOriginFeats
 from CharacterContent.Species import Human
 from CharacterContent.Spells.SpellLists import (
@@ -107,7 +112,8 @@ def get_starter_class_builder():
                     general_feat=GeneralFeats.AbilityScoreImprovement(
                         [
                             (Ability.WISDOM, 2),
-                        ]),
+                        ]
+                    ),
                     cantrip=DruidLevel0Spells.DRUIDCRAFT,
                     spell=DruidLevel2Spells.HEAT_METAL,
                 ),
@@ -120,12 +126,14 @@ def get_starter_class_builder():
                 ),
                 7: DruidLevel7(
                     spell=DruidLevel2Spells.LESSER_RESTORATION,
+                    elemental_fury=PotentSpellcastingChoice(),
                 ),
                 8: DruidLevel8(
                     general_feat=GeneralFeats.AbilityScoreImprovement(
                         [
                             (Ability.CONSTITUTION, 2),
-                        ]),
+                        ]
+                    ),
                     spell=DruidLevel4Spells.FREEDOM_OF_MOVEMENT,
                 ),
                 9: DruidLevel9(
@@ -144,7 +152,8 @@ def get_starter_class_builder():
                         [
                             (Ability.WISDOM, 1),
                             (Ability.DEXTERITY, 1),
-                        ]),
+                        ]
+                    ),
                 ),
                 13: DruidLevel13(
                     spell=DruidLevel4Spells.DIVINATION,

@@ -9,6 +9,7 @@ from CharacterContent.Classes.BaseClasses.RangerBase import (
     RangerLevel3,
 )
 from CharacterContent.Classes.SubClasses2024.RangerHunter import (
+    ColossusSlayerChoice,
     RangerHunterLevel3,
     RangerHunterCustomStarterClassArgs,
 )
@@ -84,7 +85,9 @@ def get_starter_class_builder():
                 ),
             },
             subclass_features_by_level={
-                3: RangerHunterLevel3(),
+                3: RangerHunterLevel3(
+                    hunters_prey=ColossusSlayerChoice(),
+                ),
             },
         ),
         replace_spells={},

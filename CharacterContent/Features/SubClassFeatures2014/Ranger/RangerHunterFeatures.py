@@ -31,22 +31,29 @@ class DefensiveTactics(Feature):
         return description
 
 
-class Multiattack(Feature):
+class Volley(Feature):
     def __init__(self):
-        super().__init__(name="Multiattack", origin="Hunter Ranger Level 11")
+        super().__init__(name="Volley", origin="Hunter Ranger Level 11")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        description = (
-            "You gain one of the following features of your choice.\n"
-            "    * Volley: You can use your action to make a ranged attack against any number of creatures within 10 feet of a point you can see within your weapon's range. You must have ammunition for each target, as normal, and you make a separate attack roll for each target.\n"
-            "    * Whirlwind Attack: You can use your action to make melee attacks against any number of creatures within 5 feet of you, with a separate attack roll for each target."
-        )
+        description = "You can use your action to make a ranged attack against any number of creatures within 10 feet of a point you can see within your weapon's range. You must have ammunition for each target, as normal, and you make a separate attack roll for each target."
+        return description
+
+
+class WhirlwindAttack(Feature):
+    def __init__(self):
+        super().__init__(name="Whirlwind Attack", origin="Hunter Ranger Level 11")
+
+    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+        description = "You can use your action to make melee attacks against any number of creatures within 5 feet of you, with a separate attack roll for each target."
         return description
 
 
 class SuperiorHuntersDefense(Feature):
     def __init__(self):
-        super().__init__(name="Superior Hunter's Defense", origin="Hunter Ranger Level 15")
+        super().__init__(
+            name="Superior Hunter's Defense", origin="Hunter Ranger Level 15"
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

@@ -6,6 +6,7 @@ from Builds.CharacterBuilder import CharacterBuilder
 from CharacterContent.Classes.BaseClasses import ClassBuilder
 from CharacterContent.Classes.BaseClasses.ClassBuilder import StarterClassBuilder
 from CharacterContent.Classes.BaseClasses.DruidBase import (
+    PrimalStrikeChoice,
     DruidLevel1,
     DruidLevel2,
     DruidLevel3,
@@ -48,7 +49,12 @@ from Combat.Monsters.CR_0.monsters import (
 )
 from Combat.Monsters.CR_1.monsters import GiantOctopus, GiantSpider
 from Core.Definitions import Ability, DruidLandType, Skill
-from CharacterContent.Features.CharacterFeats import Backgrounds, EpicBoon, GeneralFeats, OriginFeats
+from CharacterContent.Features.CharacterFeats import (
+    Backgrounds,
+    EpicBoon,
+    GeneralFeats,
+    OriginFeats,
+)
 from CharacterContent.Features.ClassFeatures.Druid import DruidFeatures
 from CharacterContent.Items import Armor
 from CharacterContent.Items import Items
@@ -193,6 +199,7 @@ def get_starter_class_builder():
                 ),
                 7: DruidLevel7(
                     spell=DruidLevel4Spells.WALL_OF_FIRE,
+                    elemental_fury=PrimalStrikeChoice(),
                 ),
                 8: DruidLevel8(
                     general_feat=GeneralFeats.MageSlayer(
@@ -231,7 +238,8 @@ def get_starter_class_builder():
                     general_feat=GeneralFeats.AbilityScoreImprovement(
                         [
                             (Ability.WISDOM, 2),
-                        ]),
+                        ]
+                    ),
                 ),
                 17: DruidLevel17(
                     spell=TransmutationLevel9Spells.SHAPECHANGE,

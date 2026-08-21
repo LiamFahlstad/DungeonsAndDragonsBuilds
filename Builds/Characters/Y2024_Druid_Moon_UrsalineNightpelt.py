@@ -2,6 +2,7 @@ from Builds.CharacterBuilder import CharacterBuilder
 from CharacterContent.Classes.BaseClasses import ClassBuilder
 from CharacterContent.Classes.BaseClasses.ClassBuilder import StarterClassBuilder
 from CharacterContent.Classes.BaseClasses.DruidBase import (
+    PotentSpellcastingChoice,
     DruidLevel1,
     DruidLevel2,
     DruidLevel3,
@@ -35,7 +36,12 @@ from CharacterContent.Classes.SubClasses2024.DruidMoon import (
 )
 from Combat.Monsters.CR_1.monsters import BrownBear, DireWolf, GiantSpider, Tiger
 from Core.Definitions import Ability, Skill
-from CharacterContent.Features.CharacterFeats import Backgrounds, EpicBoon, GeneralFeats, OriginFeats
+from CharacterContent.Features.CharacterFeats import (
+    Backgrounds,
+    EpicBoon,
+    GeneralFeats,
+    OriginFeats,
+)
 from CharacterContent.Species import Gnome
 from CharacterContent.Spells.SpellLists import (
     DruidLevel0Spells,
@@ -130,6 +136,7 @@ def get_starter_class_builder():
                 ),
                 7: DruidLevel7(
                     spell=DruidLevel2Spells.LESSER_RESTORATION,
+                    elemental_fury=PotentSpellcastingChoice(),
                 ),
                 8: DruidLevel8(
                     general_feat=GeneralFeats.AbilityScoreImprovement(

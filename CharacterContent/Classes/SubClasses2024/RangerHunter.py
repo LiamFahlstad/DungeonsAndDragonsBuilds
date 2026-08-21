@@ -14,25 +14,53 @@ from StatBlocks.SkillsStatBlock import RangerSkillsStatBlock
 
 
 @attr.dataclass
+class ColossusSlayerChoice:
+    pass
+
+
+@attr.dataclass
+class HordeBreakerChoice:
+    pass
+
+
+@attr.dataclass
+class EscapeTheHordeChoice:
+    pass
+
+
+@attr.dataclass
+class MultiattackDefenseChoice:
+    pass
+
+
+@attr.dataclass
 class RangerHunterLevel3(ClassBuilder.SubclassLevel3):
+    hunters_prey: ColossusSlayerChoice | HordeBreakerChoice
 
     def add_features(
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
         data.add_feature(RangerHunterFeatures.HuntersLore())
-        data.add_feature(RangerHunterFeatures.HuntersPrey())
+        if isinstance(self.hunters_prey, HordeBreakerChoice):
+            data.add_feature(RangerHunterFeatures.HordeBreaker())
+        else:
+            data.add_feature(RangerHunterFeatures.ColossusSlayer())
         return data
 
 
 @attr.dataclass
 class RangerHunterLevel7(ClassBuilder.SubclassLevel7):
+    defensive_tactics: EscapeTheHordeChoice | MultiattackDefenseChoice
 
     def add_features(
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(RangerHunterFeatures.DefensiveTactics())
+        if isinstance(self.defensive_tactics, MultiattackDefenseChoice):
+            data.add_feature(RangerHunterFeatures.MultiattackDefense())
+        else:
+            data.add_feature(RangerHunterFeatures.EscapeTheHorde())
         return data
 
 

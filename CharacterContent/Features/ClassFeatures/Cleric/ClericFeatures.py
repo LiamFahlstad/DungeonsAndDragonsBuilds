@@ -118,15 +118,22 @@ class SearUndead(Feature):
         return description
 
 
-class BlessedStrikes(Feature):
+class DivineStrike(Feature):
     def __init__(self):
-        super().__init__(name="Blessed Strikes", origin="Cleric Level 7")
+        super().__init__(name="Divine Strike", origin="Cleric Level 7")
+
+    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+        description = "Once on each of your turns when you hit a creature with an attack roll using a weapon, you can cause the target to take an extra 1d8 Necrotic or Radiant damage (your choice)."
+        return description
+
+
+class PotentSpellcasting(Feature):
+    def __init__(self):
+        super().__init__(name="Potent Spellcasting", origin="Cleric Level 7")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
-            "Divine power infuses you in battle. You gain one of the following options of your choice (if you get either option from a Cleric subclass in an older book, use only the option you choose for this feature).\n"
-            "Divine Strike. Once on each of your turns when you hit a creature with an attack roll using a weapon, you can cause the target to take an extra 1d8 Necrotic or Radiant damage (your choice).\n"
-            "Potent Spellcasting. Add your Wisdom modifier to the damage you deal with any Cleric cantrip."
+            "Add your Wisdom modifier to the damage you deal with any Cleric cantrip."
         )
         return description
 
@@ -153,16 +160,23 @@ class DivineIntervention(Feature):
         ]
 
 
-class ImprovedBlessedStrikes(Feature):
+class ImprovedDivineStrike(Feature):
     def __init__(self):
-        super().__init__(name="Improved Blessed Strikes", origin="Cleric Level 14")
+        super().__init__(name="Improved Divine Strike", origin="Cleric Level 14")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        description = (
-            "The option you chose for Blessed Strikes grows more powerful.\n"
-            "Divine Strike. The extra damage of your Divine Strike increases to 2d8.\n"
-            "Potent Spellcasting. When you cast a Cleric cantrip and deal damage to a creature with it, you can give vitality to yourself or another creature within 60 feet of yourself, granting a number of Temporary Hit Points equal to twice your Wisdom modifier."
-        )
+        description = "The extra damage of your Divine Strike increases to 2d8."
+        return description
+
+
+class ImprovedPotentSpellcasting(Feature):
+    def __init__(self):
+        super().__init__(name="Improved Potent Spellcasting", origin="Cleric Level 14")
+
+    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+        wisdom_modifier = character_stat_block.get_ability_modifier(Ability.WISDOM)
+        bonus = 2 * wisdom_modifier
+        description = f"When you cast a Cleric cantrip and deal damage to a creature with it, you can give vitality to yourself or another creature within 60 feet of yourself, granting a number of Temporary Hit Points equal to twice your Wisdom modifier (total {bonus})."
         return description
 
 

@@ -23,6 +23,7 @@ from CharacterContent.Classes.BaseClasses.ClericBase import (
     ClericLevel17,
     DivineOrderProtectorChoice,
     DivineOrderThaumaturgeChoice,
+    DivineStrikeChoice,
 )
 from CharacterContent.Classes.SubClasses2014.ClericArcana import (
     ClericArcanaCustomStarterClassArgs,
@@ -129,6 +130,7 @@ def get_starter_class_builder():
                 ),
                 7: ClericLevel7(
                     spell=ClericLevel4Spells.DIVINATION,
+                    blessed_strikes=DivineStrikeChoice(),
                 ),
                 8: ClericLevel8(
                     general_feat=GeneralFeats.AbilityScoreImprovement(

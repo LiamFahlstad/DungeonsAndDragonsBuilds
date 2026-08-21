@@ -53,6 +53,16 @@ class DivineOrderThaumaturgeChoice:
 
 
 @attr.dataclass
+class DivineStrikeChoice:
+    pass
+
+
+@attr.dataclass
+class PotentSpellcastingChoice:
+    pass
+
+
+@attr.dataclass
 class ClericLevel1(ClassBuilder.BaseClassLevel1):
     cantrip_1: ClericLevel0Spells
     cantrip_2: ClericLevel0Spells
@@ -164,12 +174,16 @@ class ClericLevel6(ClassBuilder.BaseClassLevel6):
 @attr.dataclass
 class ClericLevel7(ClassBuilder.BaseClassLevel7):
     spell: ClericSpellsUpTo4
+    blessed_strikes: DivineStrikeChoice | PotentSpellcastingChoice
 
     def add_features(
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(ClericFeatures.BlessedStrikes())
+        if isinstance(self.blessed_strikes, PotentSpellcastingChoice):
+            data.add_feature(ClericFeatures.PotentSpellcasting())
+        else:
+            data.add_feature(ClericFeatures.DivineStrike())
         data.add_spell(self.spell)
         return data
 
@@ -262,10 +276,16 @@ class ClericLevel14(ClassBuilder.BaseClassLevel14):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        blessed_strikes: ClericFeatures.BlessedStrikes = data.get_features_by_type(
-            ClericFeatures.BlessedStrikes
-        )[0]
-        blessed_strikes.extend_feature(ClericFeatures.ImprovedBlessedStrikes())
+        divine_strikes = data.get_features_by_type(ClericFeatures.DivineStrike)
+        potent_spellcastings = data.get_features_by_type(
+            ClericFeatures.PotentSpellcasting
+        )
+        if divine_strikes:
+            divine_strikes[0].extend_feature(ClericFeatures.ImprovedDivineStrike())
+        elif potent_spellcastings:
+            potent_spellcastings[0].extend_feature(
+                ClericFeatures.ImprovedPotentSpellcasting()
+            )
         return data
 
 

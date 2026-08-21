@@ -14,6 +14,16 @@ from StatBlocks.SkillsStatBlock import RangerSkillsStatBlock
 
 
 @attr.dataclass
+class VolleyChoice:
+    pass
+
+
+@attr.dataclass
+class WhirlwindAttackChoice:
+    pass
+
+
+@attr.dataclass
 class RangerHunterLevel3(ClassBuilder.SubclassLevel3):
 
     def add_features(
@@ -37,12 +47,16 @@ class RangerHunterLevel7(ClassBuilder.SubclassLevel7):
 
 @attr.dataclass
 class RangerHunterLevel11(ClassBuilder.SubclassLevel11):
+    multiattack: VolleyChoice | WhirlwindAttackChoice
 
     def add_features(
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(RangerHunterFeatures.Multiattack())
+        if isinstance(self.multiattack, WhirlwindAttackChoice):
+            data.add_feature(RangerHunterFeatures.WhirlwindAttack())
+        else:
+            data.add_feature(RangerHunterFeatures.Volley())
         return data
 
 

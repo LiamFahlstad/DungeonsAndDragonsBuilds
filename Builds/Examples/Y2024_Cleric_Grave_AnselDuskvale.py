@@ -26,6 +26,7 @@ from CharacterContent.Classes.BaseClasses.ClericBase import (
     ClericLevel20,
     DivineOrderProtectorChoice,
     DivineOrderThaumaturgeChoice,
+    DivineStrikeChoice,
 )
 from CharacterContent.Classes.SubClasses2024.ClericGrave import (
     ClericGraveCustomStarterClassArgs,
@@ -135,6 +136,7 @@ def get_starter_class_builder():
                 ),
                 7: ClericLevel7(
                     spell=ClericLevel2Spells.LESSER_RESTORATION,
+                    blessed_strikes=DivineStrikeChoice(),
                 ),
                 8: ClericLevel8(
                     general_feat=GeneralFeats.AbilityScoreImprovement(

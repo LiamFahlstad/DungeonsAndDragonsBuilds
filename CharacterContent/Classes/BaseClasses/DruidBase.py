@@ -45,6 +45,16 @@ DruidSpellsUpTo9: TypeAlias = DruidSpellsUpTo8 | DruidLevel9Spells
 
 
 @attr.dataclass
+class PotentSpellcastingChoice:
+    pass
+
+
+@attr.dataclass
+class PrimalStrikeChoice:
+    pass
+
+
+@attr.dataclass
 class DruidLevel1(ClassBuilder.BaseClassLevel1):
     cantrip_1: DruidLevel0Spells
     cantrip_2: DruidLevel0Spells
@@ -152,12 +162,16 @@ class DruidLevel6(ClassBuilder.BaseClassLevel6):
 @attr.dataclass
 class DruidLevel7(ClassBuilder.BaseClassLevel7):
     spell: DruidSpellsUpTo4
+    elemental_fury: PotentSpellcastingChoice | PrimalStrikeChoice
 
     def add_features(
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(DruidFeatures.ElementalFury())
+        if isinstance(self.elemental_fury, PrimalStrikeChoice):
+            data.add_feature(DruidFeatures.PrimalStrike())
+        else:
+            data.add_feature(DruidFeatures.PotentSpellcasting())
         data.add_spell(self.spell)
         return data
 
@@ -260,10 +274,16 @@ class DruidLevel15(ClassBuilder.BaseClassLevel15):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        elemental_fury: DruidFeatures.ElementalFury = data.get_features_by_type(
-            DruidFeatures.ElementalFury
-        )[0]
-        elemental_fury.extend_feature(DruidFeatures.ImprovedElementalFury())
+        potent_spellcasting = data.get_features_by_type(
+            DruidFeatures.PotentSpellcasting
+        )
+        primal_strike = data.get_features_by_type(DruidFeatures.PrimalStrike)
+        if potent_spellcasting:
+            potent_spellcasting[0].extend_feature(
+                DruidFeatures.ImprovedPotentSpellcasting()
+            )
+        elif primal_strike:
+            primal_strike[0].extend_feature(DruidFeatures.ImprovedPrimalStrike())
         data.add_spell(self.spell)
         return data
 

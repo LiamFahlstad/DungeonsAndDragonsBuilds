@@ -4,7 +4,9 @@ from typing import Type
 
 import Core.Definitions as Definitions
 from Combat.Definitions import ExtendedCombatantData
-from CharacterContent.Features.ClassFeatures.Druid.WildShapeForms import format_wild_shape_form
+from CharacterContent.Features.ClassFeatures.Druid.WildShapeForms import (
+    format_wild_shape_form,
+)
 from CharacterContent.Features.Core.BaseFeatures import Feature
 from CharacterContent.Features.Core.Improvements import GrantLanguage
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
@@ -167,7 +169,10 @@ class WildCompanion(Feature):
         self, character_stat_block: CharacterStatBlock
     ) -> list[tuple[str, str]]:
         return [
-            ("What", "Cast Find Familiar by expending a spell slot or a use of Wild Shape"),
+            (
+                "What",
+                "Cast Find Familiar by expending a spell slot or a use of Wild Shape",
+            ),
             ("Casting Time", "Magic action"),
             ("Cost", "1 spell slot or 1 Wild Shape use"),
             ("Components", "None (Material components waived)"),
@@ -190,51 +195,57 @@ class WildResurgence(Feature):
         self, character_stat_block: CharacterStatBlock
     ) -> list[tuple[str, str]]:
         return [
-            ("Option 1", "Expend spell slot (no action, once per turn) if no Wild Shape uses left → gain 1 Wild Shape use"),
-            ("Option 2", "Expend 1 Wild Shape use (no action, once per Long Rest) → gain 1 level 1 spell slot"),
+            (
+                "Option 1",
+                "Expend spell slot (no action, once per turn) if no Wild Shape uses left → gain 1 Wild Shape use",
+            ),
+            (
+                "Option 2",
+                "Expend 1 Wild Shape use (no action, once per Long Rest) → gain 1 level 1 spell slot",
+            ),
         ]
 
 
-class ElementalFury(Feature):
+class PotentSpellcasting(Feature):
     def __init__(self):
-        super().__init__(name="Elemental Fury", origin="Druid Level 7")
+        super().__init__(name="Potent Spellcasting", origin="Druid Level 7")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
-            "The might of the elements flows through you. You gain one of the following options of your choice.\n"
-            "Potent Spellcasting. Add your Wisdom modifier to the damage you deal with any Druid cantrip.\n"
-            "Primal Strike. Once on each of your turns when you hit a creature with an attack roll using a weapon or a Beast form's attack in Wild Shape, you can cause the target to take an extra 1d8 Cold, Fire, Lightning, or Thunder damage (choose when you hit)."
+            "Add your Wisdom modifier to the damage you deal with any Druid cantrip."
         )
         return description
 
-    def get_concise_description(
-        self, character_stat_block: CharacterStatBlock
-    ) -> str:
-        return (
-            "Choose one: Potent Spellcasting (add your Wisdom modifier to Druid cantrip damage) or Primal Strike "
-            "(once per turn when you hit with a weapon or Beast form attack, deal an extra 1d8 Cold, Fire, Lightning, or Thunder damage of your choice)."
-        )
 
-
-class ImprovedElementalFury(Feature):
+class PrimalStrike(Feature):
     def __init__(self):
-        super().__init__(name="Improved Elemental Fury", origin="Druid Level 15")
+        super().__init__(name="Primal Strike", origin="Druid Level 7")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
-            "The option you chose for Elemental Fury grows more powerful, as detailed below.\n"
-            "Potent Spellcasting. When you cast a Druid cantrip with a range of 10 feet or greater, the spell's range increases by 300 feet.\n"
-            "Primal Strike. The extra damage of your Primal Strike increases to 2d8."
+            "Once on each of your turns when you hit a creature with an attack roll using a weapon or a Beast "
+            "form's attack in Wild Shape, you can cause the target to take an extra 1d8 Cold, Fire, Lightning, "
+            "or Thunder damage (choose when you hit)."
         )
         return description
 
-    def get_concise_description(
-        self, character_stat_block: CharacterStatBlock
-    ) -> str:
-        return (
-            "Your Elemental Fury improves: Potent Spellcasting's cantrips with 10+ ft range gain +300 ft range, "
-            "or Primal Strike's extra damage becomes 2d8."
-        )
+
+class ImprovedPotentSpellcasting(Feature):
+    def __init__(self):
+        super().__init__(name="Improved Potent Spellcasting", origin="Druid Level 15")
+
+    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+        description = "When you cast a Druid cantrip with a range of 10 feet or greater, the spell's range increases by 300 feet."
+        return description
+
+
+class ImprovedPrimalStrike(Feature):
+    def __init__(self):
+        super().__init__(name="Improved Primal Strike", origin="Druid Level 15")
+
+    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+        description = "The extra damage of your Primal Strike increases to 2d8."
+        return description
 
 
 class BeastSpells(Feature):
@@ -263,7 +274,13 @@ class Archdruid(Feature):
         self, character_stat_block: CharacterStatBlock
     ) -> list[tuple[str, str]]:
         return [
-            ("Evergreen Wild Shape", "On Initiative roll with no Wild Shape uses left: regain 1 use"),
-            ("Nature Magician", "Convert unexpended Wild Shape uses to spell slot (no action, 2 spell levels per use, once per Long Rest)"),
+            (
+                "Evergreen Wild Shape",
+                "On Initiative roll with no Wild Shape uses left: regain 1 use",
+            ),
+            (
+                "Nature Magician",
+                "Convert unexpended Wild Shape uses to spell slot (no action, 2 spell levels per use, once per Long Rest)",
+            ),
             ("Longevity", "Age 1 year for every 10 years that pass"),
         ]
