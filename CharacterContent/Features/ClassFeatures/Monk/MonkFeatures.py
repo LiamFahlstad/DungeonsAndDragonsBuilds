@@ -166,7 +166,9 @@ class MonksFocus(Feature):
 
 class FlurryOfBlows(Feature):
     def __init__(self):
-        super().__init__(name="Flurry of Blows", origin="Monk Level 2")
+        super().__init__(
+            name="Flurry of Blows", origin="Monk Level 2", action_type="bonus_action"
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         monk_level = character_stat_block.get_class_level(
@@ -176,11 +178,14 @@ class FlurryOfBlows(Feature):
             return "You can expend 1 Focus Point to make two Unarmed Strikes as a Bonus Action."
         if monk_level <= 20:
             return "You can expend 1 Focus Point to make three Unarmed Strikes as a Bonus Action."
+        raise ValueError(f"Invalid monk level: {monk_level}")
 
 
 class PatientDefense(Feature):
     def __init__(self):
-        super().__init__(name="Patient Defense", origin="Monk Level 2")
+        super().__init__(
+            name="Patient Defense", origin="Monk Level 2", action_type="bonus_action"
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         monk_level = character_stat_block.get_class_level(
@@ -190,11 +195,14 @@ class PatientDefense(Feature):
             return "You can take the Disengage action as a Bonus Action. Alternatively, you can expend 1 Focus Point to take both the Disengage and the Dodge actions as a Bonus Action."
         if monk_level <= 20:
             return "You can take the Disengage action as a Bonus Action. Alternatively, you can expend 1 Focus Point to take both the Disengage and the Dodge actions as a Bonus Action. When you expend a Focus Point to use Patient Defense, you gain a number of Temporary Hit Points equal to two rolls of your Martial Arts die."
+        raise ValueError(f"Invalid monk level: {monk_level}")
 
 
 class StepOfTheWind(Feature):
     def __init__(self):
-        super().__init__(name="Step of the Wind", origin="Monk Level 2")
+        super().__init__(
+            name="Step of the Wind", origin="Monk Level 2", action_type="bonus_action"
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         monk_level = character_stat_block.get_class_level(
@@ -204,6 +212,7 @@ class StepOfTheWind(Feature):
             return "You can take the Dash action as a Bonus Action. Alternatively, you can expend 1 Focus Point to take both the Disengage and Dash actions as a Bonus Action, and your jump distance is doubled for the turn."
         if monk_level <= 20:
             return "You can take the Dash action as a Bonus Action. Alternatively, you can expend 1 Focus Point to take both the Disengage and Dash actions as a Bonus Action, and your jump distance is doubled for the turn. When you expend a Focus Point to use Step of the Wind, you can choose a willing creature within 5 feet of yourself that is Large or smaller. You move the creature with you until the end of your turn. The creature's movement doesn't provoke Opportunity Attacks."
+        raise ValueError(f"Invalid monk level: {monk_level}")
 
 
 LEVEL_TO_UNARMORED_MOVEMENT_BONUS = {
@@ -263,7 +272,9 @@ class UncannyMetabolism(Feature):
 
 class DeflectAttacks(Feature):
     def __init__(self):
-        super().__init__(name="Deflect Attacks", origin="Monk Level 3")
+        super().__init__(
+            name="Deflect Attacks", origin="Monk Level 3", action_type="reaction"
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         monk_level = character_stat_block.get_class_level(
@@ -314,7 +325,9 @@ class DeflectAttacks(Feature):
 
 class SlowFall(Feature):
     def __init__(self):
-        super().__init__(name="Slow Fall", origin="Monk Level 4")
+        super().__init__(
+            name="Slow Fall", origin="Monk Level 4", action_type="reaction"
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "You can take a Reaction when you fall to reduce any damage you take from the fall by an amount equal to five times your Monk level."
@@ -332,7 +345,7 @@ class ExtraAttack(Feature):
 
 class StunningStrike(Feature):
     def __init__(self):
-        super().__init__(name="Stunning Strike", origin="Monk Level 5")
+        super().__init__(name="Stunning Strike", origin="Monk Level 5", duration="Until Start of Next Turn")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "Once per turn when you hit a creature with a Monk weapon or an Unarmed Strike, you can expend 1 Focus Point to attempt a stunning strike. The target must make a Constitution saving throw. On a failed save, the target has the Stunned condition until the start of your next turn. On a successful save, the target's Speed is halved until the start of your next turn, and the next attack roll made against the target before then has Advantage."
@@ -468,7 +481,7 @@ class PerfectFocus(Feature):
 
 class SuperiorDefense(Feature):
     def __init__(self):
-        super().__init__(name="Superior Defense", origin="Monk Level 18")
+        super().__init__(name="Superior Defense", origin="Monk Level 18", duration="1 Minute or Until Incapacitated")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "At the start of your turn, you can expend 3 Focus Points to bolster yourself against harm for 1 minute or until you have the Incapacitated condition. During that time, you have Resistance to all damage except Force damage."

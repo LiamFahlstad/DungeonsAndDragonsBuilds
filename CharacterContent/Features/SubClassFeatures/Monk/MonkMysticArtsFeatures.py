@@ -106,7 +106,7 @@ class MysticFocus(Feature):
 class FocusedStrike(Feature):
     def __init__(self):
         super().__init__(
-            name="Focused Strike", origin="Warrior of the Mystic Arts Monk Level 11"
+            name="Focused Strike", origin="Warrior of the Mystic Arts Monk Level 11", duration="Until Start of Next Turn"
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:

@@ -53,7 +53,7 @@ LEVEL_TO_FOCUS_POINTS = {
 class ElementalAttunement(Feature):
     def __init__(self):
         super().__init__(
-            name="Elemental Attunement", origin="Warrior of the Elements Monk Level 3"
+            name="Elemental Attunement", origin="Warrior of the Elements Monk Level 3", duration="10 Minutes or Until Incapacitated"
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -90,7 +90,7 @@ class ManipulateElements(Feature):
 class ElementalBurst(Feature):
     def __init__(self):
         super().__init__(
-            name="Elemental Burst", origin="Warrior of the Elements Monk Level 6"
+            name="Elemental Burst", origin="Warrior of the Elements Monk Level 6", action_type="action"
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:

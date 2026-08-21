@@ -75,6 +75,51 @@ FEATURE_CARD_CSS = """/* ── Feature cards ───────────�
             opacity: 0.62;
         }
 
+        /* Flags the action economy a feature costs to use - Action, Bonus
+           Action, or Reaction - the same way .feature-passive-tag flags a
+           feature as passive. Colors mirror the spell tag chips (.stag-*)
+           so the two systems read consistently. */
+        .feature-action-tag {
+            display: inline-block;
+            font-size: 0.68rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            border-radius: 3px;
+            padding: 1px 6px;
+        }
+
+        .feature-action-tag.tag-action {
+            border: 1px solid #3a6090;
+            color: #3a6090;
+        }
+
+        .feature-action-tag.tag-bonus_action {
+            border: 1px solid #2a9d5f;
+            color: #1a7a45;
+        }
+
+        .feature-action-tag.tag-reaction {
+            border: 1px solid #c8672a;
+            color: #a8501a;
+        }
+
+        /* Flags a feature's effect duration (e.g. "10 Minutes", "1 Minute or
+           Until Incapacitated") the same way .feature-action-tag flags action
+           economy. Free-text rather than a fixed set of values, so it gets
+           its own neutral color rather than one of the action-type colors. */
+        .feature-duration-tag {
+            display: inline-block;
+            font-size: 0.68rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            border: 1px solid #7a4f9e;
+            color: #7a4f9e;
+            border-radius: 3px;
+            padding: 1px 6px;
+        }
+
         .feature-card.is-passive .feature-name {
             color: var(--muted-color);
         }
@@ -211,6 +256,8 @@ class Feature:
         name: str | None = None,
         origin: str | None = None,
         skippable_in_concise: bool = False,
+        action_type: Literal["action", "bonus_action", "reaction"] | None = None,
+        duration: str | None = None,
     ):
         self.name = name if name is not None else type(self).__name__
         self.origin = origin
@@ -219,6 +266,14 @@ class Feature:
         # or a resource pool) where the prose description adds nothing on a
         # concise/table character sheet. Full-mode sheets always show it.
         self.skippable_in_concise = skippable_in_concise
+        # Set for features that cost an action, bonus action, or reaction to use,
+        # so the card can flag the action economy at a glance. Leave None for
+        # passive features and features usable at will with no action cost.
+        self.action_type = action_type
+        # Set for features whose effect lasts a limited time (e.g. "10 Minutes",
+        # "1 Minute or Until Incapacitated") so the card can flag it at a glance.
+        # Leave None for instantaneous effects and always-on passives.
+        self.duration = duration
 
     def extend_feature(self, feature: "Feature"):
         self.extensions.append(feature)
@@ -318,6 +373,9 @@ class Feature:
             else ""
         )
 
+        action_tag = self._action_tag_html(self.action_type)
+        duration_tag = self._duration_tag_html(self.duration)
+
         card_class = "feature-card is-passive" if passive_tag else "feature-card"
         file.write(f"<div class='{card_class}'>\n")
         file.write("<div class='feature-header'>\n")
@@ -325,6 +383,10 @@ class Feature:
         file.write(f"<span class='feature-name'>{self.name}</span>\n")
         if passive_tag:
             file.write(f"{passive_tag}\n")
+        if action_tag:
+            file.write(f"{action_tag}\n")
+        if duration_tag:
+            file.write(f"{duration_tag}\n")
         file.write("</span>\n")
         file.write(f"<span class='feature-origin'>{self.origin}</span>\n")
         file.write("</div>\n")
@@ -372,9 +434,13 @@ class Feature:
                 if description_mode is None and extension.skippable_in_concise
                 else ""
             )
+            ext_action_tag = self._action_tag_html(extension.action_type)
+            ext_action_tag = f" {ext_action_tag}" if ext_action_tag else ""
+            ext_duration_tag = self._duration_tag_html(extension.duration)
+            ext_duration_tag = f" {ext_duration_tag}" if ext_duration_tag else ""
             file.write(
                 f"<div class='feature-upgrade'>\n"
-                f"<span class='feature-upgrade-label'>{extension.origin}: {extension.name}{ext_passive_tag}</span>\n"
+                f"<span class='feature-upgrade-label'>{extension.origin}: {extension.name}{ext_passive_tag}{ext_action_tag}{ext_duration_tag}</span>\n"
                 f"<div class='feature-upgrade-body'>{ext_html}</div>\n"
                 f"</div>\n"
             )
@@ -413,8 +479,14 @@ class Feature:
         file.write("<div class='feature-header'>\n")
         file.write("<span class='feature-name-group'>\n")
         file.write(f"<span class='feature-name'>{self.name}</span>\n")
+        action_tag = self._action_tag_html(self.action_type)
+        duration_tag = self._duration_tag_html(self.duration)
         if passive_tag:
             file.write(f"{passive_tag}\n")
+        if action_tag:
+            file.write(f"{action_tag}\n")
+        if duration_tag:
+            file.write(f"{duration_tag}\n")
         file.write("</span>\n")
         file.write(f"<span class='feature-origin'>{self.origin}</span>\n")
         file.write("</div>\n")
@@ -435,6 +507,24 @@ class Feature:
 
         file.write("</div>\n")
         file.write("</div>\n")
+
+    @staticmethod
+    def _action_tag_html(action_type: str | None) -> str:
+        if action_type is None:
+            return ""
+        labels = {
+            "action": "Action",
+            "bonus_action": "Bonus Action",
+            "reaction": "Reaction",
+        }
+        label = labels[action_type]
+        return f"<span class='feature-action-tag tag-{action_type}'>{label}</span>"
+
+    @staticmethod
+    def _duration_tag_html(duration: str | None) -> str:
+        if duration is None:
+            return ""
+        return f"<span class='feature-duration-tag'>Duration: {duration}</span>"
 
     @staticmethod
     def _resource_tile_html(label: str, value) -> str:

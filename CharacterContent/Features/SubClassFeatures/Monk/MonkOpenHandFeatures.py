@@ -80,7 +80,7 @@ class OpenHandTechnique(Feature):
 class WholenessOfBody(Feature):
     def __init__(self):
         super().__init__(
-            name="Wholeness of Body", origin="Warrior of the Open Hand Monk Level 6"
+            name="Wholeness of Body", origin="Warrior of the Open Hand Monk Level 6", action_type="bonus_action"
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -128,7 +128,7 @@ class FleetStep(Feature):
 class QuiveringPalm(Feature):
     def __init__(self):
         super().__init__(
-            name="Quivering Palm", origin="Warrior of the Open Hand Monk Level 17"
+            name="Quivering Palm", origin="Warrior of the Open Hand Monk Level 17", duration="Monk Level Days"
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
