@@ -7,7 +7,7 @@ from StatBlocks.CharacterStatBlock import CharacterStatBlock
 class DivineFury(Feature):
     def __init__(self):
         super().__init__(
-            name="Divine Fury", origin="Path Of The Zealot Barbarian Level 3"
+            name="Divine Fury", origin="Path Of The Zealot Barbarian Level 3", usage_tags=["damage"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -32,7 +32,7 @@ class DivineFury(Feature):
 class WarriorOfTheGods(Feature):
     def __init__(self):
         super().__init__(
-            name="Warrior of the Gods", origin="Path Of The Zealot Barbarian Level 3", action_type="bonus_action"
+            name="Warrior of the Gods", origin="Path Of The Zealot Barbarian Level 3", action_type="bonus_action", usage_tags=["heal"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -68,7 +68,7 @@ class WarriorOfTheGods(Feature):
 class FanaticalFocus(Feature):
     def __init__(self):
         super().__init__(
-            name="Fanatical Focus", origin="Path Of The Zealot Barbarian Level 6"
+            name="Fanatical Focus", origin="Path Of The Zealot Barbarian Level 6", usage_tags=["buff"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -79,7 +79,7 @@ class FanaticalFocus(Feature):
 class ZealousPresence(Feature):
     def __init__(self):
         super().__init__(
-            name="Zealous Presence", origin="Path Of The Zealot Barbarian Level 10", action_type="bonus_action", duration="Until Start of Your Next Turn", range="60 Feet"
+            name="Zealous Presence", origin="Path Of The Zealot Barbarian Level 10", action_type="bonus_action", duration="Until Start of Your Next Turn", range="60 Feet", usage_tags=["buff"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -105,7 +105,7 @@ class ZealousPresence(Feature):
 class RageOfTheGods(Feature):
     def __init__(self):
         super().__init__(
-            name="Rage of the Gods", origin="Path Of The Zealot Barbarian Level 14", duration="1 Minute or Until You Drop to 0 Hit Points", range="30 Feet"
+            name="Rage of the Gods", origin="Path Of The Zealot Barbarian Level 14", duration="1 Minute or Until You Drop to 0 Hit Points", range="30 Feet", usage_tags=["buff", "heal"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:

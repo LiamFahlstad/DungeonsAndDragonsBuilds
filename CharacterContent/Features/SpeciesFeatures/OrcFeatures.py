@@ -26,6 +26,7 @@ class AdrenalineRush(Feature):
             name="Adrenaline Rush",
             origin="Orc Trait",
             action_type="bonus_action",
+            usage_tags=["heal"],
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -42,6 +43,7 @@ class RelentlessEndurance(Feature):
         super().__init__(
             name="Relentless Endurance",
             origin="Orc Trait",
+            usage_tags=["heal"],
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:

@@ -18,7 +18,7 @@ class ArchfeySpells(Feature):
 class StepsOfTheFey(Feature):
     def __init__(self):
         super().__init__(
-            name="Steps of the Fey", origin="Archfey Patron Warlock Level 3"
+            name="Steps of the Fey", origin="Archfey Patron Warlock Level 3", usage_tags=["heal", "control"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -40,7 +40,7 @@ class StepsOfTheFey(Feature):
 
 class MistyEscape(Feature):
     def __init__(self):
-        super().__init__(name="Misty Escape", origin="Archfey Patron Warlock Level 6", action_type="reaction")
+        super().__init__(name="Misty Escape", origin="Archfey Patron Warlock Level 6", action_type="reaction", usage_tags=["buff", "damage"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -55,7 +55,7 @@ class MistyEscape(Feature):
 class BeguilingDefenses(Feature):
     def __init__(self):
         super().__init__(
-            name="Beguiling Defenses", origin="Archfey Patron Warlock Level 10", action_type="reaction"
+            name="Beguiling Defenses", origin="Archfey Patron Warlock Level 10", action_type="reaction", usage_tags=["buff"]
         )
         self._immunity = ConditionImmunity(Condition.CHARMED, self.name)
 

@@ -26,7 +26,7 @@ class GraveDomainSpells(Feature):
 class CircleOfMortality(Feature):
     def __init__(self):
         super().__init__(
-            name="Circle of Mortality", origin="Grave Domain Cleric Level 3"
+            name="Circle of Mortality", origin="Grave Domain Cleric Level 3", usage_tags=["damage", "heal"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -41,7 +41,7 @@ class CircleOfMortality(Feature):
 
 class PathToTheGrave(Feature):
     def __init__(self):
-        super().__init__(name="Path to the Grave", origin="Grave Domain Cleric Level 3", action_type="bonus_action", duration="Until Start of Your Next Turn", range="30 Feet")
+        super().__init__(name="Path to the Grave", origin="Grave Domain Cleric Level 3", action_type="bonus_action", duration="Until Start of Your Next Turn", range="30 Feet", usage_tags=["control", "damage"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -65,7 +65,7 @@ class PathToTheGrave(Feature):
 class SentinelAtDeathsDoor(Feature):
     def __init__(self):
         super().__init__(
-            name="Sentinel at Death's Door", origin="Grave Domain Cleric Level 6", action_type="reaction", range="60 Feet"
+            name="Sentinel at Death's Door", origin="Grave Domain Cleric Level 6", action_type="reaction", range="60 Feet", usage_tags=["buff"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -99,7 +99,7 @@ class SentinelAtDeathsDoor(Feature):
 
 class DivineReaper(Feature):
     def __init__(self):
-        super().__init__(name="Divine Reaper", origin="Grave Domain Cleric Level 17", range="60 Feet")
+        super().__init__(name="Divine Reaper", origin="Grave Domain Cleric Level 17", range="60 Feet", usage_tags=["heal"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

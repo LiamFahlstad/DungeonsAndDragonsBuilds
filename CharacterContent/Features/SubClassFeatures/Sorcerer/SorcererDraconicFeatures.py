@@ -24,7 +24,7 @@ class DraconicSpells(Feature):
 
 class DraconicResilience(Feature):
     def __init__(self):
-        super().__init__(name="Draconic Resilience", origin="Draconic Sorcerer Level 3", skippable_in_concise=True)
+        super().__init__(name="Draconic Resilience", origin="Draconic Sorcerer Level 3", skippable_in_concise=True, usage_tags=["buff"])
         self._ac = MultiAbilityArmorClass(10, [Ability.DEXTERITY, Ability.CHARISMA])
 
     def apply(self, character_stat_block: CharacterStatBlock):
@@ -44,7 +44,7 @@ class DraconicResilience(Feature):
 
 class ElementalAffinity(Feature):
     def __init__(self):
-        super().__init__(name="Elemental Affinity", origin="Draconic Sorcerer Level 6")
+        super().__init__(name="Elemental Affinity", origin="Draconic Sorcerer Level 6", usage_tags=["buff", "damage"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -56,7 +56,7 @@ class ElementalAffinity(Feature):
 
 class DragonWings(Feature):
     def __init__(self):
-        super().__init__(name="Dragon Wings", origin="Draconic Sorcerer Level 14", action_type="bonus_action", duration="1 Hour")
+        super().__init__(name="Dragon Wings", origin="Draconic Sorcerer Level 14", action_type="bonus_action", duration="1 Hour", usage_tags=["buff"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

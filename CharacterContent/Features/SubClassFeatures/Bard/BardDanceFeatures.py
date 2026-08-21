@@ -6,7 +6,7 @@ from StatBlocks.CharacterStatBlock import CharacterStatBlock
 class DazzlingFootwork(Feature):
     def __init__(self):
         super().__init__(
-            name="Dazzling Footwork", origin="College of Dance Bard Level 3"
+            name="Dazzling Footwork", origin="College of Dance Bard Level 3", usage_tags=["buff", "damage"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -33,7 +33,7 @@ class DazzlingFootwork(Feature):
 class InspiringMovement(Feature):
     def __init__(self):
         super().__init__(
-            name="Inspiring Movement", origin="College of Dance Bard Level 6", action_type="reaction", range="30 Feet"
+            name="Inspiring Movement", origin="College of Dance Bard Level 6", action_type="reaction", range="30 Feet", usage_tags=["buff"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -57,7 +57,7 @@ class InspiringMovement(Feature):
 
 class TandemFootwork(Feature):
     def __init__(self):
-        super().__init__(name="Tandem Footwork", origin="College of Dance Bard Level 6", range="30 Feet")
+        super().__init__(name="Tandem Footwork", origin="College of Dance Bard Level 6", range="30 Feet", usage_tags=["buff"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "When you roll Initiative, you can expend one use of your Bardic Inspiration if you don't have the Incapacitated condition. When you do so, roll your Bardic Inspiration die; you and each ally within 30 feet of you who can see or hear you gains a bonus to Initiative equal to the number rolled."
@@ -77,7 +77,7 @@ class TandemFootwork(Feature):
 class LeadingEvasion(Feature):
     def __init__(self):
         super().__init__(
-            name="Leading Evasion", origin="College of Dance Bard Level 14", range="5 Feet"
+            name="Leading Evasion", origin="College of Dance Bard Level 14", range="5 Feet", usage_tags=["buff"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:

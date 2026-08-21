@@ -18,7 +18,7 @@ class MetamorphSpells(Feature):
 
 class MutableForm(Feature):
     def __init__(self):
-        super().__init__(name="Mutable Form", origin="Metamorph Psion Level 3", action_type="bonus_action", duration="1 Minute")
+        super().__init__(name="Mutable Form", origin="Metamorph Psion Level 3", action_type="bonus_action", duration="1 Minute", usage_tags=["buff"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -54,7 +54,7 @@ class MutableForm(Feature):
 
 class OrganicWeapons(Feature):
     def __init__(self):
-        super().__init__(name="Organic Weapons", origin="Metamorph Psion Level 3", action_type="action")
+        super().__init__(name="Organic Weapons", origin="Metamorph Psion Level 3", action_type="action", usage_tags=["damage"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -101,7 +101,7 @@ class OrganicWeapons(Feature):
 
 class FleshWeaver(Feature):
     def __init__(self):
-        super().__init__(name="Flesh Weaver", origin="Metamorph Psion Level 6")
+        super().__init__(name="Flesh Weaver", origin="Metamorph Psion Level 6", usage_tags=["buff", "heal"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -131,7 +131,7 @@ class FleshWeaver(Feature):
 class ImprovedMutableForm(Feature):
     def __init__(self):
         super().__init__(
-            name="Improved Mutable Form", origin="Metamorph Psion Level 10"
+            name="Improved Mutable Form", origin="Metamorph Psion Level 10", usage_tags=["buff"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -164,7 +164,7 @@ class ImprovedMutableForm(Feature):
 
 class LifeBendingWeapons(Feature):
     def __init__(self):
-        super().__init__(name="Life-bending Weapons", origin="Metamorph Psion Level 14", range="30-Foot Emanation")
+        super().__init__(name="Life-bending Weapons", origin="Metamorph Psion Level 14", range="30-Foot Emanation", usage_tags=["damage", "heal"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

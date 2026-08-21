@@ -23,7 +23,7 @@ class ShadowSpells(Feature):
 
 class PowerOfShadow(Feature):
     def __init__(self):
-        super().__init__(name="Power of Shadow", origin="Shadow Sorcerer Level 3")
+        super().__init__(name="Power of Shadow", origin="Shadow Sorcerer Level 3", usage_tags=["buff"])
         self._senses = [
             GrantSense(Sense.DARKVISION, 120, self.name),
             GrantSense(Sense.BLINDSIGHT, 10, self.name),
@@ -44,7 +44,7 @@ class PowerOfShadow(Feature):
 
 class BeastsOfIllOmen(Feature):
     def __init__(self):
-        super().__init__(name="Beasts of Ill Omen", origin="Shadow Sorcerer Level 6", action_type="bonus_action")
+        super().__init__(name="Beasts of Ill Omen", origin="Shadow Sorcerer Level 6", action_type="bonus_action", usage_tags=["control"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -67,7 +67,7 @@ class BeastsOfIllOmen(Feature):
 
 class ShadowWalk(Feature):
     def __init__(self):
-        super().__init__(name="Shadow Walk", origin="Shadow Sorcerer Level 14", action_type="bonus_action")
+        super().__init__(name="Shadow Walk", origin="Shadow Sorcerer Level 14", action_type="bonus_action", usage_tags=["buff"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "While you are in Dim Light or Darkness, you can take a Bonus Action to teleport up to 120 feet to an unoccupied space you can see that is also in Dim Light or Darkness."
@@ -76,7 +76,7 @@ class ShadowWalk(Feature):
 
 class UmbralForm(Feature):
     def __init__(self):
-        super().__init__(name="Umbral Form", origin="Shadow Sorcerer Level 18")
+        super().__init__(name="Umbral Form", origin="Shadow Sorcerer Level 18", usage_tags=["buff"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

@@ -27,7 +27,7 @@ class Expertise(Feature):
 
 class SneakAttack(Feature):
     def __init__(self):
-        super().__init__(name="Sneak Attack", origin="Rogue Level 1")
+        super().__init__(name="Sneak Attack", origin="Rogue Level 1", usage_tags=["damage"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -94,7 +94,7 @@ class CunningAction(Feature):
 
 class SteadyAim(Feature):
     def __init__(self):
-        super().__init__(name="Steady Aim", origin="Rogue Level 3", action_type="bonus_action")
+        super().__init__(name="Steady Aim", origin="Rogue Level 3", action_type="bonus_action", usage_tags=["buff"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "As a Bonus Action, you give yourself Advantage on your next attack roll on your current turn. You can use this feature only if you haven't moved during this turn, and after you use it, your Speed is 0 until the end of the current turn."
@@ -113,7 +113,7 @@ class SteadyAim(Feature):
 
 class CunningStrike(Feature):
     def __init__(self):
-        super().__init__(name="Cunning Strike", origin="Rogue Level 5")
+        super().__init__(name="Cunning Strike", origin="Rogue Level 5", usage_tags=["control"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         saving_throw = (
@@ -146,7 +146,7 @@ class CunningStrike(Feature):
 
 class UncannyDodge(Feature):
     def __init__(self):
-        super().__init__(name="Uncanny Dodge", origin="Rogue Level 5", action_type="reaction")
+        super().__init__(name="Uncanny Dodge", origin="Rogue Level 5", action_type="reaction", usage_tags=["buff"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "When an attacker that you can see hits you with an attack roll, you can take a Reaction to halve the attack's damage against you (round down)."
@@ -155,7 +155,7 @@ class UncannyDodge(Feature):
 
 class Evasion(Feature):
     def __init__(self):
-        super().__init__(name="Evasion", origin="Rogue Level 7")
+        super().__init__(name="Evasion", origin="Rogue Level 7", usage_tags=["buff"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "You can nimbly dodge out of the way of certain dangers. When you're subjected to an effect that allows you to make a Dexterity saving throw to take only half damage, you instead take no damage if you succeed on the saving throw and only half damage if you fail. You can't use this feature if you have the Incapacitated condition."
@@ -182,7 +182,7 @@ class ImprovedCunningStrike(Feature):
 
 class DeviousStrikes(Feature):
     def __init__(self):
-        super().__init__(name="Devious Strikes", origin="Rogue Level 14")
+        super().__init__(name="Devious Strikes", origin="Rogue Level 14", usage_tags=["control"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -218,7 +218,7 @@ class SlipperyMind(Feature):
 
 class Elusive(Feature):
     def __init__(self):
-        super().__init__(name="Elusive", origin="Rogue Level 18")
+        super().__init__(name="Elusive", origin="Rogue Level 18", usage_tags=["buff"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "You're so evasive that attackers rarely gain the upper hand against you. No attack roll can have advantage against you unless you have the Incapacitated condition."

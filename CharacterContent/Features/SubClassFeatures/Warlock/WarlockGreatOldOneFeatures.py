@@ -43,7 +43,7 @@ class PsychicSpells(Feature):
 class ClairvoyantCombatant(Feature):
     def __init__(self):
         super().__init__(
-            name="Clairvoyant Combatant", origin="Great Old One Patron Warlock Level 6"
+            name="Clairvoyant Combatant", origin="Great Old One Patron Warlock Level 6", usage_tags=["buff", "control"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -68,7 +68,7 @@ class ClairvoyantCombatant(Feature):
 class EldritchHex(Feature):
     def __init__(self):
         super().__init__(
-            name="Eldritch Hex", origin="Great Old One Patron Warlock Level 10"
+            name="Eldritch Hex", origin="Great Old One Patron Warlock Level 10", usage_tags=["control"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -79,7 +79,7 @@ class EldritchHex(Feature):
 class ThoughtShield(Feature):
     def __init__(self):
         super().__init__(
-            name="Thought Shield", origin="Great Old One Patron Warlock Level 10"
+            name="Thought Shield", origin="Great Old One Patron Warlock Level 10", usage_tags=["buff"]
         )
         self._resistance = DamageResistance(DamageType.PSYCHIC, self.name)
 
@@ -94,7 +94,7 @@ class ThoughtShield(Feature):
 class CreateThrall(Feature):
     def __init__(self):
         super().__init__(
-            name="Create Thrall", origin="Great Old One Patron Warlock Level 14"
+            name="Create Thrall", origin="Great Old One Patron Warlock Level 14", usage_tags=["heal", "damage"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:

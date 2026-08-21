@@ -38,7 +38,7 @@ class SpiderClimb(Feature):
 
 class TraceOfUndeath(Feature):
     def __init__(self):
-        super().__init__(name="Trace of Undeath", origin="Dhampir Trait")
+        super().__init__(name="Trace of Undeath", origin="Dhampir Trait", usage_tags=["buff"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         return "You have Resistance to Necrotic damage."
@@ -46,7 +46,7 @@ class TraceOfUndeath(Feature):
 
 class VampiricBite(Feature):
     def __init__(self):
-        super().__init__(name="Vampiric Bite", origin="Dhampir Trait")
+        super().__init__(name="Vampiric Bite", origin="Dhampir Trait", usage_tags=["damage", "heal", "buff"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         proficiency_bonus = character_stat_block.get_proficiency_bonus()

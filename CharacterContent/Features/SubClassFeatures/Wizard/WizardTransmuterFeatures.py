@@ -18,7 +18,7 @@ class TransmutationSavant(Feature):
 
 class TransmutersStone(Feature):
     def __init__(self):
-        super().__init__(name="Transmuter's Stone", origin="Transmuter Wizard Level 3")
+        super().__init__(name="Transmuter's Stone", origin="Transmuter Wizard Level 3", usage_tags=["buff"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -32,7 +32,7 @@ class TransmutersStone(Feature):
 
 class WondrousAlteration(Feature):
     def __init__(self):
-        super().__init__(name="Wondrous Alteration", origin="Transmuter Wizard Level 3")
+        super().__init__(name="Wondrous Alteration", origin="Transmuter Wizard Level 3", usage_tags=["buff", "damage"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -61,7 +61,7 @@ class EmpoweredTransmutation(Feature):
 
 class PotentStone(Feature):
     def __init__(self):
-        super().__init__(name="Potent Stone", origin="Transmuter Wizard Level 10")
+        super().__init__(name="Potent Stone", origin="Transmuter Wizard Level 10", usage_tags=["buff"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -89,7 +89,7 @@ class ShapeShifter(Feature):
 
 class MasterTransmuter(Feature):
     def __init__(self):
-        super().__init__(name="Master Transmuter", origin="Transmuter Wizard Level 14", action_type="action")
+        super().__init__(name="Master Transmuter", origin="Transmuter Wizard Level 14", action_type="action", usage_tags=["heal"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

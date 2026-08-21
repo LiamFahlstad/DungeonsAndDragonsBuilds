@@ -68,7 +68,7 @@ class WarMagic(Feature):
 class EldritchStrike(Feature):
     def __init__(self):
         super().__init__(
-            name="Eldritch Strike", origin="Eldritch Knight Fighter Level 10"
+            name="Eldritch Strike", origin="Eldritch Knight Fighter Level 10", usage_tags=["control"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:

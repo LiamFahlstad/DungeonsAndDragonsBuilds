@@ -41,7 +41,7 @@ class Spells(Feature):
 class ExperimentalElixir(Feature):
     def __init__(self):
         super().__init__(
-            name="Experimental Elixir", origin="Alchemist Artificer Level 3", action_type="action"
+            name="Experimental Elixir", origin="Alchemist Artificer Level 3", action_type="action", usage_tags=["heal", "buff"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -64,7 +64,7 @@ class ExperimentalElixir(Feature):
 
 class AlchemicalSavant(Feature):
     def __init__(self):
-        super().__init__(name="Alchemical Savant", origin="Alchemist Artificer Level 5")
+        super().__init__(name="Alchemical Savant", origin="Alchemist Artificer Level 5", usage_tags=["damage", "heal"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "Whenever you cast a spell using your Alchemist's Supplies as the Spellcasting Focus, you gain a bonus to one roll of the spell. That roll must restore Hit Points or be a damage roll that deals Acid, Fire, or Poison damage. The bonus equals your Intelligence modifier (minimum bonus of +1)."
@@ -74,7 +74,7 @@ class AlchemicalSavant(Feature):
 class RestorativeReagents(Feature):
     def __init__(self):
         super().__init__(
-            name="Restorative Reagents", origin="Alchemist Artificer Level 9"
+            name="Restorative Reagents", origin="Alchemist Artificer Level 9", usage_tags=["heal"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -91,7 +91,7 @@ class RestorativeReagents(Feature):
 
 class ChemicalMastery(Feature):
     def __init__(self):
-        super().__init__(name="Chemical Mastery", origin="Alchemist Artificer Level 15")
+        super().__init__(name="Chemical Mastery", origin="Alchemist Artificer Level 15", usage_tags=["damage"])
         self._resistances = [
             DamageResistance(DamageType.ACID, self.name),
             DamageResistance(DamageType.POISON, self.name),

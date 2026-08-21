@@ -22,7 +22,7 @@ class Darkvision(Feature):
 
 class FeyAncestry(Feature):
     def __init__(self):
-        super().__init__(name="Fey Ancestry", origin="Khoravar Trait")
+        super().__init__(name="Fey Ancestry", origin="Khoravar Trait", usage_tags=["buff"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         return "You have Advantage on saving throws you make to avoid or end the Charmed condition."
@@ -57,7 +57,7 @@ class SkillVersatility(Feature):
 
 class LethargyResilience(Feature):
     def __init__(self):
-        super().__init__(name="Lethargy Resilience", origin="Khoravar Trait")
+        super().__init__(name="Lethargy Resilience", origin="Khoravar Trait", usage_tags=["buff"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         return "When you fail a saving throw to avoid or end the Unconscious condition, you can succeed instead. Once you use this trait, you can’t do so again until you finish 1d4 Long Rests."

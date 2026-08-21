@@ -30,7 +30,7 @@ class PrimalCompanion(Feature):
 class ExceptionalTraining(Feature):
     def __init__(self):
         super().__init__(
-            name="Exceptional Training", origin="Beast Master Ranger Level 7"
+            name="Exceptional Training", origin="Beast Master Ranger Level 7", usage_tags=["damage"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -43,7 +43,7 @@ class ExceptionalTraining(Feature):
 
 class BestialFury(Feature):
     def __init__(self):
-        super().__init__(name="Bestial Fury", origin="Beast Master Ranger Level 11")
+        super().__init__(name="Bestial Fury", origin="Beast Master Ranger Level 11", usage_tags=["damage"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

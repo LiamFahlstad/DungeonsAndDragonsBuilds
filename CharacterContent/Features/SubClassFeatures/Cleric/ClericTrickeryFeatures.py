@@ -6,7 +6,7 @@ from StatBlocks.CharacterStatBlock import CharacterStatBlock
 class BlessingOfTheTrickster(Feature):
     def __init__(self):
         super().__init__(
-            name="Blessing of the Trickster", origin="Trickery Domain Cleric Level 3", action_type="action", duration="Until Long Rest", range="30 Feet"
+            name="Blessing of the Trickster", origin="Trickery Domain Cleric Level 3", action_type="action", duration="Until Long Rest", range="30 Feet", usage_tags=["buff"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -38,7 +38,7 @@ class TrickeryDomainSpells(Feature):
 class InvokeDuplicity(Feature):
     def __init__(self):
         super().__init__(
-            name="Invoke Duplicity", origin="Trickery Domain Cleric Level 3", action_type="bonus_action", duration="1 Minute", range="30 Feet"
+            name="Invoke Duplicity", origin="Trickery Domain Cleric Level 3", action_type="bonus_action", duration="1 Minute", range="30 Feet", usage_tags=["buff"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -66,7 +66,7 @@ class InvokeDuplicity(Feature):
 class TrickstersTransposition(Feature):
     def __init__(self):
         super().__init__(
-            name="Trickster's Transposition", origin="Trickery Domain Cleric Level 6"
+            name="Trickster's Transposition", origin="Trickery Domain Cleric Level 6", usage_tags=["buff"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -77,7 +77,7 @@ class TrickstersTransposition(Feature):
 class ImprovedDuplicity(Feature):
     def __init__(self):
         super().__init__(
-            name="Improved Duplicity", origin="Trickery Domain Cleric Level 17", range="5 Feet"
+            name="Improved Duplicity", origin="Trickery Domain Cleric Level 17", range="5 Feet", usage_tags=["buff", "heal"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:

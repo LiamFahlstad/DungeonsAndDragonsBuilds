@@ -30,7 +30,7 @@ class DamageResistance(Feature):
     def __init__(self, dragon_color: DragonColor):
         self.color = dragon_color
         self.damage_type = get_damage_type_from_color(dragon_color)
-        super().__init__(name="Damage Resistance", origin="Dragonborn Trait", skippable_in_concise=True)
+        super().__init__(name="Damage Resistance", origin="Dragonborn Trait", skippable_in_concise=True, usage_tags=["buff"])
         self._resistance = DamageResistanceImprovement(self.damage_type, self.name)
 
     def apply(self, character_stat_block: CharacterStatBlock):
@@ -44,7 +44,7 @@ class BreathWeapon(Feature):
     def __init__(self, dragon_color: DragonColor):
         self.color = dragon_color
         self.damage_type = get_damage_type_from_color(dragon_color)
-        super().__init__(name="Breath Weapon", origin="Dragonborn Trait", range="15-Foot Cone or 30-Foot Line")
+        super().__init__(name="Breath Weapon", origin="Dragonborn Trait", range="15-Foot Cone or 30-Foot Line", usage_tags=["damage"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         constitution_modifier = character_stat_block.get_ability_modifier(
@@ -99,7 +99,7 @@ class BreathWeapon(Feature):
 
 class DraconicFlight(Feature):
     def __init__(self):
-        super().__init__(name="Draconic Flight", origin="Dragonborn Trait", action_type="bonus_action", duration="10 Minutes")
+        super().__init__(name="Draconic Flight", origin="Dragonborn Trait", action_type="bonus_action", duration="10 Minutes", usage_tags=["buff"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         text = "When you reach character level 5, you can channel draconic magic to give yourself temporary flight. As a Bonus Action, you sprout spectral wings on your back that last for 10 minutes or until you retract the wings (no action required) or have the Incapacitated condition. During that time, you have a Fly Speed equal to your Speed. Your wings appear to be made of the same energy as your Breath Weapon. Once you use this trait, you can't use it again until you finish a Long Rest."

@@ -8,7 +8,7 @@ from Utils import StringUtils
 
 class FrigidExplorer(Feature):
     def __init__(self):
-        super().__init__(name="Frigid Explorer", origin="Winter Walker Ranger Level 3")
+        super().__init__(name="Frigid Explorer", origin="Winter Walker Ranger Level 3", usage_tags=["buff", "damage"])
         self._resistance = DamageResistance(DamageType.COLD, self.name)
 
     def apply(self, character_stat_block: CharacterStatBlock):
@@ -26,7 +26,7 @@ class FrigidExplorer(Feature):
 
 class HuntersRime(Feature):
     def __init__(self):
-        super().__init__(name="Hunter's Rime", origin="Winter Walker Ranger Level 3")
+        super().__init__(name="Hunter's Rime", origin="Winter Walker Ranger Level 3", usage_tags=["heal", "control"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -58,7 +58,7 @@ class WinterWalkerSpells(Feature):
 
 class FortifyingSoul(Feature):
     def __init__(self):
-        super().__init__(name="Fortifying Soul", origin="Winter Walker Ranger Level 7", action_type="action", duration="1 Hour")
+        super().__init__(name="Fortifying Soul", origin="Winter Walker Ranger Level 7", action_type="action", duration="1 Hour", usage_tags=["heal", "buff"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -84,7 +84,7 @@ class FortifyingSoul(Feature):
 class ChillingRetribution(Feature):
     def __init__(self):
         super().__init__(
-            name="Chilling Retribution", origin="Winter Walker Ranger Level 11", action_type="reaction", duration="Until End of Your Next Turn"
+            name="Chilling Retribution", origin="Winter Walker Ranger Level 11", action_type="reaction", duration="Until End of Your Next Turn", usage_tags=["control"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -110,7 +110,7 @@ class ChillingRetribution(Feature):
 
 class FrozenHaunt(Feature):
     def __init__(self):
-        super().__init__(name="Frozen Haunt", origin="Winter Walker Ranger Level 15", range="15-Foot Emanation")
+        super().__init__(name="Frozen Haunt", origin="Winter Walker Ranger Level 15", range="15-Foot Emanation", usage_tags=["damage", "buff"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

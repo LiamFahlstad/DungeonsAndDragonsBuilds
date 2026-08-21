@@ -13,7 +13,7 @@ SIZE = CreatureSize.MEDIUM  # Given by your species
 
 class ConstructResilience(Feature):
     def __init__(self):
-        super().__init__(name="Construct Resilience", origin="Warforged Trait", skippable_in_concise=True)
+        super().__init__(name="Construct Resilience", origin="Warforged Trait", skippable_in_concise=True, usage_tags=["buff"])
         self._resistance = DamageResistance(DamageType.POISON, self.name)
 
     def apply(self, character_stat_block: CharacterStatBlock):
@@ -33,7 +33,7 @@ class SentrysRest(Feature):
 
 class Tireless(Feature):
     def __init__(self):
-        super().__init__(name="Tireless", origin="Warforged Trait")
+        super().__init__(name="Tireless", origin="Warforged Trait", usage_tags=["buff"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         return "You don’t gain Exhaustion levels from dehydration, malnutrition, or suffocation."
@@ -41,7 +41,7 @@ class Tireless(Feature):
 
 class IntegratedProtection(Feature):
     def __init__(self):
-        super().__init__(name="Integrated Protection", origin="Warforged Trait", skippable_in_concise=True)
+        super().__init__(name="Integrated Protection", origin="Warforged Trait", skippable_in_concise=True, usage_tags=["buff"])
         self._bonus = ArmorClassBonus(1)
 
     def apply(self, character_stat_block: CharacterStatBlock):

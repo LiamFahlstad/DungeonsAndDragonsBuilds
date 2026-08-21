@@ -61,7 +61,7 @@ class Druidic(Feature):
 
 class PrimalOrder(Feature):
     def __init__(self, order: PrimalOrderType = PrimalOrderType.MAGICIAN):
-        super().__init__(name="Primal Order", origin="Druid Level 1")
+        super().__init__(name="Primal Order", origin="Druid Level 1", usage_tags=["buff"])
         self.order = order
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -79,7 +79,7 @@ class PrimalOrder(Feature):
 
 class WildShape(Feature):
     def __init__(self, known_forms: list[Type[ExtendedCombatantData]]):
-        super().__init__(name="Wild Shape", origin="Druid Level 2", action_type="bonus_action", duration="Until You Leave Form or are Incapacitated")
+        super().__init__(name="Wild Shape", origin="Druid Level 2", action_type="bonus_action", duration="Until You Leave Form or are Incapacitated", usage_tags=["heal"])
         self.known_forms = known_forms
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -208,7 +208,7 @@ class WildResurgence(Feature):
 
 class PotentSpellcasting(Feature):
     def __init__(self):
-        super().__init__(name="Potent Spellcasting", origin="Druid Level 7")
+        super().__init__(name="Potent Spellcasting", origin="Druid Level 7", usage_tags=["damage"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -219,7 +219,7 @@ class PotentSpellcasting(Feature):
 
 class PrimalStrike(Feature):
     def __init__(self):
-        super().__init__(name="Primal Strike", origin="Druid Level 7")
+        super().__init__(name="Primal Strike", origin="Druid Level 7", usage_tags=["damage"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -241,7 +241,7 @@ class ImprovedPotentSpellcasting(Feature):
 
 class ImprovedPrimalStrike(Feature):
     def __init__(self):
-        super().__init__(name="Improved Primal Strike", origin="Druid Level 15")
+        super().__init__(name="Improved Primal Strike", origin="Druid Level 15", usage_tags=["damage"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "The extra damage of your Primal Strike increases to 2d8."

@@ -41,7 +41,7 @@ class Spells(Feature):
 
 class EldritchCannon(Feature):
     def __init__(self):
-        super().__init__(name="Eldritch Cannon", origin="Artillerist Artificer Level 3", action_type="action", duration="1 Hour", range="5 Feet")
+        super().__init__(name="Eldritch Cannon", origin="Artillerist Artificer Level 3", action_type="action", duration="1 Hour", range="5 Feet", usage_tags=["damage", "buff"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -62,7 +62,7 @@ class EldritchCannon(Feature):
 
 class ArcaneFirearm(Feature):
     def __init__(self):
-        super().__init__(name="Arcane Firearm", origin="Artillerist Artificer Level 5")
+        super().__init__(name="Arcane Firearm", origin="Artillerist Artificer Level 5", usage_tags=["damage"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -75,7 +75,7 @@ class ArcaneFirearm(Feature):
 class ExplosiveCannon(Feature):
     def __init__(self):
         super().__init__(
-            name="Explosive Cannon", origin="Artillerist Artificer Level 9", action_type="reaction"
+            name="Explosive Cannon", origin="Artillerist Artificer Level 9", action_type="reaction", usage_tags=["damage", "buff"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -98,7 +98,7 @@ class ExplosiveCannon(Feature):
 class FortifiedPosition(Feature):
     def __init__(self):
         super().__init__(
-            name="Fortified Position", origin="Artillerist Artificer Level 15"
+            name="Fortified Position", origin="Artillerist Artificer Level 15", usage_tags=["buff"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:

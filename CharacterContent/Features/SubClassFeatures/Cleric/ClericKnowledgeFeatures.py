@@ -86,6 +86,7 @@ class UnfetteredMind(Feature):
             origin="Knowledge Domain Cleric Level 6",
             skippable_in_concise=False,
             range="60 Feet",
+            usage_tags=["buff"]
         )
 
     def apply(self, character_stat_block: CharacterStatBlock):
@@ -121,6 +122,7 @@ class DivineForeknowledge(Feature):
             origin="Knowledge Domain Cleric Level 17",
             action_type="bonus_action",
             duration="1 Hour",
+            usage_tags=["buff"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:

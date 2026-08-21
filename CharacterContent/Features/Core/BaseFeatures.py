@@ -135,6 +135,40 @@ FEATURE_CARD_CSS = """/* ── Feature cards ───────────�
             padding: 1px 6px;
         }
 
+        /* Flags what a feature's effect *does* - Heal, Buff, Control, Damage -
+           so the card can be scanned for role at a glance. A feature can carry
+           more than one (e.g. an attack that also imposes a condition is both
+           Damage and Control), so each tag renders as its own chip. */
+        .feature-usage-tag {
+            display: inline-block;
+            font-size: 0.68rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            border-radius: 3px;
+            padding: 1px 6px;
+        }
+
+        .feature-usage-tag.tag-heal {
+            border: 1px solid #2a9d5f;
+            color: #1a7a45;
+        }
+
+        .feature-usage-tag.tag-buff {
+            border: 1px solid #4a6fd4;
+            color: #34519e;
+        }
+
+        .feature-usage-tag.tag-control {
+            border: 1px solid #b8447a;
+            color: #96335f;
+        }
+
+        .feature-usage-tag.tag-damage {
+            border: 1px solid #c23b3b;
+            color: #a52a2a;
+        }
+
         .feature-card.is-passive .feature-name {
             color: var(--muted-color);
         }
@@ -274,6 +308,7 @@ class Feature:
         action_type: Literal["action", "bonus_action", "reaction"] | None = None,
         duration: str | None = None,
         range: str | None = None,
+        usage_tags: list[Literal["heal", "buff", "control", "damage"]] | None = None,
     ):
         self.name = name if name is not None else type(self).__name__
         self.origin = origin
@@ -294,6 +329,13 @@ class Feature:
         # "20-Foot Cone", "Self") so the card can flag it at a glance. Leave None
         # for features with no meaningful range (e.g. pure passives).
         self.range = range
+        # Set for features whose effect falls into one or more of these functional
+        # roles - healing, buffing, imposing a condition/controlling a target, or
+        # dealing damage - so the card can be scanned for role at a glance. A
+        # feature can carry more than one (e.g. deals damage and also restrains).
+        # Leave None/empty for features with no combat/utility role of this kind
+        # (e.g. skill proficiencies, passive stat bonuses).
+        self.usage_tags = usage_tags
 
     def extend_feature(self, feature: "Feature"):
         self.extensions.append(feature)
@@ -396,6 +438,7 @@ class Feature:
         action_tag = self._action_tag_html(self.action_type)
         duration_tag = self._duration_tag_html(self.duration)
         range_tag = self._range_tag_html(self.range)
+        usage_tags_html = self._usage_tags_html(self.usage_tags)
 
         card_class = "feature-card is-passive" if passive_tag else "feature-card"
         file.write(f"<div class='{card_class}'>\n")
@@ -410,6 +453,8 @@ class Feature:
             file.write(f"{duration_tag}\n")
         if range_tag:
             file.write(f"{range_tag}\n")
+        if usage_tags_html:
+            file.write(f"{usage_tags_html}\n")
         file.write("</span>\n")
         file.write(f"<span class='feature-origin'>{self.origin}</span>\n")
         file.write("</div>\n")
@@ -463,9 +508,11 @@ class Feature:
             ext_duration_tag = f" {ext_duration_tag}" if ext_duration_tag else ""
             ext_range_tag = self._range_tag_html(extension.range)
             ext_range_tag = f" {ext_range_tag}" if ext_range_tag else ""
+            ext_usage_tags_html = self._usage_tags_html(extension.usage_tags)
+            ext_usage_tags_html = f" {ext_usage_tags_html}" if ext_usage_tags_html else ""
             file.write(
                 f"<div class='feature-upgrade'>\n"
-                f"<span class='feature-upgrade-label'>{extension.origin}: {extension.name}{ext_passive_tag}{ext_action_tag}{ext_duration_tag}{ext_range_tag}</span>\n"
+                f"<span class='feature-upgrade-label'>{extension.origin}: {extension.name}{ext_passive_tag}{ext_action_tag}{ext_duration_tag}{ext_range_tag}{ext_usage_tags_html}</span>\n"
                 f"<div class='feature-upgrade-body'>{ext_html}</div>\n"
                 f"</div>\n"
             )
@@ -507,6 +554,7 @@ class Feature:
         action_tag = self._action_tag_html(self.action_type)
         duration_tag = self._duration_tag_html(self.duration)
         range_tag = self._range_tag_html(self.range)
+        usage_tags_html = self._usage_tags_html(self.usage_tags)
         if passive_tag:
             file.write(f"{passive_tag}\n")
         if action_tag:
@@ -515,6 +563,8 @@ class Feature:
             file.write(f"{duration_tag}\n")
         if range_tag:
             file.write(f"{range_tag}\n")
+        if usage_tags_html:
+            file.write(f"{usage_tags_html}\n")
         file.write("</span>\n")
         file.write(f"<span class='feature-origin'>{self.origin}</span>\n")
         file.write("</div>\n")
@@ -559,6 +609,24 @@ class Feature:
         if range is None:
             return ""
         return f"<span class='feature-range-tag'>Range: {range}</span>"
+
+    @staticmethod
+    def _usage_tags_html(usage_tags: list[str] | None) -> str:
+        if not usage_tags:
+            return ""
+        labels = {
+            "damage": "Damage",
+            "heal": "Heal",
+            "buff": "Buff",
+            "control": "Control",
+        }
+        # Fixed display order regardless of the order passed in, so cards read
+        # consistently across features.
+        ordered = [tag for tag in labels if tag in usage_tags]
+        return " ".join(
+            f"<span class='feature-usage-tag tag-{tag}'>{labels[tag]}</span>"
+            for tag in ordered
+        )
 
     @staticmethod
     def _resource_tile_html(label: str, value) -> str:

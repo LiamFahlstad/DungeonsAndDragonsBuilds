@@ -22,7 +22,7 @@ class Darkvision(Feature):
 
 class DwarvenResilience(Feature):
     def __init__(self):
-        super().__init__(name="Dwarven Resilience", origin="Dwarf Trait")
+        super().__init__(name="Dwarven Resilience", origin="Dwarf Trait", usage_tags=["buff"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         return "You have Resistance to Poison damage. You also have Advantage on saving throws you make to avoid or end the Poisoned condition."
@@ -30,7 +30,7 @@ class DwarvenResilience(Feature):
 
 class DwarvenToughness(Feature):
     def __init__(self):
-        super().__init__(name="Dwarven Toughness", origin="Dwarf Trait", skippable_in_concise=True)
+        super().__init__(name="Dwarven Toughness", origin="Dwarf Trait", skippable_in_concise=True, usage_tags=["heal"])
         self._hp = HitPointsPerLevelBonus(1)
 
     def apply(self, character_stat_block: CharacterStatBlock):

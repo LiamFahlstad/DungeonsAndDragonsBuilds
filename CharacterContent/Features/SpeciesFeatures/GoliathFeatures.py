@@ -20,7 +20,7 @@ class GiantAncestryType(str, Enum):
 
 class LargeForm(Feature):
     def __init__(self):
-        super().__init__(name="Large Form", origin="Goliath Trait", action_type="bonus_action", duration="10 Minutes")
+        super().__init__(name="Large Form", origin="Goliath Trait", action_type="bonus_action", duration="10 Minutes", usage_tags=["buff"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         return "Starting at character level 5, you can change your size to Large as a Bonus Action if you're in a big enough space. This transformation lasts for 10 minutes or until you end it (no action required). For that duration, you have Advantage on Strength checks, and your Speed increases by 10 feet. Once you use this trait, you can't use it again until you finish a Long Rest."
@@ -28,7 +28,7 @@ class LargeForm(Feature):
 
 class PowerfulBuild(Feature):
     def __init__(self):
-        super().__init__(name="Goliath Nimbleness", origin="Goliath Trait")
+        super().__init__(name="Goliath Nimbleness", origin="Goliath Trait", usage_tags=["buff"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         return "You have Advantage on any ability check you make to end the Grappled condition. You also count as one size larger when determining your carrying capacity."
@@ -37,7 +37,7 @@ class PowerfulBuild(Feature):
 class GiantAncestry(Feature):
     def __init__(self, giant_ancestry_type: GiantAncestryType):
         self.giant_ancestry_type = giant_ancestry_type
-        super().__init__(name="Giant Ancestry", origin="Goliath Trait")
+        super().__init__(name="Giant Ancestry", origin="Goliath Trait", usage_tags=["buff", "damage", "control"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         text = ""

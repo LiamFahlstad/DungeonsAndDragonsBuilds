@@ -23,7 +23,7 @@ class Spellcasting(Feature):
 
 class BardicInspiration(Feature):
     def __init__(self):
-        super().__init__(name="Bardic Inspiration", origin="Bard Level 1", action_type="bonus_action", duration="1 Hour", range="60 Feet")
+        super().__init__(name="Bardic Inspiration", origin="Bard Level 1", action_type="bonus_action", duration="1 Hour", range="60 Feet", usage_tags=["buff"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         charisma_modifier = character_stat_block.get_ability_modifier(Ability.CHARISMA)
@@ -126,7 +126,7 @@ class ExpertiseLevel9(Feature):
 
 class JackOfAllTrades(Feature):
     def __init__(self):
-        super().__init__(name="Jack of All Trades", origin="Bard Level 2", skippable_in_concise=True)
+        super().__init__(name="Jack of All Trades", origin="Bard Level 2", skippable_in_concise=True, usage_tags=["buff"])
         self._bonus = JackOfAllTradesBonus()
 
     def apply(self, character_stat_block: CharacterStatBlock):
@@ -159,7 +159,7 @@ class FontOfInspiration(Feature):
 
 class Countercharm(Feature):
     def __init__(self):
-        super().__init__(name="Countercharm", origin="Bard Level 7", action_type="reaction", range="30 Feet")
+        super().__init__(name="Countercharm", origin="Bard Level 7", action_type="reaction", range="30 Feet", usage_tags=["buff"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "You can use musical notes or words of power to disrupt mind-influencing effects. If you or a creature within 30 feet of you fails a saving throw against an effect that applies the Charmed or Frightened condition, you can take a Reaction to cause the save to be rerolled, and the new roll has Advantage."

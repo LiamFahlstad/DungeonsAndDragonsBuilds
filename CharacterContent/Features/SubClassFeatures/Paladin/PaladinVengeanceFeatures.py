@@ -26,7 +26,7 @@ class OathOfVengeanceSpells(Feature):
 class VowOfEnmity(Feature):
     def __init__(self):
         super().__init__(
-            name="Vow of Enmity", origin="Oath of Vengeance Paladin Level 3", duration="1 Minute or Until Used Again", range="30 Feet"
+            name="Vow of Enmity", origin="Oath of Vengeance Paladin Level 3", duration="1 Minute or Until Used Again", range="30 Feet", usage_tags=["buff"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -50,7 +50,7 @@ class VowOfEnmity(Feature):
 class RelentlessAvenger(Feature):
     def __init__(self):
         super().__init__(
-            name="Relentless Avenger", origin="Oath of Vengeance Paladin Level 7", duration="Until End of Current Turn"
+            name="Relentless Avenger", origin="Oath of Vengeance Paladin Level 7", duration="Until End of Current Turn", usage_tags=["control"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -70,7 +70,7 @@ class RelentlessAvenger(Feature):
 class SoulOfVengeance(Feature):
     def __init__(self):
         super().__init__(
-            name="Soul of Vengeance", origin="Oath of Vengeance Paladin Level 15", action_type="reaction"
+            name="Soul of Vengeance", origin="Oath of Vengeance Paladin Level 15", action_type="reaction", usage_tags=["damage"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -81,7 +81,7 @@ class SoulOfVengeance(Feature):
 class AvengingAngel(Feature):
     def __init__(self):
         super().__init__(
-            name="Avenging Angel", origin="Oath of Vengeance Paladin Level 20", action_type="bonus_action", duration="10 Minutes or Until Ended"
+            name="Avenging Angel", origin="Oath of Vengeance Paladin Level 20", action_type="bonus_action", duration="10 Minutes or Until Ended", usage_tags=["buff", "control"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:

@@ -18,7 +18,7 @@ class AbjurationSavant(Feature):
 
 class ArcaneWard(Feature):
     def __init__(self):
-        super().__init__(name="Arcane Ward", origin="Abjurer Wizard Level 3", action_type="bonus_action", duration="Until Long Rest")
+        super().__init__(name="Arcane Ward", origin="Abjurer Wizard Level 3", action_type="bonus_action", duration="Until Long Rest", usage_tags=["buff"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         int_mod = character_stat_block.get_ability_modifier(Ability.INTELLIGENCE)
@@ -47,7 +47,7 @@ class ArcaneWard(Feature):
 
 class ProjectedWard(Feature):
     def __init__(self):
-        super().__init__(name="Projected Ward", origin="Abjurer Wizard Level 6", action_type="reaction", range="30 Feet")
+        super().__init__(name="Projected Ward", origin="Abjurer Wizard Level 6", action_type="reaction", range="30 Feet", usage_tags=["buff"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "When a creature that you can see within 30 feet of yourself takes damage, you can take a Reaction to cause your Arcane Ward to absorb that damage. If this damage reduces the ward to 0 Hit Points, the warded creature takes any remaining damage. If the creature has any Resistances or Vulnerabilities, apply them before reducing the ward's Hit Points."
@@ -78,7 +78,7 @@ class SpellBreaker(Feature):
 
 class SpellResistance(Feature):
     def __init__(self):
-        super().__init__(name="Spell Resistance", origin="Abjurer Wizard Level 14")
+        super().__init__(name="Spell Resistance", origin="Abjurer Wizard Level 14", usage_tags=["buff"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "You have Advantage on saving throws against spells, and you have Resistance to the damage of spells."

@@ -21,7 +21,7 @@ class BonusProficiencies(Feature):
 
 class CuttingWords(Feature):
     def __init__(self):
-        super().__init__(name="Cutting Words", origin="College of Lore Bard Level 3", action_type="reaction", range="60 Feet")
+        super().__init__(name="Cutting Words", origin="College of Lore Bard Level 3", action_type="reaction", range="60 Feet", usage_tags=["control"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "You learn to use your wit to supernaturally distract, confuse, and otherwise sap the confidence and competence of others. When a creature that you can see within 60 feet of yourself makes a damage roll or succeeds on an ability check or attack roll, you can take a Reaction to expend one use of your Bardic Inspiration; roll your Bardic Inspiration die, and subtract the number rolled from the creature's roll, reducing the damage or potentially turning the success into a failure."
@@ -54,7 +54,7 @@ class MagicalDiscoveries(Feature):
 
 class PeerlessSkill(Feature):
     def __init__(self):
-        super().__init__(name="Peerless Skill", origin="College of Lore Bard Level 14")
+        super().__init__(name="Peerless Skill", origin="College of Lore Bard Level 14", usage_tags=["buff"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "When you make an ability check or attack roll and fail, you can expend one use of Bardic Inspiration; roll the Bardic Inspiration die, and add the number rolled to the d20, potentially turning a failure into a success. On a failure, the Bardic Inspiration isn't expended."

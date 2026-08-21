@@ -55,7 +55,7 @@ LEVEL_TO_FOCUS_POINTS = {
 
 class HandOfHarm(Feature):
     def __init__(self):
-        super().__init__(name="Hand of Harm", origin="Warrior of Mercy Monk Level 3")
+        super().__init__(name="Hand of Harm", origin="Warrior of Mercy Monk Level 3", usage_tags=["damage"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "Once per turn when you hit a creature with an Unarmed Strike and deal damage, you can expend 1 Focus Point to deal extra Necrotic damage equal to one roll of your Martial Arts die plus your Wisdom modifier."
@@ -64,7 +64,7 @@ class HandOfHarm(Feature):
 
 class HandOfHealing(Feature):
     def __init__(self):
-        super().__init__(name="Hand of Healing", origin="Warrior of Mercy Monk Level 3", action_type="action", range="Touch")
+        super().__init__(name="Hand of Healing", origin="Warrior of Mercy Monk Level 3", action_type="action", range="Touch", usage_tags=["heal"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -106,7 +106,7 @@ class ImplementsOfMercy(Feature):
 class PhysiciansTouch(Feature):
     def __init__(self):
         super().__init__(
-            name="Physician's Touch", origin="Warrior of Mercy Monk Level 6", duration="Until End of Next Turn"
+            name="Physician's Touch", origin="Warrior of Mercy Monk Level 6", duration="Until End of Next Turn", usage_tags=["control", "heal"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -145,7 +145,7 @@ class FlurryOfHealingAndHarm(Feature):
 class HandOfUltimateMercy(Feature):
     def __init__(self):
         super().__init__(
-            name="Hand of Ultimate Mercy", origin="Warrior of Mercy Monk Level 17", action_type="action", range="Touch"
+            name="Hand of Ultimate Mercy", origin="Warrior of Mercy Monk Level 17", action_type="action", range="Touch", usage_tags=["heal", "control"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:

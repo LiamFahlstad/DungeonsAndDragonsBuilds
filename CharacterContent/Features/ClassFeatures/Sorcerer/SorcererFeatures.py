@@ -32,7 +32,7 @@ class Spellcasting(Feature):
 
 class InnateSorcery(Feature):
     def __init__(self):
-        super().__init__(name="Innate Sorcery", origin="Sorcerer Level 1", action_type="bonus_action", duration="1 Minute")
+        super().__init__(name="Innate Sorcery", origin="Sorcerer Level 1", action_type="bonus_action", duration="1 Minute", usage_tags=["buff"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -168,7 +168,7 @@ class SorcerousRestoration(Feature):
 
 class SorceryIncarnate(Feature):
     def __init__(self):
-        super().__init__(name="Sorcery Incarnate", origin="Sorcerer Level 7")
+        super().__init__(name="Sorcery Incarnate", origin="Sorcerer Level 7", usage_tags=["buff"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -180,7 +180,7 @@ class SorceryIncarnate(Feature):
 
 class ArcaneApotheosis(Feature):
     def __init__(self):
-        super().__init__(name="Arcane Apotheosis", origin="Sorcerer Level 20")
+        super().__init__(name="Arcane Apotheosis", origin="Sorcerer Level 20", usage_tags=["buff"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "While your Innate Sorcery feature is active, you can use one Metamagic option on each of your turns without spending Sorcery Points on it."

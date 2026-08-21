@@ -51,7 +51,7 @@ class RestoreBalance(Feature):
 
 class BastionOfLaw(Feature):
     def __init__(self):
-        super().__init__(name="Bastion of Law", origin="Clockwork Sorcerer Level 6", action_type="action", duration="Until Long Rest or Used Again", range="30 Feet")
+        super().__init__(name="Bastion of Law", origin="Clockwork Sorcerer Level 6", action_type="action", duration="Until Long Rest or Used Again", range="30 Feet", usage_tags=["buff"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -74,7 +74,7 @@ class BastionOfLaw(Feature):
 
 class TranceOfOrder(Feature):
     def __init__(self):
-        super().__init__(name="Trance of Order", origin="Clockwork Sorcerer Level 14", action_type="bonus_action", duration="1 Minute")
+        super().__init__(name="Trance of Order", origin="Clockwork Sorcerer Level 14", action_type="bonus_action", duration="1 Minute", usage_tags=["buff"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -98,7 +98,7 @@ class TranceOfOrder(Feature):
 class ClockworkCavalcade(Feature):
     def __init__(self):
         super().__init__(
-            name="Clockwork Cavalcade", origin="Clockwork Sorcerer Level 18", action_type="action", range="30-Foot Cube"
+            name="Clockwork Cavalcade", origin="Clockwork Sorcerer Level 18", action_type="action", range="30-Foot Cube", usage_tags=["heal", "control"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:

@@ -67,7 +67,7 @@ class UseMagicDevice(Feature):
 
 class ThiefsReflexes(Feature):
     def __init__(self):
-        super().__init__(name="Thief's Reflexes", origin="Thief Rogue Level 17")
+        super().__init__(name="Thief's Reflexes", origin="Thief Rogue Level 17", usage_tags=["buff"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "You are adept at laying ambushes and quickly escaping danger. You can take two turns during the first round of any combat. You take your first turn at your normal Initiative and your second turn at your Initiative minus 10."

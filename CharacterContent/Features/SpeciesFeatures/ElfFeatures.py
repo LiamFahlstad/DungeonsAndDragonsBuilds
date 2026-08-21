@@ -22,7 +22,7 @@ class Darkvision(Feature):
 
 class FeyAncestry(Feature):
     def __init__(self):
-        super().__init__(name="Fey Ancestry", origin="Elf Trait")
+        super().__init__(name="Fey Ancestry", origin="Elf Trait", usage_tags=["buff"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         text = f"You have Advantage on saving throws you make to avoid or end the Charmed condition."

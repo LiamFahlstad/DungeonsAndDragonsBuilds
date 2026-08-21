@@ -8,7 +8,7 @@ SIZE = CreatureSize.SMALL  # Given by your species
 
 class Brave(Feature):
     def __init__(self):
-        super().__init__(name="Brave", origin="Halfling Trait")
+        super().__init__(name="Brave", origin="Halfling Trait", usage_tags=["buff"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         return "You have Advantage on saving throws you make to avoid or end the Frightened condition."
@@ -24,7 +24,7 @@ class HalflingNimbleness(Feature):
 
 class Luck(Feature):
     def __init__(self):
-        super().__init__(name="Luck", origin="Halfling Trait")
+        super().__init__(name="Luck", origin="Halfling Trait", usage_tags=["buff"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         text = "When you roll a 1 on the d20 of a D20 Test, you can reroll the die, and you must use the new roll."

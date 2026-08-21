@@ -34,7 +34,7 @@ class ChangelingInstincts(Feature):
 
 class ShapeShifter(Feature):
     def __init__(self):
-        super().__init__(name="Shape-Shifter", origin="Changeling Trait", action_type="action")
+        super().__init__(name="Shape-Shifter", origin="Changeling Trait", action_type="action", usage_tags=["buff"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         return (

@@ -17,7 +17,7 @@ class AnimalSpeaker(Feature):
 class RageOfTheWilds(Feature):
     def __init__(self):
         super().__init__(
-            name="Rage of the Wilds", origin="Path Of The Wild Heart Barbarian Level 3", range="5 Feet"
+            name="Rage of the Wilds", origin="Path Of The Wild Heart Barbarian Level 3", range="5 Feet", usage_tags=["buff"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -35,6 +35,7 @@ class AspectOfTheWilds(Feature):
         super().__init__(
             name="Aspect of the Wilds",
             origin="Path Of The Wild Heart Barbarian Level 6",
+            usage_tags=["buff"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -64,6 +65,7 @@ class PowerOfTheWilds(Feature):
             name="Power of the Wilds",
             origin="Path Of The Wild Heart Barbarian Level 14",
             range="5 Feet",
+            usage_tags=["buff", "control"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:

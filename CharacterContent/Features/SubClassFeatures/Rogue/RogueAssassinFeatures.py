@@ -5,7 +5,7 @@ from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 class Assassinate(Feature):
     def __init__(self):
-        super().__init__(name="Assassinate", origin="Assassin Rogue Level 3")
+        super().__init__(name="Assassinate", origin="Assassin Rogue Level 3", usage_tags=["buff", "damage"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -49,7 +49,7 @@ class InfiltrationExpertise(Feature):
 
 class EnvenomWeapons(Feature):
     def __init__(self):
-        super().__init__(name="Envenom Weapons", origin="Assassin Rogue Level 13")
+        super().__init__(name="Envenom Weapons", origin="Assassin Rogue Level 13", usage_tags=["damage"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "When you use the Poison option of your Cunning Strike, the target also takes 2d6 Poison damage whenever it fails the saving throw. This damage ignores Resistance to Poison damage."
@@ -58,7 +58,7 @@ class EnvenomWeapons(Feature):
 
 class DeathStrike(Feature):
     def __init__(self):
-        super().__init__(name="Death Strike", origin="Assassin Rogue Level 17")
+        super().__init__(name="Death Strike", origin="Assassin Rogue Level 17", usage_tags=["damage"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "When you hit with your Sneak Attack on the first round of a combat, the target must succeed on a Constitution saving throw (DC 8 plus your Dexterity modifier and Proficiency Bonus), or the attack's damage is doubled against the target."

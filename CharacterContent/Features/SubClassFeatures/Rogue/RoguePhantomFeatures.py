@@ -6,7 +6,7 @@ from Utils import StringUtils
 
 class WailsFromTheGrave(Feature):
     def __init__(self):
-        super().__init__(name="Wails from the Grave", origin="Phantom Rogue Level 3", range="30 Feet")
+        super().__init__(name="Wails from the Grave", origin="Phantom Rogue Level 3", range="30 Feet", usage_tags=["damage"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         dexterity_modifier = character_stat_block.get_ability_modifier(
@@ -52,7 +52,7 @@ class WhispersOfTheDead(Feature):
 
 class TokensOfTheDeparted(Feature):
     def __init__(self):
-        super().__init__(name="Tokens of the Departed", origin="Phantom Rogue Level 9", range="30 Feet")
+        super().__init__(name="Tokens of the Departed", origin="Phantom Rogue Level 9", range="30 Feet", usage_tags=["buff"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -83,7 +83,7 @@ class VoiceOfDeath(Feature):
 
 class GhostWalk(Feature):
     def __init__(self):
-        super().__init__(name="Ghost Walk", origin="Phantom Rogue Level 13", action_type="bonus_action", duration="10 Minutes")
+        super().__init__(name="Ghost Walk", origin="Phantom Rogue Level 13", action_type="bonus_action", duration="10 Minutes", usage_tags=["buff"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -97,7 +97,7 @@ class GhostWalk(Feature):
 
 class DeathsFriend(Feature):
     def __init__(self):
-        super().__init__(name="Death's Friend", origin="Phantom Rogue Level 17")
+        super().__init__(name="Death's Friend", origin="Phantom Rogue Level 17", usage_tags=["damage"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

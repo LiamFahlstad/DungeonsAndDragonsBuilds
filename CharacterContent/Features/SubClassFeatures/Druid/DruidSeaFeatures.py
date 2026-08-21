@@ -18,7 +18,7 @@ class CircleOfTheSeaSpells(Feature):
 class WrathOfTheSea(Feature):
     def __init__(self):
         super().__init__(
-            name="Wrath of the Sea", origin="Circle of the Sea Druid Level 3", action_type="bonus_action", duration="10 Minutes or Until Dismissed/Incapacitated", range="5-Foot Emanation"
+            name="Wrath of the Sea", origin="Circle of the Sea Druid Level 3", action_type="bonus_action", duration="10 Minutes or Until Dismissed/Incapacitated", range="5-Foot Emanation", usage_tags=["damage", "control"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -46,7 +46,7 @@ class WrathOfTheSea(Feature):
 class AquaticAffinity(Feature):
     def __init__(self):
         super().__init__(
-            name="Aquatic Affinity", origin="Circle of the Sea Druid Level 6"
+            name="Aquatic Affinity", origin="Circle of the Sea Druid Level 6", usage_tags=["buff"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -59,7 +59,7 @@ class AquaticAffinity(Feature):
 
 class Stormborn(Feature):
     def __init__(self):
-        super().__init__(name="Stormborn", origin="Circle of the Sea Druid Level 10")
+        super().__init__(name="Stormborn", origin="Circle of the Sea Druid Level 10", usage_tags=["buff"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

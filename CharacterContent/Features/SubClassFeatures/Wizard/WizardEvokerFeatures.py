@@ -17,7 +17,7 @@ class EvocationSavant(Feature):
 
 class PotentCantrip(Feature):
     def __init__(self):
-        super().__init__(name="Potent Cantrip", origin="Evoker Wizard Level 3")
+        super().__init__(name="Potent Cantrip", origin="Evoker Wizard Level 3", usage_tags=["damage"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "Your damaging cantrips affect even creatures that avoid the brunt of the effect. When you cast a cantrip at a creature and you miss with the attack roll or the target succeeds on a saving throw against the cantrip, the target takes half the cantrip's damage (if any) but suffers no additional effect from the cantrip."
@@ -26,7 +26,7 @@ class PotentCantrip(Feature):
 
 class SculptSpells(Feature):
     def __init__(self):
-        super().__init__(name="Sculpt Spells", origin="Evoker Wizard Level 6")
+        super().__init__(name="Sculpt Spells", origin="Evoker Wizard Level 6", usage_tags=["buff"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "You can create pockets of relative safety within the effects of your evocations. When you cast an Evocation spell that affects other creatures that you can see, you can choose a number of them equal to 1 plus the spell's level. The chosen creatures automatically succeed on their saving throws against the spell, and they take no damage if they would normally take half damage on a successful save."
@@ -35,7 +35,7 @@ class SculptSpells(Feature):
 
 class EmpoweredEvocation(Feature):
     def __init__(self):
-        super().__init__(name="Empowered Evocation", origin="Evoker Wizard Level 10")
+        super().__init__(name="Empowered Evocation", origin="Evoker Wizard Level 10", usage_tags=["damage"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         int_mod = character_stat_block.get_ability_modifier(Ability.INTELLIGENCE)
@@ -45,7 +45,7 @@ class EmpoweredEvocation(Feature):
 
 class Overchannel(Feature):
     def __init__(self):
-        super().__init__(name="Overchannel", origin="Evoker Wizard Level 14")
+        super().__init__(name="Overchannel", origin="Evoker Wizard Level 14", usage_tags=["damage"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

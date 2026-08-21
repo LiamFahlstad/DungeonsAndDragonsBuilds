@@ -22,7 +22,7 @@ class SpellfireSpells(Feature):
 
 class SpellfireBurst(Feature):
     def __init__(self):
-        super().__init__(name="Spellfire Burst", origin="Spellfire Sorcerer Level 3", range="30 Feet")
+        super().__init__(name="Spellfire Burst", origin="Spellfire Sorcerer Level 3", range="30 Feet", usage_tags=["heal", "damage"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -66,7 +66,7 @@ class HonedSpellfire(Feature):
 class CrownOfSpellfire(Feature):
     def __init__(self):
         super().__init__(
-            name="Crown of Spellfire", origin="Spellfire Sorcerer Level 18"
+            name="Crown of Spellfire", origin="Spellfire Sorcerer Level 18", usage_tags=["buff"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:

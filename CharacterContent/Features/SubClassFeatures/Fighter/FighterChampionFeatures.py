@@ -15,7 +15,7 @@ class ImprovedCritical(Feature):
 
 class RemarkableAthlete(Feature):
     def __init__(self):
-        super().__init__(name="Remarkable Athlete", origin="Champion Fighter Level 3")
+        super().__init__(name="Remarkable Athlete", origin="Champion Fighter Level 3", usage_tags=["buff"])
         self._initiative = InitiativeRollCondition(DiceRollCondition.ADVANTAGE)
         self._athletics = SkillRollCondition(
             Skill.ATHLETICS, DiceRollCondition.ADVANTAGE, reason="Remarkable Athlete"
@@ -46,7 +46,7 @@ class AdditionalFightingStyle(Feature):
 
 class HeroicWarrior(Feature):
     def __init__(self):
-        super().__init__(name="Heroic Warrior", origin="Champion Fighter Level 10")
+        super().__init__(name="Heroic Warrior", origin="Champion Fighter Level 10", usage_tags=["buff"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "The thrill of battle drives you toward victory. During combat, you can give yourself Heroic Inspiration whenever you start your turn without it."
@@ -64,7 +64,7 @@ class SuperiorCritical(Feature):
 
 class Survivor(Feature):
     def __init__(self):
-        super().__init__(name="Survivor", origin="Champion Fighter Level 18")
+        super().__init__(name="Survivor", origin="Champion Fighter Level 18", usage_tags=["buff", "heal"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

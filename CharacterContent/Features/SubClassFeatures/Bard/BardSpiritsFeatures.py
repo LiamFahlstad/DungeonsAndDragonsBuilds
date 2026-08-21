@@ -19,7 +19,7 @@ class Channeler(Feature):
 class SpiritsFromBeyond(Feature):
     def __init__(self):
         super().__init__(
-            name="Spirits from Beyond", origin="College of Spirits Bard Level 3", range="30 Feet"
+            name="Spirits from Beyond", origin="College of Spirits Bard Level 3", range="30 Feet", usage_tags=["damage", "heal", "buff", "control"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -48,7 +48,7 @@ class SpiritsFromBeyond(Feature):
 class EmpoweredChanneling(Feature):
     def __init__(self):
         super().__init__(
-            name="Empowered Channeling", origin="College of Spirits Bard Level 6"
+            name="Empowered Channeling", origin="College of Spirits Bard Level 6", usage_tags=["buff"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:

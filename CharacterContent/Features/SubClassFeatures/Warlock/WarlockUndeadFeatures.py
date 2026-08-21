@@ -7,7 +7,7 @@ from Utils import StringUtils
 
 class FormOfDread(Feature):
     def __init__(self):
-        super().__init__(name="Form of Dread", origin="Undead Patron Warlock Level 3", action_type="bonus_action", duration="1 Minute")
+        super().__init__(name="Form of Dread", origin="Undead Patron Warlock Level 3", action_type="bonus_action", duration="1 Minute", usage_tags=["heal", "buff", "control"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         charisma_modifier = character_stat_block.get_ability_modifier(Ability.CHARISMA)
@@ -45,7 +45,7 @@ class UndeadSpells(Feature):
 
 class GraveTouched(Feature):
     def __init__(self):
-        super().__init__(name="Grave Touched", origin="Undead Patron Warlock Level 6")
+        super().__init__(name="Grave Touched", origin="Undead Patron Warlock Level 6", usage_tags=["damage"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -59,7 +59,7 @@ class GraveTouched(Feature):
 
 class NecroticHusk(Feature):
     def __init__(self):
-        super().__init__(name="Necrotic Husk", origin="Undead Patron Warlock Level 10", range="30-Foot Emanation")
+        super().__init__(name="Necrotic Husk", origin="Undead Patron Warlock Level 10", range="30-Foot Emanation", usage_tags=["buff", "damage"])
         # Only the base Resistance is unconditional; the upgrade to Immunity
         # while using Form of Dread is conditional/temporary and stays
         # prose-only.
@@ -88,7 +88,7 @@ class NecroticHusk(Feature):
 
 class SuperiorDread(Feature):
     def __init__(self):
-        super().__init__(name="Superior Dread", origin="Undead Patron Warlock Level 14")
+        super().__init__(name="Superior Dread", origin="Undead Patron Warlock Level 14", usage_tags=["buff"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

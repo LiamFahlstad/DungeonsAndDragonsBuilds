@@ -9,7 +9,7 @@ class FreeBackgroundAbilityBonus(Feature):
 
     def __init__(self, bonuses: list[tuple[Ability, int]]):
         self._bonus = AbilityScoreBonus(bonuses, total=3, error_prefix="Free Background Ability Bonus")
-        super().__init__(name="Free Background Ability Bonus", origin="Background", skippable_in_concise=True)
+        super().__init__(name="Free Background Ability Bonus", origin="Background", skippable_in_concise=True, usage_tags=["buff"])
 
     def apply(self, character_stat_block: CharacterStatBlock):
         self._bonus.apply(character_stat_block)

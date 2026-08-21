@@ -54,7 +54,7 @@ class PsionicPower(Feature):
 
 class PsychicBlades(Feature):
     def __init__(self):
-        super().__init__(name="Psychic Blades", origin="Soulknife Rogue Level 3")
+        super().__init__(name="Psychic Blades", origin="Soulknife Rogue Level 3", usage_tags=["damage"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -71,7 +71,7 @@ class PsychicBlades(Feature):
 
 class SoulBlades(Feature):
     def __init__(self):
-        super().__init__(name="Soul Blades", origin="Soulknife Rogue Level 9", range="Up to 120 Feet")
+        super().__init__(name="Soul Blades", origin="Soulknife Rogue Level 9", range="Up to 120 Feet", usage_tags=["buff"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -84,7 +84,7 @@ class SoulBlades(Feature):
 
 class PsychicVeil(Feature):
     def __init__(self):
-        super().__init__(name="Psychic Veil", origin="Soulknife Rogue Level 13", action_type="action", duration="1 Hour or Until Dismissed")
+        super().__init__(name="Psychic Veil", origin="Soulknife Rogue Level 13", action_type="action", duration="1 Hour or Until Dismissed", usage_tags=["buff"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -107,7 +107,7 @@ class PsychicVeil(Feature):
 
 class RendMind(Feature):
     def __init__(self):
-        super().__init__(name="Rend Mind", origin="Soulknife Rogue Level 17", duration="1 Minute")
+        super().__init__(name="Rend Mind", origin="Soulknife Rogue Level 17", duration="1 Minute", usage_tags=["control"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

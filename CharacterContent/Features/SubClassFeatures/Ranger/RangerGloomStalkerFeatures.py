@@ -8,7 +8,7 @@ from Utils import StringUtils
 
 class DreadAmbusher(Feature):
     def __init__(self):
-        super().__init__(name="Dread Ambusher", origin="Gloom Stalker Ranger Level 3")
+        super().__init__(name="Dread Ambusher", origin="Gloom Stalker Ranger Level 3", usage_tags=["buff", "damage"])
 
     def apply(self, character_stat_block: CharacterStatBlock):
         wis_mod = character_stat_block.get_ability_modifier(Ability.WISDOM)
@@ -39,7 +39,7 @@ class GloomStalkerSpells(Feature):
 
 class UmbralSight(Feature):
     def __init__(self):
-        super().__init__(name="Umbral Sight", origin="Gloom Stalker Ranger Level 3", range="60 Feet")
+        super().__init__(name="Umbral Sight", origin="Gloom Stalker Ranger Level 3", range="60 Feet", usage_tags=["buff"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -51,7 +51,7 @@ class UmbralSight(Feature):
 
 class IronMind(Feature):
     def __init__(self):
-        super().__init__(name="Iron Mind", origin="Gloom Stalker Ranger Level 7", skippable_in_concise=True)
+        super().__init__(name="Iron Mind", origin="Gloom Stalker Ranger Level 7", skippable_in_concise=True, usage_tags=["buff"])
 
     def apply(self, character_stat_block: CharacterStatBlock):
         if not character_stat_block.saving_throws.is_proficient(Ability.WISDOM):
@@ -73,7 +73,7 @@ class IronMind(Feature):
 class StalkersFlurry(Feature):
     def __init__(self):
         super().__init__(
-            name="Stalker's Flurry", origin="Gloom Stalker Ranger Level 11", range="10 Feet"
+            name="Stalker's Flurry", origin="Gloom Stalker Ranger Level 11", range="10 Feet", usage_tags=["damage", "control"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -87,7 +87,7 @@ class StalkersFlurry(Feature):
 
 class ShadowyDodge(Feature):
     def __init__(self):
-        super().__init__(name="Shadowy Dodge", origin="Gloom Stalker Ranger Level 15", action_type="reaction", range="30 Feet")
+        super().__init__(name="Shadowy Dodge", origin="Gloom Stalker Ranger Level 15", action_type="reaction", range="30 Feet", usage_tags=["buff"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "When a creature makes an attack roll against you, you can take a Reaction to impose Disadvantage on that roll. Whether the attack hits or misses, you can teleport up to 30 feet to an unoccupied space that you can see."

@@ -14,7 +14,7 @@ class HuntersLore(Feature):
 
 class ColossusSlayer(Feature):
     def __init__(self):
-        super().__init__(name="Colossus Slayer", origin="Hunter Ranger Level 3")
+        super().__init__(name="Colossus Slayer", origin="Hunter Ranger Level 3", usage_tags=["damage"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "Your tenacity can wear down even the most resilient foes. When you hit a creature with a weapon, the weapon deals an extra 1d8 damage to the target if it's missing any of its Hit Points. You can deal this extra damage only once per turn."
@@ -32,7 +32,7 @@ class HordeBreaker(Feature):
 
 class EscapeTheHorde(Feature):
     def __init__(self):
-        super().__init__(name="Escape the Horde", origin="Hunter Ranger Level 7")
+        super().__init__(name="Escape the Horde", origin="Hunter Ranger Level 7", usage_tags=["buff"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "Opportunity Attacks have Disadvantage against you."
@@ -41,7 +41,7 @@ class EscapeTheHorde(Feature):
 
 class MultiattackDefense(Feature):
     def __init__(self):
-        super().__init__(name="Multiattack Defense", origin="Hunter Ranger Level 7")
+        super().__init__(name="Multiattack Defense", origin="Hunter Ranger Level 7", usage_tags=["buff"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "When a creature hits you with an attack roll, that creature has Disadvantage on all other attack rolls against you this turn."
@@ -50,7 +50,7 @@ class MultiattackDefense(Feature):
 
 class SuperiorHuntersPrey(Feature):
     def __init__(self):
-        super().__init__(name="Superior Hunter's Prey", origin="Hunter Ranger Level 11", range="30 Feet")
+        super().__init__(name="Superior Hunter's Prey", origin="Hunter Ranger Level 11", range="30 Feet", usage_tags=["damage"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "Once per turn when you deal damage to a creature marked by your Hunter's Mark, you can also deal that spell's extra damage to a different creature that you can see within 30 feet of the first creature."
@@ -60,7 +60,7 @@ class SuperiorHuntersPrey(Feature):
 class SuperiorHuntersDefense(Feature):
     def __init__(self):
         super().__init__(
-            name="Superior Hunter's Defense", origin="Hunter Ranger Level 15", action_type="reaction", duration="Until End of Current Turn"
+            name="Superior Hunter's Defense", origin="Hunter Ranger Level 15", action_type="reaction", duration="Until End of Current Turn", usage_tags=["buff"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:

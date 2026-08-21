@@ -37,7 +37,7 @@ class Spells(Feature):
 
 class ArcaneArmor(Feature):
     def __init__(self):
-        super().__init__(name="Arcane Armor", origin="Armorer Artificer Level 3", action_type="action")
+        super().__init__(name="Arcane Armor", origin="Armorer Artificer Level 3", action_type="action", usage_tags=["buff"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -61,7 +61,7 @@ class ArcaneArmor(Feature):
 
 class ArmorModel(Feature):
     def __init__(self):
-        super().__init__(name="Armor Model", origin="Armorer Artificer Level 3")
+        super().__init__(name="Armor Model", origin="Armorer Artificer Level 3", usage_tags=["damage", "buff", "control"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -96,7 +96,7 @@ class ExtraAttack(Feature):
 
 class ImprovedArmorer(Feature):
     def __init__(self):
-        super().__init__(name="Improved Armorer", origin="Armorer Artificer Level 9")
+        super().__init__(name="Improved Armorer", origin="Armorer Artificer Level 9", usage_tags=["damage"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -118,7 +118,7 @@ class ImprovedArmorer(Feature):
 
 class PerfectedArmor(Feature):
     def __init__(self):
-        super().__init__(name="Perfected Armor", origin="Armorer Artificer Level 15")
+        super().__init__(name="Perfected Armor", origin="Armorer Artificer Level 15", usage_tags=["damage", "control", "buff"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

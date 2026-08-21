@@ -19,7 +19,7 @@ class StrongerTelekinesis(Feature):
 class TelekineticTechniques(Feature):
     def __init__(self):
         super().__init__(
-            name="Telekinetic Techniques", origin="Psykinetic Psion Level 3"
+            name="Telekinetic Techniques", origin="Psykinetic Psion Level 3", usage_tags=["buff", "control", "damage"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -43,7 +43,7 @@ class TelekineticTechniques(Feature):
 
 class DestructiveTrance(Feature):
     def __init__(self):
-        super().__init__(name="Destructive Trance", origin="Psykinetic Psion Level 6", duration="10 Minutes")
+        super().__init__(name="Destructive Trance", origin="Psykinetic Psion Level 6", duration="10 Minutes", usage_tags=["buff", "damage"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -72,7 +72,7 @@ class DestructiveTrance(Feature):
 
 class ReboundingField(Feature):
     def __init__(self):
-        super().__init__(name="Rebounding Field", origin="Psykinetic Psion Level 6")
+        super().__init__(name="Rebounding Field", origin="Psykinetic Psion Level 6", usage_tags=["damage", "buff"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -108,7 +108,7 @@ class ReboundingField(Feature):
 class EnhancedTelekineticCrush(Feature):
     def __init__(self):
         super().__init__(
-            name="Enhanced Telekinetic Crush", origin="Psykinetic Psion Level 10"
+            name="Enhanced Telekinetic Crush", origin="Psykinetic Psion Level 10", usage_tags=["damage", "control"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:

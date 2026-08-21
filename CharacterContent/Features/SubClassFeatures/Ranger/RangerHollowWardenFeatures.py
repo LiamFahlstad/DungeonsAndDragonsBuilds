@@ -28,7 +28,7 @@ class HollowWardenSpells(Feature):
 class WrathOfTheWild(Feature):
     def __init__(self):
         super().__init__(
-            name="Wrath of the Wild", origin="Hollow Warden Ranger Level 3", action_type="bonus_action", duration="1 Minute or Until Incapacitated", range="10-Foot Emanation"
+            name="Wrath of the Wild", origin="Hollow Warden Ranger Level 3", action_type="bonus_action", duration="1 Minute or Until Incapacitated", range="10-Foot Emanation", usage_tags=["buff", "control"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -43,7 +43,7 @@ class WrathOfTheWild(Feature):
 
 class HungeringMight(Feature):
     def __init__(self):
-        super().__init__(name="Hungering Might", origin="Hollow Warden Ranger Level 7")
+        super().__init__(name="Hungering Might", origin="Hollow Warden Ranger Level 7", usage_tags=["buff", "heal"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -70,7 +70,7 @@ class HungeringMightBonus(Feature):
 class RotAndViolence(Feature):
     def __init__(self):
         super().__init__(
-            name="Rot and Violence", origin="Hollow Warden Ranger Level 11"
+            name="Rot and Violence", origin="Hollow Warden Ranger Level 11", usage_tags=["control"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -84,7 +84,7 @@ class RotAndViolence(Feature):
 
 class AncientMight(Feature):
     def __init__(self):
-        super().__init__(name="Ancient Might", origin="Hollow Warden Ranger Level 15")
+        super().__init__(name="Ancient Might", origin="Hollow Warden Ranger Level 15", usage_tags=["damage", "heal", "buff"])
         self._immunity = ConditionImmunity(Condition.EXHAUSTION, self.name)
 
     def apply(self, character_stat_block: CharacterStatBlock):

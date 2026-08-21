@@ -7,7 +7,7 @@ from StatBlocks.CharacterStatBlock import CharacterStatBlock
 class MoonsInspiration(Feature):
     def __init__(self):
         super().__init__(
-            name="Moon's Inspiration", origin="College of the Moon Bard Level 3", duration="Until Start of Your Next Turn"
+            name="Moon's Inspiration", origin="College of the Moon Bard Level 3", duration="Until Start of Your Next Turn", usage_tags=["buff", "heal"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -62,7 +62,7 @@ class PrimalLore(Feature):
 class BlessingOfMoonlight(Feature):
     def __init__(self):
         super().__init__(
-            name="Blessing of Moonlight", origin="College of the Moon Bard Level 6", range="60 Feet"
+            name="Blessing of Moonlight", origin="College of the Moon Bard Level 6", range="60 Feet", usage_tags=["heal"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -87,7 +87,7 @@ class BlessingOfMoonlight(Feature):
 class EventidesSplendor(Feature):
     def __init__(self):
         super().__init__(
-            name="Eventide's Splendor", origin="College of the Moon Bard Level 14"
+            name="Eventide's Splendor", origin="College of the Moon Bard Level 14", usage_tags=["buff", "heal"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:

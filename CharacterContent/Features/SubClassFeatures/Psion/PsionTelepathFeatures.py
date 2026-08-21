@@ -33,7 +33,7 @@ class MindInfiltrator(Feature):
 
 class TelepathicDistraction(Feature):
     def __init__(self):
-        super().__init__(name="Telepathic Distraction", origin="Telepath Psion Level 3", action_type="reaction")
+        super().__init__(name="Telepathic Distraction", origin="Telepath Psion Level 3", action_type="reaction", usage_tags=["buff"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -49,7 +49,7 @@ class TelepathicDistraction(Feature):
 
 class BulwarkMind(Feature):
     def __init__(self):
-        super().__init__(name="Bulwark Mind", origin="Telepath Psion Level 6", duration="10 Minutes")
+        super().__init__(name="Bulwark Mind", origin="Telepath Psion Level 6", duration="10 Minutes", usage_tags=["buff"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -80,7 +80,7 @@ class BulwarkMind(Feature):
 
 class PotentThoughts(Feature):
     def __init__(self):
-        super().__init__(name="Potent Thoughts", origin="Telepath Psion Level 6")
+        super().__init__(name="Potent Thoughts", origin="Telepath Psion Level 6", usage_tags=["damage"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -93,7 +93,7 @@ class PotentThoughts(Feature):
 
 class TelepathicBolstering(Feature):
     def __init__(self):
-        super().__init__(name="Telepathic Bolstering", origin="Telepath Psion Level 10", action_type="reaction")
+        super().__init__(name="Telepathic Bolstering", origin="Telepath Psion Level 10", action_type="reaction", usage_tags=["buff"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -121,7 +121,7 @@ class TelepathicBolstering(Feature):
 
 class ScrambleMinds(Feature):
     def __init__(self):
-        super().__init__(name="Scramble Minds", origin="Telepath Psion Level 14", range="30-Foot Radius")
+        super().__init__(name="Scramble Minds", origin="Telepath Psion Level 14", range="30-Foot Radius", usage_tags=["control"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

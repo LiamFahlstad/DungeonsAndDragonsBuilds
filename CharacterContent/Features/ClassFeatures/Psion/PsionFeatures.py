@@ -5,7 +5,7 @@ from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 class PsionicPower(Feature):
     def __init__(self):
-        super().__init__(name="Psionic Power", origin="Psion Level 1", range="30 Feet")
+        super().__init__(name="Psionic Power", origin="Psion Level 1", range="30 Feet", usage_tags=["control", "buff"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -112,7 +112,7 @@ class PsionicRestoration(Feature):
 
 class PsionicSurge(Feature):
     def __init__(self):
-        super().__init__(name="Psionic Surge", origin="Psion Level 7")
+        super().__init__(name="Psionic Surge", origin="Psion Level 7", usage_tags=["buff"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -136,7 +136,7 @@ class PsionicSurge(Feature):
 
 class PsionicReserves(Feature):
     def __init__(self):
-        super().__init__(name="Psionic Reserves", origin="Psion Level 18")
+        super().__init__(name="Psionic Reserves", origin="Psion Level 18", usage_tags=["buff"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -162,7 +162,7 @@ class EpicBoon(Feature):
 
 class EnkindledLifeForce(Feature):
     def __init__(self):
-        super().__init__(name="Enkindled Life Force", origin="Psion Level 20")
+        super().__init__(name="Enkindled Life Force", origin="Psion Level 20", usage_tags=["buff"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

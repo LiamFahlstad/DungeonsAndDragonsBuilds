@@ -42,7 +42,7 @@ class CartographerSpells(Feature):
 class AdventurersAtlas(Feature):
     def __init__(self):
         super().__init__(
-            name="Adventurer's Atlas", origin="Cartographer Artificer Level 3"
+            name="Adventurer's Atlas", origin="Cartographer Artificer Level 3", usage_tags=["buff"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -67,7 +67,7 @@ class AdventurersAtlas(Feature):
 
 class MappingMagic(Feature):
     def __init__(self):
-        super().__init__(name="Mapping Magic", origin="Cartographer Artificer Level 3", range="30 Feet")
+        super().__init__(name="Mapping Magic", origin="Cartographer Artificer Level 3", range="30 Feet", usage_tags=["control"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         intelligence_modifier = character_stat_block.get_ability_modifier(Ability.INTELLIGENCE)
@@ -99,7 +99,7 @@ class MappingMagic(Feature):
 class GuidedPrecision(Feature):
     def __init__(self):
         super().__init__(
-            name="Guided Precision", origin="Cartographer Artificer Level 5"
+            name="Guided Precision", origin="Cartographer Artificer Level 5", usage_tags=["damage"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -113,7 +113,7 @@ class GuidedPrecision(Feature):
 class IngeniousMovement(Feature):
     def __init__(self):
         super().__init__(
-            name="Ingenious Movement", origin="Cartographer Artificer Level 9", range="30 Feet"
+            name="Ingenious Movement", origin="Cartographer Artificer Level 9", range="30 Feet", usage_tags=["buff"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -124,7 +124,7 @@ class IngeniousMovement(Feature):
 class SuperiorAtlas(Feature):
     def __init__(self):
         super().__init__(
-            name="Superior Atlas", origin="Cartographer Artificer Level 15"
+            name="Superior Atlas", origin="Cartographer Artificer Level 15", usage_tags=["heal"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:

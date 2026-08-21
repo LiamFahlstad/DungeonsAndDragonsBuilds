@@ -9,7 +9,7 @@ SPEED = 30  # Given by your species
 
 class DualMind(Feature):
     def __init__(self):
-        super().__init__(name="Dual Mind", origin="Kalashtar Trait", skippable_in_concise=True)
+        super().__init__(name="Dual Mind", origin="Kalashtar Trait", skippable_in_concise=True, usage_tags=["buff"])
         self._advantage = SavingThrowAdvantage([Ability.WISDOM, Ability.CHARISMA])
 
     def apply(self, character_stat_block: CharacterStatBlock):
@@ -21,7 +21,7 @@ class DualMind(Feature):
 
 class MentalDiscipline(Feature):
     def __init__(self):
-        super().__init__(name="Mental Discipline", origin="Kalashtar Trait", skippable_in_concise=True)
+        super().__init__(name="Mental Discipline", origin="Kalashtar Trait", skippable_in_concise=True, usage_tags=["buff"])
         self._resistance = DamageResistance(DamageType.PSYCHIC, self.name)
 
     def apply(self, character_stat_block: CharacterStatBlock):
@@ -33,7 +33,7 @@ class MentalDiscipline(Feature):
 
 class MindLink(Feature):
     def __init__(self):
-        super().__init__(name="Mind Link", origin="Kalashtar Trait", action_type="action", duration="1 Hour")
+        super().__init__(name="Mind Link", origin="Kalashtar Trait", action_type="action", duration="1 Hour", usage_tags=["buff"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         character_level = character_stat_block.character_level

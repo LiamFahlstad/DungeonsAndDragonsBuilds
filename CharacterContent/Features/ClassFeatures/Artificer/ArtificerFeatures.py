@@ -154,7 +154,7 @@ class MagicItemTinker(Feature):
 
 class FlashofGenius(Feature):
     def __init__(self):
-        super().__init__(name="Flash of Genius", origin="Artificer Level 7", action_type="reaction", range="30 Feet")
+        super().__init__(name="Flash of Genius", origin="Artificer Level 7", action_type="reaction", range="30 Feet", usage_tags=["buff"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         intelligence_modifier = character_stat_block.get_ability_modifier(
@@ -233,7 +233,7 @@ class MagicItemMaster(Feature):
 
 class SoulOfArtifice(Feature):
     def __init__(self):
-        super().__init__(name="Soul of Artifice", origin="Artificer Level 20")
+        super().__init__(name="Soul of Artifice", origin="Artificer Level 20", usage_tags=["heal"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

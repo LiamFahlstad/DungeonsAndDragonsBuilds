@@ -20,7 +20,7 @@ class KnightlyEnvoy(Feature):
 
 class GroupRecovery(Feature):
     def __init__(self):
-        super().__init__(name="Group Recovery", origin="Banneret Fighter Level 3", range="30-Foot Emanation")
+        super().__init__(name="Group Recovery", origin="Banneret Fighter Level 3", range="30-Foot Emanation", usage_tags=["heal"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "When you use your Second Wind to regain Hit Points, you can choose a number of allies within a 30-foot Emanation originating from yourself, up to a number of allies equal to your Charisma modifier (minimum of one). Each of those allies regains Hit Points equal to 1d4 plus your Fighter level. Once you use this ability, you can’t use it again until you finish a Short or Long Rest."
@@ -40,7 +40,7 @@ class GroupRecovery(Feature):
 
 class TeamTactics(Feature):
     def __init__(self):
-        super().__init__(name="Team Tactics", origin="Banneret Fighter Level 7")
+        super().__init__(name="Team Tactics", origin="Banneret Fighter Level 7", usage_tags=["buff"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "When you use Group Recovery, each chosen ally has Advantage on D20 Tests until the start of your next turn."
@@ -72,7 +72,7 @@ class RallyingSurge(Feature):
 
 class SharedResilience(Feature):
     def __init__(self):
-        super().__init__(name="Shared Resilience", origin="Banneret Fighter Level 15", range="60 Feet")
+        super().__init__(name="Shared Resilience", origin="Banneret Fighter Level 15", range="60 Feet", usage_tags=["buff"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "When an ally you can see within 60 feet of yourself fails a saving throw, you can take a Reaction to expend a use of your Indomitable feature. The ally can immediately reroll the saving throw with a bonus equal to your Fighter level; the ally must use the new roll."
@@ -90,7 +90,7 @@ class SharedResilience(Feature):
 
 class InspiringCommander(Feature):
     def __init__(self):
-        super().__init__(name="Inspiring Commander", origin="Banneret Fighter Level 18", skippable_in_concise=True)
+        super().__init__(name="Inspiring Commander", origin="Banneret Fighter Level 18", skippable_in_concise=True, usage_tags=["buff"])
         self._immunities = [
             ConditionImmunity(Condition.CHARMED, self.name),
             ConditionImmunity(Condition.FRIGHTENED, self.name),

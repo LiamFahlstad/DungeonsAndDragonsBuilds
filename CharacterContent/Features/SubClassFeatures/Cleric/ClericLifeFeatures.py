@@ -5,7 +5,7 @@ from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 class DiscipleOfLife(Feature):
     def __init__(self):
-        super().__init__(name="Disciple of Life", origin="Life Domain Cleric Level 3")
+        super().__init__(name="Disciple of Life", origin="Life Domain Cleric Level 3", usage_tags=["heal"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "When a spell you cast with a spell slot restores Hit Points to a creature, that creature regains additional Hit Points on the turn you cast the spell. The additional Hit Points equal 2 plus the spell slot's level."
@@ -23,7 +23,7 @@ class LifeDomainSpells(Feature):
 
 class PreserveLife(Feature):
     def __init__(self):
-        super().__init__(name="Preserve Life", origin="Life Domain Cleric Level 3", action_type="action", range="30 Feet")
+        super().__init__(name="Preserve Life", origin="Life Domain Cleric Level 3", action_type="action", range="30 Feet", usage_tags=["heal"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "As a Magic action, you present your Holy Symbol and expend a use of your Channel Divinity to evoke healing energy that can restore a number of Hit Points equal to five times your Cleric level. Choose Bloodied creatures within 30 feet of yourself (which can include you), and divide those Hit Points among them. This feature can restore a creature to no more than half its Hit Point maximum."
@@ -43,7 +43,7 @@ class PreserveLife(Feature):
 
 class BlessedHealer(Feature):
     def __init__(self):
-        super().__init__(name="Blessed Healer", origin="Life Domain Cleric Level 6")
+        super().__init__(name="Blessed Healer", origin="Life Domain Cleric Level 6", usage_tags=["heal"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "The healing spells you cast on others heal you as well. Immediately after you cast a spell with a spell slot that restores Hit Points to one or more creatures other than yourself, you regain Hit Points equal to 2 plus the spell slot's level."
@@ -52,7 +52,7 @@ class BlessedHealer(Feature):
 
 class SupremeHealing(Feature):
     def __init__(self):
-        super().__init__(name="Supreme Healing", origin="Life Domain Cleric Level 17")
+        super().__init__(name="Supreme Healing", origin="Life Domain Cleric Level 17", usage_tags=["heal"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "When you would normally roll one or more dice to restore Hit Points to a creature with a spell or Channel Divinity, don't roll those dice for the healing; instead use the highest number possible for each die. For example, instead of restoring 2d6 Hit Points to a creature with a spell, you restore 12."

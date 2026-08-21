@@ -7,7 +7,7 @@ from Utils import StringUtils
 
 class DreadfulStrikes(Feature):
     def __init__(self):
-        super().__init__(name="Dreadful Strikes", origin="Fey Wanderer Ranger Level 3")
+        super().__init__(name="Dreadful Strikes", origin="Fey Wanderer Ranger Level 3", usage_tags=["damage"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "You can augment your weapon strikes with mind-scarring magic drawn from the murky hollows of the Feywild. When you hit a creature with a weapon, you can deal an extra 1d4 Psychic damage to the target, which can take this extra damage only once per turn. The extra damage increases to 1d6 when you reach Ranger level 11."
@@ -58,7 +58,7 @@ class OtherworldlyGlamour(Feature):
 
 class BeguilingTwist(Feature):
     def __init__(self):
-        super().__init__(name="Beguiling Twist", origin="Fey Wanderer Ranger Level 7", action_type="reaction", duration="1 Minute", range="120 Feet")
+        super().__init__(name="Beguiling Twist", origin="Fey Wanderer Ranger Level 7", action_type="reaction", duration="1 Minute", range="120 Feet", usage_tags=["buff", "control"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

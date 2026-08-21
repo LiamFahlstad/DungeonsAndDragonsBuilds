@@ -6,7 +6,7 @@ from Utils import StringUtils
 
 class Bloodthirst(Feature):
     def __init__(self):
-        super().__init__(name="Bloodthirst", origin="Scion of the Three Rogue Level 3", action_type="reaction", range="30 Feet")
+        super().__init__(name="Bloodthirst", origin="Scion of the Three Rogue Level 3", action_type="reaction", range="30 Feet", usage_tags=["damage"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         intelligence_modifier = character_stat_block.get_ability_modifier(
@@ -41,7 +41,7 @@ class Bloodthirst(Feature):
 class DreadAllegiance(Feature):
     def __init__(self):
         super().__init__(
-            name="Dread Allegiance", origin="Scion of the Three Rogue Level 3"
+            name="Dread Allegiance", origin="Scion of the Three Rogue Level 3", usage_tags=["buff"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -57,7 +57,7 @@ class DreadAllegiance(Feature):
 
 class StrikeFear(Feature):
     def __init__(self):
-        super().__init__(name="Strike Fear", origin="Scion of the Three Rogue Level 9")
+        super().__init__(name="Strike Fear", origin="Scion of the Three Rogue Level 9", usage_tags=["buff", "control"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -82,7 +82,7 @@ class StrikeFear(Feature):
 class AuraOfMalevolence(Feature):
     def __init__(self):
         super().__init__(
-            name="Aura of Malevolence", origin="Scion of the Three Rogue Level 13", range="10 Feet"
+            name="Aura of Malevolence", origin="Scion of the Three Rogue Level 13", range="10 Feet", usage_tags=["damage"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -93,7 +93,7 @@ class AuraOfMalevolence(Feature):
 class DreadIncarnate(Feature):
     def __init__(self):
         super().__init__(
-            name="Dread Incarnate", origin="Scion of the Three Rogue Level 17"
+            name="Dread Incarnate", origin="Scion of the Three Rogue Level 17", usage_tags=["damage"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:

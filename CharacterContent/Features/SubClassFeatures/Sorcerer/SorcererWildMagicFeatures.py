@@ -56,7 +56,7 @@ class WildMagicSurgeTable(Feature):
 
 class TidesOfChaos(Feature):
     def __init__(self):
-        super().__init__(name="Tides of Chaos", origin="Wild Magic Sorcerer Level 3")
+        super().__init__(name="Tides of Chaos", origin="Wild Magic Sorcerer Level 3", usage_tags=["buff"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -68,7 +68,7 @@ class TidesOfChaos(Feature):
 
 class BendLuck(Feature):
     def __init__(self):
-        super().__init__(name="Bend Luck", origin="Wild Magic Sorcerer Level 6", action_type="reaction")
+        super().__init__(name="Bend Luck", origin="Wild Magic Sorcerer Level 6", action_type="reaction", usage_tags=["buff", "control"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "You have the ability to twist fate using your wild magic. Immediately after another creature you can see rolls the d20 for a D20 Test, you can take a Reaction and spend 1 Sorcery Point to roll 1d4 and apply the number rolled as a bonus or penalty (your choice) to the d20 roll."

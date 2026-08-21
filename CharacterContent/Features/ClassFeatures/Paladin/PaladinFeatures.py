@@ -8,7 +8,7 @@ from Utils import StringUtils
 
 class LayOnHands(Feature):
     def __init__(self):
-        super().__init__(name="Lay on Hands", origin="Paladin Level 1", action_type="bonus_action", range="Touch")
+        super().__init__(name="Lay on Hands", origin="Paladin Level 1", action_type="bonus_action", range="Touch", usage_tags=["heal"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -186,7 +186,7 @@ class FaithfulSteed(Feature):
 
 class AuraOfProtection(Feature):
     def __init__(self):
-        super().__init__(name="Aura of Protection", origin="Paladin Level 6", range="10-Foot Emanation")
+        super().__init__(name="Aura of Protection", origin="Paladin Level 6", range="10-Foot Emanation", usage_tags=["buff"])
 
     def apply(self, character_stat_block: CharacterStatBlock):
         cha_mod = character_stat_block.get_ability_modifier(Ability.CHARISMA)
@@ -214,7 +214,7 @@ class AuraOfProtection(Feature):
 
 class AbjureFoes(Feature):
     def __init__(self):
-        super().__init__(name="Abjure Foes", origin="Paladin Level 9", action_type="action", duration="1 Minute or Until Takes Damage", range="60 Feet")
+        super().__init__(name="Abjure Foes", origin="Paladin Level 9", action_type="action", duration="1 Minute or Until Takes Damage", range="60 Feet", usage_tags=["control"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "As a Magic action, you can expend one use of this class's Channel Divinity to overwhelm foes with awe. As you present your Holy Symbol or weapon, you can target a number of creatures equal to your Charisma modifier (minimum of one creature) that you can see within 60 feet of yourself. Each target must succeed on a Wisdom saving throw or have the Frightened condition for 1 minute or until it takes any damage. While Frightened in this way, a target can do only one of the following on its turns: move, take an action, or take a Bonus Action."
@@ -236,7 +236,7 @@ class AbjureFoes(Feature):
 
 class AuraOfCourage(Feature):
     def __init__(self):
-        super().__init__(name="Aura of Courage", origin="Paladin Level 10")
+        super().__init__(name="Aura of Courage", origin="Paladin Level 10", usage_tags=["buff"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "You and your allies have Immunity to the Frightened condition while in your Aura of Protection. If a Frightened ally enters the aura, that condition has no effect on that ally while there."
@@ -245,7 +245,7 @@ class AuraOfCourage(Feature):
 
 class RadiantStrikes(Feature):
     def __init__(self):
-        super().__init__(name="Radiant Strikes", origin="Paladin Level 11")
+        super().__init__(name="Radiant Strikes", origin="Paladin Level 11", usage_tags=["damage"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "Your strikes now carry supernatural power. When you hit a target with an attack roll using a Melee weapon or an Unarmed Strike, the target takes an extra 1d8 Radiant damage."
@@ -254,7 +254,7 @@ class RadiantStrikes(Feature):
 
 class RestoringTouch(Feature):
     def __init__(self):
-        super().__init__(name="Restoring Touch", origin="Paladin Level 14")
+        super().__init__(name="Restoring Touch", origin="Paladin Level 14", usage_tags=["buff"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "When you use Lay On Hands on a creature, you can also remove one or more of the following conditions from the creature: Blinded, Charmed, Deafened, Frightened, Paralyzed, or Stunned. You must expend 5 Hit Points from the healing pool of Lay On Hands for each of these conditions you remove; those points don't also restore Hit Points to the creature."

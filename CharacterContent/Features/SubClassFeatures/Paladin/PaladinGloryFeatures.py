@@ -6,7 +6,7 @@ from Utils import StringUtils
 
 class InspiringSmite(Feature):
     def __init__(self):
-        super().__init__(name="Inspiring Smite", origin="Oath of Glory Paladin Level 3", range="30 Feet")
+        super().__init__(name="Inspiring Smite", origin="Oath of Glory Paladin Level 3", range="30 Feet", usage_tags=["heal"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "Immediately after you cast Divine Smite, you can expend one use of your Channel Divinity and distribute Temporary Hit Points to creatures of your choice within 30 feet of yourself, which can include you. The total number of Temporary Hit Points equals 2d8 plus your Paladin level, divided among the chosen creatures however you like."
@@ -45,7 +45,7 @@ class GlorySpells(Feature):
 class PeerlessAthlete(Feature):
     def __init__(self):
         super().__init__(
-            name="Peerless Athlete", origin="Oath of Glory Paladin Level 3", action_type="bonus_action", duration="1 Hour"
+            name="Peerless Athlete", origin="Oath of Glory Paladin Level 3", action_type="bonus_action", duration="1 Hour", usage_tags=["buff"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -56,7 +56,7 @@ class PeerlessAthlete(Feature):
 class AuraOfAlacrity(Feature):
     def __init__(self):
         super().__init__(
-            name="Aura of Alacrity", origin="Oath of Glory Paladin Level 7"
+            name="Aura of Alacrity", origin="Oath of Glory Paladin Level 7", usage_tags=["buff"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -70,7 +70,7 @@ class AuraOfAlacrity(Feature):
 class GloriousDefense(Feature):
     def __init__(self):
         super().__init__(
-            name="Glorious Defense", origin="Oath of Glory Paladin Level 15", action_type="reaction", range="10 Feet"
+            name="Glorious Defense", origin="Oath of Glory Paladin Level 15", action_type="reaction", range="10 Feet", usage_tags=["buff", "damage"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -103,7 +103,7 @@ class GloriousDefense(Feature):
 
 class LivingLegend(Feature):
     def __init__(self):
-        super().__init__(name="Living Legend", origin="Oath of Glory Paladin Level 20", action_type="bonus_action", duration="10 Minutes")
+        super().__init__(name="Living Legend", origin="Oath of Glory Paladin Level 20", action_type="bonus_action", duration="10 Minutes", usage_tags=["buff"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

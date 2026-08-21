@@ -8,7 +8,7 @@ from Utils import StringUtils
 
 class Rage(Feature):
     def __init__(self):
-        super().__init__(name="Rage", origin="Barbarian Level 1", action_type="bonus_action", duration="Until End of Your Next Turn")
+        super().__init__(name="Rage", origin="Barbarian Level 1", action_type="bonus_action", duration="Until End of Your Next Turn", usage_tags=["buff"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         barbarian_level = character_stat_block.get_class_level(
@@ -147,7 +147,7 @@ class DangerSenseText(Feature):
 
 class DangerSense(Feature):
     def __init__(self):
-        super().__init__(skippable_in_concise=True)
+        super().__init__(skippable_in_concise=True, usage_tags=["buff"])
         self._advantage = SavingThrowAdvantage([Ability.DEXTERITY])
 
     def apply(self, character_stat_block: CharacterStatBlock):
@@ -156,7 +156,7 @@ class DangerSense(Feature):
 
 class RecklessAttack(Feature):
     def __init__(self):
-        super().__init__(name="Reckless Attack", origin="Barbarian Level 2", duration="Until Start of Your Next Turn")
+        super().__init__(name="Reckless Attack", origin="Barbarian Level 2", duration="Until Start of Your Next Turn", usage_tags=["buff"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "You can throw aside all concern for defense to attack with increased ferocity. When you make your first attack roll on your turn, you can decide to attack recklessly. Doing so gives you Advantage on attack rolls using Strength until the start of your next turn, but attack rolls against you have Advantage during that time."
@@ -220,7 +220,7 @@ class ExtraAttack(Feature):
 
 class FastMovement(Feature):
     def __init__(self):
-        super().__init__(name="Fast Movement", origin="Barbarian Level 5")
+        super().__init__(name="Fast Movement", origin="Barbarian Level 5", usage_tags=["buff"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -235,7 +235,7 @@ class FastMovementBonus(Feature):
     called on them - this one must be add_feature()'d directly."""
 
     def __init__(self):
-        super().__init__(skippable_in_concise=True)
+        super().__init__(skippable_in_concise=True, usage_tags=["buff"])
 
     def apply(self, character_stat_block: CharacterStatBlock):
         SpeedBonus(10).apply(character_stat_block)
@@ -243,7 +243,7 @@ class FastMovementBonus(Feature):
 
 class FeralInstinct(Feature):
     def __init__(self):
-        super().__init__(name="Feral Instinct", origin="Barbarian Level 7", skippable_in_concise=True)
+        super().__init__(name="Feral Instinct", origin="Barbarian Level 7", skippable_in_concise=True, usage_tags=["buff"])
 
     def apply(self, character_stat_block: CharacterStatBlock):
         InitiativeRollCondition(Definitions.DiceRollCondition.ADVANTAGE).apply(character_stat_block)
@@ -257,7 +257,7 @@ class FeralInstinct(Feature):
 
 class InstinctivePounce(Feature):
     def __init__(self):
-        super().__init__(name="Instinctive Pounce", origin="Barbarian Level 7")
+        super().__init__(name="Instinctive Pounce", origin="Barbarian Level 7", usage_tags=["buff"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "As part of the Bonus Action you take to enter your Rage, you can move up to half your Speed."
@@ -266,7 +266,7 @@ class InstinctivePounce(Feature):
 
 class BrutalStrike(Feature):
     def __init__(self):
-        super().__init__(name="Brutal Strike", origin="Barbarian Level 9")
+        super().__init__(name="Brutal Strike", origin="Barbarian Level 9", usage_tags=["damage", "control"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -280,7 +280,7 @@ class BrutalStrike(Feature):
 
 class RelentlessRage(Feature):
     def __init__(self):
-        super().__init__(name="Relentless Rage", origin="Barbarian Level 11")
+        super().__init__(name="Relentless Rage", origin="Barbarian Level 11", usage_tags=["heal"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -305,7 +305,7 @@ class RelentlessRage(Feature):
 
 class ImprovedBrutalStrikeLevel13(Feature):
     def __init__(self):
-        super().__init__(name="Improved Brutal Strike 1", origin="Barbarian Level 13")
+        super().__init__(name="Improved Brutal Strike 1", origin="Barbarian Level 13", usage_tags=["control"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -330,7 +330,7 @@ class PersistentRage(Feature):
 
 class ImprovedBrutalStrikeLevel17(Feature):
     def __init__(self):
-        super().__init__(name="Improved Brutal Strike 2", origin="Barbarian Level 17")
+        super().__init__(name="Improved Brutal Strike 2", origin="Barbarian Level 17", usage_tags=["damage"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "The extra damage of your Brutal Strike increases to 2d10. In addition, you can use two different Brutal Strike effects whenever you use your Brutal Strike feature."
@@ -339,7 +339,7 @@ class ImprovedBrutalStrikeLevel17(Feature):
 
 class IndomitableMight(Feature):
     def __init__(self):
-        super().__init__(name="Indomitable Might", origin="Barbarian Level 18")
+        super().__init__(name="Indomitable Might", origin="Barbarian Level 18", usage_tags=["buff"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "If your total for a Strength check or Strength saving throw is less than your Strength score, you can use that score in place of the total."
@@ -348,7 +348,7 @@ class IndomitableMight(Feature):
 
 class PrimalChampion(Feature):
     def __init__(self):
-        super().__init__(name="Primal Champion", origin="Barbarian Level 20", skippable_in_concise=True)
+        super().__init__(name="Primal Champion", origin="Barbarian Level 20", skippable_in_concise=True, usage_tags=["buff"])
         self._bonuses = AbilityScoreBonus([
             (Ability.STRENGTH, 4),
             (Ability.CONSTITUTION, 4),

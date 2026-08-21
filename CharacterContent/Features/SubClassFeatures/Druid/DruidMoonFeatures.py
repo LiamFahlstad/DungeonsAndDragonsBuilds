@@ -7,7 +7,7 @@ from Utils import StringUtils
 
 class CircleForms(Feature):
     def __init__(self):
-        super().__init__(name="Circle Forms", origin="Circle of the Moon Druid Level 3")
+        super().__init__(name="Circle Forms", origin="Circle of the Moon Druid Level 3", usage_tags=["buff", "heal"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -53,7 +53,7 @@ class CircleOfTheMoonSpells(Feature):
 class ImprovedCircleForms(Feature):
     def __init__(self):
         super().__init__(
-            name="Improved Circle Forms", origin="Circle of the Moon Druid Level 6"
+            name="Improved Circle Forms", origin="Circle of the Moon Druid Level 6", usage_tags=["buff"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -68,7 +68,7 @@ class ImprovedCircleForms(Feature):
 class MoonlightStep(Feature):
     def __init__(self):
         super().__init__(
-            name="Moonlight Step", origin="Circle of the Moon Druid Level 10", action_type="bonus_action", range="30 Feet"
+            name="Moonlight Step", origin="Circle of the Moon Druid Level 10", action_type="bonus_action", range="30 Feet", usage_tags=["buff"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -102,7 +102,7 @@ class MoonlightStep(Feature):
 
 class LunarForm(Feature):
     def __init__(self):
-        super().__init__(name="Lunar Form", origin="Circle of the Moon Druid Level 14")
+        super().__init__(name="Lunar Form", origin="Circle of the Moon Druid Level 14", usage_tags=["damage"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

@@ -9,7 +9,7 @@ SIZE = CreatureSize.MEDIUM  # Given by your species
 
 class CelestialResistance(Feature):
     def __init__(self):
-        super().__init__(name="Celestial Resistance", origin="Aasimar Trait", skippable_in_concise=True)
+        super().__init__(name="Celestial Resistance", origin="Aasimar Trait", skippable_in_concise=True, usage_tags=["buff"])
         self._resistances = [
             DamageResistance(DamageType.NECROTIC, self.name),
             DamageResistance(DamageType.RADIANT, self.name),
@@ -52,6 +52,7 @@ class HealingHands(Feature):
             origin="Aasimar Trait",
             action_type="action",
             range="Touch",
+            usage_tags=["heal"],
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -61,7 +62,7 @@ class HealingHands(Feature):
 
 class CelestialRevelation(Feature):
     def __init__(self):
-        super().__init__(name="Celestial Revelation", origin="Aasimar Trait", action_type="bonus_action", duration="1 Minute")
+        super().__init__(name="Celestial Revelation", origin="Aasimar Trait", action_type="bonus_action", duration="1 Minute", usage_tags=["damage", "buff", "control"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         proficiency_bonus = character_stat_block.get_proficiency_bonus()

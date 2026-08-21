@@ -10,7 +10,7 @@ SIZE = CreatureSize.MEDIUM  # Given by your species
 class FiendishResistance(Feature):
     def __init__(self, damage_type: str):
         self.damage_type = damage_type
-        super().__init__(name="Fiendish Resistance", origin="Tiefling Trait")
+        super().__init__(name="Fiendish Resistance", origin="Tiefling Trait", usage_tags=["buff"])
         self._resistance = DamageResistance(DamageType(damage_type), self.name)
 
     def apply(self, character_stat_block: CharacterStatBlock):

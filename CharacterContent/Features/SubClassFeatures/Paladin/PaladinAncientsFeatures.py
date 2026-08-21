@@ -6,7 +6,7 @@ from StatBlocks.CharacterStatBlock import CharacterStatBlock
 class NaturesWrath(Feature):
     def __init__(self):
         super().__init__(
-            name="Nature's Wrath", origin="Oath of the Ancients Paladin Level 3", action_type="action", duration="1 Minute", range="15 Feet"
+            name="Nature's Wrath", origin="Oath of the Ancients Paladin Level 3", action_type="action", duration="1 Minute", range="15 Feet", usage_tags=["control"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -47,7 +47,7 @@ class OathOfTheAncientsSpells(Feature):
 class AuraOfWarding(Feature):
     def __init__(self):
         super().__init__(
-            name="Aura of Warding", origin="Oath of the Ancients Paladin Level 7"
+            name="Aura of Warding", origin="Oath of the Ancients Paladin Level 7", usage_tags=["buff"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -58,7 +58,7 @@ class AuraOfWarding(Feature):
 class UndyingSentinel(Feature):
     def __init__(self):
         super().__init__(
-            name="Undying Sentinel", origin="Oath of the Ancients Paladin Level 15"
+            name="Undying Sentinel", origin="Oath of the Ancients Paladin Level 15", usage_tags=["heal"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -78,7 +78,7 @@ class UndyingSentinel(Feature):
 class ElderChampion(Feature):
     def __init__(self):
         super().__init__(
-            name="Elder Champion", origin="Oath of the Ancients Paladin Level 20", action_type="bonus_action", duration="1 Minute or Until Ended"
+            name="Elder Champion", origin="Oath of the Ancients Paladin Level 20", action_type="bonus_action", duration="1 Minute or Until Ended", usage_tags=["heal", "control"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:

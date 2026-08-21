@@ -17,7 +17,7 @@ class DivinationSavant(Feature):
 
 class Portent(Feature):
     def __init__(self):
-        super().__init__(name="Portent", origin="Diviner Wizard Level 3")
+        super().__init__(name="Portent", origin="Diviner Wizard Level 3", usage_tags=["buff"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -48,7 +48,7 @@ class ExpertDivination(Feature):
 
 class TheThirdEye(Feature):
     def __init__(self):
-        super().__init__(name="The Third Eye", origin="Diviner Wizard Level 10", action_type="bonus_action", duration="Until Short or Long Rest")
+        super().__init__(name="The Third Eye", origin="Diviner Wizard Level 10", action_type="bonus_action", duration="Until Short or Long Rest", usage_tags=["buff"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -62,7 +62,7 @@ class TheThirdEye(Feature):
 
 class GreaterPortent(Feature):
     def __init__(self):
-        super().__init__(name="Greater Portent", origin="Diviner Wizard Level 14")
+        super().__init__(name="Greater Portent", origin="Diviner Wizard Level 14", usage_tags=["buff"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "The visions in your dreams intensify and paint a more accurate picture in your mind of what is to come. Roll three d20s for your Portent feature rather than two."

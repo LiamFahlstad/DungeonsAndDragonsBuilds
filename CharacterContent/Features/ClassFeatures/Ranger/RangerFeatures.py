@@ -176,7 +176,7 @@ class Expertise(Feature):
 
 class Tireless(Feature):
     def __init__(self):
-        super().__init__(name="Tireless", origin="Ranger Level 10", action_type="action")
+        super().__init__(name="Tireless", origin="Ranger Level 10", action_type="action", usage_tags=["heal"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         wis_mod = character_stat_block.get_ability_modifier(Ability.WISDOM)
@@ -212,7 +212,7 @@ class RelentlessHunter(Feature):
 
 class NaturesVeil(Feature):
     def __init__(self):
-        super().__init__(name="Nature's Veil", origin="Ranger Level 14", action_type="bonus_action", duration="Until End of Your Next Turn")
+        super().__init__(name="Nature's Veil", origin="Ranger Level 14", action_type="bonus_action", duration="Until End of Your Next Turn", usage_tags=["buff"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         wis_mod = character_stat_block.get_ability_modifier(Ability.WISDOM)
@@ -238,7 +238,7 @@ class NaturesVeil(Feature):
 
 class PreciseHunter(Feature):
     def __init__(self):
-        super().__init__(name="Precise Hunter", origin="Ranger Level 17")
+        super().__init__(name="Precise Hunter", origin="Ranger Level 17", usage_tags=["buff"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "You have Advantage on attack rolls against the creature currently marked by your Hunter's Mark."
@@ -256,7 +256,7 @@ class FeralSenses(Feature):
 
 class FoeSlayer(Feature):
     def __init__(self):
-        super().__init__(name="Foe Slayer", origin="Ranger Level 20")
+        super().__init__(name="Foe Slayer", origin="Ranger Level 20", usage_tags=["damage"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "The damage die of your Hunter's Mark is a d10 rather than a d6."

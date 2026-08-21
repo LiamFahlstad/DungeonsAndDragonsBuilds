@@ -104,7 +104,7 @@ class ExtraAttack(Feature):
 
 class ArcaneJolt(Feature):
     def __init__(self):
-        super().__init__(name="Arcane Jolt", origin="Battle Smith Artificer Level 9", range="30 Feet")
+        super().__init__(name="Arcane Jolt", origin="Battle Smith Artificer Level 9", range="30 Feet", usage_tags=["damage", "heal"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         intelligence_modifier = character_stat_block.get_ability_modifier(Ability.INTELLIGENCE)
@@ -137,7 +137,7 @@ class ArcaneJolt(Feature):
 class ImprovedDefender(Feature):
     def __init__(self):
         super().__init__(
-            name="Improved Defender", origin="Battle Smith Artificer Level 15"
+            name="Improved Defender", origin="Battle Smith Artificer Level 15", usage_tags=["damage", "heal"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:

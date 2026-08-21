@@ -53,7 +53,7 @@ LEVEL_TO_FOCUS_POINTS = {
 class ElementalAttunement(Feature):
     def __init__(self):
         super().__init__(
-            name="Elemental Attunement", origin="Warrior of the Elements Monk Level 3", duration="10 Minutes or Until Incapacitated"
+            name="Elemental Attunement", origin="Warrior of the Elements Monk Level 3", duration="10 Minutes or Until Incapacitated", usage_tags=["damage", "control"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -90,7 +90,7 @@ class ManipulateElements(Feature):
 class ElementalBurst(Feature):
     def __init__(self):
         super().__init__(
-            name="Elemental Burst", origin="Warrior of the Elements Monk Level 6", action_type="action", range="20-Foot-Radius Sphere"
+            name="Elemental Burst", origin="Warrior of the Elements Monk Level 6", action_type="action", range="20-Foot-Radius Sphere", usage_tags=["damage"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -118,6 +118,7 @@ class StrideOfTheElements(Feature):
         super().__init__(
             name="Stride of the Elements",
             origin="Warrior of the Elements Monk Level 11",
+            usage_tags=["buff"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -128,7 +129,7 @@ class StrideOfTheElements(Feature):
 class ElementalEpitome(Feature):
     def __init__(self):
         super().__init__(
-            name="Elemental Epitome", origin="Warrior of the Elements Monk Level 17", range="5 Feet"
+            name="Elemental Epitome", origin="Warrior of the Elements Monk Level 17", range="5 Feet", usage_tags=["buff", "damage"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:

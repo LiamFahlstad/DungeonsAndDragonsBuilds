@@ -8,7 +8,7 @@ from StatBlocks.CharacterStatBlock import CharacterStatBlock
 class Frenzy(Feature):
     def __init__(self):
         super().__init__(
-            name="Frenzy", origin="Path Of The Berserker Barbarian Level 3"
+            name="Frenzy", origin="Path Of The Berserker Barbarian Level 3", usage_tags=["damage"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -35,7 +35,7 @@ class Frenzy(Feature):
 class MindlessRage(Feature):
     def __init__(self):
         super().__init__(
-            name="Mindless Rage", origin="Path Of The Berserker Barbarian Level 6"
+            name="Mindless Rage", origin="Path Of The Berserker Barbarian Level 6", usage_tags=["buff"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -46,7 +46,7 @@ class MindlessRage(Feature):
 class Retaliation(Feature):
     def __init__(self):
         super().__init__(
-            name="Retaliation", origin="Path Of The Berserker Barbarian Level 10", action_type="reaction", range="5 Feet"
+            name="Retaliation", origin="Path Of The Berserker Barbarian Level 10", action_type="reaction", range="5 Feet", usage_tags=["damage"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -62,6 +62,7 @@ class IntimidatingPresence(Feature):
             action_type="bonus_action",
             duration="1 Minute",
             range="30-Foot Emanation",
+            usage_tags=["control"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:

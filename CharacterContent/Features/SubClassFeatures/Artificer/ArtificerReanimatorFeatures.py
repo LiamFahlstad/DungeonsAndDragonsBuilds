@@ -27,7 +27,7 @@ class ReanimatorSpells(Feature):
 class ReanimatorSkillSet(Feature):
     def __init__(self):
         super().__init__(
-            name="Reanimator's Skill Set", origin="Reanimator Artificer Level 3", range="10-Foot Emanation"
+            name="Reanimator's Skill Set", origin="Reanimator Artificer Level 3", range="10-Foot Emanation", usage_tags=["heal", "damage"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -66,7 +66,7 @@ class ReanimatedCompanion(Feature):
 class StrangeModifications(Feature):
     def __init__(self):
         super().__init__(
-            name="Strange Modifications", origin="Reanimator Artificer Level 5", range="120 Feet"
+            name="Strange Modifications", origin="Reanimator Artificer Level 5", range="120 Feet", usage_tags=["damage"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -89,7 +89,7 @@ class StrangeModifications(Feature):
 class ImprovedReanimation(Feature):
     def __init__(self):
         super().__init__(
-            name="Improved Reanimation", origin="Reanimator Artificer Level 9"
+            name="Improved Reanimation", origin="Reanimator Artificer Level 9", usage_tags=["damage"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -100,7 +100,7 @@ class ImprovedReanimation(Feature):
 class MacabreModifications(Feature):
     def __init__(self):
         super().__init__(
-            name="Macabre Modifications", origin="Reanimator Artificer Level 9"
+            name="Macabre Modifications", origin="Reanimator Artificer Level 9", usage_tags=["control", "damage"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -116,7 +116,7 @@ class MacabreModifications(Feature):
 class RefinedReanimation(Feature):
     def __init__(self):
         super().__init__(
-            name="Refined Reanimation", origin="Reanimator Artificer Level 15", action_type="reaction"
+            name="Refined Reanimation", origin="Reanimator Artificer Level 15", action_type="reaction", usage_tags=["heal"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:

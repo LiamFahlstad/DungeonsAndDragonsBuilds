@@ -7,7 +7,7 @@ from Utils import StringUtils
 class ElementalSmite(Feature):
     def __init__(self):
         super().__init__(
-            name="Elemental Smite", origin="Oath of the Noble Genies Paladin Level 3", range="30 Feet"
+            name="Elemental Smite", origin="Oath of the Noble Genies Paladin Level 3", range="30 Feet", usage_tags=["damage", "control", "buff"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -56,7 +56,7 @@ class GenieSpells(Feature):
 class GeniesSplendor(Feature):
     def __init__(self):
         super().__init__(
-            name="Genie's Splendor", origin="Oath of the Noble Genies Paladin Level 3"
+            name="Genie's Splendor", origin="Oath of the Noble Genies Paladin Level 3", usage_tags=["buff"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -72,6 +72,7 @@ class AuraOfElementalShielding(Feature):
         super().__init__(
             name="Aura of Elemental Shielding",
             origin="Oath of the Noble Genies Paladin Level 7",
+            usage_tags=["buff"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -85,7 +86,7 @@ class AuraOfElementalShielding(Feature):
 class ElementalRebuke(Feature):
     def __init__(self):
         super().__init__(
-            name="Elemental Rebuke", origin="Oath of the Noble Genies Paladin Level 15", action_type="reaction"
+            name="Elemental Rebuke", origin="Oath of the Noble Genies Paladin Level 15", action_type="reaction", usage_tags=["damage", "buff"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -120,7 +121,7 @@ class ElementalRebuke(Feature):
 class NobleScion(Feature):
     def __init__(self):
         super().__init__(
-            name="Noble Scion", origin="Oath of the Noble Genies Paladin Level 20", action_type="bonus_action", duration="10 Minutes or Until Ended"
+            name="Noble Scion", origin="Oath of the Noble Genies Paladin Level 20", action_type="bonus_action", duration="10 Minutes or Until Ended", usage_tags=["buff"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:

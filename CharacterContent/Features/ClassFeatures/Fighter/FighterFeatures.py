@@ -18,7 +18,7 @@ class FightingStyle(Feature):
 
 class SecondWind(Feature):
     def __init__(self):
-        super().__init__(name="Second Wind", origin="Fighter Level 1")
+        super().__init__(name="Second Wind", origin="Fighter Level 1", usage_tags=["heal"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         uses = 2
@@ -126,7 +126,7 @@ class ActionSurge(Feature):
 
 class TacticalMind(Feature):
     def __init__(self):
-        super().__init__(name="Tactical Mind", origin="Fighter Level 2")
+        super().__init__(name="Tactical Mind", origin="Fighter Level 2", usage_tags=["buff"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "You have a mind for tactics on and off the battlefield. When you fail an ability check, you can expend a use of your Second Wind to push yourself toward success. Rather than regaining Hit Points, you roll 1d10 and add the number rolled to the ability check, potentially turning it into a success. If the check still fails, this use of Second Wind isn’t expended."
@@ -163,7 +163,7 @@ class TacticalShift(Feature):
 
 class Indomitable(Feature):
     def __init__(self):
-        super().__init__(name="Indomitable", origin="Fighter Level 9")
+        super().__init__(name="Indomitable", origin="Fighter Level 9", usage_tags=["buff"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         if character_stat_block.character_level >= 17:
@@ -224,7 +224,7 @@ class TwoExtraAttacks(Feature):
 
 class StudiedAttacks(Feature):
     def __init__(self):
-        super().__init__(name="Studied Attacks", origin="Fighter Level 13")
+        super().__init__(name="Studied Attacks", origin="Fighter Level 13", usage_tags=["buff"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "You study your opponents and learn from each attack you make. If you make an attack roll against a creature and miss, you have Advantage on your next attack roll against that creature before the end of your next turn."

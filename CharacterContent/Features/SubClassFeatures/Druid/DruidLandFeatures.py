@@ -31,7 +31,7 @@ class CircleOfTheLandSpells(Feature):
 
 class LandsAid(Feature):
     def __init__(self):
-        super().__init__(name="Land's Aid", origin="Circle of the Land Druid Level 3", action_type="action", range="60 Feet")
+        super().__init__(name="Land's Aid", origin="Circle of the Land Druid Level 3", action_type="action", range="60 Feet", usage_tags=["damage", "heal"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -93,7 +93,7 @@ class NaturalRecovery(Feature):
 class NaturesWard(Feature):
     def __init__(self, land_type: Definitions.DruidLandType):
         super().__init__(
-            name="Nature's Ward", origin="Circle of the Land Druid Level 10", skippable_in_concise=True
+            name="Nature's Ward", origin="Circle of the Land Druid Level 10", skippable_in_concise=True, usage_tags=["buff"]
         )
         self.land_type = land_type
         self._condition_immunity = ConditionImmunity(Condition.POISONED, self.name)
@@ -117,7 +117,7 @@ class NaturesWard(Feature):
 class NaturesSanctuary(Feature):
     def __init__(self):
         super().__init__(
-            name="Nature's Sanctuary", origin="Circle of the Land Druid Level 14", action_type="action", duration="1 Minute or Until Incapacitated", range="120 Feet"
+            name="Nature's Sanctuary", origin="Circle of the Land Druid Level 14", action_type="action", duration="1 Minute or Until Incapacitated", range="120 Feet", usage_tags=["buff"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
