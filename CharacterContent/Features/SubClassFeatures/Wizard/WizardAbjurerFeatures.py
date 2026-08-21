@@ -56,7 +56,7 @@ class ProjectedWard(Feature):
 
 class SpellBreaker(Feature):
     def __init__(self):
-        super().__init__(name="Spell Breaker", origin="Abjurer Wizard Level 10")
+        super().__init__(name="Spell Breaker", origin="Abjurer Wizard Level 10", action_type="bonus_action")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

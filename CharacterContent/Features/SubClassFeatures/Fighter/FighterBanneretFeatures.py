@@ -72,7 +72,7 @@ class RallyingSurge(Feature):
 
 class SharedResilience(Feature):
     def __init__(self):
-        super().__init__(name="Shared Resilience", origin="Banneret Fighter Level 15", range="60 Feet", usage_tags=["buff"])
+        super().__init__(name="Shared Resilience", origin="Banneret Fighter Level 15", action_type="reaction", range="60 Feet", usage_tags=["buff"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "When an ally you can see within 60 feet of yourself fails a saving throw, you can take a Reaction to expend a use of your Indomitable feature. The ally can immediately reroll the saving throw with a bonus equal to your Fighter level; the ally must use the new roll."

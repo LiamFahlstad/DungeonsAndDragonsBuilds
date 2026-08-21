@@ -50,7 +50,7 @@ class VowOfEnmity(Feature):
 class RelentlessAvenger(Feature):
     def __init__(self):
         super().__init__(
-            name="Relentless Avenger", origin="Oath of Vengeance Paladin Level 7", duration="Until End of Current Turn", usage_tags=["control"]
+            name="Relentless Avenger", origin="Oath of Vengeance Paladin Level 7", action_type="reaction", duration="Until End of Current Turn", usage_tags=["control"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:

@@ -18,7 +18,7 @@ class FastHands(Feature):
 
 class SecondStoryWork(Feature):
     def __init__(self):
-        super().__init__(name="Second Story Work", origin="Thief Rogue Level 3")
+        super().__init__(name="Second Story Work", origin="Thief Rogue Level 3", usage_tags=["buff"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -31,7 +31,7 @@ class SecondStoryWork(Feature):
 
 class SupremeSneak(Feature):
     def __init__(self):
-        super().__init__(name="Supreme Sneak", origin="Thief Rogue Level 9")
+        super().__init__(name="Supreme Sneak", origin="Thief Rogue Level 9", usage_tags=["buff"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

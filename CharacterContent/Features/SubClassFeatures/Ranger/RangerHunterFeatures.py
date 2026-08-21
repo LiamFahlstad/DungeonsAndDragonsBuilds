@@ -23,7 +23,7 @@ class ColossusSlayer(Feature):
 
 class HordeBreaker(Feature):
     def __init__(self):
-        super().__init__(name="Horde Breaker", origin="Hunter Ranger Level 3", range="5 Feet")
+        super().__init__(name="Horde Breaker", origin="Hunter Ranger Level 3", range="5 Feet", usage_tags=["damage"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "Once on each of your turns when you make an attack with a weapon, you can make another attack with the same weapon against a different creature that is within 5 feet of the original target, that is within the weapon's range, and that you haven't attacked this turn."

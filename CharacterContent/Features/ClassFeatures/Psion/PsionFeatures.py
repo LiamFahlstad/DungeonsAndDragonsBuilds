@@ -89,7 +89,7 @@ class PsionicDiscipline(Feature):
 
 class PsionicRestoration(Feature):
     def __init__(self):
-        super().__init__(name="Psionic Restoration", origin="Psion Level 5")
+        super().__init__(name="Psionic Restoration", origin="Psion Level 5", action_type="action")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

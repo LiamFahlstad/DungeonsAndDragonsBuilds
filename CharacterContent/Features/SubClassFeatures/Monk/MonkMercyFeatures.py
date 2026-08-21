@@ -145,7 +145,7 @@ class FlurryOfHealingAndHarm(Feature):
 class HandOfUltimateMercy(Feature):
     def __init__(self):
         super().__init__(
-            name="Hand of Ultimate Mercy", origin="Warrior of Mercy Monk Level 17", action_type="action", range="Touch", usage_tags=["heal", "control"]
+            name="Hand of Ultimate Mercy", origin="Warrior of Mercy Monk Level 17", action_type="action", range="Touch", usage_tags=["heal"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:

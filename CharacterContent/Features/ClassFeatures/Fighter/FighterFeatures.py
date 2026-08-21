@@ -18,7 +18,7 @@ class FightingStyle(Feature):
 
 class SecondWind(Feature):
     def __init__(self):
-        super().__init__(name="Second Wind", origin="Fighter Level 1", usage_tags=["heal"])
+        super().__init__(name="Second Wind", origin="Fighter Level 1", action_type="bonus_action", usage_tags=["heal"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         uses = 2

@@ -55,7 +55,7 @@ class MistyEscape(Feature):
 class BeguilingDefenses(Feature):
     def __init__(self):
         super().__init__(
-            name="Beguiling Defenses", origin="Archfey Patron Warlock Level 10", action_type="reaction", usage_tags=["buff"]
+            name="Beguiling Defenses", origin="Archfey Patron Warlock Level 10", action_type="reaction", usage_tags=["buff", "damage"]
         )
         self._immunity = ConditionImmunity(Condition.CHARMED, self.name)
 

@@ -22,7 +22,7 @@ class Darkvision(Feature):
 class SpiderClimb(Feature):
     def __init__(self, character_level: int):
         self.character_level = character_level
-        super().__init__(name="Spider Climb", origin="Dhampir Trait")
+        super().__init__(name="Spider Climb", origin="Dhampir Trait", usage_tags=["buff"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         if self.character_level >= 3:

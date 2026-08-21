@@ -11,7 +11,7 @@ class PrimalCompanion(Feature):
     def __init__(self, companion_type: CompanionType, damage_type: Optional[DamageType] = None):
         self.companion_type = companion_type
         self.damage_type = damage_type
-        super().__init__(name="Primal Companion", origin="Beast Master Ranger Level 3", action_type="bonus_action", range="5 Feet")
+        super().__init__(name="Primal Companion", origin="Beast Master Ranger Level 3", range="5 Feet")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

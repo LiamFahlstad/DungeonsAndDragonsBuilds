@@ -73,7 +73,7 @@ class IronMind(Feature):
 class StalkersFlurry(Feature):
     def __init__(self):
         super().__init__(
-            name="Stalker's Flurry", origin="Gloom Stalker Ranger Level 11", range="10 Feet", usage_tags=["damage", "control"]
+            name="Stalker's Flurry", origin="Gloom Stalker Ranger Level 11", range="10 Feet", duration="Until Start of Your Next Turn", usage_tags=["damage", "control"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:

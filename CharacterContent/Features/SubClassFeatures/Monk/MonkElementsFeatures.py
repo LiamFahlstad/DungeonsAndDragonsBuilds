@@ -90,7 +90,7 @@ class ManipulateElements(Feature):
 class ElementalBurst(Feature):
     def __init__(self):
         super().__init__(
-            name="Elemental Burst", origin="Warrior of the Elements Monk Level 6", action_type="action", range="20-Foot-Radius Sphere", usage_tags=["damage"]
+            name="Elemental Burst", origin="Warrior of the Elements Monk Level 6", action_type="action", range="120 Feet (20-Foot-Radius Sphere)", usage_tags=["damage"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:

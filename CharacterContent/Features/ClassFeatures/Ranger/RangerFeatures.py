@@ -148,7 +148,7 @@ class ExtraAttack(Feature):
 
 class Roving(Feature):
     def __init__(self):
-        super().__init__(name="Roving", origin="Ranger Level 6", skippable_in_concise=True)
+        super().__init__(name="Roving", origin="Ranger Level 6", skippable_in_concise=True, usage_tags=["buff"])
 
     def apply(self, character_stat_block: CharacterStatBlock):
         SpeedBonus(10).apply(character_stat_block)

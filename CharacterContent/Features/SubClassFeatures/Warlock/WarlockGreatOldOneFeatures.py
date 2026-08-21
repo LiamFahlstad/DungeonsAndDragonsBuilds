@@ -79,7 +79,7 @@ class EldritchHex(Feature):
 class ThoughtShield(Feature):
     def __init__(self):
         super().__init__(
-            name="Thought Shield", origin="Great Old One Patron Warlock Level 10", usage_tags=["buff"]
+            name="Thought Shield", origin="Great Old One Patron Warlock Level 10", usage_tags=["buff", "damage"]
         )
         self._resistance = DamageResistance(DamageType.PSYCHIC, self.name)
 

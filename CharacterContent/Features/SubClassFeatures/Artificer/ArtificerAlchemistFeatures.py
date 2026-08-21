@@ -91,7 +91,7 @@ class RestorativeReagents(Feature):
 
 class ChemicalMastery(Feature):
     def __init__(self):
-        super().__init__(name="Chemical Mastery", origin="Alchemist Artificer Level 15", usage_tags=["damage"])
+        super().__init__(name="Chemical Mastery", origin="Alchemist Artificer Level 15", usage_tags=["damage", "buff"])
         self._resistances = [
             DamageResistance(DamageType.ACID, self.name),
             DamageResistance(DamageType.POISON, self.name),

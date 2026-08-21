@@ -201,7 +201,7 @@ class PatientDefense(Feature):
 class StepOfTheWind(Feature):
     def __init__(self):
         super().__init__(
-            name="Step of the Wind", origin="Monk Level 2", action_type="bonus_action", usage_tags=["control"]
+            name="Step of the Wind", origin="Monk Level 2", action_type="bonus_action"
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -260,7 +260,7 @@ class UnarmoredMovement(Feature):
 
 class UncannyMetabolism(Feature):
     def __init__(self):
-        super().__init__(name="Uncanny Metabolism", origin="Monk Level 2", usage_tags=["heal", "buff"])
+        super().__init__(name="Uncanny Metabolism", origin="Monk Level 2", usage_tags=["heal"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -273,7 +273,7 @@ class UncannyMetabolism(Feature):
 class DeflectAttacks(Feature):
     def __init__(self):
         super().__init__(
-            name="Deflect Attacks", origin="Monk Level 3", action_type="reaction", usage_tags=["damage"]
+            name="Deflect Attacks", origin="Monk Level 3", action_type="reaction", usage_tags=["buff", "damage"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -326,7 +326,7 @@ class DeflectAttacks(Feature):
 class SlowFall(Feature):
     def __init__(self):
         super().__init__(
-            name="Slow Fall", origin="Monk Level 4", action_type="reaction"
+            name="Slow Fall", origin="Monk Level 4", action_type="reaction", usage_tags=["buff"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -416,7 +416,7 @@ class HeightenedFocus(Feature):
 
 class SelfRestoration(Feature):
     def __init__(self):
-        super().__init__(name="Self-Restoration", origin="Monk Level 10", usage_tags=["control"])
+        super().__init__(name="Self-Restoration", origin="Monk Level 10", usage_tags=["heal"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

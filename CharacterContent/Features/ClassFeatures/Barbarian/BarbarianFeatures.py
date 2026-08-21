@@ -92,7 +92,7 @@ class Rage(Feature):
 
 class UnarmoredDefenseText(Feature):
     def __init__(self):
-        super().__init__(name="Unarmored Defense", origin="Barbarian Level 1")
+        super().__init__(name="Unarmored Defense", origin="Barbarian Level 1", usage_tags=["buff"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         dexterity_modifier = character_stat_block.get_ability_modifier(

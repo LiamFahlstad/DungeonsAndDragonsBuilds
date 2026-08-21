@@ -57,7 +57,7 @@ class DreadAllegiance(Feature):
 
 class StrikeFear(Feature):
     def __init__(self):
-        super().__init__(name="Strike Fear", origin="Scion of the Three Rogue Level 9", usage_tags=["buff", "control"])
+        super().__init__(name="Strike Fear", origin="Scion of the Three Rogue Level 9", duration="1 Minute", usage_tags=["buff", "control"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

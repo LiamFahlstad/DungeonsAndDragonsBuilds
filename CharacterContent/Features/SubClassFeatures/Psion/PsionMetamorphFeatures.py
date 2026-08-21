@@ -54,7 +54,7 @@ class MutableForm(Feature):
 
 class OrganicWeapons(Feature):
     def __init__(self):
-        super().__init__(name="Organic Weapons", origin="Metamorph Psion Level 3", action_type="action", usage_tags=["damage"])
+        super().__init__(name="Organic Weapons", origin="Metamorph Psion Level 3", action_type="action", usage_tags=["damage", "buff", "control"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
