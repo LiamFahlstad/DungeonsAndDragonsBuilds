@@ -6,7 +6,7 @@ from StatBlocks.CharacterStatBlock import CharacterStatBlock
 class NaturesWrath(Feature):
     def __init__(self):
         super().__init__(
-            name="Nature's Wrath", origin="Oath of the Ancients Paladin Level 3"
+            name="Nature's Wrath", origin="Oath of the Ancients Paladin Level 3", action_type="action", duration="1 Minute"
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -78,7 +78,7 @@ class UndyingSentinel(Feature):
 class ElderChampion(Feature):
     def __init__(self):
         super().__init__(
-            name="Elder Champion", origin="Oath of the Ancients Paladin Level 20"
+            name="Elder Champion", origin="Oath of the Ancients Paladin Level 20", action_type="bonus_action", duration="1 Minute or Until Ended"
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:

@@ -83,7 +83,7 @@ class VoiceOfDeath(Feature):
 
 class GhostWalk(Feature):
     def __init__(self):
-        super().__init__(name="Ghost Walk", origin="Phantom Rogue Level 13")
+        super().__init__(name="Ghost Walk", origin="Phantom Rogue Level 13", action_type="bonus_action", duration="10 Minutes")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

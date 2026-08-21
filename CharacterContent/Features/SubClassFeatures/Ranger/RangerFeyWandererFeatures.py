@@ -58,7 +58,7 @@ class OtherworldlyGlamour(Feature):
 
 class BeguilingTwist(Feature):
     def __init__(self):
-        super().__init__(name="Beguiling Twist", origin="Fey Wanderer Ranger Level 7")
+        super().__init__(name="Beguiling Twist", origin="Fey Wanderer Ranger Level 7", action_type="reaction", duration="1 Minute")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

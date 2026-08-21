@@ -6,7 +6,7 @@ from Utils import StringUtils
 
 class PsionicPower(Feature):
     def __init__(self):
-        super().__init__(name="Psionic Power", origin="Soulknife Rogue Level 3")
+        super().__init__(name="Psionic Power", origin="Soulknife Rogue Level 3", action_type="action", duration="Hours Based on Energy Die Roll")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         rogue_level = character_stat_block.get_class_level(CharacterClass.ROGUE)
@@ -84,7 +84,7 @@ class SoulBlades(Feature):
 
 class PsychicVeil(Feature):
     def __init__(self):
-        super().__init__(name="Psychic Veil", origin="Soulknife Rogue Level 13")
+        super().__init__(name="Psychic Veil", origin="Soulknife Rogue Level 13", action_type="action", duration="1 Hour or Until Dismissed")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -107,7 +107,7 @@ class PsychicVeil(Feature):
 
 class RendMind(Feature):
     def __init__(self):
-        super().__init__(name="Rend Mind", origin="Soulknife Rogue Level 17")
+        super().__init__(name="Rend Mind", origin="Soulknife Rogue Level 17", duration="1 Minute")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

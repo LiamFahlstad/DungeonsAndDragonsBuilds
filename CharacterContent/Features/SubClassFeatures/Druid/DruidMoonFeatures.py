@@ -68,7 +68,7 @@ class ImprovedCircleForms(Feature):
 class MoonlightStep(Feature):
     def __init__(self):
         super().__init__(
-            name="Moonlight Step", origin="Circle of the Moon Druid Level 10"
+            name="Moonlight Step", origin="Circle of the Moon Druid Level 10", action_type="bonus_action"
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:

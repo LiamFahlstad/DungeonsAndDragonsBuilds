@@ -50,7 +50,7 @@ class KnowledgeDomainSpells(Feature):
 
 class MindMagic(Feature):
     def __init__(self):
-        super().__init__(name="Mind Magic", origin="Knowledge Domain Cleric Level 3")
+        super().__init__(name="Mind Magic", origin="Knowledge Domain Cleric Level 3", action_type="action")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "As a Magic action, you can expend one use of your Channel Divinity to manifest your magical knowledge. Choose one spell from the Divination school on the Knowledge Domain Spells table that you have prepared. As part of that action, you cast that spell without expending a spell slot or needing Material components."
@@ -98,7 +98,7 @@ class UnfetteredMind(Feature):
 class DivineForeknowledge(Feature):
     def __init__(self):
         super().__init__(
-            name="Divine Foreknowledge", origin="Knowledge Domain Cleric Level 17"
+            name="Divine Foreknowledge", origin="Knowledge Domain Cleric Level 17", action_type="bonus_action", duration="1 Hour"
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:

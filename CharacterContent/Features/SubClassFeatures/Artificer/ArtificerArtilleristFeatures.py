@@ -41,7 +41,7 @@ class Spells(Feature):
 
 class EldritchCannon(Feature):
     def __init__(self):
-        super().__init__(name="Eldritch Cannon", origin="Artillerist Artificer Level 3")
+        super().__init__(name="Eldritch Cannon", origin="Artillerist Artificer Level 3", action_type="action", duration="1 Hour")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -75,7 +75,7 @@ class ArcaneFirearm(Feature):
 class ExplosiveCannon(Feature):
     def __init__(self):
         super().__init__(
-            name="Explosive Cannon", origin="Artillerist Artificer Level 9"
+            name="Explosive Cannon", origin="Artillerist Artificer Level 9", action_type="reaction"
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:

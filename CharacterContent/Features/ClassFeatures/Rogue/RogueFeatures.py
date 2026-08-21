@@ -85,7 +85,7 @@ class WeaponMastery(Feature):
 
 class CunningAction(Feature):
     def __init__(self):
-        super().__init__(name="Cunning Action", origin="Rogue Level 2")
+        super().__init__(name="Cunning Action", origin="Rogue Level 2", action_type="bonus_action")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "Your quick thinking and agility allow you to move and act quickly. On your turn, you can take one of the following actions as a Bonus Action: Dash, Disengage, or Hide."
@@ -94,7 +94,7 @@ class CunningAction(Feature):
 
 class SteadyAim(Feature):
     def __init__(self):
-        super().__init__(name="Steady Aim", origin="Rogue Level 3")
+        super().__init__(name="Steady Aim", origin="Rogue Level 3", action_type="bonus_action")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "As a Bonus Action, you give yourself Advantage on your next attack roll on your current turn. You can use this feature only if you haven't moved during this turn, and after you use it, your Speed is 0 until the end of the current turn."
@@ -146,7 +146,7 @@ class CunningStrike(Feature):
 
 class UncannyDodge(Feature):
     def __init__(self):
-        super().__init__(name="Uncanny Dodge", origin="Rogue Level 5")
+        super().__init__(name="Uncanny Dodge", origin="Rogue Level 5", action_type="reaction")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "When an attacker that you can see hits you with an attack roll, you can take a Reaction to halve the attack's damage against you (round down)."

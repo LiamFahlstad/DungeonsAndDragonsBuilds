@@ -58,7 +58,7 @@ class WinterWalkerSpells(Feature):
 
 class FortifyingSoul(Feature):
     def __init__(self):
-        super().__init__(name="Fortifying Soul", origin="Winter Walker Ranger Level 7")
+        super().__init__(name="Fortifying Soul", origin="Winter Walker Ranger Level 7", action_type="action", duration="1 Hour")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -84,7 +84,7 @@ class FortifyingSoul(Feature):
 class ChillingRetribution(Feature):
     def __init__(self):
         super().__init__(
-            name="Chilling Retribution", origin="Winter Walker Ranger Level 11"
+            name="Chilling Retribution", origin="Winter Walker Ranger Level 11", action_type="reaction", duration="Until End of Your Next Turn"
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:

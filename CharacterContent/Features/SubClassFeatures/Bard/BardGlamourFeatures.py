@@ -6,7 +6,7 @@ from StatBlocks.CharacterStatBlock import CharacterStatBlock
 class BeguilingMagic(Feature):
     def __init__(self):
         super().__init__(
-            name="Beguiling Magic", origin="College of Glamour Bard Level 3"
+            name="Beguiling Magic", origin="College of Glamour Bard Level 3", duration="1 Minute"
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -33,7 +33,7 @@ class BeguilingMagic(Feature):
 class MantleOfInspiration(Feature):
     def __init__(self):
         super().__init__(
-            name="Mantle of Inspiration", origin="College of Glamour Bard Level 3"
+            name="Mantle of Inspiration", origin="College of Glamour Bard Level 3", action_type="bonus_action"
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -55,7 +55,7 @@ class MantleOfInspiration(Feature):
 class MantleOfMajesty(Feature):
     def __init__(self):
         super().__init__(
-            name="Mantle of Majesty", origin="College of Glamour Bard Level 6"
+            name="Mantle of Majesty", origin="College of Glamour Bard Level 6", action_type="bonus_action", duration="1 Minute or Until Concentration Ends"
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -82,7 +82,7 @@ class MantleOfMajesty(Feature):
 class UnbreakableMajesty(Feature):
     def __init__(self):
         super().__init__(
-            name="Unbreakable Majesty", origin="College of Glamour Bard Level 14"
+            name="Unbreakable Majesty", origin="College of Glamour Bard Level 14", action_type="bonus_action", duration="1 Minute or Until Incapacitated"
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:

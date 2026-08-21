@@ -89,7 +89,7 @@ class ShapeShifter(Feature):
 
 class MasterTransmuter(Feature):
     def __init__(self):
-        super().__init__(name="Master Transmuter", origin="Transmuter Wizard Level 14")
+        super().__init__(name="Master Transmuter", origin="Transmuter Wizard Level 14", action_type="action")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

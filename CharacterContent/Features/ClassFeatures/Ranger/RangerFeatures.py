@@ -176,7 +176,7 @@ class Expertise(Feature):
 
 class Tireless(Feature):
     def __init__(self):
-        super().__init__(name="Tireless", origin="Ranger Level 10")
+        super().__init__(name="Tireless", origin="Ranger Level 10", action_type="action")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         wis_mod = character_stat_block.get_ability_modifier(Ability.WISDOM)
@@ -212,7 +212,7 @@ class RelentlessHunter(Feature):
 
 class NaturesVeil(Feature):
     def __init__(self):
-        super().__init__(name="Nature's Veil", origin="Ranger Level 14")
+        super().__init__(name="Nature's Veil", origin="Ranger Level 14", action_type="bonus_action", duration="Until End of Your Next Turn")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         wis_mod = character_stat_block.get_ability_modifier(Ability.WISDOM)

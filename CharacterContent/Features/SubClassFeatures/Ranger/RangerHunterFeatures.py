@@ -60,7 +60,7 @@ class SuperiorHuntersPrey(Feature):
 class SuperiorHuntersDefense(Feature):
     def __init__(self):
         super().__init__(
-            name="Superior Hunter's Defense", origin="Hunter Ranger Level 15"
+            name="Superior Hunter's Defense", origin="Hunter Ranger Level 15", action_type="reaction", duration="Until End of Current Turn"
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:

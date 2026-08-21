@@ -8,7 +8,7 @@ from Utils import StringUtils
 
 class Rage(Feature):
     def __init__(self):
-        super().__init__(name="Rage", origin="Barbarian Level 1")
+        super().__init__(name="Rage", origin="Barbarian Level 1", action_type="bonus_action", duration="Until End of Your Next Turn")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         barbarian_level = character_stat_block.get_class_level(
@@ -156,7 +156,7 @@ class DangerSense(Feature):
 
 class RecklessAttack(Feature):
     def __init__(self):
-        super().__init__(name="Reckless Attack", origin="Barbarian Level 2")
+        super().__init__(name="Reckless Attack", origin="Barbarian Level 2", duration="Until Start of Your Next Turn")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "You can throw aside all concern for defense to attack with increased ferocity. When you make your first attack roll on your turn, you can decide to attack recklessly. Doing so gives you Advantage on attack rolls using Strength until the start of your next turn, but attack rolls against you have Advantage during that time."

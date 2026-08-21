@@ -33,7 +33,7 @@ class EldritchKnightSpellcasting(Feature):
 
 class WarBond(Feature):
     def __init__(self):
-        super().__init__(name="War Bond", origin="Eldritch Knight Fighter Level 3")
+        super().__init__(name="War Bond", origin="Eldritch Knight Fighter Level 3", action_type="bonus_action")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

@@ -26,7 +26,7 @@ class OathOfDevotionSpells(Feature):
 class SacredWeapon(Feature):
     def __init__(self):
         super().__init__(
-            name="Sacred Weapon", origin="Oath of Devotion Paladin Level 3"
+            name="Sacred Weapon", origin="Oath of Devotion Paladin Level 3", duration="10 Minutes or Until Used Again"
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -63,7 +63,7 @@ class AuraOfDevotion(Feature):
 class SmiteOfProtection(Feature):
     def __init__(self):
         super().__init__(
-            name="Smite of Protection", origin="Oath of Devotion Paladin Level 15"
+            name="Smite of Protection", origin="Oath of Devotion Paladin Level 15", duration="Until Start of Next Turn"
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -76,7 +76,7 @@ class SmiteOfProtection(Feature):
 
 class HolyNimbus(Feature):
     def __init__(self):
-        super().__init__(name="Holy Nimbus", origin="Oath of Devotion Paladin Level 20")
+        super().__init__(name="Holy Nimbus", origin="Oath of Devotion Paladin Level 20", action_type="bonus_action", duration="10 Minutes or Until Ended")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

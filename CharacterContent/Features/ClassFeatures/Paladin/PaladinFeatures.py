@@ -8,7 +8,7 @@ from Utils import StringUtils
 
 class LayOnHands(Feature):
     def __init__(self):
-        super().__init__(name="Lay on Hands", origin="Paladin Level 1")
+        super().__init__(name="Lay on Hands", origin="Paladin Level 1", action_type="bonus_action")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -214,7 +214,7 @@ class AuraOfProtection(Feature):
 
 class AbjureFoes(Feature):
     def __init__(self):
-        super().__init__(name="Abjure Foes", origin="Paladin Level 9")
+        super().__init__(name="Abjure Foes", origin="Paladin Level 9", action_type="action", duration="1 Minute or Until Takes Damage")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "As a Magic action, you can expend one use of this class's Channel Divinity to overwhelm foes with awe. As you present your Holy Symbol or weapon, you can target a number of creatures equal to your Charisma modifier (minimum of one creature) that you can see within 60 feet of yourself. Each target must succeed on a Wisdom saving throw or have the Frightened condition for 1 minute or until it takes any damage. While Frightened in this way, a target can do only one of the following on its turns: move, take an action, or take a Bonus Action."

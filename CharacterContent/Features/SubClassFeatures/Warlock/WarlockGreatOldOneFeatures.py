@@ -18,7 +18,7 @@ class GreatOldOneSpells(Feature):
 class AwakenedMind(Feature):
     def __init__(self):
         super().__init__(
-            name="Awakened Mind", origin="Great Old One Patron Warlock Level 3"
+            name="Awakened Mind", origin="Great Old One Patron Warlock Level 3", action_type="bonus_action", duration="Minutes Equal to Warlock Level"
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:

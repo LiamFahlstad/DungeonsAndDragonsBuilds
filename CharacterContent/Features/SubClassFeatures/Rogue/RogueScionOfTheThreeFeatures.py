@@ -6,7 +6,7 @@ from Utils import StringUtils
 
 class Bloodthirst(Feature):
     def __init__(self):
-        super().__init__(name="Bloodthirst", origin="Scion of the Three Rogue Level 3")
+        super().__init__(name="Bloodthirst", origin="Scion of the Three Rogue Level 3", action_type="reaction")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         intelligence_modifier = character_stat_block.get_ability_modifier(

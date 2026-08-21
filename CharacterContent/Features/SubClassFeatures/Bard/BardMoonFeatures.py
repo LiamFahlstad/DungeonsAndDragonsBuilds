@@ -7,7 +7,7 @@ from StatBlocks.CharacterStatBlock import CharacterStatBlock
 class MoonsInspiration(Feature):
     def __init__(self):
         super().__init__(
-            name="Moon's Inspiration", origin="College of the Moon Bard Level 3"
+            name="Moon's Inspiration", origin="College of the Moon Bard Level 3", duration="Until Start of Your Next Turn"
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:

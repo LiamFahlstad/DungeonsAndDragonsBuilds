@@ -37,7 +37,7 @@ class Spells(Feature):
 
 class ArcaneArmor(Feature):
     def __init__(self):
-        super().__init__(name="Arcane Armor", origin="Armorer Artificer Level 3")
+        super().__init__(name="Arcane Armor", origin="Armorer Artificer Level 3", action_type="action")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

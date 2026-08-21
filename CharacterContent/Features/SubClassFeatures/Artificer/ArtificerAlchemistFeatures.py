@@ -41,7 +41,7 @@ class Spells(Feature):
 class ExperimentalElixir(Feature):
     def __init__(self):
         super().__init__(
-            name="Experimental Elixir", origin="Alchemist Artificer Level 3"
+            name="Experimental Elixir", origin="Alchemist Artificer Level 3", action_type="action"
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:

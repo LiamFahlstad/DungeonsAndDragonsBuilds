@@ -7,7 +7,7 @@ from Utils import StringUtils
 
 class FormOfDread(Feature):
     def __init__(self):
-        super().__init__(name="Form of Dread", origin="Undead Patron Warlock Level 3")
+        super().__init__(name="Form of Dread", origin="Undead Patron Warlock Level 3", action_type="bonus_action", duration="1 Minute")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         charisma_modifier = character_stat_block.get_ability_modifier(Ability.CHARISMA)

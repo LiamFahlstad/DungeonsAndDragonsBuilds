@@ -6,7 +6,7 @@ from StatBlocks.CharacterStatBlock import CharacterStatBlock
 class BlessingOfTheTrickster(Feature):
     def __init__(self):
         super().__init__(
-            name="Blessing of the Trickster", origin="Trickery Domain Cleric Level 3"
+            name="Blessing of the Trickster", origin="Trickery Domain Cleric Level 3", action_type="action", duration="Until Long Rest"
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -38,7 +38,7 @@ class TrickeryDomainSpells(Feature):
 class InvokeDuplicity(Feature):
     def __init__(self):
         super().__init__(
-            name="Invoke Duplicity", origin="Trickery Domain Cleric Level 3"
+            name="Invoke Duplicity", origin="Trickery Domain Cleric Level 3", action_type="bonus_action", duration="1 Minute"
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:

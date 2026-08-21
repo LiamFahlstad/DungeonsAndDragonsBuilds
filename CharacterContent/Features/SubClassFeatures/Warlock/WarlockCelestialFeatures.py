@@ -19,7 +19,7 @@ class CelestialSpells(Feature):
 class HealingLight(Feature):
     def __init__(self):
         super().__init__(
-            name="Healing Light", origin="Celestial Patron Warlock Level 3"
+            name="Healing Light", origin="Celestial Patron Warlock Level 3", action_type="bonus_action"
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:

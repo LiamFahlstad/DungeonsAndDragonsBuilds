@@ -5,7 +5,7 @@ from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 class FastHands(Feature):
     def __init__(self):
-        super().__init__(name="Fast Hands", origin="Thief Rogue Level 3")
+        super().__init__(name="Fast Hands", origin="Thief Rogue Level 3", action_type="bonus_action")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

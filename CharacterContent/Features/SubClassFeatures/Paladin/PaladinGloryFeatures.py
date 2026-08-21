@@ -45,7 +45,7 @@ class GlorySpells(Feature):
 class PeerlessAthlete(Feature):
     def __init__(self):
         super().__init__(
-            name="Peerless Athlete", origin="Oath of Glory Paladin Level 3"
+            name="Peerless Athlete", origin="Oath of Glory Paladin Level 3", action_type="bonus_action", duration="1 Hour"
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -70,7 +70,7 @@ class AuraOfAlacrity(Feature):
 class GloriousDefense(Feature):
     def __init__(self):
         super().__init__(
-            name="Glorious Defense", origin="Oath of Glory Paladin Level 15"
+            name="Glorious Defense", origin="Oath of Glory Paladin Level 15", action_type="reaction"
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -103,7 +103,7 @@ class GloriousDefense(Feature):
 
 class LivingLegend(Feature):
     def __init__(self):
-        super().__init__(name="Living Legend", origin="Oath of Glory Paladin Level 20")
+        super().__init__(name="Living Legend", origin="Oath of Glory Paladin Level 20", action_type="bonus_action", duration="10 Minutes")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

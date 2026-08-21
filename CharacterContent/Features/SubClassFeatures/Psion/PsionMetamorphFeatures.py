@@ -18,7 +18,7 @@ class MetamorphSpells(Feature):
 
 class MutableForm(Feature):
     def __init__(self):
-        super().__init__(name="Mutable Form", origin="Metamorph Psion Level 3")
+        super().__init__(name="Mutable Form", origin="Metamorph Psion Level 3", action_type="bonus_action", duration="1 Minute")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -54,7 +54,7 @@ class MutableForm(Feature):
 
 class OrganicWeapons(Feature):
     def __init__(self):
-        super().__init__(name="Organic Weapons", origin="Metamorph Psion Level 3")
+        super().__init__(name="Organic Weapons", origin="Metamorph Psion Level 3", action_type="action")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

@@ -54,7 +54,7 @@ class ExtraAttack(Feature):
 
 class BattleMagic(Feature):
     def __init__(self):
-        super().__init__(name="Battle Magic", origin="College of Valor Bard Level 14")
+        super().__init__(name="Battle Magic", origin="College of Valor Bard Level 14", action_type="bonus_action")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "After you cast a spell that has a casting time of an action, you can make one attack with a weapon as a Bonus Action."

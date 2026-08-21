@@ -79,7 +79,7 @@ class PrimalOrder(Feature):
 
 class WildShape(Feature):
     def __init__(self, known_forms: list[Type[ExtendedCombatantData]]):
-        super().__init__(name="Wild Shape", origin="Druid Level 2")
+        super().__init__(name="Wild Shape", origin="Druid Level 2", action_type="bonus_action", duration="Until You Leave Form or are Incapacitated")
         self.known_forms = known_forms
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -156,7 +156,7 @@ class AdditionalWildShapeForms(Feature):
 
 class WildCompanion(Feature):
     def __init__(self):
-        super().__init__(name="Wild Companion", origin="Druid Level 2")
+        super().__init__(name="Wild Companion", origin="Druid Level 2", action_type="action", duration="Until Long Rest")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

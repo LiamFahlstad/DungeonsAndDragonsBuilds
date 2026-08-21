@@ -28,7 +28,7 @@ class HollowWardenSpells(Feature):
 class WrathOfTheWild(Feature):
     def __init__(self):
         super().__init__(
-            name="Wrath of the Wild", origin="Hollow Warden Ranger Level 3"
+            name="Wrath of the Wild", origin="Hollow Warden Ranger Level 3", action_type="bonus_action", duration="1 Minute or Until Incapacitated"
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:

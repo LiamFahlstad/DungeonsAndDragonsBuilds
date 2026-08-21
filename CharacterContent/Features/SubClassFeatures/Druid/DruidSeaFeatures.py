@@ -18,7 +18,7 @@ class CircleOfTheSeaSpells(Feature):
 class WrathOfTheSea(Feature):
     def __init__(self):
         super().__init__(
-            name="Wrath of the Sea", origin="Circle of the Sea Druid Level 3"
+            name="Wrath of the Sea", origin="Circle of the Sea Druid Level 3", action_type="bonus_action", duration="10 Minutes or Until Dismissed/Incapacitated"
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:

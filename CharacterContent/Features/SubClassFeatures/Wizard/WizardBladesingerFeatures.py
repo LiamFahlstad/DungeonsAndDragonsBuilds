@@ -6,7 +6,7 @@ from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 class Bladesong(Feature):
     def __init__(self):
-        super().__init__(name="Bladesong", origin="Bladesinger Wizard Level 3")
+        super().__init__(name="Bladesong", origin="Bladesinger Wizard Level 3", action_type="bonus_action", duration="1 Minute")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         int_mod = character_stat_block.get_ability_modifier(Ability.INTELLIGENCE)
@@ -72,7 +72,7 @@ class ExtraAttack(Feature):
 
 class SongOfDefense(Feature):
     def __init__(self):
-        super().__init__(name="Song of Defense", origin="Bladesinger Wizard Level 10")
+        super().__init__(name="Song of Defense", origin="Bladesinger Wizard Level 10", action_type="reaction")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "When you take damage while your Bladesong is active, you can take a Reaction to expend one spell slot and reduce the damage taken by an amount equal to five times the spell slot's level."
@@ -81,7 +81,7 @@ class SongOfDefense(Feature):
 
 class SongOfVictory(Feature):
     def __init__(self):
-        super().__init__(name="Song of Victory", origin="Bladesinger Wizard Level 14")
+        super().__init__(name="Song of Victory", origin="Bladesinger Wizard Level 14", action_type="bonus_action")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "After you cast a spell that has a casting time of an action, you can make one attack with a weapon as a Bonus Action."

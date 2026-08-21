@@ -62,7 +62,7 @@ class RegainingSpellSlots(Feature):
 
 class MagicalCunning(Feature):
     def __init__(self):
-        super().__init__(name="Magical Cunning", origin="Warlock Level 2")
+        super().__init__(name="Magical Cunning", origin="Warlock Level 2", duration="1 Minute")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "You can perform an esoteric rite for 1 minute. At the end of it, you regain expended Pact Magic spell slots but no more than a number equal to half your maximum (round up). Once you use this feature, you can't do so again until you finish a Long Rest."

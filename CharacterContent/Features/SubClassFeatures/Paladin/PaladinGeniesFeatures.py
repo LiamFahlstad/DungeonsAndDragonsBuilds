@@ -85,7 +85,7 @@ class AuraOfElementalShielding(Feature):
 class ElementalRebuke(Feature):
     def __init__(self):
         super().__init__(
-            name="Elemental Rebuke", origin="Oath of the Noble Genies Paladin Level 15"
+            name="Elemental Rebuke", origin="Oath of the Noble Genies Paladin Level 15", action_type="reaction"
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -120,7 +120,7 @@ class ElementalRebuke(Feature):
 class NobleScion(Feature):
     def __init__(self):
         super().__init__(
-            name="Noble Scion", origin="Oath of the Noble Genies Paladin Level 20"
+            name="Noble Scion", origin="Oath of the Noble Genies Paladin Level 20", action_type="bonus_action", duration="10 Minutes or Until Ended"
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:

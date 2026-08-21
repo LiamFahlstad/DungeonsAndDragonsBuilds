@@ -21,7 +21,7 @@ class BonusProficiencies(Feature):
 
 class CuttingWords(Feature):
     def __init__(self):
-        super().__init__(name="Cutting Words", origin="College of Lore Bard Level 3")
+        super().__init__(name="Cutting Words", origin="College of Lore Bard Level 3", action_type="reaction")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "You learn to use your wit to supernaturally distract, confuse, and otherwise sap the confidence and competence of others. When a creature that you can see within 60 feet of yourself makes a damage roll or succeeds on an ability check or attack roll, you can take a Reaction to expend one use of your Bardic Inspiration; roll your Bardic Inspiration die, and subtract the number rolled from the creature's roll, reducing the damage or potentially turning the success into a failure."

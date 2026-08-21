@@ -18,7 +18,7 @@ class LightDomainSpells(Feature):
 class RadianceOfTheDawn(Feature):
     def __init__(self):
         super().__init__(
-            name="Radiance of the Dawn", origin="Light Domain Cleric Level 3"
+            name="Radiance of the Dawn", origin="Light Domain Cleric Level 3", action_type="action"
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -39,7 +39,7 @@ class RadianceOfTheDawn(Feature):
 
 class WardingFlare(Feature):
     def __init__(self):
-        super().__init__(name="Warding Flare", origin="Light Domain Cleric Level 3")
+        super().__init__(name="Warding Flare", origin="Light Domain Cleric Level 3", action_type="reaction")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         wisdom_modifier = character_stat_block.get_ability_modifier(Ability.WISDOM)
@@ -86,7 +86,7 @@ class ImprovedWardingFlare(Feature):
 
 class CoronaOfLight(Feature):
     def __init__(self):
-        super().__init__(name="Corona of Light", origin="Light Domain Cleric Level 17")
+        super().__init__(name="Corona of Light", origin="Light Domain Cleric Level 17", action_type="action", duration="1 Minute")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         wisdom_modifier = character_stat_block.get_ability_modifier(Ability.WISDOM)

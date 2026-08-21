@@ -37,7 +37,7 @@ class StarMap(Feature):
 
 class StarryForm(Feature):
     def __init__(self):
-        super().__init__(name="Starry Form", origin="Circle of the Stars Druid Level 3")
+        super().__init__(name="Starry Form", origin="Circle of the Stars Druid Level 3", action_type="bonus_action", duration="10 Minutes or Until Dismissed/Incapacitated")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -53,7 +53,7 @@ class StarryForm(Feature):
 
 class CosmicOmen(Feature):
     def __init__(self):
-        super().__init__(name="Cosmic Omen", origin="Circle of the Stars Druid Level 6")
+        super().__init__(name="Cosmic Omen", origin="Circle of the Stars Druid Level 6", action_type="reaction", duration="Until Next Long Rest")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         wisdom_modifier = character_stat_block.get_ability_modifier(Ability.WISDOM)

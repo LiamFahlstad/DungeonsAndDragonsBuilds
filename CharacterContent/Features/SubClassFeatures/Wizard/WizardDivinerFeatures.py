@@ -48,7 +48,7 @@ class ExpertDivination(Feature):
 
 class TheThirdEye(Feature):
     def __init__(self):
-        super().__init__(name="The Third Eye", origin="Diviner Wizard Level 10")
+        super().__init__(name="The Third Eye", origin="Diviner Wizard Level 10", action_type="bonus_action", duration="Until Short or Long Rest")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

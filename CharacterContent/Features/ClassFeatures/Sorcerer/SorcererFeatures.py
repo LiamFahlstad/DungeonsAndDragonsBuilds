@@ -32,7 +32,7 @@ class Spellcasting(Feature):
 
 class InnateSorcery(Feature):
     def __init__(self):
-        super().__init__(name="Innate Sorcery", origin="Sorcerer Level 1")
+        super().__init__(name="Innate Sorcery", origin="Sorcerer Level 1", action_type="bonus_action", duration="1 Minute")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

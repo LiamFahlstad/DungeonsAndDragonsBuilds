@@ -33,7 +33,7 @@ class DazzlingFootwork(Feature):
 class InspiringMovement(Feature):
     def __init__(self):
         super().__init__(
-            name="Inspiring Movement", origin="College of Dance Bard Level 6"
+            name="Inspiring Movement", origin="College of Dance Bard Level 6", action_type="reaction"
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:

@@ -33,7 +33,7 @@ class MindInfiltrator(Feature):
 
 class TelepathicDistraction(Feature):
     def __init__(self):
-        super().__init__(name="Telepathic Distraction", origin="Telepath Psion Level 3")
+        super().__init__(name="Telepathic Distraction", origin="Telepath Psion Level 3", action_type="reaction")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -49,7 +49,7 @@ class TelepathicDistraction(Feature):
 
 class BulwarkMind(Feature):
     def __init__(self):
-        super().__init__(name="Bulwark Mind", origin="Telepath Psion Level 6")
+        super().__init__(name="Bulwark Mind", origin="Telepath Psion Level 6", duration="10 Minutes")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -93,7 +93,7 @@ class PotentThoughts(Feature):
 
 class TelepathicBolstering(Feature):
     def __init__(self):
-        super().__init__(name="Telepathic Bolstering", origin="Telepath Psion Level 10")
+        super().__init__(name="Telepathic Bolstering", origin="Telepath Psion Level 10", action_type="reaction")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

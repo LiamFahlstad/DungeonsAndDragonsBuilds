@@ -56,7 +56,7 @@ class ElementalAffinity(Feature):
 
 class DragonWings(Feature):
     def __init__(self):
-        super().__init__(name="Dragon Wings", origin="Draconic Sorcerer Level 14")
+        super().__init__(name="Dragon Wings", origin="Draconic Sorcerer Level 14", action_type="bonus_action", duration="1 Hour")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

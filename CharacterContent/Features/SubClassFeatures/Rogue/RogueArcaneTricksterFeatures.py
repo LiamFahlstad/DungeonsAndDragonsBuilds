@@ -72,7 +72,7 @@ class VersatileTrickster(Feature):
 
 class SpellThief(Feature):
     def __init__(self):
-        super().__init__(name="Spell Thief", origin="Arcane Trickster Rogue Level 17")
+        super().__init__(name="Spell Thief", origin="Arcane Trickster Rogue Level 17", action_type="reaction", duration="8 Hours")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
