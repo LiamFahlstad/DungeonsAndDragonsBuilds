@@ -284,6 +284,7 @@ class DamageMixin:
             if roll < dc:
                 if "Concentrating" in char.get("conditions", []):
                     char["conditions"].remove("Concentrating")
+                    self._end_concentration_spells(char)
                 # Concentration is always lost by the caster's own failed save,
                 # so the caster is both source and target here.
                 cond_value = {
@@ -298,7 +299,7 @@ class DamageMixin:
                     action=Action.REMOVE_CONDITION,
                     value=cond_value,
                 )
-                self._refresh_selected_card()
+                self._rebuild_card(char)
             dialog.accept()
 
         def _cancel():

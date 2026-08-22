@@ -54,6 +54,8 @@ class ConditionsMixin:
                 action=Action.REMOVE_CONDITION,
                 value=cond_value,
             )
+            if cond == Condition.CONCENTRATING.value:
+                self._end_concentration_spells(char)
             self._rebuild_card(char)
 
     def _add_condition(self):

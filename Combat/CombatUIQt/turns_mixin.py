@@ -4,6 +4,7 @@ import random
 
 from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import (
+    QApplication,
     QDialog,
     QHBoxLayout,
     QLabel,
@@ -41,9 +42,14 @@ class TurnsMixin:
         self._refresh_turn()
 
     def _shortcut_next_turn(self):
-        """Keyboard shortcut 'Enter': Next Combatant / Next Round, only once combat has started."""
-        if self.phase == "COMBAT":
-            self._advance_turn()
+        """Keyboard shortcut 'Enter': Next Combatant / Next Round, only once combat has
+        started and no text field is focused (Enter in an input field should only submit
+        that field, not also advance the turn)."""
+        if self.phase != "COMBAT":
+            return
+        if isinstance(QApplication.focusWidget(), QLineEdit):
+            return
+        self._advance_turn()
 
     @staticmethod
     def _dex_mod(char: dict) -> int:

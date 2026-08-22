@@ -67,6 +67,20 @@ class SpellsMixin:
         if Condition.CONCENTRATING.value in conditions:
             conditions.remove(Condition.CONCENTRATING.value)
 
+    def _end_concentration_spells(self, char: dict):
+        """End every active spell on char that requires concentration. Call this
+        whenever Concentrating is removed by any path other than the spell's own
+        duration expiring — a manual shortcut, a failed save, incapacitation,
+        knockout, or death — so the effect doesn't keep ticking on the card after
+        the character has stopped concentrating on it."""
+        active_spells = char.get("active_spells") or []
+        ended = [e for e in active_spells if e.get("concentration")]
+        if not ended:
+            return
+        char["active_spells"] = [e for e in active_spells if not e.get("concentration")]
+        for entry in ended:
+            self._log_event(f"{char['name']}'s {entry['name']} ends (concentration lost)", note_turn=False)
+
     def _tick_active_spells(self):
         """Deduct 6 seconds (one round) from every combatant's active spell timers,
         expiring and logging any that reach zero, and dropping Concentrating if its

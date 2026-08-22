@@ -63,6 +63,11 @@ class WindowMixin:
         self.target_label.setText("Target: None")
         self._refresh_cards()
 
+    def _shortcut_active(self) -> bool:
+        """False when the focused widget (e.g. a combo box mid type-ahead search)
+        should receive the keystroke itself instead of triggering a global shortcut."""
+        return not isinstance(QApplication.focusWidget(), QComboBox)
+
     def _build_window(self):
         self._window = QMainWindow()
         self._window.setWindowTitle("DnD Combat Engine")
@@ -398,21 +403,25 @@ class WindowMixin:
         self._action_shortcuts = []
         for key, action_type in self.ACTION_ECONOMY_SHORTCUTS.items():
             shortcut = QShortcut(QKeySequence(key), self._window)
-            shortcut.activated.connect(lambda a=action_type: self._add_action_use(a))
+            shortcut.activated.connect(
+                lambda a=action_type: self._add_action_use(a) if self._shortcut_active() else None
+            )
             self._action_shortcuts.append(shortcut)
 
         # C / Ctrl+C / Ctrl+Shift+C: Concentrating on the source, cleared from the target.
         self._concentration_shortcut = QShortcut(QKeySequence("C"), self._window)
-        self._concentration_shortcut.activated.connect(self._shortcut_add_concentration)
+        self._concentration_shortcut.activated.connect(
+            lambda: self._shortcut_add_concentration() if self._shortcut_active() else None
+        )
         self._remove_concentration_shortcut = QShortcut(QKeySequence("Ctrl+C"), self._window)
         self._remove_concentration_shortcut.activated.connect(
-            self._shortcut_remove_concentration
+            lambda: self._shortcut_remove_concentration() if self._shortcut_active() else None
         )
         self._clear_target_conditions_shortcut = QShortcut(
             QKeySequence("Ctrl+Shift+C"), self._window
         )
         self._clear_target_conditions_shortcut.activated.connect(
-            self._shortcut_clear_target_conditions
+            lambda: self._shortcut_clear_target_conditions() if self._shortcut_active() else None
         )
 
         # Ctrl+Z: Undo Last Action
@@ -435,7 +444,9 @@ class WindowMixin:
         self._spell_slot_shortcuts = []
         for level in range(1, 10):
             shortcut = QShortcut(QKeySequence(str(level)), self._window)
-            shortcut.activated.connect(lambda lvl=level: self._cast_spell_slot_level(lvl))
+            shortcut.activated.connect(
+                lambda lvl=level: self._cast_spell_slot_level(lvl) if self._shortcut_active() else None
+            )
             self._spell_slot_shortcuts.append(shortcut)
 
     @staticmethod
