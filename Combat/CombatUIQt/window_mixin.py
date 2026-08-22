@@ -63,10 +63,60 @@ class WindowMixin:
         self.target_label.setText("Target: None")
         self._refresh_cards()
 
-    def _shortcut_active(self) -> bool:
-        """False when the focused widget (e.g. a combo box mid type-ahead search)
-        should receive the keystroke itself instead of triggering a global shortcut."""
-        return not isinstance(QApplication.focusWidget(), QComboBox)
+    def _update_combo_sensitive_shortcuts(self, _old, new):
+        """Disable every combo-sensitive shortcut while a combo box has focus,
+        re-enable otherwise. A registered QShortcut consumes a matching key
+        event before it ever reaches the focused widget, no matter what its
+        activated handler does — so checking focus *inside* the handler is too
+        late to help; unlike QLineEdit, QComboBox doesn't reserve its own
+        arrow-key/type-ahead keys via ShortcutOverride, so leaving these
+        shortcuts enabled breaks the combo box's own keyboard handling
+        entirely. Wired to QApplication.focusChanged so it stays correct as
+        focus moves around, not just at the moment each shortcut fires."""
+        active = not isinstance(new, QComboBox)
+        for shortcut in self._combo_sensitive_shortcuts:
+            shortcut.setEnabled(active)
+
+    def _cycle_source(self, direction: int):
+        """Select the next/previous combatant (direction +1/-1) as source,
+        cycling through self.characters and wrapping around."""
+        if not self.characters:
+            return
+        idx = next(
+            (i for i, c in enumerate(self.characters) if c is self.selected_character),
+            -1,
+        )
+        new_idx = (idx + direction) % len(self.characters)
+        self._select_character(self.characters[new_idx])
+
+    def _cycle_target(self, direction: int):
+        """Select the next/previous combatant (direction +1/-1) as the sole
+        target, cycling through self.characters and wrapping around."""
+        if not self.characters:
+            return
+        current = self.target_characters[0] if self.target_characters else None
+        idx = next((i for i, c in enumerate(self.characters) if c is current), -1)
+        new_idx = (idx + direction) % len(self.characters)
+        self._select_target_character(self.characters[new_idx], additive=False)
+
+    def _shortcut_select_active_source(self):
+        """Keyboard shortcut 'Space': select whoever's turn it currently is as
+        the source, saving a mouse click at the start of every turn."""
+        if self.phase != "COMBAT" or not self.initiative_order:
+            return
+        self._select_character(self.initiative_order[self.current_turn_idx])
+
+    def _focus_damage_input(self):
+        self.damage_input.setFocus()
+        self.damage_input.selectAll()
+
+    def _focus_heal_input(self):
+        self.heal_input.setFocus()
+        self.heal_input.selectAll()
+
+    def _focus_temp_hp_input(self):
+        self.temp_hp_input.setFocus()
+        self.temp_hp_input.selectAll()
 
     def _build_window(self):
         self._window = QMainWindow()
@@ -402,31 +452,35 @@ class WindowMixin:
         panel_layout.addStretch()
         root_layout.addWidget(panel)
 
+        # Shortcuts that must stand down (fully disabled, not just a no-op
+        # handler) while a combo box has focus — see _update_combo_sensitive_shortcuts.
+        self._combo_sensitive_shortcuts: list[QShortcut] = []
+
         # Keyboard shortcuts: A / B / R log an Action / Bonus Action / Reaction use
         # for the current source. These naturally yield to any focused text field.
         self._action_shortcuts = []
         for key, action_type in self.ACTION_ECONOMY_SHORTCUTS.items():
             shortcut = QShortcut(QKeySequence(key), self._window)
-            shortcut.activated.connect(
-                lambda a=action_type: self._add_action_use(a) if self._shortcut_active() else None
-            )
+            shortcut.activated.connect(lambda a=action_type: self._add_action_use(a))
             self._action_shortcuts.append(shortcut)
+        self._combo_sensitive_shortcuts += self._action_shortcuts
 
         # C / Ctrl+C / Ctrl+Shift+C: Concentrating on the source, cleared from the target.
         self._concentration_shortcut = QShortcut(QKeySequence("C"), self._window)
-        self._concentration_shortcut.activated.connect(
-            lambda: self._shortcut_add_concentration() if self._shortcut_active() else None
-        )
+        self._concentration_shortcut.activated.connect(self._shortcut_add_concentration)
         self._remove_concentration_shortcut = QShortcut(QKeySequence("Ctrl+C"), self._window)
-        self._remove_concentration_shortcut.activated.connect(
-            lambda: self._shortcut_remove_concentration() if self._shortcut_active() else None
-        )
+        self._remove_concentration_shortcut.activated.connect(self._shortcut_remove_concentration)
         self._clear_target_conditions_shortcut = QShortcut(
             QKeySequence("Ctrl+Shift+C"), self._window
         )
         self._clear_target_conditions_shortcut.activated.connect(
-            lambda: self._shortcut_clear_target_conditions() if self._shortcut_active() else None
+            self._shortcut_clear_target_conditions
         )
+        self._combo_sensitive_shortcuts += [
+            self._concentration_shortcut,
+            self._remove_concentration_shortcut,
+            self._clear_target_conditions_shortcut,
+        ]
 
         # Ctrl+Z: Undo Last Action
         self._undo_shortcut = QShortcut(QKeySequence("Ctrl+Z"), self._window)
@@ -448,10 +502,69 @@ class WindowMixin:
         self._spell_slot_shortcuts = []
         for level in range(1, 10):
             shortcut = QShortcut(QKeySequence(str(level)), self._window)
-            shortcut.activated.connect(
-                lambda lvl=level: self._cast_spell_slot_level(lvl) if self._shortcut_active() else None
-            )
+            shortcut.activated.connect(lambda lvl=level: self._cast_spell_slot_level(lvl))
             self._spell_slot_shortcuts.append(shortcut)
+        self._combo_sensitive_shortcuts += self._spell_slot_shortcuts
+
+        # N / P (and Left / Right arrow aliases): select next / previous
+        # combatant as source. Shift+N / Shift+P (and Up / Down arrow
+        # aliases): same, as target. A focused text field keeps its own
+        # cursor-movement arrow keys regardless (see the class docstring above).
+        self._cycle_source_next_shortcut = QShortcut(QKeySequence("N"), self._window)
+        self._cycle_source_next_shortcut.activated.connect(lambda: self._cycle_source(1))
+        self._cycle_source_prev_shortcut = QShortcut(QKeySequence("P"), self._window)
+        self._cycle_source_prev_shortcut.activated.connect(lambda: self._cycle_source(-1))
+        self._cycle_target_next_shortcut = QShortcut(QKeySequence("Shift+N"), self._window)
+        self._cycle_target_next_shortcut.activated.connect(lambda: self._cycle_target(1))
+        self._cycle_target_prev_shortcut = QShortcut(QKeySequence("Shift+P"), self._window)
+        self._cycle_target_prev_shortcut.activated.connect(lambda: self._cycle_target(-1))
+
+        self._cycle_source_right_shortcut = QShortcut(QKeySequence(Qt.Key.Key_Right), self._window)
+        self._cycle_source_right_shortcut.activated.connect(lambda: self._cycle_source(1))
+        self._cycle_source_left_shortcut = QShortcut(QKeySequence(Qt.Key.Key_Left), self._window)
+        self._cycle_source_left_shortcut.activated.connect(lambda: self._cycle_source(-1))
+        self._cycle_target_down_shortcut = QShortcut(QKeySequence(Qt.Key.Key_Down), self._window)
+        self._cycle_target_down_shortcut.activated.connect(lambda: self._cycle_target(1))
+        self._cycle_target_up_shortcut = QShortcut(QKeySequence(Qt.Key.Key_Up), self._window)
+        self._cycle_target_up_shortcut.activated.connect(lambda: self._cycle_target(-1))
+        self._combo_sensitive_shortcuts += [
+            self._cycle_source_next_shortcut,
+            self._cycle_source_prev_shortcut,
+            self._cycle_target_next_shortcut,
+            self._cycle_target_prev_shortcut,
+            self._cycle_source_right_shortcut,
+            self._cycle_source_left_shortcut,
+            self._cycle_target_down_shortcut,
+            self._cycle_target_up_shortcut,
+        ]
+
+        # Space: select whoever's turn it is as the source
+        self._select_active_shortcut = QShortcut(QKeySequence(Qt.Key.Key_Space), self._window)
+        self._select_active_shortcut.activated.connect(self._shortcut_select_active_source)
+        self._combo_sensitive_shortcuts.append(self._select_active_shortcut)
+
+        # D / H / T: jump straight into the Damage / Heal / Temp HP amount field
+        self._focus_damage_shortcut = QShortcut(QKeySequence("D"), self._window)
+        self._focus_damage_shortcut.activated.connect(self._focus_damage_input)
+        self._focus_heal_shortcut = QShortcut(QKeySequence("H"), self._window)
+        self._focus_heal_shortcut.activated.connect(self._focus_heal_input)
+        self._focus_temp_hp_shortcut = QShortcut(QKeySequence("T"), self._window)
+        self._focus_temp_hp_shortcut.activated.connect(self._focus_temp_hp_input)
+        self._combo_sensitive_shortcuts += [
+            self._focus_damage_shortcut,
+            self._focus_heal_shortcut,
+            self._focus_temp_hp_shortcut,
+        ]
+
+        # Ctrl+N: open the Add Combatant dialog
+        self._add_combatant_shortcut = QShortcut(QKeySequence("Ctrl+N"), self._window)
+        self._add_combatant_shortcut.activated.connect(self._show_add_combatant_dialog)
+        self._combo_sensitive_shortcuts.append(self._add_combatant_shortcut)
+
+        # Keep the shortcuts above disabled while focus is on a combo box, and
+        # restored the instant it moves elsewhere (see the method docstring).
+        QApplication.instance().focusChanged.connect(self._update_combo_sensitive_shortcuts)
+        self._update_combo_sensitive_shortcuts(None, QApplication.focusWidget())
 
     @staticmethod
     def _make_divider() -> QFrame:

@@ -4,6 +4,7 @@ from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import (
     QDialog,
     QHBoxLayout,
+    QLabel,
     QLineEdit,
     QPushButton,
     QTextEdit,
@@ -143,6 +144,16 @@ class SpellsMixin:
         search_box.setPlaceholderText("Search spells…")
         outer.addWidget(search_box)
 
+        if self.target_characters:
+            target_names = ", ".join(t["name"] for t in self.target_characters)
+            target_text = f"Target(s): {target_names}"
+        else:
+            target_text = "Target(s): None selected — \"Apply to Target(s)\" will be unavailable"
+        target_info_lbl = QLabel(target_text)
+        target_info_lbl.setObjectName("secondary")
+        target_info_lbl.setWordWrap(True)
+        outer.addWidget(target_info_lbl)
+
         body = QHBoxLayout()
         body.setSpacing(10)
         outer.addLayout(body)
@@ -192,7 +203,8 @@ class SpellsMixin:
             )
             selected_spell["spell"] = spell
             cast_btn.setEnabled(True)
-            condition_btn.setEnabled(True)
+            condition_source_btn.setEnabled(True)
+            condition_target_btn.setEnabled(bool(self.target_characters))
 
         def on_selection_changed():
             items = tree.selectedItems()
@@ -233,22 +245,43 @@ class SpellsMixin:
 
         cast_btn.clicked.connect(do_cast)
 
-        condition_btn = QPushButton("Apply as Condition")
-        condition_btn.setEnabled(False)
+        condition_source_btn = QPushButton("Apply to Source")
+        condition_source_btn.setEnabled(False)
+        condition_source_btn.setToolTip(
+            f"Add as a condition on {self.selected_character['name']} (self-applied)"
+        )
 
-        def do_apply_condition():
+        def do_apply_condition_source():
             spell = selected_spell["spell"]
             if spell is None:
                 return
-            self._apply_spell_as_condition(spell)
+            self._apply_spell_as_condition(spell, apply_to_target=False)
             dlg.accept()
 
-        condition_btn.clicked.connect(do_apply_condition)
+        condition_source_btn.clicked.connect(do_apply_condition_source)
+
+        condition_target_btn = QPushButton("Apply to Target(s)")
+        condition_target_btn.setEnabled(False)
+        condition_target_btn.setToolTip(
+            f"Add as a condition on {target_names}"
+            if self.target_characters
+            else "Select a target first (right-click a card)"
+        )
+
+        def do_apply_condition_target():
+            spell = selected_spell["spell"]
+            if spell is None:
+                return
+            self._apply_spell_as_condition(spell, apply_to_target=True)
+            dlg.accept()
+
+        condition_target_btn.clicked.connect(do_apply_condition_target)
 
         close_btn2 = QPushButton("Close")
         close_btn2.clicked.connect(dlg.reject)
         btn_row.addWidget(cast_btn)
-        btn_row.addWidget(condition_btn)
+        btn_row.addWidget(condition_source_btn)
+        btn_row.addWidget(condition_target_btn)
         btn_row.addWidget(close_btn2)
         outer.addLayout(btn_row)
 
@@ -303,11 +336,18 @@ class SpellsMixin:
 
         self._refresh_selected_card()
 
-    def _apply_spell_as_condition(self, spell):
-        """Add a spell's name as a condition badge on the selected combatant,
-        with the spell's full description available as a hover tooltip."""
-        char = self.selected_character
-        if char is None:
+    def _apply_spell_as_condition(self, spell, apply_to_target: bool = False):
+        """Add a spell's name as a condition badge — on the caster (self-applied,
+        e.g. a self-buff like Shield of Faith on yourself) or on the current
+        target(s) (e.g. a debuff like Hold Person, which should badge the
+        creature it affects, not the caster) — with the spell's full description
+        available as a hover tooltip. The caster is always recorded as the
+        condition's source either way, for correct log/stat attribution."""
+        source = self.selected_character
+        if source is None:
+            return
+        recipients = self.target_characters if apply_to_target else [source]
+        if not recipients:
             return
 
         from CharacterContent.Spells.SpellFactory import Spell
@@ -332,13 +372,11 @@ class SpellsMixin:
             f"<br><b>Duration:</b> {spell.duration}"
             f"<br><br>{spell.description.replace(chr(10) + chr(10), '<br><br>')}"
         )
+        badge_color = Spell.get_school_color(spell.school)
 
-        # Store the tooltip description and the school-of-magic badge color
-        char.setdefault("spell_condition_descriptions", {})[spell.name] = tooltip_html
-        char.setdefault("spell_condition_colors", {})[spell.name] = Spell.get_school_color(
-            spell.school
-        )
-
-        # Add the spell name as a condition (self-applied, same as this method's
-        # existing single-combatant scope)
-        self._add_condition_to(char, spell.name, source=char)
+        # Store the tooltip description and badge color, and add the condition,
+        # on every recipient (the caster for a self-cast, each target otherwise).
+        for char in list(recipients):
+            char.setdefault("spell_condition_descriptions", {})[spell.name] = tooltip_html
+            char.setdefault("spell_condition_colors", {})[spell.name] = badge_color
+            self._add_condition_to(char, spell.name, source=source)
