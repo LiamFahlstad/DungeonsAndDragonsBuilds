@@ -16,6 +16,7 @@ from PyQt6.QtWidgets import (
     QWidget,
 )
 
+from .stats import _default_stats
 from .styles import QSS
 
 
@@ -59,6 +60,83 @@ class TurnsMixin:
                 return (ability_scores[key] - 10) // 2
         return 0
 
+    def _add_initiative_row(self, char: dict):
+        """Build and append one initiative-entry row for char. Used both while
+        building the initiative screen from scratch and to append a row for a
+        combatant added mid-setup via Add Combatant."""
+        mod = self._dex_mod(char)
+
+        row_widget = QWidget()
+        row_layout = QHBoxLayout(row_widget)
+        row_layout.setContentsMargins(0, 0, 0, 0)
+        row_layout.setSpacing(8)
+
+        name_lbl = QLabel(char["name"])
+        name_lbl.setStyleSheet("color: #c9a84c; font-weight: bold;")
+        name_lbl.setFixedWidth(160)
+        row_layout.addWidget(name_lbl)
+
+        mod_lbl = QLabel(f"(mod {mod:+d})")
+        mod_lbl.setObjectName("secondary")
+        mod_lbl.setFixedWidth(60)
+        row_layout.addWidget(mod_lbl)
+
+        init_input = QLineEdit()
+        init_input.setPlaceholderText("Total...")
+        init_input.setFixedWidth(60)
+        init_input.textChanged.connect(self._check_start_button)
+        row_layout.addWidget(init_input)
+
+        roll_btn = QPushButton("Roll")
+        roll_btn.setFixedWidth(50)
+
+        def _roll(checked=False, inp=init_input, m=mod):
+            result = random.randint(1, 20) + m
+            inp.setText(str(result))
+            inp.setStyleSheet(
+                "background-color: #1a3a1a; border: 1px solid #2ecc71;"
+            )
+
+        roll_btn.clicked.connect(_roll)
+        row_layout.addWidget(roll_btn)
+
+        row_layout.addStretch()
+        self._initiative_rows_layout.addWidget(row_widget)
+
+        self._initiative_inputs[id(char)] = init_input
+
+    def _add_ad_hoc_combatant(self, name: str, hp: int = 10, ac: int = 10):
+        """Quickly add a free-text combatant mid-session (e.g. a door, an
+        improvised target) without needing a full character sheet or a
+        predefined monster. Slots into whichever phase is currently active:
+        appended to the initiative-entry screen before combat starts, or
+        appended to the end of the turn order (it'll get a turn once the
+        order cycles round to it) once combat is underway."""
+        char = {
+            "name": name,
+            "create_name": name,
+            "hp": hp,
+            "max_hp": hp,
+            "ac": ac,
+            "temp_hp": 0,
+            "conditions": [],
+            "visibility_states": [],
+            "death_saves_fail": 0,
+            "death_saves_success": 0,
+            "stats": _default_stats(),
+            "spell_slots": {},
+            "Ability Scores": {},
+            "Saving Throws": {},
+        }
+        self.characters.append(char)
+        self._log_event(f"{name} added to the encounter", note_turn=False)
+        if self.phase == "COMBAT":
+            self.initiative_order.append(char)
+            self._rebuild_cards()
+        else:
+            self._add_initiative_row(char)
+            self._check_start_button()
+
     def _build_initiative_widget(self) -> QWidget:
         """Build the initiative-entry screen."""
         container = QWidget()
@@ -75,47 +153,12 @@ class TurnsMixin:
 
         self._initiative_inputs.clear()
 
+        self._initiative_rows_layout = QVBoxLayout()
+        self._initiative_rows_layout.setSpacing(8)
+        outer.addLayout(self._initiative_rows_layout)
+
         for char in self.characters:
-            mod = self._dex_mod(char)
-
-            row_widget = QWidget()
-            row_layout = QHBoxLayout(row_widget)
-            row_layout.setContentsMargins(0, 0, 0, 0)
-            row_layout.setSpacing(8)
-
-            name_lbl = QLabel(char["name"])
-            name_lbl.setStyleSheet("color: #c9a84c; font-weight: bold;")
-            name_lbl.setFixedWidth(160)
-            row_layout.addWidget(name_lbl)
-
-            mod_lbl = QLabel(f"(mod {mod:+d})")
-            mod_lbl.setObjectName("secondary")
-            mod_lbl.setFixedWidth(60)
-            row_layout.addWidget(mod_lbl)
-
-            init_input = QLineEdit()
-            init_input.setPlaceholderText("Total...")
-            init_input.setFixedWidth(60)
-            init_input.textChanged.connect(self._check_start_button)
-            row_layout.addWidget(init_input)
-
-            roll_btn = QPushButton("Roll")
-            roll_btn.setFixedWidth(50)
-
-            def _roll(checked=False, inp=init_input, m=mod):
-                result = random.randint(1, 20) + m
-                inp.setText(str(result))
-                inp.setStyleSheet(
-                    "background-color: #1a3a1a; border: 1px solid #2ecc71;"
-                )
-
-            roll_btn.clicked.connect(_roll)
-            row_layout.addWidget(roll_btn)
-
-            row_layout.addStretch()
-            outer.addWidget(row_widget)
-
-            self._initiative_inputs[id(char)] = init_input
+            self._add_initiative_row(char)
 
         outer.addWidget(self._make_divider())
 

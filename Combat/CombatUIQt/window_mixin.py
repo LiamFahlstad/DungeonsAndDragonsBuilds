@@ -356,6 +356,10 @@ class WindowMixin:
         # Actions section
         panel_layout.addWidget(self._section_header("Actions"))
 
+        add_combatant_btn = QPushButton("+ Add Combatant")
+        add_combatant_btn.clicked.connect(self._show_add_combatant_dialog)
+        panel_layout.addWidget(add_combatant_btn)
+
         # Next turn button (hidden during initiative phase)
         self._turn_divider = self._make_divider()
         self._turn_divider.hide()

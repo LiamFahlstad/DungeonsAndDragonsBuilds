@@ -117,6 +117,67 @@ def _damage_entry_text(entry) -> str:
 class DialogsMixin:
     """Mixin for dialog windows."""
 
+    def _show_add_combatant_dialog(self):
+        """Quickly add a free-text combatant — a name plus optional HP/AC —
+        for ad hoc sources/targets that don't need a full sheet or monster
+        (e.g. 'a door', an NPC improvised mid-session)."""
+        dlg = QDialog(self._window)
+        dlg.setWindowTitle("Add Combatant")
+        dlg.setStyleSheet(QSS)
+        dlg.setFixedWidth(300)
+
+        layout = QVBoxLayout(dlg)
+        layout.setContentsMargins(14, 14, 14, 14)
+        layout.setSpacing(8)
+
+        layout.addWidget(QLabel("Name:"))
+        name_input = QLineEdit()
+        name_input.setPlaceholderText("e.g. Wooden Door, Bandit Captain...")
+        layout.addWidget(name_input)
+
+        stats_row = QHBoxLayout()
+        stats_row.setSpacing(6)
+        stats_row.addWidget(QLabel("HP:"))
+        hp_input = QLineEdit("10")
+        hp_input.setFixedWidth(60)
+        stats_row.addWidget(hp_input)
+        stats_row.addWidget(QLabel("AC:"))
+        ac_input = QLineEdit("10")
+        ac_input.setFixedWidth(60)
+        stats_row.addWidget(ac_input)
+        stats_row.addStretch()
+        layout.addLayout(stats_row)
+
+        btn_row = QHBoxLayout()
+        add_btn = QPushButton("Add")
+        add_btn.setObjectName("primaryBtn")
+        cancel_btn = QPushButton("Cancel")
+        btn_row.addWidget(add_btn)
+        btn_row.addWidget(cancel_btn)
+        layout.addLayout(btn_row)
+
+        def do_add():
+            name = name_input.text().strip()
+            if not name:
+                return
+            try:
+                hp = int(hp_input.text())
+            except ValueError:
+                hp = 10
+            try:
+                ac = int(ac_input.text())
+            except ValueError:
+                ac = 10
+            self._add_ad_hoc_combatant(name, hp=hp, ac=ac)
+            dlg.accept()
+
+        add_btn.clicked.connect(do_add)
+        name_input.returnPressed.connect(do_add)
+        cancel_btn.clicked.connect(dlg.reject)
+
+        name_input.setFocus()
+        dlg.exec()
+
     def _show_more_info(self):
         if not self.selected_character:
             return
