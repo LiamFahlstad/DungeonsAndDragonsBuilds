@@ -82,3 +82,12 @@ class DataSpell(Spell):
     @property
     def source(self) -> str:
         return str(self._data["source"])
+
+    @property
+    def usage_tags(self) -> list[str]:
+        value = self._data.get("usage_tags", [])
+        if not isinstance(value, list):
+            raise ValueError(
+                f"Invalid usage_tags value for spell {self.name!r}: {value!r}"
+            )
+        return value

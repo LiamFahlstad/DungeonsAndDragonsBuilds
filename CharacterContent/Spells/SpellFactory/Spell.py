@@ -110,6 +110,13 @@ class Spell(ABC):
     def source(self) -> str:
         pass
 
+    @property
+    def usage_tags(self) -> list[str]:
+        """Zero or more of "heal"/"buff"/"control"/"damage" flagging what the spell's
+        effect functionally does, for a quick-scan chip on the card. Defaults to empty
+        (no chips) for any Spell subclass that doesn't provide its own data for this."""
+        return []
+
     # ---------- Interpreted properties (derived from the raw strings above) ---------- #
 
     @property
@@ -218,7 +225,7 @@ class Spell(ABC):
         return Spell.SCHOOL_COLORS.get(school, "#999999")
 
     def to_dict(self) -> dict:
-        return {
+        result = {
             "name": self.name,
             "level": self.level,
             "school": self.school,
@@ -230,6 +237,9 @@ class Spell(ABC):
             "description": self.description,
             "source": self.source,
         }
+        if self.usage_tags:
+            result["usage_tags"] = self.usage_tags
+        return result
 
     def write_to_file(
         self,

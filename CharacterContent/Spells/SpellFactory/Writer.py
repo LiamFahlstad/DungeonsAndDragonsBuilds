@@ -116,6 +116,29 @@ SPELL_CARD_CSS = """/* ── Spell entries ────────────
             color: #1a5f58;
         }
 
+        /* Usage-role chips — what the spell's effect does (Damage/Heal/Buff/Control).
+           Colors match the equivalent Feature usage tags for a consistent visual
+           language between spell cards and feature cards. */
+        .stag-usage-damage {
+            border: 1px solid #c23b3b;
+            color: #a52a2a;
+        }
+
+        .stag-usage-heal {
+            border: 1px solid #2a9d5f;
+            color: #1a7a45;
+        }
+
+        .stag-usage-buff {
+            border: 1px solid #4a6fd4;
+            color: #34519e;
+        }
+
+        .stag-usage-control {
+            border: 1px solid #b8447a;
+            color: #96335f;
+        }
+
         """
 
 if TYPE_CHECKING:
@@ -161,6 +184,17 @@ def write_spell_to_file(
         tags_html += f"<span class='spell-concentration-checkbox'><input type='checkbox' id='{concentration_id}' name='{concentration_id}'/><label for='{concentration_id}' style='font-size: 0.75rem; margin: 0;'>Active</label></span> "
     if is_ritual:
         tags_html += "<span class='stag stag-ritual'>Ritual</span> "
+    usage_labels = {
+        "damage": "Damage",
+        "heal": "Heal",
+        "buff": "Buff",
+        "control": "Control",
+    }
+    # Fixed display order regardless of the order listed in the spell data, so
+    # cards read consistently across spells.
+    for usage_tag in usage_labels:
+        if usage_tag in spell.usage_tags:
+            tags_html += f"<span class='stag stag-usage-{usage_tag}'>{usage_labels[usage_tag]}</span> "
 
     # ── Quick-stats ─────────────────────────────────────────────────────
     # Level, school, casting time, range, duration, and components all flow
