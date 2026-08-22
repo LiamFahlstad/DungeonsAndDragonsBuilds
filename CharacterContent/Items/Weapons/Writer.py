@@ -440,9 +440,11 @@ def write_weapons_to_file(
         return
 
     file.write("<div class='weapons'>\n")
-    file.write("<h2>Weapons</h2>\n")
+    file.write("<h3>Weapon Attacks</h3>\n")
 
     for weapon in weapons:
-        _write_single_weapon(weapon, character_stat_block, file, include_probability_tables)
+        _write_single_weapon(
+            weapon, character_stat_block, file, include_probability_tables
+        )
 
     file.write("</div>\n")

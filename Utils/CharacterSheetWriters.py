@@ -866,7 +866,14 @@ class HtmlCharacterSheetWriter:
                 sections.append(("Weapons", weapon_rows))
 
         if entry.items:
-            sorted_items = sorted(entry.items, key=lambda x: (x[0].category.value, x[0].name))
+            sorted_items = sorted(
+                (
+                    (item, quantity)
+                    for item, quantity in entry.items
+                    if item.category != Items.ItemCategory.CURRENCY
+                ),
+                key=lambda x: (x[0].category.value, x[0].name),
+            )
             item_rows = [
                 (
                     f"{item.name} ({quantity}){self._worn_tag(item)}"
@@ -913,7 +920,10 @@ class HtmlCharacterSheetWriter:
 
         # Wallet pinned to the left, carrying capacity (total + a compact
         # per-source pip breakdown) pinned to the right - keeps the row
-        # tidy instead of one flat chip list wrapping unevenly.
+        # tidy instead of one flat chip list wrapping unevenly. Given its
+        # own header so it reads as a distinct section rather than a
+        # continuation of the weapon attacks above it.
+        file.write("<h3>Wealth &amp; Carrying Capacity</h3>\n")
         carrying_capacity = character.get_carrying_capacity()
         file.write("<div class='wallet-carry-row'>\n")
         file.write("<div class='wallet-block'>\n")
@@ -954,10 +964,9 @@ class HtmlCharacterSheetWriter:
                 )
 
             sections = self._build_item_sections(entry, is_starting_equipment)
-            for i, (title, rows) in enumerate(sections):
-                if i > 0:
-                    file.write("<hr>")
-                Html.write_item_cards(file, title, rows)
+            combined_rows = [row for _, rows in sections for row in rows]
+            if combined_rows:
+                Html.write_item_cards(file, None, combined_rows)
 
         file.write("<br class='section-gap'>\n")
 

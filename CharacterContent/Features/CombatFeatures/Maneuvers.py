@@ -4,8 +4,20 @@ from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
 class Maneuver(Feature):
-    def __init__(self, name: str, action_type: str = None, duration: str = None):
-        super().__init__(name=name, origin="Maneuver", action_type=action_type, duration=duration)
+    def __init__(
+        self,
+        name: str,
+        action_type: str = None,
+        duration: str = None,
+        usage_tags: list = None,
+    ):
+        super().__init__(
+            name=name,
+            origin="Maneuver",
+            action_type=action_type,
+            duration=duration,
+            usage_tags=usage_tags,
+        )
 
 
 class ManeuverWithSavingThrow(Maneuver):

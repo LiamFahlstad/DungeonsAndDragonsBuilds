@@ -1,7 +1,7 @@
 """Generic HTML generation primitives and character sheet CSS fragments."""
 
 import re
-from typing import TextIO
+from typing import Optional, TextIO
 
 from Core.Definitions import DAMAGE_TYPE_COLORS
 
@@ -275,7 +275,7 @@ def write_item_table(file: TextIO, title: str, rows: list[tuple[str, str]]):
 
 
 def write_item_cards(
-    file: TextIO, title: str, rows: list[tuple[str, str, int, str, str, str]]
+    file: TextIO, title: Optional[str], rows: list[tuple[str, str, int, str, str, str]]
 ):
     """Inventory items rendered as stacked cards (matching the weapon-entry
     visual language) with type, rarity, buy/sell price, slot cost, and
@@ -283,7 +283,8 @@ def write_item_cards(
     rarity, price_display)."""
     import re
 
-    file.write(f"<h3>{title}</h3>\n")
+    if title:
+        file.write(f"<h3>{title}</h3>\n")
     file.write("<div class='gear-list'>\n")
 
     for label, description, slots, item_type, rarity, price in rows:
@@ -306,9 +307,10 @@ def write_item_cards(
             f"<input type='checkbox' id='{carrying_id}_check' name='{carrying_id}_check'/></label>\n"
         )
         file.write("</div>\n")
+        rarity_class = f"rarity-{rarity.lower().replace(' ', '-')}"
         file.write(
             f"<div class='gear-meta'>{item_type}"
-            f"<span class='gsep'>·</span>{rarity}"
+            f"<span class='gsep'>·</span><span class='{rarity_class}'>{rarity}</span>"
             f"<span class='gsep'>·</span>"
             f"<span class='glabel'>Buy/Sell</span> {price}"
             f"<span class='gsep'>·</span>"
@@ -874,6 +876,37 @@ BASE_CHARACTER_SHEET_CSS = """
             text-transform: uppercase;
             letter-spacing: 0.04em;
             margin-right: 2px;
+        }
+
+        /* Rarity tag colors within .gear-meta - standard tabletop/RPG
+           rarity ramp (grey -> green -> blue -> purple -> orange -> red). */
+        .rarity-common {
+            color: var(--muted-color);
+        }
+
+        .rarity-uncommon {
+            color: #2f8f4e;
+            font-weight: 600;
+        }
+
+        .rarity-rare {
+            color: #2a6fb0;
+            font-weight: 600;
+        }
+
+        .rarity-very-rare {
+            color: #7c4fb5;
+            font-weight: 600;
+        }
+
+        .rarity-legendary {
+            color: #c9791f;
+            font-weight: 600;
+        }
+
+        .rarity-artifact {
+            color: #b5342f;
+            font-weight: 600;
         }
 
         /* Bullet separator between quick-stat items */
