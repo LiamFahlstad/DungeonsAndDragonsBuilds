@@ -112,9 +112,9 @@ class Spell(ABC):
 
     @property
     def usage_tags(self) -> list[str]:
-        """Zero or more of "heal"/"buff"/"control"/"damage" flagging what the spell's
-        effect functionally does, for a quick-scan chip on the card. Defaults to empty
-        (no chips) for any Spell subclass that doesn't provide its own data for this."""
+        """Zero or more of "heal"/"buff"/"control"/"damage"/"utility" flagging what the
+        spell's effect functionally does, for a quick-scan chip on the card. Defaults to
+        empty (no chips) for any Spell subclass that doesn't provide its own data for this."""
         return []
 
     # ---------- Interpreted properties (derived from the raw strings above) ---------- #

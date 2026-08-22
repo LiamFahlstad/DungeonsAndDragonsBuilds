@@ -169,6 +169,11 @@ FEATURE_CARD_CSS = """/* ── Feature cards ───────────�
             color: #a52a2a;
         }
 
+        .feature-usage-tag.tag-utility {
+            border: 1px solid #6b7280;
+            color: #4b5563;
+        }
+
         .feature-card.is-passive .feature-name {
             color: var(--muted-color);
         }
@@ -308,7 +313,7 @@ class Feature:
         action_type: Literal["action", "bonus_action", "reaction"] | None = None,
         duration: str | None = None,
         range: str | None = None,
-        usage_tags: list[Literal["heal", "buff", "control", "damage"]] | None = None,
+        usage_tags: list[Literal["heal", "buff", "control", "damage", "utility"]] | None = None,
     ):
         self.name = name if name is not None else type(self).__name__
         self.origin = origin
@@ -330,9 +335,10 @@ class Feature:
         # for features with no meaningful range (e.g. pure passives).
         self.range = range
         # Set for features whose effect falls into one or more of these functional
-        # roles - healing, buffing, imposing a condition/controlling a target, or
-        # dealing damage - so the card can be scanned for role at a glance. A
-        # feature can carry more than one (e.g. deals damage and also restrains).
+        # roles - healing, buffing, imposing a condition/controlling a target,
+        # dealing damage, or non-combat utility - so the card can be scanned for
+        # role at a glance. A feature can carry more than one (e.g. deals damage
+        # and also restrains).
         # Leave None/empty for features with no combat/utility role of this kind
         # (e.g. skill proficiencies, passive stat bonuses).
         self.usage_tags = usage_tags
@@ -619,6 +625,7 @@ class Feature:
             "heal": "Heal",
             "buff": "Buff",
             "control": "Control",
+            "utility": "Utility",
         }
         # Fixed display order regardless of the order passed in, so cards read
         # consistently across features.

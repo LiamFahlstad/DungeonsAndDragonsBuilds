@@ -132,7 +132,10 @@
         "components": "V, S, M (a morsel of food)",
         "duration": "24 Hours",
         "description": "A Tiny Beast of your choice that you can see within range must succeed on a Charisma saving throw, or it attempts to deliver a message for you (if the target’s Challenge Rating isn’t 0, it automatically succeeds). You specify a location you have visited and a recipient who matches a general description, such as “a person dressed in the uniform of the town guard” or “a red-haired dwarf wearing a pointed hat.” You also communicate a message of up to twenty-five words. The Beast travels for the duration toward the specified location, covering about 25 miles per 24 hours or 50 miles if the Beast can fly.\nWhen the Beast arrives, it delivers your message to the creature that you described, mimicking your communication. If the Beast doesn’t reach its destination before the spell ends, the message is lost, and the Beast returns to where you cast the spell.\nUsing a Higher-Level Spell Slot. The spell’s duration increases by 48 hours for each spell slot level above 2.",
-        "source": "Player's Handbook"
+        "source": "Player's Handbook",
+        "usage_tags": [
+            "utility"
+        ]
     },
     "Animal Shapes": {
         "name": "Animal Shapes",
@@ -287,7 +290,10 @@
         "components": "V, S, M (gold dust worth 25+ GP, which the spell consumes)",
         "duration": "Until dispelled",
         "description": "You touch a closed door, window, gate, container, or hatch and magically lock it for the duration. This lock can’t be unlocked by any nonmagical means. You and any creatures you designate when you cast the spell can open and close the object despite the lock. You can also set a password that, when spoken within 5 feet of the object, unlocks it for 1 minute.",
-        "source": "Player's Handbook"
+        "source": "Player's Handbook",
+        "usage_tags": [
+            "utility"
+        ]
     },
     "Arcane Vigor": {
         "name": "Arcane Vigor",
@@ -397,7 +403,10 @@
         "components": "V, S, M (specially marked sticks, bones, cards, or other divinatory tokens worth 25+ GP)",
         "duration": "Instantaneous",
         "description": "You receive an omen from an otherworldly entity about the results of a course of action that you plan to take within the next 30 minutes. The DM chooses the omen from the Omens table.\nThe spell doesn’t account for circumstances, such as other spells, that might change the results.\nIf you cast the spell more than once before finishing a Long Rest, there is a cumulative 25 percent chance for each casting after the first that you get no answer.",
-        "source": "Player's Handbook"
+        "source": "Player's Handbook",
+        "usage_tags": [
+            "utility"
+        ]
     },
     "Aura of Life": {
         "name": "Aura of Life",
@@ -601,7 +610,10 @@
         "components": "S",
         "duration": "Concentration, up to 1 hour",
         "description": "You touch a willing Beast. For the duration, you can perceive through the Beast’s senses as well as your own. When perceiving through the Beast’s senses, you benefit from any special senses it has.",
-        "source": "Player's Handbook"
+        "source": "Player's Handbook",
+        "usage_tags": [
+            "utility"
+        ]
     },
     "Befuddlement": {
         "name": "Befuddlement",
@@ -1197,7 +1209,10 @@
         "components": "V, S, M (incense)",
         "duration": "1 minute",
         "description": "You contact a deity or a divine proxy and ask up to three questions that can be answered with yes or no. You must ask your questions before the spell ends. You receive a correct answer for each question.\nDivine beings aren't necessarily omniscient, so you might receive “unclear” as an answer if a question pertains to information that lies beyond the deity’s knowledge. In a case where a one-word answer could be misleading or contrary to the deity’s interests, the DM might offer a short phrase as an answer instead.\nIf you cast the spell more than once before finishing a Long Rest, there is a cumulative 25 percent chance for each casting after the first that you get no answer.",
-        "source": "Player's Handbook"
+        "source": "Player's Handbook",
+        "usage_tags": [
+            "utility"
+        ]
     },
     "Commune with Nature": {
         "name": "Commune with Nature",
@@ -1212,7 +1227,10 @@
         "components": "V, S",
         "duration": "Instantaneous",
         "description": "You commune with nature spirits and gain knowledge of the surrounding area. In the outdoors, the spell gives you knowledge of the area within 3 miles of you. In caves and other natural underground settings, the radius is limited to 300 feet. The spell doesn't function where nature has been replaced by construction, such as in castles and settlements.\nChoose three of the following facts; you learn those facts as they pertain to the spell's area:\nLocations of settlements\nLocations of portals to other planes of existence\nLocation of one Challenge Rating 10+ creature (DM’s choice) that is a Celestial, an Elemental, a Fey, a Fiend, or an Undead\nThe most prevalent kind of plant, mineral, or Beast (you choose which to learn)\nLocations of bodies of water\nFor example, you could determine the location of a powerful monster in the area, the locations of bodies of water, and the locations of any towns.",
-        "source": "Player's Handbook"
+        "source": "Player's Handbook",
+        "usage_tags": [
+            "utility"
+        ]
     },
     "Compelled Duel": {
         "name": "Compelled Duel",
@@ -1247,7 +1265,10 @@
         "components": "V, S, M (a pinch of soot and salt)",
         "duration": "1 hour",
         "description": "For the duration, you understand the literal meaning of any language that you hear or see signed. You also understand any written language that you see, but you must be touching the surface on which the words are written. It takes about 1 minute to read one page of text. This spell doesn't decode symbols or secret messages.",
-        "source": "Player's Handbook"
+        "source": "Player's Handbook",
+        "usage_tags": [
+            "utility"
+        ]
     },
     "Compulsion": {
         "name": "Compulsion",
@@ -1534,7 +1555,10 @@
         "components": "V, S, M (ruby dust worth 50+ GP, which the spell consumes)",
         "duration": "Until dispelled",
         "description": "A flame springs from an object that you touch. The effect casts Bright Light in a 20-foot radius and Dim Light for an additional 20 feet. It looks like a regular flame, but it creates no heat and consumes no fuel. The flame can be covered or hidden but not smothered or quenched.",
-        "source": "Player's Handbook"
+        "source": "Player's Handbook",
+        "usage_tags": [
+            "utility"
+        ]
     },
     "Control Water": {
         "name": "Control Water",
@@ -1570,7 +1594,10 @@
         "components": "V, S, M (burning incense)",
         "duration": "Concentration, up to 8 hours",
         "description": "You take control of the weather within 5 miles of you for the duration. You must be outdoors to cast this spell, and it ends early if you go indoors.\nWhen you cast the spell, you change the current weather conditions, which are determined by the DM. You can change precipitation, temperature, and wind. It takes 1d4 × 10 minutes for the new conditions to take effect. Once they do so, you can change the conditions again. When the spell ends, the weather gradually returns to normal.\nWhen you change the weather conditions, find a current condition on the following tables and change its stage by one, up or down. When changing the wind, you can change its direction.",
-        "source": "Player's Handbook"
+        "source": "Player's Handbook",
+        "usage_tags": [
+            "utility"
+        ]
     },
     "Cordon of Arrows": {
         "name": "Cordon of Arrows",
@@ -1619,7 +1646,10 @@
         "components": "V, S",
         "duration": "Instantaneous",
         "description": "You create 45 pounds of food and 30 gallons of fresh water on the ground or in containers within range - both useful in fending off the hazards of malnutrition and dehydration. The food is bland but nourishing and looks like a food of your choice, and the water is clean. The food spoils after 24 hours if uneaten.",
-        "source": "Player's Handbook"
+        "source": "Player's Handbook",
+        "usage_tags": [
+            "utility"
+        ]
     },
     "Create or Destroy Water": {
         "name": "Create or Destroy Water",
@@ -1634,7 +1664,10 @@
         "components": "V, S, M (a mix of water and sand)",
         "duration": "Instantaneous",
         "description": "You do one of the following:\nCreate Water. You create up to 10 gallons of clean water within range in an open container. Alternatively, the water falls as rain in a 30-foot Cube within range, extinguishing exposed flames there.\nDestroy Water. You destroy up to 10 gallons of water in an open container within range. Alternatively, you destroy fog in a 30-foot Cube within range.\nUsing a Higher-Level Spell Slot. You create or destroy 10 additional gallons of water, or the size of the Cube increases by 5 feet, for each spell slot level above 1.",
-        "source": "Player's Handbook"
+        "source": "Player's Handbook",
+        "usage_tags": [
+            "utility"
+        ]
     },
     "Create Undead": {
         "name": "Create Undead",
@@ -1666,7 +1699,10 @@
         "components": "V, S, M (a paintbrush)",
         "duration": "Special",
         "description": "You pull wisps of shadow material from the Shadowfell to create an object within range. It is either an object of vegetable matter (soft goods, rope, wood, and the like) or mineral matter (stone, crystal, metal, and the like). The object must be no larger than a 5-foot Cube, and the object must be of a form and material that you have seen.\nThe spell’s duration depends on the object’s material, as shown in the Materials table. If the object is composed of multiple materials, use the shortest duration. Using any object created by this spell as another spell’s Material component causes the other spell to fail.\nUsing a Higher-Level Spell Slot. The Cube increases by 5 feet for each spell slot level above 5.",
-        "source": "Player's Handbook"
+        "source": "Player's Handbook",
+        "usage_tags": [
+            "utility"
+        ]
     },
     "Crown of Madness": {
         "name": "Crown of Madness",
@@ -1743,7 +1779,10 @@
         "components": "V, S, M (a bit of phosphorus)",
         "duration": "Concentration, up to 1 minute",
         "description": "You create up to four torch-size lights within range, making them appear as torches, lanterns, or glowing orbs that hover for the duration. Alternatively, you combine the four lights into one glowing Medium form that is vaguely humanlike. Whichever form you choose, each light sheds Dim Light in a 10-foot radius.\nAs a Bonus Action, you can move the lights up to 60 feet to a space within range. A light must be within 20 feet of another light created by this spell, and a light vanishes if it exceeds the spell’s range.",
-        "source": "Player's Handbook"
+        "source": "Player's Handbook",
+        "usage_tags": [
+            "utility"
+        ]
     },
     "Darkness": {
         "name": "Darkness",
@@ -1802,7 +1841,10 @@
         "components": "V, S",
         "duration": "1 hour",
         "description": "For the duration, sunlight spreads from a point within range and fills a 60-foot-radius Sphere. The sunlight’s area is Bright Light and sheds Dim Light for an additional 60 feet.\nAlternatively, you cast the spell on an object that isn’t being worn or carried, causing the sunlight to fill a 60-foot Emanation originating from that object. Covering that object with something opaque, such as a bowl or helm, blocks the sunlight.\nIf any of this spell’s area overlaps with an area of Darkness created by a spell of level 3 or lower, that other spell is dispelled.",
-        "source": "Player's Handbook"
+        "source": "Player's Handbook",
+        "usage_tags": [
+            "utility"
+        ]
     },
     "Death Armor": {
         "name": "Death Armor",
@@ -1891,7 +1933,10 @@
         "components": "V, S, M (powdered gemstones worth 100+ GP, which the spell consumes, and one set of Artisan’s Tools with which you have proficiency)",
         "duration": "8 hours",
         "description": "You summon a group of helpful spirits, which lasts for the duration. The spirits appear as homunculi or as another Construct of your choice but are intangible and invulnerable, and they are considered to have proficiency in the Arcana skill and with the set of Artisan’s Tools used in the spell’s casting.\nIf you are crafting an item, the spirits function as a single assistant for your crafting, halving the crafting time.",
-        "source": "Forgotten Realms - Heroes of Faerun"
+        "source": "Forgotten Realms - Heroes of Faerun",
+        "usage_tags": [
+            "utility"
+        ]
     },
     "Destructive Wave": {
         "name": "Destructive Wave",
@@ -1924,7 +1969,10 @@
         "components": "V, S",
         "duration": "Concentration, up to 10 minutes",
         "description": "For the duration, you sense the location of any Aberration, Celestial, Elemental, Fey, Fiend, or Undead within 30 feet of yourself. You also sense whether the Hallow spell is active there and, if so, where.\nThe spell is blocked by 1 foot of stone, dirt, or wood; 1 inch of metal; or a thin sheet of lead.",
-        "source": "Player's Handbook"
+        "source": "Player's Handbook",
+        "usage_tags": [
+            "utility"
+        ]
     },
     "Detect Magic": {
         "name": "Detect Magic",
@@ -1946,7 +1994,10 @@
         "components": "V, S",
         "duration": "Concentration, up to 10 minutes",
         "description": "For the duration, you sense the presence of magical effects within 30 feet of yourself. If you sense such effects, you can take the Magic action to see a faint aura around any visible creature or object in the area that bears the magic, and if an effect was created by a spell, you learn the spell's school of magic.\nThe spell is blocked by 1 foot of stone, dirt, or wood; 1 inch of metal; or a thin sheet of lead.",
-        "source": "Player's Handbook"
+        "source": "Player's Handbook",
+        "usage_tags": [
+            "utility"
+        ]
     },
     "Detect Poison and Disease": {
         "name": "Detect Poison and Disease",
@@ -1963,7 +2014,10 @@
         "components": "V, S, M (a yew leaf)",
         "duration": "Concentration, up to 10 minutes",
         "description": "For the duration, you sense the location of poisons, poisonous or venomous creatures, and magical contagions within 30 feet of yourself. You sense the kind of poison, creature, or contagion in each case.\nThe spell is blocked by 1 foot of stone, dirt, or wood; 1 inch of metal; or a thin sheet of lead.",
-        "source": "Player's Handbook"
+        "source": "Player's Handbook",
+        "usage_tags": [
+            "utility"
+        ]
     },
     "Detect Thoughts": {
         "name": "Detect Thoughts",
@@ -2039,7 +2093,10 @@
         "components": "V, S",
         "duration": "1 hour",
         "description": "You make yourself - including your clothing, armor, weapons, and other belongings on your person - look different until the spell ends. You can seem 1 foot shorter or taller and can appear heavier or lighter. You must adopt a form that has the same basic arrangement of limbs as you have. Otherwise, the extent of the illusion is up to you.\nThe changes wrought by this spell fail to hold up to physical inspection. For example, if you use this spell to add a hat to your outfit, objects pass through the hat, and anyone who touches it would feel nothing.\nTo discern that you are disguised, a creature must take the Study action to inspect your appearance and succeed on an Intelligence (Investigation) check against your spell save DC.",
-        "source": "Player's Handbook"
+        "source": "Player's Handbook",
+        "usage_tags": [
+            "utility"
+        ]
     },
     "Disintegrate": {
         "name": "Disintegrate",
@@ -2100,7 +2157,10 @@
         "components": "V, S",
         "duration": "Instantaneous",
         "description": "Choose one creature, object, or magical effect within range. Any ongoing spell of level 3 or lower on the target ends. For each ongoing spell of level 4 or higher on the target, make an ability check using your spellcasting ability (DC 10 plus that spell’s level). On a successful check, the spell ends.\nUsing a Higher-Level Spell Slot. You automatically end a spell on the target if the spell’s level is equal to or less than the level of the spell slot you use.",
-        "source": "Player's Handbook"
+        "source": "Player's Handbook",
+        "usage_tags": [
+            "utility"
+        ]
     },
     "Dissonant Whispers": {
         "name": "Dissonant Whispers",
@@ -2133,7 +2193,10 @@
         "components": "V, S, M (incense worth 25+ GP, which the spell consumes)",
         "duration": "Instantaneous",
         "description": "This spell puts you in contact with a god or a god’s servants. You ask one question about a specific goal, event, or activity to occur within 7 days. The DM offers a truthful reply, which might be a short phrase or cryptic rhyme. The spell doesn’t account for circumstances that might change the answer, such as the casting of other spells.\nIf you cast the spell more than once before finishing a Long Rest, there is a cumulative 25 percent chance for each casting after the first that you get no answer.",
-        "source": "Player's Handbook"
+        "source": "Player's Handbook",
+        "usage_tags": [
+            "utility"
+        ]
     },
     "Divine Favor": {
         "name": "Divine Favor",
@@ -2181,7 +2244,11 @@
         "components": "V",
         "duration": "Instantaneous",
         "description": "You utter a word imbued with power from the Upper Planes. Each creature of your choice in range makes a Charisma saving throw. On a failed save, a target that has 50 Hit Points or fewer suffers an effect based on its current Hit Points, as shown in the Divine Word Effects table. Regardless of its Hit Points, a Celestial, an Elemental, a Fey, or a Fiend target that fails its save is forced back to its plane of origin (if it isn’t there already) and can’t return to the current plane for 24 hours by any means short of a Wish spell.",
-        "source": "Player's Handbook"
+        "source": "Player's Handbook",
+        "usage_tags": [
+            "damage",
+            "control"
+        ]
     },
     "Dominate Beast": {
         "name": "Dominate Beast",
@@ -2296,7 +2363,10 @@
         "components": "V, S, M (a sapphire worth 1,000+ GP)",
         "duration": "Until dispelled",
         "description": "You touch the sapphire used in the casting and an object weighing 10 pounds or less whose longest dimension is 6 feet or less. The spell leaves an Invisible mark on that object and invisibly inscribes the object’s name on the sapphire. Each time you cast this spell, you must use a different sapphire.\nThereafter, you can take a Magic action to speak the object’s name and crush the sapphire. The object instantly appears in your hand regardless of physical or planar distances, and the spell ends.\nIf another creature is holding or carrying the object, crushing the sapphire doesn’t transport it, but instead you learn who that creature is and where that creature is currently located.",
-        "source": "Player's Handbook"
+        "source": "Player's Handbook",
+        "usage_tags": [
+            "utility"
+        ]
     },
     "Dream": {
         "name": "Dream",
@@ -2330,7 +2400,10 @@
         "components": "V, S",
         "duration": "Instantaneous",
         "description": "Whispering to the spirits of nature, you create one of the following effects within range.\nWeather Sensor. You create a Tiny, harmless sensory effect that predicts what the weather will be at your location for the next 24 hours. The effect might manifest as a golden orb for clear skies, a cloud for rain, falling snowflakes for snow, and so on. This effect persists for 1 round.\nBloom. You instantly make a flower blossom, a seed pod open, or a leaf bud bloom.\nSensory Effect. You create a harmless sensory effect, such as falling leaves, spectral dancing fairies, a gentle breeze, the sound of an animal, or the faint odor of skunk. The effect must fit in a 5-foot Cube.\nFire Play. You light or snuff out a candle, a torch, or a campfire.",
-        "source": "Player's Handbook"
+        "source": "Player's Handbook",
+        "usage_tags": [
+            "utility"
+        ]
     },
     "Earthquake": {
         "name": "Earthquake",
@@ -2559,7 +2632,10 @@
         "components": "V, S",
         "duration": "Up to 8 hours",
         "description": "You step into the border regions of the Ethereal Plane, where it overlaps with your current plane. You remain in the Border Ethereal for the duration. During this time, you can move in any direction. If you move up or down, every foot of movement costs an extra foot. You can perceive the plane you left, which looks gray, and you can’t see anything there more than 60 feet away.\nWhile on the Ethereal Plane, you can affect and be affected only by creatures, objects, and effects on that plane. Creatures that aren’t on the Ethereal Plane can’t perceive or interact with you unless a feature gives them the ability to do so.\nWhen the spell ends, you return to the plane you left in the spot that corresponds to your space in the Border Ethereal. If you appear in an occupied space, you are shunted to the nearest unoccupied space and take Force damage equal to twice the number of feet you are moved.\nThis spell ends instantly if you cast it while you are on the Ethereal Plane or a plane that doesn’t border it, such as one of the Outer Planes.\nUsing a Higher-Level Spell Slot. You can target up to three willing creatures (including yourself) for each spell slot level above 7. The creatures must be within 10 feet of you when you cast the spell.",
-        "source": "Player's Handbook"
+        "source": "Player's Handbook",
+        "usage_tags": [
+            "utility"
+        ]
     },
     "Evard's Black Tentacles": {
         "name": "Evard's Black Tentacles",
@@ -2594,7 +2670,10 @@
         "components": "V, S",
         "duration": "Concentration, up to 10 minutes",
         "description": "You take the Dash action, and until the spell ends, you can take that action again as a Bonus Action.",
-        "source": "Player's Handbook"
+        "source": "Player's Handbook",
+        "usage_tags": [
+            "buff"
+        ]
     },
     "Eyebite": {
         "name": "Eyebite",
@@ -2629,7 +2708,10 @@
         "components": "V, S",
         "duration": "Instantaneous",
         "description": "You convert raw materials into products of the same material. For example, you can fabricate a wooden bridge from a clump of trees, a rope from a patch of hemp, or clothes from flax or wool.\nChoose raw materials that you can see within range. You can fabricate a Large or smaller object (contained within a 10-foot Cube or eight connected 5-foot Cubes) given a sufficient quantity of material. If you’re working with metal, stone, or another mineral substance, however, the fabricated object can be no larger than Medium (contained within a 5-foot Cube). The quality of any fabricated objects is based on the quality of the raw materials.\nCreatures and magic items can’t be created by this spell. You also can’t use it to create items that require a high degree of skill - such as weapons and armor - unless you have proficiency with the type of Artisan’s Tools used to craft such objects.",
-        "source": "Player's Handbook"
+        "source": "Player's Handbook",
+        "usage_tags": [
+            "utility"
+        ]
     },
     "Faerie Fire": {
         "name": "Faerie Fire",
@@ -2645,7 +2727,10 @@
         "components": "V",
         "duration": "Concentration, up to 1 minute",
         "description": "Objects in a 20-foot Cube within range are outlined in blue, green, or violet light (your choice). Each creature in the Cube is also outlined if it fails a Dexterity saving throw. For the duration, objects and affected creatures shed Dim Light in a 10-foot radius and can’t benefit from the Invisible condition.\nAttack rolls against an affected creature or object have Advantage if the attacker can see it.",
-        "source": "Player's Handbook"
+        "source": "Player's Handbook",
+        "usage_tags": [
+            "control"
+        ]
     },
     "False Life": {
         "name": "False Life",
@@ -2701,7 +2786,10 @@
         "components": "V, M (a small feather or piece of down)",
         "duration": "1 minute",
         "description": "Choose up to five falling creatures within range. A falling creature’s rate of descent slows to 60 feet per round until the spell ends. If a creature lands before the spell ends, the creature takes no damage from the fall, and the spell ends for that creature.",
-        "source": "Player's Handbook"
+        "source": "Player's Handbook",
+        "usage_tags": [
+            "buff"
+        ]
     },
     "Feign Death": {
         "name": "Feign Death",
@@ -2771,7 +2859,10 @@
         "components": "V, S, M (a set of divination tools - such as cards or runes - worth 100+ GP)",
         "duration": "Concentration, up to 1 day",
         "description": "You magically sense the most direct physical route to a location you name. You must be familiar with the location, and the spell fails if you name a destination on another plane of existence, a moving destination (such as a mobile fortress), or an unspecific destination (such as “a green dragon’s lair”).\nFor the duration, as long as you are on the same plane of existence as the destination, you know how far it is and in what direction it lies. Whenever you face a choice of paths along the way there, you know which path is the most direct.",
-        "source": "Player's Handbook"
+        "source": "Player's Handbook",
+        "usage_tags": [
+            "utility"
+        ]
     },
     "Find Traps": {
         "name": "Find Traps",
@@ -3197,7 +3288,10 @@
         "components": "V, S, M (2 Copper Pieces, which the spell consumes)",
         "duration": "10 days",
         "description": "You touch a corpse or other remains. For the duration, the target is protected from decay and can’t become Undead.\nThe spell also effectively extends the time limit on raising the target from the dead, since days spent under the influence of this spell don’t count against the time limit of spells such as Raise Dead.",
-        "source": "Player's Handbook"
+        "source": "Player's Handbook",
+        "usage_tags": [
+            "utility"
+        ]
     },
     "Giant Insect": {
         "name": "Giant Insect",
@@ -3244,7 +3338,10 @@
         "components": "V, S, M (a glass bead)",
         "duration": "Concentration, up to 1 minute",
         "description": "An immobile, shimmering barrier appears in a 10-foot Emanation around you and remains for the duration.\nAny spell of level 5 or lower cast from outside the barrier can’t affect anything within it. Such a spell can target creatures and objects within the barrier, but the spell has no effect on them. Similarly, the area within the barrier is excluded from areas of effect created by such spells.\nUsing a Higher-Level Spell Slot. The barrier blocks spells of 1 level higher for each spell slot level above 6.",
-        "source": "Player's Handbook"
+        "source": "Player's Handbook",
+        "usage_tags": [
+            "buff"
+        ]
     },
     "Glyph of Warding": {
         "name": "Glyph of Warding",
@@ -3333,7 +3430,10 @@
         "components": "V, S",
         "duration": "Concentration, up to 1 minute",
         "description": "A creature you touch has the Invisible condition until the spell ends.",
-        "source": "Player's Handbook"
+        "source": "Player's Handbook",
+        "usage_tags": [
+            "buff"
+        ]
     },
     "Greater Restoration": {
         "name": "Greater Restoration",
@@ -3369,7 +3469,11 @@
         "components": "V",
         "duration": "8 hours",
         "description": "A Large spectral guardian appears and hovers for the duration in an unoccupied space that you can see within range. The guardian occupies that space and is invulnerable, and it appears in a form appropriate for your deity or pantheon.\nAny enemy that moves to a space within 10 feet of the guardian for the first time on a turn or starts its turn there makes a Dexterity saving throw, taking 20 Radiant damage on a failed save or half as much damage on a successful one. The guardian vanishes when it has dealt a total of 60 damage.",
-        "source": "Player's Handbook"
+        "source": "Player's Handbook",
+        "usage_tags": [
+            "damage",
+            "control"
+        ]
     },
     "Guards and Wards": {
         "name": "Guards and Wards",
@@ -3403,7 +3507,10 @@
         "components": "V, S",
         "duration": "Concentration, up to 1 minute",
         "description": "You touch a willing creature and choose a skill. Until the spell ends, the creature adds 1d4 to any ability check using the chosen skill.",
-        "source": "Player's Handbook"
+        "source": "Player's Handbook",
+        "usage_tags": [
+            "buff"
+        ]
     },
     "Guiding Bolt": {
         "name": "Guiding Bolt",
@@ -3492,7 +3599,10 @@
         "components": "V, S, M (a mushroom)",
         "duration": "24 hours",
         "description": "You make natural terrain in a 150-foot Cube in range look, sound, and smell like another sort of natural terrain. Thus, open fields or a road can be made to resemble a swamp, hill, crevasse, or some other difficult or impassable terrain. A pond can be made to seem like a grassy meadow, a precipice like a gentle slope, or a rock-strewn gully like a wide and smooth road. Manufactured structures, equipment, and creatures within the area aren’t changed.\nThe tactile characteristics of the terrain are unchanged, so creatures entering the area are likely to notice the illusion. If the difference isn’t obvious by touch, a creature examining the illusion can take the Study action to make an Intelligence (Investigation) check against your spell save DC to disbelieve it. If a creature discerns that the terrain is illusory, the creature sees a vague image superimposed on the real terrain.",
-        "source": "Player's Handbook"
+        "source": "Player's Handbook",
+        "usage_tags": [
+            "utility"
+        ]
     },
     "Harm": {
         "name": "Harm",
@@ -3861,7 +3971,10 @@
         "components": "V, S, M (a pearl worth 100+ GP)",
         "duration": "Instantaneous",
         "description": "You touch an object throughout the spell’s casting. If the object is a magic item or some other magical object, you learn its properties and how to use them, whether it requires Attunement, and how many charges it has, if any. You learn whether any ongoing spells are affecting the item and what they are. If the item was created by a spell, you learn that spell’s name.\nIf you instead touch a creature throughout the casting, you learn which ongoing spells, if any, are currently affecting it.",
-        "source": "Player's Handbook"
+        "source": "Player's Handbook",
+        "usage_tags": [
+            "utility"
+        ]
     },
     "Illusory Script": {
         "name": "Illusory Script",
@@ -3970,7 +4083,10 @@
         "components": "V, S",
         "duration": "Concentration, up to 1 minute",
         "description": "One creature of your choice that you can see within range hears a haunting yet catchy tune that continuously repeats in its mind. The target must succeed on a Wisdom saving throw, or it has Disadvantage on Intelligence checks and on Constitution saving throws made to maintain Concentration. At the end of each of its turns, the target repeats the save, ending the spell on itself on a success.\nUsing a Higher-Level Spell Slot. You can target one additional creature for each spell slot level above 1.",
-        "source": "D&D Beyond Drops - May 2026"
+        "source": "D&D Beyond Drops - May 2026",
+        "usage_tags": [
+            "control"
+        ]
     },
     "Invisibility": {
         "name": "Invisibility",
@@ -4046,7 +4162,10 @@
         "components": "V",
         "duration": "Instantaneous",
         "description": "Choose an object that you can see within range. The object can be a door, a box, a chest, a set of manacles, a padlock, or another object that contains a mundane or magical means that prevents access.\nA target that is held shut by a mundane lock or that is stuck or barred becomes unlocked, unstuck, or unbarred. If the object has multiple locks, only one of them is unlocked.\nIf the target is held shut by Arcane Lock , that spell is suppressed for 10 minutes, during which time the target can be opened and closed.\nWhen you cast the spell, a loud knock, audible up to 300 feet away, emanates from the target.",
-        "source": "Player's Handbook"
+        "source": "Player's Handbook",
+        "usage_tags": [
+            "utility"
+        ]
     },
     "Laeral's Silver Lance": {
         "name": "Laeral's Silver Lance",
@@ -4082,7 +4201,10 @@
         "components": "V, S, M (incense worth 250+ GP, which the spell consumes, and four ivory strips worth 50+ GP each)",
         "duration": "Instantaneous",
         "description": "Name or describe a famous person, place, or object. The spell brings to your mind a brief summary of the significant lore about that famous thing, as described by the DM.\nThe lore might consist of important details, amusing revelations, or even secret lore that has never been widely known. The more information you already know about the thing, the more precise and detailed the information you receive is. That information is accurate but might be couched in figurative language or poetry, as determined by the DM.\nIf the famous thing you chose isn’t actually famous, you hear sad musical notes played on a trombone, and the spell fails.",
-        "source": "Player's Handbook"
+        "source": "Player's Handbook",
+        "usage_tags": [
+            "utility"
+        ]
     },
     "Leomund's Lamentable Belaborment": {
         "name": "Leomund's Lamentable Belaborment",
@@ -4116,7 +4238,10 @@
         "components": "V, S, M (a chest, 3 feet by 2 feet by 2 feet, constructed from rare materials worth 5,000+ GP, and a Tiny replica of the chest made from the same materials worth 50+ GP)",
         "duration": "Until dispelled",
         "description": "You hide a chest and all its contents on the Ethereal Plane. You must touch the chest and the miniature replica that serve as Material components for the spell. The chest can contain up to 12 cubic feet of nonliving material (3 feet by 2 feet by 2 feet).\nWhile the chest remains on the Ethereal Plane, you can take a Magic action and touch the replica to recall the chest. It appears in an unoccupied space on the ground within 5 feet of you. You can send the chest back to the Ethereal Plane by taking a Magic action to touch the chest and the replica.\nAfter 60 days, there is a cumulative 5 percent chance at the end of each day that the spell ends. The spell also ends if you cast this spell again or if the Tiny replica chest is destroyed. If the spell ends and the larger chest is on the Ethereal Plane, the chest remains there for you or someone else to find.",
-        "source": "Player's Handbook"
+        "source": "Player's Handbook",
+        "usage_tags": [
+            "utility"
+        ]
     },
     "Leomund's Tiny Hut": {
         "name": "Leomund's Tiny Hut",
@@ -4153,7 +4278,10 @@
         "components": "V, S",
         "duration": "Instantaneous",
         "description": "You touch a creature and end one condition on it: Blinded, Deafened, Paralyzed, or Poisoned.",
-        "source": "Player's Handbook"
+        "source": "Player's Handbook",
+        "usage_tags": [
+            "heal"
+        ]
     },
     "Levitate": {
         "name": "Levitate",
@@ -4190,7 +4318,10 @@
         "components": "V, M (a firefly or phosphorescent moss)",
         "duration": "1 hour",
         "description": "You touch one Large or smaller object that isn’t being worn or carried by someone else. Until the spell ends, the object sheds Bright Light in a 20-foot radius and Dim Light for an additional 20 feet. The light can be colored as you like.\nCovering the object with something opaque blocks the light. The spell ends if you cast it again.",
-        "source": "Player's Handbook"
+        "source": "Player's Handbook",
+        "usage_tags": [
+            "utility"
+        ]
     },
     "Lightning Arrow": {
         "name": "Lightning Arrow",
@@ -4241,7 +4372,10 @@
         "components": "V, S, M (fur from a bloodhound)",
         "duration": "Instantaneous",
         "description": "Describe or name a specific kind of Beast, Plant creature, or nonmagical plant. You learn the direction and distance to the closest creature or plant of that kind within 5 miles, if any are present.",
-        "source": "Player's Handbook"
+        "source": "Player's Handbook",
+        "usage_tags": [
+            "utility"
+        ]
     },
     "Locate Creature": {
         "name": "Locate Creature",
@@ -4260,7 +4394,10 @@
         "components": "V, S, M (fur from a bloodhound)",
         "duration": "Concentration, up to 1 hour",
         "description": "Describe or name a creature that is familiar to you. You sense the direction to the creature’s location if that creature is within 1,000 feet of you. If the creature is moving, you know the direction of its movement.\nThe spell can locate a specific creature known to you or the nearest creature of a specific kind (such as a human or a unicorn) if you have seen such a creature up close—within 30 feet—at least once. If the creature you described or named is in a different form, such as under the effects of a Flesh to Stone or Polymorph spell, this spell doesn’t locate the creature.\nThis spell can’t locate a creature if any thickness of lead blocks a direct path between you and the creature.",
-        "source": "Player's Handbook"
+        "source": "Player's Handbook",
+        "usage_tags": [
+            "utility"
+        ]
     },
     "Locate Object": {
         "name": "Locate Object",
@@ -4279,7 +4416,10 @@
         "components": "V, S, M (a forked twig)",
         "duration": "Concentration, up to 10 minutes",
         "description": "Describe or name an object that is familiar to you. You sense the direction to the object’s location if that object is within 1,000 feet of you. If the object is in motion, you know the direction of its movement.\nThe spell can locate a specific object known to you if you have seen it up close—within 30 feet—at least once. Alternatively, the spell can locate the nearest object of a particular kind, such as a certain kind of apparel, jewelry, furniture, tool, or weapon.\nThis spell can’t locate an object if any thickness of lead blocks a direct path between you and the object.",
-        "source": "Player's Handbook"
+        "source": "Player's Handbook",
+        "usage_tags": [
+            "utility"
+        ]
     },
     "Longstrider": {
         "name": "Longstrider",
@@ -4336,7 +4476,10 @@
         "components": "V, S",
         "duration": "1 minute",
         "description": "A spectral, floating hand appears at a point you choose within range. The hand lasts for the duration. The hand vanishes if it is ever more than 30 feet away from you or if you cast this spell again.\nWhen you cast the spell, you can use the hand to manipulate an object, open an unlocked door or container, stow or retrieve an item from an open container, or pour the contents out of a vial.\nAs a Magic action on your later turns, you can control the hand thus again. As part of that action, you can move the hand up to 30 feet.\nThe hand can’t attack, activate magic items, or carry more than 10 pounds.",
-        "source": "Player's Handbook"
+        "source": "Player's Handbook",
+        "usage_tags": [
+            "utility"
+        ]
     },
     "Magic Circle": {
         "name": "Magic Circle",
@@ -4408,7 +4551,10 @@
         "components": "V, S, M (jade dust worth 10+ GP, which the spell consumes)",
         "duration": "Until dispelled",
         "description": "You implant a message within an object in range - a message that is uttered when a trigger condition is met. Choose an object that you can see and that isn’t being worn or carried by another creature. Then speak the message, which must be 25 words or fewer, though it can be delivered over as long as 10 minutes. Finally, determine the circumstance that will trigger the spell to deliver your message.\nWhen that trigger occurs, a magical mouth appears on the object and recites the message in your voice and at the same volume you spoke. If the object you chose has a mouth or something that looks like a mouth (for example, the mouth of a statue), the magical mouth appears there, so the words appear to come from the object’s mouth. When you cast this spell, you can have the spell end after it delivers its message, or it can remain and repeat its message whenever the trigger occurs.\nThe trigger can be as general or as detailed as you like, though it must be based on visual or audible conditions that occur within 30 feet of the object. For example, you could instruct the mouth to speak when any creature moves within 30 feet of the object or when a silver bell rings within 30 feet of it.",
-        "source": "Player's Handbook"
+        "source": "Player's Handbook",
+        "usage_tags": [
+            "utility"
+        ]
     },
     "Magic Weapon": {
         "name": "Magic Weapon",
@@ -4446,7 +4592,10 @@
         "components": "V, S, M (a bit of fleece)",
         "duration": "Concentration, up to 10 minutes",
         "description": "You create the image of an object, a creature, or some other visible phenomenon that is no larger than a 20-foot Cube. The image appears at a spot that you can see within range and lasts for the duration. It seems real, including sounds, smells, and temperature appropriate to the thing depicted, but it can’t deal damage or cause conditions.\nIf you are within range of the illusion, you can take a Magic action to cause the image to move to any other spot within range. As the image changes location, you can alter its appearance so that its movements appear natural for the image. For example, if you create an image of a creature and move it, you can alter the image so that it appears to be walking. Similarly, you can cause the illusion to make different sounds at different times, even making it carry on a conversation, for example.\nPhysical interaction with the image reveals it to be an illusion, for things can pass through it. A creature that takes a Study action to examine the image can determine that it is an illusion with a successful Intelligence (Investigation) check against your spell save DC. If a creature discerns the illusion for what it is, the creature can see through the image, and its other sensory qualities become faint to the creature.\nUsing a Higher-Level Spell Slot. The spell lasts until dispelled, without requiring Concentration, if cast with a level 4+ spell slot.",
-        "source": "Player's Handbook"
+        "source": "Player's Handbook",
+        "usage_tags": [
+            "utility"
+        ]
     },
     "Mass Cure Wounds": {
         "name": "Mass Cure Wounds",
@@ -4591,7 +4740,10 @@
         "components": "V, S, M (two lodestones)",
         "duration": "Instantaneous",
         "description": "This spell repairs a single break or tear in an object you touch, such as a broken chain link, two halves of a broken key, a torn cloak, or a leaking wineskin. As long as the break or tear is no larger than 1 foot in any dimension, you mend it, leaving no trace of the former damage.\nThis spell can physically repair a magic item, but it can’t restore magic to such an object.",
-        "source": "Player's Handbook"
+        "source": "Player's Handbook",
+        "usage_tags": [
+            "utility"
+        ]
     },
     "Message": {
         "name": "Message",
@@ -4609,7 +4761,10 @@
         "components": "S, M (a copper wire)",
         "duration": "1 round",
         "description": "You point toward a creature within range and whisper a message. The target (and only the target) hears the message and can reply in a whisper that only you can hear.\nYou can cast this spell through solid objects if you are familiar with the target and know it is beyond the barrier. Magical silence; 1 foot of stone, metal, or wood; or a thin sheet of lead blocks the spell.",
-        "source": "Player's Handbook"
+        "source": "Player's Handbook",
+        "usage_tags": [
+            "utility"
+        ]
     },
     "Meteor Swarm": {
         "name": "Meteor Swarm",
@@ -4703,7 +4858,10 @@
         "components": "S, M (a bit of fleece)",
         "duration": "1 minute",
         "description": "You create a sound or an image of an object within range that lasts for the duration. See the descriptions below for the effects of each. The illusion ends if you cast this spell again.\nIf a creature takes a Study action to examine the sound or image, the creature can determine that it is an illusion with a successful Intelligence (Investigation) check against your spell save DC. If a creature discerns the illusion for what it is, the illusion becomes faint to the creature.\nSound. If you create a sound, its volume can range from a whisper to a scream. It can be your voice, someone else’s voice, a lion’s roar, a beating of drums, or any other sound you choose. The sound continues unabated throughout the duration, or you can make discrete sounds at different times before the spell ends.\nImage. If you create an image of an object—such as a chair, muddy footprints, or a small chest—it must be no larger than a 5-foot Cube. The image can’t create sound, light, smell, or any other sensory effect. Physical interaction with the image reveals it to be an illusion, since things can pass through it.",
-        "source": "Player's Handbook"
+        "source": "Player's Handbook",
+        "usage_tags": [
+            "utility"
+        ]
     },
     "Mirage Arcane": {
         "name": "Mirage Arcane",
@@ -4853,7 +5011,10 @@
         "components": "V, S",
         "duration": "Instantaneous",
         "description": "You recover up to two expended spell slots of level 2 or lower.\nUsing a Higher-Level Spell Slot. The maximum level of spell slots you can recover increases to level 3 (if cast with a level 6-7 spell slot) or level 4 (if cast with a level 8+ spell slot).",
-        "source": "Arcana Unleashed 2026"
+        "source": "Arcana Unleashed 2026",
+        "usage_tags": [
+            "utility"
+        ]
     },
     "Mordenkainen's Magnificent Mansion": {
         "name": "Mordenkainen's Magnificent Mansion",
@@ -4868,7 +5029,10 @@
         "components": "V, S, M (a miniature door worth 15+ GP)",
         "duration": "24 hours",
         "description": "You conjure a shimmering door in range that lasts for the duration. The door leads to an extradimensional dwelling and is 5 feet wide and 10 feet tall. You and any creature you designate when you cast the spell can enter the extradimensional dwelling as long as the door remains open. You can open or close it (no action required) if you are within 30 feet of it. While closed, the door is imperceptible.\nBeyond the door is a magnificent foyer with numerous chambers beyond. The dwelling’s atmosphere is clean, fresh, and warm.\nYou can create any floor plan you like for the dwelling, but it can’t exceed 50 contiguous 10-foot Cubes. The place is furnished and decorated as you choose. It contains sufficient food to serve a nine-course banquet for up to 100 people. Furnishings and other objects created by this spell dissipate into smoke if removed from it.\nA staff of 100 near-transparent servants attends all who enter. You determine the appearance of these servants and their attire. They are invulnerable and obey your commands. Each servant can perform tasks that a human could perform, but they can’t attack or take any action that would directly harm another creature. Thus the servants can fetch things, clean, mend, fold clothes, light fires, serve food, pour wine, and so on. The servants can’t leave the dwelling.\nWhen the spell ends, any creatures or objects left inside the extradimensional space are expelled into the unoccupied spaces nearest to the entrance.",
-        "source": "Player's Handbook"
+        "source": "Player's Handbook",
+        "usage_tags": [
+            "utility"
+        ]
     },
     "Mordenkainen's Private Sanctum": {
         "name": "Mordenkainen's Private Sanctum",
@@ -4941,7 +5105,10 @@
         "components": "V, S, M (a pinch of diamond dust worth 25+ GP, which the spell consumes)",
         "duration": "8 hours",
         "description": "For the duration, you hide a target that you touch from Divination spells. The target can be a willing creature, or it can be a place or an object no larger than 10 feet in any dimension. The target can’t be targeted by any Divination spell or perceived through magical scrying sensors.",
-        "source": "Player's Handbook"
+        "source": "Player's Handbook",
+        "usage_tags": [
+            "utility"
+        ]
     },
     "Nystul's Magic Aura": {
         "name": "Nystul's Magic Aura",
@@ -5047,7 +5214,10 @@
         "components": "V, S, M (a pinch of sesame seeds)",
         "duration": "1 hour",
         "description": "A passage appears at a point that you can see on a wooden, plaster, or stone surface (such as a wall, ceiling, or floor) within range and lasts for the duration. You choose the opening’s dimensions: up to 5 feet wide, 8 feet tall, and 20 feet deep. The passage creates no instability in a structure surrounding it.\nWhen the opening disappears, any creatures or objects still in the passage created by the spell are safely ejected to an unoccupied space nearest to the surface on which you cast the spell.",
-        "source": "Player's Handbook"
+        "source": "Player's Handbook",
+        "usage_tags": [
+            "utility"
+        ]
     },
     "Phantasmal Force": {
         "name": "Phantasmal Force",
@@ -5096,7 +5266,10 @@
         "components": "V, S",
         "duration": "1 hour",
         "description": "A Large, quasi-real, horselike creature appears on the ground in an unoccupied space of your choice within range. You decide the creature’s appearance, and it is equipped with a saddle, bit, and bridle. Any of the equipment created by the spell vanishes in a puff of smoke if it is carried more than 10 feet away from the steed.\nFor the duration, you or a creature you choose can ride the steed. The steed uses the Riding Horse stat block (see appendix B), except it has a Speed of 100 feet and can travel 13 miles in an hour. When the spell ends, the steed gradually fades, giving the rider 1 minute to dismount. The spell ends early if the steed takes any damage.",
-        "source": "Player's Handbook"
+        "source": "Player's Handbook",
+        "usage_tags": [
+            "utility"
+        ]
     },
     "Planar Ally": {
         "name": "Planar Ally",
@@ -5323,7 +5496,10 @@
         "components": "V, S",
         "duration": "Up to 1 hour",
         "description": "You create a magical effect within range. Choose the effect from the options below. If you cast this spell multiple times, you can have up to three of its non-instantaneous effects active at a time.\nSensory Effect. You create an instantaneous, harmless sensory effect, such as a shower of sparks, a puff of wind, faint musical notes, or an odd odor.\nFire Play. You instantaneously light or snuff out a candle, a torch, or a small campfire.\nClean or Soil. You instantaneously clean or soil an object no larger than 1 cubic foot.\nMinor Sensation. You chill, warm, or flavor up to 1 cubic foot of nonliving material for 1 hour.\nMagic Mark. You make a color, a small mark, or a symbol appear on an object or a surface for 1 hour.\nMinor Creation. You create a nonmagical trinket or an illusory image that can fit in your hand. It lasts until the end of your next turn. A trinket can deal no damage and has no monetary worth.",
-        "source": "Player's Handbook"
+        "source": "Player's Handbook",
+        "usage_tags": [
+            "utility"
+        ]
     },
     "Prismatic Spray": {
         "name": "Prismatic Spray",
@@ -5339,7 +5515,11 @@
         "components": "V, S",
         "duration": "Instantaneous",
         "description": "Eight rays of light flash from you in a 60-foot Cone. Each creature in the Cone makes a Dexterity saving throw. For each target, roll 1d8 to determine which color ray affects it, consulting the Prismatic Rays table.",
-        "source": "Player's Handbook"
+        "source": "Player's Handbook",
+        "usage_tags": [
+            "damage",
+            "control"
+        ]
     },
     "Prismatic Wall": {
         "name": "Prismatic Wall",
@@ -5639,7 +5819,10 @@
         "components": "V, S",
         "duration": "Instantaneous",
         "description": "At your touch, all curses affecting one creature or object end. If the object is a cursed magic item, its curse remains, but the spell breaks its owner’s Attunement to the object so it can be removed or discarded.",
-        "source": "Player's Handbook"
+        "source": "Player's Handbook",
+        "usage_tags": [
+            "heal"
+        ]
     },
     "Resistance": {
         "name": "Resistance",
@@ -5655,7 +5838,10 @@
         "components": "V, S",
         "duration": "Concentration, up to 1 minute",
         "description": "You touch a willing creature and choose a damage type: Acid, Bludgeoning, Cold, Fire, Lightning, Necrotic, Piercing, Poison, Radiant, Slashing, or Thunder. When the creature takes damage of the chosen type before the spell ends, the creature reduces the total damage taken by 1d4. A creature can benefit from this spell only once per turn.",
-        "source": "Player's Handbook"
+        "source": "Player's Handbook",
+        "usage_tags": [
+            "buff"
+        ]
     },
     "Resurrection": {
         "name": "Resurrection",
@@ -5690,7 +5876,11 @@
         "components": "V, S, M (a lodestone and iron filings)",
         "duration": "Concentration, up to 1 minute",
         "description": "This spell reverses gravity in a 50-foot-radius, 100-foot high Cylinder centered on a point within range. All creatures and objects in that area that aren’t anchored to the ground fall upward and reach the top of the Cylinder. A creature can make a Dexterity saving throw to grab a fixed object it can reach, thus avoiding the fall upward.\nIf a ceiling or an anchored object is encountered in this upward fall, creatures and objects strike it just as they would during a downward fall. If an affected creature or object reaches the Cylinder’s top without striking anything, it hovers there for the duration. When the spell ends, affected objects and creatures fall downward.",
-        "source": "Player's Handbook"
+        "source": "Player's Handbook",
+        "usage_tags": [
+            "damage",
+            "control"
+        ]
     },
     "Revivify": {
         "name": "Revivify",
@@ -5726,7 +5916,10 @@
         "components": "V, S, M (a segment of rope)",
         "duration": "1 hour",
         "description": "You touch a rope. One end of it hovers upward until the rope hangs perpendicular to the ground or the rope reaches a ceiling. At the rope’s upper end, an Invisible 3-foot-by-5-foot portal opens to an extradimensional space that lasts until the spell ends. That space can be reached by climbing the rope, which can be pulled into or dropped out of it.\nThe space can hold up to eight Medium or smaller creatures. Attacks, spells, and other effects can’t pass into or out of the space, but creatures inside it can see through the portal. Anything inside the space drops out when the spell ends.",
-        "source": "Player's Handbook"
+        "source": "Player's Handbook",
+        "usage_tags": [
+            "utility"
+        ]
     },
     "Sacred Flame": {
         "name": "Sacred Flame",
@@ -5797,7 +5990,10 @@
         "components": "V, S, M (a focus worth 1,000+ GP, such as a crystal ball, mirror, or water-filled font)",
         "duration": "Concentration, up to 10 minutes",
         "description": "You can see and hear a creature you choose that is on the same plane of existence as you. The target makes a Wisdom saving throw, which is modified (see the tables below) by how well you know the target and the sort of physical connection you have to it. The target doesn’t know what it is making the save against, only that it feels uneasy.\nOn a successful save, the target isn’t affected, and you can’t use this spell on it again for 24 hours.\nOn a failed save, the spell creates an Invisible, intangible sensor within 10 feet of the target. You can see and hear through the sensor as if you were there. The sensor moves with the target, remaining within 10 feet of it for the duration. If something can see the sensor, it appears as a luminous orb about the size of your fist.\nInstead of targeting a creature, you can target a location you have seen. When you do so, the sensor appears at that location and doesn’t move.",
-        "source": "Player's Handbook"
+        "source": "Player's Handbook",
+        "usage_tags": [
+            "utility"
+        ]
     },
     "Searing Orb": {
         "name": "Searing Orb",
@@ -5869,7 +6065,10 @@
         "components": "V, S",
         "duration": "8 hours",
         "description": "You give an illusory appearance to each creature of your choice that you can see within range. An unwilling target can make a Charisma saving throw, and if it succeeds, it is unaffected by this spell.\nYou can give the same appearance or different ones to the targets. The spell can change the appearance of the targets’ bodies and equipment. You can make each creature seem 1 foot shorter or taller and appear heavier or lighter. A target’s new appearance must have the same basic arrangement of limbs as the target, but the extent of the illusion is otherwise up to you. The spell lasts for the duration.\nThe changes wrought by this spell fail to hold up to physical inspection. For example, if you use this spell to add a hat to a creature’s outfit, objects pass through the hat.\nA creature that takes the Study action to examine a target can make an Intelligence (Investigation) check against your spell save DC. If it succeeds, it becomes aware that the target is disguised.",
-        "source": "Player's Handbook"
+        "source": "Player's Handbook",
+        "usage_tags": [
+            "utility"
+        ]
     },
     "Sending": {
         "name": "Sending",
@@ -5885,7 +6084,10 @@
         "components": "V, S, M (a copper wire)",
         "duration": "Instantaneous",
         "description": "You send a short message of 25 words or fewer to a creature you have met or a creature described to you by someone who has met it. The target hears the message in its mind, recognizes you as the sender if it knows you, and can answer in a like manner immediately. The spell enables targets to understand the meaning of your message.\nYou can send the message across any distance and even to other planes of existence, but if the target is on a different plane than you, there is a 5 percent chance that the message doesn’t arrive. You know if the delivery fails.\nUpon receiving your message, a creature can block your ability to reach it again with this spell for 8 hours. If you try to send another message during that time, you learn that you are blocked, and the spell fails.",
-        "source": "Player's Handbook"
+        "source": "Player's Handbook",
+        "usage_tags": [
+            "utility"
+        ]
     },
     "Sequester": {
         "name": "Sequester",
@@ -5899,7 +6101,10 @@
         "components": "V, S, M (gem dust worth 5,000+ GP, which the spell consumes)",
         "duration": "Until dispelled",
         "description": "With a touch, you magically sequester an object or a willing creature. For the duration, the target has the Invisible condition and can’t be targeted by Divination spells, detected by magic, or viewed remotely with magic.\nIf the target is a creature, it enters a state of suspended animation; it has the Unconscious condition, doesn’t age, and doesn’t need food, water, or air.\nYou can set a condition for the spell to end early. The condition can be anything you choose, but it must occur or be visible within 1 mile of the target. Examples include “after 1,000 years” or “when the tarrasque awakens.” This spell also ends if the target takes any damage.",
-        "source": "Player's Handbook"
+        "source": "Player's Handbook",
+        "usage_tags": [
+            "utility"
+        ]
     },
     "Shapechange": {
         "name": "Shapechange",
@@ -5987,7 +6192,10 @@
         "components": "V, S, M (mistletoe)",
         "duration": "1 minute",
         "description": "A Club or Quarterstaff you are holding is imbued with nature’s power. For the duration, you can use your spellcasting ability instead of Strength for the attack and damage rolls of melee attacks using that weapon, and the weapon’s damage die becomes a d8. If the attack deals damage, it can be Force damage or the weapon’s normal damage type (your choice).\nThe spell ends early if you cast it again or if you let go of the weapon.\nCantrip Upgrade. The damage die changes when you reach levels 5 (d10), 11 (d12), and 17 (2d6).",
-        "source": "Player's Handbook"
+        "source": "Player's Handbook",
+        "usage_tags": [
+            "buff"
+        ]
     },
     "Shining Smite": {
         "name": "Shining Smite",
@@ -6059,7 +6267,10 @@
         "components": "V, S, M (a bit of fleece)",
         "duration": "Concentration, up to 10 minutes",
         "description": "You create the image of an object, a creature, or some other visible phenomenon that is no larger than a 15-foot Cube. The image appears at a spot within range and lasts for the duration. The image is purely visual; it isn’t accompanied by sound, smell, or other sensory effects.\nAs a Magic action, you can cause the image to move to any spot within range. As the image changes location, you can alter its appearance so that its movements appear natural for the image. For example, if you create an image of a creature and move it, you can alter the image so that it appears to be walking.\nPhysical interaction with the image reveals it to be an illusion, since things can pass through it. A creature that takes a Study action to examine the image can determine that it is an illusion with a successful Intelligence (Investigation) check against your spell save DC. If a creature discerns the illusion for what it is, the creature can see through the image.",
-        "source": "Player's Handbook"
+        "source": "Player's Handbook",
+        "usage_tags": [
+            "utility"
+        ]
     },
     "Simbul's Synostodweomer": {
         "name": "Simbul's Synostodweomer",
@@ -6225,7 +6436,10 @@
         "components": "V, S",
         "duration": "10 minutes",
         "description": "For the duration, you can comprehend and verbally communicate with Beasts, and you can use any of the Influence action’s skill options with them.\nMost Beasts have little to say about topics that don’t pertain to survival or companionship, but at minimum, a Beast can give you information about nearby locations and monsters, including whatever it has perceived within the past day.",
-        "source": "Player's Handbook"
+        "source": "Player's Handbook",
+        "usage_tags": [
+            "utility"
+        ]
     },
     "Speak with Dead": {
         "name": "Speak with Dead",
@@ -6241,7 +6455,10 @@
         "components": "V, S, M (burning incense)",
         "duration": "10 minutes",
         "description": "You grant the semblance of life to a corpse of your choice within range, allowing it to answer questions you pose. The corpse must have a mouth, and this spell fails if the deceased creature was Undead when it died. The spell also fails if the corpse was the target of this spell within the past 10 days.\nUntil the spell ends, you can ask the corpse up to five questions. The corpse knows only what it knew in life, including the languages it knew. Answers are usually brief, cryptic, or repetitive, and the corpse is under no compulsion to offer a truthful answer if you are antagonistic toward it or it recognizes you as an enemy. This spell doesn’t return the creature’s soul to its body, only its animating spirit. Thus, the corpse can’t learn new information, doesn’t comprehend anything that has happened since it died, and can’t speculate about future events.",
-        "source": "Player's Handbook"
+        "source": "Player's Handbook",
+        "usage_tags": [
+            "utility"
+        ]
     },
     "Speak with Plants": {
         "name": "Speak with Plants",
@@ -6479,7 +6696,10 @@
         "components": "V, S, M (a rotten egg)",
         "duration": "Concentration, up to 1 minute",
         "description": "You create a 20-foot-radius Sphere of yellow, nauseating gas centered on a point within range. The cloud is Heavily Obscured. The cloud lingers in the air for the duration or until a strong wind (such as the one created by Gust of Wind ) disperses it.\nEach creature that starts its turn in the Sphere must succeed on a Constitution saving throw or have the Poisoned condition until the end of the current turn. While Poisoned in this way, the creature can’t take an action or a Bonus Action.",
-        "source": "Player's Handbook"
+        "source": "Player's Handbook",
+        "usage_tags": [
+            "control"
+        ]
     },
     "Stone Shape": {
         "name": "Stone Shape",
@@ -6496,7 +6716,10 @@
         "components": "V, S, M (soft clay)",
         "duration": "Instantaneous",
         "description": "You touch a stone object of Medium size or smaller or a section of stone no more than 5 feet in any dimension and form it into any shape you like. For example, you could shape a large rock into a weapon, statue, or coffer, or you could make a small passage through a wall that is 5 feet thick. You could also shape a stone door or its frame to seal the door shut. The object you create can have up to two hinges and a latch, but finer mechanical detail isn’t possible.",
-        "source": "Player's Handbook"
+        "source": "Player's Handbook",
+        "usage_tags": [
+            "utility"
+        ]
     },
     "Stoneskin": {
         "name": "Stoneskin",
@@ -6748,7 +6971,10 @@
         "components": "V, S, M (a Quiver worth 1+ GP)",
         "duration": "Concentration, up to 1 minute",
         "description": "When you cast the spell and as a Bonus Action until it ends, you can make two attacks with a weapon that fires Arrows or Bolts, such as a Longbow or a Light Crossbow. The spell magically creates the ammunition needed for each attack. Each Arrow or Bolt created by the spell deals damage like a nonmagical piece of ammunition of its kind and disintegrates immediately after it hits or misses.",
-        "source": "Player's Handbook"
+        "source": "Player's Handbook",
+        "usage_tags": [
+            "buff"
+        ]
     },
     "Sylune's Viper": {
         "name": "Sylune's Viper",
@@ -6827,7 +7053,10 @@
         "components": "V, S, M (a gilded ladle worth 500+ GP)",
         "duration": "10 minutes",
         "description": "You conjure a claw-footed cauldron filled with bubbling liquid. The cauldron appears in an unoccupied space on the ground within 5 feet of you and lasts for the duration. The cauldron can't be moved and disappears when the spell ends, along with the bubbling liquid inside it.\nThe liquid in the cauldron duplicates the properties of a Common or an Uncommon potion of your choice (such as a Potion of Healing ). As a Bonus Action, you or an ally can reach into the cauldron and withdraw one potion of that kind. The potion is contained in a vial that disappears when the potion is consumed. The cauldron can produce a number of these potions equal to your spellcasting ability modifier (minimum 1). When the last of these potions is withdrawn from the cauldron, the cauldron disappears, and the spell ends.\nPotions obtained from the cauldron that aren't consumed disappear when you cast this spell again.",
-        "source": "Player's Handbook"
+        "source": "Player's Handbook",
+        "usage_tags": [
+            "utility"
+        ]
     },
     "Tasha's Hideous Laughter": {
         "name": "Tasha's Hideous Laughter",
@@ -6935,7 +7164,10 @@
         "components": "V, S, M (a drop of mercury)",
         "duration": "1 hour",
         "description": "This spell creates a circular, horizontal plane of force, 3 feet in diameter and 1 inch thick, that floats 3 feet above the ground in an unoccupied space of your choice that you can see within range. The disk remains for the duration and can hold up to 500 pounds. If more weight is placed on it, the spell ends, and everything on the disk falls to the ground.\nThe disk is immobile while you are within 20 feet of it. If you move more than 20 feet away from it, the disk follows you so that it remains within 20 feet of you. It can move across uneven terrain, up or down stairs, slopes and the like, but it can’t cross an elevation change of 10 feet or more. For example, the disk can’t move across a 10-foot-deep pit, nor could it leave such a pit if it was created at the bottom.\nIf you move more than 100 feet from the disk (typically because it can’t move around an obstacle to follow you), the spell ends.",
-        "source": "Player's Handbook"
+        "source": "Player's Handbook",
+        "usage_tags": [
+            "utility"
+        ]
     },
     "Thaumaturgy": {
         "name": "Thaumaturgy",
@@ -6949,7 +7181,10 @@
         "components": "V",
         "duration": "Up to 1 minute",
         "description": "You manifest a minor wonder within range. You create one of the effects below within range. If you cast this spell multiple times, you can have up to three of its 1-minute effects active at a time.\nAltered Eyes. You alter the appearance of your eyes for 1 minute.\nBooming Voice. Your voice booms up to three times as loud as normal for 1 minute. For the duration, you have Advantage on Charisma (Intimidation) checks.\nFire Play. You cause flames to flicker, brighten, dim, or change color for 1 minute.\nInvisible Hand. You instantaneously cause an unlocked door or window to fly open or slam shut.\nPhantom Sound. You create an instantaneous sound that originates from a point of your choice within range, such as a rumble of thunder, the cry of a raven, or ominous whispers.\nTremors. You cause harmless tremors in the ground for 1 minute.",
-        "source": "Player's Handbook"
+        "source": "Player's Handbook",
+        "usage_tags": [
+            "utility"
+        ]
     },
     "Thorn Whip": {
         "name": "Thorn Whip",
@@ -7043,7 +7278,10 @@
         "components": "V",
         "duration": "Instantaneous",
         "description": "You briefly stop the flow of time for everyone but yourself. No time passes for other creatures, while you take 1d4 + 1 turns in a row, during which you can use actions and move as normal.\nThis spell ends if one of the actions you use during this period, or any effects that you create during it, affects a creature other than you or an object being worn or carried by someone other than you. In addition, the spell ends if you move to a place more than 1,000 feet from the location where you cast it.",
-        "source": "Player's Handbook"
+        "source": "Player's Handbook",
+        "usage_tags": [
+            "buff"
+        ]
     },
     "Toll the Dead": {
         "name": "Toll the Dead",
@@ -7080,7 +7318,10 @@
         "components": "V, M (a miniature ziggurat)",
         "duration": "1 hour",
         "description": "This spell grants the creature you touch the ability to understand any spoken or signed language that it hears or sees. Moreover, when the target communicates by speaking or signing, any creature that knows at least one language can understand it if that creature can hear the speech or see the signing.",
-        "source": "Player's Handbook"
+        "source": "Player's Handbook",
+        "usage_tags": [
+            "utility"
+        ]
     },
     "Tortoise Shell": {
         "name": "Tortoise Shell",
@@ -7113,7 +7354,10 @@
         "components": "V, S",
         "duration": "1 minute",
         "description": "This spell creates a magical link between a Large or larger inanimate plant within range and another plant, at any distance, on the same plane of existence. You must have seen or touched the destination plant at least once before. For the duration, any creature can step into the target plant and exit from the destination plant by using 5 feet of movement.",
-        "source": "Player's Handbook"
+        "source": "Player's Handbook",
+        "usage_tags": [
+            "utility"
+        ]
     },
     "Tree Stride": {
         "name": "Tree Stride",
@@ -7128,7 +7372,10 @@
         "components": "V, S",
         "duration": "Concentration, up to 1 minute",
         "description": "You gain the ability to enter a tree and move from inside it to inside another tree of the same kind within 500 feet. Both trees must be living and at least the same size as you. You must use 5 feet of movement to enter a tree. You instantly know the location of all other trees of the same kind within 500 feet and, as part of the move used to enter the tree, can either pass into one of those trees or step out of the tree you’re in. You appear in a spot of your choice within 5 feet of the destination tree, using another 5 feet of movement. If you have no movement left, you appear within 5 feet of the tree you entered.\nYou can use this transportation ability only once on each of your turns. You must end each turn outside a tree.",
-        "source": "Player's Handbook"
+        "source": "Player's Handbook",
+        "usage_tags": [
+            "utility"
+        ]
     },
     "True Polymorph": {
         "name": "True Polymorph",
@@ -7204,7 +7451,10 @@
         "components": "S, M (a weapon with which you have proficiency and that is worth 1+ CP)",
         "duration": "Instantaneous",
         "description": "Guided by a flash of magical insight, you make one attack with the weapon used in the spell’s casting. The attack uses your spellcasting ability for the attack and damage rolls instead of using Strength or Dexterity. If the attack deals damage, it can be Radiant damage or the weapon’s normal damage type (your choice).\nCantrip Upgrade. Whether you deal Radiant damage or the weapon’s normal damage type, the attack deals extra Radiant damage when you reach levels 5 (1d6), 11 (2d6), and 17 (3d6).",
-        "source": "Player's Handbook"
+        "source": "Player's Handbook",
+        "usage_tags": [
+            "damage"
+        ]
     },
     "Tsunami": {
         "name": "Tsunami",
@@ -7237,7 +7487,10 @@
         "components": "V, S, M (a bit of string and of wood)",
         "duration": "1 hour",
         "description": "This spell creates an Invisible, mindless, shapeless, Medium force that performs simple tasks at your command until the spell ends. The servant springs into existence in an unoccupied space on the ground within range. It has AC 10, 1 Hit Point, and a Strength of 2, and it can’t attack. If it drops to 0 Hit Points, the spell ends.\nOnce on each of your turns as a Bonus Action, you can mentally command the servant to move up to 15 feet and interact with an object. The servant can perform simple tasks that a human could do, such as fetching things, cleaning, mending, folding clothes, lighting fires, serving food, and pouring drinks. Once you give the command, the servant performs the task to the best of its ability until it completes the task, then waits for your next command.\nIf you command the servant to perform a task that would move it more than 60 feet away from you, the spell ends.",
-        "source": "Player's Handbook"
+        "source": "Player's Handbook",
+        "usage_tags": [
+            "utility"
+        ]
     },
     "Vampiric Touch": {
         "name": "Vampiric Touch",
@@ -7462,7 +7715,10 @@
         "components": "V, S, M (a short reed)",
         "duration": "24 hours",
         "description": "This spell grants up to ten willing creatures of your choice within range the ability to breathe underwater until the spell ends. Affected creatures also retain their normal mode of respiration.",
-        "source": "Player's Handbook"
+        "source": "Player's Handbook",
+        "usage_tags": [
+            "buff"
+        ]
     },
     "Water Walk": {
         "name": "Water Walk",
@@ -7480,7 +7736,10 @@
         "components": "V, S, M (a piece of cork)",
         "duration": "1 hour",
         "description": "This spell grants the ability to move across any liquid surface - such as water, acid, mud, snow, quicksand, or lava - as if it were harmless solid ground (creatures crossing molten lava can still take damage from the heat). Up to ten willing creatures of your choice within range gain this ability for the duration.\nAn affected target must take a Bonus Action to pass from the liquid’s surface into the liquid itself and vice versa, but if the target falls into the liquid, the target passes through the surface into the liquid below.",
-        "source": "Player's Handbook"
+        "source": "Player's Handbook",
+        "usage_tags": [
+            "buff"
+        ]
     },
     "Web": {
         "name": "Web",
@@ -7701,6 +7960,9 @@
         "components": "V, S",
         "duration": "10 minutes",
         "description": "You create a magical zone that guards against deception in a 15-foot-radius Sphere centered on a point within range. Until the spell ends, a creature that enters the spell’s area for the first time on a turn or starts its turn there makes a Charisma saving throw. On a failed save, a creature can’t speak a deliberate lie while in the radius. You know whether a creature succeeds or fails on this save.\nAn affected creature is aware of the spell and can avoid answering questions to which it would normally respond with a lie. Such a creature can be evasive yet must be truthful.",
-        "source": "Player's Handbook"
+        "source": "Player's Handbook",
+        "usage_tags": [
+            "control"
+        ]
     }
 }

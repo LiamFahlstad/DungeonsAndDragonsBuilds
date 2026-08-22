@@ -139,6 +139,11 @@ SPELL_CARD_CSS = """/* ── Spell entries ────────────
             color: #96335f;
         }
 
+        .stag-usage-utility {
+            border: 1px solid #6b7280;
+            color: #4b5563;
+        }
+
         """
 
 if TYPE_CHECKING:
@@ -189,6 +194,7 @@ def write_spell_to_file(
         "heal": "Heal",
         "buff": "Buff",
         "control": "Control",
+        "utility": "Utility",
     }
     # Fixed display order regardless of the order listed in the spell data, so
     # cards read consistently across spells.
