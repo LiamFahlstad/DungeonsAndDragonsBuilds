@@ -32,6 +32,7 @@ class WindowMixin:
         self.selected_label.setText(f"Source: {char['name']}")
         self._more_info_btn.setEnabled(True)
         self._cast_spell_btn.setEnabled(True)
+        self._enable_feature_btn.setEnabled(True)
         self._refresh_cards()
 
     def _select_target_character(self, char: dict, additive: bool = False):
@@ -59,6 +60,7 @@ class WindowMixin:
         self.selected_label.setText("Source: None")
         self._more_info_btn.setEnabled(False)
         self._cast_spell_btn.setEnabled(False)
+        self._enable_feature_btn.setEnabled(False)
         self.target_characters = []
         self.target_label.setText("Target: None")
         self._refresh_cards()
@@ -186,6 +188,11 @@ class WindowMixin:
         self._cast_spell_btn.setEnabled(False)
         self._cast_spell_btn.clicked.connect(self._show_cast_spell_dialog)
         info_cast_row.addWidget(self._cast_spell_btn)
+
+        self._enable_feature_btn = QPushButton("Enable Feature")
+        self._enable_feature_btn.setEnabled(False)
+        self._enable_feature_btn.clicked.connect(self._show_enable_feature_dialog)
+        info_cast_row.addWidget(self._enable_feature_btn)
         panel_layout.addLayout(info_cast_row)
 
         # Round indicator + session/player timers (compact, combined rows)

@@ -15,6 +15,7 @@ STAT_KEYS = (
     "conditions_received",
     "spell_slots_used",
     "spells_cast",
+    "features_enabled",
     "knockouts",
     "times_downed",
     "deaths",
@@ -29,6 +30,7 @@ DICT_STAT_KEYS = (
     "conditions_given_by_name",
     "conditions_received_by_name",
     "spells_cast_by_name",
+    "features_enabled_by_name",
 )
 
 

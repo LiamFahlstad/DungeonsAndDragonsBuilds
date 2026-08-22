@@ -273,8 +273,8 @@ class CardsMixin:
             cond_row.setSpacing(3)
             cond_row.setAlignment(Qt.AlignmentFlag.AlignLeft)
             for cond in conditions:
-                spell_desc = char.get("spell_condition_descriptions", {}).get(cond)
-                spell_color = char.get("spell_condition_colors", {}).get(cond)
+                spell_desc = char.get("spell_condition_descriptions", {}).get(cond) or char.get("feature_condition_descriptions", {}).get(cond)
+                spell_color = char.get("spell_condition_colors", {}).get(cond) or char.get("feature_condition_colors", {}).get(cond)
                 badge_color = spell_color or self._CONDITION_COLORS.get(cond, "#7a5c00")
                 has_rule = ConditionRule.from_name(cond) is not None
                 if has_rule or spell_desc:

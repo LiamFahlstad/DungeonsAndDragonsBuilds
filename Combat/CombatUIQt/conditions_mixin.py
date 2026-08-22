@@ -42,6 +42,8 @@ class ConditionsMixin:
             char["conditions"].remove(cond)
             char.get("spell_condition_descriptions", {}).pop(cond, None)
             char.get("spell_condition_colors", {}).pop(cond, None)
+            char.get("feature_condition_descriptions", {}).pop(cond, None)
+            char.get("feature_condition_colors", {}).pop(cond, None)
             source_name = source["name"] if source is not None else None
             cond_value = {"condition": cond, "source_name": source_name, "target_name": char["name"]}
             self.history.append((Action.REMOVE_CONDITION, cond_value))

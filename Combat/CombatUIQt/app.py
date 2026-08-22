@@ -19,6 +19,7 @@ from .cards_mixin import CardsMixin
 from .conditions_mixin import ConditionsMixin
 from .damage_mixin import DamageMixin
 from .dialogs_mixin import DialogsMixin
+from .features_mixin import FeaturesMixin
 from .logging_mixin import LoggingMixin
 from .rolls_mixin import RollsMixin
 from .spells_mixin import SpellsMixin
@@ -33,6 +34,7 @@ class CombatAppQt(
     DamageMixin,
     ConditionsMixin,
     SpellsMixin,
+    FeaturesMixin,
     TurnsMixin,
     CardsMixin,
     LoggingMixin,
