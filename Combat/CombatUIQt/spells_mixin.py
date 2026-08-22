@@ -260,6 +260,19 @@ class SpellsMixin:
         )
 
         if spell.is_concentration:
+            # Break any existing concentration spells before starting a new one
+            active_spells = char.get("active_spells") or []
+            remaining_spells = []
+            for entry in active_spells:
+                if entry.get("concentration"):
+                    self._log_event(
+                        f"{char['name']}'s {entry['name']} ends (concentration broken by casting {spell.name})",
+                        character=char["name"],
+                        action=Action.CAST_SPELL,
+                    )
+                else:
+                    remaining_spells.append(entry)
+            char["active_spells"] = remaining_spells
             # Self-applied — the caster is always the source of their own concentration.
             self._add_condition_to(char, Condition.CONCENTRATING.value, source=char)
 

@@ -127,7 +127,7 @@ class CombatAppQt(
         # Pre-compute spell levels (display_name, level, Ability enum)
         spells_with_level = []
         spell_objects: dict[str, object] = {}
-        for spell_name, ability, ruling in character_sheet.spells:
+        for spell_name, ability, ruling, _grant_level in character_sheet.spells:
             display_name = getattr(spell_name, "value", str(spell_name))
             try:
                 spell_obj = SpellFactory.create(spell_name, ability, ruling)

@@ -3,6 +3,9 @@
 from Combat.Definitions import Action, Condition
 from .stats import _default_stats, increment_named_stat
 
+# Conditions that incapacitate a creature and break concentration per 2024 D&D rules
+INCAPACITATING_CONDITIONS = {"Incapacitated", "Paralyzed", "Petrified", "Stunned", "Unconscious"}
+
 
 class ConditionsMixin:
     """Mixin for condition and visibility management."""
@@ -30,6 +33,9 @@ class ConditionsMixin:
                 value=cond_value,
             )
             self._rebuild_card(char)
+            # Break concentration if an incapacitating condition is applied to a concentrating character
+            if cond in INCAPACITATING_CONDITIONS and cond != "Concentrating" and "Concentrating" in char.get("conditions", []):
+                self._remove_condition_from(char, "Concentrating", source=char)
 
     def _remove_condition_from(self, char: dict, cond: str, source: dict | None = None):
         if cond in char["conditions"]:

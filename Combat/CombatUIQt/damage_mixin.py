@@ -158,7 +158,10 @@ class DamageMixin:
             self._rebuild_card(target)
 
             if "Concentrating" in target.get("conditions", []):
-                self._concentration_check_dialog(target, dmg)
+                if knockout:
+                    self._remove_condition_from(target, "Concentrating", source=target)
+                else:
+                    self._concentration_check_dialog(target, dmg)
 
         self.damage_type_combo.setCurrentIndex(0)
 
@@ -176,7 +179,7 @@ class DamageMixin:
 
     def _concentration_check_dialog(self, char: dict, dmg: int):
         """Show a modal concentration saving throw dialog."""
-        dc = max(10, dmg // 2)
+        dc = min(30, max(10, dmg // 2))
         con_mod = self._con_save_mod(char)
         name = char["name"]
 
@@ -383,6 +386,8 @@ class DamageMixin:
                 action=Action.DEATH_SAVE_FAIL,
                 value=newly_dead,
             )
+        if newly_dead and "Concentrating" in char.get("conditions", []):
+            self._remove_condition_from(char, "Concentrating", source=char)
         self._refresh_selected_card()
 
     def _apply_success_death_save(self, char: dict):
