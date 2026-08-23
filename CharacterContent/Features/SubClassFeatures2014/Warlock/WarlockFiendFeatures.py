@@ -27,7 +27,8 @@ class FiendExpandedSpells(Feature):
 class DarkOnesBlessing(Feature):
     def __init__(self):
         super().__init__(
-            name="Dark One's Blessing", origin="The Fiend Patron Warlock Level 3"
+            name="Dark One's Blessing", origin="The Fiend Patron Warlock Level 3",
+            usage_tags=["heal"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -38,7 +39,8 @@ class DarkOnesBlessing(Feature):
 class DarkOnesOwnLuck(Feature):
     def __init__(self):
         super().__init__(
-            name="Dark One's Own Luck", origin="The Fiend Patron Warlock Level 6"
+            name="Dark One's Own Luck", origin="The Fiend Patron Warlock Level 6",
+            usage_tags=["buff"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -62,7 +64,8 @@ class DarkOnesOwnLuck(Feature):
 class FiendishResilience(Feature):
     def __init__(self):
         super().__init__(
-            name="Fiendish Resilience", origin="The Fiend Patron Warlock Level 10"
+            name="Fiendish Resilience", origin="The Fiend Patron Warlock Level 10",
+            usage_tags=["buff"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -73,7 +76,8 @@ class FiendishResilience(Feature):
 class HurlThroughHell(Feature):
     def __init__(self):
         super().__init__(
-            name="Hurl Through Hell", origin="The Fiend Patron Warlock Level 14"
+            name="Hurl Through Hell", origin="The Fiend Patron Warlock Level 14",
+            duration="Until End of Next Turn", usage_tags=["damage", "control"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:

@@ -27,7 +27,8 @@ class ExpandedSpellList(Feature):
 class TentacleOfTheDeep(Feature):
     def __init__(self):
         super().__init__(
-            name="Tentacle of the Deep", origin="The Fathomless Patron Warlock Level 3"
+            name="Tentacle of the Deep", origin="The Fathomless Patron Warlock Level 3",
+            action_type="bonus_action", duration="1 Minute or Until Another Tentacle Created", range="60 Feet", usage_tags=["damage", "control"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -69,7 +70,7 @@ class TentacleOfTheDeep(Feature):
 class GiftOfTheSea(Feature):
     def __init__(self):
         super().__init__(
-            name="Gift of the Sea", origin="The Fathomless Patron Warlock Level 3"
+            name="Gift of the Sea", origin="The Fathomless Patron Warlock Level 3", usage_tags=["utility"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -80,7 +81,7 @@ class GiftOfTheSea(Feature):
 class OceanicSoul(Feature):
     def __init__(self):
         super().__init__(
-            name="Oceanic Soul", origin="The Fathomless Patron Warlock Level 6"
+            name="Oceanic Soul", origin="The Fathomless Patron Warlock Level 6", usage_tags=["buff", "utility"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -93,7 +94,8 @@ class OceanicSoul(Feature):
 class GuardianCoil(Feature):
     def __init__(self):
         super().__init__(
-            name="Guardian Coil", origin="The Fathomless Patron Warlock Level 6"
+            name="Guardian Coil", origin="The Fathomless Patron Warlock Level 6",
+            action_type="reaction", range="10 Feet", usage_tags=["buff"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -123,7 +125,8 @@ class GuardianCoil(Feature):
 class GraspingTentacles(Feature):
     def __init__(self):
         super().__init__(
-            name="Grasping Tentacles", origin="The Fathomless Patron Warlock Level 10"
+            name="Grasping Tentacles", origin="The Fathomless Patron Warlock Level 10",
+            usage_tags=["heal"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -155,7 +158,8 @@ class GraspingTentacles(Feature):
 class FathomlessPlunge(Feature):
     def __init__(self):
         super().__init__(
-            name="Fathomless Plunge", origin="The Fathomless Patron Warlock Level 14"
+            name="Fathomless Plunge", origin="The Fathomless Patron Warlock Level 14",
+            action_type="action", range="30 Feet", usage_tags=["utility"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:

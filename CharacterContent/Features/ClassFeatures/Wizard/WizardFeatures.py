@@ -7,7 +7,7 @@ from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 class RitualAdept(Feature):
     def __init__(self):
-        super().__init__(name="Ritual Adept", origin="Wizard Level 1")
+        super().__init__(name="Ritual Adept", origin="Wizard Level 1", usage_tags=["utility"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         return "You can cast any spell as a Ritual if that spell has the Ritual tag and the spell is in your spellbook. You needn't have the spell prepared, but you must read from the book to cast a spell in this way."

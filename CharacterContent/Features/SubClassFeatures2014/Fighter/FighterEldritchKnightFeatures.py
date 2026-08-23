@@ -60,7 +60,7 @@ class Spellcasting(Feature):
 
 class WeaponBond(Feature):
     def __init__(self):
-        super().__init__(name="Weapon Bond", origin="Eldritch Knight Fighter Level 3")
+        super().__init__(name="Weapon Bond", origin="Eldritch Knight Fighter Level 3", action_type="bonus_action", usage_tags=["utility"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -75,7 +75,7 @@ class WeaponBond(Feature):
 
 class WarMagic(Feature):
     def __init__(self):
-        super().__init__(name="War Magic", origin="Eldritch Knight Fighter Level 7")
+        super().__init__(name="War Magic", origin="Eldritch Knight Fighter Level 7", usage_tags=["damage"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "Beginning at 7th level, when you use your action to cast a cantrip, you can make one weapon attack as a bonus action."
@@ -85,7 +85,7 @@ class WarMagic(Feature):
 class EldritchStrike(Feature):
     def __init__(self):
         super().__init__(
-            name="Eldritch Strike", origin="Eldritch Knight Fighter Level 10"
+            name="Eldritch Strike", origin="Eldritch Knight Fighter Level 10", duration="Until End of Your Next Turn", usage_tags=["control"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -96,7 +96,7 @@ class EldritchStrike(Feature):
 class ArcaneCharge(Feature):
     def __init__(self):
         super().__init__(
-            name="Arcane Charge", origin="Eldritch Knight Fighter Level 15"
+            name="Arcane Charge", origin="Eldritch Knight Fighter Level 15", range="30 Feet", usage_tags=["utility"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -107,7 +107,7 @@ class ArcaneCharge(Feature):
 class ImprovedWarMagic(Feature):
     def __init__(self):
         super().__init__(
-            name="Improved War Magic", origin="Eldritch Knight Fighter Level 18"
+            name="Improved War Magic", origin="Eldritch Knight Fighter Level 18", usage_tags=["damage"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:

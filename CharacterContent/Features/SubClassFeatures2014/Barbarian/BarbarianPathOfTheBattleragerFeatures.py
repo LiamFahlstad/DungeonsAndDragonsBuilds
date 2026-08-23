@@ -4,7 +4,7 @@ from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 class BattleragerArmor(Feature):
     def __init__(self):
-        super().__init__(name="Battlerager Armor", origin="Path Of The Battlerager Barbarian Level 3")
+        super().__init__(name="Battlerager Armor", origin="Path Of The Battlerager Barbarian Level 3", action_type="bonus_action", range="5 Feet", usage_tags=["damage"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -27,7 +27,7 @@ class BattleragerArmor(Feature):
 
 class RecklessAbandon(Feature):
     def __init__(self):
-        super().__init__(name="Reckless Abandon", origin="Path Of The Battlerager Barbarian Level 6")
+        super().__init__(name="Reckless Abandon", origin="Path Of The Battlerager Barbarian Level 6", duration="Until Your Rage Ends", usage_tags=["heal"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -38,7 +38,7 @@ class RecklessAbandon(Feature):
 
 class BattleragerCharge(Feature):
     def __init__(self):
-        super().__init__(name="Battlerager Charge", origin="Path Of The Battlerager Barbarian Level 10")
+        super().__init__(name="Battlerager Charge", origin="Path Of The Battlerager Barbarian Level 10", action_type="bonus_action", usage_tags=["utility"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -49,7 +49,7 @@ class BattleragerCharge(Feature):
 
 class SpikedRetribution(Feature):
     def __init__(self):
-        super().__init__(name="Spiked Retribution", origin="Path Of The Battlerager Barbarian Level 14")
+        super().__init__(name="Spiked Retribution", origin="Path Of The Battlerager Barbarian Level 14", range="5 Feet", usage_tags=["damage"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

@@ -45,7 +45,7 @@ class UndeadSpells(Feature):
 
 class GraveTouched(Feature):
     def __init__(self):
-        super().__init__(name="Grave Touched", origin="Undead Patron Warlock Level 6", usage_tags=["damage"])
+        super().__init__(name="Grave Touched", origin="Undead Patron Warlock Level 6", usage_tags=["damage", "utility"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -88,7 +88,7 @@ class NecroticHusk(Feature):
 
 class SuperiorDread(Feature):
     def __init__(self):
-        super().__init__(name="Superior Dread", origin="Undead Patron Warlock Level 14", usage_tags=["buff"])
+        super().__init__(name="Superior Dread", origin="Undead Patron Warlock Level 14", usage_tags=["buff", "utility"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

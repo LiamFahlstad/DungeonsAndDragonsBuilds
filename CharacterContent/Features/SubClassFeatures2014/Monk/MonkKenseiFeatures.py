@@ -46,7 +46,7 @@ class KenseiWeapons(Feature):
 
 class AgileParry(Feature):
     def __init__(self):
-        super().__init__(name="Agile Parry", origin="Way of the Kensei Monk Level 3")
+        super().__init__(name="Agile Parry", origin="Way of the Kensei Monk Level 3", duration="Until Start of Next Turn", usage_tags=["buff"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -59,7 +59,7 @@ class AgileParry(Feature):
 
 class KenseiShot(Feature):
     def __init__(self):
-        super().__init__(name="Kensei's Shot", origin="Way of the Kensei Monk Level 3")
+        super().__init__(name="Kensei's Shot", origin="Way of the Kensei Monk Level 3", action_type="bonus_action", duration="Until End of Current Turn", usage_tags=["damage"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -83,7 +83,7 @@ class WayOfTheBrush(Feature):
 
 class MagicKenseiWeapons(Feature):
     def __init__(self):
-        super().__init__(name="Magic Kensei Weapons", origin="Way of the Kensei Monk Level 6")
+        super().__init__(name="Magic Kensei Weapons", origin="Way of the Kensei Monk Level 6", usage_tags=["buff"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -94,7 +94,7 @@ class MagicKenseiWeapons(Feature):
 
 class DeftStrike(Feature):
     def __init__(self):
-        super().__init__(name="Deft Strike", origin="Way of the Kensei Monk Level 6")
+        super().__init__(name="Deft Strike", origin="Way of the Kensei Monk Level 6", usage_tags=["damage"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -106,7 +106,7 @@ class DeftStrike(Feature):
 
 class SharpenTheBlade(Feature):
     def __init__(self):
-        super().__init__(name="Sharpen the Blade", origin="Way of the Kensei Monk Level 11")
+        super().__init__(name="Sharpen the Blade", origin="Way of the Kensei Monk Level 11", action_type="bonus_action", duration="1 Minute or Until Feature Used Again", range="Touch", usage_tags=["buff"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -129,7 +129,7 @@ class SharpenTheBlade(Feature):
 
 class UnearringAccuracy(Feature):
     def __init__(self):
-        super().__init__(name="Unerring Accuracy", origin="Way of the Kensei Monk Level 17")
+        super().__init__(name="Unerring Accuracy", origin="Way of the Kensei Monk Level 17", usage_tags=["buff"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

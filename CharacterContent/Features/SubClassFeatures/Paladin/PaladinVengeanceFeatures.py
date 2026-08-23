@@ -81,7 +81,7 @@ class SoulOfVengeance(Feature):
 class AvengingAngel(Feature):
     def __init__(self):
         super().__init__(
-            name="Avenging Angel", origin="Oath of Vengeance Paladin Level 20", action_type="bonus_action", duration="10 Minutes or Until Ended", usage_tags=["buff", "control"]
+            name="Avenging Angel", origin="Oath of Vengeance Paladin Level 20", action_type="bonus_action", duration="10 Minutes or Until Ended", usage_tags=["buff", "control", "utility"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:

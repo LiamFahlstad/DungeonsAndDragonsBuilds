@@ -24,7 +24,7 @@ class DevotionSpells(Feature):
 
 class SacredWeapon(Feature):
     def __init__(self):
-        super().__init__(name="Sacred Weapon", origin="Oath of Devotion Paladin Level 3")
+        super().__init__(name="Sacred Weapon", origin="Oath of Devotion Paladin Level 3", action_type="action", duration="1 Minute", usage_tags=["buff"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -46,7 +46,7 @@ class SacredWeapon(Feature):
 
 class TurnTheUnholy(Feature):
     def __init__(self):
-        super().__init__(name="Turn the Unholy", origin="Oath of Devotion Paladin Level 3")
+        super().__init__(name="Turn the Unholy", origin="Oath of Devotion Paladin Level 3", action_type="action", duration="1 Minute or Until Takes Damage", range="30 Feet", usage_tags=["control"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -58,7 +58,7 @@ class TurnTheUnholy(Feature):
 
 class AuraOfDevotion(Feature):
     def __init__(self):
-        super().__init__(name="Aura of Devotion", origin="Oath of Devotion Paladin Level 7")
+        super().__init__(name="Aura of Devotion", origin="Oath of Devotion Paladin Level 7", range="10 Feet", usage_tags=["buff"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "You and friendly creatures within 10 feet of you can't be charmed while you are conscious."
@@ -87,7 +87,7 @@ class PurityOfSpirit(Feature):
 
 class HolyNimbus(Feature):
     def __init__(self):
-        super().__init__(name="Holy Nimbus", origin="Oath of Devotion Paladin Level 20")
+        super().__init__(name="Holy Nimbus", origin="Oath of Devotion Paladin Level 20", action_type="action", duration="1 Minute", range="30-Foot Radius", usage_tags=["damage", "buff"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

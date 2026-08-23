@@ -34,6 +34,10 @@ class ArcaneAbjurationChannelDivinity(Feature):
         super().__init__(
             name="Channel Divinity: Arcane Abjuration",
             origin="Arcana Domain Cleric Level 3",
+            action_type="action",
+            range="30 Feet",
+            duration="1 Minute or Until Takes Any Damage",
+            usage_tags=["control"],
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -64,7 +68,7 @@ class SpellBreaker(Feature):
 
 class PotentSpellcasting(Feature):
     def __init__(self):
-        super().__init__(name="Potent Spellcasting", origin="Arcana Domain Cleric Level 8")
+        super().__init__(name="Potent Spellcasting", origin="Arcana Domain Cleric Level 8", usage_tags=["damage"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "You add your Wisdom modifier to the damage you deal with any cleric cantrip."

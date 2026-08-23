@@ -34,7 +34,7 @@ class Spells(Feature):
 
 class ExperimentalElixir(Feature):
     def __init__(self):
-        super().__init__(name="Experimental Elixir", origin="Alchemist Artificer Level 3")
+        super().__init__(name="Experimental Elixir", origin="Alchemist Artificer Level 3", action_type="action", duration="Until Drunk or End of Your Next Long Rest", usage_tags=["utility", "heal", "buff"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -56,7 +56,7 @@ class ExperimentalElixir(Feature):
 
 class AlchemicalSavant(Feature):
     def __init__(self):
-        super().__init__(name="Alchemical Savant", origin="Alchemist Artificer Level 5")
+        super().__init__(name="Alchemical Savant", origin="Alchemist Artificer Level 5", usage_tags=["buff"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "At 5th level, you've developed masterful command of magical chemicals, enhancing the healing and damage you create through them. Whenever you cast a spell using your alchemist's supplies as the spellcasting focus, you gain a bonus to one roll of the spell. That roll must restore hit points or be a damage roll that deals acid, fire, necrotic, or poison damage, and the bonus equals your Intelligence modifier (minimum of +1)."
@@ -65,7 +65,7 @@ class AlchemicalSavant(Feature):
 
 class RestorativeReagents(Feature):
     def __init__(self):
-        super().__init__(name="Restorative Reagents", origin="Alchemist Artificer Level 9")
+        super().__init__(name="Restorative Reagents", origin="Alchemist Artificer Level 9", usage_tags=["utility", "heal"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         intelligence_modifier = character_stat_block.get_ability_modifier(Ability.INTELLIGENCE)
@@ -85,7 +85,7 @@ class RestorativeReagents(Feature):
 
 class ChemicalMastery(Feature):
     def __init__(self):
-        super().__init__(name="Chemical Mastery", origin="Alchemist Artificer Level 15")
+        super().__init__(name="Chemical Mastery", origin="Alchemist Artificer Level 15", usage_tags=["utility", "buff"])
         self._resistances = [
             DamageResistance(DamageType.ACID, self.name),
             DamageResistance(DamageType.POISON, self.name),

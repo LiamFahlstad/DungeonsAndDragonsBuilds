@@ -131,7 +131,7 @@ class FleshWeaver(Feature):
 class ImprovedMutableForm(Feature):
     def __init__(self):
         super().__init__(
-            name="Improved Mutable Form", origin="Metamorph Psion Level 10", usage_tags=["buff"]
+            name="Improved Mutable Form", origin="Metamorph Psion Level 10", usage_tags=["buff", "utility"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:

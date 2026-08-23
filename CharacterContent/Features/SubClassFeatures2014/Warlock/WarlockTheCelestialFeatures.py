@@ -38,7 +38,8 @@ class BonusCantrips(Feature):
 class HealingLight(Feature):
     def __init__(self):
         super().__init__(
-            name="Healing Light", origin="The Celestial Patron Warlock Level 3"
+            name="Healing Light", origin="The Celestial Patron Warlock Level 3",
+            action_type="bonus_action", range="60 Feet", usage_tags=["heal"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -65,7 +66,8 @@ class HealingLight(Feature):
 class RadiantSoul(Feature):
     def __init__(self):
         super().__init__(
-            name="Radiant Soul", origin="The Celestial Patron Warlock Level 6"
+            name="Radiant Soul", origin="The Celestial Patron Warlock Level 6",
+            usage_tags=["buff"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -76,7 +78,8 @@ class RadiantSoul(Feature):
 class CelestialResistance(Feature):
     def __init__(self):
         super().__init__(
-            name="Celestial Resistance", origin="The Celestial Patron Warlock Level 10"
+            name="Celestial Resistance", origin="The Celestial Patron Warlock Level 10",
+            usage_tags=["heal"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -99,7 +102,8 @@ class CelestialResistance(Feature):
 class SearingVengeance(Feature):
     def __init__(self):
         super().__init__(
-            name="Searing Vengeance", origin="The Celestial Patron Warlock Level 14"
+            name="Searing Vengeance", origin="The Celestial Patron Warlock Level 14",
+            duration="Until End of Current Turn", range="30 Feet", usage_tags=["heal", "damage", "control"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:

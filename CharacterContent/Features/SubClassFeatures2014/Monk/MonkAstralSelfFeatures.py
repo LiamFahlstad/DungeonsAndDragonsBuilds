@@ -5,7 +5,7 @@ from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 class ArmsOfTheAstralSelf(Feature):
     def __init__(self):
-        super().__init__(name="Arms of the Astral Self", origin="Way of the Astral Self Monk Level 3")
+        super().__init__(name="Arms of the Astral Self", origin="Way of the Astral Self Monk Level 3", action_type="bonus_action", duration="10 Minutes", range="10 Feet", usage_tags=["damage", "buff"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -35,7 +35,7 @@ class ArmsOfTheAstralSelf(Feature):
 
 class VisageOfTheAstralSelf(Feature):
     def __init__(self):
-        super().__init__(name="Visage of the Astral Self", origin="Way of the Astral Self Monk Level 6")
+        super().__init__(name="Visage of the Astral Self", origin="Way of the Astral Self Monk Level 6", action_type="bonus_action", duration="10 Minutes", usage_tags=["buff", "utility"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -56,7 +56,7 @@ class VisageOfTheAstralSelf(Feature):
 
 class BodyOfTheAstralSelf(Feature):
     def __init__(self):
-        super().__init__(name="Body of the Astral Self", origin="Way of the Astral Self Monk Level 11")
+        super().__init__(name="Body of the Astral Self", origin="Way of the Astral Self Monk Level 11", usage_tags=["damage", "buff"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -73,7 +73,7 @@ class BodyOfTheAstralSelf(Feature):
 
 class AwakenedAstralSelf(Feature):
     def __init__(self):
-        super().__init__(name="Awakened Astral Self", origin="Way of the Astral Self Monk Level 17")
+        super().__init__(name="Awakened Astral Self", origin="Way of the Astral Self Monk Level 17", action_type="bonus_action", duration="10 Minutes", usage_tags=["buff"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

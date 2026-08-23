@@ -15,7 +15,7 @@ class EnchantmentSavant(Feature):
 
 class HypnoticGaze(Feature):
     def __init__(self):
-        super().__init__(name="Hypnotic Gaze", origin="Enchantment Wizard Level 3")
+        super().__init__(name="Hypnotic Gaze", origin="Enchantment Wizard Level 3", action_type="action", duration="Until End Of Your Next Turn", range="5 Feet", usage_tags=["control"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -40,7 +40,7 @@ class HypnoticGaze(Feature):
 
 class InstinctiveCharm(Feature):
     def __init__(self):
-        super().__init__(name="Instinctive Charm", origin="Enchantment Wizard Level 6")
+        super().__init__(name="Instinctive Charm", origin="Enchantment Wizard Level 6", action_type="reaction", range="30 Feet", usage_tags=["control"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -74,7 +74,7 @@ class SplitEnchantment(Feature):
 
 class AlterMemories(Feature):
     def __init__(self):
-        super().__init__(name="Alter Memories", origin="Enchantment Wizard Level 14")
+        super().__init__(name="Alter Memories", origin="Enchantment Wizard Level 14", action_type="action", usage_tags=["control"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         cha_mod = character_stat_block.get_ability_modifier(Ability.CHARISMA)

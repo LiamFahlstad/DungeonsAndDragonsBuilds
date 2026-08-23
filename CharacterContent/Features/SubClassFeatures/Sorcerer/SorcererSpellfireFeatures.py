@@ -66,7 +66,7 @@ class HonedSpellfire(Feature):
 class CrownOfSpellfire(Feature):
     def __init__(self):
         super().__init__(
-            name="Crown of Spellfire", origin="Spellfire Sorcerer Level 18", usage_tags=["buff"]
+            name="Crown of Spellfire", origin="Spellfire Sorcerer Level 18", usage_tags=["buff", "utility"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:

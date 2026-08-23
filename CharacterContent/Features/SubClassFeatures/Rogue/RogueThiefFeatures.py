@@ -5,7 +5,7 @@ from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 class FastHands(Feature):
     def __init__(self):
-        super().__init__(name="Fast Hands", origin="Thief Rogue Level 3", action_type="bonus_action")
+        super().__init__(name="Fast Hands", origin="Thief Rogue Level 3", action_type="bonus_action", usage_tags=["utility"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -18,7 +18,7 @@ class FastHands(Feature):
 
 class SecondStoryWork(Feature):
     def __init__(self):
-        super().__init__(name="Second Story Work", origin="Thief Rogue Level 3", usage_tags=["buff"])
+        super().__init__(name="Second Story Work", origin="Thief Rogue Level 3", usage_tags=["buff", "utility"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -43,7 +43,7 @@ class SupremeSneak(Feature):
 
 class UseMagicDevice(Feature):
     def __init__(self):
-        super().__init__(name="Use Magic Device", origin="Thief Rogue Level 13")
+        super().__init__(name="Use Magic Device", origin="Thief Rogue Level 13", usage_tags=["utility"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

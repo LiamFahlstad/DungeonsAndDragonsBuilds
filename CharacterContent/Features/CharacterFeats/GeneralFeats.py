@@ -93,6 +93,21 @@ class Athlete(_AbilityScoreFeat):
     _NAME = "Athlete"
     _ABILITIES = (Ability.STRENGTH, Ability.DEXTERITY)
 
+    def __init__(self, character_level: int, ability: Ability):
+        if character_level < self._MIN_LEVEL:
+            raise ValueError(
+                f"{self._NAME} requires character level {self._MIN_LEVEL} or higher."
+            )
+        if ability not in self._ABILITIES:
+            allowed = " or ".join(a.value for a in self._ABILITIES)
+            raise ValueError(f"{self._NAME} ability increase must be {allowed}.")
+        self.ability = ability
+        self._bonus = AbilityScoreBonus([(ability, 1)], total=1, error_prefix=self._NAME)
+        Feature.__init__(self, name=self._NAME, origin=self._ORIGIN, usage_tags=["utility"])
+
+    def apply(self, character_stat_block: CharacterStatBlock):
+        self._bonus.apply(character_stat_block)
+
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         return (
             "Prerequisite: Level 4+, Strength or Dexterity 13+\n"
@@ -441,6 +456,21 @@ class Poisoner(_AbilityScoreFeat):
     _NAME = "Poisoner"
     _ABILITIES = (Ability.DEXTERITY, Ability.INTELLIGENCE)
 
+    def __init__(self, character_level: int, ability: Ability):
+        if character_level < self._MIN_LEVEL:
+            raise ValueError(
+                f"{self._NAME} requires character level {self._MIN_LEVEL} or higher."
+            )
+        if ability not in self._ABILITIES:
+            allowed = " or ".join(a.value for a in self._ABILITIES)
+            raise ValueError(f"{self._NAME} ability increase must be {allowed}.")
+        self.ability = ability
+        self._bonus = AbilityScoreBonus([(ability, 1)], total=1, error_prefix=self._NAME)
+        Feature.__init__(self, name=self._NAME, origin=self._ORIGIN, usage_tags=["utility"])
+
+    def apply(self, character_stat_block: CharacterStatBlock):
+        self._bonus.apply(character_stat_block)
+
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         return (
             "Prerequisite: Level 4+\n"
@@ -489,6 +519,21 @@ class Resilient(_AbilityScoreFeat):
 class RitualCaster(_AbilityScoreFeat):
     _NAME = "Ritual Caster"
     _ABILITIES = (Ability.INTELLIGENCE, Ability.WISDOM, Ability.CHARISMA)
+
+    def __init__(self, character_level: int, ability: Ability):
+        if character_level < self._MIN_LEVEL:
+            raise ValueError(
+                f"{self._NAME} requires character level {self._MIN_LEVEL} or higher."
+            )
+        if ability not in self._ABILITIES:
+            allowed = " or ".join(a.value for a in self._ABILITIES)
+            raise ValueError(f"{self._NAME} ability increase must be {allowed}.")
+        self.ability = ability
+        self._bonus = AbilityScoreBonus([(ability, 1)], total=1, error_prefix=self._NAME)
+        Feature.__init__(self, name=self._NAME, origin=self._ORIGIN, usage_tags=["utility"])
+
+    def apply(self, character_stat_block: CharacterStatBlock):
+        self._bonus.apply(character_stat_block)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         return (
@@ -671,6 +716,21 @@ class Telekinetic(_AbilityScoreFeat):
 class Telepathic(_AbilityScoreFeat):
     _NAME = "Telepathic"
     _ABILITIES = (Ability.INTELLIGENCE, Ability.WISDOM, Ability.CHARISMA)
+
+    def __init__(self, character_level: int, ability: Ability):
+        if character_level < self._MIN_LEVEL:
+            raise ValueError(
+                f"{self._NAME} requires character level {self._MIN_LEVEL} or higher."
+            )
+        if ability not in self._ABILITIES:
+            allowed = " or ".join(a.value for a in self._ABILITIES)
+            raise ValueError(f"{self._NAME} ability increase must be {allowed}.")
+        self.ability = ability
+        self._bonus = AbilityScoreBonus([(ability, 1)], total=1, error_prefix=self._NAME)
+        Feature.__init__(self, name=self._NAME, origin=self._ORIGIN, usage_tags=["utility"])
+
+    def apply(self, character_stat_block: CharacterStatBlock):
+        self._bonus.apply(character_stat_block)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         return (

@@ -37,7 +37,8 @@ class GenieExpandedSpells(Feature):
 class GeniesVessel(Feature):
     def __init__(self, kind: Definitions.WarlockGenieKind):
         super().__init__(
-            name="Genie's Vessel", origin="The Genie Patron Warlock Level 3"
+            name="Genie's Vessel", origin="The Genie Patron Warlock Level 3",
+            action_type="action", duration="Until Leaving Vessel or Long Rest", usage_tags=["damage"]
         )
         self.kind = kind
 
@@ -69,7 +70,8 @@ class GeniesVessel(Feature):
 class ElementalGift(Feature):
     def __init__(self, kind: Definitions.WarlockGenieKind):
         super().__init__(
-            name="Elemental Gift", origin="The Genie Patron Warlock Level 6"
+            name="Elemental Gift", origin="The Genie Patron Warlock Level 6",
+            action_type="bonus_action", duration="10 Minutes", usage_tags=["buff", "utility"]
         )
         self.kind = kind
 
@@ -103,7 +105,8 @@ class ElementalGift(Feature):
 class SanctuaryVessel(Feature):
     def __init__(self):
         super().__init__(
-            name="Sanctuary Vessel", origin="The Genie Patron Warlock Level 10"
+            name="Sanctuary Vessel", origin="The Genie Patron Warlock Level 10",
+            action_type="bonus_action", range="30 Feet", usage_tags=["utility"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -121,7 +124,8 @@ class SanctuaryVessel(Feature):
 class LimitedWish(Feature):
     def __init__(self):
         super().__init__(
-            name="Limited Wish", origin="The Genie Patron Warlock Level 14"
+            name="Limited Wish", origin="The Genie Patron Warlock Level 14",
+            action_type="action", usage_tags=["utility"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:

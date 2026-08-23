@@ -6,7 +6,7 @@ from Utils import StringUtils
 
 class BalmOfTheSummerCourt(Feature):
     def __init__(self):
-        super().__init__(name="Balm of the Summer Court", origin="Circle of Dreams Druid Level 3")
+        super().__init__(name="Balm of the Summer Court", origin="Circle of Dreams Druid Level 3", action_type="bonus_action", range="120 Feet", usage_tags=["heal"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         druid_level = character_stat_block.get_class_level(Definitions.CharacterClass.DRUID)
@@ -45,7 +45,7 @@ class BalmOfTheSummerCourt(Feature):
 
 class HearthOfMoonlightAndShadow(Feature):
     def __init__(self):
-        super().__init__(name="Hearth of Moonlight and Shadow", origin="Circle of Dreams Druid Level 6")
+        super().__init__(name="Hearth of Moonlight and Shadow", origin="Circle of Dreams Druid Level 6", duration="Until End of Rest", range="30-Foot Radius", usage_tags=["buff"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -60,7 +60,7 @@ class HearthOfMoonlightAndShadow(Feature):
 
 class HiddenPaths(Feature):
     def __init__(self):
-        super().__init__(name="Hidden Paths", origin="Circle of Dreams Druid Level 10")
+        super().__init__(name="Hidden Paths", origin="Circle of Dreams Druid Level 10", action_type="bonus_action", usage_tags=["utility"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         wisdom_mod = character_stat_block.get_ability_modifier(Definitions.Ability.WISDOM)

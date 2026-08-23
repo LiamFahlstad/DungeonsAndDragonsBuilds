@@ -17,7 +17,7 @@ class BonusProficiencies(Feature):
 
 class BladeFlourish(Feature):
     def __init__(self):
-        super().__init__(name="Blade Flourish", origin="College of Swords Bard Level 3")
+        super().__init__(name="Blade Flourish", origin="College of Swords Bard Level 3", duration="Until Start of Next Turn", usage_tags=["damage", "buff"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -36,7 +36,7 @@ class BladeFlourish(Feature):
 
 class ExtraAttack(Feature):
     def __init__(self):
-        super().__init__(name="Extra Attack", origin="College of Swords Bard Level 6")
+        super().__init__(name="Extra Attack", origin="College of Swords Bard Level 6", usage_tags=["damage"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -47,7 +47,7 @@ class ExtraAttack(Feature):
 
 class MastersFlourish(Feature):
     def __init__(self):
-        super().__init__(name="Master's Flourish", origin="College of Swords Bard Level 14")
+        super().__init__(name="Master's Flourish", origin="College of Swords Bard Level 14", usage_tags=["buff"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

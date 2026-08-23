@@ -27,7 +27,7 @@ class DivineMagic(Feature):
 
 class FavoredByTheGods(Feature):
     def __init__(self):
-        super().__init__(name="Favored by the Gods", origin="Divine Soul Sorcerer Level 3")
+        super().__init__(name="Favored by the Gods", origin="Divine Soul Sorcerer Level 3", usage_tags=["buff"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -49,7 +49,7 @@ class FavoredByTheGods(Feature):
 
 class EmpoweredHealing(Feature):
     def __init__(self):
-        super().__init__(name="Empowered Healing", origin="Divine Soul Sorcerer Level 6")
+        super().__init__(name="Empowered Healing", origin="Divine Soul Sorcerer Level 6", range="5 Feet", usage_tags=["buff", "heal"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -70,7 +70,7 @@ class EmpoweredHealing(Feature):
 
 class AngelicForm(Feature):
     def __init__(self):
-        super().__init__(name="Angelic Form", origin="Divine Soul Sorcerer Level 14")
+        super().__init__(name="Angelic Form", origin="Divine Soul Sorcerer Level 14", action_type="bonus_action", duration="Until Incapacitated, Dead, or Dismissed", range="Self", usage_tags=["utility"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -93,7 +93,7 @@ class AngelicForm(Feature):
 
 class UnearthlyRecovery(Feature):
     def __init__(self):
-        super().__init__(name="Unearthly Recovery", origin="Divine Soul Sorcerer Level 18")
+        super().__init__(name="Unearthly Recovery", origin="Divine Soul Sorcerer Level 18", action_type="bonus_action", range="Self", usage_tags=["heal"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

@@ -7,7 +7,7 @@ from Utils import StringUtils
 
 class FancyFootwork(Feature):
     def __init__(self):
-        super().__init__(name="Fancy Footwork", origin="Swashbuckler Rogue Level 3")
+        super().__init__(name="Fancy Footwork", origin="Swashbuckler Rogue Level 3", duration="Until End of Your Turn", usage_tags=["buff"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -20,7 +20,7 @@ class FancyFootwork(Feature):
 
 class RakishAudacity(Feature):
     def __init__(self):
-        super().__init__(name="Rakish Audacity", origin="Swashbuckler Rogue Level 3")
+        super().__init__(name="Rakish Audacity", origin="Swashbuckler Rogue Level 3", range="5 Feet", usage_tags=["buff"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -49,7 +49,7 @@ class RakishAudacityBonus(Feature):
 
 class Panache(Feature):
     def __init__(self):
-        super().__init__(name="Panache", origin="Swashbuckler Rogue Level 9")
+        super().__init__(name="Panache", origin="Swashbuckler Rogue Level 9", action_type="action", duration="1 Minute", usage_tags=["control"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -79,7 +79,7 @@ class Panache(Feature):
 
 class ElegantManeuver(Feature):
     def __init__(self):
-        super().__init__(name="Elegant Maneuver", origin="Swashbuckler Rogue Level 13")
+        super().__init__(name="Elegant Maneuver", origin="Swashbuckler Rogue Level 13", action_type="bonus_action", duration="Until End of Your Turn", usage_tags=["buff"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -91,7 +91,7 @@ class ElegantManeuver(Feature):
 
 class MasterDuelist(Feature):
     def __init__(self):
-        super().__init__(name="Master Duelist", origin="Swashbuckler Rogue Level 17")
+        super().__init__(name="Master Duelist", origin="Swashbuckler Rogue Level 17", usage_tags=["buff"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

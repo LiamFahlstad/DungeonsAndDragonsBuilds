@@ -90,7 +90,7 @@ class CircleSpells(Feature):
 
 class SummonWildfireSpirit(Feature):
     def __init__(self):
-        super().__init__(name="Summon Wildfire Spirit", origin="Circle of Wildfire Druid Level 3")
+        super().__init__(name="Summon Wildfire Spirit", origin="Circle of Wildfire Druid Level 3", action_type="action", duration="1 Hour", range="30 Feet", usage_tags=["damage", "utility"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         uses = 1
@@ -112,7 +112,7 @@ class SummonWildfireSpirit(Feature):
 
 class EnhancedBond(Feature):
     def __init__(self):
-        super().__init__(name="Enhanced Bond", origin="Circle of Wildfire Druid Level 6")
+        super().__init__(name="Enhanced Bond", origin="Circle of Wildfire Druid Level 6", usage_tags=["buff"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -125,7 +125,7 @@ class EnhancedBond(Feature):
 
 class CauterizingFlames(Feature):
     def __init__(self):
-        super().__init__(name="Cauterizing Flames", origin="Circle of Wildfire Druid Level 10")
+        super().__init__(name="Cauterizing Flames", origin="Circle of Wildfire Druid Level 10", action_type="reaction", duration="1 Minute", range="30 Feet", usage_tags=["heal", "damage"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         proficiency_bonus = character_stat_block.get_proficiency_bonus()
@@ -162,7 +162,7 @@ class CauterizingFlames(Feature):
 
 class BlazingRevival(Feature):
     def __init__(self):
-        super().__init__(name="Blazing Revival", origin="Circle of Wildfire Druid Level 14")
+        super().__init__(name="Blazing Revival", origin="Circle of Wildfire Druid Level 14", range="120 Feet", usage_tags=["heal"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

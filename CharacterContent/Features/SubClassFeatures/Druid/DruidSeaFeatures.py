@@ -46,7 +46,7 @@ class WrathOfTheSea(Feature):
 class AquaticAffinity(Feature):
     def __init__(self):
         super().__init__(
-            name="Aquatic Affinity", origin="Circle of the Sea Druid Level 6", usage_tags=["buff"]
+            name="Aquatic Affinity", origin="Circle of the Sea Druid Level 6", usage_tags=["buff", "utility"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -59,7 +59,7 @@ class AquaticAffinity(Feature):
 
 class Stormborn(Feature):
     def __init__(self):
-        super().__init__(name="Stormborn", origin="Circle of the Sea Druid Level 10", usage_tags=["buff"])
+        super().__init__(name="Stormborn", origin="Circle of the Sea Druid Level 10", usage_tags=["buff", "utility"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

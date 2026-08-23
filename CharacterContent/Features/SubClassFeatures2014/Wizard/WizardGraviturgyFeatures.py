@@ -7,7 +7,7 @@ from Utils import StringUtils
 
 class AdjustDensity(Feature):
     def __init__(self):
-        super().__init__(name="Adjust Density", origin="Graviturgy Wizard Level 3")
+        super().__init__(name="Adjust Density", origin="Graviturgy Wizard Level 3", action_type="action", duration="Up To 1 Minute Or Until Concentration Ends", range="30 Feet", usage_tags=["buff", "control"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -24,7 +24,7 @@ class AdjustDensity(Feature):
 
 class GravityWell(Feature):
     def __init__(self):
-        super().__init__(name="Gravity Well", origin="Graviturgy Wizard Level 6")
+        super().__init__(name="Gravity Well", origin="Graviturgy Wizard Level 6", usage_tags=["control"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "When you reach 6th level, whenever you cast a spell on a creature, you can move the target 5 feet to an unoccupied space of your choice if the target is willing to move, the spell hits it with an attack, or it fails a saving throw against the spell."
@@ -33,7 +33,7 @@ class GravityWell(Feature):
 
 class ViolentAttraction(Feature):
     def __init__(self):
-        super().__init__(name="Violent Attraction", origin="Graviturgy Wizard Level 10")
+        super().__init__(name="Violent Attraction", origin="Graviturgy Wizard Level 10", action_type="reaction", range="60 Feet", usage_tags=["damage"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         int_mod = character_stat_block.get_ability_modifier(Ability.INTELLIGENCE)
@@ -50,7 +50,7 @@ class ViolentAttraction(Feature):
 
 class EventHorizon(Feature):
     def __init__(self):
-        super().__init__(name="Event Horizon", origin="Graviturgy Wizard Level 14")
+        super().__init__(name="Event Horizon", origin="Graviturgy Wizard Level 14", action_type="action", duration="1 Minute Or Until Concentration Ends", range="30 Feet", usage_tags=["damage", "control"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

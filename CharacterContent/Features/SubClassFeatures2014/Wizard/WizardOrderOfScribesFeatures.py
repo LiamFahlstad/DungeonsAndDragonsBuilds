@@ -5,7 +5,7 @@ from Utils import StringUtils
 
 class WizardlyQuill(Feature):
     def __init__(self):
-        super().__init__(name="Wizardly Quill", origin="Order of Scribes Wizard Level 3")
+        super().__init__(name="Wizardly Quill", origin="Order of Scribes Wizard Level 3", action_type="bonus_action", usage_tags=["utility"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -21,7 +21,7 @@ class WizardlyQuill(Feature):
 
 class AwakenedSpellbook(Feature):
     def __init__(self):
-        super().__init__(name="Awakened Spellbook", origin="Order of Scribes Wizard Level 3")
+        super().__init__(name="Awakened Spellbook", origin="Order of Scribes Wizard Level 3", usage_tags=["utility"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -38,7 +38,7 @@ class AwakenedSpellbook(Feature):
 
 class ManifestMind(Feature):
     def __init__(self):
-        super().__init__(name="Manifest Mind", origin="Order of Scribes Wizard Level 6")
+        super().__init__(name="Manifest Mind", origin="Order of Scribes Wizard Level 6", action_type="bonus_action", duration="Until Dismissed Or >300 Feet", range="60 Feet", usage_tags=["utility"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         proficiency_bonus = character_stat_block.get_proficiency_bonus()
@@ -60,7 +60,7 @@ class ManifestMind(Feature):
 
 class MasterScriviner(Feature):
     def __init__(self):
-        super().__init__(name="Master Scriviner", origin="Order of Scribes Wizard Level 10")
+        super().__init__(name="Master Scriviner", origin="Order of Scribes Wizard Level 10", usage_tags=["utility"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -75,7 +75,7 @@ class MasterScriviner(Feature):
 
 class OneWithTheWord(Feature):
     def __init__(self):
-        super().__init__(name="One with the Word", origin="Order of Scribes Wizard Level 14")
+        super().__init__(name="One with the Word", origin="Order of Scribes Wizard Level 14", action_type="reaction", duration="1d6 Long Rests", usage_tags=["buff"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

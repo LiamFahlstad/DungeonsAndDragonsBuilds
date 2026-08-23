@@ -25,7 +25,7 @@ class WatchersSpells(Feature):
 
 class WatchersWill(Feature):
     def __init__(self):
-        super().__init__(name="Channel Divinity: Watcher's Will", origin="Oath of the Watchers Paladin Level 3")
+        super().__init__(name="Channel Divinity: Watcher's Will", origin="Oath of the Watchers Paladin Level 3", action_type="action", duration="1 Minute", range="30 Feet", usage_tags=["buff"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         charisma_modifier = character_stat_block.get_ability_modifier(Ability.CHARISMA)
@@ -50,7 +50,7 @@ class WatchersWill(Feature):
 
 class AbjureTheExtraplanar(Feature):
     def __init__(self):
-        super().__init__(name="Channel Divinity: Abjure the Extraplanar", origin="Oath of the Watchers Paladin Level 3")
+        super().__init__(name="Channel Divinity: Abjure the Extraplanar", origin="Oath of the Watchers Paladin Level 3", action_type="action", duration="1 Minute or Until Takes Damage", range="30 Feet", usage_tags=["control"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -63,7 +63,7 @@ class AbjureTheExtraplanar(Feature):
 
 class AuraOfTheSentinel(Feature):
     def __init__(self):
-        super().__init__(name="Aura of the Sentinel", origin="Oath of the Watchers Paladin Level 7")
+        super().__init__(name="Aura of the Sentinel", origin="Oath of the Watchers Paladin Level 7", range="10 Feet (30 at 18th Level)", usage_tags=["buff"])
 
     def apply(self, character_stat_block: CharacterStatBlock):
         InitiativeProficiency().apply(character_stat_block)
@@ -99,7 +99,7 @@ class AuraOfTheSentinelExpansion(Feature):
 
 class VigilantRebuke(Feature):
     def __init__(self):
-        super().__init__(name="Vigilant Rebuke", origin="Oath of the Watchers Paladin Level 15")
+        super().__init__(name="Vigilant Rebuke", origin="Oath of the Watchers Paladin Level 15", action_type="reaction", range="30 Feet", usage_tags=["damage"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         charisma_modifier = character_stat_block.get_ability_modifier(Ability.CHARISMA)
@@ -120,7 +120,7 @@ class VigilantRebuke(Feature):
 
 class MortalBulwark(Feature):
     def __init__(self):
-        super().__init__(name="Mortal Bulwark", origin="Oath of the Watchers Paladin Level 20")
+        super().__init__(name="Mortal Bulwark", origin="Oath of the Watchers Paladin Level 20", action_type="bonus_action", duration="1 Minute", range="120 Feet (Truesight)", usage_tags=["buff", "control"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

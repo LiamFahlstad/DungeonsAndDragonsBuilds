@@ -14,7 +14,7 @@ class BonusProficiencies(Feature):
 
 class Assassinate(Feature):
     def __init__(self):
-        super().__init__(name="Assassinate", origin="Assassin Rogue Level 3")
+        super().__init__(name="Assassinate", origin="Assassin Rogue Level 3", usage_tags=["buff"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -25,7 +25,7 @@ class Assassinate(Feature):
 
 class InfiltrationExpertise(Feature):
     def __init__(self):
-        super().__init__(name="Infiltration Expertise", origin="Assassin Rogue Level 9")
+        super().__init__(name="Infiltration Expertise", origin="Assassin Rogue Level 9", usage_tags=["utility"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -46,7 +46,7 @@ class InfiltrationExpertise(Feature):
 
 class Impostor(Feature):
     def __init__(self):
-        super().__init__(name="Impostor", origin="Assassin Rogue Level 13")
+        super().__init__(name="Impostor", origin="Assassin Rogue Level 13", usage_tags=["utility"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -67,7 +67,7 @@ class Impostor(Feature):
 
 class DeathStrike(Feature):
     def __init__(self):
-        super().__init__(name="Death Strike", origin="Assassin Rogue Level 17")
+        super().__init__(name="Death Strike", origin="Assassin Rogue Level 17", usage_tags=["damage"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         dexterity_modifier = character_stat_block.get_ability_modifier(Ability.DEXTERITY)

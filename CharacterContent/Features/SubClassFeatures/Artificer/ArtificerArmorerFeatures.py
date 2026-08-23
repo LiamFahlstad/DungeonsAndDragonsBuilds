@@ -5,7 +5,7 @@ from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 class ToolsOfTheTrade(Feature):
     def __init__(self):
-        super().__init__(name="Tools of the Trade", origin="Armorer Artificer Level 3")
+        super().__init__(name="Tools of the Trade", origin="Armorer Artificer Level 3", usage_tags=["utility"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -61,7 +61,7 @@ class ArcaneArmor(Feature):
 
 class ArmorModel(Feature):
     def __init__(self):
-        super().__init__(name="Armor Model", origin="Armorer Artificer Level 3", usage_tags=["damage", "buff", "control"])
+        super().__init__(name="Armor Model", origin="Armorer Artificer Level 3", usage_tags=["damage", "buff", "control", "utility"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -118,7 +118,7 @@ class ImprovedArmorer(Feature):
 
 class PerfectedArmor(Feature):
     def __init__(self):
-        super().__init__(name="Perfected Armor", origin="Armorer Artificer Level 15", usage_tags=["damage", "control", "buff"])
+        super().__init__(name="Perfected Armor", origin="Armorer Artificer Level 15", usage_tags=["damage", "control", "buff", "utility"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

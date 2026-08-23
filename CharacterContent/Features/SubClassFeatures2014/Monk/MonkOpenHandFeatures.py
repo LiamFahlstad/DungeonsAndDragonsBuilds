@@ -6,7 +6,7 @@ from Utils import StringUtils
 
 class OpenHandTechnique(Feature):
     def __init__(self):
-        super().__init__(name="Open Hand Technique", origin="Way of the Open Hand Monk Level 3")
+        super().__init__(name="Open Hand Technique", origin="Way of the Open Hand Monk Level 3", duration="Until End of Next Turn", range="15 Feet", usage_tags=["control"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -21,7 +21,7 @@ class OpenHandTechnique(Feature):
 
 class WholenessOfBody(Feature):
     def __init__(self):
-        super().__init__(name="Wholeness of Body", origin="Way of the Open Hand Monk Level 6")
+        super().__init__(name="Wholeness of Body", origin="Way of the Open Hand Monk Level 6", action_type="action", usage_tags=["heal"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         monk_level = character_stat_block.get_class_level(Definitions.CharacterClass.MONK)
@@ -43,7 +43,7 @@ class WholenessOfBody(Feature):
 
 class Tranquility(Feature):
     def __init__(self):
-        super().__init__(name="Tranquility", origin="Way of the Open Hand Monk Level 11")
+        super().__init__(name="Tranquility", origin="Way of the Open Hand Monk Level 11", duration="Until Start of Next Long Rest", usage_tags=["buff"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         wisdom_modifier = character_stat_block.get_ability_modifier(Definitions.Ability.WISDOM)
@@ -57,7 +57,7 @@ class Tranquility(Feature):
 
 class QuiveringPalm(Feature):
     def __init__(self):
-        super().__init__(name="Quivering Palm", origin="Way of the Open Hand Monk Level 17")
+        super().__init__(name="Quivering Palm", origin="Way of the Open Hand Monk Level 17", action_type="action", duration="Number of Days Equal to Monk Level", usage_tags=["damage"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         monk_level = character_stat_block.get_class_level(Definitions.CharacterClass.MONK)

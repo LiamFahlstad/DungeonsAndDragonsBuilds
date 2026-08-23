@@ -19,7 +19,12 @@ class BonusProficiencies(Feature):
 
 class BlessingOfTheForge(Feature):
     def __init__(self):
-        super().__init__(name="Blessing of the Forge", origin="Forge Domain Cleric Level 3")
+        super().__init__(
+            name="Blessing of the Forge",
+            origin="Forge Domain Cleric Level 3",
+            duration="Until End of Next Long Rest or Until You Die",
+            usage_tags=["buff"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -65,6 +70,7 @@ class ArtisansBlessingChannelDivinity(Feature):
         super().__init__(
             name="Channel Divinity: Artisan's Blessing",
             origin="Forge Domain Cleric Level 3",
+            usage_tags=["utility"],
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -79,7 +85,12 @@ class ArtisansBlessingChannelDivinity(Feature):
 
 class SoulOfTheForge(Feature):
     def __init__(self):
-        super().__init__(name="Soul of the Forge", origin="Forge Domain Cleric Level 6", skippable_in_concise=True)
+        super().__init__(
+            name="Soul of the Forge",
+            origin="Forge Domain Cleric Level 6",
+            skippable_in_concise=True,
+            usage_tags=["buff"],
+        )
         self._resistance = DamageResistance(DamageType.FIRE, self.name)
 
     def apply(self, character_stat_block: CharacterStatBlock):
@@ -96,7 +107,7 @@ class SoulOfTheForge(Feature):
 
 class DivineStrike(Feature):
     def __init__(self):
-        super().__init__(name="Divine Strike", origin="Forge Domain Cleric Level 8")
+        super().__init__(name="Divine Strike", origin="Forge Domain Cleric Level 8", usage_tags=["damage"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -122,7 +133,10 @@ class DivineStrike(Feature):
 class SaintOfForgeAndFire(Feature):
     def __init__(self):
         super().__init__(
-            name="Saint of Forge and Fire", origin="Forge Domain Cleric Level 17", skippable_in_concise=True
+            name="Saint of Forge and Fire",
+            origin="Forge Domain Cleric Level 17",
+            skippable_in_concise=True,
+            usage_tags=["buff"],
         )
         # Only the fire immunity is unconditional; the bludgeoning/piercing/
         # slashing resistance is gated on wearing heavy armor AND only

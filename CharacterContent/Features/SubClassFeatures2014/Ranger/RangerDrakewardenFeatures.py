@@ -95,7 +95,7 @@ def format_drake(
 
 class DraconicGift(Feature):
     def __init__(self, language: Optional[str] = None):
-        super().__init__(name="Draconic Gift", origin="Drakewarden Ranger Level 3")
+        super().__init__(name="Draconic Gift", origin="Drakewarden Ranger Level 3", usage_tags=["utility"])
         self._language = language
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -111,7 +111,7 @@ class DraconicGift(Feature):
 
 class DrakeCompanion(Feature):
     def __init__(self, damage_type: Optional[DamageType] = None):
-        super().__init__(name="Drake Companion", origin="Drakewarden Ranger Level 3")
+        super().__init__(name="Drake Companion", origin="Drakewarden Ranger Level 3", action_type="action", range="30 Feet", usage_tags=["utility"])
         self.damage_type = damage_type
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -137,7 +137,7 @@ class DrakeCompanion(Feature):
 
 class BondOfFangAndScale(Feature):
     def __init__(self):
-        super().__init__(name="Bond of Fang and Scale", origin="Drakewarden Ranger Level 7")
+        super().__init__(name="Bond of Fang and Scale", origin="Drakewarden Ranger Level 7", usage_tags=["buff", "utility"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -152,7 +152,7 @@ class BondOfFangAndScale(Feature):
 
 class DrakesBreath(Feature):
     def __init__(self):
-        super().__init__(name="Drake's Breath", origin="Drakewarden Ranger Level 11")
+        super().__init__(name="Drake's Breath", origin="Drakewarden Ranger Level 11", action_type="action", range="30-Foot Cone", usage_tags=["damage"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         ranger_level = character_stat_block.get_class_level(CharacterClass.RANGER)
@@ -189,7 +189,7 @@ class DrakesBreath(Feature):
 
 class PerfectedBond(Feature):
     def __init__(self):
-        super().__init__(name="Perfected Bond", origin="Drakewarden Ranger Level 15")
+        super().__init__(name="Perfected Bond", origin="Drakewarden Ranger Level 15", action_type="reaction", usage_tags=["buff"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         proficiency_bonus = character_stat_block.get_proficiency_bonus()

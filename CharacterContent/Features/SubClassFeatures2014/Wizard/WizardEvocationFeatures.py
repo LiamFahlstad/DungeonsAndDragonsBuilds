@@ -26,7 +26,7 @@ class SculptSpells(Feature):
 
 class PotentCantrip(Feature):
     def __init__(self):
-        super().__init__(name="Potent Cantrip", origin="Evocation Wizard Level 6")
+        super().__init__(name="Potent Cantrip", origin="Evocation Wizard Level 6", usage_tags=["damage"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "Your damaging cantrips affect even creatures that avoid the brunt of the effect. When a creature succeeds on a saving throw against your cantrip, the creature takes half the cantrip's damage (if any) but suffers no additional effect from the cantrip."
@@ -36,7 +36,7 @@ class PotentCantrip(Feature):
 class EmpoweredEvocation(Feature):
     def __init__(self):
         super().__init__(
-            name="Empowered Evocation", origin="Evocation Wizard Level 10"
+            name="Empowered Evocation", origin="Evocation Wizard Level 10", usage_tags=["damage"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -46,7 +46,7 @@ class EmpoweredEvocation(Feature):
 
 class Overchannel(Feature):
     def __init__(self):
-        super().__init__(name="Overchannel", origin="Evocation Wizard Level 14")
+        super().__init__(name="Overchannel", origin="Evocation Wizard Level 14", usage_tags=["damage"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

@@ -92,7 +92,7 @@ class StudentOfWar(Feature):
 
 class KnowYourEnemy(Feature):
     def __init__(self):
-        super().__init__(name="Know Your Enemy", origin="Battle Master Fighter Level 7")
+        super().__init__(name="Know Your Enemy", origin="Battle Master Fighter Level 7", usage_tags=["utility"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

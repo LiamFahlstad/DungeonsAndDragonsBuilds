@@ -15,7 +15,7 @@ class ConjurationSavant(Feature):
 
 class MinorConjuration(Feature):
     def __init__(self):
-        super().__init__(name="Minor Conjuration", origin="Conjuration Wizard Level 3")
+        super().__init__(name="Minor Conjuration", origin="Conjuration Wizard Level 3", action_type="action", duration="1 Hour", range="10 Feet", usage_tags=["utility"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -38,7 +38,7 @@ class MinorConjuration(Feature):
 
 class BenignTransportation(Feature):
     def __init__(self):
-        super().__init__(name="Benign Transportation", origin="Conjuration Wizard Level 6")
+        super().__init__(name="Benign Transportation", origin="Conjuration Wizard Level 6", action_type="action", range="30 Feet", usage_tags=["utility"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -58,7 +58,7 @@ class BenignTransportation(Feature):
 
 class FocusedConjuration(Feature):
     def __init__(self):
-        super().__init__(name="Focused Conjuration", origin="Conjuration Wizard Level 10")
+        super().__init__(name="Focused Conjuration", origin="Conjuration Wizard Level 10", usage_tags=["buff"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "While you are concentrating on a conjuration spell, your concentration can't be broken as a result of taking damage."
@@ -67,7 +67,7 @@ class FocusedConjuration(Feature):
 
 class DurableSummons(Feature):
     def __init__(self):
-        super().__init__(name="Durable Summons", origin="Conjuration Wizard Level 14")
+        super().__init__(name="Durable Summons", origin="Conjuration Wizard Level 14", usage_tags=["buff"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "Any creature that you summon or create with a conjuration spell has 30 temporary hit points."

@@ -15,7 +15,7 @@ class BonusProficiencies(Feature):
 
 class DrunkenTechnique(Feature):
     def __init__(self):
-        super().__init__(name="Drunken Technique", origin="Way of the Drunken Master Monk Level 3")
+        super().__init__(name="Drunken Technique", origin="Way of the Drunken Master Monk Level 3", duration="Until End of Current Turn", usage_tags=["buff"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -26,7 +26,7 @@ class DrunkenTechnique(Feature):
 
 class TipsySway(Feature):
     def __init__(self):
-        super().__init__(name="Tipsy Sway", origin="Way of the Drunken Master Monk Level 6")
+        super().__init__(name="Tipsy Sway", origin="Way of the Drunken Master Monk Level 6", action_type="reaction", range="5 Feet", usage_tags=["control"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -39,7 +39,7 @@ class TipsySway(Feature):
 
 class DrunkardsLuck(Feature):
     def __init__(self):
-        super().__init__(name="Drunkard's Luck", origin="Way of the Drunken Master Monk Level 11")
+        super().__init__(name="Drunkard's Luck", origin="Way of the Drunken Master Monk Level 11", usage_tags=["buff"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -50,7 +50,7 @@ class DrunkardsLuck(Feature):
 
 class IntoxicatedFrenzy(Feature):
     def __init__(self):
-        super().__init__(name="Intoxicated Frenzy", origin="Way of the Drunken Master Monk Level 17")
+        super().__init__(name="Intoxicated Frenzy", origin="Way of the Drunken Master Monk Level 17", usage_tags=["buff"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

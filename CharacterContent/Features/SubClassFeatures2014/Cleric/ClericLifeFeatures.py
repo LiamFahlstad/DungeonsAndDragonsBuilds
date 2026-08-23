@@ -14,7 +14,7 @@ class BonusProficiency(Feature):
 
 class DiscipleOfLife(Feature):
     def __init__(self):
-        super().__init__(name="Disciple of Life", origin="Life Domain Cleric Level 3")
+        super().__init__(name="Disciple of Life", origin="Life Domain Cleric Level 3", usage_tags=["heal"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "Your healing spells are more effective. Whenever you use a spell of 1st level or higher to restore hit points to a creature, the creature regains additional hit points equal to 2 + the spell's level."
@@ -26,6 +26,9 @@ class PreserveLifeChannelDivinity(Feature):
         super().__init__(
             name="Channel Divinity: Preserve Life",
             origin="Life Domain Cleric Level 3",
+            action_type="action",
+            range="30 Feet",
+            usage_tags=["heal"],
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -71,7 +74,7 @@ class LifeDomainSpells(Feature):
 
 class BlessedHealer(Feature):
     def __init__(self):
-        super().__init__(name="Blessed Healer", origin="Life Domain Cleric Level 6")
+        super().__init__(name="Blessed Healer", origin="Life Domain Cleric Level 6", usage_tags=["heal"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "The healing spells you cast on others heal you as well. When you cast a spell of 1st level or higher that restores hit points to a creature other than you, you regain hit points equal to 2 + the spell's level."
@@ -80,7 +83,7 @@ class BlessedHealer(Feature):
 
 class DivineStrike(Feature):
     def __init__(self):
-        super().__init__(name="Divine Strike", origin="Life Domain Cleric Level 8")
+        super().__init__(name="Divine Strike", origin="Life Domain Cleric Level 8", usage_tags=["damage"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "You gain the ability to infuse your weapon strikes with divine energy. Once on each of your turns when you hit a creature with a weapon attack, you can cause the attack to deal an extra 1d8 radiant damage to the target. When you reach 14th level, the extra damage increases to 2d8."
@@ -102,7 +105,7 @@ class DivineStrike(Feature):
 
 class SupremeHealing(Feature):
     def __init__(self):
-        super().__init__(name="Supreme Healing", origin="Life Domain Cleric Level 17")
+        super().__init__(name="Supreme Healing", origin="Life Domain Cleric Level 17", usage_tags=["heal"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "When you would normally roll one or more dice to restore hit points with a spell, you instead use the highest number possible for each die. For example, instead of restoring 2d6 hit points to a creature, you restore 12."

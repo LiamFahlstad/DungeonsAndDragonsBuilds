@@ -24,7 +24,7 @@ class MonsterSlayerMagic(Feature):
 
 class HuntersSense(Feature):
     def __init__(self):
-        super().__init__(name="Hunter's Sense", origin="Monster Slayer Ranger Level 3")
+        super().__init__(name="Hunter's Sense", origin="Monster Slayer Ranger Level 3", action_type="action", range="60 Feet", usage_tags=["utility"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         wisdom_modifier = character_stat_block.get_ability_modifier(Ability.WISDOM)
@@ -59,7 +59,7 @@ class HuntersSense(Feature):
 
 class SlayersPrey(Feature):
     def __init__(self):
-        super().__init__(name="Slayer's Prey", origin="Monster Slayer Ranger Level 3")
+        super().__init__(name="Slayer's Prey", origin="Monster Slayer Ranger Level 3", action_type="bonus_action", duration="Until Short or Long Rest", range="60 Feet", usage_tags=["damage"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -83,7 +83,7 @@ class SlayersPrey(Feature):
 
 class SupernaturalDefense(Feature):
     def __init__(self):
-        super().__init__(name="Supernatural Defense", origin="Monster Slayer Ranger Level 7")
+        super().__init__(name="Supernatural Defense", origin="Monster Slayer Ranger Level 7", usage_tags=["buff"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "At 7th level, you gain extra resilience against your prey's assaults on your mind and body. Whenever the target of your Slayer's Prey forces you to make a saving throw and whenever you make an ability check to escape that target's grapple, add 1d6 to your roll."
@@ -92,7 +92,7 @@ class SupernaturalDefense(Feature):
 
 class MagicUsersNemesis(Feature):
     def __init__(self):
-        super().__init__(name="Magic-User's Nemesis", origin="Monster Slayer Ranger Level 11")
+        super().__init__(name="Magic-User's Nemesis", origin="Monster Slayer Ranger Level 11", action_type="reaction", range="60 Feet", usage_tags=["control"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -120,7 +120,7 @@ class MagicUsersNemesis(Feature):
 
 class SlayersCounter(Feature):
     def __init__(self):
-        super().__init__(name="Slayer's Counter", origin="Monster Slayer Ranger Level 15")
+        super().__init__(name="Slayer's Counter", origin="Monster Slayer Ranger Level 15", action_type="reaction", usage_tags=["damage"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "At 15th level, you gain the ability to counterattack when your prey tries to sabotage you. If the target of your Slayer's Prey forces you to make a saving throw, you can use your reaction to make one weapon attack against the quarry. You make this attack immediately before making the saving throw. If the attack hits, your save automatically succeeds, in addition to the attack's normal effects."

@@ -44,6 +44,7 @@ class TouchOfDeathChannelDivinity(Feature):
         super().__init__(
             name="Channel Divinity: Touch of Death",
             origin="Death Domain Cleric Level 3",
+            usage_tags=["damage"],
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -82,7 +83,7 @@ class InescapableDestruction(Feature):
 
 class DivineStrike(Feature):
     def __init__(self):
-        super().__init__(name="Divine Strike", origin="Death Domain Cleric Level 8")
+        super().__init__(name="Divine Strike", origin="Death Domain Cleric Level 8", usage_tags=["damage"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "You gain the ability to infuse your weapon strikes with necrotic energy. Once on each of your turns when you hit a creature with a weapon attack, you can cause the attack to deal an extra 1d8 necrotic damage to the target. When you reach 14th level, the extra damage increases to 2d8."

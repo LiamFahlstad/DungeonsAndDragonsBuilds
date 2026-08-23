@@ -28,7 +28,7 @@ class LunarEmbodiment(Feature):
 
 class MoonFire(Feature):
     def __init__(self):
-        super().__init__(name="Moon Fire", origin="Lunar Sorcery Sorcerer Level 3")
+        super().__init__(name="Moon Fire", origin="Lunar Sorcery Sorcerer Level 3", usage_tags=["damage"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -39,7 +39,7 @@ class MoonFire(Feature):
 
 class LunarBoons(Feature):
     def __init__(self):
-        super().__init__(name="Lunar Boons", origin="Lunar Sorcery Sorcerer Level 6")
+        super().__init__(name="Lunar Boons", origin="Lunar Sorcery Sorcerer Level 6", usage_tags=["buff"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         proficiency_bonus = character_stat_block.get_proficiency_bonus()
@@ -57,7 +57,7 @@ class LunarBoons(Feature):
 
 class WaxingAndWaning(Feature):
     def __init__(self):
-        super().__init__(name="Waxing and Waning", origin="Lunar Sorcery Sorcerer Level 6")
+        super().__init__(name="Waxing and Waning", origin="Lunar Sorcery Sorcerer Level 6", action_type="bonus_action", usage_tags=["utility"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -70,7 +70,7 @@ class WaxingAndWaning(Feature):
 
 class LunarEmpowerment(Feature):
     def __init__(self):
-        super().__init__(name="Lunar Empowerment", origin="Lunar Sorcery Sorcerer Level 14")
+        super().__init__(name="Lunar Empowerment", origin="Lunar Sorcery Sorcerer Level 14", usage_tags=["utility", "buff"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -85,7 +85,7 @@ class LunarEmpowerment(Feature):
 
 class LunarPhenomenon(Feature):
     def __init__(self):
-        super().__init__(name="Lunar Phenomenon", origin="Lunar Sorcery Sorcerer Level 18")
+        super().__init__(name="Lunar Phenomenon", origin="Lunar Sorcery Sorcerer Level 18", action_type="bonus_action", duration="Until End of Next Turn", range="60 Feet", usage_tags=["utility", "damage", "control", "heal", "buff"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

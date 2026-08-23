@@ -41,7 +41,7 @@ class Bloodthirst(Feature):
 class DreadAllegiance(Feature):
     def __init__(self):
         super().__init__(
-            name="Dread Allegiance", origin="Scion of the Three Rogue Level 3", usage_tags=["buff"]
+            name="Dread Allegiance", origin="Scion of the Three Rogue Level 3", usage_tags=["buff", "utility"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:

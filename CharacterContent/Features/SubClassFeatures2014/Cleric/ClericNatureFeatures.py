@@ -46,6 +46,10 @@ class CharmAnimalsAndPlantsChannelDivinity(Feature):
         super().__init__(
             name="Channel Divinity: Charm Animals and Plants",
             origin="Nature Domain Cleric Level 3",
+            action_type="action",
+            range="30 Feet",
+            duration="1 Minute or Until Takes Damage",
+            usage_tags=["control"],
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -70,7 +74,13 @@ class CharmAnimalsAndPlantsChannelDivinity(Feature):
 
 class DampenElements(Feature):
     def __init__(self):
-        super().__init__(name="Dampen Elements", origin="Nature Domain Cleric Level 6")
+        super().__init__(
+            name="Dampen Elements",
+            origin="Nature Domain Cleric Level 6",
+            action_type="reaction",
+            range="30 Feet",
+            usage_tags=["buff"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "When you or a creature within 30 feet of you takes acid, cold, fire, lightning, or thunder damage, you can use your reaction to grant resistance to the creature against that instance of the damage."
@@ -79,7 +89,7 @@ class DampenElements(Feature):
 
 class DivineStrike(Feature):
     def __init__(self):
-        super().__init__(name="Divine Strike", origin="Nature Domain Cleric Level 8")
+        super().__init__(name="Divine Strike", origin="Nature Domain Cleric Level 8", usage_tags=["damage"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "You gain the ability to infuse your weapon strikes with divine energy. Once on each of your turns when you hit a creature with a weapon attack, you can cause the attack to deal an extra 1d8 cold, fire, or lightning damage (your choice) to the target. When you reach 14th level, the extra damage increases to 2d8."
@@ -101,7 +111,7 @@ class DivineStrike(Feature):
 
 class MasterOfNature(Feature):
     def __init__(self):
-        super().__init__(name="Master of Nature", origin="Nature Domain Cleric Level 17")
+        super().__init__(name="Master of Nature", origin="Nature Domain Cleric Level 17", action_type="bonus_action")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "You gain the ability to command animals and plant creatures. While creatures are charmed by your Charm Animals and Plants feature, you can take a bonus action on your turn to verbally command what each of those creatures will do on its next turn."

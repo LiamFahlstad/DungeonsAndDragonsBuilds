@@ -36,7 +36,7 @@ class AssassinsTools(Feature):
 
 class InfiltrationExpertise(Feature):
     def __init__(self):
-        super().__init__(name="Infiltration Expertise", origin="Assassin Rogue Level 9", usage_tags=["buff"])
+        super().__init__(name="Infiltration Expertise", origin="Assassin Rogue Level 9", usage_tags=["buff", "utility"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

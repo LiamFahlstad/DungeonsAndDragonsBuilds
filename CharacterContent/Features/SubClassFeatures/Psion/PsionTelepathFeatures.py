@@ -80,7 +80,7 @@ class BulwarkMind(Feature):
 
 class PotentThoughts(Feature):
     def __init__(self):
-        super().__init__(name="Potent Thoughts", origin="Telepath Psion Level 6", usage_tags=["damage"])
+        super().__init__(name="Potent Thoughts", origin="Telepath Psion Level 6", usage_tags=["damage", "utility"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

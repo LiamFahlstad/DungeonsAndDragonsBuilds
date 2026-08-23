@@ -8,7 +8,7 @@ from Utils import StringUtils
 
 class SpeechOfTheWoods(Feature):
     def __init__(self):
-        super().__init__(name="Speech of the Woods", origin="Circle of the Shepherd Druid Level 3")
+        super().__init__(name="Speech of the Woods", origin="Circle of the Shepherd Druid Level 3", usage_tags=["utility"])
         self._language = GrantLanguage(Language.SYLVAN, self.name)
 
     def apply(self, character_stat_block: CharacterStatBlock):
@@ -25,7 +25,7 @@ class SpeechOfTheWoods(Feature):
 
 class SpiritTotem(Feature):
     def __init__(self):
-        super().__init__(name="Spirit Totem", origin="Circle of the Shepherd Druid Level 3")
+        super().__init__(name="Spirit Totem", origin="Circle of the Shepherd Druid Level 3", action_type="bonus_action", duration="1 Minute", range="60 Feet", usage_tags=["buff"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         druid_level = character_stat_block.get_class_level(Definitions.CharacterClass.DRUID)
@@ -48,7 +48,7 @@ class SpiritTotem(Feature):
 
 class MightySummoner(Feature):
     def __init__(self):
-        super().__init__(name="Mighty Summoner", origin="Circle of the Shepherd Druid Level 6")
+        super().__init__(name="Mighty Summoner", origin="Circle of the Shepherd Druid Level 6", usage_tags=["buff"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -62,7 +62,7 @@ class MightySummoner(Feature):
 
 class GuardianSpirit(Feature):
     def __init__(self):
-        super().__init__(name="Guardian Spirit", origin="Circle of the Shepherd Druid Level 10")
+        super().__init__(name="Guardian Spirit", origin="Circle of the Shepherd Druid Level 10", usage_tags=["heal"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "Your Spirit Totem safeguards the beasts and fey that you call forth with your magic. When a beast or fey that you summoned or created with a spell ends its turn in your Spirit Totem aura, that creature regains a number of hit points equal to half your druid level."
@@ -71,7 +71,7 @@ class GuardianSpirit(Feature):
 
 class FaithfulSummons(Feature):
     def __init__(self):
-        super().__init__(name="Faithful Summons", origin="Circle of the Shepherd Druid Level 14")
+        super().__init__(name="Faithful Summons", origin="Circle of the Shepherd Druid Level 14", duration="1 Hour", range="20 Feet", usage_tags=["buff"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

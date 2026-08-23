@@ -28,7 +28,8 @@ class ArchfeyExpandedSpells(Feature):
 class FeyPresence(Feature):
     def __init__(self):
         super().__init__(
-            name="Fey Presence", origin="The Archfey Patron Warlock Level 3"
+            name="Fey Presence", origin="The Archfey Patron Warlock Level 3",
+            action_type="action", duration="Until End of Next Turn", range="10-Foot Cube", usage_tags=["control"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -53,7 +54,8 @@ class FeyPresence(Feature):
 class MistyEscape(Feature):
     def __init__(self):
         super().__init__(
-            name="Misty Escape", origin="The Archfey Patron Warlock Level 6"
+            name="Misty Escape", origin="The Archfey Patron Warlock Level 6",
+            action_type="reaction", duration="Until Start of Next Turn or Until Attack/Spell", range="60 Feet", usage_tags=["utility"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -78,7 +80,8 @@ class MistyEscape(Feature):
 class BeguilingDefenses(Feature):
     def __init__(self):
         super().__init__(
-            name="Beguiling Defenses", origin="The Archfey Patron Warlock Level 10"
+            name="Beguiling Defenses", origin="The Archfey Patron Warlock Level 10",
+            action_type="reaction", duration="1 Minute or Until Creature Takes Damage", usage_tags=["control"]
         )
         self._immunity = ConditionImmunity(Condition.CHARMED, self.name)
 
@@ -104,7 +107,8 @@ class BeguilingDefenses(Feature):
 class DarkDelirium(Feature):
     def __init__(self):
         super().__init__(
-            name="Dark Delirium", origin="The Archfey Patron Warlock Level 14"
+            name="Dark Delirium", origin="The Archfey Patron Warlock Level 14",
+            action_type="action", duration="1 Minute or Until Concentration Broken", range="60 Feet", usage_tags=["control"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:

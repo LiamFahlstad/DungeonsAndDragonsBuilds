@@ -6,7 +6,7 @@ from Utils import StringUtils
 
 class MagicAwareness(Feature):
     def __init__(self):
-        super().__init__(name="Magic Awareness", origin="Path Of Wild Magic Barbarian Level 3")
+        super().__init__(name="Magic Awareness", origin="Path Of Wild Magic Barbarian Level 3", action_type="action", duration="Until the End of Your Next Turn", range="60 Feet", usage_tags=["utility"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         proficiency_bonus = character_stat_block.get_proficiency_bonus()
@@ -32,7 +32,7 @@ class MagicAwareness(Feature):
 
 class WildSurge(Feature):
     def __init__(self):
-        super().__init__(name="Wild Surge", origin="Path Of Wild Magic Barbarian Level 3")
+        super().__init__(name="Wild Surge", origin="Path Of Wild Magic Barbarian Level 3", duration="Until Your Rage Ends", usage_tags=["damage", "heal", "buff", "control", "utility"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         proficiency_bonus = character_stat_block.get_proficiency_bonus()
@@ -59,7 +59,7 @@ class WildSurge(Feature):
 
 class BolsteringMagic(Feature):
     def __init__(self):
-        super().__init__(name="Bolstering Magic", origin="Path Of Wild Magic Barbarian Level 6")
+        super().__init__(name="Bolstering Magic", origin="Path Of Wild Magic Barbarian Level 6", action_type="action", duration="For 10 Minutes", range="Touch", usage_tags=["buff", "utility"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         proficiency_bonus = character_stat_block.get_proficiency_bonus()
@@ -77,7 +77,7 @@ class BolsteringMagic(Feature):
 
 class UnstableBacklash(Feature):
     def __init__(self):
-        super().__init__(name="Unstable Backlash", origin="Path Of Wild Magic Barbarian Level 10")
+        super().__init__(name="Unstable Backlash", origin="Path Of Wild Magic Barbarian Level 10", action_type="reaction", usage_tags=["damage", "heal", "buff", "control", "utility"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -93,7 +93,7 @@ class UnstableBacklash(Feature):
 
 class ControlledSurge(Feature):
     def __init__(self):
-        super().__init__(name="Controlled Surge", origin="Path Of Wild Magic Barbarian Level 14")
+        super().__init__(name="Controlled Surge", origin="Path Of Wild Magic Barbarian Level 14", usage_tags=["damage", "heal", "buff", "control", "utility"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

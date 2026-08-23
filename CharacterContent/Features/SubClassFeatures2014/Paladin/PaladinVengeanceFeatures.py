@@ -24,7 +24,7 @@ class VengeanceSpells(Feature):
 
 class AbjureEnemy(Feature):
     def __init__(self):
-        super().__init__(name="Abjure Enemy", origin="Oath of Vengeance Paladin Level 3")
+        super().__init__(name="Abjure Enemy", origin="Oath of Vengeance Paladin Level 3", action_type="action", duration="1 Minute or Until Takes Damage", range="60 Feet", usage_tags=["control"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -46,7 +46,7 @@ class AbjureEnemy(Feature):
 
 class VowOfEnmity(Feature):
     def __init__(self):
-        super().__init__(name="Vow of Enmity", origin="Oath of Vengeance Paladin Level 3")
+        super().__init__(name="Vow of Enmity", origin="Oath of Vengeance Paladin Level 3", action_type="bonus_action", duration="1 Minute or Until Unconscious", range="10 Feet", usage_tags=["buff"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -57,7 +57,7 @@ class VowOfEnmity(Feature):
 
 class RelentlessAvenger(Feature):
     def __init__(self):
-        super().__init__(name="Relentless Avenger", origin="Oath of Vengeance Paladin Level 7")
+        super().__init__(name="Relentless Avenger", origin="Oath of Vengeance Paladin Level 7", action_type="reaction", usage_tags=["buff"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -68,7 +68,7 @@ class RelentlessAvenger(Feature):
 
 class SoulOfVengeance(Feature):
     def __init__(self):
-        super().__init__(name="Soul of Vengeance", origin="Oath of Vengeance Paladin Level 15")
+        super().__init__(name="Soul of Vengeance", origin="Oath of Vengeance Paladin Level 15", action_type="reaction")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -79,7 +79,7 @@ class SoulOfVengeance(Feature):
 
 class AvengingAngel(Feature):
     def __init__(self):
-        super().__init__(name="Avenging Angel", origin="Oath of Vengeance Paladin Level 20")
+        super().__init__(name="Avenging Angel", origin="Oath of Vengeance Paladin Level 20", action_type="action", duration="1 Hour", range="30-Foot Radius", usage_tags=["utility", "control"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

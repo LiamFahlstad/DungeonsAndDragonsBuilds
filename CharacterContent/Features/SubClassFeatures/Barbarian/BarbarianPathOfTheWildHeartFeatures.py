@@ -6,7 +6,7 @@ from StatBlocks.CharacterStatBlock import CharacterStatBlock
 class AnimalSpeaker(Feature):
     def __init__(self):
         super().__init__(
-            name="Animal Speaker", origin="Path Of The Wild Heart Barbarian Level 3"
+            name="Animal Speaker", origin="Path Of The Wild Heart Barbarian Level 3", usage_tags=["utility"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -35,7 +35,7 @@ class AspectOfTheWilds(Feature):
         super().__init__(
             name="Aspect of the Wilds",
             origin="Path Of The Wild Heart Barbarian Level 6",
-            usage_tags=["buff"]
+            usage_tags=["buff", "utility"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -51,7 +51,7 @@ class AspectOfTheWilds(Feature):
 class NatureSpeaker(Feature):
     def __init__(self):
         super().__init__(
-            name="Nature Speaker", origin="Path Of The Wild Heart Barbarian Level 10"
+            name="Nature Speaker", origin="Path Of The Wild Heart Barbarian Level 10", usage_tags=["utility"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -65,7 +65,7 @@ class PowerOfTheWilds(Feature):
             name="Power of the Wilds",
             origin="Path Of The Wild Heart Barbarian Level 14",
             range="5 Feet",
-            usage_tags=["buff", "control"]
+            usage_tags=["buff", "control", "utility"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:

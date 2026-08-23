@@ -33,7 +33,7 @@ class MentalDiscipline(Feature):
 
 class MindLink(Feature):
     def __init__(self):
-        super().__init__(name="Mind Link", origin="Kalashtar Trait", action_type="action", duration="1 Hour", range="10 Feet Per Character Level", usage_tags=["buff"])
+        super().__init__(name="Mind Link", origin="Kalashtar Trait", action_type="action", duration="1 Hour", range="10 Feet Per Character Level", usage_tags=["buff", "utility"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         character_level = character_stat_block.character_level

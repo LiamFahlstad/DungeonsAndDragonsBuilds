@@ -375,7 +375,7 @@ class Evasion(Feature):
 
 class AcrobaticMovement(Feature):
     def __init__(self):
-        super().__init__(name="Acrobatic Movement", origin="Monk Level 9")
+        super().__init__(name="Acrobatic Movement", origin="Monk Level 9", usage_tags=["utility"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "While you aren't wearing armor or wielding a Shield, you gain the ability to move along vertical surfaces and across liquids on your turn without falling during the movement."

@@ -6,7 +6,7 @@ from Utils import StringUtils
 
 class GatheredSwarm(Feature):
     def __init__(self):
-        super().__init__(name="Gathered Swarm", origin="Swarmkeeper Ranger Level 3")
+        super().__init__(name="Gathered Swarm", origin="Swarmkeeper Ranger Level 3", usage_tags=["damage", "control", "utility"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -47,7 +47,7 @@ class SwarmkeeperMagic(Feature):
 
 class WrithingTide(Feature):
     def __init__(self):
-        super().__init__(name="Writhing Tide", origin="Swarmkeeper Ranger Level 7")
+        super().__init__(name="Writhing Tide", origin="Swarmkeeper Ranger Level 7", action_type="bonus_action", duration="1 Minute or Until Incapacitated", usage_tags=["utility"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         proficiency_bonus = character_stat_block.get_proficiency_bonus()
@@ -74,7 +74,7 @@ class WrithingTide(Feature):
 
 class MightySwarm(Feature):
     def __init__(self):
-        super().__init__(name="Mighty Swarm", origin="Swarmkeeper Ranger Level 11")
+        super().__init__(name="Mighty Swarm", origin="Swarmkeeper Ranger Level 11", usage_tags=["buff", "control", "damage"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -88,7 +88,7 @@ class MightySwarm(Feature):
 
 class SwarmingDispersal(Feature):
     def __init__(self):
-        super().__init__(name="Swarming Dispersal", origin="Swarmkeeper Ranger Level 15")
+        super().__init__(name="Swarming Dispersal", origin="Swarmkeeper Ranger Level 15", action_type="reaction", range="30 Feet", usage_tags=["buff", "utility"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         proficiency_bonus = character_stat_block.get_proficiency_bonus()

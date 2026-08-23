@@ -16,7 +16,7 @@ class BonusProficiencies(Feature):
 
 class VoiceOfAuthority(Feature):
     def __init__(self):
-        super().__init__(name="Voice of Authority", origin="Order Domain Cleric Level 3")
+        super().__init__(name="Voice of Authority", origin="Order Domain Cleric Level 3", usage_tags=["utility"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -49,6 +49,10 @@ class OrdersDemandChannelDivinity(Feature):
         super().__init__(
             name="Channel Divinity: Order's Demand",
             origin="Order Domain Cleric Level 3",
+            action_type="action",
+            range="30 Feet",
+            duration="Until End of Your Next Turn or Until Takes Damage",
+            usage_tags=["control"],
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -73,7 +77,7 @@ class OrdersDemandChannelDivinity(Feature):
 
 class EmbodimentOfTheLaw(Feature):
     def __init__(self):
-        super().__init__(name="Embodiment of the Law", origin="Order Domain Cleric Level 6")
+        super().__init__(name="Embodiment of the Law", origin="Order Domain Cleric Level 6", usage_tags=["utility"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         wis_mod = character_stat_block.get_ability_modifier(Ability.WISDOM)
@@ -100,7 +104,7 @@ class EmbodimentOfTheLaw(Feature):
 
 class DivineStrike(Feature):
     def __init__(self):
-        super().__init__(name="Divine Strike", origin="Order Domain Cleric Level 8")
+        super().__init__(name="Divine Strike", origin="Order Domain Cleric Level 8", usage_tags=["damage"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "You gain the ability to infuse your weapon strikes with divine energy. Once on each of your turns when you hit a creature with a weapon attack, you can cause the attack to deal an extra 1d8 psychic damage to the target. When you reach 14th level, the extra damage increases to 2d8."
@@ -122,7 +126,12 @@ class DivineStrike(Feature):
 
 class OrdersWrath(Feature):
     def __init__(self):
-        super().__init__(name="Order's Wrath", origin="Order Domain Cleric Level 17")
+        super().__init__(
+            name="Order's Wrath",
+            origin="Order Domain Cleric Level 17",
+            duration="Until Start of Your Next Turn",
+            usage_tags=["damage", "control"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "Enemies you designate for destruction wilt under the combined efforts of you and your allies. If you deal your Divine Strike damage to a creature on your turn, you can curse that creature until the start of your next turn. The next time one of your allies hits the cursed creature with an attack, the target also takes 2d8 psychic damage, and the curse ends. You can curse a creature in this way only once per turn."

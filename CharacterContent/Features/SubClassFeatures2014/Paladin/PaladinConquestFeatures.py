@@ -24,7 +24,7 @@ class ConquestSpells(Feature):
 
 class ConqueringPresence(Feature):
     def __init__(self):
-        super().__init__(name="Channel Divinity: Conquering Presence", origin="Oath of Conquest Paladin Level 3")
+        super().__init__(name="Channel Divinity: Conquering Presence", origin="Oath of Conquest Paladin Level 3", action_type="action", duration="1 Minute", range="30 Feet", usage_tags=["control"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -44,7 +44,7 @@ class ConqueringPresence(Feature):
 
 class GuidedStrike(Feature):
     def __init__(self):
-        super().__init__(name="Channel Divinity: Guided Strike", origin="Oath of Conquest Paladin Level 3")
+        super().__init__(name="Channel Divinity: Guided Strike", origin="Oath of Conquest Paladin Level 3", usage_tags=["buff"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -62,7 +62,7 @@ class GuidedStrike(Feature):
 
 class AuraOfConquest(Feature):
     def __init__(self):
-        super().__init__(name="Aura of Conquest", origin="Oath of Conquest Paladin Level 7")
+        super().__init__(name="Aura of Conquest", origin="Oath of Conquest Paladin Level 7", range="10 Feet (30 at 18th Level)", usage_tags=["damage", "control"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         half_paladin_level = character_stat_block.character_level // 2
@@ -97,7 +97,7 @@ class AuraOfConquestExpansion(Feature):
 
 class ScornfulRebuke(Feature):
     def __init__(self):
-        super().__init__(name="Scornful Rebuke", origin="Oath of Conquest Paladin Level 15")
+        super().__init__(name="Scornful Rebuke", origin="Oath of Conquest Paladin Level 15", usage_tags=["damage"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         charisma_modifier = character_stat_block.get_ability_modifier(Ability.CHARISMA)
@@ -110,7 +110,7 @@ class ScornfulRebuke(Feature):
 
 class InvincibleConqueror(Feature):
     def __init__(self):
-        super().__init__(name="Invincible Conqueror", origin="Oath of Conquest Paladin Level 20")
+        super().__init__(name="Invincible Conqueror", origin="Oath of Conquest Paladin Level 20", action_type="action", duration="1 Minute", usage_tags=["buff"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

@@ -5,7 +5,7 @@ from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 class TouchOfDeath(Feature):
     def __init__(self):
-        super().__init__(name="Touch of Death", origin="Way of the Long Death Monk Level 3")
+        super().__init__(name="Touch of Death", origin="Way of the Long Death Monk Level 3", range="5 Feet", usage_tags=["heal"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         wisdom_modifier = character_stat_block.get_ability_modifier(Ability.WISDOM)
@@ -20,7 +20,7 @@ class TouchOfDeath(Feature):
 
 class HourOfReaping(Feature):
     def __init__(self):
-        super().__init__(name="Hour of Reaping", origin="Way of the Long Death Monk Level 6")
+        super().__init__(name="Hour of Reaping", origin="Way of the Long Death Monk Level 6", action_type="action", duration="Until End of Next Turn", range="30 Feet", usage_tags=["control"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -39,7 +39,7 @@ class HourOfReaping(Feature):
 
 class MasteryOfDeath(Feature):
     def __init__(self):
-        super().__init__(name="Mastery of Death", origin="Way of the Long Death Monk Level 11")
+        super().__init__(name="Mastery of Death", origin="Way of the Long Death Monk Level 11", usage_tags=["heal"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -50,7 +50,7 @@ class MasteryOfDeath(Feature):
 
 class TouchOfTheLongDeath(Feature):
     def __init__(self):
-        super().__init__(name="Touch of the Long Death", origin="Way of the Long Death Monk Level 17")
+        super().__init__(name="Touch of the Long Death", origin="Way of the Long Death Monk Level 17", action_type="action", range="Touch (5 Feet)", usage_tags=["damage"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

@@ -24,7 +24,7 @@ class RedemptionSpells(Feature):
 
 class EmissaryOfPeace(Feature):
     def __init__(self):
-        super().__init__(name="Channel Divinity: Emissary of Peace", origin="Oath of Redemption Paladin Level 3")
+        super().__init__(name="Channel Divinity: Emissary of Peace", origin="Oath of Redemption Paladin Level 3", action_type="bonus_action", duration="10 Minutes", usage_tags=["buff"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -35,7 +35,7 @@ class EmissaryOfPeace(Feature):
 
 class RebukeTheViolent(Feature):
     def __init__(self):
-        super().__init__(name="Channel Divinity: Rebuke the Violent", origin="Oath of Redemption Paladin Level 3")
+        super().__init__(name="Channel Divinity: Rebuke the Violent", origin="Oath of Redemption Paladin Level 3", action_type="reaction", range="30 Feet", usage_tags=["damage"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -55,7 +55,7 @@ class RebukeTheViolent(Feature):
 
 class AuraOfTheGuardian(Feature):
     def __init__(self):
-        super().__init__(name="Aura of the Guardian", origin="Oath of Redemption Paladin Level 7")
+        super().__init__(name="Aura of the Guardian", origin="Oath of Redemption Paladin Level 7", action_type="reaction", range="10 Feet")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -84,7 +84,7 @@ class AuraOfTheGuardianExpansion(Feature):
 
 class ProtectiveSpirit(Feature):
     def __init__(self):
-        super().__init__(name="Protective Spirit", origin="Oath of Redemption Paladin Level 15")
+        super().__init__(name="Protective Spirit", origin="Oath of Redemption Paladin Level 15", usage_tags=["heal"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -103,7 +103,7 @@ class ProtectiveSpirit(Feature):
 
 class EmissaryOfRedemption(Feature):
     def __init__(self):
-        super().__init__(name="Emissary of Redemption", origin="Oath of Redemption Paladin Level 20")
+        super().__init__(name="Emissary of Redemption", origin="Oath of Redemption Paladin Level 20", usage_tags=["buff", "damage"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

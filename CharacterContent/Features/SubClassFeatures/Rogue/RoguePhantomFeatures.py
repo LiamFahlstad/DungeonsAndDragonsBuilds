@@ -52,7 +52,7 @@ class WhispersOfTheDead(Feature):
 
 class TokensOfTheDeparted(Feature):
     def __init__(self):
-        super().__init__(name="Tokens of the Departed", origin="Phantom Rogue Level 9", range="30 Feet", usage_tags=["buff"])
+        super().__init__(name="Tokens of the Departed", origin="Phantom Rogue Level 9", range="30 Feet", usage_tags=["buff", "utility"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -71,7 +71,7 @@ class TokensOfTheDeparted(Feature):
 
 class VoiceOfDeath(Feature):
     def __init__(self):
-        super().__init__(name="Voice of Death", origin="Phantom Rogue Level 9")
+        super().__init__(name="Voice of Death", origin="Phantom Rogue Level 9", usage_tags=["utility"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -83,7 +83,7 @@ class VoiceOfDeath(Feature):
 
 class GhostWalk(Feature):
     def __init__(self):
-        super().__init__(name="Ghost Walk", origin="Phantom Rogue Level 13", action_type="bonus_action", duration="10 Minutes", usage_tags=["buff"])
+        super().__init__(name="Ghost Walk", origin="Phantom Rogue Level 13", action_type="bonus_action", duration="10 Minutes", usage_tags=["buff", "utility"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

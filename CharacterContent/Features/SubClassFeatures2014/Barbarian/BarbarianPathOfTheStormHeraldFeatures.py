@@ -27,7 +27,7 @@ def _dice_damage_value(barbarian_level: int) -> str:
 
 class StormAura(Feature):
     def __init__(self, environment: Definitions.BarbarianStormEnvironment):
-        super().__init__(name="Storm Aura", origin="Path Of The Storm Herald Barbarian Level 3")
+        super().__init__(name="Storm Aura", origin="Path Of The Storm Herald Barbarian Level 3", action_type="bonus_action", duration="While You Rage", range="10 Feet", usage_tags=["damage", "heal", "control"])
         self.environment = environment
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -65,7 +65,7 @@ class StormAura(Feature):
 
 class StormSoul(Feature):
     def __init__(self, environment: Definitions.BarbarianStormEnvironment):
-        super().__init__(name="Storm Soul", origin="Path Of The Storm Herald Barbarian Level 6")
+        super().__init__(name="Storm Soul", origin="Path Of The Storm Herald Barbarian Level 6", usage_tags=["utility", "buff"])
         self.environment = environment
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -85,7 +85,7 @@ class StormSoul(Feature):
 
 class ShieldingStorm(Feature):
     def __init__(self):
-        super().__init__(name="Shielding Storm", origin="Path Of The Storm Herald Barbarian Level 10")
+        super().__init__(name="Shielding Storm", origin="Path Of The Storm Herald Barbarian Level 10", usage_tags=["buff"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -96,7 +96,7 @@ class ShieldingStorm(Feature):
 
 class RagingStorm(Feature):
     def __init__(self, environment: Definitions.BarbarianStormEnvironment):
-        super().__init__(name="Raging Storm", origin="Path Of The Storm Herald Barbarian Level 14")
+        super().__init__(name="Raging Storm", origin="Path Of The Storm Herald Barbarian Level 14", action_type="reaction", usage_tags=["damage", "control"])
         self.environment = environment
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:

@@ -43,7 +43,7 @@ class TelekineticTechniques(Feature):
 
 class DestructiveTrance(Feature):
     def __init__(self):
-        super().__init__(name="Destructive Trance", origin="Psykinetic Psion Level 6", duration="10 Minutes", usage_tags=["buff", "damage"])
+        super().__init__(name="Destructive Trance", origin="Psykinetic Psion Level 6", duration="10 Minutes", usage_tags=["buff", "damage", "utility"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

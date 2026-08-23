@@ -15,7 +15,7 @@ class BonusProficiency(Feature):
 
 class BornToTheSaddle(Feature):
     def __init__(self):
-        super().__init__(name="Born to the Saddle", origin="Cavalier Fighter Level 3")
+        super().__init__(name="Born to the Saddle", origin="Cavalier Fighter Level 3", usage_tags=["utility"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -27,7 +27,7 @@ class BornToTheSaddle(Feature):
 
 class UnwaveringMark(Feature):
     def __init__(self):
-        super().__init__(name="Unwavering Mark", origin="Cavalier Fighter Level 3")
+        super().__init__(name="Unwavering Mark", origin="Cavalier Fighter Level 3", duration="Until End of Your Next Turn", range="5 Feet", usage_tags=["damage", "control"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         strength_modifier = character_stat_block.get_ability_modifier(Ability.STRENGTH)
@@ -66,7 +66,7 @@ class UnwaveringMark(Feature):
 
 class WardingManeuver(Feature):
     def __init__(self):
-        super().__init__(name="Warding Maneuver", origin="Cavalier Fighter Level 7")
+        super().__init__(name="Warding Maneuver", origin="Cavalier Fighter Level 7", action_type="reaction", range="5 Feet", usage_tags=["buff"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         constitution_modifier = character_stat_block.get_ability_modifier(Ability.CONSTITUTION)
@@ -100,7 +100,7 @@ class WardingManeuver(Feature):
 
 class HoldTheLine(Feature):
     def __init__(self):
-        super().__init__(name="Hold the Line", origin="Cavalier Fighter Level 10")
+        super().__init__(name="Hold the Line", origin="Cavalier Fighter Level 10", duration="Until End of Current Turn", range="5 Feet", usage_tags=["control"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "You become a master of locking down your enemies. Creatures provoke an opportunity attack from you when they move 5 feet or more while within your reach, and if you hit a creature with an opportunity attack, the target's speed is reduced to 0 until the end of the current turn."
@@ -109,7 +109,7 @@ class HoldTheLine(Feature):
 
 class FerociousCharger(Feature):
     def __init__(self):
-        super().__init__(name="Ferocious Charger", origin="Cavalier Fighter Level 15")
+        super().__init__(name="Ferocious Charger", origin="Cavalier Fighter Level 15", usage_tags=["control"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         proficiency_bonus = character_stat_block.get_proficiency_bonus()
@@ -136,7 +136,7 @@ class FerociousCharger(Feature):
 
 class VigilantDefender(Feature):
     def __init__(self):
-        super().__init__(name="Vigilant Defender", origin="Cavalier Fighter Level 18")
+        super().__init__(name="Vigilant Defender", origin="Cavalier Fighter Level 18", usage_tags=["damage"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "You respond to danger with extraordinary vigilance. In combat, you get a special reaction that you can take once on every creature's turn, except your turn. You can use this special reaction only to make an opportunity attack, and you can't use it on the same turn that you take your normal reaction."

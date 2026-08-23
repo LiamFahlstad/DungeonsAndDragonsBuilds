@@ -7,7 +7,7 @@ from Utils import StringUtils
 class CartographerToolsOfTheTrade(Feature):
     def __init__(self):
         super().__init__(
-            name="Tools of the Trade", origin="Cartographer Artificer Level 3"
+            name="Tools of the Trade", origin="Cartographer Artificer Level 3", usage_tags=["utility"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -67,7 +67,7 @@ class AdventurersAtlas(Feature):
 
 class MappingMagic(Feature):
     def __init__(self):
-        super().__init__(name="Mapping Magic", origin="Cartographer Artificer Level 3", range="30 Feet")
+        super().__init__(name="Mapping Magic", origin="Cartographer Artificer Level 3", range="30 Feet", usage_tags=["utility"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         intelligence_modifier = character_stat_block.get_ability_modifier(Ability.INTELLIGENCE)
@@ -113,7 +113,7 @@ class GuidedPrecision(Feature):
 class IngeniousMovement(Feature):
     def __init__(self):
         super().__init__(
-            name="Ingenious Movement", origin="Cartographer Artificer Level 9", range="30 Feet", usage_tags=["buff"]
+            name="Ingenious Movement", origin="Cartographer Artificer Level 9", range="30 Feet", usage_tags=["buff", "utility"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -124,7 +124,7 @@ class IngeniousMovement(Feature):
 class SuperiorAtlas(Feature):
     def __init__(self):
         super().__init__(
-            name="Superior Atlas", origin="Cartographer Artificer Level 15", usage_tags=["heal"]
+            name="Superior Atlas", origin="Cartographer Artificer Level 15", usage_tags=["heal", "utility"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:

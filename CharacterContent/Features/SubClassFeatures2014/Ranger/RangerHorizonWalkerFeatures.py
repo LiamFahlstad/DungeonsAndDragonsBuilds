@@ -27,7 +27,7 @@ class HorizonWalkerSpells(Feature):
 class DetectPortal(Feature):
     def __init__(self):
         super().__init__(
-            name="Detect Portal", origin="Horizon Walker Ranger Level 3"
+            name="Detect Portal", origin="Horizon Walker Ranger Level 3", action_type="action", range="1 Mile", usage_tags=["utility"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -52,7 +52,7 @@ class DetectPortal(Feature):
 class PlanarWarrior(Feature):
     def __init__(self):
         super().__init__(
-            name="Planar Warrior", origin="Horizon Walker Ranger Level 3"
+            name="Planar Warrior", origin="Horizon Walker Ranger Level 3", action_type="bonus_action", duration="Until Next Hit on This Turn", range="30 Feet", usage_tags=["damage", "buff"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -79,7 +79,7 @@ class PlanarWarrior(Feature):
 class EtherealStep(Feature):
     def __init__(self):
         super().__init__(
-            name="Ethereal Step", origin="Horizon Walker Ranger Level 7"
+            name="Ethereal Step", origin="Horizon Walker Ranger Level 7", action_type="bonus_action", duration="Until End of Current Turn", usage_tags=["utility"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -103,7 +103,7 @@ class EtherealStep(Feature):
 class DistantStrike(Feature):
     def __init__(self):
         super().__init__(
-            name="Distant Strike", origin="Horizon Walker Ranger Level 11"
+            name="Distant Strike", origin="Horizon Walker Ranger Level 11", usage_tags=["damage", "utility"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -117,7 +117,7 @@ class DistantStrike(Feature):
 class SpectralDefense(Feature):
     def __init__(self):
         super().__init__(
-            name="Spectral Defense", origin="Horizon Walker Ranger Level 15"
+            name="Spectral Defense", origin="Horizon Walker Ranger Level 15", action_type="reaction", duration="Until End of This Turn", usage_tags=["buff"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:

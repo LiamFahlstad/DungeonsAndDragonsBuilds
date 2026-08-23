@@ -42,7 +42,7 @@ class Spellcasting(Feature):
 class MageHandLegerdemain(Feature):
     def __init__(self):
         super().__init__(
-            name="Mage Hand Legerdemain", origin="Arcane Trickster Rogue Level 3"
+            name="Mage Hand Legerdemain", origin="Arcane Trickster Rogue Level 3", usage_tags=["utility"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:

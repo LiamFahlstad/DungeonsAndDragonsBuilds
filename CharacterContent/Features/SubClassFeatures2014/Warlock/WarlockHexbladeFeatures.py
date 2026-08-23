@@ -28,7 +28,8 @@ class HexbladeExpandedSpells(Feature):
 class HexbladesCurse(Feature):
     def __init__(self):
         super().__init__(
-            name="Hexblade's Curse", origin="Hexblade Patron Warlock Level 3"
+            name="Hexblade's Curse", origin="Hexblade Patron Warlock Level 3",
+            action_type="bonus_action", duration="1 Minute", range="30 Feet", usage_tags=["buff", "damage"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -58,7 +59,7 @@ class HexbladesCurse(Feature):
 
 class HexWarrior(Feature):
     def __init__(self):
-        super().__init__(name="Hex Warrior", origin="Hexblade Patron Warlock Level 3")
+        super().__init__(name="Hex Warrior", origin="Hexblade Patron Warlock Level 3", usage_tags=["buff"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -71,7 +72,8 @@ class HexWarrior(Feature):
 class AccursedSpecter(Feature):
     def __init__(self):
         super().__init__(
-            name="Accursed Specter", origin="Hexblade Patron Warlock Level 6"
+            name="Accursed Specter", origin="Hexblade Patron Warlock Level 6",
+            duration="Until End of Next Long Rest", usage_tags=["damage", "utility"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -102,7 +104,8 @@ class AccursedSpecter(Feature):
 class ArmorOfHexes(Feature):
     def __init__(self):
         super().__init__(
-            name="Armor of Hexes", origin="Hexblade Patron Warlock Level 10"
+            name="Armor of Hexes", origin="Hexblade Patron Warlock Level 10",
+            action_type="reaction", usage_tags=["buff"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -122,7 +125,8 @@ class ArmorOfHexes(Feature):
 class MasterOfHexes(Feature):
     def __init__(self):
         super().__init__(
-            name="Master of Hexes", origin="Hexblade Patron Warlock Level 14"
+            name="Master of Hexes", origin="Hexblade Patron Warlock Level 14",
+            range="30 Feet", usage_tags=["control"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:

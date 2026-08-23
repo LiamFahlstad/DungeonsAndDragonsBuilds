@@ -16,7 +16,13 @@ class BonusProficiencies(Feature):
 
 class WrathOfTheStorm(Feature):
     def __init__(self):
-        super().__init__(name="Wrath of the Storm", origin="Tempest Domain Cleric Level 3")
+        super().__init__(
+            name="Wrath of the Storm",
+            origin="Tempest Domain Cleric Level 3",
+            action_type="reaction",
+            range="5 Feet",
+            usage_tags=["damage"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         wis_mod = character_stat_block.get_ability_modifier(Ability.WISDOM)
@@ -75,7 +81,12 @@ class DestructiveWrathChannelDivinity(Feature):
 
 class ThunderousStrike(Feature):
     def __init__(self):
-        super().__init__(name="Thunderous Strike", origin="Tempest Domain Cleric Level 6")
+        super().__init__(
+            name="Thunderous Strike",
+            origin="Tempest Domain Cleric Level 6",
+            range="10 Feet",
+            usage_tags=["control"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "When you deal lightning damage to a Large or smaller creature, you can also push it up to 10 feet away from you."
@@ -84,7 +95,7 @@ class ThunderousStrike(Feature):
 
 class DivineStrike(Feature):
     def __init__(self):
-        super().__init__(name="Divine Strike", origin="Tempest Domain Cleric Level 8")
+        super().__init__(name="Divine Strike", origin="Tempest Domain Cleric Level 8", usage_tags=["damage"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "You gain the ability to infuse your weapon strikes with divine energy. Once on each of your turns when you hit a creature with a weapon attack, you can cause the attack to deal an extra 1d8 thunder damage to the target. When you reach 14th level, the extra damage increases to 2d8."
@@ -106,7 +117,7 @@ class DivineStrike(Feature):
 
 class Stormborn(Feature):
     def __init__(self):
-        super().__init__(name="Stormborn", origin="Tempest Domain Cleric Level 17")
+        super().__init__(name="Stormborn", origin="Tempest Domain Cleric Level 17", usage_tags=["utility"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "You have a flying speed equal to your current walking speed whenever you are not underground or indoors."

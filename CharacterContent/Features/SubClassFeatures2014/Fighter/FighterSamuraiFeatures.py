@@ -39,7 +39,7 @@ class BonusProficiency(Feature):
 
 class FightingSpirit(Feature):
     def __init__(self):
-        super().__init__(name="Fighting Spirit", origin="Samurai Fighter Level 3")
+        super().__init__(name="Fighting Spirit", origin="Samurai Fighter Level 3", action_type="bonus_action", duration="Until End of Current Turn", usage_tags=["buff"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         fighter_level = character_stat_block.get_class_level(CharacterClass.FIGHTER)
@@ -77,7 +77,7 @@ class FightingSpirit(Feature):
 
 class ElegantCourtier(Feature):
     def __init__(self, alternate_saving_throw: Optional[Ability] = None):
-        super().__init__(name="Elegant Courtier", origin="Samurai Fighter Level 7")
+        super().__init__(name="Elegant Courtier", origin="Samurai Fighter Level 7", usage_tags=["buff"])
         self._alternate_saving_throw = alternate_saving_throw
         ability = alternate_saving_throw if alternate_saving_throw is not None else Ability.WISDOM
         self._proficiency_choice = SavingThrowProficiencyChoice(
@@ -111,7 +111,7 @@ class TirelessSpirit(Feature):
 
 class RapidStrike(Feature):
     def __init__(self):
-        super().__init__(name="Rapid Strike", origin="Samurai Fighter Level 15")
+        super().__init__(name="Rapid Strike", origin="Samurai Fighter Level 15", usage_tags=["damage"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "You learn to trade accuracy for swift strikes. If you take the Attack action on your turn and have advantage on an attack roll against one of the targets, you can forgo the advantage for that roll to make an additional weapon attack against that target, as part of the same action. You can do so no more than once per turn."
@@ -120,7 +120,7 @@ class RapidStrike(Feature):
 
 class StrengthBeforeDeath(Feature):
     def __init__(self):
-        super().__init__(name="Strength Before Death", origin="Samurai Fighter Level 18")
+        super().__init__(name="Strength Before Death", origin="Samurai Fighter Level 18", action_type="reaction")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         uses = 1

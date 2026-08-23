@@ -15,7 +15,7 @@ class NecromancySavant(Feature):
 
 class GrimHarvest(Feature):
     def __init__(self):
-        super().__init__(name="Grim Harvest", origin="Necromancy Wizard Level 3")
+        super().__init__(name="Grim Harvest", origin="Necromancy Wizard Level 3", usage_tags=["heal"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -27,7 +27,7 @@ class GrimHarvest(Feature):
 
 class UndeadThralls(Feature):
     def __init__(self):
-        super().__init__(name="Undead Thralls", origin="Necromancy Wizard Level 6")
+        super().__init__(name="Undead Thralls", origin="Necromancy Wizard Level 6", usage_tags=["buff"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -42,7 +42,7 @@ class UndeadThralls(Feature):
 class InuredToUndeath(Feature):
     def __init__(self):
         super().__init__(
-            name="Inured to Undeath", origin="Necromancy Wizard Level 10"
+            name="Inured to Undeath", origin="Necromancy Wizard Level 10", usage_tags=["buff"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -52,7 +52,7 @@ class InuredToUndeath(Feature):
 
 class CommandUndead(Feature):
     def __init__(self):
-        super().__init__(name="Command Undead", origin="Necromancy Wizard Level 14")
+        super().__init__(name="Command Undead", origin="Necromancy Wizard Level 14", action_type="action", range="60 Feet", usage_tags=["control"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

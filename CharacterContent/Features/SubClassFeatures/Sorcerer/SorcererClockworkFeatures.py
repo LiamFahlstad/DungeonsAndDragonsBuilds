@@ -98,7 +98,7 @@ class TranceOfOrder(Feature):
 class ClockworkCavalcade(Feature):
     def __init__(self):
         super().__init__(
-            name="Clockwork Cavalcade", origin="Clockwork Sorcerer Level 18", action_type="action", range="30-Foot Cube", usage_tags=["heal", "control"]
+            name="Clockwork Cavalcade", origin="Clockwork Sorcerer Level 18", action_type="action", range="30-Foot Cube", usage_tags=["heal", "control", "utility"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:

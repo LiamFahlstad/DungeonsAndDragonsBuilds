@@ -6,7 +6,7 @@ from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 class KnightlyEnvoy(Feature):
     def __init__(self):
-        super().__init__(name="Knightly Envoy", origin="Banneret Fighter Level 3")
+        super().__init__(name="Knightly Envoy", origin="Banneret Fighter Level 3", usage_tags=["utility"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

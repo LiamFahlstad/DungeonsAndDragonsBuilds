@@ -27,7 +27,7 @@ class WindSpeaker(Feature):
 
 class TempestuousMagic(Feature):
     def __init__(self):
-        super().__init__(name="Tempestuous Magic", origin="Storm Sorcery Sorcerer Level 3")
+        super().__init__(name="Tempestuous Magic", origin="Storm Sorcery Sorcerer Level 3", action_type="bonus_action", usage_tags=["utility"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -38,7 +38,7 @@ class TempestuousMagic(Feature):
 
 class HeartOfTheStorm(Feature):
     def __init__(self):
-        super().__init__(name="Heart of the Storm", origin="Storm Sorcery Sorcerer Level 6")
+        super().__init__(name="Heart of the Storm", origin="Storm Sorcery Sorcerer Level 6", range="10 Feet", usage_tags=["damage", "buff"])
         self._resistances = [
             DamageResistance(DamageType.LIGHTNING, self.name),
             DamageResistance(DamageType.THUNDER, self.name),
@@ -57,7 +57,7 @@ class HeartOfTheStorm(Feature):
 
 class StormGuide(Feature):
     def __init__(self):
-        super().__init__(name="Storm Guide", origin="Storm Sorcery Sorcerer Level 6")
+        super().__init__(name="Storm Guide", origin="Storm Sorcery Sorcerer Level 6", action_type="action", range="100-Foot Radius", usage_tags=["utility"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -70,7 +70,7 @@ class StormGuide(Feature):
 
 class StormsFury(Feature):
     def __init__(self):
-        super().__init__(name="Storm's Fury", origin="Storm Sorcery Sorcerer Level 14")
+        super().__init__(name="Storm's Fury", origin="Storm Sorcery Sorcerer Level 14", action_type="reaction", range="20 Feet", usage_tags=["damage", "control"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -93,7 +93,7 @@ class StormsFury(Feature):
 
 class WindSoul(Feature):
     def __init__(self):
-        super().__init__(name="Wind Soul", origin="Storm Sorcery Sorcerer Level 18")
+        super().__init__(name="Wind Soul", origin="Storm Sorcery Sorcerer Level 18", action_type="action", duration="1 Hour", range="30 Feet", usage_tags=["utility", "buff"])
         self._immunities = [
             DamageImmunity(DamageType.LIGHTNING, self.name),
             DamageImmunity(DamageType.THUNDER, self.name),

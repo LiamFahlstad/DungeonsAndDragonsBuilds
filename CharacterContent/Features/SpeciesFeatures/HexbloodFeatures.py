@@ -21,7 +21,7 @@ class Darkvision(Feature):
 
 class EerieToken(Feature):
     def __init__(self):
-        super().__init__(name="Eerie Token", origin="Hexblood Trait", action_type="bonus_action", duration="Until Long Rest", range="10 Miles")
+        super().__init__(name="Eerie Token", origin="Hexblood Trait", action_type="bonus_action", duration="Until Long Rest", range="10 Miles", usage_tags=["utility"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

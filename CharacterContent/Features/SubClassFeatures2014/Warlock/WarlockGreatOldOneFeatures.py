@@ -28,7 +28,8 @@ class GreatOldOneExpandedSpells(Feature):
 class AwakenedMind(Feature):
     def __init__(self):
         super().__init__(
-            name="Awakened Mind", origin="The Great Old One Patron Warlock Level 3"
+            name="Awakened Mind", origin="The Great Old One Patron Warlock Level 3",
+            range="30 Feet", usage_tags=["utility"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -39,7 +40,8 @@ class AwakenedMind(Feature):
 class EntropicWard(Feature):
     def __init__(self):
         super().__init__(
-            name="Entropic Ward", origin="The Great Old One Patron Warlock Level 6"
+            name="Entropic Ward", origin="The Great Old One Patron Warlock Level 6",
+            action_type="reaction", duration="Until End of Next Turn", usage_tags=["buff"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -64,7 +66,8 @@ class EntropicWard(Feature):
 class ThoughtShield(Feature):
     def __init__(self):
         super().__init__(
-            name="Thought Shield", origin="The Great Old One Patron Warlock Level 10"
+            name="Thought Shield", origin="The Great Old One Patron Warlock Level 10",
+            usage_tags=["buff"]
         )
         self._resistance = DamageResistance(DamageType.PSYCHIC, self.name)
 
@@ -79,7 +82,8 @@ class ThoughtShield(Feature):
 class CreateThrall(Feature):
     def __init__(self):
         super().__init__(
-            name="Create Thrall", origin="The Great Old One Patron Warlock Level 14"
+            name="Create Thrall", origin="The Great Old One Patron Warlock Level 14",
+            action_type="action", duration="Until Remove Curse or Charmed Removed", range="Touch", usage_tags=["control"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:

@@ -34,7 +34,14 @@ class TwilightDomainSpells(Feature):
 
 class EyesOfNight(Feature):
     def __init__(self):
-        super().__init__(name="Eyes of Night", origin="Twilight Domain Cleric Level 3")
+        super().__init__(
+            name="Eyes of Night",
+            origin="Twilight Domain Cleric Level 3",
+            action_type="action",
+            range="10 Feet",
+            duration="1 Hour",
+            usage_tags=["utility"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         wis_mod = character_stat_block.get_ability_modifier(Ability.WISDOM)
@@ -62,7 +69,12 @@ class EyesOfNight(Feature):
 
 class VigilantBlessing(Feature):
     def __init__(self):
-        super().__init__(name="Vigilant Blessing", origin="Twilight Domain Cleric Level 3")
+        super().__init__(
+            name="Vigilant Blessing",
+            origin="Twilight Domain Cleric Level 3",
+            action_type="action",
+            usage_tags=["buff"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "The night has taught you to be vigilant. As an action, you give one creature you touch (including possibly yourself) advantage on the next initiative roll the creature makes. This benefit ends immediately after the roll or if you use this feature again."
@@ -74,6 +86,10 @@ class TwilightSanctuaryChannelDivinity(Feature):
         super().__init__(
             name="Channel Divinity: Twilight Sanctuary",
             origin="Twilight Domain Cleric Level 3",
+            action_type="action",
+            range="Self (30-Foot-Radius Sphere)",
+            duration="1 Minute or Until You Are Incapacitated or Die",
+            usage_tags=["heal", "buff"],
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -100,7 +116,13 @@ class TwilightSanctuaryChannelDivinity(Feature):
 
 class StepsOfNight(Feature):
     def __init__(self):
-        super().__init__(name="Steps of Night", origin="Twilight Domain Cleric Level 6")
+        super().__init__(
+            name="Steps of Night",
+            origin="Twilight Domain Cleric Level 6",
+            action_type="bonus_action",
+            duration="1 Minute",
+            usage_tags=["utility"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         proficiency_bonus = character_stat_block.get_proficiency_bonus()
@@ -125,7 +147,7 @@ class StepsOfNight(Feature):
 
 class DivineStrike(Feature):
     def __init__(self):
-        super().__init__(name="Divine Strike", origin="Twilight Domain Cleric Level 8")
+        super().__init__(name="Divine Strike", origin="Twilight Domain Cleric Level 8", usage_tags=["damage"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "You gain the ability to infuse your weapon strikes with divine energy. Once on each of your turns when you hit a creature with a weapon attack, you can cause the attack to deal an extra 1d8 radiant damage. When you reach 14th level, the extra damage increases to 2d8."
@@ -147,7 +169,7 @@ class DivineStrike(Feature):
 
 class TwilightShroud(Feature):
     def __init__(self):
-        super().__init__(name="Twilight Shroud", origin="Twilight Domain Cleric Level 17")
+        super().__init__(name="Twilight Shroud", origin="Twilight Domain Cleric Level 17", usage_tags=["buff"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "The twilight that you summon offers a protective embrace: you and your allies have half cover while in the sphere created by your Twilight Sanctuary."

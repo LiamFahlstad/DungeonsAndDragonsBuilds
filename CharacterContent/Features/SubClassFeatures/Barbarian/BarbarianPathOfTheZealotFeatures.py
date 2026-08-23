@@ -105,7 +105,7 @@ class ZealousPresence(Feature):
 class RageOfTheGods(Feature):
     def __init__(self):
         super().__init__(
-            name="Rage of the Gods", origin="Path Of The Zealot Barbarian Level 14", duration="1 Minute or Until You Drop to 0 Hit Points", range="30 Feet", usage_tags=["buff", "heal"]
+            name="Rage of the Gods", origin="Path Of The Zealot Barbarian Level 14", duration="1 Minute or Until You Drop to 0 Hit Points", range="30 Feet", usage_tags=["buff", "heal", "utility"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:

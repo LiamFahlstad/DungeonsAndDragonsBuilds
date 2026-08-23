@@ -28,7 +28,8 @@ class UndyingExpandedSpells(Feature):
 class AmongTheDead(Feature):
     def __init__(self):
         super().__init__(
-            name="Among the Dead", origin="The Undying Patron Warlock Level 3"
+            name="Among the Dead", origin="The Undying Patron Warlock Level 3",
+            duration="24 Hours", usage_tags=["buff"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -43,7 +44,8 @@ class AmongTheDead(Feature):
 class DefyDeath(Feature):
     def __init__(self):
         super().__init__(
-            name="Defy Death", origin="The Undying Patron Warlock Level 6"
+            name="Defy Death", origin="The Undying Patron Warlock Level 6",
+            usage_tags=["heal"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -69,7 +71,7 @@ class DefyDeath(Feature):
 class UndyingNature(Feature):
     def __init__(self):
         super().__init__(
-            name="Undying Nature", origin="The Undying Patron Warlock Level 10"
+            name="Undying Nature", origin="The Undying Patron Warlock Level 10", usage_tags=["utility"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -84,7 +86,8 @@ class UndyingNature(Feature):
 class IndestructibleLife(Feature):
     def __init__(self):
         super().__init__(
-            name="Indestructible Life", origin="The Undying Patron Warlock Level 14"
+            name="Indestructible Life", origin="The Undying Patron Warlock Level 14",
+            action_type="bonus_action", usage_tags=["heal"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:

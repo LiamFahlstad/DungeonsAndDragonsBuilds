@@ -65,7 +65,7 @@ class Alert(OriginFeat):
 class Crafter(OriginFeat):
     def __init__(self, artisans_tools: list[str]):
         self.artisans_tools = artisans_tools
-        super().__init__(name="Crafter", origin="Origin Feat")
+        super().__init__(name="Crafter", origin="Origin Feat", usage_tags=["utility"])
 
     def get_tool_choices(self) -> str:
         tool_map = {

@@ -6,7 +6,7 @@ from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 class Skirmisher(Feature):
     def __init__(self):
-        super().__init__(name="Skirmisher", origin="Scout Rogue Level 3")
+        super().__init__(name="Skirmisher", origin="Scout Rogue Level 3", action_type="reaction", range="5 Feet", usage_tags=["utility"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -34,7 +34,7 @@ class Survivalist(Feature):
 
 class SuperiorMobility(Feature):
     def __init__(self):
-        super().__init__(name="Superior Mobility", origin="Scout Rogue Level 9")
+        super().__init__(name="Superior Mobility", origin="Scout Rogue Level 9", usage_tags=["utility"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "At 9th level, your walking speed increases by 10 feet. If you have a climbing or swimming speed, this increase applies to that speed as well."
@@ -43,7 +43,7 @@ class SuperiorMobility(Feature):
 
 class AmbushMaster(Feature):
     def __init__(self):
-        super().__init__(name="Ambush Master", origin="Scout Rogue Level 13")
+        super().__init__(name="Ambush Master", origin="Scout Rogue Level 13", duration="Until Start of Your Next Turn", usage_tags=["buff"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -56,7 +56,7 @@ class AmbushMaster(Feature):
 
 class SuddenStrike(Feature):
     def __init__(self):
-        super().__init__(name="Sudden Strike", origin="Scout Rogue Level 17")
+        super().__init__(name="Sudden Strike", origin="Scout Rogue Level 17", action_type="bonus_action", usage_tags=["damage"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "Starting at 17th level, you can strike with deadly speed. If you take the Attack action on your turn, you can make one additional attack as a bonus action. This attack can benefit from your Sneak Attack even if you have already used it this turn, but you can't use your Sneak Attack against the same target more than once in a turn."

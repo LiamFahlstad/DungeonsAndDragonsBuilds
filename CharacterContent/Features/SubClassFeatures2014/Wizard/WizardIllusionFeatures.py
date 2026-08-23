@@ -28,7 +28,7 @@ class ImprovedMinorIllusion(Feature):
 
 class MalleableIllusions(Feature):
     def __init__(self):
-        super().__init__(name="Malleable Illusions", origin="Illusion Wizard Level 6")
+        super().__init__(name="Malleable Illusions", origin="Illusion Wizard Level 6", action_type="action")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "When you cast an illusion spell that has a duration of 1 minute or longer, you can use your action to change the nature of that illusion (using the spell's normal parameters for the illusion), provided that you can see the illusion."
@@ -37,7 +37,7 @@ class MalleableIllusions(Feature):
 
 class IllusorySelf(Feature):
     def __init__(self):
-        super().__init__(name="Illusory Self", origin="Illusion Wizard Level 10")
+        super().__init__(name="Illusory Self", origin="Illusion Wizard Level 10", action_type="reaction")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -57,7 +57,7 @@ class IllusorySelf(Feature):
 
 class IllusoryReality(Feature):
     def __init__(self):
-        super().__init__(name="Illusory Reality", origin="Illusion Wizard Level 14")
+        super().__init__(name="Illusory Reality", origin="Illusion Wizard Level 14", action_type="bonus_action", duration="1 Minute", usage_tags=["utility"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

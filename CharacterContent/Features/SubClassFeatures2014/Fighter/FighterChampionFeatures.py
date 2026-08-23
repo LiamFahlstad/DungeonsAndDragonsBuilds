@@ -7,7 +7,7 @@ from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 class ImprovedCritical(Feature):
     def __init__(self):
-        super().__init__(name="Improved Critical", origin="Champion Fighter Level 3")
+        super().__init__(name="Improved Critical", origin="Champion Fighter Level 3", usage_tags=["damage"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "Beginning when you choose this archetype at 3rd level, your weapon attacks score a critical hit on a roll of 19 or 20."
@@ -16,7 +16,7 @@ class ImprovedCritical(Feature):
 
 class RemarkableAthlete(Feature):
     def __init__(self):
-        super().__init__(name="Remarkable Athlete", origin="Champion Fighter Level 7")
+        super().__init__(name="Remarkable Athlete", origin="Champion Fighter Level 7", usage_tags=["buff"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         proficiency_bonus = character_stat_block.get_proficiency_bonus()
@@ -43,7 +43,7 @@ class AdditionalFightingStyle(Feature):
 
 class SuperiorCritical(Feature):
     def __init__(self):
-        super().__init__(name="Superior Critical", origin="Champion Fighter Level 15")
+        super().__init__(name="Superior Critical", origin="Champion Fighter Level 15", usage_tags=["damage"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "Starting at 15th level, your weapon attacks score a critical hit on a roll of 18-20."
@@ -52,7 +52,7 @@ class SuperiorCritical(Feature):
 
 class Survivor(Feature):
     def __init__(self):
-        super().__init__(name="Survivor", origin="Champion Fighter Level 18")
+        super().__init__(name="Survivor", origin="Champion Fighter Level 18", usage_tags=["heal"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         constitution_modifier = character_stat_block.get_ability_modifier(Ability.CONSTITUTION)

@@ -27,6 +27,7 @@ class RuneCarver(Feature):
         super().__init__(
             name="Rune Carver",
             origin="Rune Knight Fighter Level 3",
+            usage_tags=["damage", "buff", "control"],
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -74,6 +75,9 @@ class GiantsMight(Feature):
         super().__init__(
             name="Giant's Might",
             origin="Rune Knight Fighter Level 3",
+            action_type="bonus_action",
+            duration="1 Minute",
+            usage_tags=["buff", "damage"],
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -107,6 +111,9 @@ class RunicShield(Feature):
         super().__init__(
             name="Runic Shield",
             origin="Rune Knight Fighter Level 7",
+            action_type="reaction",
+            range="60 Feet",
+            usage_tags=["buff"],
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:

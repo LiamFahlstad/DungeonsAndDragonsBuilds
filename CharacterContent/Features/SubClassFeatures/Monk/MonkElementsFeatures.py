@@ -118,7 +118,7 @@ class StrideOfTheElements(Feature):
         super().__init__(
             name="Stride of the Elements",
             origin="Warrior of the Elements Monk Level 11",
-            usage_tags=["buff"]
+            usage_tags=["buff", "utility"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:

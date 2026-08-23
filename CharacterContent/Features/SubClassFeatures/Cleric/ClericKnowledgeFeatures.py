@@ -86,7 +86,7 @@ class UnfetteredMind(Feature):
             origin="Knowledge Domain Cleric Level 6",
             skippable_in_concise=False,
             range="60 Feet",
-            usage_tags=["buff"]
+            usage_tags=["buff", "utility"]
         )
 
     def apply(self, character_stat_block: CharacterStatBlock):

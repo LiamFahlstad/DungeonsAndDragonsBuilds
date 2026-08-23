@@ -25,7 +25,7 @@ class CircleSporesSpells(Feature):
 
 class HaloOfSpores(Feature):
     def __init__(self):
-        super().__init__(name="Halo of Spores", origin="Circle of Spores Druid Level 3")
+        super().__init__(name="Halo of Spores", origin="Circle of Spores Druid Level 3", action_type="reaction", range="10 Feet", usage_tags=["damage"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -42,7 +42,7 @@ class HaloOfSpores(Feature):
 
 class SymbioticEntity(Feature):
     def __init__(self):
-        super().__init__(name="Symbiotic Entity", origin="Circle of Spores Druid Level 3")
+        super().__init__(name="Symbiotic Entity", origin="Circle of Spores Druid Level 3", action_type="action", duration="10 Minutes", usage_tags=["buff"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -56,7 +56,7 @@ class SymbioticEntity(Feature):
 
 class FungalInfestation(Feature):
     def __init__(self):
-        super().__init__(name="Fungal Infestation", origin="Circle of Spores Druid Level 6")
+        super().__init__(name="Fungal Infestation", origin="Circle of Spores Druid Level 6", action_type="reaction", duration="1 Hour", range="10 Feet", usage_tags=["utility"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         wisdom_mod = character_stat_block.get_ability_modifier(Ability.WISDOM)
@@ -86,7 +86,7 @@ class FungalInfestation(Feature):
 
 class SpreadingSpores(Feature):
     def __init__(self):
-        super().__init__(name="Spreading Spores", origin="Circle of Spores Druid Level 10")
+        super().__init__(name="Spreading Spores", origin="Circle of Spores Druid Level 10", action_type="bonus_action", duration="1 Minute", range="30 Feet (10-Foot Cube)", usage_tags=["damage"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -99,7 +99,7 @@ class SpreadingSpores(Feature):
 
 class FungalBody(Feature):
     def __init__(self):
-        super().__init__(name="Fungal Body", origin="Circle of Spores Druid Level 14", skippable_in_concise=True)
+        super().__init__(name="Fungal Body", origin="Circle of Spores Druid Level 14", skippable_in_concise=True, usage_tags=["buff"])
         self._immunities = [
             ConditionImmunity(Condition.BLINDED, self.name),
             ConditionImmunity(Condition.DEAFENED, self.name),

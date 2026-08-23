@@ -6,7 +6,7 @@ from StatBlocks.CharacterStatBlock import CharacterStatBlock
 class ToolsOfTheTrade(Feature):
     def __init__(self):
         super().__init__(
-            name="Tools of the Trade", origin="Artillerist Artificer Level 3"
+            name="Tools of the Trade", origin="Artillerist Artificer Level 3", usage_tags=["utility"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:

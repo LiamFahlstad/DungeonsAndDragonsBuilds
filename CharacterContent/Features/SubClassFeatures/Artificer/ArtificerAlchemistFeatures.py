@@ -8,7 +8,7 @@ from Utils import StringUtils
 class ToolsOfTheTrade(Feature):
     def __init__(self):
         super().__init__(
-            name="Tools of the Trade", origin="Alchemist Artificer Level 3"
+            name="Tools of the Trade", origin="Alchemist Artificer Level 3", usage_tags=["utility"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -41,7 +41,7 @@ class Spells(Feature):
 class ExperimentalElixir(Feature):
     def __init__(self):
         super().__init__(
-            name="Experimental Elixir", origin="Alchemist Artificer Level 3", action_type="action", usage_tags=["heal", "buff"]
+            name="Experimental Elixir", origin="Alchemist Artificer Level 3", action_type="action", usage_tags=["heal", "buff", "utility"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -74,7 +74,7 @@ class AlchemicalSavant(Feature):
 class RestorativeReagents(Feature):
     def __init__(self):
         super().__init__(
-            name="Restorative Reagents", origin="Alchemist Artificer Level 9", usage_tags=["heal"]
+            name="Restorative Reagents", origin="Alchemist Artificer Level 9", usage_tags=["heal", "utility"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -91,7 +91,7 @@ class RestorativeReagents(Feature):
 
 class ChemicalMastery(Feature):
     def __init__(self):
-        super().__init__(name="Chemical Mastery", origin="Alchemist Artificer Level 15", usage_tags=["damage", "buff"])
+        super().__init__(name="Chemical Mastery", origin="Alchemist Artificer Level 15", usage_tags=["damage", "buff", "utility"])
         self._resistances = [
             DamageResistance(DamageType.ACID, self.name),
             DamageResistance(DamageType.POISON, self.name),

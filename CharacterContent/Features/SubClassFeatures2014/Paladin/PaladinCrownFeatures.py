@@ -24,7 +24,7 @@ class CrownSpells(Feature):
 
 class ChampionChallenge(Feature):
     def __init__(self):
-        super().__init__(name="Channel Divinity: Champion Challenge", origin="Oath of the Crown Paladin Level 3")
+        super().__init__(name="Channel Divinity: Champion Challenge", origin="Oath of the Crown Paladin Level 3", action_type="bonus_action", range="30 Feet", usage_tags=["control"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -45,7 +45,7 @@ class ChampionChallenge(Feature):
 
 class TurnTheTide(Feature):
     def __init__(self):
-        super().__init__(name="Channel Divinity: Turn the Tide", origin="Oath of the Crown Paladin Level 3")
+        super().__init__(name="Channel Divinity: Turn the Tide", origin="Oath of the Crown Paladin Level 3", action_type="bonus_action", range="30 Feet", usage_tags=["heal"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         charisma_modifier = character_stat_block.get_ability_modifier(Ability.CHARISMA)
@@ -69,7 +69,7 @@ class TurnTheTide(Feature):
 
 class DivineAllegiance(Feature):
     def __init__(self):
-        super().__init__(name="Divine Allegiance", origin="Oath of the Crown Paladin Level 7")
+        super().__init__(name="Divine Allegiance", origin="Oath of the Crown Paladin Level 7", action_type="reaction", range="5 Feet")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -88,7 +88,7 @@ class DivineAllegiance(Feature):
 
 class UnyieldingSaint(Feature):
     def __init__(self):
-        super().__init__(name="Unyielding Saint", origin="Oath of the Crown Paladin Level 15")
+        super().__init__(name="Unyielding Saint", origin="Oath of the Crown Paladin Level 15", usage_tags=["buff"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "You have advantage on saving throws to avoid becoming paralyzed or stunned."
@@ -97,7 +97,7 @@ class UnyieldingSaint(Feature):
 
 class ExaltedChampion(Feature):
     def __init__(self):
-        super().__init__(name="Exalted Champion", origin="Oath of the Crown Paladin Level 20")
+        super().__init__(name="Exalted Champion", origin="Oath of the Crown Paladin Level 20", action_type="action", duration="1 Hour", range="30 Feet", usage_tags=["buff"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

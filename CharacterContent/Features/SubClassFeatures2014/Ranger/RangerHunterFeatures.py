@@ -5,7 +5,7 @@ from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 class HuntersPrey(Feature):
     def __init__(self):
-        super().__init__(name="Hunter's Prey", origin="Hunter Ranger Level 3")
+        super().__init__(name="Hunter's Prey", origin="Hunter Ranger Level 3", usage_tags=["damage"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -19,7 +19,7 @@ class HuntersPrey(Feature):
 
 class DefensiveTactics(Feature):
     def __init__(self):
-        super().__init__(name="Defensive Tactics", origin="Hunter Ranger Level 7")
+        super().__init__(name="Defensive Tactics", origin="Hunter Ranger Level 7", usage_tags=["buff", "control"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -33,7 +33,7 @@ class DefensiveTactics(Feature):
 
 class Volley(Feature):
     def __init__(self):
-        super().__init__(name="Volley", origin="Hunter Ranger Level 11")
+        super().__init__(name="Volley", origin="Hunter Ranger Level 11", action_type="action", range="10-Foot Radius", usage_tags=["damage"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "You can use your action to make a ranged attack against any number of creatures within 10 feet of a point you can see within your weapon's range. You must have ammunition for each target, as normal, and you make a separate attack roll for each target."
@@ -42,7 +42,7 @@ class Volley(Feature):
 
 class WhirlwindAttack(Feature):
     def __init__(self):
-        super().__init__(name="Whirlwind Attack", origin="Hunter Ranger Level 11")
+        super().__init__(name="Whirlwind Attack", origin="Hunter Ranger Level 11", action_type="action", range="5 Feet", usage_tags=["damage"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "You can use your action to make melee attacks against any number of creatures within 5 feet of you, with a separate attack roll for each target."
@@ -52,7 +52,7 @@ class WhirlwindAttack(Feature):
 class SuperiorHuntersDefense(Feature):
     def __init__(self):
         super().__init__(
-            name="Superior Hunter's Defense", origin="Hunter Ranger Level 15"
+            name="Superior Hunter's Defense", origin="Hunter Ranger Level 15", usage_tags=["buff", "control"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:

@@ -76,7 +76,7 @@ class CosmicOmen(Feature):
 class TwinklingConstellations(Feature):
     def __init__(self):
         super().__init__(
-            name="Twinkling Constellations", origin="Circle of the Stars Druid Level 10", usage_tags=["damage", "heal", "buff"]
+            name="Twinkling Constellations", origin="Circle of the Stars Druid Level 10", usage_tags=["damage", "heal", "buff", "utility"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
