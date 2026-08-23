@@ -144,6 +144,11 @@ SPELL_CARD_CSS = """/* ── Spell entries ────────────
             color: #4b5563;
         }
 
+        .stag-usage-summon {
+            border: 1px solid #8b5cf6;
+            color: #6d28d9;
+        }
+
         """
 
 if TYPE_CHECKING:
@@ -195,6 +200,7 @@ def write_spell_to_file(
         "buff": "Buff",
         "control": "Control",
         "utility": "Utility",
+        "summon": "Summon",
     }
     # Fixed display order regardless of the order listed in the spell data, so
     # cards read consistently across spells.
