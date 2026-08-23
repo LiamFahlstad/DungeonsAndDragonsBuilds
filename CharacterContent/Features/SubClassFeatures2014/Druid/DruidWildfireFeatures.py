@@ -90,7 +90,7 @@ class CircleSpells(Feature):
 
 class SummonWildfireSpirit(Feature):
     def __init__(self):
-        super().__init__(name="Summon Wildfire Spirit", origin="Circle of Wildfire Druid Level 3", action_type="action", duration="1 Hour", range="30 Feet", usage_tags=["damage", "utility"])
+        super().__init__(name="Summon Wildfire Spirit", origin="Circle of Wildfire Druid Level 3", action_type="action", duration="1 Hour", range="30 Feet", usage_tags=["damage", "utility", "summon"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         uses = 1

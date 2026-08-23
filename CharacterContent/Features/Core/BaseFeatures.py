@@ -174,6 +174,11 @@ FEATURE_CARD_CSS = """/* ── Feature cards ───────────�
             color: #4b5563;
         }
 
+        .feature-usage-tag.tag-summon {
+            border: 1px solid #8b5cf6;
+            color: #6d28d9;
+        }
+
         .feature-card.is-passive .feature-name {
             color: var(--muted-color);
         }
@@ -313,7 +318,7 @@ class Feature:
         action_type: Literal["action", "bonus_action", "reaction"] | None = None,
         duration: str | None = None,
         range: str | None = None,
-        usage_tags: list[Literal["heal", "buff", "control", "damage", "utility"]] | None = None,
+        usage_tags: list[Literal["heal", "buff", "control", "damage", "utility", "summon"]] | None = None,
     ):
         self.name = name if name is not None else type(self).__name__
         self.origin = origin
@@ -626,6 +631,7 @@ class Feature:
             "buff": "Buff",
             "control": "Control",
             "utility": "Utility",
+            "summon": "Summon",
         }
         # Fixed display order regardless of the order passed in, so cards read
         # consistently across features.

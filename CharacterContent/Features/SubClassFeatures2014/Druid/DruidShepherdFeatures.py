@@ -25,7 +25,7 @@ class SpeechOfTheWoods(Feature):
 
 class SpiritTotem(Feature):
     def __init__(self):
-        super().__init__(name="Spirit Totem", origin="Circle of the Shepherd Druid Level 3", action_type="bonus_action", duration="1 Minute", range="60 Feet", usage_tags=["buff"])
+        super().__init__(name="Spirit Totem", origin="Circle of the Shepherd Druid Level 3", action_type="bonus_action", duration="1 Minute", range="60 Feet", usage_tags=["buff", "summon"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         druid_level = character_stat_block.get_class_level(Definitions.CharacterClass.DRUID)
@@ -71,7 +71,7 @@ class GuardianSpirit(Feature):
 
 class FaithfulSummons(Feature):
     def __init__(self):
-        super().__init__(name="Faithful Summons", origin="Circle of the Shepherd Druid Level 14", duration="1 Hour", range="20 Feet", usage_tags=["buff"])
+        super().__init__(name="Faithful Summons", origin="Circle of the Shepherd Druid Level 14", duration="1 Hour", range="20 Feet", usage_tags=["buff", "summon"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

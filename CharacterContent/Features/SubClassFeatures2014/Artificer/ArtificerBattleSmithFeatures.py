@@ -46,7 +46,7 @@ class BattleReady(Feature):
 
 class SteelDefender(Feature):
     def __init__(self):
-        super().__init__(name="Steel Defender", origin="Battle Smith Artificer Level 3")
+        super().__init__(name="Steel Defender", origin="Battle Smith Artificer Level 3", usage_tags=["summon"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

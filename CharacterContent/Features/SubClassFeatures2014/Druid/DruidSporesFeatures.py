@@ -56,7 +56,7 @@ class SymbioticEntity(Feature):
 
 class FungalInfestation(Feature):
     def __init__(self):
-        super().__init__(name="Fungal Infestation", origin="Circle of Spores Druid Level 6", action_type="reaction", duration="1 Hour", range="10 Feet", usage_tags=["utility"])
+        super().__init__(name="Fungal Infestation", origin="Circle of Spores Druid Level 6", action_type="reaction", duration="1 Hour", range="10 Feet", usage_tags=["utility", "summon"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         wisdom_mod = character_stat_block.get_ability_modifier(Ability.WISDOM)

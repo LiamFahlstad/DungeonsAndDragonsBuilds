@@ -111,7 +111,7 @@ class DraconicGift(Feature):
 
 class DrakeCompanion(Feature):
     def __init__(self, damage_type: Optional[DamageType] = None):
-        super().__init__(name="Drake Companion", origin="Drakewarden Ranger Level 3", action_type="action", range="30 Feet", usage_tags=["utility"])
+        super().__init__(name="Drake Companion", origin="Drakewarden Ranger Level 3", action_type="action", range="30 Feet", usage_tags=["utility", "summon"])
         self.damage_type = damage_type
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:

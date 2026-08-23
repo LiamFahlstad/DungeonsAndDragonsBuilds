@@ -28,7 +28,7 @@ class TentacleOfTheDeep(Feature):
     def __init__(self):
         super().__init__(
             name="Tentacle of the Deep", origin="The Fathomless Patron Warlock Level 3",
-            action_type="bonus_action", duration="1 Minute or Until Another Tentacle Created", range="60 Feet", usage_tags=["damage", "control"]
+            action_type="bonus_action", duration="1 Minute or Until Another Tentacle Created", range="60 Feet", usage_tags=["damage", "control", "summon"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:

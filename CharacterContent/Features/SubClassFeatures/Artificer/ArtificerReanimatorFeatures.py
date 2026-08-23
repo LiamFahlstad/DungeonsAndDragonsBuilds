@@ -50,7 +50,7 @@ class ReanimatorSkillSet(Feature):
 class ReanimatedCompanion(Feature):
     def __init__(self):
         super().__init__(
-            name="Reanimated Companion", origin="Reanimator Artificer Level 3", action_type="action", duration="Until Long Rest", range="5 Feet"
+            name="Reanimated Companion", origin="Reanimator Artificer Level 3", action_type="action", duration="Until Long Rest", range="5 Feet", usage_tags=["summon"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
