@@ -96,9 +96,10 @@ def get_starter_class_builder():
                 Skill.ACROBATICS,
             ]
         ),
-        # Half Plate + Shield once Valor grants medium armor/shield proficiency.
+        # Leather (not Chain Shirt) to fit her starting gold budget; upgrade
+        # to Half Plate + Shield once Valor grants medium armor proficiency.
         armor=[
-            Armor.ChainShirtArmor(),
+            Armor.LeatherArmor(),
             Armor.ShieldArmor(),
         ],
         weapons=[
@@ -107,10 +108,8 @@ def get_starter_class_builder():
         # Trimmed to 12 items total carried (was 36) - kept one of each type,
         # with Rations bumped to a few days' worth.
         items=[
-            (Items.Lute(), 1),
             (Items.Backpack(), 1),
             (Items.Bell(), 1),
-            (Items.BullseyeLantern(), 1),
             (Items.Costume(), 1),
             (Items.Mirror(), 1),
             (Items.FlasksOfOil(), 1),
