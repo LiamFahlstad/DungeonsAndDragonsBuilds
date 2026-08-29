@@ -24,6 +24,8 @@ FEATURE_CARD_CSS = """/* ── Feature cards ───────────�
             margin: 0 0 0.4rem 0;
             max-width: none;
             padding: 0 0 0.4rem 0;
+            break-inside: avoid;
+            -webkit-column-break-inside: avoid;
         }
 
         .feature-card + .feature-card {

@@ -402,6 +402,15 @@ BASE_CHARACTER_SHEET_CSS = """
             letter-spacing: 0.02em;
         }
 
+        .build-group-owner {
+            font-size: 0.72rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--muted-color);
+            margin: 0.8rem 0 0.3rem 0;
+        }
+
         ul, ol {
             margin: 0.5em 0 0.5em 1.2em;
         }

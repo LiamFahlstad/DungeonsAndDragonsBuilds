@@ -100,6 +100,7 @@ def get_starter_class_builder():
             (Items.Tinderbox(), 1),
             (Items.Torch(), 10),
             (Items.Waterskin(), 1),
+            (Items.Drum(), 1),
         ],
         base_class_level_features=ClassBuilder.BaseClassLevelFeatures(
             base_class_features_by_level={

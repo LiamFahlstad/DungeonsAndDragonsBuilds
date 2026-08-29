@@ -32,6 +32,8 @@ WEAPON_CARD_CSS = """/* ── Weapon entries ───────────�
             font-size: 0.85rem;
             padding: 0.4rem 0;
             max-width: none;
+            break-inside: avoid;
+            -webkit-column-break-inside: avoid;
         }
 
         /* Separator line between consecutive weapons */

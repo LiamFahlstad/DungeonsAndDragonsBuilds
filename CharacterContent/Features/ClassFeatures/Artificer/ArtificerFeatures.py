@@ -1,5 +1,5 @@
-from Core.Definitions import Ability
 from CharacterContent.Features.Core.BaseFeatures import Feature
+from Core.Definitions import Ability
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
@@ -22,7 +22,13 @@ class Spellcasting(Feature):
 
 class TinkersMagic(Feature):
     def __init__(self):
-        super().__init__(name="Tinker's Magic", origin="Artificer Level 1", action_type="action", duration="Until Long Rest", range="5 Feet")
+        super().__init__(
+            name="Tinker's Magic",
+            origin="Artificer Level 1",
+            action_type="action",
+            duration="Until Long Rest",
+            range="5 Feet",
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         intelligence_modifier = character_stat_block.get_ability_modifier(
@@ -53,6 +59,7 @@ class TinkersMagic(Feature):
             max_box_count=10,
             current_formula="Current amount: equal to your Intelligence modifier.",
         )
+
 
 class ReplicateMagicItem(Feature):
     def __init__(self):
@@ -133,7 +140,7 @@ class ReplicateMagicItem(Feature):
             "Rare Wondrous Item that isn't cursed (you can learn this option multiple times and must select a different item each time; each item selected counts as a different plan)	Varies\n"
             "Ring of Free Action	Yes\n"
             "Ring of Protection	Yes\n"
-            "Ring of the Ram"
+            "Ring of the Ram 	Yes"
         )
         return description
 
@@ -154,7 +161,13 @@ class MagicItemTinker(Feature):
 
 class FlashofGenius(Feature):
     def __init__(self):
-        super().__init__(name="Flash of Genius", origin="Artificer Level 7", action_type="reaction", range="30 Feet", usage_tags=["buff"])
+        super().__init__(
+            name="Flash of Genius",
+            origin="Artificer Level 7",
+            action_type="reaction",
+            range="30 Feet",
+            usage_tags=["buff"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         intelligence_modifier = character_stat_block.get_ability_modifier(
@@ -173,7 +186,9 @@ class FlashofGenius(Feature):
             current_formula="Current amount: equal to your Intelligence modifier.",
         )
 
-    def get_table_description(self, character_stat_block: CharacterStatBlock) -> list[tuple[str, str]]:
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
         intelligence_modifier = character_stat_block.get_ability_modifier(
             Ability.INTELLIGENCE
         )
@@ -233,7 +248,9 @@ class MagicItemMaster(Feature):
 
 class SoulOfArtifice(Feature):
     def __init__(self):
-        super().__init__(name="Soul of Artifice", origin="Artificer Level 20", usage_tags=["heal"])
+        super().__init__(
+            name="Soul of Artifice", origin="Artificer Level 20", usage_tags=["heal"]
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -243,8 +260,16 @@ class SoulOfArtifice(Feature):
         )
         return description
 
-    def get_table_description(self, character_stat_block: CharacterStatBlock) -> list[tuple[str, str]]:
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
         return [
-            ("Cheat Death", "When reduced to 0 HP, disintegrate any number of Uncommon or Rare items you created; gain 20 HP per item disintegrated"),
-            ("Magical Guidance", "When finishing a Short Rest while attuned to ≥1 item, regain all Flash of Genius uses"),
+            (
+                "Cheat Death",
+                "When reduced to 0 HP, disintegrate any number of Uncommon or Rare items you created; gain 20 HP per item disintegrated",
+            ),
+            (
+                "Magical Guidance",
+                "When finishing a Short Rest while attuned to ≥1 item, regain all Flash of Genius uses",
+            ),
         ]

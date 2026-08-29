@@ -1,9 +1,10 @@
 """Regenerate Combat/Tools/monster_cr_distributions.html.
 
 Imports every CR_*/monsters.py (official) and CR_*/monsters_homebrew.py
-(homebrew) stat block, computes per-CR-tier HP/AC/ability-score means and
-standard deviations from the *official* monsters only, and writes a
-self-contained interactive HTML report:
+(homebrew) stat block, computes per-CR-tier means and standard deviations
+(HP, AC, the six ability scores, attack roll bonus, damage per hit, action
+economy, and defensive tags) from the *official* monsters only, and writes
+a self-contained interactive HTML report:
 
   - a ridgeline (joyplot) chart per attribute showing the fitted normal
     distribution for each CR tier, with real stat blocks plotted as dots
@@ -35,12 +36,39 @@ OUTPUT_HTML = Path(__file__).resolve().parent / "monster_cr_distributions.html"
 
 PLACEHOLDER = "__MONSTER_DATA_JSON__"
 
+# Same convention as analyze_monster_stats.py: to-hit and damage are read out
+# of the free-text ability descriptions (there's no structured field for
+# either), averaged across every "Attack Roll: +N" / "Hit: N (...)" found
+# among a monster's action-like ability lists.
+_ATTACK_ROLL_RE = re.compile(r"Attack Roll:\s*([+-]\d+)")
+_DAMAGE_HIT_RE = re.compile(r"Hit:\s*(\d+)")
+_ACTION_LIKE_FIELDS = (
+    "actions", "bonus_actions", "reactions",
+    "legendary_actions", "mythic_actions", "lair_actions",
+)
+
 
 def cr_key(cr: str) -> float:
     if "/" in cr:
         n, d = cr.split("/")
         return float(n) / float(d)
     return float(cr)
+
+
+def _avg_regex_match(instance, pattern):
+    values = []
+    for field in _ACTION_LIKE_FIELDS:
+        for ability in getattr(instance, field, None) or []:
+            m = pattern.search(ability.description)
+            if m:
+                values.append(int(m.group(1)))
+    return sum(values) / len(values) if values else None
+
+
+def _damage_type_count(entries) -> int:
+    """Counts individual damage types across all entries, e.g. one entry
+    covering [BLUDGEONING, PIERCING, SLASHING] counts as 3, not 1."""
+    return sum(len(e.damage_types) for e in (entries or []))
 
 
 def extract_module(cr_folder: Path, filename: str, errors: list[str]) -> list[dict]:
@@ -87,6 +115,15 @@ def extract_module(cr_folder: Path, filename: str, errors: list[str]) -> list[di
             "int": abilities.get("INT"),
             "wis": abilities.get("WIS"),
             "cha": abilities.get("CHA"),
+            "atk": _avg_regex_match(instance, _ATTACK_ROLL_RE),
+            "dmg": _avg_regex_match(instance, _DAMAGE_HIT_RE),
+            "condimm": len(instance.condition_immunities or []),
+            "dmgimm": _damage_type_count(instance.damage_immunities),
+            "dmgres": _damage_type_count(instance.damage_resistances),
+            "dmgvuln": _damage_type_count(instance.damage_vulnerabilities),
+            "actions": len(instance.actions or []),
+            "bonusact": len(instance.bonus_actions or []),
+            "speed": instance.speed_ground_ft,
         })
     return out
 

@@ -179,15 +179,15 @@ class AccursedGroupLarge(ExtendedCombatantData):
         super().__init__(
             combatant_type="Accursed Group (Large)",
             hp=80,
-            ac=9,
+            ac=13,
             temp_hp=0,
             conditions=[],
             ability_scores={
                 Ability.STRENGTH: 12,
-                Ability.DEXTERITY: 8,
+                Ability.DEXTERITY: 13,
                 Ability.CONSTITUTION: 12,
                 Ability.INTELLIGENCE: 3,
-                Ability.WISDOM: 6,
+                Ability.WISDOM: 11,
                 Ability.CHARISMA: 5,
             },
             saving_throws={},
@@ -209,7 +209,7 @@ class AccursedGroupLarge(ExtendedCombatantData):
                 DamageTypeEntry(damage_types=[DamageType.POISON], note=""),
             ],
             condition_immunities=[Condition.EXHAUSTION, Condition.POISONED],
-            senses="darkvision 60 ft., Passive Perception 8",
+            senses="darkvision 60 ft., Passive Perception 10",
             languages="Understands the languages its bodies knew in life but can't speak",
             traits=[
                 MonsterAbility(
