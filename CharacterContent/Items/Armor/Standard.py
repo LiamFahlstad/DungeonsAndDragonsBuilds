@@ -170,8 +170,3 @@ class ShieldArmor(AbstractArmor):
         self.weight = 6
         self.value = 10
         self.armor_type = Definitions.ArmorType.SHIELD
-
-
-# ──────────────────────────────────────────────────────────────────────────────
-# Magical Armor
-# ──────────────────────────────────────────────────────────────────────────────

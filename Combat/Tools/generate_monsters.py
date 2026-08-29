@@ -108,7 +108,6 @@ def generate_monster_class(monster: dict) -> str:
 
     legendary_resistances = monster.get("legendary_resistances", 0)
 
-    # Build the class string
     class_code = f"""class {class_name}(ExtendedCombatantData):
     def __init__(self):
         super().__init__(
@@ -250,7 +249,6 @@ if __name__ == "__main__":
             f"  CR {tier}: {len(class_names)} classes ({len(monsters_in_tier)} monsters)"
         )
 
-    # Create main Monsters/__init__.py with only the tiers that exist
     import_lines = []
     for tier in sorted(tier_monsters.keys()):
         import_lines.append(f"from .CR_{tier} import *  # noqa: F401, F403")

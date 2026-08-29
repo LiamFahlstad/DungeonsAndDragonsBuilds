@@ -245,7 +245,6 @@ class DialogsMixin:
             wl.addWidget(content_widget)
             return wrapper
 
-        # --- Basic stats ---
         hp_str = f"{char['hp']} / {char['max_hp']}"
         if char.get("temp_hp"):
             hp_str += f"  (+{char['temp_hp']} temp)"
@@ -879,7 +878,6 @@ class DialogsMixin:
 
         dlg.exec()
 
-    # Condition badge color map
     _CONDITION_COLORS: dict[str, str] = {
         "Poisoned": "#1a5c1a",
         "Frightened": "#7a3d00",

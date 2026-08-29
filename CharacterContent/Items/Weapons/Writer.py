@@ -295,7 +295,6 @@ def _write_single_weapon(
         f"{weapon.damage_roll.value} {damage_bonus_int:+} ({damage_bonus_label})"
     )
 
-    # Add extra damage if present
     if weapon.extra_damage:
         extra_damages = " + ".join(ed.format_damage() for ed in weapon.extra_damage)
         damage_roll_str += f" + {extra_damages}"
@@ -310,7 +309,6 @@ def _write_single_weapon(
 
     file.write("<div class='weapon-entry'>\n")
 
-    # ── Weapon name ──────────────────────────────────────────────────────────
     wielded_tag = ""
     if not isinstance(weapon, UnarmedStrike):
         if weapon.is_wearing:
@@ -319,8 +317,6 @@ def _write_single_weapon(
             wielded_tag = " <span class='wtag wtag-not-worn'>Not wielded</span>"
     file.write(f"<span class='weapon-name'>{weapon.name}{wielded_tag}</span>\n")
 
-    # ── Quick-stats ──────────────────────────────────────────────────────────
-    # Left = type/category info, right = roll info
     type_cell = (
         f"{weapon.weapon_type.value}"
         f"<span class='wsep'>·</span>"
@@ -342,7 +338,6 @@ def _write_single_weapon(
         f"</div>\n"
     )
 
-    # ── Hit probability ──────────────────────────────────────────────────────
     if include_probability_tables:
         conditions = [
             ("Normal", DamageCalculator.DiceRollCondition.NEUTRAL),
@@ -376,7 +371,6 @@ def _write_single_weapon(
             f"</div>\n"
         )
 
-    # ── Properties ───────────────────────────────────────────────────────────
     if weapon.properties or mastery_label:
         tags_html = ""
         for prop in weapon.properties:
@@ -395,7 +389,6 @@ def _write_single_weapon(
             f"</div>\n"
         )
 
-    # ── Per-property descriptions ────────────────────────────────────────────
     for prop in weapon.properties:
         prop_desc_processed = Html.boxes_to_html(prop.description)
         prop_desc_html = prop_desc_processed.replace("\n", "<br>")
@@ -406,7 +399,6 @@ def _write_single_weapon(
             f"</div>\n"
         )
 
-    # ── Mastery description (only if the player has mastery) ────────────────
     if weapon.mastery and weapon.player_has_mastery:
         mastery_desc_processed = Html.boxes_to_html(weapon.mastery.description)
         mastery_desc_html = mastery_desc_processed.replace("\n", "<br>")
@@ -417,7 +409,6 @@ def _write_single_weapon(
             f"</div>\n"
         )
 
-    # ── Additional description ───────────────────────────────────────────────
     if weapon.description_text:
         # Replace newlines with <br> for HTML display
         desc_processed = Html.boxes_to_html(weapon.description_text)

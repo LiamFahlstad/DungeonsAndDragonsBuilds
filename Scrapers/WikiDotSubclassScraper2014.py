@@ -177,20 +177,12 @@ class SubclassParser:
                 f"(HTTP {response.status_code})."
             )
 
-    # -------------------
-    # Rendering
-    # -------------------
-
     def get_lines(self) -> list[str]:
         """Render the page content into the exact plain-text line list."""
         return render_content_lines(self.content)
 
     def get_text(self) -> str:
         return "\n".join(self.get_lines())
-
-    # -------------------
-    # to_dict / print_info / write_to_file trio
-    # -------------------
 
     def to_dict(self) -> dict:
         return {

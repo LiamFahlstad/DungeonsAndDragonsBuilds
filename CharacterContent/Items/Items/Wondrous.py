@@ -186,11 +186,6 @@ class BadFriendGlasses(Item):
         )
 
 
-# ══════════════════════════════════════════════════════════════════════════════
-# Mechanical Items (with CharacterImprovements)
-# ══════════════════════════════════════════════════════════════════════════════
-
-
 class GarbOfLightAndShadow(Item):
     def __init__(self, is_wearing: bool = True):
         super().__init__(
@@ -219,11 +214,6 @@ class GenieRobe(Item):
             is_homebrew=False,
             value=50,
         )
-
-
-# ══════════════════════════════════════════════════════════════════════════════
-# Mechanical Items (with CharacterImprovements)
-# ══════════════════════════════════════════════════════════════════════════════
 
 
 class CloakOfProtection(Item):

@@ -117,7 +117,6 @@ class CardsMixin:
         if self.selected_character is not None:
             self._rebuild_card(self.selected_character)
 
-    # Condition badge color map
     _CONDITION_COLORS: dict[str, str] = {
         "Poisoned": "#1a5c1a",
         "Frightened": "#7a3d00",
@@ -169,7 +168,6 @@ class CardsMixin:
         layout.setContentsMargins(8, 6, 8, 6)
         layout.setSpacing(3)
 
-        # --- Name ---
         if is_dead:
             display_name = "☠ " + char["name"]
             name_style = "color: #555; font-weight: bold; font-size: 13px;"
@@ -188,7 +186,6 @@ class CardsMixin:
             name_lbl.setStyleSheet(name_style)
         layout.addWidget(name_lbl)
 
-        # --- Death save pips + buttons (dying / stabilized) ---
         if is_dying or is_stabilized:
             fail = char.get("death_saves_fail", 0)
             success = char.get("death_saves_success", 0)
@@ -220,7 +217,6 @@ class CardsMixin:
             btn_row.addWidget(save_btn)
             layout.addLayout(btn_row)
 
-        # --- HP bar ---
         max_hp = char["max_hp"]
         temp_hp = char.get("temp_hp", 0)
 
@@ -256,7 +252,6 @@ class CardsMixin:
 
         layout.addLayout(hp_row)
 
-        # --- AC / Speed ---
         ac_speed_text = f"AC: {char['ac']}"
         speed_text = _speed_text(char)
         if speed_text:
@@ -266,7 +261,6 @@ class CardsMixin:
         ac_lbl.setWordWrap(True)
         layout.addWidget(ac_lbl)
 
-        # --- Conditions ---
         conditions = char.get("conditions", [])
         if conditions:
             cond_row = QHBoxLayout()
@@ -311,7 +305,6 @@ class CardsMixin:
             cond_row.addStretch()
             layout.addLayout(cond_row)
 
-        # --- Visibility states ---
         visibility_states = char.get("visibility_states", [])
         if visibility_states:
             vis_row = QHBoxLayout()
@@ -342,7 +335,6 @@ class CardsMixin:
             vis_row.addStretch()
             layout.addLayout(vis_row)
 
-        # --- Damage resistances / immunities / vulnerabilities ---
         defense_rows = [
             ("Vulnerable", char.get("damage_vulnerabilities") or [], "#e74c3c"),
             ("Resist", char.get("damage_resistances") or [], "#4caf82"),
@@ -370,7 +362,6 @@ class CardsMixin:
                 cond_immune_lbl.setWordWrap(True)
                 layout.addWidget(cond_immune_lbl)
 
-        # --- Spell slots ---
         slots = {k: v for k, v in (char.get("spell_slots") or {}).items() if v > 0}
         if slots:
             sep = QFrame()

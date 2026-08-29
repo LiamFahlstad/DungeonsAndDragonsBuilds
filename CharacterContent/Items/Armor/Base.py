@@ -130,8 +130,3 @@ class AbstractArmor(Item, ABC):
             SetArmorClass(self.base_ac, self.ac_ability).apply(character_stat_block)
             if self.ac_bonus:
                 ArmorClassBonus(self.ac_bonus).apply(character_stat_block)
-
-
-# ──────────────────────────────────────────────────────────────────────────────
-# Standard Armor
-# ──────────────────────────────────────────────────────────────────────────────

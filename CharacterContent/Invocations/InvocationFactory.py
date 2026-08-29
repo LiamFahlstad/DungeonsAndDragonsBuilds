@@ -27,7 +27,6 @@ class Invocation:
     ):
         self._data = invocation_data
 
-    # ---------- Property Accessors ---------- #
     @property
     def name(self):
         return self._data.get("name")
@@ -57,8 +56,6 @@ class Invocation:
         return f"<Invocation {self.name!r}, level {self.level}>"
 
     def write_to_file(self, file: TextIO):
-        """Write all invocation info in a readable format to a file."""
-
         file.write(f"Name: {self.name}\n")
         file.write(f"Level: {self.level}\n")
         file.write(f"Description:\n{self.description}\n")

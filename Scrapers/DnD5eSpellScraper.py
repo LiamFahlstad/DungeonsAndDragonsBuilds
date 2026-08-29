@@ -156,10 +156,6 @@ class DnD5eSpellParser:
                 f"Spell '{self.original_name}' ({self.url}) does not exist on dnd5e.wikidot.com."
             )
 
-    # -------------------
-    # Individual field getters
-    # -------------------
-
     def format_text(self, text: str) -> str:
         return text.replace("´", "'").replace("’", "'").replace("“", '"').replace(
             "”", '"'
@@ -283,22 +279,16 @@ class DnD5eSpellParser:
             return first_text[len("Source:") :].strip()
         return None
 
-    # -------------------
-    # Helpers
-    # -------------------
-
     def _get_text(self, element):
         return element.get_text(" ", strip=True) if element else ""
 
     def to_dict(self):
         """Return all spell info as a dictionary."""
-        level_school = (
-            self.get_level_and_school()
-        )  # returns dict with level, school, ritual
+        level_school = self.get_level_and_school()
 
         return {
             "name": self.get_name(),
-            **level_school,  # <-- Unpacks into "level", "school", "ritual"
+            **level_school,
             "classes": self.get_classes(),
             "casting_time": self.get_casting_time(),
             "range": self.get_range(),

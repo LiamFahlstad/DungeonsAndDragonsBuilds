@@ -60,8 +60,6 @@ def _validate_pool(items, pool, count: int, error_prefix: str):
             raise ValueError(f"{error_prefix}: {item} is not in the allowed pool.")
 
 
-# ── Skill proficiency ─────────────────────────────────────────────────────────
-
 
 class SkillProficiency(CharacterImprovement):
     """Grants proficiency in a fixed list of skills.
@@ -90,9 +88,6 @@ class SkillProficiencyChoice(SkillProficiency):
     ):
         _validate_pool(skills, pool, count, error_prefix)
         super().__init__(skills)
-
-
-# ── Skill expertise ───────────────────────────────────────────────────────────
 
 
 class SkillExpertise(CharacterImprovement):
@@ -125,9 +120,6 @@ class SkillExpertiseChoice(SkillExpertise):
         super().__init__(skills)
 
 
-# ── Saving throw proficiency ──────────────────────────────────────────────────
-
-
 class SavingThrowProficiency(CharacterImprovement):
     """Grants saving throw proficiency for a fixed list of abilities."""
 
@@ -153,9 +145,6 @@ class SavingThrowProficiencyChoice(SavingThrowProficiency):
         super().__init__(abilities)
 
 
-# ── Saving throw advantage ────────────────────────────────────────────────────
-
-
 class SavingThrowAdvantage(CharacterImprovement):
     """Grants advantage on saving throws for one or more abilities."""
 
@@ -179,8 +168,6 @@ class SavingThrowBonus(CharacterImprovement):
             character_stat_block.saving_throws.add_bonus(ability, self.bonus)
 
 
-# ── Ability scores ────────────────────────────────────────────────────────────
-
 
 class AbilityScoreBonus(CharacterImprovement):
     """Applies (Ability, bonus) pairs, validated to sum to `total`."""
@@ -198,9 +185,6 @@ class AbilityScoreBonus(CharacterImprovement):
     def apply(self, character_stat_block: CharacterStatBlock):
         for ability, bonus in self.bonuses:
             character_stat_block.abilities.add_bonus(ability, bonus)
-
-
-# ── Armor class ───────────────────────────────────────────────────────────────
 
 
 class SetArmorClass(CharacterImprovement):
@@ -276,8 +260,6 @@ class StealthDisadvantage(SkillRollCondition):
         super().__init__(Skill.STEALTH, DiceRollCondition.DISADVANTAGE, reason)
 
 
-# ── Initiative ────────────────────────────────────────────────────────────────
-
 
 class InitiativeProficiency(CharacterImprovement):
     """Grants proficiency bonus to initiative rolls."""
@@ -307,8 +289,6 @@ class InitiativeBonus(CharacterImprovement):
         character_stat_block.add_initiative_bonus(self.bonus)
 
 
-# ── Hit points ────────────────────────────────────────────────────────────────
-
 
 class HitPointsPerLevelBonus(CharacterImprovement):
     """Adds `multiplier × character_level` to the hit points bonus."""
@@ -321,8 +301,6 @@ class HitPointsPerLevelBonus(CharacterImprovement):
             self.multiplier * character_stat_block.character_level
         )
 
-
-# ── Skill modifiers ───────────────────────────────────────────────────────────
 
 
 class SkillBonus(CharacterImprovement):
@@ -371,8 +349,6 @@ class JackOfAllTradesBonus(CharacterImprovement):
                 )
 
 
-# ── Movement ──────────────────────────────────────────────────────────────────
-
 
 class SpeedBonus(CharacterImprovement):
     """Increases the character's movement speed by a flat amount."""
@@ -382,9 +358,6 @@ class SpeedBonus(CharacterImprovement):
 
     def apply(self, character_stat_block: CharacterStatBlock):
         character_stat_block.combat.speed += self.bonus
-
-
-# ── Carrying capacity ────────────────────────────────────────────────────────
 
 
 class CarryingCapacityBonus(CharacterImprovement):
@@ -402,9 +375,6 @@ class CarryingCapacityBonus(CharacterImprovement):
         character_stat_block.carrying_capacity_sources.append((self.source, self.bonus))
 
 
-# ── Spellcasting ──────────────────────────────────────────────────────────────
-
-
 class SpellSaveDCBonus(CharacterImprovement):
     """Adds a flat bonus to spell save DC (calculate_difficulty_class[_for_ability])."""
 
@@ -413,9 +383,6 @@ class SpellSaveDCBonus(CharacterImprovement):
 
     def apply(self, character_stat_block: CharacterStatBlock):
         character_stat_block.add_spell_save_dc_bonus(self.bonus)
-
-
-# ── Prerequisites ─────────────────────────────────────────────────────────────
 
 
 class StrengthRequirement(CharacterImprovement):

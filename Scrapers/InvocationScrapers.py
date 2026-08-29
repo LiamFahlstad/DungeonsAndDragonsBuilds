@@ -28,8 +28,6 @@ class InvocationParser:
         # Replace curly apostrophes and normalize common punctuation
         name = name.replace("’", "'")
         name = name.replace("'", "-")
-        if "hunter" in name:
-            pass
 
         # Remove any non-alphanumeric characters except spaces and hyphens
         allowed_chars = "abcdefghijklmnopqrstuvwxyz0123456789 -"
@@ -55,12 +53,6 @@ class InvocationParser:
                 f"Invocation '{self.original_name}' ({self.url}) does not exist on AideDD."
             )
 
-    # -------------------
-
-    # -------------------
-    # Individual field getters
-    # -------------------
-
     def get_name(self):
         return self._get_text(self.col1.find("h1"))
 
@@ -82,10 +74,6 @@ class InvocationParser:
 
     def get_source(self):
         return self._get_text(self.col1.find("div", class_="source"))
-
-    # -------------------
-    # Helpers
-    # -------------------
 
     def _get_text(self, element):
         return element.get_text(" ", strip=True) if element else ""

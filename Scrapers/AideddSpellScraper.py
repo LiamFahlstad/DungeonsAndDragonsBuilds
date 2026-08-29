@@ -77,12 +77,6 @@ class SpellParser:
                 f"Spell '{self.original_name}' ({self.url}) does not exist on AideDD."
             )
 
-    # -------------------
-
-    # -------------------
-    # Individual field getters
-    # -------------------
-
     def format_text(self, text: str) -> str:
         return text.replace("´", "'")
 
@@ -128,10 +122,6 @@ class SpellParser:
         text = self._get_text(self.col1.find("div", class_="source"))
         return self.format_text(text)
 
-    # -------------------
-    # Helpers
-    # -------------------
-
     def _get_text(self, element):
         return element.get_text(" ", strip=True) if element else ""
 
@@ -142,13 +132,11 @@ class SpellParser:
 
     def to_dict(self):
         """Return all spell info as a dictionary."""
-        level_school = (
-            self.get_level_and_school()
-        )  # returns dict with level, school, classes
+        level_school = self.get_level_and_school()
 
         return {
             "name": self.get_name(),
-            **level_school,  # <-- Unpacks into "level", "school", "classes"
+            **level_school,
             "casting_time": self.get_casting_time(),
             "range": self.get_range(),
             "components": self.get_components(),

@@ -173,9 +173,6 @@ def group_by_cr(monsters: list[ExtendedCombatantData]) -> list[CrStats]:
     return stats
 
 
-# ---------------------------------------------------------------------------
-# Charting
-# ---------------------------------------------------------------------------
 
 def _new_axes(figsize=(7.5, 4.2)):
     fig, ax = plt.subplots(figsize=figsize, dpi=150)
@@ -272,9 +269,6 @@ def hp_vs_ac_scatter(monsters: list[ExtendedCombatantData], cr_order: list[str])
     return fig_to_base64(fig)
 
 
-# ---------------------------------------------------------------------------
-# HTML assembly
-# ---------------------------------------------------------------------------
 
 def build_table(stats: list[CrStats]) -> str:
     rows = []

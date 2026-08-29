@@ -51,10 +51,6 @@ class ClassParser:
         self.title_div = self.soup.find("div", class_="page-title")
         self.breadcrumbs_div = self.soup.find("div", class_="breadcrumbs")
 
-    # -------------------
-    # Rendering
-    # -------------------
-
     def get_lines(self) -> list[str]:
         """Render the page into the exact plain-text line list: page title, breadcrumbs,
         then the rendered #page-content blocks (no blank line separating any of these).
@@ -72,10 +68,6 @@ class ClassParser:
 
     def get_text(self) -> str:
         return "\n".join(self.get_lines())
-
-    # -------------------
-    # to_dict / print_info / write_to_file trio
-    # -------------------
 
     def to_dict(self) -> dict:
         return {

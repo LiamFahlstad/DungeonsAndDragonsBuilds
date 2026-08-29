@@ -158,8 +158,3 @@ class Item(Feature):
         to already exist (see AbstractWeapon / AbstractArmor, which
         initialize it before calling base_stats())."""
         self.character_improvements.append(improvement)
-
-
-# ══════════════════════════════════════════════════════════════════════════════
-# Simple Description-Only Items
-# ══════════════════════════════════════════════════════════════════════════════

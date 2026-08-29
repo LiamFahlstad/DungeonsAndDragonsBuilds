@@ -132,10 +132,7 @@ class ClassSkillsStatBlock(SkillsStatBlock):
         )
 
 
-### PALADIN
 class PaladinSkillsStatBlock(ClassSkillsStatBlock):
-    """Paladin Skills Stat Block"""
-
     def __init__(
         self,
         proficiencies: dict[Skill, bool],
@@ -162,8 +159,6 @@ class PaladinSkillsStatBlock(ClassSkillsStatBlock):
 
 
 class FighterSkillsStatBlock(ClassSkillsStatBlock):
-    """Fighter Skills Stat Block"""
-
     def __init__(
         self,
         proficiencies: dict[Skill, bool],
@@ -193,8 +188,6 @@ class FighterSkillsStatBlock(ClassSkillsStatBlock):
 
 
 class WarlockSkillsStatBlock(ClassSkillsStatBlock):
-    """Warlock Skills Stat Block"""
-
     def __init__(
         self,
         proficiencies: dict[Skill, bool],
@@ -222,8 +215,6 @@ class WarlockSkillsStatBlock(ClassSkillsStatBlock):
 
 
 class RangerSkillsStatBlock(ClassSkillsStatBlock):
-    """Ranger Skills Stat Block"""
-
     def __init__(
         self,
         proficiencies: dict[Skill, bool],
@@ -251,8 +242,6 @@ class RangerSkillsStatBlock(ClassSkillsStatBlock):
 
 
 class WizardSkillsStatBlock(ClassSkillsStatBlock):
-    """Wizard Skills Stat Block"""
-
     def __init__(
         self,
         proficiencies: dict[Skill, bool],
@@ -279,8 +268,6 @@ class WizardSkillsStatBlock(ClassSkillsStatBlock):
 
 
 class BarbarianSkillsStatBlock(ClassSkillsStatBlock):
-    """Barbarian Skills Stat Block"""
-
     def __init__(
         self,
         proficiencies: dict[Skill, bool],
@@ -306,8 +293,6 @@ class BarbarianSkillsStatBlock(ClassSkillsStatBlock):
 
 
 class RogueSkillsStatBlock(ClassSkillsStatBlock):
-    """Rogue Skills Stat Block"""
-
     def __init__(
         self,
         proficiencies: dict[Skill, bool],
@@ -337,8 +322,6 @@ class RogueSkillsStatBlock(ClassSkillsStatBlock):
 
 
 class DruidSkillsStatBlock(ClassSkillsStatBlock):
-    """Druid Skills Stat Block"""
-
     def __init__(
         self,
         proficiencies: dict[Skill, bool],
@@ -366,8 +349,6 @@ class DruidSkillsStatBlock(ClassSkillsStatBlock):
 
 
 class ClericSkillsStatBlock(ClassSkillsStatBlock):
-    """Cleric Skills Stat Block"""
-
     def __init__(
         self,
         proficiencies: dict[Skill, bool],
@@ -392,8 +373,6 @@ class ClericSkillsStatBlock(ClassSkillsStatBlock):
 
 
 class BardSkillsStatBlock(ClassSkillsStatBlock):
-    """Bard Skills Stat Block"""
-
     def __init__(
         self,
         proficiencies: dict[Skill, bool],
@@ -412,8 +391,6 @@ class BardSkillsStatBlock(ClassSkillsStatBlock):
 
 
 class SorcererSkillsStatBlock(ClassSkillsStatBlock):
-    """Sorcerer Skills Stat Block"""
-
     def __init__(
         self,
         proficiencies: dict[Skill, bool],
@@ -439,8 +416,6 @@ class SorcererSkillsStatBlock(ClassSkillsStatBlock):
 
 
 class MonkSkillsStatBlock(ClassSkillsStatBlock):
-    """Monk Skills Stat Block"""
-
     def __init__(
         self,
         proficiencies: dict[Skill, bool],
@@ -466,8 +441,6 @@ class MonkSkillsStatBlock(ClassSkillsStatBlock):
 
 
 class ArtificerSkillsStatBlock(ClassSkillsStatBlock):
-    """Artificer Skills Stat Block"""
-
     def __init__(
         self,
         proficiencies: dict[Skill, bool],

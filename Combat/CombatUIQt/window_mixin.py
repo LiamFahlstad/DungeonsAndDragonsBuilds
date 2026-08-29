@@ -132,7 +132,6 @@ class WindowMixin:
         root_layout.setContentsMargins(10, 10, 10, 10)
         root_layout.setSpacing(10)
 
-        # --- Left: scrollable area (initiative or card grid) ---
         self._scroll_area = QScrollArea()
         self._scroll_area.setWidgetResizable(True)
         self._scroll_area.setHorizontalScrollBarPolicy(
@@ -157,7 +156,6 @@ class WindowMixin:
 
         root_layout.addWidget(self._scroll_area, stretch=1)
 
-        # --- Right: control panel ---
         panel = QFrame()
         panel.setObjectName("controlPanel")
         panel.setFixedWidth(460)

@@ -58,8 +58,6 @@ class Spell(ABC):
         Channel Divinity option that lets it be cast without a slot), or None."""
         return self._additional_ruling
 
-    # ---------- Required properties ---------- #
-
     @property
     @abstractmethod
     def name(self) -> str:

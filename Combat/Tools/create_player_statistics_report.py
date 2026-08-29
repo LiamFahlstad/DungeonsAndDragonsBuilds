@@ -117,9 +117,6 @@ def main() -> None:
         f"{escape(name)} ({count})" for name, count in scenario_items
     )
 
-    # -----------------------------------------------------------------------
-    # Build stat tables
-    # -----------------------------------------------------------------------
 
     # Damage columns (flat keys + per-type breakdowns)
     damage_columns = (
@@ -195,9 +192,6 @@ def main() -> None:
 
         return "<table>" + "<thead>" + rows[0] + "</thead><tbody>" + "".join(rows[1:]) + "</tbody></table>"
 
-    # -----------------------------------------------------------------------
-    # Build party overview cards
-    # -----------------------------------------------------------------------
 
     party_cards = []
     for name in names:
@@ -219,9 +213,6 @@ def main() -> None:
 
     party_grid = "<div class=\"player-grid\">" + "".join(party_cards) + "</div>"
 
-    # -----------------------------------------------------------------------
-    # Build comparison bars
-    # -----------------------------------------------------------------------
 
     def _build_bar_section(stat_key, css_class):
         """Build a bar-chart comparison section for a single stat."""
@@ -249,9 +240,6 @@ def main() -> None:
     healing_done_section = _build_bar_section("healing_done", "heal")
     spells_cast_section = _build_bar_section("spells_cast", "spells")
 
-    # -----------------------------------------------------------------------
-    # Build detailed breakdown tables
-    # -----------------------------------------------------------------------
 
     detailed_tables = [
         ("Damage", _build_table_html(damage_columns)),
@@ -271,9 +259,6 @@ def main() -> None:
 </details>
 """
 
-    # -----------------------------------------------------------------------
-    # CSS
-    # -----------------------------------------------------------------------
 
     CSS = """
 :root {
@@ -313,9 +298,6 @@ td { color: var(--text); }
 .empty-note { color: var(--muted); font-style: italic; padding: 1rem 0; }
 """
 
-    # -----------------------------------------------------------------------
-    # Assemble HTML
-    # -----------------------------------------------------------------------
 
     html = f"""<!doctype html>
 <html lang="en">
