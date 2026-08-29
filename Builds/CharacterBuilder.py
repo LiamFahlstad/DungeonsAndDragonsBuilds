@@ -99,7 +99,6 @@ class CharacterBuilder:
                 character_sheet_data, applied_level_features
             )
 
-        # Set spellcasting ability
         abilities = character_sheet_data.abilities
         if abilities is None:
             raise ValueError("AbilitiesStatBlock is None.")
@@ -108,12 +107,10 @@ class CharacterBuilder:
         )
         character_sheet_data.spell_casting_ability = ability_with_highest_modifier
 
-        # Get species data
         self.species_builder.set_character_level(character_sheet_data.character_level)
         self.species_builder.set_spell_casting_ability(ability_with_highest_modifier)
         character_sheet_data.merge_with(self.species_builder.build())
 
-        # Set character name
         character_sheet_data.character_name = self.name
         character_sheet_data.is_example = type(self).__module__.startswith(
             "Builds.Examples"
@@ -136,5 +133,4 @@ class CharacterBuilder:
         for item, quantity in self.equipment_handler.items:
             character_sheet_data.add_item(item, quantity)
 
-        # Return final character sheet data
         return character_sheet_data
