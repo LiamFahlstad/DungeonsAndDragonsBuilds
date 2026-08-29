@@ -1,5 +1,5 @@
 import Core.Definitions as Definitions
-from CharacterContent.Features.Core.BaseFeatures import FeatureUses, Feature, FeatureActivation
+from CharacterContent.Features.Core.BaseFeatures import FeatureUses, Feature, FeatureActivation, ActionType
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
@@ -21,7 +21,7 @@ class OpenHandTechnique(Feature):
 
 class WholenessOfBody(Feature):
     def __init__(self):
-        super().__init__(name="Wholeness of Body", origin="Way of the Open Hand Monk Level 6", activation=FeatureActivation(action_type="action"), usage_tags=["heal"])
+        super().__init__(name="Wholeness of Body", origin="Way of the Open Hand Monk Level 6", activation=FeatureActivation(action_type=ActionType.ACTION), usage_tags=["heal"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         monk_level = character_stat_block.get_class_level(Definitions.CharacterClass.MONK)
@@ -57,7 +57,7 @@ class Tranquility(Feature):
 
 class QuiveringPalm(Feature):
     def __init__(self):
-        super().__init__(name="Quivering Palm", origin="Way of the Open Hand Monk Level 17", activation=FeatureActivation(action_type="action", duration="Number of Days Equal to Monk Level"), usage_tags=["damage"])
+        super().__init__(name="Quivering Palm", origin="Way of the Open Hand Monk Level 17", activation=FeatureActivation(action_type=ActionType.ACTION, duration="Number of Days Equal to Monk Level"), usage_tags=["damage"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         monk_level = character_stat_block.get_class_level(Definitions.CharacterClass.MONK)

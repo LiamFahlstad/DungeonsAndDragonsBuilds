@@ -4,7 +4,7 @@ from typing import Type
 from CharacterContent.Features.ClassFeatures.Druid.WildShapeForms import (
     format_wild_shape_form,
 )
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, ActionType
 from CharacterContent.Features.Core.Improvements import GrantLanguage
 from Combat.Definitions import ExtendedCombatantData
 from Core.Definitions import Language
@@ -83,7 +83,7 @@ class WildShape(Feature):
         super().__init__(
             name="Wild Shape",
             origin="Druid Level 2",
-            activation=FeatureActivation(action_type="bonus_action", duration="Until You Leave Form or are Incapacitated"),
+            activation=FeatureActivation(action_type=ActionType.BONUS_ACTION, duration="Until You Leave Form or are Incapacitated"),
             usage_tags=["heal"],
             uses=FeatureUses(
                 max_uses=4,
@@ -152,7 +152,7 @@ class WildCompanion(Feature):
         super().__init__(
             name="Wild Companion",
             origin="Druid Level 2",
-            activation=FeatureActivation(action_type="action", duration="Until Long Rest"),
+            activation=FeatureActivation(action_type=ActionType.ACTION, duration="Until Long Rest"),
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:

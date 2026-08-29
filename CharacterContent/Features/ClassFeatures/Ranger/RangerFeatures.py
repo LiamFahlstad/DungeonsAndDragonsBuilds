@@ -1,4 +1,4 @@
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, ActionType
 from CharacterContent.Features.Core.Improvements import SkillExpertiseChoice, SpeedBonus
 from Core.Definitions import Ability, Skill
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
@@ -188,7 +188,7 @@ class Tireless(Feature):
         super().__init__(
             name="Tireless",
             origin="Ranger Level 10",
-            activation=FeatureActivation(action_type="action"),
+            activation=FeatureActivation(action_type=ActionType.ACTION),
             usage_tags=["heal"],
         )
 
@@ -229,7 +229,7 @@ class NaturesVeil(Feature):
         super().__init__(
             name="Nature's Veil",
             origin="Ranger Level 14",
-            activation=FeatureActivation(action_type="bonus_action", duration="Until End of Your Next Turn"),
+            activation=FeatureActivation(action_type=ActionType.BONUS_ACTION, duration="Until End of Your Next Turn"),
             usage_tags=["buff"],
         )
 

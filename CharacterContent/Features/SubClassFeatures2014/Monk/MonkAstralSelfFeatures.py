@@ -1,11 +1,11 @@
 from Core.Definitions import MONK_HIT_DIE
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
 class ArmsOfTheAstralSelf(Feature):
     def __init__(self):
-        super().__init__(name="Arms of the Astral Self", origin="Way of the Astral Self Monk Level 3", activation=FeatureActivation(action_type="bonus_action", duration="10 Minutes", range="10 Feet"), usage_tags=["damage", "buff"])
+        super().__init__(name="Arms of the Astral Self", origin="Way of the Astral Self Monk Level 3", activation=FeatureActivation(action_type=ActionType.BONUS_ACTION, duration="10 Minutes", range="10 Feet"), usage_tags=["damage", "buff"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -35,7 +35,7 @@ class ArmsOfTheAstralSelf(Feature):
 
 class VisageOfTheAstralSelf(Feature):
     def __init__(self):
-        super().__init__(name="Visage of the Astral Self", origin="Way of the Astral Self Monk Level 6", activation=FeatureActivation(action_type="bonus_action", duration="10 Minutes"), usage_tags=["buff", "utility"])
+        super().__init__(name="Visage of the Astral Self", origin="Way of the Astral Self Monk Level 6", activation=FeatureActivation(action_type=ActionType.BONUS_ACTION, duration="10 Minutes"), usage_tags=["buff", "utility"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -73,7 +73,7 @@ class BodyOfTheAstralSelf(Feature):
 
 class AwakenedAstralSelf(Feature):
     def __init__(self):
-        super().__init__(name="Awakened Astral Self", origin="Way of the Astral Self Monk Level 17", activation=FeatureActivation(action_type="bonus_action", duration="10 Minutes"), usage_tags=["buff"])
+        super().__init__(name="Awakened Astral Self", origin="Way of the Astral Self Monk Level 17", activation=FeatureActivation(action_type=ActionType.BONUS_ACTION, duration="10 Minutes"), usage_tags=["buff"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

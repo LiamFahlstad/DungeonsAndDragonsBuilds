@@ -1,6 +1,6 @@
 from Core.Definitions import Ability, Condition, WARLOCK_HIT_DIE
 import Core.Definitions as Definitions
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, ActionType
 from CharacterContent.Features.Core.Improvements import ConditionImmunity
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
@@ -32,7 +32,7 @@ class StepsOfTheFey(Feature):
 
 class MistyEscape(Feature):
     def __init__(self):
-        super().__init__(name="Misty Escape", origin="Archfey Patron Warlock Level 6", activation=FeatureActivation(action_type="reaction"), usage_tags=["buff", "damage"])
+        super().__init__(name="Misty Escape", origin="Archfey Patron Warlock Level 6", activation=FeatureActivation(action_type=ActionType.REACTION), usage_tags=["buff", "damage"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -47,7 +47,7 @@ class MistyEscape(Feature):
 class BeguilingDefenses(Feature):
     def __init__(self):
         super().__init__(
-            name="Beguiling Defenses", origin="Archfey Patron Warlock Level 10", activation=FeatureActivation(action_type="reaction"), usage_tags=["buff", "damage"]
+            name="Beguiling Defenses", origin="Archfey Patron Warlock Level 10", activation=FeatureActivation(action_type=ActionType.REACTION), usage_tags=["buff", "damage"]
         )
         self._immunity = ConditionImmunity(Condition.CHARMED, self.name)
 

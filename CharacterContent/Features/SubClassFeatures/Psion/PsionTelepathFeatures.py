@@ -1,5 +1,5 @@
 from Core.Definitions import PSION_HIT_DIE, Ability
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
@@ -33,7 +33,7 @@ class MindInfiltrator(Feature):
 
 class TelepathicDistraction(Feature):
     def __init__(self):
-        super().__init__(name="Telepathic Distraction", origin="Telepath Psion Level 3", activation=FeatureActivation(action_type="reaction"), usage_tags=["buff"])
+        super().__init__(name="Telepathic Distraction", origin="Telepath Psion Level 3", activation=FeatureActivation(action_type=ActionType.REACTION), usage_tags=["buff"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -93,7 +93,7 @@ class PotentThoughts(Feature):
 
 class TelepathicBolstering(Feature):
     def __init__(self):
-        super().__init__(name="Telepathic Bolstering", origin="Telepath Psion Level 10", activation=FeatureActivation(action_type="reaction"), usage_tags=["buff"])
+        super().__init__(name="Telepathic Bolstering", origin="Telepath Psion Level 10", activation=FeatureActivation(action_type=ActionType.REACTION), usage_tags=["buff"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

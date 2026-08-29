@@ -1,4 +1,4 @@
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, ActionType
 from CharacterContent.Features.Core.Improvements import InitiativeProficiency
 from Core.Definitions import Ability
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
@@ -30,7 +30,7 @@ class WatchersWill(Feature):
         super().__init__(
             name="Channel Divinity: Watcher's Will",
             origin="Oath of the Watchers Paladin Level 3",
-            activation=FeatureActivation(action_type="action", duration="1 Minute", range="30 Feet"),
+            activation=FeatureActivation(action_type=ActionType.ACTION, duration="1 Minute", range="30 Feet"),
             usage_tags=["buff"],
         )
 
@@ -62,7 +62,7 @@ class AbjureTheExtraplanar(Feature):
         super().__init__(
             name="Channel Divinity: Abjure the Extraplanar",
             origin="Oath of the Watchers Paladin Level 3",
-            activation=FeatureActivation(action_type="action", duration="1 Minute or Until Takes Damage", range="30 Feet"),
+            activation=FeatureActivation(action_type=ActionType.ACTION, duration="1 Minute or Until Takes Damage", range="30 Feet"),
             usage_tags=["control"],
         )
 
@@ -126,7 +126,7 @@ class VigilantRebuke(Feature):
         super().__init__(
             name="Vigilant Rebuke",
             origin="Oath of the Watchers Paladin Level 15",
-            activation=FeatureActivation(action_type="reaction", range="30 Feet"),
+            activation=FeatureActivation(action_type=ActionType.REACTION, range="30 Feet"),
             usage_tags=["damage"],
         )
 
@@ -154,7 +154,7 @@ class MortalBulwark(Feature):
         super().__init__(
             name="Mortal Bulwark",
             origin="Oath of the Watchers Paladin Level 20",
-            activation=FeatureActivation(action_type="bonus_action", duration="1 Minute", range="120 Feet (Truesight)"),
+            activation=FeatureActivation(action_type=ActionType.BONUS_ACTION, duration="1 Minute", range="120 Feet (Truesight)"),
             usage_tags=["buff", "control"],
             uses=FeatureUses(max_uses=1, regain_all_on="long rest"),
         )

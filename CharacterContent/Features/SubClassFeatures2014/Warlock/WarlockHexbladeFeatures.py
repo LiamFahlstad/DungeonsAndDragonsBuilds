@@ -1,5 +1,5 @@
 import Core.Definitions as Definitions
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, ActionType
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
@@ -28,7 +28,7 @@ class HexbladesCurse(Feature):
         super().__init__(
             name="Hexblade's Curse",
             origin="Hexblade Patron Warlock Level 3",
-            activation=FeatureActivation(action_type="bonus_action", duration="1 Minute", range="30 Feet"),
+            activation=FeatureActivation(action_type=ActionType.BONUS_ACTION, duration="1 Minute", range="30 Feet"),
             usage_tags=["buff", "damage"],
             uses=FeatureUses(max_uses=1, regain_all_on="short or long rest"),
         )
@@ -117,7 +117,7 @@ class ArmorOfHexes(Feature):
         super().__init__(
             name="Armor of Hexes",
             origin="Hexblade Patron Warlock Level 10",
-            activation=FeatureActivation(action_type="reaction"),
+            activation=FeatureActivation(action_type=ActionType.REACTION),
             usage_tags=["buff"],
         )
 

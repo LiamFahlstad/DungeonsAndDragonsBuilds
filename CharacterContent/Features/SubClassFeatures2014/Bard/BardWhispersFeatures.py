@@ -1,5 +1,5 @@
 from Core.Definitions import BARD_HIT_DIE
-from CharacterContent.Features.Core.BaseFeatures import FeatureUses, Feature, FeatureActivation
+from CharacterContent.Features.Core.BaseFeatures import FeatureUses, Feature, FeatureActivation, ActionType
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
@@ -78,7 +78,7 @@ class WordsOfTerror(Feature):
 
 class MantleOfWhispers(Feature):
     def __init__(self):
-        super().__init__(name="Mantle of Whispers", origin="College of Whispers Bard Level 6", activation=FeatureActivation(action_type="action", duration="1 Hour or Until Ended", range="30 Feet"), usage_tags=["utility"])
+        super().__init__(name="Mantle of Whispers", origin="College of Whispers Bard Level 6", activation=FeatureActivation(action_type=ActionType.ACTION, duration="1 Hour or Until Ended", range="30 Feet"), usage_tags=["utility"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -97,7 +97,7 @@ class MantleOfWhispers(Feature):
 
 class ShadowLore(Feature):
     def __init__(self):
-        super().__init__(name="Shadow Lore", origin="College of Whispers Bard Level 14", activation=FeatureActivation(action_type="action", duration="8 Hours or Until Attacked or Damaged", range="30 Feet"), usage_tags=["control"])
+        super().__init__(name="Shadow Lore", origin="College of Whispers Bard Level 14", activation=FeatureActivation(action_type=ActionType.ACTION, duration="8 Hours or Until Attacked or Damaged", range="30 Feet"), usage_tags=["control"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

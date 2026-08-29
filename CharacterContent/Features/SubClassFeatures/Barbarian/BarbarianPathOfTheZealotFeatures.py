@@ -1,6 +1,6 @@
 import Core.Definitions as Definitions
 from Core.Definitions import BARBARIAN_HIT_DIE
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
@@ -32,7 +32,7 @@ class DivineFury(Feature):
 class WarriorOfTheGods(Feature):
     def __init__(self):
         super().__init__(
-            name="Warrior of the Gods", origin="Path Of The Zealot Barbarian Level 3", activation=FeatureActivation(action_type="bonus_action"), usage_tags=["heal"]
+            name="Warrior of the Gods", origin="Path Of The Zealot Barbarian Level 3", activation=FeatureActivation(action_type=ActionType.BONUS_ACTION), usage_tags=["heal"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -79,7 +79,7 @@ class FanaticalFocus(Feature):
 class ZealousPresence(Feature):
     def __init__(self):
         super().__init__(
-            name="Zealous Presence", origin="Path Of The Zealot Barbarian Level 10", activation=FeatureActivation(action_type="bonus_action", duration="Until Start of Your Next Turn", range="60 Feet"), usage_tags=["buff"]
+            name="Zealous Presence", origin="Path Of The Zealot Barbarian Level 10", activation=FeatureActivation(action_type=ActionType.BONUS_ACTION, duration="Until Start of Your Next Turn", range="60 Feet"), usage_tags=["buff"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:

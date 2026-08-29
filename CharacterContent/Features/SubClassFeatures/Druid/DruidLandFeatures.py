@@ -1,7 +1,7 @@
 
 import Core.Definitions as Definitions
 from Core.Definitions import DRUID_HIT_DIE, Condition, DamageType
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType
 from CharacterContent.Features.Core.Improvements import ConditionImmunity, DamageResistance
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
@@ -31,7 +31,7 @@ class CircleOfTheLandSpells(Feature):
 
 class LandsAid(Feature):
     def __init__(self):
-        super().__init__(name="Land's Aid", origin="Circle of the Land Druid Level 3", activation=FeatureActivation(action_type="action", range="60 Feet (10-Foot-Radius Sphere)"), usage_tags=["damage", "heal"])
+        super().__init__(name="Land's Aid", origin="Circle of the Land Druid Level 3", activation=FeatureActivation(action_type=ActionType.ACTION, range="60 Feet (10-Foot-Radius Sphere)"), usage_tags=["damage", "heal"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -117,7 +117,7 @@ class NaturesWard(Feature):
 class NaturesSanctuary(Feature):
     def __init__(self):
         super().__init__(
-            name="Nature's Sanctuary", origin="Circle of the Land Druid Level 14", activation=FeatureActivation(action_type="action", duration="1 Minute or Until Incapacitated", range="120 Feet (15-Foot Cube)"), usage_tags=["buff"]
+            name="Nature's Sanctuary", origin="Circle of the Land Druid Level 14", activation=FeatureActivation(action_type=ActionType.ACTION, duration="1 Minute or Until Incapacitated", range="120 Feet (15-Foot Cube)"), usage_tags=["buff"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:

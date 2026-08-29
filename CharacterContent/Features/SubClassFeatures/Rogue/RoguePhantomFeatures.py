@@ -1,5 +1,5 @@
 from Core.Definitions import Ability, MAX_ABILITY_MODIFIER, ROGUE_HIT_DIE
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, ActionType
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
@@ -73,7 +73,7 @@ class VoiceOfDeath(Feature):
 
 class GhostWalk(Feature):
     def __init__(self):
-        super().__init__(name="Ghost Walk", origin="Phantom Rogue Level 13", activation=FeatureActivation(action_type="bonus_action", duration="10 Minutes"), usage_tags=["buff", "utility"])
+        super().__init__(name="Ghost Walk", origin="Phantom Rogue Level 13", activation=FeatureActivation(action_type=ActionType.BONUS_ACTION, duration="10 Minutes"), usage_tags=["buff", "utility"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

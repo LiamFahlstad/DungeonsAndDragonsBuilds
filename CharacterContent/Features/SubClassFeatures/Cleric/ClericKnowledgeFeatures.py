@@ -1,4 +1,4 @@
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType
 from CharacterContent.Features.Core.Improvements import (
     SkillExpertiseChoice,
     SkillProficiencyChoice,
@@ -60,7 +60,7 @@ class MindMagic(Feature):
         super().__init__(
             name="Mind Magic",
             origin="Knowledge Domain Cleric Level 3",
-            activation=FeatureActivation(action_type="action"),
+            activation=FeatureActivation(action_type=ActionType.ACTION),
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -120,7 +120,7 @@ class DivineForeknowledge(Feature):
         super().__init__(
             name="Divine Foreknowledge",
             origin="Knowledge Domain Cleric Level 17",
-            activation=FeatureActivation(action_type="bonus_action", duration="1 Hour"),
+            activation=FeatureActivation(action_type=ActionType.BONUS_ACTION, duration="1 Hour"),
             usage_tags=["buff"]
         )
 

@@ -1,7 +1,7 @@
 from typing import Optional
 
 from Core.Definitions import Ability, RANGER_HIT_DIE
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType
 from CharacterContent.Features.Core.Improvements import InitiativeBonus, SavingThrowProficiencyChoice
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
@@ -102,7 +102,7 @@ class StalkersFlurry(Feature):
 
 class ShadowyDodge(Feature):
     def __init__(self):
-        super().__init__(name="Shadowy Dodge", origin="Gloom Stalker Ranger Level 15", activation=FeatureActivation(action_type="reaction"), usage_tags=["control"])
+        super().__init__(name="Shadowy Dodge", origin="Gloom Stalker Ranger Level 15", activation=FeatureActivation(action_type=ActionType.REACTION), usage_tags=["control"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "You can dodge in unforeseen ways, with wisps of supernatural shadow around you. Whenever a creature makes an attack roll against you and doesn't have advantage on the roll, you can use your reaction to impose disadvantage on it. You must use this feature before you know the outcome of the attack roll."

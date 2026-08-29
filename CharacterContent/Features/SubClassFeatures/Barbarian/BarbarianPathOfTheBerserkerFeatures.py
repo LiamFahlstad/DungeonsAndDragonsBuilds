@@ -1,7 +1,7 @@
 import Core.Definitions as Definitions
 from Core.Definitions import BARBARIAN_HIT_DIE
 from CharacterContent.Features.ClassFeatures.Barbarian.BarbarianFeatures import get_rage_damage_bonus
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
@@ -46,7 +46,7 @@ class MindlessRage(Feature):
 class Retaliation(Feature):
     def __init__(self):
         super().__init__(
-            name="Retaliation", origin="Path Of The Berserker Barbarian Level 10", activation=FeatureActivation(action_type="reaction", range="5 Feet"), usage_tags=["damage"]
+            name="Retaliation", origin="Path Of The Berserker Barbarian Level 10", activation=FeatureActivation(action_type=ActionType.REACTION, range="5 Feet"), usage_tags=["damage"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -59,7 +59,7 @@ class IntimidatingPresence(Feature):
         super().__init__(
             name="Intimidating Presence",
             origin="Path Of The Berserker Barbarian Level 14",
-            activation=FeatureActivation(action_type="bonus_action", duration="1 Minute", range="30-Foot Emanation"),
+            activation=FeatureActivation(action_type=ActionType.BONUS_ACTION, duration="1 Minute", range="30-Foot Emanation"),
             usage_tags=["control"]
         )
 

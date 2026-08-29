@@ -3,6 +3,7 @@ from CharacterContent.Features.Core.BaseFeatures import (
     Feature,
     FeatureActivation,
     FeatureUses,
+    ActionType,
 )
 from CharacterContent.Features.Core.Improvements import (
     AbilityScoreBonus,
@@ -171,7 +172,7 @@ class FlurryOfBlows(Feature):
         super().__init__(
             name="Flurry of Blows",
             origin="Monk Level 2",
-            activation=FeatureActivation(action_type="bonus_action"),
+            activation=FeatureActivation(action_type=ActionType.BONUS_ACTION),
             usage_tags=["damage"],
         )
 
@@ -191,7 +192,7 @@ class PatientDefense(Feature):
         super().__init__(
             name="Patient Defense",
             origin="Monk Level 2",
-            activation=FeatureActivation(action_type="bonus_action"),
+            activation=FeatureActivation(action_type=ActionType.BONUS_ACTION),
             usage_tags=["buff"],
         )
 
@@ -211,7 +212,7 @@ class StepOfTheWind(Feature):
         super().__init__(
             name="Step of the Wind",
             origin="Monk Level 2",
-            activation=FeatureActivation(action_type="bonus_action"),
+            activation=FeatureActivation(action_type=ActionType.BONUS_ACTION),
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -287,7 +288,7 @@ class DeflectAttacks(Feature):
         super().__init__(
             name="Deflect Attacks",
             origin="Monk Level 3",
-            activation=FeatureActivation(action_type="reaction"),
+            activation=FeatureActivation(action_type=ActionType.REACTION),
             usage_tags=["buff", "damage"],
         )
 
@@ -343,7 +344,7 @@ class SlowFall(Feature):
         super().__init__(
             name="Slow Fall",
             origin="Monk Level 4",
-            activation=FeatureActivation(action_type="reaction"),
+            activation=FeatureActivation(action_type=ActionType.REACTION),
             usage_tags=["buff"],
         )
 

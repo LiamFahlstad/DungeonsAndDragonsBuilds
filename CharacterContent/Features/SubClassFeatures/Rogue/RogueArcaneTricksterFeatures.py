@@ -1,4 +1,4 @@
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
@@ -72,7 +72,7 @@ class VersatileTrickster(Feature):
 
 class SpellThief(Feature):
     def __init__(self):
-        super().__init__(name="Spell Thief", origin="Arcane Trickster Rogue Level 17", activation=FeatureActivation(action_type="reaction", duration="8 Hours"), usage_tags=["buff", "control"])
+        super().__init__(name="Spell Thief", origin="Arcane Trickster Rogue Level 17", activation=FeatureActivation(action_type=ActionType.REACTION, duration="8 Hours"), usage_tags=["buff", "control"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

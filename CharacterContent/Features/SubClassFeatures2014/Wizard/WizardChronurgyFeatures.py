@@ -1,4 +1,4 @@
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, ActionType
 from Core.Definitions import Ability
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
@@ -9,7 +9,7 @@ class ChronalShift(Feature):
         super().__init__(
             name="Chronal Shift",
             origin="Chronurgy Wizard Level 3",
-            activation=FeatureActivation(action_type="reaction", range="30 Feet"),
+            activation=FeatureActivation(action_type=ActionType.REACTION, range="30 Feet"),
             uses=FeatureUses(max_uses=2, regain_all_on="long rest"),
         )
 
@@ -37,7 +37,7 @@ class MomentaryStasis(Feature):
         super().__init__(
             name="Momentary Stasis",
             origin="Chronurgy Wizard Level 6",
-            activation=FeatureActivation(action_type="action", duration="Until End Of Your Next Turn Or Until Takes Damage", range="60 Feet"),
+            activation=FeatureActivation(action_type=ActionType.ACTION, duration="Until End Of Your Next Turn Or Until Takes Damage", range="60 Feet"),
             usage_tags=["control"],
         )
 
@@ -92,7 +92,7 @@ class ConvergentFuture(Feature):
         super().__init__(
             name="Convergent Future",
             origin="Chronurgy Wizard Level 14",
-            activation=FeatureActivation(action_type="reaction", range="60 Feet"),
+            activation=FeatureActivation(action_type=ActionType.REACTION, range="60 Feet"),
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:

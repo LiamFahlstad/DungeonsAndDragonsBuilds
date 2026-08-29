@@ -1,6 +1,6 @@
 import Core.Definitions as Definitions
 from Core.Definitions import Language
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType
 from CharacterContent.Features.Core.Improvements import GrantLanguage
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
@@ -25,7 +25,7 @@ class SpeechOfTheWoods(Feature):
 
 class SpiritTotem(Feature):
     def __init__(self):
-        super().__init__(name="Spirit Totem", origin="Circle of the Shepherd Druid Level 3", activation=FeatureActivation(action_type="bonus_action", duration="1 Minute", range="60 Feet"), usage_tags=["buff", "summon"], uses=FeatureUses(max_uses=1, regain_all_on="short or long rest"))
+        super().__init__(name="Spirit Totem", origin="Circle of the Shepherd Druid Level 3", activation=FeatureActivation(action_type=ActionType.BONUS_ACTION, duration="1 Minute", range="60 Feet"), usage_tags=["buff", "summon"], uses=FeatureUses(max_uses=1, regain_all_on="short or long rest"))
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         druid_level = character_stat_block.get_class_level(Definitions.CharacterClass.DRUID)

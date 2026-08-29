@@ -1,7 +1,7 @@
 from typing import Optional
 
 from Core.Definitions import Ability, CharacterClass, Skill
-from CharacterContent.Features.Core.BaseFeatures import FeatureUses, Feature, FeatureActivation
+from CharacterContent.Features.Core.BaseFeatures import FeatureUses, Feature, FeatureActivation, ActionType
 from CharacterContent.Features.Core.Improvements import (
     SkillProficiencyChoice,
     SavingThrowProficiencyChoice,
@@ -39,7 +39,7 @@ class BonusProficiency(Feature):
 
 class FightingSpirit(Feature):
     def __init__(self):
-        super().__init__(name="Fighting Spirit", origin="Samurai Fighter Level 3", activation=FeatureActivation(action_type="bonus_action", duration="Until End of Current Turn"), usage_tags=["buff"])
+        super().__init__(name="Fighting Spirit", origin="Samurai Fighter Level 3", activation=FeatureActivation(action_type=ActionType.BONUS_ACTION, duration="Until End of Current Turn"), usage_tags=["buff"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         fighter_level = character_stat_block.get_class_level(CharacterClass.FIGHTER)
@@ -120,7 +120,7 @@ class RapidStrike(Feature):
 
 class StrengthBeforeDeath(Feature):
     def __init__(self):
-        super().__init__(name="Strength Before Death", origin="Samurai Fighter Level 18", activation=FeatureActivation(action_type="reaction"))
+        super().__init__(name="Strength Before Death", origin="Samurai Fighter Level 18", activation=FeatureActivation(action_type=ActionType.REACTION))
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         uses = 1

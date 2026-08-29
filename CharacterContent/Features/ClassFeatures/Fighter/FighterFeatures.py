@@ -1,4 +1,4 @@
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, ActionType
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
@@ -20,7 +20,7 @@ class SecondWind(Feature):
         super().__init__(
             name="Second Wind",
             origin="Fighter Level 1",
-            activation=FeatureActivation(action_type="bonus_action"),
+            activation=FeatureActivation(action_type=ActionType.BONUS_ACTION),
             usage_tags=["heal"],
             uses=FeatureUses(
                 max_uses=4,

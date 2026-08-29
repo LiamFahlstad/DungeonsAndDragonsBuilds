@@ -1,5 +1,5 @@
 import Core.Definitions as Definitions
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, ActionType
 from Core.Definitions import Ability
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
@@ -96,7 +96,7 @@ class IndestructibleLife(Feature):
         super().__init__(
             name="Indestructible Life",
             origin="The Undying Patron Warlock Level 14",
-            activation=FeatureActivation(action_type="bonus_action"),
+            activation=FeatureActivation(action_type=ActionType.BONUS_ACTION),
             usage_tags=["heal"],
             uses=FeatureUses(max_uses=1, regain_all_on="short or long rest"),
         )

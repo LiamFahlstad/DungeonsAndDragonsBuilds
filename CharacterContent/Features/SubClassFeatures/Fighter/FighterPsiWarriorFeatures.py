@@ -1,12 +1,12 @@
 from Core.Definitions import FIGHTER_HIT_DIE, Ability, DamageType
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType
 from CharacterContent.Features.Core.Improvements import DamageResistance
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
 class PsionicPower(Feature):
     def __init__(self):
-        super().__init__(name="Psionic Power", origin="Psi Warrior Fighter Level 3", activation=FeatureActivation(action_type="action", range="30 Feet"), usage_tags=["damage", "buff"])
+        super().__init__(name="Psionic Power", origin="Psi Warrior Fighter Level 3", activation=FeatureActivation(action_type=ActionType.ACTION, range="30 Feet"), usage_tags=["damage", "buff"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -31,7 +31,7 @@ class PsionicPower(Feature):
 
 class TelekineticAdept(Feature):
     def __init__(self):
-        super().__init__(name="Telekinetic Adept", origin="Psi Warrior Fighter Level 7", activation=FeatureActivation(action_type="bonus_action", duration="Until End of Current Turn", range="10 Feet"), usage_tags=["buff", "control"])
+        super().__init__(name="Telekinetic Adept", origin="Psi Warrior Fighter Level 7", activation=FeatureActivation(action_type=ActionType.BONUS_ACTION, duration="Until End of Current Turn", range="10 Feet"), usage_tags=["buff", "control"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -57,7 +57,7 @@ class GuardedMind(Feature):
 
 class BulwarkOfForce(Feature):
     def __init__(self):
-        super().__init__(name="Bulwark of Force", origin="Psi Warrior Fighter Level 15", activation=FeatureActivation(action_type="bonus_action", duration="1 Minute or Until Incapacitated", range="30 Feet"), usage_tags=["buff"])
+        super().__init__(name="Bulwark of Force", origin="Psi Warrior Fighter Level 15", activation=FeatureActivation(action_type=ActionType.BONUS_ACTION, duration="1 Minute or Until Incapacitated", range="30 Feet"), usage_tags=["buff"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

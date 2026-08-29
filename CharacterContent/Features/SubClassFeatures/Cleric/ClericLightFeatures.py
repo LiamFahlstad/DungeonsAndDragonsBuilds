@@ -1,5 +1,5 @@
 from Core.Definitions import Ability, CLERIC_HIT_DIE, MAX_ABILITY_MODIFIER
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, ActionType
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
@@ -18,7 +18,7 @@ class LightDomainSpells(Feature):
 class RadianceOfTheDawn(Feature):
     def __init__(self):
         super().__init__(
-            name="Radiance of the Dawn", origin="Light Domain Cleric Level 3", activation=FeatureActivation(action_type="action", range="30-Foot Emanation"), usage_tags=["damage"]
+            name="Radiance of the Dawn", origin="Light Domain Cleric Level 3", activation=FeatureActivation(action_type=ActionType.ACTION, range="30-Foot Emanation"), usage_tags=["damage"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -39,7 +39,7 @@ class RadianceOfTheDawn(Feature):
 
 class WardingFlare(Feature):
     def __init__(self):
-        super().__init__(name="Warding Flare", origin="Light Domain Cleric Level 3", activation=FeatureActivation(action_type="reaction", range="30 Feet"), usage_tags=["control"], uses=FeatureUses(max_uses=MAX_ABILITY_MODIFIER, regain_all_on="long rest", current_formula="Current amount: equal to your Wisdom modifier."))
+        super().__init__(name="Warding Flare", origin="Light Domain Cleric Level 3", activation=FeatureActivation(action_type=ActionType.REACTION, range="30 Feet"), usage_tags=["control"], uses=FeatureUses(max_uses=MAX_ABILITY_MODIFIER, regain_all_on="long rest", current_formula="Current amount: equal to your Wisdom modifier."))
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -78,7 +78,7 @@ class ImprovedWardingFlare(Feature):
 
 class CoronaOfLight(Feature):
     def __init__(self):
-        super().__init__(name="Corona of Light", origin="Light Domain Cleric Level 17", activation=FeatureActivation(action_type="action", duration="1 Minute", range="60-Foot Radius"), usage_tags=["control"], uses=FeatureUses(max_uses=MAX_ABILITY_MODIFIER, regain_all_on="long rest", current_formula="Current amount: equal to your Wisdom modifier."))
+        super().__init__(name="Corona of Light", origin="Light Domain Cleric Level 17", activation=FeatureActivation(action_type=ActionType.ACTION, duration="1 Minute", range="60-Foot Radius"), usage_tags=["control"], uses=FeatureUses(max_uses=MAX_ABILITY_MODIFIER, regain_all_on="long rest", current_formula="Current amount: equal to your Wisdom modifier."))
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

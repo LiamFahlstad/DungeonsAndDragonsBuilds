@@ -1,5 +1,5 @@
 import Core.Definitions as Definitions
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, ActionType
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
@@ -28,7 +28,7 @@ class TentacleOfTheDeep(Feature):
         super().__init__(
             name="Tentacle of the Deep",
             origin="The Fathomless Patron Warlock Level 3",
-            activation=FeatureActivation(action_type="bonus_action", duration="1 Minute or Until Another Tentacle Created", range="60 Feet"),
+            activation=FeatureActivation(action_type=ActionType.BONUS_ACTION, duration="1 Minute or Until Another Tentacle Created", range="60 Feet"),
             usage_tags=["damage", "control", "summon"],
             uses=FeatureUses(
                 max_uses=Definitions.MAX_PROFICIENCY_BONUS,
@@ -106,7 +106,7 @@ class GuardianCoil(Feature):
         super().__init__(
             name="Guardian Coil",
             origin="The Fathomless Patron Warlock Level 6",
-            activation=FeatureActivation(action_type="reaction", range="10 Feet"),
+            activation=FeatureActivation(action_type=ActionType.REACTION, range="10 Feet"),
             usage_tags=["buff"],
         )
 
@@ -172,7 +172,7 @@ class FathomlessPlunge(Feature):
         super().__init__(
             name="Fathomless Plunge",
             origin="The Fathomless Patron Warlock Level 14",
-            activation=FeatureActivation(action_type="action", range="30 Feet"),
+            activation=FeatureActivation(action_type=ActionType.ACTION, range="30 Feet"),
             usage_tags=["utility"],
             uses=FeatureUses(max_uses=1, regain_all_on="short or long rest"),
         )

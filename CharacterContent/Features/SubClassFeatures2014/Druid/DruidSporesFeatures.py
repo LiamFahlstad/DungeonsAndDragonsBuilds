@@ -1,5 +1,5 @@
 from Core.Definitions import Ability, Condition
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType
 from CharacterContent.Features.Core.Improvements import ConditionImmunity
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
@@ -25,7 +25,7 @@ class CircleSporesSpells(Feature):
 
 class HaloOfSpores(Feature):
     def __init__(self):
-        super().__init__(name="Halo of Spores", origin="Circle of Spores Druid Level 3", activation=FeatureActivation(action_type="reaction", range="10 Feet"), usage_tags=["damage"])
+        super().__init__(name="Halo of Spores", origin="Circle of Spores Druid Level 3", activation=FeatureActivation(action_type=ActionType.REACTION, range="10 Feet"), usage_tags=["damage"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -42,7 +42,7 @@ class HaloOfSpores(Feature):
 
 class SymbioticEntity(Feature):
     def __init__(self):
-        super().__init__(name="Symbiotic Entity", origin="Circle of Spores Druid Level 3", activation=FeatureActivation(action_type="action", duration="10 Minutes"), usage_tags=["buff"])
+        super().__init__(name="Symbiotic Entity", origin="Circle of Spores Druid Level 3", activation=FeatureActivation(action_type=ActionType.ACTION, duration="10 Minutes"), usage_tags=["buff"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -56,7 +56,7 @@ class SymbioticEntity(Feature):
 
 class FungalInfestation(Feature):
     def __init__(self):
-        super().__init__(name="Fungal Infestation", origin="Circle of Spores Druid Level 6", activation=FeatureActivation(action_type="reaction", duration="1 Hour", range="10 Feet"), usage_tags=["utility", "summon"])
+        super().__init__(name="Fungal Infestation", origin="Circle of Spores Druid Level 6", activation=FeatureActivation(action_type=ActionType.REACTION, duration="1 Hour", range="10 Feet"), usage_tags=["utility", "summon"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         wisdom_mod = character_stat_block.get_ability_modifier(Ability.WISDOM)

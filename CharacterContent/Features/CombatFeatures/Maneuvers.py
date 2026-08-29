@@ -1,5 +1,5 @@
 from Core.Definitions import Ability
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
@@ -47,7 +47,7 @@ class BaitAndSwitch(Maneuver):
 
 class Brace(Maneuver):
     def __init__(self):
-        super().__init__(name="Brace", activation=FeatureActivation(action_type="reaction"), usage_tags=["damage"])
+        super().__init__(name="Brace", activation=FeatureActivation(action_type=ActionType.REACTION), usage_tags=["damage"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         return "Brace: When a creature you can see moves into the reach you have with the melee weapon you're wielding, you can use your reaction to expend one superiority die and make one attack against the creature, using that weapon. If the attack hits, add the superiority die to the weapon's damage roll."
@@ -58,7 +58,7 @@ class Brace(Maneuver):
 
 class CommandersStrike(Maneuver):
     def __init__(self):
-        super().__init__(name="Commander's Strike", activation=FeatureActivation(action_type="bonus_action"), usage_tags=["damage"])
+        super().__init__(name="Commander's Strike", activation=FeatureActivation(action_type=ActionType.BONUS_ACTION), usage_tags=["damage"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         return "Commander's Strike: When you take the Attack action on your turn, you can forgo one of your attacks and use a bonus action to direct one of your companions to strike. When you do so, choose a friendly creature who can see or hear you and expend one superiority die. That creature can immediately use its reaction to make one weapon attack, adding the superiority die to the attack's damage roll."
@@ -109,7 +109,7 @@ class EvasiveFootwork(Maneuver):
 
 class FeintingAttack(Maneuver):
     def __init__(self):
-        super().__init__(name="Feinting Attack", activation=FeatureActivation(action_type="bonus_action"), usage_tags=["buff", "damage"])
+        super().__init__(name="Feinting Attack", activation=FeatureActivation(action_type=ActionType.BONUS_ACTION), usage_tags=["buff", "damage"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         return "Feinting Attack: You can expend one superiority die and use a bonus action on your turn to feint, choosing one creature within 5 feet of you as your target. You have advantage on your next attack roll against that creature this turn. If that attack hits, add the superiority die to the attack's damage roll."
@@ -138,7 +138,7 @@ class GoadingAttack(ManeuverWithSavingThrow):
 
 class GrapplingStrike(Maneuver):
     def __init__(self):
-        super().__init__(name="Grappling Strike", activation=FeatureActivation(action_type="bonus_action"), usage_tags=["control"])
+        super().__init__(name="Grappling Strike", activation=FeatureActivation(action_type=ActionType.BONUS_ACTION), usage_tags=["control"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         return "Grappling Strike: Immediately after you hit a creature with a melee attack on your turn, you can expend one superiority die and then try to grapple the target as a bonus action (see the Player's Handbook for rules on grappling). Add the superiority die to your Strength (Athletics) check."
@@ -181,7 +181,7 @@ class MenacingAttack(ManeuverWithSavingThrow):
 
 class Parry(Maneuver):
     def __init__(self):
-        super().__init__(name="Parry", activation=FeatureActivation(action_type="reaction"), usage_tags=["buff"])
+        super().__init__(name="Parry", activation=FeatureActivation(action_type=ActionType.REACTION), usage_tags=["buff"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         return "Parry: When another creature damages you with a melee attack, you can use your reaction and expend one superiority die to reduce the damage by the number you roll on your superiority die + your Dexterity modifier."
@@ -214,7 +214,7 @@ class PushingAttack(ManeuverWithSavingThrow):
 
 class QuickToss(Maneuver):
     def __init__(self):
-        super().__init__(name="Quick Toss", activation=FeatureActivation(action_type="bonus_action"), usage_tags=["damage"])
+        super().__init__(name="Quick Toss", activation=FeatureActivation(action_type=ActionType.BONUS_ACTION), usage_tags=["damage"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         return "Quick Toss: As a bonus action, you can expend one superiority die and make a ranged attack with a weapon that has the thrown property. You can draw the weapon as part of making this attack. If you hit, add the superiority die to the weapon's damage roll."
@@ -225,7 +225,7 @@ class QuickToss(Maneuver):
 
 class Rally(Maneuver):
     def __init__(self):
-        super().__init__(name="Rally", activation=FeatureActivation(action_type="bonus_action"), usage_tags=["heal"])
+        super().__init__(name="Rally", activation=FeatureActivation(action_type=ActionType.BONUS_ACTION), usage_tags=["heal"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         return "Rally: On your turn, you can use a bonus action and expend one superiority die to bolster the resolve of one of your companions. When you do so, choose a friendly creature who can see or hear you. That creature gains temporary hit points equal to the superiority die roll + your Charisma modifier."
@@ -236,7 +236,7 @@ class Rally(Maneuver):
 
 class Riposte(Maneuver):
     def __init__(self):
-        super().__init__(name="Riposte", activation=FeatureActivation(action_type="reaction"), usage_tags=["damage"])
+        super().__init__(name="Riposte", activation=FeatureActivation(action_type=ActionType.REACTION), usage_tags=["damage"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         return (

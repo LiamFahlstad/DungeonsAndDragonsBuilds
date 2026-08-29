@@ -1,5 +1,5 @@
 from Core.Definitions import Ability, MAX_ABILITY_MODIFIER, PALADIN_HIT_DIE
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, ActionType
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
@@ -45,7 +45,7 @@ class GlorySpells(Feature):
 class PeerlessAthlete(Feature):
     def __init__(self):
         super().__init__(
-            name="Peerless Athlete", origin="Oath of Glory Paladin Level 3", activation=FeatureActivation(action_type="bonus_action", duration="1 Hour"), usage_tags=["buff"]
+            name="Peerless Athlete", origin="Oath of Glory Paladin Level 3", activation=FeatureActivation(action_type=ActionType.BONUS_ACTION, duration="1 Hour"), usage_tags=["buff"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -70,7 +70,7 @@ class AuraOfAlacrity(Feature):
 class GloriousDefense(Feature):
     def __init__(self):
         super().__init__(
-            name="Glorious Defense", origin="Oath of Glory Paladin Level 15", activation=FeatureActivation(action_type="reaction", range="10 Feet"), usage_tags=["buff", "damage"]
+            name="Glorious Defense", origin="Oath of Glory Paladin Level 15", activation=FeatureActivation(action_type=ActionType.REACTION, range="10 Feet"), usage_tags=["buff", "damage"]
         , uses=FeatureUses(max_uses=MAX_ABILITY_MODIFIER, regain_all_on="long rest", current_formula="Current amount: equal to your Charisma modifier."))
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -95,7 +95,7 @@ class GloriousDefense(Feature):
 
 class LivingLegend(Feature):
     def __init__(self):
-        super().__init__(name="Living Legend", origin="Oath of Glory Paladin Level 20", activation=FeatureActivation(action_type="bonus_action", duration="10 Minutes"), usage_tags=["buff"])
+        super().__init__(name="Living Legend", origin="Oath of Glory Paladin Level 20", activation=FeatureActivation(action_type=ActionType.BONUS_ACTION, duration="10 Minutes"), usage_tags=["buff"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

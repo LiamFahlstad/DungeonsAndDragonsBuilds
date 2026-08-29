@@ -1,5 +1,5 @@
 from Core.Definitions import RANGER_HIT_DIE
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
@@ -33,7 +33,7 @@ class DefensiveTactics(Feature):
 
 class Volley(Feature):
     def __init__(self):
-        super().__init__(name="Volley", origin="Hunter Ranger Level 11", activation=FeatureActivation(action_type="action", range="10-Foot Radius"), usage_tags=["damage"])
+        super().__init__(name="Volley", origin="Hunter Ranger Level 11", activation=FeatureActivation(action_type=ActionType.ACTION, range="10-Foot Radius"), usage_tags=["damage"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "You can use your action to make a ranged attack against any number of creatures within 10 feet of a point you can see within your weapon's range. You must have ammunition for each target, as normal, and you make a separate attack roll for each target."
@@ -42,7 +42,7 @@ class Volley(Feature):
 
 class WhirlwindAttack(Feature):
     def __init__(self):
-        super().__init__(name="Whirlwind Attack", origin="Hunter Ranger Level 11", activation=FeatureActivation(action_type="action", range="5 Feet"), usage_tags=["damage"])
+        super().__init__(name="Whirlwind Attack", origin="Hunter Ranger Level 11", activation=FeatureActivation(action_type=ActionType.ACTION, range="5 Feet"), usage_tags=["damage"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "You can use your action to make melee attacks against any number of creatures within 5 feet of you, with a separate attack roll for each target."

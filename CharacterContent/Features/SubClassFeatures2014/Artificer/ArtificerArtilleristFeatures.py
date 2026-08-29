@@ -1,5 +1,5 @@
 from Core.Definitions import ARTIFICER_HIT_DIE
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
@@ -32,7 +32,7 @@ class Spells(Feature):
 
 class EldritchCannon(Feature):
     def __init__(self):
-        super().__init__(name="Eldritch Cannon", origin="Artillerist Artificer Level 3", activation=FeatureActivation(action_type="action", duration="1 Hour or Until Destroyed", range="5 Feet"), usage_tags=["damage", "heal", "buff"])
+        super().__init__(name="Eldritch Cannon", origin="Artillerist Artificer Level 3", activation=FeatureActivation(action_type=ActionType.ACTION, duration="1 Hour or Until Destroyed", range="5 Feet"), usage_tags=["damage", "heal", "buff"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -62,7 +62,7 @@ class ArcaneFirearm(Feature):
 
 class ExplosiveCannon(Feature):
     def __init__(self):
-        super().__init__(name="Explosive Cannon", origin="Artillerist Artificer Level 9", activation=FeatureActivation(action_type="action", range="20 Feet"), usage_tags=["damage"])
+        super().__init__(name="Explosive Cannon", origin="Artillerist Artificer Level 9", activation=FeatureActivation(action_type=ActionType.ACTION, range="20 Feet"), usage_tags=["damage"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

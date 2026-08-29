@@ -1,6 +1,6 @@
 from Core import Definitions
 from Core.Definitions import WIZARD_HIT_DIE
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
@@ -52,7 +52,7 @@ class InuredToUndeath(Feature):
 
 class CommandUndead(Feature):
     def __init__(self):
-        super().__init__(name="Command Undead", origin="Necromancy Wizard Level 14", activation=FeatureActivation(action_type="action", range="60 Feet"), usage_tags=["control"])
+        super().__init__(name="Command Undead", origin="Necromancy Wizard Level 14", activation=FeatureActivation(action_type=ActionType.ACTION, range="60 Feet"), usage_tags=["control"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

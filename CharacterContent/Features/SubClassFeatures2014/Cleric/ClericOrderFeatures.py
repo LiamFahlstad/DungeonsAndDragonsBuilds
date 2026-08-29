@@ -1,6 +1,6 @@
 import Core.Definitions as Definitions
 from Core.Definitions import Ability
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
@@ -49,7 +49,7 @@ class OrdersDemandChannelDivinity(Feature):
         super().__init__(
             name="Channel Divinity: Order's Demand",
             origin="Order Domain Cleric Level 3",
-            activation=FeatureActivation(action_type="action", duration="Until End of Your Next Turn or Until Takes Damage", range="30 Feet"),
+            activation=FeatureActivation(action_type=ActionType.ACTION, duration="Until End of Your Next Turn or Until Takes Damage", range="30 Feet"),
             usage_tags=["control"],
         )
 

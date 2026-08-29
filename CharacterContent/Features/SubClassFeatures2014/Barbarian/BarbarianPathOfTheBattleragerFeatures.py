@@ -1,10 +1,10 @@
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
 class BattleragerArmor(Feature):
     def __init__(self):
-        super().__init__(name="Battlerager Armor", origin="Path Of The Battlerager Barbarian Level 3", activation=FeatureActivation(action_type="bonus_action", range="5 Feet"), usage_tags=["damage"])
+        super().__init__(name="Battlerager Armor", origin="Path Of The Battlerager Barbarian Level 3", activation=FeatureActivation(action_type=ActionType.BONUS_ACTION, range="5 Feet"), usage_tags=["damage"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -38,7 +38,7 @@ class RecklessAbandon(Feature):
 
 class BattleragerCharge(Feature):
     def __init__(self):
-        super().__init__(name="Battlerager Charge", origin="Path Of The Battlerager Barbarian Level 10", activation=FeatureActivation(action_type="bonus_action"), usage_tags=["utility"])
+        super().__init__(name="Battlerager Charge", origin="Path Of The Battlerager Barbarian Level 10", activation=FeatureActivation(action_type=ActionType.BONUS_ACTION), usage_tags=["utility"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

@@ -1,5 +1,5 @@
 from Core.Definitions import PSION_HIT_DIE
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
@@ -89,7 +89,7 @@ class PsionicDiscipline(Feature):
 
 class PsionicRestoration(Feature):
     def __init__(self):
-        super().__init__(name="Psionic Restoration", origin="Psion Level 5", activation=FeatureActivation(action_type="action"))
+        super().__init__(name="Psionic Restoration", origin="Psion Level 5", activation=FeatureActivation(action_type=ActionType.ACTION))
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

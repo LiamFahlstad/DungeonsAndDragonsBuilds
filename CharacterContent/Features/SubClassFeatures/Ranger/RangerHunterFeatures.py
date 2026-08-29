@@ -1,5 +1,5 @@
 from Core.Definitions import RANGER_HIT_DIE
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
@@ -60,7 +60,7 @@ class SuperiorHuntersPrey(Feature):
 class SuperiorHuntersDefense(Feature):
     def __init__(self):
         super().__init__(
-            name="Superior Hunter's Defense", origin="Hunter Ranger Level 15", activation=FeatureActivation(action_type="reaction", duration="Until End of Current Turn"), usage_tags=["buff"]
+            name="Superior Hunter's Defense", origin="Hunter Ranger Level 15", activation=FeatureActivation(action_type=ActionType.REACTION, duration="Until End of Current Turn"), usage_tags=["buff"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:

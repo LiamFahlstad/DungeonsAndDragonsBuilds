@@ -1,4 +1,4 @@
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, ActionType
 from Core.Definitions import MAX_PROFICIENCY_BONUS
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
@@ -8,7 +8,7 @@ class WizardlyQuill(Feature):
         super().__init__(
             name="Wizardly Quill",
             origin="Order of Scribes Wizard Level 3",
-            activation=FeatureActivation(action_type="bonus_action"),
+            activation=FeatureActivation(action_type=ActionType.BONUS_ACTION),
             usage_tags=["utility"],
         )
 
@@ -50,7 +50,7 @@ class ManifestMind(Feature):
         super().__init__(
             name="Manifest Mind",
             origin="Order of Scribes Wizard Level 6",
-            activation=FeatureActivation(action_type="bonus_action", duration="Until Dismissed Or >300 Feet", range="60 Feet"),
+            activation=FeatureActivation(action_type=ActionType.BONUS_ACTION, duration="Until Dismissed Or >300 Feet", range="60 Feet"),
             usage_tags=["utility"],
             uses=FeatureUses(
                 max_uses=MAX_PROFICIENCY_BONUS,
@@ -102,7 +102,7 @@ class OneWithTheWord(Feature):
         super().__init__(
             name="One with the Word",
             origin="Order of Scribes Wizard Level 14",
-            activation=FeatureActivation(action_type="reaction", duration="1d6 Long Rests"),
+            activation=FeatureActivation(action_type=ActionType.REACTION, duration="1d6 Long Rests"),
             usage_tags=["buff"],
             uses=FeatureUses(max_uses=1, regain_all_on="long rest"),
         )

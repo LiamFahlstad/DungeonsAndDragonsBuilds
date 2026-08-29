@@ -1,5 +1,5 @@
 import Core.Definitions as Definitions
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
@@ -30,7 +30,7 @@ class AncestralProtectors(Feature):
 
 class SpiritShield(Feature):
     def __init__(self):
-        super().__init__(name="Spirit Shield", origin="Path Of The Ancestral Guardian Barbarian Level 6", activation=FeatureActivation(action_type="reaction", duration="Ends When Your Rage Ends", range="30 Feet"), usage_tags=["buff"])
+        super().__init__(name="Spirit Shield", origin="Path Of The Ancestral Guardian Barbarian Level 6", activation=FeatureActivation(action_type=ActionType.REACTION, duration="Ends When Your Rage Ends", range="30 Feet"), usage_tags=["buff"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         barbarian_level = character_stat_block.get_class_level(Definitions.CharacterClass.BARBARIAN)

@@ -1,5 +1,5 @@
 from Core.Definitions import MONK_HIT_DIE
-from CharacterContent.Features.Core.BaseFeatures import FeatureUses, Feature, FeatureActivation
+from CharacterContent.Features.Core.BaseFeatures import FeatureUses, Feature, FeatureActivation, ActionType
 from CharacterContent.Items.Weapons import WeaponDamageRolls
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
@@ -59,7 +59,7 @@ class AgileParry(Feature):
 
 class KenseiShot(Feature):
     def __init__(self):
-        super().__init__(name="Kensei's Shot", origin="Way of the Kensei Monk Level 3", activation=FeatureActivation(action_type="bonus_action", duration="Until End of Current Turn"), usage_tags=["damage"])
+        super().__init__(name="Kensei's Shot", origin="Way of the Kensei Monk Level 3", activation=FeatureActivation(action_type=ActionType.BONUS_ACTION, duration="Until End of Current Turn"), usage_tags=["damage"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -106,7 +106,7 @@ class DeftStrike(Feature):
 
 class SharpenTheBlade(Feature):
     def __init__(self):
-        super().__init__(name="Sharpen the Blade", origin="Way of the Kensei Monk Level 11", activation=FeatureActivation(action_type="bonus_action", duration="1 Minute or Until Feature Used Again", range="Touch"), usage_tags=["buff"])
+        super().__init__(name="Sharpen the Blade", origin="Way of the Kensei Monk Level 11", activation=FeatureActivation(action_type=ActionType.BONUS_ACTION, duration="1 Minute or Until Feature Used Again", range="Touch"), usage_tags=["buff"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

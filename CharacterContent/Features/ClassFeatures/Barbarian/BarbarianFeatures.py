@@ -1,5 +1,5 @@
 import Core.Definitions as Definitions
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, ActionType
 from CharacterContent.Features.Core.Improvements import (
     AbilityScoreBonus,
     InitiativeRollCondition,
@@ -18,7 +18,7 @@ class Rage(Feature):
         super().__init__(
             name="Rage",
             origin="Barbarian Level 1",
-            activation=FeatureActivation(action_type="bonus_action", duration="Until End of Your Next Turn"),
+            activation=FeatureActivation(action_type=ActionType.BONUS_ACTION, duration="Until End of Your Next Turn"),
             usage_tags=["buff"],
             uses=FeatureUses(
                 max_uses=6,

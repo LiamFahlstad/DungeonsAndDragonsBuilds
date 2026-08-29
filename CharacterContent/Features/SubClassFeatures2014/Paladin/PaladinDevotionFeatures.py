@@ -1,5 +1,5 @@
 from Core.Definitions import PALADIN_HIT_DIE
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
@@ -24,7 +24,7 @@ class DevotionSpells(Feature):
 
 class SacredWeapon(Feature):
     def __init__(self):
-        super().__init__(name="Sacred Weapon", origin="Oath of Devotion Paladin Level 3", activation=FeatureActivation(action_type="action", duration="1 Minute"), usage_tags=["buff"])
+        super().__init__(name="Sacred Weapon", origin="Oath of Devotion Paladin Level 3", activation=FeatureActivation(action_type=ActionType.ACTION, duration="1 Minute"), usage_tags=["buff"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -46,7 +46,7 @@ class SacredWeapon(Feature):
 
 class TurnTheUnholy(Feature):
     def __init__(self):
-        super().__init__(name="Turn the Unholy", origin="Oath of Devotion Paladin Level 3", activation=FeatureActivation(action_type="action", duration="1 Minute or Until Takes Damage", range="30 Feet"), usage_tags=["control"])
+        super().__init__(name="Turn the Unholy", origin="Oath of Devotion Paladin Level 3", activation=FeatureActivation(action_type=ActionType.ACTION, duration="1 Minute or Until Takes Damage", range="30 Feet"), usage_tags=["control"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -87,7 +87,7 @@ class PurityOfSpirit(Feature):
 
 class HolyNimbus(Feature):
     def __init__(self):
-        super().__init__(name="Holy Nimbus", origin="Oath of Devotion Paladin Level 20", activation=FeatureActivation(action_type="action", duration="1 Minute", range="30-Foot Radius"), usage_tags=["damage", "buff"], uses=FeatureUses(max_uses=1, regain_all_on="long rest"))
+        super().__init__(name="Holy Nimbus", origin="Oath of Devotion Paladin Level 20", activation=FeatureActivation(action_type=ActionType.ACTION, duration="1 Minute", range="30-Foot Radius"), usage_tags=["damage", "buff"], uses=FeatureUses(max_uses=1, regain_all_on="long rest"))
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

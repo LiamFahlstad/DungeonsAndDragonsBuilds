@@ -1,4 +1,4 @@
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, ActionType
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
@@ -38,7 +38,7 @@ class HealingLight(Feature):
         super().__init__(
             name="Healing Light",
             origin="The Celestial Patron Warlock Level 3",
-            activation=FeatureActivation(action_type="bonus_action", range="60 Feet"),
+            activation=FeatureActivation(action_type=ActionType.BONUS_ACTION, range="60 Feet"),
             usage_tags=["heal"],
         )
 

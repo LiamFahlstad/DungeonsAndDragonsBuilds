@@ -1,7 +1,7 @@
 from enum import Enum
 
 import Core.Definitions as Definitions
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, ActionType
 from CharacterContent.Features.Core.Improvements import (
     DamageResistance as DamageResistanceImprovement,
 )
@@ -115,7 +115,7 @@ class DraconicFlight(Feature):
         super().__init__(
             name="Draconic Flight",
             origin="Dragonborn Trait",
-            activation=FeatureActivation(action_type="bonus_action", duration="10 Minutes"),
+            activation=FeatureActivation(action_type=ActionType.BONUS_ACTION, duration="10 Minutes"),
             usage_tags=["buff", "utility"],
         )
 

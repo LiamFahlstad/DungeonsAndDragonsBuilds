@@ -1,6 +1,6 @@
 import Core.Definitions as Definitions
 from Core.Definitions import Ability
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
@@ -37,7 +37,7 @@ class EyesOfNight(Feature):
         super().__init__(
             name="Eyes of Night",
             origin="Twilight Domain Cleric Level 3",
-            activation=FeatureActivation(action_type="action", duration="1 Hour", range="10 Feet"),
+            activation=FeatureActivation(action_type=ActionType.ACTION, duration="1 Hour", range="10 Feet"),
             usage_tags=["utility"],
         )
 
@@ -70,7 +70,7 @@ class VigilantBlessing(Feature):
         super().__init__(
             name="Vigilant Blessing",
             origin="Twilight Domain Cleric Level 3",
-            activation=FeatureActivation(action_type="action"),
+            activation=FeatureActivation(action_type=ActionType.ACTION),
             usage_tags=["buff"],
         )
 
@@ -84,7 +84,7 @@ class TwilightSanctuaryChannelDivinity(Feature):
         super().__init__(
             name="Channel Divinity: Twilight Sanctuary",
             origin="Twilight Domain Cleric Level 3",
-            activation=FeatureActivation(action_type="action", duration="1 Minute or Until You Are Incapacitated or Die", range="Self (30-Foot-Radius Sphere)"),
+            activation=FeatureActivation(action_type=ActionType.ACTION, duration="1 Minute or Until You Are Incapacitated or Die", range="Self (30-Foot-Radius Sphere)"),
             usage_tags=["heal", "buff"],
         )
 
@@ -115,7 +115,7 @@ class StepsOfNight(Feature):
         super().__init__(
             name="Steps of Night",
             origin="Twilight Domain Cleric Level 6",
-            activation=FeatureActivation(action_type="bonus_action", duration="1 Minute"),
+            activation=FeatureActivation(action_type=ActionType.BONUS_ACTION, duration="1 Minute"),
             usage_tags=["utility"],
             uses=FeatureUses(max_uses=Definitions.MAX_PROFICIENCY_BONUS, regain_all_on="long rest", current_formula="Current amount: equal to your proficiency bonus."))
 

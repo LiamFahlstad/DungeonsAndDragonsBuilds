@@ -1,6 +1,6 @@
 from Core.Definitions import WARLOCK_HIT_DIE, Ability, DamageType
 import Core.Definitions as Definitions
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType
 from CharacterContent.Features.Core.Improvements import DamageResistance
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
@@ -19,7 +19,7 @@ class CelestialSpells(Feature):
 class HealingLight(Feature):
     def __init__(self):
         super().__init__(
-            name="Healing Light", origin="Celestial Patron Warlock Level 3", activation=FeatureActivation(action_type="bonus_action", range="60 Feet"), usage_tags=["heal"]
+            name="Healing Light", origin="Celestial Patron Warlock Level 3", activation=FeatureActivation(action_type=ActionType.BONUS_ACTION, range="60 Feet"), usage_tags=["heal"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:

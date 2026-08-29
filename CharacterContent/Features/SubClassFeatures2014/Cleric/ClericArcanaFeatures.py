@@ -1,4 +1,4 @@
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
@@ -34,7 +34,7 @@ class ArcaneAbjurationChannelDivinity(Feature):
         super().__init__(
             name="Channel Divinity: Arcane Abjuration",
             origin="Arcana Domain Cleric Level 3",
-            activation=FeatureActivation(action_type="action", duration="1 Minute or Until Takes Any Damage", range="30 Feet"),
+            activation=FeatureActivation(action_type=ActionType.ACTION, duration="1 Minute or Until Takes Any Damage", range="30 Feet"),
             usage_tags=["control"],
         )
 

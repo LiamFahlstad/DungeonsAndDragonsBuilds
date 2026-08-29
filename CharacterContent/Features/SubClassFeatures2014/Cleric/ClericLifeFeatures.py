@@ -1,5 +1,5 @@
 import Core.Definitions as Definitions
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
@@ -26,7 +26,7 @@ class PreserveLifeChannelDivinity(Feature):
         super().__init__(
             name="Channel Divinity: Preserve Life",
             origin="Life Domain Cleric Level 3",
-            activation=FeatureActivation(action_type="action", range="30 Feet"),
+            activation=FeatureActivation(action_type=ActionType.ACTION, range="30 Feet"),
             usage_tags=["heal"],
         )
 

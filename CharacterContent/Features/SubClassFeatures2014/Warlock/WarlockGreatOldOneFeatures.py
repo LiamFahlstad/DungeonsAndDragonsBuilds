@@ -1,4 +1,4 @@
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, ActionType
 from CharacterContent.Features.Core.Improvements import DamageResistance
 from Core.Definitions import DamageType
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
@@ -44,7 +44,7 @@ class EntropicWard(Feature):
         super().__init__(
             name="Entropic Ward",
             origin="The Great Old One Patron Warlock Level 6",
-            activation=FeatureActivation(action_type="reaction", duration="Until End of Next Turn"),
+            activation=FeatureActivation(action_type=ActionType.REACTION, duration="Until End of Next Turn"),
             usage_tags=["buff"],
             uses=FeatureUses(max_uses=1, regain_all_on="short or long rest"),
         )
@@ -93,7 +93,7 @@ class CreateThrall(Feature):
         super().__init__(
             name="Create Thrall",
             origin="The Great Old One Patron Warlock Level 14",
-            activation=FeatureActivation(action_type="action", duration="Until Remove Curse or Charmed Removed", range="Touch"),
+            activation=FeatureActivation(action_type=ActionType.ACTION, duration="Until Remove Curse or Charmed Removed", range="Touch"),
             usage_tags=["control"],
         )
 

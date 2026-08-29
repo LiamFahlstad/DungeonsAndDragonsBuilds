@@ -1,6 +1,6 @@
 import Core.Definitions as Definitions
 from Core.Definitions import MONK_HIT_DIE
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, ActionType
 from CharacterContent.Items.Weapons import WeaponDamageRolls
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
@@ -80,7 +80,7 @@ class OpenHandTechnique(Feature):
 class WholenessOfBody(Feature):
     def __init__(self):
         super().__init__(
-            name="Wholeness of Body", origin="Warrior of the Open Hand Monk Level 6", activation=FeatureActivation(action_type="bonus_action"), usage_tags=["heal"]
+            name="Wholeness of Body", origin="Warrior of the Open Hand Monk Level 6", activation=FeatureActivation(action_type=ActionType.BONUS_ACTION), usage_tags=["heal"]
         , uses=FeatureUses(max_uses=Definitions.MAX_ABILITY_MODIFIER, regain_all_on="long rest", current_formula="Current amount: equal to your Wisdom modifier."))
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:

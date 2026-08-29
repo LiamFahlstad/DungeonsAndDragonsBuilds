@@ -1,5 +1,5 @@
 from Core.Definitions import Ability
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
@@ -20,7 +20,7 @@ class TouchOfDeath(Feature):
 
 class HourOfReaping(Feature):
     def __init__(self):
-        super().__init__(name="Hour of Reaping", origin="Way of the Long Death Monk Level 6", activation=FeatureActivation(action_type="action", duration="Until End of Next Turn", range="30 Feet"), usage_tags=["control"])
+        super().__init__(name="Hour of Reaping", origin="Way of the Long Death Monk Level 6", activation=FeatureActivation(action_type=ActionType.ACTION, duration="Until End of Next Turn", range="30 Feet"), usage_tags=["control"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -50,7 +50,7 @@ class MasteryOfDeath(Feature):
 
 class TouchOfTheLongDeath(Feature):
     def __init__(self):
-        super().__init__(name="Touch of the Long Death", origin="Way of the Long Death Monk Level 17", activation=FeatureActivation(action_type="action", range="Touch (5 Feet)"), usage_tags=["damage"])
+        super().__init__(name="Touch of the Long Death", origin="Way of the Long Death Monk Level 17", activation=FeatureActivation(action_type=ActionType.ACTION, range="Touch (5 Feet)"), usage_tags=["damage"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

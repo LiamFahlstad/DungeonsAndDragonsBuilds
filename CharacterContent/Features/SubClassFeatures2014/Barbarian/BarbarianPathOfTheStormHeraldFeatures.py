@@ -1,5 +1,5 @@
 import Core.Definitions as Definitions
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
@@ -27,7 +27,7 @@ def _dice_damage_value(barbarian_level: int) -> str:
 
 class StormAura(Feature):
     def __init__(self, environment: Definitions.BarbarianStormEnvironment):
-        super().__init__(name="Storm Aura", origin="Path Of The Storm Herald Barbarian Level 3", activation=FeatureActivation(action_type="bonus_action", duration="While You Rage", range="10 Feet"), usage_tags=["damage", "heal", "control"])
+        super().__init__(name="Storm Aura", origin="Path Of The Storm Herald Barbarian Level 3", activation=FeatureActivation(action_type=ActionType.BONUS_ACTION, duration="While You Rage", range="10 Feet"), usage_tags=["damage", "heal", "control"])
         self.environment = environment
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -96,7 +96,7 @@ class ShieldingStorm(Feature):
 
 class RagingStorm(Feature):
     def __init__(self, environment: Definitions.BarbarianStormEnvironment):
-        super().__init__(name="Raging Storm", origin="Path Of The Storm Herald Barbarian Level 14", activation=FeatureActivation(action_type="reaction"), usage_tags=["damage", "control"])
+        super().__init__(name="Raging Storm", origin="Path Of The Storm Herald Barbarian Level 14", activation=FeatureActivation(action_type=ActionType.REACTION), usage_tags=["damage", "control"])
         self.environment = environment
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:

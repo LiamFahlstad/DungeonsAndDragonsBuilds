@@ -1,4 +1,4 @@
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
@@ -46,7 +46,7 @@ class EldritchCannon(Feature):
             name="Eldritch Cannon",
             origin="Artillerist Artificer Level 3",
             activation=FeatureActivation(
-                action_type="action", duration="1 Hour", range="5 Feet"
+                action_type=ActionType.ACTION, duration="1 Hour", range="5 Feet"
             ),
             usage_tags=["damage", "buff"],
         )
@@ -89,7 +89,7 @@ class ExplosiveCannon(Feature):
         super().__init__(
             name="Explosive Cannon",
             origin="Artillerist Artificer Level 9",
-            activation=FeatureActivation(action_type="reaction"),
+            activation=FeatureActivation(action_type=ActionType.REACTION),
             usage_tags=["damage", "buff"],
         )
 

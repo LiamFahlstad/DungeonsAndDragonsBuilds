@@ -1,6 +1,6 @@
 
 from Core.Definitions import Ability, DRUID_HIT_DIE
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
@@ -18,7 +18,7 @@ class CircleOfTheSeaSpells(Feature):
 class WrathOfTheSea(Feature):
     def __init__(self):
         super().__init__(
-            name="Wrath of the Sea", origin="Circle of the Sea Druid Level 3", activation=FeatureActivation(action_type="bonus_action", duration="10 Minutes or Until Dismissed/Incapacitated", range="5-Foot Emanation"), usage_tags=["damage", "control"]
+            name="Wrath of the Sea", origin="Circle of the Sea Druid Level 3", activation=FeatureActivation(action_type=ActionType.BONUS_ACTION, duration="10 Minutes or Until Dismissed/Incapacitated", range="5-Foot Emanation"), usage_tags=["damage", "control"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:

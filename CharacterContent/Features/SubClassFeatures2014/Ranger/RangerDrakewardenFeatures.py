@@ -1,6 +1,6 @@
 from typing import Optional
 
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType
 from Combat.Definitions import (
     Alignment,
     DamageTypeEntry,
@@ -126,7 +126,7 @@ class DrakeCompanion(Feature):
         super().__init__(
             name="Drake Companion",
             origin="Drakewarden Ranger Level 3",
-            activation=FeatureActivation(action_type="action", range="30 Feet"),
+            activation=FeatureActivation(action_type=ActionType.ACTION, range="30 Feet"),
             usage_tags=["utility", "summon"],
         )
         self.damage_type = damage_type
@@ -176,7 +176,7 @@ class DrakesBreath(Feature):
         super().__init__(
             name="Drake's Breath",
             origin="Drakewarden Ranger Level 11",
-            activation=FeatureActivation(action_type="action", range="30-Foot Cone"),
+            activation=FeatureActivation(action_type=ActionType.ACTION, range="30-Foot Cone"),
             usage_tags=["damage"],
         )
 
@@ -218,7 +218,7 @@ class PerfectedBond(Feature):
         super().__init__(
             name="Perfected Bond",
             origin="Drakewarden Ranger Level 15",
-            activation=FeatureActivation(action_type="reaction"),
+            activation=FeatureActivation(action_type=ActionType.REACTION),
             usage_tags=["buff"],
         )
 

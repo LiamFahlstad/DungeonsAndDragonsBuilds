@@ -1,5 +1,5 @@
 import Core.Definitions as Definitions
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, ActionType
 from CharacterContent.Features.Core.Improvements import (
     JackOfAllTradesBonus,
     SkillExpertiseChoice,
@@ -29,7 +29,7 @@ class BardicInspiration(Feature):
         super().__init__(
             name="Bardic Inspiration",
             origin="Bard Level 1",
-            activation=FeatureActivation(action_type="bonus_action", duration="1 Hour", range="60 Feet"),
+            activation=FeatureActivation(action_type=ActionType.BONUS_ACTION, duration="1 Hour", range="60 Feet"),
             usage_tags=["buff"],
             uses=FeatureUses(
                 max_uses=Definitions.MAX_ABILITY_MODIFIER,
@@ -185,7 +185,7 @@ class Countercharm(Feature):
         super().__init__(
             name="Countercharm",
             origin="Bard Level 7",
-            activation=FeatureActivation(action_type="reaction", range="30 Feet"),
+            activation=FeatureActivation(action_type=ActionType.REACTION, range="30 Feet"),
             usage_tags=["buff"],
         )
 

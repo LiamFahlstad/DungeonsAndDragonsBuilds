@@ -1,13 +1,13 @@
 import Core.Definitions as Definitions
 from CharacterContent.Features.ClassFeatures.Monk.MonkFeatures import LEVEL_TO_MARTIAL_ARTS_DIE
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType
 from CharacterContent.Items.Weapons import WeaponDamageRolls
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
 class RadiantSunBolt(Feature):
     def __init__(self):
-        super().__init__(name="Radiant Sun Bolt", origin="Way of the Sun Soul Monk Level 3", activation=FeatureActivation(action_type="bonus_action", range="30 Feet"), usage_tags=["damage"])
+        super().__init__(name="Radiant Sun Bolt", origin="Way of the Sun Soul Monk Level 3", activation=FeatureActivation(action_type=ActionType.BONUS_ACTION, range="30 Feet"), usage_tags=["damage"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         monk_level = character_stat_block.get_class_level(Definitions.CharacterClass.MONK)
@@ -27,7 +27,7 @@ class RadiantSunBolt(Feature):
 
 class SearingArcStrike(Feature):
     def __init__(self):
-        super().__init__(name="Searing Arc Strike", origin="Way of the Sun Soul Monk Level 6", activation=FeatureActivation(action_type="bonus_action"), usage_tags=["damage"])
+        super().__init__(name="Searing Arc Strike", origin="Way of the Sun Soul Monk Level 6", activation=FeatureActivation(action_type=ActionType.BONUS_ACTION), usage_tags=["damage"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         monk_level = character_stat_block.get_class_level(Definitions.CharacterClass.MONK)
@@ -54,7 +54,7 @@ class SearingArcStrike(Feature):
 
 class SearingSunburst(Feature):
     def __init__(self):
-        super().__init__(name="Searing Sunburst", origin="Way of the Sun Soul Monk Level 11", activation=FeatureActivation(action_type="action", range="150 Feet (20-Foot-Radius Sphere)"), usage_tags=["damage"])
+        super().__init__(name="Searing Sunburst", origin="Way of the Sun Soul Monk Level 11", activation=FeatureActivation(action_type=ActionType.ACTION, range="150 Feet (20-Foot-Radius Sphere)"), usage_tags=["damage"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -80,7 +80,7 @@ class SearingSunburst(Feature):
 
 class SunShield(Feature):
     def __init__(self):
-        super().__init__(name="Sun Shield", origin="Way of the Sun Soul Monk Level 17", activation=FeatureActivation(action_type="reaction", range="30 Feet"), usage_tags=["damage"])
+        super().__init__(name="Sun Shield", origin="Way of the Sun Soul Monk Level 17", activation=FeatureActivation(action_type=ActionType.REACTION, range="30 Feet"), usage_tags=["damage"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         wis_mod = character_stat_block.get_ability_modifier(Definitions.Ability.WISDOM)

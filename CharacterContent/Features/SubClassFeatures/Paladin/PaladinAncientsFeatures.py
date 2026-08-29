@@ -1,12 +1,12 @@
 from Core.Definitions import PALADIN_HIT_DIE
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
 class NaturesWrath(Feature):
     def __init__(self):
         super().__init__(
-            name="Nature's Wrath", origin="Oath of the Ancients Paladin Level 3", activation=FeatureActivation(action_type="action", duration="1 Minute", range="15 Feet"), usage_tags=["control"]
+            name="Nature's Wrath", origin="Oath of the Ancients Paladin Level 3", activation=FeatureActivation(action_type=ActionType.ACTION, duration="1 Minute", range="15 Feet"), usage_tags=["control"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -78,7 +78,7 @@ class UndyingSentinel(Feature):
 class ElderChampion(Feature):
     def __init__(self):
         super().__init__(
-            name="Elder Champion", origin="Oath of the Ancients Paladin Level 20", activation=FeatureActivation(action_type="bonus_action", duration="1 Minute or Until Ended"), usage_tags=["heal", "control"]
+            name="Elder Champion", origin="Oath of the Ancients Paladin Level 20", activation=FeatureActivation(action_type=ActionType.BONUS_ACTION, duration="1 Minute or Until Ended"), usage_tags=["heal", "control"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:

@@ -1,6 +1,6 @@
 
 from Core.Definitions import RANGER_HIT_DIE, Ability, Condition
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType
 from CharacterContent.Features.Core.Improvements import ConditionImmunity, SavingThrowBonus
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
@@ -28,7 +28,7 @@ class HollowWardenSpells(Feature):
 class WrathOfTheWild(Feature):
     def __init__(self):
         super().__init__(
-            name="Wrath of the Wild", origin="Hollow Warden Ranger Level 3", activation=FeatureActivation(action_type="bonus_action", duration="1 Minute or Until Incapacitated", range="10-Foot Emanation"), usage_tags=["buff", "control"]
+            name="Wrath of the Wild", origin="Hollow Warden Ranger Level 3", activation=FeatureActivation(action_type=ActionType.BONUS_ACTION, duration="1 Minute or Until Incapacitated", range="10-Foot Emanation"), usage_tags=["buff", "control"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:

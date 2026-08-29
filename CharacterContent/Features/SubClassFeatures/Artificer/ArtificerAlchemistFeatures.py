@@ -1,5 +1,5 @@
 from Core.Definitions import ARTIFICER_HIT_DIE, Ability, Condition, DamageType, MAX_ABILITY_MODIFIER
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, ActionType
 from CharacterContent.Features.Core.Improvements import ConditionImmunity, DamageResistance
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
@@ -41,7 +41,7 @@ class Spells(Feature):
 class ExperimentalElixir(Feature):
     def __init__(self):
         super().__init__(
-            name="Experimental Elixir", origin="Alchemist Artificer Level 3", activation=FeatureActivation(action_type="action"), usage_tags=["heal", "buff", "utility"]
+            name="Experimental Elixir", origin="Alchemist Artificer Level 3", activation=FeatureActivation(action_type=ActionType.ACTION), usage_tags=["heal", "buff", "utility"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:

@@ -1,5 +1,5 @@
 from Core.Definitions import Ability
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
@@ -60,7 +60,7 @@ class Spellcasting(Feature):
 
 class WeaponBond(Feature):
     def __init__(self):
-        super().__init__(name="Weapon Bond", origin="Eldritch Knight Fighter Level 3", activation=FeatureActivation(action_type="bonus_action"), usage_tags=["utility"])
+        super().__init__(name="Weapon Bond", origin="Eldritch Knight Fighter Level 3", activation=FeatureActivation(action_type=ActionType.BONUS_ACTION), usage_tags=["utility"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

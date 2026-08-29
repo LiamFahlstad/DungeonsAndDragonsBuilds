@@ -1,5 +1,5 @@
 import Core.Definitions as Definitions
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, ActionType
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
@@ -34,7 +34,7 @@ class InnateSorcery(Feature):
         super().__init__(
             name="Innate Sorcery",
             origin="Sorcerer Level 1",
-            activation=FeatureActivation(action_type="bonus_action", duration="1 Minute"),
+            activation=FeatureActivation(action_type=ActionType.BONUS_ACTION, duration="1 Minute"),
             usage_tags=["buff"],
             uses=FeatureUses(max_uses=2, regain_all_on="long rest"),
         )

@@ -1,5 +1,5 @@
 from Core.Definitions import BARD_HIT_DIE
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
@@ -33,7 +33,7 @@ class DazzlingFootwork(Feature):
 class InspiringMovement(Feature):
     def __init__(self):
         super().__init__(
-            name="Inspiring Movement", origin="College of Dance Bard Level 6", activation=FeatureActivation(action_type="reaction", range="30 Feet"), usage_tags=["buff"]
+            name="Inspiring Movement", origin="College of Dance Bard Level 6", activation=FeatureActivation(action_type=ActionType.REACTION, range="30 Feet"), usage_tags=["buff"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
