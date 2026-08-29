@@ -1,29 +1,26 @@
 
-from Core.Definitions import Ability, RANGER_HIT_DIE
+from Core.Definitions import Ability, RANGER_HIT_DIE, MAX_ABILITY_MODIFIER
 from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, ActionType
 from CharacterContent.Features.Core.Improvements import InitiativeBonus
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
-from Utils import StringUtils
 
 
 class DreadAmbusher(Feature):
     def __init__(self):
-        super().__init__(name="Dread Ambusher", origin="Gloom Stalker Ranger Level 3", usage_tags=["buff", "damage"])
+        super().__init__(name="Dread Ambusher", origin="Gloom Stalker Ranger Level 3", usage_tags=["buff", "damage"], uses=FeatureUses(max_uses=MAX_ABILITY_MODIFIER, regain_all_on="long rest", current_formula="Current amount: equal to your Wisdom modifier."))
 
     def apply(self, character_stat_block: CharacterStatBlock):
         wis_mod = character_stat_block.get_ability_modifier(Ability.WISDOM)
         InitiativeBonus(wis_mod).apply(character_stat_block)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        wis_mod = character_stat_block.get_ability_modifier(Ability.WISDOM)
-        uses = max(1, wis_mod)
         description = (
             "You have mastered the art of creating fearsome ambushes, granting you the following benefits.\n"
             "Ambusher's Leap. At the start of your first turn of each combat, your speed increases by 10 feet until the end of that turn.\n"
             "Dreadful Strike. When you attack a creature and hit it with a weapon, you can deal an extra 2d6 Psychic damage. You can use this benefit only once per turn, you can use it a number of times equal to your Wisdom modifier (minimum of once), and you regain all expended uses when you finish a Long Rest.\n"
             "Initiative Bonus. When you roll Initiative, you can add your Wisdom modifier to the roll."
         )
-        return StringUtils.add_boxes(description, uses, regain_all_on="long rest")
+        return description
 
 
 class GloomStalkerSpells(Feature):

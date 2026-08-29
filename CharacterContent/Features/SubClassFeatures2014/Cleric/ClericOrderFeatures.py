@@ -1,8 +1,7 @@
 import Core.Definitions as Definitions
 from Core.Definitions import Ability
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, ActionType
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
-from Utils import StringUtils
 
 
 class BonusProficiencies(Feature):
@@ -75,14 +74,12 @@ class OrdersDemandChannelDivinity(Feature):
 
 class EmbodimentOfTheLaw(Feature):
     def __init__(self):
-        super().__init__(name="Embodiment of the Law", origin="Order Domain Cleric Level 6", usage_tags=["utility"])
+        super().__init__(name="Embodiment of the Law", origin="Order Domain Cleric Level 6", usage_tags=["utility"], uses=FeatureUses(max_uses=Definitions.MAX_ABILITY_MODIFIER, regain_all_on="long rest", current_formula="Current amount: equal to your Wisdom modifier."))
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        wis_mod = character_stat_block.get_ability_modifier(Ability.WISDOM)
-        uses = max(1, wis_mod)
         description = (
             "You become remarkably adept at channeling magical energy to compel others.\n"
             "If you cast a spell of the enchantment school using a spell slot of 1st level or higher, you can change the spell's casting time to 1 bonus action for this casting, provided the spell's casting time is normally 1 action.\n"
             "You can use this feature a number of times equal to your Wisdom modifier (minimum of once), and you regain all expended uses of it when you finish a long rest."
         )
-        return StringUtils.add_boxes(description, uses, regain_all_on="long rest")
+        return description

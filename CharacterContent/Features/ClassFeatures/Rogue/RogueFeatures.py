@@ -1,17 +1,23 @@
-from Core.Definitions import Ability, Language, ROGUE_HIT_DIE, Skill
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType
+from CharacterContent.Features.Core.BaseFeatures import (
+    ActionType,
+    Feature,
+    FeatureActivation,
+)
 from CharacterContent.Features.Core.Improvements import (
     GrantLanguage,
     SavingThrowProficiencyChoice,
     SkillExpertiseChoice,
 )
+from Core.Definitions import Ability, Language, Skill
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
 
 class Expertise(Feature):
     def __init__(self, skill_1: Skill, skill_2: Skill):
-        super().__init__(name="Expertise", origin="Rogue Level 1", skippable_in_concise=True)
+        super().__init__(
+            name="Expertise", origin="Rogue Level 1", skippable_in_concise=True
+        )
         self._choice = SkillExpertiseChoice(
             [skill_1, skill_2], list(Skill), count=2, error_prefix="Rogue Expertise"
         )
@@ -27,7 +33,9 @@ class Expertise(Feature):
 
 class SneakAttack(Feature):
     def __init__(self):
-        super().__init__(name="Sneak Attack", origin="Rogue Level 1", usage_tags=["damage"])
+        super().__init__(
+            name="Sneak Attack", origin="Rogue Level 1", usage_tags=["damage"]
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -50,9 +58,7 @@ class SneakAttack(Feature):
         return [("Sneak Attack Damage", steps)]
 
     def get_concise_description(self, character_stat_block: CharacterStatBlock) -> str:
-        return (
-            "Once per turn, add 1d6 extra damage (same type as weapon) to an attack using a Finesse or Ranged weapon if you have Advantage on the roll. Alternatively, you don't need Advantage if an ally is within 5 feet of the target (ally not Incapacitated, and you don't have Disadvantage). Damage increases with Rogue levels."
-        )
+        return "Once per turn, add 1d6 extra damage (same type as weapon) to an attack using a Finesse or Ranged weapon if you have Advantage on the roll. Alternatively, you don't need Advantage if an ally is within 5 feet of the target (ally not Incapacitated, and you don't have Disadvantage). Damage increases with Rogue levels."
 
 
 class ThievesCant(Feature):
@@ -85,7 +91,11 @@ class WeaponMastery(Feature):
 
 class CunningAction(Feature):
     def __init__(self):
-        super().__init__(name="Cunning Action", origin="Rogue Level 2", activation=FeatureActivation(action_type=ActionType.BONUS_ACTION))
+        super().__init__(
+            name="Cunning Action",
+            origin="Rogue Level 2",
+            activation=FeatureActivation(action_type=ActionType.BONUS_ACTION),
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "Your quick thinking and agility allow you to move and act quickly. On your turn, you can take one of the following actions as a Bonus Action: Dash, Disengage, or Hide."
@@ -94,7 +104,12 @@ class CunningAction(Feature):
 
 class SteadyAim(Feature):
     def __init__(self):
-        super().__init__(name="Steady Aim", origin="Rogue Level 3", activation=FeatureActivation(action_type=ActionType.BONUS_ACTION), usage_tags=["buff"])
+        super().__init__(
+            name="Steady Aim",
+            origin="Rogue Level 3",
+            activation=FeatureActivation(action_type=ActionType.BONUS_ACTION),
+            usage_tags=["buff"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "As a Bonus Action, you give yourself Advantage on your next attack roll on your current turn. You can use this feature only if you haven't moved during this turn, and after you use it, your Speed is 0 until the end of the current turn."
@@ -113,7 +128,9 @@ class SteadyAim(Feature):
 
 class CunningStrike(Feature):
     def __init__(self):
-        super().__init__(name="Cunning Strike", origin="Rogue Level 5", usage_tags=["control"])
+        super().__init__(
+            name="Cunning Strike", origin="Rogue Level 5", usage_tags=["control"]
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         saving_throw = (
@@ -131,22 +148,38 @@ class CunningStrike(Feature):
         )
         return description
 
-    def get_table_description(self, character_stat_block: CharacterStatBlock) -> list[tuple[str, str]]:
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
         saving_throw = (
             8
             + character_stat_block.get_ability_modifier(Ability.DEXTERITY)
             + character_stat_block.get_proficiency_bonus()
         )
         return [
-            ("Poison (Cost: 1d6)", f"Target makes Constitution save (DC {saving_throw}) or gains Poisoned condition for 1 minute. Requires Poisoner's Kit."),
-            ("Trip (Cost: 1d6)", f"Target Large or smaller makes Dexterity save (DC {saving_throw}) or gains Prone condition"),
-            ("Withdraw (Cost: 1d6)", "Move up to half your speed without provoking Opportunity Attacks"),
+            (
+                "Poison (Cost: 1d6)",
+                f"Target makes Constitution save (DC {saving_throw}) or gains Poisoned condition for 1 minute. Requires Poisoner's Kit.",
+            ),
+            (
+                "Trip (Cost: 1d6)",
+                f"Target Large or smaller makes Dexterity save (DC {saving_throw}) or gains Prone condition",
+            ),
+            (
+                "Withdraw (Cost: 1d6)",
+                "Move up to half your speed without provoking Opportunity Attacks",
+            ),
         ]
 
 
 class UncannyDodge(Feature):
     def __init__(self):
-        super().__init__(name="Uncanny Dodge", origin="Rogue Level 5", activation=FeatureActivation(action_type=ActionType.REACTION), usage_tags=["buff"])
+        super().__init__(
+            name="Uncanny Dodge",
+            origin="Rogue Level 5",
+            activation=FeatureActivation(action_type=ActionType.REACTION),
+            usage_tags=["buff"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "When an attacker that you can see hits you with an attack roll, you can take a Reaction to halve the attack's damage against you (round down)."
@@ -182,7 +215,9 @@ class ImprovedCunningStrike(Feature):
 
 class DeviousStrikes(Feature):
     def __init__(self):
-        super().__init__(name="Devious Strikes", origin="Rogue Level 14", usage_tags=["control"])
+        super().__init__(
+            name="Devious Strikes", origin="Rogue Level 14", usage_tags=["control"]
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -193,20 +228,35 @@ class DeviousStrikes(Feature):
         )
         return description
 
-    def get_table_description(self, character_stat_block: CharacterStatBlock) -> list[tuple[str, str]]:
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
         return [
-            ("Daze (Cost: 2d6)", "Target makes Constitution save or can only move, take an action, or take a Bonus Action on its next turn (not multiple)"),
-            ("Knock Out (Cost: 6d6)", "Target makes Constitution save or gains Unconscious condition for 1 minute or until taking damage (repeats save at end of turn)"),
-            ("Obscure (Cost: 3d6)", "Target makes Dexterity save or gains Blinded condition until end of its next turn"),
+            (
+                "Daze (Cost: 2d6)",
+                "Target makes Constitution save or can only move, take an action, or take a Bonus Action on its next turn (not multiple)",
+            ),
+            (
+                "Knock Out (Cost: 6d6)",
+                "Target makes Constitution save or gains Unconscious condition for 1 minute or until taking damage (repeats save at end of turn)",
+            ),
+            (
+                "Obscure (Cost: 3d6)",
+                "Target makes Dexterity save or gains Blinded condition until end of its next turn",
+            ),
         ]
 
 
 class SlipperyMind(Feature):
     def __init__(self):
-        super().__init__(name="Slippery Mind", origin="Rogue Level 15", skippable_in_concise=True)
+        super().__init__(
+            name="Slippery Mind", origin="Rogue Level 15", skippable_in_concise=True
+        )
         self._choice = SavingThrowProficiencyChoice(
-            [Ability.WISDOM, Ability.CHARISMA], list(Ability), count=2,
-            error_prefix="Slippery Mind"
+            [Ability.WISDOM, Ability.CHARISMA],
+            list(Ability),
+            count=2,
+            error_prefix="Slippery Mind",
         )
 
     def apply(self, character_stat_block: CharacterStatBlock):

@@ -1,7 +1,6 @@
 from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, ActionType
-from Core.Definitions import Ability
+from Core.Definitions import Ability, MAX_ABILITY_MODIFIER
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
-from Utils import StringUtils
 
 
 class ChronalShift(Feature):
@@ -39,17 +38,16 @@ class MomentaryStasis(Feature):
             origin="Chronurgy Wizard Level 6",
             activation=FeatureActivation(action_type=ActionType.ACTION, duration="Until End Of Your Next Turn Or Until Takes Damage", range="60 Feet"),
             usage_tags=["control"],
+            uses=FeatureUses(max_uses=MAX_ABILITY_MODIFIER, regain_all_on="long rest", current_formula="Current amount: equal to your Intelligence modifier."),
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        int_mod = character_stat_block.get_ability_modifier(Ability.INTELLIGENCE)
-        uses = max(1, int_mod)
         description = (
             "When you reach 6th level, as an action, you can magically force a Large or smaller creature you can see within 60 feet of you to make a Constitution saving throw against your spell save DC. Unless the saving throw is a success, the creature is encased in a field of magical energy until the end of your next turn or until the creature takes any damage. While encased in this way, the creature is incapacitated and has a speed of 0.\n"
             "\n"
             "You can use this feature a minimum of once per long rest, and you regain all expended uses when you finish a long rest."
         )
-        return StringUtils.add_boxes(description, uses, regain_all_on="long rest")
+        return description
 
     def get_table_description(
         self, character_stat_block: CharacterStatBlock

@@ -1,8 +1,7 @@
 
-from Core.Definitions import Ability, RANGER_HIT_DIE
+from Core.Definitions import Ability, RANGER_HIT_DIE, MAX_ABILITY_MODIFIER
 from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, ActionType
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
-from Utils import StringUtils
 
 
 class DreadfulStrikes(Feature):
@@ -100,16 +99,14 @@ class FeyReinforcements(Feature):
 
 class MistyWanderer(Feature):
     def __init__(self):
-        super().__init__(name="Misty Wanderer", origin="Fey Wanderer Ranger Level 15", activation=FeatureActivation(range="5 Feet"))
+        super().__init__(name="Misty Wanderer", origin="Fey Wanderer Ranger Level 15", activation=FeatureActivation(range="5 Feet"), uses=FeatureUses(max_uses=MAX_ABILITY_MODIFIER, regain_all_on="long rest", current_formula="Current amount: equal to your Wisdom modifier."))
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        wis_mod = character_stat_block.get_ability_modifier(Ability.WISDOM)
-        uses = max(1, wis_mod)
         description = (
             "You can cast Misty Step without expending a spell slot. You can do so a number of times equal to your Wisdom modifier (minimum of once), and you regain all expended uses when you finish a Long Rest.\n"
             "In addition, whenever you cast Misty Step, you can bring along one willing creature you can see within 5 feet of yourself. That creature teleports to an unoccupied space of your choice within 5 feet of your destination space."
         )
-        return StringUtils.add_boxes(description, uses, regain_all_on="long rest")
+        return description
 
     def get_table_description(self, character_stat_block: CharacterStatBlock) -> list[tuple[str, str]]:
         wis_mod = character_stat_block.get_ability_modifier(Ability.WISDOM)

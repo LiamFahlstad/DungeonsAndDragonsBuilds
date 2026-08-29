@@ -1,8 +1,7 @@
-from Core.Definitions import Ability, Condition
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType
+from Core.Definitions import Ability, Condition, MAX_ABILITY_MODIFIER
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, ActionType
 from CharacterContent.Features.Core.Improvements import ConditionImmunity
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
-from Utils import StringUtils
 
 
 class CircleSporesSpells(Feature):
@@ -56,14 +55,11 @@ class SymbioticEntity(Feature):
 
 class FungalInfestation(Feature):
     def __init__(self):
-        super().__init__(name="Fungal Infestation", origin="Circle of Spores Druid Level 6", activation=FeatureActivation(action_type=ActionType.REACTION, duration="1 Hour", range="10 Feet"), usage_tags=["utility", "summon"])
+        super().__init__(name="Fungal Infestation", origin="Circle of Spores Druid Level 6", activation=FeatureActivation(action_type=ActionType.REACTION, duration="1 Hour", range="10 Feet"), usage_tags=["utility", "summon"], uses=FeatureUses(max_uses=MAX_ABILITY_MODIFIER, regain_all_on="long rest", current_formula="Current amount: equal to your Wisdom modifier."))
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        wisdom_mod = character_stat_block.get_ability_modifier(Ability.WISDOM)
-        uses = max(1, wisdom_mod)
-
         description = (
             "Your spores gain the ability to infest a corpse and animate it. If a beast or a humanoid that is Small or Medium dies within 10 feet of you, you can use your reaction to animate it, causing it to stand up immediately with 1 hit point. The creature uses the Zombie stat block in the Monster Manual. It remains animate for 1 hour, after which time it collapses and dies.\n"
             "In combat, the zombie's turn comes immediately after yours. It obeys your mental commands, and the only action it can take is the Attack action, making one melee attack."
         )
-        return StringUtils.add_boxes(description, uses, regain_all_on="long rest")
+        return description

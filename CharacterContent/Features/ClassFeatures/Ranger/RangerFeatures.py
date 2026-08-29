@@ -1,6 +1,6 @@
 from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, ActionType
 from CharacterContent.Features.Core.Improvements import SkillExpertiseChoice, SpeedBonus
-from Core.Definitions import Ability, Skill
+from Core.Definitions import Ability, Skill, MAX_ABILITY_MODIFIER
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
@@ -179,18 +179,17 @@ class Tireless(Feature):
             origin="Ranger Level 10",
             activation=FeatureActivation(action_type=ActionType.ACTION),
             usage_tags=["heal"],
+            uses=FeatureUses(max_uses=MAX_ABILITY_MODIFIER, regain_all_on="long rest", current_formula="Current amount: equal to your Wisdom modifier."),
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        wis_mod = character_stat_block.get_ability_modifier(Ability.WISDOM)
-        uses = max(1, wis_mod)
         description = (
             "Primal forces now help fuel you on your journeys, granting you the following benefits.\n"
             "    * Temporary Hit Points: As a Magic Action, you can give yourself a number of Temporary Hit Points equal to 1d8 plus your Wisdom modifier (minimum of 1).\n"
             "   You can use this action a number of times equal to your Wisdom modifier (minimum of once), and you regain all expended uses when you finish a Long Rest.\n"
             "    * Decrease Exhaustion: Whenever you finish a Short Rest, your Exhaustion level, if any, decreases by 1."
         )
-        return StringUtils.add_boxes(description, uses, regain_all_on="long rest")
+        return description
 
     def get_table_description(
         self, character_stat_block: CharacterStatBlock
@@ -220,16 +219,15 @@ class NaturesVeil(Feature):
             origin="Ranger Level 14",
             activation=FeatureActivation(action_type=ActionType.BONUS_ACTION, duration="Until End of Your Next Turn"),
             usage_tags=["buff"],
+            uses=FeatureUses(max_uses=MAX_ABILITY_MODIFIER, regain_all_on="long rest", current_formula="Current amount: equal to your Wisdom modifier."),
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        wis_mod = character_stat_block.get_ability_modifier(Ability.WISDOM)
-        uses = max(1, wis_mod)
         description = (
             "You invoke spirits of nature to magically hide yourself. As a Bonus Action you can give yourself the Invisible condition until the end of your next turn.\n"
             "You can use this feature a number of times equal to your Wisdom modifier (minimum of once), and you regain all expended uses when you finish a Long Rest."
         )
-        return StringUtils.add_boxes(description, uses, regain_all_on="long rest")
+        return description
 
     def get_table_description(
         self, character_stat_block: CharacterStatBlock

@@ -1,9 +1,8 @@
 
-from Core.Definitions import Ability, CharacterClass, DamageType, RANGER_HIT_DIE
+from Core.Definitions import Ability, CharacterClass, DamageType, RANGER_HIT_DIE, MAX_ABILITY_MODIFIER
 from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, ActionType
 from CharacterContent.Features.Core.Improvements import DamageResistance
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
-from Utils import StringUtils
 
 
 class FrigidExplorer(Feature):
@@ -84,17 +83,15 @@ class FortifyingSoul(Feature):
 class ChillingRetribution(Feature):
     def __init__(self):
         super().__init__(
-            name="Chilling Retribution", origin="Winter Walker Ranger Level 11", activation=FeatureActivation(action_type=ActionType.REACTION, duration="Until End of Your Next Turn"), usage_tags=["control"]
+            name="Chilling Retribution", origin="Winter Walker Ranger Level 11", activation=FeatureActivation(action_type=ActionType.REACTION, duration="Until End of Your Next Turn"), usage_tags=["control"], uses=FeatureUses(max_uses=MAX_ABILITY_MODIFIER, regain_all_on="long rest", current_formula="Current amount: equal to your Wisdom modifier.")
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        wis_mod = character_stat_block.get_ability_modifier(Ability.WISDOM)
-        uses = max(1, wis_mod)
         description = (
             "When a creature hits you with an attack roll, you can take a Reaction to force the creature to make a Wisdom saving throw against your spell save DC. On a failed save, the target has the Stunned condition until the end of your next turn. While the target is Stunned, its Speed is reduced to 0 feet.\n"
             "You can use this feature a number of times equal to your Wisdom modifier (minimum of once), and you regain all expended uses when you finish a Long Rest."
         )
-        return StringUtils.add_boxes(description, uses, regain_all_on="long rest")
+        return description
 
     def get_table_description(self, character_stat_block: CharacterStatBlock) -> list[tuple[str, str]]:
         wis_mod = character_stat_block.get_ability_modifier(Ability.WISDOM)

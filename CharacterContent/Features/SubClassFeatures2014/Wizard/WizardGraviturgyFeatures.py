@@ -1,7 +1,6 @@
 from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, ActionType
-from Core.Definitions import Ability
+from Core.Definitions import Ability, MAX_ABILITY_MODIFIER
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
-from Utils import StringUtils
 
 
 class AdjustDensity(Feature):
@@ -46,11 +45,10 @@ class ViolentAttraction(Feature):
             origin="Graviturgy Wizard Level 10",
             activation=FeatureActivation(action_type=ActionType.REACTION, range="60 Feet"),
             usage_tags=["damage"],
+            uses=FeatureUses(max_uses=MAX_ABILITY_MODIFIER, regain_all_on="long rest", current_formula="Current amount: equal to your Intelligence modifier."),
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        int_mod = character_stat_block.get_ability_modifier(Ability.INTELLIGENCE)
-        uses = max(1, int_mod)
         description = (
             "At 10th level, when another creature that you can see within 60 feet of you hits with a weapon attack, you can use your reaction to increase the attack's velocity, causing the attack's target to take an extra 1d10 damage of the weapon's type.\n"
             "\n"
@@ -58,7 +56,7 @@ class ViolentAttraction(Feature):
             "\n"
             "You can use this feature a minimum of once per long rest, and you regain all expended uses when you finish a long rest."
         )
-        return StringUtils.add_boxes(description, uses, regain_all_on="long rest")
+        return description
 
 
 class EventHorizon(Feature):
