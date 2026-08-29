@@ -56,13 +56,12 @@ class FavoredEnemy(Feature):
 
         description = (
             "You always have the Hunter's Mark spell prepared.\n"
-            f"You can cast it {free_hunters_mark_uses} times without expending a spell slot, and you regain all expended uses of this ability when you finish a Long Rest.\n"
+            "You regain all expended uses of this ability when you finish a Long Rest.\n"
         )
         return StringUtils.add_boxes(
             description,
-            free_hunters_mark_uses,
+            6,
             regain_all_on="long rest",
-            max_box_count=6,
             current_formula=(
                 "Current amount: determined by your character level — 2 uses "
                 "at levels 1-4, 3 at 5-8, 4 at 9-12, 5 at 13-16, 6 at 17+."
@@ -183,8 +182,8 @@ class Tireless(Feature):
         uses = max(1, wis_mod)
         description = (
             "Primal forces now help fuel you on your journeys, granting you the following benefits.\n"
-            f"    * Temporary Hit Points: As a Magic Action, you can give yourself a number of Temporary Hit Points equal to 1d8 plus your Wisdom modifier (minimum of 1) ({uses}).\n"
-            f"   You can use this action a number of times equal to your Wisdom modifier (minimum of once) ({uses}), and you regain all expended uses when you finish a Long Rest.\n"
+            "    * Temporary Hit Points: As a Magic Action, you can give yourself a number of Temporary Hit Points equal to 1d8 plus your Wisdom modifier (minimum of 1).\n"
+            "   You can use this action a number of times equal to your Wisdom modifier (minimum of once), and you regain all expended uses when you finish a Long Rest.\n"
             "    * Decrease Exhaustion: Whenever you finish a Short Rest, your Exhaustion level, if any, decreases by 1."
         )
         return StringUtils.add_boxes(description, uses, regain_all_on="long rest")
@@ -219,7 +218,7 @@ class NaturesVeil(Feature):
         uses = max(1, wis_mod)
         description = (
             "You invoke spirits of nature to magically hide yourself. As a Bonus Action you can give yourself the Invisible condition until the end of your next turn.\n"
-            f"You can use this feature a number of times equal to your Wisdom modifier (minimum of once) ({uses}), and you regain all expended uses when you finish a Long Rest."
+            "You can use this feature a number of times equal to your Wisdom modifier (minimum of once), and you regain all expended uses when you finish a Long Rest."
         )
         return StringUtils.add_boxes(description, uses, regain_all_on="long rest")
 

@@ -1,4 +1,4 @@
-from Core.Definitions import Ability, CreatureSize, Sense
+from Core.Definitions import Ability, CreatureSize, MAX_PROFICIENCY_BONUS, Sense
 from CharacterContent.Features.Core.BaseFeatures import Feature
 from CharacterContent.Features.Core.Improvements import SavingThrowAdvantage, GrantSense
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
@@ -40,9 +40,8 @@ class ForestGnomeSpeakWithAnimals(Feature):
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        proficiency_bonus = character_stat_block.get_proficiency_bonus()
-        text = f"You also always have the Speak with Animals spell prepared. You can cast it without a spell slot a number of times equal to your Proficiency Bonus ({proficiency_bonus}), and you regain all expended uses when you finish a Long Rest. You can also use any spell slots you have to cast the spell."
-        return StringUtils.add_boxes(text, proficiency_bonus, max_box_count=6, current_formula="Current amount: equal to your proficiency bonus.")
+        text = "You also always have the Speak with Animals spell prepared. You can cast it without a spell slot, and you regain all expended uses when you finish a Long Rest. You can also use any spell slots you have to cast the spell."
+        return StringUtils.add_boxes(text, MAX_PROFICIENCY_BONUS, current_formula="Current amount: equal to your proficiency bonus.")
 
 
 class RockGnomePrestidigitation(Feature):

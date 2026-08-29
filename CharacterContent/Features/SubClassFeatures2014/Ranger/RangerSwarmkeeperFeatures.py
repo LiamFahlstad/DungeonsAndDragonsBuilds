@@ -1,4 +1,4 @@
-from Core.Definitions import Ability, RANGER_HIT_DIE
+from Core.Definitions import Ability, MAX_PROFICIENCY_BONUS, RANGER_HIT_DIE
 from CharacterContent.Features.Core.BaseFeatures import Feature
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
@@ -50,13 +50,12 @@ class WrithingTide(Feature):
         super().__init__(name="Writhing Tide", origin="Swarmkeeper Ranger Level 7", action_type="bonus_action", duration="1 Minute or Until Incapacitated", usage_tags=["utility"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        proficiency_bonus = character_stat_block.get_proficiency_bonus()
         description = (
             "Beginning at 7th level, you can condense part of your swarm into a focused mass that lifts you up. As a bonus action, you gain a flying speed of 10 feet and can hover. This effect lasts for 1 minute or until you are incapacitated.\n"
             "\n"
-            f"You can use this feature a number of times equal to your proficiency bonus ({proficiency_bonus}), and you regain all expended uses when you finish a long rest."
+            "You can use this feature a number of times equal to your proficiency bonus, and you regain all expended uses when you finish a long rest."
         )
-        return StringUtils.add_boxes(description, proficiency_bonus, regain_all_on="long rest", max_box_count=6, current_formula="Current amount: equal to your proficiency bonus.")
+        return StringUtils.add_boxes(description, MAX_PROFICIENCY_BONUS, regain_all_on="long rest", current_formula="Current amount: equal to your proficiency bonus.")
 
     def get_table_description(
         self, character_stat_block: CharacterStatBlock
@@ -91,13 +90,12 @@ class SwarmingDispersal(Feature):
         super().__init__(name="Swarming Dispersal", origin="Swarmkeeper Ranger Level 15", action_type="reaction", range="30 Feet", usage_tags=["buff", "utility"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        proficiency_bonus = character_stat_block.get_proficiency_bonus()
         description = (
             "When you reach 15th level, you can discorporate into your swarm, avoiding danger. When you take damage, you can use your reaction to give yourself resistance to that damage. You vanish into your swarm and then teleport to an unoccupied space that you can see within 30 feet of you, where you reappear with the swarm.\n"
             "\n"
-            f"You can use this feature a number of times equal to your proficiency bonus ({proficiency_bonus}), and you regain all expended uses when you finish a long rest."
+            "You can use this feature a number of times equal to your proficiency bonus, and you regain all expended uses when you finish a long rest."
         )
-        return StringUtils.add_boxes(description, proficiency_bonus, regain_all_on="long rest", max_box_count=6, current_formula="Current amount: equal to your proficiency bonus.")
+        return StringUtils.add_boxes(description, MAX_PROFICIENCY_BONUS, regain_all_on="long rest", current_formula="Current amount: equal to your proficiency bonus.")
 
     def get_table_description(
         self, character_stat_block: CharacterStatBlock

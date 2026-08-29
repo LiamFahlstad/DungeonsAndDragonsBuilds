@@ -1,4 +1,4 @@
-from Core.Definitions import Sense
+from Core.Definitions import MAX_PROFICIENCY_BONUS, Sense
 from CharacterContent.Features.Core.BaseFeatures import Feature
 from CharacterContent.Features.Core.Improvements import GrantSense
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
@@ -49,13 +49,12 @@ class VampiricBite(Feature):
         super().__init__(name="Vampiric Bite", origin="Dhampir Trait", usage_tags=["damage", "heal", "buff"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        proficiency_bonus = character_stat_block.get_proficiency_bonus()
         description = (
             "When you use your Unarmed Strike and deal damage, you can choose to bite with your fangs. "
             "You deal Piercing damage equal to 1d4 plus your Constitution modifier instead of the normal damage of an Unarmed Strike.\n"
             "In addition, when you deal this damage to a creature that isn't a Construct or an Undead, you can empower yourself in one of the following ways:\n"
             "Drain. You regain Hit Points equal to the Piercing damage dealt.\n"
             "Strengthen. You gain a bonus to the next ability check or attack roll you make within the next minute; the bonus is equal to the Piercing damage dealt.\n"
-            f"You can empower yourself with this trait a number of times equal to your Proficiency Bonus ({proficiency_bonus}), and you regain all expended uses when you finish a Long Rest."
+            "You can empower yourself with this trait, and you regain all expended uses when you finish a Long Rest."
         )
-        return StringUtils.add_boxes(description, proficiency_bonus, max_box_count=6, current_formula="Current amount: equal to your proficiency bonus.")
+        return StringUtils.add_boxes(description, MAX_PROFICIENCY_BONUS, current_formula="Current amount: equal to your proficiency bonus.")

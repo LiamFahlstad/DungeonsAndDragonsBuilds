@@ -397,7 +397,6 @@ class Feature:
         self,
         character_stat_block: CharacterStatBlock,
         description_mode: Literal["table", "concise"] | None = None,
-        use_max_boxes: bool = False,
     ) -> str | None:
         if description_mode is not None and self.skippable_in_concise:
             return None
@@ -412,14 +411,12 @@ class Feature:
         if description_mode == "concise":
             concise_description = self.get_concise_description(character_stat_block)
             if concise_description is not None:
-                return self._description_to_html(
-                    concise_description, use_max_boxes=use_max_boxes
-                )
+                return self._description_to_html(concise_description)
 
         description = self.get_description(character_stat_block)
         if description is None:
             return None
-        return self._description_to_html(description, use_max_boxes=use_max_boxes)
+        return self._description_to_html(description)
 
     def write_to_file(
         self,
@@ -428,13 +425,8 @@ class Feature:
         description_mode: Literal["table", "concise"] | None = None,
         max_level: int | None = None,
     ):
-        # A level shard page is generated once and never regenerated as the
-        # player levels up in play, so its box rows show the formula's
-        # absolute ceiling rather than this build's current value (which is
-        # what the full sheet shows instead).
-        use_max_boxes = max_level is not None
         html_description = self.render_html_description(
-            character_stat_block, description_mode, use_max_boxes=use_max_boxes
+            character_stat_block, description_mode
         )
         if html_description is None:
             return
@@ -506,7 +498,7 @@ class Feature:
                     continue
 
             ext_html = extension.render_html_description(
-                character_stat_block, description_mode, use_max_boxes=use_max_boxes
+                character_stat_block, description_mode
             )
             if ext_html is None:
                 continue
@@ -544,11 +536,8 @@ class Feature:
         standalone feature card on its own level page, visually flagged as extending
         the parent. Reuses the existing .feature-upgrade CSS classes for consistent
         blue-label styling."""
-        # This method is only ever called from _write_features_page (level shard
-        # pages) - standalone extension cards never appear on the full sheet - so
-        # box rows always show the formula's max, never a build's current value.
         html_description = self.render_html_description(
-            character_stat_block, description_mode, use_max_boxes=True
+            character_stat_block, description_mode
         )
         if html_description is None:
             return
@@ -665,8 +654,8 @@ class Feature:
         return text
 
     @staticmethod
-    def _description_to_html(description: str, use_max_boxes: bool = False) -> str:
-        processed = Html.boxes_to_html(description, use_max=use_max_boxes)
+    def _description_to_html(description: str) -> str:
+        processed = Html.boxes_to_html(description)
         processed = Html.tables_to_html(processed)
 
         BULLET_PREFIXES = [

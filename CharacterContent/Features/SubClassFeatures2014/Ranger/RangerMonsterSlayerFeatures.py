@@ -1,4 +1,4 @@
-from Core.Definitions import Ability, CharacterClass, RANGER_HIT_DIE
+from Core.Definitions import Ability, CharacterClass, MAX_ABILITY_MODIFIER, RANGER_HIT_DIE
 from CharacterContent.Features.Core.BaseFeatures import Feature
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
@@ -27,8 +27,6 @@ class HuntersSense(Feature):
         super().__init__(name="Hunter's Sense", origin="Monster Slayer Ranger Level 3", action_type="action", range="60 Feet", usage_tags=["utility"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        wisdom_modifier = character_stat_block.get_ability_modifier(Ability.WISDOM)
-        uses = max(1, wisdom_modifier)
         description = (
             "At 3rd level, you gain the ability to peer at a creature and magically discern how best to hurt it. As an action, choose one creature you can see within 60 feet of you. You immediately learn whether the creature has any damage immunities, resistances, or vulnerabilities and what they are. If the creature is hidden from divination magic, you sense that it has no damage immunities, resistances, or vulnerabilities.\n"
             "\n"
@@ -36,9 +34,8 @@ class HuntersSense(Feature):
         )
         return StringUtils.add_boxes(
             description,
-            uses,
+            MAX_ABILITY_MODIFIER,
             regain_all_on="long rest",
-            max_box_count=10,
             current_formula="Current amount: equal to your Wisdom modifier.",
         )
 

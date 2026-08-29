@@ -1,4 +1,4 @@
-from Core.Definitions import Ability, ROGUE_HIT_DIE
+from Core.Definitions import Ability, MAX_ABILITY_MODIFIER, ROGUE_HIT_DIE
 from CharacterContent.Features.Core.BaseFeatures import Feature
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
@@ -9,16 +9,11 @@ class Bloodthirst(Feature):
         super().__init__(name="Bloodthirst", origin="Scion of the Three Rogue Level 3", action_type="reaction", range="30 Feet", usage_tags=["damage"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        intelligence_modifier = character_stat_block.get_ability_modifier(
-            Ability.INTELLIGENCE
-        )
-        uses = max(1, intelligence_modifier)
-        description = "When an enemy you can see within 30 feet of yourself takes damage and is Bloodied after taking that damage but not killed outright, you can take a Reaction and teleport to an unoccupied space you can see within 5 feet of that enemy. You can then make one melee attack. You can use this feature a number of times equal to your Intelligence modifier (minimum of once), and you regain all expended uses when you finish a Long Rest."
+        description = "When an enemy you can see within 30 feet of yourself takes damage and is Bloodied after taking that damage but not killed outright, you can take a Reaction and teleport to an unoccupied space you can see within 5 feet of that enemy. You can then make one melee attack. You can use this feature a number of times based on your Intelligence modifier, and you regain all expended uses when you finish a Long Rest."
         return StringUtils.add_boxes(
             description,
-            uses,
+            MAX_ABILITY_MODIFIER,
             regain_all_on="long rest",
-            max_box_count=10,
             current_formula="Current amount: equal to your Intelligence modifier.",
         )
 

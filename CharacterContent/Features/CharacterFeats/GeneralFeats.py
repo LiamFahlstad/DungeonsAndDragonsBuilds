@@ -1,4 +1,4 @@
-from Core.Definitions import Ability, DamageType, Sense, Skill
+from Core.Definitions import Ability, DamageType, MAX_PROFICIENCY_BONUS, Sense, Skill
 from CharacterContent.Features.Core.BaseFeatures import Feature
 from CharacterContent.Features.Core.Improvements import (
     AbilityScoreBonus,
@@ -837,9 +837,8 @@ class FairyTrickster(_AbilityScoreFeat):
         )
         return StringUtils.add_boxes(
             description,
-            proficiency_bonus,
+            MAX_PROFICIENCY_BONUS,
             regain_all_on="long rest",
-            max_box_count=6,
             current_formula="Current amount: equal to your proficiency bonus.",
         )
 
@@ -914,9 +913,8 @@ class MythalTouched(_AbilityScoreFeat):
         )
         return StringUtils.add_boxes(
             description,
-            proficiency_bonus,
+            MAX_PROFICIENCY_BONUS,
             regain_all_on="long rest",
-            max_box_count=6,
             current_formula="Current amount: equal to your proficiency bonus.",
         )
 
@@ -952,9 +950,8 @@ class PurpleDragonCommandant(_AbilityScoreFeat):
         )
         return StringUtils.add_boxes(
             description,
-            proficiency_bonus,
+            MAX_PROFICIENCY_BONUS,
             regain_all_on="long rest",
-            max_box_count=6,
             current_formula="Current amount: equal to your proficiency bonus.",
         )
 
@@ -1074,9 +1071,8 @@ class GatheredWhispers(GeneralFeat):
         )
         return StringUtils.add_boxes(
             description,
-            proficiency_bonus,
+            MAX_PROFICIENCY_BONUS,
             regain_all_on="long rest",
-            max_box_count=6,
             current_formula="Current amount: equal to your proficiency bonus.",
         )
 
@@ -1106,9 +1102,8 @@ class LivingShadow(GeneralFeat):
         )
         return StringUtils.add_boxes(
             description,
-            proficiency_bonus,
+            MAX_PROFICIENCY_BONUS,
             regain_all_on="long rest",
-            max_box_count=6,
             current_formula="Current amount: equal to your proficiency bonus.",
         )
 
@@ -1133,9 +1128,8 @@ class MistWalker(GeneralFeat):
         )
         return StringUtils.add_boxes(
             description,
-            proficiency_bonus,
+            MAX_PROFICIENCY_BONUS,
             regain_all_on="long rest",
-            max_box_count=6,
             current_formula="Current amount: equal to your proficiency bonus.",
         )
 
@@ -1169,9 +1163,8 @@ class SecondSkin(GeneralFeat):
         )
         return StringUtils.add_boxes(
             description,
-            proficiency_bonus,
+            MAX_PROFICIENCY_BONUS,
             regain_all_on="long rest",
-            max_box_count=6,
             current_formula="Current amount: equal to your proficiency bonus.",
         )
 
@@ -1199,9 +1192,8 @@ class SymbioticBeing(GeneralFeat):
         )
         return StringUtils.add_boxes(
             description,
-            proficiency_bonus,
+            MAX_PROFICIENCY_BONUS,
             regain_all_on="long rest",
-            max_box_count=6,
             current_formula="Current amount: equal to your proficiency bonus.",
         )
 
@@ -1324,8 +1316,7 @@ class SpellResistant(_AbilityScoreFeat):
         )
         return StringUtils.add_boxes(
             description,
-            proficiency_bonus,
+            MAX_PROFICIENCY_BONUS,
             regain_all_on="long rest",
-            max_box_count=6,
             current_formula="Current amount: equal to your proficiency bonus.",
         )

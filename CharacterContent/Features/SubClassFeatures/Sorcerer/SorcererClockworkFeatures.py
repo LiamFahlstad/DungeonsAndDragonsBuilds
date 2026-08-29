@@ -1,4 +1,4 @@
-from Core.Definitions import Ability, SORCERER_HIT_DIE
+from Core.Definitions import Ability, MAX_ABILITY_MODIFIER, SORCERER_HIT_DIE
 from CharacterContent.Features.Core.BaseFeatures import Feature
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
@@ -35,17 +35,14 @@ class RestoreBalance(Feature):
         super().__init__(name="Restore Balance", origin="Clockwork Sorcerer Level 3", action_type="reaction", range="60 Feet")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        charisma_modifier = character_stat_block.get_ability_modifier(Ability.CHARISMA)
-        uses = max(1, charisma_modifier)
         description = (
             "Your connection to the plane of absolute order allows you to equalize chaotic moments. When a creature you can see within 60 feet of yourself is about to roll a d20 with Advantage or Disadvantage, you can take a Reaction to prevent the roll from being affected by Advantage and Disadvantage.\n"
-            "You can use this feature a number of times equal to your Charisma modifier (minimum of once), and you regain all expended uses when you finish a Long Rest."
+            "You regain all expended uses when you finish a Long Rest."
         )
         return StringUtils.add_boxes(
             description,
-            uses,
+            MAX_ABILITY_MODIFIER,
             regain_all_on="long rest",
-            max_box_count=10,
             current_formula="Current amount: equal to your Charisma modifier.",
         )
 

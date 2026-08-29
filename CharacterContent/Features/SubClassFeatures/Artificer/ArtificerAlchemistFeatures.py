@@ -1,4 +1,4 @@
-from Core.Definitions import ARTIFICER_HIT_DIE, Ability, Condition, DamageType
+from Core.Definitions import ARTIFICER_HIT_DIE, Ability, Condition, DamageType, MAX_ABILITY_MODIFIER
 from CharacterContent.Features.Core.BaseFeatures import Feature
 from CharacterContent.Features.Core.Improvements import ConditionImmunity, DamageResistance
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
@@ -78,14 +78,11 @@ class RestorativeReagents(Feature):
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        intelligence_modifier = character_stat_block.get_ability_modifier(Ability.INTELLIGENCE)
-        uses = max(1, intelligence_modifier)
         description = "You can cast Lesser Restoration without expending a spell slot and without preparing the spell, provided you use Alchemist's Supplies as the Spellcasting Focus. You can do so a number of times equal to your Intelligence modifier (minimum of once), and you regain all expended uses when you finish a Long Rest."
         return StringUtils.add_boxes(
             description,
-            uses,
+            MAX_ABILITY_MODIFIER,
             regain_all_on="long rest",
-            max_box_count=10,
             current_formula="Current amount: equal to your Intelligence modifier.",
         )
 

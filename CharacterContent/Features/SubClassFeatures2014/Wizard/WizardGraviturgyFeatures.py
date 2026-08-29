@@ -43,7 +43,7 @@ class ViolentAttraction(Feature):
             "\n"
             "Alternatively, if a creature within 60 feet of you takes damage from a fall, you can use your reaction to increase the fall's damage by 2d10.\n"
             "\n"
-            f"You can use this feature a number of times equal to your Intelligence modifier ({uses}, a minimum of once). You regain all expended uses when you finish a long rest."
+            "You can use this feature a minimum of once per long rest, and you regain all expended uses when you finish a long rest."
         )
         return StringUtils.add_boxes(description, uses, regain_all_on="long rest")
 

@@ -14,22 +14,12 @@ class Rage(Feature):
         barbarian_level = character_stat_block.get_class_level(
             Definitions.CharacterClass.BARBARIAN
         )
-        if barbarian_level <= 2:
-            rage_usages = 2
-        elif barbarian_level <= 5:
-            rage_usages = 3
-        elif barbarian_level <= 11:
-            rage_usages = 4
-        elif barbarian_level <= 16:
-            rage_usages = 5
-        else:
-            rage_usages = 6
         rage_damage_bonus = get_rage_damage_bonus(barbarian_level)
         description = (
             "You can imbue yourself with a primal power called Rage, a force that grants you extraordinary might and resilience.\n"
             "    * Casting Time: Bonus Action\n"
             "    * Condition: Not wearing Heavy armor\n"
-            f"    * Number of usages: You can enter your Rage {rage_usages} times.\n"
+            "    * Number of usages: You can enter your Rage.\n"
             "    * Regaining: You regain one expended use when you finish a Short Rest, and you regain all expended uses when you finish a Long Rest.\n"
             "    * While active, your Rage follows the rules below.\n"
             "        - Damage Resistance: You have Resistance to Bludgeoning, Piercing, and Slashing damage.\n"
@@ -44,10 +34,9 @@ class Rage(Feature):
         )
         return StringUtils.add_boxes(
             description,
-            rage_usages,
+            6,
             regain_x_on=(1, "short rest"),
             regain_all_on="long rest",
-            max_box_count=6,
             current_formula=(
                 "Current amount: determined by your Barbarian level — 2 uses at "
                 "levels 1-2, 3 at 3-5, 4 at 6-11, 5 at 12-16, 6 at 17-20."

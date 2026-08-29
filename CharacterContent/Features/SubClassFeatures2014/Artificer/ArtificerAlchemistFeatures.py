@@ -1,4 +1,4 @@
-from Core.Definitions import ARTIFICER_HIT_DIE, Ability, Condition, DamageType
+from Core.Definitions import ARTIFICER_HIT_DIE, Ability, Condition, DamageType, MAX_ABILITY_MODIFIER
 from CharacterContent.Features.Core.BaseFeatures import Feature
 from CharacterContent.Features.Core.Improvements import ConditionImmunity, DamageResistance
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
@@ -68,18 +68,15 @@ class RestorativeReagents(Feature):
         super().__init__(name="Restorative Reagents", origin="Alchemist Artificer Level 9", usage_tags=["utility", "heal"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        intelligence_modifier = character_stat_block.get_ability_modifier(Ability.INTELLIGENCE)
-        uses = max(1, intelligence_modifier)
         description = (
             "Starting at 9th level, you can incorporate restorative reagents into some of your works.\n"
             "Whenever a creature drinks an experimental elixir you created, the creature gains temporary hit points equal to 2d6 + your Intelligence modifier (minimum of 1 temporary hit point).\n"
-            "You can cast Lesser Restoration without expending a spell slot and without preparing the spell, provided you use alchemist's supplies as the spellcasting focus. You can do so a number of times equal to your Intelligence modifier (minimum of once), and you regain all expended uses when you finish a long rest."
+            "You can cast Lesser Restoration without expending a spell slot and without preparing the spell, provided you use alchemist's supplies as the spellcasting focus. You regain all expended uses when you finish a long rest."
         )
         return StringUtils.add_boxes(
             description,
-            uses,
+            MAX_ABILITY_MODIFIER,
             regain_all_on="long rest",
-            max_box_count=10,
             current_formula="Current amount: equal to your Intelligence modifier.",
         )
 

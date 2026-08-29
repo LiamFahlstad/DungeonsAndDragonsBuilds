@@ -39,14 +39,13 @@ class BardicInspiration(Feature):
         description = (
             f"You can supernaturally inspire others through words, music, or dance. This inspiration is represented by your Bardic Inspiration die, which is a {die}.\n"
             "    * Using Bardic Inspiration: As a Bonus Action, you can inspire another creature within 60 feet of yourself who can see or hear you. That creature gains one of your Bardic Inspiration dice. A creature can have only one Bardic Inspiration die at a time. Once within the next hour when the creature fails a D20 Test, the creature can roll the Bardic Inspiration die and add the number rolled to the d20, potentially turning the failure into a success. A Bardic Inspiration die is expended when it's rolled.\n"
-            f"    * Number of Uses. You can confer a Bardic Inspiration die a number of times equal to your Charisma modifier ({max(1, charisma_modifier)}), and you regain all expended uses when you finish a Long Rest.\n"
+            "    * Number of Uses. You can confer a Bardic Inspiration die a number of times equal to your Charisma modifier, and you regain all expended uses when you finish a Long Rest.\n"
             "    * At Higher Levels. Your Bardic Inspiration die changes when you reach certain Bard levels, as shown in the Bardic Die column of the Bard Features table. The die becomes a d8 at level 5, a d10 at level 10, and a d12 at level 15.\n"
         )
         return StringUtils.add_boxes(
             description,
-            max(1, charisma_modifier),
+            Definitions.MAX_ABILITY_MODIFIER,
             regain_all_on="long rest",
-            max_box_count=10,
             current_formula="Current amount: equal to your Charisma modifier.",
         )
 

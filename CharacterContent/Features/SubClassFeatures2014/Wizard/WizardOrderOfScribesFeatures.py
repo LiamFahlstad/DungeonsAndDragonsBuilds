@@ -1,6 +1,7 @@
 from CharacterContent.Features.Core.BaseFeatures import Feature
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
+from Core.Definitions import MAX_PROFICIENCY_BONUS
 
 
 class WizardlyQuill(Feature):
@@ -55,7 +56,7 @@ class ManifestMind(Feature):
             "\n"
             "Once you conjure the mind, you can't do so again until you finish a long rest, unless you expend a spell slot of any level to conjure it again."
         )
-        return StringUtils.add_boxes(description, proficiency_bonus, regain_all_on="long rest", max_box_count=6, current_formula="Current amount: equal to your proficiency bonus.")
+        return StringUtils.add_boxes(description, MAX_PROFICIENCY_BONUS, regain_all_on="long rest", current_formula="Current amount: equal to your proficiency bonus.")
 
 
 class MasterScriviner(Feature):

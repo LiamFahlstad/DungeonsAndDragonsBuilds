@@ -129,10 +129,6 @@ class MonksFocus(Feature):
             Definitions.Ability.WISDOM
         )
         dc = 8 + wisdom_modifier + character_stat_block.get_proficiency_bonus()
-        monk_level = character_stat_block.get_class_level(
-            Definitions.CharacterClass.MONK
-        )
-        focus_points = LEVEL_TO_FOCUS_POINTS.get(monk_level, 0)
         description = (
             "Rules for Focus Points:\n"
             "    * Regaining: You regain all expended Focus Points when you finish a Short or Long Rest.\n"
@@ -141,9 +137,8 @@ class MonksFocus(Feature):
         )
         return StringUtils.add_boxes(
             description,
-            focus_points,
+            LEVEL_TO_FOCUS_POINTS[20],
             regain_all_on="short or long rest",
-            max_box_count=LEVEL_TO_FOCUS_POINTS[20],
             current_formula="Current amount: equal to your Monk level.",
         )
 

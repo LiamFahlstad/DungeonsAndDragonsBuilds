@@ -1,5 +1,5 @@
 
-from Core.Definitions import Ability, DRUID_HIT_DIE
+from Core.Definitions import Ability, DRUID_HIT_DIE, MAX_ABILITY_MODIFIER
 from CharacterContent.Features.Core.BaseFeatures import Feature
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
@@ -10,18 +10,15 @@ class StarMap(Feature):
         super().__init__(name="Star Map", origin="Circle of the Stars Druid Level 3")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        wisdom_modifier = character_stat_block.get_ability_modifier(Ability.WISDOM)
-        uses = max(1, wisdom_modifier)
         description = (
             "You’ve created a star chart as part of your heavenly studies. It is a Tiny object, and you can use it as a Spellcasting Focus for your Druid spells. You determine its form by rolling on the Star Map table or by choosing one.\n"
-            "While holding the map, you have the Guidance and Guiding Bolt spells prepared, and you can cast Guiding Bolt without expending a spell slot. You can cast it in that way a number of times equal to your Wisdom modifier (minimum of once), and you regain all expended uses when you finish a Long Rest.\n"
+            "While holding the map, you have the Guidance and Guiding Bolt spells prepared, and you can cast Guiding Bolt without expending a spell slot. You can cast it a number of times based on your Wisdom modifier, and you regain all expended uses when you finish a Long Rest.\n"
             "If you lose the map, you can perform a 1-hour ceremony to magically create a replacement. This ceremony can be performed during a Short or Long Rest, and it destroys the previous map."
         )
         return StringUtils.add_boxes(
             description,
-            uses,
+            MAX_ABILITY_MODIFIER,
             regain_all_on="long rest",
-            max_box_count=10,
             current_formula="Current amount: equal to your Wisdom modifier.",
         )
 
@@ -56,19 +53,16 @@ class CosmicOmen(Feature):
         super().__init__(name="Cosmic Omen", origin="Circle of the Stars Druid Level 6", action_type="reaction", duration="Until Next Long Rest", range="30 Feet", usage_tags=["buff", "control"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        wisdom_modifier = character_stat_block.get_ability_modifier(Ability.WISDOM)
-        uses = max(1, wisdom_modifier)
         description = (
             "Whenever you finish a Long Rest, you can consult your Star Map for omens and roll a die. Until you finish your next Long Rest, you gain access to a special Reaction based on whether you rolled an even or an odd number on the die:\n"
             "Weal (Even). Whenever a creature you can see within 30 feet of you is about to make a D20 Test, you can take a Reaction to roll 1d6 and add the number rolled to the total.\n"
             "Woe (Odd). Whenever a creature you can see within 30 feet of you is about to make a D20 Test, you can take a Reaction to roll 1d6 and subtract the number rolled from the total.\n"
-            "You can use this Reaction a number of times equal to your Wisdom modifier (minimum of once), and you regain all expended uses when you finish a Long Rest."
+            "You can use this Reaction a number of times based on your Wisdom modifier, and you regain all expended uses when you finish a Long Rest."
         )
         return StringUtils.add_boxes(
             description,
-            uses,
+            MAX_ABILITY_MODIFIER,
             regain_all_on="long rest",
-            max_box_count=10,
             current_formula="Current amount: equal to your Wisdom modifier.",
         )
 

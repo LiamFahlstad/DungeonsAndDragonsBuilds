@@ -1,4 +1,4 @@
-from Core.Definitions import Skill, Sense
+from Core.Definitions import MAX_PROFICIENCY_BONUS, Sense, Skill
 from CharacterContent.Features.Core.BaseFeatures import Feature
 from CharacterContent.Features.Core.Improvements import SkillProficiencyChoice, GrantSense
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
@@ -36,16 +36,14 @@ class Howl(Feature):
         super().__init__(name="Howl", origin="Lupin Trait", action_type="bonus_action", duration="Until Start of Next Turn", range="15-Foot Radius", usage_tags=["control"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        proficiency_bonus = character_stat_block.get_proficiency_bonus()
         description = (
             "As a Bonus Action, you let out an unearthly howl. "
             "Each creature of your choice within 15 feet of you must succeed on a Wisdom saving throw "
             "(DC 8 plus your Constitution modifier and Proficiency Bonus) or have Disadvantage on attack rolls "
             "and saving throws until the start of your next turn.\n"
-            f"You can use this trait a number of times equal to your Proficiency Bonus ({proficiency_bonus}), "
-            "and you regain all expended uses when you finish a Long Rest."
+            "You can use this trait, and you regain all expended uses when you finish a Long Rest."
         )
-        return StringUtils.add_boxes(description, proficiency_bonus, max_box_count=6, current_formula="Current amount: equal to your proficiency bonus.")
+        return StringUtils.add_boxes(description, MAX_PROFICIENCY_BONUS, current_formula="Current amount: equal to your proficiency bonus.")
 
 
 class WerewolfInstincts(Feature):

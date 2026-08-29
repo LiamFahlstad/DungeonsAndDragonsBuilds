@@ -22,8 +22,6 @@ class StepsOfTheFey(Feature):
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        charisma_modifier = character_stat_block.get_ability_modifier(Ability.CHARISMA)
-        uses = max(1, charisma_modifier)
         description = (
             "Your patron grants you the ability to move between the boundaries of the planes. You can cast Misty Step without expending a spell slot a number of times equal to your Charisma modifier (minimum of once), and you regain all expended uses when you finish a Long Rest.\n"
             "In addition, whenever you cast that spell, you can choose one of the following additional effects.\n"
@@ -32,9 +30,8 @@ class StepsOfTheFey(Feature):
         )
         return StringUtils.add_boxes(
             description,
-            uses,
+            Definitions.MAX_ABILITY_MODIFIER,
             regain_all_on="long rest",
-            max_box_count=10,
             current_formula="Current amount: equal to your Charisma modifier.",
         )
 

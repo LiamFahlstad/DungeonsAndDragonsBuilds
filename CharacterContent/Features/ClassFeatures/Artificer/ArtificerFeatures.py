@@ -1,5 +1,5 @@
 from CharacterContent.Features.Core.BaseFeatures import Feature
-from Core.Definitions import Ability
+from Core.Definitions import Ability, MAX_ABILITY_MODIFIER
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
@@ -31,10 +31,6 @@ class TinkersMagic(Feature):
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        intelligence_modifier = character_stat_block.get_ability_modifier(
-            Ability.INTELLIGENCE
-        )
-        uses = max(1, intelligence_modifier)
         description = (
             "You know the Mending cantrip.\n"
             "As a Magic action while holding Tinker's Tools, you can create one item in an unoccupied space within 5 feet of yourself, choosing the item from the following list:\n"
@@ -54,9 +50,8 @@ class TinkersMagic(Feature):
         )
         return StringUtils.add_boxes(
             description,
-            uses,
+            MAX_ABILITY_MODIFIER,
             regain_all_on="long rest",
-            max_box_count=10,
             current_formula="Current amount: equal to your Intelligence modifier.",
         )
 
@@ -170,19 +165,14 @@ class FlashofGenius(Feature):
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        intelligence_modifier = character_stat_block.get_ability_modifier(
-            Ability.INTELLIGENCE
-        )
-        uses = max(1, intelligence_modifier)
         description = (
             "When you or a creature you can see within 30 feet of you fails an ability check or a saving throw, you can take a Reaction to add a bonus to the roll, potentially causing it to succeed. The bonus equals your Intelligence modifier (minimum of +1).\n"
             "You can take this Reaction a number of times equal to your Intelligence modifier (minimum of once). You regain all expended uses when you finish a Long Rest."
         )
         return StringUtils.add_boxes(
             description,
-            uses,
+            MAX_ABILITY_MODIFIER,
             regain_all_on="long rest",
-            max_box_count=10,
             current_formula="Current amount: equal to your Intelligence modifier.",
         )
 

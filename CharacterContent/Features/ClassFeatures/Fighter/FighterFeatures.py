@@ -21,25 +21,18 @@ class SecondWind(Feature):
         super().__init__(name="Second Wind", origin="Fighter Level 1", action_type="bonus_action", usage_tags=["heal"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        uses = 2
-        if character_stat_block.character_level >= 4:
-            uses = 3
-        if character_stat_block.character_level >= 10:
-            uses = 4
-
         base_text = (
-            f"You have a limited well of physical and mental stamina that you can draw on. "
-            f"As a Bonus Action, you can use it to regain Hit Points equal to 1d10 plus your Fighter level.\n"
-            f"You can use this feature {uses} time(s). You regain one expended use when you finish a Short Rest, "
-            f"and you regain all expended uses when you finish a Long Rest.\n"
+            "You have a limited well of physical and mental stamina that you can draw on. "
+            "As a Bonus Action, you can use it to regain Hit Points equal to 1d10 plus your Fighter level.\n"
+            "You regain one expended use when you finish a Short Rest, "
+            "and you regain all expended uses when you finish a Long Rest.\n"
         )
 
         return StringUtils.add_boxes(
             base_text,
-            uses,
+            4,
             regain_x_on=(1, "short rest"),
             regain_all_on="long rest",
-            max_box_count=4,
             current_formula=(
                 "Current amount: determined by your character level — 2 uses "
                 "at levels 1-3, 3 at 4-9, 4 at 10+."
@@ -80,16 +73,14 @@ class ActionSurge(Feature):
         super().__init__(name="Action Surge", origin="Fighter Level 2")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        uses = 2 if character_stat_block.character_level >= 17 else 1
         description = (
             "You can push yourself beyond your normal limits for a moment. On your turn, you can take one additional action, except the Magic action.\n"
             "Once you use this feature, you can’t do so again until you finish a Short or Long Rest. Starting at level 17, you can use it twice before a rest but only once on a turn."
         )
         return StringUtils.add_boxes(
             description,
-            uses,
+            2,
             regain_all_on="short or long rest",
-            max_box_count=2,
             current_formula=(
                 "Current amount: 1 use below character level 17, 2 uses at 17+."
             ),
@@ -166,21 +157,14 @@ class Indomitable(Feature):
         super().__init__(name="Indomitable", origin="Fighter Level 9", usage_tags=["buff"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        if character_stat_block.character_level >= 17:
-            uses = 3
-        elif character_stat_block.character_level >= 13:
-            uses = 2
-        else:
-            uses = 1
         description = (
             "If you fail a saving throw, you can reroll it with a bonus equal to your Fighter level. You must use the new roll, and you can’t use this feature again until you finish a Long Rest.\n"
             "You can use this feature twice before a Long Rest starting at level 13 and three times before a Long Rest starting at level 17."
         )
         return StringUtils.add_boxes(
             description,
-            uses,
+            3,
             regain_all_on="long rest",
-            max_box_count=3,
             current_formula=(
                 "Current amount: determined by your character level — 1 use "
                 "below level 13, 2 at 13-16, 3 at 17+."

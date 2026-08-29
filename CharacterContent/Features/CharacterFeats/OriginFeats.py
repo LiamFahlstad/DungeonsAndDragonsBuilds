@@ -1,6 +1,6 @@
 from typing import Optional
 
-from Core.Definitions import Ability, CharacterClass, Skill
+from Core.Definitions import Ability, CharacterClass, MAX_PROFICIENCY_BONUS, Skill
 from CharacterContent.Features.Core.BaseFeatures import Feature
 from CharacterContent.Features.Core.Improvements import (
     HitPointsPerLevelBonus,
@@ -129,9 +129,8 @@ class Lucky(OriginFeat):
         )
         return StringUtils.add_boxes(
             description,
-            proficiency_bonus,
+            MAX_PROFICIENCY_BONUS,
             regain_all_on="long rest",
-            max_box_count=6,
             current_formula="Current amount: equal to your proficiency bonus.",
         )
 
@@ -145,9 +144,8 @@ class Lucky(OriginFeat):
         )
         return StringUtils.add_boxes(
             description,
-            proficiency_bonus,
+            MAX_PROFICIENCY_BONUS,
             regain_all_on="long rest",
-            max_box_count=6,
             current_formula="Current amount: equal to your proficiency bonus.",
         )
 
@@ -405,9 +403,8 @@ class FamiliarFriend(OriginFeat):
         )
         return StringUtils.add_boxes(
             description,
-            proficiency_bonus,
+            MAX_PROFICIENCY_BONUS,
             regain_all_on="long rest",
-            max_box_count=6,
             current_formula="Current amount: equal to your proficiency bonus.",
         )
 
@@ -475,9 +472,8 @@ class SpellfireSpark(OriginFeat):
         )
         return StringUtils.add_boxes(
             description,
-            proficiency_bonus,
+            MAX_PROFICIENCY_BONUS,
             regain_all_on="long rest",
-            max_box_count=6,
             current_formula="Current amount: equal to your proficiency bonus.",
         )
 
@@ -513,7 +509,7 @@ class SharpEye(OriginFeat):
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         proficiency_bonus = character_stat_block.get_proficiency_bonus()
         description = "When you take the Search or Study action, you can give yourself Advantage on any ability check made as part of that action. You can use this feature a number of times equal to your Proficiency Bonus, and you regain all expended uses when you finish a Long Rest. If the check fails, the use of this feature isn't expended."
-        return StringUtils.add_boxes(description, proficiency_bonus, max_box_count=6, current_formula="Current amount: equal to your proficiency bonus.")
+        return StringUtils.add_boxes(description, MAX_PROFICIENCY_BONUS, current_formula="Current amount: equal to your proficiency bonus.")
 
 
 class Survivor(OriginFeat):

@@ -76,16 +76,15 @@ class ElementalGift(Feature):
         self.kind = kind
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        proficiency_bonus = character_stat_block.get_proficiency_bonus()
         damage_type = _WRATH_DAMAGE_TYPE[self.kind]
         description = (
             "At 6th level, you begin to take on characteristics of your patron's kind. You now have resistance to a damage type determined by your patron's kind: bludgeoning (Dao), thunder (Djinni), fire (Efreeti), or cold (Marid).\n"
             "\n"
-            "In addition, as a bonus action, you can give yourself a flying speed of 30 feet that lasts for 10 minutes, during which you can hover. You can use this bonus action a number of times equal to your proficiency bonus, and you regain all expended uses when you finish a long rest.\n"
+            "In addition, as a bonus action, you can give yourself a flying speed of 30 feet that lasts for 10 minutes, during which you can hover. You regain all expended uses when you finish a long rest.\n"
             "\n"
-            f"You have chosen the {self.kind.value} kind, so you have resistance to {damage_type} damage. You can use the flying speed bonus action a number of times equal to your proficiency bonus ({proficiency_bonus})."
+            f"You have chosen the {self.kind.value} kind, so you have resistance to {damage_type} damage."
         )
-        return StringUtils.add_boxes(description, proficiency_bonus, regain_all_on="long rest", max_box_count=6, current_formula="Current amount: equal to your proficiency bonus.")
+        return StringUtils.add_boxes(description, Definitions.MAX_PROFICIENCY_BONUS, regain_all_on="long rest", current_formula="Current amount: equal to your proficiency bonus.")
 
     def get_table_description(
         self, character_stat_block: CharacterStatBlock

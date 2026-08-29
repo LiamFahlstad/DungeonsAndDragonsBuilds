@@ -1,4 +1,4 @@
-from Core.Definitions import Ability, CLERIC_HIT_DIE, DamageType
+from Core.Definitions import Ability, CLERIC_HIT_DIE, DamageType, MAX_ABILITY_MODIFIER
 from CharacterContent.Features.Core.BaseFeatures import Feature
 from CharacterContent.Features.Core.Improvements import DamageResistance
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
@@ -39,14 +39,11 @@ class WarPriest(Feature):
         super().__init__(name="War Priest", origin="War Domain Cleric Level 3", action_type="bonus_action", usage_tags=["damage"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        wisdom_modifier = character_stat_block.get_ability_modifier(Ability.WISDOM)
-        uses = max(1, wisdom_modifier)
-        description = "As a Bonus Action, you can make one attack with a weapon or an Unarmed Strike. You can use this Bonus Action a number of times equal to your Wisdom modifier (minimum of once). You regain all expended uses when you finish a Short or Long Rest."
+        description = "As a Bonus Action, you can make one attack with a weapon or an Unarmed Strike. You regain all expended uses when you finish a Short or Long Rest."
         return StringUtils.add_boxes(
             description,
-            uses,
+            MAX_ABILITY_MODIFIER,
             regain_all_on="short or long rest",
-            max_box_count=10,
             current_formula="Current amount: equal to your Wisdom modifier.",
         )
 

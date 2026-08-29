@@ -59,10 +59,6 @@ class FontOfMagic(Feature):
         super().__init__(name="Font of Magic", origin="Sorcerer Level 2")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        sorcerer_level = character_stat_block.get_class_level(
-            Definitions.CharacterClass.SORCERER
-        )
-        sorcery_points = sorcerer_level
         description = (
             "Rules for Sorcery Points:\n"
             "    * You regain all expended Sorcery Points when you finish a Long Rest.\n"
@@ -79,9 +75,8 @@ class FontOfMagic(Feature):
         )
         return StringUtils.add_boxes(
             description,
-            sorcery_points,
+            20,
             regain_all_on="long rest",
-            max_box_count=20,
             current_formula="Current amount: equal to your Sorcerer level.",
         )
 

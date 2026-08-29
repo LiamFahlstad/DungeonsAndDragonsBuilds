@@ -1,4 +1,4 @@
-from Core.Definitions import CreatureSize, Sense
+from Core.Definitions import CreatureSize, MAX_PROFICIENCY_BONUS, Sense
 from CharacterContent.Features.Core.BaseFeatures import Feature
 from CharacterContent.Features.Core.Improvements import GrantSense
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
@@ -30,12 +30,11 @@ class AdrenalineRush(Feature):
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        proficiency_bonus = character_stat_block.get_proficiency_bonus()
         text = (
-            f"You can take the Dash action as a Bonus Action. When you do so, you gain a number of Temporary Hit Points equal to your Proficiency Bonus ({proficiency_bonus}).\n"
-            f"You can use this trait a number of times equal to your Proficiency Bonus ({proficiency_bonus}), and you regain all expended uses when you finish a Short or Long Rest."
+            "You can take the Dash action as a Bonus Action. When you do so, you gain a number of Temporary Hit Points equal to your Proficiency Bonus.\n"
+            "You can use this trait, and you regain all expended uses when you finish a Short or Long Rest."
         )
-        return StringUtils.add_boxes(text, proficiency_bonus, max_box_count=6, current_formula="Current amount: equal to your proficiency bonus.")
+        return StringUtils.add_boxes(text, MAX_PROFICIENCY_BONUS, current_formula="Current amount: equal to your proficiency bonus.")
 
 
 class RelentlessEndurance(Feature):

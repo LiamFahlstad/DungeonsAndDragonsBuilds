@@ -1,6 +1,20 @@
 from enum import Enum
 
 
+###### RESOURCE CAPS ######
+
+# get_proficiency_bonus() = 2 + (character_level - 1) // 4, maxed at
+# character level 20. Used as the box-count ceiling for features whose
+# uses scale with proficiency bonus.
+MAX_PROFICIENCY_BONUS = 6
+
+# Modifier for the highest ability score these box-count formulas are
+# designed to show (a score of 30, reachable via Wish/epic boons). Used as
+# the box-count ceiling for features whose uses scale with an ability
+# modifier (minimum of 1).
+MAX_ABILITY_MODIFIER = 10
+
+
 ###### HIT DICE ######
 
 ARTIFICER_HIT_DIE = 8

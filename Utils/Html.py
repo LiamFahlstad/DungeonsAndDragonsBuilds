@@ -14,16 +14,13 @@ _DAMAGE_TYPE_PATTERN = re.compile(
 RESET_PREFIX = "[RESET:"
 RESET_SUFFIX = "]"
 
-# Box-count sentinel markers - encode both the current and max box counts so
-# rendering can defer to render time which one to draw (current on the full
-# sheet, max on a level shard page). Format: [BOXES:current:max]
+# Box-count sentinel marker - the number of checkbox symbols to render.
+# Always the formula's maximum value. Format: [BOXES:count]
 BOXES_PREFIX = "[BOXES:"
 BOXES_SUFFIX = "]"
 
 # Current-value-formula sentinel marker - a short plain-English note on how to
-# derive the build's real "current" count from the max shown on a level shard
-# page (where the boxes render the formula's ceiling, not the current value).
-# Only rendered when use_max=True; consumed and discarded otherwise.
+# derive the build's real current count from the max shown by the boxes.
 CURRENT_PREFIX = "[CURRENT:"
 CURRENT_SUFFIX = "]"
 
@@ -47,20 +44,19 @@ def _is_reset_sentinel_line(line: str) -> bool:
     return stripped.startswith(RESET_PREFIX) and stripped.endswith(RESET_SUFFIX)
 
 
-def boxes_to_html(description: str, use_max: bool = False) -> str:
+def boxes_to_html(description: str) -> str:
     def normalize_box_line(line: str) -> str:
         stripped = line.strip()
         if stripped.endswith("<br>"):
             stripped = stripped[:-4].rstrip()
         return stripped
 
-    def parse_box_counts(line: str) -> tuple[int, int] | None:
-        """Return (box_count, max_box_count) if *line* is a box sentinel, else None."""
+    def parse_box_count(line: str) -> int | None:
+        """Return the box count if *line* is a box sentinel, else None."""
         normalized = normalize_box_line(line)
         if normalized.startswith(BOXES_PREFIX) and normalized.endswith(BOXES_SUFFIX):
             inner = normalized[len(BOXES_PREFIX) : -len(BOXES_SUFFIX)]
-            current_str, max_str = inner.split(":")
-            return int(current_str), int(max_str)
+            return int(inner)
         return None
 
     def parse_reset_label(line: str) -> str | None:
@@ -84,12 +80,10 @@ def boxes_to_html(description: str, use_max: bool = False) -> str:
     index = 0
 
     while index < len(lines):
-        box_counts = parse_box_counts(lines[index])
+        box_count = parse_box_count(lines[index])
 
-        if box_counts is not None:
-            box_count, max_box_count = box_counts
-            top_count = max_box_count if use_max else box_count
-            boxes_html = '<span class="slot-box"></span>' * top_count
+        if box_count is not None:
+            boxes_html = '<span class="slot-box"></span>' * box_count
             consumed = 1  # the box line itself
 
             # Peek at the following lines, in order, for an optional reset-label
@@ -116,11 +110,7 @@ def boxes_to_html(description: str, use_max: bool = False) -> str:
                 extra_html_parts.append(
                     f'<span class="slot-reset-label">{capitalized_label}.</span>'
                 )
-            if current_formula is not None and use_max:
-                # Only meaningful on level shard pages, where the boxes above
-                # show the formula's ceiling rather than the build's current
-                # value - not rendered on the full sheet, where the boxes
-                # already show the current value directly.
+            if current_formula is not None:
                 extra_html_parts.append(
                     f'<span class="slot-reset-label">{current_formula}</span>'
                 )

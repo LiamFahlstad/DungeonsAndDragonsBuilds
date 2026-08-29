@@ -109,22 +109,16 @@ class ChannelDivinity(Feature):
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        usages = 2
-        if character_stat_block.character_level >= 11:
-            usages = 3
-
         description = (
             "Each time you use this class's Channel Divinity, you choose which effect from this class to create.\n"
-            f"Usage: {usages}.\n"
             "You regain one after a Short Rest, all after a Long Rest.\n"
             "DC: class's Spellcasting feature.\n"
         )
         description = StringUtils.add_boxes(
             description,
-            usages,
+            3,
             regain_x_on=(1, "short rest"),
             regain_all_on="long rest",
-            max_box_count=3,
             current_formula=(
                 "Current amount: 2 uses below character level 11, 3 at 11+."
             ),

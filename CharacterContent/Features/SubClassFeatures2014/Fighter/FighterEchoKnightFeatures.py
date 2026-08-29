@@ -1,4 +1,4 @@
-from Core.Definitions import Ability
+from Core.Definitions import Ability, MAX_ABILITY_MODIFIER
 from CharacterContent.Features.Core.BaseFeatures import Feature
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
@@ -30,18 +30,15 @@ class UnleashIncarnation(Feature):
         super().__init__(name="Unleash Incarnation", origin="Echo Knight Fighter Level 3", usage_tags=["damage"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        constitution_modifier = character_stat_block.get_ability_modifier(Ability.CONSTITUTION)
-        uses = max(1, constitution_modifier)
         description = (
             "At 3rd level, you can heighten your echo's fury. Whenever you take the Attack action, you can make one additional melee attack from the echo's position.\n"
             "\n"
-            "You can use this feature a number of times equal to your Constitution modifier (a minimum of once). You regain all expended uses when you finish a long rest."
+            "You regain all expended uses when you finish a long rest."
         )
         return StringUtils.add_boxes(
             description,
-            uses,
+            MAX_ABILITY_MODIFIER,
             regain_all_on="long rest",
-            max_box_count=10,
             current_formula="Current amount: equal to your Constitution modifier.",
         )
 
@@ -102,18 +99,15 @@ class ReclaimPotential(Feature):
         super().__init__(name="Reclaim Potential", origin="Echo Knight Fighter Level 15", usage_tags=["buff"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        constitution_modifier = character_stat_block.get_ability_modifier(Ability.CONSTITUTION)
-        uses = max(1, constitution_modifier)
         description = (
             "By 15th level, you've learned to absorb the fleeting magic of your echo. When an echo of yours is destroyed by taking damage, you can gain a number of temporary hit points equal to 2d6 + your Constitution modifier, provided you don't already have temporary hit points.\n"
             "\n"
-            "You can use this feature a number of times equal to your Constitution modifier (a minimum of once). You regain all expended uses when you finish a long rest."
+            "You regain all expended uses when you finish a long rest."
         )
         return StringUtils.add_boxes(
             description,
-            uses,
+            MAX_ABILITY_MODIFIER,
             regain_all_on="long rest",
-            max_box_count=10,
             current_formula="Current amount: equal to your Constitution modifier.",
         )
 

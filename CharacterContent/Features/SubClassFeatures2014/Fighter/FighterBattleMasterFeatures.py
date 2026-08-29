@@ -11,13 +11,6 @@ class CombatSuperiority(Feature):
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        if character_stat_block.character_level < 7:
-            number_of_superiority_die = 4
-        elif character_stat_block.character_level < 15:
-            number_of_superiority_die = 5
-        else:
-            number_of_superiority_die = 6
-
         if character_stat_block.character_level < 10:
             superiority_die = "1d8"
         elif character_stat_block.character_level < 18:
@@ -35,7 +28,7 @@ class CombatSuperiority(Feature):
             "\n"
             "Maneuvers. You learn three maneuvers of your choice. Many maneuvers enhance an attack in some way. You can use only one maneuver per attack. You learn two additional maneuvers of your choice at 7th, 10th, and 15th level. Each time you learn new maneuvers, you can also replace one maneuver you know with a different one.\n"
             "\n"
-            f"Superiority Dice. You have {number_of_superiority_die} superiority dice, which are {superiority_die}s. A superiority die is expended when you use it. You regain all of your expended superiority dice when you finish a short or long rest. You gain another superiority die at 7th level and one more at 15th level.\n"
+            f"Superiority Dice. You have superiority dice, which are {superiority_die}s. A superiority die is expended when you use it. You regain all of your expended superiority dice when you finish a short or long rest. You gain another superiority die at 7th level and one more at 15th level.\n"
             "\n"
             f"Saving Throws. Some of your maneuvers require your target to make a saving throw to resist the maneuver's effects. Maneuver save DC = 8 + your proficiency bonus + your Strength or Dexterity modifier (your choice) = {maneuver_save_dc}\n"
             "\n"
@@ -43,9 +36,8 @@ class CombatSuperiority(Feature):
         )
         return StringUtils.add_boxes(
             description,
-            number_of_superiority_die,
+            6,
             regain_all_on="short or long rest",
-            max_box_count=6,
             current_formula=(
                 "Current amount: determined by your character level — 4 dice "
                 "below level 7, 5 at 7-14, 6 at 15+."

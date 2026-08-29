@@ -1,4 +1,4 @@
-from Core.Definitions import Ability, ROGUE_HIT_DIE
+from Core.Definitions import Ability, MAX_ABILITY_MODIFIER, ROGUE_HIT_DIE
 from CharacterContent.Features.Core.BaseFeatures import Feature
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
@@ -9,19 +9,14 @@ class WailsFromTheGrave(Feature):
         super().__init__(name="Wails from the Grave", origin="Phantom Rogue Level 3", range="30 Feet", usage_tags=["damage"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        dexterity_modifier = character_stat_block.get_ability_modifier(
-            Ability.DEXTERITY
-        )
-        uses = max(1, dexterity_modifier)
         description = (
             "Immediately after you deal Sneak Attack damage to a creature on your turn, you can target a second creature that you can see within 30 feet of the first creature. Roll half the number of Sneak Attack damage dice for your level (round up), and the second creature takes Necrotic damage equal to the roll's total as wails of the dead sound around it.\n"
-            "You can use this feature a number of times equal to your Dexterity modifier (minimum of once), and you regain all expended uses when you finish a Long Rest."
+            "You can use this feature a number of times based on your Dexterity modifier, and you regain all expended uses when you finish a Long Rest."
         )
         return StringUtils.add_boxes(
             description,
-            uses,
+            MAX_ABILITY_MODIFIER,
             regain_all_on="long rest",
-            max_box_count=10,
             current_formula="Current amount: equal to your Dexterity modifier.",
         )
 

@@ -44,9 +44,9 @@ class TentacleOfTheDeep(Feature):
             "\n"
             "As a bonus action on your turn, you can move the tentacle up to 30 feet and repeat the attack.\n"
             "\n"
-            f"You can summon the tentacle a number of times equal to your proficiency bonus ({proficiency_bonus}), and you regain all expended uses when you finish a long rest."
+            "You can summon the tentacle a number of times equal to your proficiency bonus, and you regain all expended uses when you finish a long rest."
         )
-        return StringUtils.add_boxes(description, proficiency_bonus, regain_all_on="long rest", max_box_count=6, current_formula="Current amount: equal to your proficiency bonus.")
+        return StringUtils.add_boxes(description, Definitions.MAX_PROFICIENCY_BONUS, regain_all_on="long rest", current_formula="Current amount: equal to your proficiency bonus.")
 
     def get_table_description(
         self, character_stat_block: CharacterStatBlock

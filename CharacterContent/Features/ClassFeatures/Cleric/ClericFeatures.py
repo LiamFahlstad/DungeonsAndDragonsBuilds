@@ -63,15 +63,9 @@ class ChannelDivinity(Feature):
         super().__init__(name="Channel Divinity", origin="Cleric Level 2", action_type="action", duration="1 Minute", range="30 Feet", usage_tags=["heal", "damage", "control"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        if character_stat_block.character_level >= 18:
-            uses = 4
-        elif character_stat_block.character_level >= 6:
-            uses = 3
-        else:
-            uses = 2
         description = (
             "You can channel divine energy directly from the Outer Planes to fuel magical effects. You start with two such effects: Divine Spark and Turn Undead, each of which is described below. Each time you use this class's Channel Divinity, choose which Channel Divinity effect from this class to create. You gain additional effect options at higher Cleric levels.\n"
-            "You can use this class's Channel Divinity twice. You regain one of its expended uses when you finish a Short Rest, and you regain all expended uses when you finish a Long Rest. You gain additional uses when you reach certain Cleric levels, as shown in the Channel Divinity column of the Cleric Features table.\n"
+            "You can use this class's Channel Divinity. You regain one of its expended uses when you finish a Short Rest, and you regain all expended uses when you finish a Long Rest. You gain additional uses when you reach certain Cleric levels, as shown in the Channel Divinity column of the Cleric Features table.\n"
             "If a Channel Divinity effect requires a saving throw, the DC equals the spell save DC from this class's Spellcasting feature.\n"
             "Divine Spark. As a Magic action, you point your Holy Symbol at another creature you can see within 30 feet of yourself and focus divine energy at it. Roll 1d8 and add your Wisdom modifier. You either restore Hit Points to the creature equal to that total or force the creature to make a Constitution saving throw. On a failed save, the creature takes Necrotic or Radiant damage (your choice) equal to that total. On a successful save, the creature takes half as much damage (round down).\n"
             "You roll an additional d8 when you reach Cleric levels 7 (2d8), 13 (3d8), and 18 (4d8).\n"
@@ -79,10 +73,9 @@ class ChannelDivinity(Feature):
         )
         return StringUtils.add_boxes(
             description,
-            uses,
+            4,
             regain_x_on=(1, "short rest"),
             regain_all_on="long rest",
-            max_box_count=4,
             current_formula=(
                 "Current amount: determined by your character level — 2 uses "
                 "at levels 1-5, 3 at 6-17, 4 at 18+."

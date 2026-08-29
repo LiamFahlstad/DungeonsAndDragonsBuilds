@@ -40,9 +40,8 @@ class DarkOnesOwnLuck(Feature):
         )
         return StringUtils.add_boxes(
             description,
-            uses,
+            Definitions.MAX_ABILITY_MODIFIER,
             regain_all_on="long rest",
-            max_box_count=10,
             current_formula="Current amount: equal to your Charisma modifier.",
         )
 

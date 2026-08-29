@@ -1,4 +1,4 @@
-from Core.Definitions import CreatureSize, Sense
+from Core.Definitions import CreatureSize, MAX_PROFICIENCY_BONUS, Sense
 from CharacterContent.Features.Core.BaseFeatures import Feature
 from CharacterContent.Features.Core.Improvements import HitPointsPerLevelBonus, GrantSense
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
@@ -45,9 +45,8 @@ class Stonecunning(Feature):
         super().__init__(name="Stonecunning", origin="Dwarf Trait", action_type="bonus_action", duration="10 Minutes", range="60 Feet")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        proficiency_bonus = character_stat_block.get_proficiency_bonus()
         text = (
             "As a Bonus Action, you gain Tremorsense with a range of 60 feet for 10 minutes. You must be on a stone surface or touching a stone surface to use this Tremorsense. The stone can be natural or worked.\n"
-            f"You can use this Bonus Action a number of times equal to your Proficiency Bonus ({proficiency_bonus}), and you regain all expended uses when you finish a Long Rest."
+            "You can use this Bonus Action a number of times equal to your Proficiency Bonus, and you regain all expended uses when you finish a Long Rest."
         )
-        return StringUtils.add_boxes(text, proficiency_bonus, max_box_count=6, current_formula="Current amount: equal to your proficiency bonus.")
+        return StringUtils.add_boxes(text, MAX_PROFICIENCY_BONUS, current_formula="Current amount: equal to your proficiency bonus.")

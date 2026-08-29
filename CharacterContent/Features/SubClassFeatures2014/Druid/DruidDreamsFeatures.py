@@ -16,15 +16,12 @@ class BalmOfTheSummerCourt(Feature):
             "\n"
             "As a bonus action, you can choose an ally you can see within 120 feet of you and spend a number of those dice equal to half your druid level or less. Roll the spent dice and add them together. The target regains a number of hit points equal to the total. The target also gains 1 temporary hit point per die spent.\n"
             "\n"
-            "You regain the expended dice when you finish a long rest.\n"
-            "\n"
-            f"At your current Druid level, your pool contains {druid_level}d6, and you can spend up to {half_druid_level} of those dice at once."
+            "You regain the expended dice when you finish a long rest."
         )
         return StringUtils.add_boxes(
             description,
-            druid_level,
+            20,
             regain_all_on="long rest",
-            max_box_count=20,
             current_formula="Current amount: equal to your Druid level.",
         )
 

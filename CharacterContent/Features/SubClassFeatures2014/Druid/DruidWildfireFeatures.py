@@ -1,5 +1,5 @@
 from Combat.Definitions import Alignment, Condition, DamageTypeEntry, ExtendedCombatantData, MonsterAbility, MonsterType, Size
-from Core.Definitions import Ability, CharacterClass, DamageType
+from Core.Definitions import Ability, CharacterClass, DamageType, MAX_PROFICIENCY_BONUS
 from CharacterContent.Features.Core.BaseFeatures import Feature
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
@@ -93,7 +93,6 @@ class SummonWildfireSpirit(Feature):
         super().__init__(name="Summon Wildfire Spirit", origin="Circle of Wildfire Druid Level 3", action_type="action", duration="1 Hour", range="30 Feet", usage_tags=["damage", "utility", "summon"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        uses = 1
         description = (
             "You can summon the primal spirit bound to your soul. As an action, you can expend one use of your Wild Shape feature to summon your wildfire spirit, rather than assuming a beast form.\n"
             "\n"
@@ -107,7 +106,7 @@ class SummonWildfireSpirit(Feature):
             "\n"
             + format_wildfire_spirit(character_stat_block)
         )
-        return StringUtils.add_boxes(description, uses, regain_all_on="Wild Shape use")
+        return StringUtils.add_boxes(description, 1, regain_all_on="Wild Shape use")
 
 
 class EnhancedBond(Feature):
@@ -138,9 +137,8 @@ class CauterizingFlames(Feature):
         )
         return StringUtils.add_boxes(
             description,
-            proficiency_bonus,
+            MAX_PROFICIENCY_BONUS,
             regain_all_on="long rest",
-            max_box_count=6,
             current_formula="Current amount: equal to your proficiency bonus.",
         )
 

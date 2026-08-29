@@ -64,9 +64,9 @@ class BreathWeapon(Feature):
         text = (
             f"When you take the Attack action on your turn, you can replace one of your attacks with an exhalation of magical energy in either a 15-foot Cone or a 30-foot Line that is 5 feet wide (choose the shape each time). Each creature in that area must make a Dexterity saving throw (DC 8 plus your Constitution modifier and Proficiency Bonus = {8 + constitution_modifier + proficiency_bonus}).\n"
             f"On a failed save, a creature takes {damage} {self.damage_type} damage because your Draconic Ancestry is {self.color.value} dragon. On a successful save, a creature takes half as much damage.\n"
-            f"You can use this Breath Weapon a number of times equal to your Proficiency Bonus ({proficiency_bonus}), and you regain all expended uses when you finish a Long Rest."
+            "You can use this Breath Weapon a number of times equal to your Proficiency Bonus, and you regain all expended uses when you finish a Long Rest."
         )
-        return StringUtils.add_boxes(text, proficiency_bonus, max_box_count=6, current_formula="Current amount: equal to your proficiency bonus.")
+        return StringUtils.add_boxes(text, Definitions.MAX_PROFICIENCY_BONUS, current_formula="Current amount: equal to your proficiency bonus.")
 
     def get_table_description(
         self, character_stat_block: CharacterStatBlock

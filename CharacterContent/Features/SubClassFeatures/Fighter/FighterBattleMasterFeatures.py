@@ -12,13 +12,6 @@ class SuperiorityDice(Feature):
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        if character_stat_block.character_level < 7:
-            number_of_superiority_die = 4
-        elif character_stat_block.character_level < 15:
-            number_of_superiority_die = 5
-        else:
-            number_of_superiority_die = 6
-
         if character_stat_block.character_level < 10:
             superiority_die = "1d8"
         elif character_stat_block.character_level < 18:
@@ -34,16 +27,14 @@ class SuperiorityDice(Feature):
         base_text = (
             f"These are {superiority_die}s, and you can expend them to fuel your maneuvers.\n"
             "You regain all expended superiority dice when you finish a short or long rest.\n"
-            f"Number of Superiority Dice: {number_of_superiority_die}\n"
             f"If a maneuver requires a saving throw, the DC equals {saving_throw}.\n"
-            f"Maneuvers:"
+            "Maneuvers:"
         )
 
         return StringUtils.add_boxes(
             base_text,
-            number_of_superiority_die,
+            6,
             regain_all_on="short or long rest",
-            max_box_count=6,
             current_formula=(
                 "Current amount: determined by your character level — 4 dice "
                 "below level 7, 5 at 7-14, 6 at 15+."
