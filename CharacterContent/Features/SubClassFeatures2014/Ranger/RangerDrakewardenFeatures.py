@@ -132,7 +132,6 @@ class DrakeCompanion(Feature):
         self.damage_type = damage_type
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        uses = 1
         description = (
             "As an action, you can magically summon the drake that is bound to you. It appears in an unoccupied space of your choice within 30 feet of you.\n"
             "The drake is friendly to you and your companions, and it obeys your commands. Whenever you summon the drake, choose a damage type listed in its Draconic Essence trait. You can determine the cosmetic characteristics of the drake, such as its color, its scale texture, or any visible effect of its Draconic Essence; your choice has no effect on its game statistics.\n"
@@ -186,7 +185,6 @@ class DrakesBreath(Feature):
         wisdom_modifier = character_stat_block.get_ability_modifier(Ability.WISDOM)
         spell_save_dc = 8 + proficiency_bonus + wisdom_modifier
         damage = "10d6" if ranger_level >= 15 else "8d6"
-        uses = 1
         description = (
             "As an action, you can exhale a 30-foot cone of damaging breath or cause your drake to exhale it. Choose acid, cold, fire, lightning, or poison damage (your choice doesn't have to match your drake's Draconic Essence). "
             f"Each creature in the cone must make a Dexterity saving throw against your spell save DC ({spell_save_dc}), taking {damage} damage on a failed save, or half as much damage on a successful one.\n"

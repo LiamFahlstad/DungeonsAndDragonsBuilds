@@ -81,8 +81,6 @@ class InfectiousInspiration(Feature):
         super().__init__(name="Infectious Inspiration", origin="College of Eloquence Bard Level 14", activation=FeatureActivation(action_type=ActionType.REACTION, range="60 Feet"), usage_tags=["buff"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        cha_mod = character_stat_block.get_ability_modifier(Ability.CHARISMA)
-        uses = max(1, cha_mod)
         description = (
             "When you successfully inspire someone, the power of your eloquence can now spread to someone else. "
             "When a creature within 60 feet of you adds one of your Bardic Inspiration dice to its ability check, "

@@ -50,17 +50,6 @@ class FavoredEnemy(Feature):
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        if character_stat_block.character_level < 5:
-            free_hunters_mark_uses = 2
-        elif character_stat_block.character_level < 9:
-            free_hunters_mark_uses = 3
-        elif character_stat_block.character_level < 13:
-            free_hunters_mark_uses = 4
-        elif character_stat_block.character_level < 17:
-            free_hunters_mark_uses = 5
-        else:
-            free_hunters_mark_uses = 6
-
         description = (
             "You always have the Hunter's Mark spell prepared.\n"
             "You regain all expended uses of this ability when you finish a Long Rest.\n"

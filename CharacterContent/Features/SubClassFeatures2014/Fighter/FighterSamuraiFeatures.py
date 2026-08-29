@@ -48,7 +48,6 @@ class FightingSpirit(Feature):
             temporary_hit_points = 15
         elif fighter_level >= 10:
             temporary_hit_points = 10
-        uses = 3
         description = (
             "Your intensity in battle can shield you and help you strike true. As a bonus action on your turn, you can give yourself advantage on all weapon attack rolls until the end of the current turn. When you do so, you also gain temporary hit points.\n"
             f"At your current fighter level, you gain {temporary_hit_points} temporary hit points when you use this feature. This increases to 10 at 10th level and 15 at 15th level.\n"
@@ -123,7 +122,6 @@ class StrengthBeforeDeath(Feature):
         super().__init__(name="Strength Before Death", origin="Samurai Fighter Level 18", activation=FeatureActivation(action_type=ActionType.REACTION))
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        uses = 1
         description = (
             "Your fighting spirit can delay the grasp of death. If you take damage that reduces you to 0 hit points, you can use your reaction to delay falling unconscious, and you can immediately take an extra turn. While you have 0 hit points during that extra turn, taking damage causes death saving throw failures as normal, and three death saving throw failures can still kill you. When the extra turn ends, you fall unconscious if you still have 0 hit points.\n"
             "Once you use this feature, you can't use it again until you finish a long rest."

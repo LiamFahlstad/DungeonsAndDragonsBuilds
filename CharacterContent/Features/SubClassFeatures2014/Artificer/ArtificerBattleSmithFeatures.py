@@ -93,8 +93,6 @@ class ArcaneJolt(Feature):
         super().__init__(name="Arcane Jolt", origin="Battle Smith Artificer Level 9", activation=FeatureActivation(range="30 Feet"), usage_tags=["damage", "heal"], uses=FeatureUses(max_uses=MAX_ABILITY_MODIFIER, regain_all_on="long rest", current_formula="Current amount: equal to your Intelligence modifier."))
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        intelligence_modifier = character_stat_block.get_ability_modifier(Ability.INTELLIGENCE)
-        uses = max(1, intelligence_modifier)
         description = (
             "At 9th level, you've learned new ways to channel arcane energy to harm or heal. When either you hit a target with a magic weapon attack or your steel defender hits a target, you can channel magical energy through the strike to create one of the following effects.\n"
             "The target takes an extra 2d6 force damage.\n"

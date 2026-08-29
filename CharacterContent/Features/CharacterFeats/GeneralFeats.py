@@ -847,7 +847,6 @@ class FairyTrickster(_AbilityScoreFeat):
     )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        proficiency_bonus = character_stat_block.get_proficiency_bonus()
         description = (
             "General Feat (Prerequisite: Level 4+)\n"
             "You gain the following benefits.\n"
@@ -916,7 +915,6 @@ class MythalTouched(_AbilityScoreFeat):
     )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        proficiency_bonus = character_stat_block.get_proficiency_bonus()
         description = (
             "General Feat (Prerequisite: Level 4+)\n"
             "You gain the following benefits.\n"
@@ -961,7 +959,6 @@ class PurpleDragonCommandant(_AbilityScoreFeat):
     )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        proficiency_bonus = character_stat_block.get_proficiency_bonus()
         description = (
             "General Feat (Prerequisite: Level 4+, Purple Dragon Rook Feat or Martial Weapon Proficiency)\n"
             "You gain the following benefits.\n"
@@ -1082,7 +1079,6 @@ class GatheredWhispers(GeneralFeat):
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        proficiency_bonus = character_stat_block.get_proficiency_bonus()
         description = (
             "You are haunted by a cacophony of whispering spirits only you can hear. You gain the following features.\n"
             " * Spirit Whispers. You learn the Message spell and can cast it without Material components. Additionally, you always have the Augury spell prepared. You can cast it without a spell slot or spell components, and you must finish a Long Rest before you can cast it in this way again. You can also cast the spell using any spell slots you have.\n"
@@ -1109,7 +1105,6 @@ class LivingShadow(GeneralFeat):
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        proficiency_bonus = character_stat_block.get_proficiency_bonus()
         description = (
             "The shadow you cast is animate and ever-present - sometimes it even acts according to its own will. You gain the following features.\n"
             " * Grasping Shadow. You learn the Mage Hand spell and can cast it without spell components. Intelligence, Wisdom or Charisma is your spellcasting ability for this spell (choose when you select this feat).\n"
@@ -1140,7 +1135,6 @@ class MistWalker(GeneralFeat):
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        proficiency_bonus = character_stat_block.get_proficiency_bonus()
         description = (
             "You know how to slip through the Mists' grasp, but this freedom comes at a price: If you remain in one area for too long, the Mists find you and drain your life force. You gain the following features.\n"
             "Domain Traveler. When you enter the Mists intent on reaching a specific domain, you are treated as if you possess a Mist talisman keyed to that domain. To use this feature, you must know the name of the domain you have chosen as your destination, but you don't need to have previously visited that land. This trait doesn't allow you to bypass domain borders closed by a Darklord's will.\n"
@@ -1166,7 +1160,6 @@ class SecondSkin(GeneralFeat):
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        proficiency_bonus = character_stat_block.get_proficiency_bonus()
         description = (
             "Your skin is toughened and hardened by the Mists, granting you unnatural resilience. You gain the following features.\n"
             " * Hardened Skin. Your base AC becomes 13 + your Dexterity modifier. You can use a shield and still gain this benefit.\n"
@@ -1201,7 +1194,6 @@ class SymbioticBeing(GeneralFeat):
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        proficiency_bonus = character_stat_block.get_proficiency_bonus()
         description = (
             "A second being resides within your body, offering knowledge and assistance while furthering its own agenda. You gain the following features.\n"
             "Entwined Existence. The symbiote can't be targeted. If you die, so does your symbiote. If you are returned to life, your symbiote also revives.\n"
@@ -1327,7 +1319,6 @@ class SpellResistant(_AbilityScoreFeat):
         self._resistance.apply(character_stat_block)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        proficiency_bonus = character_stat_block.get_proficiency_bonus()
         description = (
             "General Feat (Prerequisite: Level 4+)\n"
             "You gain the following benefits.\n"

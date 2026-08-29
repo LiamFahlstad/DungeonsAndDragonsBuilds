@@ -20,8 +20,6 @@ class StarMap(Feature):
     def get_concise_description(
         self, character_stat_block: CharacterStatBlock
     ) -> str:
-        wisdom_modifier = character_stat_block.get_ability_modifier(Ability.WISDOM)
-        uses = max(1, wisdom_modifier)
         return (
             "You create a Tiny star chart that serves as your spellcasting focus. While holding it, you have Guidance and Guiding Bolt prepared, and can cast Guiding Bolt without expending a spell slot a number of times equal to your Wisdom modifier (minimum 1) per Long Rest. If lost, you can replace it by conducting a 1-hour ceremony during a Short or Long Rest."
         )

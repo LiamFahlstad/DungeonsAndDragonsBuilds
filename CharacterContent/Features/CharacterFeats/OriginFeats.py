@@ -130,7 +130,6 @@ class Lucky(OriginFeat):
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        proficiency_bonus = character_stat_block.get_proficiency_bonus()
         description = (
             "Luck Points. You have a number of Luck Points equal to your Proficiency Bonus and can spend the points on the benefits below. You regain your expended Luck Points when you finish a Long Rest.\n"
             "Advantage. When you roll a d20 for a D20 Test, you can spend 1 Luck Point to give yourself Advantage on the roll.\n"
@@ -139,7 +138,6 @@ class Lucky(OriginFeat):
         return description
 
     def get_concise_description(self, character_stat_block: CharacterStatBlock) -> str:
-        proficiency_bonus = character_stat_block.get_proficiency_bonus()
         description = (
             "You have a number of Luck Points equal to your Proficiency Bonus and regain them when you finish a Long Rest. "
             "Spend 1 Luck Point to give yourself Advantage on a d20 roll, or spend 1 Luck Point to impose Disadvantage on an attack roll against you."
@@ -397,7 +395,6 @@ class FamiliarFriend(OriginFeat):
         return self.spell_casting_ability
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        proficiency_bonus = character_stat_block.get_proficiency_bonus()
         description = (
             "You gain the following benefits.\n"
             "Faithful Companion. You always have the Find Familiar spell prepared. "
@@ -472,7 +469,6 @@ class SpellfireSpark(OriginFeat):
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        proficiency_bonus = character_stat_block.get_proficiency_bonus()
         description = (
             "You gain the following benefits.\n"
             "Magic Absorption. Once per turn, when you take damage from a spell or magical effect, you reduce the total damage taken by 1d4. You can’t use this benefit if you have the Incapacitated condition.\n"
@@ -518,7 +514,6 @@ class SharpEye(OriginFeat):
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        proficiency_bonus = character_stat_block.get_proficiency_bonus()
         description = "When you take the Search or Study action, you can give yourself Advantage on any ability check made as part of that action. You can use this feature a number of times equal to your Proficiency Bonus, and you regain all expended uses when you finish a Long Rest. If the check fails, the use of this feature isn't expended."
         return description
 

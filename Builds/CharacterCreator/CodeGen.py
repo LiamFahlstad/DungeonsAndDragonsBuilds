@@ -76,7 +76,6 @@ def _level_call(cls, params: dict, indent: str) -> str:
 
 
 def _starter_builder_source(spec, class_info, subclass_info):
-    registry = registry_module.get_registry()
     skills_block = class_info.skills_block
     base_levels, sub_levels = _used_level_classes(spec, class_info, subclass_info)
 

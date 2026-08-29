@@ -1,5 +1,10 @@
 import Core.Definitions as Definitions
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, ActionType
+from CharacterContent.Features.Core.BaseFeatures import (
+    ActionType,
+    Feature,
+    FeatureActivation,
+    FeatureUses,
+)
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
@@ -28,7 +33,11 @@ class TentacleOfTheDeep(Feature):
         super().__init__(
             name="Tentacle of the Deep",
             origin="The Fathomless Patron Warlock Level 3",
-            activation=FeatureActivation(action_type=ActionType.BONUS_ACTION, duration="1 Minute or Until Another Tentacle Created", range="60 Feet"),
+            activation=FeatureActivation(
+                action_type=ActionType.BONUS_ACTION,
+                duration="1 Minute or Until Another Tentacle Created",
+                range="60 Feet",
+            ),
             usage_tags=["damage", "control", "summon"],
             uses=FeatureUses(
                 max_uses=Definitions.MAX_PROFICIENCY_BONUS,
@@ -41,7 +50,6 @@ class TentacleOfTheDeep(Feature):
         warlock_level = character_stat_block.get_class_level(
             Definitions.CharacterClass.WARLOCK
         )
-        proficiency_bonus = character_stat_block.get_proficiency_bonus()
         damage = "2d8" if warlock_level >= 10 else "1d8"
         description = (
             "You can magically summon a spectral tentacle that strikes at your foes. As a bonus action, you create a 10-foot-long tentacle at a point you can see within 60 feet of you. The tentacle lasts for 1 minute or until you use this feature to create another tentacle.\n"
@@ -106,7 +114,9 @@ class GuardianCoil(Feature):
         super().__init__(
             name="Guardian Coil",
             origin="The Fathomless Patron Warlock Level 6",
-            activation=FeatureActivation(action_type=ActionType.REACTION, range="10 Feet"),
+            activation=FeatureActivation(
+                action_type=ActionType.REACTION, range="10 Feet"
+            ),
             usage_tags=["buff"],
         )
 
@@ -172,7 +182,9 @@ class FathomlessPlunge(Feature):
         super().__init__(
             name="Fathomless Plunge",
             origin="The Fathomless Patron Warlock Level 14",
-            activation=FeatureActivation(action_type=ActionType.ACTION, range="30 Feet"),
+            activation=FeatureActivation(
+                action_type=ActionType.ACTION, range="30 Feet"
+            ),
             usage_tags=["utility"],
             uses=FeatureUses(max_uses=1, regain_all_on="short or long rest"),
         )

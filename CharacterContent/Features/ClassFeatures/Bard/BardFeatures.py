@@ -39,7 +39,6 @@ class BardicInspiration(Feature):
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        charisma_modifier = character_stat_block.get_ability_modifier(Ability.CHARISMA)
         bard_level = character_stat_block.get_class_level(
             Definitions.CharacterClass.BARD
         )

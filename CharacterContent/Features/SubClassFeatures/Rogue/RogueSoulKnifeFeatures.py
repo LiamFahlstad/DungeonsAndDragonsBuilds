@@ -12,17 +12,17 @@ class PsionicPower(Feature):
         rogue_level = character_stat_block.get_class_level(CharacterClass.ROGUE)
 
         if rogue_level < 5:
-            die_size, number_of_dice = 6, 4
+            die_size, _ = 6, 4
         elif rogue_level < 9:
-            die_size, number_of_dice = 8, 6
+            die_size, _ = 8, 6
         elif rogue_level < 11:
-            die_size, number_of_dice = 8, 8
+            die_size, _ = 8, 8
         elif rogue_level < 13:
-            die_size, number_of_dice = 10, 8
+            die_size, _ = 10, 8
         elif rogue_level < 17:
-            die_size, number_of_dice = 10, 10
+            die_size, _ = 10, 10
         else:
-            die_size, number_of_dice = 12, 12
+            die_size, _ = 12, 12
 
         description = (
             f"You harbor a wellspring of psionic energy within yourself. It is represented by your Psionic Energy Dice (currently d{die_size}s), which fuel certain powers you have from this subclass. The Soulknife Energy Dice table shows the number of these dice you have when you reach certain Rogue levels, and the table shows the die size.\n"
