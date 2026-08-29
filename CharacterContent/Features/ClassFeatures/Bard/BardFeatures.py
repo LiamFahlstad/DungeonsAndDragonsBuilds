@@ -1,7 +1,10 @@
 import Core.Definitions as Definitions
-from Core.Definitions import Ability, BARD_HIT_DIE, Skill
-from CharacterContent.Features.Core.BaseFeatures import Feature
-from CharacterContent.Features.Core.Improvements import JackOfAllTradesBonus, SkillExpertiseChoice
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses
+from CharacterContent.Features.Core.Improvements import (
+    JackOfAllTradesBonus,
+    SkillExpertiseChoice,
+)
+from Core.Definitions import Ability, Skill
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
@@ -23,11 +26,25 @@ class Spellcasting(Feature):
 
 class BardicInspiration(Feature):
     def __init__(self):
-        super().__init__(name="Bardic Inspiration", origin="Bard Level 1", action_type="bonus_action", duration="1 Hour", range="60 Feet", usage_tags=["buff"])
+        super().__init__(
+            name="Bardic Inspiration",
+            origin="Bard Level 1",
+            action_type="bonus_action",
+            duration="1 Hour",
+            range="60 Feet",
+            usage_tags=["buff"],
+            uses=FeatureUses(
+                max_uses=Definitions.MAX_ABILITY_MODIFIER,
+                regain_all_on="long rest",
+                current_formula="Current amount: equal to your Charisma modifier.",
+            ),
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         charisma_modifier = character_stat_block.get_ability_modifier(Ability.CHARISMA)
-        bard_level = character_stat_block.get_class_level(Definitions.CharacterClass.BARD)
+        bard_level = character_stat_block.get_class_level(
+            Definitions.CharacterClass.BARD
+        )
         if bard_level >= 15:
             die = "d12"
         elif bard_level >= 10:
@@ -42,12 +59,7 @@ class BardicInspiration(Feature):
             "    * Number of Uses. You can confer a Bardic Inspiration die a number of times equal to your Charisma modifier, and you regain all expended uses when you finish a Long Rest.\n"
             "    * At Higher Levels. Your Bardic Inspiration die changes when you reach certain Bard levels, as shown in the Bardic Die column of the Bard Features table. The die becomes a d8 at level 5, a d10 at level 10, and a d12 at level 15.\n"
         )
-        return StringUtils.add_boxes(
-            description,
-            Definitions.MAX_ABILITY_MODIFIER,
-            regain_all_on="long rest",
-            current_formula="Current amount: equal to your Charisma modifier.",
-        )
+        return description
 
     def get_resource_tiles(
         self, character_stat_block: CharacterStatBlock
@@ -74,7 +86,9 @@ class BardicInspiration(Feature):
         self, character_stat_block: CharacterStatBlock
     ) -> list[tuple[str, str]]:
         charisma_modifier = character_stat_block.get_ability_modifier(Ability.CHARISMA)
-        bard_level = character_stat_block.get_class_level(Definitions.CharacterClass.BARD)
+        bard_level = character_stat_block.get_class_level(
+            Definitions.CharacterClass.BARD
+        )
         if bard_level >= 15:
             die = "d12"
         elif bard_level >= 10:
@@ -89,13 +103,18 @@ class BardicInspiration(Feature):
             ("Inspiration Die", die),
             ("Uses", f"{max(1, charisma_modifier)} per Long Rest"),
             ("Duration", "1 hour (until creature fails a D20 Test)"),
-            ("Effect", "Creature adds die result to d20 to potentially turn failure into success"),
+            (
+                "Effect",
+                "Creature adds die result to d20 to potentially turn failure into success",
+            ),
         ]
 
 
 class ExpertiseLevel1(Feature):
     def __init__(self, skill_1: Skill, skill_2: Skill):
-        super().__init__(name="Expertise", origin="Bard Level 1", skippable_in_concise=True)
+        super().__init__(
+            name="Expertise", origin="Bard Level 1", skippable_in_concise=True
+        )
         self._choice = SkillExpertiseChoice(
             [skill_1, skill_2], list(Skill), count=2, error_prefix="Bard Expertise"
         )
@@ -110,7 +129,9 @@ class ExpertiseLevel1(Feature):
 
 class ExpertiseLevel9(Feature):
     def __init__(self, skill_1: Skill, skill_2: Skill):
-        super().__init__(name="Expertise", origin="Bard Level 9", skippable_in_concise=True)
+        super().__init__(
+            name="Expertise", origin="Bard Level 9", skippable_in_concise=True
+        )
         self._choice = SkillExpertiseChoice(
             [skill_1, skill_2], list(Skill), count=2, error_prefix="Bard Expertise"
         )
@@ -125,7 +146,12 @@ class ExpertiseLevel9(Feature):
 
 class JackOfAllTrades(Feature):
     def __init__(self):
-        super().__init__(name="Jack of All Trades", origin="Bard Level 2", skippable_in_concise=True, usage_tags=["buff"])
+        super().__init__(
+            name="Jack of All Trades",
+            origin="Bard Level 2",
+            skippable_in_concise=True,
+            usage_tags=["buff"],
+        )
         self._bonus = JackOfAllTradesBonus()
 
     def apply(self, character_stat_block: CharacterStatBlock):
@@ -158,7 +184,13 @@ class FontOfInspiration(Feature):
 
 class Countercharm(Feature):
     def __init__(self):
-        super().__init__(name="Countercharm", origin="Bard Level 7", action_type="reaction", range="30 Feet", usage_tags=["buff"])
+        super().__init__(
+            name="Countercharm",
+            origin="Bard Level 7",
+            action_type="reaction",
+            range="30 Feet",
+            usage_tags=["buff"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "You can use musical notes or words of power to disrupt mind-influencing effects. If you or a creature within 30 feet of you fails a saving throw against an effect that applies the Charmed or Frightened condition, you can take a Reaction to cause the save to be rerolled, and the new roll has Advantage."
@@ -194,7 +226,9 @@ class SuperiorInspiration(Feature):
 
 class WordsOfCreation(Feature):
     def __init__(self):
-        super().__init__(name="Words of Creation", origin="Bard Level 20", range="10 Feet")
+        super().__init__(
+            name="Words of Creation", origin="Bard Level 20", range="10 Feet"
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "You have mastered two of the Words of Creation: the words of life and death. You therefore always have the Power Word: Heal and Power Word: Kill spells prepared. When you cast either spell, you can target a second creature with it if that creature is within 10 feet of the first target."

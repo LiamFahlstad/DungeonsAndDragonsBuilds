@@ -1,6 +1,6 @@
 
 from Core.Definitions import Ability, DRUID_HIT_DIE, MAX_ABILITY_MODIFIER
-from CharacterContent.Features.Core.BaseFeatures import Feature
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
@@ -69,19 +69,14 @@ class MoonlightStep(Feature):
     def __init__(self):
         super().__init__(
             name="Moonlight Step", origin="Circle of the Moon Druid Level 10", action_type="bonus_action", range="30 Feet", usage_tags=["buff"]
-        )
+        , uses=FeatureUses(max_uses=MAX_ABILITY_MODIFIER, regain_all_on="long rest", current_formula="Current amount: equal to your Wisdom modifier."))
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
             "You magically transport yourself, reappearing amid a burst of moonlight. As a Bonus Action, you teleport up to 30 feet to an unoccupied space you can see, and you have Advantage on the next attack roll you make before the end of this turn.\n"
             "You can use this feature a number of times based on your Wisdom modifier, and you regain all expended uses when you finish a Long Rest. You can also regain uses by expending a level 2+ spell slot for each use you want to restore (no action required)."
         )
-        return StringUtils.add_boxes(
-            description,
-            MAX_ABILITY_MODIFIER,
-            regain_all_on="long rest",
-            current_formula="Current amount: equal to your Wisdom modifier.",
-        )
+        return description
 
     def get_table_description(
         self, character_stat_block: CharacterStatBlock

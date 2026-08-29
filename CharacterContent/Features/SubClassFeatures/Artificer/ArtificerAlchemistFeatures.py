@@ -1,5 +1,5 @@
 from Core.Definitions import ARTIFICER_HIT_DIE, Ability, Condition, DamageType, MAX_ABILITY_MODIFIER
-from CharacterContent.Features.Core.BaseFeatures import Feature
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses
 from CharacterContent.Features.Core.Improvements import ConditionImmunity, DamageResistance
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
@@ -75,16 +75,11 @@ class RestorativeReagents(Feature):
     def __init__(self):
         super().__init__(
             name="Restorative Reagents", origin="Alchemist Artificer Level 9", usage_tags=["heal", "utility"]
-        )
+        , uses=FeatureUses(max_uses=MAX_ABILITY_MODIFIER, regain_all_on="long rest", current_formula="Current amount: equal to your Intelligence modifier."))
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "You can cast Lesser Restoration without expending a spell slot and without preparing the spell, provided you use Alchemist's Supplies as the Spellcasting Focus. You can do so a number of times equal to your Intelligence modifier (minimum of once), and you regain all expended uses when you finish a Long Rest."
-        return StringUtils.add_boxes(
-            description,
-            MAX_ABILITY_MODIFIER,
-            regain_all_on="long rest",
-            current_formula="Current amount: equal to your Intelligence modifier.",
-        )
+        return description
 
 class ChemicalMastery(Feature):
     def __init__(self):

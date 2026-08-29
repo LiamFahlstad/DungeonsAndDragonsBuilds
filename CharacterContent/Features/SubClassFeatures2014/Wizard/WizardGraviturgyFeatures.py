@@ -1,13 +1,19 @@
-from Core import Definitions
-from Core.Definitions import Ability, WIZARD_HIT_DIE
-from CharacterContent.Features.Core.BaseFeatures import Feature
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses
+from Core.Definitions import Ability
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
 
 class AdjustDensity(Feature):
     def __init__(self):
-        super().__init__(name="Adjust Density", origin="Graviturgy Wizard Level 3", action_type="action", duration="Up To 1 Minute Or Until Concentration Ends", range="30 Feet", usage_tags=["buff", "control"])
+        super().__init__(
+            name="Adjust Density",
+            origin="Graviturgy Wizard Level 3",
+            action_type="action",
+            duration="Up To 1 Minute Or Until Concentration Ends",
+            range="30 Feet",
+            usage_tags=["buff", "control"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -24,7 +30,11 @@ class AdjustDensity(Feature):
 
 class GravityWell(Feature):
     def __init__(self):
-        super().__init__(name="Gravity Well", origin="Graviturgy Wizard Level 6", usage_tags=["control"])
+        super().__init__(
+            name="Gravity Well",
+            origin="Graviturgy Wizard Level 6",
+            usage_tags=["control"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "When you reach 6th level, whenever you cast a spell on a creature, you can move the target 5 feet to an unoccupied space of your choice if the target is willing to move, the spell hits it with an attack, or it fails a saving throw against the spell."
@@ -33,7 +43,13 @@ class GravityWell(Feature):
 
 class ViolentAttraction(Feature):
     def __init__(self):
-        super().__init__(name="Violent Attraction", origin="Graviturgy Wizard Level 10", action_type="reaction", range="60 Feet", usage_tags=["damage"])
+        super().__init__(
+            name="Violent Attraction",
+            origin="Graviturgy Wizard Level 10",
+            action_type="reaction",
+            range="60 Feet",
+            usage_tags=["damage"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         int_mod = character_stat_block.get_ability_modifier(Ability.INTELLIGENCE)
@@ -50,7 +66,15 @@ class ViolentAttraction(Feature):
 
 class EventHorizon(Feature):
     def __init__(self):
-        super().__init__(name="Event Horizon", origin="Graviturgy Wizard Level 14", action_type="action", duration="1 Minute Or Until Concentration Ends", range="30 Feet", usage_tags=["damage", "control"])
+        super().__init__(
+            name="Event Horizon",
+            origin="Graviturgy Wizard Level 14",
+            action_type="action",
+            duration="1 Minute Or Until Concentration Ends",
+            range="30 Feet",
+            usage_tags=["damage", "control"],
+            uses=FeatureUses(max_uses=1, regain_all_on="long rest"),
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -58,9 +82,11 @@ class EventHorizon(Feature):
             "\n"
             "Once you use this feature, you can't do so again until you finish a long rest or until you expend a spell slot of 3rd level or higher on it."
         )
-        return StringUtils.add_boxes(description, 1, regain_all_on="long rest")
+        return description
 
-    def get_table_description(self, character_stat_block: CharacterStatBlock) -> list[tuple[str, str]]:
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
         return [
             ("Action", "Action"),
             ("Duration", "1 minute or until concentration ends"),

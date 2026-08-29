@@ -1,13 +1,18 @@
-from Core import Definitions
-from Core.Definitions import Ability, WIZARD_HIT_DIE
-from CharacterContent.Features.Core.BaseFeatures import Feature
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses
+from Core.Definitions import Ability
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
 
 class ChronalShift(Feature):
     def __init__(self):
-        super().__init__(name="Chronal Shift", origin="Chronurgy Wizard Level 3", action_type="reaction", range="30 Feet")
+        super().__init__(
+            name="Chronal Shift",
+            origin="Chronurgy Wizard Level 3",
+            action_type="reaction",
+            range="30 Feet",
+            uses=FeatureUses(max_uses=2, regain_all_on="long rest"),
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -15,7 +20,7 @@ class ChronalShift(Feature):
             "\n"
             "You can use this ability twice, and you regain any expended uses when you finish a long rest."
         )
-        return StringUtils.add_boxes(description, 2, regain_all_on="long rest")
+        return description
 
 
 class TemporalAwareness(Feature):
@@ -30,7 +35,14 @@ class TemporalAwareness(Feature):
 
 class MomentaryStasis(Feature):
     def __init__(self):
-        super().__init__(name="Momentary Stasis", origin="Chronurgy Wizard Level 6", action_type="action", duration="Until End Of Your Next Turn Or Until Takes Damage", range="60 Feet", usage_tags=["control"])
+        super().__init__(
+            name="Momentary Stasis",
+            origin="Chronurgy Wizard Level 6",
+            action_type="action",
+            duration="Until End Of Your Next Turn Or Until Takes Damage",
+            range="60 Feet",
+            usage_tags=["control"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         int_mod = character_stat_block.get_ability_modifier(Ability.INTELLIGENCE)
@@ -42,7 +54,9 @@ class MomentaryStasis(Feature):
         )
         return StringUtils.add_boxes(description, uses, regain_all_on="long rest")
 
-    def get_table_description(self, character_stat_block: CharacterStatBlock) -> list[tuple[str, str]]:
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
         int_mod = character_stat_block.get_ability_modifier(Ability.INTELLIGENCE)
         uses = max(1, int_mod)
         return [
@@ -58,7 +72,12 @@ class MomentaryStasis(Feature):
 
 class ArcaneAbeyance(Feature):
     def __init__(self):
-        super().__init__(name="Arcane Abeyance", origin="Chronurgy Wizard Level 10", duration="1 Hour")
+        super().__init__(
+            name="Arcane Abeyance",
+            origin="Chronurgy Wizard Level 10",
+            duration="1 Hour",
+            uses=FeatureUses(max_uses=1, regain_all_on="short or long rest"),
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -68,12 +87,17 @@ class ArcaneAbeyance(Feature):
             "\n"
             "Once you create a bead with this feature, you can't do so again until you finish a short or long rest."
         )
-        return StringUtils.add_boxes(description, 1, regain_all_on="short or long rest")
+        return description
 
 
 class ConvergentFuture(Feature):
     def __init__(self):
-        super().__init__(name="Convergent Future", origin="Chronurgy Wizard Level 14", action_type="reaction", range="60 Feet")
+        super().__init__(
+            name="Convergent Future",
+            origin="Chronurgy Wizard Level 14",
+            action_type="reaction",
+            range="60 Feet",
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

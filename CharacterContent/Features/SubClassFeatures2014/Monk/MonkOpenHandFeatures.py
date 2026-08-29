@@ -1,5 +1,5 @@
 import Core.Definitions as Definitions
-from CharacterContent.Features.Core.BaseFeatures import Feature
+from CharacterContent.Features.Core.BaseFeatures import FeatureUses, Feature
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
@@ -29,7 +29,7 @@ class WholenessOfBody(Feature):
         description = (
             f"You gain the ability to heal yourself. As an action, you can regain hit points equal to three times your monk level ({healing})."
         )
-        return StringUtils.add_boxes(description, 1, regain_all_on="long rest")
+        return description
 
     def get_table_description(self, character_stat_block: CharacterStatBlock) -> list[tuple[str, str]]:
         monk_level = character_stat_block.get_class_level(Definitions.CharacterClass.MONK)

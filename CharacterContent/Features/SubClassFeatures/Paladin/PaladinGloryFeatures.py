@@ -1,5 +1,5 @@
 from Core.Definitions import Ability, MAX_ABILITY_MODIFIER, PALADIN_HIT_DIE
-from CharacterContent.Features.Core.BaseFeatures import Feature
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
@@ -71,19 +71,14 @@ class GloriousDefense(Feature):
     def __init__(self):
         super().__init__(
             name="Glorious Defense", origin="Oath of Glory Paladin Level 15", action_type="reaction", range="10 Feet", usage_tags=["buff", "damage"]
-        )
+        , uses=FeatureUses(max_uses=MAX_ABILITY_MODIFIER, regain_all_on="long rest", current_formula="Current amount: equal to your Charisma modifier."))
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
             "You can turn defense into a sudden strike. When you or another creature you can see within 10 feet of you is hit by an attack roll, you can take a Reaction to grant a bonus to the target's AC against that attack, potentially causing it to miss. The bonus equals your Charisma modifier (minimum of +1). If the attack misses, you can make one attack with a weapon against the attacker as part of this Reaction if the attacker is within your weapon's range.\n"
             "You regain all expended uses when you finish a Long Rest."
         )
-        return StringUtils.add_boxes(
-            description,
-            MAX_ABILITY_MODIFIER,
-            regain_all_on="long rest",
-            current_formula="Current amount: equal to your Charisma modifier.",
-        )
+        return description
 
     def get_table_description(self, character_stat_block: CharacterStatBlock) -> list[tuple[str, str]]:
         charisma_modifier = character_stat_block.get_ability_modifier(Ability.CHARISMA)

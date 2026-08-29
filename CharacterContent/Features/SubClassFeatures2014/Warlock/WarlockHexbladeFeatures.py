@@ -1,8 +1,6 @@
 import Core.Definitions as Definitions
-from Core.Definitions import Ability, WARLOCK_HIT_DIE
-from CharacterContent.Features.Core.BaseFeatures import Feature
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
-from Utils import StringUtils
 
 
 class HexbladeExpandedSpells(Feature):
@@ -28,8 +26,13 @@ class HexbladeExpandedSpells(Feature):
 class HexbladesCurse(Feature):
     def __init__(self):
         super().__init__(
-            name="Hexblade's Curse", origin="Hexblade Patron Warlock Level 3",
-            action_type="bonus_action", duration="1 Minute", range="30 Feet", usage_tags=["buff", "damage"]
+            name="Hexblade's Curse",
+            origin="Hexblade Patron Warlock Level 3",
+            action_type="bonus_action",
+            duration="1 Minute",
+            range="30 Feet",
+            usage_tags=["buff", "damage"],
+            uses=FeatureUses(max_uses=1, regain_all_on="short or long rest"),
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -40,7 +43,7 @@ class HexbladesCurse(Feature):
             "    * If the cursed target dies, you regain Hit Points equal to your Warlock level plus your Charisma modifier (minimum of 1 Hit Point).\n"
             "You can't use this feature again until you finish a Short or Long Rest."
         )
-        return StringUtils.add_boxes(description, 1, regain_all_on="short or long rest")
+        return description
 
     def get_table_description(
         self, character_stat_block: CharacterStatBlock
@@ -49,7 +52,10 @@ class HexbladesCurse(Feature):
         return [
             ("Action", "Bonus Action"),
             ("Range", "30 feet"),
-            ("Duration", "1 minute (ends on target death, your death, or incapacitation)"),
+            (
+                "Duration",
+                "1 minute (ends on target death, your death, or incapacitation)",
+            ),
             ("Damage Bonus", f"Proficiency bonus ({proficiency_bonus})"),
             ("Critical Hit", "On 19-20"),
             ("Target Death", "Regain HP = Warlock level + Charisma modifier (min 1)"),
@@ -59,7 +65,11 @@ class HexbladesCurse(Feature):
 
 class HexWarrior(Feature):
     def __init__(self):
-        super().__init__(name="Hex Warrior", origin="Hexblade Patron Warlock Level 3", usage_tags=["buff"])
+        super().__init__(
+            name="Hex Warrior",
+            origin="Hexblade Patron Warlock Level 3",
+            usage_tags=["buff"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -72,8 +82,11 @@ class HexWarrior(Feature):
 class AccursedSpecter(Feature):
     def __init__(self):
         super().__init__(
-            name="Accursed Specter", origin="Hexblade Patron Warlock Level 6",
-            duration="Until End of Next Long Rest", usage_tags=["damage", "utility"]
+            name="Accursed Specter",
+            origin="Hexblade Patron Warlock Level 6",
+            duration="Until End of Next Long Rest",
+            usage_tags=["damage", "utility"],
+            uses=FeatureUses(max_uses=1, regain_all_on="long rest"),
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -82,7 +95,7 @@ class AccursedSpecter(Feature):
             "The Specter remains in your service until the end of your next Long Rest, at which point it vanishes to the afterlife.\n"
             "Once you bind a Specter with this feature, you can't use the feature again until you finish a Long Rest."
         )
-        return StringUtils.add_boxes(description, 1, regain_all_on="long rest")
+        return description
 
     def get_table_description(
         self, character_stat_block: CharacterStatBlock
@@ -104,8 +117,10 @@ class AccursedSpecter(Feature):
 class ArmorOfHexes(Feature):
     def __init__(self):
         super().__init__(
-            name="Armor of Hexes", origin="Hexblade Patron Warlock Level 10",
-            action_type="reaction", usage_tags=["buff"]
+            name="Armor of Hexes",
+            origin="Hexblade Patron Warlock Level 10",
+            action_type="reaction",
+            usage_tags=["buff"],
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -125,8 +140,10 @@ class ArmorOfHexes(Feature):
 class MasterOfHexes(Feature):
     def __init__(self):
         super().__init__(
-            name="Master of Hexes", origin="Hexblade Patron Warlock Level 14",
-            range="30 Feet", usage_tags=["control"]
+            name="Master of Hexes",
+            origin="Hexblade Patron Warlock Level 14",
+            range="30 Feet",
+            usage_tags=["control"],
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:

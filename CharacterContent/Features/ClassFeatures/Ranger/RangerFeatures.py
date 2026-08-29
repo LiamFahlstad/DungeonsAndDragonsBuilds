@@ -1,7 +1,6 @@
-
-from Core.Definitions import Ability, RANGER_HIT_DIE, Skill
-from CharacterContent.Features.Core.BaseFeatures import Feature
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses
 from CharacterContent.Features.Core.Improvements import SkillExpertiseChoice, SpeedBonus
+from Core.Definitions import Ability, Skill
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
@@ -40,7 +39,15 @@ class ReplacingWeaponMasteries(Feature):
 
 class FavoredEnemy(Feature):
     def __init__(self):
-        super().__init__(name="Favored Enemy", origin="Ranger Level 1")
+        super().__init__(
+            name="Favored Enemy",
+            origin="Ranger Level 1",
+            uses=FeatureUses(
+                max_uses=6,
+                regain_all_on="long rest",
+                current_formula="Current amount: determined by your character level — 2 uses at levels 1-4, 3 at 5-8, 4 at 9-12, 5 at 13-16, 6 at 17+.",
+            ),
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         if character_stat_block.character_level < 5:
@@ -58,15 +65,7 @@ class FavoredEnemy(Feature):
             "You always have the Hunter's Mark spell prepared.\n"
             "You regain all expended uses of this ability when you finish a Long Rest.\n"
         )
-        return StringUtils.add_boxes(
-            description,
-            6,
-            regain_all_on="long rest",
-            current_formula=(
-                "Current amount: determined by your character level — 2 uses "
-                "at levels 1-4, 3 at 5-8, 4 at 9-12, 5 at 13-16, 6 at 17+."
-            ),
-        )
+        return description
 
     def get_resource_tiles(
         self, character_stat_block: CharacterStatBlock
@@ -114,7 +113,11 @@ class FavoredEnemy(Feature):
 
 class DeftExplorerExpertise(Feature):
     def __init__(self, skill: Skill):
-        super().__init__(name="Deft Explorer Expertise", origin="Deft Explorer Ranger Level 2", skippable_in_concise=True)
+        super().__init__(
+            name="Deft Explorer Expertise",
+            origin="Deft Explorer Ranger Level 2",
+            skippable_in_concise=True,
+        )
         self.skill = skill
         self._choice = SkillExpertiseChoice(
             [skill], list(Skill), count=1, error_prefix="Deft Explorer Expertise"
@@ -147,7 +150,12 @@ class ExtraAttack(Feature):
 
 class Roving(Feature):
     def __init__(self):
-        super().__init__(name="Roving", origin="Ranger Level 6", skippable_in_concise=True, usage_tags=["buff", "utility"])
+        super().__init__(
+            name="Roving",
+            origin="Ranger Level 6",
+            skippable_in_concise=True,
+            usage_tags=["buff", "utility"],
+        )
 
     def apply(self, character_stat_block: CharacterStatBlock):
         SpeedBonus(10).apply(character_stat_block)
@@ -159,7 +167,9 @@ class Roving(Feature):
 
 class Expertise(Feature):
     def __init__(self, skill_1: Skill, skill_2: Skill):
-        super().__init__(name="Expertise", origin="Ranger Level 7", skippable_in_concise=True)
+        super().__init__(
+            name="Expertise", origin="Ranger Level 7", skippable_in_concise=True
+        )
         self.skill_1 = skill_1
         self.skill_2 = skill_2
         self._choice = SkillExpertiseChoice(
@@ -175,7 +185,12 @@ class Expertise(Feature):
 
 class Tireless(Feature):
     def __init__(self):
-        super().__init__(name="Tireless", origin="Ranger Level 10", action_type="action", usage_tags=["heal"])
+        super().__init__(
+            name="Tireless",
+            origin="Ranger Level 10",
+            action_type="action",
+            usage_tags=["heal"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         wis_mod = character_stat_block.get_ability_modifier(Ability.WISDOM)
@@ -211,7 +226,13 @@ class RelentlessHunter(Feature):
 
 class NaturesVeil(Feature):
     def __init__(self):
-        super().__init__(name="Nature's Veil", origin="Ranger Level 14", action_type="bonus_action", duration="Until End of Your Next Turn", usage_tags=["buff"])
+        super().__init__(
+            name="Nature's Veil",
+            origin="Ranger Level 14",
+            action_type="bonus_action",
+            duration="Until End of Your Next Turn",
+            usage_tags=["buff"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         wis_mod = character_stat_block.get_ability_modifier(Ability.WISDOM)
@@ -237,7 +258,9 @@ class NaturesVeil(Feature):
 
 class PreciseHunter(Feature):
     def __init__(self):
-        super().__init__(name="Precise Hunter", origin="Ranger Level 17", usage_tags=["buff"])
+        super().__init__(
+            name="Precise Hunter", origin="Ranger Level 17", usage_tags=["buff"]
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "You have Advantage on attack rolls against the creature currently marked by your Hunter's Mark."
@@ -255,7 +278,9 @@ class FeralSenses(Feature):
 
 class FoeSlayer(Feature):
     def __init__(self):
-        super().__init__(name="Foe Slayer", origin="Ranger Level 20", usage_tags=["damage"])
+        super().__init__(
+            name="Foe Slayer", origin="Ranger Level 20", usage_tags=["damage"]
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "The damage die of your Hunter's Mark is a d10 rather than a d6."

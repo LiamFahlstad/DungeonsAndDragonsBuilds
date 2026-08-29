@@ -1,7 +1,32 @@
+from dataclasses import dataclass
 from typing import Literal, TextIO
 
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import Html
+
+
+@dataclass
+class FeatureUses:
+    """Limited-use tracking for a feature, rendered as checkbox slots on its card.
+
+    max_uses is always the formula's maximum value - the boxes never show a
+    build's "current" count directly, since level shard pages are generated
+    once and never regenerated as the player levels up in play. A feature
+    whose count varies by level or by another stat (e.g. equal to proficiency
+    bonus) should explain how to derive the current count via
+    current_formula instead.
+    """
+
+    max_uses: int
+    # Reset cadence label for full recovery, e.g. "long rest", "short rest", "dawn".
+    regain_all_on: str | None = None
+    # (count, cadence) for partial recovery on a shorter rest, e.g. (1, "short rest").
+    # If both this and regain_all_on are set, renders as "Regain <n> on a <cadence>,
+    # all on a <regain_all_on>."
+    regain_x_on: tuple[int, str] | None = None
+    # Short plain-English fragment describing how to derive the build's real current
+    # count from the max shown by the boxes (e.g. "equal to your proficiency bonus.").
+    current_formula: str | None = None
 
 
 def parse_feature_level(origin: str | None) -> int:
@@ -321,6 +346,7 @@ class Feature:
         duration: str | None = None,
         range: str | None = None,
         usage_tags: list[Literal["heal", "buff", "control", "damage", "utility", "summon"]] | None = None,
+        uses: "FeatureUses | None" = None,
     ):
         self.name = name if name is not None else type(self).__name__
         self.origin = origin
@@ -349,6 +375,11 @@ class Feature:
         # Leave None/empty for features with no combat/utility role of this kind
         # (e.g. skill proficiencies, passive stat bonuses).
         self.usage_tags = usage_tags
+        # Set for features that have a limited number of uses per rest period
+        # (e.g. action surge, channel divinity). The FeatureUses dataclass tracks
+        # max uses, what resets them, and optionally a formula explaining the
+        # current uses based on character stats.
+        self.uses = uses
 
     def extend_feature(self, feature: "Feature"):
         self.extensions.append(feature)
@@ -481,6 +512,8 @@ class Feature:
             file.write("</div>\n")
 
         file.write(f"{html_description}\n")
+        if self.uses is not None:
+            file.write(self._uses_html(self.uses) + "\n")
 
         for extension in self.extensions:
             ext_level = parse_feature_level(extension.origin)
@@ -515,10 +548,13 @@ class Feature:
             ext_range_tag = f" {ext_range_tag}" if ext_range_tag else ""
             ext_usage_tags_html = self._usage_tags_html(extension.usage_tags)
             ext_usage_tags_html = f" {ext_usage_tags_html}" if ext_usage_tags_html else ""
+            ext_uses_html = (
+                "\n" + self._uses_html(extension.uses) if extension.uses is not None else ""
+            )
             file.write(
                 f"<div class='feature-upgrade'>\n"
                 f"<span class='feature-upgrade-label'>{extension.origin}: {extension.name}{ext_passive_tag}{ext_action_tag}{ext_duration_tag}{ext_range_tag}{ext_usage_tags_html}</span>\n"
-                f"<div class='feature-upgrade-body'>{ext_html}</div>\n"
+                f"<div class='feature-upgrade-body'>{ext_html}{ext_uses_html}</div>\n"
                 f"</div>\n"
             )
 
@@ -578,10 +614,11 @@ class Feature:
             if description_mode is None and self.skippable_in_concise
             else ""
         )
+        uses_html = "\n" + self._uses_html(self.uses) if self.uses is not None else ""
         file.write(
             f"<div class='feature-upgrade'>\n"
             f"<span class='feature-upgrade-label'>{parent_name} Feature Extension{ext_passive_tag}</span>\n"
-            f"<div class='feature-upgrade-body'>{html_description}</div>\n"
+            f"<div class='feature-upgrade-body'>{html_description}{uses_html}</div>\n"
             f"</div>\n"
         )
 
@@ -630,6 +667,15 @@ class Feature:
         return " ".join(
             f"<span class='feature-usage-tag tag-{tag}'>{labels[tag]}</span>"
             for tag in ordered
+        )
+
+    @staticmethod
+    def _uses_html(uses: "FeatureUses") -> str:
+        return Html.render_slot_boxes(
+            uses.max_uses,
+            regain_all_on=uses.regain_all_on,
+            regain_x_on=uses.regain_x_on,
+            current_formula=uses.current_formula,
         )
 
     @staticmethod

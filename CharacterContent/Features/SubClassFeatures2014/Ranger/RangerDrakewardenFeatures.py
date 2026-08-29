@@ -1,10 +1,16 @@
 from typing import Optional
 
-from Combat.Definitions import Alignment, DamageTypeEntry, ExtendedCombatantData, MonsterAbility, MonsterType, Size
-from Core.Definitions import Ability, CharacterClass, DamageType, MAX_PROFICIENCY_BONUS
 from CharacterContent.Features.Core.BaseFeatures import Feature
+from Combat.Definitions import (
+    Alignment,
+    DamageTypeEntry,
+    ExtendedCombatantData,
+    MonsterAbility,
+    MonsterType,
+    Size,
+)
+from Core.Definitions import Ability, CharacterClass, DamageType
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
-from Utils import StringUtils
 from Utils.CreatureStatBlocks import format_creature_stat_block
 
 
@@ -90,12 +96,18 @@ def format_drake(
     ranger_level = character_stat_block.get_class_level(CharacterClass.RANGER)
     proficiency_bonus = character_stat_block.get_proficiency_bonus()
     drake = _build_drake(ranger_level, proficiency_bonus, damage_type)
-    return format_creature_stat_block(drake, character_stat_block, retain_mental_abilities=False)
+    return format_creature_stat_block(
+        drake, character_stat_block, retain_mental_abilities=False
+    )
 
 
 class DraconicGift(Feature):
     def __init__(self, language: Optional[str] = None):
-        super().__init__(name="Draconic Gift", origin="Drakewarden Ranger Level 3", usage_tags=["utility"])
+        super().__init__(
+            name="Draconic Gift",
+            origin="Drakewarden Ranger Level 3",
+            usage_tags=["utility"],
+        )
         self._language = language
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -111,7 +123,13 @@ class DraconicGift(Feature):
 
 class DrakeCompanion(Feature):
     def __init__(self, damage_type: Optional[DamageType] = None):
-        super().__init__(name="Drake Companion", origin="Drakewarden Ranger Level 3", action_type="action", range="30 Feet", usage_tags=["utility", "summon"])
+        super().__init__(
+            name="Drake Companion",
+            origin="Drakewarden Ranger Level 3",
+            action_type="action",
+            range="30 Feet",
+            usage_tags=["utility", "summon"],
+        )
         self.damage_type = damage_type
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -125,7 +143,7 @@ class DrakeCompanion(Feature):
             "\nThe drake's stat block grows as you gain levels in this class (Bond of Fang and Scale at 7th level and Perfected Bond at 15th level are reflected below):\n"
             + format_drake(character_stat_block, self.damage_type)
         )
-        return StringUtils.add_boxes(description, uses, regain_all_on="long rest")
+        return description
 
     def get_concise_description(self, character_stat_block: CharacterStatBlock) -> str:
         return (
@@ -137,7 +155,11 @@ class DrakeCompanion(Feature):
 
 class BondOfFangAndScale(Feature):
     def __init__(self):
-        super().__init__(name="Bond of Fang and Scale", origin="Drakewarden Ranger Level 7", usage_tags=["buff", "utility"])
+        super().__init__(
+            name="Bond of Fang and Scale",
+            origin="Drakewarden Ranger Level 7",
+            usage_tags=["buff", "utility"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -152,7 +174,13 @@ class BondOfFangAndScale(Feature):
 
 class DrakesBreath(Feature):
     def __init__(self):
-        super().__init__(name="Drake's Breath", origin="Drakewarden Ranger Level 11", action_type="action", range="30-Foot Cone", usage_tags=["damage"])
+        super().__init__(
+            name="Drake's Breath",
+            origin="Drakewarden Ranger Level 11",
+            action_type="action",
+            range="30-Foot Cone",
+            usage_tags=["damage"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         ranger_level = character_stat_block.get_class_level(CharacterClass.RANGER)
@@ -167,7 +195,7 @@ class DrakesBreath(Feature):
             "This damage increases to 10d6 when you reach 15th level in this class.\n"
             "Once you use this feature, you can't do so again until you finish a long rest, unless you expend a spell slot of 3rd level or higher to use it again."
         )
-        return StringUtils.add_boxes(description, uses, regain_all_on="long rest")
+        return description
 
     def get_table_description(
         self, character_stat_block: CharacterStatBlock
@@ -189,7 +217,12 @@ class DrakesBreath(Feature):
 
 class PerfectedBond(Feature):
     def __init__(self):
-        super().__init__(name="Perfected Bond", origin="Drakewarden Ranger Level 15", action_type="reaction", usage_tags=["buff"])
+        super().__init__(
+            name="Perfected Bond",
+            origin="Drakewarden Ranger Level 15",
+            action_type="reaction",
+            usage_tags=["buff"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         proficiency_bonus = character_stat_block.get_proficiency_bonus()
@@ -199,4 +232,4 @@ class PerfectedBond(Feature):
             "    * Large Drake. The drake grows to Large size. When you ride your drake, it is no longer prohibited from using the flying speed of Bond of Fang and Scale.\n"
             f"    * Reflexive Resistance. When either you or the drake takes damage while you're within 30 feet of each other, you can use your reaction to give yourself or the drake resistance to that instance of damage. You can use this reaction a number of times equal to your proficiency bonus ({proficiency_bonus}), and you regain all expended uses when you finish a long rest."
         )
-        return StringUtils.add_boxes(description, MAX_PROFICIENCY_BONUS, regain_all_on="long rest", current_formula="Current amount: equal to your proficiency bonus.")
+        return description

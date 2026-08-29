@@ -1,5 +1,5 @@
 from Core.Definitions import Ability, CLERIC_HIT_DIE, DamageType, MAX_ABILITY_MODIFIER
-from CharacterContent.Features.Core.BaseFeatures import Feature
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses
 from CharacterContent.Features.Core.Improvements import DamageResistance
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
@@ -36,16 +36,11 @@ class WarDomainSpells(Feature):
 
 class WarPriest(Feature):
     def __init__(self):
-        super().__init__(name="War Priest", origin="War Domain Cleric Level 3", action_type="bonus_action", usage_tags=["damage"])
+        super().__init__(name="War Priest", origin="War Domain Cleric Level 3", action_type="bonus_action", usage_tags=["damage"], uses=FeatureUses(max_uses=MAX_ABILITY_MODIFIER, regain_all_on="short or long rest", current_formula="Current amount: equal to your Wisdom modifier."))
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "As a Bonus Action, you can make one attack with a weapon or an Unarmed Strike. You regain all expended uses when you finish a Short or Long Rest."
-        return StringUtils.add_boxes(
-            description,
-            MAX_ABILITY_MODIFIER,
-            regain_all_on="short or long rest",
-            current_formula="Current amount: equal to your Wisdom modifier.",
-        )
+        return description
 
     def get_table_description(
         self, character_stat_block: CharacterStatBlock

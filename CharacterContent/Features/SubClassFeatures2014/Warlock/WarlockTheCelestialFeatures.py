@@ -1,7 +1,5 @@
-from Core.Definitions import Ability, WARLOCK_HIT_DIE
-from CharacterContent.Features.Core.BaseFeatures import Feature
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
-from Utils import StringUtils
 
 
 class CelestialExpandedSpells(Feature):
@@ -38,8 +36,11 @@ class BonusCantrips(Feature):
 class HealingLight(Feature):
     def __init__(self):
         super().__init__(
-            name="Healing Light", origin="The Celestial Patron Warlock Level 3",
-            action_type="bonus_action", range="60 Feet", usage_tags=["heal"]
+            name="Healing Light",
+            origin="The Celestial Patron Warlock Level 3",
+            action_type="bonus_action",
+            range="60 Feet",
+            usage_tags=["heal"],
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -66,8 +67,9 @@ class HealingLight(Feature):
 class RadiantSoul(Feature):
     def __init__(self):
         super().__init__(
-            name="Radiant Soul", origin="The Celestial Patron Warlock Level 6",
-            usage_tags=["buff"]
+            name="Radiant Soul",
+            origin="The Celestial Patron Warlock Level 6",
+            usage_tags=["buff"],
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -78,14 +80,13 @@ class RadiantSoul(Feature):
 class CelestialResistance(Feature):
     def __init__(self):
         super().__init__(
-            name="Celestial Resistance", origin="The Celestial Patron Warlock Level 10",
-            usage_tags=["heal"]
+            name="Celestial Resistance",
+            origin="The Celestial Patron Warlock Level 10",
+            usage_tags=["heal"],
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        description = (
-            "You gain temporary hit points whenever you finish a Short or Long Rest. These temporary hit points equal your Warlock level + your Charisma modifier. Additionally, choose up to five creatures you can see at the end of the rest. Those creatures each gain temporary hit points equal to half your Warlock level + your Charisma modifier."
-        )
+        description = "You gain temporary hit points whenever you finish a Short or Long Rest. These temporary hit points equal your Warlock level + your Charisma modifier. Additionally, choose up to five creatures you can see at the end of the rest. Those creatures each gain temporary hit points equal to half your Warlock level + your Charisma modifier."
         return description
 
     def get_table_description(
@@ -102,8 +103,12 @@ class CelestialResistance(Feature):
 class SearingVengeance(Feature):
     def __init__(self):
         super().__init__(
-            name="Searing Vengeance", origin="The Celestial Patron Warlock Level 14",
-            duration="Until End of Current Turn", range="30 Feet", usage_tags=["heal", "damage", "control"]
+            name="Searing Vengeance",
+            origin="The Celestial Patron Warlock Level 14",
+            duration="Until End of Current Turn",
+            range="30 Feet",
+            usage_tags=["heal", "damage", "control"],
+            uses=FeatureUses(max_uses=1, regain_all_on="long rest"),
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -111,7 +116,7 @@ class SearingVengeance(Feature):
             "The radiant energy you channel allows you to resist death. When you have to make a death saving throw at the start of your turn, you can instead spring back to your feet with a burst of radiant energy. You regain hit points equal to half your hit point maximum, and then you stand up if you so choose. Each creature of your choice that is within 30 feet of you takes radiant damage equal to 2d8 + your Charisma modifier, and is blinded until the end of the current turn.\n"
             "Once you use this feature, you can't use it again until you finish a Long Rest."
         )
-        return StringUtils.add_boxes(description, 1, regain_all_on="long rest")
+        return description
 
     def get_table_description(
         self, character_stat_block: CharacterStatBlock

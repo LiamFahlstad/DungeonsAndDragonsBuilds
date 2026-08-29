@@ -1,8 +1,5 @@
-from Core import Definitions
-from Core.Definitions import WIZARD_HIT_DIE
-from CharacterContent.Features.Core.BaseFeatures import Feature
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
-from Utils import StringUtils
 
 
 class IllusionSavant(Feature):
@@ -16,7 +13,9 @@ class IllusionSavant(Feature):
 
 class ImprovedMinorIllusion(Feature):
     def __init__(self):
-        super().__init__(name="Improved Minor Illusion", origin="Illusion Wizard Level 3")
+        super().__init__(
+            name="Improved Minor Illusion", origin="Illusion Wizard Level 3"
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -28,7 +27,11 @@ class ImprovedMinorIllusion(Feature):
 
 class MalleableIllusions(Feature):
     def __init__(self):
-        super().__init__(name="Malleable Illusions", origin="Illusion Wizard Level 6", action_type="action")
+        super().__init__(
+            name="Malleable Illusions",
+            origin="Illusion Wizard Level 6",
+            action_type="action",
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "When you cast an illusion spell that has a duration of 1 minute or longer, you can use your action to change the nature of that illusion (using the spell's normal parameters for the illusion), provided that you can see the illusion."
@@ -37,27 +40,43 @@ class MalleableIllusions(Feature):
 
 class IllusorySelf(Feature):
     def __init__(self):
-        super().__init__(name="Illusory Self", origin="Illusion Wizard Level 10", action_type="reaction")
+        super().__init__(
+            name="Illusory Self",
+            origin="Illusion Wizard Level 10",
+            action_type="reaction",
+            uses=FeatureUses(max_uses=1, regain_all_on="short or long rest"),
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
             "You can create an illusory duplicate of yourself as an instant, almost instinctual reaction to danger. When a creature makes an attack roll against you, you can use your reaction to interpose the illusory duplicate between the attacker and yourself. The attack automatically misses you, then the illusion dissipates.\n"
             "Once you use this feature, you can't use it again until you finish a short or long rest."
         )
-        return StringUtils.add_boxes(description, 1, regain_all_on="short or long rest")
+        return description
 
-    def get_table_description(self, character_stat_block: CharacterStatBlock) -> list[tuple[str, str]]:
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
         return [
             ("Trigger", "Creature makes attack roll against you"),
             ("Action", "Reaction"),
-            ("Effect", "Interpose illusory duplicate, attack misses, illusion dissipates"),
+            (
+                "Effect",
+                "Interpose illusory duplicate, attack misses, illusion dissipates",
+            ),
             ("Recharge", "Short or long rest"),
         ]
 
 
 class IllusoryReality(Feature):
     def __init__(self):
-        super().__init__(name="Illusory Reality", origin="Illusion Wizard Level 14", action_type="bonus_action", duration="1 Minute", usage_tags=["utility"])
+        super().__init__(
+            name="Illusory Reality",
+            origin="Illusion Wizard Level 14",
+            action_type="bonus_action",
+            duration="1 Minute",
+            usage_tags=["utility"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -66,7 +85,9 @@ class IllusoryReality(Feature):
         )
         return description
 
-    def get_table_description(self, character_stat_block: CharacterStatBlock) -> list[tuple[str, str]]:
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
         return [
             ("Trigger", "Cast illusion spell of 1st level or higher"),
             ("Action", "Bonus action on your turn"),

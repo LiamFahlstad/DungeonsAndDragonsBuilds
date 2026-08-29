@@ -1,8 +1,7 @@
-from Core.Definitions import Ability, Condition, WARLOCK_HIT_DIE
-from CharacterContent.Features.Core.BaseFeatures import Feature
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses
 from CharacterContent.Features.Core.Improvements import ConditionImmunity
+from Core.Definitions import Condition
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
-from Utils import StringUtils
 
 
 class ArchfeyExpandedSpells(Feature):
@@ -28,8 +27,13 @@ class ArchfeyExpandedSpells(Feature):
 class FeyPresence(Feature):
     def __init__(self):
         super().__init__(
-            name="Fey Presence", origin="The Archfey Patron Warlock Level 3",
-            action_type="action", duration="Until End of Next Turn", range="10-Foot Cube", usage_tags=["control"]
+            name="Fey Presence",
+            origin="The Archfey Patron Warlock Level 3",
+            action_type="action",
+            duration="Until End of Next Turn",
+            range="10-Foot Cube",
+            usage_tags=["control"],
+            uses=FeatureUses(max_uses=1, regain_all_on="short or long rest"),
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -37,7 +41,7 @@ class FeyPresence(Feature):
             "Your patron bestows upon you the ability to project the beguiling and fearsome presence of the fey. As an action, you can cause each creature in a 10-foot cube originating from you to make a Wisdom saving throw against your Warlock spell save DC. The creatures that fail their saving throws are all charmed or frightened by you (your choice) until the end of your next turn.\n"
             "Once you use this feature, you can't use it again until you finish a Short or Long Rest."
         )
-        return StringUtils.add_boxes(description, 1, regain_all_on="short or long rest")
+        return description
 
     def get_table_description(
         self, character_stat_block: CharacterStatBlock
@@ -54,8 +58,13 @@ class FeyPresence(Feature):
 class MistyEscape(Feature):
     def __init__(self):
         super().__init__(
-            name="Misty Escape", origin="The Archfey Patron Warlock Level 6",
-            action_type="reaction", duration="Until Start of Next Turn or Until Attack/Spell", range="60 Feet", usage_tags=["utility"]
+            name="Misty Escape",
+            origin="The Archfey Patron Warlock Level 6",
+            action_type="reaction",
+            duration="Until Start of Next Turn or Until Attack/Spell",
+            range="60 Feet",
+            usage_tags=["utility"],
+            uses=FeatureUses(max_uses=1, regain_all_on="short or long rest"),
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -63,7 +72,7 @@ class MistyEscape(Feature):
             "You can vanish in a puff of mist in response to harm. When you take damage, you can use your Reaction to turn Invisible and teleport up to 60 feet to an unoccupied space you can see. You remain Invisible until the start of your next turn or until you attack or cast a spell.\n"
             "Once you use this feature, you can't use it again until you finish a Short or Long Rest."
         )
-        return StringUtils.add_boxes(description, 1, regain_all_on="short or long rest")
+        return description
 
     def get_table_description(
         self, character_stat_block: CharacterStatBlock
@@ -72,7 +81,10 @@ class MistyEscape(Feature):
             ("Trigger", "When you take damage"),
             ("Type", "Reaction"),
             ("Effect", "Turn Invisible and teleport up to 60 feet"),
-            ("Duration", "Invisible until start of next turn or until you attack or cast a spell"),
+            (
+                "Duration",
+                "Invisible until start of next turn or until you attack or cast a spell",
+            ),
             ("Recharge", "Short or long rest"),
         ]
 
@@ -80,8 +92,11 @@ class MistyEscape(Feature):
 class BeguilingDefenses(Feature):
     def __init__(self):
         super().__init__(
-            name="Beguiling Defenses", origin="The Archfey Patron Warlock Level 10",
-            action_type="reaction", duration="1 Minute or Until Creature Takes Damage", usage_tags=["control"]
+            name="Beguiling Defenses",
+            origin="The Archfey Patron Warlock Level 10",
+            action_type="reaction",
+            duration="1 Minute or Until Creature Takes Damage",
+            usage_tags=["control"],
         )
         self._immunity = ConditionImmunity(Condition.CHARMED, self.name)
 
@@ -107,8 +122,13 @@ class BeguilingDefenses(Feature):
 class DarkDelirium(Feature):
     def __init__(self):
         super().__init__(
-            name="Dark Delirium", origin="The Archfey Patron Warlock Level 14",
-            action_type="action", duration="1 Minute or Until Concentration Broken", range="60 Feet", usage_tags=["control"]
+            name="Dark Delirium",
+            origin="The Archfey Patron Warlock Level 14",
+            action_type="action",
+            duration="1 Minute or Until Concentration Broken",
+            range="60 Feet",
+            usage_tags=["control"],
+            uses=FeatureUses(max_uses=1, regain_all_on="short or long rest"),
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -117,7 +137,7 @@ class DarkDelirium(Feature):
             "Until this illusion ends, the creature thinks it is lost in a misty realm, the appearance of which you choose. The creature can see and hear only itself, you, and the illusion.\n"
             "You must finish a Short or Long Rest before you can use this feature again."
         )
-        return StringUtils.add_boxes(description, 1, regain_all_on="short or long rest")
+        return description
 
     def get_table_description(
         self, character_stat_block: CharacterStatBlock

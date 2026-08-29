@@ -1,5 +1,5 @@
 from Core.Definitions import BARD_HIT_DIE
-from CharacterContent.Features.Core.BaseFeatures import Feature
+from CharacterContent.Features.Core.BaseFeatures import FeatureUses, Feature
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
@@ -73,7 +73,7 @@ class WordsOfTerror(Feature):
             "\n"
             "Once you use this feature, you can't use it again until you finish a short rest or long rest."
         )
-        return StringUtils.add_boxes(description, 1, regain_all_on="short or long rest")
+        return description
 
 
 class MantleOfWhispers(Feature):
@@ -92,7 +92,7 @@ class MantleOfWhispers(Feature):
             "\n"
             "Once you capture a shadow with this feature, you can't capture another one with it until you finish a short or long rest."
         )
-        return StringUtils.add_boxes(description, 1, regain_all_on="short or long rest")
+        return description
 
 
 class ShadowLore(Feature):
@@ -113,7 +113,7 @@ class ShadowLore(Feature):
             "\n"
             "Once you use this feature, you can't use it again until you finish a long rest."
         )
-        return StringUtils.add_boxes(description, 1, regain_all_on="long rest")
+        return description
 
     def get_table_description(
         self, character_stat_block: CharacterStatBlock

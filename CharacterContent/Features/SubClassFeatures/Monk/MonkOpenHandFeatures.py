@@ -1,6 +1,6 @@
 import Core.Definitions as Definitions
 from Core.Definitions import MONK_HIT_DIE
-from CharacterContent.Features.Core.BaseFeatures import Feature
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses
 from CharacterContent.Items.Weapons import WeaponDamageRolls
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
@@ -81,19 +81,14 @@ class WholenessOfBody(Feature):
     def __init__(self):
         super().__init__(
             name="Wholeness of Body", origin="Warrior of the Open Hand Monk Level 6", action_type="bonus_action", usage_tags=["heal"]
-        )
+        , uses=FeatureUses(max_uses=Definitions.MAX_ABILITY_MODIFIER, regain_all_on="long rest", current_formula="Current amount: equal to your Wisdom modifier."))
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
             "You gain the ability to heal yourself. As a Bonus Action, you can roll your Martial Arts die. You regain a number of Hit Points equal to the number rolled plus your Wisdom modifier (minimum of 1 Hit Point regained).\n"
             "You can use this feature a number of times equal to your Wisdom modifier (minimum of once), and you regain all expended uses when you finish a Long Rest."
         )
-        return StringUtils.add_boxes(
-            description,
-            Definitions.MAX_ABILITY_MODIFIER,
-            regain_all_on="long rest",
-            current_formula="Current amount: equal to your Wisdom modifier.",
-        )
+        return description
 
     def get_table_description(
         self, character_stat_block: CharacterStatBlock

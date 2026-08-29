@@ -1,6 +1,6 @@
 from Core.Definitions import Ability, WARLOCK_HIT_DIE
 import Core.Definitions as Definitions
-from CharacterContent.Features.Core.BaseFeatures import Feature
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
@@ -29,7 +29,7 @@ class DarkOnesOwnLuck(Feature):
     def __init__(self):
         super().__init__(
             name="Dark One's Own Luck", origin="Fiend Patron Warlock Level 6", usage_tags=["buff"]
-        )
+        , uses=FeatureUses(max_uses=Definitions.MAX_ABILITY_MODIFIER, regain_all_on="long rest", current_formula="Current amount: equal to your Charisma modifier."))
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         charisma_modifier = character_stat_block.get_ability_modifier(Ability.CHARISMA)
@@ -38,12 +38,7 @@ class DarkOnesOwnLuck(Feature):
             "You can call on your fiendish patron to alter fate in your favor. When you make an ability check or a saving throw, you can use this feature to add 1d10 to your roll. You can do so after seeing the roll but before any of the roll's effects occur.\n"
             "You can use this feature a number of times equal to your Charisma modifier (minimum of once), but you can use it no more than once per roll. You regain all expended uses when you finish a Long Rest."
         )
-        return StringUtils.add_boxes(
-            description,
-            Definitions.MAX_ABILITY_MODIFIER,
-            regain_all_on="long rest",
-            current_formula="Current amount: equal to your Charisma modifier.",
-        )
+        return description
 
     def get_table_description(
         self, character_stat_block: CharacterStatBlock

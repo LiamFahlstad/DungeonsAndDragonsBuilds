@@ -1,5 +1,5 @@
 from Core.Definitions import Ability, ROGUE_HIT_DIE
-from CharacterContent.Features.Core.BaseFeatures import Feature
+from CharacterContent.Features.Core.BaseFeatures import FeatureUses, Feature
 from CharacterContent.Features.Core.Improvements import InitiativeBonus
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
@@ -99,4 +99,4 @@ class MasterDuelist(Feature):
             "attack roll, you can roll it again with advantage. Once you do so, you can't use this feature "
             "again until you finish a short or long rest."
         )
-        return StringUtils.add_boxes(description, 1, regain_all_on="short or long rest")
+        return description

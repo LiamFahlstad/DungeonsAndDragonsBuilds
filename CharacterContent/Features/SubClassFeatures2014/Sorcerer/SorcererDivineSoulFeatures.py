@@ -1,8 +1,7 @@
 import Core.Definitions as Definitions
 from Core.Definitions import SORCERER_HIT_DIE
-from CharacterContent.Features.Core.BaseFeatures import Feature
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
-from Utils import StringUtils
 
 
 class DivineMagic(Feature):
@@ -27,7 +26,7 @@ class DivineMagic(Feature):
 
 class FavoredByTheGods(Feature):
     def __init__(self):
-        super().__init__(name="Favored by the Gods", origin="Divine Soul Sorcerer Level 3", usage_tags=["buff"])
+        super().__init__(name="Favored by the Gods", origin="Divine Soul Sorcerer Level 3", usage_tags=["buff"], uses=FeatureUses(max_uses=1, regain_all_on="short or long rest"))
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -35,7 +34,7 @@ class FavoredByTheGods(Feature):
             "\n"
             "Once you use this feature, you can't use it again until you finish a short or long rest."
         )
-        return StringUtils.add_boxes(description, 1, regain_all_on="short or long rest")
+        return description
 
     def get_table_description(
         self, character_stat_block: CharacterStatBlock
@@ -93,7 +92,7 @@ class AngelicForm(Feature):
 
 class UnearthlyRecovery(Feature):
     def __init__(self):
-        super().__init__(name="Unearthly Recovery", origin="Divine Soul Sorcerer Level 18", action_type="bonus_action", range="Self", usage_tags=["heal"])
+        super().__init__(name="Unearthly Recovery", origin="Divine Soul Sorcerer Level 18", action_type="bonus_action", range="Self", usage_tags=["heal"], uses=FeatureUses(max_uses=1, regain_all_on="long rest"))
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -101,7 +100,7 @@ class UnearthlyRecovery(Feature):
             "\n"
             "Once you use this feature, you can't use it again until you finish a long rest."
         )
-        return StringUtils.add_boxes(description, 1, regain_all_on="long rest")
+        return description
 
     def get_table_description(
         self, character_stat_block: CharacterStatBlock

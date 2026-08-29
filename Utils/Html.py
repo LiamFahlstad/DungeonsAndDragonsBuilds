@@ -143,6 +143,61 @@ def boxes_to_html(description: str) -> str:
     return "\n".join(new_lines)
 
 
+def render_slot_boxes(
+    max_uses: int,
+    regain_all_on: str | None = None,
+    regain_x_on: tuple | None = None,
+    current_formula: str | None = None,
+) -> str:
+    """Render limited-use checkbox slots plus an optional reset/current-count note.
+
+    This is the structured counterpart to the [BOXES:]/[RESET:]/[CURRENT:] sentinels
+    consumed by boxes_to_html() - callers that already hold the box count and reset
+    rules as data (e.g. Feature.uses) can render directly instead of embedding
+    sentinels in description text.
+    """
+    boxes_html = '<span class="slot-box"></span>' * max_uses
+
+    reset_label = None
+    if regain_x_on is not None:
+        if not isinstance(regain_x_on, tuple) or len(regain_x_on) != 2:
+            raise ValueError(
+                "regain_x_on must be a tuple of (count: int, cadence: str)"
+            )
+        count, cadence = regain_x_on
+        if not isinstance(count, int) or count < 0:
+            raise ValueError("regain_x_on count must be a non-negative integer")
+        if count >= max_uses:
+            raise ValueError(
+                f"regain_x_on count ({count}) must be less than max_uses ({max_uses})"
+            )
+        box_word = "box" if count == 1 else "boxes"
+        if regain_all_on is not None:
+            reset_label = (
+                f"regain {count} {box_word} on a {cadence}, all on a {regain_all_on}"
+            )
+        else:
+            reset_label = f"regain {count} {box_word} on a {cadence}"
+    elif regain_all_on is not None:
+        reset_label = f"regain all on a {regain_all_on}"
+
+    extra_html_parts = []
+    if reset_label is not None:
+        capitalized_label = reset_label[0].upper() + reset_label[1:]
+        extra_html_parts.append(
+            f'<span class="slot-reset-label">{capitalized_label}.</span>'
+        )
+    if current_formula is not None:
+        extra_html_parts.append(
+            f'<span class="slot-reset-label">{current_formula}</span>'
+        )
+
+    boxes_div = '<div class="slot-box-group">' + boxes_html + "</div>"
+    if extra_html_parts:
+        return boxes_div + "\n" + "\n".join(extra_html_parts)
+    return boxes_div
+
+
 def tables_to_html(description: str) -> str:
     """Convert blocks of consecutive tab-separated lines into HTML tables.
 

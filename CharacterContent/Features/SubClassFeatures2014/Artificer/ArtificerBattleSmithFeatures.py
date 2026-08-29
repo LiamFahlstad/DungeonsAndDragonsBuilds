@@ -90,7 +90,7 @@ class ExtraAttack(Feature):
 
 class ArcaneJolt(Feature):
     def __init__(self):
-        super().__init__(name="Arcane Jolt", origin="Battle Smith Artificer Level 9", range="30 Feet", usage_tags=["damage", "heal"])
+        super().__init__(name="Arcane Jolt", origin="Battle Smith Artificer Level 9", range="30 Feet", usage_tags=["damage", "heal"], uses=FeatureUses(max_uses=MAX_ABILITY_MODIFIER, regain_all_on="long rest", current_formula="Current amount: equal to your Intelligence modifier."))
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         intelligence_modifier = character_stat_block.get_ability_modifier(Ability.INTELLIGENCE)
@@ -100,37 +100,5 @@ class ArcaneJolt(Feature):
             "The target takes an extra 2d6 force damage.\n"
             "Choose one creature or object you can see within 30 feet of the target. Healing energy flows into the chosen recipient, restoring 2d6 hit points to it.\n"
             "You can use this energy a number of times equal to your Intelligence modifier (minimum of once), but you can do so no more than once on a turn. You regain all expended uses when you finish a long rest."
-        )
-        return StringUtils.add_boxes(
-            description,
-            MAX_ABILITY_MODIFIER,
-            regain_all_on="long rest",
-            current_formula="Current amount: equal to your Intelligence modifier.",
-        )
-
-    def get_table_description(
-        self, character_stat_block: CharacterStatBlock
-    ) -> list[tuple[str, str]]:
-        intelligence_modifier = character_stat_block.get_ability_modifier(Ability.INTELLIGENCE)
-        uses = max(1, intelligence_modifier)
-        return [
-            ("Trigger", "Magic weapon or Steel Defender attack hits"),
-            ("Option 1", "2d6 force damage to target"),
-            ("Option 2", "2d6 healing to creature within 30 feet"),
-            ("Uses", f"{uses} per long rest"),
-            ("Limit", "Once per turn"),
-        ]
-
-
-class ImprovedDefender(Feature):
-    def __init__(self):
-        super().__init__(name="Improved Defender", origin="Battle Smith Artificer Level 15", usage_tags=["damage", "buff"])
-
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        description = (
-            "At 15th level, your Arcane Jolt and steel defender become more powerful.\n"
-            "The extra damage and the healing of your Arcane Jolt both increase to 4d6.\n"
-            "Your steel defender gains a +2 bonus to Armor Class.\n"
-            "Whenever your steel defender uses its Deflect Attack, the attacker takes force damage equal to 1d4 + your Intelligence modifier."
         )
         return description

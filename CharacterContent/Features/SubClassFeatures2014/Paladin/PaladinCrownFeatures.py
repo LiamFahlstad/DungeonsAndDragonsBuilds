@@ -97,7 +97,7 @@ class UnyieldingSaint(Feature):
 
 class ExaltedChampion(Feature):
     def __init__(self):
-        super().__init__(name="Exalted Champion", origin="Oath of the Crown Paladin Level 20", action_type="action", duration="1 Hour", range="30 Feet", usage_tags=["buff"])
+        super().__init__(name="Exalted Champion", origin="Oath of the Crown Paladin Level 20", action_type="action", duration="1 Hour", range="30 Feet", usage_tags=["buff"], uses=FeatureUses(max_uses=1, regain_all_on="long rest"))
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -108,15 +108,4 @@ class ExaltedChampion(Feature):
             "\n"
             "This effect ends early if you are incapacitated or die. Once you use this feature, you can't use it again until you finish a long rest."
         )
-        return StringUtils.add_boxes(description, 1, regain_all_on="long rest")
-
-    def get_table_description(self, character_stat_block: CharacterStatBlock) -> list[tuple[str, str]]:
-        return [
-            ("What", "Inspiration on the field of battle"),
-            ("Action", "Action"),
-            ("Duration", "1 hour"),
-            ("Resistance", "Nonmagical bludgeoning/piercing/slashing"),
-            ("Ally Death Saves", "Allies within 30 feet have advantage"),
-            ("Wisdom Saves", "You and allies within 30 feet have advantage"),
-            ("Recharge", "Long rest"),
-        ]
+        return description

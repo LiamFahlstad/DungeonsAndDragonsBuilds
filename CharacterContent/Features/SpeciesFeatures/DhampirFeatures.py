@@ -1,8 +1,7 @@
-from Core.Definitions import MAX_PROFICIENCY_BONUS, Sense
-from CharacterContent.Features.Core.BaseFeatures import Feature
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses
 from CharacterContent.Features.Core.Improvements import GrantSense
+from Core.Definitions import MAX_PROFICIENCY_BONUS, Sense
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
-from Utils import StringUtils
 
 SPEED = 35  # Given by your species
 
@@ -22,7 +21,9 @@ class Darkvision(Feature):
 class SpiderClimb(Feature):
     def __init__(self, character_level: int):
         self.character_level = character_level
-        super().__init__(name="Spider Climb", origin="Dhampir Trait", usage_tags=["buff", "utility"])
+        super().__init__(
+            name="Spider Climb", origin="Dhampir Trait", usage_tags=["buff", "utility"]
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         if self.character_level >= 3:
@@ -38,7 +39,9 @@ class SpiderClimb(Feature):
 
 class TraceOfUndeath(Feature):
     def __init__(self):
-        super().__init__(name="Trace of Undeath", origin="Dhampir Trait", usage_tags=["buff"])
+        super().__init__(
+            name="Trace of Undeath", origin="Dhampir Trait", usage_tags=["buff"]
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         return "You have Resistance to Necrotic damage."
@@ -46,7 +49,15 @@ class TraceOfUndeath(Feature):
 
 class VampiricBite(Feature):
     def __init__(self):
-        super().__init__(name="Vampiric Bite", origin="Dhampir Trait", usage_tags=["damage", "heal", "buff"])
+        super().__init__(
+            name="Vampiric Bite",
+            origin="Dhampir Trait",
+            usage_tags=["damage", "heal", "buff"],
+            uses=FeatureUses(
+                max_uses=MAX_PROFICIENCY_BONUS,
+                current_formula="Current amount: equal to your proficiency bonus.",
+            ),
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -57,4 +68,4 @@ class VampiricBite(Feature):
             "Strengthen. You gain a bonus to the next ability check or attack roll you make within the next minute; the bonus is equal to the Piercing damage dealt.\n"
             "You can empower yourself with this trait, and you regain all expended uses when you finish a Long Rest."
         )
-        return StringUtils.add_boxes(description, MAX_PROFICIENCY_BONUS, current_formula="Current amount: equal to your proficiency bonus.")
+        return description

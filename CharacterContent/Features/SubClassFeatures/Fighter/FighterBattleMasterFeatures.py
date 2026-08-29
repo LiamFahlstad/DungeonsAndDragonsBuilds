@@ -1,5 +1,5 @@
 from Core.Definitions import Ability, FIGHTER_HIT_DIE
-from CharacterContent.Features.Core.BaseFeatures import Feature
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
@@ -9,7 +9,7 @@ class SuperiorityDice(Feature):
         self.maneuvers = []
         super().__init__(
             name="Superiority Dice", origin="Battle Master Fighter Level 3"
-        )
+        , uses=FeatureUses(max_uses=6, regain_all_on="short or long rest"))
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         if character_stat_block.character_level < 10:
@@ -31,15 +31,7 @@ class SuperiorityDice(Feature):
             "Maneuvers:"
         )
 
-        return StringUtils.add_boxes(
-            base_text,
-            6,
-            regain_all_on="short or long rest",
-            current_formula=(
-                "Current amount: determined by your character level — 4 dice "
-                "below level 7, 5 at 7-14, 6 at 15+."
-            ),
-        )
+        return base_text
 
 
 class CombatSuperiority(Feature):

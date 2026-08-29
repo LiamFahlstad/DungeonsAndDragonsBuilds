@@ -1,6 +1,5 @@
-from CharacterContent.Features.Core.BaseFeatures import Feature
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
-from Utils import StringUtils
 from Core.Definitions import MAX_PROFICIENCY_BONUS
 
 
@@ -40,7 +39,7 @@ class MoonFire(Feature):
 
 class LunarBoons(Feature):
     def __init__(self):
-        super().__init__(name="Lunar Boons", origin="Lunar Sorcery Sorcerer Level 6", usage_tags=["buff"])
+        super().__init__(name="Lunar Boons", origin="Lunar Sorcery Sorcerer Level 6", usage_tags=["buff"], uses=FeatureUses(max_uses=MAX_PROFICIENCY_BONUS, regain_all_on="long rest", current_formula="Current amount: equal to your proficiency bonus."))
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         proficiency_bonus = character_stat_block.get_proficiency_bonus()
@@ -53,7 +52,7 @@ class LunarBoons(Feature):
             "\n"
             f"Whenever you use Metamagic on a spell of a school of magic associated with your current Lunar Embodiment phase, you can reduce the sorcery points spent by 1 (minimum 0). You can reduce the sorcery points spent for your Metamagic a number of times equal to your proficiency bonus ({proficiency_bonus}), and you regain all expended uses when you finish a long rest."
         )
-        return StringUtils.add_boxes(description, MAX_PROFICIENCY_BONUS, regain_all_on="long rest", current_formula="Current amount: equal to your proficiency bonus.")
+        return description
 
 
 class WaxingAndWaning(Feature):
@@ -86,7 +85,7 @@ class LunarEmpowerment(Feature):
 
 class LunarPhenomenon(Feature):
     def __init__(self):
-        super().__init__(name="Lunar Phenomenon", origin="Lunar Sorcery Sorcerer Level 18", action_type="bonus_action", duration="Until End of Next Turn", range="60 Feet", usage_tags=["utility", "damage", "control", "heal", "buff"])
+        super().__init__(name="Lunar Phenomenon", origin="Lunar Sorcery Sorcerer Level 18", action_type="bonus_action", duration="Until End of Next Turn", range="60 Feet", usage_tags=["utility", "damage", "control", "heal", "buff"], uses=FeatureUses(max_uses=1, regain_all_on="long rest"))
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -98,4 +97,4 @@ class LunarPhenomenon(Feature):
             "\n"
             "Once you use one of these bonus action benefits, you can't use that benefit again until you finish a long rest, unless you spend 5 sorcery points to use it again."
         )
-        return StringUtils.add_boxes(description, 1, regain_all_on="long rest")
+        return description

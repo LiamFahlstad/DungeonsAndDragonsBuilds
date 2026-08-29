@@ -1,8 +1,7 @@
 from Core.Definitions import Sense
-from CharacterContent.Features.Core.BaseFeatures import Feature
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses
 from CharacterContent.Features.Core.Improvements import GrantSense
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
-from Utils import StringUtils
 
 SPEED = 30  # Given by your species
 
@@ -21,7 +20,7 @@ class Darkvision(Feature):
 
 class EerieToken(Feature):
     def __init__(self):
-        super().__init__(name="Eerie Token", origin="Hexblood Trait", action_type="bonus_action", duration="Until Long Rest", range="10 Miles", usage_tags=["utility"])
+        super().__init__(name="Eerie Token", origin="Hexblood Trait", action_type="bonus_action", duration="Until Long Rest", range="10 Miles", usage_tags=["utility"], uses=FeatureUses(max_uses=1))
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -33,7 +32,7 @@ class EerieToken(Feature):
             "Unless the token is destroyed early, it lasts until you finish a Long Rest. "
             "Once you create a token using this feature, you can't do so again until you finish a Long Rest."
         )
-        return StringUtils.add_boxes(description, 1)
+        return description
 
 
 class HexMagic(Feature):

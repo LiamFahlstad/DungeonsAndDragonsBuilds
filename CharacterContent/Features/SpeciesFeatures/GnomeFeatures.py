@@ -1,8 +1,7 @@
 from Core.Definitions import Ability, CreatureSize, MAX_PROFICIENCY_BONUS, Sense
-from CharacterContent.Features.Core.BaseFeatures import Feature
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses
 from CharacterContent.Features.Core.Improvements import SavingThrowAdvantage, GrantSense
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
-from Utils import StringUtils
 
 SPEED = 30  # Given by your species
 SIZE = CreatureSize.SMALL  # Given by your species
@@ -37,11 +36,12 @@ class ForestGnomeSpeakWithAnimals(Feature):
         super().__init__(
             name="Forest Gnome Speak with Animals",
             origin="Gnomish Lineage Forest Gnome Trait",
+            uses=FeatureUses(max_uses=MAX_PROFICIENCY_BONUS, current_formula="Current amount: equal to your proficiency bonus.")
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         text = "You also always have the Speak with Animals spell prepared. You can cast it without a spell slot, and you regain all expended uses when you finish a Long Rest. You can also use any spell slots you have to cast the spell."
-        return StringUtils.add_boxes(text, MAX_PROFICIENCY_BONUS, current_formula="Current amount: equal to your proficiency bonus.")
+        return text
 
 
 class RockGnomePrestidigitation(Feature):

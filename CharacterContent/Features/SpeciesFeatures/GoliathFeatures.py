@@ -1,9 +1,8 @@
 from enum import Enum
 
 from Core.Definitions import CreatureSize, MAX_PROFICIENCY_BONUS
-from CharacterContent.Features.Core.BaseFeatures import Feature
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
-from Utils import StringUtils
 
 SPEED = 35  # Given by your species
 SIZE = CreatureSize.MEDIUM  # Given by your species
@@ -37,7 +36,7 @@ class PowerfulBuild(Feature):
 class GiantAncestry(Feature):
     def __init__(self, giant_ancestry_type: GiantAncestryType):
         self.giant_ancestry_type = giant_ancestry_type
-        super().__init__(name="Giant Ancestry", origin="Goliath Trait", usage_tags=["buff", "damage", "control"])
+        super().__init__(name="Giant Ancestry", origin="Goliath Trait", usage_tags=["buff", "damage", "control"], uses=FeatureUses(max_uses=MAX_PROFICIENCY_BONUS, current_formula="Current amount: equal to your proficiency bonus."))
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         text = ""
@@ -54,4 +53,4 @@ class GiantAncestry(Feature):
         if self.giant_ancestry_type == GiantAncestryType.STORM_GIANT:
             text += "When you take damage from a creature within 60 feet of you, you can take a Reaction to deal 1d8 Thunder damage to that creature.\n"
         text += "You can use the benefit, and you regain all expended uses when you finish a Long Rest"
-        return StringUtils.add_boxes(text, MAX_PROFICIENCY_BONUS, current_formula="Current amount: equal to your proficiency bonus.")
+        return text

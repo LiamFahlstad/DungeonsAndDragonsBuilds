@@ -59,34 +59,12 @@ class SpiritShield(Feature):
 
 class ConsultTheSpirits(Feature):
     def __init__(self):
-        super().__init__(name="Consult the Spirits", origin="Path Of The Ancestral Guardian Barbarian Level 10", usage_tags=["utility"])
+        super().__init__(name="Consult the Spirits", origin="Path Of The Ancestral Guardian Barbarian Level 10", usage_tags=["utility"], uses=FeatureUses(max_uses=1, regain_all_on="short or long rest"))
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
             "At 10th level, you gain the ability to consult with your ancestral spirits. When you do so, you cast the Augury or Clairvoyance spell, without using a spell slot or material components. Rather than creating a spherical sensor, this use of clairvoyance invisibly summons one of your ancestral spirits to the chosen location. Wisdom is your spellcasting ability for these spells.\n"
             "\n"
             "After you cast either spell in this way, you can't use this feature again until you finish a short or long rest."
-        )
-        return StringUtils.add_boxes(description, 1, regain_all_on="short or long rest")
-
-    def get_table_description(
-        self, character_stat_block: CharacterStatBlock
-    ) -> list[tuple[str, str]]:
-        return [
-            ("Spells", "Augury or Clairvoyance"),
-            ("Cost", "No spell slot or material components"),
-            ("Casting Ability", "Wisdom"),
-            ("Clairvoyance", "Summons ancestral spirit, not sensor"),
-            ("Recharge", "Short or long rest"),
-        ]
-
-
-class VengefulAncestors(Feature):
-    def __init__(self):
-        super().__init__(name="Vengeful Ancestors", origin="Path Of The Ancestral Guardian Barbarian Level 14", usage_tags=["damage"])
-
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        description = (
-            "At 14th level, your ancestral spirits grow powerful enough to retaliate. When you use your Spirit Shield to reduce the damage of an attack, the attacker takes an amount of force damage that your Spirit Shield prevents."
         )
         return description

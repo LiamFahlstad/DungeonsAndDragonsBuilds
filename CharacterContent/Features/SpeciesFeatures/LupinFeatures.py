@@ -1,8 +1,7 @@
 from Core.Definitions import MAX_PROFICIENCY_BONUS, Sense, Skill
-from CharacterContent.Features.Core.BaseFeatures import Feature
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses
 from CharacterContent.Features.Core.Improvements import SkillProficiencyChoice, GrantSense
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
-from Utils import StringUtils
 
 SPEED = 30  # Given by your species
 
@@ -33,7 +32,7 @@ class FeralPounce(Feature):
 
 class Howl(Feature):
     def __init__(self):
-        super().__init__(name="Howl", origin="Lupin Trait", action_type="bonus_action", duration="Until Start of Next Turn", range="15-Foot Radius", usage_tags=["control"])
+        super().__init__(name="Howl", origin="Lupin Trait", action_type="bonus_action", duration="Until Start of Next Turn", range="15-Foot Radius", usage_tags=["control"], uses=FeatureUses(max_uses=MAX_PROFICIENCY_BONUS, current_formula="Current amount: equal to your proficiency bonus."))
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -43,7 +42,7 @@ class Howl(Feature):
             "and saving throws until the start of your next turn.\n"
             "You can use this trait, and you regain all expended uses when you finish a Long Rest."
         )
-        return StringUtils.add_boxes(description, MAX_PROFICIENCY_BONUS, current_formula="Current amount: equal to your proficiency bonus.")
+        return description
 
 
 class WerewolfInstincts(Feature):

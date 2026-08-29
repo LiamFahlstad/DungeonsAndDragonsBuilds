@@ -1,5 +1,5 @@
 from Core.Definitions import Ability, MAX_ABILITY_MODIFIER
-from CharacterContent.Features.Core.BaseFeatures import Feature
+from CharacterContent.Features.Core.BaseFeatures import FeatureUses, Feature
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
@@ -35,12 +35,7 @@ class UnleashIncarnation(Feature):
             "\n"
             "You regain all expended uses when you finish a long rest."
         )
-        return StringUtils.add_boxes(
-            description,
-            MAX_ABILITY_MODIFIER,
-            regain_all_on="long rest",
-            current_formula="Current amount: equal to your Constitution modifier.",
-        )
+        return description
 
     def get_table_description(
         self, character_stat_block: CharacterStatBlock
@@ -81,7 +76,7 @@ class ShadowMartyr(Feature):
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "Starting at 10th level, you can make your echo throw itself in front of an attack directed at another creature that you can see. Before the attack roll is made, you can use your reaction to teleport the echo to an unoccupied space within 5 feet of the targeted creature. The attack roll that triggered the reaction is instead made against your echo.\n\nOnce you use this feature, you can't use it again until you finish a short or long rest."
-        return StringUtils.add_boxes(description, 1, regain_all_on="short or long rest")
+        return description
 
     def get_table_description(
         self, character_stat_block: CharacterStatBlock
@@ -104,12 +99,7 @@ class ReclaimPotential(Feature):
             "\n"
             "You regain all expended uses when you finish a long rest."
         )
-        return StringUtils.add_boxes(
-            description,
-            MAX_ABILITY_MODIFIER,
-            regain_all_on="long rest",
-            current_formula="Current amount: equal to your Constitution modifier.",
-        )
+        return description
 
     def get_table_description(
         self, character_stat_block: CharacterStatBlock

@@ -1,8 +1,7 @@
 import Core.Definitions as Definitions
-from Core.Definitions import Ability, WARLOCK_HIT_DIE
-from CharacterContent.Features.Core.BaseFeatures import Feature
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses
+from Core.Definitions import Ability
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
-from Utils import StringUtils
 
 
 class UndyingExpandedSpells(Feature):
@@ -28,8 +27,10 @@ class UndyingExpandedSpells(Feature):
 class AmongTheDead(Feature):
     def __init__(self):
         super().__init__(
-            name="Among the Dead", origin="The Undying Patron Warlock Level 3",
-            duration="24 Hours", usage_tags=["buff"]
+            name="Among the Dead",
+            origin="The Undying Patron Warlock Level 3",
+            duration="24 Hours",
+            usage_tags=["buff"],
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -44,8 +45,10 @@ class AmongTheDead(Feature):
 class DefyDeath(Feature):
     def __init__(self):
         super().__init__(
-            name="Defy Death", origin="The Undying Patron Warlock Level 6",
-            usage_tags=["heal"]
+            name="Defy Death",
+            origin="The Undying Patron Warlock Level 6",
+            usage_tags=["heal"],
+            uses=FeatureUses(max_uses=1, regain_all_on="long rest"),
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -55,14 +58,17 @@ class DefyDeath(Feature):
             "\n"
             "Once you use this feature, you can't use it again until you finish a long rest."
         )
-        return StringUtils.add_boxes(description, 1, regain_all_on="long rest")
+        return description
 
     def get_table_description(
         self, character_stat_block: CharacterStatBlock
     ) -> list[tuple[str, str]]:
         con_mod = character_stat_block.get_ability_modifier(Ability.CONSTITUTION)
         return [
-            ("Trigger", "Succeed on death saving throw OR stabilize creature with Spare the Dying"),
+            (
+                "Trigger",
+                "Succeed on death saving throw OR stabilize creature with Spare the Dying",
+            ),
             ("Effect", f"Regain 1d8 + Constitution modifier ({con_mod}) HP (min 1)"),
             ("Recharge", "Long rest"),
         ]
@@ -71,7 +77,9 @@ class DefyDeath(Feature):
 class UndyingNature(Feature):
     def __init__(self):
         super().__init__(
-            name="Undying Nature", origin="The Undying Patron Warlock Level 10", usage_tags=["utility"]
+            name="Undying Nature",
+            origin="The Undying Patron Warlock Level 10",
+            usage_tags=["utility"],
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -86,8 +94,11 @@ class UndyingNature(Feature):
 class IndestructibleLife(Feature):
     def __init__(self):
         super().__init__(
-            name="Indestructible Life", origin="The Undying Patron Warlock Level 14",
-            action_type="bonus_action", usage_tags=["heal"]
+            name="Indestructible Life",
+            origin="The Undying Patron Warlock Level 14",
+            action_type="bonus_action",
+            usage_tags=["heal"],
+            uses=FeatureUses(max_uses=1, regain_all_on="short or long rest"),
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -99,7 +110,7 @@ class IndestructibleLife(Feature):
             "\n"
             "Once you use this feature, you can't use it again until you finish a short or long rest."
         )
-        return StringUtils.add_boxes(description, 1, regain_all_on="short or long rest")
+        return description
 
     def get_table_description(
         self, character_stat_block: CharacterStatBlock

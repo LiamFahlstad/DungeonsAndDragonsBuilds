@@ -1,6 +1,6 @@
 from Core.Definitions import Ability, Condition, WARLOCK_HIT_DIE
 import Core.Definitions as Definitions
-from CharacterContent.Features.Core.BaseFeatures import Feature
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses
 from CharacterContent.Features.Core.Improvements import ConditionImmunity
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
@@ -19,7 +19,7 @@ class StepsOfTheFey(Feature):
     def __init__(self):
         super().__init__(
             name="Steps of the Fey", origin="Archfey Patron Warlock Level 3", usage_tags=["heal", "control"]
-        )
+        , uses=FeatureUses(max_uses=Definitions.MAX_ABILITY_MODIFIER, regain_all_on="long rest", current_formula="Current amount: equal to your Charisma modifier."))
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -28,12 +28,7 @@ class StepsOfTheFey(Feature):
             "    * Refreshing Step: Immediately after you teleport, you or one creature you can see within 10 feet of yourself gains 1d10 Temporary Hit Points.\n"
             "    * Taunting Step: Creatures within 5 feet of the space you left must succeed on a Wisdom saving throw against your spell save DC or have Disadvantage on attack rolls against creatures other than you until the start of your next turn."
         )
-        return StringUtils.add_boxes(
-            description,
-            Definitions.MAX_ABILITY_MODIFIER,
-            regain_all_on="long rest",
-            current_formula="Current amount: equal to your Charisma modifier.",
-        )
+        return description
 
 class MistyEscape(Feature):
     def __init__(self):

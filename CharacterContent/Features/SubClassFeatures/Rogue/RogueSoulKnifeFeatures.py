@@ -1,12 +1,12 @@
 from Core.Definitions import CharacterClass, ROGUE_HIT_DIE
-from CharacterContent.Features.Core.BaseFeatures import Feature
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
 
 class PsionicPower(Feature):
     def __init__(self):
-        super().__init__(name="Psionic Power", origin="Soulknife Rogue Level 3", action_type="action", duration="Hours Based on Energy Die Roll", range="1 Mile", usage_tags=["utility"])
+        super().__init__(name="Psionic Power", origin="Soulknife Rogue Level 3", action_type="action", duration="Hours Based on Energy Die Roll", range="1 Mile", usage_tags=["utility"], uses=FeatureUses(max_uses=12, regain_all_on="long rest", regain_x_on=(1, "short rest")))
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         rogue_level = character_stat_block.get_class_level(CharacterClass.ROGUE)
@@ -39,16 +39,7 @@ class PsionicPower(Feature):
             "Psi-Bolstered Knack. If you fail an ability check using a skill or tool with which you have proficiency, you can roll one Psionic Energy Die and add the number rolled to the check, potentially turning failure into success. The die is expended only if the roll then succeeds.\n"
             "Psychic Whispers. You can establish telepathic communication between yourself and others. As a Magic action, choose one or more creatures you can see, up to a number of creatures equal to your Proficiency Bonus, and then roll one Psionic Energy Die. For a number of hours equal to the number rolled, the chosen creatures can speak telepathically to you, and you can speak telepathically with them. To send or receive a message (no action required), you and the other creature must be within 1 mile of each other. A creature can end the telepathic connection at any time (no action required)."
         )
-        return StringUtils.add_boxes(
-            description,
-            12,
-            regain_x_on=(1, "short rest"),
-            regain_all_on="long rest",
-            current_formula=(
-                "Current amount: determined by your Rogue level — 4 dice "
-                "below level 5, 6 at 5-8, 8 at 9-12, 10 at 13-16, 12 at 17+."
-            ),
-        )
+        return description
 
 
 class PsychicBlades(Feature):

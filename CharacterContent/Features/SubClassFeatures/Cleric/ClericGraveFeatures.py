@@ -1,5 +1,5 @@
 from Core.Definitions import Ability, CLERIC_HIT_DIE, MAX_ABILITY_MODIFIER
-from CharacterContent.Features.Core.BaseFeatures import Feature
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
@@ -66,19 +66,14 @@ class SentinelAtDeathsDoor(Feature):
     def __init__(self):
         super().__init__(
             name="Sentinel at Death's Door", origin="Grave Domain Cleric Level 6", action_type="reaction", range="60 Feet", usage_tags=["buff"]
-        )
+        , uses=FeatureUses(max_uses=MAX_ABILITY_MODIFIER, regain_all_on="long rest", current_formula="Current amount: equal to your Wisdom modifier."))
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
             "When you or a Bloodied creature you can see within 60 feet of yourself is hit with an attack roll, you can take a Reaction to halve that attack's damage (round down). If the triggering attack roll was a Critical Hit, any effects triggered by a Critical Hit are canceled.\n"
             "You regain all expended uses when you finish a Long Rest."
         )
-        return StringUtils.add_boxes(
-            description,
-            MAX_ABILITY_MODIFIER,
-            regain_all_on="long rest",
-            current_formula="Current amount: equal to your Wisdom modifier.",
-        )
+        return description
 
     def get_table_description(
         self, character_stat_block: CharacterStatBlock

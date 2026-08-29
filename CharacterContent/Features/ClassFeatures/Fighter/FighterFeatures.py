@@ -1,5 +1,4 @@
-from Core.Definitions import FIGHTER_HIT_DIE
-from CharacterContent.Features.Core.BaseFeatures import Feature
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
@@ -18,7 +17,18 @@ class FightingStyle(Feature):
 
 class SecondWind(Feature):
     def __init__(self):
-        super().__init__(name="Second Wind", origin="Fighter Level 1", action_type="bonus_action", usage_tags=["heal"])
+        super().__init__(
+            name="Second Wind",
+            origin="Fighter Level 1",
+            action_type="bonus_action",
+            usage_tags=["heal"],
+            uses=FeatureUses(
+                max_uses=4,
+                regain_x_on=(1, "short rest"),
+                regain_all_on="long rest",
+                current_formula="Current amount: determined by your character level — 2 uses at levels 1-3, 3 at 4-9, 4 at 10+.",
+            ),
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         base_text = (
@@ -28,16 +38,7 @@ class SecondWind(Feature):
             "and you regain all expended uses when you finish a Long Rest.\n"
         )
 
-        return StringUtils.add_boxes(
-            base_text,
-            4,
-            regain_x_on=(1, "short rest"),
-            regain_all_on="long rest",
-            current_formula=(
-                "Current amount: determined by your character level — 2 uses "
-                "at levels 1-3, 3 at 4-9, 4 at 10+."
-            ),
-        )
+        return base_text
 
     def get_table_description(
         self, character_stat_block: CharacterStatBlock
@@ -70,28 +71,27 @@ class WeaponMastery(Feature):
 
 class ActionSurge(Feature):
     def __init__(self):
-        super().__init__(name="Action Surge", origin="Fighter Level 2")
+        super().__init__(
+            name="Action Surge",
+            origin="Fighter Level 2",
+            uses=FeatureUses(
+                max_uses=2,
+                regain_all_on="short or long rest",
+                current_formula="Current amount: 1 use below character level 17, 2 uses at 17+.",
+            ),
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
             "You can push yourself beyond your normal limits for a moment. On your turn, you can take one additional action, except the Magic action.\n"
             "Once you use this feature, you can’t do so again until you finish a Short or Long Rest. Starting at level 17, you can use it twice before a rest but only once on a turn."
         )
-        return StringUtils.add_boxes(
-            description,
-            2,
-            regain_all_on="short or long rest",
-            current_formula=(
-                "Current amount: 1 use below character level 17, 2 uses at 17+."
-            ),
-        )
+        return description
 
     def get_resource_tiles(
         self, character_stat_block: CharacterStatBlock
     ) -> list[tuple[str, list[tuple[str, str]]]]:
-        uses_by_level = {
-            level: (2 if level >= 17 else 1) for level in range(2, 21)
-        }
+        uses_by_level = {level: (2 if level >= 17 else 1) for level in range(2, 21)}
         steps = [
             (f"Lv {level_range}", str(value))
             for level_range, value in StringUtils.compress_level_progression(
@@ -117,7 +117,9 @@ class ActionSurge(Feature):
 
 class TacticalMind(Feature):
     def __init__(self):
-        super().__init__(name="Tactical Mind", origin="Fighter Level 2", usage_tags=["buff"])
+        super().__init__(
+            name="Tactical Mind", origin="Fighter Level 2", usage_tags=["buff"]
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "You have a mind for tactics on and off the battlefield. When you fail an ability check, you can expend a use of your Second Wind to push yourself toward success. Rather than regaining Hit Points, you roll 1d10 and add the number rolled to the ability check, potentially turning it into a success. If the check still fails, this use of Second Wind isn’t expended."
@@ -154,22 +156,23 @@ class TacticalShift(Feature):
 
 class Indomitable(Feature):
     def __init__(self):
-        super().__init__(name="Indomitable", origin="Fighter Level 9", usage_tags=["buff"])
+        super().__init__(
+            name="Indomitable",
+            origin="Fighter Level 9",
+            usage_tags=["buff"],
+            uses=FeatureUses(
+                max_uses=3,
+                regain_all_on="long rest",
+                current_formula="Current amount: determined by your character level — 1 use below level 13, 2 at 13-16, 3 at 17+.",
+            ),
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
             "If you fail a saving throw, you can reroll it with a bonus equal to your Fighter level. You must use the new roll, and you can’t use this feature again until you finish a Long Rest.\n"
             "You can use this feature twice before a Long Rest starting at level 13 and three times before a Long Rest starting at level 17."
         )
-        return StringUtils.add_boxes(
-            description,
-            3,
-            regain_all_on="long rest",
-            current_formula=(
-                "Current amount: determined by your character level — 1 use "
-                "below level 13, 2 at 13-16, 3 at 17+."
-            ),
-        )
+        return description
 
     def get_table_description(
         self, character_stat_block: CharacterStatBlock
@@ -208,7 +211,9 @@ class TwoExtraAttacks(Feature):
 
 class StudiedAttacks(Feature):
     def __init__(self):
-        super().__init__(name="Studied Attacks", origin="Fighter Level 13", usage_tags=["buff"])
+        super().__init__(
+            name="Studied Attacks", origin="Fighter Level 13", usage_tags=["buff"]
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "You study your opponents and learn from each attack you make. If you make an attack roll against a creature and miss, you have Advantage on your next attack roll against that creature before the end of your next turn."

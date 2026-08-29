@@ -1,14 +1,14 @@
-from Core.Definitions import Ability, DamageType, WARLOCK_HIT_DIE
-from CharacterContent.Features.Core.BaseFeatures import Feature
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses
 from CharacterContent.Features.Core.Improvements import DamageResistance
+from Core.Definitions import DamageType
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
-from Utils import StringUtils
 
 
 class GreatOldOneExpandedSpells(Feature):
     def __init__(self):
         super().__init__(
-            name="Expanded Spell List", origin="The Great Old One Patron Warlock Level 3"
+            name="Expanded Spell List",
+            origin="The Great Old One Patron Warlock Level 3",
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -28,8 +28,10 @@ class GreatOldOneExpandedSpells(Feature):
 class AwakenedMind(Feature):
     def __init__(self):
         super().__init__(
-            name="Awakened Mind", origin="The Great Old One Patron Warlock Level 3",
-            range="30 Feet", usage_tags=["utility"]
+            name="Awakened Mind",
+            origin="The Great Old One Patron Warlock Level 3",
+            range="30 Feet",
+            usage_tags=["utility"],
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -40,8 +42,12 @@ class AwakenedMind(Feature):
 class EntropicWard(Feature):
     def __init__(self):
         super().__init__(
-            name="Entropic Ward", origin="The Great Old One Patron Warlock Level 6",
-            action_type="reaction", duration="Until End of Next Turn", usage_tags=["buff"]
+            name="Entropic Ward",
+            origin="The Great Old One Patron Warlock Level 6",
+            action_type="reaction",
+            duration="Until End of Next Turn",
+            usage_tags=["buff"],
+            uses=FeatureUses(max_uses=1, regain_all_on="short or long rest"),
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -49,7 +55,7 @@ class EntropicWard(Feature):
             "You learn to magically ward yourself against attack and to turn an enemy's failed strike into good luck for yourself. When a creature makes an attack roll against you, you can use your Reaction to impose Disadvantage on that roll. If the attack misses you, your next attack roll against the creature has Advantage if you make it before the end of your next turn.\n"
             "Once you use this feature, you can't use it again until you finish a Short or Long Rest."
         )
-        return StringUtils.add_boxes(description, 1, regain_all_on="short or long rest")
+        return description
 
     def get_table_description(
         self, character_stat_block: CharacterStatBlock
@@ -58,7 +64,10 @@ class EntropicWard(Feature):
             ("Trigger", "Creature makes attack roll against you"),
             ("Type", "Reaction"),
             ("Effect", "Impose Disadvantage on the roll"),
-            ("Bonus", "If misses, your next attack on it has Advantage (by end of next turn)"),
+            (
+                "Bonus",
+                "If misses, your next attack on it has Advantage (by end of next turn)",
+            ),
             ("Recharge", "Short or long rest"),
         ]
 
@@ -66,8 +75,9 @@ class EntropicWard(Feature):
 class ThoughtShield(Feature):
     def __init__(self):
         super().__init__(
-            name="Thought Shield", origin="The Great Old One Patron Warlock Level 10",
-            usage_tags=["buff"]
+            name="Thought Shield",
+            origin="The Great Old One Patron Warlock Level 10",
+            usage_tags=["buff"],
         )
         self._resistance = DamageResistance(DamageType.PSYCHIC, self.name)
 
@@ -82,8 +92,12 @@ class ThoughtShield(Feature):
 class CreateThrall(Feature):
     def __init__(self):
         super().__init__(
-            name="Create Thrall", origin="The Great Old One Patron Warlock Level 14",
-            action_type="action", duration="Until Remove Curse or Charmed Removed", range="Touch", usage_tags=["control"]
+            name="Create Thrall",
+            origin="The Great Old One Patron Warlock Level 14",
+            action_type="action",
+            duration="Until Remove Curse or Charmed Removed",
+            range="Touch",
+            usage_tags=["control"],
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:

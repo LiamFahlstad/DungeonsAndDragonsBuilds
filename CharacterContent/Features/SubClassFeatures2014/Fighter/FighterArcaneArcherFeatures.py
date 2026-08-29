@@ -1,5 +1,5 @@
 from Core.Definitions import Ability, Skill
-from CharacterContent.Features.Core.BaseFeatures import Feature
+from CharacterContent.Features.Core.BaseFeatures import FeatureUses, Feature
 from CharacterContent.Features.Core.Improvements import SkillProficiencyChoice
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
@@ -66,7 +66,7 @@ class ArcaneShot(Feature):
             "\n"
             "Shadow Arrow. You weave illusion magic into your arrow, causing it to occlude your foe's vision with shadows. The creature hit by the arrow takes an extra 2d6 psychic damage, and it must succeed on a Wisdom saving throw or be unable to see anything farther than 5 feet away until the start of your next turn. The psychic damage increases to 4d6 when you reach 18th level in this class."
         )
-        return StringUtils.add_boxes(description, 2, regain_all_on="short or long rest")
+        return description
 
 
 class MagicArrow(Feature):

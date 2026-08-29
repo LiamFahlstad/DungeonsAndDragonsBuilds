@@ -1,5 +1,5 @@
 from Core.Definitions import ARTIFICER_HIT_DIE, Ability, MAX_ABILITY_MODIFIER
-from CharacterContent.Features.Core.BaseFeatures import Feature
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
@@ -28,7 +28,7 @@ class ReanimatorSkillSet(Feature):
     def __init__(self):
         super().__init__(
             name="Reanimator's Skill Set", origin="Reanimator Artificer Level 3", range="10-Foot Emanation", usage_tags=["heal", "damage", "utility"]
-        )
+        , uses=FeatureUses(max_uses=MAX_ABILITY_MODIFIER, regain_all_on="long rest", current_formula="Current amount: equal to your Intelligence modifier."))
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -37,12 +37,7 @@ class ReanimatorSkillSet(Feature):
             "You can modify the spell this way a number of times equal to your Intelligence modifier (minimum of once), and you regain all expended uses when you finish a Long Rest. The Lightning damage of this feature increases by 1d4 when you reach Artificer levels 11 (3d4) and 17 (4d4).\n"
             "Reanimator's Tools. You gain proficiency with Alchemist's Supplies. If you already have this proficiency, you gain proficiency with one other type of Artisan's Tools of your choice."
         )
-        return StringUtils.add_boxes(
-            description,
-            MAX_ABILITY_MODIFIER,
-            regain_all_on="long rest",
-            current_formula="Current amount: equal to your Intelligence modifier.",
-        )
+        return description
 
 class ReanimatedCompanion(Feature):
     def __init__(self):

@@ -1,8 +1,7 @@
 from Core.Definitions import CreatureSize, MAX_PROFICIENCY_BONUS, Sense
-from CharacterContent.Features.Core.BaseFeatures import Feature
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses
 from CharacterContent.Features.Core.Improvements import GrantSense
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
-from Utils import StringUtils
 
 SPEED = 30  # Given by your species
 SIZE = CreatureSize.MEDIUM  # Given by your species
@@ -27,6 +26,7 @@ class AdrenalineRush(Feature):
             origin="Orc Trait",
             action_type="bonus_action",
             usage_tags=["heal"],
+            uses=FeatureUses(max_uses=MAX_PROFICIENCY_BONUS, current_formula="Current amount: equal to your proficiency bonus.")
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -34,7 +34,7 @@ class AdrenalineRush(Feature):
             "You can take the Dash action as a Bonus Action. When you do so, you gain a number of Temporary Hit Points equal to your Proficiency Bonus.\n"
             "You can use this trait, and you regain all expended uses when you finish a Short or Long Rest."
         )
-        return StringUtils.add_boxes(text, MAX_PROFICIENCY_BONUS, current_formula="Current amount: equal to your proficiency bonus.")
+        return text
 
 
 class RelentlessEndurance(Feature):

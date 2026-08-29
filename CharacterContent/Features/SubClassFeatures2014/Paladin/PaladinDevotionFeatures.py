@@ -87,7 +87,7 @@ class PurityOfSpirit(Feature):
 
 class HolyNimbus(Feature):
     def __init__(self):
-        super().__init__(name="Holy Nimbus", origin="Oath of Devotion Paladin Level 20", action_type="action", duration="1 Minute", range="30-Foot Radius", usage_tags=["damage", "buff"])
+        super().__init__(name="Holy Nimbus", origin="Oath of Devotion Paladin Level 20", action_type="action", duration="1 Minute", range="30-Foot Radius", usage_tags=["damage", "buff"], uses=FeatureUses(max_uses=1, regain_all_on="long rest"))
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -96,14 +96,4 @@ class HolyNimbus(Feature):
             "In addition, for the duration, you have advantage on saving throws against spells cast by fiends or undead.\n"
             "Once you use this feature, you can't use it again until you finish a long rest."
         )
-        return StringUtils.add_boxes(description, 1, regain_all_on="long rest")
-
-    def get_table_description(self, character_stat_block: CharacterStatBlock) -> list[tuple[str, str]]:
-        return [
-            ("Action", "Action"),
-            ("Duration", "1 minute"),
-            ("Light", "Bright 30 feet, dim 60 feet"),
-            ("Enemy Damage", "10 radiant to enemies starting turn in bright light"),
-            ("Saving Throws", "Advantage against fiends/undead spells"),
-            ("Recharge", "Long rest"),
-        ]
+        return description

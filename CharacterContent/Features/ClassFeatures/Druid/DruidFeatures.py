@@ -1,14 +1,13 @@
-from Core.Definitions import DRUID_HIT_DIE, Language
 from enum import Enum
 from typing import Type
 
-import Core.Definitions as Definitions
-from Combat.Definitions import ExtendedCombatantData
 from CharacterContent.Features.ClassFeatures.Druid.WildShapeForms import (
     format_wild_shape_form,
 )
-from CharacterContent.Features.Core.BaseFeatures import Feature
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses
 from CharacterContent.Features.Core.Improvements import GrantLanguage
+from Combat.Definitions import ExtendedCombatantData
+from Core.Definitions import Language
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
@@ -61,7 +60,9 @@ class Druidic(Feature):
 
 class PrimalOrder(Feature):
     def __init__(self, order: PrimalOrderType = PrimalOrderType.MAGICIAN):
-        super().__init__(name="Primal Order", origin="Druid Level 1", usage_tags=["buff"])
+        super().__init__(
+            name="Primal Order", origin="Druid Level 1", usage_tags=["buff"]
+        )
         self.order = order
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -79,7 +80,19 @@ class PrimalOrder(Feature):
 
 class WildShape(Feature):
     def __init__(self, known_forms: list[Type[ExtendedCombatantData]]):
-        super().__init__(name="Wild Shape", origin="Druid Level 2", action_type="bonus_action", duration="Until You Leave Form or are Incapacitated", usage_tags=["heal"])
+        super().__init__(
+            name="Wild Shape",
+            origin="Druid Level 2",
+            action_type="bonus_action",
+            duration="Until You Leave Form or are Incapacitated",
+            usage_tags=["heal"],
+            uses=FeatureUses(
+                max_uses=4,
+                regain_x_on=(1, "short rest"),
+                regain_all_on="long rest",
+                current_formula="Current amount: determined by your Druid level — 2 uses at levels 2-5, 3 at 6-16, 4 at 17+.",
+            ),
+        )
         self.known_forms = known_forms
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -101,16 +114,7 @@ class WildShape(Feature):
             "Objects. Your ability to handle objects is determined by the form's limbs rather than your own. In addition, you choose whether your equipment falls in your space, merges into your new form, or is worn by it. Worn equipment functions as normal, but the DM decides whether it's practical for the new form to wear a piece of equipment based on the creature's size and shape. Your equipment doesn't change size or shape to match the new form, and any equipment that the new form can't wear must either fall to the ground or merge with the form. Equipment that merges with the form has no effect while you're in that form.\n"
             "\nKnown Forms:\n" + known_forms_lines
         )
-        return StringUtils.add_boxes(
-            description,
-            4,
-            regain_x_on=(1, "short rest"),
-            regain_all_on="long rest",
-            current_formula=(
-                "Current amount: determined by your Druid level — 2 uses at "
-                "levels 2-5, 3 at 6-16, 4 at 17+."
-            ),
-        )
+        return description
 
     def get_resource_tiles(
         self, character_stat_block: CharacterStatBlock
@@ -146,7 +150,12 @@ class AdditionalWildShapeForms(Feature):
 
 class WildCompanion(Feature):
     def __init__(self):
-        super().__init__(name="Wild Companion", origin="Druid Level 2", action_type="action", duration="Until Long Rest")
+        super().__init__(
+            name="Wild Companion",
+            origin="Druid Level 2",
+            action_type="action",
+            duration="Until Long Rest",
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -198,7 +207,9 @@ class WildResurgence(Feature):
 
 class PotentSpellcasting(Feature):
     def __init__(self):
-        super().__init__(name="Potent Spellcasting", origin="Druid Level 7", usage_tags=["damage"])
+        super().__init__(
+            name="Potent Spellcasting", origin="Druid Level 7", usage_tags=["damage"]
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -209,7 +220,9 @@ class PotentSpellcasting(Feature):
 
 class PrimalStrike(Feature):
     def __init__(self):
-        super().__init__(name="Primal Strike", origin="Druid Level 7", usage_tags=["damage"])
+        super().__init__(
+            name="Primal Strike", origin="Druid Level 7", usage_tags=["damage"]
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -231,7 +244,11 @@ class ImprovedPotentSpellcasting(Feature):
 
 class ImprovedPrimalStrike(Feature):
     def __init__(self):
-        super().__init__(name="Improved Primal Strike", origin="Druid Level 15", usage_tags=["damage"])
+        super().__init__(
+            name="Improved Primal Strike",
+            origin="Druid Level 15",
+            usage_tags=["damage"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "The extra damage of your Primal Strike increases to 2d8."

@@ -1,44 +1,53 @@
 import Core.Definitions as Definitions
-from Core.Definitions import SORCERER_HIT_DIE, DamageType, Language
-from CharacterContent.Features.Core.BaseFeatures import Feature
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses
 from CharacterContent.Features.Core.Improvements import (
     DamageImmunity,
     DamageResistance,
     GrantLanguage,
 )
+from Core.Definitions import DamageType, Language
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
-from Utils import StringUtils
 
 
 class WindSpeaker(Feature):
     def __init__(self):
-        super().__init__(name="Wind Speaker", origin="Storm Sorcery Sorcerer Level 3", skippable_in_concise=True)
+        super().__init__(
+            name="Wind Speaker",
+            origin="Storm Sorcery Sorcerer Level 3",
+            skippable_in_concise=True,
+        )
         self._language = GrantLanguage(Language.PRIMORDIAL, self.name)
 
     def apply(self, character_stat_block: CharacterStatBlock):
         self._language.apply(character_stat_block)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        description = (
-            "The arcane magic you command is infused with elemental air. You can speak, read, and write Primordial. Knowing this language allows you to understand and be understood by those who speak its dialects: Aquan, Auran, Ignan, and Terran."
-        )
+        description = "The arcane magic you command is infused with elemental air. You can speak, read, and write Primordial. Knowing this language allows you to understand and be understood by those who speak its dialects: Aquan, Auran, Ignan, and Terran."
         return description
 
 
 class TempestuousMagic(Feature):
     def __init__(self):
-        super().__init__(name="Tempestuous Magic", origin="Storm Sorcery Sorcerer Level 3", action_type="bonus_action", usage_tags=["utility"])
+        super().__init__(
+            name="Tempestuous Magic",
+            origin="Storm Sorcery Sorcerer Level 3",
+            action_type="bonus_action",
+            usage_tags=["utility"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        description = (
-            "You can use a bonus action on your turn to cause whirling gusts of elemental air to briefly surround you, immediately before or after you cast a spell of 1st level or higher. Doing so allows you to fly up to 10 feet without provoking opportunity attacks."
-        )
+        description = "You can use a bonus action on your turn to cause whirling gusts of elemental air to briefly surround you, immediately before or after you cast a spell of 1st level or higher. Doing so allows you to fly up to 10 feet without provoking opportunity attacks."
         return description
 
 
 class HeartOfTheStorm(Feature):
     def __init__(self):
-        super().__init__(name="Heart of the Storm", origin="Storm Sorcery Sorcerer Level 6", range="10 Feet", usage_tags=["damage", "buff"])
+        super().__init__(
+            name="Heart of the Storm",
+            origin="Storm Sorcery Sorcerer Level 6",
+            range="10 Feet",
+            usage_tags=["damage", "buff"],
+        )
         self._resistances = [
             DamageResistance(DamageType.LIGHTNING, self.name),
             DamageResistance(DamageType.THUNDER, self.name),
@@ -49,15 +58,19 @@ class HeartOfTheStorm(Feature):
             resistance.apply(character_stat_block)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        description = (
-            "You gain resistance to lightning and thunder damage. In addition, whenever you start casting a spell of 1st level or higher that deals lightning or thunder damage, stormy magic erupts from you. This eruption causes creatures of your choice that you can see within 10 feet of you to take lightning or thunder damage (choose each time this ability activates) equal to half your sorcerer level."
-        )
+        description = "You gain resistance to lightning and thunder damage. In addition, whenever you start casting a spell of 1st level or higher that deals lightning or thunder damage, stormy magic erupts from you. This eruption causes creatures of your choice that you can see within 10 feet of you to take lightning or thunder damage (choose each time this ability activates) equal to half your sorcerer level."
         return description
 
 
 class StormGuide(Feature):
     def __init__(self):
-        super().__init__(name="Storm Guide", origin="Storm Sorcery Sorcerer Level 6", action_type="action", range="100-Foot Radius", usage_tags=["utility"])
+        super().__init__(
+            name="Storm Guide",
+            origin="Storm Sorcery Sorcerer Level 6",
+            action_type="action",
+            range="100-Foot Radius",
+            usage_tags=["utility"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -70,18 +83,25 @@ class StormGuide(Feature):
 
 class StormsFury(Feature):
     def __init__(self):
-        super().__init__(name="Storm's Fury", origin="Storm Sorcery Sorcerer Level 14", action_type="reaction", range="20 Feet", usage_tags=["damage", "control"])
+        super().__init__(
+            name="Storm's Fury",
+            origin="Storm Sorcery Sorcerer Level 14",
+            action_type="reaction",
+            range="20 Feet",
+            usage_tags=["damage", "control"],
+            uses=FeatureUses(max_uses=1, regain_all_on="long rest"),
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        description = (
-            "When you are hit by a melee attack, you can use your reaction to deal lightning damage to the attacker. The damage equals your sorcerer level. The attacker must also make a Strength saving throw against your sorcerer spell save DC. On a failed save, the attacker is pushed in a straight line up to 20 feet away from you."
-        )
-        return StringUtils.add_boxes(description, 1, regain_all_on="long rest")
+        description = "When you are hit by a melee attack, you can use your reaction to deal lightning damage to the attacker. The damage equals your sorcerer level. The attacker must also make a Strength saving throw against your sorcerer spell save DC. On a failed save, the attacker is pushed in a straight line up to 20 feet away from you."
+        return description
 
     def get_table_description(
         self, character_stat_block: CharacterStatBlock
     ) -> list[tuple[str, str]]:
-        sorcerer_level = character_stat_block.get_class_level(Definitions.CharacterClass.SORCERER)
+        sorcerer_level = character_stat_block.get_class_level(
+            Definitions.CharacterClass.SORCERER
+        )
         return [
             ("Trigger", "Hit by melee attack"),
             ("Action", "Reaction"),
@@ -93,7 +113,14 @@ class StormsFury(Feature):
 
 class WindSoul(Feature):
     def __init__(self):
-        super().__init__(name="Wind Soul", origin="Storm Sorcery Sorcerer Level 18", action_type="action", duration="1 Hour", range="30 Feet", usage_tags=["utility", "buff"])
+        super().__init__(
+            name="Wind Soul",
+            origin="Storm Sorcery Sorcerer Level 18",
+            action_type="action",
+            duration="1 Hour",
+            range="30 Feet",
+            usage_tags=["utility", "buff"],
+        )
         self._immunities = [
             DamageImmunity(DamageType.LIGHTNING, self.name),
             DamageImmunity(DamageType.THUNDER, self.name),

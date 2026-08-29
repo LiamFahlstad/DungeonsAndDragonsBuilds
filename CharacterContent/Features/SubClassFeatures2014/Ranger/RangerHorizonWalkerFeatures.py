@@ -1,7 +1,6 @@
-from Core.Definitions import Ability, CharacterClass, RANGER_HIT_DIE
 from CharacterContent.Features.Core.BaseFeatures import Feature
+from Core.Definitions import CharacterClass
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
-from Utils import StringUtils
 
 
 class HorizonWalkerSpells(Feature):
@@ -27,16 +26,20 @@ class HorizonWalkerSpells(Feature):
 class DetectPortal(Feature):
     def __init__(self):
         super().__init__(
-            name="Detect Portal", origin="Horizon Walker Ranger Level 3", action_type="action", range="1 Mile", usage_tags=["utility"]
+            name="Detect Portal",
+            origin="Horizon Walker Ranger Level 3",
+            action_type="action",
+            range="1 Mile",
+            usage_tags=["utility"],
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
             "You gain the ability to magically sense the presence of a planar portal. As an action, you detect the distance and direction to the closest planar portal within 1 mile of you.\n"
             "Once you use this feature, you can't use it again until you finish a short or long rest.\n"
-            "See the \"Planar Travel\" section in chapter 2 of the Dungeon Master's Guide for examples of planar portals."
+            'See the "Planar Travel" section in chapter 2 of the Dungeon Master\'s Guide for examples of planar portals.'
         )
-        return StringUtils.add_boxes(description, 1, regain_all_on="short or long rest")
+        return description
 
     def get_table_description(
         self, character_stat_block: CharacterStatBlock
@@ -52,7 +55,12 @@ class DetectPortal(Feature):
 class PlanarWarrior(Feature):
     def __init__(self):
         super().__init__(
-            name="Planar Warrior", origin="Horizon Walker Ranger Level 3", action_type="bonus_action", duration="Until Next Hit on This Turn", range="30 Feet", usage_tags=["damage", "buff"]
+            name="Planar Warrior",
+            origin="Horizon Walker Ranger Level 3",
+            action_type="bonus_action",
+            duration="Until Next Hit on This Turn",
+            range="30 Feet",
+            usage_tags=["damage", "buff"],
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -72,14 +80,21 @@ class PlanarWarrior(Feature):
             ("Action", "Bonus action"),
             ("Range", "30 feet"),
             ("Condition", "Next hit on this turn"),
-            ("Effect", "All damage becomes force; extra " + extra_damage + " force damage"),
+            (
+                "Effect",
+                "All damage becomes force; extra " + extra_damage + " force damage",
+            ),
         ]
 
 
 class EtherealStep(Feature):
     def __init__(self):
         super().__init__(
-            name="Ethereal Step", origin="Horizon Walker Ranger Level 7", action_type="bonus_action", duration="Until End of Current Turn", usage_tags=["utility"]
+            name="Ethereal Step",
+            origin="Horizon Walker Ranger Level 7",
+            action_type="bonus_action",
+            duration="Until End of Current Turn",
+            usage_tags=["utility"],
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -87,7 +102,7 @@ class EtherealStep(Feature):
             "You learn to step through the Ethereal Plane. As a bonus action on your turn, you can cast the Etherealness spell with this feature, without expending a spell slot, but the spell ends at the end of the current turn.\n"
             "Once you use this feature, you can't use it again until you finish a short or long rest."
         )
-        return StringUtils.add_boxes(description, 1, regain_all_on="short or long rest")
+        return description
 
     def get_table_description(
         self, character_stat_block: CharacterStatBlock
@@ -103,7 +118,9 @@ class EtherealStep(Feature):
 class DistantStrike(Feature):
     def __init__(self):
         super().__init__(
-            name="Distant Strike", origin="Horizon Walker Ranger Level 11", usage_tags=["damage", "utility"]
+            name="Distant Strike",
+            origin="Horizon Walker Ranger Level 11",
+            usage_tags=["damage", "utility"],
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -117,11 +134,13 @@ class DistantStrike(Feature):
 class SpectralDefense(Feature):
     def __init__(self):
         super().__init__(
-            name="Spectral Defense", origin="Horizon Walker Ranger Level 15", action_type="reaction", duration="Until End of This Turn", usage_tags=["buff"]
+            name="Spectral Defense",
+            origin="Horizon Walker Ranger Level 15",
+            action_type="reaction",
+            duration="Until End of This Turn",
+            usage_tags=["buff"],
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        description = (
-            "Your ability to move between planes enables you to slip through the planar boundaries to lessen the harm done to you during battle. When you take damage from an attack, you can use your reaction to give yourself resistance to all of that attack's damage on this turn."
-        )
+        description = "Your ability to move between planes enables you to slip through the planar boundaries to lessen the harm done to you during battle. When you take damage from an attack, you can use your reaction to give yourself resistance to all of that attack's damage on this turn."
         return description

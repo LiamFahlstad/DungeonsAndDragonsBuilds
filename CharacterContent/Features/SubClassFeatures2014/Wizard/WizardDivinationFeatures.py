@@ -1,7 +1,5 @@
-from Core.Definitions import Ability, WIZARD_HIT_DIE
-from CharacterContent.Features.Core.BaseFeatures import Feature
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
-from Utils import StringUtils
 
 
 class DivinationSavant(Feature):
@@ -37,7 +35,14 @@ class ExpertDivination(Feature):
 
 class TheThirdEye(Feature):
     def __init__(self):
-        super().__init__(name="The Third Eye", origin="Divination Wizard Level 10", action_type="action", duration="Until Incapacitated Or Until Short Or Long Rest", usage_tags=["utility"])
+        super().__init__(
+            name="The Third Eye",
+            origin="Divination Wizard Level 10",
+            action_type="action",
+            duration="Until Incapacitated Or Until Short Or Long Rest",
+            usage_tags=["utility"],
+            uses=FeatureUses(max_uses=1, regain_all_on="short or long rest"),
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -48,7 +53,7 @@ class TheThirdEye(Feature):
             "    * Greater Comprehension. You can read any language.\n"
             "    * See Invisibility. You can see invisible creatures and objects within 10 feet of you that are within line of sight."
         )
-        return StringUtils.add_boxes(description, 1, regain_all_on="short or long rest")
+        return description
 
 
 class GreaterPortent(Feature):

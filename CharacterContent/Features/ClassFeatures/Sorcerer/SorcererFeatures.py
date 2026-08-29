@@ -1,6 +1,5 @@
 import Core.Definitions as Definitions
-from Core.Definitions import SORCERER_HIT_DIE
-from CharacterContent.Features.Core.BaseFeatures import Feature
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
@@ -32,7 +31,14 @@ class Spellcasting(Feature):
 
 class InnateSorcery(Feature):
     def __init__(self):
-        super().__init__(name="Innate Sorcery", origin="Sorcerer Level 1", action_type="bonus_action", duration="1 Minute", usage_tags=["buff"])
+        super().__init__(
+            name="Innate Sorcery",
+            origin="Sorcerer Level 1",
+            action_type="bonus_action",
+            duration="1 Minute",
+            usage_tags=["buff"],
+            uses=FeatureUses(max_uses=2, regain_all_on="long rest"),
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -41,7 +47,7 @@ class InnateSorcery(Feature):
             "You have Advantage on the attack rolls of Sorcerer spells you cast.\n"
             "You can use this feature twice, and you regain all expended uses of it when you finish a Long Rest."
         )
-        return StringUtils.add_boxes(description, 2, regain_all_on="long rest")
+        return description
 
     def get_table_description(
         self, character_stat_block: CharacterStatBlock
@@ -56,7 +62,15 @@ class InnateSorcery(Feature):
 
 class FontOfMagic(Feature):
     def __init__(self):
-        super().__init__(name="Font of Magic", origin="Sorcerer Level 2")
+        super().__init__(
+            name="Font of Magic",
+            origin="Sorcerer Level 2",
+            uses=FeatureUses(
+                max_uses=20,
+                regain_all_on="long rest",
+                current_formula="Current amount: equal to your Sorcerer level.",
+            ),
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -73,12 +87,7 @@ class FontOfMagic(Feature):
             "           4        |         6          |           7           \n"
             "           5        |         7          |           9           "
         )
-        return StringUtils.add_boxes(
-            description,
-            20,
-            regain_all_on="long rest",
-            current_formula="Current amount: equal to your Sorcerer level.",
-        )
+        return description
 
     def get_resource_tiles(
         self, character_stat_block: CharacterStatBlock
@@ -133,9 +142,7 @@ class Metamagic(Feature):
         ]
         return [("Metamagic Options Known", steps)]
 
-    def get_concise_description(
-        self, character_stat_block: CharacterStatBlock
-    ) -> str:
+    def get_concise_description(self, character_stat_block: CharacterStatBlock) -> str:
         sorcerer_level = character_stat_block.get_class_level(
             Definitions.CharacterClass.SORCERER
         )
@@ -163,7 +170,9 @@ class SorcerousRestoration(Feature):
 
 class SorceryIncarnate(Feature):
     def __init__(self):
-        super().__init__(name="Sorcery Incarnate", origin="Sorcerer Level 7", usage_tags=["buff"])
+        super().__init__(
+            name="Sorcery Incarnate", origin="Sorcerer Level 7", usage_tags=["buff"]
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -175,7 +184,9 @@ class SorceryIncarnate(Feature):
 
 class ArcaneApotheosis(Feature):
     def __init__(self):
-        super().__init__(name="Arcane Apotheosis", origin="Sorcerer Level 20", usage_tags=["buff"])
+        super().__init__(
+            name="Arcane Apotheosis", origin="Sorcerer Level 20", usage_tags=["buff"]
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "While your Innate Sorcery feature is active, you can use one Metamagic option on each of your turns without spending Sorcery Points on it."

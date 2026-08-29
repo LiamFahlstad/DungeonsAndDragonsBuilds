@@ -1,5 +1,5 @@
 from Core.Definitions import MONK_HIT_DIE
-from CharacterContent.Features.Core.BaseFeatures import Feature
+from CharacterContent.Features.Core.BaseFeatures import FeatureUses, Feature
 from CharacterContent.Items.Weapons import WeaponDamageRolls
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
@@ -101,7 +101,7 @@ class DeftStrike(Feature):
             "When you hit a target with a kensei weapon, you can spend 1 ki point to cause the weapon to deal extra damage to the target "
             "equal to your Martial Arts die. You can use this feature only once on each of your turns."
         )
-        return StringUtils.add_boxes(description, 1, regain_all_on="turn")
+        return description
 
 
 class SharpenTheBlade(Feature):
@@ -136,4 +136,4 @@ class UnearringAccuracy(Feature):
             "Your mastery of weapons grants you extraordinary accuracy. If you miss with an attack roll using a monk weapon on your turn, "
             "you can reroll it. You can use this feature only once on each of your turns."
         )
-        return StringUtils.add_boxes(description, 1, regain_all_on="turn")
+        return description

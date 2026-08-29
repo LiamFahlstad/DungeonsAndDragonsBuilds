@@ -1,5 +1,5 @@
 from Core.Definitions import Ability
-from CharacterContent.Features.Core.BaseFeatures import Feature
+from CharacterContent.Features.Core.BaseFeatures import FeatureUses, Feature
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
@@ -36,7 +36,7 @@ class MoteOfPotential(Feature):
 
 class PerformanceOfCreation(Feature):
     def __init__(self):
-        super().__init__(name="Performance of Creation", origin="College of Creation Bard Level 3", action_type="action", duration="Proficiency Bonus Hours", range="10 Feet", usage_tags=["utility"])
+        super().__init__(name="Performance of Creation", origin="College of Creation Bard Level 3", action_type="action", duration="Proficiency Bonus Hours", range="10 Feet", usage_tags=["utility"], uses=FeatureUses(max_uses=1, regain_all_on="long rest"))
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -46,12 +46,12 @@ class PerformanceOfCreation(Feature):
             "\n"
             "The size of the item you can create with this feature increases by one size category when you reach 6th level (Large) and 14th level (Huge)."
         )
-        return StringUtils.add_boxes(description, 1, regain_all_on="long rest")
+        return description
 
 
 class AnimatingPerformance(Feature):
     def __init__(self):
-        super().__init__(name="Animating Performance", origin="College of Creation Bard Level 6", action_type="action", duration="1 Hour or Until Reduced to 0 HP or Death", range="30 Feet", usage_tags=["utility"])
+        super().__init__(name="Animating Performance", origin="College of Creation Bard Level 6", action_type="action", duration="1 Hour or Until Reduced to 0 HP or Death", range="30 Feet", usage_tags=["utility"], uses=FeatureUses(max_uses=1, regain_all_on="long rest"))
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -81,7 +81,7 @@ class AnimatingPerformance(Feature):
             "Actions\n"
             "Force-Empowered Slam. Melee Weapon Attack: your spell attack modifier to hit, reach 5 ft., one target you can see. Hit: 1d10 + PB force damage."
         )
-        return StringUtils.add_boxes(description, 1, regain_all_on="long rest")
+        return description
 
 
 class CreativeCrescendo(Feature):

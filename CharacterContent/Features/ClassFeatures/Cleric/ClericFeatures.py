@@ -1,7 +1,6 @@
-import Core.Definitions as Definitions
-from Core.Definitions import Ability, Skill
-from CharacterContent.Features.Core.BaseFeatures import Feature
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses
 from CharacterContent.Features.Core.Improvements import SkillBonus
+from Core.Definitions import Ability, Skill
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
@@ -42,7 +41,11 @@ class DivineOrderProtector(Feature):
 
 class DivineOrderThaumaturge(Feature):
     def __init__(self, extra_cantrip: str):
-        super().__init__(name="Divine Order: Thaumaturge", origin="Cleric Level 1", usage_tags=["buff"])
+        super().__init__(
+            name="Divine Order: Thaumaturge",
+            origin="Cleric Level 1",
+            usage_tags=["buff"],
+        )
         self.extra_cantrip = extra_cantrip
 
     def apply(self, character_stat_block: CharacterStatBlock):
@@ -60,7 +63,20 @@ class DivineOrderThaumaturge(Feature):
 
 class ChannelDivinity(Feature):
     def __init__(self):
-        super().__init__(name="Channel Divinity", origin="Cleric Level 2", action_type="action", duration="1 Minute", range="30 Feet", usage_tags=["heal", "damage", "control"])
+        super().__init__(
+            name="Channel Divinity",
+            origin="Cleric Level 2",
+            action_type="action",
+            duration="1 Minute",
+            range="30 Feet",
+            usage_tags=["heal", "damage", "control"],
+            uses=FeatureUses(
+                max_uses=4,
+                regain_x_on=(1, "short rest"),
+                regain_all_on="long rest",
+                current_formula="Current amount: determined by your character level — 2 uses at levels 1-5, 3 at 6-17, 4 at 18+.",
+            ),
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -71,16 +87,7 @@ class ChannelDivinity(Feature):
             "You roll an additional d8 when you reach Cleric levels 7 (2d8), 13 (3d8), and 18 (4d8).\n"
             "Turn Undead. As a Magic action, you present your Holy Symbol and censure Undead creatures. Each Undead of your choice within 30 feet of you must make a Wisdom saving throw. If the creature fails its save, it has the Frightened and Incapacitated conditions for 1 minute. For that duration, it tries to move as far from you as it can on its turns. This effect ends early on the creature if it takes any damage, if you have the Incapacitated condition, or if you die."
         )
-        return StringUtils.add_boxes(
-            description,
-            4,
-            regain_x_on=(1, "short rest"),
-            regain_all_on="long rest",
-            current_formula=(
-                "Current amount: determined by your character level — 2 uses "
-                "at levels 1-5, 3 at 6-17, 4 at 18+."
-            ),
-        )
+        return description
 
     def get_resource_tiles(
         self, character_stat_block: CharacterStatBlock
@@ -104,7 +111,9 @@ class ChannelDivinity(Feature):
 
 class SearUndead(Feature):
     def __init__(self):
-        super().__init__(name="Sear Undead", origin="Cleric Level 5", usage_tags=["damage"])
+        super().__init__(
+            name="Sear Undead", origin="Cleric Level 5", usage_tags=["damage"]
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "Whenever you use Turn Undead, you can roll a number of d8s equal to your Wisdom modifier (minimum of 1d8) and add the rolls together. Each Undead that fails its saving throw against that use of Turn Undead takes Radiant damage equal to the roll's total. This damage doesn't end the turn effect."
@@ -113,7 +122,9 @@ class SearUndead(Feature):
 
 class DivineStrike(Feature):
     def __init__(self):
-        super().__init__(name="Divine Strike", origin="Cleric Level 7", usage_tags=["damage"])
+        super().__init__(
+            name="Divine Strike", origin="Cleric Level 7", usage_tags=["damage"]
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "Once on each of your turns when you hit a creature with an attack roll using a weapon, you can cause the target to take an extra 1d8 Necrotic or Radiant damage (your choice)."
@@ -122,7 +133,9 @@ class DivineStrike(Feature):
 
 class PotentSpellcasting(Feature):
     def __init__(self):
-        super().__init__(name="Potent Spellcasting", origin="Cleric Level 7", usage_tags=["buff"])
+        super().__init__(
+            name="Potent Spellcasting", origin="Cleric Level 7", usage_tags=["buff"]
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -133,7 +146,9 @@ class PotentSpellcasting(Feature):
 
 class DivineIntervention(Feature):
     def __init__(self):
-        super().__init__(name="Divine Intervention", origin="Cleric Level 10", action_type="action")
+        super().__init__(
+            name="Divine Intervention", origin="Cleric Level 10", action_type="action"
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "You can call on your deity or pantheon to intervene on your behalf. As a Magic action, choose any Cleric spell of level 5 or lower that doesn't require a Reaction to cast. As part of the same action, you cast that spell without expending a spell slot or needing Material components. You can't use this feature again until you finish a Long Rest."
@@ -155,7 +170,11 @@ class DivineIntervention(Feature):
 
 class ImprovedDivineStrike(Feature):
     def __init__(self):
-        super().__init__(name="Improved Divine Strike", origin="Cleric Level 14", usage_tags=["damage"])
+        super().__init__(
+            name="Improved Divine Strike",
+            origin="Cleric Level 14",
+            usage_tags=["damage"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "The extra damage of your Divine Strike increases to 2d8."
@@ -164,7 +183,12 @@ class ImprovedDivineStrike(Feature):
 
 class ImprovedPotentSpellcasting(Feature):
     def __init__(self):
-        super().__init__(name="Improved Potent Spellcasting", origin="Cleric Level 14", range="60 Feet", usage_tags=["heal"])
+        super().__init__(
+            name="Improved Potent Spellcasting",
+            origin="Cleric Level 14",
+            range="60 Feet",
+            usage_tags=["heal"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         wisdom_modifier = character_stat_block.get_ability_modifier(Ability.WISDOM)

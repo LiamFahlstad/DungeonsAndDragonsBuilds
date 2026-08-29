@@ -1,5 +1,5 @@
 from Core.Definitions import Ability, DamageType, MAX_ABILITY_MODIFIER, WARLOCK_HIT_DIE
-from CharacterContent.Features.Core.BaseFeatures import Feature
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses
 from CharacterContent.Features.Core.Improvements import DamageResistance
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
@@ -7,7 +7,7 @@ from Utils import StringUtils
 
 class FormOfDread(Feature):
     def __init__(self):
-        super().__init__(name="Form of Dread", origin="Undead Patron Warlock Level 3", action_type="bonus_action", duration="1 Minute", usage_tags=["heal", "buff", "control"])
+        super().__init__(name="Form of Dread", origin="Undead Patron Warlock Level 3", action_type="bonus_action", duration="1 Minute", usage_tags=["heal", "buff", "control"], uses=FeatureUses(max_uses=MAX_ABILITY_MODIFIER, regain_all_on="long rest", current_formula="Current amount: equal to your Charisma modifier."))
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -16,12 +16,7 @@ class FormOfDread(Feature):
             "Fearless Form. You have Immunity to the Frightened condition. If you are Frightened when you transform, the condition immediately ends for you.\n"
             "Frightful Avatar. Once per turn, when you hit a creature with an attack roll, you can force it to make a Wisdom saving throw against your spell save DC. On a failed save, the target has the Frightened condition until the end of your next turn."
         )
-        return StringUtils.add_boxes(
-            description,
-            MAX_ABILITY_MODIFIER,
-            regain_all_on="long rest",
-            current_formula="Current amount: equal to your Charisma modifier.",
-        )
+        return description
 
 class UndeadSpells(Feature):
     def __init__(self):

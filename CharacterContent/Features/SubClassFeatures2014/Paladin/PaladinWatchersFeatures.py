@@ -1,13 +1,15 @@
-from Core.Definitions import Ability
-from CharacterContent.Features.Core.BaseFeatures import Feature
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses
 from CharacterContent.Features.Core.Improvements import InitiativeProficiency
+from Core.Definitions import Ability
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
-from Utils import StringUtils
 
 
 class WatchersSpells(Feature):
     def __init__(self):
-        super().__init__(name="Oath of the Watchers Spells", origin="Oath of the Watchers Paladin Level 3")
+        super().__init__(
+            name="Oath of the Watchers Spells",
+            origin="Oath of the Watchers Paladin Level 3",
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -25,7 +27,14 @@ class WatchersSpells(Feature):
 
 class WatchersWill(Feature):
     def __init__(self):
-        super().__init__(name="Channel Divinity: Watcher's Will", origin="Oath of the Watchers Paladin Level 3", action_type="action", duration="1 Minute", range="30 Feet", usage_tags=["buff"])
+        super().__init__(
+            name="Channel Divinity: Watcher's Will",
+            origin="Oath of the Watchers Paladin Level 3",
+            action_type="action",
+            duration="1 Minute",
+            range="30 Feet",
+            usage_tags=["buff"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         charisma_modifier = character_stat_block.get_ability_modifier(Ability.CHARISMA)
@@ -36,7 +45,9 @@ class WatchersWill(Feature):
         )
         return description
 
-    def get_table_description(self, character_stat_block: CharacterStatBlock) -> list[tuple[str, str]]:
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
         charisma_modifier = character_stat_block.get_ability_modifier(Ability.CHARISMA)
         creature_count = max(1, charisma_modifier)
         return [
@@ -50,7 +61,14 @@ class WatchersWill(Feature):
 
 class AbjureTheExtraplanar(Feature):
     def __init__(self):
-        super().__init__(name="Channel Divinity: Abjure the Extraplanar", origin="Oath of the Watchers Paladin Level 3", action_type="action", duration="1 Minute or Until Takes Damage", range="30 Feet", usage_tags=["control"])
+        super().__init__(
+            name="Channel Divinity: Abjure the Extraplanar",
+            origin="Oath of the Watchers Paladin Level 3",
+            action_type="action",
+            duration="1 Minute or Until Takes Damage",
+            range="30 Feet",
+            usage_tags=["control"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -63,7 +81,12 @@ class AbjureTheExtraplanar(Feature):
 
 class AuraOfTheSentinel(Feature):
     def __init__(self):
-        super().__init__(name="Aura of the Sentinel", origin="Oath of the Watchers Paladin Level 7", range="10 Feet (30 at 18th Level)", usage_tags=["buff"])
+        super().__init__(
+            name="Aura of the Sentinel",
+            origin="Oath of the Watchers Paladin Level 7",
+            range="10 Feet (30 at 18th Level)",
+            usage_tags=["buff"],
+        )
 
     def apply(self, character_stat_block: CharacterStatBlock):
         InitiativeProficiency().apply(character_stat_block)
@@ -78,7 +101,9 @@ class AuraOfTheSentinel(Feature):
         )
         return description
 
-    def get_table_description(self, character_stat_block: CharacterStatBlock) -> list[tuple[str, str]]:
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
         proficiency_bonus = character_stat_block.get_proficiency_bonus()
         return [
             ("Range", "10 feet (30 at 18th level)"),
@@ -90,7 +115,10 @@ class AuraOfTheSentinel(Feature):
 
 class AuraOfTheSentinelExpansion(Feature):
     def __init__(self):
-        super().__init__(name="Aura of the Sentinel Expansion", origin="Oath of the Watchers Paladin Level 18")
+        super().__init__(
+            name="Aura of the Sentinel Expansion",
+            origin="Oath of the Watchers Paladin Level 18",
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "The range of your Aura of the Sentinel increases to 30 feet."
@@ -99,7 +127,13 @@ class AuraOfTheSentinelExpansion(Feature):
 
 class VigilantRebuke(Feature):
     def __init__(self):
-        super().__init__(name="Vigilant Rebuke", origin="Oath of the Watchers Paladin Level 15", action_type="reaction", range="30 Feet", usage_tags=["damage"])
+        super().__init__(
+            name="Vigilant Rebuke",
+            origin="Oath of the Watchers Paladin Level 15",
+            action_type="reaction",
+            range="30 Feet",
+            usage_tags=["damage"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         charisma_modifier = character_stat_block.get_ability_modifier(Ability.CHARISMA)
@@ -109,7 +143,9 @@ class VigilantRebuke(Feature):
         )
         return description
 
-    def get_table_description(self, character_stat_block: CharacterStatBlock) -> list[tuple[str, str]]:
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
         charisma_modifier = character_stat_block.get_ability_modifier(Ability.CHARISMA)
         return [
             ("Trigger", "You or ally within 30 feet succeeds on INT/WIS/CHA save"),
@@ -120,7 +156,15 @@ class VigilantRebuke(Feature):
 
 class MortalBulwark(Feature):
     def __init__(self):
-        super().__init__(name="Mortal Bulwark", origin="Oath of the Watchers Paladin Level 20", action_type="bonus_action", duration="1 Minute", range="120 Feet (Truesight)", usage_tags=["buff", "control"])
+        super().__init__(
+            name="Mortal Bulwark",
+            origin="Oath of the Watchers Paladin Level 20",
+            action_type="bonus_action",
+            duration="1 Minute",
+            range="120 Feet (Truesight)",
+            usage_tags=["buff", "control"],
+            uses=FeatureUses(max_uses=1, regain_all_on="long rest"),
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -131,15 +175,4 @@ class MortalBulwark(Feature):
             "\n"
             "Once you use this bonus action, you can't use it again until you finish a long rest, unless you expend a 5th-level spell slot to use it again."
         )
-        return StringUtils.add_boxes(description, 1, regain_all_on="long rest")
-
-    def get_table_description(self, character_stat_block: CharacterStatBlock) -> list[tuple[str, str]]:
-        return [
-            ("What", "Manifest divine power for defense"),
-            ("Action", "Bonus action"),
-            ("Duration", "1 minute"),
-            ("Truesight", "120-foot range"),
-            ("Attack Advantage", "Against aberrations, celestials, elementals, fey, fiends"),
-            ("Banishment", "Hit forces CHA save vs spell DC; fail = banish to native plane; success = can't banish for 24 hours"),
-            ("Recharge", "Long rest (or 5th-level slot to use again)"),
-        ]
+        return description

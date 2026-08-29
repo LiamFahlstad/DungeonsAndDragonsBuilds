@@ -1,13 +1,15 @@
-from Core.Definitions import Ability, MAX_ABILITY_MODIFIER, PALADIN_HIT_DIE
-from CharacterContent.Features.Core.BaseFeatures import Feature
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses
+from Core.Definitions import MAX_ABILITY_MODIFIER, Ability
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
-from Utils import StringUtils
 
 
 class ElementalSmite(Feature):
     def __init__(self):
         super().__init__(
-            name="Elemental Smite", origin="Oath of the Noble Genies Paladin Level 3", range="30 Feet", usage_tags=["damage", "control", "buff"]
+            name="Elemental Smite",
+            origin="Oath of the Noble Genies Paladin Level 3",
+            range="30 Feet",
+            usage_tags=["damage", "control", "buff"],
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -26,10 +28,22 @@ class ElementalSmite(Feature):
         return [
             ("Trigger", "Cast Divine Smite"),
             ("Cost", "1 Channel Divinity use"),
-            ("Dao's Crush", "Target Grappled (escape DC = spell save DC), Restrained while Grappled"),
-            ("Djinni's Escape", "Teleport within 30 ft, semi-incorporeal until end of next turn; Resist B/P/S, Immune to Grappled/Prone/Restrained"),
-            ("Efreeti's Fury", "Target takes 2d4 Fire; fire jumps to another creature within 30 ft for 2d4 Fire"),
-            ("Marid's Surge", "Target and up to 10-ft Emanation of creatures save Strength; on fail, pushed 15 ft and Prone"),
+            (
+                "Dao's Crush",
+                "Target Grappled (escape DC = spell save DC), Restrained while Grappled",
+            ),
+            (
+                "Djinni's Escape",
+                "Teleport within 30 ft, semi-incorporeal until end of next turn; Resist B/P/S, Immune to Grappled/Prone/Restrained",
+            ),
+            (
+                "Efreeti's Fury",
+                "Target takes 2d4 Fire; fire jumps to another creature within 30 ft for 2d4 Fire",
+            ),
+            (
+                "Marid's Surge",
+                "Target and up to 10-ft Emanation of creatures save Strength; on fail, pushed 15 ft and Prone",
+            ),
         ]
 
 
@@ -56,7 +70,9 @@ class GenieSpells(Feature):
 class GeniesSplendor(Feature):
     def __init__(self):
         super().__init__(
-            name="Genie's Splendor", origin="Oath of the Noble Genies Paladin Level 3", usage_tags=["buff"]
+            name="Genie's Splendor",
+            origin="Oath of the Noble Genies Paladin Level 3",
+            usage_tags=["buff"],
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -72,7 +88,7 @@ class AuraOfElementalShielding(Feature):
         super().__init__(
             name="Aura of Elemental Shielding",
             origin="Oath of the Noble Genies Paladin Level 7",
-            usage_tags=["buff"]
+            usage_tags=["buff"],
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -86,7 +102,15 @@ class AuraOfElementalShielding(Feature):
 class ElementalRebuke(Feature):
     def __init__(self):
         super().__init__(
-            name="Elemental Rebuke", origin="Oath of the Noble Genies Paladin Level 15", action_type="reaction", usage_tags=["damage", "buff"]
+            name="Elemental Rebuke",
+            origin="Oath of the Noble Genies Paladin Level 15",
+            action_type="reaction",
+            usage_tags=["damage", "buff"],
+            uses=FeatureUses(
+                max_uses=MAX_ABILITY_MODIFIER,
+                regain_all_on="long rest",
+                current_formula="Current amount: equal to your Charisma modifier.",
+            ),
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -94,14 +118,11 @@ class ElementalRebuke(Feature):
             "When you are hit by an attack roll, you can take a Reaction to halve the attack's damage against yourself (round down) and force the attacker to make a Dexterity saving throw against your spell save DC. On a failed save, the attacker takes damage equal to 2d10 plus your Charisma modifier of one of the following types (your choice): Acid, Cold, Fire, Lightning, or Thunder. On a successful save, the attacker takes half as much damage.\n"
             "You regain all expended uses when you finish a Long Rest."
         )
-        return StringUtils.add_boxes(
-            description,
-            MAX_ABILITY_MODIFIER,
-            regain_all_on="long rest",
-            current_formula="Current amount: equal to your Charisma modifier.",
-        )
+        return description
 
-    def get_table_description(self, character_stat_block: CharacterStatBlock) -> list[tuple[str, str]]:
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
         charisma_modifier = character_stat_block.get_ability_modifier(Ability.CHARISMA)
         uses = max(1, charisma_modifier)
         return [
@@ -109,7 +130,10 @@ class ElementalRebuke(Feature):
             ("Action", "Reaction"),
             ("Damage Reduction", "Halve attack damage (round down)"),
             ("Save", "Dexterity against spell save DC"),
-            ("Damage on Fail", "2d10 + Charisma modifier (Acid, Cold, Fire, Lightning, or Thunder)"),
+            (
+                "Damage on Fail",
+                "2d10 + Charisma modifier (Acid, Cold, Fire, Lightning, or Thunder)",
+            ),
             ("Damage on Success", "Half damage"),
             ("Uses", f"{uses} per Long Rest"),
         ]
@@ -118,7 +142,11 @@ class ElementalRebuke(Feature):
 class NobleScion(Feature):
     def __init__(self):
         super().__init__(
-            name="Noble Scion", origin="Oath of the Noble Genies Paladin Level 20", action_type="bonus_action", duration="10 Minutes or Until Ended", usage_tags=["buff", "utility"]
+            name="Noble Scion",
+            origin="Oath of the Noble Genies Paladin Level 20",
+            action_type="bonus_action",
+            duration="10 Minutes or Until Ended",
+            usage_tags=["buff", "utility"],
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -129,11 +157,16 @@ class NobleScion(Feature):
         )
         return description
 
-    def get_table_description(self, character_stat_block: CharacterStatBlock) -> list[tuple[str, str]]:
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
         return [
             ("Action", "Bonus Action"),
             ("Duration", "10 minutes (or until ended)"),
             ("Recharge", "Once per Long Rest (or spend level 5 spell slot)"),
             ("Flight", "Fly Speed 60 feet, can hover"),
-            ("Minor Wish", "Reaction: when you or ally in aura fails D20 Test, make them succeed instead"),
+            (
+                "Minor Wish",
+                "Reaction: when you or ally in aura fails D20 Test, make them succeed instead",
+            ),
         ]

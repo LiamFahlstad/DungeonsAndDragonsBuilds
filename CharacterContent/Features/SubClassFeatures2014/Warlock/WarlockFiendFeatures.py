@@ -1,7 +1,5 @@
-from Core.Definitions import Ability, WARLOCK_HIT_DIE
-from CharacterContent.Features.Core.BaseFeatures import Feature
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
-from Utils import StringUtils
 
 
 class FiendExpandedSpells(Feature):
@@ -27,8 +25,9 @@ class FiendExpandedSpells(Feature):
 class DarkOnesBlessing(Feature):
     def __init__(self):
         super().__init__(
-            name="Dark One's Blessing", origin="The Fiend Patron Warlock Level 3",
-            usage_tags=["heal"]
+            name="Dark One's Blessing",
+            origin="The Fiend Patron Warlock Level 3",
+            usage_tags=["heal"],
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -39,8 +38,10 @@ class DarkOnesBlessing(Feature):
 class DarkOnesOwnLuck(Feature):
     def __init__(self):
         super().__init__(
-            name="Dark One's Own Luck", origin="The Fiend Patron Warlock Level 6",
-            usage_tags=["buff"]
+            name="Dark One's Own Luck",
+            origin="The Fiend Patron Warlock Level 6",
+            usage_tags=["buff"],
+            uses=FeatureUses(max_uses=1, regain_all_on="short or long rest"),
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -48,7 +49,7 @@ class DarkOnesOwnLuck(Feature):
             "You can call on your patron to alter fate in your favor. When you make an ability check or a saving throw, you can use this feature to add a d10 to your roll. You can do so after seeing the initial roll but before any of the roll's effects occur.\n"
             "Once you use this feature, you can't use it again until you finish a Short or Long Rest."
         )
-        return StringUtils.add_boxes(description, 1, regain_all_on="short or long rest")
+        return description
 
     def get_table_description(
         self, character_stat_block: CharacterStatBlock
@@ -64,8 +65,9 @@ class DarkOnesOwnLuck(Feature):
 class FiendishResilience(Feature):
     def __init__(self):
         super().__init__(
-            name="Fiendish Resilience", origin="The Fiend Patron Warlock Level 10",
-            usage_tags=["buff"]
+            name="Fiendish Resilience",
+            origin="The Fiend Patron Warlock Level 10",
+            usage_tags=["buff"],
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -76,8 +78,11 @@ class FiendishResilience(Feature):
 class HurlThroughHell(Feature):
     def __init__(self):
         super().__init__(
-            name="Hurl Through Hell", origin="The Fiend Patron Warlock Level 14",
-            duration="Until End of Next Turn", usage_tags=["damage", "control"]
+            name="Hurl Through Hell",
+            origin="The Fiend Patron Warlock Level 14",
+            duration="Until End of Next Turn",
+            usage_tags=["damage", "control"],
+            uses=FeatureUses(max_uses=1, regain_all_on="long rest"),
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -86,7 +91,7 @@ class HurlThroughHell(Feature):
             "At the end of your next turn, the target returns to the space it previously occupied, or the nearest unoccupied space. If the target is not a fiend, it takes 10d10 Psychic damage as it reels from its horrific experience.\n"
             "Once you use this feature, you can't use it again until you finish a Long Rest."
         )
-        return StringUtils.add_boxes(description, 1, regain_all_on="long rest")
+        return description
 
     def get_table_description(
         self, character_stat_block: CharacterStatBlock

@@ -1,12 +1,12 @@
-from Core.Definitions import PALADIN_HIT_DIE
-from CharacterContent.Features.Core.BaseFeatures import Feature
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
-from Utils import StringUtils
 
 
 class VengeanceSpells(Feature):
     def __init__(self):
-        super().__init__(name="Oath of Vengeance Spells", origin="Oath of Vengeance Paladin Level 3")
+        super().__init__(
+            name="Oath of Vengeance Spells", origin="Oath of Vengeance Paladin Level 3"
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -24,7 +24,14 @@ class VengeanceSpells(Feature):
 
 class AbjureEnemy(Feature):
     def __init__(self):
-        super().__init__(name="Abjure Enemy", origin="Oath of Vengeance Paladin Level 3", action_type="action", duration="1 Minute or Until Takes Damage", range="60 Feet", usage_tags=["control"])
+        super().__init__(
+            name="Abjure Enemy",
+            origin="Oath of Vengeance Paladin Level 3",
+            action_type="action",
+            duration="1 Minute or Until Takes Damage",
+            range="60 Feet",
+            usage_tags=["control"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -34,7 +41,9 @@ class AbjureEnemy(Feature):
         )
         return description
 
-    def get_table_description(self, character_stat_block: CharacterStatBlock) -> list[tuple[str, str]]:
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
         return [
             ("Action", "Action"),
             ("Range", "60 feet"),
@@ -46,40 +55,58 @@ class AbjureEnemy(Feature):
 
 class VowOfEnmity(Feature):
     def __init__(self):
-        super().__init__(name="Vow of Enmity", origin="Oath of Vengeance Paladin Level 3", action_type="bonus_action", duration="1 Minute or Until Unconscious", range="10 Feet", usage_tags=["buff"])
+        super().__init__(
+            name="Vow of Enmity",
+            origin="Oath of Vengeance Paladin Level 3",
+            action_type="bonus_action",
+            duration="1 Minute or Until Unconscious",
+            range="10 Feet",
+            usage_tags=["buff"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        description = (
-            "As a bonus action, you can utter a vow of enmity against a creature you can see within 10 feet of you, using your Channel Divinity. You gain advantage on attack rolls against the creature for 1 minute or until it drops to 0 hit points or falls unconscious."
-        )
+        description = "As a bonus action, you can utter a vow of enmity against a creature you can see within 10 feet of you, using your Channel Divinity. You gain advantage on attack rolls against the creature for 1 minute or until it drops to 0 hit points or falls unconscious."
         return description
 
 
 class RelentlessAvenger(Feature):
     def __init__(self):
-        super().__init__(name="Relentless Avenger", origin="Oath of Vengeance Paladin Level 7", action_type="reaction", usage_tags=["buff"])
+        super().__init__(
+            name="Relentless Avenger",
+            origin="Oath of Vengeance Paladin Level 7",
+            action_type="reaction",
+            usage_tags=["buff"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        description = (
-            "Your supernatural focus helps you close off a foe's retreat. When you hit a creature with an opportunity attack, you can move up to half your speed immediately after the attack and as part of the same reaction. This movement doesn't provoke opportunity attacks."
-        )
+        description = "Your supernatural focus helps you close off a foe's retreat. When you hit a creature with an opportunity attack, you can move up to half your speed immediately after the attack and as part of the same reaction. This movement doesn't provoke opportunity attacks."
         return description
 
 
 class SoulOfVengeance(Feature):
     def __init__(self):
-        super().__init__(name="Soul of Vengeance", origin="Oath of Vengeance Paladin Level 15", action_type="reaction")
+        super().__init__(
+            name="Soul of Vengeance",
+            origin="Oath of Vengeance Paladin Level 15",
+            action_type="reaction",
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        description = (
-            "The authority with which you speak your Vow of Enmity gives you greater power over your foe. When a creature under the effect of your Vow of Enmity makes an attack, you can use your reaction to make a melee weapon attack against that creature if it is within range."
-        )
+        description = "The authority with which you speak your Vow of Enmity gives you greater power over your foe. When a creature under the effect of your Vow of Enmity makes an attack, you can use your reaction to make a melee weapon attack against that creature if it is within range."
         return description
 
 
 class AvengingAngel(Feature):
     def __init__(self):
-        super().__init__(name="Avenging Angel", origin="Oath of Vengeance Paladin Level 20", action_type="action", duration="1 Hour", range="30-Foot Radius", usage_tags=["utility", "control"])
+        super().__init__(
+            name="Avenging Angel",
+            origin="Oath of Vengeance Paladin Level 20",
+            action_type="action",
+            duration="1 Hour",
+            range="30-Foot Radius",
+            usage_tags=["utility", "control"],
+            uses=FeatureUses(max_uses=1, regain_all_on="long rest"),
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -88,15 +115,4 @@ class AvengingAngel(Feature):
             "    * You emanate an aura of menace in a 30-foot radius. The first time any enemy creature enters the aura or starts its turn there during a battle, the creature must succeed on a Wisdom saving throw or become frightened of you for 1 minute or until it takes any damage. Attack rolls against the frightened creature have advantage.\n"
             "Once you use this feature, you can't use it again until you finish a long rest."
         )
-        return StringUtils.add_boxes(description, 1, regain_all_on="long rest")
-
-    def get_table_description(self, character_stat_block: CharacterStatBlock) -> list[tuple[str, str]]:
-        return [
-            ("What", "Transform into avenging avatar"),
-            ("Action", "Action"),
-            ("Duration", "1 hour"),
-            ("Flight", "Gain wings and 60-foot flying speed"),
-            ("Aura", "Menace aura in 30-foot radius"),
-            ("Aura Effect", "Enemies first entering/starting turn: WIS save or frightened 1 min; attacks vs frightened have advantage"),
-            ("Recharge", "Long rest"),
-        ]
+        return description

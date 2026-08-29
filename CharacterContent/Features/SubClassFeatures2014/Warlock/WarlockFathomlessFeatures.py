@@ -1,7 +1,6 @@
 import Core.Definitions as Definitions
-from CharacterContent.Features.Core.BaseFeatures import Feature
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
-from Utils import StringUtils
 
 
 class ExpandedSpellList(Feature):
@@ -27,8 +26,17 @@ class ExpandedSpellList(Feature):
 class TentacleOfTheDeep(Feature):
     def __init__(self):
         super().__init__(
-            name="Tentacle of the Deep", origin="The Fathomless Patron Warlock Level 3",
-            action_type="bonus_action", duration="1 Minute or Until Another Tentacle Created", range="60 Feet", usage_tags=["damage", "control", "summon"]
+            name="Tentacle of the Deep",
+            origin="The Fathomless Patron Warlock Level 3",
+            action_type="bonus_action",
+            duration="1 Minute or Until Another Tentacle Created",
+            range="60 Feet",
+            usage_tags=["damage", "control", "summon"],
+            uses=FeatureUses(
+                max_uses=Definitions.MAX_PROFICIENCY_BONUS,
+                regain_all_on="long rest",
+                current_formula="Current amount: equal to your proficiency bonus.",
+            ),
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -46,7 +54,7 @@ class TentacleOfTheDeep(Feature):
             "\n"
             "You can summon the tentacle a number of times equal to your proficiency bonus, and you regain all expended uses when you finish a long rest."
         )
-        return StringUtils.add_boxes(description, Definitions.MAX_PROFICIENCY_BONUS, regain_all_on="long rest", current_formula="Current amount: equal to your proficiency bonus.")
+        return description
 
     def get_table_description(
         self, character_stat_block: CharacterStatBlock
@@ -70,32 +78,39 @@ class TentacleOfTheDeep(Feature):
 class GiftOfTheSea(Feature):
     def __init__(self):
         super().__init__(
-            name="Gift of the Sea", origin="The Fathomless Patron Warlock Level 3", usage_tags=["utility"]
+            name="Gift of the Sea",
+            origin="The Fathomless Patron Warlock Level 3",
+            usage_tags=["utility"],
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        description = "You gain a swimming speed of 40 feet, and you can breathe underwater."
+        description = (
+            "You gain a swimming speed of 40 feet, and you can breathe underwater."
+        )
         return description
 
 
 class OceanicSoul(Feature):
     def __init__(self):
         super().__init__(
-            name="Oceanic Soul", origin="The Fathomless Patron Warlock Level 6", usage_tags=["buff", "utility"]
+            name="Oceanic Soul",
+            origin="The Fathomless Patron Warlock Level 6",
+            usage_tags=["buff", "utility"],
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        description = (
-            "You are now even more at home in the depths. You gain resistance to cold damage. In addition, when you are fully submerged, any creature that is also fully submerged can understand your speech, and you can understand theirs."
-        )
+        description = "You are now even more at home in the depths. You gain resistance to cold damage. In addition, when you are fully submerged, any creature that is also fully submerged can understand your speech, and you can understand theirs."
         return description
 
 
 class GuardianCoil(Feature):
     def __init__(self):
         super().__init__(
-            name="Guardian Coil", origin="The Fathomless Patron Warlock Level 6",
-            action_type="reaction", range="10 Feet", usage_tags=["buff"]
+            name="Guardian Coil",
+            origin="The Fathomless Patron Warlock Level 6",
+            action_type="reaction",
+            range="10 Feet",
+            usage_tags=["buff"],
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -103,9 +118,7 @@ class GuardianCoil(Feature):
             Definitions.CharacterClass.WARLOCK
         )
         damage = "2d8" if warlock_level >= 10 else "1d8"
-        description = (
-            f"Your Tentacle of the Deep can defend you and others, interposing itself between them and harm. When you or a creature you can see takes damage while within 10 feet of the tentacle, you can use your reaction to choose one of those creatures and reduce the damage to that creature by {damage}. When you reach 10th level in this class, the damage reduced by the tentacle increases to 2d8."
-        )
+        description = f"Your Tentacle of the Deep can defend you and others, interposing itself between them and harm. When you or a creature you can see takes damage while within 10 feet of the tentacle, you can use your reaction to choose one of those creatures and reduce the damage to that creature by {damage}. When you reach 10th level in this class, the damage reduced by the tentacle increases to 2d8."
         return description
 
     def get_table_description(
@@ -125,8 +138,10 @@ class GuardianCoil(Feature):
 class GraspingTentacles(Feature):
     def __init__(self):
         super().__init__(
-            name="Grasping Tentacles", origin="The Fathomless Patron Warlock Level 10",
-            usage_tags=["heal"]
+            name="Grasping Tentacles",
+            origin="The Fathomless Patron Warlock Level 10",
+            usage_tags=["heal"],
+            uses=FeatureUses(max_uses=1, regain_all_on="long rest"),
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -138,7 +153,7 @@ class GraspingTentacles(Feature):
             "\n"
             f"Whenever you cast this spell, your patron's magic bolsters you, granting you a number of temporary hit points equal to your Warlock level ({warlock_level}). Moreover, damage can't break your concentration on this spell."
         )
-        return StringUtils.add_boxes(description, 1, regain_all_on="long rest")
+        return description
 
     def get_table_description(
         self, character_stat_block: CharacterStatBlock
@@ -158,8 +173,12 @@ class GraspingTentacles(Feature):
 class FathomlessPlunge(Feature):
     def __init__(self):
         super().__init__(
-            name="Fathomless Plunge", origin="The Fathomless Patron Warlock Level 14",
-            action_type="action", range="30 Feet", usage_tags=["utility"]
+            name="Fathomless Plunge",
+            origin="The Fathomless Patron Warlock Level 14",
+            action_type="action",
+            range="30 Feet",
+            usage_tags=["utility"],
+            uses=FeatureUses(max_uses=1, regain_all_on="short or long rest"),
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -168,7 +187,7 @@ class FathomlessPlunge(Feature):
             "\n"
             "Once you use this feature, you can't use it again until you finish a short or long rest."
         )
-        return StringUtils.add_boxes(description, 1, regain_all_on="short or long rest")
+        return description
 
     def get_table_description(
         self, character_stat_block: CharacterStatBlock

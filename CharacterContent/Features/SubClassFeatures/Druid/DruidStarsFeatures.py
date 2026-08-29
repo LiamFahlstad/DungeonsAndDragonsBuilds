@@ -1,13 +1,13 @@
 
 from Core.Definitions import Ability, DRUID_HIT_DIE, MAX_ABILITY_MODIFIER
-from CharacterContent.Features.Core.BaseFeatures import Feature
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
 
 class StarMap(Feature):
     def __init__(self):
-        super().__init__(name="Star Map", origin="Circle of the Stars Druid Level 3")
+        super().__init__(name="Star Map", origin="Circle of the Stars Druid Level 3", uses=FeatureUses(max_uses=MAX_ABILITY_MODIFIER, regain_all_on="long rest", current_formula="Current amount: equal to your Wisdom modifier."))
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -15,12 +15,7 @@ class StarMap(Feature):
             "While holding the map, you have the Guidance and Guiding Bolt spells prepared, and you can cast Guiding Bolt without expending a spell slot. You can cast it a number of times based on your Wisdom modifier, and you regain all expended uses when you finish a Long Rest.\n"
             "If you lose the map, you can perform a 1-hour ceremony to magically create a replacement. This ceremony can be performed during a Short or Long Rest, and it destroys the previous map."
         )
-        return StringUtils.add_boxes(
-            description,
-            MAX_ABILITY_MODIFIER,
-            regain_all_on="long rest",
-            current_formula="Current amount: equal to your Wisdom modifier.",
-        )
+        return description
 
     def get_concise_description(
         self, character_stat_block: CharacterStatBlock
@@ -50,7 +45,7 @@ class StarryForm(Feature):
 
 class CosmicOmen(Feature):
     def __init__(self):
-        super().__init__(name="Cosmic Omen", origin="Circle of the Stars Druid Level 6", action_type="reaction", duration="Until Next Long Rest", range="30 Feet", usage_tags=["buff", "control"])
+        super().__init__(name="Cosmic Omen", origin="Circle of the Stars Druid Level 6", action_type="reaction", duration="Until Next Long Rest", range="30 Feet", usage_tags=["buff", "control"], uses=FeatureUses(max_uses=MAX_ABILITY_MODIFIER, regain_all_on="long rest", current_formula="Current amount: equal to your Wisdom modifier."))
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -59,12 +54,7 @@ class CosmicOmen(Feature):
             "Woe (Odd). Whenever a creature you can see within 30 feet of you is about to make a D20 Test, you can take a Reaction to roll 1d6 and subtract the number rolled from the total.\n"
             "You can use this Reaction a number of times based on your Wisdom modifier, and you regain all expended uses when you finish a Long Rest."
         )
-        return StringUtils.add_boxes(
-            description,
-            MAX_ABILITY_MODIFIER,
-            regain_all_on="long rest",
-            current_formula="Current amount: equal to your Wisdom modifier.",
-        )
+        return description
 
 
 class TwinklingConstellations(Feature):

@@ -1,13 +1,12 @@
 from enum import Enum
 
 import Core.Definitions as Definitions
-from Core.Definitions import Ability, CreatureSize
-from CharacterContent.Features.Core.BaseFeatures import Feature
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses
 from CharacterContent.Features.Core.Improvements import (
     DamageResistance as DamageResistanceImprovement,
 )
+from Core.Definitions import Ability, CreatureSize
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
-from Utils import StringUtils
 
 SPEED = 30  # Given by your species
 SIZE = CreatureSize.MEDIUM  # Given by your species
@@ -30,7 +29,12 @@ class DamageResistance(Feature):
     def __init__(self, dragon_color: DragonColor):
         self.color = dragon_color
         self.damage_type = get_damage_type_from_color(dragon_color)
-        super().__init__(name="Damage Resistance", origin="Dragonborn Trait", skippable_in_concise=True, usage_tags=["buff"])
+        super().__init__(
+            name="Damage Resistance",
+            origin="Dragonborn Trait",
+            skippable_in_concise=True,
+            usage_tags=["buff"],
+        )
         self._resistance = DamageResistanceImprovement(self.damage_type, self.name)
 
     def apply(self, character_stat_block: CharacterStatBlock):
@@ -44,7 +48,16 @@ class BreathWeapon(Feature):
     def __init__(self, dragon_color: DragonColor):
         self.color = dragon_color
         self.damage_type = get_damage_type_from_color(dragon_color)
-        super().__init__(name="Breath Weapon", origin="Dragonborn Trait", range="15-Foot Cone or 30-Foot Line", usage_tags=["damage"])
+        super().__init__(
+            name="Breath Weapon",
+            origin="Dragonborn Trait",
+            range="15-Foot Cone or 30-Foot Line",
+            usage_tags=["damage"],
+            uses=FeatureUses(
+                max_uses=Definitions.MAX_PROFICIENCY_BONUS,
+                current_formula="Current amount: equal to your proficiency bonus.",
+            ),
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         constitution_modifier = character_stat_block.get_ability_modifier(
@@ -66,7 +79,7 @@ class BreathWeapon(Feature):
             f"On a failed save, a creature takes {damage} {self.damage_type} damage because your Draconic Ancestry is {self.color.value} dragon. On a successful save, a creature takes half as much damage.\n"
             "You can use this Breath Weapon a number of times equal to your Proficiency Bonus, and you regain all expended uses when you finish a Long Rest."
         )
-        return StringUtils.add_boxes(text, Definitions.MAX_PROFICIENCY_BONUS, current_formula="Current amount: equal to your proficiency bonus.")
+        return text
 
     def get_table_description(
         self, character_stat_block: CharacterStatBlock
@@ -99,7 +112,13 @@ class BreathWeapon(Feature):
 
 class DraconicFlight(Feature):
     def __init__(self):
-        super().__init__(name="Draconic Flight", origin="Dragonborn Trait", action_type="bonus_action", duration="10 Minutes", usage_tags=["buff", "utility"])
+        super().__init__(
+            name="Draconic Flight",
+            origin="Dragonborn Trait",
+            action_type="bonus_action",
+            duration="10 Minutes",
+            usage_tags=["buff", "utility"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         text = "When you reach character level 5, you can channel draconic magic to give yourself temporary flight. As a Bonus Action, you sprout spectral wings on your back that last for 10 minutes or until you retract the wings (no action required) or have the Incapacitated condition. During that time, you have a Fly Speed equal to your Speed. Your wings appear to be made of the same energy as your Breath Weapon. Once you use this trait, you can't use it again until you finish a Long Rest."

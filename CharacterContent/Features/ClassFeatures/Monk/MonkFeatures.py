@@ -1,5 +1,5 @@
 import Core.Definitions as Definitions
-from CharacterContent.Features.Core.BaseFeatures import Feature
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses
 from CharacterContent.Features.Core.Improvements import (
     AbilityScoreBonus,
     MultiAbilityArmorClass,
@@ -122,7 +122,15 @@ class UnarmoredDefense(Feature):
 
 class MonksFocus(Feature):
     def __init__(self):
-        super().__init__(name="Monk's Focus", origin="Monk Level 2")
+        super().__init__(
+            name="Monk's Focus",
+            origin="Monk Level 2",
+            uses=FeatureUses(
+                max_uses=LEVEL_TO_FOCUS_POINTS[20],
+                regain_all_on="short or long rest",
+                current_formula="Current amount: equal to your Monk level.",
+            ),
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         wisdom_modifier = character_stat_block.get_ability_modifier(
@@ -135,12 +143,7 @@ class MonksFocus(Feature):
             f"    * DC: {dc}\n"
             "Known features:\n"
         )
-        return StringUtils.add_boxes(
-            description,
-            LEVEL_TO_FOCUS_POINTS[20],
-            regain_all_on="short or long rest",
-            current_formula="Current amount: equal to your Monk level.",
-        )
+        return description
 
     def get_resource_tiles(
         self, character_stat_block: CharacterStatBlock
@@ -162,7 +165,10 @@ class MonksFocus(Feature):
 class FlurryOfBlows(Feature):
     def __init__(self):
         super().__init__(
-            name="Flurry of Blows", origin="Monk Level 2", action_type="bonus_action", usage_tags=["damage"]
+            name="Flurry of Blows",
+            origin="Monk Level 2",
+            action_type="bonus_action",
+            usage_tags=["damage"],
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -179,7 +185,10 @@ class FlurryOfBlows(Feature):
 class PatientDefense(Feature):
     def __init__(self):
         super().__init__(
-            name="Patient Defense", origin="Monk Level 2", action_type="bonus_action", usage_tags=["buff"]
+            name="Patient Defense",
+            origin="Monk Level 2",
+            action_type="bonus_action",
+            usage_tags=["buff"],
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -255,7 +264,9 @@ class UnarmoredMovement(Feature):
 
 class UncannyMetabolism(Feature):
     def __init__(self):
-        super().__init__(name="Uncanny Metabolism", origin="Monk Level 2", usage_tags=["heal"])
+        super().__init__(
+            name="Uncanny Metabolism", origin="Monk Level 2", usage_tags=["heal"]
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -268,7 +279,10 @@ class UncannyMetabolism(Feature):
 class DeflectAttacks(Feature):
     def __init__(self):
         super().__init__(
-            name="Deflect Attacks", origin="Monk Level 3", action_type="reaction", usage_tags=["buff", "damage"]
+            name="Deflect Attacks",
+            origin="Monk Level 3",
+            action_type="reaction",
+            usage_tags=["buff", "damage"],
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -321,7 +335,10 @@ class DeflectAttacks(Feature):
 class SlowFall(Feature):
     def __init__(self):
         super().__init__(
-            name="Slow Fall", origin="Monk Level 4", action_type="reaction", usage_tags=["buff"]
+            name="Slow Fall",
+            origin="Monk Level 4",
+            action_type="reaction",
+            usage_tags=["buff"],
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -340,7 +357,12 @@ class ExtraAttack(Feature):
 
 class StunningStrike(Feature):
     def __init__(self):
-        super().__init__(name="Stunning Strike", origin="Monk Level 5", duration="Until Start of Next Turn", usage_tags=["control"])
+        super().__init__(
+            name="Stunning Strike",
+            origin="Monk Level 5",
+            duration="Until Start of Next Turn",
+            usage_tags=["control"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "Once per turn when you hit a creature with a Monk weapon or an Unarmed Strike, you can expend 1 Focus Point to attempt a stunning strike. The target must make a Constitution saving throw. On a failed save, the target has the Stunned condition until the start of your next turn. On a successful save, the target's Speed is halved until the start of your next turn, and the next attack roll made against the target before then has Advantage."
@@ -370,7 +392,9 @@ class Evasion(Feature):
 
 class AcrobaticMovement(Feature):
     def __init__(self):
-        super().__init__(name="Acrobatic Movement", origin="Monk Level 9", usage_tags=["utility"])
+        super().__init__(
+            name="Acrobatic Movement", origin="Monk Level 9", usage_tags=["utility"]
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "While you aren't wearing armor or wielding a Shield, you gain the ability to move along vertical surfaces and across liquids on your turn without falling during the movement."
@@ -411,7 +435,9 @@ class HeightenedFocus(Feature):
 
 class SelfRestoration(Feature):
     def __init__(self):
-        super().__init__(name="Self-Restoration", origin="Monk Level 10", usage_tags=["heal"])
+        super().__init__(
+            name="Self-Restoration", origin="Monk Level 10", usage_tags=["heal"]
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -458,7 +484,9 @@ class DisciplinedSurvivorSavingThrows(Feature):
 
 class DisciplinedSurvivorMartialFocus(Feature):
     def __init__(self):
-        super().__init__(name="Disciplined Survivor", origin="Monk Level 14", usage_tags=["buff"])
+        super().__init__(
+            name="Disciplined Survivor", origin="Monk Level 14", usage_tags=["buff"]
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "Whenever you make a saving throw and fail, you can expend 1 Focus Point to reroll it, and you must use the new roll."
@@ -476,7 +504,12 @@ class PerfectFocus(Feature):
 
 class SuperiorDefense(Feature):
     def __init__(self):
-        super().__init__(name="Superior Defense", origin="Monk Level 18", duration="1 Minute or Until Incapacitated", usage_tags=["buff"])
+        super().__init__(
+            name="Superior Defense",
+            origin="Monk Level 18",
+            duration="1 Minute or Until Incapacitated",
+            usage_tags=["buff"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "At the start of your turn, you can expend 3 Focus Points to bolster yourself against harm for 1 minute or until you have the Incapacitated condition. During that time, you have Resistance to all damage except Force damage."

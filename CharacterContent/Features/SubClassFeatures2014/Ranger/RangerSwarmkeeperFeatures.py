@@ -1,12 +1,14 @@
-from Core.Definitions import Ability, MAX_PROFICIENCY_BONUS, RANGER_HIT_DIE
 from CharacterContent.Features.Core.BaseFeatures import Feature
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
-from Utils import StringUtils
 
 
 class GatheredSwarm(Feature):
     def __init__(self):
-        super().__init__(name="Gathered Swarm", origin="Swarmkeeper Ranger Level 3", usage_tags=["damage", "control", "utility"])
+        super().__init__(
+            name="Gathered Swarm",
+            origin="Swarmkeeper Ranger Level 3",
+            usage_tags=["damage", "control", "utility"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -47,7 +49,13 @@ class SwarmkeeperMagic(Feature):
 
 class WrithingTide(Feature):
     def __init__(self):
-        super().__init__(name="Writhing Tide", origin="Swarmkeeper Ranger Level 7", action_type="bonus_action", duration="1 Minute or Until Incapacitated", usage_tags=["utility"])
+        super().__init__(
+            name="Writhing Tide",
+            origin="Swarmkeeper Ranger Level 7",
+            action_type="bonus_action",
+            duration="1 Minute or Until Incapacitated",
+            usage_tags=["utility"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -55,7 +63,7 @@ class WrithingTide(Feature):
             "\n"
             "You can use this feature a number of times equal to your proficiency bonus, and you regain all expended uses when you finish a long rest."
         )
-        return StringUtils.add_boxes(description, MAX_PROFICIENCY_BONUS, regain_all_on="long rest", current_formula="Current amount: equal to your proficiency bonus.")
+        return description
 
     def get_table_description(
         self, character_stat_block: CharacterStatBlock
@@ -73,7 +81,11 @@ class WrithingTide(Feature):
 
 class MightySwarm(Feature):
     def __init__(self):
-        super().__init__(name="Mighty Swarm", origin="Swarmkeeper Ranger Level 11", usage_tags=["buff", "control", "damage"])
+        super().__init__(
+            name="Mighty Swarm",
+            origin="Swarmkeeper Ranger Level 11",
+            usage_tags=["buff", "control", "damage"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -87,7 +99,13 @@ class MightySwarm(Feature):
 
 class SwarmingDispersal(Feature):
     def __init__(self):
-        super().__init__(name="Swarming Dispersal", origin="Swarmkeeper Ranger Level 15", action_type="reaction", range="30 Feet", usage_tags=["buff", "utility"])
+        super().__init__(
+            name="Swarming Dispersal",
+            origin="Swarmkeeper Ranger Level 15",
+            action_type="reaction",
+            range="30 Feet",
+            usage_tags=["buff", "utility"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -95,7 +113,7 @@ class SwarmingDispersal(Feature):
             "\n"
             "You can use this feature a number of times equal to your proficiency bonus, and you regain all expended uses when you finish a long rest."
         )
-        return StringUtils.add_boxes(description, MAX_PROFICIENCY_BONUS, regain_all_on="long rest", current_formula="Current amount: equal to your proficiency bonus.")
+        return description
 
     def get_table_description(
         self, character_stat_block: CharacterStatBlock
@@ -105,7 +123,10 @@ class SwarmingDispersal(Feature):
             ("What", "Discorporate into swarm"),
             ("Action", "Reaction"),
             ("Condition", "When you take damage"),
-            ("Effect", "Resistance to that damage, teleport to unoccupied space within 30 ft"),
+            (
+                "Effect",
+                "Resistance to that damage, teleport to unoccupied space within 30 ft",
+            ),
             ("Uses", f"{proficiency_bonus}"),
             ("Recharge", "Long rest"),
         ]

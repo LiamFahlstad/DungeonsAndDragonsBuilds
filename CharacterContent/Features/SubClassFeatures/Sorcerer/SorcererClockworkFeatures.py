@@ -1,5 +1,5 @@
 from Core.Definitions import Ability, MAX_ABILITY_MODIFIER, SORCERER_HIT_DIE
-from CharacterContent.Features.Core.BaseFeatures import Feature
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
@@ -32,19 +32,14 @@ class ClockworkSpells(Feature):
 
 class RestoreBalance(Feature):
     def __init__(self):
-        super().__init__(name="Restore Balance", origin="Clockwork Sorcerer Level 3", action_type="reaction", range="60 Feet")
+        super().__init__(name="Restore Balance", origin="Clockwork Sorcerer Level 3", action_type="reaction", range="60 Feet", uses=FeatureUses(max_uses=MAX_ABILITY_MODIFIER, regain_all_on="long rest", current_formula="Current amount: equal to your Charisma modifier."))
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
             "Your connection to the plane of absolute order allows you to equalize chaotic moments. When a creature you can see within 60 feet of yourself is about to roll a d20 with Advantage or Disadvantage, you can take a Reaction to prevent the roll from being affected by Advantage and Disadvantage.\n"
             "You regain all expended uses when you finish a Long Rest."
         )
-        return StringUtils.add_boxes(
-            description,
-            MAX_ABILITY_MODIFIER,
-            regain_all_on="long rest",
-            current_formula="Current amount: equal to your Charisma modifier.",
-        )
+        return description
 
 class BastionOfLaw(Feature):
     def __init__(self):

@@ -1,6 +1,6 @@
 import Core.Definitions as Definitions
 from Core.Definitions import MONK_HIT_DIE, Skill
-from CharacterContent.Features.Core.BaseFeatures import Feature
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses
 from CharacterContent.Features.Core.Improvements import SkillProficiency
 from CharacterContent.Items.Weapons import WeaponDamageRolls
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
@@ -122,7 +122,7 @@ class FlurryOfHealingAndHarm(Feature):
     def __init__(self):
         super().__init__(
             name="Flurry of Healing and Harm", origin="Warrior of Mercy Monk Level 11"
-        )
+        , uses=FeatureUses(max_uses=Definitions.MAX_ABILITY_MODIFIER, regain_all_on="long rest", current_formula="Current amount: equal to your Wisdom modifier."))
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -130,12 +130,7 @@ class FlurryOfHealingAndHarm(Feature):
             "In addition, when you make an Unarmed Strike with Flurry of Blows and deal damage, you can use Hand of Harm with that strike without expending a Focus Point for Hand of Harm. You can still use Hand of Harm only once per turn.\n"
             "You can use these benefits a total number of times equal to your Wisdom modifier (minimum of once). You regain all expended uses when you finish a Long Rest."
         )
-        return StringUtils.add_boxes(
-            description,
-            Definitions.MAX_ABILITY_MODIFIER,
-            regain_all_on="long rest",
-            current_formula="Current amount: equal to your Wisdom modifier.",
-        )
+        return description
 
 class HandOfUltimateMercy(Feature):
     def __init__(self):

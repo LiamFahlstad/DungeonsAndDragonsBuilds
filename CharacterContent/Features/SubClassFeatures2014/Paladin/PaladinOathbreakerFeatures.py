@@ -106,7 +106,7 @@ class SupernaturalResistance(Feature):
 
 class DreadLord(Feature):
     def __init__(self):
-        super().__init__(name="Dread Lord", origin="Oathbreaker Paladin Level 20", action_type="action", duration="1 Minute", range="30-Foot Radius", usage_tags=["damage", "control"])
+        super().__init__(name="Dread Lord", origin="Oathbreaker Paladin Level 20", action_type="action", duration="1 Minute", range="30-Foot Radius", usage_tags=["damage", "control"], uses=FeatureUses(max_uses=1, regain_all_on="long rest"))
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -115,15 +115,4 @@ class DreadLord(Feature):
             "While the aura lasts, you can use a bonus action on your turn to cause the shadows in the aura to attack one creature. Make a melee spell attack against the target. If the attack hits, the target takes necrotic damage equal to 3d10 + your Charisma modifier.\n"
             "After activating the aura, you can't do so again until you finish a long rest."
         )
-        return StringUtils.add_boxes(description, 1, regain_all_on="long rest")
-
-    def get_table_description(self, character_stat_block: CharacterStatBlock) -> list[tuple[str, str]]:
-        return [
-            ("Action", "Action"),
-            ("Duration", "1 minute"),
-            ("Light Effect", "Bright light → dim light in 30 feet"),
-            ("Enemy Damage", "4d10 psychic to frightened enemies starting turn"),
-            ("Shadow Veil", "Disadvantage on attacks vs shadowed creatures"),
-            ("Shadow Attack", "Bonus action, melee spell attack, 3d10 + CHA necrotic"),
-            ("Recharge", "Long rest"),
-        ]
+        return description

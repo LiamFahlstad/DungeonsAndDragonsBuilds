@@ -1,7 +1,7 @@
 from typing import Optional
 
 from Core.Definitions import Ability, CharacterClass, Skill
-from CharacterContent.Features.Core.BaseFeatures import Feature
+from CharacterContent.Features.Core.BaseFeatures import FeatureUses, Feature
 from CharacterContent.Features.Core.Improvements import (
     SkillProficiencyChoice,
     SavingThrowProficiencyChoice,
@@ -54,7 +54,7 @@ class FightingSpirit(Feature):
             f"At your current fighter level, you gain {temporary_hit_points} temporary hit points when you use this feature. This increases to 10 at 10th level and 15 at 15th level.\n"
             "You can use this feature three times. You regain all expended uses of it when you finish a long rest."
         )
-        return StringUtils.add_boxes(description, uses, regain_all_on="long rest")
+        return description
 
     def get_table_description(
         self, character_stat_block: CharacterStatBlock
@@ -128,7 +128,7 @@ class StrengthBeforeDeath(Feature):
             "Your fighting spirit can delay the grasp of death. If you take damage that reduces you to 0 hit points, you can use your reaction to delay falling unconscious, and you can immediately take an extra turn. While you have 0 hit points during that extra turn, taking damage causes death saving throw failures as normal, and three death saving throw failures can still kill you. When the extra turn ends, you fall unconscious if you still have 0 hit points.\n"
             "Once you use this feature, you can't use it again until you finish a long rest."
         )
-        return StringUtils.add_boxes(description, uses, regain_all_on="long rest")
+        return description
 
     def get_table_description(
         self, character_stat_block: CharacterStatBlock

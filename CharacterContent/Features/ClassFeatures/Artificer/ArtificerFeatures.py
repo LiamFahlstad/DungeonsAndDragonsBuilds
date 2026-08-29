@@ -1,7 +1,6 @@
-from CharacterContent.Features.Core.BaseFeatures import Feature
-from Core.Definitions import Ability, MAX_ABILITY_MODIFIER
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses
+from Core.Definitions import MAX_ABILITY_MODIFIER, Ability
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
-from Utils import StringUtils
 
 
 class Spellcasting(Feature):
@@ -28,6 +27,11 @@ class TinkersMagic(Feature):
             action_type="action",
             duration="Until Long Rest",
             range="5 Feet",
+            uses=FeatureUses(
+                max_uses=MAX_ABILITY_MODIFIER,
+                regain_all_on="long rest",
+                current_formula="Current amount: equal to your Intelligence modifier.",
+            ),
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -48,12 +52,7 @@ class TinkersMagic(Feature):
             "See the rules for the item in the Player's Handbook. The item lasts until you finish a Long Rest, at which point it vanishes.\n"
             "You can use this feature a number of times equal to your Intelligence modifier (minimum of once), and you regain all expended uses when you finish a Long Rest."
         )
-        return StringUtils.add_boxes(
-            description,
-            MAX_ABILITY_MODIFIER,
-            regain_all_on="long rest",
-            current_formula="Current amount: equal to your Intelligence modifier.",
-        )
+        return description
 
 
 class ReplicateMagicItem(Feature):
@@ -162,6 +161,11 @@ class FlashofGenius(Feature):
             action_type="reaction",
             range="30 Feet",
             usage_tags=["buff"],
+            uses=FeatureUses(
+                max_uses=MAX_ABILITY_MODIFIER,
+                regain_all_on="long rest",
+                current_formula="Current amount: equal to your Intelligence modifier.",
+            ),
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -169,12 +173,7 @@ class FlashofGenius(Feature):
             "When you or a creature you can see within 30 feet of you fails an ability check or a saving throw, you can take a Reaction to add a bonus to the roll, potentially causing it to succeed. The bonus equals your Intelligence modifier (minimum of +1).\n"
             "You can take this Reaction a number of times equal to your Intelligence modifier (minimum of once). You regain all expended uses when you finish a Long Rest."
         )
-        return StringUtils.add_boxes(
-            description,
-            MAX_ABILITY_MODIFIER,
-            regain_all_on="long rest",
-            current_formula="Current amount: equal to your Intelligence modifier.",
-        )
+        return description
 
     def get_table_description(
         self, character_stat_block: CharacterStatBlock

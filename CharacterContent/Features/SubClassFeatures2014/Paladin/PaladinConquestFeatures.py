@@ -110,7 +110,7 @@ class ScornfulRebuke(Feature):
 
 class InvincibleConqueror(Feature):
     def __init__(self):
-        super().__init__(name="Invincible Conqueror", origin="Oath of Conquest Paladin Level 20", action_type="action", duration="1 Minute", usage_tags=["buff"])
+        super().__init__(name="Invincible Conqueror", origin="Oath of Conquest Paladin Level 20", action_type="action", duration="1 Minute", usage_tags=["buff"], uses=FeatureUses(max_uses=1, regain_all_on="long rest"))
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -121,15 +121,4 @@ class InvincibleConqueror(Feature):
             "\n"
             "Once you use this feature, you can't use it again until you finish a long rest."
         )
-        return StringUtils.add_boxes(description, 1, regain_all_on="long rest")
-
-    def get_table_description(self, character_stat_block: CharacterStatBlock) -> list[tuple[str, str]]:
-        return [
-            ("What", "Avatar of conquest"),
-            ("Action", "Action"),
-            ("Duration", "1 minute"),
-            ("Resistance", "Resistance to all damage"),
-            ("Extra Attack", "Additional attack with Attack action"),
-            ("Critical Hits", "Critical hit on 19-20"),
-            ("Recharge", "Long rest"),
-        ]
+        return description

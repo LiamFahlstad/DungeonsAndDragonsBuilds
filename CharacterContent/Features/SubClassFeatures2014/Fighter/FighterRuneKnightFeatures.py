@@ -1,5 +1,5 @@
 from Core.Definitions import Ability, Language, MAX_PROFICIENCY_BONUS
-from CharacterContent.Features.Core.BaseFeatures import Feature
+from CharacterContent.Features.Core.BaseFeatures import FeatureUses, Feature
 from CharacterContent.Features.Core.Improvements import GrantLanguage
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
@@ -89,7 +89,7 @@ class GiantsMight(Feature):
             "\n"
             "You regain all expended uses when you finish a long rest."
         )
-        return StringUtils.add_boxes(description, MAX_PROFICIENCY_BONUS, regain_all_on="long rest", current_formula="Current amount: equal to your proficiency bonus.")
+        return description
 
     def get_table_description(
         self, character_stat_block: CharacterStatBlock
@@ -113,6 +113,7 @@ class RunicShield(Feature):
             action_type="reaction",
             range="60 Feet",
             usage_tags=["buff"],
+            uses=FeatureUses(max_uses=MAX_PROFICIENCY_BONUS, regain_all_on="long rest", current_formula="Current amount: equal to your proficiency bonus.")
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -121,7 +122,7 @@ class RunicShield(Feature):
             "\n"
             "You regain all expended uses when you finish a long rest."
         )
-        return StringUtils.add_boxes(description, MAX_PROFICIENCY_BONUS, regain_all_on="long rest", current_formula="Current amount: equal to your proficiency bonus.")
+        return description
 
     def get_table_description(
         self, character_stat_block: CharacterStatBlock

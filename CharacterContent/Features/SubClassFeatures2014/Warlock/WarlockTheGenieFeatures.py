@@ -1,7 +1,6 @@
 import Core.Definitions as Definitions
-from CharacterContent.Features.Core.BaseFeatures import Feature
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
-from Utils import StringUtils
 
 _WRATH_DAMAGE_TYPE = {
     Definitions.WarlockGenieKind.DAO: "bludgeoning",
@@ -37,8 +36,12 @@ class GenieExpandedSpells(Feature):
 class GeniesVessel(Feature):
     def __init__(self, kind: Definitions.WarlockGenieKind):
         super().__init__(
-            name="Genie's Vessel", origin="The Genie Patron Warlock Level 3",
-            action_type="action", duration="Until Leaving Vessel or Long Rest", usage_tags=["damage"]
+            name="Genie's Vessel",
+            origin="The Genie Patron Warlock Level 3",
+            action_type="action",
+            duration="Until Leaving Vessel or Long Rest",
+            usage_tags=["damage"],
+            uses=FeatureUses(max_uses=1, regain_all_on="long rest"),
         )
         self.kind = kind
 
@@ -64,14 +67,22 @@ class GeniesVessel(Feature):
             "\n"
             f"You have chosen the {self.kind.value} kind, so your Genie's Wrath deals {damage_type} damage."
         )
-        return StringUtils.add_boxes(description, 1, regain_all_on="long rest")
+        return description
 
 
 class ElementalGift(Feature):
     def __init__(self, kind: Definitions.WarlockGenieKind):
         super().__init__(
-            name="Elemental Gift", origin="The Genie Patron Warlock Level 6",
-            action_type="bonus_action", duration="10 Minutes", usage_tags=["buff", "utility"]
+            name="Elemental Gift",
+            origin="The Genie Patron Warlock Level 6",
+            action_type="bonus_action",
+            duration="10 Minutes",
+            usage_tags=["buff", "utility"],
+            uses=FeatureUses(
+                max_uses=Definitions.MAX_PROFICIENCY_BONUS,
+                regain_all_on="long rest",
+                current_formula="Current amount: equal to your proficiency bonus.",
+            ),
         )
         self.kind = kind
 
@@ -84,7 +95,7 @@ class ElementalGift(Feature):
             "\n"
             f"You have chosen the {self.kind.value} kind, so you have resistance to {damage_type} damage."
         )
-        return StringUtils.add_boxes(description, Definitions.MAX_PROFICIENCY_BONUS, regain_all_on="long rest", current_formula="Current amount: equal to your proficiency bonus.")
+        return description
 
     def get_table_description(
         self, character_stat_block: CharacterStatBlock
@@ -104,8 +115,11 @@ class ElementalGift(Feature):
 class SanctuaryVessel(Feature):
     def __init__(self):
         super().__init__(
-            name="Sanctuary Vessel", origin="The Genie Patron Warlock Level 10",
-            action_type="bonus_action", range="30 Feet", usage_tags=["utility"]
+            name="Sanctuary Vessel",
+            origin="The Genie Patron Warlock Level 10",
+            action_type="bonus_action",
+            range="30 Feet",
+            usage_tags=["utility"],
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -123,8 +137,11 @@ class SanctuaryVessel(Feature):
 class LimitedWish(Feature):
     def __init__(self):
         super().__init__(
-            name="Limited Wish", origin="The Genie Patron Warlock Level 14",
-            action_type="action", usage_tags=["utility"]
+            name="Limited Wish",
+            origin="The Genie Patron Warlock Level 14",
+            action_type="action",
+            usage_tags=["utility"],
+            uses=FeatureUses(max_uses=1, regain_all_on="1d4 long rests"),
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -133,7 +150,7 @@ class LimitedWish(Feature):
             "\n"
             "Once you use this feature, you can't use it again until you finish 1d4 long rests."
         )
-        return StringUtils.add_boxes(description, 1, regain_all_on="1d4 long rests")
+        return description
 
     def get_table_description(
         self, character_stat_block: CharacterStatBlock

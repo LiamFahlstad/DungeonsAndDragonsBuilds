@@ -1,7 +1,6 @@
 from typing import Optional
 
-from Core.Definitions import Ability, CharacterClass, MAX_PROFICIENCY_BONUS, Skill
-from CharacterContent.Features.Core.BaseFeatures import Feature
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses
 from CharacterContent.Features.Core.Improvements import (
     HitPointsPerLevelBonus,
     InitiativeProficiency,
@@ -15,8 +14,8 @@ from CharacterContent.Spells.SpellLists import (
     WizardLevel0Spells,
     WizardLevel1Spells,
 )
+from Core.Definitions import MAX_PROFICIENCY_BONUS, Ability, CharacterClass, Skill
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
-from Utils import StringUtils
 
 
 class OriginFeat(Feature):
@@ -34,7 +33,9 @@ class Skilled(OriginFeat):
         self._choice = SkillProficiencyChoice(
             skills, list(Skill), count=3, error_prefix="Skilled"
         )
-        super().__init__(name="Skilled", origin="Origin Feat", skippable_in_concise=True)
+        super().__init__(
+            name="Skilled", origin="Origin Feat", skippable_in_concise=True
+        )
 
     def apply(self, character_stat_block: CharacterStatBlock):
         self._choice.apply(character_stat_block)
@@ -118,7 +119,15 @@ class Healer(OriginFeat):
 
 class Lucky(OriginFeat):
     def __init__(self):
-        super().__init__(name="Lucky", origin="Origin Feat")
+        super().__init__(
+            name="Lucky",
+            origin="Origin Feat",
+            uses=FeatureUses(
+                max_uses=MAX_PROFICIENCY_BONUS,
+                regain_all_on="long rest",
+                current_formula="Current amount: equal to your proficiency bonus.",
+            ),
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         proficiency_bonus = character_stat_block.get_proficiency_bonus()
@@ -127,27 +136,15 @@ class Lucky(OriginFeat):
             "Advantage. When you roll a d20 for a D20 Test, you can spend 1 Luck Point to give yourself Advantage on the roll.\n"
             "Disadvantage. When a creature rolls a d20 for an attack roll against you, you can spend 1 Luck Point to impose Disadvantage on that roll."
         )
-        return StringUtils.add_boxes(
-            description,
-            MAX_PROFICIENCY_BONUS,
-            regain_all_on="long rest",
-            current_formula="Current amount: equal to your proficiency bonus.",
-        )
+        return description
 
-    def get_concise_description(
-        self, character_stat_block: CharacterStatBlock
-    ) -> str:
+    def get_concise_description(self, character_stat_block: CharacterStatBlock) -> str:
         proficiency_bonus = character_stat_block.get_proficiency_bonus()
         description = (
             "You have a number of Luck Points equal to your Proficiency Bonus and regain them when you finish a Long Rest. "
             "Spend 1 Luck Point to give yourself Advantage on a d20 roll, or spend 1 Luck Point to impose Disadvantage on an attack roll against you."
         )
-        return StringUtils.add_boxes(
-            description,
-            MAX_PROFICIENCY_BONUS,
-            regain_all_on="long rest",
-            current_formula="Current amount: equal to your proficiency bonus.",
-        )
+        return description
 
 
 class MagicInitiate(OriginFeat):
@@ -383,7 +380,15 @@ class FamiliarFriend(OriginFeat):
                 "Familiar Friend spellcasting ability must be Intelligence, Wisdom, or Charisma."
             )
         self.spell_casting_ability = spell_casting_ability
-        super().__init__(name="Familiar Friend", origin="Arcana Unleashed 2026")
+        super().__init__(
+            name="Familiar Friend",
+            origin="Arcana Unleashed 2026",
+            uses=FeatureUses(
+                max_uses=MAX_PROFICIENCY_BONUS,
+                regain_all_on="long rest",
+                current_formula="Current amount: equal to your proficiency bonus.",
+            ),
+        )
 
     def get_spells(self) -> list[str]:
         return ["Find Familiar"]
@@ -401,12 +406,7 @@ class FamiliarFriend(OriginFeat):
             "Fortified Familiar. When you cast the Find Familiar spell, your familiar’s Hit Point maximum and current Hit Points are increased by an amount equal to twice your character level.\n"
             "Helpful Friend. When you make an ability check using a skill in which you have proficiency while your familiar is within 5 feet of you, you gain Advantage on the check."
         )
-        return StringUtils.add_boxes(
-            description,
-            MAX_PROFICIENCY_BONUS,
-            regain_all_on="long rest",
-            current_formula="Current amount: equal to your proficiency bonus.",
-        )
+        return description
 
 
 class HarperAgent(OriginFeat):
@@ -461,7 +461,15 @@ class PurpleDragonRook(OriginFeat):
 
 class SpellfireSpark(OriginFeat):
     def __init__(self):
-        super().__init__(name="Spellfire Spark", origin="Origin Feat")
+        super().__init__(
+            name="Spellfire Spark",
+            origin="Origin Feat",
+            uses=FeatureUses(
+                max_uses=MAX_PROFICIENCY_BONUS,
+                regain_all_on="long rest",
+                current_formula="Current amount: equal to your proficiency bonus.",
+            ),
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         proficiency_bonus = character_stat_block.get_proficiency_bonus()
@@ -470,12 +478,7 @@ class SpellfireSpark(OriginFeat):
             "Magic Absorption. Once per turn, when you take damage from a spell or magical effect, you reduce the total damage taken by 1d4. You can’t use this benefit if you have the Incapacitated condition.\n"
             "Spellfire Flame. You learn the Sacred Flame cantrip. Intelligence, Wisdom, or Charisma is your spellcasting ability for this spell (choose when you select this feat). You can also cast this cantrip as a Bonus Action a number of times equal to your Proficiency Bonus, and you regain all expended uses when you finish a Long Rest."
         )
-        return StringUtils.add_boxes(
-            description,
-            MAX_PROFICIENCY_BONUS,
-            regain_all_on="long rest",
-            current_formula="Current amount: equal to your proficiency bonus.",
-        )
+        return description
 
 
 class TyroOfTheGauntlet(OriginFeat):
@@ -504,12 +507,20 @@ class ZhentarimRuffian(OriginFeat):
 
 class SharpEye(OriginFeat):
     def __init__(self):
-        super().__init__(name="Sharp Eye", origin="Origin Feat")
+        super().__init__(
+            name="Sharp Eye",
+            origin="Origin Feat",
+            uses=FeatureUses(
+                max_uses=MAX_PROFICIENCY_BONUS,
+                regain_all_on="long rest",
+                current_formula="Current amount: equal to your proficiency bonus.",
+            ),
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         proficiency_bonus = character_stat_block.get_proficiency_bonus()
         description = "When you take the Search or Study action, you can give yourself Advantage on any ability check made as part of that action. You can use this feature a number of times equal to your Proficiency Bonus, and you regain all expended uses when you finish a Long Rest. If the check fails, the use of this feature isn't expended."
-        return StringUtils.add_boxes(description, MAX_PROFICIENCY_BONUS, current_formula="Current amount: equal to your proficiency bonus.")
+        return description
 
 
 class Survivor(OriginFeat):

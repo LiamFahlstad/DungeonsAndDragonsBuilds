@@ -1,5 +1,5 @@
 from Core.Definitions import BARD_HIT_DIE, Ability
-from CharacterContent.Features.Core.BaseFeatures import Feature
+from CharacterContent.Features.Core.BaseFeatures import FeatureUses, Feature
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
@@ -59,7 +59,7 @@ class UniversalSpeech(Feature):
             f"Once you use this feature, you can't use it again until you finish a long rest, unless you "
             f"expend a spell slot to use it again."
         )
-        return StringUtils.add_boxes(description, 1, regain_all_on="long rest")
+        return description
 
     def get_table_description(
         self, character_stat_block: CharacterStatBlock
@@ -90,4 +90,4 @@ class InfectiousInspiration(Feature):
             "creature (other than yourself) that can hear you within 60 feet of you, giving it a Bardic Inspiration "
             "die without expending any of your Bardic Inspiration uses."
         )
-        return StringUtils.add_boxes(description, uses, regain_all_on="long rest")
+        return description

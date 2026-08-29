@@ -1,12 +1,16 @@
-from CharacterContent.Features.Core.BaseFeatures import Feature
-from StatBlocks.CharacterStatBlock import CharacterStatBlock
-from Utils import StringUtils
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses
 from Core.Definitions import MAX_PROFICIENCY_BONUS
+from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
 class WizardlyQuill(Feature):
     def __init__(self):
-        super().__init__(name="Wizardly Quill", origin="Order of Scribes Wizard Level 3", action_type="bonus_action", usage_tags=["utility"])
+        super().__init__(
+            name="Wizardly Quill",
+            origin="Order of Scribes Wizard Level 3",
+            action_type="bonus_action",
+            usage_tags=["utility"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -22,7 +26,11 @@ class WizardlyQuill(Feature):
 
 class AwakenedSpellbook(Feature):
     def __init__(self):
-        super().__init__(name="Awakened Spellbook", origin="Order of Scribes Wizard Level 3", usage_tags=["utility"])
+        super().__init__(
+            name="Awakened Spellbook",
+            origin="Order of Scribes Wizard Level 3",
+            usage_tags=["utility"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -39,7 +47,19 @@ class AwakenedSpellbook(Feature):
 
 class ManifestMind(Feature):
     def __init__(self):
-        super().__init__(name="Manifest Mind", origin="Order of Scribes Wizard Level 6", action_type="bonus_action", duration="Until Dismissed Or >300 Feet", range="60 Feet", usage_tags=["utility"])
+        super().__init__(
+            name="Manifest Mind",
+            origin="Order of Scribes Wizard Level 6",
+            action_type="bonus_action",
+            duration="Until Dismissed Or >300 Feet",
+            range="60 Feet",
+            usage_tags=["utility"],
+            uses=FeatureUses(
+                max_uses=MAX_PROFICIENCY_BONUS,
+                regain_all_on="long rest",
+                current_formula="Current amount: equal to your proficiency bonus.",
+            ),
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         proficiency_bonus = character_stat_block.get_proficiency_bonus()
@@ -56,12 +76,17 @@ class ManifestMind(Feature):
             "\n"
             "Once you conjure the mind, you can't do so again until you finish a long rest, unless you expend a spell slot of any level to conjure it again."
         )
-        return StringUtils.add_boxes(description, MAX_PROFICIENCY_BONUS, regain_all_on="long rest", current_formula="Current amount: equal to your proficiency bonus.")
+        return description
 
 
 class MasterScriviner(Feature):
     def __init__(self):
-        super().__init__(name="Master Scriviner", origin="Order of Scribes Wizard Level 10", usage_tags=["utility"])
+        super().__init__(
+            name="Master Scriviner",
+            origin="Order of Scribes Wizard Level 10",
+            usage_tags=["utility"],
+            uses=FeatureUses(max_uses=1, regain_all_on="long rest"),
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -71,12 +96,19 @@ class MasterScriviner(Feature):
             "\n"
             "You are also adept at crafting spell scrolls, which are described in the treasure chapter of the Dungeon Master's Guide. The gold and time you must spend to make such a scroll are halved if you use your Wizardly Quill."
         )
-        return StringUtils.add_boxes(description, 1, regain_all_on="long rest")
+        return description
 
 
 class OneWithTheWord(Feature):
     def __init__(self):
-        super().__init__(name="One with the Word", origin="Order of Scribes Wizard Level 14", action_type="reaction", duration="1d6 Long Rests", usage_tags=["buff"])
+        super().__init__(
+            name="One with the Word",
+            origin="Order of Scribes Wizard Level 14",
+            action_type="reaction",
+            duration="1d6 Long Rests",
+            usage_tags=["buff"],
+            uses=FeatureUses(max_uses=1, regain_all_on="long rest"),
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -88,4 +120,4 @@ class OneWithTheWord(Feature):
             "\n"
             "Once you use this reaction, you can't do so again until you finish a long rest."
         )
-        return StringUtils.add_boxes(description, 1, regain_all_on="long rest")
+        return description

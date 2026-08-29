@@ -1,5 +1,5 @@
 from Core.Definitions import ARTIFICER_HIT_DIE, Ability, MAX_ABILITY_MODIFIER
-from CharacterContent.Features.Core.BaseFeatures import Feature
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
@@ -67,7 +67,7 @@ class AdventurersAtlas(Feature):
 
 class MappingMagic(Feature):
     def __init__(self):
-        super().__init__(name="Mapping Magic", origin="Cartographer Artificer Level 3", range="30 Feet", usage_tags=["utility"])
+        super().__init__(name="Mapping Magic", origin="Cartographer Artificer Level 3", range="30 Feet", usage_tags=["utility"], uses=FeatureUses(max_uses=MAX_ABILITY_MODIFIER, regain_all_on="long rest", current_formula="Current amount: equal to your Intelligence modifier."))
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -75,12 +75,7 @@ class MappingMagic(Feature):
             "Illuminated Cartography. You can cast Faerie Fire without expending a spell slot, outlining the affected creatures as if in ink. You can do so a number of times equal to your Intelligence modifier (minimum of once), and you regain all expended uses when you finish a Long Rest.\n"
             "Portal Jump. On your turn, you can spend an amount of movement equal to half your Speed (round down) to teleport to an unoccupied space you can see within 10 feet of yourself or within 5 feet of a creature that is within 30 feet of you and holding one of your Adventurer's Atlas maps. You can't use this benefit if your Speed is 0."
         )
-        return StringUtils.add_boxes(
-            description,
-            MAX_ABILITY_MODIFIER,
-            regain_all_on="long rest",
-            current_formula="Current amount: equal to your Intelligence modifier.",
-        )
+        return description
 
     def get_table_description(
         self, character_stat_block: CharacterStatBlock
