@@ -1,7 +1,7 @@
 from enum import Enum
 
 import Core.Definitions as Definitions
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation
 from CharacterContent.Features.Core.Improvements import (
     DamageResistance as DamageResistanceImprovement,
 )
@@ -51,7 +51,7 @@ class BreathWeapon(Feature):
         super().__init__(
             name="Breath Weapon",
             origin="Dragonborn Trait",
-            range="15-Foot Cone or 30-Foot Line",
+            activation=FeatureActivation(range="15-Foot Cone or 30-Foot Line"),
             usage_tags=["damage"],
             uses=FeatureUses(
                 max_uses=Definitions.MAX_PROFICIENCY_BONUS,
@@ -115,8 +115,7 @@ class DraconicFlight(Feature):
         super().__init__(
             name="Draconic Flight",
             origin="Dragonborn Trait",
-            action_type="bonus_action",
-            duration="10 Minutes",
+            activation=FeatureActivation(action_type="bonus_action", duration="10 Minutes"),
             usage_tags=["buff", "utility"],
         )
 

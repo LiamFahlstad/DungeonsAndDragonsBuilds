@@ -1,6 +1,6 @@
 import Core.Definitions as Definitions
 from Core.Definitions import BARBARIAN_HIT_DIE
-from CharacterContent.Features.Core.BaseFeatures import Feature
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
@@ -32,7 +32,7 @@ class DivineFury(Feature):
 class WarriorOfTheGods(Feature):
     def __init__(self):
         super().__init__(
-            name="Warrior of the Gods", origin="Path Of The Zealot Barbarian Level 3", action_type="bonus_action", usage_tags=["heal"]
+            name="Warrior of the Gods", origin="Path Of The Zealot Barbarian Level 3", activation=FeatureActivation(action_type="bonus_action"), usage_tags=["heal"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -79,7 +79,7 @@ class FanaticalFocus(Feature):
 class ZealousPresence(Feature):
     def __init__(self):
         super().__init__(
-            name="Zealous Presence", origin="Path Of The Zealot Barbarian Level 10", action_type="bonus_action", duration="Until Start of Your Next Turn", range="60 Feet", usage_tags=["buff"]
+            name="Zealous Presence", origin="Path Of The Zealot Barbarian Level 10", activation=FeatureActivation(action_type="bonus_action", duration="Until Start of Your Next Turn", range="60 Feet"), usage_tags=["buff"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -105,7 +105,7 @@ class ZealousPresence(Feature):
 class RageOfTheGods(Feature):
     def __init__(self):
         super().__init__(
-            name="Rage of the Gods", origin="Path Of The Zealot Barbarian Level 14", duration="1 Minute or Until You Drop to 0 Hit Points", range="30 Feet", usage_tags=["buff", "heal", "utility"]
+            name="Rage of the Gods", origin="Path Of The Zealot Barbarian Level 14", activation=FeatureActivation(duration="1 Minute or Until You Drop to 0 Hit Points", range="30 Feet"), usage_tags=["buff", "heal", "utility"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:

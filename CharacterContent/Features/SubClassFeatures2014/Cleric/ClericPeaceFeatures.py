@@ -1,5 +1,5 @@
 from Core.Definitions import Ability, MAX_PROFICIENCY_BONUS
-from CharacterContent.Features.Core.BaseFeatures import Feature
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
@@ -36,9 +36,7 @@ class EmboldeningBond(Feature):
         super().__init__(
             name="Emboldening Bond",
             origin="Peace Domain Cleric Level 3",
-            action_type="action",
-            range="30 Feet",
-            duration="10 Minutes or Until You Use This Feature Again",
+            activation=FeatureActivation(action_type="action", duration="10 Minutes or Until You Use This Feature Again", range="30 Feet"),
             usage_tags=["buff"],
             uses=FeatureUses(max_uses=MAX_PROFICIENCY_BONUS, regain_all_on="long rest", current_formula="Current amount: equal to your proficiency bonus."))
 

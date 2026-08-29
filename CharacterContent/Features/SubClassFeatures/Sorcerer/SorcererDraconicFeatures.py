@@ -1,6 +1,6 @@
 import Core.Definitions as Definitions
 from Core.Definitions import Ability, SORCERER_HIT_DIE
-from CharacterContent.Features.Core.BaseFeatures import Feature
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation
 from CharacterContent.Features.Core.Improvements import MultiAbilityArmorClass
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
@@ -56,7 +56,7 @@ class ElementalAffinity(Feature):
 
 class DragonWings(Feature):
     def __init__(self):
-        super().__init__(name="Dragon Wings", origin="Draconic Sorcerer Level 14", action_type="bonus_action", duration="1 Hour", usage_tags=["buff", "utility"])
+        super().__init__(name="Dragon Wings", origin="Draconic Sorcerer Level 14", activation=FeatureActivation(action_type="bonus_action", duration="1 Hour"), usage_tags=["buff", "utility"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

@@ -1,4 +1,4 @@
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
@@ -38,8 +38,7 @@ class TheThirdEye(Feature):
         super().__init__(
             name="The Third Eye",
             origin="Divination Wizard Level 10",
-            action_type="action",
-            duration="Until Incapacitated Or Until Short Or Long Rest",
+            activation=FeatureActivation(action_type="action", duration="Until Incapacitated Or Until Short Or Long Rest"),
             usage_tags=["utility"],
             uses=FeatureUses(max_uses=1, regain_all_on="short or long rest"),
         )

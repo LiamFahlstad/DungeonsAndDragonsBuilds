@@ -1,4 +1,4 @@
-from CharacterContent.Features.Core.BaseFeatures import Feature
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
@@ -52,8 +52,7 @@ class WrithingTide(Feature):
         super().__init__(
             name="Writhing Tide",
             origin="Swarmkeeper Ranger Level 7",
-            action_type="bonus_action",
-            duration="1 Minute or Until Incapacitated",
+            activation=FeatureActivation(action_type="bonus_action", duration="1 Minute or Until Incapacitated"),
             usage_tags=["utility"],
         )
 
@@ -102,8 +101,7 @@ class SwarmingDispersal(Feature):
         super().__init__(
             name="Swarming Dispersal",
             origin="Swarmkeeper Ranger Level 15",
-            action_type="reaction",
-            range="30 Feet",
+            activation=FeatureActivation(action_type="reaction", range="30 Feet"),
             usage_tags=["buff", "utility"],
         )
 

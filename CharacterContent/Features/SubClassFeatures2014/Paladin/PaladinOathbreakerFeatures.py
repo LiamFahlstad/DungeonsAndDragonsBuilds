@@ -1,5 +1,5 @@
 from Core.Definitions import PALADIN_HIT_DIE
-from CharacterContent.Features.Core.BaseFeatures import Feature
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
@@ -26,7 +26,7 @@ class OathbreakerSpells(Feature):
 
 class ControlUndead(Feature):
     def __init__(self):
-        super().__init__(name="Control Undead", origin="Oathbreaker Paladin Level 3", action_type="action", duration="24 Hours", range="30 Feet", usage_tags=["control"])
+        super().__init__(name="Control Undead", origin="Oathbreaker Paladin Level 3", activation=FeatureActivation(action_type="action", duration="24 Hours", range="30 Feet"), usage_tags=["control"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -49,7 +49,7 @@ class ControlUndead(Feature):
 
 class DreadfulAspect(Feature):
     def __init__(self):
-        super().__init__(name="Dreadful Aspect", origin="Oathbreaker Paladin Level 3", action_type="action", duration="1 Minute", range="30 Feet", usage_tags=["control"])
+        super().__init__(name="Dreadful Aspect", origin="Oathbreaker Paladin Level 3", activation=FeatureActivation(action_type="action", duration="1 Minute", range="30 Feet"), usage_tags=["control"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -72,7 +72,7 @@ class DreadfulAspect(Feature):
 
 class AuraOfHate(Feature):
     def __init__(self):
-        super().__init__(name="Aura of Hate", origin="Oathbreaker Paladin Level 7", range="10 Feet", usage_tags=["buff"])
+        super().__init__(name="Aura of Hate", origin="Oathbreaker Paladin Level 7", activation=FeatureActivation(range="10 Feet"), usage_tags=["buff"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -106,7 +106,7 @@ class SupernaturalResistance(Feature):
 
 class DreadLord(Feature):
     def __init__(self):
-        super().__init__(name="Dread Lord", origin="Oathbreaker Paladin Level 20", action_type="action", duration="1 Minute", range="30-Foot Radius", usage_tags=["damage", "control"], uses=FeatureUses(max_uses=1, regain_all_on="long rest"))
+        super().__init__(name="Dread Lord", origin="Oathbreaker Paladin Level 20", activation=FeatureActivation(action_type="action", duration="1 Minute", range="30-Foot Radius"), usage_tags=["damage", "control"], uses=FeatureUses(max_uses=1, regain_all_on="long rest"))
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

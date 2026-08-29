@@ -1,12 +1,13 @@
-from Core.Definitions import ARTIFICER_HIT_DIE
-from CharacterContent.Features.Core.BaseFeatures import Feature
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
 class ToolsOfTheTrade(Feature):
     def __init__(self):
         super().__init__(
-            name="Tools of the Trade", origin="Artillerist Artificer Level 3", usage_tags=["utility"]
+            name="Tools of the Trade",
+            origin="Artillerist Artificer Level 3",
+            usage_tags=["utility"],
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -41,7 +42,14 @@ class Spells(Feature):
 
 class EldritchCannon(Feature):
     def __init__(self):
-        super().__init__(name="Eldritch Cannon", origin="Artillerist Artificer Level 3", action_type="action", duration="1 Hour", range="5 Feet", usage_tags=["damage", "buff"])
+        super().__init__(
+            name="Eldritch Cannon",
+            origin="Artillerist Artificer Level 3",
+            activation=FeatureActivation(
+                action_type="action", duration="1 Hour", range="5 Feet"
+            ),
+            usage_tags=["damage", "buff"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -62,7 +70,11 @@ class EldritchCannon(Feature):
 
 class ArcaneFirearm(Feature):
     def __init__(self):
-        super().__init__(name="Arcane Firearm", origin="Artillerist Artificer Level 5", usage_tags=["damage"])
+        super().__init__(
+            name="Arcane Firearm",
+            origin="Artillerist Artificer Level 5",
+            usage_tags=["damage"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -75,7 +87,10 @@ class ArcaneFirearm(Feature):
 class ExplosiveCannon(Feature):
     def __init__(self):
         super().__init__(
-            name="Explosive Cannon", origin="Artillerist Artificer Level 9", action_type="reaction", usage_tags=["damage", "buff"]
+            name="Explosive Cannon",
+            origin="Artillerist Artificer Level 9",
+            activation=FeatureActivation(action_type="reaction"),
+            usage_tags=["damage", "buff"],
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -90,15 +105,23 @@ class ExplosiveCannon(Feature):
         self, character_stat_block: CharacterStatBlock
     ) -> list[tuple[str, str]]:
         return [
-            ("Detonate", "When cannon takes damage, take a Reaction to detonate it (within 60 feet). Creatures within 20 feet make a Dexterity saving throw or take 3d10 Force damage."),
-            ("Firepower", "Cannon's damage rolls and Protector's Temporary Hit Points each increase by 1d8"),
+            (
+                "Detonate",
+                "When cannon takes damage, take a Reaction to detonate it (within 60 feet). Creatures within 20 feet make a Dexterity saving throw or take 3d10 Force damage.",
+            ),
+            (
+                "Firepower",
+                "Cannon's damage rolls and Protector's Temporary Hit Points each increase by 1d8",
+            ),
         ]
 
 
 class FortifiedPosition(Feature):
     def __init__(self):
         super().__init__(
-            name="Fortified Position", origin="Artillerist Artificer Level 15", usage_tags=["buff"]
+            name="Fortified Position",
+            origin="Artillerist Artificer Level 15",
+            usage_tags=["buff"],
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -113,6 +136,12 @@ class FortifiedPosition(Feature):
         self, character_stat_block: CharacterStatBlock
     ) -> list[tuple[str, str]]:
         return [
-            ("Double Firepower", "Have two cannons simultaneously; create both with same Magic action; activate both with same Bonus Action"),
-            ("Shimmering Field Projection", "You and allies have Half Cover within 10 feet of an Eldritch Cannon"),
+            (
+                "Double Firepower",
+                "Have two cannons simultaneously; create both with same Magic action; activate both with same Bonus Action",
+            ),
+            (
+                "Shimmering Field Projection",
+                "You and allies have Half Cover within 10 feet of an Eldritch Cannon",
+            ),
         ]

@@ -1,4 +1,4 @@
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation
 from CharacterContent.Features.Core.Improvements import SkillExpertiseChoice, SpeedBonus
 from Core.Definitions import Ability, Skill
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
@@ -188,7 +188,7 @@ class Tireless(Feature):
         super().__init__(
             name="Tireless",
             origin="Ranger Level 10",
-            action_type="action",
+            activation=FeatureActivation(action_type="action"),
             usage_tags=["heal"],
         )
 
@@ -229,8 +229,7 @@ class NaturesVeil(Feature):
         super().__init__(
             name="Nature's Veil",
             origin="Ranger Level 14",
-            action_type="bonus_action",
-            duration="Until End of Your Next Turn",
+            activation=FeatureActivation(action_type="bonus_action", duration="Until End of Your Next Turn"),
             usage_tags=["buff"],
         )
 
@@ -269,7 +268,7 @@ class PreciseHunter(Feature):
 
 class FeralSenses(Feature):
     def __init__(self):
-        super().__init__(name="Feral Senses", origin="Ranger Level 18", range="30 Feet")
+        super().__init__(name="Feral Senses", origin="Ranger Level 18", activation=FeatureActivation(range="30 Feet"))
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "Your connection to the forces of nature grants you Blindsight with a range of 30 feet."

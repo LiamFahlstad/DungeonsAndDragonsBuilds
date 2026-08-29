@@ -1,4 +1,4 @@
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
@@ -80,7 +80,7 @@ class HurlThroughHell(Feature):
         super().__init__(
             name="Hurl Through Hell",
             origin="The Fiend Patron Warlock Level 14",
-            duration="Until End of Next Turn",
+            activation=FeatureActivation(duration="Until End of Next Turn"),
             usage_tags=["damage", "control"],
             uses=FeatureUses(max_uses=1, regain_all_on="long rest"),
         )

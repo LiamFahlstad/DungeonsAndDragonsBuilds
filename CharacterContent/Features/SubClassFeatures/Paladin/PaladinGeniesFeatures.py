@@ -1,4 +1,4 @@
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation
 from Core.Definitions import MAX_ABILITY_MODIFIER, Ability
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
@@ -8,7 +8,7 @@ class ElementalSmite(Feature):
         super().__init__(
             name="Elemental Smite",
             origin="Oath of the Noble Genies Paladin Level 3",
-            range="30 Feet",
+            activation=FeatureActivation(range="30 Feet"),
             usage_tags=["damage", "control", "buff"],
         )
 
@@ -104,7 +104,7 @@ class ElementalRebuke(Feature):
         super().__init__(
             name="Elemental Rebuke",
             origin="Oath of the Noble Genies Paladin Level 15",
-            action_type="reaction",
+            activation=FeatureActivation(action_type="reaction"),
             usage_tags=["damage", "buff"],
             uses=FeatureUses(
                 max_uses=MAX_ABILITY_MODIFIER,
@@ -144,8 +144,7 @@ class NobleScion(Feature):
         super().__init__(
             name="Noble Scion",
             origin="Oath of the Noble Genies Paladin Level 20",
-            action_type="bonus_action",
-            duration="10 Minutes or Until Ended",
+            activation=FeatureActivation(action_type="bonus_action", duration="10 Minutes or Until Ended"),
             usage_tags=["buff", "utility"],
         )
 

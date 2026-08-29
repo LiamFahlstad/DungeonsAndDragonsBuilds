@@ -1,5 +1,5 @@
 from Core.Definitions import Skill
-from CharacterContent.Features.Core.BaseFeatures import Feature
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation
 from CharacterContent.Features.Core.Improvements import SkillProficiencyChoice
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
@@ -34,7 +34,7 @@ class ChangelingInstincts(Feature):
 
 class ShapeShifter(Feature):
     def __init__(self):
-        super().__init__(name="Shape-Shifter", origin="Changeling Trait", action_type="action", duration="Until Reverted As an Action", usage_tags=["buff"])
+        super().__init__(name="Shape-Shifter", origin="Changeling Trait", activation=FeatureActivation(action_type="action", duration="Until Reverted As an Action"), usage_tags=["buff"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         return (

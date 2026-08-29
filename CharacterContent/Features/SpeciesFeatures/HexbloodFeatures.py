@@ -1,5 +1,5 @@
 from Core.Definitions import Sense
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation
 from CharacterContent.Features.Core.Improvements import GrantSense
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
@@ -20,7 +20,7 @@ class Darkvision(Feature):
 
 class EerieToken(Feature):
     def __init__(self):
-        super().__init__(name="Eerie Token", origin="Hexblood Trait", action_type="bonus_action", duration="Until Long Rest", range="10 Miles", usage_tags=["utility"], uses=FeatureUses(max_uses=1))
+        super().__init__(name="Eerie Token", origin="Hexblood Trait", activation=FeatureActivation(action_type="bonus_action", duration="Until Long Rest", range="10 Miles"), usage_tags=["utility"], uses=FeatureUses(max_uses=1))
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

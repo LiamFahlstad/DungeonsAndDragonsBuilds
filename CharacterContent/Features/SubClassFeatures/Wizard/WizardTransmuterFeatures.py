@@ -1,5 +1,5 @@
 from Core.Definitions import Ability, WIZARD_HIT_DIE
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
@@ -89,7 +89,7 @@ class ShapeShifter(Feature):
 
 class MasterTransmuter(Feature):
     def __init__(self):
-        super().__init__(name="Master Transmuter", origin="Transmuter Wizard Level 14", action_type="action", usage_tags=["heal", "utility"])
+        super().__init__(name="Master Transmuter", origin="Transmuter Wizard Level 14", activation=FeatureActivation(action_type="action"), usage_tags=["heal", "utility"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

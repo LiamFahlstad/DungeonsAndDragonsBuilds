@@ -1,4 +1,4 @@
-from CharacterContent.Features.Core.BaseFeatures import Feature
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation
 from Core.Definitions import Ability
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
@@ -28,8 +28,7 @@ class HuntersSense(Feature):
         super().__init__(
             name="Hunter's Sense",
             origin="Monster Slayer Ranger Level 3",
-            action_type="action",
-            range="60 Feet",
+            activation=FeatureActivation(action_type="action", range="60 Feet"),
             usage_tags=["utility"],
         )
 
@@ -61,9 +60,7 @@ class SlayersPrey(Feature):
         super().__init__(
             name="Slayer's Prey",
             origin="Monster Slayer Ranger Level 3",
-            action_type="bonus_action",
-            duration="Until Short or Long Rest",
-            range="60 Feet",
+            activation=FeatureActivation(action_type="bonus_action", duration="Until Short or Long Rest", range="60 Feet"),
             usage_tags=["damage"],
         )
 
@@ -105,8 +102,7 @@ class MagicUsersNemesis(Feature):
         super().__init__(
             name="Magic-User's Nemesis",
             origin="Monster Slayer Ranger Level 11",
-            action_type="reaction",
-            range="60 Feet",
+            activation=FeatureActivation(action_type="reaction", range="60 Feet"),
             usage_tags=["control"],
         )
 
@@ -139,7 +135,7 @@ class SlayersCounter(Feature):
         super().__init__(
             name="Slayer's Counter",
             origin="Monster Slayer Ranger Level 15",
-            action_type="reaction",
+            activation=FeatureActivation(action_type="reaction"),
             usage_tags=["damage"],
         )
 

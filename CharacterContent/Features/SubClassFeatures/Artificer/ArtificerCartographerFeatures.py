@@ -1,5 +1,5 @@
 from Core.Definitions import ARTIFICER_HIT_DIE, Ability, MAX_ABILITY_MODIFIER
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
@@ -67,7 +67,7 @@ class AdventurersAtlas(Feature):
 
 class MappingMagic(Feature):
     def __init__(self):
-        super().__init__(name="Mapping Magic", origin="Cartographer Artificer Level 3", range="30 Feet", usage_tags=["utility"], uses=FeatureUses(max_uses=MAX_ABILITY_MODIFIER, regain_all_on="long rest", current_formula="Current amount: equal to your Intelligence modifier."))
+        super().__init__(name="Mapping Magic", origin="Cartographer Artificer Level 3", activation=FeatureActivation(range="30 Feet"), usage_tags=["utility"], uses=FeatureUses(max_uses=MAX_ABILITY_MODIFIER, regain_all_on="long rest", current_formula="Current amount: equal to your Intelligence modifier."))
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -105,7 +105,7 @@ class GuidedPrecision(Feature):
 class IngeniousMovement(Feature):
     def __init__(self):
         super().__init__(
-            name="Ingenious Movement", origin="Cartographer Artificer Level 9", range="30 Feet", usage_tags=["buff", "utility"]
+            name="Ingenious Movement", origin="Cartographer Artificer Level 9", activation=FeatureActivation(range="30 Feet"), usage_tags=["buff", "utility"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:

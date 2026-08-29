@@ -1,5 +1,5 @@
 from Core.Definitions import ARTIFICER_HIT_DIE
-from CharacterContent.Features.Core.BaseFeatures import Feature
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
@@ -37,7 +37,7 @@ class Spells(Feature):
 
 class ArcaneArmor(Feature):
     def __init__(self):
-        super().__init__(name="Arcane Armor", origin="Armorer Artificer Level 3", action_type="action", usage_tags=["buff"])
+        super().__init__(name="Arcane Armor", origin="Armorer Artificer Level 3", activation=FeatureActivation(action_type="action"), usage_tags=["buff"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

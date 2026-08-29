@@ -1,5 +1,5 @@
 from Core.Definitions import FIGHTER_HIT_DIE
-from CharacterContent.Features.Core.BaseFeatures import Feature
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
@@ -33,7 +33,7 @@ class EldritchKnightSpellcasting(Feature):
 
 class WarBond(Feature):
     def __init__(self):
-        super().__init__(name="War Bond", origin="Eldritch Knight Fighter Level 3", action_type="bonus_action", usage_tags=["utility"])
+        super().__init__(name="War Bond", origin="Eldritch Knight Fighter Level 3", activation=FeatureActivation(action_type="bonus_action"), usage_tags=["utility"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -79,7 +79,7 @@ class EldritchStrike(Feature):
 class ArcaneCharge(Feature):
     def __init__(self):
         super().__init__(
-            name="Arcane Charge", origin="Eldritch Knight Fighter Level 15", range="30 Feet", usage_tags=["utility"]
+            name="Arcane Charge", origin="Eldritch Knight Fighter Level 15", activation=FeatureActivation(range="30 Feet"), usage_tags=["utility"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:

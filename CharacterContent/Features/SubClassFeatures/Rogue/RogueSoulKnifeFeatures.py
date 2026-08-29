@@ -1,12 +1,12 @@
 from Core.Definitions import CharacterClass, ROGUE_HIT_DIE
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
 
 class PsionicPower(Feature):
     def __init__(self):
-        super().__init__(name="Psionic Power", origin="Soulknife Rogue Level 3", action_type="action", duration="Hours Based on Energy Die Roll", range="1 Mile", usage_tags=["utility"], uses=FeatureUses(max_uses=12, regain_all_on="long rest", regain_x_on=(1, "short rest")))
+        super().__init__(name="Psionic Power", origin="Soulknife Rogue Level 3", activation=FeatureActivation(action_type="action", duration="Hours Based on Energy Die Roll", range="1 Mile"), usage_tags=["utility"], uses=FeatureUses(max_uses=12, regain_all_on="long rest", regain_x_on=(1, "short rest")))
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         rogue_level = character_stat_block.get_class_level(CharacterClass.ROGUE)
@@ -61,7 +61,7 @@ class PsychicBlades(Feature):
 
 class SoulBlades(Feature):
     def __init__(self):
-        super().__init__(name="Soul Blades", origin="Soulknife Rogue Level 9", range="Up to 120 Feet", usage_tags=["buff", "utility"])
+        super().__init__(name="Soul Blades", origin="Soulknife Rogue Level 9", activation=FeatureActivation(range="Up to 120 Feet"), usage_tags=["buff", "utility"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -74,7 +74,7 @@ class SoulBlades(Feature):
 
 class PsychicVeil(Feature):
     def __init__(self):
-        super().__init__(name="Psychic Veil", origin="Soulknife Rogue Level 13", action_type="action", duration="1 Hour or Until Dismissed", usage_tags=["buff"])
+        super().__init__(name="Psychic Veil", origin="Soulknife Rogue Level 13", activation=FeatureActivation(action_type="action", duration="1 Hour or Until Dismissed"), usage_tags=["buff"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -97,7 +97,7 @@ class PsychicVeil(Feature):
 
 class RendMind(Feature):
     def __init__(self):
-        super().__init__(name="Rend Mind", origin="Soulknife Rogue Level 17", duration="1 Minute", usage_tags=["control"])
+        super().__init__(name="Rend Mind", origin="Soulknife Rogue Level 17", activation=FeatureActivation(duration="1 Minute"), usage_tags=["control"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

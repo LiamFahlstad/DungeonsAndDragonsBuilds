@@ -1,4 +1,4 @@
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
@@ -27,9 +27,7 @@ class AbjureEnemy(Feature):
         super().__init__(
             name="Abjure Enemy",
             origin="Oath of Vengeance Paladin Level 3",
-            action_type="action",
-            duration="1 Minute or Until Takes Damage",
-            range="60 Feet",
+            activation=FeatureActivation(action_type="action", duration="1 Minute or Until Takes Damage", range="60 Feet"),
             usage_tags=["control"],
         )
 
@@ -58,9 +56,7 @@ class VowOfEnmity(Feature):
         super().__init__(
             name="Vow of Enmity",
             origin="Oath of Vengeance Paladin Level 3",
-            action_type="bonus_action",
-            duration="1 Minute or Until Unconscious",
-            range="10 Feet",
+            activation=FeatureActivation(action_type="bonus_action", duration="1 Minute or Until Unconscious", range="10 Feet"),
             usage_tags=["buff"],
         )
 
@@ -74,7 +70,7 @@ class RelentlessAvenger(Feature):
         super().__init__(
             name="Relentless Avenger",
             origin="Oath of Vengeance Paladin Level 7",
-            action_type="reaction",
+            activation=FeatureActivation(action_type="reaction"),
             usage_tags=["buff"],
         )
 
@@ -88,7 +84,7 @@ class SoulOfVengeance(Feature):
         super().__init__(
             name="Soul of Vengeance",
             origin="Oath of Vengeance Paladin Level 15",
-            action_type="reaction",
+            activation=FeatureActivation(action_type="reaction"),
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -101,9 +97,7 @@ class AvengingAngel(Feature):
         super().__init__(
             name="Avenging Angel",
             origin="Oath of Vengeance Paladin Level 20",
-            action_type="action",
-            duration="1 Hour",
-            range="30-Foot Radius",
+            activation=FeatureActivation(action_type="action", duration="1 Hour", range="30-Foot Radius"),
             usage_tags=["utility", "control"],
             uses=FeatureUses(max_uses=1, regain_all_on="long rest"),
         )

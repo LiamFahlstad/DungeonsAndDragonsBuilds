@@ -1,5 +1,9 @@
 import Core.Definitions as Definitions
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses
+from CharacterContent.Features.Core.BaseFeatures import (
+    Feature,
+    FeatureActivation,
+    FeatureUses,
+)
 from CharacterContent.Features.Core.Improvements import (
     AbilityScoreBonus,
     MultiAbilityArmorClass,
@@ -167,7 +171,7 @@ class FlurryOfBlows(Feature):
         super().__init__(
             name="Flurry of Blows",
             origin="Monk Level 2",
-            action_type="bonus_action",
+            activation=FeatureActivation(action_type="bonus_action"),
             usage_tags=["damage"],
         )
 
@@ -187,7 +191,7 @@ class PatientDefense(Feature):
         super().__init__(
             name="Patient Defense",
             origin="Monk Level 2",
-            action_type="bonus_action",
+            activation=FeatureActivation(action_type="bonus_action"),
             usage_tags=["buff"],
         )
 
@@ -205,7 +209,9 @@ class PatientDefense(Feature):
 class StepOfTheWind(Feature):
     def __init__(self):
         super().__init__(
-            name="Step of the Wind", origin="Monk Level 2", action_type="bonus_action"
+            name="Step of the Wind",
+            origin="Monk Level 2",
+            activation=FeatureActivation(action_type="bonus_action"),
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -281,7 +287,7 @@ class DeflectAttacks(Feature):
         super().__init__(
             name="Deflect Attacks",
             origin="Monk Level 3",
-            action_type="reaction",
+            activation=FeatureActivation(action_type="reaction"),
             usage_tags=["buff", "damage"],
         )
 
@@ -337,7 +343,7 @@ class SlowFall(Feature):
         super().__init__(
             name="Slow Fall",
             origin="Monk Level 4",
-            action_type="reaction",
+            activation=FeatureActivation(action_type="reaction"),
             usage_tags=["buff"],
         )
 
@@ -360,7 +366,7 @@ class StunningStrike(Feature):
         super().__init__(
             name="Stunning Strike",
             origin="Monk Level 5",
-            duration="Until Start of Next Turn",
+            activation=FeatureActivation(duration="Until Start of Next Turn"),
             usage_tags=["control"],
         )
 
@@ -507,7 +513,7 @@ class SuperiorDefense(Feature):
         super().__init__(
             name="Superior Defense",
             origin="Monk Level 18",
-            duration="1 Minute or Until Incapacitated",
+            activation=FeatureActivation(duration="1 Minute or Until Incapacitated"),
             usage_tags=["buff"],
         )
 

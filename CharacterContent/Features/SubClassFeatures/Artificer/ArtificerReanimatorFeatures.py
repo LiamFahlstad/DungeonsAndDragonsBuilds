@@ -1,5 +1,5 @@
 from Core.Definitions import ARTIFICER_HIT_DIE, Ability, MAX_ABILITY_MODIFIER
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
@@ -27,7 +27,7 @@ class ReanimatorSpells(Feature):
 class ReanimatorSkillSet(Feature):
     def __init__(self):
         super().__init__(
-            name="Reanimator's Skill Set", origin="Reanimator Artificer Level 3", range="10-Foot Emanation", usage_tags=["heal", "damage", "utility"]
+            name="Reanimator's Skill Set", origin="Reanimator Artificer Level 3", activation=FeatureActivation(range="10-Foot Emanation"), usage_tags=["heal", "damage", "utility"]
         , uses=FeatureUses(max_uses=MAX_ABILITY_MODIFIER, regain_all_on="long rest", current_formula="Current amount: equal to your Intelligence modifier."))
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -42,7 +42,7 @@ class ReanimatorSkillSet(Feature):
 class ReanimatedCompanion(Feature):
     def __init__(self):
         super().__init__(
-            name="Reanimated Companion", origin="Reanimator Artificer Level 3", action_type="action", duration="Until Long Rest", range="5 Feet", usage_tags=["summon"]
+            name="Reanimated Companion", origin="Reanimator Artificer Level 3", activation=FeatureActivation(action_type="action", duration="Until Long Rest", range="5 Feet"), usage_tags=["summon"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -58,7 +58,7 @@ class ReanimatedCompanion(Feature):
 class StrangeModifications(Feature):
     def __init__(self):
         super().__init__(
-            name="Strange Modifications", origin="Reanimator Artificer Level 5", range="120 Feet", usage_tags=["damage"]
+            name="Strange Modifications", origin="Reanimator Artificer Level 5", activation=FeatureActivation(range="120 Feet"), usage_tags=["damage"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -108,7 +108,7 @@ class MacabreModifications(Feature):
 class RefinedReanimation(Feature):
     def __init__(self):
         super().__init__(
-            name="Refined Reanimation", origin="Reanimator Artificer Level 15", action_type="reaction", usage_tags=["heal", "utility"]
+            name="Refined Reanimation", origin="Reanimator Artificer Level 15", activation=FeatureActivation(action_type="reaction"), usage_tags=["heal", "utility"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:

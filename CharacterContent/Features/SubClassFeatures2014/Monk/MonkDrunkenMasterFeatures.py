@@ -1,4 +1,4 @@
-from CharacterContent.Features.Core.BaseFeatures import Feature
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
@@ -15,7 +15,7 @@ class BonusProficiencies(Feature):
 
 class DrunkenTechnique(Feature):
     def __init__(self):
-        super().__init__(name="Drunken Technique", origin="Way of the Drunken Master Monk Level 3", duration="Until End of Current Turn", usage_tags=["buff"])
+        super().__init__(name="Drunken Technique", origin="Way of the Drunken Master Monk Level 3", activation=FeatureActivation(duration="Until End of Current Turn"), usage_tags=["buff"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -26,7 +26,7 @@ class DrunkenTechnique(Feature):
 
 class TipsySway(Feature):
     def __init__(self):
-        super().__init__(name="Tipsy Sway", origin="Way of the Drunken Master Monk Level 6", action_type="reaction", range="5 Feet", usage_tags=["control"])
+        super().__init__(name="Tipsy Sway", origin="Way of the Drunken Master Monk Level 6", activation=FeatureActivation(action_type="reaction", range="5 Feet"), usage_tags=["control"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

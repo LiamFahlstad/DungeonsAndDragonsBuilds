@@ -1,5 +1,5 @@
 from Core.Definitions import RANGER_HIT_DIE
-from CharacterContent.Features.Core.BaseFeatures import Feature
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
@@ -23,7 +23,7 @@ class ColossusSlayer(Feature):
 
 class HordeBreaker(Feature):
     def __init__(self):
-        super().__init__(name="Horde Breaker", origin="Hunter Ranger Level 3", range="5 Feet", usage_tags=["damage"])
+        super().__init__(name="Horde Breaker", origin="Hunter Ranger Level 3", activation=FeatureActivation(range="5 Feet"), usage_tags=["damage"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "Once on each of your turns when you make an attack with a weapon, you can make another attack with the same weapon against a different creature that is within 5 feet of the original target, that is within the weapon's range, and that you haven't attacked this turn."
@@ -50,7 +50,7 @@ class MultiattackDefense(Feature):
 
 class SuperiorHuntersPrey(Feature):
     def __init__(self):
-        super().__init__(name="Superior Hunter's Prey", origin="Hunter Ranger Level 11", range="30 Feet", usage_tags=["damage"])
+        super().__init__(name="Superior Hunter's Prey", origin="Hunter Ranger Level 11", activation=FeatureActivation(range="30 Feet"), usage_tags=["damage"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "Once per turn when you deal damage to a creature marked by your Hunter's Mark, you can also deal that spell's extra damage to a different creature that you can see within 30 feet of the first creature."
@@ -60,7 +60,7 @@ class SuperiorHuntersPrey(Feature):
 class SuperiorHuntersDefense(Feature):
     def __init__(self):
         super().__init__(
-            name="Superior Hunter's Defense", origin="Hunter Ranger Level 15", action_type="reaction", duration="Until End of Current Turn", usage_tags=["buff"]
+            name="Superior Hunter's Defense", origin="Hunter Ranger Level 15", activation=FeatureActivation(action_type="reaction", duration="Until End of Current Turn"), usage_tags=["buff"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:

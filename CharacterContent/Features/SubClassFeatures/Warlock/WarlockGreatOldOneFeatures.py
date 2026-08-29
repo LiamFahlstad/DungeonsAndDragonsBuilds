@@ -1,5 +1,5 @@
 from Core.Definitions import DamageType, WARLOCK_HIT_DIE
-from CharacterContent.Features.Core.BaseFeatures import Feature
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation
 from CharacterContent.Features.Core.Improvements import DamageResistance
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
@@ -18,7 +18,7 @@ class GreatOldOneSpells(Feature):
 class AwakenedMind(Feature):
     def __init__(self):
         super().__init__(
-            name="Awakened Mind", origin="Great Old One Patron Warlock Level 3", action_type="bonus_action", duration="Minutes Equal to Warlock Level", range="30 Feet", usage_tags=["utility"]
+            name="Awakened Mind", origin="Great Old One Patron Warlock Level 3", activation=FeatureActivation(action_type="bonus_action", duration="Minutes Equal to Warlock Level", range="30 Feet"), usage_tags=["utility"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:

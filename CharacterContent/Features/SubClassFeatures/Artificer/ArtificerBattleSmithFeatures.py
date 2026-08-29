@@ -1,5 +1,5 @@
 from Core.Definitions import ARTIFICER_HIT_DIE, Ability, MAX_ABILITY_MODIFIER
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
@@ -104,7 +104,7 @@ class ExtraAttack(Feature):
 
 class ArcaneJolt(Feature):
     def __init__(self):
-        super().__init__(name="Arcane Jolt", origin="Battle Smith Artificer Level 9", range="30 Feet", usage_tags=["damage", "heal"], uses=FeatureUses(max_uses=MAX_ABILITY_MODIFIER, regain_all_on="long rest", current_formula="Current amount: equal to your Intelligence modifier."))
+        super().__init__(name="Arcane Jolt", origin="Battle Smith Artificer Level 9", activation=FeatureActivation(range="30 Feet"), usage_tags=["damage", "heal"], uses=FeatureUses(max_uses=MAX_ABILITY_MODIFIER, regain_all_on="long rest", current_formula="Current amount: equal to your Intelligence modifier."))
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

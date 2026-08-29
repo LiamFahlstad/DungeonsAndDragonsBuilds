@@ -1,5 +1,5 @@
 import Core.Definitions as Definitions
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation
 from Core.Definitions import Ability
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
@@ -29,7 +29,7 @@ class AmongTheDead(Feature):
         super().__init__(
             name="Among the Dead",
             origin="The Undying Patron Warlock Level 3",
-            duration="24 Hours",
+            activation=FeatureActivation(duration="24 Hours"),
             usage_tags=["buff"],
         )
 
@@ -96,7 +96,7 @@ class IndestructibleLife(Feature):
         super().__init__(
             name="Indestructible Life",
             origin="The Undying Patron Warlock Level 14",
-            action_type="bonus_action",
+            activation=FeatureActivation(action_type="bonus_action"),
             usage_tags=["heal"],
             uses=FeatureUses(max_uses=1, regain_all_on="short or long rest"),
         )

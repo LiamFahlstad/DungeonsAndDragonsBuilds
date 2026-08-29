@@ -1,6 +1,6 @@
 from Core import Definitions
 from Core.Definitions import Ability, WIZARD_HIT_DIE
-from CharacterContent.Features.Core.BaseFeatures import Feature
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
@@ -15,7 +15,7 @@ class ConjurationSavant(Feature):
 
 class MinorConjuration(Feature):
     def __init__(self):
-        super().__init__(name="Minor Conjuration", origin="Conjuration Wizard Level 3", action_type="action", duration="1 Hour", range="10 Feet", usage_tags=["utility"])
+        super().__init__(name="Minor Conjuration", origin="Conjuration Wizard Level 3", activation=FeatureActivation(action_type="action", duration="1 Hour", range="10 Feet"), usage_tags=["utility"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -38,7 +38,7 @@ class MinorConjuration(Feature):
 
 class BenignTransportation(Feature):
     def __init__(self):
-        super().__init__(name="Benign Transportation", origin="Conjuration Wizard Level 6", action_type="action", range="30 Feet", usage_tags=["utility"])
+        super().__init__(name="Benign Transportation", origin="Conjuration Wizard Level 6", activation=FeatureActivation(action_type="action", range="30 Feet"), usage_tags=["utility"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

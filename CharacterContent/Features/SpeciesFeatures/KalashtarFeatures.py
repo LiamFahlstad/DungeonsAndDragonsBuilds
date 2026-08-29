@@ -1,5 +1,5 @@
 from Core.Definitions import Ability, DamageType, Skill
-from CharacterContent.Features.Core.BaseFeatures import Feature
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation
 from CharacterContent.Features.Core.Improvements import DamageResistance, SavingThrowAdvantage
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
@@ -33,7 +33,7 @@ class MentalDiscipline(Feature):
 
 class MindLink(Feature):
     def __init__(self):
-        super().__init__(name="Mind Link", origin="Kalashtar Trait", action_type="action", duration="1 Hour", range="10 Feet Per Character Level", usage_tags=["buff", "utility"])
+        super().__init__(name="Mind Link", origin="Kalashtar Trait", activation=FeatureActivation(action_type="action", duration="1 Hour", range="10 Feet Per Character Level"), usage_tags=["buff", "utility"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         character_level = character_stat_block.character_level
@@ -48,7 +48,7 @@ class MindLink(Feature):
 
 class SeveredFromDreams(Feature):
     def __init__(self):
-        super().__init__(name="Severed from Dreams", origin="Kalashtar Trait", duration="Until Next Long Rest", usage_tags=["buff"])
+        super().__init__(name="Severed from Dreams", origin="Kalashtar Trait", activation=FeatureActivation(duration="Until Next Long Rest"), usage_tags=["buff"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         return (

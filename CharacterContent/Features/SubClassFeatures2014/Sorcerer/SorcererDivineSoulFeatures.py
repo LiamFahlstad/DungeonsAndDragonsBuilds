@@ -1,6 +1,6 @@
 import Core.Definitions as Definitions
 from Core.Definitions import SORCERER_HIT_DIE
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
@@ -48,7 +48,7 @@ class FavoredByTheGods(Feature):
 
 class EmpoweredHealing(Feature):
     def __init__(self):
-        super().__init__(name="Empowered Healing", origin="Divine Soul Sorcerer Level 6", range="5 Feet", usage_tags=["buff", "heal"])
+        super().__init__(name="Empowered Healing", origin="Divine Soul Sorcerer Level 6", activation=FeatureActivation(range="5 Feet"), usage_tags=["buff", "heal"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -69,7 +69,7 @@ class EmpoweredHealing(Feature):
 
 class AngelicForm(Feature):
     def __init__(self):
-        super().__init__(name="Angelic Form", origin="Divine Soul Sorcerer Level 14", action_type="bonus_action", duration="Until Incapacitated, Dead, or Dismissed", range="Self", usage_tags=["utility"])
+        super().__init__(name="Angelic Form", origin="Divine Soul Sorcerer Level 14", activation=FeatureActivation(action_type="bonus_action", duration="Until Incapacitated, Dead, or Dismissed", range="Self"), usage_tags=["utility"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -92,7 +92,7 @@ class AngelicForm(Feature):
 
 class UnearthlyRecovery(Feature):
     def __init__(self):
-        super().__init__(name="Unearthly Recovery", origin="Divine Soul Sorcerer Level 18", action_type="bonus_action", range="Self", usage_tags=["heal"], uses=FeatureUses(max_uses=1, regain_all_on="long rest"))
+        super().__init__(name="Unearthly Recovery", origin="Divine Soul Sorcerer Level 18", activation=FeatureActivation(action_type="bonus_action", range="Self"), usage_tags=["heal"], uses=FeatureUses(max_uses=1, regain_all_on="long rest"))
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

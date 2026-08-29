@@ -1,5 +1,5 @@
 import Core.Definitions as Definitions
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation
 from CharacterContent.Features.Core.Improvements import SavingThrowBonus
 from Core.Definitions import Ability
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
@@ -11,8 +11,7 @@ class LayOnHands(Feature):
         super().__init__(
             name="Lay on Hands",
             origin="Paladin Level 1",
-            action_type="bonus_action",
-            range="Touch",
+            activation=FeatureActivation(action_type="bonus_action", range="Touch"),
             usage_tags=["heal"],
         )
 
@@ -188,7 +187,7 @@ class AuraOfProtection(Feature):
         super().__init__(
             name="Aura of Protection",
             origin="Paladin Level 6",
-            range="10-Foot Emanation",
+            activation=FeatureActivation(range="10-Foot Emanation"),
             usage_tags=["buff"],
         )
 
@@ -223,9 +222,7 @@ class AbjureFoes(Feature):
         super().__init__(
             name="Abjure Foes",
             origin="Paladin Level 9",
-            action_type="action",
-            duration="1 Minute or Until Takes Damage",
-            range="60 Feet",
+            activation=FeatureActivation(action_type="action", duration="1 Minute or Until Takes Damage", range="60 Feet"),
             usage_tags=["control"],
         )
 

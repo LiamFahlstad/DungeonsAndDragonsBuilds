@@ -1,6 +1,6 @@
 from Combat.Definitions import Alignment, Condition, DamageTypeEntry, ExtendedCombatantData, MonsterAbility, MonsterType, Size
 from Core.Definitions import Ability, CharacterClass, DamageType, MAX_PROFICIENCY_BONUS
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 from Utils.CreatureStatBlocks import format_creature_stat_block
@@ -90,7 +90,7 @@ class CircleSpells(Feature):
 
 class SummonWildfireSpirit(Feature):
     def __init__(self):
-        super().__init__(name="Summon Wildfire Spirit", origin="Circle of Wildfire Druid Level 3", action_type="action", duration="1 Hour", range="30 Feet", usage_tags=["damage", "utility", "summon"], uses=FeatureUses(max_uses=1, regain_all_on="Wild Shape use"))
+        super().__init__(name="Summon Wildfire Spirit", origin="Circle of Wildfire Druid Level 3", activation=FeatureActivation(action_type="action", duration="1 Hour", range="30 Feet"), usage_tags=["damage", "utility", "summon"], uses=FeatureUses(max_uses=1, regain_all_on="Wild Shape use"))
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

@@ -1,4 +1,4 @@
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation
 from CharacterContent.Features.Core.Improvements import ConditionImmunity
 from Core.Definitions import Condition
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
@@ -29,9 +29,7 @@ class FeyPresence(Feature):
         super().__init__(
             name="Fey Presence",
             origin="The Archfey Patron Warlock Level 3",
-            action_type="action",
-            duration="Until End of Next Turn",
-            range="10-Foot Cube",
+            activation=FeatureActivation(action_type="action", duration="Until End of Next Turn", range="10-Foot Cube"),
             usage_tags=["control"],
             uses=FeatureUses(max_uses=1, regain_all_on="short or long rest"),
         )
@@ -60,9 +58,7 @@ class MistyEscape(Feature):
         super().__init__(
             name="Misty Escape",
             origin="The Archfey Patron Warlock Level 6",
-            action_type="reaction",
-            duration="Until Start of Next Turn or Until Attack/Spell",
-            range="60 Feet",
+            activation=FeatureActivation(action_type="reaction", duration="Until Start of Next Turn or Until Attack/Spell", range="60 Feet"),
             usage_tags=["utility"],
             uses=FeatureUses(max_uses=1, regain_all_on="short or long rest"),
         )
@@ -94,8 +90,7 @@ class BeguilingDefenses(Feature):
         super().__init__(
             name="Beguiling Defenses",
             origin="The Archfey Patron Warlock Level 10",
-            action_type="reaction",
-            duration="1 Minute or Until Creature Takes Damage",
+            activation=FeatureActivation(action_type="reaction", duration="1 Minute or Until Creature Takes Damage"),
             usage_tags=["control"],
         )
         self._immunity = ConditionImmunity(Condition.CHARMED, self.name)
@@ -124,9 +119,7 @@ class DarkDelirium(Feature):
         super().__init__(
             name="Dark Delirium",
             origin="The Archfey Patron Warlock Level 14",
-            action_type="action",
-            duration="1 Minute or Until Concentration Broken",
-            range="60 Feet",
+            activation=FeatureActivation(action_type="action", duration="1 Minute or Until Concentration Broken", range="60 Feet"),
             usage_tags=["control"],
             uses=FeatureUses(max_uses=1, regain_all_on="short or long rest"),
         )

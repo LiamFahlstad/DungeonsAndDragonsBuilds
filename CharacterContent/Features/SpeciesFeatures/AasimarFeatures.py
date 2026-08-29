@@ -1,5 +1,5 @@
 from Core.Definitions import CreatureSize, DamageType, Sense
-from CharacterContent.Features.Core.BaseFeatures import Feature
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation
 from CharacterContent.Features.Core.Improvements import DamageResistance, GrantSense
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
@@ -50,8 +50,7 @@ class HealingHands(Feature):
         super().__init__(
             name="Healing Hands",
             origin="Aasimar Trait",
-            action_type="action",
-            range="Touch",
+            activation=FeatureActivation(action_type="action", range="Touch"),
             usage_tags=["heal"],
         )
 
@@ -62,7 +61,7 @@ class HealingHands(Feature):
 
 class CelestialRevelation(Feature):
     def __init__(self):
-        super().__init__(name="Celestial Revelation", origin="Aasimar Trait", action_type="bonus_action", duration="1 Minute", usage_tags=["damage", "buff", "control", "utility"])
+        super().__init__(name="Celestial Revelation", origin="Aasimar Trait", activation=FeatureActivation(action_type="bonus_action", duration="1 Minute"), usage_tags=["damage", "buff", "control", "utility"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         proficiency_bonus = character_stat_block.get_proficiency_bonus()

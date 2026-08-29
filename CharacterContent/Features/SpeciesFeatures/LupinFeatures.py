@@ -1,5 +1,5 @@
 from Core.Definitions import MAX_PROFICIENCY_BONUS, Sense, Skill
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation
 from CharacterContent.Features.Core.Improvements import SkillProficiencyChoice, GrantSense
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
@@ -32,7 +32,7 @@ class FeralPounce(Feature):
 
 class Howl(Feature):
     def __init__(self):
-        super().__init__(name="Howl", origin="Lupin Trait", action_type="bonus_action", duration="Until Start of Next Turn", range="15-Foot Radius", usage_tags=["control"], uses=FeatureUses(max_uses=MAX_PROFICIENCY_BONUS, current_formula="Current amount: equal to your proficiency bonus."))
+        super().__init__(name="Howl", origin="Lupin Trait", activation=FeatureActivation(action_type="bonus_action", duration="Until Start of Next Turn", range="15-Foot Radius"), usage_tags=["control"], uses=FeatureUses(max_uses=MAX_PROFICIENCY_BONUS, current_formula="Current amount: equal to your proficiency bonus."))
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

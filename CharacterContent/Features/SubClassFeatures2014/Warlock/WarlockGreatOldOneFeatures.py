@@ -1,4 +1,4 @@
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation
 from CharacterContent.Features.Core.Improvements import DamageResistance
 from Core.Definitions import DamageType
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
@@ -30,7 +30,7 @@ class AwakenedMind(Feature):
         super().__init__(
             name="Awakened Mind",
             origin="The Great Old One Patron Warlock Level 3",
-            range="30 Feet",
+            activation=FeatureActivation(range="30 Feet"),
             usage_tags=["utility"],
         )
 
@@ -44,8 +44,7 @@ class EntropicWard(Feature):
         super().__init__(
             name="Entropic Ward",
             origin="The Great Old One Patron Warlock Level 6",
-            action_type="reaction",
-            duration="Until End of Next Turn",
+            activation=FeatureActivation(action_type="reaction", duration="Until End of Next Turn"),
             usage_tags=["buff"],
             uses=FeatureUses(max_uses=1, regain_all_on="short or long rest"),
         )
@@ -94,9 +93,7 @@ class CreateThrall(Feature):
         super().__init__(
             name="Create Thrall",
             origin="The Great Old One Patron Warlock Level 14",
-            action_type="action",
-            duration="Until Remove Curse or Charmed Removed",
-            range="Touch",
+            activation=FeatureActivation(action_type="action", duration="Until Remove Curse or Charmed Removed", range="Touch"),
             usage_tags=["control"],
         )
 

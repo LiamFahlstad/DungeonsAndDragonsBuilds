@@ -1,12 +1,12 @@
 from Core.Definitions import Ability, MAX_ABILITY_MODIFIER, ROGUE_HIT_DIE
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
 
 class Bloodthirst(Feature):
     def __init__(self):
-        super().__init__(name="Bloodthirst", origin="Scion of the Three Rogue Level 3", action_type="reaction", range="30 Feet", usage_tags=["damage"], uses=FeatureUses(max_uses=MAX_ABILITY_MODIFIER, regain_all_on="long rest", current_formula="Current amount: equal to your Intelligence modifier."))
+        super().__init__(name="Bloodthirst", origin="Scion of the Three Rogue Level 3", activation=FeatureActivation(action_type="reaction", range="30 Feet"), usage_tags=["damage"], uses=FeatureUses(max_uses=MAX_ABILITY_MODIFIER, regain_all_on="long rest", current_formula="Current amount: equal to your Intelligence modifier."))
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "When an enemy you can see within 30 feet of yourself takes damage and is Bloodied after taking that damage but not killed outright, you can take a Reaction and teleport to an unoccupied space you can see within 5 feet of that enemy. You can then make one melee attack. You can use this feature a number of times based on your Intelligence modifier, and you regain all expended uses when you finish a Long Rest."
@@ -47,7 +47,7 @@ class DreadAllegiance(Feature):
 
 class StrikeFear(Feature):
     def __init__(self):
-        super().__init__(name="Strike Fear", origin="Scion of the Three Rogue Level 9", duration="1 Minute", usage_tags=["buff", "control"])
+        super().__init__(name="Strike Fear", origin="Scion of the Three Rogue Level 9", activation=FeatureActivation(duration="1 Minute"), usage_tags=["buff", "control"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -72,7 +72,7 @@ class StrikeFear(Feature):
 class AuraOfMalevolence(Feature):
     def __init__(self):
         super().__init__(
-            name="Aura of Malevolence", origin="Scion of the Three Rogue Level 13", range="10 Feet", usage_tags=["damage"]
+            name="Aura of Malevolence", origin="Scion of the Three Rogue Level 13", activation=FeatureActivation(range="10 Feet"), usage_tags=["damage"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:

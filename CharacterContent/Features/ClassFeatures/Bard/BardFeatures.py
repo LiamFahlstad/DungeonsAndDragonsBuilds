@@ -1,5 +1,5 @@
 import Core.Definitions as Definitions
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation
 from CharacterContent.Features.Core.Improvements import (
     JackOfAllTradesBonus,
     SkillExpertiseChoice,
@@ -29,9 +29,7 @@ class BardicInspiration(Feature):
         super().__init__(
             name="Bardic Inspiration",
             origin="Bard Level 1",
-            action_type="bonus_action",
-            duration="1 Hour",
-            range="60 Feet",
+            activation=FeatureActivation(action_type="bonus_action", duration="1 Hour", range="60 Feet"),
             usage_tags=["buff"],
             uses=FeatureUses(
                 max_uses=Definitions.MAX_ABILITY_MODIFIER,
@@ -187,8 +185,7 @@ class Countercharm(Feature):
         super().__init__(
             name="Countercharm",
             origin="Bard Level 7",
-            action_type="reaction",
-            range="30 Feet",
+            activation=FeatureActivation(action_type="reaction", range="30 Feet"),
             usage_tags=["buff"],
         )
 
@@ -227,7 +224,7 @@ class SuperiorInspiration(Feature):
 class WordsOfCreation(Feature):
     def __init__(self):
         super().__init__(
-            name="Words of Creation", origin="Bard Level 20", range="10 Feet"
+            name="Words of Creation", origin="Bard Level 20", activation=FeatureActivation(range="10 Feet")
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:

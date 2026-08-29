@@ -1,5 +1,5 @@
 from Core.Definitions import PALADIN_HIT_DIE
-from CharacterContent.Features.Core.BaseFeatures import Feature
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
@@ -24,7 +24,7 @@ class RedemptionSpells(Feature):
 
 class EmissaryOfPeace(Feature):
     def __init__(self):
-        super().__init__(name="Channel Divinity: Emissary of Peace", origin="Oath of Redemption Paladin Level 3", action_type="bonus_action", duration="10 Minutes", usage_tags=["buff"])
+        super().__init__(name="Channel Divinity: Emissary of Peace", origin="Oath of Redemption Paladin Level 3", activation=FeatureActivation(action_type="bonus_action", duration="10 Minutes"), usage_tags=["buff"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -35,7 +35,7 @@ class EmissaryOfPeace(Feature):
 
 class RebukeTheViolent(Feature):
     def __init__(self):
-        super().__init__(name="Channel Divinity: Rebuke the Violent", origin="Oath of Redemption Paladin Level 3", action_type="reaction", range="30 Feet", usage_tags=["damage"])
+        super().__init__(name="Channel Divinity: Rebuke the Violent", origin="Oath of Redemption Paladin Level 3", activation=FeatureActivation(action_type="reaction", range="30 Feet"), usage_tags=["damage"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -55,7 +55,7 @@ class RebukeTheViolent(Feature):
 
 class AuraOfTheGuardian(Feature):
     def __init__(self):
-        super().__init__(name="Aura of the Guardian", origin="Oath of Redemption Paladin Level 7", action_type="reaction", range="10 Feet")
+        super().__init__(name="Aura of the Guardian", origin="Oath of Redemption Paladin Level 7", activation=FeatureActivation(action_type="reaction", range="10 Feet"))
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

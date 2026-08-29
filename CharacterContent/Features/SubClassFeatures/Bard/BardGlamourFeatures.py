@@ -1,12 +1,12 @@
 from Core.Definitions import BARD_HIT_DIE
-from CharacterContent.Features.Core.BaseFeatures import Feature
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
 class BeguilingMagic(Feature):
     def __init__(self):
         super().__init__(
-            name="Beguiling Magic", origin="College of Glamour Bard Level 3", duration="1 Minute", range="60 Feet", usage_tags=["control"]
+            name="Beguiling Magic", origin="College of Glamour Bard Level 3", activation=FeatureActivation(duration="1 Minute", range="60 Feet"), usage_tags=["control"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -33,7 +33,7 @@ class BeguilingMagic(Feature):
 class MantleOfInspiration(Feature):
     def __init__(self):
         super().__init__(
-            name="Mantle of Inspiration", origin="College of Glamour Bard Level 3", action_type="bonus_action", range="60 Feet", usage_tags=["heal", "buff"]
+            name="Mantle of Inspiration", origin="College of Glamour Bard Level 3", activation=FeatureActivation(action_type="bonus_action", range="60 Feet"), usage_tags=["heal", "buff"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -55,7 +55,7 @@ class MantleOfInspiration(Feature):
 class MantleOfMajesty(Feature):
     def __init__(self):
         super().__init__(
-            name="Mantle of Majesty", origin="College of Glamour Bard Level 6", action_type="bonus_action", duration="1 Minute or Until Concentration Ends", usage_tags=["control"]
+            name="Mantle of Majesty", origin="College of Glamour Bard Level 6", activation=FeatureActivation(action_type="bonus_action", duration="1 Minute or Until Concentration Ends"), usage_tags=["control"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -82,7 +82,7 @@ class MantleOfMajesty(Feature):
 class UnbreakableMajesty(Feature):
     def __init__(self):
         super().__init__(
-            name="Unbreakable Majesty", origin="College of Glamour Bard Level 14", action_type="bonus_action", duration="1 Minute or Until Incapacitated", usage_tags=["buff"]
+            name="Unbreakable Majesty", origin="College of Glamour Bard Level 14", activation=FeatureActivation(action_type="bonus_action", duration="1 Minute or Until Incapacitated"), usage_tags=["buff"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:

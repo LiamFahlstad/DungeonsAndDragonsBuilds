@@ -1,4 +1,4 @@
-from CharacterContent.Features.Core.BaseFeatures import Feature
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
@@ -17,7 +17,7 @@ class BonusProficiencies(Feature):
 
 class BladeFlourish(Feature):
     def __init__(self):
-        super().__init__(name="Blade Flourish", origin="College of Swords Bard Level 3", duration="Until Start of Next Turn", usage_tags=["damage", "buff"])
+        super().__init__(name="Blade Flourish", origin="College of Swords Bard Level 3", activation=FeatureActivation(duration="Until Start of Next Turn"), usage_tags=["damage", "buff"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

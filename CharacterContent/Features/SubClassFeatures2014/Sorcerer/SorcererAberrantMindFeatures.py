@@ -1,6 +1,6 @@
 import Core.Definitions as Definitions
 from Core.Definitions import SORCERER_HIT_DIE
-from CharacterContent.Features.Core.BaseFeatures import Feature
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
@@ -27,7 +27,7 @@ class PsionicSpells(Feature):
 
 class TelepathicSpeech(Feature):
     def __init__(self):
-        super().__init__(name="Telepathic Speech", origin="Aberrant Mind Sorcerer Level 3", action_type="bonus_action", duration="Sorcerer Level Minutes", range="30 Feet", usage_tags=["utility"])
+        super().__init__(name="Telepathic Speech", origin="Aberrant Mind Sorcerer Level 3", activation=FeatureActivation(action_type="bonus_action", duration="Sorcerer Level Minutes", range="30 Feet"), usage_tags=["utility"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -84,7 +84,7 @@ class PsychicDefenses(Feature):
 
 class RevelationInFlesh(Feature):
     def __init__(self):
-        super().__init__(name="Revelation in Flesh", origin="Aberrant Mind Sorcerer Level 14", action_type="bonus_action", duration="10 Minutes", range="60 Feet", usage_tags=["utility"])
+        super().__init__(name="Revelation in Flesh", origin="Aberrant Mind Sorcerer Level 14", activation=FeatureActivation(action_type="bonus_action", duration="10 Minutes", range="60 Feet"), usage_tags=["utility"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -100,7 +100,7 @@ class RevelationInFlesh(Feature):
 
 class WarpingImplosion(Feature):
     def __init__(self):
-        super().__init__(name="Warping Implosion", origin="Aberrant Mind Sorcerer Level 18", action_type="action", range="120 Feet", usage_tags=["damage", "control"])
+        super().__init__(name="Warping Implosion", origin="Aberrant Mind Sorcerer Level 18", activation=FeatureActivation(action_type="action", range="120 Feet"), usage_tags=["damage", "control"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

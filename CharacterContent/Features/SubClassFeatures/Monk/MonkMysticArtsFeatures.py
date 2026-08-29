@@ -1,5 +1,5 @@
 from Core.Definitions import MONK_HIT_DIE
-from CharacterContent.Features.Core.BaseFeatures import Feature
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation
 from CharacterContent.Items.Weapons import WeaponDamageRolls
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
@@ -106,7 +106,7 @@ class MysticFocus(Feature):
 class FocusedStrike(Feature):
     def __init__(self):
         super().__init__(
-            name="Focused Strike", origin="Warrior of the Mystic Arts Monk Level 11", duration="Until Start of Next Turn", usage_tags=["control"]
+            name="Focused Strike", origin="Warrior of the Mystic Arts Monk Level 11", activation=FeatureActivation(duration="Until Start of Next Turn"), usage_tags=["control"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:

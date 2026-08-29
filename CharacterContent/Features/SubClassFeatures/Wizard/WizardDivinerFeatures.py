@@ -1,5 +1,5 @@
 from Core.Definitions import WIZARD_HIT_DIE
-from CharacterContent.Features.Core.BaseFeatures import Feature
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
@@ -48,7 +48,7 @@ class ExpertDivination(Feature):
 
 class TheThirdEye(Feature):
     def __init__(self):
-        super().__init__(name="The Third Eye", origin="Diviner Wizard Level 10", action_type="bonus_action", duration="Until Short or Long Rest", usage_tags=["buff", "utility"])
+        super().__init__(name="The Third Eye", origin="Diviner Wizard Level 10", activation=FeatureActivation(action_type="bonus_action", duration="Until Short or Long Rest"), usage_tags=["buff", "utility"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

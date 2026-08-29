@@ -1,4 +1,4 @@
-from CharacterContent.Features.Core.BaseFeatures import Feature
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation
 from CharacterContent.Features.Core.Improvements import (
     SkillExpertiseChoice,
     SkillProficiencyChoice,
@@ -60,7 +60,7 @@ class MindMagic(Feature):
         super().__init__(
             name="Mind Magic",
             origin="Knowledge Domain Cleric Level 3",
-            action_type="action",
+            activation=FeatureActivation(action_type="action"),
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -85,7 +85,7 @@ class UnfetteredMind(Feature):
             name="Unfettered Mind",
             origin="Knowledge Domain Cleric Level 6",
             skippable_in_concise=False,
-            range="60 Feet",
+            activation=FeatureActivation(range="60 Feet"),
             usage_tags=["buff", "utility"]
         )
 
@@ -120,8 +120,7 @@ class DivineForeknowledge(Feature):
         super().__init__(
             name="Divine Foreknowledge",
             origin="Knowledge Domain Cleric Level 17",
-            action_type="bonus_action",
-            duration="1 Hour",
+            activation=FeatureActivation(action_type="bonus_action", duration="1 Hour"),
             usage_tags=["buff"]
         )
 

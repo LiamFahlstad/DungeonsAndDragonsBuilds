@@ -1,5 +1,5 @@
 from Core.Definitions import BARD_HIT_DIE, Language, Skill
-from CharacterContent.Features.Core.BaseFeatures import Feature
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation
 from CharacterContent.Features.Core.Improvements import GrantLanguage, SkillProficiencyChoice
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
@@ -7,7 +7,7 @@ from StatBlocks.CharacterStatBlock import CharacterStatBlock
 class MoonsInspiration(Feature):
     def __init__(self):
         super().__init__(
-            name="Moon's Inspiration", origin="College of the Moon Bard Level 3", duration="Until Start of Your Next Turn", usage_tags=["buff", "heal"]
+            name="Moon's Inspiration", origin="College of the Moon Bard Level 3", activation=FeatureActivation(duration="Until Start of Your Next Turn"), usage_tags=["buff", "heal"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -62,7 +62,7 @@ class PrimalLore(Feature):
 class BlessingOfMoonlight(Feature):
     def __init__(self):
         super().__init__(
-            name="Blessing of Moonlight", origin="College of the Moon Bard Level 6", range="60 Feet", usage_tags=["heal"]
+            name="Blessing of Moonlight", origin="College of the Moon Bard Level 6", activation=FeatureActivation(range="60 Feet"), usage_tags=["heal"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:

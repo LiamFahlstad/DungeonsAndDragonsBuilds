@@ -1,4 +1,4 @@
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation
 from Core.Definitions import Ability
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
@@ -9,9 +9,7 @@ class AdjustDensity(Feature):
         super().__init__(
             name="Adjust Density",
             origin="Graviturgy Wizard Level 3",
-            action_type="action",
-            duration="Up To 1 Minute Or Until Concentration Ends",
-            range="30 Feet",
+            activation=FeatureActivation(action_type="action", duration="Up To 1 Minute Or Until Concentration Ends", range="30 Feet"),
             usage_tags=["buff", "control"],
         )
 
@@ -46,8 +44,7 @@ class ViolentAttraction(Feature):
         super().__init__(
             name="Violent Attraction",
             origin="Graviturgy Wizard Level 10",
-            action_type="reaction",
-            range="60 Feet",
+            activation=FeatureActivation(action_type="reaction", range="60 Feet"),
             usage_tags=["damage"],
         )
 
@@ -69,9 +66,7 @@ class EventHorizon(Feature):
         super().__init__(
             name="Event Horizon",
             origin="Graviturgy Wizard Level 14",
-            action_type="action",
-            duration="1 Minute Or Until Concentration Ends",
-            range="30 Feet",
+            activation=FeatureActivation(action_type="action", duration="1 Minute Or Until Concentration Ends", range="30 Feet"),
             usage_tags=["damage", "control"],
             uses=FeatureUses(max_uses=1, regain_all_on="long rest"),
         )

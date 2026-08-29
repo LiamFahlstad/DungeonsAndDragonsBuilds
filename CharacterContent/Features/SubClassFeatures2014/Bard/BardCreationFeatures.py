@@ -1,12 +1,12 @@
 from Core.Definitions import Ability
-from CharacterContent.Features.Core.BaseFeatures import FeatureUses, Feature
+from CharacterContent.Features.Core.BaseFeatures import FeatureUses, Feature, FeatureActivation
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
 
 class MoteOfPotential(Feature):
     def __init__(self):
-        super().__init__(name="Mote of Potential", origin="College of Creation Bard Level 3", duration="Until Bardic Inspiration Die is Lost", range="5 Feet", usage_tags=["damage", "buff"])
+        super().__init__(name="Mote of Potential", origin="College of Creation Bard Level 3", activation=FeatureActivation(duration="Until Bardic Inspiration Die is Lost", range="5 Feet"), usage_tags=["damage", "buff"])
 
     def get_table_description(
         self, character_stat_block: CharacterStatBlock
@@ -36,7 +36,7 @@ class MoteOfPotential(Feature):
 
 class PerformanceOfCreation(Feature):
     def __init__(self):
-        super().__init__(name="Performance of Creation", origin="College of Creation Bard Level 3", action_type="action", duration="Proficiency Bonus Hours", range="10 Feet", usage_tags=["utility"], uses=FeatureUses(max_uses=1, regain_all_on="long rest"))
+        super().__init__(name="Performance of Creation", origin="College of Creation Bard Level 3", activation=FeatureActivation(action_type="action", duration="Proficiency Bonus Hours", range="10 Feet"), usage_tags=["utility"], uses=FeatureUses(max_uses=1, regain_all_on="long rest"))
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -51,7 +51,7 @@ class PerformanceOfCreation(Feature):
 
 class AnimatingPerformance(Feature):
     def __init__(self):
-        super().__init__(name="Animating Performance", origin="College of Creation Bard Level 6", action_type="action", duration="1 Hour or Until Reduced to 0 HP or Death", range="30 Feet", usage_tags=["utility"], uses=FeatureUses(max_uses=1, regain_all_on="long rest"))
+        super().__init__(name="Animating Performance", origin="College of Creation Bard Level 6", activation=FeatureActivation(action_type="action", duration="1 Hour or Until Reduced to 0 HP or Death", range="30 Feet"), usage_tags=["utility"], uses=FeatureUses(max_uses=1, regain_all_on="long rest"))
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

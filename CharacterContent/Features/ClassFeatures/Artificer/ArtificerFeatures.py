@@ -1,4 +1,8 @@
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses
+from CharacterContent.Features.Core.BaseFeatures import (
+    Feature,
+    FeatureActivation,
+    FeatureUses,
+)
 from Core.Definitions import MAX_ABILITY_MODIFIER, Ability
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
@@ -24,9 +28,9 @@ class TinkersMagic(Feature):
         super().__init__(
             name="Tinker's Magic",
             origin="Artificer Level 1",
-            action_type="action",
-            duration="Until Long Rest",
-            range="5 Feet",
+            activation=FeatureActivation(
+                action_type="action", duration="Until Long Rest", range="5 Feet"
+            ),
             uses=FeatureUses(
                 max_uses=MAX_ABILITY_MODIFIER,
                 regain_all_on="long rest",
@@ -158,8 +162,7 @@ class FlashofGenius(Feature):
         super().__init__(
             name="Flash of Genius",
             origin="Artificer Level 7",
-            action_type="reaction",
-            range="30 Feet",
+            activation=FeatureActivation(action_type="reaction", range="30 Feet"),
             usage_tags=["buff"],
             uses=FeatureUses(
                 max_uses=MAX_ABILITY_MODIFIER,

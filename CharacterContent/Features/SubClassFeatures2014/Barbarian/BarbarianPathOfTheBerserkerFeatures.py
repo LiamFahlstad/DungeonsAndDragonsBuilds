@@ -1,12 +1,12 @@
 import Core.Definitions as Definitions
-from CharacterContent.Features.Core.BaseFeatures import Feature
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
 class Frenzy(Feature):
     def __init__(self):
         super().__init__(
-            name="Frenzy", origin="Path Of The Berserker Barbarian Level 3", action_type="bonus_action", duration="For the Duration of Your Rage", usage_tags=["damage"]
+            name="Frenzy", origin="Path Of The Berserker Barbarian Level 3", activation=FeatureActivation(action_type="bonus_action", duration="For the Duration of Your Rage"), usage_tags=["damage"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -40,7 +40,7 @@ class IntimidatingPresence(Feature):
         super().__init__(
             name="Intimidating Presence",
             origin="Path Of The Berserker Barbarian Level 10",
-            action_type="action", duration="Until End of Your Next Turn", range="30 Feet", usage_tags=["control"]
+            activation=FeatureActivation(action_type="action", duration="Until End of Your Next Turn", range="30 Feet"), usage_tags=["control"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -70,7 +70,7 @@ class IntimidatingPresence(Feature):
 class Retaliation(Feature):
     def __init__(self):
         super().__init__(
-            name="Retaliation", origin="Path Of The Berserker Barbarian Level 14", action_type="reaction", range="5 Feet", usage_tags=["damage"]
+            name="Retaliation", origin="Path Of The Berserker Barbarian Level 14", activation=FeatureActivation(action_type="reaction", range="5 Feet"), usage_tags=["damage"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:

@@ -1,6 +1,6 @@
 from Core import Definitions
 from Core.Definitions import Ability, WIZARD_HIT_DIE
-from CharacterContent.Features.Core.BaseFeatures import Feature
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
@@ -15,7 +15,7 @@ class AbjurationSavant(Feature):
 
 class ArcaneWard(Feature):
     def __init__(self):
-        super().__init__(name="Arcane Ward", origin="Abjuration Wizard Level 3", duration="Until Long Rest", usage_tags=["buff"])
+        super().__init__(name="Arcane Ward", origin="Abjuration Wizard Level 3", activation=FeatureActivation(duration="Until Long Rest"), usage_tags=["buff"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         int_mod = character_stat_block.get_ability_modifier(Ability.INTELLIGENCE)
@@ -43,7 +43,7 @@ class ArcaneWard(Feature):
 
 class ProjectedWard(Feature):
     def __init__(self):
-        super().__init__(name="Projected Ward", origin="Abjuration Wizard Level 6", action_type="reaction", range="30 Feet", usage_tags=["buff"])
+        super().__init__(name="Projected Ward", origin="Abjuration Wizard Level 6", activation=FeatureActivation(action_type="reaction", range="30 Feet"), usage_tags=["buff"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "When a creature that you can see within 30 feet of you takes damage, you can use your reaction to cause your Arcane Ward to absorb that damage. If this damage reduces the ward to 0 hit points, the warded creature takes any remaining damage."

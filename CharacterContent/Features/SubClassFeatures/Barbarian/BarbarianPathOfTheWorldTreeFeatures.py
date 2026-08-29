@@ -1,6 +1,6 @@
 import Core.Definitions as Definitions
 from Core.Definitions import BARBARIAN_HIT_DIE
-from CharacterContent.Features.Core.BaseFeatures import Feature
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
@@ -9,7 +9,7 @@ class VitalityOfTheTree(Feature):
         super().__init__(
             name="Vitality of the Tree",
             origin="Path Of The World Tree Barbarian Level 3",
-            range="10 Feet",
+            activation=FeatureActivation(range="10 Feet"),
             usage_tags=["heal"]
         )
 
@@ -41,8 +41,7 @@ class BranchesOfTheTree(Feature):
         super().__init__(
             name="Branches of the Tree",
             origin="Path Of The World Tree Barbarian Level 6",
-            action_type="reaction",
-            range="30 Feet",
+            activation=FeatureActivation(action_type="reaction", range="30 Feet"),
             usage_tags=["control"]
         )
 
@@ -89,8 +88,7 @@ class TravelAlongTheTree(Feature):
         super().__init__(
             name="Travel along the Tree",
             origin="Path Of The World Tree Barbarian Level 14",
-            action_type="bonus_action",
-            range="60 Feet",
+            activation=FeatureActivation(action_type="bonus_action", range="60 Feet"),
             usage_tags=["buff"]
         )
 

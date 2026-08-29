@@ -1,5 +1,5 @@
 from Core.Definitions import Ability, DamageType, MAX_ABILITY_MODIFIER, WARLOCK_HIT_DIE
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation
 from CharacterContent.Features.Core.Improvements import DamageResistance
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
@@ -7,7 +7,7 @@ from Utils import StringUtils
 
 class FormOfDread(Feature):
     def __init__(self):
-        super().__init__(name="Form of Dread", origin="Undead Patron Warlock Level 3", action_type="bonus_action", duration="1 Minute", usage_tags=["heal", "buff", "control"], uses=FeatureUses(max_uses=MAX_ABILITY_MODIFIER, regain_all_on="long rest", current_formula="Current amount: equal to your Charisma modifier."))
+        super().__init__(name="Form of Dread", origin="Undead Patron Warlock Level 3", activation=FeatureActivation(action_type="bonus_action", duration="1 Minute"), usage_tags=["heal", "buff", "control"], uses=FeatureUses(max_uses=MAX_ABILITY_MODIFIER, regain_all_on="long rest", current_formula="Current amount: equal to your Charisma modifier."))
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -51,7 +51,7 @@ class GraveTouched(Feature):
 
 class NecroticHusk(Feature):
     def __init__(self):
-        super().__init__(name="Necrotic Husk", origin="Undead Patron Warlock Level 10", range="30-Foot Emanation", usage_tags=["buff", "damage"])
+        super().__init__(name="Necrotic Husk", origin="Undead Patron Warlock Level 10", activation=FeatureActivation(range="30-Foot Emanation"), usage_tags=["buff", "damage"])
         # Only the base Resistance is unconditional; the upgrade to Immunity
         # while using Form of Dread is conditional/temporary and stays
         # prose-only.

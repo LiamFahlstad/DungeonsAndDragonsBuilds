@@ -1,4 +1,4 @@
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Core.Definitions import MAX_PROFICIENCY_BONUS
 
@@ -57,7 +57,7 @@ class LunarBoons(Feature):
 
 class WaxingAndWaning(Feature):
     def __init__(self):
-        super().__init__(name="Waxing and Waning", origin="Lunar Sorcery Sorcerer Level 6", action_type="bonus_action", usage_tags=["utility"])
+        super().__init__(name="Waxing and Waning", origin="Lunar Sorcery Sorcerer Level 6", activation=FeatureActivation(action_type="bonus_action"), usage_tags=["utility"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -85,7 +85,7 @@ class LunarEmpowerment(Feature):
 
 class LunarPhenomenon(Feature):
     def __init__(self):
-        super().__init__(name="Lunar Phenomenon", origin="Lunar Sorcery Sorcerer Level 18", action_type="bonus_action", duration="Until End of Next Turn", range="60 Feet", usage_tags=["utility", "damage", "control", "heal", "buff"], uses=FeatureUses(max_uses=1, regain_all_on="long rest"))
+        super().__init__(name="Lunar Phenomenon", origin="Lunar Sorcery Sorcerer Level 18", activation=FeatureActivation(action_type="bonus_action", duration="Until End of Next Turn", range="60 Feet"), usage_tags=["utility", "damage", "control", "heal", "buff"], uses=FeatureUses(max_uses=1, regain_all_on="long rest"))
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

@@ -1,5 +1,5 @@
 import Core.Definitions as Definitions
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 _WRATH_DAMAGE_TYPE = {
@@ -38,8 +38,7 @@ class GeniesVessel(Feature):
         super().__init__(
             name="Genie's Vessel",
             origin="The Genie Patron Warlock Level 3",
-            action_type="action",
-            duration="Until Leaving Vessel or Long Rest",
+            activation=FeatureActivation(action_type="action", duration="Until Leaving Vessel or Long Rest"),
             usage_tags=["damage"],
             uses=FeatureUses(max_uses=1, regain_all_on="long rest"),
         )
@@ -75,8 +74,7 @@ class ElementalGift(Feature):
         super().__init__(
             name="Elemental Gift",
             origin="The Genie Patron Warlock Level 6",
-            action_type="bonus_action",
-            duration="10 Minutes",
+            activation=FeatureActivation(action_type="bonus_action", duration="10 Minutes"),
             usage_tags=["buff", "utility"],
             uses=FeatureUses(
                 max_uses=Definitions.MAX_PROFICIENCY_BONUS,
@@ -117,8 +115,7 @@ class SanctuaryVessel(Feature):
         super().__init__(
             name="Sanctuary Vessel",
             origin="The Genie Patron Warlock Level 10",
-            action_type="bonus_action",
-            range="30 Feet",
+            activation=FeatureActivation(action_type="bonus_action", range="30 Feet"),
             usage_tags=["utility"],
         )
 
@@ -139,7 +136,7 @@ class LimitedWish(Feature):
         super().__init__(
             name="Limited Wish",
             origin="The Genie Patron Warlock Level 14",
-            action_type="action",
+            activation=FeatureActivation(action_type="action"),
             usage_tags=["utility"],
             uses=FeatureUses(max_uses=1, regain_all_on="1d4 long rests"),
         )

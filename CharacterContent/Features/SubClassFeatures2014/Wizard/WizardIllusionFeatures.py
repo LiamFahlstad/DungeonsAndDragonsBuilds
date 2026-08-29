@@ -1,4 +1,4 @@
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
@@ -30,7 +30,7 @@ class MalleableIllusions(Feature):
         super().__init__(
             name="Malleable Illusions",
             origin="Illusion Wizard Level 6",
-            action_type="action",
+            activation=FeatureActivation(action_type="action"),
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -43,7 +43,7 @@ class IllusorySelf(Feature):
         super().__init__(
             name="Illusory Self",
             origin="Illusion Wizard Level 10",
-            action_type="reaction",
+            activation=FeatureActivation(action_type="reaction"),
             uses=FeatureUses(max_uses=1, regain_all_on="short or long rest"),
         )
 
@@ -73,8 +73,7 @@ class IllusoryReality(Feature):
         super().__init__(
             name="Illusory Reality",
             origin="Illusion Wizard Level 14",
-            action_type="bonus_action",
-            duration="1 Minute",
+            activation=FeatureActivation(action_type="bonus_action", duration="1 Minute"),
             usage_tags=["utility"],
         )
 

@@ -1,5 +1,5 @@
 from Core.Definitions import Ability, FIGHTER_HIT_DIE
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
@@ -77,7 +77,7 @@ class StudentOfWar(Feature):
 
 class KnowYourEnemy(Feature):
     def __init__(self):
-        super().__init__(name="Know Your Enemy", origin="Battle Master Fighter Level 7", action_type="bonus_action", range="30 Feet", usage_tags=["utility"])
+        super().__init__(name="Know Your Enemy", origin="Battle Master Fighter Level 7", activation=FeatureActivation(action_type="bonus_action", range="30 Feet"), usage_tags=["utility"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

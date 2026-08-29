@@ -1,5 +1,5 @@
 import Core.Definitions as Definitions
-from CharacterContent.Features.Core.BaseFeatures import Feature
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
@@ -46,9 +46,7 @@ class CharmAnimalsAndPlantsChannelDivinity(Feature):
         super().__init__(
             name="Channel Divinity: Charm Animals and Plants",
             origin="Nature Domain Cleric Level 3",
-            action_type="action",
-            range="30 Feet",
-            duration="1 Minute or Until Takes Damage",
+            activation=FeatureActivation(action_type="action", duration="1 Minute or Until Takes Damage", range="30 Feet"),
             usage_tags=["control"],
         )
 
@@ -77,8 +75,7 @@ class DampenElements(Feature):
         super().__init__(
             name="Dampen Elements",
             origin="Nature Domain Cleric Level 6",
-            action_type="reaction",
-            range="30 Feet",
+            activation=FeatureActivation(action_type="reaction", range="30 Feet"),
             usage_tags=["buff"],
         )
 
@@ -111,7 +108,7 @@ class DivineStrike(Feature):
 
 class MasterOfNature(Feature):
     def __init__(self):
-        super().__init__(name="Master of Nature", origin="Nature Domain Cleric Level 17", action_type="bonus_action")
+        super().__init__(name="Master of Nature", origin="Nature Domain Cleric Level 17", activation=FeatureActivation(action_type="bonus_action"))
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "You gain the ability to command animals and plant creatures. While creatures are charmed by your Charm Animals and Plants feature, you can take a bonus action on your turn to verbally command what each of those creatures will do on its next turn."

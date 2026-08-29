@@ -1,6 +1,6 @@
 import Core.Definitions as Definitions
 from Core.Definitions import Ability
-from CharacterContent.Features.Core.BaseFeatures import Feature
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
@@ -19,8 +19,7 @@ class WrathOfTheStorm(Feature):
         super().__init__(
             name="Wrath of the Storm",
             origin="Tempest Domain Cleric Level 3",
-            action_type="reaction",
-            range="5 Feet",
+            activation=FeatureActivation(action_type="reaction", range="5 Feet"),
             usage_tags=["damage"],
         )
 

@@ -1,5 +1,5 @@
 from Core.Definitions import Ability, PALADIN_HIT_DIE
-from CharacterContent.Features.Core.BaseFeatures import Feature
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
@@ -24,7 +24,7 @@ class ConquestSpells(Feature):
 
 class ConqueringPresence(Feature):
     def __init__(self):
-        super().__init__(name="Channel Divinity: Conquering Presence", origin="Oath of Conquest Paladin Level 3", action_type="action", duration="1 Minute", range="30 Feet", usage_tags=["control"])
+        super().__init__(name="Channel Divinity: Conquering Presence", origin="Oath of Conquest Paladin Level 3", activation=FeatureActivation(action_type="action", duration="1 Minute", range="30 Feet"), usage_tags=["control"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -62,7 +62,7 @@ class GuidedStrike(Feature):
 
 class AuraOfConquest(Feature):
     def __init__(self):
-        super().__init__(name="Aura of Conquest", origin="Oath of Conquest Paladin Level 7", range="10 Feet (30 at 18th Level)", usage_tags=["damage", "control"])
+        super().__init__(name="Aura of Conquest", origin="Oath of Conquest Paladin Level 7", activation=FeatureActivation(range="10 Feet (30 at 18th Level)"), usage_tags=["damage", "control"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         half_paladin_level = character_stat_block.character_level // 2
@@ -110,7 +110,7 @@ class ScornfulRebuke(Feature):
 
 class InvincibleConqueror(Feature):
     def __init__(self):
-        super().__init__(name="Invincible Conqueror", origin="Oath of Conquest Paladin Level 20", action_type="action", duration="1 Minute", usage_tags=["buff"], uses=FeatureUses(max_uses=1, regain_all_on="long rest"))
+        super().__init__(name="Invincible Conqueror", origin="Oath of Conquest Paladin Level 20", activation=FeatureActivation(action_type="action", duration="1 Minute"), usage_tags=["buff"], uses=FeatureUses(max_uses=1, regain_all_on="long rest"))
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

@@ -1,7 +1,7 @@
 from enum import Enum
 
 from Core.Definitions import Skill, Sense
-from CharacterContent.Features.Core.BaseFeatures import Feature
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation
 from CharacterContent.Features.Core.Improvements import SkillProficiencyChoice, GrantSense
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
@@ -31,7 +31,7 @@ class Darkvision(Feature):
 class Shifting(Feature):
     def __init__(self, shift_form: ShiftForm):
         self.shift_form = shift_form
-        super().__init__(name="Shifting", origin="Shifter Trait", action_type="bonus_action", duration="1 Minute", usage_tags=["heal", "buff", "damage"])
+        super().__init__(name="Shifting", origin="Shifter Trait", activation=FeatureActivation(action_type="bonus_action", duration="1 Minute"), usage_tags=["heal", "buff", "damage"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

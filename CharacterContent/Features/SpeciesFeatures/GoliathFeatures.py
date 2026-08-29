@@ -1,7 +1,7 @@
 from enum import Enum
 
 from Core.Definitions import CreatureSize, MAX_PROFICIENCY_BONUS
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 SPEED = 35  # Given by your species
@@ -19,7 +19,7 @@ class GiantAncestryType(str, Enum):
 
 class LargeForm(Feature):
     def __init__(self):
-        super().__init__(name="Large Form", origin="Goliath Trait", action_type="bonus_action", duration="10 Minutes", usage_tags=["buff"])
+        super().__init__(name="Large Form", origin="Goliath Trait", activation=FeatureActivation(action_type="bonus_action", duration="10 Minutes"), usage_tags=["buff"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         return "Starting at character level 5, you can change your size to Large as a Bonus Action if you're in a big enough space. This transformation lasts for 10 minutes or until you end it (no action required). For that duration, you have Advantage on Strength checks, and your Speed increases by 10 feet. Once you use this trait, you can't use it again until you finish a Long Rest."

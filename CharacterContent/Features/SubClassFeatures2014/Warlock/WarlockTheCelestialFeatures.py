@@ -1,4 +1,4 @@
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
@@ -38,8 +38,7 @@ class HealingLight(Feature):
         super().__init__(
             name="Healing Light",
             origin="The Celestial Patron Warlock Level 3",
-            action_type="bonus_action",
-            range="60 Feet",
+            activation=FeatureActivation(action_type="bonus_action", range="60 Feet"),
             usage_tags=["heal"],
         )
 
@@ -105,8 +104,7 @@ class SearingVengeance(Feature):
         super().__init__(
             name="Searing Vengeance",
             origin="The Celestial Patron Warlock Level 14",
-            duration="Until End of Current Turn",
-            range="30 Feet",
+            activation=FeatureActivation(duration="Until End of Current Turn", range="30 Feet"),
             usage_tags=["heal", "damage", "control"],
             uses=FeatureUses(max_uses=1, regain_all_on="long rest"),
         )

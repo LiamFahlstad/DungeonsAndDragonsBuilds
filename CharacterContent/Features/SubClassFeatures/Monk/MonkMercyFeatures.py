@@ -1,6 +1,6 @@
 import Core.Definitions as Definitions
 from Core.Definitions import MONK_HIT_DIE, Skill
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation
 from CharacterContent.Features.Core.Improvements import SkillProficiency
 from CharacterContent.Items.Weapons import WeaponDamageRolls
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
@@ -64,7 +64,7 @@ class HandOfHarm(Feature):
 
 class HandOfHealing(Feature):
     def __init__(self):
-        super().__init__(name="Hand of Healing", origin="Warrior of Mercy Monk Level 3", action_type="action", range="Touch", usage_tags=["heal"])
+        super().__init__(name="Hand of Healing", origin="Warrior of Mercy Monk Level 3", activation=FeatureActivation(action_type="action", range="Touch"), usage_tags=["heal"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -106,7 +106,7 @@ class ImplementsOfMercy(Feature):
 class PhysiciansTouch(Feature):
     def __init__(self):
         super().__init__(
-            name="Physician's Touch", origin="Warrior of Mercy Monk Level 6", duration="Until End of Next Turn", usage_tags=["control", "heal"]
+            name="Physician's Touch", origin="Warrior of Mercy Monk Level 6", activation=FeatureActivation(duration="Until End of Next Turn"), usage_tags=["control", "heal"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -135,7 +135,7 @@ class FlurryOfHealingAndHarm(Feature):
 class HandOfUltimateMercy(Feature):
     def __init__(self):
         super().__init__(
-            name="Hand of Ultimate Mercy", origin="Warrior of Mercy Monk Level 17", action_type="action", range="Touch", usage_tags=["heal"]
+            name="Hand of Ultimate Mercy", origin="Warrior of Mercy Monk Level 17", activation=FeatureActivation(action_type="action", range="Touch"), usage_tags=["heal"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:

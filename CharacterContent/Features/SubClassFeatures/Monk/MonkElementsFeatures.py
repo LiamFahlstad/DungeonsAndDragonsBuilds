@@ -1,5 +1,5 @@
 from Core.Definitions import MONK_HIT_DIE
-from CharacterContent.Features.Core.BaseFeatures import Feature
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation
 from CharacterContent.Items.Weapons import WeaponDamageRolls
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
@@ -53,7 +53,7 @@ LEVEL_TO_FOCUS_POINTS = {
 class ElementalAttunement(Feature):
     def __init__(self):
         super().__init__(
-            name="Elemental Attunement", origin="Warrior of the Elements Monk Level 3", duration="10 Minutes or Until Incapacitated", usage_tags=["damage", "control"]
+            name="Elemental Attunement", origin="Warrior of the Elements Monk Level 3", activation=FeatureActivation(duration="10 Minutes or Until Incapacitated"), usage_tags=["damage", "control"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -90,7 +90,7 @@ class ManipulateElements(Feature):
 class ElementalBurst(Feature):
     def __init__(self):
         super().__init__(
-            name="Elemental Burst", origin="Warrior of the Elements Monk Level 6", action_type="action", range="120 Feet (20-Foot-Radius Sphere)", usage_tags=["damage"]
+            name="Elemental Burst", origin="Warrior of the Elements Monk Level 6", activation=FeatureActivation(action_type="action", range="120 Feet (20-Foot-Radius Sphere)"), usage_tags=["damage"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -129,7 +129,7 @@ class StrideOfTheElements(Feature):
 class ElementalEpitome(Feature):
     def __init__(self):
         super().__init__(
-            name="Elemental Epitome", origin="Warrior of the Elements Monk Level 17", range="5 Feet", usage_tags=["buff", "damage"]
+            name="Elemental Epitome", origin="Warrior of the Elements Monk Level 17", activation=FeatureActivation(range="5 Feet"), usage_tags=["buff", "damage"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:

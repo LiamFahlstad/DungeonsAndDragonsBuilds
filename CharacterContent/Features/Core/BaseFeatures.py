@@ -1,4 +1,6 @@
+import re
 from dataclasses import dataclass
+from enum import Enum
 from typing import Literal, TextIO
 
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
@@ -29,9 +31,85 @@ class FeatureUses:
     current_formula: str | None = None
 
 
+class ActionType(str, Enum):
+    """Action economy cost to activate a feature."""
+
+    ACTION = "action"
+    BONUS_ACTION = "bonus_action"
+    REACTION = "reaction"
+
+
+_RANGE_SHAPE_RE = re.compile(
+    r"(\d+)-Foot[- ](Cone|Cube|Sphere|Line|Emanation|Cylinder|Radius(?: Sphere)?)",
+    re.IGNORECASE,
+)
+
+_DURATION_RE = re.compile(r"(?:up to\s+)?(\d+)\s+(\w+)", re.IGNORECASE)
+
+_DURATION_UNIT_SECONDS = {
+    "second": 1,
+    "seconds": 1,
+    "round": 6,
+    "rounds": 6,
+    "turn": 6,
+    "turns": 6,
+    "minute": 60,
+    "minutes": 60,
+    "hour": 3600,
+    "hours": 3600,
+    "day": 86400,
+    "days": 86400,
+}
+
+
+@dataclass
+class FeatureActivation:
+    """Action economy, duration, and range/shape for how a feature is activated,
+    rendered as tag chips on its card (mirrors FeatureUses' role for limited-use tracking).
+
+    range_shape captures an area-of-effect shape (e.g. "Cone", "Sphere", "Radius")
+    when the range text states one - split out automatically from a combined
+    range string like "30-Foot Cone" unless range_shape is passed explicitly.
+    Left None when no shape is stated (e.g. "30 Feet", "Self", "Touch").
+    """
+
+    action_type: "ActionType | Literal['action', 'bonus_action', 'reaction'] | None" = (
+        None
+    )
+    duration: str | None = None
+    range: str | None = None
+    range_shape: str | None = None
+
+    def __post_init__(self):
+        if self.action_type is not None and not isinstance(
+            self.action_type, ActionType
+        ):
+            self.action_type = ActionType(self.action_type)
+        if self.range is not None and self.range_shape is None:
+            match = _RANGE_SHAPE_RE.fullmatch(self.range.strip())
+            if match:
+                self.range = f"{match.group(1)} Feet"
+                self.range_shape = match.group(2).title()
+
+    def duration_to_seconds(self) -> int | str | None:
+        """Convert duration to a whole number of seconds (a turn/round is 6 seconds).
+        Returns the original duration string unchanged when it isn't a plain
+        "<number> <unit>" time span (e.g. "Until Incapacitated", "1d6 Long Rests")."""
+        if self.duration is None:
+            return None
+        match = _DURATION_RE.fullmatch(self.duration.strip())
+        if match:
+            count, unit = match.groups()
+            seconds_per_unit = _DURATION_UNIT_SECONDS.get(unit.lower())
+            if seconds_per_unit is not None:
+                return int(count) * seconds_per_unit
+        return self.duration
+
+
 def parse_feature_level(origin: str | None) -> int:
     """Parse the level from a feature's origin string (e.g. 'Bard Level 3' -> 3).
-    Features without a parseable level (background, species, origin feats) default to 1."""
+    Features without a parseable level (background, species, origin feats) default to 1.
+    """
     if not origin or "Level " not in origin:
         return 1
     try:
@@ -342,10 +420,11 @@ class Feature:
         name: str | None = None,
         origin: str | None = None,
         skippable_in_concise: bool = False,
-        action_type: Literal["action", "bonus_action", "reaction"] | None = None,
-        duration: str | None = None,
-        range: str | None = None,
-        usage_tags: list[Literal["heal", "buff", "control", "damage", "utility", "summon"]] | None = None,
+        usage_tags: (
+            list[Literal["heal", "buff", "control", "damage", "utility", "summon"]]
+            | None
+        ) = None,
+        activation: "FeatureActivation | None" = None,
         uses: "FeatureUses | None" = None,
     ):
         self.name = name if name is not None else type(self).__name__
@@ -355,18 +434,10 @@ class Feature:
         # or a resource pool) where the prose description adds nothing on a
         # concise/table character sheet. Full-mode sheets always show it.
         self.skippable_in_concise = skippable_in_concise
-        # Set for features that cost an action, bonus action, or reaction to use,
-        # so the card can flag the action economy at a glance. Leave None for
-        # passive features and features usable at will with no action cost.
-        self.action_type = action_type
-        # Set for features whose effect lasts a limited time (e.g. "10 Minutes",
-        # "1 Minute or Until Incapacitated") so the card can flag it at a glance.
-        # Leave None for instantaneous effects and always-on passives.
-        self.duration = duration
-        # Set for features whose effect has a stated range or area (e.g. "30 Feet",
-        # "20-Foot Cone", "Self") so the card can flag it at a glance. Leave None
-        # for features with no meaningful range (e.g. pure passives).
-        self.range = range
+        # Action economy, duration, and range/shape for activating this feature.
+        # Leave unset (or pass an empty FeatureActivation()) for passive features
+        # and instantaneous effects with no meaningful range.
+        self.activation = activation if activation is not None else FeatureActivation()
         # Set for features whose effect falls into one or more of these functional
         # roles - healing, buffing, imposing a condition/controlling a target,
         # dealing damage, or non-combat utility - so the card can be scanned for
@@ -471,9 +542,11 @@ class Feature:
             else ""
         )
 
-        action_tag = self._action_tag_html(self.action_type)
-        duration_tag = self._duration_tag_html(self.duration)
-        range_tag = self._range_tag_html(self.range)
+        action_tag = self._action_tag_html(self.activation.action_type)
+        duration_tag = self._duration_tag_html(self.activation.duration)
+        range_tag = self._range_tag_html(
+            self.activation.range, self.activation.range_shape
+        )
         usage_tags_html = self._usage_tags_html(self.usage_tags)
 
         card_class = "feature-card is-passive" if passive_tag else "feature-card"
@@ -540,16 +613,22 @@ class Feature:
                 if description_mode is None and extension.skippable_in_concise
                 else ""
             )
-            ext_action_tag = self._action_tag_html(extension.action_type)
+            ext_action_tag = self._action_tag_html(extension.activation.action_type)
             ext_action_tag = f" {ext_action_tag}" if ext_action_tag else ""
-            ext_duration_tag = self._duration_tag_html(extension.duration)
+            ext_duration_tag = self._duration_tag_html(extension.activation.duration)
             ext_duration_tag = f" {ext_duration_tag}" if ext_duration_tag else ""
-            ext_range_tag = self._range_tag_html(extension.range)
+            ext_range_tag = self._range_tag_html(
+                extension.activation.range, extension.activation.range_shape
+            )
             ext_range_tag = f" {ext_range_tag}" if ext_range_tag else ""
             ext_usage_tags_html = self._usage_tags_html(extension.usage_tags)
-            ext_usage_tags_html = f" {ext_usage_tags_html}" if ext_usage_tags_html else ""
+            ext_usage_tags_html = (
+                f" {ext_usage_tags_html}" if ext_usage_tags_html else ""
+            )
             ext_uses_html = (
-                "\n" + self._uses_html(extension.uses) if extension.uses is not None else ""
+                "\n" + self._uses_html(extension.uses)
+                if extension.uses is not None
+                else ""
             )
             file.write(
                 f"<div class='feature-upgrade'>\n"
@@ -589,9 +668,11 @@ class Feature:
         file.write("<div class='feature-header'>\n")
         file.write("<span class='feature-name-group'>\n")
         file.write(f"<span class='feature-name'>{self.name}</span>\n")
-        action_tag = self._action_tag_html(self.action_type)
-        duration_tag = self._duration_tag_html(self.duration)
-        range_tag = self._range_tag_html(self.range)
+        action_tag = self._action_tag_html(self.activation.action_type)
+        duration_tag = self._duration_tag_html(self.activation.duration)
+        range_tag = self._range_tag_html(
+            self.activation.range, self.activation.range_shape
+        )
         usage_tags_html = self._usage_tags_html(self.usage_tags)
         if passive_tag:
             file.write(f"{passive_tag}\n")
@@ -626,16 +707,21 @@ class Feature:
         file.write("</div>\n")
 
     @staticmethod
-    def _action_tag_html(action_type: str | None) -> str:
+    def _action_tag_html(
+        action_type: "ActionType | Literal['action', 'bonus_action', 'reaction'] | None",
+    ) -> str:
         if action_type is None:
             return ""
+        value = (
+            action_type.value if isinstance(action_type, ActionType) else action_type
+        )
         labels = {
             "action": "Action",
             "bonus_action": "Bonus Action",
             "reaction": "Reaction",
         }
-        label = labels[action_type]
-        return f"<span class='feature-action-tag tag-{action_type}'>{label}</span>"
+        label = labels[value]
+        return f"<span class='feature-action-tag tag-{value}'>{label}</span>"
 
     @staticmethod
     def _duration_tag_html(duration: str | None) -> str:
@@ -644,10 +730,11 @@ class Feature:
         return f"<span class='feature-duration-tag'>Duration: {duration}</span>"
 
     @staticmethod
-    def _range_tag_html(range: str | None) -> str:
+    def _range_tag_html(range: str | None, range_shape: str | None = None) -> str:
         if range is None:
             return ""
-        return f"<span class='feature-range-tag'>Range: {range}</span>"
+        label = f"{range} ({range_shape})" if range_shape else range
+        return f"<span class='feature-range-tag'>Range: {label}</span>"
 
     @staticmethod
     def _usage_tags_html(usage_tags: list[str] | None) -> str:

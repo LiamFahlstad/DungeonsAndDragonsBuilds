@@ -1,6 +1,6 @@
 import Core.Definitions as Definitions
 from Core.Definitions import DamageType
-from CharacterContent.Features.Core.BaseFeatures import Feature
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation
 from CharacterContent.Features.Core.Improvements import DamageImmunity, DamageResistance
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
@@ -22,7 +22,7 @@ class BlessingOfTheForge(Feature):
         super().__init__(
             name="Blessing of the Forge",
             origin="Forge Domain Cleric Level 3",
-            duration="Until End of Next Long Rest or Until You Die",
+            activation=FeatureActivation(duration="Until End of Next Long Rest or Until You Die"),
             usage_tags=["buff"],
             uses=FeatureUses(max_uses=1, regain_all_on="long rest"))
 

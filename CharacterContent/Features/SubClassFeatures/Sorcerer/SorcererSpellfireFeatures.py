@@ -1,5 +1,5 @@
 from Core.Definitions import Ability, SORCERER_HIT_DIE
-from CharacterContent.Features.Core.BaseFeatures import Feature
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
@@ -22,7 +22,7 @@ class SpellfireSpells(Feature):
 
 class SpellfireBurst(Feature):
     def __init__(self):
-        super().__init__(name="Spellfire Burst", origin="Spellfire Sorcerer Level 3", range="30 Feet", usage_tags=["heal", "damage"])
+        super().__init__(name="Spellfire Burst", origin="Spellfire Sorcerer Level 3", activation=FeatureActivation(range="30 Feet"), usage_tags=["heal", "damage"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

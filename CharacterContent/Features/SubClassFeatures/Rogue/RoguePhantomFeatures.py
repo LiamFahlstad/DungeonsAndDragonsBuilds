@@ -1,12 +1,12 @@
 from Core.Definitions import Ability, MAX_ABILITY_MODIFIER, ROGUE_HIT_DIE
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
 
 class WailsFromTheGrave(Feature):
     def __init__(self):
-        super().__init__(name="Wails from the Grave", origin="Phantom Rogue Level 3", range="30 Feet", usage_tags=["damage"], uses=FeatureUses(max_uses=MAX_ABILITY_MODIFIER, regain_all_on="long rest", current_formula="Current amount: equal to your Dexterity modifier."))
+        super().__init__(name="Wails from the Grave", origin="Phantom Rogue Level 3", activation=FeatureActivation(range="30 Feet"), usage_tags=["damage"], uses=FeatureUses(max_uses=MAX_ABILITY_MODIFIER, regain_all_on="long rest", current_formula="Current amount: equal to your Dexterity modifier."))
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -42,7 +42,7 @@ class WhispersOfTheDead(Feature):
 
 class TokensOfTheDeparted(Feature):
     def __init__(self):
-        super().__init__(name="Tokens of the Departed", origin="Phantom Rogue Level 9", range="30 Feet", usage_tags=["buff", "utility"])
+        super().__init__(name="Tokens of the Departed", origin="Phantom Rogue Level 9", activation=FeatureActivation(range="30 Feet"), usage_tags=["buff", "utility"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -73,7 +73,7 @@ class VoiceOfDeath(Feature):
 
 class GhostWalk(Feature):
     def __init__(self):
-        super().__init__(name="Ghost Walk", origin="Phantom Rogue Level 13", action_type="bonus_action", duration="10 Minutes", usage_tags=["buff", "utility"])
+        super().__init__(name="Ghost Walk", origin="Phantom Rogue Level 13", activation=FeatureActivation(action_type="bonus_action", duration="10 Minutes"), usage_tags=["buff", "utility"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

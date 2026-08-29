@@ -1,12 +1,12 @@
 import Core.Definitions as Definitions
-from CharacterContent.Features.Core.BaseFeatures import Feature
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
 
 class BalmOfTheSummerCourt(Feature):
     def __init__(self):
-        super().__init__(name="Balm of the Summer Court", origin="Circle of Dreams Druid Level 3", action_type="bonus_action", range="120 Feet", usage_tags=["heal"], uses=FeatureUses(max_uses=20, regain_all_on="long rest", current_formula="Current amount: equal to your Druid level."))
+        super().__init__(name="Balm of the Summer Court", origin="Circle of Dreams Druid Level 3", activation=FeatureActivation(action_type="bonus_action", range="120 Feet"), usage_tags=["heal"], uses=FeatureUses(max_uses=20, regain_all_on="long rest", current_formula="Current amount: equal to your Druid level."))
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         druid_level = character_stat_block.get_class_level(Definitions.CharacterClass.DRUID)

@@ -1,5 +1,5 @@
 from Core.Definitions import PSION_HIT_DIE, Ability
-from CharacterContent.Features.Core.BaseFeatures import Feature
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
@@ -43,7 +43,7 @@ class TelekineticTechniques(Feature):
 
 class DestructiveTrance(Feature):
     def __init__(self):
-        super().__init__(name="Destructive Trance", origin="Psykinetic Psion Level 6", duration="10 Minutes", usage_tags=["buff", "damage", "utility"])
+        super().__init__(name="Destructive Trance", origin="Psykinetic Psion Level 6", activation=FeatureActivation(duration="10 Minutes"), usage_tags=["buff", "damage", "utility"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

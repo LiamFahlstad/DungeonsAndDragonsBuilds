@@ -1,5 +1,5 @@
 from Core.Definitions import CreatureSize, MAX_PROFICIENCY_BONUS, Sense
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation
 from CharacterContent.Features.Core.Improvements import GrantSense
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
@@ -24,7 +24,7 @@ class AdrenalineRush(Feature):
         super().__init__(
             name="Adrenaline Rush",
             origin="Orc Trait",
-            action_type="bonus_action",
+            activation=FeatureActivation(action_type="bonus_action"),
             usage_tags=["heal"],
             uses=FeatureUses(max_uses=MAX_PROFICIENCY_BONUS, current_formula="Current amount: equal to your proficiency bonus.")
         )

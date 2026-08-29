@@ -1,5 +1,5 @@
 from Core.Definitions import Ability, Language, MAX_PROFICIENCY_BONUS
-from CharacterContent.Features.Core.BaseFeatures import FeatureUses, Feature
+from CharacterContent.Features.Core.BaseFeatures import FeatureUses, Feature, FeatureActivation
 from CharacterContent.Features.Core.Improvements import GrantLanguage
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
@@ -75,8 +75,7 @@ class GiantsMight(Feature):
         super().__init__(
             name="Giant's Might",
             origin="Rune Knight Fighter Level 3",
-            action_type="bonus_action",
-            duration="1 Minute",
+            activation=FeatureActivation(action_type="bonus_action", duration="1 Minute"),
             usage_tags=["buff", "damage"],
         )
 
@@ -110,8 +109,7 @@ class RunicShield(Feature):
         super().__init__(
             name="Runic Shield",
             origin="Rune Knight Fighter Level 7",
-            action_type="reaction",
-            range="60 Feet",
+            activation=FeatureActivation(action_type="reaction", range="60 Feet"),
             usage_tags=["buff"],
             uses=FeatureUses(max_uses=MAX_PROFICIENCY_BONUS, regain_all_on="long rest", current_formula="Current amount: equal to your proficiency bonus.")
         )

@@ -1,5 +1,5 @@
 import Core.Definitions as Definitions
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation
 from CharacterContent.Features.Core.Improvements import (
     DamageImmunity,
     DamageResistance,
@@ -31,7 +31,7 @@ class TempestuousMagic(Feature):
         super().__init__(
             name="Tempestuous Magic",
             origin="Storm Sorcery Sorcerer Level 3",
-            action_type="bonus_action",
+            activation=FeatureActivation(action_type="bonus_action"),
             usage_tags=["utility"],
         )
 
@@ -45,7 +45,7 @@ class HeartOfTheStorm(Feature):
         super().__init__(
             name="Heart of the Storm",
             origin="Storm Sorcery Sorcerer Level 6",
-            range="10 Feet",
+            activation=FeatureActivation(range="10 Feet"),
             usage_tags=["damage", "buff"],
         )
         self._resistances = [
@@ -67,8 +67,7 @@ class StormGuide(Feature):
         super().__init__(
             name="Storm Guide",
             origin="Storm Sorcery Sorcerer Level 6",
-            action_type="action",
-            range="100-Foot Radius",
+            activation=FeatureActivation(action_type="action", range="100-Foot Radius"),
             usage_tags=["utility"],
         )
 
@@ -86,8 +85,7 @@ class StormsFury(Feature):
         super().__init__(
             name="Storm's Fury",
             origin="Storm Sorcery Sorcerer Level 14",
-            action_type="reaction",
-            range="20 Feet",
+            activation=FeatureActivation(action_type="reaction", range="20 Feet"),
             usage_tags=["damage", "control"],
             uses=FeatureUses(max_uses=1, regain_all_on="long rest"),
         )
@@ -116,9 +114,7 @@ class WindSoul(Feature):
         super().__init__(
             name="Wind Soul",
             origin="Storm Sorcery Sorcerer Level 18",
-            action_type="action",
-            duration="1 Hour",
-            range="30 Feet",
+            activation=FeatureActivation(action_type="action", duration="1 Hour", range="30 Feet"),
             usage_tags=["utility", "buff"],
         )
         self._immunities = [

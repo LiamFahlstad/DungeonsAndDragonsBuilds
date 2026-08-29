@@ -1,4 +1,4 @@
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation
 from CharacterContent.Features.Core.Improvements import SkillBonus
 from Core.Definitions import Ability, Skill
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
@@ -66,9 +66,7 @@ class ChannelDivinity(Feature):
         super().__init__(
             name="Channel Divinity",
             origin="Cleric Level 2",
-            action_type="action",
-            duration="1 Minute",
-            range="30 Feet",
+            activation=FeatureActivation(action_type="action", duration="1 Minute", range="30 Feet"),
             usage_tags=["heal", "damage", "control"],
             uses=FeatureUses(
                 max_uses=4,
@@ -147,7 +145,7 @@ class PotentSpellcasting(Feature):
 class DivineIntervention(Feature):
     def __init__(self):
         super().__init__(
-            name="Divine Intervention", origin="Cleric Level 10", action_type="action"
+            name="Divine Intervention", origin="Cleric Level 10", activation=FeatureActivation(action_type="action")
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -186,7 +184,7 @@ class ImprovedPotentSpellcasting(Feature):
         super().__init__(
             name="Improved Potent Spellcasting",
             origin="Cleric Level 14",
-            range="60 Feet",
+            activation=FeatureActivation(range="60 Feet"),
             usage_tags=["heal"],
         )
 

@@ -1,6 +1,6 @@
 
 from Core.Definitions import Ability, DRUID_HIT_DIE, MAX_ABILITY_MODIFIER
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
@@ -68,7 +68,7 @@ class ImprovedCircleForms(Feature):
 class MoonlightStep(Feature):
     def __init__(self):
         super().__init__(
-            name="Moonlight Step", origin="Circle of the Moon Druid Level 10", action_type="bonus_action", range="30 Feet", usage_tags=["buff"]
+            name="Moonlight Step", origin="Circle of the Moon Druid Level 10", activation=FeatureActivation(action_type="bonus_action", range="30 Feet"), usage_tags=["buff"]
         , uses=FeatureUses(max_uses=MAX_ABILITY_MODIFIER, regain_all_on="long rest", current_formula="Current amount: equal to your Wisdom modifier."))
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:

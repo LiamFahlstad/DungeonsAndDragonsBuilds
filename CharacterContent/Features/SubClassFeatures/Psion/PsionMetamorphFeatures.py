@@ -1,5 +1,5 @@
 from Core.Definitions import PSION_HIT_DIE, Ability
-from CharacterContent.Features.Core.BaseFeatures import Feature
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
@@ -18,7 +18,7 @@ class MetamorphSpells(Feature):
 
 class MutableForm(Feature):
     def __init__(self):
-        super().__init__(name="Mutable Form", origin="Metamorph Psion Level 3", action_type="bonus_action", duration="1 Minute", usage_tags=["buff"])
+        super().__init__(name="Mutable Form", origin="Metamorph Psion Level 3", activation=FeatureActivation(action_type="bonus_action", duration="1 Minute"), usage_tags=["buff"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -54,7 +54,7 @@ class MutableForm(Feature):
 
 class OrganicWeapons(Feature):
     def __init__(self):
-        super().__init__(name="Organic Weapons", origin="Metamorph Psion Level 3", action_type="action", usage_tags=["damage", "buff", "control"])
+        super().__init__(name="Organic Weapons", origin="Metamorph Psion Level 3", activation=FeatureActivation(action_type="action"), usage_tags=["damage", "buff", "control"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -164,7 +164,7 @@ class ImprovedMutableForm(Feature):
 
 class LifeBendingWeapons(Feature):
     def __init__(self):
-        super().__init__(name="Life-bending Weapons", origin="Metamorph Psion Level 14", range="30-Foot Emanation", usage_tags=["damage", "heal"])
+        super().__init__(name="Life-bending Weapons", origin="Metamorph Psion Level 14", activation=FeatureActivation(range="30-Foot Emanation"), usage_tags=["damage", "heal"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

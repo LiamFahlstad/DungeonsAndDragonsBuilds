@@ -1,5 +1,5 @@
 from Core.Definitions import BARD_HIT_DIE
-from CharacterContent.Features.Core.BaseFeatures import Feature
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
@@ -33,7 +33,7 @@ class DazzlingFootwork(Feature):
 class InspiringMovement(Feature):
     def __init__(self):
         super().__init__(
-            name="Inspiring Movement", origin="College of Dance Bard Level 6", action_type="reaction", range="30 Feet", usage_tags=["buff"]
+            name="Inspiring Movement", origin="College of Dance Bard Level 6", activation=FeatureActivation(action_type="reaction", range="30 Feet"), usage_tags=["buff"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -57,7 +57,7 @@ class InspiringMovement(Feature):
 
 class TandemFootwork(Feature):
     def __init__(self):
-        super().__init__(name="Tandem Footwork", origin="College of Dance Bard Level 6", range="30 Feet", usage_tags=["buff"])
+        super().__init__(name="Tandem Footwork", origin="College of Dance Bard Level 6", activation=FeatureActivation(range="30 Feet"), usage_tags=["buff"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "When you roll Initiative, you can expend one use of your Bardic Inspiration if you don't have the Incapacitated condition. When you do so, roll your Bardic Inspiration die; you and each ally within 30 feet of you who can see or hear you gains a bonus to Initiative equal to the number rolled."
@@ -77,7 +77,7 @@ class TandemFootwork(Feature):
 class LeadingEvasion(Feature):
     def __init__(self):
         super().__init__(
-            name="Leading Evasion", origin="College of Dance Bard Level 14", range="5 Feet", usage_tags=["buff"]
+            name="Leading Evasion", origin="College of Dance Bard Level 14", activation=FeatureActivation(range="5 Feet"), usage_tags=["buff"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:

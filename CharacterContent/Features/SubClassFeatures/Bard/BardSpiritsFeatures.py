@@ -1,5 +1,5 @@
 from Core.Definitions import BARD_HIT_DIE
-from CharacterContent.Features.Core.BaseFeatures import Feature
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
@@ -19,7 +19,7 @@ class Channeler(Feature):
 class SpiritsFromBeyond(Feature):
     def __init__(self):
         super().__init__(
-            name="Spirits from Beyond", origin="College of Spirits Bard Level 3", range="30 Feet", usage_tags=["damage", "heal", "buff", "control"]
+            name="Spirits from Beyond", origin="College of Spirits Bard Level 3", activation=FeatureActivation(range="30 Feet"), usage_tags=["damage", "heal", "buff", "control"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
