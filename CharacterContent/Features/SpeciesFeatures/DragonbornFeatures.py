@@ -60,23 +60,9 @@ class BreathWeapon(Feature):
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        constitution_modifier = character_stat_block.get_ability_modifier(
-            Ability.CONSTITUTION
-        )
-        proficiency_bonus = character_stat_block.get_proficiency_bonus()
-
-        if character_stat_block.character_level < 5:
-            damage = "1d10"
-        elif character_stat_block.character_level < 11:
-            damage = "2d10"
-        elif character_stat_block.character_level < 17:
-            damage = "3d10"
-        else:
-            damage = "4d10"
-
         text = (
-            f"When you take the Attack action on your turn, you can replace one of your attacks with an exhalation of magical energy in either a 15-foot Cone or a 30-foot Line that is 5 feet wide (choose the shape each time). Each creature in that area must make a Dexterity saving throw (DC 8 plus your Constitution modifier and Proficiency Bonus = {8 + constitution_modifier + proficiency_bonus}).\n"
-            f"On a failed save, a creature takes {damage} {self.damage_type} damage because your Draconic Ancestry is {self.color.value} dragon. On a successful save, a creature takes half as much damage.\n"
+            "When you take the Attack action on your turn, you can replace one of your attacks with an exhalation of magical energy in either a 15-foot Cone or a 30-foot Line that is 5 feet wide (choose the shape each time). Each creature in that area must make a Dexterity saving throw (DC 8 plus your Constitution modifier and Proficiency Bonus).\n"
+            f"On a failed save, a creature takes {self.damage_type.value} damage because your Draconic Ancestry is {self.color.value} dragon. The damage increases as you gain levels, as shown in the Breath Weapon column of the Dragonborn Features table. On a successful save, a creature takes half as much damage.\n"
             "You can use this Breath Weapon a number of times equal to your Proficiency Bonus, and you regain all expended uses when you finish a Long Rest."
         )
         return text

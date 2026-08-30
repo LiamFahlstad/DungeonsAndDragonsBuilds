@@ -26,8 +26,7 @@ class TemporalAwareness(Feature):
         super().__init__(name="Temporal Awareness", origin="Chronurgy Wizard Level 3")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        int_mod = character_stat_block.get_ability_modifier(Ability.INTELLIGENCE)
-        description = f"Starting at 2nd level, you can add your Intelligence modifier ({int_mod}) to your initiative rolls."
+        description = "Starting at 2nd level, you can add your Intelligence modifier to your initiative rolls."
         return description
 
 

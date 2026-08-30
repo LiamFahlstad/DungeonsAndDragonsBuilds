@@ -19,13 +19,10 @@ class RemarkableAthlete(Feature):
         super().__init__(name="Remarkable Athlete", origin="Champion Fighter Level 7", usage_tags=["buff"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        proficiency_bonus = character_stat_block.get_proficiency_bonus()
-        half_proficiency_bonus = math.ceil(proficiency_bonus / 2)
-        strength_modifier = character_stat_block.get_ability_modifier(Ability.STRENGTH)
         description = (
-            f"Starting at 7th level, you can add half your proficiency bonus (rounded up, {half_proficiency_bonus}) to any Strength, Dexterity, or Constitution check you make that doesn't already use your proficiency bonus.\n"
+            "Starting at 7th level, you can add half your proficiency bonus (rounded up) to any Strength, Dexterity, or Constitution check you make that doesn't already use your proficiency bonus.\n"
             "\n"
-            f"In addition, when you make a running long jump, the distance you can cover increases by a number of feet equal to your Strength modifier ({strength_modifier})."
+            "In addition, when you make a running long jump, the distance you can cover increases by a number of feet equal to your Strength modifier."
         )
         return description
 
@@ -55,9 +52,7 @@ class Survivor(Feature):
         super().__init__(name="Survivor", origin="Champion Fighter Level 18", usage_tags=["heal"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        constitution_modifier = character_stat_block.get_ability_modifier(Ability.CONSTITUTION)
-        hit_points_regained = 5 + constitution_modifier
         description = (
-            f"At 18th level, you attain the pinnacle of resilience in battle. At the start of each of your turns, you regain hit points equal to {hit_points_regained} (5 + your Constitution modifier) if you have no more than half of your hit points left. You don't gain this benefit if you have 0 hit points."
+            "At 18th level, you attain the pinnacle of resilience in battle. At the start of each of your turns, you regain hit points equal to 5 + your Constitution modifier if you have no more than half of your hit points left. You don't gain this benefit if you have 0 hit points."
         )
         return description

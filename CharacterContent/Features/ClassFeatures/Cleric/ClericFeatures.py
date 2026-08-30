@@ -55,9 +55,7 @@ class DivineOrderThaumaturge(Feature):
         SkillBonus(Skill.RELIGION, bonus, source=self.name).apply(character_stat_block)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        wisdom_modifier = character_stat_block.get_ability_modifier(Ability.WISDOM)
-        bonus = max(1, wisdom_modifier)
-        description = f"You know one extra cantrip from the Cleric spell list: {self.extra_cantrip}. Your mystical connection to the divine gives you a bonus to your Intelligence (Arcana or Religion) checks equal to your Wisdom modifier (total +{bonus})."
+        description = f"You know one extra cantrip from the Cleric spell list: {self.extra_cantrip}. Your mystical connection to the divine gives you a bonus to your Intelligence (Arcana or Religion) checks equal to your Wisdom modifier (minimum bonus of +1)."
         return description
 
 
@@ -189,9 +187,7 @@ class ImprovedPotentSpellcasting(Feature):
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        wisdom_modifier = character_stat_block.get_ability_modifier(Ability.WISDOM)
-        bonus = 2 * wisdom_modifier
-        description = f"When you cast a Cleric cantrip and deal damage to a creature with it, you can give vitality to yourself or another creature within 60 feet of yourself, granting a number of Temporary Hit Points equal to twice your Wisdom modifier (total {bonus})."
+        description = "When you cast a Cleric cantrip and deal damage to a creature with it, you can give vitality to yourself or another creature within 60 feet of yourself, granting a number of Temporary Hit Points equal to twice your Wisdom modifier."
         return description
 
 

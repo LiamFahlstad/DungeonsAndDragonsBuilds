@@ -38,8 +38,7 @@ class EmpoweredEvocation(Feature):
         super().__init__(name="Empowered Evocation", origin="Evoker Wizard Level 10", usage_tags=["damage"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        int_mod = character_stat_block.get_ability_modifier(Ability.INTELLIGENCE)
-        description = f"Whenever you cast a Wizard spell from the Evocation school, you can add your Intelligence modifier ({int_mod}) to one damage roll of that spell."
+        description = "Whenever you cast a Wizard spell from the Evocation school, you can add your Intelligence modifier to one damage roll of that spell."
         return description
 
 

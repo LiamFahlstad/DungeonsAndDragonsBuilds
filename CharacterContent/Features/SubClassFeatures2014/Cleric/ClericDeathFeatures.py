@@ -48,11 +48,7 @@ class TouchOfDeathChannelDivinity(Feature):
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        cleric_level = character_stat_block.get_class_level(
-            Definitions.CharacterClass.CLERIC
-        )
-        damage = 5 + 2 * cleric_level
-        description = f"You can use Channel Divinity to destroy another creature's life force by touch. When you hit a creature with a melee attack, you can use Channel Divinity to deal extra necrotic damage to the target. The damage equals 5 + twice your cleric level ({damage})."
+        description = "You can use Channel Divinity to destroy another creature's life force by touch. When you hit a creature with a melee attack, you can use Channel Divinity to deal extra necrotic damage to the target. The damage equals 5 + twice your cleric level."
         return description
 
     def get_table_description(

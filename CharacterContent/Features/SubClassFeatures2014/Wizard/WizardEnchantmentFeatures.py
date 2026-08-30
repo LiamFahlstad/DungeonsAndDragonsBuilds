@@ -77,10 +77,8 @@ class AlterMemories(Feature):
         super().__init__(name="Alter Memories", origin="Enchantment Wizard Level 14", activation=FeatureActivation(action_type=ActionType.ACTION), usage_tags=["control"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        cha_mod = character_stat_block.get_ability_modifier(Ability.CHARISMA)
-        memory_loss = max(1, 1 + cha_mod)
         description = (
             "You gain the ability to make a creature unaware of your magical influence on it. When you cast an enchantment spell to charm one or more creatures, you can alter one creature's understanding so that it remains unaware of being charmed.\n"
-            f"Additionally, once before the spell expires, you can use your action to try to make the chosen creature forget some of the time it spent charmed. The creature must succeed on an Intelligence saving throw against your wizard spell save DC or lose a number of hours of its memories equal to 1 + your Charisma modifier ({memory_loss}). You can make the creature forget less time, and the amount of time can't exceed the duration of your enchantment spell."
+            "Additionally, once before the spell expires, you can use your action to try to make the chosen creature forget some of the time it spent charmed. The creature must succeed on an Intelligence saving throw against your wizard spell save DC or lose a number of hours of its memories equal to 1 + your Charisma modifier. You can make the creature forget less time, and the amount of time can't exceed the duration of your enchantment spell."
         )
         return description

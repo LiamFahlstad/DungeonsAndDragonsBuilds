@@ -12,10 +12,7 @@ class Frenzy(Feature):
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        rage_damage_bonus = get_rage_damage_bonus(
-            character_stat_block.get_class_level(Definitions.CharacterClass.BARBARIAN)
-        )
-        description = f"If you use Reckless Attack while your Rage is active, you deal extra damage to the first target you hit on your turn with a Strength-based attack. To determine the extra damage, roll a number of d6s equal to your Rage Damage bonus ({rage_damage_bonus}), and add them together. The damage has the same type as the weapon or Unarmed Strike used for the attack."
+        description = "If you use Reckless Attack while your Rage is active, you deal extra damage to the first target you hit on your turn with a Strength-based attack. To determine the extra damage, roll a number of d6s equal to your Rage Damage bonus, and add them together. The damage has the same type as the weapon or Unarmed Strike used for the attack."
         return description
 
     def get_table_description(

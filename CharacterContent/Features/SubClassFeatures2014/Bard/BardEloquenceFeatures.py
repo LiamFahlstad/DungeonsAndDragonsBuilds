@@ -48,16 +48,14 @@ class UniversalSpeech(Feature):
         super().__init__(name="Universal Speech", origin="College of Eloquence Bard Level 6", activation=FeatureActivation(action_type=ActionType.ACTION, duration="1 Hour", range="60 Feet"), usage_tags=["utility"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        cha_mod = character_stat_block.get_ability_modifier(Ability.CHARISMA)
-        creatures = max(1, cha_mod)
         description = (
-            f"You have gained the ability to make your speech intelligible to any creature. As an action, "
-            f"choose one or more creatures within 60 feet of you, up to a number equal to your Charisma "
-            f"modifier ({creatures} creature{'s' if creatures != 1 else ''}). The chosen creatures can magically "
-            f"understand you, regardless of the language you speak, for 1 hour.\n"
-            f"\n"
-            f"Once you use this feature, you can't use it again until you finish a long rest, unless you "
-            f"expend a spell slot to use it again."
+            "You have gained the ability to make your speech intelligible to any creature. As an action, "
+            "choose one or more creatures within 60 feet of you, up to a number equal to your Charisma "
+            "modifier (minimum of one creature). The chosen creatures can magically "
+            "understand you, regardless of the language you speak, for 1 hour.\n"
+            "\n"
+            "Once you use this feature, you can't use it again until you finish a long rest, unless you "
+            "expend a spell slot to use it again."
         )
         return description
 

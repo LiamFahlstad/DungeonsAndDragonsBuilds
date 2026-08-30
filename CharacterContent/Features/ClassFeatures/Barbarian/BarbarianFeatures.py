@@ -29,10 +29,6 @@ class Rage(Feature):
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        barbarian_level = character_stat_block.get_class_level(
-            Definitions.CharacterClass.BARBARIAN
-        )
-        rage_damage_bonus = get_rage_damage_bonus(barbarian_level)
         description = (
             "You can imbue yourself with a primal power called Rage, a force that grants you extraordinary might and resilience.\n"
             "    * Casting Time: Bonus Action\n"
@@ -41,7 +37,7 @@ class Rage(Feature):
             "    * Regaining: You regain one expended use when you finish a Short Rest, and you regain all expended uses when you finish a Long Rest.\n"
             "    * While active, your Rage follows the rules below.\n"
             "        - Damage Resistance: You have Resistance to Bludgeoning, Piercing, and Slashing damage.\n"
-            f"        - Rage Damage: When you make an attack using Strength—with either a weapon or an Unarmed Strike—and deal damage to the target, you gain +{rage_damage_bonus} bonus to the damage.\n"
+            "        - Rage Damage: When you make an attack using Strength—with either a weapon or an Unarmed Strike—and deal damage to the target, you gain a bonus to the damage, as shown in the Rage Damage column of the Barbarian Features table.\n"
             "        - Strength Advantage: You have Advantage on Strength checks and Strength saving throws.\n"
             "        - No Concentration or Spells: You can't maintain Concentration, and you can't cast spells.\n"
             "        - Duration: The Rage lasts until the end of your next turn, and it ends early if you don Heavy armor or have the Incapacitated condition. If your Rage is still active on your next turn, you can extend the Rage for another round by doing one of the following:\n"
@@ -95,14 +91,7 @@ class UnarmoredDefenseText(Feature):
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        dexterity_modifier = character_stat_block.get_ability_modifier(
-            Definitions.Ability.DEXTERITY
-        )
-        constitution_modifier = character_stat_block.get_ability_modifier(
-            Definitions.Ability.CONSTITUTION
-        )
-        armor_class = 10 + dexterity_modifier + constitution_modifier
-        description = f"While you aren't wearing any armor, your base Armor Class equals 10 plus your Dexterity and Constitution modifiers (total {dexterity_modifier} + {constitution_modifier} = {armor_class}). You can use a Shield and still gain this benefit."
+        description = "While you aren't wearing any armor, your base Armor Class equals 10 plus your Dexterity and Constitution modifiers. You can use a Shield and still gain this benefit."
         return description
 
 

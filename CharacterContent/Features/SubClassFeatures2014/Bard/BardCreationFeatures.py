@@ -89,13 +89,9 @@ class CreativeCrescendo(Feature):
         super().__init__(name="Creative Crescendo", origin="College of Creation Bard Level 14", usage_tags=["utility"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        cha_mod = character_stat_block.get_ability_modifier(Ability.CHARISMA)
-        items = max(2, cha_mod)
         description = (
             "At 14th level, when you use your Performance of Creation feature, you can create more than one item at once. The number of items equals your Charisma modifier (minimum of two items). If you create an item that would exceed that number, you choose which of the previously created items disappears. Only one of these items can be of the maximum size you can create; the rest must be Small or Tiny.\n"
             "\n"
-            "You are no longer limited by gp value when creating items with Performance of Creation.\n"
-            "\n"
-            f"At your current Charisma modifier, you can create {items} items at once."
+            "You are no longer limited by gp value when creating items with Performance of Creation."
         )
         return description

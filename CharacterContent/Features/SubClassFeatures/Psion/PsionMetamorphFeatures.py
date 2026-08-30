@@ -189,9 +189,8 @@ class LifeBendingWeapons(Feature):
     def get_concise_description(
         self, character_stat_block: CharacterStatBlock
     ) -> str:
-        int_mod = character_stat_block.get_ability_modifier(Ability.INTELLIGENCE)
         return (
             "On hit with Organic Weapon, roll a Psionic Energy Die for extra Necrotic damage "
             "(no expend). Alternatively (once/turn), expend one die: deal extra Necrotic damage "
-            f"+ heal creatures in 30-foot emanation for die roll + INT mod ({int_mod})."
+            "+ heal creatures in 30-foot emanation for die roll + INT mod."
         )

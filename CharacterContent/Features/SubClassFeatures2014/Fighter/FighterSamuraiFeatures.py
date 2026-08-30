@@ -42,15 +42,9 @@ class FightingSpirit(Feature):
         super().__init__(name="Fighting Spirit", origin="Samurai Fighter Level 3", activation=FeatureActivation(action_type=ActionType.BONUS_ACTION, duration="Until End of Current Turn"), usage_tags=["buff"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        fighter_level = character_stat_block.get_class_level(CharacterClass.FIGHTER)
-        temporary_hit_points = 5
-        if fighter_level >= 15:
-            temporary_hit_points = 15
-        elif fighter_level >= 10:
-            temporary_hit_points = 10
         description = (
             "Your intensity in battle can shield you and help you strike true. As a bonus action on your turn, you can give yourself advantage on all weapon attack rolls until the end of the current turn. When you do so, you also gain temporary hit points.\n"
-            f"At your current fighter level, you gain {temporary_hit_points} temporary hit points when you use this feature. This increases to 10 at 10th level and 15 at 15th level.\n"
+            "The number of temporary hit points depends on your fighter level: 5 at 3rd level, 10 at 10th level, and 15 at 15th level.\n"
             "You can use this feature three times. You regain all expended uses of it when you finish a long rest."
         )
         return description

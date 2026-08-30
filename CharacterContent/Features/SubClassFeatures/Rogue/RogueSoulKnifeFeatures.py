@@ -9,23 +9,8 @@ class PsionicPower(Feature):
         super().__init__(name="Psionic Power", origin="Soulknife Rogue Level 3", activation=FeatureActivation(action_type=ActionType.ACTION, duration="Hours Based on Energy Die Roll", range="1 Mile"), usage_tags=["utility"], uses=FeatureUses(max_uses=12, regain_all_on="long rest", regain_x_on=(1, "short rest")))
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        rogue_level = character_stat_block.get_class_level(CharacterClass.ROGUE)
-
-        if rogue_level < 5:
-            die_size, _ = 6, 4
-        elif rogue_level < 9:
-            die_size, _ = 8, 6
-        elif rogue_level < 11:
-            die_size, _ = 8, 8
-        elif rogue_level < 13:
-            die_size, _ = 10, 8
-        elif rogue_level < 17:
-            die_size, _ = 10, 10
-        else:
-            die_size, _ = 12, 12
-
         description = (
-            f"You harbor a wellspring of psionic energy within yourself. It is represented by your Psionic Energy Dice (currently d{die_size}s), which fuel certain powers you have from this subclass. The Soulknife Energy Dice table shows the number of these dice you have when you reach certain Rogue levels, and the table shows the die size.\n"
+            "You harbor a wellspring of psionic energy within yourself. It is represented by your Psionic Energy Dice, which fuel certain powers you have from this subclass. The Soulknife Energy Dice table shows the number of these dice you have when you reach certain Rogue levels, and the table shows the die size.\n"
             "Soulknife Energy Dice\n"
             "Rogue Level	Die Size	Number\n"
             "3	D6	4\n"

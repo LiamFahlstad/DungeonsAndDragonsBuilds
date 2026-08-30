@@ -8,12 +8,8 @@ class TouchOfDeath(Feature):
         super().__init__(name="Touch of Death", origin="Way of the Long Death Monk Level 3", activation=FeatureActivation(range="5 Feet"), usage_tags=["heal"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        wisdom_modifier = character_stat_block.get_ability_modifier(Ability.WISDOM)
-        monk_level = character_stat_block.character_level
-        temporary_hit_points = max(1, wisdom_modifier + monk_level)
         description = (
-            "Your study of death allows you to extract vitality from another creature as it nears its demise. When you reduce a creature within 5 feet of you to 0 hit points, you gain temporary hit points equal to your Wisdom modifier + your monk level "
-            f"(minimum of 1 temporary hit point) = {temporary_hit_points}."
+            "Your study of death allows you to extract vitality from another creature as it nears its demise. When you reduce a creature within 5 feet of you to 0 hit points, you gain temporary hit points equal to your Wisdom modifier + your monk level (minimum of 1 temporary hit point)."
         )
         return description
 

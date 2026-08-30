@@ -60,13 +60,12 @@ class ManifestMind(Feature):
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        proficiency_bonus = character_stat_block.get_proficiency_bonus()
         description = (
             "You can conjure forth the mind of your Awakened Spellbook. As a bonus action while the book is on your person, you can cause the mind to manifest as a Tiny spectral object, hovering in an unoccupied space of your choice within 60 feet of you. The spectral mind is intangible and doesn't occupy its space, and it sheds dim light in a 10-foot radius. It looks like a ghostly tome, a cascade of text, or a scholar from the past (your choice).\n"
             "\n"
             "While manifested, the spectral mind can hear and see, and it has darkvision with a range of 60 feet. The mind can telepathically share with you what it sees and hears (no action required).\n"
             "\n"
-            f"Whenever you cast a wizard spell on your turn, you can cast it as if you were in the spectral mind's space, instead of your own, using its senses. You can do so a number of times per day equal to your proficiency bonus ({proficiency_bonus}), and you regain all expended uses when you finish a long rest.\n"
+            "Whenever you cast a wizard spell on your turn, you can cast it as if you were in the spectral mind's space, instead of your own, using its senses. You can do so a number of times per day equal to your proficiency bonus, and you regain all expended uses when you finish a long rest.\n"
             "\n"
             "As a bonus action, you can cause the spectral mind to hover up to 30 feet to an unoccupied space that you or it can see. It can pass through creatures but not objects.\n"
             "\n"

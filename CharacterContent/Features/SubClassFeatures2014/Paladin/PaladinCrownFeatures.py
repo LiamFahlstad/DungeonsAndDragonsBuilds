@@ -48,10 +48,8 @@ class TurnTheTide(Feature):
         super().__init__(name="Channel Divinity: Turn the Tide", origin="Oath of the Crown Paladin Level 3", activation=FeatureActivation(action_type=ActionType.BONUS_ACTION, range="30 Feet"), usage_tags=["heal"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        charisma_modifier = character_stat_block.get_ability_modifier(Ability.CHARISMA)
-        healing = max(1, charisma_modifier)
         description = (
-            f"You can use your Channel Divinity to bolster injured creatures. As a bonus action, each creature of your choice that can hear you within 30 feet of you regains hit points equal to 1d6 + your Charisma modifier (minimum of 1) = 1d6 + {healing} if it has no more than half of its hit points."
+            "You can use your Channel Divinity to bolster injured creatures. As a bonus action, each creature of your choice that can hear you within 30 feet of you regains hit points equal to 1d6 + your Charisma modifier (minimum of 1 hp) if it has no more than half of its hit points."
         )
         return description
 

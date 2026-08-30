@@ -33,14 +33,10 @@ class SpiritShield(Feature):
         super().__init__(name="Spirit Shield", origin="Path Of The Ancestral Guardian Barbarian Level 6", activation=FeatureActivation(action_type=ActionType.REACTION, duration="Ends When Your Rage Ends", range="30 Feet"), usage_tags=["buff"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        barbarian_level = character_stat_block.get_class_level(Definitions.CharacterClass.BARBARIAN)
-        dice = _spirit_shield_dice(barbarian_level)
         description = (
             "Beginning at 6th level, the guardian spirits that aid you can provide supernatural protection to those you defend. If you are raging and another creature you can see within 30 feet of you takes damage, you can use your reaction to reduce that damage by 2d6.\n"
             "\n"
-            "When you reach certain levels in this class, you can reduce the damage by more: by 3d6 at 10th level and by 4d6 at 14th level.\n"
-            "\n"
-            f"At your current Barbarian level, you reduce the damage by {dice}."
+            "When you reach certain levels in this class, you can reduce the damage by more: by 3d6 at 10th level and by 4d6 at 14th level."
         )
         return description
 

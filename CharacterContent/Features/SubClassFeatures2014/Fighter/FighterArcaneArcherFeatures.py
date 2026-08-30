@@ -34,10 +34,6 @@ class ArcaneShot(Feature):
         super().__init__(name="Arcane Shot", origin="Arcane Archer Fighter Level 3", usage_tags=["damage", "control"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        proficiency_bonus = character_stat_block.get_proficiency_bonus()
-        intelligence_modifier = character_stat_block.get_ability_modifier(Ability.INTELLIGENCE)
-        arcane_shot_save_dc = 8 + proficiency_bonus + intelligence_modifier
-
         description = (
             "At 3rd level, you learn to unleash special magical effects with some of your shots. When you gain this feature, you learn two Arcane Shot options of your choice (see below).\n"
             "\n"
@@ -48,7 +44,7 @@ class ArcaneShot(Feature):
             "Arcane Shot Options\n"
             "The Arcane Shot feature lets you choose options for it at certain levels. The options are presented here in alphabetical order. They are all magical effects, and each one is associated with one of the schools of magic.\n"
             "\n"
-            f"If an option requires a saving throw, your Arcane Shot save DC equals 8 + your proficiency bonus + your Intelligence modifier = {arcane_shot_save_dc}.\n"
+            "If an option requires a saving throw, your Arcane Shot save DC equals 8 + your proficiency bonus + your Intelligence modifier.\n"
             "\n"
             "Banishing Arrow. You use abjuration magic to try to temporarily banish your target to a harmless location in the Feywild. The creature hit by the arrow must also succeed on a Charisma saving throw or be banished. While banished in this way, its speed is 0, and it is incapacitated. At the end of its next turn, the target reappears in the space it vacated or in the nearest unoccupied space if that space is occupied. After you reach 18th level in this class, a target also takes 2d6 force damage when the arrow hits it.\n"
             "\n"

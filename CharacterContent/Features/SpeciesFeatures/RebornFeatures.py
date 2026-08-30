@@ -35,9 +35,8 @@ class RebornKnowledge(Feature):
         return description
 
     def get_concise_description(self, character_stat_block: CharacterStatBlock) -> str:
-        proficiency_bonus = character_stat_block.get_proficiency_bonus()
         return (
-            f"Gain proficiency in one skill of your choice. When you fail an ability check, add 1d6 to the roll to potentially turn it into a success ({proficiency_bonus} uses per Long Rest)."
+            "Gain proficiency in one skill of your choice. When you fail an ability check, add 1d6 to the roll to potentially turn it into a success (uses per Long Rest equal to your Proficiency Bonus)."
         )
 
 

@@ -35,11 +35,8 @@ class WatchersWill(Feature):
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        charisma_modifier = character_stat_block.get_ability_modifier(Ability.CHARISMA)
-        creature_count = max(1, charisma_modifier)
         description = (
-            "You can use your Channel Divinity to invest your presence with the warding power of your faith. As an action, you can choose a number of creatures you can see within 30 feet of you, "
-            f"up to a number equal to your Charisma modifier (minimum of one creature) = {creature_count}. For 1 minute, you and the chosen creatures have advantage on Intelligence, Wisdom, and Charisma saving throws."
+            "You can use your Channel Divinity to invest your presence with the warding power of your faith. As an action, you can choose a number of creatures you can see within 30 feet of you, up to a number equal to your Charisma modifier (minimum of one creature). For 1 minute, you and the chosen creatures have advantage on Intelligence, Wisdom, and Charisma saving throws."
         )
         return description
 
@@ -88,10 +85,8 @@ class AuraOfTheSentinel(Feature):
         InitiativeProficiency().apply(character_stat_block)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        proficiency_bonus = character_stat_block.get_proficiency_bonus()
         description = (
-            "You emit an aura of alertness while you aren't incapacitated. When you and any creatures of your choice within 10 feet of you roll initiative, you all gain a bonus to initiative equal to your proficiency bonus "
-            f"({proficiency_bonus}).\n"
+            "You emit an aura of alertness while you aren't incapacitated. When you and any creatures of your choice within 10 feet of you roll initiative, you all gain a bonus to initiative equal to your proficiency bonus.\n"
             "\n"
             "At 18th level, the range of this aura increases to 30 feet."
         )
@@ -131,10 +126,8 @@ class VigilantRebuke(Feature):
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        charisma_modifier = character_stat_block.get_ability_modifier(Ability.CHARISMA)
         description = (
-            "You've learned how to chastise anyone who dares wield beguilements against you and your wards. Whenever you or a creature you can see within 30 feet of you succeeds on an Intelligence, a Wisdom, or a Charisma saving throw, you can use your reaction to deal "
-            f"2d8 + your Charisma modifier ({charisma_modifier}) force damage to the creature that forced the saving throw."
+            "You've learned how to chastise anyone who dares wield beguilements against you and your wards. Whenever you or a creature you can see within 30 feet of you succeeds on an Intelligence, a Wisdom, or a Charisma saving throw, you can use your reaction to deal 2d8 + your Charisma modifier force damage to the creature that forced the saving throw."
         )
         return description
 

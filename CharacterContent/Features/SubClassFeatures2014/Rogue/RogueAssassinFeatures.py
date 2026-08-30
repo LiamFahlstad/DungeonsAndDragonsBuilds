@@ -1,5 +1,5 @@
-from Core.Definitions import Ability, ROGUE_HIT_DIE
 from CharacterContent.Features.Core.BaseFeatures import Feature
+from Core.Definitions import Ability
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
@@ -8,24 +8,30 @@ class BonusProficiencies(Feature):
         super().__init__(name="Bonus Proficiencies", origin="Assassin Rogue Level 3")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        description = "You gain proficiency with the disguise kit and the poisoner's kit."
+        description = (
+            "You gain proficiency with the disguise kit and the poisoner's kit."
+        )
         return description
 
 
 class Assassinate(Feature):
     def __init__(self):
-        super().__init__(name="Assassinate", origin="Assassin Rogue Level 3", usage_tags=["buff"])
+        super().__init__(
+            name="Assassinate", origin="Assassin Rogue Level 3", usage_tags=["buff"]
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        description = (
-            "You are at your deadliest when you get the drop on your enemies. You have advantage on attack rolls against any creature that hasn't taken a turn in the combat yet. In addition, any hit you score against a creature that is surprised is a critical hit."
-        )
+        description = "You are at your deadliest when you get the drop on your enemies. You have advantage on attack rolls against any creature that hasn't taken a turn in the combat yet. In addition, any hit you score against a creature that is surprised is a critical hit."
         return description
 
 
 class InfiltrationExpertise(Feature):
     def __init__(self):
-        super().__init__(name="Infiltration Expertise", origin="Assassin Rogue Level 9", usage_tags=["utility"])
+        super().__init__(
+            name="Infiltration Expertise",
+            origin="Assassin Rogue Level 9",
+            usage_tags=["utility"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -35,18 +41,28 @@ class InfiltrationExpertise(Feature):
         )
         return description
 
-    def get_table_description(self, character_stat_block: CharacterStatBlock) -> list[tuple[str, str]]:
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
         return [
             ("Time", "7 days"),
             ("Cost", "25 gp"),
-            ("What", "Create a false identity with history, profession, and affiliations"),
-            ("Effect", "Creatures believe you are that person until given obvious reason not to"),
+            (
+                "What",
+                "Create a false identity with history, profession, and affiliations",
+            ),
+            (
+                "Effect",
+                "Creatures believe you are that person until given obvious reason not to",
+            ),
         ]
 
 
 class Impostor(Feature):
     def __init__(self):
-        super().__init__(name="Impostor", origin="Assassin Rogue Level 13", usage_tags=["utility"])
+        super().__init__(
+            name="Impostor", origin="Assassin Rogue Level 13", usage_tags=["utility"]
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -56,30 +72,36 @@ class Impostor(Feature):
         )
         return description
 
-    def get_table_description(self, character_stat_block: CharacterStatBlock) -> list[tuple[str, str]]:
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
         return [
             ("Time", "At least 3 hours of observation"),
             ("Study", "Speech patterns, handwriting, mannerisms"),
             ("Effect", "Ruse is indiscernible to casual observer"),
-            ("Detection", "Advantage on Charisma (Deception) checks if creature suspects deception"),
+            (
+                "Detection",
+                "Advantage on Charisma (Deception) checks if creature suspects deception",
+            ),
         ]
 
 
 class DeathStrike(Feature):
     def __init__(self):
-        super().__init__(name="Death Strike", origin="Assassin Rogue Level 17", usage_tags=["damage"])
+        super().__init__(
+            name="Death Strike", origin="Assassin Rogue Level 17", usage_tags=["damage"]
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        dexterity_modifier = character_stat_block.get_ability_modifier(Ability.DEXTERITY)
-        proficiency_bonus = character_stat_block.get_proficiency_bonus()
-        dc = 8 + dexterity_modifier + proficiency_bonus
-        description = (
-            f"You become a master of instant death. When you attack and hit a creature that is surprised, it must make a Constitution saving throw (DC {dc}). On a failed save, double the damage of your attack against the creature."
-        )
+        description = "You become a master of instant death. When you attack and hit a creature that is surprised, it must make a Constitution saving throw against your spell save DC. On a failed save, double the damage of your attack against the creature."
         return description
 
-    def get_table_description(self, character_stat_block: CharacterStatBlock) -> list[tuple[str, str]]:
-        dexterity_modifier = character_stat_block.get_ability_modifier(Ability.DEXTERITY)
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        dexterity_modifier = character_stat_block.get_ability_modifier(
+            Ability.DEXTERITY
+        )
         proficiency_bonus = character_stat_block.get_proficiency_bonus()
         dc = 8 + dexterity_modifier + proficiency_bonus
         return [

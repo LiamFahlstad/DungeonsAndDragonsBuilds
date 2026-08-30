@@ -49,10 +49,9 @@ class EmpoweredTransmutation(Feature):
         super().__init__(name="Empowered Transmutation", origin="Transmuter Wizard Level 6", uses=FeatureUses(max_uses=MAX_ABILITY_MODIFIER, regain_all_on="long rest", current_formula="Current amount: equal to your Intelligence modifier."))
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        int_mod = character_stat_block.get_ability_modifier(Ability.INTELLIGENCE)
         description = (
             "When you use a spell slot to cast a Transmutation spell that doesn't make an attack roll or force a saving throw, such as Fly or Magic Weapon, you can increase the spell's effective level by 1.\n"
-            f"You can use this feature a number of times equal to your Intelligence modifier ({int_mod}) (minimum of once), and you regain all expended uses when you finish a Long Rest."
+            "You can use this feature a number of times equal to your Intelligence modifier (minimum of once), and you regain all expended uses when you finish a Long Rest."
         )
         return description
 

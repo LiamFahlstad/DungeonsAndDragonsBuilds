@@ -19,15 +19,10 @@ class SuperiorityDice(Feature):
         else:
             superiority_die = "1d12"
 
-        str_mod = character_stat_block.get_ability_modifier(Ability.STRENGTH)
-        dex_mod = character_stat_block.get_ability_modifier(Ability.DEXTERITY)
-        saving_throw = (
-            8 + max(str_mod, dex_mod) + character_stat_block.get_proficiency_bonus()
-        )
         base_text = (
             f"These are {superiority_die}s, and you can expend them to fuel your maneuvers.\n"
             "You regain all expended superiority dice when you finish a short or long rest.\n"
-            f"If a maneuver requires a saving throw, the DC equals {saving_throw}.\n"
+            "If a maneuver requires a saving throw, the DC equals 8 plus your Strength or Dexterity modifier (your choice) and Proficiency Bonus.\n"
             "Maneuvers:"
         )
 
@@ -54,15 +49,10 @@ class CombatSuperiority(Feature):
     def get_concise_description(
         self, character_stat_block: CharacterStatBlock
     ) -> str:
-        str_mod = character_stat_block.get_ability_modifier(Ability.STRENGTH)
-        dex_mod = character_stat_block.get_ability_modifier(Ability.DEXTERITY)
-        saving_throw = (
-            8 + max(str_mod, dex_mod) + character_stat_block.get_proficiency_bonus()
-        )
         return (
-            f"Learn maneuvers fueled by Superiority Dice (4 d8s at level 3, 5 at level 7, 6 at level 15). "
-            f"Learn 3 maneuvers at level 3, then 2 more at levels 7, 10, and 15; can replace one on level gain. "
-            f"Use one maneuver per attack, regain all dice on short or long rest. Maneuver save DC = {saving_throw}."
+            "Learn maneuvers fueled by Superiority Dice (4 d8s at level 3, 5 at level 7, 6 at level 15). "
+            "Learn 3 maneuvers at level 3, then 2 more at levels 7, 10, and 15; can replace one on level gain. "
+            "Use one maneuver per attack, regain all dice on short or long rest. Maneuver save DC = 8 + Strength or Dexterity modifier (your choice) + Proficiency Bonus."
         )
 
 

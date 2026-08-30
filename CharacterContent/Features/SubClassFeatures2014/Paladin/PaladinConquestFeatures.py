@@ -65,11 +65,10 @@ class AuraOfConquest(Feature):
         super().__init__(name="Aura of Conquest", origin="Oath of Conquest Paladin Level 7", activation=FeatureActivation(range="10 Feet (30 at 18th Level)"), usage_tags=["damage", "control"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        half_paladin_level = character_stat_block.character_level // 2
         description = (
             "Starting at 7th level, you constantly emanate a menacing aura while you're not incapacitated. The aura extends 10 feet from you in every direction, but not through total cover.\n"
             "\n"
-            f"If a creature is frightened of you, its speed is reduced to 0 while in the aura, and that creature takes psychic damage equal to half your paladin level ({half_paladin_level}) if it starts its turn there.\n"
+            "If a creature is frightened of you, its speed is reduced to 0 while in the aura, and that creature takes psychic damage equal to half your paladin level if it starts its turn there.\n"
             "\n"
             "At 18th level, the range of this aura increases to 30 feet."
         )
@@ -100,10 +99,8 @@ class ScornfulRebuke(Feature):
         super().__init__(name="Scornful Rebuke", origin="Oath of Conquest Paladin Level 15", usage_tags=["damage"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        charisma_modifier = character_stat_block.get_ability_modifier(Ability.CHARISMA)
-        rebuke_damage = max(1, charisma_modifier)
         description = (
-            f"Starting at 15th level, those who dare to strike you are psychically punished for their audacity. Whenever a creature hits you with an attack, that creature takes psychic damage equal to your Charisma modifier (minimum of 1) = {rebuke_damage} if you're not incapacitated."
+            "Starting at 15th level, those who dare to strike you are psychically punished for their audacity. Whenever a creature hits you with an attack, that creature takes psychic damage equal to your Charisma modifier (minimum of 1 hp) if you're not incapacitated."
         )
         return description
 

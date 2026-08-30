@@ -106,17 +106,8 @@ class Metamagic(Feature):
         super().__init__(name="Metamagic", origin="Sorcerer Level 2")
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        sorcerer_level = character_stat_block.get_class_level(
-            Definitions.CharacterClass.SORCERER
-        )
-        if sorcerer_level < 10:
-            metamaagic_options = 2
-        elif sorcerer_level < 17:
-            metamaagic_options = 4
-        else:
-            metamaagic_options = 6
         description = (
-            f"Because your magic flows from within, you can alter your spells to suit your needs; You have {metamaagic_options} options to temporarily modify spells you cast. To use an option, you must spend the number of Sorcery Points that it costs.\n"
+            "Because your magic flows from within, you can alter your spells to suit your needs; You have Metamagic options to temporarily modify spells you cast. To use an option, you must spend the number of Sorcery Points that it costs.\n"
             "You can use only one Metamagic option on a spell when you cast it unless otherwise noted in one of those options.\n"
             "Whenever you gain a Sorcerer level, you can replace one of your Metamagic options with one you don't know. You gain two more options at Sorcerer level 10 and two more at Sorcerer level 17."
         )

@@ -28,8 +28,6 @@ class SpiritTotem(Feature):
         super().__init__(name="Spirit Totem", origin="Circle of the Shepherd Druid Level 3", activation=FeatureActivation(action_type=ActionType.BONUS_ACTION, duration="1 Minute", range="60 Feet"), usage_tags=["buff", "summon"], uses=FeatureUses(max_uses=1, regain_all_on="short or long rest"))
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        druid_level = character_stat_block.get_class_level(Definitions.CharacterClass.DRUID)
-        temp_hp = 5 + druid_level
         description = (
             "Starting at 2nd level, you gain the ability to call forth nature spirits and use them to influence the world around you.\n"
             "\n"
@@ -39,7 +37,7 @@ class SpiritTotem(Feature):
             "\n"
             "The effect of the spirit's aura depends on the type of spirit you summon from the options below.\n"
             "\n"
-            f"    * Bear Spirit. The bear spirit grants you and your allies its might and endurance. Each creature of your choice in the aura when the spirit appears gains temporary hit points equal to 5 + your druid level ({temp_hp}). In addition, you and your allies gain advantage on Strength checks and Strength saving throws while in the aura.\n"
+            "    * Bear Spirit. The bear spirit grants you and your allies its might and endurance. Each creature of your choice in the aura when the spirit appears gains temporary hit points equal to 5 + your druid level. In addition, you and your allies gain advantage on Strength checks and Strength saving throws while in the aura.\n"
             "    * Hawk Spirit. The hawk spirit is a consummate hunter, aiding you and your allies with its keen sight. When a creature makes an attack roll against a target in the spirit's aura, you can use your reaction to grant advantage to that attack roll. In addition, you and your allies have advantage on Wisdom (Perception) checks while in the aura.\n"
             "    * Unicorn Spirit. The unicorn spirit lends its protection to those nearby. You and your allies gain advantage on all ability checks made to detect creatures in the spirit's aura. In addition, if you cast a spell using a spell slot that restores hit points to any creature inside or outside the aura, each creature of your choice in the aura also regains hit points equal to your druid level."
         )

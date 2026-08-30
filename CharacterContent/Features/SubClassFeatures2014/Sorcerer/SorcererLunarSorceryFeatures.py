@@ -42,7 +42,6 @@ class LunarBoons(Feature):
         super().__init__(name="Lunar Boons", origin="Lunar Sorcery Sorcerer Level 6", usage_tags=["buff"], uses=FeatureUses(max_uses=MAX_PROFICIENCY_BONUS, regain_all_on="long rest", current_formula="Current amount: equal to your proficiency bonus."))
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        proficiency_bonus = character_stat_block.get_proficiency_bonus()
         description = (
             "The current phase of your Lunar Embodiment can affect your Metamagic feature. Each Lunar Embodiment phase is associated with certain schools of magic, as shown here:\n"
             "\n"
@@ -50,7 +49,7 @@ class LunarBoons(Feature):
             "    * New Moon. Enchantment and Necromancy spells\n"
             "    * Crescent Moon. Illusion and Transmutation spells\n"
             "\n"
-            f"Whenever you use Metamagic on a spell of a school of magic associated with your current Lunar Embodiment phase, you can reduce the sorcery points spent by 1 (minimum 0). You can reduce the sorcery points spent for your Metamagic a number of times equal to your proficiency bonus ({proficiency_bonus}), and you regain all expended uses when you finish a long rest."
+            "Whenever you use Metamagic on a spell of a school of magic associated with your current Lunar Embodiment phase, you can reduce the sorcery points spent by 1 (minimum 0). You can reduce the sorcery points spent for your Metamagic a number of times equal to your proficiency bonus, and you regain all expended uses when you finish a long rest."
         )
         return description
 

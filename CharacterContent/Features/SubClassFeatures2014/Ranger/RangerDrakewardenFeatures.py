@@ -180,14 +180,9 @@ class DrakesBreath(Feature):
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        ranger_level = character_stat_block.get_class_level(CharacterClass.RANGER)
-        proficiency_bonus = character_stat_block.get_proficiency_bonus()
-        wisdom_modifier = character_stat_block.get_ability_modifier(Ability.WISDOM)
-        spell_save_dc = 8 + proficiency_bonus + wisdom_modifier
-        damage = "10d6" if ranger_level >= 15 else "8d6"
         description = (
             "As an action, you can exhale a 30-foot cone of damaging breath or cause your drake to exhale it. Choose acid, cold, fire, lightning, or poison damage (your choice doesn't have to match your drake's Draconic Essence). "
-            f"Each creature in the cone must make a Dexterity saving throw against your spell save DC ({spell_save_dc}), taking {damage} damage on a failed save, or half as much damage on a successful one.\n"
+            "Each creature in the cone must make a Dexterity saving throw against your spell save DC, taking 8d6 damage on a failed save, or half as much damage on a successful one.\n"
             "This damage increases to 10d6 when you reach 15th level in this class.\n"
             "Once you use this feature, you can't do so again until you finish a long rest, unless you expend a spell slot of 3rd level or higher to use it again."
         )
@@ -221,11 +216,10 @@ class PerfectedBond(Feature):
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        proficiency_bonus = character_stat_block.get_proficiency_bonus()
         description = (
             "Your bond to your drake reaches the pinnacle of its power. While your drake is summoned, you and the drake gain the following benefits:\n"
             "    * Empowered Bite. The drake's Bite attack deals an extra 1d6 damage of the type chosen for its Draconic Essence (for a total of 2d6 extra damage).\n"
             "    * Large Drake. The drake grows to Large size. When you ride your drake, it is no longer prohibited from using the flying speed of Bond of Fang and Scale.\n"
-            f"    * Reflexive Resistance. When either you or the drake takes damage while you're within 30 feet of each other, you can use your reaction to give yourself or the drake resistance to that instance of damage. You can use this reaction a number of times equal to your proficiency bonus ({proficiency_bonus}), and you regain all expended uses when you finish a long rest."
+            "    * Reflexive Resistance. When either you or the drake takes damage while you're within 30 feet of each other, you can use your reaction to give yourself or the drake resistance to that instance of damage. You can use this reaction a number of times equal to your proficiency bonus, and you regain all expended uses when you finish a long rest."
         )
         return description

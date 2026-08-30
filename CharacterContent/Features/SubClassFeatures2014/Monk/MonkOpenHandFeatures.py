@@ -24,10 +24,8 @@ class WholenessOfBody(Feature):
         super().__init__(name="Wholeness of Body", origin="Way of the Open Hand Monk Level 6", activation=FeatureActivation(action_type=ActionType.ACTION), usage_tags=["heal"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        monk_level = character_stat_block.get_class_level(Definitions.CharacterClass.MONK)
-        healing = monk_level * 3
         description = (
-            f"You gain the ability to heal yourself. As an action, you can regain hit points equal to three times your monk level ({healing})."
+            "You gain the ability to heal yourself. As an action, you can regain hit points equal to three times your monk level."
         )
         return description
 
@@ -46,11 +44,8 @@ class Tranquility(Feature):
         super().__init__(name="Tranquility", origin="Way of the Open Hand Monk Level 11", activation=FeatureActivation(duration="Until Start of Next Long Rest"), usage_tags=["buff"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        wisdom_modifier = character_stat_block.get_ability_modifier(Definitions.Ability.WISDOM)
-        proficiency_bonus = character_stat_block.get_proficiency_bonus()
-        dc = 8 + wisdom_modifier + proficiency_bonus
         description = (
-            f"You can enter a special meditation that surrounds you with an aura of peace. At the end of a long rest, you gain the effect of a Sanctuary spell that lasts until the start of your next long rest (the spell can end early as normal). The saving throw DC for the spell equals {dc}."
+            "You can enter a special meditation that surrounds you with an aura of peace. At the end of a long rest, you gain the effect of a Sanctuary spell that lasts until the start of your next long rest (the spell can end early as normal). The saving throw DC for the spell equals 8 + your proficiency bonus + your Wisdom modifier."
         )
         return description
 
@@ -60,9 +55,8 @@ class QuiveringPalm(Feature):
         super().__init__(name="Quivering Palm", origin="Way of the Open Hand Monk Level 17", activation=FeatureActivation(action_type=ActionType.ACTION, duration="Number of Days Equal to Monk Level"), usage_tags=["damage"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        monk_level = character_stat_block.get_class_level(Definitions.CharacterClass.MONK)
         description = (
-            f"You gain the ability to set up lethal vibrations in someone's body. When you hit a creature with an unarmed strike, you can spend 3 ki points to start these imperceptible vibrations, which last for a number of days equal to your monk level ({monk_level}). The vibrations are harmless unless you use your action to end them. To do so, you and the target must be on the same plane of existence. When you use this action, the creature must make a Constitution saving throw. If it fails, it is reduced to 0 hit points. If it succeeds, it takes 10d10 necrotic damage.\n"
+            "You gain the ability to set up lethal vibrations in someone's body. When you hit a creature with an unarmed strike, you can spend 3 ki points to start these imperceptible vibrations, which last for a number of days equal to your monk level. The vibrations are harmless unless you use your action to end them. To do so, you and the target must be on the same plane of existence. When you use this action, the creature must make a Constitution saving throw. If it fails, it is reduced to 0 hit points. If it succeeds, it takes 10d10 necrotic damage.\n"
             "\n"
             "You can have only one creature under the effect of this feature at a time. You can choose to end the vibrations harmlessly without using an action."
         )

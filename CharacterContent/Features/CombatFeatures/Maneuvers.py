@@ -80,12 +80,10 @@ class DisarmingAttack(ManeuverWithSavingThrow):
         super().__init__(name="Disarming Attack", usage_tags=["damage", "control"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        dc = self.get_saving_throw_dc(character_stat_block)
-        return f"Disarming Attack: When you hit a creature with a weapon attack, you can expend one superiority die to attempt to disarm the target, forcing it to drop one item of your choice that it's holding. You add the superiority die to the attack's damage roll, and the target must make a Strength saving throw (DC {dc}). On a failed save, it drops the object you choose. The object lands at its feet."
+        return "Disarming Attack: When you hit a creature with a weapon attack, you can expend one superiority die to attempt to disarm the target, forcing it to drop one item of your choice that it's holding. You add the superiority die to the attack's damage roll, and the target must make a Strength saving throw against your maneuver save DC. On a failed save, it drops the object you choose. The object lands at its feet."
 
     def get_concise_description(self, character_stat_block: CharacterStatBlock) -> str:
-        dc = self.get_saving_throw_dc(character_stat_block)
-        return f"When you hit with a weapon attack, expend one superiority die to add to damage and force the target to make a Strength saving throw (DC {dc}). On a failed save, it drops one item of your choice."
+        return "When you hit with a weapon attack, expend one superiority die to add to damage and force the target to make a Strength saving throw against your maneuver save DC. On a failed save, it drops one item of your choice."
 
 
 class DistractingStrike(Maneuver):
@@ -123,17 +121,15 @@ class GoadingAttack(ManeuverWithSavingThrow):
         super().__init__(name="Goading Attack", activation=FeatureActivation(duration="Until End of Next Turn"), usage_tags=["damage", "control"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        dc = self.get_saving_throw_dc(character_stat_block)
         return (
             "When you hit a creature with an attack roll, you can expend one Superiority\n"
             "Die to attempt to goad the target into attacking you. Add the Superiority Die to the attack's\n"
-            f"damage roll. The target must succeed on a Wisdom saving throw (DC {dc}) or the target has\n"
+            "damage roll. The target must succeed on a Wisdom saving throw against your maneuver save DC or the target has\n"
             "Disadvantage on attack rolls against targets other than you until the end of your next turn.\n"
         )
 
     def get_concise_description(self, character_stat_block: CharacterStatBlock) -> str:
-        dc = self.get_saving_throw_dc(character_stat_block)
-        return f"When you hit with an attack, expend one superiority die to add to damage and goad the target. The target makes a Wisdom saving throw (DC {dc}); on a failed save, it has disadvantage on attack rolls against targets other than you until the end of your next turn."
+        return "When you hit with an attack, expend one superiority die to add to damage and goad the target. The target makes a Wisdom saving throw against your maneuver save DC; on a failed save, it has disadvantage on attack rolls against targets other than you until the end of your next turn."
 
 
 class GrapplingStrike(Maneuver):
@@ -171,12 +167,10 @@ class MenacingAttack(ManeuverWithSavingThrow):
         super().__init__(name="Menacing Attack", activation=FeatureActivation(duration="Until End of Next Turn"), usage_tags=["damage", "control"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        dc = self.get_saving_throw_dc(character_stat_block)
-        return f"Menacing Attack: When you hit a creature with a weapon attack, you can expend one superiority die to attempt to frighten the target. You add the superiority die to the attack's damage roll, and the target must make a Wisdom saving throw (DC {dc}). On a failed save, it is frightened of you until the end of your next turn."
+        return "Menacing Attack: When you hit a creature with a weapon attack, you can expend one superiority die to attempt to frighten the target. You add the superiority die to the attack's damage roll, and the target must make a Wisdom saving throw against your maneuver save DC. On a failed save, it is frightened of you until the end of your next turn."
 
     def get_concise_description(self, character_stat_block: CharacterStatBlock) -> str:
-        dc = self.get_saving_throw_dc(character_stat_block)
-        return f"When you hit with a weapon attack, expend one superiority die to add to damage and frighten the target. The target makes a Wisdom saving throw (DC {dc}); on a failed save, it is frightened of you until the end of your next turn."
+        return "When you hit with a weapon attack, expend one superiority die to add to damage and frighten the target. The target makes a Wisdom saving throw against your maneuver save DC; on a failed save, it is frightened of you until the end of your next turn."
 
 
 class Parry(Maneuver):
@@ -200,16 +194,14 @@ class PushingAttack(ManeuverWithSavingThrow):
         super().__init__(name="Pushing Attack", usage_tags=["damage", "control"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        dc = self.get_saving_throw_dc(character_stat_block)
         return (
-            f"When you hit a creature with a weapon attack, you can expend one superiority die to attempt to drive the target back.\n"
-            f"You add the superiority die to the attack's damage roll, and if the target is Large or smaller, it must make a Strength saving throw (DC {dc}).\n"
+            "When you hit a creature with a weapon attack, you can expend one superiority die to attempt to drive the target back.\n"
+            "You add the superiority die to the attack's damage roll, and if the target is Large or smaller, it must make a Strength saving throw against your maneuver save DC.\n"
             "On a failed save, you push the target up to 15 feet away from you."
         )
 
     def get_concise_description(self, character_stat_block: CharacterStatBlock) -> str:
-        dc = self.get_saving_throw_dc(character_stat_block)
-        return f"When you hit with a weapon attack, expend one superiority die to add to damage. If the target is Large or smaller, it makes a Strength saving throw (DC {dc}); on a failed save, you push it up to 15 feet away."
+        return "When you hit with a weapon attack, expend one superiority die to add to damage. If the target is Large or smaller, it makes a Strength saving throw against your maneuver save DC; on a failed save, you push it up to 15 feet away."
 
 
 class QuickToss(Maneuver):
@@ -273,9 +265,7 @@ class TripAttack(ManeuverWithSavingThrow):
         super().__init__(name="Trip Attack", usage_tags=["damage", "control"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        dc = self.get_saving_throw_dc(character_stat_block)
-        return f"Trip Attack: When you hit a creature with a weapon attack, you can expend one superiority die to attempt to knock the target down. You add the superiority die to the attack's damage roll, and if the target is Large or smaller, it must make a Strength saving throw (DC {dc}). On a failed save, you knock the target prone"
+        return "Trip Attack: When you hit a creature with a weapon attack, you can expend one superiority die to attempt to knock the target down. You add the superiority die to the attack's damage roll, and if the target is Large or smaller, it must make a Strength saving throw against your maneuver save DC. On a failed save, you knock the target prone"
 
     def get_concise_description(self, character_stat_block: CharacterStatBlock) -> str:
-        dc = self.get_saving_throw_dc(character_stat_block)
-        return f"When you hit with a weapon attack, expend one superiority die to add to damage and attempt to knock down the target. If the target is Large or smaller, it makes a Strength saving throw (DC {dc}); on a failed save, you knock it prone."
+        return "When you hit with a weapon attack, expend one superiority die to add to damage and attempt to knock down the target. If the target is Large or smaller, it makes a Strength saving throw against your maneuver save DC; on a failed save, you knock it prone."

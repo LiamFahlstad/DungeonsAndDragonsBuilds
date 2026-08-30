@@ -31,20 +31,12 @@ class StormAura(Feature):
         self.environment = environment
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        barbarian_level = character_stat_block.get_class_level(
-            Definitions.CharacterClass.BARBARIAN
-        )
-        proficiency_bonus = character_stat_block.get_proficiency_bonus()
-        con_mod = character_stat_block.get_ability_modifier(Definitions.Ability.CONSTITUTION)
-        dc = 8 + proficiency_bonus + con_mod
-        flat_damage = _flat_damage_value(barbarian_level)
-        dice_damage = _dice_damage_value(barbarian_level)
         description = (
             "When you select this path at 3rd level, you emanate a stormy, magical aura while you rage. The aura extends 10 feet from you in every direction, but not through total cover.\n"
             "\n"
             "Your aura has an effect that activates when you enter your rage, and you can activate the effect again on each of your turns as a bonus action. Choose desert, sea, or tundra. Your aura's effect depends on that chosen environment, as detailed below. You can change your environment choice whenever you gain a level in this class.\n"
             "\n"
-            f"If your aura's effects require a saving throw, the DC equals 8 + your proficiency bonus + your Constitution modifier ({dc}).\n"
+            "If your aura's effects require a saving throw, the DC equals 8 + your proficiency bonus + your Constitution modifier.\n"
             "\n"
             "Desert. When this effect is activated, all other creatures in your aura take 2 fire damage each. The damage increases when you reach certain levels in this class, increasing to 3 at 5th level, 4 at 10th level, 5 at 15th level, and 6 at 20th level.\n"
             "\n"
@@ -54,12 +46,6 @@ class StormAura(Feature):
             "\n"
             f"You have chosen the {self.environment.value} environment."
         )
-        if self.environment == Definitions.BarbarianStormEnvironment.DESERT:
-            description += f" At your current Barbarian level, activating your aura deals {flat_damage} fire damage to other creatures in it."
-        elif self.environment == Definitions.BarbarianStormEnvironment.SEA:
-            description += f" At your current Barbarian level, activating your aura deals {dice_damage} lightning damage (half on a successful save) to your chosen target."
-        else:
-            description += f" At your current Barbarian level, activating your aura grants {flat_damage} temporary hit points to your chosen creatures."
         return description
 
 
@@ -100,14 +86,10 @@ class RagingStorm(Feature):
         self.environment = environment
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        barbarian_level = character_stat_block.get_class_level(
-            Definitions.CharacterClass.BARBARIAN
-        )
-        fire_damage = barbarian_level // 2
         description = (
             "The power of the storm you channel grows mightier, lashing out at your foes. The effect is based on the environment you chose for your Storm Aura.\n"
             "\n"
-            f"Desert. Immediately after a creature in your aura hits you with an attack, you can use your reaction to force that creature to make a Dexterity saving throw. On a failed save, the creature takes fire damage equal to half your Barbarian level ({fire_damage}).\n"
+            "Desert. Immediately after a creature in your aura hits you with an attack, you can use your reaction to force that creature to make a Dexterity saving throw. On a failed save, the creature takes fire damage equal to half your Barbarian level.\n"
             "\n"
             "Sea. When you hit a creature in your aura with an attack, you can use your reaction to force that creature to make a Strength saving throw. On a failed save, the creature is knocked prone, as if struck by a wave.\n"
             "\n"

@@ -45,11 +45,6 @@ class GeniesVessel(Feature):
         self.kind = kind
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        proficiency_bonus = character_stat_block.get_proficiency_bonus()
-        warlock_level = character_stat_block.get_class_level(
-            Definitions.CharacterClass.WARLOCK
-        )
-        vessel_hp = warlock_level + proficiency_bonus
         damage_type = _WRATH_DAMAGE_TYPE[self.kind]
         description = (
             "Also at 1st level, your patron gifts you a magical vessel that grants you a measure of the genie's power. The vessel is a Tiny object, and you can use it as a spellcasting focus for your Warlock spells. You decide what the object is (an oil lamp, an urn, a ring with a compartment, a stoppered bottle, a hollow statuette, an ornate lantern, or another vessel of your choice).\n"
@@ -58,9 +53,9 @@ class GeniesVessel(Feature):
             "\n"
             "Bottled Respite. As an action, you can magically vanish and enter your vessel, which remains in the space you left. The interior of the vessel is an extradimensional space in the shape of a 20-foot-radius cylinder, 20 feet high, and resembles your vessel. The interior is appointed with cushions and low tables and is a comfortable temperature. While inside, you can hear the area around your vessel as if you were in its space. You can remain inside the vessel up to a number of hours equal to twice your proficiency bonus. You exit the vessel early if you use a bonus action to leave, if you die, or if the vessel is destroyed. When you exit the vessel, you appear in the unoccupied space closest to it. Any objects left in the vessel remain there until carried out, and if the vessel is destroyed, every object stored there harmlessly appears in the unoccupied spaces closest to the vessel's former space. Once you enter the vessel, you can't enter again until you finish a long rest.\n"
             "\n"
-            f"Genie's Wrath. Once during each of your turns when you hit with an attack roll, you can deal extra damage to the target equal to your proficiency bonus ({proficiency_bonus}). The type of this damage is determined by your patron: bludgeoning (Dao), thunder (Djinni), fire (Efreeti), or cold (Marid).\n"
+            "Genie's Wrath. Once during each of your turns when you hit with an attack roll, you can deal extra damage to the target equal to your proficiency bonus. The type of this damage is determined by your patron: bludgeoning (Dao), thunder (Djinni), fire (Efreeti), or cold (Marid).\n"
             "\n"
-            f"The vessel's AC equals your spell save DC. Its hit points equal your Warlock level plus your proficiency bonus ({vessel_hp}), and it is immune to poison and psychic damage.\n"
+            "The vessel's AC equals your spell save DC. Its hit points equal your Warlock level plus your proficiency bonus, and it is immune to poison and psychic damage.\n"
             "\n"
             "If the vessel is destroyed or you lose it, you can perform a 1-hour ceremony to receive a replacement from your patron. This ceremony can be performed during a short or long rest, and the previous vessel is destroyed if it still exists. The vessel vanishes in a flare of elemental power when you die.\n"
             "\n"
@@ -120,13 +115,12 @@ class SanctuaryVessel(Feature):
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        proficiency_bonus = character_stat_block.get_proficiency_bonus()
         description = (
             "At 10th level, when you enter your Genie's Vessel via the Bottled Respite feature, you can now choose up to five willing creatures that you can see within 30 feet of you, and the chosen creatures are drawn into the vessel with you.\n"
             "\n"
             "As a bonus action, you can eject any number of creatures from the vessel, and everyone is ejected if you leave or die or if the vessel is destroyed.\n"
             "\n"
-            f"In addition, anyone (including you) who remains within the vessel for at least 10 minutes gains the benefit of finishing a short rest, and anyone can add your proficiency bonus ({proficiency_bonus}) to the number of hit points they regain if they spend any Hit Dice as part of a short rest there."
+            "In addition, anyone (including you) who remains within the vessel for at least 10 minutes gains the benefit of finishing a short rest, and anyone can add your proficiency bonus to the number of hit points they regain if they spend any Hit Dice as part of a short rest there."
         )
         return description
 

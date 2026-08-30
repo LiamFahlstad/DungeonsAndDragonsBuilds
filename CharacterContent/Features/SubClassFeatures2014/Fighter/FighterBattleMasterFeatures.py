@@ -11,26 +11,14 @@ class CombatSuperiority(Feature):
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        if character_stat_block.character_level < 10:
-            superiority_die = "1d8"
-        elif character_stat_block.character_level < 18:
-            superiority_die = "1d10"
-        else:
-            superiority_die = "1d12"
-
-        proficiency_bonus = character_stat_block.get_proficiency_bonus()
-        str_mod = character_stat_block.get_ability_modifier(Ability.STRENGTH)
-        dex_mod = character_stat_block.get_ability_modifier(Ability.DEXTERITY)
-        maneuver_save_dc = 8 + proficiency_bonus + max(str_mod, dex_mod)
-
         description = (
             "When you choose this archetype at 3rd level, you learn maneuvers that are fueled by special dice called superiority dice.\n"
             "\n"
             "Maneuvers. You learn three maneuvers of your choice. Many maneuvers enhance an attack in some way. You can use only one maneuver per attack. You learn two additional maneuvers of your choice at 7th, 10th, and 15th level. Each time you learn new maneuvers, you can also replace one maneuver you know with a different one.\n"
             "\n"
-            f"Superiority Dice. You have superiority dice, which are {superiority_die}s. A superiority die is expended when you use it. You regain all of your expended superiority dice when you finish a short or long rest. You gain another superiority die at 7th level and one more at 15th level.\n"
+            "Superiority Dice. You have superiority dice that increase in size as you gain levels in this class. You start with 1d8 superiority dice, which increase to 1d10 at 10th level and 1d12 at 18th level. A superiority die is expended when you use it. You regain all of your expended superiority dice when you finish a short or long rest. You gain another superiority die at 7th level and one more at 15th level.\n"
             "\n"
-            f"Saving Throws. Some of your maneuvers require your target to make a saving throw to resist the maneuver's effects. Maneuver save DC = 8 + your proficiency bonus + your Strength or Dexterity modifier (your choice) = {maneuver_save_dc}\n"
+            "Saving Throws. Some of your maneuvers require your target to make a saving throw to resist the maneuver's effects. Maneuver save DC = 8 + your proficiency bonus + your Strength or Dexterity modifier (your choice).\n"
             "\n"
             "Maneuvers:"
         )

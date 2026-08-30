@@ -10,13 +10,10 @@ class RadiantSunBolt(Feature):
         super().__init__(name="Radiant Sun Bolt", origin="Way of the Sun Soul Monk Level 3", activation=FeatureActivation(action_type=ActionType.BONUS_ACTION, range="30 Feet"), usage_tags=["damage"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        monk_level = character_stat_block.get_class_level(Definitions.CharacterClass.MONK)
-        martial_arts_die = LEVEL_TO_MARTIAL_ARTS_DIE.get(monk_level, WeaponDamageRolls.D4)
         description = (
             "You can hurl searing bolts of magical radiance.\n"
             "\n"
-            "You gain a new attack option that you can use with the Attack action. This special attack is a ranged spell attack with a range of 30 feet. You are proficient with it, and you add your Dexterity modifier to its attack and damage rolls. "
-            f"Its damage is radiant, and its damage die is a d4. This die changes as you gain monk levels, as shown in the Martial Arts column of the Monk table. At your current monk level, this die is {martial_arts_die.value}.\n"
+            "You gain a new attack option that you can use with the Attack action. This special attack is a ranged spell attack with a range of 30 feet. You are proficient with it, and you add your Dexterity modifier to its attack and damage rolls. Its damage is radiant, and its damage die is determined by your Martial Arts feature, as shown in the Martial Arts column of the Monk table.\n"
             "\n"
             "When you take the Attack action on your turn and use this special attack as part of it, you can spend 1 ki point to make the special attack twice as a bonus action.\n"
             "\n"
@@ -30,12 +27,10 @@ class SearingArcStrike(Feature):
         super().__init__(name="Searing Arc Strike", origin="Way of the Sun Soul Monk Level 6", activation=FeatureActivation(action_type=ActionType.BONUS_ACTION), usage_tags=["damage"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        monk_level = character_stat_block.get_class_level(Definitions.CharacterClass.MONK)
-        max_ki_spent = monk_level // 2
         description = (
             "You gain the ability to channel your ki into searing waves of energy. Immediately after you take the Attack action on your turn, you can spend 2 ki points to cast the Burning Hands spell as a bonus action.\n"
             "\n"
-            f"You can spend additional ki points to cast Burning Hands as a higher level spell. Each additional ki point you spend increases the spell's level by 1. The maximum number of ki points (2 plus any additional points) that you can spend on the spell equals half your monk level ({max_ki_spent})."
+            "You can spend additional ki points to cast Burning Hands as a higher level spell. Each additional ki point you spend increases the spell's level by 1. The maximum number of ki points (2 plus any additional points) that you can spend on the spell equals half your monk level."
         )
         return description
 
@@ -83,11 +78,9 @@ class SunShield(Feature):
         super().__init__(name="Sun Shield", origin="Way of the Sun Soul Monk Level 17", activation=FeatureActivation(action_type=ActionType.REACTION, range="30 Feet"), usage_tags=["damage"])
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        wis_mod = character_stat_block.get_ability_modifier(Definitions.Ability.WISDOM)
-        damage = 5 + wis_mod
         description = (
             "You become wreathed in a luminous, magical aura. You shed bright light in a 30-foot radius and dim light for an additional 30 feet. You can extinguish or restore the light as a bonus action.\n"
             "\n"
-            f"If a creature hits you with a melee attack while this light shines, you can use your reaction to deal radiant damage to the creature. The radiant damage equals 5 + your Wisdom modifier ({damage})."
+            "If a creature hits you with a melee attack while this light shines, you can use your reaction to deal radiant damage to the creature. The radiant damage equals 5 + your Wisdom modifier."
         )
         return description
