@@ -101,7 +101,7 @@ class Relentless(Feature):
         super().__init__(name="Relentless", origin="Battle Master Fighter Level 15")
 
     def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
-        return RegainedOn.OTHER
+        return RegainedOn.INITIATIVE_ROLL
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "Starting at 15th level, when you roll initiative and have no superiority dice remaining, you regain 1 superiority die."

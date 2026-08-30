@@ -33,7 +33,7 @@ class Bladesong(Feature):
         ]
 
     def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
-        return RegainedOn.OTHER
+        return RegainedOn.LONG_REST
 
 
 class TrainingInWarAndSong(Feature):

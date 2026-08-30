@@ -133,4 +133,4 @@ class LegionOfOne(Feature):
         return description
 
     def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
-        return RegainedOn.OTHER
+        return RegainedOn.INITIATIVE_ROLL

@@ -101,7 +101,7 @@ class TirelessSpirit(Feature):
         super().__init__(name="Tireless Spirit", origin="Samurai Fighter Level 10")
 
     def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
-        return RegainedOn.OTHER
+        return RegainedOn.INITIATIVE_ROLL
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "When you roll initiative and have no uses of Fighting Spirit remaining, you regain one use."

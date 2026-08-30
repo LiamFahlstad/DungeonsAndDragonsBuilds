@@ -46,8 +46,13 @@ class RegainedOn(str, Enum):
     SHORT_REST = "short_rest"
     LONG_REST = "long_rest"
     SHORT_OR_LONG_REST = "short_or_long_rest"
-    # A regain condition tied to something other than a rest/time cadence
-    # (e.g. "regains a use when you roll initiative", "on a kill").
+    # "When you roll Initiative [and have no uses left], you regain ..." - a
+    # recurring 5e pattern distinct from rest cadences (Rage, Bardic
+    # Inspiration, Focus Points, Superiority Dice, Psionic Energy Dice, etc.
+    # all have a high-level feature that refunds one use on an initiative roll).
+    INITIATIVE_ROLL = "initiative_roll"
+    # A regain condition tied to something other than a rest/time cadence or
+    # an initiative roll (e.g. "on a kill", "when you cast a spell").
     OTHER = "other"
 
 
@@ -500,9 +505,10 @@ class Feature:
         self, character_stat_block: CharacterStatBlock
     ) -> "RegainedOn | None":
         """Override to return when this feature's expended resource (uses, hit
-        points, etc.) is regained (e.g. a short rest, long rest, or dawn), so
-        the value can be reused anywhere it's needed instead of being re-parsed
-        from prose. Return None (default) for features with nothing to regain."""
+        points, etc.) is regained (e.g. a short rest, long rest, or an
+        initiative roll), so the value can be reused anywhere it's needed
+        instead of being re-parsed from prose. Return None (default) for
+        features with nothing to regain."""
         return None
 
     def get_resource_tiles(

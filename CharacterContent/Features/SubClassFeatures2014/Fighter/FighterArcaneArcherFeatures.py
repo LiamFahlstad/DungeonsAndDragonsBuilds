@@ -96,7 +96,7 @@ class EverReadyShot(Feature):
         super().__init__(name="Ever-Ready Shot", origin="Arcane Archer Fighter Level 15")
 
     def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
-        return RegainedOn.OTHER
+        return RegainedOn.INITIATIVE_ROLL
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "Starting at 15th level, your magical archery is available whenever battle starts. If you roll initiative and have no uses of Arcane Shot remaining, you regain one use of it."
