@@ -122,6 +122,8 @@ class ElementalRebuke(Feature):
 
     def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
+    def number_of_uses(self, character_stat_block: CharacterStatBlock) -> int:
+        return max(1, character_stat_block.get_charisma_modifier())
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
             "When you are hit by an attack roll, you can take a Reaction to halve the attack's damage against yourself (round down) and force the attacker to make a Dexterity saving throw against your spell save DC. On a failed save, the attacker takes damage equal to 2d10 plus your Charisma modifier of one of the following types (your choice): Acid, Cold, Fire, Lightning, or Thunder. On a successful save, the attacker takes half as much damage.\n"
@@ -132,8 +134,7 @@ class ElementalRebuke(Feature):
     def get_table_description(
         self, character_stat_block: CharacterStatBlock
     ) -> list[tuple[str, str]]:
-        charisma_modifier = character_stat_block.get_charisma_modifier()
-        uses = max(1, charisma_modifier)
+        uses = self.number_of_uses(character_stat_block)
         return [
             ("Trigger", "You are hit by an attack roll"),
             ("Action", "Reaction"),

@@ -119,8 +119,7 @@ class ArcaneJolt(Feature):
         return description
 
     def get_table_description(self, character_stat_block: CharacterStatBlock) -> list[tuple[str, str]]:
-        intelligence_modifier = character_stat_block.get_intelligence_modifier()
-        uses = max(1, intelligence_modifier)
+        uses = self.number_of_uses(character_stat_block)
         return [
             ("Trigger", "When you or Steel Defender hits with a magic weapon"),
             ("Destructive Energy", "Target takes extra 2d6 Force damage"),
@@ -132,6 +131,9 @@ class ArcaneJolt(Feature):
 
     def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
+
+    def number_of_uses(self, character_stat_block: CharacterStatBlock) -> int:
+        return max(1, character_stat_block.get_intelligence_modifier())
 class ImprovedDefender(Feature):
     def __init__(self):
         super().__init__(

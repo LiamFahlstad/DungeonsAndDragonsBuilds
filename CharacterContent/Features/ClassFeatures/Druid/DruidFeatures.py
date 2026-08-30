@@ -7,7 +7,7 @@ from CharacterContent.Features.ClassFeatures.Druid.WildShapeForms import (
 from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, ActionType, RegainedOn
 from CharacterContent.Features.Core.Improvements import GrantLanguage
 from Combat.Definitions import ExtendedCombatantData
-from Core.Definitions import Language
+from Core.Definitions import CharacterClass, Language
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
@@ -139,6 +139,15 @@ class WildShape(Feature):
 
     def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
         return RegainedOn.SHORT_OR_LONG_REST
+
+    def number_of_uses(self, character_stat_block: CharacterStatBlock) -> int:
+        druid_level = character_stat_block.get_class_level(CharacterClass.DRUID)
+        if druid_level >= 17:
+            return 4
+        elif druid_level >= 6:
+            return 3
+        else:
+            return 2
 
 
 class AdditionalWildShapeForms(Feature):

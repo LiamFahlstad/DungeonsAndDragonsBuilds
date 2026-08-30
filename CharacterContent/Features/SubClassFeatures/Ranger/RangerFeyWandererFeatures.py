@@ -115,8 +115,7 @@ class MistyWanderer(Feature):
         return description
 
     def get_table_description(self, character_stat_block: CharacterStatBlock) -> list[tuple[str, str]]:
-        wis_mod = character_stat_block.get_wisdom_modifier()
-        uses = max(1, wis_mod)
+        uses = self.number_of_uses(character_stat_block)
         return [
             ("Spell", "Misty Step"),
             ("Cost", "No spell slot"),
@@ -127,3 +126,6 @@ class MistyWanderer(Feature):
 
     def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
+
+    def number_of_uses(self, character_stat_block: CharacterStatBlock) -> int:
+        return max(1, character_stat_block.get_wisdom_modifier())

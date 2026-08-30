@@ -46,6 +46,9 @@ class ForestGnomeSpeakWithAnimals(Feature):
     def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
 
+    def number_of_uses(self, character_stat_block: CharacterStatBlock) -> int:
+        return character_stat_block.get_proficiency_bonus()
+
 
 class RockGnomePrestidigitation(Feature):
     def __init__(self):

@@ -44,6 +44,8 @@ class RestoreBalance(Feature):
 
     def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
+    def number_of_uses(self, character_stat_block: CharacterStatBlock) -> int:
+        return max(1, character_stat_block.get_charisma_modifier())
 class BastionOfLaw(Feature):
     def __init__(self):
         super().__init__(name="Bastion of Law", origin="Clockwork Sorcerer Level 6", activation=FeatureActivation(action_type=ActionType.ACTION, duration="Until Long Rest or Used Again", range="30 Feet"), usage_tags=["buff"])

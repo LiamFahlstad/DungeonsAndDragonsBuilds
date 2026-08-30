@@ -58,6 +58,9 @@ class ViolentAttraction(Feature):
         )
         return description
 
+    def number_of_uses(self, character_stat_block: CharacterStatBlock) -> int:
+        return character_stat_block.get_intelligence_modifier()
+
 
 class EventHorizon(Feature):
     def __init__(self):

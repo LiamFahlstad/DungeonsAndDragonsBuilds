@@ -18,11 +18,12 @@ class WailsFromTheGrave(Feature):
 
     def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
+    def number_of_uses(self, character_stat_block: CharacterStatBlock) -> int:
+        return max(1, character_stat_block.get_dexterity_modifier())
     def get_table_description(
         self, character_stat_block: CharacterStatBlock
     ) -> list[tuple[str, str]]:
-        dexterity_modifier = character_stat_block.get_dexterity_modifier()
-        uses = max(1, dexterity_modifier)
+        uses = self.number_of_uses(character_stat_block)
         return [
             ("Trigger", "After you deal Sneak Attack damage on your turn"),
             ("Target", "Second creature within 30 feet of the first"),

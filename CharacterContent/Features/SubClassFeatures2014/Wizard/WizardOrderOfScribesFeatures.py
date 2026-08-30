@@ -75,6 +75,9 @@ class ManifestMind(Feature):
         )
         return description
 
+    def number_of_uses(self, character_stat_block: CharacterStatBlock) -> int:
+        return character_stat_block.get_proficiency_bonus()
+
 
 class MasterScriviner(Feature):
     def __init__(self):

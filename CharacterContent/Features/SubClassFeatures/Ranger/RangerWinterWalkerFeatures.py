@@ -95,6 +95,10 @@ class ChillingRetribution(Feature):
 
     def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
+
+    def number_of_uses(self, character_stat_block: CharacterStatBlock) -> int:
+        return max(1, character_stat_block.get_wisdom_modifier())
+
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
             "When a creature hits you with an attack roll, you can take a Reaction to force the creature to make a Wisdom saving throw against your spell save DC. On a failed save, the target has the Stunned condition until the end of your next turn. While the target is Stunned, its Speed is reduced to 0 feet.\n"
@@ -103,8 +107,7 @@ class ChillingRetribution(Feature):
         return description
 
     def get_table_description(self, character_stat_block: CharacterStatBlock) -> list[tuple[str, str]]:
-        wis_mod = character_stat_block.get_wisdom_modifier()
-        uses = max(1, wis_mod)
+        uses = self.number_of_uses(character_stat_block)
         return [
             ("Trigger", "Creature hits you with attack roll"),
             ("Action", "Reaction"),

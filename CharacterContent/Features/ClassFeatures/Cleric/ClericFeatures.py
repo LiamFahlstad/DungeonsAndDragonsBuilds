@@ -110,6 +110,14 @@ class ChannelDivinity(Feature):
     def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
         return RegainedOn.SHORT_OR_LONG_REST
 
+    def number_of_uses(self, character_stat_block: CharacterStatBlock) -> int:
+        if character_stat_block.character_level >= 18:
+            return 4
+        elif character_stat_block.character_level >= 6:
+            return 3
+        else:
+            return 2
+
 
 class SearUndead(Feature):
     def __init__(self):

@@ -43,11 +43,7 @@ class SecondWind(Feature):
     def get_table_description(
         self, character_stat_block: CharacterStatBlock
     ) -> list[tuple[str, str]]:
-        uses = 2
-        if character_stat_block.character_level >= 4:
-            uses = 3
-        if character_stat_block.character_level >= 10:
-            uses = 4
+        uses = self.number_of_uses(character_stat_block)
         return [
             ("What", "Regain hit points"),
             ("Action", "Bonus Action"),
@@ -58,6 +54,14 @@ class SecondWind(Feature):
 
     def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
         return RegainedOn.SHORT_OR_LONG_REST
+
+    def number_of_uses(self, character_stat_block: CharacterStatBlock) -> int:
+        uses = 2
+        if character_stat_block.character_level >= 4:
+            uses = 3
+        if character_stat_block.character_level >= 10:
+            uses = 4
+        return uses
 
 
 class WeaponMastery(Feature):
@@ -106,7 +110,7 @@ class ActionSurge(Feature):
     def get_table_description(
         self, character_stat_block: CharacterStatBlock
     ) -> list[tuple[str, str]]:
-        uses = 2 if character_stat_block.character_level >= 17 else 1
+        uses = self.number_of_uses(character_stat_block)
         recharge = "Short or long rest"
         if character_stat_block.character_level >= 17:
             recharge = "Short or long rest (max 1 per turn)"
@@ -119,6 +123,9 @@ class ActionSurge(Feature):
 
     def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
         return RegainedOn.SHORT_OR_LONG_REST
+
+    def number_of_uses(self, character_stat_block: CharacterStatBlock) -> int:
+        return 2 if character_stat_block.character_level >= 17 else 1
 
 
 class TacticalMind(Feature):
@@ -183,12 +190,7 @@ class Indomitable(Feature):
     def get_table_description(
         self, character_stat_block: CharacterStatBlock
     ) -> list[tuple[str, str]]:
-        if character_stat_block.character_level >= 17:
-            uses = 3
-        elif character_stat_block.character_level >= 13:
-            uses = 2
-        else:
-            uses = 1
+        uses = self.number_of_uses(character_stat_block)
         return [
             ("What", "Reroll a failed saving throw"),
             ("Bonus", "Fighter level"),
@@ -198,6 +200,14 @@ class Indomitable(Feature):
 
     def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
+
+    def number_of_uses(self, character_stat_block: CharacterStatBlock) -> int:
+        if character_stat_block.character_level >= 17:
+            return 3
+        elif character_stat_block.character_level >= 13:
+            return 2
+        else:
+            return 1
 
 
 class TacticalMaster(Feature):

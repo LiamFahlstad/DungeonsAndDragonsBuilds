@@ -94,7 +94,7 @@ class WholenessOfBody(Feature):
         self, character_stat_block: CharacterStatBlock
     ) -> list[tuple[str, str]]:
         wisdom_modifier = character_stat_block.get_wisdom_modifier()
-        uses = max(1, wisdom_modifier)
+        uses = self.number_of_uses(character_stat_block)
         return [
             ("Action", "Bonus Action"),
             ("Effect", f"Roll Martial Arts die + {wisdom_modifier:+d} (Wisdom) Hit Points (minimum 1)"),
@@ -105,6 +105,9 @@ class WholenessOfBody(Feature):
 
     def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
+
+    def number_of_uses(self, character_stat_block: CharacterStatBlock) -> int:
+        return max(1, character_stat_block.get_wisdom_modifier())
 class FleetStep(Feature):
     def __init__(self):
         super().__init__(

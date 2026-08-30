@@ -144,6 +144,9 @@ class Lucky(OriginFeat):
         )
         return description
 
+    def number_of_uses(self, character_stat_block: CharacterStatBlock) -> int:
+        return character_stat_block.get_proficiency_bonus()
+
 
 class MagicInitiate(OriginFeat):
     def __init__(
@@ -410,6 +413,9 @@ class FamiliarFriend(OriginFeat):
         )
         return description
 
+    def number_of_uses(self, character_stat_block: CharacterStatBlock) -> int:
+        return character_stat_block.get_proficiency_bonus()
+
 
 class HarperAgent(OriginFeat):
     def __init__(self):
@@ -484,6 +490,9 @@ class SpellfireSpark(OriginFeat):
         )
         return description
 
+    def number_of_uses(self, character_stat_block: CharacterStatBlock) -> int:
+        return character_stat_block.get_proficiency_bonus()
+
 
 class TyroOfTheGauntlet(OriginFeat):
     def __init__(self):
@@ -524,6 +533,9 @@ class SharpEye(OriginFeat):
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "When you take the Search or Study action, you can give yourself Advantage on any ability check made as part of that action. You can use this feature a number of times equal to your Proficiency Bonus, and you regain all expended uses when you finish a Long Rest. If the check fails, the use of this feature isn't expended."
         return description
+
+    def number_of_uses(self, character_stat_block: CharacterStatBlock) -> int:
+        return character_stat_block.get_proficiency_bonus()
 
 
 class Survivor(OriginFeat):

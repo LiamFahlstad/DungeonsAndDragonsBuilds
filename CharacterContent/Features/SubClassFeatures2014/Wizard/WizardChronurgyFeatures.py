@@ -63,6 +63,9 @@ class MomentaryStasis(Feature):
             ("Recharge", "Long rest"),
         ]
 
+    def number_of_uses(self, character_stat_block: CharacterStatBlock) -> int:
+        return character_stat_block.get_intelligence_modifier()
+
 
 class ArcaneAbeyance(Feature):
     def __init__(self):

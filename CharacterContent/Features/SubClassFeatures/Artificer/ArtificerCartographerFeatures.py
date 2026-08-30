@@ -80,8 +80,7 @@ class MappingMagic(Feature):
     def get_table_description(
         self, character_stat_block: CharacterStatBlock
     ) -> list[tuple[str, str]]:
-        intelligence_modifier = character_stat_block.get_intelligence_modifier()
-        uses = max(1, intelligence_modifier)
+        uses = self.number_of_uses(character_stat_block)
         return [
             ("Illuminated Cartography", f"Cast Faerie Fire without slot ({uses} times, regain on long rest)"),
             ("Portal Jump", "Spend half Speed to teleport within 10 ft of you or within 5 ft of map-holder within 30 ft"),
@@ -91,6 +90,9 @@ class MappingMagic(Feature):
 
     def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
+
+    def number_of_uses(self, character_stat_block: CharacterStatBlock) -> int:
+        return max(1, character_stat_block.get_intelligence_modifier())
 class GuidedPrecision(Feature):
     def __init__(self):
         super().__init__(

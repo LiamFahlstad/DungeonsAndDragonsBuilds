@@ -15,6 +15,8 @@ class FormOfDread(Feature):
 
     def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
+    def number_of_uses(self, character_stat_block: CharacterStatBlock) -> int:
+        return max(1, character_stat_block.get_charisma_modifier())
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
             "As a Bonus Action, you transform into an avatar of your patron's dreadful power, gaining the benefits below for 1 minute, until you have the Incapacitated condition, or until you end the form (no action required). You can transform a number of times equal to your Charisma modifier (minimum of once), and you regain all expended uses when you finish a Long Rest.\n"

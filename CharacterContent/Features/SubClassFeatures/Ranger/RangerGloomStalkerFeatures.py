@@ -26,6 +26,9 @@ class DreadAmbusher(Feature):
 
     def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
+
+    def number_of_uses(self, character_stat_block: CharacterStatBlock) -> int:
+        return max(1, character_stat_block.get_wisdom_modifier())
 class GloomStalkerSpells(Feature):
     def __init__(self):
         super().__init__(

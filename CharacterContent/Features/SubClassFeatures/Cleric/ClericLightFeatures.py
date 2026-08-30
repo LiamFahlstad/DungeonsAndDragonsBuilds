@@ -51,8 +51,7 @@ class WardingFlare(Feature):
     def get_table_description(
         self, character_stat_block: CharacterStatBlock
     ) -> list[tuple[str, str]]:
-        wisdom_modifier = character_stat_block.get_wisdom_modifier()
-        uses = max(1, wisdom_modifier)
+        uses = self.number_of_uses(character_stat_block)
         return [
             ("What", "Impose Disadvantage on attack roll"),
             ("Trigger", "Reaction when creature within 30 feet attacks"),
@@ -65,6 +64,9 @@ class WardingFlare(Feature):
 
     def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
+
+    def number_of_uses(self, character_stat_block: CharacterStatBlock) -> int:
+        return max(1, character_stat_block.get_wisdom_modifier())
 class ImprovedWardingFlare(Feature):
     def __init__(self):
         super().__init__(
@@ -96,8 +98,7 @@ class CoronaOfLight(Feature):
     def get_table_description(
         self, character_stat_block: CharacterStatBlock
     ) -> list[tuple[str, str]]:
-        wisdom_modifier = character_stat_block.get_wisdom_modifier()
-        uses = max(1, wisdom_modifier)
+        uses = self.number_of_uses(character_stat_block)
         return [
             ("What", "Emit aura of sunlight"),
             ("Trigger", "Magic action"),
@@ -111,3 +112,6 @@ class CoronaOfLight(Feature):
 
     def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
+
+    def number_of_uses(self, character_stat_block: CharacterStatBlock) -> int:
+        return max(1, character_stat_block.get_wisdom_modifier())

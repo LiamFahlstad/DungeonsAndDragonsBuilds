@@ -81,8 +81,7 @@ class MoonlightStep(Feature):
     def get_table_description(
         self, character_stat_block: CharacterStatBlock
     ) -> list[tuple[str, str]]:
-        wisdom_modifier = character_stat_block.get_wisdom_modifier()
-        uses = max(1, wisdom_modifier)
+        uses = self.number_of_uses(character_stat_block)
         return [
             ("What", "Teleport up to 30 feet in burst of moonlight"),
             ("Casting Time", "Bonus Action"),
@@ -95,6 +94,9 @@ class MoonlightStep(Feature):
 
     def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
+
+    def number_of_uses(self, character_stat_block: CharacterStatBlock) -> int:
+        return max(1, character_stat_block.get_wisdom_modifier())
 class LunarForm(Feature):
     def __init__(self):
         super().__init__(name="Lunar Form", origin="Circle of the Moon Druid Level 14", usage_tags=["damage"])

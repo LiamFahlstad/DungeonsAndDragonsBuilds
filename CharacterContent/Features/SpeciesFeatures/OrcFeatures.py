@@ -39,6 +39,9 @@ class AdrenalineRush(Feature):
     def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
         return RegainedOn.SHORT_OR_LONG_REST
 
+    def number_of_uses(self, character_stat_block: CharacterStatBlock) -> int:
+        return character_stat_block.get_proficiency_bonus()
+
 
 class RelentlessEndurance(Feature):
     def __init__(self):

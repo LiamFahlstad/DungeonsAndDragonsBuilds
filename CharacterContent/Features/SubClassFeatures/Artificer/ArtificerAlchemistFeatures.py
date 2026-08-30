@@ -1,14 +1,24 @@
-from Core.Definitions import ARTIFICER_HIT_DIE, Ability, Condition, DamageType, MAX_ABILITY_MODIFIER
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, ActionType, RegainedOn
-from CharacterContent.Features.Core.Improvements import ConditionImmunity, DamageResistance
+from CharacterContent.Features.Core.BaseFeatures import (
+    ActionType,
+    Feature,
+    FeatureActivation,
+    FeatureUses,
+    RegainedOn,
+)
+from CharacterContent.Features.Core.Improvements import (
+    ConditionImmunity,
+    DamageResistance,
+)
+from Core.Definitions import MAX_ABILITY_MODIFIER, Condition, DamageType
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
-from Utils import StringUtils
 
 
 class ToolsOfTheTrade(Feature):
     def __init__(self):
         super().__init__(
-            name="Tools of the Trade", origin="Alchemist Artificer Level 3", usage_tags=["utility"]
+            name="Tools of the Trade",
+            origin="Alchemist Artificer Level 3",
+            usage_tags=["utility"],
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -41,7 +51,10 @@ class Spells(Feature):
 class ExperimentalElixir(Feature):
     def __init__(self):
         super().__init__(
-            name="Experimental Elixir", origin="Alchemist Artificer Level 3", activation=FeatureActivation(action_type=ActionType.ACTION), usage_tags=["heal", "buff", "utility"]
+            name="Experimental Elixir",
+            origin="Alchemist Artificer Level 3",
+            activation=FeatureActivation(action_type=ActionType.ACTION),
+            usage_tags=["heal", "buff", "utility"],
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -61,13 +74,19 @@ class ExperimentalElixir(Feature):
         )
         return description
 
-
-
-    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+    def regained_on(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
+
+
 class AlchemicalSavant(Feature):
     def __init__(self):
-        super().__init__(name="Alchemical Savant", origin="Alchemist Artificer Level 5", usage_tags=["damage", "heal"])
+        super().__init__(
+            name="Alchemical Savant",
+            origin="Alchemist Artificer Level 5",
+            usage_tags=["damage", "heal"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "Whenever you cast a spell using your Alchemist's Supplies as the Spellcasting Focus, you gain a bonus to one roll of the spell. That roll must restore Hit Points or be a damage roll that deals Acid, Fire, or Poison damage. The bonus equals your Intelligence modifier (minimum bonus of +1)."
@@ -77,19 +96,36 @@ class AlchemicalSavant(Feature):
 class RestorativeReagents(Feature):
     def __init__(self):
         super().__init__(
-            name="Restorative Reagents", origin="Alchemist Artificer Level 9", usage_tags=["heal", "utility"]
-        , uses=FeatureUses(max_uses=MAX_ABILITY_MODIFIER, regain_all_on="long rest", current_formula="Current amount: equal to your Intelligence modifier."))
+            name="Restorative Reagents",
+            origin="Alchemist Artificer Level 9",
+            usage_tags=["heal", "utility"],
+            uses=FeatureUses(
+                max_uses=MAX_ABILITY_MODIFIER,
+                regain_all_on="long rest",
+                current_formula="Current amount: equal to your Intelligence modifier.",
+            ),
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "You can cast Lesser Restoration without expending a spell slot and without preparing the spell, provided you use Alchemist's Supplies as the Spellcasting Focus. You can do so a number of times equal to your Intelligence modifier (minimum of once), and you regain all expended uses when you finish a Long Rest."
         return description
 
-
-    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+    def regained_on(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
+
+    def number_of_uses(self, character_stat_block: CharacterStatBlock) -> int:
+        return max(1, character_stat_block.get_intelligence_modifier())
+
+
 class ChemicalMastery(Feature):
     def __init__(self):
-        super().__init__(name="Chemical Mastery", origin="Alchemist Artificer Level 15", usage_tags=["damage", "buff", "utility"])
+        super().__init__(
+            name="Chemical Mastery",
+            origin="Alchemist Artificer Level 15",
+            usage_tags=["damage", "buff", "utility"],
+        )
         self._resistances = [
             DamageResistance(DamageType.ACID, self.name),
             DamageResistance(DamageType.POISON, self.name),
@@ -114,7 +150,16 @@ class ChemicalMastery(Feature):
         self, character_stat_block: CharacterStatBlock
     ) -> list[tuple[str, str]]:
         return [
-            ("Alchemical Eruption", "When you cast an Artificer spell dealing Acid, Fire, or Poison damage, also deal 2d8 Force damage. Once per turn."),
-            ("Chemical Resistance", "Resistance to Acid and Poison damage; Immunity to Poisoned condition"),
-            ("Conjured Cauldron", "Cast Tasha's Bubbling Cauldron with no slot, preparation, or components (Alchemist's Supplies as focus). 1/LR"),
+            (
+                "Alchemical Eruption",
+                "When you cast an Artificer spell dealing Acid, Fire, or Poison damage, also deal 2d8 Force damage. Once per turn.",
+            ),
+            (
+                "Chemical Resistance",
+                "Resistance to Acid and Poison damage; Immunity to Poisoned condition",
+            ),
+            (
+                "Conjured Cauldron",
+                "Cast Tasha's Bubbling Cauldron with no slot, preparation, or components (Alchemist's Supplies as focus). 1/LR",
+            ),
         ]

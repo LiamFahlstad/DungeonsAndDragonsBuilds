@@ -895,6 +895,9 @@ class FairyTrickster(_AbilityScoreFeat):
         proficiency_bonus = character_stat_block.get_proficiency_bonus()
         return 8 + modifier + proficiency_bonus
 
+    def number_of_uses(self, character_stat_block: CharacterStatBlock) -> int:
+        return character_stat_block.get_proficiency_bonus()
+
 
 class GenieMagic(_AbilityScoreFeat):
     _NAME = "Genie Magic"
@@ -957,6 +960,9 @@ class MythalTouched(_AbilityScoreFeat):
         proficiency_bonus = character_stat_block.get_proficiency_bonus()
         return 8 + modifier + proficiency_bonus
 
+    def number_of_uses(self, character_stat_block: CharacterStatBlock) -> int:
+        return character_stat_block.get_proficiency_bonus()
+
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
             "General Feat (Prerequisite: Level 4+)\n"
@@ -1010,6 +1016,9 @@ class PurpleDragonCommandant(_AbilityScoreFeat):
             "Last Stand. You have Advantage on attack rolls while Bloodied."
         )
         return description
+
+    def number_of_uses(self, character_stat_block: CharacterStatBlock) -> int:
+        return character_stat_block.get_proficiency_bonus()
 
 
 class SpellfireAdept(_AbilityScoreFeat):
@@ -1143,6 +1152,9 @@ class GatheredWhispers(GeneralFeat):
         proficiency_bonus = character_stat_block.get_proficiency_bonus()
         return 13 + proficiency_bonus
 
+    def number_of_uses(self, character_stat_block: CharacterStatBlock) -> int:
+        return character_stat_block.get_proficiency_bonus()
+
 
 class LivingShadow(GeneralFeat):
 
@@ -1177,6 +1189,9 @@ class LivingShadow(GeneralFeat):
         proficiency_bonus = character_stat_block.get_proficiency_bonus()
         return 13 + proficiency_bonus
 
+    def number_of_uses(self, character_stat_block: CharacterStatBlock) -> int:
+        return character_stat_block.get_proficiency_bonus()
+
 
 class MistWalker(GeneralFeat):
 
@@ -1205,6 +1220,9 @@ class MistWalker(GeneralFeat):
     def calculate_dc(self, character_stat_block: CharacterStatBlock) -> int:
         proficiency_bonus = character_stat_block.get_proficiency_bonus()
         return 13 + proficiency_bonus
+
+    def number_of_uses(self, character_stat_block: CharacterStatBlock) -> int:
+        return character_stat_block.get_proficiency_bonus()
 
 
 class SecondSkin(GeneralFeat):
@@ -1244,6 +1262,9 @@ class SecondSkin(GeneralFeat):
         proficiency_bonus = character_stat_block.get_proficiency_bonus()
         return 13 + proficiency_bonus
 
+    def number_of_uses(self, character_stat_block: CharacterStatBlock) -> int:
+        return character_stat_block.get_proficiency_bonus()
+
 
 class SymbioticBeing(GeneralFeat):
 
@@ -1275,6 +1296,9 @@ class SymbioticBeing(GeneralFeat):
     def calculate_dc(self, character_stat_block: CharacterStatBlock) -> int:
         proficiency_bonus = character_stat_block.get_proficiency_bonus()
         return 13 + proficiency_bonus
+
+    def number_of_uses(self, character_stat_block: CharacterStatBlock) -> int:
+        return character_stat_block.get_proficiency_bonus()
 
 
 class TouchOfDeath(GeneralFeat):
@@ -1402,3 +1426,6 @@ class SpellResistant(_AbilityScoreFeat):
             "Magic Resistant. When you would fail a saving throw against a spell or magical effect, you can roll 1d6 and add the number rolled to the save's total, potentially turning the failure into a success. You can use this benefit a number of times equal to your Proficiency Bonus, and you regain all expended uses when you finish a Long Rest."
         )
         return description
+
+    def number_of_uses(self, character_stat_block: CharacterStatBlock) -> int:
+        return character_stat_block.get_proficiency_bonus()

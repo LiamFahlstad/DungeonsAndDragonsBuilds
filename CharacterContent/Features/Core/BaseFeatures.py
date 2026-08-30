@@ -511,6 +511,15 @@ class Feature:
         features with nothing to regain."""
         return None
 
+    def number_of_uses(self, character_stat_block: CharacterStatBlock) -> int:
+        """Override to return this feature's actual current number of uses,
+        computed from the character's stats (e.g. equal to your proficiency
+        bonus or level), for features whose real count is described only in
+        FeatureUses.current_formula prose rather than being the flat
+        FeatureUses.max_uses. Defaults to max_uses (or 0 if uses is unset)
+        for features with a fixed use count."""
+        return self.uses.max_uses if self.uses is not None else 0
+
     def get_resource_tiles(
         self, character_stat_block: CharacterStatBlock
     ) -> list[tuple[str, list[tuple[str, str]]]] | None:

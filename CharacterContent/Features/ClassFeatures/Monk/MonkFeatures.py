@@ -153,6 +153,10 @@ class MonksFocus(Feature):
     def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
         return RegainedOn.SHORT_OR_LONG_REST
 
+    def number_of_uses(self, character_stat_block: CharacterStatBlock) -> int:
+        monk_level = character_stat_block.get_class_level(Definitions.CharacterClass.MONK)
+        return LEVEL_TO_FOCUS_POINTS.get(monk_level, 0)
+
 
 class FlurryOfBlows(Feature):
     def __init__(self):

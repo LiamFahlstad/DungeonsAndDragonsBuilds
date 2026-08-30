@@ -93,7 +93,7 @@ class ElementalGift(Feature):
     def get_table_description(
         self, character_stat_block: CharacterStatBlock
     ) -> list[tuple[str, str]]:
-        proficiency_bonus = character_stat_block.get_proficiency_bonus()
+        proficiency_bonus = self.number_of_uses(character_stat_block)
         damage_type = _WRATH_DAMAGE_TYPE[self.kind]
         return [
             ("Resistance", f"{damage_type.capitalize()} damage"),
@@ -103,6 +103,9 @@ class ElementalGift(Feature):
             ("Uses", f"Proficiency bonus ({proficiency_bonus})"),
             ("Recharge", "Long rest"),
         ]
+
+    def number_of_uses(self, character_stat_block: CharacterStatBlock) -> int:
+        return character_stat_block.get_proficiency_bonus()
 
 
 class SanctuaryVessel(Feature):

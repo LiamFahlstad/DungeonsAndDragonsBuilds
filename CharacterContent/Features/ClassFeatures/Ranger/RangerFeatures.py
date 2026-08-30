@@ -85,16 +85,7 @@ class FavoredEnemy(Feature):
     def get_table_description(
         self, character_stat_block: CharacterStatBlock
     ) -> list[tuple[str, str]]:
-        if character_stat_block.character_level < 5:
-            free_hunters_mark_uses = 2
-        elif character_stat_block.character_level < 9:
-            free_hunters_mark_uses = 3
-        elif character_stat_block.character_level < 13:
-            free_hunters_mark_uses = 4
-        elif character_stat_block.character_level < 17:
-            free_hunters_mark_uses = 5
-        else:
-            free_hunters_mark_uses = 6
+        free_hunters_mark_uses = self.number_of_uses(character_stat_block)
 
         return [
             ("Spell", "Hunter's Mark (always prepared)"),
@@ -104,6 +95,18 @@ class FavoredEnemy(Feature):
 
     def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
+
+    def number_of_uses(self, character_stat_block: CharacterStatBlock) -> int:
+        if character_stat_block.character_level < 5:
+            return 2
+        elif character_stat_block.character_level < 9:
+            return 3
+        elif character_stat_block.character_level < 13:
+            return 4
+        elif character_stat_block.character_level < 17:
+            return 5
+        else:
+            return 6
 
 
 class DeftExplorerExpertise(Feature):
@@ -211,6 +214,9 @@ class Tireless(Feature):
     def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
 
+    def number_of_uses(self, character_stat_block: CharacterStatBlock) -> int:
+        return character_stat_block.get_wisdom_modifier()
+
 
 class RelentlessHunter(Feature):
     def __init__(self):
@@ -252,6 +258,9 @@ class NaturesVeil(Feature):
 
     def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
+
+    def number_of_uses(self, character_stat_block: CharacterStatBlock) -> int:
+        return character_stat_block.get_wisdom_modifier()
 
 
 class PreciseHunter(Feature):

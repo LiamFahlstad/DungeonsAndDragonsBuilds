@@ -28,6 +28,9 @@ class StarMap(Feature):
 
     def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
+
+    def number_of_uses(self, character_stat_block: CharacterStatBlock) -> int:
+        return max(1, character_stat_block.get_wisdom_modifier())
 class StarryForm(Feature):
     def __init__(self):
         super().__init__(name="Starry Form", origin="Circle of the Stars Druid Level 3", activation=FeatureActivation(action_type=ActionType.BONUS_ACTION, duration="10 Minutes or Until Dismissed/Incapacitated", range="10-Foot Radius"), usage_tags=["damage", "heal", "buff"])
@@ -61,6 +64,9 @@ class CosmicOmen(Feature):
 
     def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
+
+    def number_of_uses(self, character_stat_block: CharacterStatBlock) -> int:
+        return max(1, character_stat_block.get_wisdom_modifier())
 class TwinklingConstellations(Feature):
     def __init__(self):
         super().__init__(

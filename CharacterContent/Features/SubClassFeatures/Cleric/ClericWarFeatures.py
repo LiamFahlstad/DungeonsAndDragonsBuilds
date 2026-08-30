@@ -45,8 +45,7 @@ class WarPriest(Feature):
     def get_table_description(
         self, character_stat_block: CharacterStatBlock
     ) -> list[tuple[str, str]]:
-        wisdom_modifier = character_stat_block.get_wisdom_modifier()
-        uses = max(1, wisdom_modifier)
+        uses = self.number_of_uses(character_stat_block)
         return [
             ("What", "Make one extra attack"),
             ("Trigger", "Bonus Action"),
@@ -59,6 +58,9 @@ class WarPriest(Feature):
 
     def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
         return RegainedOn.SHORT_OR_LONG_REST
+
+    def number_of_uses(self, character_stat_block: CharacterStatBlock) -> int:
+        return max(1, character_stat_block.get_wisdom_modifier())
 class WarGodsBlessing(Feature):
     def __init__(self):
         super().__init__(name="War God's Blessing", origin="War Domain Cleric Level 6", activation=FeatureActivation(duration="1 Minute"), usage_tags=["buff", "damage"])

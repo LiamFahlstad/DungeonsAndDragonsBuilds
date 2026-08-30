@@ -166,6 +166,9 @@ class ChannelDivinity(Feature):
     def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
         return RegainedOn.SHORT_OR_LONG_REST
 
+    def number_of_uses(self, character_stat_block: CharacterStatBlock) -> int:
+        return 3 if character_stat_block.character_level >= 11 else 2
+
 
 class ExtraAttack(Feature):
     def __init__(self):

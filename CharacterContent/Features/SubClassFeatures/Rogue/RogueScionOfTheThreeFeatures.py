@@ -15,11 +15,12 @@ class Bloodthirst(Feature):
 
     def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
+    def number_of_uses(self, character_stat_block: CharacterStatBlock) -> int:
+        return max(1, character_stat_block.get_intelligence_modifier())
     def get_table_description(
         self, character_stat_block: CharacterStatBlock
     ) -> list[tuple[str, str]]:
-        intelligence_modifier = character_stat_block.get_intelligence_modifier()
-        uses = max(1, intelligence_modifier)
+        uses = self.number_of_uses(character_stat_block)
         return [
             ("Trigger", "Enemy within 30 feet takes damage and becomes Bloodied (not killed)"),
             ("Action", "Reaction"),

@@ -68,7 +68,7 @@ class TentacleOfTheDeep(Feature):
         warlock_level = character_stat_block.get_class_level(
             Definitions.CharacterClass.WARLOCK
         )
-        proficiency_bonus = character_stat_block.get_proficiency_bonus()
+        proficiency_bonus = self.number_of_uses(character_stat_block)
         damage = "2d8" if warlock_level >= 10 else "1d8"
         return [
             ("Action", "Bonus action to summon"),
@@ -79,6 +79,9 @@ class TentacleOfTheDeep(Feature):
             ("Uses", f"Proficiency bonus ({proficiency_bonus})"),
             ("Recharge", "Long rest"),
         ]
+
+    def number_of_uses(self, character_stat_block: CharacterStatBlock) -> int:
+        return character_stat_block.get_proficiency_bonus()
 
 
 class GiftOfTheSea(Feature):

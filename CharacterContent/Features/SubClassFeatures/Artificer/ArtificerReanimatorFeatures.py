@@ -36,6 +36,10 @@ class ReanimatorSkillSet(Feature):
 
     def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
+
+    def number_of_uses(self, character_stat_block: CharacterStatBlock) -> int:
+        return max(1, character_stat_block.get_intelligence_modifier())
+
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
             "You gain the following benefits.\n"

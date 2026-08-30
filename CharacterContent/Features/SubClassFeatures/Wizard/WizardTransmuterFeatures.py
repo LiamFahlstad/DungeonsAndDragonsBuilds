@@ -62,6 +62,8 @@ class EmpoweredTransmutation(Feature):
 
     def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
+    def number_of_uses(self, character_stat_block: CharacterStatBlock) -> int:
+        return max(1, character_stat_block.get_intelligence_modifier())
 class PotentStone(Feature):
     def __init__(self):
         super().__init__(name="Potent Stone", origin="Transmuter Wizard Level 10", usage_tags=["buff"])

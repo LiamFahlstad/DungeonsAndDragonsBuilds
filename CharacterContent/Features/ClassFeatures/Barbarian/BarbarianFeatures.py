@@ -86,6 +86,21 @@ class Rage(Feature):
     def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
         return RegainedOn.SHORT_OR_LONG_REST
 
+    def number_of_uses(self, character_stat_block: CharacterStatBlock) -> int:
+        barbarian_level = character_stat_block.get_class_level(
+            Definitions.CharacterClass.BARBARIAN
+        )
+        if barbarian_level >= 17:
+            return 6
+        elif barbarian_level >= 12:
+            return 5
+        elif barbarian_level >= 6:
+            return 4
+        elif barbarian_level >= 3:
+            return 3
+        else:
+            return 2
+
 
 class UnarmoredDefenseText(Feature):
     def __init__(self):

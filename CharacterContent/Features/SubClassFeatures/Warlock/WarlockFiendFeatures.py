@@ -41,11 +41,12 @@ class DarkOnesOwnLuck(Feature):
 
     def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
+    def number_of_uses(self, character_stat_block: CharacterStatBlock) -> int:
+        return max(1, character_stat_block.get_charisma_modifier())
     def get_table_description(
         self, character_stat_block: CharacterStatBlock
     ) -> list[tuple[str, str]]:
-        charisma_modifier = character_stat_block.get_charisma_modifier()
-        uses = max(1, charisma_modifier)
+        uses = self.number_of_uses(character_stat_block)
         return [
             ("When", "Ability check or saving throw (after seeing roll)"),
             ("Effect", "Add 1d10 to your roll"),
