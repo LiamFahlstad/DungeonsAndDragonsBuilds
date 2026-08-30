@@ -1,4 +1,4 @@
-from Core.Definitions import MAX_PROFICIENCY_BONUS, Sense, Skill, Ability
+from Core.Definitions import MAX_PROFICIENCY_BONUS, Sense, Skill
 from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, ActionType
 from CharacterContent.Features.Core.Improvements import SkillProficiencyChoice, GrantSense
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
@@ -45,7 +45,7 @@ class Howl(Feature):
         return description
 
     def calculate_dc(self, character_stat_block: CharacterStatBlock) -> int:
-        constitution_modifier = character_stat_block.get_ability_modifier(Ability.CONSTITUTION)
+        constitution_modifier = character_stat_block.get_constitution_modifier()
         proficiency_bonus = character_stat_block.get_proficiency_bonus()
         return 8 + constitution_modifier + proficiency_bonus
 

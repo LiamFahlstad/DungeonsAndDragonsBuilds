@@ -1,4 +1,4 @@
-from Core.Definitions import Ability, ROGUE_HIT_DIE
+from Core.Definitions import ROGUE_HIT_DIE
 from CharacterContent.Features.Core.BaseFeatures import FeatureUses, Feature, FeatureActivation, ActionType
 from CharacterContent.Features.Core.Improvements import InitiativeBonus
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
@@ -43,7 +43,7 @@ class RakishAudacityBonus(Feature):
         super().__init__(skippable_in_concise=True)
 
     def apply(self, character_stat_block: CharacterStatBlock):
-        cha_mod = character_stat_block.get_ability_modifier(Ability.CHARISMA)
+        cha_mod = character_stat_block.get_charisma_modifier()
         InitiativeBonus(cha_mod).apply(character_stat_block)
 
 

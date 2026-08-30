@@ -1,4 +1,4 @@
-from Core.Definitions import Ability, CharacterClass, MAX_ABILITY_MODIFIER
+from Core.Definitions import CharacterClass, MAX_ABILITY_MODIFIER
 from CharacterContent.Features.Core.BaseFeatures import FeatureUses, Feature, FeatureActivation, ActionType
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
@@ -41,7 +41,7 @@ class UnwaveringMark(Feature):
     def get_table_description(
         self, character_stat_block: CharacterStatBlock
     ) -> list[tuple[str, str]]:
-        strength_modifier = character_stat_block.get_ability_modifier(Ability.STRENGTH)
+        strength_modifier = character_stat_block.get_strength_modifier()
         uses = max(1, strength_modifier)
         fighter_level = character_stat_block.get_class_level(CharacterClass.FIGHTER)
         extra_damage = fighter_level // 2
@@ -70,7 +70,7 @@ class WardingManeuver(Feature):
     def get_table_description(
         self, character_stat_block: CharacterStatBlock
     ) -> list[tuple[str, str]]:
-        constitution_modifier = character_stat_block.get_ability_modifier(Ability.CONSTITUTION)
+        constitution_modifier = character_stat_block.get_constitution_modifier()
         uses = max(1, constitution_modifier)
 
         return [
@@ -103,7 +103,7 @@ class FerociousCharger(Feature):
 
     def calculate_dc(self, character_stat_block: CharacterStatBlock) -> int:
         proficiency_bonus = character_stat_block.get_proficiency_bonus()
-        strength_modifier = character_stat_block.get_ability_modifier(Ability.STRENGTH)
+        strength_modifier = character_stat_block.get_strength_modifier()
         return 8 + proficiency_bonus + strength_modifier
 
     def get_table_description(

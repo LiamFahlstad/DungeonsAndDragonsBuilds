@@ -1,4 +1,4 @@
-from Core.Definitions import Ability, WARLOCK_HIT_DIE
+from Core.Definitions import WARLOCK_HIT_DIE
 import Core.Definitions as Definitions
 from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
@@ -41,7 +41,7 @@ class DarkOnesOwnLuck(Feature):
     def get_table_description(
         self, character_stat_block: CharacterStatBlock
     ) -> list[tuple[str, str]]:
-        charisma_modifier = character_stat_block.get_ability_modifier(Ability.CHARISMA)
+        charisma_modifier = character_stat_block.get_charisma_modifier()
         uses = max(1, charisma_modifier)
         return [
             ("When", "Ability check or saving throw (after seeing roll)"),

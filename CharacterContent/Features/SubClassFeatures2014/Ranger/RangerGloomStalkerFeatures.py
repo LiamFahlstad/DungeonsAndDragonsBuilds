@@ -30,7 +30,7 @@ class DreadAmbusher(Feature):
         super().__init__(name="Dread Ambusher", origin="Gloom Stalker Ranger Level 3", usage_tags=["buff", "damage", "utility"])
 
     def apply(self, character_stat_block: CharacterStatBlock):
-        wisdom_modifier = character_stat_block.get_ability_modifier(Ability.WISDOM)
+        wisdom_modifier = character_stat_block.get_wisdom_modifier()
         InitiativeBonus(wisdom_modifier).apply(character_stat_block)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -44,7 +44,7 @@ class DreadAmbusher(Feature):
     def get_table_description(
         self, character_stat_block: CharacterStatBlock
     ) -> list[tuple[str, str]]:
-        wisdom_modifier = character_stat_block.get_ability_modifier(Ability.WISDOM)
+        wisdom_modifier = character_stat_block.get_wisdom_modifier()
         return [
             ("Initiative Bonus", f"Wisdom modifier ({wisdom_modifier:+})"),
             ("First Turn Effect", "Walking speed +10 ft (until end of turn)"),

@@ -81,9 +81,7 @@ class TotemicAttunement(Feature):
 
     def calculate_dc(self, character_stat_block: CharacterStatBlock) -> int:
         proficiency_bonus = character_stat_block.get_proficiency_bonus()
-        strength_modifier = character_stat_block.get_ability_modifier(
-            Definitions.Ability.STRENGTH
-        )
+        strength_modifier = character_stat_block.get_strength_modifier()
         return 8 + proficiency_bonus + strength_modifier
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:

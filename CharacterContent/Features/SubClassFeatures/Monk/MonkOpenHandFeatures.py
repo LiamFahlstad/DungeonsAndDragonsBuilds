@@ -93,9 +93,7 @@ class WholenessOfBody(Feature):
     def get_table_description(
         self, character_stat_block: CharacterStatBlock
     ) -> list[tuple[str, str]]:
-        wisdom_modifier = character_stat_block.get_ability_modifier(
-            Definitions.Ability.WISDOM
-        )
+        wisdom_modifier = character_stat_block.get_wisdom_modifier()
         uses = max(1, wisdom_modifier)
         return [
             ("Action", "Bonus Action"),

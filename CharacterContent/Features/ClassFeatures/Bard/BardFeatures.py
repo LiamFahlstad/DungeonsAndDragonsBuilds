@@ -4,7 +4,7 @@ from CharacterContent.Features.Core.Improvements import (
     JackOfAllTradesBonus,
     SkillExpertiseChoice,
 )
-from Core.Definitions import Ability, Skill
+from Core.Definitions import Skill
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
@@ -71,7 +71,7 @@ class BardicInspiration(Feature):
     def get_table_description(
         self, character_stat_block: CharacterStatBlock
     ) -> list[tuple[str, str]]:
-        charisma_modifier = character_stat_block.get_ability_modifier(Ability.CHARISMA)
+        charisma_modifier = character_stat_block.get_charisma_modifier()
         bard_level = character_stat_block.get_class_level(
             Definitions.CharacterClass.BARD
         )

@@ -4,7 +4,7 @@ from CharacterContent.Features.Core.BaseFeatures import (
     FeatureUses,
     ActionType,
 )
-from Core.Definitions import MAX_ABILITY_MODIFIER, Ability
+from Core.Definitions import MAX_ABILITY_MODIFIER
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
@@ -182,9 +182,7 @@ class FlashofGenius(Feature):
     def get_table_description(
         self, character_stat_block: CharacterStatBlock
     ) -> list[tuple[str, str]]:
-        intelligence_modifier = character_stat_block.get_ability_modifier(
-            Ability.INTELLIGENCE
-        )
+        intelligence_modifier = character_stat_block.get_intelligence_modifier()
         bonus = max(1, intelligence_modifier)
         uses = max(1, intelligence_modifier)
         return [

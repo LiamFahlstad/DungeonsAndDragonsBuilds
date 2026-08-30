@@ -1,4 +1,3 @@
-from Core.Definitions import Ability
 from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
@@ -54,7 +53,7 @@ class TurnTheTide(Feature):
         return description
 
     def get_table_description(self, character_stat_block: CharacterStatBlock) -> list[tuple[str, str]]:
-        charisma_modifier = character_stat_block.get_ability_modifier(Ability.CHARISMA)
+        charisma_modifier = character_stat_block.get_charisma_modifier()
         healing = max(1, charisma_modifier)
         return [
             ("What", "Bolster injured creatures"),

@@ -1,4 +1,4 @@
-from Core.Definitions import Ability, Skill
+from Core.Definitions import Skill
 from CharacterContent.Features.Core.BaseFeatures import FeatureUses, Feature, FeatureActivation, ActionType
 from CharacterContent.Features.Core.Improvements import SkillProficiencyChoice
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
@@ -34,7 +34,7 @@ class ArcaneShot(Feature):
         super().__init__(name="Arcane Shot", origin="Arcane Archer Fighter Level 3", usage_tags=["damage", "control"])
 
     def calculate_dc(self, character_stat_block: CharacterStatBlock) -> int:
-        intelligence_modifier = character_stat_block.get_ability_modifier(Ability.INTELLIGENCE)
+        intelligence_modifier = character_stat_block.get_intelligence_modifier()
         proficiency_bonus = character_stat_block.get_proficiency_bonus()
         return 8 + proficiency_bonus + intelligence_modifier
 

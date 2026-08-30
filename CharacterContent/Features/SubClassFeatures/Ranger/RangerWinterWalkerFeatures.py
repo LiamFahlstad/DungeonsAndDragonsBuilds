@@ -1,5 +1,5 @@
 
-from Core.Definitions import Ability, CharacterClass, DamageType, RANGER_HIT_DIE, MAX_ABILITY_MODIFIER
+from Core.Definitions import CharacterClass, DamageType, RANGER_HIT_DIE, MAX_ABILITY_MODIFIER
 from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, ActionType
 from CharacterContent.Features.Core.Improvements import DamageResistance
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
@@ -67,7 +67,7 @@ class FortifyingSoul(Feature):
         return description
 
     def get_table_description(self, character_stat_block: CharacterStatBlock) -> list[tuple[str, str]]:
-        wis_mod = character_stat_block.get_ability_modifier(Ability.WISDOM)
+        wis_mod = character_stat_block.get_wisdom_modifier()
         ranger_level = character_stat_block.get_class_level(CharacterClass.RANGER)
         targets = max(1, wis_mod)
         healing = f"1d10 + {ranger_level}"
@@ -97,7 +97,7 @@ class ChillingRetribution(Feature):
         return description
 
     def get_table_description(self, character_stat_block: CharacterStatBlock) -> list[tuple[str, str]]:
-        wis_mod = character_stat_block.get_ability_modifier(Ability.WISDOM)
+        wis_mod = character_stat_block.get_wisdom_modifier()
         uses = max(1, wis_mod)
         return [
             ("Trigger", "Creature hits you with attack roll"),

@@ -1,4 +1,4 @@
-from Core.Definitions import Ability, Skill, WIZARD_HIT_DIE
+from Core.Definitions import Skill, WIZARD_HIT_DIE
 from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType
 from CharacterContent.Features.Core.Improvements import SkillProficiencyChoice
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
@@ -22,7 +22,7 @@ class Bladesong(Feature):
     def get_table_description(
         self, character_stat_block: CharacterStatBlock
     ) -> list[tuple[str, str]]:
-        int_mod = character_stat_block.get_ability_modifier(Ability.INTELLIGENCE)
+        int_mod = character_stat_block.get_intelligence_modifier()
         return [
             ("Activation", "Bonus Action (while no armor or Shield)"),
             ("Duration", "1 minute (ends if Incapacitated, don armor/Shield, or use two hands on attack)"),

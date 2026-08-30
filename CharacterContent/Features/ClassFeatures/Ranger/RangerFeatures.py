@@ -1,6 +1,6 @@
 from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, ActionType
 from CharacterContent.Features.Core.Improvements import SkillExpertiseChoice, SpeedBonus
-from Core.Definitions import Ability, Skill, MAX_ABILITY_MODIFIER
+from Core.Definitions import Skill, MAX_ABILITY_MODIFIER
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
@@ -194,7 +194,7 @@ class Tireless(Feature):
     def get_table_description(
         self, character_stat_block: CharacterStatBlock
     ) -> list[tuple[str, str]]:
-        wis_mod = character_stat_block.get_ability_modifier(Ability.WISDOM)
+        wis_mod = character_stat_block.get_wisdom_modifier()
         uses = max(1, wis_mod)
         return [
             ("Temporary Hit Points", f"1d8 + Wisdom modifier (Magic Action)"),
@@ -232,7 +232,7 @@ class NaturesVeil(Feature):
     def get_table_description(
         self, character_stat_block: CharacterStatBlock
     ) -> list[tuple[str, str]]:
-        wis_mod = character_stat_block.get_ability_modifier(Ability.WISDOM)
+        wis_mod = character_stat_block.get_wisdom_modifier()
         uses = max(1, wis_mod)
         return [
             ("Action", "Bonus Action"),

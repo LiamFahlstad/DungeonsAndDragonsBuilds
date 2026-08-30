@@ -1,4 +1,4 @@
-from Core.Definitions import Ability, Language, MAX_PROFICIENCY_BONUS
+from Core.Definitions import Language, MAX_PROFICIENCY_BONUS
 from CharacterContent.Features.Core.BaseFeatures import FeatureUses, Feature, FeatureActivation, ActionType
 from CharacterContent.Features.Core.Improvements import GrantLanguage
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
@@ -31,7 +31,7 @@ class RuneCarver(Feature):
         )
 
     def calculate_dc(self, character_stat_block: CharacterStatBlock) -> int:
-        constitution_modifier = character_stat_block.get_ability_modifier(Ability.CONSTITUTION)
+        constitution_modifier = character_stat_block.get_constitution_modifier()
         proficiency_bonus = character_stat_block.get_proficiency_bonus()
         return 8 + proficiency_bonus + constitution_modifier
 

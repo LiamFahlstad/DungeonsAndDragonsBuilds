@@ -1,5 +1,5 @@
 import Core.Definitions as Definitions
-from Core.Definitions import Ability, WIZARD_HIT_DIE
+from Core.Definitions import WIZARD_HIT_DIE
 from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
@@ -34,7 +34,7 @@ class ArcaneWard(Feature):
         wizard_level = character_stat_block.get_class_level(
             Definitions.CharacterClass.WIZARD
         )
-        int_mod = character_stat_block.get_ability_modifier(Ability.INTELLIGENCE)
+        int_mod = character_stat_block.get_intelligence_modifier()
         max_hp = 2 * wizard_level + int_mod
         return [
             ("Ward HP Maximum", f"{max_hp} (2 × Wizard level + INT mod)"),

@@ -1,4 +1,3 @@
-from Core.Definitions import Ability
 from CharacterContent.Features.Core.BaseFeatures import FeatureUses, Feature
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
@@ -26,8 +25,8 @@ class CombatSuperiority(Feature):
 
     def calculate_dc(self, character_stat_block: CharacterStatBlock) -> int:
         proficiency_bonus = character_stat_block.get_proficiency_bonus()
-        str_mod = character_stat_block.get_ability_modifier(Ability.STRENGTH)
-        dex_mod = character_stat_block.get_ability_modifier(Ability.DEXTERITY)
+        str_mod = character_stat_block.get_strength_modifier()
+        dex_mod = character_stat_block.get_dexterity_modifier()
         return 8 + proficiency_bonus + max(str_mod, dex_mod)
 
     def get_table_description(

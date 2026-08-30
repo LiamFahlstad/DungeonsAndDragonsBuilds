@@ -338,7 +338,7 @@ class CultOfTheDragonInitiate(OriginFeat):
         )
 
     def calculate_dc(self, character_stat_block: CharacterStatBlock) -> int:
-        wisdom_modifier = character_stat_block.get_ability_modifier(Ability.WISDOM)
+        wisdom_modifier = character_stat_block.get_wisdom_modifier()
         proficiency_bonus = character_stat_block.get_proficiency_bonus()
         return 8 + wisdom_modifier + proficiency_bonus
 

@@ -1,4 +1,4 @@
-from Core.Definitions import CreatureSize, DamageType, Sense, Ability
+from Core.Definitions import CreatureSize, DamageType, Sense
 from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType
 from CharacterContent.Features.Core.Improvements import DamageResistance, GrantSense
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
@@ -74,6 +74,6 @@ class CelestialRevelation(Feature):
         return text
 
     def calculate_dc(self, character_stat_block: CharacterStatBlock) -> int:
-        charisma_modifier = character_stat_block.get_ability_modifier(Ability.CHARISMA)
+        charisma_modifier = character_stat_block.get_charisma_modifier()
         proficiency_bonus = character_stat_block.get_proficiency_bonus()
         return 8 + charisma_modifier + proficiency_bonus

@@ -1,5 +1,5 @@
 from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, ActionType
-from Core.Definitions import MAX_ABILITY_MODIFIER, Ability
+from Core.Definitions import MAX_ABILITY_MODIFIER
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
@@ -129,7 +129,7 @@ class ElementalRebuke(Feature):
     def get_table_description(
         self, character_stat_block: CharacterStatBlock
     ) -> list[tuple[str, str]]:
-        charisma_modifier = character_stat_block.get_ability_modifier(Ability.CHARISMA)
+        charisma_modifier = character_stat_block.get_charisma_modifier()
         uses = max(1, charisma_modifier)
         return [
             ("Trigger", "You are hit by an attack roll"),

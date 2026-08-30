@@ -1,5 +1,5 @@
 from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, ActionType
-from Core.Definitions import Ability, MAX_ABILITY_MODIFIER
+from Core.Definitions import MAX_ABILITY_MODIFIER
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
@@ -51,7 +51,7 @@ class MomentaryStasis(Feature):
     def get_table_description(
         self, character_stat_block: CharacterStatBlock
     ) -> list[tuple[str, str]]:
-        int_mod = character_stat_block.get_ability_modifier(Ability.INTELLIGENCE)
+        int_mod = character_stat_block.get_intelligence_modifier()
         uses = max(1, int_mod)
         return [
             ("Action", "Action"),

@@ -1,4 +1,4 @@
-from Core.Definitions import CharacterClass, ROGUE_HIT_DIE, Ability
+from Core.Definitions import CharacterClass, ROGUE_HIT_DIE
 import Core.Definitions as Definitions
 from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, ActionType
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
@@ -86,9 +86,7 @@ class RendMind(Feature):
         super().__init__(name="Rend Mind", origin="Soulknife Rogue Level 17", activation=FeatureActivation(duration="1 Minute"), usage_tags=["control"])
 
     def calculate_dc(self, character_stat_block: CharacterStatBlock) -> int:
-        dexterity_modifier = character_stat_block.get_ability_modifier(
-            Definitions.Ability.DEXTERITY
-        )
+        dexterity_modifier = character_stat_block.get_dexterity_modifier()
         proficiency_bonus = character_stat_block.get_proficiency_bonus()
         return 8 + dexterity_modifier + proficiency_bonus
 

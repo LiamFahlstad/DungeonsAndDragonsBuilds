@@ -9,7 +9,7 @@ from Combat.Definitions import (
     MonsterType,
     Size,
 )
-from Core.Definitions import Ability, CharacterClass, DamageType
+from Core.Definitions import CharacterClass, DamageType
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils.CreatureStatBlocks import format_creature_stat_block
 
@@ -190,7 +190,7 @@ class DrakesBreath(Feature):
 
     def calculate_dc(self, character_stat_block: CharacterStatBlock) -> int:
         proficiency_bonus = character_stat_block.get_proficiency_bonus()
-        wisdom_modifier = character_stat_block.get_ability_modifier(Ability.WISDOM)
+        wisdom_modifier = character_stat_block.get_wisdom_modifier()
         return 8 + proficiency_bonus + wisdom_modifier
 
     def get_table_description(

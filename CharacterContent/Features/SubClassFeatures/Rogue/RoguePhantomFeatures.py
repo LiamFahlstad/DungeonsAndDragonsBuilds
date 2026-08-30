@@ -1,4 +1,4 @@
-from Core.Definitions import Ability, MAX_ABILITY_MODIFIER, ROGUE_HIT_DIE
+from Core.Definitions import MAX_ABILITY_MODIFIER, ROGUE_HIT_DIE
 from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, ActionType
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
@@ -18,9 +18,7 @@ class WailsFromTheGrave(Feature):
     def get_table_description(
         self, character_stat_block: CharacterStatBlock
     ) -> list[tuple[str, str]]:
-        dexterity_modifier = character_stat_block.get_ability_modifier(
-            Ability.DEXTERITY
-        )
+        dexterity_modifier = character_stat_block.get_dexterity_modifier()
         uses = max(1, dexterity_modifier)
         return [
             ("Trigger", "After you deal Sneak Attack damage on your turn"),

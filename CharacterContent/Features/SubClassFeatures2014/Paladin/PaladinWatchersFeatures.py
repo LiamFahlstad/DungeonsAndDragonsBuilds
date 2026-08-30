@@ -1,6 +1,5 @@
 from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, ActionType
 from CharacterContent.Features.Core.Improvements import InitiativeProficiency
-from Core.Definitions import Ability
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
@@ -43,7 +42,7 @@ class WatchersWill(Feature):
     def get_table_description(
         self, character_stat_block: CharacterStatBlock
     ) -> list[tuple[str, str]]:
-        charisma_modifier = character_stat_block.get_ability_modifier(Ability.CHARISMA)
+        charisma_modifier = character_stat_block.get_charisma_modifier()
         creature_count = max(1, charisma_modifier)
         return [
             ("Action", "Action"),
@@ -134,7 +133,7 @@ class VigilantRebuke(Feature):
     def get_table_description(
         self, character_stat_block: CharacterStatBlock
     ) -> list[tuple[str, str]]:
-        charisma_modifier = character_stat_block.get_ability_modifier(Ability.CHARISMA)
+        charisma_modifier = character_stat_block.get_charisma_modifier()
         return [
             ("Trigger", "You or ally within 30 feet succeeds on INT/WIS/CHA save"),
             ("Action", "Reaction"),

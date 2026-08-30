@@ -10,7 +10,7 @@ class DreadAmbusher(Feature):
         super().__init__(name="Dread Ambusher", origin="Gloom Stalker Ranger Level 3", usage_tags=["buff", "damage"], uses=FeatureUses(max_uses=MAX_ABILITY_MODIFIER, regain_all_on="long rest", current_formula="Current amount: equal to your Wisdom modifier."))
 
     def apply(self, character_stat_block: CharacterStatBlock):
-        wis_mod = character_stat_block.get_ability_modifier(Ability.WISDOM)
+        wis_mod = character_stat_block.get_wisdom_modifier()
         InitiativeBonus(wis_mod).apply(character_stat_block)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:

@@ -231,7 +231,7 @@ def build_primal_companion(
     damage_type: Optional[DamageType] = None,
 ) -> ExtendedCombatantData:
     ranger_level = character_stat_block.get_class_level(CharacterClass.RANGER)
-    wisdom_modifier = character_stat_block.get_ability_modifier(Ability.WISDOM)
+    wisdom_modifier = character_stat_block.get_wisdom_modifier()
     proficiency_bonus = character_stat_block.get_proficiency_bonus()
     spell_attack_modifier = character_stat_block.calculate_attack_bonus_for_ability(Ability.WISDOM)
 

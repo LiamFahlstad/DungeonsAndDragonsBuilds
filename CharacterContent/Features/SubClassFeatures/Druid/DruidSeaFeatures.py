@@ -1,5 +1,5 @@
 
-from Core.Definitions import Ability, DRUID_HIT_DIE
+from Core.Definitions import DRUID_HIT_DIE
 from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
@@ -34,7 +34,7 @@ class WrathOfTheSea(Feature):
     def get_table_description(
         self, character_stat_block: CharacterStatBlock
     ) -> list[tuple[str, str]]:
-        wisdom_modifier = character_stat_block.get_ability_modifier(Ability.WISDOM)
+        wisdom_modifier = character_stat_block.get_wisdom_modifier()
         damage_dice = max(1, wisdom_modifier)
         return [
             ("What", "Create 5-foot ocean spray Emanation"),

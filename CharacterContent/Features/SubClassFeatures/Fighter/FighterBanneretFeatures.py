@@ -1,4 +1,4 @@
-from Core.Definitions import FIGHTER_HIT_DIE, Ability, Condition
+from Core.Definitions import FIGHTER_HIT_DIE, Condition
 from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType
 from CharacterContent.Features.Core.Improvements import ConditionImmunity
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
@@ -32,7 +32,7 @@ class GroupRecovery(Feature):
         return [
             ("Trigger", "When you use Second Wind"),
             ("Range", "30-foot Emanation"),
-            ("Targets", f"Up to {max(1, character_stat_block.get_ability_modifier(Ability.CHARISMA))} allies"),
+            ("Targets", f"Up to {max(1, character_stat_block.get_charisma_modifier())} allies"),
             ("Effect", "Each ally regains 1d4 + Fighter level HP"),
             ("Recharge", "Short or Long Rest"),
         ]
@@ -65,7 +65,7 @@ class RallyingSurge(Feature):
         return [
             ("Trigger", "When you use Action Surge"),
             ("Range", "30-foot Emanation"),
-            ("Targets", f"Up to {max(1, character_stat_block.get_ability_modifier(Ability.CHARISMA))} allies"),
+            ("Targets", f"Up to {max(1, character_stat_block.get_charisma_modifier())} allies"),
             ("Reaction Options", "One attack, or move up to half Speed without OAs"),
         ]
 

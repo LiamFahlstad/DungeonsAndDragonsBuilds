@@ -1,4 +1,4 @@
-from Core.Definitions import Ability, CLERIC_HIT_DIE, MAX_ABILITY_MODIFIER
+from Core.Definitions import CLERIC_HIT_DIE, MAX_ABILITY_MODIFIER
 from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, ActionType
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
@@ -51,7 +51,7 @@ class WardingFlare(Feature):
     def get_table_description(
         self, character_stat_block: CharacterStatBlock
     ) -> list[tuple[str, str]]:
-        wisdom_modifier = character_stat_block.get_ability_modifier(Ability.WISDOM)
+        wisdom_modifier = character_stat_block.get_wisdom_modifier()
         uses = max(1, wisdom_modifier)
         return [
             ("What", "Impose Disadvantage on attack roll"),
@@ -90,7 +90,7 @@ class CoronaOfLight(Feature):
     def get_table_description(
         self, character_stat_block: CharacterStatBlock
     ) -> list[tuple[str, str]]:
-        wisdom_modifier = character_stat_block.get_ability_modifier(Ability.WISDOM)
+        wisdom_modifier = character_stat_block.get_wisdom_modifier()
         uses = max(1, wisdom_modifier)
         return [
             ("What", "Emit aura of sunlight"),

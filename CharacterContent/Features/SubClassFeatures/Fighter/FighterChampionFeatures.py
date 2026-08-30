@@ -78,7 +78,7 @@ class Survivor(Feature):
         self, character_stat_block: CharacterStatBlock
     ) -> list[tuple[str, str]]:
         from Core.Definitions import Ability
-        con_modifier = character_stat_block.get_ability_modifier(Ability.CONSTITUTION)
+        con_modifier = character_stat_block.get_constitution_modifier()
         return [
             ("Defy Death", "Advantage on Death Saving Throws; rolls 18-20 count as 20"),
             ("Heroic Rally", f"Start of turn: regain 5 + {con_modifier} HP (if Bloodied and HP ≥ 1)"),

@@ -39,9 +39,7 @@ class BranchesOfTheTree(Feature):
         )
 
     def calculate_dc(self, character_stat_block: CharacterStatBlock) -> int:
-        strength_modifier = character_stat_block.get_ability_modifier(
-            Definitions.Ability.STRENGTH
-        )
+        strength_modifier = character_stat_block.get_strength_modifier()
         proficiency_bonus = character_stat_block.get_proficiency_bonus()
         return 8 + strength_modifier + proficiency_bonus
 

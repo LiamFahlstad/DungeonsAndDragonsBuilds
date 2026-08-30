@@ -32,9 +32,7 @@ class StormAura(Feature):
 
     def calculate_dc(self, character_stat_block: CharacterStatBlock) -> int:
         proficiency_bonus = character_stat_block.get_proficiency_bonus()
-        constitution_modifier = character_stat_block.get_ability_modifier(
-            Definitions.Ability.CONSTITUTION
-        )
+        constitution_modifier = character_stat_block.get_constitution_modifier()
         return 8 + proficiency_bonus + constitution_modifier
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:

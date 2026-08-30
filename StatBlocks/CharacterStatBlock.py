@@ -128,6 +128,24 @@ class CharacterStatBlock:
     def get_ability_modifier(self, ability: Ability) -> int:
         return self.abilities.get_modifier(ability)
 
+    def get_strength_modifier(self) -> int:
+        return self.get_ability_modifier(Ability.STRENGTH)
+
+    def get_dexterity_modifier(self) -> int:
+        return self.get_ability_modifier(Ability.DEXTERITY)
+
+    def get_constitution_modifier(self) -> int:
+        return self.get_ability_modifier(Ability.CONSTITUTION)
+
+    def get_intelligence_modifier(self) -> int:
+        return self.get_ability_modifier(Ability.INTELLIGENCE)
+
+    def get_wisdom_modifier(self) -> int:
+        return self.get_ability_modifier(Ability.WISDOM)
+
+    def get_charisma_modifier(self) -> int:
+        return self.get_ability_modifier(Ability.CHARISMA)
+
     def is_proficient_in_skill(self, skill: Skill) -> bool:
         return self.skills.is_proficient(skill)
 
@@ -190,7 +208,7 @@ class CharacterStatBlock:
         return base_modifier + proficiency_bonus + self.saving_throws.get_bonus(ability)
 
     def calculate_hit_points(self) -> int:
-        constitution_modifier = self.get_ability_modifier(Ability.CONSTITUTION)
+        constitution_modifier = self.get_constitution_modifier()
         return self.combat.calculate_hit_points(
             base_class=self.base_class,
             level_per_class=self.level_per_class,
@@ -234,10 +252,14 @@ class CharacterStatBlock:
             raise ValueError("Character does not have spell slots.")
         return self.spell_slots
 
-    def add_damage_resistance(self, damage_type: Definitions.DamageType, source: str) -> None:
+    def add_damage_resistance(
+        self, damage_type: Definitions.DamageType, source: str
+    ) -> None:
         self.damage_resistances.setdefault(damage_type, []).append(source)
 
-    def add_damage_immunity(self, damage_type: Definitions.DamageType, source: str) -> None:
+    def add_damage_immunity(
+        self, damage_type: Definitions.DamageType, source: str
+    ) -> None:
         self.damage_immunities.setdefault(damage_type, []).append(source)
 
     def is_resistant_to_damage(self, damage_type: Definitions.DamageType) -> bool:
@@ -256,7 +278,9 @@ class CharacterStatBlock:
     ) -> list[str]:
         return self.damage_immunities.get(damage_type, [])
 
-    def add_condition_immunity(self, condition: Definitions.Condition, source: str) -> None:
+    def add_condition_immunity(
+        self, condition: Definitions.Condition, source: str
+    ) -> None:
         self.condition_immunities.setdefault(condition, []).append(source)
 
     def is_immune_to_condition(self, condition: Definitions.Condition) -> bool:

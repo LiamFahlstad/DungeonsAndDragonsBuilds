@@ -1,4 +1,4 @@
-from Core.Definitions import Ability, MAX_ABILITY_MODIFIER, PALADIN_HIT_DIE
+from Core.Definitions import MAX_ABILITY_MODIFIER, PALADIN_HIT_DIE
 from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, ActionType
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
@@ -81,7 +81,7 @@ class GloriousDefense(Feature):
         return description
 
     def get_table_description(self, character_stat_block: CharacterStatBlock) -> list[tuple[str, str]]:
-        charisma_modifier = character_stat_block.get_ability_modifier(Ability.CHARISMA)
+        charisma_modifier = character_stat_block.get_charisma_modifier()
         uses = max(1, charisma_modifier)
         return [
             ("Trigger", "You or ally within 10 ft is hit by attack roll"),

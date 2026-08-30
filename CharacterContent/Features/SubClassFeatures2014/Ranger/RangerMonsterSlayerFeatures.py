@@ -1,5 +1,4 @@
 from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType
-from Core.Definitions import Ability
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
@@ -43,7 +42,7 @@ class HuntersSense(Feature):
     def get_table_description(
         self, character_stat_block: CharacterStatBlock
     ) -> list[tuple[str, str]]:
-        wisdom_modifier = character_stat_block.get_ability_modifier(Ability.WISDOM)
+        wisdom_modifier = character_stat_block.get_wisdom_modifier()
         uses = max(1, wisdom_modifier)
         return [
             ("What", "Discern damage immunities/resistances/vulnerabilities"),
@@ -108,7 +107,7 @@ class MagicUsersNemesis(Feature):
 
     def calculate_dc(self, character_stat_block: CharacterStatBlock) -> int:
         proficiency_bonus = character_stat_block.get_proficiency_bonus()
-        wisdom_modifier = character_stat_block.get_ability_modifier(Ability.WISDOM)
+        wisdom_modifier = character_stat_block.get_wisdom_modifier()
         return 8 + proficiency_bonus + wisdom_modifier
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:

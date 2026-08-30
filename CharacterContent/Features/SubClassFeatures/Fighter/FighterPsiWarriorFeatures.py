@@ -1,4 +1,4 @@
-from Core.Definitions import FIGHTER_HIT_DIE, Ability, DamageType
+from Core.Definitions import FIGHTER_HIT_DIE, DamageType
 from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType
 from CharacterContent.Features.Core.Improvements import DamageResistance
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
@@ -34,9 +34,7 @@ class TelekineticAdept(Feature):
         super().__init__(name="Telekinetic Adept", origin="Psi Warrior Fighter Level 7", activation=FeatureActivation(action_type=ActionType.BONUS_ACTION, duration="Until End of Current Turn", range="10 Feet"), usage_tags=["buff", "control"])
 
     def calculate_dc(self, character_stat_block: CharacterStatBlock) -> int:
-        intelligence_modifier = character_stat_block.get_ability_modifier(
-            Ability.INTELLIGENCE
-        )
+        intelligence_modifier = character_stat_block.get_intelligence_modifier()
         proficiency_bonus = character_stat_block.get_proficiency_bonus()
         return 8 + intelligence_modifier + proficiency_bonus
 
@@ -79,7 +77,7 @@ class BulwarkOfForce(Feature):
         return [
             ("Action", "Bonus Action"),
             ("Range", "30 feet"),
-            ("Targets", f"Up to {max(1, character_stat_block.get_ability_modifier(Ability.INTELLIGENCE))} creatures"),
+            ("Targets", f"Up to {max(1, character_stat_block.get_intelligence_modifier())} creatures"),
             ("Effect", "Half Cover for 1 minute or until Incapacitated"),
             ("Recharge", "Long Rest, or expend Psionic Energy Die"),
         ]

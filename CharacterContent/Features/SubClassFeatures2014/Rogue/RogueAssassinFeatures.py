@@ -1,5 +1,4 @@
 from CharacterContent.Features.Core.BaseFeatures import Feature
-from Core.Definitions import Ability
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
@@ -97,9 +96,7 @@ class DeathStrike(Feature):
         return description
 
     def calculate_dc(self, character_stat_block: CharacterStatBlock) -> int:
-        dexterity_modifier = character_stat_block.get_ability_modifier(
-            Ability.DEXTERITY
-        )
+        dexterity_modifier = character_stat_block.get_dexterity_modifier()
         proficiency_bonus = character_stat_block.get_proficiency_bonus()
         return 8 + dexterity_modifier + proficiency_bonus
 

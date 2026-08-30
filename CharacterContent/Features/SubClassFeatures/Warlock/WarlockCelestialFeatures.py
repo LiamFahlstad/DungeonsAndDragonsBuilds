@@ -1,4 +1,4 @@
-from Core.Definitions import WARLOCK_HIT_DIE, Ability, DamageType
+from Core.Definitions import WARLOCK_HIT_DIE, DamageType
 import Core.Definitions as Definitions
 from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType
 from CharacterContent.Features.Core.Improvements import DamageResistance
@@ -35,7 +35,7 @@ class HealingLight(Feature):
         warlock_level = character_stat_block.get_class_level(
             Definitions.CharacterClass.WARLOCK
         )
-        charisma_modifier = character_stat_block.get_ability_modifier(Ability.CHARISMA)
+        charisma_modifier = character_stat_block.get_charisma_modifier()
         max_dice = max(1, charisma_modifier)
         pool_size = 1 + warlock_level
         return [

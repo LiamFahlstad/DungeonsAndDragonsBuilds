@@ -1,4 +1,4 @@
-from Core.Definitions import Ability, MAX_ABILITY_MODIFIER
+from Core.Definitions import MAX_ABILITY_MODIFIER
 from CharacterContent.Features.Core.BaseFeatures import FeatureUses, Feature, FeatureActivation, ActionType
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
@@ -38,7 +38,7 @@ class UnleashIncarnation(Feature):
     def get_table_description(
         self, character_stat_block: CharacterStatBlock
     ) -> list[tuple[str, str]]:
-        constitution_modifier = character_stat_block.get_ability_modifier(Ability.CONSTITUTION)
+        constitution_modifier = character_stat_block.get_constitution_modifier()
         uses = max(1, constitution_modifier)
 
         return [
@@ -102,7 +102,7 @@ class ReclaimPotential(Feature):
     def get_table_description(
         self, character_stat_block: CharacterStatBlock
     ) -> list[tuple[str, str]]:
-        constitution_modifier = character_stat_block.get_ability_modifier(Ability.CONSTITUTION)
+        constitution_modifier = character_stat_block.get_constitution_modifier()
         uses = max(1, constitution_modifier)
 
         return [

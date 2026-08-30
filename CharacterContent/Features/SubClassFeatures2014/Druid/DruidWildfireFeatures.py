@@ -1,5 +1,5 @@
 from Combat.Definitions import Alignment, Condition, DamageTypeEntry, ExtendedCombatantData, MonsterAbility, MonsterType, Size
-from Core.Definitions import Ability, CharacterClass, DamageType, MAX_PROFICIENCY_BONUS
+from Core.Definitions import CharacterClass, DamageType, MAX_PROFICIENCY_BONUS
 from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, ActionType
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
@@ -62,7 +62,7 @@ def _build_wildfire_spirit(druid_level: int, proficiency_bonus: int, spell_attac
 def format_wildfire_spirit(character_stat_block: CharacterStatBlock) -> str:
     druid_level = character_stat_block.get_class_level(CharacterClass.DRUID)
     proficiency_bonus = character_stat_block.get_proficiency_bonus()
-    wisdom_modifier = character_stat_block.get_ability_modifier(Ability.WISDOM)
+    wisdom_modifier = character_stat_block.get_wisdom_modifier()
     spell_attack_modifier = proficiency_bonus + wisdom_modifier
     spirit = _build_wildfire_spirit(druid_level, proficiency_bonus, spell_attack_modifier)
     return format_creature_stat_block(spirit, character_stat_block, retain_mental_abilities=False)

@@ -1,4 +1,4 @@
-from Core.Definitions import ARTIFICER_HIT_DIE, Ability, MAX_ABILITY_MODIFIER
+from Core.Definitions import ARTIFICER_HIT_DIE, MAX_ABILITY_MODIFIER
 from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
@@ -55,7 +55,7 @@ class AdventurersAtlas(Feature):
         return description
 
     def get_table_description(self, character_stat_block: CharacterStatBlock) -> list[tuple[str, str]]:
-        intelligence_modifier = character_stat_block.get_ability_modifier(Ability.INTELLIGENCE)
+        intelligence_modifier = character_stat_block.get_intelligence_modifier()
         max_creatures = max(2, 1 + intelligence_modifier)
         return [
             ("Trigger", f"End of Long Rest; touch {max_creatures} creatures (min 2)"),
@@ -80,7 +80,7 @@ class MappingMagic(Feature):
     def get_table_description(
         self, character_stat_block: CharacterStatBlock
     ) -> list[tuple[str, str]]:
-        intelligence_modifier = character_stat_block.get_ability_modifier(Ability.INTELLIGENCE)
+        intelligence_modifier = character_stat_block.get_intelligence_modifier()
         uses = max(1, intelligence_modifier)
         return [
             ("Illuminated Cartography", f"Cast Faerie Fire without slot ({uses} times, regain on long rest)"),

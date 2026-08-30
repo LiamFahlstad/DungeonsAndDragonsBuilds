@@ -146,7 +146,7 @@ class CunningStrike(Feature):
     def calculate_dc(self, character_stat_block: CharacterStatBlock) -> int:
         return (
             8
-            + character_stat_block.get_ability_modifier(Ability.DEXTERITY)
+            + character_stat_block.get_dexterity_modifier()
             + character_stat_block.get_proficiency_bonus()
         )
 

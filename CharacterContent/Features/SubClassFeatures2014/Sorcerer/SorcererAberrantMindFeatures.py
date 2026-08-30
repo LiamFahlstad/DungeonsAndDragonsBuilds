@@ -40,7 +40,7 @@ class TelepathicSpeech(Feature):
     def get_table_description(
         self, character_stat_block: CharacterStatBlock
     ) -> list[tuple[str, str]]:
-        charisma_modifier = character_stat_block.get_ability_modifier(Definitions.Ability.CHARISMA)
+        charisma_modifier = character_stat_block.get_charisma_modifier()
         sorcerer_level = character_stat_block.get_class_level(Definitions.CharacterClass.SORCERER)
         return [
             ("Action", "Bonus action"),

@@ -192,7 +192,7 @@ class AuraOfProtection(Feature):
         )
 
     def apply(self, character_stat_block: CharacterStatBlock):
-        cha_mod = character_stat_block.get_ability_modifier(Ability.CHARISMA)
+        cha_mod = character_stat_block.get_charisma_modifier()
         bonus = max(1, cha_mod)
         SavingThrowBonus(list(Ability), bonus).apply(character_stat_block)
 
@@ -207,7 +207,7 @@ class AuraOfProtection(Feature):
     def get_table_description(
         self, character_stat_block: CharacterStatBlock
     ) -> list[tuple[str, str]]:
-        cha_mod = character_stat_block.get_ability_modifier(Ability.CHARISMA)
+        cha_mod = character_stat_block.get_charisma_modifier()
         bonus = max(1, cha_mod)
         return [
             ("Range", "10-foot Emanation from you"),
@@ -233,7 +233,7 @@ class AbjureFoes(Feature):
     def get_table_description(
         self, character_stat_block: CharacterStatBlock
     ) -> list[tuple[str, str]]:
-        cha_mod = character_stat_block.get_ability_modifier(Ability.CHARISMA)
+        cha_mod = character_stat_block.get_charisma_modifier()
         targets = max(1, cha_mod)
         return [
             ("Action Type", "Magic action"),

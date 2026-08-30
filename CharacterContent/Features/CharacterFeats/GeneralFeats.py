@@ -94,7 +94,7 @@ class Actor(_AbilityScoreFeat):
         )
 
     def calculate_dc(self, character_stat_block: CharacterStatBlock) -> int:
-        charisma_modifier = character_stat_block.get_ability_modifier(Ability.CHARISMA)
+        charisma_modifier = character_stat_block.get_charisma_modifier()
         proficiency_bonus = character_stat_block.get_proficiency_bonus()
         return 8 + charisma_modifier + proficiency_bonus
 
@@ -628,7 +628,7 @@ class ShieldMaster(_AbilityScoreFeat):
         )
 
     def calculate_dc(self, character_stat_block: CharacterStatBlock) -> int:
-        strength_modifier = character_stat_block.get_ability_modifier(Ability.STRENGTH)
+        strength_modifier = character_stat_block.get_strength_modifier()
         proficiency_bonus = character_stat_block.get_proficiency_bonus()
         return 8 + strength_modifier + proficiency_bonus
 

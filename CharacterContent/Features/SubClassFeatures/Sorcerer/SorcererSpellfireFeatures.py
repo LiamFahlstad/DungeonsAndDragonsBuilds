@@ -1,4 +1,4 @@
-from Core.Definitions import Ability, SORCERER_HIT_DIE
+from Core.Definitions import SORCERER_HIT_DIE
 from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
@@ -33,7 +33,7 @@ class SpellfireBurst(Feature):
         return description
 
     def get_table_description(self, character_stat_block: CharacterStatBlock) -> list[tuple[str, str]]:
-        charisma_modifier = character_stat_block.get_ability_modifier(Ability.CHARISMA)
+        charisma_modifier = character_stat_block.get_charisma_modifier()
         return [
             ("Trigger", "Spend 1+ Sorcery Points as Magic action or Bonus Action (once per turn)"),
             ("Range", "30 feet (for both options)"),
@@ -79,7 +79,7 @@ class CrownOfSpellfire(Feature):
         return description
 
     def get_table_description(self, character_stat_block: CharacterStatBlock) -> list[tuple[str, str]]:
-        charisma_modifier = character_stat_block.get_ability_modifier(Ability.CHARISMA)
+        charisma_modifier = character_stat_block.get_charisma_modifier()
         return [
             ("Trigger", "Use Innate Sorcery"),
             ("Duration", "While Innate Sorcery active"),

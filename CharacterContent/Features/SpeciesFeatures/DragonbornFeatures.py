@@ -5,7 +5,7 @@ from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, Fe
 from CharacterContent.Features.Core.Improvements import (
     DamageResistance as DamageResistanceImprovement,
 )
-from Core.Definitions import Ability, CreatureSize
+from Core.Definitions import CreatureSize
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 SPEED = 30  # Given by your species
@@ -68,9 +68,7 @@ class BreathWeapon(Feature):
         return text
 
     def calculate_dc(self, character_stat_block: CharacterStatBlock) -> int:
-        constitution_modifier = character_stat_block.get_ability_modifier(
-            Ability.CONSTITUTION
-        )
+        constitution_modifier = character_stat_block.get_constitution_modifier()
         proficiency_bonus = character_stat_block.get_proficiency_bonus()
         return 8 + constitution_modifier + proficiency_bonus
 

@@ -1,4 +1,4 @@
-from Core.Definitions import PSION_HIT_DIE, Ability
+from Core.Definitions import PSION_HIT_DIE
 from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
@@ -94,7 +94,7 @@ class ReboundingField(Feature):
     def get_table_description(
         self, character_stat_block: CharacterStatBlock
     ) -> list[tuple[str, str]]:
-        int_mod = character_stat_block.get_ability_modifier(Ability.INTELLIGENCE)
+        int_mod = character_stat_block.get_intelligence_modifier()
         return [
             ("Trigger", "Cast Shield as reaction to attack hit and cause it to miss"),
             ("Cost", "1 Psionic Energy Die"),

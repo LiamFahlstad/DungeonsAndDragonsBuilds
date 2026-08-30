@@ -1,4 +1,4 @@
-from Core.Definitions import Ability, MAX_ABILITY_MODIFIER, ROGUE_HIT_DIE
+from Core.Definitions import MAX_ABILITY_MODIFIER, ROGUE_HIT_DIE
 from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, ActionType
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
@@ -15,9 +15,7 @@ class Bloodthirst(Feature):
     def get_table_description(
         self, character_stat_block: CharacterStatBlock
     ) -> list[tuple[str, str]]:
-        intelligence_modifier = character_stat_block.get_ability_modifier(
-            Ability.INTELLIGENCE
-        )
+        intelligence_modifier = character_stat_block.get_intelligence_modifier()
         uses = max(1, intelligence_modifier)
         return [
             ("Trigger", "Enemy within 30 feet takes damage and becomes Bloodied (not killed)"),

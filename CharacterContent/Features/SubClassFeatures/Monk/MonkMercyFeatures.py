@@ -76,9 +76,7 @@ class HandOfHealing(Feature):
     def get_table_description(
         self, character_stat_block: CharacterStatBlock
     ) -> list[tuple[str, str]]:
-        wisdom_modifier = character_stat_block.get_ability_modifier(
-            Definitions.Ability.WISDOM
-        )
+        wisdom_modifier = character_stat_block.get_wisdom_modifier()
         return [
             ("Action", "Magic action"),
             ("Cost", "1 Focus Point"),
@@ -148,9 +146,7 @@ class HandOfUltimateMercy(Feature):
     def get_table_description(
         self, character_stat_block: CharacterStatBlock
     ) -> list[tuple[str, str]]:
-        wisdom_modifier = character_stat_block.get_ability_modifier(
-            Definitions.Ability.WISDOM
-        )
+        wisdom_modifier = character_stat_block.get_wisdom_modifier()
         return [
             ("Action", "Magic action"),
             ("Cost", "5 Focus Points"),

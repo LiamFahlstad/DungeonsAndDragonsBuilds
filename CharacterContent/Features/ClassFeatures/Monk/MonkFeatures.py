@@ -299,9 +299,7 @@ class DeflectAttacks(Feature):
         monk_level = character_stat_block.get_class_level(
             Definitions.CharacterClass.MONK
         )
-        dex_modifier = character_stat_block.get_ability_modifier(
-            Definitions.Ability.DEXTERITY
-        )
+        dex_modifier = character_stat_block.get_dexterity_modifier()
         damage_types = (
             "any type" if monk_level >= 13 else "Bludgeoning, Piercing, or Slashing"
         )

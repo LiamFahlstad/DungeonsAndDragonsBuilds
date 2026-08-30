@@ -1,6 +1,5 @@
 import Core.Definitions as Definitions
 from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, ActionType
-from Core.Definitions import Ability
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
@@ -62,7 +61,7 @@ class DefyDeath(Feature):
     def get_table_description(
         self, character_stat_block: CharacterStatBlock
     ) -> list[tuple[str, str]]:
-        con_mod = character_stat_block.get_ability_modifier(Ability.CONSTITUTION)
+        con_mod = character_stat_block.get_constitution_modifier()
         return [
             (
                 "Trigger",
