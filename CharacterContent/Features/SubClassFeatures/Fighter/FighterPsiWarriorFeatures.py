@@ -33,6 +33,13 @@ class TelekineticAdept(Feature):
     def __init__(self):
         super().__init__(name="Telekinetic Adept", origin="Psi Warrior Fighter Level 7", activation=FeatureActivation(action_type=ActionType.BONUS_ACTION, duration="Until End of Current Turn", range="10 Feet"), usage_tags=["buff", "control"])
 
+    def calculate_dc(self, character_stat_block: CharacterStatBlock) -> int:
+        intelligence_modifier = character_stat_block.get_ability_modifier(
+            Ability.INTELLIGENCE
+        )
+        proficiency_bonus = character_stat_block.get_proficiency_bonus()
+        return 8 + intelligence_modifier + proficiency_bonus
+
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
             "You have mastered new ways to use your telekinetic abilities, detailed below.\n"

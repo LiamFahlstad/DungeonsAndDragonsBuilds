@@ -1,4 +1,5 @@
-from Core.Definitions import ROGUE_HIT_DIE
+from Core.Definitions import ROGUE_HIT_DIE, Ability
+import Core.Definitions as Definitions
 from CharacterContent.Features.Core.BaseFeatures import Feature
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
@@ -59,6 +60,13 @@ class EnvenomWeapons(Feature):
 class DeathStrike(Feature):
     def __init__(self):
         super().__init__(name="Death Strike", origin="Assassin Rogue Level 17", usage_tags=["damage"])
+
+    def calculate_dc(self, character_stat_block: CharacterStatBlock) -> int:
+        dexterity_modifier = character_stat_block.get_ability_modifier(
+            Definitions.Ability.DEXTERITY
+        )
+        proficiency_bonus = character_stat_block.get_proficiency_bonus()
+        return 8 + dexterity_modifier + proficiency_bonus
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "When you hit with your Sneak Attack on the first round of a combat, the target must succeed on a Constitution saving throw (DC 8 plus your Dexterity modifier and Proficiency Bonus), or the attack's damage is doubled against the target."

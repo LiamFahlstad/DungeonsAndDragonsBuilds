@@ -143,14 +143,17 @@ class CunningStrike(Feature):
         )
         return description
 
-    def get_table_description(
-        self, character_stat_block: CharacterStatBlock
-    ) -> list[tuple[str, str]]:
-        saving_throw = (
+    def calculate_dc(self, character_stat_block: CharacterStatBlock) -> int:
+        return (
             8
             + character_stat_block.get_ability_modifier(Ability.DEXTERITY)
             + character_stat_block.get_proficiency_bonus()
         )
+
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        saving_throw = self.calculate_dc(character_stat_block)
         return [
             (
                 "Poison (Cost: 1d6)",

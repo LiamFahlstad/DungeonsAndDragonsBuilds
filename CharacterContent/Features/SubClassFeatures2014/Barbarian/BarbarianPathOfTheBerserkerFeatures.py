@@ -43,6 +43,13 @@ class IntimidatingPresence(Feature):
             activation=FeatureActivation(action_type=ActionType.ACTION, duration="Until End of Your Next Turn", range="30 Feet"), usage_tags=["control"]
         )
 
+    def calculate_dc(self, character_stat_block: CharacterStatBlock) -> int:
+        proficiency_bonus = character_stat_block.get_proficiency_bonus()
+        charisma_modifier = character_stat_block.get_ability_modifier(
+            Definitions.Ability.CHARISMA
+        )
+        return 8 + proficiency_bonus + charisma_modifier
+
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
             "You can use your action to frighten someone with your menacing presence. When you do so, choose one creature that you can see within 30 feet of you. If the creature can see or hear you, it must succeed on a Wisdom saving throw (DC equal to 8 + your proficiency bonus + your Charisma modifier) or be frightened of you until the end of your next turn. On subsequent turns, you can use your action to extend the duration of this effect on the frightened creature until the end of your next turn. This effect ends if the creature ends its turn out of line of sight or more than 60 feet away from you.\n"
@@ -53,9 +60,7 @@ class IntimidatingPresence(Feature):
     def get_table_description(
         self, character_stat_block: CharacterStatBlock
     ) -> list[tuple[str, str]]:
-        proficiency_bonus = character_stat_block.get_proficiency_bonus()
-        charisma_modifier = character_stat_block.get_ability_modifier(Definitions.Ability.CHARISMA)
-        dc = 8 + proficiency_bonus + charisma_modifier
+        dc = self.calculate_dc(character_stat_block)
         return [
             ("Action", "Action"),
             ("Range", "30 feet (creature must see/hear you)"),

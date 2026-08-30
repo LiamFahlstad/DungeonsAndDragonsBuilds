@@ -96,14 +96,17 @@ class DeathStrike(Feature):
         description = "You become a master of instant death. When you attack and hit a creature that is surprised, it must make a Constitution saving throw against your spell save DC. On a failed save, double the damage of your attack against the creature."
         return description
 
-    def get_table_description(
-        self, character_stat_block: CharacterStatBlock
-    ) -> list[tuple[str, str]]:
+    def calculate_dc(self, character_stat_block: CharacterStatBlock) -> int:
         dexterity_modifier = character_stat_block.get_ability_modifier(
             Ability.DEXTERITY
         )
         proficiency_bonus = character_stat_block.get_proficiency_bonus()
-        dc = 8 + dexterity_modifier + proficiency_bonus
+        return 8 + dexterity_modifier + proficiency_bonus
+
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        dc = self.calculate_dc(character_stat_block)
         return [
             ("Trigger", "Attack and hit a surprised creature"),
             ("Save", f"Constitution saving throw DC {dc}"),

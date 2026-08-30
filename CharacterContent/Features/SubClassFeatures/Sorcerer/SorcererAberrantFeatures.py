@@ -98,6 +98,9 @@ class WarpingImplosion(Feature):
     def __init__(self):
         super().__init__(name="Warping Implosion", origin="Aberrant Sorcerer Level 18", activation=FeatureActivation(action_type=ActionType.ACTION, range="120 Feet"), usage_tags=["damage", "control"])
 
+    def calculate_dc(self, character_stat_block: CharacterStatBlock) -> int:
+        return character_stat_block.calculate_difficulty_class()
+
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
             "You can unleash a space-warping anomaly. As a Magic action, you teleport to an unoccupied space you can see within 120 feet of yourself. Immediately after you disappear, each creature within 30 feet of the space you left must make a Strength saving throw against your spell save DC. On a failed save, a creature takes 3d10 Force damage and is pulled straight toward the space you left, ending in an unoccupied space as close to your former space as possible. On a successful save, the creature takes half as much damage only.\n"

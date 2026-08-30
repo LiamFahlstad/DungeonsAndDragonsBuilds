@@ -73,6 +73,9 @@ class StalkersFlurry(Feature):
             name="Stalker's Flurry", origin="Gloom Stalker Ranger Level 11", activation=FeatureActivation(duration="Until Start of Your Next Turn", range="10 Feet"), usage_tags=["damage", "control"]
         )
 
+    def calculate_dc(self, character_stat_block: CharacterStatBlock) -> int:
+        return character_stat_block.calculate_difficulty_class()
+
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
             "The Psychic damage of your Dreadful Strike becomes 2d8. In addition, when you use the Dreadful Strike effect of your Dread Ambusher feature, you can use one of the following additional effects.\n"

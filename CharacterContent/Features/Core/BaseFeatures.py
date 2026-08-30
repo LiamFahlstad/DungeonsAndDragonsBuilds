@@ -477,6 +477,13 @@ class Feature:
         descriptions are requested. Return None to fall back to get_description()."""
         return None
 
+    def calculate_dc(self, character_stat_block: CharacterStatBlock) -> int | None:
+        """Override to return this feature's saving throw DC (e.g. 8 plus an
+        ability modifier plus proficiency bonus), so the value can be reused
+        anywhere it's needed instead of being recomputed inline. Return None
+        (default) for features with no DC."""
+        return None
+
     def get_resource_tiles(
         self, character_stat_block: CharacterStatBlock
     ) -> list[tuple[str, list[tuple[str, str]]]] | None:

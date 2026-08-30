@@ -30,6 +30,11 @@ class RuneCarver(Feature):
             usage_tags=["damage", "buff", "control"],
         )
 
+    def calculate_dc(self, character_stat_block: CharacterStatBlock) -> int:
+        constitution_modifier = character_stat_block.get_ability_modifier(Ability.CONSTITUTION)
+        proficiency_bonus = character_stat_block.get_proficiency_bonus()
+        return 8 + proficiency_bonus + constitution_modifier
+
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
             "You can use magic runes to enhance your gear. You learn two runes of your choice, from among the runes described below, and each time you gain a level in this class, you can replace one rune you know with a different one from this feature. When you reach certain levels in this class, you learn additional runes, as shown in the Runes Known table.\n"

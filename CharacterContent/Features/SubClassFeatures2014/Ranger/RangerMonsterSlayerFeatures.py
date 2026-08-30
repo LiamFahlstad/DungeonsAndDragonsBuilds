@@ -106,6 +106,11 @@ class MagicUsersNemesis(Feature):
             usage_tags=["control"],
         )
 
+    def calculate_dc(self, character_stat_block: CharacterStatBlock) -> int:
+        proficiency_bonus = character_stat_block.get_proficiency_bonus()
+        wisdom_modifier = character_stat_block.get_ability_modifier(Ability.WISDOM)
+        return 8 + proficiency_bonus + wisdom_modifier
+
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
             "At 11th level, you gain the ability to thwart someone else's magic. When you see a creature casting a spell or teleporting within 60 feet of you, you can use your reaction to try to magically foil it. The creature must succeed on a Wisdom saving throw against your spell save DC, or its spell or teleport fails and is wasted.\n"
@@ -117,9 +122,7 @@ class MagicUsersNemesis(Feature):
     def get_table_description(
         self, character_stat_block: CharacterStatBlock
     ) -> list[tuple[str, str]]:
-        proficiency_bonus = character_stat_block.get_proficiency_bonus()
-        wisdom_modifier = character_stat_block.get_ability_modifier(Ability.WISDOM)
-        spell_save_dc = 8 + proficiency_bonus + wisdom_modifier
+        spell_save_dc = self.calculate_dc(character_stat_block)
         return [
             ("What", "Foil spell or teleport"),
             ("Action", "Reaction"),

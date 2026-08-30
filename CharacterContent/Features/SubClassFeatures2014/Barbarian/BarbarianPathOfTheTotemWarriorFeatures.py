@@ -1,3 +1,4 @@
+import Core.Definitions as Definitions
 from Core.Definitions import BARBARIAN_HIT_DIE
 from CharacterContent.Features.Core.BaseFeatures import Feature
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
@@ -77,6 +78,13 @@ class TotemicAttunement(Feature):
             origin="Path Of The Totem Warrior Barbarian Level 14",
             usage_tags=["utility", "control", "damage"]
         )
+
+    def calculate_dc(self, character_stat_block: CharacterStatBlock) -> int:
+        proficiency_bonus = character_stat_block.get_proficiency_bonus()
+        strength_modifier = character_stat_block.get_ability_modifier(
+            Definitions.Ability.STRENGTH
+        )
+        return 8 + proficiency_bonus + strength_modifier
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

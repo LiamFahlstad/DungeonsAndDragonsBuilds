@@ -1,4 +1,4 @@
-from Core.Definitions import CreatureSize, DamageType, Sense
+from Core.Definitions import CreatureSize, DamageType, Sense, Ability
 from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType
 from CharacterContent.Features.Core.Improvements import DamageResistance, GrantSense
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
@@ -72,3 +72,8 @@ class CelestialRevelation(Feature):
             "    * Necrotic Shroud. Your eyes briefly become pools of darkness, and flightless wings sprout from your back temporarily. Creatures other than your allies within 10 feet of you must succeed on a Charisma saving throw (DC 8 plus your Charisma modifier and Proficiency Bonus) or have the Frightened condition until the end of your next turn.\n"
         )
         return text
+
+    def calculate_dc(self, character_stat_block: CharacterStatBlock) -> int:
+        charisma_modifier = character_stat_block.get_ability_modifier(Ability.CHARISMA)
+        proficiency_bonus = character_stat_block.get_proficiency_bonus()
+        return 8 + charisma_modifier + proficiency_bonus

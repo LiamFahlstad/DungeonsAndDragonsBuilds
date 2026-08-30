@@ -67,12 +67,16 @@ class BreathWeapon(Feature):
         )
         return text
 
-    def get_table_description(
-        self, character_stat_block: CharacterStatBlock
-    ) -> list[tuple[str, str]]:
+    def calculate_dc(self, character_stat_block: CharacterStatBlock) -> int:
         constitution_modifier = character_stat_block.get_ability_modifier(
             Ability.CONSTITUTION
         )
+        proficiency_bonus = character_stat_block.get_proficiency_bonus()
+        return 8 + constitution_modifier + proficiency_bonus
+
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
         proficiency_bonus = character_stat_block.get_proficiency_bonus()
 
         if character_stat_block.character_level < 5:
@@ -84,7 +88,7 @@ class BreathWeapon(Feature):
         else:
             damage = "4d10"
 
-        save_dc = 8 + constitution_modifier + proficiency_bonus
+        save_dc = self.calculate_dc(character_stat_block)
 
         return [
             ("Trigger", "Replace one attack when taking Attack action"),

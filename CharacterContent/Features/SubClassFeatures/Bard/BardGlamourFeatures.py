@@ -9,6 +9,9 @@ class BeguilingMagic(Feature):
             name="Beguiling Magic", origin="College of Glamour Bard Level 3", activation=FeatureActivation(duration="1 Minute", range="60 Feet"), usage_tags=["control"]
         )
 
+    def calculate_dc(self, character_stat_block: CharacterStatBlock) -> int:
+        return character_stat_block.calculate_difficulty_class()
+
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
             "You always have the Charm Person and Mirror Image spells prepared.\n"
@@ -84,6 +87,9 @@ class UnbreakableMajesty(Feature):
         super().__init__(
             name="Unbreakable Majesty", origin="College of Glamour Bard Level 14", activation=FeatureActivation(action_type=ActionType.BONUS_ACTION, duration="1 Minute or Until Incapacitated"), usage_tags=["buff"]
         )
+
+    def calculate_dc(self, character_stat_block: CharacterStatBlock) -> int:
+        return character_stat_block.calculate_difficulty_class()
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

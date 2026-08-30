@@ -337,6 +337,11 @@ class CultOfTheDragonInitiate(OriginFeat):
             "Inspired by Fear. When you cause a creature to have the Frightened condition and you are the source of its fear, you can gain Heroic Inspiration if you lack it. Once you use this benefit, you can’t use it again until you finish a Short or Long Rest.\n"
         )
 
+    def calculate_dc(self, character_stat_block: CharacterStatBlock) -> int:
+        wisdom_modifier = character_stat_block.get_ability_modifier(Ability.WISDOM)
+        proficiency_bonus = character_stat_block.get_proficiency_bonus()
+        return 8 + wisdom_modifier + proficiency_bonus
+
 
 class EmeraldEnclaveFledgling(OriginFeat):
     def __init__(self, spell_casting_ability: Ability):

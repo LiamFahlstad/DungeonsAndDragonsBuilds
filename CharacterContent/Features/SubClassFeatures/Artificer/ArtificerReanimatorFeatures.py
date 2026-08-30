@@ -30,6 +30,9 @@ class ReanimatorSkillSet(Feature):
             name="Reanimator's Skill Set", origin="Reanimator Artificer Level 3", activation=FeatureActivation(range="10-Foot Emanation"), usage_tags=["heal", "damage", "utility"]
         , uses=FeatureUses(max_uses=MAX_ABILITY_MODIFIER, regain_all_on="long rest", current_formula="Current amount: equal to your Intelligence modifier."))
 
+    def calculate_dc(self, character_stat_block: CharacterStatBlock) -> int:
+        return character_stat_block.calculate_difficulty_class()
+
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
             "You gain the following benefits.\n"
@@ -94,6 +97,9 @@ class MacabreModifications(Feature):
         super().__init__(
             name="Macabre Modifications", origin="Reanimator Artificer Level 9", usage_tags=["control", "damage", "utility"]
         )
+
+    def calculate_dc(self, character_stat_block: CharacterStatBlock) -> int:
+        return character_stat_block.calculate_difficulty_class()
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

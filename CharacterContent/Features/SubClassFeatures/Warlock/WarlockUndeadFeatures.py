@@ -9,6 +9,9 @@ class FormOfDread(Feature):
     def __init__(self):
         super().__init__(name="Form of Dread", origin="Undead Patron Warlock Level 3", activation=FeatureActivation(action_type=ActionType.BONUS_ACTION, duration="1 Minute"), usage_tags=["heal", "buff", "control"], uses=FeatureUses(max_uses=MAX_ABILITY_MODIFIER, regain_all_on="long rest", current_formula="Current amount: equal to your Charisma modifier."))
 
+    def calculate_dc(self, character_stat_block: CharacterStatBlock) -> int:
+        return character_stat_block.calculate_difficulty_class()
+
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
             "As a Bonus Action, you transform into an avatar of your patron's dreadful power, gaining the benefits below for 1 minute, until you have the Incapacitated condition, or until you end the form (no action required). You can transform a number of times equal to your Charisma modifier (minimum of once), and you regain all expended uses when you finish a Long Rest.\n"
@@ -59,6 +62,9 @@ class NecroticHusk(Feature):
 
     def apply(self, character_stat_block: CharacterStatBlock):
         self._resistance.apply(character_stat_block)
+
+    def calculate_dc(self, character_stat_block: CharacterStatBlock) -> int:
+        return character_stat_block.calculate_difficulty_class()
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

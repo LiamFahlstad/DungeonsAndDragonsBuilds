@@ -93,6 +93,11 @@ class Actor(_AbilityScoreFeat):
             "Mimicry. You can mimic the sounds of other creatures, including speech. A creature that hears the mimicry must succeed on a Wisdom (Insight) check to determine the effect is faked (DC 8 plus your Charisma modifier and Proficiency Bonus).\n"
         )
 
+    def calculate_dc(self, character_stat_block: CharacterStatBlock) -> int:
+        charisma_modifier = character_stat_block.get_ability_modifier(Ability.CHARISMA)
+        proficiency_bonus = character_stat_block.get_proficiency_bonus()
+        return 8 + charisma_modifier + proficiency_bonus
+
 
 class Athlete(_AbilityScoreFeat):
     _NAME = "Athlete"
@@ -484,6 +489,11 @@ class Poisoner(_AbilityScoreFeat):
     def apply(self, character_stat_block: CharacterStatBlock):
         self._bonus.apply(character_stat_block)
 
+    def calculate_dc(self, character_stat_block: CharacterStatBlock) -> int:
+        modifier = character_stat_block.get_ability_modifier(self.ability)
+        proficiency_bonus = character_stat_block.get_proficiency_bonus()
+        return 8 + modifier + proficiency_bonus
+
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         return (
             "Prerequisite: Level 4+\n"
@@ -617,6 +627,11 @@ class ShieldMaster(_AbilityScoreFeat):
             "Interpose Shield. If you're subjected to an effect that allows you to make a Dexterity saving throw to take only half damage, you can take a Reaction to take no damage if you succeed on the saving throw and are holding a Shield.\n"
         )
 
+    def calculate_dc(self, character_stat_block: CharacterStatBlock) -> int:
+        strength_modifier = character_stat_block.get_ability_modifier(Ability.STRENGTH)
+        proficiency_bonus = character_stat_block.get_proficiency_bonus()
+        return 8 + strength_modifier + proficiency_bonus
+
 
 class SkillExpert(_AbilityScoreFeat):
     _NAME = "Skill Expert"
@@ -728,6 +743,11 @@ class Telekinetic(_AbilityScoreFeat):
             "Minor Telekinesis. You learn the Mage Hand spell. You can cast it without Verbal or Somatic components, you can make the spectral hand Invisible, and its range and the distance it can be away from you both increase by 30 feet when you cast it. The spell's spellcasting ability is the ability increased by this feat.\n"
             "Telekinetic Shove. As a Bonus Action, you can telekinetically shove one creature you can see within 30 feet of yourself. When you do so, the target must succeed on a Strength saving throw (DC 8 plus the ability modifier of the score increased by this feat and your Proficiency Bonus) or be moved 5 feet toward or away from you.\n"
         )
+
+    def calculate_dc(self, character_stat_block: CharacterStatBlock) -> int:
+        modifier = character_stat_block.get_ability_modifier(self.ability)
+        proficiency_bonus = character_stat_block.get_proficiency_bonus()
+        return 8 + modifier + proficiency_bonus
 
 
 class Telepathic(_AbilityScoreFeat):
@@ -857,6 +877,11 @@ class FairyTrickster(_AbilityScoreFeat):
         )
         return description
 
+    def calculate_dc(self, character_stat_block: CharacterStatBlock) -> int:
+        modifier = character_stat_block.get_ability_modifier(self.ability)
+        proficiency_bonus = character_stat_block.get_proficiency_bonus()
+        return 8 + modifier + proficiency_bonus
+
 
 class GenieMagic(_AbilityScoreFeat):
     _NAME = "Genie Magic"
@@ -913,6 +938,11 @@ class MythalTouched(_AbilityScoreFeat):
         regain_all_on="long rest",
         current_formula="Current amount: equal to your proficiency bonus.",
     )
+
+    def calculate_dc(self, character_stat_block: CharacterStatBlock) -> int:
+        modifier = character_stat_block.get_ability_modifier(self.ability)
+        proficiency_bonus = character_stat_block.get_proficiency_bonus()
+        return 8 + modifier + proficiency_bonus
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -1043,6 +1073,10 @@ class DarkGift(GeneralFeat):
             " * Warping Flesh. Immediately after you make a D20 Test and roll a 1 on the d20, the aberrant influence infecting your form flares, wrenching control of your flesh. Make a Constitution saving throw (DC 13 plus your Proficiency Bonus). On a failed save, you have the Stunned condition until the end of your next turn."
         )
 
+    def calculate_dc(self, character_stat_block: CharacterStatBlock) -> int:
+        proficiency_bonus = character_stat_block.get_proficiency_bonus()
+        return 13 + proficiency_bonus
+
 
 class EchoingSoul(GeneralFeat):
 
@@ -1061,6 +1095,10 @@ class EchoingSoul(GeneralFeat):
             " * Inherent Tongues. You know one additional language of your choice, which you choose from the language tables in the Player's Handbook.\n"
             " * Intrusive Echoes. Immediately after you make a D20 Test and roll a 1 on the d20, memories and sensations from your soul's other life threaten to overtake you. Make a Constitution saving throw (DC 13 plus your Proficiency Bonus). On a failed save, you have the Incapacitated condition until the end of your next turn. While you are Incapacitated in this way, your Speed is halved."
         )
+
+    def calculate_dc(self, character_stat_block: CharacterStatBlock) -> int:
+        proficiency_bonus = character_stat_block.get_proficiency_bonus()
+        return 13 + proficiency_bonus
 
 
 class GatheredWhispers(GeneralFeat):
@@ -1087,6 +1125,10 @@ class GatheredWhispers(GeneralFeat):
             " * Voices from Beyond. Immediately after you make a D20 Test and roll a 1 on the d20, the haunting whispers rise to a ghastly volume. Make a Wisdom saving throw (DC 13 plus your Proficiency Bonus). On a failed save, you have the Deafened condition until the end of your next turn. While Deafened, you have Disadvantage on ability checks and attack rolls."
         )
         return description
+
+    def calculate_dc(self, character_stat_block: CharacterStatBlock) -> int:
+        proficiency_bonus = character_stat_block.get_proficiency_bonus()
+        return 13 + proficiency_bonus
 
 
 class LivingShadow(GeneralFeat):
@@ -1118,6 +1160,10 @@ class LivingShadow(GeneralFeat):
         )
         return description
 
+    def calculate_dc(self, character_stat_block: CharacterStatBlock) -> int:
+        proficiency_bonus = character_stat_block.get_proficiency_bonus()
+        return 13 + proficiency_bonus
+
 
 class MistWalker(GeneralFeat):
 
@@ -1142,6 +1188,10 @@ class MistWalker(GeneralFeat):
             "Poisoned Roots. When you finish a Long Rest, the world around you in a 10-mile radius becomes a siphon that leeches away at your vitality. Whenever you finish a Short Rest in that area, make a Constitution saving throw (DC 13 plus your Proficiency Bonus). On a failed save, you get no benefits from finishing that rest."
         )
         return description
+
+    def calculate_dc(self, character_stat_block: CharacterStatBlock) -> int:
+        proficiency_bonus = character_stat_block.get_proficiency_bonus()
+        return 13 + proficiency_bonus
 
 
 class SecondSkin(GeneralFeat):
@@ -1177,6 +1227,10 @@ class SecondSkin(GeneralFeat):
         )
         return description
 
+    def calculate_dc(self, character_stat_block: CharacterStatBlock) -> int:
+        proficiency_bonus = character_stat_block.get_proficiency_bonus()
+        return 13 + proficiency_bonus
+
 
 class SymbioticBeing(GeneralFeat):
 
@@ -1204,6 +1258,10 @@ class SymbioticBeing(GeneralFeat):
             "At the DM's discretion, you might make this saving throw whenever you act contrary to the symbiote's agenda."
         )
         return description
+
+    def calculate_dc(self, character_stat_block: CharacterStatBlock) -> int:
+        proficiency_bonus = character_stat_block.get_proficiency_bonus()
+        return 13 + proficiency_bonus
 
 
 class TouchOfDeath(GeneralFeat):
@@ -1242,6 +1300,10 @@ class Watchers(GeneralFeat):
             "Incessant Watchers. You have Disadvantage on saving throws made against the Scrying spell.\n"
             "In addition, immediately after you make a D20 Test and roll a 1 on the d20, paranoia threatens to overwhelm you. Make a Wisdom saving throw (DC 13 plus your Proficiency Bonus). On a failed save, you have Disadvantage on D20 Tests for 1 minute. You can repeat the save at the end of each of your turns, ending the effect early on a success."
         )
+
+    def calculate_dc(self, character_stat_block: CharacterStatBlock) -> int:
+        proficiency_bonus = character_stat_block.get_proficiency_bonus()
+        return 13 + proficiency_bonus
 
 
 # ---------------------------------------------------------------------------

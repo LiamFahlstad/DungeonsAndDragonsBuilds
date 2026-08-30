@@ -1,4 +1,4 @@
-from Core.Definitions import ARTIFICER_HIT_DIE
+from Core.Definitions import ARTIFICER_HIT_DIE, Ability
 from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
@@ -119,6 +119,9 @@ class ImprovedArmorer(Feature):
 class PerfectedArmor(Feature):
     def __init__(self):
         super().__init__(name="Perfected Armor", origin="Armorer Artificer Level 15", usage_tags=["damage", "control", "buff", "utility"])
+
+    def calculate_dc(self, character_stat_block: CharacterStatBlock) -> int:
+        return character_stat_block.calculate_difficulty_class()
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

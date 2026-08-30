@@ -21,6 +21,9 @@ class StepsOfTheFey(Feature):
             name="Steps of the Fey", origin="Archfey Patron Warlock Level 3", usage_tags=["heal", "control"]
         , uses=FeatureUses(max_uses=Definitions.MAX_ABILITY_MODIFIER, regain_all_on="long rest", current_formula="Current amount: equal to your Charisma modifier."))
 
+    def calculate_dc(self, character_stat_block: CharacterStatBlock) -> int:
+        return character_stat_block.calculate_difficulty_class()
+
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
             "Your patron grants you the ability to move between the boundaries of the planes. You can cast Misty Step without expending a spell slot a number of times equal to your Charisma modifier (minimum of once), and you regain all expended uses when you finish a Long Rest.\n"
@@ -33,6 +36,9 @@ class StepsOfTheFey(Feature):
 class MistyEscape(Feature):
     def __init__(self):
         super().__init__(name="Misty Escape", origin="Archfey Patron Warlock Level 6", activation=FeatureActivation(action_type=ActionType.REACTION), usage_tags=["buff", "damage"])
+
+    def calculate_dc(self, character_stat_block: CharacterStatBlock) -> int:
+        return character_stat_block.calculate_difficulty_class()
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -53,6 +59,9 @@ class BeguilingDefenses(Feature):
 
     def apply(self, character_stat_block: CharacterStatBlock):
         self._immunity.apply(character_stat_block)
+
+    def calculate_dc(self, character_stat_block: CharacterStatBlock) -> int:
+        return character_stat_block.calculate_difficulty_class()
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

@@ -25,6 +25,9 @@ class ManeuverWithSavingThrow(Maneuver):
         dex_mod = character_stat_block.get_ability_modifier(Ability.DEXTERITY)
         return 8 + proficiency_bonus + max(str_mod, dex_mod)
 
+    def calculate_dc(self, character_stat_block: CharacterStatBlock) -> int:
+        return self.get_saving_throw_dc(character_stat_block)
+
 
 class Ambush(Maneuver):
     def __init__(self):

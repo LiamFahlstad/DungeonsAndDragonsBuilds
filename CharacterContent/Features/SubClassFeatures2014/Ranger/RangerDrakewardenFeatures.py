@@ -188,13 +188,16 @@ class DrakesBreath(Feature):
         )
         return description
 
+    def calculate_dc(self, character_stat_block: CharacterStatBlock) -> int:
+        proficiency_bonus = character_stat_block.get_proficiency_bonus()
+        wisdom_modifier = character_stat_block.get_ability_modifier(Ability.WISDOM)
+        return 8 + proficiency_bonus + wisdom_modifier
+
     def get_table_description(
         self, character_stat_block: CharacterStatBlock
     ) -> list[tuple[str, str]]:
         ranger_level = character_stat_block.get_class_level(CharacterClass.RANGER)
-        proficiency_bonus = character_stat_block.get_proficiency_bonus()
-        wisdom_modifier = character_stat_block.get_ability_modifier(Ability.WISDOM)
-        spell_save_dc = 8 + proficiency_bonus + wisdom_modifier
+        spell_save_dc = self.calculate_dc(character_stat_block)
         damage = "10d6" if ranger_level >= 15 else "8d6"
         return [
             ("What", "Exhale a cone of damaging breath"),

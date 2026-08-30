@@ -31,6 +31,9 @@ class WrathOfTheWild(Feature):
             name="Wrath of the Wild", origin="Hollow Warden Ranger Level 3", activation=FeatureActivation(action_type=ActionType.BONUS_ACTION, duration="1 Minute or Until Incapacitated", range="10-Foot Emanation"), usage_tags=["buff", "control"]
         )
 
+    def calculate_dc(self, character_stat_block: CharacterStatBlock) -> int:
+        return character_stat_block.calculate_difficulty_class()
+
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
             "You draw power from the strange and ancient horrors of the land, causing you to sprout unnatural growths, such as bloody antlers or putrid fangs, or causing your shadow to lengthen or twist around you. As a Bonus Action, you can expend a use of Favored Enemy to transform into a ghastly form, gaining the following benefits for 1 minute or until you have the Incapacitated condition, die, or end the transformation (no action required).\n"

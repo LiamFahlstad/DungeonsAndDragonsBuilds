@@ -49,6 +49,13 @@ class Tranquility(Feature):
         )
         return description
 
+    def calculate_dc(self, character_stat_block: CharacterStatBlock) -> int:
+        proficiency_bonus = character_stat_block.get_proficiency_bonus()
+        wisdom_modifier = character_stat_block.get_ability_modifier(
+            Definitions.Ability.WISDOM
+        )
+        return 8 + proficiency_bonus + wisdom_modifier
+
 
 class QuiveringPalm(Feature):
     def __init__(self):

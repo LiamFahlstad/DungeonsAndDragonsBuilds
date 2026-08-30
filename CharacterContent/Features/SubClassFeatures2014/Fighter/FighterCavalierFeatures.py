@@ -101,12 +101,15 @@ class FerociousCharger(Feature):
         )
         return description
 
+    def calculate_dc(self, character_stat_block: CharacterStatBlock) -> int:
+        proficiency_bonus = character_stat_block.get_proficiency_bonus()
+        strength_modifier = character_stat_block.get_ability_modifier(Ability.STRENGTH)
+        return 8 + proficiency_bonus + strength_modifier
+
     def get_table_description(
         self, character_stat_block: CharacterStatBlock
     ) -> list[tuple[str, str]]:
-        proficiency_bonus = character_stat_block.get_proficiency_bonus()
-        strength_modifier = character_stat_block.get_ability_modifier(Ability.STRENGTH)
-        dc = 8 + proficiency_bonus + strength_modifier
+        dc = self.calculate_dc(character_stat_block)
 
         return [
             ("Trigger", "Move 10+ feet in straight line, then hit with attack"),

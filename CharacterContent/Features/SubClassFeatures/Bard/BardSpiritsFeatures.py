@@ -22,6 +22,9 @@ class SpiritsFromBeyond(Feature):
             name="Spirits from Beyond", origin="College of Spirits Bard Level 3", activation=FeatureActivation(range="30 Feet"), usage_tags=["damage", "heal", "buff", "control"]
         )
 
+    def calculate_dc(self, character_stat_block: CharacterStatBlock) -> int:
+        return character_stat_block.calculate_difficulty_class()
+
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
             "You can call forth spirits of the dead to empower you and your allies. When you take a Bonus Action to give a creature a Bardic Inspiration die, you can call forth the powers of a random spirit. To determine the spirit you channel, roll the Bardic Inspiration die and refer to the Spirits from Beyond table. The spirit remains channeled until you unleash it or until you finish a Short or Long Rest.\n"

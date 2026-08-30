@@ -21,6 +21,9 @@ class WrathOfTheSea(Feature):
             name="Wrath of the Sea", origin="Circle of the Sea Druid Level 3", activation=FeatureActivation(action_type=ActionType.BONUS_ACTION, duration="10 Minutes or Until Dismissed/Incapacitated", range="5-Foot Emanation"), usage_tags=["damage", "control"]
         )
 
+    def calculate_dc(self, character_stat_block: CharacterStatBlock) -> int:
+        return character_stat_block.calculate_difficulty_class()
+
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
             "As a Bonus Action, you can expend a use of your Wild Shape to manifest a 5-foot Emanation that takes the form of ocean spray that surrounds you for 10 minutes. It ends early if you dismiss it (no action required), manifest it again, or have the Incapacitated condition.\n"

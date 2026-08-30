@@ -12,6 +12,9 @@ class ElementalSmite(Feature):
             usage_tags=["damage", "control", "buff"],
         )
 
+    def calculate_dc(self, character_stat_block: CharacterStatBlock) -> int:
+        return character_stat_block.calculate_difficulty_class()
+
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
             "Immediately after you cast Divine Smite, you can expend one use of your Channel Divinity and invoke one of the following effects.\n"
@@ -112,6 +115,9 @@ class ElementalRebuke(Feature):
                 current_formula="Current amount: equal to your Charisma modifier.",
             ),
         )
+
+    def calculate_dc(self, character_stat_block: CharacterStatBlock) -> int:
+        return character_stat_block.calculate_difficulty_class()
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

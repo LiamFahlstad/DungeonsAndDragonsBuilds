@@ -59,6 +59,9 @@ class BeguilingTwist(Feature):
     def __init__(self):
         super().__init__(name="Beguiling Twist", origin="Fey Wanderer Ranger Level 7", activation=FeatureActivation(action_type=ActionType.REACTION, duration="1 Minute", range="120 Feet"), usage_tags=["buff", "control"])
 
+    def calculate_dc(self, character_stat_block: CharacterStatBlock) -> int:
+        return character_stat_block.calculate_difficulty_class()
+
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
             "The magic of the Feywild guards your mind. You have advantage on saving throws to avoid or end the Charmed or Frightened condition.\n"

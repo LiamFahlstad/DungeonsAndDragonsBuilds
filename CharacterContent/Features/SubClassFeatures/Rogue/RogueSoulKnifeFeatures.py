@@ -1,4 +1,5 @@
-from Core.Definitions import CharacterClass, ROGUE_HIT_DIE
+from Core.Definitions import CharacterClass, ROGUE_HIT_DIE, Ability
+import Core.Definitions as Definitions
 from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, ActionType
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
@@ -84,6 +85,13 @@ class RendMind(Feature):
     def __init__(self):
         super().__init__(name="Rend Mind", origin="Soulknife Rogue Level 17", activation=FeatureActivation(duration="1 Minute"), usage_tags=["control"])
 
+    def calculate_dc(self, character_stat_block: CharacterStatBlock) -> int:
+        dexterity_modifier = character_stat_block.get_ability_modifier(
+            Definitions.Ability.DEXTERITY
+        )
+        proficiency_bonus = character_stat_block.get_proficiency_bonus()
+        return 8 + dexterity_modifier + proficiency_bonus
+
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
             "You can sweep your Psychic Blades through a creature's mind. When you use you Psychic Blades to deal Sneak Attack damage to a creature, you can force that target to make a Wisdom saving throw (DC 8 plus your Dexterity modifier and Proficiency Bonus). If the save fails, the target has the Stunned condition for 1 minute. The Stunned target repeats the save at the end of each of its turns, ending the effect on itself with a success.\n"
@@ -94,9 +102,10 @@ class RendMind(Feature):
     def get_table_description(
         self, character_stat_block: CharacterStatBlock
     ) -> list[tuple[str, str]]:
+        dc = self.calculate_dc(character_stat_block)
         return [
             ("Trigger", "Use Psychic Blades to deal Sneak Attack damage"),
-            ("Save", "Wisdom (DC 8 + Dexterity modifier + Proficiency Bonus)"),
+            ("Save", f"Wisdom (DC {dc})"),
             ("Effect", "Stunned for 1 minute on failed save"),
             ("Repeat Save", "End of target's turn (success ends effect)"),
             ("Recharge", "Long Rest (or expend 3 Psionic Energy Dice)"),

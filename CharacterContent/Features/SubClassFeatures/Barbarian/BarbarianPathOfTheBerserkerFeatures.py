@@ -67,14 +67,17 @@ class IntimidatingPresence(Feature):
         )
         return description
 
-    def get_table_description(
-        self, character_stat_block: CharacterStatBlock
-    ) -> list[tuple[str, str]]:
+    def calculate_dc(self, character_stat_block: CharacterStatBlock) -> int:
         strength_modifier = character_stat_block.get_ability_modifier(
             Definitions.Ability.STRENGTH
         )
         proficiency_bonus = character_stat_block.get_proficiency_bonus()
-        dc = 8 + strength_modifier + proficiency_bonus
+        return 8 + strength_modifier + proficiency_bonus
+
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        dc = self.calculate_dc(character_stat_block)
         return [
             ("Action", "Bonus Action"),
             ("Range", "30-foot Emanation"),

@@ -1,5 +1,6 @@
 from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
+from Core.Definitions import Ability
 
 
 class ToolsOfTheTrade(Feature):
@@ -51,6 +52,9 @@ class EldritchCannon(Feature):
             usage_tags=["damage", "buff"],
         )
 
+    def calculate_dc(self, character_stat_block: CharacterStatBlock) -> int:
+        return character_stat_block.calculate_difficulty_class()
+
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
             "Using Smith's Tools or Woodcarver's Tools, you can take a Magic action to create a Small or Tiny Eldritch Cannon in an unoccupied space on a horizontal surface within 5 feet of yourself. The cannon's game statistics appear below. You determine its appearance, including whether you carry it or not (and your choice of legs or wheels, for the latter). It disappears if it is reduced to 0 Hit Points or after 1 hour. You can dismiss it early as a Magic action.\n"
@@ -92,6 +96,9 @@ class ExplosiveCannon(Feature):
             activation=FeatureActivation(action_type=ActionType.REACTION),
             usage_tags=["damage", "buff"],
         )
+
+    def calculate_dc(self, character_stat_block: CharacterStatBlock) -> int:
+        return character_stat_block.calculate_difficulty_class()
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

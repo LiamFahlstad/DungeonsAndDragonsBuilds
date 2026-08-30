@@ -33,6 +33,9 @@ class LandsAid(Feature):
     def __init__(self):
         super().__init__(name="Land's Aid", origin="Circle of the Land Druid Level 3", activation=FeatureActivation(action_type=ActionType.ACTION, range="60 Feet (10-Foot-Radius Sphere)"), usage_tags=["damage", "heal"])
 
+    def calculate_dc(self, character_stat_block: CharacterStatBlock) -> int:
+        return character_stat_block.calculate_difficulty_class()
+
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
             "As a Magic action, you can expend a use of your Wild Shape and choose a point within 60 feet of yourself. Vitality-giving flowers and life-draining thorns appear for a moment in a 10-foot-radius Sphere centered on that point. Each creature of your choice in the Sphere must make a Constitution saving throw against your spell save DC, taking 2d6 Necrotic damage on a failed save or half as much damage on a successful one. One creature of your choice in that area regains 2d6 Hit Points.\n"

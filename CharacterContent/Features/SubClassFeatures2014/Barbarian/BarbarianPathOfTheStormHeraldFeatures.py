@@ -30,6 +30,13 @@ class StormAura(Feature):
         super().__init__(name="Storm Aura", origin="Path Of The Storm Herald Barbarian Level 3", activation=FeatureActivation(action_type=ActionType.BONUS_ACTION, duration="While You Rage", range="10 Feet"), usage_tags=["damage", "heal", "control"])
         self.environment = environment
 
+    def calculate_dc(self, character_stat_block: CharacterStatBlock) -> int:
+        proficiency_bonus = character_stat_block.get_proficiency_bonus()
+        constitution_modifier = character_stat_block.get_ability_modifier(
+            Definitions.Ability.CONSTITUTION
+        )
+        return 8 + proficiency_bonus + constitution_modifier
+
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
             "When you select this path at 3rd level, you emanate a stormy, magical aura while you rage. The aura extends 10 feet from you in every direction, but not through total cover.\n"

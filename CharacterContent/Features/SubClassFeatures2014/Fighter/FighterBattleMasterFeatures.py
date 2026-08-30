@@ -24,6 +24,12 @@ class CombatSuperiority(Feature):
         )
         return description
 
+    def calculate_dc(self, character_stat_block: CharacterStatBlock) -> int:
+        proficiency_bonus = character_stat_block.get_proficiency_bonus()
+        str_mod = character_stat_block.get_ability_modifier(Ability.STRENGTH)
+        dex_mod = character_stat_block.get_ability_modifier(Ability.DEXTERITY)
+        return 8 + proficiency_bonus + max(str_mod, dex_mod)
+
     def get_table_description(
         self, character_stat_block: CharacterStatBlock
     ) -> list[tuple[str, str]]:
@@ -41,10 +47,7 @@ class CombatSuperiority(Feature):
         else:
             superiority_die = "1d12"
 
-        proficiency_bonus = character_stat_block.get_proficiency_bonus()
-        str_mod = character_stat_block.get_ability_modifier(Ability.STRENGTH)
-        dex_mod = character_stat_block.get_ability_modifier(Ability.DEXTERITY)
-        maneuver_save_dc = 8 + proficiency_bonus + max(str_mod, dex_mod)
+        maneuver_save_dc = self.calculate_dc(character_stat_block)
 
         return [
             ("Superiority Dice", f"{number_of_superiority_die} {superiority_die}s"),

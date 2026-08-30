@@ -33,6 +33,11 @@ class ArcaneShot(Feature):
     def __init__(self):
         super().__init__(name="Arcane Shot", origin="Arcane Archer Fighter Level 3", usage_tags=["damage", "control"])
 
+    def calculate_dc(self, character_stat_block: CharacterStatBlock) -> int:
+        intelligence_modifier = character_stat_block.get_ability_modifier(Ability.INTELLIGENCE)
+        proficiency_bonus = character_stat_block.get_proficiency_bonus()
+        return 8 + proficiency_bonus + intelligence_modifier
+
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
             "At 3rd level, you learn to unleash special magical effects with some of your shots. When you gain this feature, you learn two Arcane Shot options of your choice (see below).\n"

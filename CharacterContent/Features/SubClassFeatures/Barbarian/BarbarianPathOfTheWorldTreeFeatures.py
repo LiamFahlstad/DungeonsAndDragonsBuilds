@@ -38,6 +38,13 @@ class BranchesOfTheTree(Feature):
             usage_tags=["control"]
         )
 
+    def calculate_dc(self, character_stat_block: CharacterStatBlock) -> int:
+        strength_modifier = character_stat_block.get_ability_modifier(
+            Definitions.Ability.STRENGTH
+        )
+        proficiency_bonus = character_stat_block.get_proficiency_bonus()
+        return 8 + strength_modifier + proficiency_bonus
+
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "Whenever a creature you can see starts its turn within 30 feet of you while your Rage is active, you can take a Reaction to summon spectral branches of the World Tree around it. The target must succeed on a Strength saving throw (DC 8 plus your Strength modifier and Proficiency Bonus) or be teleported to an unoccupied space you can see within 5 feet of yourself or in the nearest unoccupied space you can see. After the target teleports, you can reduce its Speed to 0 until the end of the current turn."
         return description
@@ -45,11 +52,7 @@ class BranchesOfTheTree(Feature):
     def get_table_description(
         self, character_stat_block: CharacterStatBlock
     ) -> list[tuple[str, str]]:
-        strength_modifier = character_stat_block.get_ability_modifier(
-            Definitions.Ability.STRENGTH
-        )
-        proficiency_bonus = character_stat_block.get_proficiency_bonus()
-        dc = 8 + strength_modifier + proficiency_bonus
+        dc = self.calculate_dc(character_stat_block)
         return [
             ("Trigger", "Creature starts turn within 30 feet (while Rage active)"),
             ("Action", "Reaction"),
