@@ -1,6 +1,6 @@
 from Combat.Definitions import Alignment, Condition, DamageTypeEntry, ExtendedCombatantData, MonsterAbility, MonsterType, Size
 from Core.Definitions import CharacterClass, DamageType, MAX_PROFICIENCY_BONUS
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, ActionType, RegainedOn
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, ActionType, RegainedOn, FeatureTarget
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 from Utils.CreatureStatBlocks import format_creature_stat_block
@@ -110,3 +110,6 @@ class SummonWildfireSpirit(Feature):
 
     def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
         return RegainedOn.OTHER
+
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.ALLY

@@ -1,6 +1,6 @@
 import Core.Definitions as Definitions
 from CharacterContent.Features.ClassFeatures.Monk.MonkFeatures import LEVEL_TO_MARTIAL_ARTS_DIE
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType, FeatureTarget
 from CharacterContent.Items.Weapons import WeaponDamageRolls
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
@@ -21,6 +21,9 @@ class RadiantSunBolt(Feature):
         )
         return description
 
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.ENEMY
+
 
 class SearingArcStrike(Feature):
     def __init__(self):
@@ -33,6 +36,9 @@ class SearingArcStrike(Feature):
             "You can spend additional ki points to cast Burning Hands as a higher level spell. Each additional ki point you spend increases the spell's level by 1. The maximum number of ki points (2 plus any additional points) that you can spend on the spell equals half your monk level."
         )
         return description
+
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.AREA
 
     def get_table_description(self, character_stat_block: CharacterStatBlock) -> list[tuple[str, str]]:
         monk_level = character_stat_block.get_class_level(Definitions.CharacterClass.MONK)
@@ -61,6 +67,9 @@ class SearingSunburst(Feature):
         )
         return description
 
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.AREA
+
     def get_table_description(self, character_stat_block: CharacterStatBlock) -> list[tuple[str, str]]:
         return [
             ("Action", "Action"),
@@ -84,3 +93,6 @@ class SunShield(Feature):
             "If a creature hits you with a melee attack while this light shines, you can use your reaction to deal radiant damage to the creature. The radiant damage equals 5 + your Wisdom modifier."
         )
         return description
+
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.ENEMY

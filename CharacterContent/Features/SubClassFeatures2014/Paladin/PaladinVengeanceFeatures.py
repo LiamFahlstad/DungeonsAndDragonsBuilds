@@ -1,4 +1,4 @@
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, ActionType, RegainedOn
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, ActionType, RegainedOn, FeatureTarget
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
@@ -39,6 +39,9 @@ class AbjureEnemy(Feature):
         )
         return description
 
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.ENEMY
+
     def get_table_description(
         self, character_stat_block: CharacterStatBlock
     ) -> list[tuple[str, str]]:
@@ -64,6 +67,9 @@ class VowOfEnmity(Feature):
         description = "As a bonus action, you can utter a vow of enmity against a creature you can see within 10 feet of you, using your Channel Divinity. You gain advantage on attack rolls against the creature for 1 minute or until it drops to 0 hit points or falls unconscious."
         return description
 
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.ENEMY
+
 
 class RelentlessAvenger(Feature):
     def __init__(self):
@@ -78,6 +84,9 @@ class RelentlessAvenger(Feature):
         description = "Your supernatural focus helps you close off a foe's retreat. When you hit a creature with an opportunity attack, you can move up to half your speed immediately after the attack and as part of the same reaction. This movement doesn't provoke opportunity attacks."
         return description
 
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.SELF
+
 
 class SoulOfVengeance(Feature):
     def __init__(self):
@@ -90,6 +99,9 @@ class SoulOfVengeance(Feature):
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "The authority with which you speak your Vow of Enmity gives you greater power over your foe. When a creature under the effect of your Vow of Enmity makes an attack, you can use your reaction to make a melee weapon attack against that creature if it is within range."
         return description
+
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.ENEMY
 
 
 class AvengingAngel(Feature):
@@ -104,6 +116,9 @@ class AvengingAngel(Feature):
 
     def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
+
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.AREA
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

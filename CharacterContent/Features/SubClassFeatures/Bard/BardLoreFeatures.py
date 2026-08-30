@@ -1,5 +1,5 @@
 from Core.Definitions import BARD_HIT_DIE, Skill
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType, FeatureTarget
 from CharacterContent.Features.Core.Improvements import SkillProficiencyChoice
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
@@ -37,6 +37,11 @@ class CuttingWords(Feature):
             ("Effect", "Roll Bardic Inspiration die, subtract from creature's roll (can turn success into failure)"),
         ]
 
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
+        return FeatureTarget.ENEMY
+
 
 class MagicalDiscoveries(Feature):
     def __init__(self):
@@ -69,3 +74,8 @@ class PeerlessSkill(Feature):
             ("Effect", "Roll Bardic Inspiration die, add to failed d20"),
             ("Failure Recovery", "If still fails, Bardic Inspiration isn't expended"),
         ]
+
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
+        return FeatureTarget.SELF

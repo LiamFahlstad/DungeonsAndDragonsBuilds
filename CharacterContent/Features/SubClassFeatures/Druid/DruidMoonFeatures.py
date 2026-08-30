@@ -1,6 +1,6 @@
 
 from Core.Definitions import DRUID_HIT_DIE, MAX_ABILITY_MODIFIER
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, ActionType, RegainedOn
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, ActionType, RegainedOn, FeatureTarget
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
@@ -8,6 +8,11 @@ from Utils import StringUtils
 class CircleForms(Feature):
     def __init__(self):
         super().__init__(name="Circle Forms", origin="Circle of the Moon Druid Level 3", usage_tags=["buff", "heal"])
+
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
+        return FeatureTarget.SELF
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -56,6 +61,11 @@ class ImprovedCircleForms(Feature):
             name="Improved Circle Forms", origin="Circle of the Moon Druid Level 6", usage_tags=["buff"]
         )
 
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
+        return FeatureTarget.SELF
+
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
             "While in a Wild Shape form, you gain the following benefits.\n"
@@ -94,6 +104,11 @@ class MoonlightStep(Feature):
 
     def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
+
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
+        return FeatureTarget.SELF
 
     def number_of_uses(self, character_stat_block: CharacterStatBlock) -> int:
         return max(1, character_stat_block.get_wisdom_modifier())

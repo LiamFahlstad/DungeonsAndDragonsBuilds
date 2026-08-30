@@ -1,4 +1,10 @@
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, ActionType
+from CharacterContent.Features.Core.BaseFeatures import (
+    Feature,
+    FeatureUses,
+    FeatureActivation,
+    ActionType,
+    FeatureTarget,
+)
 from Core.Definitions import MAX_ABILITY_MODIFIER
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
@@ -19,6 +25,9 @@ class ChronalShift(Feature):
             "You can use this ability twice, and you regain any expended uses when you finish a long rest."
         )
         return description
+
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.CREATURE
 
 
 class TemporalAwareness(Feature):
@@ -63,6 +72,9 @@ class MomentaryStasis(Feature):
             ("Recharge", "Long rest"),
         ]
 
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.ENEMY
+
     def number_of_uses(self, character_stat_block: CharacterStatBlock) -> int:
         return character_stat_block.get_intelligence_modifier()
 
@@ -102,3 +114,6 @@ class ConvergentFuture(Feature):
             "When you use this feature, you gain one level of exhaustion. Only by finishing a long rest can you remove a level of exhaustion gained in this way."
         )
         return description
+
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.CREATURE

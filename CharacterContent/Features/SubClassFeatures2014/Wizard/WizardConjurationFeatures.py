@@ -1,6 +1,11 @@
 from Core import Definitions
 from Core.Definitions import Ability, WIZARD_HIT_DIE
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType
+from CharacterContent.Features.Core.BaseFeatures import (
+    Feature,
+    FeatureActivation,
+    ActionType,
+    FeatureTarget,
+)
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
@@ -35,6 +40,9 @@ class MinorConjuration(Feature):
             ("Duration", "1 hour, until you use feature again, or until takes/deals damage"),
         ]
 
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.OBJECT
+
 
 class BenignTransportation(Feature):
     def __init__(self):
@@ -55,6 +63,9 @@ class BenignTransportation(Feature):
             ("Recharge", "Long rest or cast conjuration spell of 1st level or higher"),
         ]
 
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.SELF
+
 
 class FocusedConjuration(Feature):
     def __init__(self):
@@ -64,6 +75,9 @@ class FocusedConjuration(Feature):
         description = "While you are concentrating on a conjuration spell, your concentration can't be broken as a result of taking damage."
         return description
 
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.SELF
+
 
 class DurableSummons(Feature):
     def __init__(self):
@@ -72,3 +86,6 @@ class DurableSummons(Feature):
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "Any creature that you summon or create with a conjuration spell has 30 temporary hit points."
         return description
+
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.ALLY

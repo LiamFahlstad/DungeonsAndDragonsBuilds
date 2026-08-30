@@ -1,5 +1,5 @@
 from Core.Definitions import MONK_HIT_DIE
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType, FeatureTarget
 from CharacterContent.Items.Weapons import WeaponDamageRolls
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
@@ -56,6 +56,11 @@ class ElementalAttunement(Feature):
             name="Elemental Attunement", origin="Warrior of the Elements Monk Level 3", activation=FeatureActivation(duration="10 Minutes or Until Incapacitated"), usage_tags=["damage", "control"]
         )
 
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
+        return FeatureTarget.SELF
+
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
             "At the start of your turn, you can expend 1 Focus Point to imbue yourself with elemental energy. The energy lasts for 10 minutes or until you have the Incapacitated condition. You gain the following benefits while this feature is active.\n"
@@ -93,6 +98,11 @@ class ElementalBurst(Feature):
             name="Elemental Burst", origin="Warrior of the Elements Monk Level 6", activation=FeatureActivation(action_type=ActionType.ACTION, range="120 Feet (20-Foot-Radius Sphere)"), usage_tags=["damage"]
         )
 
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
+        return FeatureTarget.AREA
+
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
             "As a Magic action, you can expend 2 Focus Points to cause elemental energy to burst in a 20-foot-radius Sphere centered on a point within 120 feet of yourself. Choose a damage type: Acid, Cold, Fire, Lightning, or Thunder.\n"
@@ -120,6 +130,11 @@ class StrideOfTheElements(Feature):
             origin="Warrior of the Elements Monk Level 11",
             usage_tags=["buff", "utility"]
         )
+
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
+        return FeatureTarget.SELF
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "While your Elemental Attunement is active, you also have a Fly Speed and a Swim Speed equal to your Speed."

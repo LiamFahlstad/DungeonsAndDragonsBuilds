@@ -1,6 +1,6 @@
 
 from Core.Definitions import DRUID_HIT_DIE
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType, FeatureTarget
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
@@ -23,6 +23,11 @@ class WrathOfTheSea(Feature):
 
     def calculate_dc(self, character_stat_block: CharacterStatBlock) -> int:
         return character_stat_block.calculate_difficulty_class()
+
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
+        return FeatureTarget.ENEMY
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -52,6 +57,11 @@ class AquaticAffinity(Feature):
             name="Aquatic Affinity", origin="Circle of the Sea Druid Level 6", usage_tags=["buff", "utility"]
         )
 
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
+        return FeatureTarget.SELF
+
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
             "The size of the Emanation created by your Wrath of the Sea increases to 10 feet.\n"
@@ -63,6 +73,11 @@ class AquaticAffinity(Feature):
 class Stormborn(Feature):
     def __init__(self):
         super().__init__(name="Stormborn", origin="Circle of the Sea Druid Level 10", usage_tags=["buff", "utility"])
+
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
+        return FeatureTarget.SELF
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -76,6 +91,11 @@ class Stormborn(Feature):
 class OceanicGift(Feature):
     def __init__(self):
         super().__init__(name="Oceanic Gift", origin="Circle of the Sea Druid Level 14", activation=FeatureActivation(range="60 Feet"))
+
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
+        return FeatureTarget.ALLY
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

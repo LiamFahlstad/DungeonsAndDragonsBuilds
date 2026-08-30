@@ -1,5 +1,5 @@
 from Core.Definitions import PSION_HIT_DIE
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, FeatureTarget
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
@@ -40,6 +40,9 @@ class TelekineticTechniques(Feature):
         )
         return description
 
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.ENEMY
+
 
 class DestructiveTrance(Feature):
     def __init__(self):
@@ -68,6 +71,9 @@ class DestructiveTrance(Feature):
             ("Fly Speed", "20 feet (can hover)"),
             ("Damage Bonus", "Add die roll to one damage roll of Psion spells (die doesn't expend)"),
         ]
+
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.SELF
 
 
 class ReboundingField(Feature):
@@ -104,6 +110,9 @@ class ReboundingField(Feature):
             ("Temp HP", "You gain temp HP equal to damage dealt"),
         ]
 
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.ENEMY
+
 
 class EnhancedTelekineticCrush(Feature):
     def __init__(self):
@@ -132,6 +141,9 @@ class EnhancedTelekineticCrush(Feature):
             ("Speed Effect", "Speed halved until start of next turn (save doesn't prevent)"),
             ("Damage Bonus", "Roll die and add to one damage roll of spell"),
         ]
+
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.ENEMY
 
 
 class HeightenedTelekinesis(Feature):

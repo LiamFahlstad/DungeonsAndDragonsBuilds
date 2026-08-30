@@ -1,6 +1,13 @@
 import Core.Definitions as Definitions
 from Core.Definitions import SORCERER_HIT_DIE
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, ActionType, RegainedOn
+from CharacterContent.Features.Core.BaseFeatures import (
+    Feature,
+    FeatureUses,
+    FeatureActivation,
+    ActionType,
+    RegainedOn,
+    FeatureTarget,
+)
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
@@ -39,6 +46,9 @@ class FavoredByTheGods(Feature):
     def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
         return RegainedOn.SHORT_OR_LONG_REST
 
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.SELF
+
     def get_table_description(
         self, character_stat_block: CharacterStatBlock
     ) -> list[tuple[str, str]]:
@@ -69,6 +79,9 @@ class EmpoweredHealing(Feature):
             ("Restriction", "Once per turn, not while incapacitated"),
         ]
 
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.ALLY
+
 
 class AngelicForm(Feature):
     def __init__(self):
@@ -92,6 +105,9 @@ class AngelicForm(Feature):
             ("Duration", "Until incapacitated, dead, or dismissed (bonus action)"),
         ]
 
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.SELF
+
 
 class UnearthlyRecovery(Feature):
     def __init__(self):
@@ -107,6 +123,9 @@ class UnearthlyRecovery(Feature):
 
     def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
+
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.SELF
 
     def get_table_description(
         self, character_stat_block: CharacterStatBlock

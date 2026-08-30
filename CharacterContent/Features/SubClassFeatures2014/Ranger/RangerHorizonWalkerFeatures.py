@@ -1,4 +1,9 @@
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType
+from CharacterContent.Features.Core.BaseFeatures import (
+    Feature,
+    FeatureActivation,
+    ActionType,
+    FeatureTarget,
+)
 from Core.Definitions import CharacterClass
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
@@ -83,6 +88,9 @@ class PlanarWarrior(Feature):
             ),
         ]
 
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.ENEMY
+
 
 class EtherealStep(Feature):
     def __init__(self):
@@ -110,6 +118,9 @@ class EtherealStep(Feature):
             ("Recharge", "Short or long rest"),
         ]
 
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.SELF
+
 
 class DistantStrike(Feature):
     def __init__(self):
@@ -126,6 +137,9 @@ class DistantStrike(Feature):
         )
         return description
 
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.SELF
+
 
 class SpectralDefense(Feature):
     def __init__(self):
@@ -139,3 +153,6 @@ class SpectralDefense(Feature):
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "Your ability to move between planes enables you to slip through the planar boundaries to lessen the harm done to you during battle. When you take damage from an attack, you can use your reaction to give yourself resistance to all of that attack's damage on this turn."
         return description
+
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.SELF

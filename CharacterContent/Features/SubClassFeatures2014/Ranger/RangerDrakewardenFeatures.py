@@ -1,6 +1,12 @@
 from typing import Optional
 
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType, RegainedOn
+from CharacterContent.Features.Core.BaseFeatures import (
+    Feature,
+    FeatureActivation,
+    ActionType,
+    RegainedOn,
+    FeatureTarget,
+)
 from Combat.Definitions import (
     Alignment,
     DamageTypeEntry,
@@ -150,6 +156,9 @@ class DrakeCompanion(Feature):
             "It remains until reduced to 0 HP, resummoned, or you die; recharge with long rest or by expending a 1st-level spell slot."
         )
 
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.ALLY
+
 
 class BondOfFangAndScale(Feature):
     def __init__(self):
@@ -207,6 +216,9 @@ class DrakesBreath(Feature):
             ("Damage", f"{damage} on failed save, half on success"),
             ("Recharge", "Long rest (or 3rd+ spell slot)"),
         ]
+
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.AREA
 
 
 class PerfectedBond(Feature):

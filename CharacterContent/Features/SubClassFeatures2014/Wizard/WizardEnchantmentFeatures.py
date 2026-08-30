@@ -1,6 +1,11 @@
 from Core import Definitions
 from Core.Definitions import Ability, WIZARD_HIT_DIE
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType
+from CharacterContent.Features.Core.BaseFeatures import (
+    Feature,
+    FeatureActivation,
+    ActionType,
+    FeatureTarget,
+)
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
@@ -37,6 +42,9 @@ class HypnoticGaze(Feature):
             ("Recharge", "Long rest (per target)"),
         ]
 
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.ENEMY
+
 
 class InstinctiveCharm(Feature):
     def __init__(self):
@@ -62,6 +70,9 @@ class InstinctiveCharm(Feature):
             ("Immunity", "Creatures that can't be charmed are immune"),
         ]
 
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.ENEMY
+
 
 class SplitEnchantment(Feature):
     def __init__(self):
@@ -82,3 +93,6 @@ class AlterMemories(Feature):
             "Additionally, once before the spell expires, you can use your action to try to make the chosen creature forget some of the time it spent charmed. The creature must succeed on an Intelligence saving throw against your wizard spell save DC or lose a number of hours of its memories equal to 1 + your Charisma modifier. You can make the creature forget less time, and the amount of time can't exceed the duration of your enchantment spell."
         )
         return description
+
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.ENEMY

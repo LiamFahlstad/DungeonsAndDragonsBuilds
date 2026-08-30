@@ -1,5 +1,5 @@
 from Core.Definitions import PALADIN_HIT_DIE
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType, RegainedOn, FeatureUses
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType, RegainedOn, FeatureUses, FeatureTarget
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
@@ -35,6 +35,9 @@ class ControlUndead(Feature):
         )
         return description
 
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.ENEMY
+
     def get_table_description(self, character_stat_block: CharacterStatBlock) -> list[tuple[str, str]]:
         return [
             ("What", "Control undead creature"),
@@ -58,6 +61,9 @@ class DreadfulAspect(Feature):
         )
         return description
 
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.ENEMY
+
     def get_table_description(self, character_stat_block: CharacterStatBlock) -> list[tuple[str, str]]:
         return [
             ("What", "Channel magical menace"),
@@ -80,6 +86,9 @@ class AuraOfHate(Feature):
             "A creature can benefit from this feature from only one Paladin at a time."
         )
         return description
+
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.SELF
 
 
 class AuraOfHateExpansion(Feature):
@@ -110,6 +119,9 @@ class DreadLord(Feature):
 
     def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
+
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.AREA
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

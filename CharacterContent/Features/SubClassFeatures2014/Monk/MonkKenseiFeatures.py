@@ -1,5 +1,5 @@
 from Core.Definitions import MONK_HIT_DIE
-from CharacterContent.Features.Core.BaseFeatures import FeatureUses, Feature, FeatureActivation, ActionType
+from CharacterContent.Features.Core.BaseFeatures import FeatureUses, Feature, FeatureActivation, ActionType, FeatureTarget
 from CharacterContent.Items.Weapons import WeaponDamageRolls
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
@@ -56,6 +56,9 @@ class AgileParry(Feature):
         )
         return description
 
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.SELF
+
 
 class KenseiShot(Feature):
     def __init__(self):
@@ -68,6 +71,9 @@ class KenseiShot(Feature):
             "You retain this benefit until the end of the current turn."
         )
         return description
+
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.ENEMY
 
 
 class WayOfTheBrush(Feature):
@@ -103,6 +109,9 @@ class DeftStrike(Feature):
         )
         return description
 
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.ENEMY
+
 
 class SharpenTheBlade(Feature):
     def __init__(self):
@@ -115,6 +124,9 @@ class SharpenTheBlade(Feature):
             "this feature again. This feature has no effect on a magic weapon that already has a bonus to attack and damage rolls."
         )
         return description
+
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.OBJECT
 
     def get_table_description(self, character_stat_block: CharacterStatBlock) -> list[tuple[str, str]]:
         return [
@@ -137,3 +149,6 @@ class UnearringAccuracy(Feature):
             "you can reroll it. You can use this feature only once on each of your turns."
         )
         return description
+
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.SELF

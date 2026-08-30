@@ -1,6 +1,6 @@
 
 from Core.Definitions import RANGER_HIT_DIE, MAX_ABILITY_MODIFIER
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, ActionType, RegainedOn
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, ActionType, RegainedOn, FeatureTarget
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
@@ -11,6 +11,9 @@ class DreadfulStrikes(Feature):
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "You can augment your weapon strikes with mind-scarring magic drawn from the murky hollows of the Feywild. When you hit a creature with a weapon, you can deal an extra 1d4 Psychic damage to the target, which can take this extra damage only once per turn. The extra damage increases to 1d6 when you reach Ranger level 11."
         return description
+
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.ENEMY
 
 
 class FeyWandererSpells(Feature):
@@ -54,6 +57,9 @@ class OtherworldlyGlamour(Feature):
         )
         return description
 
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.SELF
+
 
 class BeguilingTwist(Feature):
     def __init__(self):
@@ -76,6 +82,9 @@ class BeguilingTwist(Feature):
             "to force another creature within 120 feet to save against your spell save DC; on a failure, "
             "it is charmed or frightened (your choice) for 1 minute."
         )
+
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.ENEMY
 
 
 class FeyReinforcements(Feature):
@@ -103,6 +112,9 @@ class FeyReinforcements(Feature):
 
     def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
+
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.ALLY
 class MistyWanderer(Feature):
     def __init__(self):
         super().__init__(name="Misty Wanderer", origin="Fey Wanderer Ranger Level 15", activation=FeatureActivation(range="5 Feet"), uses=FeatureUses(max_uses=MAX_ABILITY_MODIFIER, regain_all_on="long rest", current_formula="Current amount: equal to your Wisdom modifier."))
@@ -126,6 +138,9 @@ class MistyWanderer(Feature):
 
     def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
+
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.ALLY
 
     def number_of_uses(self, character_stat_block: CharacterStatBlock) -> int:
         return max(1, character_stat_block.get_wisdom_modifier())

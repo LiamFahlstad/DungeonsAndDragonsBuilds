@@ -1,6 +1,6 @@
 from Core import Definitions
 from Core.Definitions import WIZARD_HIT_DIE
-from CharacterContent.Features.Core.BaseFeatures import Feature
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureTarget
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
@@ -23,6 +23,9 @@ class SculptSpells(Feature):
         )
         return description
 
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.ALLY
+
 
 class PotentCantrip(Feature):
     def __init__(self):
@@ -31,6 +34,9 @@ class PotentCantrip(Feature):
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "Your damaging cantrips affect even creatures that avoid the brunt of the effect. When a creature succeeds on a saving throw against your cantrip, the creature takes half the cantrip's damage (if any) but suffers no additional effect from the cantrip."
         return description
+
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.ENEMY
 
 
 class EmpoweredEvocation(Feature):
@@ -42,6 +48,9 @@ class EmpoweredEvocation(Feature):
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "You can add your Intelligence modifier (minimum of +1) to one damage roll of any wizard evocation spell that you cast."
         return description
+
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.SELF
 
 
 class Overchannel(Feature):
@@ -64,3 +73,6 @@ class Overchannel(Feature):
             ("Damage Properties", "Ignores resistance and immunity"),
             ("Recharge", "Long rest"),
         ]
+
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.SELF

@@ -1,5 +1,12 @@
 import Core.Definitions as Definitions
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, ActionType, RegainedOn
+from CharacterContent.Features.Core.BaseFeatures import (
+    ActionType,
+    Feature,
+    FeatureActivation,
+    FeatureTarget,
+    FeatureUses,
+    RegainedOn,
+)
 from CharacterContent.Features.Core.Improvements import SavingThrowBonus
 from Core.Definitions import Ability
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
@@ -38,6 +45,9 @@ class LayOnHands(Feature):
 
     def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
+
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.CREATURE
 
 
 class WeaponMastery(Feature):
@@ -228,6 +238,9 @@ class AuraOfProtection(Feature):
             ("Stacking", "Creature benefits from one aura at a time"),
         ]
 
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.ALLY
+
 
 class AbjureFoes(Feature):
     def __init__(self):
@@ -257,6 +270,9 @@ class AbjureFoes(Feature):
             ("Restriction", "Can only move, take an action, or Bonus Action per turn"),
         ]
 
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.ENEMY
+
 
 class AuraOfCourage(Feature):
     def __init__(self):
@@ -268,6 +284,9 @@ class AuraOfCourage(Feature):
         description = "You and your allies have Immunity to the Frightened condition while in your Aura of Protection. If a Frightened ally enters the aura, that condition has no effect on that ally while there."
         return description
 
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.ALLY
+
 
 class RadiantStrikes(Feature):
     def __init__(self):
@@ -278,6 +297,9 @@ class RadiantStrikes(Feature):
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "Your strikes now carry supernatural power. When you hit a target with an attack roll using a Melee weapon or an Unarmed Strike, the target takes an extra 1d8 Radiant damage."
         return description
+
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.ENEMY
 
 
 class RestoringTouch(Feature):
@@ -302,6 +324,9 @@ class RestoringTouch(Feature):
             ("Cost", "5 HP per condition removed"),
             ("Note", "Expended HP doesn't restore hit points"),
         ]
+
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.CREATURE
 
 
 class AuraExpansion(Feature):

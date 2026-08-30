@@ -1,5 +1,5 @@
 import Core.Definitions as Definitions
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType, FeatureTarget
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
@@ -23,6 +23,11 @@ class Frenzy(Feature):
             ("Cost", "One level of exhaustion when rage ends"),
         ]
 
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
+        return FeatureTarget.ENEMY
+
 
 class MindlessRage(Feature):
     def __init__(self):
@@ -33,6 +38,11 @@ class MindlessRage(Feature):
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "You can't be charmed or frightened while raging. If you are charmed or frightened when you enter your rage, the effect is suspended for the duration of the rage."
         return description
+
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
+        return FeatureTarget.SELF
 
 
 class IntimidatingPresence(Feature):
@@ -69,6 +79,11 @@ class IntimidatingPresence(Feature):
             ("Cooldown", "24 hours if save succeeds"),
         ]
 
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
+        return FeatureTarget.ENEMY
+
 
 class Retaliation(Feature):
     def __init__(self):
@@ -79,3 +94,8 @@ class Retaliation(Feature):
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "When you take damage from a creature that is within 5 feet of you, you can use your reaction to make a melee weapon attack against that creature."
         return description
+
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
+        return FeatureTarget.ENEMY

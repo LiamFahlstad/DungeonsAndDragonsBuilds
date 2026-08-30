@@ -1,5 +1,5 @@
 from Core.Definitions import BARD_HIT_DIE
-from CharacterContent.Features.Core.BaseFeatures import FeatureUses, Feature, FeatureActivation, ActionType
+from CharacterContent.Features.Core.BaseFeatures import FeatureUses, Feature, FeatureActivation, ActionType, FeatureTarget
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
@@ -7,6 +7,11 @@ from Utils import StringUtils
 class PsychicBlades(Feature):
     def __init__(self):
         super().__init__(name="Psychic Blades", origin="College of Whispers Bard Level 3", usage_tags=["damage"])
+
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
+        return FeatureTarget.ENEMY
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         if character_stat_block.character_level < 5:
@@ -51,6 +56,11 @@ class WordsOfTerror(Feature):
     def __init__(self):
         super().__init__(name="Words of Terror", origin="College of Whispers Bard Level 3", activation=FeatureActivation(duration="1 Hour or Until Attacked or Damaged"), usage_tags=["control"])
 
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
+        return FeatureTarget.ENEMY
+
     def get_table_description(
         self, character_stat_block: CharacterStatBlock
     ) -> list[tuple[str, str]]:
@@ -80,6 +90,11 @@ class MantleOfWhispers(Feature):
     def __init__(self):
         super().__init__(name="Mantle of Whispers", origin="College of Whispers Bard Level 6", activation=FeatureActivation(action_type=ActionType.ACTION, duration="1 Hour or Until Ended", range="30 Feet"), usage_tags=["utility"])
 
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
+        return FeatureTarget.SELF
+
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
             "At 6th level, you gain the ability to adopt a humanoid's persona. When a humanoid dies within 30 feet of you, you can magically capture its shadow using your reaction. You retain this shadow until you use it or you finish a long rest.\n"
@@ -98,6 +113,11 @@ class MantleOfWhispers(Feature):
 class ShadowLore(Feature):
     def __init__(self):
         super().__init__(name="Shadow Lore", origin="College of Whispers Bard Level 14", activation=FeatureActivation(action_type=ActionType.ACTION, duration="8 Hours or Until Attacked or Damaged", range="30 Feet"), usage_tags=["control"])
+
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
+        return FeatureTarget.ENEMY
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

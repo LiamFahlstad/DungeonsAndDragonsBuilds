@@ -1,4 +1,4 @@
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType, FeatureTarget
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
@@ -35,6 +35,9 @@ class Ambush(Maneuver):
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         return "Ambush: When you make a Dexterity (Stealth) check or an initiative roll, you can expend one superiority die and add the die to the roll, provided you aren't incapacitated."
 
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.SELF
+
 
 class BaitAndSwitch(Maneuver):
     def __init__(self):
@@ -45,6 +48,9 @@ class BaitAndSwitch(Maneuver):
 
     def get_concise_description(self, character_stat_block: CharacterStatBlock) -> str:
         return "When you're within 5 feet of a willing creature on your turn, expend one superiority die to switch places (costs 5 feet movement). This movement doesn't provoke opportunity attacks. Until the start of your next turn, you or the creature gains AC bonus equal to the die roll."
+
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.ALLY
 
 
 class Brace(Maneuver):
@@ -57,6 +63,9 @@ class Brace(Maneuver):
     def get_concise_description(self, character_stat_block: CharacterStatBlock) -> str:
         return "As a reaction when a creature moves into your reach with a melee weapon, expend one superiority die to make one attack. Add the die to the damage roll if you hit."
 
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.ENEMY
+
 
 class CommandersStrike(Maneuver):
     def __init__(self):
@@ -68,6 +77,9 @@ class CommandersStrike(Maneuver):
     def get_concise_description(self, character_stat_block: CharacterStatBlock) -> str:
         return "When you take the Attack action, forgo one attack and use a bonus action to expend one superiority die. Choose a friendly creature who can see or hear you; that creature can use its reaction to make one weapon attack. Add the die to that creature's damage roll."
 
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.ALLY
+
 
 class CommandingPresence(Maneuver):
     def __init__(self):
@@ -75,6 +87,9 @@ class CommandingPresence(Maneuver):
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         return "Commanding Presence: When you make a Charisma (Intimidation), a Charisma (Performance), or a Charisma (Persuasion) check, you can expend one superiority die and add the superiority die to the ability check."
+
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.SELF
 
 
 class DisarmingAttack(ManeuverWithSavingThrow):
@@ -87,6 +102,9 @@ class DisarmingAttack(ManeuverWithSavingThrow):
     def get_concise_description(self, character_stat_block: CharacterStatBlock) -> str:
         return "When you hit with a weapon attack, expend one superiority die to add to damage and force the target to make a Strength saving throw against your maneuver save DC. On a failed save, it drops one item of your choice."
 
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.ENEMY
+
 
 class DistractingStrike(Maneuver):
     def __init__(self):
@@ -98,6 +116,9 @@ class DistractingStrike(Maneuver):
     def get_concise_description(self, character_stat_block: CharacterStatBlock) -> str:
         return "When you hit with a weapon attack, expend one superiority die to add to damage. The next attack against the target by another attacker has advantage if made before the start of your next turn."
 
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.ENEMY
+
 
 class EvasiveFootwork(Maneuver):
     def __init__(self):
@@ -105,6 +126,9 @@ class EvasiveFootwork(Maneuver):
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         return "Evasive Footwork: When you move, you can expend one superiority die, rolling the die and adding the number rolled to your AC until you stop moving."
+
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.SELF
 
 
 class FeintingAttack(Maneuver):
@@ -116,6 +140,9 @@ class FeintingAttack(Maneuver):
 
     def get_concise_description(self, character_stat_block: CharacterStatBlock) -> str:
         return "As a bonus action, expend one superiority die to feint against one creature within 5 feet. You have advantage on your next attack roll against that creature this turn. If it hits, add the die to the damage roll."
+
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.ENEMY
 
 
 class GoadingAttack(ManeuverWithSavingThrow):
@@ -133,6 +160,9 @@ class GoadingAttack(ManeuverWithSavingThrow):
     def get_concise_description(self, character_stat_block: CharacterStatBlock) -> str:
         return "When you hit with an attack, expend one superiority die to add to damage and goad the target. The target makes a Wisdom saving throw against your maneuver save DC; on a failed save, it has disadvantage on attack rolls against targets other than you until the end of your next turn."
 
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.ENEMY
+
 
 class GrapplingStrike(Maneuver):
     def __init__(self):
@@ -144,6 +174,9 @@ class GrapplingStrike(Maneuver):
     def get_concise_description(self, character_stat_block: CharacterStatBlock) -> str:
         return "Immediately after you hit with a melee attack, expend one superiority die and try to grapple the target as a bonus action. Add the die to your Strength (Athletics) check."
 
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.ENEMY
+
 
 class LungingAttack(Maneuver):
     def __init__(self):
@@ -151,6 +184,9 @@ class LungingAttack(Maneuver):
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         return "Lunging Attack: When you make a melee weapon attack on your turn, you can expend one superiority die to increase your reach for that attack by 5 feet. If you hit, you add the superiority die to the attack's damage roll."
+
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.ENEMY
 
 
 class ManeuveringAttack(Maneuver):
@@ -163,6 +199,9 @@ class ManeuveringAttack(Maneuver):
     def get_concise_description(self, character_stat_block: CharacterStatBlock) -> str:
         return "When you hit with a weapon attack, expend one superiority die to add to damage. Choose a friendly creature who can see or hear you; that creature can use its reaction to move up to half its speed without provoking opportunity attacks from your target."
 
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.ALLY
+
 
 class MenacingAttack(ManeuverWithSavingThrow):
     def __init__(self):
@@ -174,6 +213,9 @@ class MenacingAttack(ManeuverWithSavingThrow):
     def get_concise_description(self, character_stat_block: CharacterStatBlock) -> str:
         return "When you hit with a weapon attack, expend one superiority die to add to damage and frighten the target. The target makes a Wisdom saving throw against your maneuver save DC; on a failed save, it is frightened of you until the end of your next turn."
 
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.ENEMY
+
 
 class Parry(Maneuver):
     def __init__(self):
@@ -182,6 +224,9 @@ class Parry(Maneuver):
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         return "Parry: When another creature damages you with a melee attack, you can use your reaction and expend one superiority die to reduce the damage by the number you roll on your superiority die + your Dexterity modifier."
 
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.SELF
+
 
 class PrecisionAttack(Maneuver):
     def __init__(self):
@@ -189,6 +234,9 @@ class PrecisionAttack(Maneuver):
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         return "Precision Attack: When you make a weapon attack roll against a creature, you can expend one superiority die to add it to the roll. You can use this maneuver before or after making the attack roll, but before any effects of the attack are applied."
+
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.SELF
 
 
 class PushingAttack(ManeuverWithSavingThrow):
@@ -205,6 +253,9 @@ class PushingAttack(ManeuverWithSavingThrow):
     def get_concise_description(self, character_stat_block: CharacterStatBlock) -> str:
         return "When you hit with a weapon attack, expend one superiority die to add to damage. If the target is Large or smaller, it makes a Strength saving throw against your maneuver save DC; on a failed save, you push it up to 15 feet away."
 
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.ENEMY
+
 
 class QuickToss(Maneuver):
     def __init__(self):
@@ -216,6 +267,9 @@ class QuickToss(Maneuver):
     def get_concise_description(self, character_stat_block: CharacterStatBlock) -> str:
         return "As a bonus action, expend one superiority die to make a ranged attack with a thrown weapon (can draw as part of the attack). If you hit, add the die to the damage roll."
 
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.ENEMY
+
 
 class Rally(Maneuver):
     def __init__(self):
@@ -226,6 +280,9 @@ class Rally(Maneuver):
 
     def get_concise_description(self, character_stat_block: CharacterStatBlock) -> str:
         return "On your turn, use a bonus action to expend one superiority die and bolster one companion. Choose a friendly creature who can see or hear you; that creature gains temporary hit points equal to the die roll plus your Charisma modifier."
+
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.ALLY
 
 
 class Riposte(Maneuver):
@@ -242,6 +299,9 @@ class Riposte(Maneuver):
     def get_concise_description(self, character_stat_block: CharacterStatBlock) -> str:
         return "When a creature misses you with a melee attack, use your reaction to expend one superiority die and make a melee weapon attack. If you hit, add the die to the damage roll."
 
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.ENEMY
+
 
 class SweepingAttack(Maneuver):
     def __init__(self):
@@ -253,6 +313,9 @@ class SweepingAttack(Maneuver):
     def get_concise_description(self, character_stat_block: CharacterStatBlock) -> str:
         return "When you hit a creature with a melee weapon attack, expend one superiority die to damage another creature within 5 feet of the target and within your reach. If the original attack roll would hit the second creature, it takes damage equal to the die roll of the same type as the original attack."
 
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.ENEMY
+
 
 class TacticalAssessment(Maneuver):
     def __init__(self):
@@ -260,6 +323,9 @@ class TacticalAssessment(Maneuver):
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         return "Tactical Assessment: When you make an Intelligence (Investigation), an Intelligence (History), or a Wisdom (Insight) check, you can expend one superiority die and add the superiority die to the ability check."
+
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.SELF
 
 
 class TripAttack(ManeuverWithSavingThrow):
@@ -271,3 +337,6 @@ class TripAttack(ManeuverWithSavingThrow):
 
     def get_concise_description(self, character_stat_block: CharacterStatBlock) -> str:
         return "When you hit with a weapon attack, expend one superiority die to add to damage and attempt to knock down the target. If the target is Large or smaller, it makes a Strength saving throw against your maneuver save DC; on a failed save, you knock it prone."
+
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.ENEMY

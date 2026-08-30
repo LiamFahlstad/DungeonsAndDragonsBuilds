@@ -1,6 +1,11 @@
 import Core.Definitions as Definitions
 from Core.Definitions import SORCERER_HIT_DIE
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType
+from CharacterContent.Features.Core.BaseFeatures import (
+    Feature,
+    FeatureActivation,
+    ActionType,
+    FeatureTarget,
+)
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
@@ -50,6 +55,9 @@ class TelepathicSpeech(Feature):
             ("Ends Early", "If incapacitated, dead, or you form another connection"),
         ]
 
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.CREATURE
+
 
 class PsionicSorcery(Feature):
     def __init__(self):
@@ -81,6 +89,9 @@ class PsychicDefenses(Feature):
         description = "You gain resistance to psychic damage, and you have advantage on saving throws against being charmed or frightened."
         return description
 
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.SELF
+
 
 class RevelationInFlesh(Feature):
     def __init__(self):
@@ -96,6 +107,9 @@ class RevelationInFlesh(Feature):
             "    * Your body, along with any equipment you are wearing or carrying, becomes slimy and pliable. You can move through any space as narrow as 1 inch without squeezing, and you can spend 5 feet of movement to escape from nonmagical restraints or being grappled."
         )
         return description
+
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.SELF
 
 
 class WarpingImplosion(Feature):
@@ -121,3 +135,6 @@ class WarpingImplosion(Feature):
             ("On Successful Save", "Half damage, not pulled"),
             ("Recharge", "Long rest or 5 sorcery points"),
         ]
+
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.AREA

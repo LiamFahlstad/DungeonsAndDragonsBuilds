@@ -1,4 +1,9 @@
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation
+from CharacterContent.Features.Core.BaseFeatures import (
+    Feature,
+    FeatureUses,
+    FeatureActivation,
+    FeatureTarget,
+)
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
@@ -34,6 +39,9 @@ class DarkOnesBlessing(Feature):
         description = "When you reduce a hostile creature to 0 Hit Points, you gain Temporary Hit Points equal to your Charisma modifier + your Warlock level (minimum of 1)."
         return description
 
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.SELF
+
 
 class DarkOnesOwnLuck(Feature):
     def __init__(self):
@@ -61,6 +69,9 @@ class DarkOnesOwnLuck(Feature):
             ("Recharge", "Short or long rest"),
         ]
 
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.SELF
+
 
 class FiendishResilience(Feature):
     def __init__(self):
@@ -73,6 +84,9 @@ class FiendishResilience(Feature):
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "You can choose one damage type when you finish a Short or Long Rest. You gain Resistance to that damage type until you choose a different one with this feature. Damage from magical weapons or silver weapons ignores this Resistance."
         return description
+
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.SELF
 
 
 class HurlThroughHell(Feature):
@@ -103,3 +117,6 @@ class HurlThroughHell(Feature):
             ("Damage", "10d10 Psychic if target is not a fiend"),
             ("Recharge", "Long rest"),
         ]
+
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.ENEMY

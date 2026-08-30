@@ -1,5 +1,5 @@
 from Core.Definitions import CLERIC_HIT_DIE
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType, FeatureTarget
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
@@ -22,6 +22,11 @@ class BlessingOfTheTrickster(Feature):
             ("Target", "Self or willing creature within 30 feet"),
             ("Duration", "Until Long Rest or use again"),
         ]
+
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
+        return FeatureTarget.ALLY
 
 
 class TrickeryDomainSpells(Feature):

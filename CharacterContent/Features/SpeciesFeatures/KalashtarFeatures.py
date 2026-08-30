@@ -1,5 +1,5 @@
 from Core.Definitions import Ability, DamageType, Skill
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType, FeatureTarget
 from CharacterContent.Features.Core.Improvements import DamageResistance, SavingThrowAdvantage
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
@@ -44,6 +44,9 @@ class MindLink(Feature):
             "to give that creature the ability to speak telepathically with you for 1 hour or until you take "
             "another Magic action to end this effect."
         )
+
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.CREATURE
 
 
 class SeveredFromDreams(Feature):

@@ -1,5 +1,12 @@
 import Core.Definitions as Definitions
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, ActionType, RegainedOn
+from CharacterContent.Features.Core.BaseFeatures import (
+    ActionType,
+    Feature,
+    FeatureActivation,
+    FeatureTarget,
+    FeatureUses,
+    RegainedOn,
+)
 from CharacterContent.Features.Core.Improvements import (
     JackOfAllTradesBonus,
     SkillExpertiseChoice,
@@ -104,6 +111,9 @@ class BardicInspiration(Feature):
             ),
         ]
 
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.ALLY
+
 
 class ExpertiseLevel1(Feature):
     def __init__(self, skill_1: Skill, skill_2: Skill):
@@ -202,6 +212,9 @@ class Countercharm(Feature):
             ("Effect", "Reroll save with Advantage"),
         ]
 
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.ALLY
+
 
 class MagicalSecrets(Feature):
     def __init__(self):
@@ -233,3 +246,6 @@ class WordsOfCreation(Feature):
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "You have mastered two of the Words of Creation: the words of life and death. You therefore always have the Power Word: Heal and Power Word: Kill spells prepared. When you cast either spell, you can target a second creature with it if that creature is within 10 feet of the first target."
         return description
+
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.CREATURE

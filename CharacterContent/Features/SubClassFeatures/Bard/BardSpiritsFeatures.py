@@ -1,5 +1,5 @@
 from Core.Definitions import BARD_HIT_DIE
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, RegainedOn
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, FeatureTarget, RegainedOn
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
@@ -24,6 +24,11 @@ class SpiritsFromBeyond(Feature):
 
     def calculate_dc(self, character_stat_block: CharacterStatBlock) -> int:
         return character_stat_block.calculate_difficulty_class()
+
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
+        return FeatureTarget.CREATURE
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

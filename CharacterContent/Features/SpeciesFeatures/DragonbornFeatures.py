@@ -1,7 +1,7 @@
 from enum import Enum
 
 import Core.Definitions as Definitions
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, ActionType, RegainedOn
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, ActionType, RegainedOn, FeatureTarget
 from CharacterContent.Features.Core.Improvements import (
     DamageResistance as DamageResistanceImprovement,
 )
@@ -75,6 +75,9 @@ class BreathWeapon(Feature):
     def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
 
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.AREA
+
     def number_of_uses(self, character_stat_block: CharacterStatBlock) -> int:
         return character_stat_block.get_proficiency_bonus()
 
@@ -119,6 +122,9 @@ class DraconicFlight(Feature):
 
     def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
+
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.SELF
 
 
 def get_damage_type_from_color(dragon_color: DragonColor) -> Definitions.DamageType:

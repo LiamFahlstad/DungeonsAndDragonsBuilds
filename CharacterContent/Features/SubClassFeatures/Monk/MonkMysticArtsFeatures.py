@@ -1,5 +1,5 @@
 from Core.Definitions import MONK_HIT_DIE
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, RegainedOn
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, RegainedOn, FeatureTarget
 from CharacterContent.Items.Weapons import WeaponDamageRolls
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
@@ -111,6 +111,11 @@ class FocusedStrike(Feature):
         super().__init__(
             name="Focused Strike", origin="Warrior of the Mystic Arts Monk Level 11", activation=FeatureActivation(duration="Until Start of Next Turn"), usage_tags=["control"]
         )
+
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
+        return FeatureTarget.ENEMY
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "When you use your Stunning Strike, whether the target succeeds or fails on the saving throw, the target has Disadvantage on saving throws against your spells until the start of your next turn."

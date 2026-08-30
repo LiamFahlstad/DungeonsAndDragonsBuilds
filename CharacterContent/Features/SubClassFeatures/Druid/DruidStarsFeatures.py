@@ -1,6 +1,6 @@
 
 from Core.Definitions import Ability, DRUID_HIT_DIE, MAX_ABILITY_MODIFIER
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, ActionType, RegainedOn
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, ActionType, RegainedOn, FeatureTarget
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
@@ -35,6 +35,11 @@ class StarryForm(Feature):
     def __init__(self):
         super().__init__(name="Starry Form", origin="Circle of the Stars Druid Level 3", activation=FeatureActivation(action_type=ActionType.BONUS_ACTION, duration="10 Minutes or Until Dismissed/Incapacitated", range="10-Foot Radius"), usage_tags=["damage", "heal", "buff"])
 
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
+        return FeatureTarget.SELF
+
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
             "As a Bonus Action, you can expend a use of your Wild Shape feature to take on a starry form rather than shape-shifting.\n"
@@ -65,6 +70,11 @@ class CosmicOmen(Feature):
     def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
 
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
+        return FeatureTarget.CREATURE
+
     def number_of_uses(self, character_stat_block: CharacterStatBlock) -> int:
         return max(1, character_stat_block.get_wisdom_modifier())
 class TwinklingConstellations(Feature):
@@ -86,6 +96,11 @@ class FullOfStars(Feature):
         super().__init__(
             name="Full of Stars", origin="Circle of the Stars Druid Level 14", usage_tags=["buff"]
         )
+
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
+        return FeatureTarget.SELF
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "While in your Starry Form, you become partially incorporeal, giving you Resistance to Bludgeoning, Piercing, and Slashing damage."

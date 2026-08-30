@@ -1,7 +1,7 @@
 from typing import Optional
 
 from Core.Definitions import Ability, CharacterClass, Skill
-from CharacterContent.Features.Core.BaseFeatures import FeatureUses, Feature, FeatureActivation, ActionType, RegainedOn
+from CharacterContent.Features.Core.BaseFeatures import FeatureUses, Feature, FeatureActivation, ActionType, RegainedOn, FeatureTarget
 from CharacterContent.Features.Core.Improvements import (
     SkillProficiencyChoice,
     SavingThrowProficiencyChoice,
@@ -70,6 +70,9 @@ class FightingSpirit(Feature):
     def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
 
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.SELF
+
 
 class ElegantCourtier(Feature):
     def __init__(self, alternate_saving_throw: Optional[Ability] = None):
@@ -95,6 +98,9 @@ class ElegantCourtier(Feature):
             description += f"\nYou already had Wisdom saving throw proficiency, so you chose {self._alternate_saving_throw.value} instead."
         return description
 
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.SELF
+
 
 class TirelessSpirit(Feature):
     def __init__(self):
@@ -115,6 +121,9 @@ class RapidStrike(Feature):
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "You learn to trade accuracy for swift strikes. If you take the Attack action on your turn and have advantage on an attack roll against one of the targets, you can forgo the advantage for that roll to make an additional weapon attack against that target, as part of the same action. You can do so no more than once per turn."
         return description
+
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.ENEMY
 
 
 class StrengthBeforeDeath(Feature):
@@ -138,3 +147,6 @@ class StrengthBeforeDeath(Feature):
             ("Conditions", "Death saves still apply; 3 failures still kills"),
             ("Uses", "1 per long rest"),
         ]
+
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.SELF

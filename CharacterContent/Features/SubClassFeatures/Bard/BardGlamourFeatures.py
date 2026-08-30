@@ -1,5 +1,5 @@
 from Core.Definitions import BARD_HIT_DIE
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType, FeatureTarget
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
@@ -32,6 +32,11 @@ class BeguilingMagic(Feature):
             ("Recharge", "Long Rest (restore early by expending 1 Bardic Inspiration)"),
         ]
 
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
+        return FeatureTarget.ENEMY
+
 
 class MantleOfInspiration(Feature):
     def __init__(self):
@@ -53,6 +58,11 @@ class MantleOfInspiration(Feature):
             ("Temporary HP", "2 × the number rolled on Bardic Inspiration die"),
             ("Movement", "Each target can use Reaction to move up to its Speed without provoking Opportunity Attacks"),
         ]
+
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
+        return FeatureTarget.ALLY
 
 
 class MantleOfMajesty(Feature):
@@ -81,6 +91,11 @@ class MantleOfMajesty(Feature):
             ("Recharge", "Long Rest (restore early with level 3+ spell slot)"),
         ]
 
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
+        return FeatureTarget.ENEMY
+
 
 class UnbreakableMajesty(Feature):
     def __init__(self):
@@ -90,6 +105,11 @@ class UnbreakableMajesty(Feature):
 
     def calculate_dc(self, character_stat_block: CharacterStatBlock) -> int:
         return character_stat_block.calculate_difficulty_class()
+
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
+        return FeatureTarget.SELF
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

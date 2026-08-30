@@ -1,4 +1,4 @@
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType, FeatureTarget
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
@@ -24,6 +24,11 @@ class BattleragerArmor(Feature):
             "When you grapple a creature, it takes 3 piercing damage if successful."
         )
 
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
+        return FeatureTarget.ENEMY
+
 
 class RecklessAbandon(Feature):
     def __init__(self):
@@ -34,6 +39,11 @@ class RecklessAbandon(Feature):
             "Beginning at 6th level, when you use Reckless Attack while raging, you also gain temporary hit points equal to your Constitution modifier (minimum of 1). They vanish if any of them are left when your rage ends."
         )
         return description
+
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
+        return FeatureTarget.SELF
 
 
 class BattleragerCharge(Feature):
@@ -61,3 +71,8 @@ class SpikedRetribution(Feature):
         return (
             "When a creature within 5 feet hits you with a melee attack, the attacker takes 3 piercing damage if you're raging, not incapacitated, and wearing spiked armor."
         )
+
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
+        return FeatureTarget.ENEMY

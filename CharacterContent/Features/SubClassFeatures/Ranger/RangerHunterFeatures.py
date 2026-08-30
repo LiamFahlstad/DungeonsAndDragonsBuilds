@@ -1,5 +1,5 @@
 from Core.Definitions import RANGER_HIT_DIE
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType, FeatureTarget
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
@@ -11,6 +11,9 @@ class HuntersLore(Feature):
         description = "You can call upon the forces of nature to reveal certain strengths and weaknesses of your prey. While a creature is marked by your Hunter's Mark, you know whether the creature has any Immunities, Resistances, or Vulnerabilities, and if the creature has any, you know what they are."
         return description
 
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.ENEMY
+
 
 class ColossusSlayer(Feature):
     def __init__(self):
@@ -19,6 +22,9 @@ class ColossusSlayer(Feature):
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "Your tenacity can wear down even the most resilient foes. When you hit a creature with a weapon, the weapon deals an extra 1d8 damage to the target if it's missing any of its Hit Points. You can deal this extra damage only once per turn."
         return description
+
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.ENEMY
 
 
 class HordeBreaker(Feature):
@@ -29,6 +35,9 @@ class HordeBreaker(Feature):
         description = "Once on each of your turns when you make an attack with a weapon, you can make another attack with the same weapon against a different creature that is within 5 feet of the original target, that is within the weapon's range, and that you haven't attacked this turn."
         return description
 
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.ENEMY
+
 
 class EscapeTheHorde(Feature):
     def __init__(self):
@@ -37,6 +46,9 @@ class EscapeTheHorde(Feature):
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "Opportunity Attacks have Disadvantage against you."
         return description
+
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.SELF
 
 
 class MultiattackDefense(Feature):
@@ -47,6 +59,9 @@ class MultiattackDefense(Feature):
         description = "When a creature hits you with an attack roll, that creature has Disadvantage on all other attack rolls against you this turn."
         return description
 
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.SELF
+
 
 class SuperiorHuntersPrey(Feature):
     def __init__(self):
@@ -55,6 +70,9 @@ class SuperiorHuntersPrey(Feature):
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "Once per turn when you deal damage to a creature marked by your Hunter's Mark, you can also deal that spell's extra damage to a different creature that you can see within 30 feet of the first creature."
         return description
+
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.ENEMY
 
 
 class SuperiorHuntersDefense(Feature):
@@ -66,3 +84,6 @@ class SuperiorHuntersDefense(Feature):
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "When you take damage, you can take a Reaction to give yourself Resistance to that damage and any other damage of the same type until the end of the current turn."
         return description
+
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.SELF

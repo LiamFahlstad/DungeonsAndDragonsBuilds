@@ -1,5 +1,11 @@
 import Core.Definitions as Definitions
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, ActionType
+from CharacterContent.Features.Core.BaseFeatures import (
+    Feature,
+    FeatureUses,
+    FeatureActivation,
+    ActionType,
+    FeatureTarget,
+)
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
@@ -60,6 +66,9 @@ class HexbladesCurse(Feature):
             ("Recharge", "Short or long rest"),
         ]
 
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.ENEMY
+
 
 class HexWarrior(Feature):
     def __init__(self):
@@ -75,6 +84,9 @@ class HexWarrior(Feature):
             "The influence of your patron also allows you to mystically channel your will through a particular weapon. Whenever you finish a Long Rest, you can touch one weapon that you are proficient with and that lacks the Two-Handed property. When you attack with that weapon, you can use your Charisma modifier, instead of Strength or Dexterity, for the attack and damage rolls. This benefit lasts until you finish a Long Rest. If you later gain the Pact of the Blade feature, this benefit extends to every pact weapon you conjure with that feature, no matter the weapon's type."
         )
         return description
+
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.SELF
 
 
 class AccursedSpecter(Feature):
@@ -111,6 +123,9 @@ class AccursedSpecter(Feature):
             ("Recharge", "Long rest"),
         ]
 
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.ALLY
+
 
 class ArmorOfHexes(Feature):
     def __init__(self):
@@ -134,6 +149,9 @@ class ArmorOfHexes(Feature):
             ("Effect", "Roll d6; on 4+ attack misses"),
         ]
 
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.ENEMY
+
 
 class MasterOfHexes(Feature):
     def __init__(self):
@@ -147,3 +165,6 @@ class MasterOfHexes(Feature):
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "You can spread your Hexblade's Curse from a slain creature to another creature. When the creature cursed by your Hexblade's Curse dies, you can apply the curse to a different creature you can see within 30 feet of yourself, provided you don't have the Incapacitated condition. When you apply the curse in this way, you don't regain Hit Points from the death of the previously cursed creature."
         return description
+
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.ENEMY

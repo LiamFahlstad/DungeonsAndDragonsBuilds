@@ -1,5 +1,5 @@
 from Core.Definitions import FIGHTER_HIT_DIE, Condition
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType, FeatureTarget
 from CharacterContent.Features.Core.Improvements import ConditionImmunity
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
@@ -22,6 +22,11 @@ class GroupRecovery(Feature):
     def __init__(self):
         super().__init__(name="Group Recovery", origin="Banneret Fighter Level 3", activation=FeatureActivation(range="30-Foot Emanation"), usage_tags=["heal"])
 
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
+        return FeatureTarget.ALLY
+
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "When you use your Second Wind to regain Hit Points, you can choose a number of allies within a 30-foot Emanation originating from yourself, up to a number of allies equal to your Charisma modifier (minimum of one). Each of those allies regains Hit Points equal to 1d4 plus your Fighter level. Once you use this ability, you can’t use it again until you finish a Short or Long Rest."
         return description
@@ -42,6 +47,11 @@ class TeamTactics(Feature):
     def __init__(self):
         super().__init__(name="Team Tactics", origin="Banneret Fighter Level 7", usage_tags=["buff"])
 
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
+        return FeatureTarget.ALLY
+
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "When you use Group Recovery, each chosen ally has Advantage on D20 Tests until the start of your next turn."
         return description
@@ -50,6 +60,11 @@ class TeamTactics(Feature):
 class RallyingSurge(Feature):
     def __init__(self):
         super().__init__(name="Rallying Surge", origin="Banneret Fighter Level 10", activation=FeatureActivation(range="30-Foot Emanation"))
+
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
+        return FeatureTarget.ALLY
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -73,6 +88,11 @@ class RallyingSurge(Feature):
 class SharedResilience(Feature):
     def __init__(self):
         super().__init__(name="Shared Resilience", origin="Banneret Fighter Level 15", activation=FeatureActivation(action_type=ActionType.REACTION, range="60 Feet"), usage_tags=["buff"])
+
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
+        return FeatureTarget.ALLY
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "When an ally you can see within 60 feet of yourself fails a saving throw, you can take a Reaction to expend a use of your Indomitable feature. The ally can immediately reroll the saving throw with a bonus equal to your Fighter level; the ally must use the new roll."

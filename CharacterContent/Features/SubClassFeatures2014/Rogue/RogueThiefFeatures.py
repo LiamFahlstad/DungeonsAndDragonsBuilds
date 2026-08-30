@@ -1,5 +1,10 @@
 from Core.Definitions import ROGUE_HIT_DIE
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType
+from CharacterContent.Features.Core.BaseFeatures import (
+    Feature,
+    FeatureActivation,
+    ActionType,
+    FeatureTarget,
+)
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
@@ -14,6 +19,9 @@ class FastHands(Feature):
         )
         return description
 
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.SELF
+
 
 class SecondStoryWork(Feature):
     def __init__(self):
@@ -27,6 +35,9 @@ class SecondStoryWork(Feature):
         )
         return description
 
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.SELF
+
 
 class SupremeSneak(Feature):
     def __init__(self):
@@ -38,6 +49,9 @@ class SupremeSneak(Feature):
             "same turn."
         )
         return description
+
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.SELF
 
 
 class UseMagicDevice(Feature):
@@ -52,6 +66,9 @@ class UseMagicDevice(Feature):
         )
         return description
 
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.SELF
+
 
 class ThiefsReflexes(Feature):
     def __init__(self):
@@ -64,3 +81,6 @@ class ThiefsReflexes(Feature):
             "second turn at your initiative minus 10. You can't use this feature when you are surprised."
         )
         return description
+
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.SELF

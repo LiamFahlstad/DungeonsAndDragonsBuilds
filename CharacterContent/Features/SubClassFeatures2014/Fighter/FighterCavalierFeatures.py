@@ -1,5 +1,5 @@
 from Core.Definitions import CharacterClass, MAX_ABILITY_MODIFIER
-from CharacterContent.Features.Core.BaseFeatures import FeatureUses, Feature, FeatureActivation, ActionType, RegainedOn
+from CharacterContent.Features.Core.BaseFeatures import FeatureUses, Feature, FeatureActivation, ActionType, RegainedOn, FeatureTarget
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
@@ -23,6 +23,9 @@ class BornToTheSaddle(Feature):
             "Finally, mounting or dismounting a creature costs you only 5 feet of movement, rather than half your speed."
         )
         return description
+
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.SELF
 
 
 class UnwaveringMark(Feature):
@@ -58,6 +61,9 @@ class UnwaveringMark(Feature):
     def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
 
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.ENEMY
+
 
 class WardingManeuver(Feature):
     def __init__(self):
@@ -87,6 +93,9 @@ class WardingManeuver(Feature):
     def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
 
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.ALLY
+
 
 class HoldTheLine(Feature):
     def __init__(self):
@@ -95,6 +104,9 @@ class HoldTheLine(Feature):
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "You become a master of locking down your enemies. Creatures provoke an opportunity attack from you when they move 5 feet or more while within your reach, and if you hit a creature with an opportunity attack, the target's speed is reduced to 0 until the end of the current turn."
         return description
+
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.ENEMY
 
 
 class FerociousCharger(Feature):
@@ -111,6 +123,9 @@ class FerociousCharger(Feature):
         proficiency_bonus = character_stat_block.get_proficiency_bonus()
         strength_modifier = character_stat_block.get_strength_modifier()
         return 8 + proficiency_bonus + strength_modifier
+
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.ENEMY
 
     def get_table_description(
         self, character_stat_block: CharacterStatBlock
@@ -131,3 +146,6 @@ class VigilantDefender(Feature):
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "You respond to danger with extraordinary vigilance. In combat, you get a special reaction that you can take once on every creature's turn, except your turn. You can use this special reaction only to make an opportunity attack, and you can't use it on the same turn that you take your normal reaction."
         return description
+
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.ENEMY

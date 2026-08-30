@@ -1,4 +1,4 @@
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType, FeatureTarget
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Core.Definitions import Ability
 
@@ -87,6 +87,11 @@ class ArcaneFirearm(Feature):
         )
         return description
 
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
+        return FeatureTarget.OBJECT
+
 
 class ExplosiveCannon(Feature):
     def __init__(self):
@@ -99,6 +104,11 @@ class ExplosiveCannon(Feature):
 
     def calculate_dc(self, character_stat_block: CharacterStatBlock) -> int:
         return character_stat_block.calculate_difficulty_class()
+
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
+        return FeatureTarget.AREA
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

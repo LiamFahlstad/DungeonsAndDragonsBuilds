@@ -1,5 +1,5 @@
 from Core.Definitions import Ability
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType, RegainedOn
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType, RegainedOn, FeatureTarget
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
@@ -70,6 +70,9 @@ class WeaponBond(Feature):
         )
         return description
 
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.OBJECT
+
 
 class WarMagic(Feature):
     def __init__(self):
@@ -78,6 +81,9 @@ class WarMagic(Feature):
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "Beginning at 7th level, when you use your action to cast a cantrip, you can make one weapon attack as a bonus action."
         return description
+
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.ENEMY
 
 
 class EldritchStrike(Feature):
@@ -90,6 +96,9 @@ class EldritchStrike(Feature):
         description = "At 10th level, you learn how to make your weapon strikes undercut a creature's resistance to your spells. When you hit a creature with a weapon attack, that creature has disadvantage on the next saving throw it makes against a spell you cast before the end of your next turn."
         return description
 
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.ENEMY
+
 
 class ArcaneCharge(Feature):
     def __init__(self):
@@ -101,6 +110,9 @@ class ArcaneCharge(Feature):
         description = "At 15th level, you gain the ability to teleport up to 30 feet to an unoccupied space you can see when you use your Action Surge. You can teleport before or after the additional action."
         return description
 
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.SELF
+
 
 class ImprovedWarMagic(Feature):
     def __init__(self):
@@ -111,3 +123,6 @@ class ImprovedWarMagic(Feature):
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "Starting at 18th level, when you use your action to cast a spell, you can make one weapon attack as a bonus action."
         return description
+
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.ENEMY

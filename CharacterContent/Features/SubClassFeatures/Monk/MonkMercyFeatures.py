@@ -1,6 +1,6 @@
 import Core.Definitions as Definitions
 from Core.Definitions import MONK_HIT_DIE, Skill
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, ActionType, RegainedOn
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, ActionType, RegainedOn, FeatureTarget
 from CharacterContent.Features.Core.Improvements import SkillProficiency
 from CharacterContent.Items.Weapons import WeaponDamageRolls
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
@@ -57,6 +57,11 @@ class HandOfHarm(Feature):
     def __init__(self):
         super().__init__(name="Hand of Harm", origin="Warrior of Mercy Monk Level 3", usage_tags=["damage"])
 
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
+        return FeatureTarget.ENEMY
+
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "Once per turn when you hit a creature with an Unarmed Strike and deal damage, you can expend 1 Focus Point to deal extra Necrotic damage equal to one roll of your Martial Arts die plus your Wisdom modifier."
         return description
@@ -65,6 +70,11 @@ class HandOfHarm(Feature):
 class HandOfHealing(Feature):
     def __init__(self):
         super().__init__(name="Hand of Healing", origin="Warrior of Mercy Monk Level 3", activation=FeatureActivation(action_type=ActionType.ACTION, range="Touch"), usage_tags=["heal"])
+
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
+        return FeatureTarget.ALLY
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -141,6 +151,11 @@ class HandOfUltimateMercy(Feature):
         super().__init__(
             name="Hand of Ultimate Mercy", origin="Warrior of Mercy Monk Level 17", activation=FeatureActivation(action_type=ActionType.ACTION, range="Touch"), usage_tags=["heal"]
         )
+
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
+        return FeatureTarget.ALLY
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

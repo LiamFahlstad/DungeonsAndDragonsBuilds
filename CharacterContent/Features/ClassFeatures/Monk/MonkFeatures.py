@@ -2,6 +2,7 @@ import Core.Definitions as Definitions
 from CharacterContent.Features.Core.BaseFeatures import (
     Feature,
     FeatureActivation,
+    FeatureTarget,
     FeatureUses,
     ActionType,
     RegainedOn,
@@ -197,6 +198,9 @@ class PatientDefense(Feature):
             return "You can take the Disengage action as a Bonus Action. Alternatively, you can expend 1 Focus Point to take both the Disengage and the Dodge actions as a Bonus Action. When you expend a Focus Point to use Patient Defense, you gain a number of Temporary Hit Points equal to two rolls of your Martial Arts die."
         raise ValueError(f"Invalid monk level: {monk_level}")
 
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.SELF
+
 
 class StepOfTheWind(Feature):
     def __init__(self):
@@ -259,6 +263,9 @@ class UnarmoredMovement(Feature):
         description = "Your speed increases by 10 feet while you aren't wearing armor or wielding a Shield. This bonus increases when you reach certain Monk levels, as shown on the Monk Features table."
         return description
 
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.SELF
+
 
 class UncannyMetabolism(Feature):
     def __init__(self):
@@ -275,6 +282,9 @@ class UncannyMetabolism(Feature):
 
     def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
+
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.SELF
 
 
 class DeflectAttacks(Feature):
@@ -344,6 +354,9 @@ class SlowFall(Feature):
         description = "You can take a Reaction when you fall to reduce any damage you take from the fall by an amount equal to five times your Monk level."
         return description
 
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.SELF
+
 
 class ExtraAttack(Feature):
     def __init__(self):
@@ -367,6 +380,9 @@ class StunningStrike(Feature):
         description = "Once per turn when you hit a creature with a Monk weapon or an Unarmed Strike, you can expend 1 Focus Point to attempt a stunning strike. The target must make a Constitution saving throw. On a failed save, the target has the Stunned condition until the start of your next turn. On a successful save, the target's Speed is halved until the start of your next turn, and the next attack roll made against the target before then has Advantage."
         return description
 
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.ENEMY
+
 
 class EmpoweredStrikes(Feature):
     def __init__(self):
@@ -388,6 +404,9 @@ class Evasion(Feature):
         )
         return description
 
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.SELF
+
 
 class AcrobaticMovement(Feature):
     def __init__(self):
@@ -398,6 +417,9 @@ class AcrobaticMovement(Feature):
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "While you aren't wearing armor or wielding a Shield, you gain the ability to move along vertical surfaces and across liquids on your turn without falling during the movement."
         return description
+
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.SELF
 
 
 class HeightenedFocus(Feature):
@@ -445,6 +467,9 @@ class SelfRestoration(Feature):
         )
         return description
 
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.SELF
+
 
 class DeflectEnergy(Feature):
     def __init__(self):
@@ -491,6 +516,9 @@ class DisciplinedSurvivorMartialFocus(Feature):
         description = "Whenever you make a saving throw and fail, you can expend 1 Focus Point to reroll it, and you must use the new roll."
         return description
 
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.SELF
+
 
 class PerfectFocus(Feature):
     def __init__(self):
@@ -516,6 +544,9 @@ class SuperiorDefense(Feature):
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "At the start of your turn, you can expend 3 Focus Points to bolster yourself against harm for 1 minute or until you have the Incapacitated condition. During that time, you have Resistance to all damage except Force damage."
         return description
+
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.SELF
 
 
 class BodyAndMind(Feature):

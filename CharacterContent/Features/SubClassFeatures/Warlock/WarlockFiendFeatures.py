@@ -1,6 +1,6 @@
 from Core.Definitions import WARLOCK_HIT_DIE
 import Core.Definitions as Definitions
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, RegainedOn
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, RegainedOn, FeatureTarget
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
@@ -24,6 +24,9 @@ class DarkOnesBlessing(Feature):
         description = "When you reduce an enemy to 0 Hit Points, you gain Temporary Hit Points equal to your Charisma modifier plus your Warlock level (minimum of 1 Temporary Hit Point). You also gain this benefit if someone else reduces an enemy within 10 feet of you to 0 Hit Points."
         return description
 
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.SELF
+
 
 class DarkOnesOwnLuck(Feature):
     def __init__(self):
@@ -41,6 +44,8 @@ class DarkOnesOwnLuck(Feature):
 
     def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.SELF
     def number_of_uses(self, character_stat_block: CharacterStatBlock) -> int:
         return max(1, character_stat_block.get_charisma_modifier())
     def get_table_description(
@@ -82,6 +87,9 @@ class HurlThroughHell(Feature):
             "Once you use this feature, you can't use it again until you finish a Long Rest unless you expend a Pact Magic spell slot (no action required) to restore your use of it."
         )
         return description
+
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.ENEMY
 
     def get_table_description(
         self, character_stat_block: CharacterStatBlock

@@ -1,4 +1,11 @@
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, ActionType, RegainedOn
+from CharacterContent.Features.Core.BaseFeatures import (
+    Feature,
+    FeatureUses,
+    FeatureActivation,
+    ActionType,
+    RegainedOn,
+    FeatureTarget,
+)
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
@@ -70,6 +77,9 @@ class IllusorySelf(Feature):
     def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
         return RegainedOn.SHORT_OR_LONG_REST
 
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.SELF
+
 
 class IllusoryReality(Feature):
     def __init__(self):
@@ -98,3 +108,6 @@ class IllusoryReality(Feature):
             ("Duration", "1 minute"),
             ("Limitation", "Can't deal damage or directly harm anyone"),
         ]
+
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.OBJECT

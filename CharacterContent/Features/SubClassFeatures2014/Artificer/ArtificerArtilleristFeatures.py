@@ -1,5 +1,5 @@
 from Core.Definitions import ARTIFICER_HIT_DIE
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType, FeatureTarget
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
@@ -59,6 +59,11 @@ class ArcaneFirearm(Feature):
         )
         return description
 
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
+        return FeatureTarget.OBJECT
+
 
 class ExplosiveCannon(Feature):
     def __init__(self):
@@ -71,6 +76,11 @@ class ExplosiveCannon(Feature):
             "As an action, you can command the cannon to detonate if you are within 60 feet of it. Doing so destroys the cannon and forces each creature within 20 feet of it to make a Dexterity saving throw against your spell save DC, taking 3d8 force damage on a failed save or half as much damage on a successful one."
         )
         return description
+
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
+        return FeatureTarget.AREA
 
 
 class FortifiedPosition(Feature):

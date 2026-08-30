@@ -1,6 +1,6 @@
 import Core.Definitions as Definitions
 from Core.Definitions import BARBARIAN_HIT_DIE
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType, RegainedOn
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType, FeatureTarget, RegainedOn
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
@@ -27,6 +27,11 @@ class DivineFury(Feature):
             ("Damage Type", "Necrotic or Radiant (your choice)"),
             ("Requirement", "Weapon or Unarmed Strike"),
         ]
+
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
+        return FeatureTarget.ENEMY
 
 
 class WarriorOfTheGods(Feature):
@@ -68,6 +73,11 @@ class WarriorOfTheGods(Feature):
 
     def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
+
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
+        return FeatureTarget.SELF
 class FanaticalFocus(Feature):
     def __init__(self):
         super().__init__(
@@ -77,6 +87,11 @@ class FanaticalFocus(Feature):
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "Once per active Rage, if you fail a saving throw, you can reroll it with a bonus equal to your Rage Damage bonus, and you must use the new roll."
         return description
+
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
+        return FeatureTarget.SELF
 
 
 class ZealousPresence(Feature):
@@ -103,6 +118,11 @@ class ZealousPresence(Feature):
             ("Duration", "Until start of next turn"),
             ("Recharge", "Long Rest or expend Rage use"),
         ]
+
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
+        return FeatureTarget.ALLY
 
 
 class RageOfTheGods(Feature):

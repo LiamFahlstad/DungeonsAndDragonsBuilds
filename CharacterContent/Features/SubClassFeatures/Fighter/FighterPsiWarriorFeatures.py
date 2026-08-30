@@ -1,5 +1,5 @@
 from Core.Definitions import FIGHTER_HIT_DIE, DamageType
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType, RegainedOn
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType, RegainedOn, FeatureTarget
 from CharacterContent.Features.Core.Improvements import DamageResistance
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
@@ -58,6 +58,11 @@ class GuardedMind(Feature):
     def apply(self, character_stat_block: CharacterStatBlock):
         self._resistance.apply(character_stat_block)
 
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
+        return FeatureTarget.SELF
+
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "You have Resistance to Psychic damage. Moreover, if you start your turn with the Charmed or Frightened condition, you can expend a Psionic Energy Die (no action required) and end every effect on yourself giving you those conditions."
         return description
@@ -66,6 +71,11 @@ class GuardedMind(Feature):
 class BulwarkOfForce(Feature):
     def __init__(self):
         super().__init__(name="Bulwark of Force", origin="Psi Warrior Fighter Level 15", activation=FeatureActivation(action_type=ActionType.BONUS_ACTION, duration="1 Minute or Until Incapacitated", range="30 Feet"), usage_tags=["buff"])
+
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
+        return FeatureTarget.ALLY
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

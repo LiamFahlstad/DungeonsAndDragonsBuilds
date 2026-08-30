@@ -1,4 +1,10 @@
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, ActionType
+from CharacterContent.Features.Core.BaseFeatures import (
+    Feature,
+    FeatureUses,
+    FeatureActivation,
+    ActionType,
+    FeatureTarget,
+)
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
@@ -62,6 +68,9 @@ class HealingLight(Feature):
             ("Recharge", "Long rest"),
         ]
 
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.ALLY
+
 
 class RadiantSoul(Feature):
     def __init__(self):
@@ -74,6 +83,9 @@ class RadiantSoul(Feature):
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "Your link to the Celestial allows you to serve as a conduit for radiant energy. You have resistance to radiant damage, and when you cast a spell that deals radiant or fire damage, you add your Charisma modifier to one radiant or fire damage roll of that spell against one of its targets."
         return description
+
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.SELF
 
 
 class CelestialResistance(Feature):
@@ -97,6 +109,9 @@ class CelestialResistance(Feature):
             ("Others Temp HP", "Half Warlock level + Charisma modifier"),
             ("Who", "Up to 5 creatures you can see"),
         ]
+
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.ALLY
 
 
 class SearingVengeance(Feature):
@@ -128,3 +143,6 @@ class SearingVengeance(Feature):
             ("Condition", "Blinded until end of current turn"),
             ("Recharge", "Long rest"),
         ]
+
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.AREA

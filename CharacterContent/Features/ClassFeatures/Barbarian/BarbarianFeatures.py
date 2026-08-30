@@ -1,5 +1,12 @@
 import Core.Definitions as Definitions
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, ActionType, RegainedOn
+from CharacterContent.Features.Core.BaseFeatures import (
+    ActionType,
+    Feature,
+    FeatureActivation,
+    FeatureTarget,
+    FeatureUses,
+    RegainedOn,
+)
 from CharacterContent.Features.Core.Improvements import (
     AbilityScoreBonus,
     InitiativeRollCondition,
@@ -101,6 +108,9 @@ class Rage(Feature):
         else:
             return 2
 
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.SELF
+
 
 class UnarmoredDefenseText(Feature):
     def __init__(self):
@@ -186,6 +196,9 @@ class RecklessAttack(Feature):
             ("Duration", "Until start of your next turn"),
         ]
 
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.SELF
+
 
 class PrimalKnowledgeSkillProficiency(Feature):
     SKILL_POOL = [
@@ -246,6 +259,9 @@ class FastMovement(Feature):
         )
         return description
 
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.SELF
+
 
 class FastMovementBonus(Feature):
     """Mechanical half of Fast Movement, kept separate from the descriptive
@@ -279,6 +295,9 @@ class FeralInstinct(Feature):
         )
         return description
 
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.SELF
+
 
 class InstinctivePounce(Feature):
     def __init__(self):
@@ -289,6 +308,9 @@ class InstinctivePounce(Feature):
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "As part of the Bonus Action you take to enter your Rage, you can move up to half your Speed."
         return description
+
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.SELF
 
 
 class BrutalStrike(Feature):
@@ -307,6 +329,9 @@ class BrutalStrike(Feature):
             "    * Hamstring Blow. The target’s Speed is reduced by 15 feet until the start of your next turn. A target can be affected by only one Hamstring Blow at a time— the most recent one."
         )
         return description
+
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.ENEMY
 
 
 class RelentlessRage(Feature):
@@ -338,6 +363,9 @@ class RelentlessRage(Feature):
             ("Scaling", "DC increases by 5 each use; resets on Short or Long Rest"),
         ]
 
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.SELF
+
 
 class ImprovedBrutalStrikeLevel13(Feature):
     def __init__(self):
@@ -355,6 +383,9 @@ class ImprovedBrutalStrikeLevel13(Feature):
         )
         return description
 
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.ENEMY
+
 
 class PersistentRage(Feature):
     def __init__(self):
@@ -370,6 +401,9 @@ class PersistentRage(Feature):
     def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
         return RegainedOn.INITIATIVE_ROLL
 
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.SELF
+
 
 class ImprovedBrutalStrikeLevel17(Feature):
     def __init__(self):
@@ -382,6 +416,9 @@ class ImprovedBrutalStrikeLevel17(Feature):
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "The extra damage of your Brutal Strike increases to 2d10. In addition, you can use two different Brutal Strike effects whenever you use your Brutal Strike feature."
         return description
+
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.ENEMY
 
 
 class IndomitableMight(Feature):

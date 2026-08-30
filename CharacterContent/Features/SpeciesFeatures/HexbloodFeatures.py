@@ -1,5 +1,5 @@
 from Core.Definitions import Sense
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, ActionType, RegainedOn
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, ActionType, RegainedOn, FeatureTarget
 from CharacterContent.Features.Core.Improvements import GrantSense
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
@@ -33,6 +33,9 @@ class EerieToken(Feature):
             "Once you create a token using this feature, you can't do so again until you finish a Long Rest."
         )
         return description
+
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.OBJECT
 
 
 class HexMagic(Feature):

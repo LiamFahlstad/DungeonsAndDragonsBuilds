@@ -1,4 +1,11 @@
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, ActionType, RegainedOn
+from CharacterContent.Features.Core.BaseFeatures import (
+    ActionType,
+    Feature,
+    FeatureActivation,
+    FeatureTarget,
+    FeatureUses,
+    RegainedOn,
+)
 from CharacterContent.Features.Core.Improvements import SkillExpertiseChoice, SpeedBonus
 from Core.Definitions import Skill, MAX_ABILITY_MODIFIER
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
@@ -162,6 +169,9 @@ class Roving(Feature):
         description = "Your speed increases by 10 feet while you aren't wearing Heavy Armor. You also have a Climb speed and a Swim Speed equal to your Speed."
         return description
 
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.SELF
+
 
 class Expertise(Feature):
     def __init__(self, skill_1: Skill, skill_2: Skill):
@@ -217,6 +227,9 @@ class Tireless(Feature):
     def number_of_uses(self, character_stat_block: CharacterStatBlock) -> int:
         return character_stat_block.get_wisdom_modifier()
 
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.SELF
+
 
 class RelentlessHunter(Feature):
     def __init__(self):
@@ -262,6 +275,9 @@ class NaturesVeil(Feature):
     def number_of_uses(self, character_stat_block: CharacterStatBlock) -> int:
         return character_stat_block.get_wisdom_modifier()
 
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.SELF
+
 
 class PreciseHunter(Feature):
     def __init__(self):
@@ -273,6 +289,9 @@ class PreciseHunter(Feature):
         description = "You have Advantage on attack rolls against the creature currently marked by your Hunter's Mark."
         return description
 
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.ENEMY
+
 
 class FeralSenses(Feature):
     def __init__(self):
@@ -281,6 +300,9 @@ class FeralSenses(Feature):
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "Your connection to the forces of nature grants you Blindsight with a range of 30 feet."
         return description
+
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.SELF
 
 
 class FoeSlayer(Feature):

@@ -1,4 +1,11 @@
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, ActionType, RegainedOn
+from CharacterContent.Features.Core.BaseFeatures import (
+    ActionType,
+    Feature,
+    FeatureActivation,
+    FeatureTarget,
+    FeatureUses,
+    RegainedOn,
+)
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
@@ -62,6 +69,9 @@ class SecondWind(Feature):
         if character_stat_block.character_level >= 10:
             uses = 4
         return uses
+
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.SELF
 
 
 class WeaponMastery(Feature):
@@ -166,6 +176,9 @@ class TacticalShift(Feature):
         description = "Whenever you activate your Second Wind with a Bonus Action, you can move up to half your Speed without provoking Opportunity Attacks."
         return description
 
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.SELF
+
 
 class Indomitable(Feature):
     def __init__(self):
@@ -209,6 +222,9 @@ class Indomitable(Feature):
         else:
             return 1
 
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.SELF
+
 
 class TacticalMaster(Feature):
     def __init__(self):
@@ -237,6 +253,9 @@ class StudiedAttacks(Feature):
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "You study your opponents and learn from each attack you make. If you make an attack roll against a creature and miss, you have Advantage on your next attack roll against that creature before the end of your next turn."
         return description
+
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.ENEMY
 
 
 class EpicBoon(Feature):

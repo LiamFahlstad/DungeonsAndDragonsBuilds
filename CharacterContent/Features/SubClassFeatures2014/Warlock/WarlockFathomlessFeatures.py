@@ -4,6 +4,7 @@ from CharacterContent.Features.Core.BaseFeatures import (
     Feature,
     FeatureActivation,
     FeatureUses,
+    FeatureTarget,
 )
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
@@ -80,6 +81,9 @@ class TentacleOfTheDeep(Feature):
             ("Recharge", "Long rest"),
         ]
 
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.ENEMY
+
     def number_of_uses(self, character_stat_block: CharacterStatBlock) -> int:
         return character_stat_block.get_proficiency_bonus()
 
@@ -98,6 +102,9 @@ class GiftOfTheSea(Feature):
         )
         return description
 
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.SELF
+
 
 class OceanicSoul(Feature):
     def __init__(self):
@@ -110,6 +117,9 @@ class OceanicSoul(Feature):
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "You are now even more at home in the depths. You gain resistance to cold damage. In addition, when you are fully submerged, any creature that is also fully submerged can understand your speech, and you can understand theirs."
         return description
+
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.SELF
 
 
 class GuardianCoil(Feature):
@@ -143,6 +153,9 @@ class GuardianCoil(Feature):
             ("Type", "Reaction"),
             ("Effect", f"Reduce damage to chosen creature by {damage}"),
         ]
+
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.ALLY
 
 
 class GraspingTentacles(Feature):
@@ -208,3 +221,6 @@ class FathomlessPlunge(Feature):
             ("Destination", "Body of water (pond size+) or within 30 feet"),
             ("Recharge", "Short or long rest"),
         ]
+
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.ALLY

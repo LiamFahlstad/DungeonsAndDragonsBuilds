@@ -1,6 +1,6 @@
 
 from Core.Definitions import RANGER_HIT_DIE, Ability, Condition
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType, FeatureTarget
 from CharacterContent.Features.Core.Improvements import ConditionImmunity, SavingThrowBonus
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
@@ -43,6 +43,9 @@ class WrathOfTheWild(Feature):
         )
         return description
 
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.AREA
+
 
 class HungeringMight(Feature):
     def __init__(self):
@@ -54,6 +57,9 @@ class HungeringMight(Feature):
             "In addition, once per turn when you hit a creature with an attack roll while you are transformed using Wrath of the Wild, you regain a number of Hit Points equal to 1d10 plus your Wisdom modifier, provided you are Bloodied when you hit."
         )
         return description
+
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.SELF
 
 
 class HungeringMightBonus(Feature):

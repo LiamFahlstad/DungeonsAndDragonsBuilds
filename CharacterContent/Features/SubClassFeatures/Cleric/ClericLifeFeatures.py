@@ -1,5 +1,5 @@
 from Core.Definitions import CLERIC_HIT_DIE
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType, FeatureTarget
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
@@ -10,6 +10,11 @@ class DiscipleOfLife(Feature):
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "When a spell you cast with a spell slot restores Hit Points to a creature, that creature regains additional Hit Points on the turn you cast the spell. The additional Hit Points equal 2 plus the spell slot's level."
         return description
+
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
+        return FeatureTarget.ALLY
 
 
 class LifeDomainSpells(Feature):
@@ -40,6 +45,11 @@ class PreserveLife(Feature):
             ("Limit", "No creature healed above half max HP"),
         ]
 
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
+        return FeatureTarget.ALLY
+
 
 class BlessedHealer(Feature):
     def __init__(self):
@@ -48,6 +58,11 @@ class BlessedHealer(Feature):
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "The healing spells you cast on others heal you as well. Immediately after you cast a spell with a spell slot that restores Hit Points to one or more creatures other than yourself, you regain Hit Points equal to 2 plus the spell slot's level."
         return description
+
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
+        return FeatureTarget.SELF
 
 
 class SupremeHealing(Feature):

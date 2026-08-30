@@ -1,5 +1,5 @@
 from Core.Definitions import Ability, CreatureSize, MAX_PROFICIENCY_BONUS, Sense
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, RegainedOn
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, RegainedOn, FeatureTarget
 from CharacterContent.Features.Core.Improvements import SavingThrowAdvantage, GrantSense
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
@@ -46,6 +46,9 @@ class ForestGnomeSpeakWithAnimals(Feature):
     def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
 
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.SELF
+
     def number_of_uses(self, character_stat_block: CharacterStatBlock) -> int:
         return character_stat_block.get_proficiency_bonus()
 
@@ -65,3 +68,6 @@ class RockGnomePrestidigitation(Feature):
             "Create a Tiny clockwork device (AC 5, 1 HP) that mimics one Prestidigitation effect, activated by Bonus Action and touch. "
             "You can have 3 at a time; each lasts 8 hours or until dismantled."
         )
+
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.OBJECT

@@ -1,6 +1,6 @@
 from Core.Definitions import ROGUE_HIT_DIE
 import Core.Definitions as Definitions
-from CharacterContent.Features.Core.BaseFeatures import Feature
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureTarget
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
@@ -24,6 +24,9 @@ class Assassinate(Feature):
             ("Surprising Strikes", "Advantage on attacks vs. creatures that haven't taken a turn in round 1"),
             ("Extra Damage", "Weapon damage type equal to your Rogue level when Sneak Attack hits in round 1"),
         ]
+
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.ENEMY
 
 
 class AssassinsTools(Feature):
@@ -56,6 +59,9 @@ class EnvenomWeapons(Feature):
         description = "When you use the Poison option of your Cunning Strike, the target also takes 2d6 Poison damage whenever it fails the saving throw. This damage ignores Resistance to Poison damage."
         return description
 
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.ENEMY
+
 
 class DeathStrike(Feature):
     def __init__(self):
@@ -69,3 +75,6 @@ class DeathStrike(Feature):
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "When you hit with your Sneak Attack on the first round of a combat, the target must succeed on a Constitution saving throw (DC 8 plus your Dexterity modifier and Proficiency Bonus), or the attack's damage is doubled against the target."
         return description
+
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.ENEMY

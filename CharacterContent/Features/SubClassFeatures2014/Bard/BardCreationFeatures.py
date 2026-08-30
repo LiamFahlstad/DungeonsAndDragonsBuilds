@@ -1,5 +1,5 @@
 from Core.Definitions import Ability
-from CharacterContent.Features.Core.BaseFeatures import FeatureUses, Feature, FeatureActivation, ActionType, RegainedOn
+from CharacterContent.Features.Core.BaseFeatures import FeatureUses, Feature, FeatureActivation, ActionType, RegainedOn, FeatureTarget
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
@@ -7,6 +7,11 @@ from Utils import StringUtils
 class MoteOfPotential(Feature):
     def __init__(self):
         super().__init__(name="Mote of Potential", origin="College of Creation Bard Level 3", activation=FeatureActivation(duration="Until Bardic Inspiration Die is Lost", range="5 Feet"), usage_tags=["damage", "buff"])
+
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
+        return FeatureTarget.ALLY
 
     def get_table_description(
         self, character_stat_block: CharacterStatBlock
@@ -38,6 +43,11 @@ class PerformanceOfCreation(Feature):
     def __init__(self):
         super().__init__(name="Performance of Creation", origin="College of Creation Bard Level 3", activation=FeatureActivation(action_type=ActionType.ACTION, duration="Proficiency Bonus Hours", range="10 Feet"), usage_tags=["utility"], uses=FeatureUses(max_uses=1, regain_all_on="long rest"))
 
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
+        return FeatureTarget.OBJECT
+
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
             "Also at 3rd level, as an action, you can channel the magic of the Song of Creation to create one nonmagical item of your choice in an unoccupied space within 10 feet of you. The item must appear on a surface or in a liquid that can support it. The gp value of the item can't be more than 20 times your bard level, and the item must be Medium or smaller. The item glimmers softly, and a creature can faintly hear music when touching it. The created item disappears after a number of hours equal to your proficiency bonus. For examples of items you can create, see the equipment chapter of the Player's Handbook.\n"
@@ -55,6 +65,11 @@ class PerformanceOfCreation(Feature):
 class AnimatingPerformance(Feature):
     def __init__(self):
         super().__init__(name="Animating Performance", origin="College of Creation Bard Level 6", activation=FeatureActivation(action_type=ActionType.ACTION, duration="1 Hour or Until Reduced to 0 HP or Death", range="30 Feet"), usage_tags=["utility"], uses=FeatureUses(max_uses=1, regain_all_on="long rest"))
+
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
+        return FeatureTarget.OBJECT
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

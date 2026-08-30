@@ -1,4 +1,10 @@
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, ActionType
+from CharacterContent.Features.Core.BaseFeatures import (
+    Feature,
+    FeatureUses,
+    FeatureActivation,
+    ActionType,
+    FeatureTarget,
+)
 from Core.Definitions import MAX_PROFICIENCY_BONUS
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
@@ -22,6 +28,9 @@ class WizardlyQuill(Feature):
             "This quill disappears if you create another one or if you die."
         )
         return description
+
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.OBJECT
 
 
 class AwakenedSpellbook(Feature):
@@ -75,6 +84,9 @@ class ManifestMind(Feature):
         )
         return description
 
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.SELF
+
     def number_of_uses(self, character_stat_block: CharacterStatBlock) -> int:
         return character_stat_block.get_proficiency_bonus()
 
@@ -120,3 +132,6 @@ class OneWithTheWord(Feature):
             "Once you use this reaction, you can't do so again until you finish a long rest."
         )
         return description
+
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.SELF

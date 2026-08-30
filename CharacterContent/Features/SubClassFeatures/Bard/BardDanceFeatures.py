@@ -1,5 +1,5 @@
 from Core.Definitions import BARD_HIT_DIE
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType, FeatureTarget
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
@@ -72,6 +72,11 @@ class TandemFootwork(Feature):
             ("Cost", "1 use of Bardic Inspiration"),
             ("Effect", "Roll Bardic Inspiration die; you and each ally within 30 feet who can see/hear you gain that bonus to Initiative"),
         ]
+
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
+        return FeatureTarget.ALLY
 
 
 class LeadingEvasion(Feature):

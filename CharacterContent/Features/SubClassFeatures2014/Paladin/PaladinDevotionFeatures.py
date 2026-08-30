@@ -1,5 +1,5 @@
 from Core.Definitions import PALADIN_HIT_DIE
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType, RegainedOn, FeatureUses
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType, RegainedOn, FeatureUses, FeatureTarget
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
@@ -33,6 +33,9 @@ class SacredWeapon(Feature):
         )
         return description
 
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.OBJECT
+
     def get_table_description(self, character_stat_block: CharacterStatBlock) -> list[tuple[str, str]]:
         return [
             ("Action", "Action"),
@@ -55,6 +58,9 @@ class TurnTheUnholy(Feature):
         )
         return description
 
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.ENEMY
+
 
 class AuraOfDevotion(Feature):
     def __init__(self):
@@ -63,6 +69,9 @@ class AuraOfDevotion(Feature):
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "You and friendly creatures within 10 feet of you can't be charmed while you are conscious."
         return description
+
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.ALLY
 
 
 class AuraOfDevotionExpansion(Feature):
@@ -84,6 +93,9 @@ class PurityOfSpirit(Feature):
         description = "You are always under the effects of a Protection from Evil and Good spell."
         return description
 
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.SELF
+
 
 class HolyNimbus(Feature):
     def __init__(self):
@@ -91,6 +103,9 @@ class HolyNimbus(Feature):
 
     def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
+
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.AREA
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

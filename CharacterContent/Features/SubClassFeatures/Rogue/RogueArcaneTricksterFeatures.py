@@ -1,4 +1,4 @@
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType, RegainedOn
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType, RegainedOn, FeatureTarget
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
@@ -52,6 +52,9 @@ class MageHandLegerdemain(Feature):
         description = "When you cast Mage Hand, you can cast it as a Bonus Action, and you can make the spectral hand Invisible. You can control the hand as a Bonus Action, and through it, you can make Dexterity (Sleight of Hand) checks."
         return description
 
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.OBJECT
+
 
 class MagicalAmbush(Feature):
     def __init__(self):
@@ -60,6 +63,9 @@ class MagicalAmbush(Feature):
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "If you have the Invisible condition when you cast a spell on a creature, it has Disadvantage on any saving throw it makes against the spell on the same turn."
         return description
+
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.CREATURE
 
 
 class VersatileTrickster(Feature):
@@ -71,6 +77,9 @@ class VersatileTrickster(Feature):
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "You gain the ability to distract targets with your Mage Hand. When you use the Trip option of your Cunning Strike on a creature, you can also use that option on another creature within 5 feet of the spectral hand."
         return description
+
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.ENEMY
 
 
 class SpellThief(Feature):
@@ -99,3 +108,6 @@ class SpellThief(Feature):
             ("Duration", "8 hours (you have spell prepared; creature can't cast)"),
             ("Limitation", "Once per Long Rest"),
         ]
+
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.ENEMY

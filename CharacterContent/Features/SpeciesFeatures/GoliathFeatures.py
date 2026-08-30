@@ -1,7 +1,7 @@
 from enum import Enum
 
 from Core.Definitions import CreatureSize, MAX_PROFICIENCY_BONUS
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, ActionType, RegainedOn
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, ActionType, RegainedOn, FeatureTarget
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 SPEED = 35  # Given by your species
@@ -26,6 +26,9 @@ class LargeForm(Feature):
 
     def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
+
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.SELF
 
 
 class PowerfulBuild(Feature):
@@ -60,6 +63,13 @@ class GiantAncestry(Feature):
 
     def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
+
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        if self.giant_ancestry_type == GiantAncestryType.CLOUD_GIANT:
+            return FeatureTarget.SELF
+        if self.giant_ancestry_type == GiantAncestryType.STONE_GIANT:
+            return FeatureTarget.SELF
+        return FeatureTarget.ENEMY
 
     def number_of_uses(self, character_stat_block: CharacterStatBlock) -> int:
         return character_stat_block.get_proficiency_bonus()

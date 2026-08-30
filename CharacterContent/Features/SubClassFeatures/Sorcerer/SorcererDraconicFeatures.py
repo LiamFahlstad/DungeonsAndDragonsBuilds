@@ -1,6 +1,6 @@
 import Core.Definitions as Definitions
 from Core.Definitions import Ability, SORCERER_HIT_DIE
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType, RegainedOn
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType, RegainedOn, FeatureTarget
 from CharacterContent.Features.Core.Improvements import MultiAbilityArmorClass
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
@@ -64,6 +64,9 @@ class DragonWings(Feature):
             "Once you use this feature, you can’t use it again until you finish a Long Rest unless you spend 3 Sorcery Points (no action required) to restore your use of it."
         )
         return description
+
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.SELF
 
     def get_table_description(
         self, character_stat_block: CharacterStatBlock

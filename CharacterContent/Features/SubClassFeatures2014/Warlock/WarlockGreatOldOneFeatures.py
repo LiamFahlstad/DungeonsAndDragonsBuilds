@@ -1,4 +1,10 @@
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, ActionType
+from CharacterContent.Features.Core.BaseFeatures import (
+    Feature,
+    FeatureUses,
+    FeatureActivation,
+    ActionType,
+    FeatureTarget,
+)
 from CharacterContent.Features.Core.Improvements import DamageResistance
 from Core.Definitions import DamageType
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
@@ -38,6 +44,9 @@ class AwakenedMind(Feature):
         description = "Your alien knowledge gives you the ability to touch the minds of other creatures. You can telepathically speak to any creature you can see within 30 feet of yourself. You don't need to share a language with the creature for it to understand your telepathic utterances, but the creature must be able to understand at least one language."
         return description
 
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.CREATURE
+
 
 class EntropicWard(Feature):
     def __init__(self):
@@ -70,6 +79,9 @@ class EntropicWard(Feature):
             ("Recharge", "Short or long rest"),
         ]
 
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.ENEMY
+
 
 class ThoughtShield(Feature):
     def __init__(self):
@@ -86,6 +98,9 @@ class ThoughtShield(Feature):
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "Your thoughts can't be read by telepathy or other means unless you allow it. You also have Resistance to Psychic damage, and whenever a creature deals Psychic damage to you, that creature takes the same amount of damage that you do."
         return description
+
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.SELF
 
 
 class CreateThrall(Feature):
@@ -113,3 +128,6 @@ class CreateThrall(Feature):
             ("Duration", "Until Remove Curse, Charmed removed, or feature used again"),
             ("Bonus", "Telepathic communication on same plane"),
         ]
+
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.ENEMY

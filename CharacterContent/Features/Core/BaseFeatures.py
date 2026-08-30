@@ -56,6 +56,18 @@ class RegainedOn(str, Enum):
     OTHER = "other"
 
 
+class FeatureTarget(str, Enum):
+    """Who or what a feature's effect can be aimed at, as stated in the
+    feature's own description."""
+
+    SELF = "self"
+    ALLY = "ally"
+    CREATURE = "creature"
+    ENEMY = "enemy"
+    OBJECT = "object"
+    AREA = "area"
+
+
 _RANGE_SHAPE_RE = re.compile(
     r"(\d+)-Foot[- ](Cone|Cube|Sphere|Line|Emanation|Cylinder|Radius(?: Sphere)?)",
     re.IGNORECASE,
@@ -509,6 +521,16 @@ class Feature:
         initiative roll), so the value can be reused anywhere it's needed
         instead of being re-parsed from prose. Return None (default) for
         features with nothing to regain."""
+        return None
+
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
+        """Override to return what this feature's effect can be aimed at
+        (e.g. self, an ally, a creature, an object), so the value can be
+        reused anywhere it's needed instead of being re-parsed from prose.
+        Return None (default) for features with no meaningful target (e.g.
+        passive features or ones that affect the caster only implicitly)."""
         return None
 
     def number_of_uses(self, character_stat_block: CharacterStatBlock) -> int:

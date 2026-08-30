@@ -1,4 +1,4 @@
-from CharacterContent.Features.Core.BaseFeatures import FeatureUses, Feature, RegainedOn
+from CharacterContent.Features.Core.BaseFeatures import FeatureUses, Feature, RegainedOn, FeatureTarget
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
@@ -83,6 +83,9 @@ class KnowYourEnemy(Feature):
             "    * Fighter class levels, if any"
         )
         return description
+
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.CREATURE
 
 
 class ImprovedCombatSuperiority(Feature):

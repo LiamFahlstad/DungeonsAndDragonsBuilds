@@ -1,7 +1,7 @@
 import Core.Definitions as Definitions
 from Core.Definitions import BARBARIAN_HIT_DIE
 from CharacterContent.Features.ClassFeatures.Barbarian.BarbarianFeatures import get_rage_damage_bonus
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType, FeatureTarget
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
@@ -28,6 +28,11 @@ class Frenzy(Feature):
             ("Uses", "First target hit per turn"),
         ]
 
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
+        return FeatureTarget.ENEMY
+
 
 class MindlessRage(Feature):
     def __init__(self):
@@ -39,6 +44,11 @@ class MindlessRage(Feature):
         description = "You have Immunity to the Charmed and Frightened conditions while your Rage is active. If you're Charmed or Frightened when you enter your Rage, the condition ends on you."
         return description
 
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
+        return FeatureTarget.SELF
+
 
 class Retaliation(Feature):
     def __init__(self):
@@ -49,6 +59,11 @@ class Retaliation(Feature):
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "When you take damage from a creature that is within 5 feet of you, you can take a Reaction to make one melee attack against that creature, using a weapon or an Unarmed Strike."
         return description
+
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
+        return FeatureTarget.ENEMY
 
 
 class IntimidatingPresence(Feature):
@@ -71,6 +86,11 @@ class IntimidatingPresence(Feature):
         strength_modifier = character_stat_block.get_strength_modifier()
         proficiency_bonus = character_stat_block.get_proficiency_bonus()
         return 8 + strength_modifier + proficiency_bonus
+
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
+        return FeatureTarget.AREA
 
     def get_table_description(
         self, character_stat_block: CharacterStatBlock

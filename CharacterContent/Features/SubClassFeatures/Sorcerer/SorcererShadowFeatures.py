@@ -1,5 +1,5 @@
 from Core.Definitions import SORCERER_HIT_DIE, Sense
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType, FeatureTarget
 from CharacterContent.Features.Core.Improvements import GrantSense
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
@@ -41,6 +41,9 @@ class PowerOfShadow(Feature):
         )
         return description
 
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.SELF
+
 
 class BeastsOfIllOmen(Feature):
     def __init__(self):
@@ -52,6 +55,9 @@ class BeastsOfIllOmen(Feature):
             "Whenever you cast the spell, you can modify it so that it doesn’t require Concentration. If you do so, the spell’s duration becomes 1 minute for that casting, and the spell ends early if you cast the spell again."
         )
         return description
+
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.ENEMY
 
     def get_table_description(
         self, character_stat_block: CharacterStatBlock
@@ -73,6 +79,9 @@ class ShadowWalk(Feature):
         description = "While you are in Dim Light or Darkness, you can take a Bonus Action to teleport up to 120 feet to an unoccupied space you can see that is also in Dim Light or Darkness."
         return description
 
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.SELF
+
 
 class UmbralForm(Feature):
     def __init__(self):
@@ -85,6 +94,9 @@ class UmbralForm(Feature):
             "Shadow Resilience. You have Resistance to all damage except Force and Radiant damage."
         )
         return description
+
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.SELF
 
     def get_table_description(self, character_stat_block: CharacterStatBlock) -> list[tuple[str, str]]:
         return [

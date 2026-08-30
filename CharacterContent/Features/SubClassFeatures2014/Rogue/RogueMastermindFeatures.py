@@ -1,4 +1,9 @@
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType
+from CharacterContent.Features.Core.BaseFeatures import (
+    Feature,
+    FeatureActivation,
+    ActionType,
+    FeatureTarget,
+)
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
@@ -13,6 +18,9 @@ class MasterOfIntrigue(Feature):
         )
         return description
 
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.SELF
+
 
 class MasterOfTactics(Feature):
     def __init__(self):
@@ -21,6 +29,9 @@ class MasterOfTactics(Feature):
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "You can use the Help action as a bonus action. Additionally, when you use the Help action to aid an ally in attacking a creature, the target of that attack can be within 30 feet of you, rather than 5 feet of you, if the target can see or hear you."
         return description
+
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.ALLY
 
 
 class InsightfulManipulator(Feature):
@@ -38,6 +49,9 @@ class InsightfulManipulator(Feature):
         )
         return description
 
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.CREATURE
+
 
 class Misdirection(Feature):
     def __init__(self):
@@ -46,6 +60,9 @@ class Misdirection(Feature):
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "You can sometimes cause another creature to suffer an attack meant for you. When you are targeted by an attack while a creature within 5 feet of you is granting you cover against that attack, you can use your reaction to have the attack target that creature instead of you."
         return description
+
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.CREATURE
 
 
 class SoulOfDeceit(Feature):
@@ -58,3 +75,6 @@ class SoulOfDeceit(Feature):
             "Additionally, no matter what you say, magic that would determine if you are telling the truth indicates you are being truthful if you so choose, and you can't be compelled to tell the truth by magic."
         )
         return description
+
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.SELF

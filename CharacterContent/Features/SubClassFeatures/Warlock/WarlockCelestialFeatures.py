@@ -1,6 +1,6 @@
 from Core.Definitions import WARLOCK_HIT_DIE, DamageType
 import Core.Definitions as Definitions
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType, RegainedOn
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType, RegainedOn, FeatureTarget
 from CharacterContent.Features.Core.Improvements import DamageResistance
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
@@ -32,6 +32,8 @@ class HealingLight(Feature):
 
     def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.ALLY
     def get_table_description(
         self, character_stat_block: CharacterStatBlock
     ) -> list[tuple[str, str]]:
@@ -79,6 +81,9 @@ class CelestialResilience(Feature):
     ) -> str:
         return "Gain temp HP (Warlock level + CHA mod) when using Magical Cunning or finishing Short or Long Rest; you can grant half that amount to up to 5 creatures you can see."
 
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.ALLY
+
 
 class SearingVengeance(Feature):
     def __init__(self):
@@ -92,6 +97,9 @@ class SearingVengeance(Feature):
             "Once you use this feature, you can't use it again until you finish a Long Rest."
         )
         return description
+
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.ALLY
 
     def get_table_description(
         self, character_stat_block: CharacterStatBlock

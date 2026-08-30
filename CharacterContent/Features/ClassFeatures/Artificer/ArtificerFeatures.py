@@ -1,6 +1,7 @@
 from CharacterContent.Features.Core.BaseFeatures import (
     Feature,
     FeatureActivation,
+    FeatureTarget,
     FeatureUses,
     ActionType,
     RegainedOn,
@@ -68,6 +69,9 @@ class TinkersMagic(Feature):
 
     def number_of_uses(self, character_stat_block: CharacterStatBlock) -> int:
         return character_stat_block.get_intelligence_modifier()
+
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.OBJECT
 
 
 class ReplicateMagicItem(Feature):
@@ -153,6 +157,9 @@ class ReplicateMagicItem(Feature):
         )
         return description
 
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.OBJECT
+
 
 class MagicItemTinker(Feature):
     def __init__(self):
@@ -166,6 +173,9 @@ class MagicItemTinker(Feature):
             "Transmute Magic Item. As a Magic action, you can touch one magic item within 5 feet of yourself that you created with Replicate Magic Item and transform it into a different magic item. The resulting item must be based on a magic item plan you know. Once you use this feature, you can't do so again until you finish a Long Rest."
         )
         return description
+
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.OBJECT
 
 
 class FlashofGenius(Feature):
@@ -208,6 +218,9 @@ class FlashofGenius(Feature):
     def number_of_uses(self, character_stat_block: CharacterStatBlock) -> int:
         return character_stat_block.get_intelligence_modifier()
 
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.ALLY
+
 
 class MagicItemAdept(Feature):
     def __init__(self):
@@ -229,6 +242,9 @@ class SpellStoringItem(Feature):
             "The spell stays in the object until it's been used a number of times equal to twice your Intelligence modifier (minimum of twice) or until you use this feature again to store a spell in an object."
         )
         return description
+
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.OBJECT
 
 
 class AdvancedArtifice(Feature):

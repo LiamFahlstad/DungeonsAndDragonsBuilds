@@ -1,5 +1,5 @@
 from Core.Definitions import MAX_ABILITY_MODIFIER, ROGUE_HIT_DIE
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, ActionType, RegainedOn
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, ActionType, RegainedOn, FeatureTarget
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
@@ -15,6 +15,8 @@ class Bloodthirst(Feature):
 
     def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.ENEMY
     def number_of_uses(self, character_stat_block: CharacterStatBlock) -> int:
         return max(1, character_stat_block.get_intelligence_modifier())
     def get_table_description(
@@ -46,6 +48,9 @@ class DreadAllegiance(Feature):
         )
         return description
 
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.SELF
+
 
 class StrikeFear(Feature):
     def __init__(self):
@@ -70,6 +75,9 @@ class StrikeFear(Feature):
             ("Repeat Save", "End of target's turn (success ends effect)"),
         ]
 
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.ENEMY
+
 
 class AuraOfMalevolence(Feature):
     def __init__(self):
@@ -80,6 +88,9 @@ class AuraOfMalevolence(Feature):
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "You radiate malignant power associated with one of the Dead Three. When you use Bloodthirst and teleport, each creature of your choice within 10 feet of either the space you left or your destination space (your choice) takes damage equal to your Intelligence modifier; the damage type is the same as the damage Resistance granted by your choice in the Dread Allegiance feature. Damage dealt by this feature ignores Resistance."
         return description
+
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.AREA
 
 
 class DreadIncarnate(Feature):

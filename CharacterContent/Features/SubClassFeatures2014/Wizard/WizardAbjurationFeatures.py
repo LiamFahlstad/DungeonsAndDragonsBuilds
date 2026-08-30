@@ -1,6 +1,11 @@
 from Core import Definitions
 from Core.Definitions import WIZARD_HIT_DIE
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType
+from CharacterContent.Features.Core.BaseFeatures import (
+    Feature,
+    FeatureActivation,
+    ActionType,
+    FeatureTarget,
+)
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
@@ -39,6 +44,9 @@ class ArcaneWard(Feature):
             ("Limit", "Once per long rest"),
         ]
 
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.SELF
+
 
 class ProjectedWard(Feature):
     def __init__(self):
@@ -48,6 +56,9 @@ class ProjectedWard(Feature):
         description = "When a creature that you can see within 30 feet of you takes damage, you can use your reaction to cause your Arcane Ward to absorb that damage. If this damage reduces the ward to 0 hit points, the warded creature takes any remaining damage."
         return description
 
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.ALLY
+
 
 class ImprovedAbjuration(Feature):
     def __init__(self):
@@ -56,6 +67,9 @@ class ImprovedAbjuration(Feature):
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "When you cast an abjuration spell that requires you to make an ability check as a part of casting that spell (as in Counterspell and Dispel Magic), you add your proficiency bonus to that ability check."
         return description
+
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.SELF
 
 
 class SpellResistance(Feature):
@@ -68,3 +82,6 @@ class SpellResistance(Feature):
             "Furthermore, you have resistance against the damage of spells."
         )
         return description
+
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.SELF

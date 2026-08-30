@@ -1,4 +1,4 @@
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType, FeatureTarget
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
@@ -38,6 +38,11 @@ class ArcaneAbjurationChannelDivinity(Feature):
             usage_tags=["control"],
         )
 
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
+        return FeatureTarget.ENEMY
+
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
             "You can use your Channel Divinity to abjure otherworldly creatures.\n"
@@ -58,6 +63,11 @@ class ArcaneAbjurationChannelDivinity(Feature):
 class SpellBreaker(Feature):
     def __init__(self):
         super().__init__(name="Spell Breaker", origin="Arcana Domain Cleric Level 6")
+
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
+        return FeatureTarget.ALLY
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "When you restore hit points to an ally with a spell of 1st level or higher, you can also end one spell of your choice on that creature. The level of the spell you end must be equal to or lower than the level of the spell slot you use to cast the healing spell."

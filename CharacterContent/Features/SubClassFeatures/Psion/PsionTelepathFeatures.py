@@ -1,5 +1,5 @@
 from Core.Definitions import PSION_HIT_DIE, Ability
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType, FeatureTarget
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
@@ -30,6 +30,9 @@ class MindInfiltrator(Feature):
             ("Stealth on Read Thoughts", "Target doesn't know you're probing (if fails save)"),
         ]
 
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.CREATURE
+
 
 class TelepathicDistraction(Feature):
     def __init__(self):
@@ -45,6 +48,9 @@ class TelepathicDistraction(Feature):
             "if the target misses the attack."
         )
         return description
+
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.ALLY
 
 
 class BulwarkMind(Feature):
@@ -76,6 +82,9 @@ class BulwarkMind(Feature):
             ("Saving Throw Bonus", "Add die roll to INT/WIS/CHA saves (die doesn't expend)"),
             ("Restriction", "Not while Incapacitated"),
         ]
+
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.SELF
 
 
 class PotentThoughts(Feature):
@@ -118,6 +127,9 @@ class TelepathicBolstering(Feature):
             ("Cost", "1 Psionic Energy Die (expended only if success)"),
         ]
 
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.ALLY
+
 
 class ScrambleMinds(Feature):
     def __init__(self):
@@ -148,3 +160,6 @@ class ScrambleMinds(Feature):
             "choose one creature to auto-succeed on save, and you pick each creature's confused behavior each turn "
             "(instead of rolling)."
         )
+
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.AREA

@@ -1,5 +1,5 @@
 import Core.Definitions as Definitions
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType, RegainedOn
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType, FeatureTarget, RegainedOn
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
@@ -27,6 +27,11 @@ class AncestralProtectors(Feature):
             "When you rage, spectral warriors target the first creature you hit each turn. That target has disadvantage on attacks not against you; creatures it hits gain resistance to the damage dealt."
         )
 
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
+        return FeatureTarget.ENEMY
+
 
 class SpiritShield(Feature):
     def __init__(self):
@@ -51,6 +56,11 @@ class SpiritShield(Feature):
             ("Effect", f"Reduce that damage by {dice}"),
             ("Duration", "Ends when your rage ends"),
         ]
+
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
+        return FeatureTarget.ALLY
 
 
 class ConsultTheSpirits(Feature):

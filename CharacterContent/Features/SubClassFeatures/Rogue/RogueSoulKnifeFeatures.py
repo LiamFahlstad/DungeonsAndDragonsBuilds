@@ -1,6 +1,6 @@
 from Core.Definitions import CharacterClass, ROGUE_HIT_DIE
 import Core.Definitions as Definitions
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, ActionType, RegainedOn
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, ActionType, RegainedOn, FeatureTarget
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
@@ -47,6 +47,9 @@ class PsychicBlades(Feature):
         )
         return description
 
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.ENEMY
+
 
 class SoulBlades(Feature):
     def __init__(self):
@@ -83,6 +86,9 @@ class PsychicVeil(Feature):
             ("Recharge", "Long Rest (or expend 1 Psionic Energy Die)"),
         ]
 
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.SELF
+
 
 class RendMind(Feature):
     def __init__(self):
@@ -92,6 +98,9 @@ class RendMind(Feature):
         dexterity_modifier = character_stat_block.get_dexterity_modifier()
         proficiency_bonus = character_stat_block.get_proficiency_bonus()
         return 8 + dexterity_modifier + proficiency_bonus
+
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.ENEMY
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

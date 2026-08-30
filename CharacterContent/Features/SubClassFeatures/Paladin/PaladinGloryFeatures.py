@@ -1,5 +1,5 @@
 from Core.Definitions import MAX_ABILITY_MODIFIER, PALADIN_HIT_DIE
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, ActionType, RegainedOn
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, ActionType, RegainedOn, FeatureTarget
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
@@ -7,6 +7,11 @@ from Utils import StringUtils
 class InspiringSmite(Feature):
     def __init__(self):
         super().__init__(name="Inspiring Smite", origin="Oath of Glory Paladin Level 3", activation=FeatureActivation(range="30 Feet"), usage_tags=["heal"])
+
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
+        return FeatureTarget.ALLY
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "Immediately after you cast Divine Smite, you can expend one use of your Channel Divinity and distribute Temporary Hit Points to creatures of your choice within 30 feet of yourself, which can include you. The total number of Temporary Hit Points equals 2d8 plus your Paladin level, divided among the chosen creatures however you like."
@@ -48,6 +53,11 @@ class PeerlessAthlete(Feature):
             name="Peerless Athlete", origin="Oath of Glory Paladin Level 3", activation=FeatureActivation(action_type=ActionType.BONUS_ACTION, duration="1 Hour"), usage_tags=["buff"]
         )
 
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
+        return FeatureTarget.SELF
+
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "As a Bonus Action, you can expend one use of your Channel Divinity to augment your athleticism. For 1 hour, you have Advantage on Strength (Athletics) and Dexterity (Acrobatics) checks, and the distance of your Long and High Jumps increases by 10 feet (this extra distance costs movement as normal)."
         return description
@@ -58,6 +68,11 @@ class AuraOfAlacrity(Feature):
         super().__init__(
             name="Aura of Alacrity", origin="Oath of Glory Paladin Level 7", usage_tags=["buff"]
         )
+
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
+        return FeatureTarget.ALLY
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -83,6 +98,12 @@ class GloriousDefense(Feature):
 
     def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
+
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
+        return FeatureTarget.ALLY
+
     def number_of_uses(self, character_stat_block: CharacterStatBlock) -> int:
         return max(1, character_stat_block.get_charisma_modifier())
     def get_table_description(self, character_stat_block: CharacterStatBlock) -> list[tuple[str, str]]:
@@ -100,6 +121,11 @@ class GloriousDefense(Feature):
 class LivingLegend(Feature):
     def __init__(self):
         super().__init__(name="Living Legend", origin="Oath of Glory Paladin Level 20", activation=FeatureActivation(action_type=ActionType.BONUS_ACTION, duration="10 Minutes"), usage_tags=["buff"])
+
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
+        return FeatureTarget.SELF
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

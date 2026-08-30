@@ -1,5 +1,5 @@
 from Core.Definitions import ARTIFICER_HIT_DIE, Ability
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType, RegainedOn
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType, FeatureTarget, RegainedOn
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
@@ -57,6 +57,11 @@ class ArcaneArmor(Feature):
             ("Quick Don and Doff", "Don or doff as a Utilize action; can't be removed against your will"),
             ("Spellcasting Focus", "Use Arcane Armor as Spellcasting Focus for your Artificer spells"),
         ]
+
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
+        return FeatureTarget.SELF
 
 
 class ArmorModel(Feature):

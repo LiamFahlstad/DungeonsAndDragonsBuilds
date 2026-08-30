@@ -2,6 +2,7 @@ from CharacterContent.Features.Core.BaseFeatures import (
     ActionType,
     Feature,
     FeatureActivation,
+    FeatureTarget,
     FeatureUses,
     RegainedOn,
 )
@@ -78,6 +79,11 @@ class ExperimentalElixir(Feature):
         self, character_stat_block: CharacterStatBlock
     ) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
+
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
+        return FeatureTarget.ALLY
 
 
 class AlchemicalSavant(Feature):

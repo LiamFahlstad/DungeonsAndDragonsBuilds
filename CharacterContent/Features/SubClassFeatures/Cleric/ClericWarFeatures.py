@@ -1,5 +1,5 @@
 from Core.Definitions import CLERIC_HIT_DIE, DamageType, MAX_ABILITY_MODIFIER
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, ActionType, RegainedOn
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, ActionType, FeatureTarget, RegainedOn
 from CharacterContent.Features.Core.Improvements import DamageResistance
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
@@ -23,6 +23,11 @@ class GuidedStrike(Feature):
             ("Range", "30 feet for other creatures"),
             ("Effect", "Attack may hit after bonus applied"),
         ]
+
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
+        return FeatureTarget.ALLY
 
 
 class WarDomainSpells(Feature):
@@ -53,6 +58,11 @@ class WarPriest(Feature):
             ("Uses", f"{uses} (Wisdom modifier, minimum 1)"),
             ("Recharge", "Short or Long Rest"),
         ]
+
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
+        return FeatureTarget.ENEMY
 
 
 
@@ -99,3 +109,8 @@ class AvatarOfBattle(Feature):
             "You gain Resistance to Bludgeoning, Piercing, and Slashing damage."
         )
         return description
+
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
+        return FeatureTarget.SELF

@@ -1,5 +1,5 @@
 from Core.Definitions import BARBARIAN_HIT_DIE
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, FeatureTarget
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
@@ -46,6 +46,11 @@ class AspectOfTheWilds(Feature):
             "Salmon. You have a Swim Speed equal to your Speed."
         )
         return description
+
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
+        return FeatureTarget.SELF
 
 
 class NatureSpeaker(Feature):

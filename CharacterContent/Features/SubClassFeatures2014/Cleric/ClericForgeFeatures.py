@@ -1,6 +1,6 @@
 import Core.Definitions as Definitions
 from Core.Definitions import DamageType
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, RegainedOn
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, RegainedOn, FeatureTarget
 from CharacterContent.Features.Core.Improvements import DamageImmunity, DamageResistance
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
@@ -25,6 +25,11 @@ class BlessingOfTheForge(Feature):
             activation=FeatureActivation(duration="Until End of Next Long Rest or Until You Die"),
             usage_tags=["buff"],
             uses=FeatureUses(max_uses=1, regain_all_on="long rest"))
+
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
+        return FeatureTarget.OBJECT
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

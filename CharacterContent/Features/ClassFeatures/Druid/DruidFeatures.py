@@ -4,7 +4,14 @@ from typing import Type
 from CharacterContent.Features.ClassFeatures.Druid.WildShapeForms import (
     format_wild_shape_form,
 )
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, ActionType, RegainedOn
+from CharacterContent.Features.Core.BaseFeatures import (
+    ActionType,
+    Feature,
+    FeatureActivation,
+    FeatureTarget,
+    FeatureUses,
+    RegainedOn,
+)
 from CharacterContent.Features.Core.Improvements import GrantLanguage
 from Combat.Definitions import ExtendedCombatantData
 from Core.Definitions import CharacterClass, Language
@@ -149,6 +156,9 @@ class WildShape(Feature):
         else:
             return 2
 
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.SELF
+
 
 class AdditionalWildShapeForms(Feature):
     def __init__(self, known_forms: list[Type[ExtendedCombatantData]], origin: str):
@@ -245,6 +255,9 @@ class PrimalStrike(Feature):
         )
         return description
 
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.ENEMY
+
 
 class ImprovedPotentSpellcasting(Feature):
     def __init__(self):
@@ -266,6 +279,9 @@ class ImprovedPrimalStrike(Feature):
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "The extra damage of your Primal Strike increases to 2d8."
         return description
+
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.ENEMY
 
 
 class BeastSpells(Feature):

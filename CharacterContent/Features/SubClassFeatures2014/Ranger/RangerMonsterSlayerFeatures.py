@@ -1,4 +1,10 @@
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType, RegainedOn
+from CharacterContent.Features.Core.BaseFeatures import (
+    Feature,
+    FeatureActivation,
+    ActionType,
+    RegainedOn,
+    FeatureTarget,
+)
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
@@ -41,6 +47,9 @@ class HuntersSense(Feature):
 
     def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
+
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.CREATURE
 
     def get_table_description(
         self, character_stat_block: CharacterStatBlock
@@ -85,6 +94,9 @@ class SlayersPrey(Feature):
             ("Duration", "Until short or long rest (ends early if redesignate)"),
         ]
 
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.ENEMY
+
 
 class SupernaturalDefense(Feature):
     def __init__(self):
@@ -97,6 +109,9 @@ class SupernaturalDefense(Feature):
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "At 7th level, you gain extra resilience against your prey's assaults on your mind and body. Whenever the target of your Slayer's Prey forces you to make a saving throw and whenever you make an ability check to escape that target's grapple, add 1d6 to your roll."
         return description
+
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.SELF
 
 
 class MagicUsersNemesis(Feature):
@@ -134,6 +149,9 @@ class MagicUsersNemesis(Feature):
             ("Recharge", "Short or long rest"),
         ]
 
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.ENEMY
+
 
 class SlayersCounter(Feature):
     def __init__(self):
@@ -147,3 +165,6 @@ class SlayersCounter(Feature):
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "At 15th level, you gain the ability to counterattack when your prey tries to sabotage you. If the target of your Slayer's Prey forces you to make a saving throw, you can use your reaction to make one weapon attack against the quarry. You make this attack immediately before making the saving throw. If the attack hits, your save automatically succeeds, in addition to the attack's normal effects."
         return description
+
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.ENEMY

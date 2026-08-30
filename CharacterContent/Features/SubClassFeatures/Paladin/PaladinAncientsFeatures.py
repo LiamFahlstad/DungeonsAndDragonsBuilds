@@ -1,5 +1,5 @@
 from Core.Definitions import PALADIN_HIT_DIE
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType, RegainedOn
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType, RegainedOn, FeatureTarget
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
@@ -8,6 +8,11 @@ class NaturesWrath(Feature):
         super().__init__(
             name="Nature's Wrath", origin="Oath of the Ancients Paladin Level 3", activation=FeatureActivation(action_type=ActionType.ACTION, duration="1 Minute", range="15 Feet"), usage_tags=["control"]
         )
+
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
+        return FeatureTarget.ENEMY
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "As a Magic action, you can expend one use of your Channel Divinity to conjure spectral vines around nearby creatures. Each creature of your choice that you can see within 15 feet of yourself must succeed on a Strength saving throw or have the Restrained condition for 1 minute. A Restrained creature repeats the save at the end of each of its turns, ending the effect on a success."
@@ -50,6 +55,11 @@ class AuraOfWarding(Feature):
             name="Aura of Warding", origin="Oath of the Ancients Paladin Level 7", usage_tags=["buff"]
         )
 
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
+        return FeatureTarget.ALLY
+
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "Ancient magic lies so heavily upon you that it forms an eldritch ward, blunting energy from beyond the Material Plane; you and your allies have Resistance to Necrotic, Psychic, and Radiant damage while in your Aura of Protection."
         return description
@@ -60,6 +70,11 @@ class UndyingSentinel(Feature):
         super().__init__(
             name="Undying Sentinel", origin="Oath of the Ancients Paladin Level 15", usage_tags=["heal"]
         )
+
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
+        return FeatureTarget.SELF
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -83,6 +98,11 @@ class ElderChampion(Feature):
         super().__init__(
             name="Elder Champion", origin="Oath of the Ancients Paladin Level 20", activation=FeatureActivation(action_type=ActionType.BONUS_ACTION, duration="1 Minute or Until Ended"), usage_tags=["heal", "control"]
         )
+
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
+        return FeatureTarget.SELF
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

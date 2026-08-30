@@ -1,5 +1,5 @@
 import Core.Definitions as Definitions
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType, RegainedOn
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType, RegainedOn, FeatureTarget
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
@@ -40,6 +40,11 @@ class EyesOfNight(Feature):
             usage_tags=["utility"],
         )
 
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
+        return FeatureTarget.ALLY
+
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
             "You can see through the deepest gloom. You have darkvision out to a range of 300 feet. In that radius, you can see in dim light as if it were bright light and in darkness as if it were dim light.\n"
@@ -71,6 +76,11 @@ class VigilantBlessing(Feature):
             usage_tags=["buff"],
         )
 
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
+        return FeatureTarget.ALLY
+
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "The night has taught you to be vigilant. As an action, you give one creature you touch (including possibly yourself) advantage on the next initiative roll the creature makes. This benefit ends immediately after the roll or if you use this feature again."
         return description
@@ -84,6 +94,11 @@ class TwilightSanctuaryChannelDivinity(Feature):
             activation=FeatureActivation(action_type=ActionType.ACTION, duration="1 Minute or Until You Are Incapacitated or Die", range="Self (30-Foot-Radius Sphere)"),
             usage_tags=["heal", "buff"],
         )
+
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
+        return FeatureTarget.AREA
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -115,6 +130,11 @@ class StepsOfNight(Feature):
             activation=FeatureActivation(action_type=ActionType.BONUS_ACTION, duration="1 Minute"),
             usage_tags=["utility"],
             uses=FeatureUses(max_uses=Definitions.MAX_PROFICIENCY_BONUS, regain_all_on="long rest", current_formula="Current amount: equal to your proficiency bonus."))
+
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
+        return FeatureTarget.SELF
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

@@ -1,5 +1,5 @@
 from Core.Definitions import FIGHTER_HIT_DIE
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType, RegainedOn
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType, RegainedOn, FeatureTarget
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
@@ -38,6 +38,11 @@ class WarBond(Feature):
     def __init__(self):
         super().__init__(name="War Bond", origin="Eldritch Knight Fighter Level 3", activation=FeatureActivation(action_type=ActionType.BONUS_ACTION), usage_tags=["utility"])
 
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
+        return FeatureTarget.OBJECT
+
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
             "You learn a ritual that creates a magical bond between yourself and one weapon. You perform the ritual over the course of 1 hour, which can be done during a Short Rest. The weapon must be within your reach throughout the ritual, at the conclusion of which you touch the weapon and forge the bond. The bond fails if another Fighter is bonded to the weapon or if the weapon is a magic item to which someone else is attuned.\n"
@@ -74,6 +79,11 @@ class EldritchStrike(Feature):
             name="Eldritch Strike", origin="Eldritch Knight Fighter Level 10", usage_tags=["control"]
         )
 
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
+        return FeatureTarget.ENEMY
+
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "You learn how to make your weapon strikes undercut a creature's ability to withstand your spells. When you hit a creature with an attack using a weapon, that creature has Disadvantage on the next saving throw it makes against a spell you cast before the end of your next turn."
         return description
@@ -84,6 +94,11 @@ class ArcaneCharge(Feature):
         super().__init__(
             name="Arcane Charge", origin="Eldritch Knight Fighter Level 15", activation=FeatureActivation(range="30 Feet"), usage_tags=["utility"]
         )
+
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
+        return FeatureTarget.SELF
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "When you use your Action Surge, you can teleport up to 30 feet to an unoccupied space you can see. You can teleport before or after the additional action."

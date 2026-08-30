@@ -1,4 +1,10 @@
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, ActionType
+from CharacterContent.Features.Core.BaseFeatures import (
+    Feature,
+    FeatureUses,
+    FeatureActivation,
+    ActionType,
+    FeatureTarget,
+)
 from CharacterContent.Features.Core.Improvements import ConditionImmunity
 from Core.Definitions import Condition
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
@@ -52,6 +58,9 @@ class FeyPresence(Feature):
             ("Recharge", "Short or long rest"),
         ]
 
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.AREA
+
 
 class MistyEscape(Feature):
     def __init__(self):
@@ -84,6 +93,9 @@ class MistyEscape(Feature):
             ("Recharge", "Short or long rest"),
         ]
 
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.SELF
+
 
 class BeguilingDefenses(Feature):
     def __init__(self):
@@ -112,6 +124,9 @@ class BeguilingDefenses(Feature):
             ("Effect", "Target is charmed by you"),
             ("Duration", "1 minute or until target takes damage"),
         ]
+
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.ENEMY
 
 
 class DarkDelirium(Feature):
@@ -143,3 +158,6 @@ class DarkDelirium(Feature):
             ("Concentration", "Yes; breaks on creature damage"),
             ("Recharge", "Short or long rest"),
         ]
+
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.ENEMY

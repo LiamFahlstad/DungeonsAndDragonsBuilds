@@ -1,5 +1,5 @@
 from Core.Definitions import Ability, DamageType, MAX_ABILITY_MODIFIER, WARLOCK_HIT_DIE
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, ActionType, RegainedOn
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, ActionType, RegainedOn, FeatureTarget
 from CharacterContent.Features.Core.Improvements import DamageResistance
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
@@ -15,6 +15,8 @@ class FormOfDread(Feature):
 
     def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.SELF
     def number_of_uses(self, character_stat_block: CharacterStatBlock) -> int:
         return max(1, character_stat_block.get_charisma_modifier())
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -88,6 +90,9 @@ class NecroticHusk(Feature):
             "When you drop to 0 HP and don't die, trigger area effect: creatures in 30-foot Emanation make CON save (DC your spell save), taking 2d10 + CHA Necrotic damage on fail (half on success); you regain HP to twice your Warlock level and gain 1 Exhaustion (recharge Short or Long Rest)."
         )
 
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.AREA
+
 
 class SuperiorDread(Feature):
     def __init__(self):
@@ -108,3 +113,6 @@ class SuperiorDread(Feature):
         return (
             "While Form of Dread active: gain Resistance to Bludgeoning/Piercing/Slashing, Fly Speed equal to your Speed with hover (moving through creatures and objects as difficult terrain but taking 1d10 Force if ending turn inside), and cast Conjuration or Necromancy Warlock spells without components (except costly or consumed Material)."
         )
+
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.SELF

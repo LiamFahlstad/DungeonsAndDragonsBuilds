@@ -1,5 +1,5 @@
 from Core.Definitions import Skill
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType, FeatureTarget
 from CharacterContent.Features.Core.Improvements import SkillProficiencyChoice
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
@@ -53,3 +53,6 @@ class ShapeShifter(Feature):
             "As an action, change your appearance and voice to appear as a playable species (Medium or Small size, same limb arrangement). "
             "Gain Advantage on Charisma checks while shifted. Revert as an action; clothing and equipment don't change."
         )
+
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.SELF

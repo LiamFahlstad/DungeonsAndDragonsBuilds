@@ -1,5 +1,5 @@
 from Core.Definitions import CLERIC_HIT_DIE, MAX_ABILITY_MODIFIER
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, ActionType, RegainedOn
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, ActionType, FeatureTarget, RegainedOn
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
@@ -36,6 +36,11 @@ class RadianceOfTheDawn(Feature):
             ("Effect 2", "Constitution save; 2d10 + Cleric level Radiant damage on fail (half on success)"),
         ]
 
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
+        return FeatureTarget.AREA
+
 
 class WardingFlare(Feature):
     def __init__(self):
@@ -65,6 +70,11 @@ class WardingFlare(Feature):
     def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
 
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
+        return FeatureTarget.ENEMY
+
     def number_of_uses(self, character_stat_block: CharacterStatBlock) -> int:
         return max(1, character_stat_block.get_wisdom_modifier())
 class ImprovedWardingFlare(Feature):
@@ -84,6 +94,11 @@ class ImprovedWardingFlare(Feature):
 
     def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
+
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
+        return FeatureTarget.ALLY
 class CoronaOfLight(Feature):
     def __init__(self):
         super().__init__(name="Corona of Light", origin="Light Domain Cleric Level 17", activation=FeatureActivation(action_type=ActionType.ACTION, duration="1 Minute", range="60-Foot Radius"), usage_tags=["control"], uses=FeatureUses(max_uses=MAX_ABILITY_MODIFIER, regain_all_on="long rest", current_formula="Current amount: equal to your Wisdom modifier."))
@@ -112,6 +127,11 @@ class CoronaOfLight(Feature):
 
     def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
+
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
+        return FeatureTarget.AREA
 
     def number_of_uses(self, character_stat_block: CharacterStatBlock) -> int:
         return max(1, character_stat_block.get_wisdom_modifier())

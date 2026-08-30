@@ -1,7 +1,12 @@
 from typing import Optional
 
 from Core.Definitions import Ability, RANGER_HIT_DIE
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType
+from CharacterContent.Features.Core.BaseFeatures import (
+    Feature,
+    FeatureActivation,
+    ActionType,
+    FeatureTarget,
+)
 from CharacterContent.Features.Core.Improvements import InitiativeBonus, SavingThrowProficiencyChoice
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
@@ -52,6 +57,9 @@ class DreadAmbusher(Feature):
             ("Attack Damage", "+1d8 damage of weapon's type on hit"),
         ]
 
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.SELF
+
 
 class UmbralSight(Feature):
     def __init__(self):
@@ -98,6 +106,9 @@ class StalkersFlurry(Feature):
         description = "You learn to attack with such unexpected speed that you can turn a miss into another strike. Once on each of your turns when you miss with a weapon attack, you can make another weapon attack as part of the same action."
         return description
 
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.SELF
+
 
 class ShadowyDodge(Feature):
     def __init__(self):
@@ -106,3 +117,6 @@ class ShadowyDodge(Feature):
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "You can dodge in unforeseen ways, with wisps of supernatural shadow around you. Whenever a creature makes an attack roll against you and doesn't have advantage on the roll, you can use your reaction to impose disadvantage on it. You must use this feature before you know the outcome of the attack roll."
         return description
+
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.ENEMY

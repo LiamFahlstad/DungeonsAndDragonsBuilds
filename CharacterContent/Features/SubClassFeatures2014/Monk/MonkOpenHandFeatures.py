@@ -1,5 +1,5 @@
 import Core.Definitions as Definitions
-from CharacterContent.Features.Core.BaseFeatures import FeatureUses, Feature, FeatureActivation, ActionType
+from CharacterContent.Features.Core.BaseFeatures import FeatureUses, Feature, FeatureActivation, ActionType, FeatureTarget
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
@@ -18,6 +18,9 @@ class OpenHandTechnique(Feature):
         )
         return description
 
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.ENEMY
+
 
 class WholenessOfBody(Feature):
     def __init__(self):
@@ -28,6 +31,9 @@ class WholenessOfBody(Feature):
             "You gain the ability to heal yourself. As an action, you can regain hit points equal to three times your monk level."
         )
         return description
+
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.SELF
 
     def get_table_description(self, character_stat_block: CharacterStatBlock) -> list[tuple[str, str]]:
         monk_level = character_stat_block.get_class_level(Definitions.CharacterClass.MONK)
@@ -54,6 +60,9 @@ class Tranquility(Feature):
         wisdom_modifier = character_stat_block.get_wisdom_modifier()
         return 8 + proficiency_bonus + wisdom_modifier
 
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.SELF
+
 
 class QuiveringPalm(Feature):
     def __init__(self):
@@ -66,6 +75,9 @@ class QuiveringPalm(Feature):
             "You can have only one creature under the effect of this feature at a time. You can choose to end the vibrations harmlessly without using an action."
         )
         return description
+
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.ENEMY
 
     def get_table_description(self, character_stat_block: CharacterStatBlock) -> list[tuple[str, str]]:
         monk_level = character_stat_block.get_class_level(Definitions.CharacterClass.MONK)

@@ -1,5 +1,5 @@
 from Core.Definitions import Ability, MAX_ABILITY_MODIFIER, SORCERER_HIT_DIE
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, ActionType, RegainedOn
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, ActionType, RegainedOn, FeatureTarget
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
@@ -44,6 +44,8 @@ class RestoreBalance(Feature):
 
     def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.CREATURE
     def number_of_uses(self, character_stat_block: CharacterStatBlock) -> int:
         return max(1, character_stat_block.get_charisma_modifier())
 class BastionOfLaw(Feature):
@@ -56,6 +58,9 @@ class BastionOfLaw(Feature):
             "The ward lasts until you finish a Long Rest or until you use this feature again."
         )
         return description
+
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.ALLY
 
     def get_table_description(
         self, character_stat_block: CharacterStatBlock
@@ -79,6 +84,9 @@ class TranceOfOrder(Feature):
             "Once you use this feature, you can’t use it again until you finish a Long Rest unless you spend 5 Sorcery Points (no action required) to restore your use of it."
         )
         return description
+
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.SELF
 
     def get_table_description(
         self, character_stat_block: CharacterStatBlock
@@ -106,6 +114,9 @@ class ClockworkCavalcade(Feature):
             "Dispel. Every spell of level 6 and lower ends on creatures and objects of your choice in the Cube."
         )
         return description
+
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.AREA
 
     def get_table_description(
         self, character_stat_block: CharacterStatBlock

@@ -1,5 +1,5 @@
 from Core.Definitions import PALADIN_HIT_DIE
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType, FeatureTarget
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
@@ -29,6 +29,11 @@ class SacredWeapon(Feature):
             name="Sacred Weapon", origin="Oath of Devotion Paladin Level 3", activation=FeatureActivation(duration="10 Minutes or Until Used Again", range="20-Foot Radius"), usage_tags=["buff"]
         )
 
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
+        return FeatureTarget.OBJECT
+
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
             "When you take the Attack action, you can expend one use of your Channel Divinity to imbue one Melee weapon that you are holding with positive energy. For 10 minutes or until you use this feature again, you add your Charisma modifier to attack rolls you make with that weapon (minimum bonus of +1), and each time you hit with it, you cause it to deal its normal damage type or Radiant Damage.\n"
@@ -55,6 +60,11 @@ class AuraOfDevotion(Feature):
             name="Aura of Devotion", origin="Oath of Devotion Paladin Level 7", usage_tags=["buff"]
         )
 
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
+        return FeatureTarget.ALLY
+
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "You and your allies have Immunity to the Charmed condition while in your Aura of Protection. If a Charmed ally enters the aura, that condition has no effect on that ally while there."
         return description
@@ -65,6 +75,11 @@ class SmiteOfProtection(Feature):
         super().__init__(
             name="Smite of Protection", origin="Oath of Devotion Paladin Level 15", activation=FeatureActivation(duration="Until Start of Next Turn"), usage_tags=["buff"]
         )
+
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
+        return FeatureTarget.ALLY
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "Your magical smite now radiates protective energy. Whenever you cast Divine Smite, you and your allies have Half Cover while in your Aura of Protection. The aura has this benefit until the start of your next turn."
@@ -77,6 +92,11 @@ class SmiteOfProtection(Feature):
 class HolyNimbus(Feature):
     def __init__(self):
         super().__init__(name="Holy Nimbus", origin="Oath of Devotion Paladin Level 20", activation=FeatureActivation(action_type=ActionType.BONUS_ACTION, duration="10 Minutes or Until Ended"), usage_tags=["buff", "damage"])
+
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
+        return FeatureTarget.SELF
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

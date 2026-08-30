@@ -1,5 +1,5 @@
 from Core.Definitions import CLERIC_HIT_DIE, MAX_ABILITY_MODIFIER
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, ActionType, RegainedOn
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, ActionType, FeatureTarget, RegainedOn
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
@@ -61,6 +61,11 @@ class PathToTheGrave(Feature):
             ("Bonus", "Extra Necrotic or Radiant damage (Cleric level) when hit"),
         ]
 
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
+        return FeatureTarget.ENEMY
+
 
 class SentinelAtDeathsDoor(Feature):
     def __init__(self):
@@ -94,6 +99,11 @@ class SentinelAtDeathsDoor(Feature):
 
     def number_of_uses(self, character_stat_block: CharacterStatBlock) -> int:
         return max(1, character_stat_block.get_wisdom_modifier())
+
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
+        return FeatureTarget.ALLY
 class DivineReaper(Feature):
     def __init__(self):
         super().__init__(name="Divine Reaper", origin="Grave Domain Cleric Level 17", activation=FeatureActivation(range="60 Feet"), usage_tags=["heal"])

@@ -1,6 +1,11 @@
 from Core import Definitions
 from Core.Definitions import WIZARD_HIT_DIE
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType
+from CharacterContent.Features.Core.BaseFeatures import (
+    Feature,
+    FeatureActivation,
+    ActionType,
+    FeatureTarget,
+)
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
@@ -24,6 +29,9 @@ class GrimHarvest(Feature):
         )
         return description
 
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.SELF
+
 
 class UndeadThralls(Feature):
     def __init__(self):
@@ -38,6 +46,9 @@ class UndeadThralls(Feature):
         )
         return description
 
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.ALLY
+
 
 class InuredToUndeath(Feature):
     def __init__(self):
@@ -48,6 +59,9 @@ class InuredToUndeath(Feature):
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "You have resistance to necrotic damage, and your hit point maximum can't be reduced. You have spent so much time dealing with undead and the forces that animate them that you have become inured to some of their worst effects."
         return description
+
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.SELF
 
 
 class CommandUndead(Feature):
@@ -71,3 +85,6 @@ class CommandUndead(Feature):
             ("Int 8+", "Has advantage on save"),
             ("Int 12+", "Can repeat save at end of every hour"),
         ]
+
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.ENEMY

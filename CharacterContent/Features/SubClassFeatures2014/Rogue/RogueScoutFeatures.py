@@ -1,5 +1,10 @@
 from Core.Definitions import ROGUE_HIT_DIE, Skill
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType
+from CharacterContent.Features.Core.BaseFeatures import (
+    Feature,
+    FeatureActivation,
+    ActionType,
+    FeatureTarget,
+)
 from CharacterContent.Features.Core.Improvements import SkillProficiency, SkillExpertise
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
@@ -13,6 +18,9 @@ class Skirmisher(Feature):
             "Starting at 3rd level, you are difficult to pin down during a fight. You can move up to half your speed as a reaction when an enemy ends its turn within 5 feet of you. This movement doesn't provoke opportunity attacks."
         )
         return description
+
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.SELF
 
 
 class Survivalist(Feature):
@@ -40,6 +48,9 @@ class SuperiorMobility(Feature):
         description = "At 9th level, your walking speed increases by 10 feet. If you have a climbing or swimming speed, this increase applies to that speed as well."
         return description
 
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.SELF
+
 
 class AmbushMaster(Feature):
     def __init__(self):
@@ -61,3 +72,6 @@ class SuddenStrike(Feature):
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "Starting at 17th level, you can strike with deadly speed. If you take the Attack action on your turn, you can make one additional attack as a bonus action. This attack can benefit from your Sneak Attack even if you have already used it this turn, but you can't use your Sneak Attack against the same target more than once in a turn."
         return description
+
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.SELF

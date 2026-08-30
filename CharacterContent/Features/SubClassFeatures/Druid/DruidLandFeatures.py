@@ -1,7 +1,7 @@
 
 import Core.Definitions as Definitions
 from Core.Definitions import DRUID_HIT_DIE, Condition, DamageType
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType, FeatureTarget
 from CharacterContent.Features.Core.Improvements import ConditionImmunity, DamageResistance
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
@@ -35,6 +35,11 @@ class LandsAid(Feature):
 
     def calculate_dc(self, character_stat_block: CharacterStatBlock) -> int:
         return character_stat_block.calculate_difficulty_class()
+
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
+        return FeatureTarget.AREA
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -108,6 +113,11 @@ class NaturesWard(Feature):
         self._condition_immunity.apply(character_stat_block)
         self._resistance.apply(character_stat_block)
 
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
+        return FeatureTarget.SELF
+
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         resistance = _LAND_TYPE_RESISTANCE[self.land_type]
         description = (
@@ -122,6 +132,11 @@ class NaturesSanctuary(Feature):
         super().__init__(
             name="Nature's Sanctuary", origin="Circle of the Land Druid Level 14", activation=FeatureActivation(action_type=ActionType.ACTION, duration="1 Minute or Until Incapacitated", range="120 Feet (15-Foot Cube)"), usage_tags=["buff"]
         )
+
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
+        return FeatureTarget.AREA
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

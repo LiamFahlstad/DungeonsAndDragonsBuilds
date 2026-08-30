@@ -1,5 +1,5 @@
 from Core.Definitions import BARD_HIT_DIE
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType, FeatureTarget
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
@@ -24,6 +24,11 @@ class CombatInspiration(Feature):
             ("Defense", "When hit by attack, use Reaction to roll Bardic Inspiration die and add to AC (may cause attack to miss)"),
             ("Offense", "After hitting with attack, roll Bardic Inspiration die and add to the attack's damage"),
         ]
+
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
+        return FeatureTarget.ALLY
 
 
 class MartialTraining(Feature):

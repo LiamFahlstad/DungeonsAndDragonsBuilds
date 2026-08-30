@@ -3,7 +3,7 @@ from typing import Optional
 from Core.Definitions import DamageType, RANGER_HIT_DIE
 from CharacterContent.Features.ClassFeatures.Ranger import PrimalCompanions
 from CharacterContent.Features.ClassFeatures.Ranger.PrimalCompanions import CompanionType
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, FeatureTarget
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
@@ -26,6 +26,9 @@ class PrimalCompanion(Feature):
         )
         return description
 
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.ALLY
+
 
 class ExceptionalTraining(Feature):
     def __init__(self):
@@ -40,6 +43,9 @@ class ExceptionalTraining(Feature):
         )
         return description
 
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.ALLY
+
 
 class BestialFury(Feature):
     def __init__(self):
@@ -52,6 +58,9 @@ class BestialFury(Feature):
         )
         return description
 
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.ALLY
+
 
 class ShareSpells(Feature):
     def __init__(self):
@@ -60,3 +69,6 @@ class ShareSpells(Feature):
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "When you cast a spell targeting yourself, you can also affect your Primal Companion beast with the spell if the beast is within 30 feet of you."
         return description
+
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.ALLY

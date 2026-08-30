@@ -1,4 +1,4 @@
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType, FeatureTarget
 from CharacterContent.Features.Core.Improvements import (
     SkillExpertiseChoice,
     SkillProficiencyChoice,
@@ -114,6 +114,11 @@ class UnfetteredMind(Feature):
         )
         return description
 
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
+        return FeatureTarget.CREATURE
+
 
 class DivineForeknowledge(Feature):
     def __init__(self):
@@ -138,3 +143,8 @@ class DivineForeknowledge(Feature):
             ("Recharge", "Long Rest"),
             ("Alternative", "Expend level 6+ spell slot (no action)"),
         ]
+
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
+        return FeatureTarget.SELF

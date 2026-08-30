@@ -1,5 +1,5 @@
 from Core.Definitions import PSION_HIT_DIE, Ability
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType, FeatureTarget
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
@@ -51,6 +51,9 @@ class MutableForm(Feature):
             ("Touch Range", "10 feet (for touch spells with action casting time)"),
         ]
 
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.SELF
+
 
 class OrganicWeapons(Feature):
     def __init__(self):
@@ -98,6 +101,9 @@ class OrganicWeapons(Feature):
         )
         return description
 
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.SELF
+
 
 class FleshWeaver(Feature):
     def __init__(self):
@@ -126,6 +132,9 @@ class FleshWeaver(Feature):
             ("Organic Defense", "+2 bonus to AC"),
             ("Empowered Healing", "When casting healing spell, expend die and add roll to HP regained"),
         ]
+
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.SELF
 
 
 class ImprovedMutableForm(Feature):
@@ -160,6 +169,9 @@ class ImprovedMutableForm(Feature):
             "condition."
         )
         return description
+
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.SELF
 
 
 class LifeBendingWeapons(Feature):

@@ -1,5 +1,5 @@
 from Core.Definitions import PALADIN_HIT_DIE
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType, FeatureTarget
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
@@ -29,6 +29,11 @@ class VowOfEnmity(Feature):
             name="Vow of Enmity", origin="Oath of Vengeance Paladin Level 3", activation=FeatureActivation(duration="1 Minute or Until Used Again", range="30 Feet"), usage_tags=["buff"]
         )
 
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
+        return FeatureTarget.ENEMY
+
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
             "When you take the Attack action, you can expend one use of your Channel Divinity to utter a vow of enmity against a creature you can see within 30 feet of yourself. You have Advantage on attack rolls against the creature for 1 minute or until you use this feature again.\n"
@@ -53,6 +58,11 @@ class RelentlessAvenger(Feature):
             name="Relentless Avenger", origin="Oath of Vengeance Paladin Level 7", activation=FeatureActivation(action_type=ActionType.REACTION, duration="Until End of Current Turn"), usage_tags=["control"]
         )
 
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
+        return FeatureTarget.ENEMY
+
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "Your supernatural focus helps you close off a foe's retreat. When you hit a creature with an Opportunity Attack, you can reduce the creature's Speed to 0 until the end of the current turn. You can then move up to half your Speed as part of the same Reaction. This movement doesn't provoke Opportunity Attacks."
         return description
@@ -73,6 +83,11 @@ class SoulOfVengeance(Feature):
             name="Soul of Vengeance", origin="Oath of Vengeance Paladin Level 15", activation=FeatureActivation(action_type=ActionType.REACTION), usage_tags=["damage"]
         )
 
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
+        return FeatureTarget.ENEMY
+
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "Immediately after a creature under the effect of your Vow of Enmity hits or misses with an attack roll, you can take a Reaction to make a melee attack against that creature if it's within range."
         return description
@@ -83,6 +98,11 @@ class AvengingAngel(Feature):
         super().__init__(
             name="Avenging Angel", origin="Oath of Vengeance Paladin Level 20", activation=FeatureActivation(action_type=ActionType.BONUS_ACTION, duration="10 Minutes or Until Ended"), usage_tags=["buff", "control", "utility"]
         )
+
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
+        return FeatureTarget.SELF
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

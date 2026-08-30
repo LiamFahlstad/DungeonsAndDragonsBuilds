@@ -1,5 +1,5 @@
 from Core.Definitions import WIZARD_HIT_DIE
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType, RegainedOn
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType, RegainedOn, FeatureTarget
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
@@ -25,6 +25,9 @@ class Portent(Feature):
             "Each foretelling roll can be used only once. When you finish a Long Rest, you lose any unused foretelling rolls."
         )
         return description
+
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.CREATURE
 
     def get_table_description(
         self, character_stat_block: CharacterStatBlock
@@ -61,6 +64,9 @@ class TheThirdEye(Feature):
             "    * See Invisibility: You can cast See Invisibility without expending a spell slot."
         )
         return description
+
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.SELF
 
 
 class GreaterPortent(Feature):

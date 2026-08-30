@@ -1,5 +1,11 @@
 from Core.Definitions import ROGUE_HIT_DIE
-from CharacterContent.Features.Core.BaseFeatures import FeatureUses, Feature, FeatureActivation, ActionType
+from CharacterContent.Features.Core.BaseFeatures import (
+    FeatureUses,
+    Feature,
+    FeatureActivation,
+    ActionType,
+    FeatureTarget,
+)
 from CharacterContent.Features.Core.Improvements import InitiativeBonus
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
@@ -17,6 +23,9 @@ class FancyFootwork(Feature):
         )
         return description
 
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.SELF
+
 
 class RakishAudacity(Feature):
     def __init__(self):
@@ -32,6 +41,9 @@ class RakishAudacity(Feature):
             "All the other rules for Sneak Attack still apply to you."
         )
         return description
+
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.SELF
 
 
 class RakishAudacityBonus(Feature):
@@ -76,6 +88,9 @@ class Panache(Feature):
             ("If Non-Hostile & Success", "Target is charmed by you for 1 minute, regards you as friendly acquaintance; ends if you do anything harmful to it"),
         ]
 
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.CREATURE
+
 
 class ElegantManeuver(Feature):
     def __init__(self):
@@ -87,6 +102,9 @@ class ElegantManeuver(Feature):
             "or Strength (Athletics) check you make during the same turn."
         )
         return description
+
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.SELF
 
 
 class MasterDuelist(Feature):
@@ -100,3 +118,6 @@ class MasterDuelist(Feature):
             "again until you finish a short or long rest."
         )
         return description
+
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.SELF

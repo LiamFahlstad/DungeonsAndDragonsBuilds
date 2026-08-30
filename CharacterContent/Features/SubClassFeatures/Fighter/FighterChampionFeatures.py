@@ -1,5 +1,5 @@
 from Core.Definitions import DiceRollCondition, FIGHTER_HIT_DIE, Skill
-from CharacterContent.Features.Core.BaseFeatures import Feature
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureTarget
 from CharacterContent.Features.Core.Improvements import InitiativeRollCondition, SkillRollCondition
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
@@ -7,6 +7,11 @@ from StatBlocks.CharacterStatBlock import CharacterStatBlock
 class ImprovedCritical(Feature):
     def __init__(self):
         super().__init__(name="Improved Critical", origin="Champion Fighter Level 3")
+
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
+        return FeatureTarget.SELF
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "Your attack rolls with weapons and Unarmed Strikes can score a Critical Hit on a roll of 19 or 20 on the d20."
@@ -24,6 +29,11 @@ class RemarkableAthlete(Feature):
     def apply(self, character_stat_block: CharacterStatBlock) -> None:
         self._initiative.apply(character_stat_block)
         self._athletics.apply(character_stat_block)
+
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
+        return FeatureTarget.SELF
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -48,6 +58,11 @@ class HeroicWarrior(Feature):
     def __init__(self):
         super().__init__(name="Heroic Warrior", origin="Champion Fighter Level 10", usage_tags=["buff"])
 
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
+        return FeatureTarget.SELF
+
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "The thrill of battle drives you toward victory. During combat, you can give yourself Heroic Inspiration whenever you start your turn without it."
         return description
@@ -57,6 +72,11 @@ class SuperiorCritical(Feature):
     def __init__(self):
         super().__init__(name="Superior Critical", origin="Champion Fighter Level 15")
 
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
+        return FeatureTarget.SELF
+
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "Your attack rolls with weapons and Unarmed Strikes can now score a Critical Hit on a roll of 18-20 on the d20."
         return description
@@ -65,6 +85,11 @@ class SuperiorCritical(Feature):
 class Survivor(Feature):
     def __init__(self):
         super().__init__(name="Survivor", origin="Champion Fighter Level 18", usage_tags=["buff", "heal"])
+
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
+        return FeatureTarget.SELF
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

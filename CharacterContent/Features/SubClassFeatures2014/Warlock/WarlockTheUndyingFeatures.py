@@ -1,5 +1,11 @@
 import Core.Definitions as Definitions
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, ActionType
+from CharacterContent.Features.Core.BaseFeatures import (
+    Feature,
+    FeatureUses,
+    FeatureActivation,
+    ActionType,
+    FeatureTarget,
+)
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
@@ -40,6 +46,9 @@ class AmongTheDead(Feature):
         )
         return description
 
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.SELF
+
 
 class DefyDeath(Feature):
     def __init__(self):
@@ -70,6 +79,9 @@ class DefyDeath(Feature):
             ("Effect", f"Regain 1d8 + Constitution modifier ({con_mod}) HP (min 1)"),
             ("Recharge", "Long rest"),
         ]
+
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.SELF
 
 
 class UndyingNature(Feature):
@@ -119,3 +131,6 @@ class IndestructibleLife(Feature):
             ("Bonus", "Reattach severed body parts"),
             ("Recharge", "Short or long rest"),
         ]
+
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.SELF

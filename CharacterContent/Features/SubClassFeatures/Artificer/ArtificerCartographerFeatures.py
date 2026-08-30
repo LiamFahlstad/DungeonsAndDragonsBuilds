@@ -1,5 +1,5 @@
 from Core.Definitions import ARTIFICER_HIT_DIE, MAX_ABILITY_MODIFIER
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, RegainedOn
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, FeatureTarget, RegainedOn
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
@@ -64,6 +64,11 @@ class AdventurersAtlas(Feature):
             ("Positioning", "Map holders see each other (same plane); can target spells through obstacles"),
         ]
 
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
+        return FeatureTarget.ALLY
+
 
 class MappingMagic(Feature):
     def __init__(self):
@@ -116,6 +121,11 @@ class IngeniousMovement(Feature):
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "When you use your Flash of Genius, you or a willing creature of your choice that you can see within 30 feet of yourself can teleport up to 30 feet to an unoccupied space you can see as part of that same Reaction."
         return description
+
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
+        return FeatureTarget.ALLY
 
 
 class SuperiorAtlas(Feature):

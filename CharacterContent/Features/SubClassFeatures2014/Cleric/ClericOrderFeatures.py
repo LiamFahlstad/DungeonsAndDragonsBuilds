@@ -1,6 +1,6 @@
 import Core.Definitions as Definitions
 from Core.Definitions import Ability
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, ActionType, RegainedOn
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, ActionType, RegainedOn, FeatureTarget
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
@@ -16,6 +16,11 @@ class BonusProficiencies(Feature):
 class VoiceOfAuthority(Feature):
     def __init__(self):
         super().__init__(name="Voice of Authority", origin="Order Domain Cleric Level 3", usage_tags=["utility"])
+
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
+        return FeatureTarget.ALLY
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -51,6 +56,11 @@ class OrdersDemandChannelDivinity(Feature):
             activation=FeatureActivation(action_type=ActionType.ACTION, duration="Until End of Your Next Turn or Until Takes Damage", range="30 Feet"),
             usage_tags=["control"],
         )
+
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
+        return FeatureTarget.ENEMY
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

@@ -1,7 +1,7 @@
 import math
 
 from Core.Definitions import Ability
-from CharacterContent.Features.Core.BaseFeatures import Feature
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureTarget
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
@@ -12,6 +12,9 @@ class ImprovedCritical(Feature):
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "Beginning when you choose this archetype at 3rd level, your weapon attacks score a critical hit on a roll of 19 or 20."
         return description
+
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.ENEMY
 
 
 class RemarkableAthlete(Feature):
@@ -25,6 +28,9 @@ class RemarkableAthlete(Feature):
             "In addition, when you make a running long jump, the distance you can cover increases by a number of feet equal to your Strength modifier."
         )
         return description
+
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.SELF
 
 
 class AdditionalFightingStyle(Feature):
@@ -46,6 +52,9 @@ class SuperiorCritical(Feature):
         description = "Starting at 15th level, your weapon attacks score a critical hit on a roll of 18-20."
         return description
 
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.ENEMY
+
 
 class Survivor(Feature):
     def __init__(self):
@@ -56,3 +65,6 @@ class Survivor(Feature):
             "At 18th level, you attain the pinnacle of resilience in battle. At the start of each of your turns, you regain hit points equal to 5 + your Constitution modifier if you have no more than half of your hit points left. You don't gain this benefit if you have 0 hit points."
         )
         return description
+
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.SELF

@@ -1,4 +1,11 @@
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, ActionType, RegainedOn
+from CharacterContent.Features.Core.BaseFeatures import (
+    ActionType,
+    Feature,
+    FeatureActivation,
+    FeatureTarget,
+    FeatureUses,
+    RegainedOn,
+)
 from CharacterContent.Features.Core.Improvements import SkillBonus
 from Core.Definitions import Skill
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
@@ -118,6 +125,9 @@ class ChannelDivinity(Feature):
         else:
             return 2
 
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.CREATURE
+
 
 class SearUndead(Feature):
     def __init__(self):
@@ -129,6 +139,9 @@ class SearUndead(Feature):
         description = "Whenever you use Turn Undead, you can roll a number of d8s equal to your Wisdom modifier (minimum of 1d8) and add the rolls together. Each Undead that fails its saving throw against that use of Turn Undead takes Radiant damage equal to the roll's total. This damage doesn't end the turn effect."
         return description
 
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.ENEMY
+
 
 class DivineStrike(Feature):
     def __init__(self):
@@ -139,6 +152,9 @@ class DivineStrike(Feature):
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "Once on each of your turns when you hit a creature with an attack roll using a weapon, you can cause the target to take an extra 1d8 Necrotic or Radiant damage (your choice)."
         return description
+
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.ENEMY
 
 
 class PotentSpellcasting(Feature):
@@ -190,6 +206,9 @@ class ImprovedDivineStrike(Feature):
         description = "The extra damage of your Divine Strike increases to 2d8."
         return description
 
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.ENEMY
+
 
 class ImprovedPotentSpellcasting(Feature):
     def __init__(self):
@@ -203,6 +222,9 @@ class ImprovedPotentSpellcasting(Feature):
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "When you cast a Cleric cantrip and deal damage to a creature with it, you can give vitality to yourself or another creature within 60 feet of yourself, granting a number of Temporary Hit Points equal to twice your Wisdom modifier."
         return description
+
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.ALLY
 
 
 class GreaterDivineIntervention(Feature):

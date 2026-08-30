@@ -1,5 +1,5 @@
 from Core.Definitions import ROGUE_HIT_DIE
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType, FeatureTarget
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
@@ -15,6 +15,9 @@ class FastHands(Feature):
         )
         return description
 
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.OBJECT
+
 
 class SecondStoryWork(Feature):
     def __init__(self):
@@ -28,6 +31,9 @@ class SecondStoryWork(Feature):
         )
         return description
 
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.SELF
+
 
 class SupremeSneak(Feature):
     def __init__(self):
@@ -39,6 +45,9 @@ class SupremeSneak(Feature):
             "Stealth Attack (Cost: 1d6). If you have the Hide action's Invisible condition, this attack doesn't end that condition on you if you end the turn behind Three-Quarters Cover or Total Cover."
         )
         return description
+
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.SELF
 
 
 class UseMagicDevice(Feature):
@@ -64,6 +73,9 @@ class UseMagicDevice(Feature):
             ("Scrolls (Level 2+)", "Intelligence (Arcana) check (DC 10 + spell level); success casts, failure destroys"),
         ]
 
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.OBJECT
+
 
 class ThiefsReflexes(Feature):
     def __init__(self):
@@ -72,3 +84,6 @@ class ThiefsReflexes(Feature):
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "You are adept at laying ambushes and quickly escaping danger. You can take two turns during the first round of any combat. You take your first turn at your normal Initiative and your second turn at your Initiative minus 10."
         return description
+
+    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+        return FeatureTarget.SELF
