@@ -34,6 +34,7 @@ class TurnsMixin:
             self._log_event(f"--- Round {self.round_number} ---", note_turn=False)
             self.round_label.setText(f"Round {self.round_number}")
             self._tick_active_spells()
+            self._tick_active_features()
         if self.initiative_order:
             # The action economy (Action/Bonus Action/Reaction) resets for whoever's
             # turn is now starting — other combatants keep their tallies until theirs does.

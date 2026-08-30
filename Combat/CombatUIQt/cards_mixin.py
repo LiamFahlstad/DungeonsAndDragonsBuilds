@@ -424,6 +424,50 @@ class CardsMixin:
                 )
                 layout.addWidget(time_bar)
 
+        # --- Active features (time bars) ---
+        active_features = char.get("active_features") or []
+        if active_features:
+            sep_features = QFrame()
+            sep_features.setFrameShape(QFrame.Shape.HLine)
+            sep_features.setStyleSheet("color: #0f3460;")
+            layout.addWidget(sep_features)
+            features_header = QLabel("Active Features:")
+            features_header.setStyleSheet(
+                "color: #c9a84c; font-size: 10px; font-weight: bold;"
+            )
+            layout.addWidget(features_header)
+            for entry in active_features:
+                feature_name_row = QHBoxLayout()
+                feature_name_row.setSpacing(4)
+                name_row = QLabel(entry["name"])
+                name_row.setStyleSheet("color: #a0c4ff; font-size: 10px;")
+                feature_name_row.addWidget(name_row, stretch=1)
+                remove_feature_btn = QPushButton("×")
+                remove_feature_btn.setFixedSize(16, 16)
+                remove_feature_btn.setToolTip(f"Dismiss {entry['name']}")
+                remove_feature_btn.setStyleSheet(
+                    "QPushButton { background-color: #5c1a1a; color: #ffffff;"
+                    " border: none; border-radius: 3px; font-size: 10px; padding: 0px; }"
+                    "QPushButton:hover { background-color: #7a2a2a; }"
+                )
+                remove_feature_btn.setCursor(Qt.CursorShape.PointingHandCursor)
+                remove_feature_btn.clicked.connect(
+                    lambda _=False, c=char, e=entry: self._remove_active_feature(c, e)
+                )
+                feature_name_row.addWidget(remove_feature_btn)
+                layout.addLayout(feature_name_row)
+                time_bar = QProgressBar()
+                time_bar.setMinimum(0)
+                time_bar.setMaximum(max(entry.get("duration", entry["time_left"]), 1))
+                time_bar.setValue(max(entry["time_left"], 0))
+                time_bar.setFormat(f"{entry['time_left']}s")
+                time_bar.setTextVisible(True)
+                time_bar.setFixedHeight(14)
+                time_bar.setStyleSheet(
+                    "QProgressBar::chunk { background-color: #5ac8f5; border-radius: 3px; }"
+                )
+                layout.addWidget(time_bar)
+
         # --- Action economy used this round ---
         action_uses = {
             k: v for k, v in (char.get("action_uses") or {}).items() if v > 0

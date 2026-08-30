@@ -289,7 +289,8 @@ class SpellsMixin:
 
     def _apply_cast_spell(self, spell):
         """Apply a cast spell to the selected combatant: log it, auto-apply Concentrating,
-        and start a duration timer (shown as a time bar) unless the spell is instantaneous."""
+        add action economy, and start a duration timer (shown as a time bar) unless the
+        spell is instantaneous."""
         char = self.selected_character
         if char is None:
             return
@@ -323,6 +324,14 @@ class SpellsMixin:
             # Self-applied — the caster is always the source of their own concentration.
             self._add_condition_to(char, Condition.CONCENTRATING.value, source=char)
 
+        # Add action economy if casting time is an action economy type
+        try:
+            casting_time_type = spell.casting_time_type.value
+            if casting_time_type in self.ACTION_ECONOMY_TYPES:
+                self._add_action_use(casting_time_type)
+        except ValueError:
+            pass
+
         duration = spell.duration_seconds
         if duration:
             char.setdefault("active_spells", []).append(
@@ -349,6 +358,14 @@ class SpellsMixin:
         recipients = self.target_characters if apply_to_target else [source]
         if not recipients:
             return
+
+        # Add action economy if casting time is an action economy type
+        try:
+            casting_time_type = spell.casting_time_type.value
+            if casting_time_type in self.ACTION_ECONOMY_TYPES:
+                self._add_action_use(casting_time_type)
+        except ValueError:
+            pass
 
         from CharacterContent.Spells.SpellFactory import Spell
 
@@ -380,3 +397,15 @@ class SpellsMixin:
             char.setdefault("spell_condition_descriptions", {})[spell.name] = tooltip_html
             char.setdefault("spell_condition_colors", {})[spell.name] = badge_color
             self._add_condition_to(char, spell.name, source=source)
+
+            # Track duration on this recipient
+            duration = spell.duration_seconds
+            if duration:
+                char.setdefault("active_spells", []).append(
+                    {
+                        "name": spell.name,
+                        "time_left": duration,
+                        "duration": duration,
+                        "concentration": spell.is_concentration,
+                    }
+                )

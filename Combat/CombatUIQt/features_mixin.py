@@ -186,7 +186,8 @@ class FeaturesMixin:
         dlg.exec()
 
     def _apply_enable_feature(self, feature):
-        """Apply an enabled feature to the selected combatant: log it and update stats."""
+        """Apply an enabled feature to the selected combatant: log it, track duration,
+        add action economy, and update stats."""
         char = self.selected_character
         if char is None:
             return
@@ -202,6 +203,30 @@ class FeaturesMixin:
             action=Action.ENABLE_FEATURE,
             value=feature_value,
         )
+
+        # Track duration if present
+        if feature.activation:
+            duration_value = feature.activation.duration_to_seconds()
+            if isinstance(duration_value, int) and duration_value > 0:
+                char.setdefault("active_features", []).append(
+                    {
+                        "name": feature.name,
+                        "time_left": duration_value,
+                        "duration": duration_value,
+                    }
+                )
+
+            # Add action economy if present
+            if feature.activation.action_type is not None:
+                action_type_map = {
+                    "action": "Action",
+                    "bonus_action": "Bonus Action",
+                    "reaction": "Reaction",
+                }
+                action_label = action_type_map.get(feature.activation.action_type.value)
+                if action_label:
+                    self._add_action_use(action_label)
+
         self._refresh_selected_card()
 
     def _apply_feature_as_condition(self, feature, apply_to_target: bool = False):
@@ -215,6 +240,17 @@ class FeaturesMixin:
         recipients = self.target_characters if apply_to_target else [source]
         if not recipients:
             return
+
+        # Add action economy if present
+        if feature.activation and feature.activation.action_type is not None:
+            action_type_map = {
+                "action": "Action",
+                "bonus_action": "Bonus Action",
+                "reaction": "Reaction",
+            }
+            action_label = action_type_map.get(feature.activation.action_type.value)
+            if action_label:
+                self._add_action_use(action_label)
 
         # Build tooltip HTML from the feature details
         sb = source.get("_stat_block")
@@ -239,3 +275,43 @@ class FeaturesMixin:
             char.setdefault("feature_condition_descriptions", {})[feature.name] = tooltip_html
             char.setdefault("feature_condition_colors", {})[feature.name] = badge_color
             self._add_condition_to(char, feature.name, source=source)
+
+            # Track duration on this recipient
+            if feature.activation:
+                duration_value = feature.activation.duration_to_seconds()
+                if isinstance(duration_value, int) and duration_value > 0:
+                    char.setdefault("active_features", []).append(
+                        {
+                            "name": feature.name,
+                            "time_left": duration_value,
+                            "duration": duration_value,
+                        }
+                    )
+
+    def _tick_active_features(self):
+        """Deduct 6 seconds (one round) from every combatant's active feature timers,
+        expiring and logging any that reach zero."""
+        for char in self.characters:
+            active_features = char.get("active_features")
+            if not active_features:
+                continue
+            remaining = []
+            for entry in active_features:
+                entry["time_left"] = max(entry["time_left"] - 6, 0)
+                if entry["time_left"] > 0:
+                    remaining.append(entry)
+                else:
+                    self._log_event(
+                        f"{char['name']}'s {entry['name']} expires", note_turn=False
+                    )
+            char["active_features"] = remaining
+        self._rebuild_cards()
+
+    def _remove_active_feature(self, char: dict, entry: dict):
+        """Manually dismiss an active feature before its duration timer runs out."""
+        active_features = char.get("active_features") or []
+        if entry not in active_features:
+            return
+        active_features.remove(entry)
+        self._log_event(f"{char['name']}'s {entry['name']} ends early")
+        self._rebuild_card(char)
