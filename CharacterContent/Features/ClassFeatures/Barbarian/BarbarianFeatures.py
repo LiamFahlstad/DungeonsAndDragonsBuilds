@@ -1,5 +1,5 @@
 import Core.Definitions as Definitions
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, ActionType
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, ActionType, RegainedOn
 from CharacterContent.Features.Core.Improvements import (
     AbilityScoreBonus,
     InitiativeRollCondition,
@@ -82,6 +82,9 @@ class Rage(Feature):
             ("Rage Uses", uses_steps),
             ("Rage Damage", damage_steps),
         ]
+
+    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+        return RegainedOn.SHORT_OR_LONG_REST
 
 
 class UnarmoredDefenseText(Feature):
@@ -348,6 +351,9 @@ class PersistentRage(Feature):
             "In addition, your Rage is so fierce that it now lasts for 10 minutes without you needing to do anything to extend it from round to round. Your Rage ends early if you have the Unconscious condition (not just the Incapacitated condition) or don Heavy armor."
         )
         return description
+
+    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+        return RegainedOn.OTHER
 
 
 class ImprovedBrutalStrikeLevel17(Feature):

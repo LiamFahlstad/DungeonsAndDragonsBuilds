@@ -1,7 +1,7 @@
 from enum import Enum
 
 import Core.Definitions as Definitions
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, ActionType
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, ActionType, RegainedOn
 from CharacterContent.Features.Core.Improvements import (
     DamageResistance as DamageResistanceImprovement,
 )
@@ -72,6 +72,9 @@ class BreathWeapon(Feature):
         proficiency_bonus = character_stat_block.get_proficiency_bonus()
         return 8 + constitution_modifier + proficiency_bonus
 
+    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+        return RegainedOn.LONG_REST
+
     def get_table_description(
         self, character_stat_block: CharacterStatBlock
     ) -> list[tuple[str, str]]:
@@ -110,6 +113,9 @@ class DraconicFlight(Feature):
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         text = "When you reach character level 5, you can channel draconic magic to give yourself temporary flight. As a Bonus Action, you sprout spectral wings on your back that last for 10 minutes or until you retract the wings (no action required) or have the Incapacitated condition. During that time, you have a Fly Speed equal to your Speed. Your wings appear to be made of the same energy as your Breath Weapon. Once you use this trait, you can't use it again until you finish a Long Rest."
         return text
+
+    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+        return RegainedOn.LONG_REST
 
 
 def get_damage_type_from_color(dragon_color: DragonColor) -> Definitions.DamageType:

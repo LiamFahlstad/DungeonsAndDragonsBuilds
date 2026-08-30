@@ -1,4 +1,4 @@
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, ActionType
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, ActionType, RegainedOn
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Core.Definitions import MAX_PROFICIENCY_BONUS
 
@@ -53,6 +53,9 @@ class LunarBoons(Feature):
         )
         return description
 
+    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+        return RegainedOn.LONG_REST
+
 
 class WaxingAndWaning(Feature):
     def __init__(self):
@@ -97,3 +100,6 @@ class LunarPhenomenon(Feature):
             "Once you use one of these bonus action benefits, you can't use that benefit again until you finish a long rest, unless you spend 5 sorcery points to use it again."
         )
         return description
+
+    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+        return RegainedOn.LONG_REST

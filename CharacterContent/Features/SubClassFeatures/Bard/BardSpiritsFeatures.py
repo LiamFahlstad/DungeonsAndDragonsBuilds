@@ -1,5 +1,5 @@
 from Core.Definitions import BARD_HIT_DIE
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, RegainedOn
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
@@ -74,6 +74,9 @@ class EmpoweredChanneling(Feature):
         ]
 
 
+
+    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+        return RegainedOn.LONG_REST
 class MysticalConnection(Feature):
     def __init__(self):
         super().__init__(

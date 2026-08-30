@@ -1,5 +1,5 @@
 from Core.Definitions import WIZARD_HIT_DIE
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType, RegainedOn
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
@@ -46,6 +46,9 @@ class ExpertDivination(Feature):
         return description
 
 
+
+    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+        return RegainedOn.OTHER
 class TheThirdEye(Feature):
     def __init__(self):
         super().__init__(name="The Third Eye", origin="Diviner Wizard Level 10", activation=FeatureActivation(action_type=ActionType.BONUS_ACTION, duration="Until Short or Long Rest"), usage_tags=["buff", "utility"])

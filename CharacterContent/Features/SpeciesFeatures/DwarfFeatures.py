@@ -1,4 +1,4 @@
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, ActionType
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, ActionType, RegainedOn
 from CharacterContent.Features.Core.Improvements import (
     GrantSense,
     HitPointsPerLevelBonus,
@@ -69,3 +69,6 @@ class Stonecunning(Feature):
             "You can use this Bonus Action a number of times equal to your Proficiency Bonus, and you regain all expended uses when you finish a Long Rest."
         )
         return text
+
+    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+        return RegainedOn.LONG_REST

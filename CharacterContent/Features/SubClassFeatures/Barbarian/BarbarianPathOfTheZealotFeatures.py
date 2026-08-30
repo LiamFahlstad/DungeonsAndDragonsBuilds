@@ -1,6 +1,6 @@
 import Core.Definitions as Definitions
 from Core.Definitions import BARBARIAN_HIT_DIE
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType, RegainedOn
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
@@ -65,6 +65,9 @@ class WarriorOfTheGods(Feature):
         ]
 
 
+
+    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+        return RegainedOn.LONG_REST
 class FanaticalFocus(Feature):
     def __init__(self):
         super().__init__(

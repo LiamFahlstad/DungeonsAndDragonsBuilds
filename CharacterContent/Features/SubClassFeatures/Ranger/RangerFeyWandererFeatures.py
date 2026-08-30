@@ -1,6 +1,6 @@
 
 from Core.Definitions import RANGER_HIT_DIE, MAX_ABILITY_MODIFIER
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, ActionType
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, ActionType, RegainedOn
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
@@ -100,6 +100,9 @@ class FeyReinforcements(Feature):
         ]
 
 
+
+    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+        return RegainedOn.LONG_REST
 class MistyWanderer(Feature):
     def __init__(self):
         super().__init__(name="Misty Wanderer", origin="Fey Wanderer Ranger Level 15", activation=FeatureActivation(range="5 Feet"), uses=FeatureUses(max_uses=MAX_ABILITY_MODIFIER, regain_all_on="long rest", current_formula="Current amount: equal to your Wisdom modifier."))
@@ -120,3 +123,7 @@ class MistyWanderer(Feature):
             ("Uses", f"{uses} per Long Rest"),
             ("Effect", "Teleport up to 30 feet; can bring 1 willing creature within 5 feet with you"),
         ]
+
+
+    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+        return RegainedOn.LONG_REST

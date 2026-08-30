@@ -1,6 +1,6 @@
 import Core.Definitions as Definitions
 from Core.Definitions import Ability
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, ActionType
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, ActionType, RegainedOn
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
@@ -29,3 +29,6 @@ class WrathOfTheStorm(Feature):
             "You can use this feature a number of times equal to your Wisdom modifier (a minimum of once). You regain all expended uses when you finish a long rest."
         )
         return description
+
+    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+        return RegainedOn.LONG_REST

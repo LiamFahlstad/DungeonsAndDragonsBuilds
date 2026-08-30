@@ -1,5 +1,5 @@
 from Core.Definitions import Skill, WIZARD_HIT_DIE
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType, RegainedOn
 from CharacterContent.Features.Core.Improvements import SkillProficiencyChoice
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
@@ -31,6 +31,9 @@ class Bladesong(Feature):
             ("Bladework", f"Use INT mod ({int_mod}) for attack and damage rolls"),
             ("Focus", f"Add INT mod ({int_mod}) to CON saves for Concentration"),
         ]
+
+    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+        return RegainedOn.OTHER
 
 
 class TrainingInWarAndSong(Feature):

@@ -1,6 +1,6 @@
 from typing import Optional
 
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType, RegainedOn
 from Combat.Definitions import (
     Alignment,
     DamageTypeEntry,
@@ -226,3 +226,6 @@ class PerfectedBond(Feature):
             "    * Reflexive Resistance. When either you or the drake takes damage while you're within 30 feet of each other, you can use your reaction to give yourself or the drake resistance to that instance of damage. You can use this reaction a number of times equal to your proficiency bonus, and you regain all expended uses when you finish a long rest."
         )
         return description
+
+    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+        return RegainedOn.LONG_REST

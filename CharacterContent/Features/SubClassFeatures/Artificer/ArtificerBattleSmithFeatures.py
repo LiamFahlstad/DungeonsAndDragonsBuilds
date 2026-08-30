@@ -1,5 +1,5 @@
 from Core.Definitions import ARTIFICER_HIT_DIE, MAX_ABILITY_MODIFIER
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, RegainedOn
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
@@ -93,6 +93,9 @@ class SteelDefender(Feature):
         return description
 
 
+
+    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+        return RegainedOn.LONG_REST
 class ExtraAttack(Feature):
     def __init__(self):
         super().__init__(name="Extra Attack", origin="Battle Smith Artificer Level 5")
@@ -126,6 +129,9 @@ class ArcaneJolt(Feature):
         ]
 
 
+
+    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+        return RegainedOn.LONG_REST
 class ImprovedDefender(Feature):
     def __init__(self):
         super().__init__(

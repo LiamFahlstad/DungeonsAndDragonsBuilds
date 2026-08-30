@@ -1,4 +1,4 @@
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, ActionType
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, ActionType, RegainedOn
 from CharacterContent.Features.Core.Improvements import SkillExpertiseChoice, SpeedBonus
 from Core.Definitions import Skill, MAX_ABILITY_MODIFIER
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
@@ -26,6 +26,9 @@ class Spellcasting(Feature):
             ("Spell Slots", "Regain all on Long Rest"),
             ("Spellcasting Ability", "Wisdom"),
         ]
+
+    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+        return RegainedOn.LONG_REST
 
 
 class ReplacingWeaponMasteries(Feature):
@@ -98,6 +101,9 @@ class FavoredEnemy(Feature):
             ("Free Uses", f"{free_hunters_mark_uses}"),
             ("Regain", "Long Rest"),
         ]
+
+    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+        return RegainedOn.LONG_REST
 
 
 class DeftExplorerExpertise(Feature):
@@ -202,6 +208,9 @@ class Tireless(Feature):
             ("Exhaustion Reduction", "Decrease by 1 on Short Rest"),
         ]
 
+    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+        return RegainedOn.LONG_REST
+
 
 class RelentlessHunter(Feature):
     def __init__(self):
@@ -240,6 +249,9 @@ class NaturesVeil(Feature):
             ("Duration", "Until end of your next turn"),
             ("Uses", f"{uses}, regain on Long Rest"),
         ]
+
+    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+        return RegainedOn.LONG_REST
 
 
 class PreciseHunter(Feature):

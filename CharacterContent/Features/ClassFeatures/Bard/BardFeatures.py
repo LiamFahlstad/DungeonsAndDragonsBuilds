@@ -1,5 +1,5 @@
 import Core.Definitions as Definitions
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, ActionType
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, ActionType, RegainedOn
 from CharacterContent.Features.Core.Improvements import (
     JackOfAllTradesBonus,
     SkillExpertiseChoice,
@@ -22,6 +22,9 @@ class Spellcasting(Feature):
             "    * Regaining Spell Slots: You regain all expended spell slots when you finish a Long Rest.\n"
         )
         return description
+
+    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+        return RegainedOn.LONG_REST
 
 
 class BardicInspiration(Feature):
@@ -67,6 +70,9 @@ class BardicInspiration(Feature):
             )
         ]
         return [("Bardic Inspiration Die", steps)]
+
+    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+        return RegainedOn.LONG_REST
 
     def get_table_description(
         self, character_stat_block: CharacterStatBlock
@@ -167,6 +173,9 @@ class FontOfInspiration(Feature):
             ("Alternative Cost", "1 spell slot (no action required)"),
         ]
 
+    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+        return RegainedOn.SHORT_OR_LONG_REST
+
 
 class Countercharm(Feature):
     def __init__(self):
@@ -207,6 +216,9 @@ class SuperiorInspiration(Feature):
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "When you roll Initiative, you regain expended uses of Bardic Inspiration until you have two if you have fewer than that."
         return description
+
+    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+        return RegainedOn.OTHER
 
 
 class WordsOfCreation(Feature):

@@ -1,6 +1,6 @@
 import Core.Definitions as Definitions
 from Core.Definitions import MONK_HIT_DIE, Skill
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, ActionType
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, ActionType, RegainedOn
 from CharacterContent.Features.Core.Improvements import SkillProficiency
 from CharacterContent.Items.Weapons import WeaponDamageRolls
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
@@ -130,6 +130,9 @@ class FlurryOfHealingAndHarm(Feature):
         )
         return description
 
+
+    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+        return RegainedOn.LONG_REST
 class HandOfUltimateMercy(Feature):
     def __init__(self):
         super().__init__(

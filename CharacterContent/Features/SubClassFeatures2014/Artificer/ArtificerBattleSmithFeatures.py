@@ -1,5 +1,5 @@
 from Core.Definitions import ARTIFICER_HIT_DIE, Ability, MAX_ABILITY_MODIFIER
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, RegainedOn
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
@@ -100,3 +100,6 @@ class ArcaneJolt(Feature):
             "You can use this energy a number of times equal to your Intelligence modifier (minimum of once), but you can do so no more than once on a turn. You regain all expended uses when you finish a long rest."
         )
         return description
+
+    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+        return RegainedOn.LONG_REST

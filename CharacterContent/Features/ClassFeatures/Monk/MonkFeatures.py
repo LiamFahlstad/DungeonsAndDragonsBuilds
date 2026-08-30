@@ -4,6 +4,7 @@ from CharacterContent.Features.Core.BaseFeatures import (
     FeatureActivation,
     FeatureUses,
     ActionType,
+    RegainedOn,
 )
 from CharacterContent.Features.Core.Improvements import (
     AbilityScoreBonus,
@@ -149,6 +150,9 @@ class MonksFocus(Feature):
         ]
         return [("Focus Points", steps)]
 
+    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+        return RegainedOn.SHORT_OR_LONG_REST
+
 
 class FlurryOfBlows(Feature):
     def __init__(self):
@@ -264,6 +268,9 @@ class UncannyMetabolism(Feature):
             "Once you use this feature, you can't use it again until you finish a Long Rest."
         )
         return description
+
+    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+        return RegainedOn.LONG_REST
 
 
 class DeflectAttacks(Feature):
@@ -488,6 +495,9 @@ class PerfectFocus(Feature):
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "When you roll Initiative and don't use Uncanny Metabolism, you regain expended Focus Points until you have 4 if you have 3 or fewer."
         return description
+
+    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+        return RegainedOn.OTHER
 
 
 class SuperiorDefense(Feature):

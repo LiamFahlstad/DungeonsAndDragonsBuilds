@@ -1,5 +1,5 @@
 from Core.Definitions import ARTIFICER_HIT_DIE, Ability, Condition, DamageType, MAX_ABILITY_MODIFIER
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType, RegainedOn
 from CharacterContent.Features.Core.Improvements import ConditionImmunity, DamageResistance
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
@@ -74,3 +74,6 @@ class RestorativeReagents(Feature):
             "You can cast Lesser Restoration without expending a spell slot and without preparing the spell, provided you use alchemist's supplies as the spellcasting focus. You regain all expended uses when you finish a long rest."
         )
         return description
+
+    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+        return RegainedOn.LONG_REST

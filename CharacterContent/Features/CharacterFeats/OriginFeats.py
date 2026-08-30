@@ -1,6 +1,6 @@
 from typing import Optional
 
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, RegainedOn
 from CharacterContent.Features.Core.Improvements import (
     HitPointsPerLevelBonus,
     InitiativeProficiency,
@@ -459,6 +459,9 @@ class PurpleDragonRook(OriginFeat):
             "Rallying Cry. When you roll Initiative and don’t have the Incapacitated condition, you can choose a number of creatures equal to your Proficiency Bonus that you can see within 30 feet of yourself. Those creatures gain Heroic Inspiration.\n"
             "Once you use this benefit, you can’t do so again until you finish a Long Rest.\n"
         )
+
+    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+        return RegainedOn.LONG_REST
 
 
 class SpellfireSpark(OriginFeat):

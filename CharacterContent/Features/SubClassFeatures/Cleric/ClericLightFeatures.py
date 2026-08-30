@@ -1,5 +1,5 @@
 from Core.Definitions import CLERIC_HIT_DIE, MAX_ABILITY_MODIFIER
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, ActionType
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, ActionType, RegainedOn
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
@@ -62,6 +62,9 @@ class WardingFlare(Feature):
         ]
 
 
+
+    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+        return RegainedOn.LONG_REST
 class ImprovedWardingFlare(Feature):
     def __init__(self):
         super().__init__(
@@ -76,6 +79,9 @@ class ImprovedWardingFlare(Feature):
         return description
 
 
+
+    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+        return RegainedOn.LONG_REST
 class CoronaOfLight(Feature):
     def __init__(self):
         super().__init__(name="Corona of Light", origin="Light Domain Cleric Level 17", activation=FeatureActivation(action_type=ActionType.ACTION, duration="1 Minute", range="60-Foot Radius"), usage_tags=["control"], uses=FeatureUses(max_uses=MAX_ABILITY_MODIFIER, regain_all_on="long rest", current_formula="Current amount: equal to your Wisdom modifier."))
@@ -101,3 +107,7 @@ class CoronaOfLight(Feature):
             ("Uses", f"{uses} (Wisdom modifier, minimum 1)"),
             ("Recharge", "Long Rest"),
         ]
+
+
+    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+        return RegainedOn.LONG_REST

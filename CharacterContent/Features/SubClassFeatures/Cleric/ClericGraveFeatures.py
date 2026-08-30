@@ -1,5 +1,5 @@
 from Core.Definitions import CLERIC_HIT_DIE, MAX_ABILITY_MODIFIER
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, ActionType
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, ActionType, RegainedOn
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
@@ -89,6 +89,9 @@ class SentinelAtDeathsDoor(Feature):
         ]
 
 
+
+    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+        return RegainedOn.LONG_REST
 class DivineReaper(Feature):
     def __init__(self):
         super().__init__(name="Divine Reaper", origin="Grave Domain Cleric Level 17", activation=FeatureActivation(range="60 Feet"), usage_tags=["heal"])
@@ -100,3 +103,7 @@ class DivineReaper(Feature):
             "Keeper of Souls. When an enemy dies within 60 feet of you, you or one creature you can see within 60 feet of yourself regains Hit Points equal to twice your Cleric level. You can't use this feature if you have the Incapacitated condition. Once you use this feature, you can't use it again until you finish a Short or Long Rest, unless you expend a level 6+ spell slot (no action required) to restore your use of it."
         )
         return description
+
+
+    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+        return RegainedOn.LONG_REST

@@ -1,5 +1,5 @@
 from Core.Definitions import CLERIC_HIT_DIE, DamageType, MAX_ABILITY_MODIFIER
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, ActionType
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, ActionType, RegainedOn
 from CharacterContent.Features.Core.Improvements import DamageResistance
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
@@ -56,6 +56,9 @@ class WarPriest(Feature):
         ]
 
 
+
+    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+        return RegainedOn.SHORT_OR_LONG_REST
 class WarGodsBlessing(Feature):
     def __init__(self):
         super().__init__(name="War God's Blessing", origin="War Domain Cleric Level 6", activation=FeatureActivation(duration="1 Minute"), usage_tags=["buff", "damage"])

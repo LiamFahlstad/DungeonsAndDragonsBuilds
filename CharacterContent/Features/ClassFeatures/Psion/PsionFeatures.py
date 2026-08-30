@@ -1,5 +1,5 @@
 from Core.Definitions import PSION_HIT_DIE
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType, RegainedOn
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
@@ -49,6 +49,9 @@ class PsionicPower(Feature):
             "use this feature, you expend the die."
         )
         return description
+
+    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+        return RegainedOn.SHORT_OR_LONG_REST
 
 
 class SubtleTelekinesis(Feature):
@@ -109,6 +112,9 @@ class PsionicRestoration(Feature):
             ("Recharge", "Long Rest"),
         ]
 
+    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+        return RegainedOn.LONG_REST
+
 
 class PsionicSurge(Feature):
     def __init__(self):
@@ -145,6 +151,9 @@ class PsionicReserves(Feature):
             "have fewer than that."
         )
         return description
+
+    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+        return RegainedOn.OTHER
 
 
 class EpicBoon(Feature):

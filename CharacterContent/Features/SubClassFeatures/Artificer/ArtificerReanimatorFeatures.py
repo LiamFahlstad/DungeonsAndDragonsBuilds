@@ -1,5 +1,5 @@
 from Core.Definitions import ARTIFICER_HIT_DIE, Ability, MAX_ABILITY_MODIFIER
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, ActionType
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, ActionType, RegainedOn
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
@@ -33,6 +33,9 @@ class ReanimatorSkillSet(Feature):
     def calculate_dc(self, character_stat_block: CharacterStatBlock) -> int:
         return character_stat_block.calculate_difficulty_class()
 
+
+    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+        return RegainedOn.LONG_REST
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
             "You gain the following benefits.\n"

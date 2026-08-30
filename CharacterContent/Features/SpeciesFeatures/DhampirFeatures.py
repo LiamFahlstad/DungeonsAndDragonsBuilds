@@ -1,4 +1,4 @@
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, RegainedOn
 from CharacterContent.Features.Core.Improvements import GrantSense
 from Core.Definitions import MAX_PROFICIENCY_BONUS, Sense
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
@@ -69,3 +69,6 @@ class VampiricBite(Feature):
             "You can empower yourself with this trait, and you regain all expended uses when you finish a Long Rest."
         )
         return description
+
+    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+        return RegainedOn.LONG_REST

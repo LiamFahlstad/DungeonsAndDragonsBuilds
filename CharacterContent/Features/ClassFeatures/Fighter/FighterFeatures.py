@@ -1,4 +1,4 @@
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, ActionType
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, ActionType, RegainedOn
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
@@ -55,6 +55,9 @@ class SecondWind(Feature):
             ("Uses", f"{uses}"),
             ("Recharge", "1 use per short rest, all per long rest"),
         ]
+
+    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+        return RegainedOn.SHORT_OR_LONG_REST
 
 
 class WeaponMastery(Feature):
@@ -113,6 +116,9 @@ class ActionSurge(Feature):
             ("Uses", f"{uses}"),
             ("Recharge", recharge),
         ]
+
+    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+        return RegainedOn.SHORT_OR_LONG_REST
 
 
 class TacticalMind(Feature):
@@ -189,6 +195,9 @@ class Indomitable(Feature):
             ("Uses", f"{uses}"),
             ("Recharge", "Long rest"),
         ]
+
+    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+        return RegainedOn.LONG_REST
 
 
 class TacticalMaster(Feature):

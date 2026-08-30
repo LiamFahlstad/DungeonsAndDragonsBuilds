@@ -1,7 +1,7 @@
 from typing import Optional
 
 from Core.Definitions import Ability, CharacterClass, Skill
-from CharacterContent.Features.Core.BaseFeatures import FeatureUses, Feature, FeatureActivation, ActionType
+from CharacterContent.Features.Core.BaseFeatures import FeatureUses, Feature, FeatureActivation, ActionType, RegainedOn
 from CharacterContent.Features.Core.Improvements import (
     SkillProficiencyChoice,
     SavingThrowProficiencyChoice,
@@ -67,6 +67,9 @@ class FightingSpirit(Feature):
             ("Regain", "Long rest"),
         ]
 
+    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+        return RegainedOn.LONG_REST
+
 
 class ElegantCourtier(Feature):
     def __init__(self, alternate_saving_throw: Optional[Ability] = None):
@@ -96,6 +99,9 @@ class ElegantCourtier(Feature):
 class TirelessSpirit(Feature):
     def __init__(self):
         super().__init__(name="Tireless Spirit", origin="Samurai Fighter Level 10")
+
+    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+        return RegainedOn.OTHER
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "When you roll initiative and have no uses of Fighting Spirit remaining, you regain one use."

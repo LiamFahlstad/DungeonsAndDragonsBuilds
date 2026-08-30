@@ -1,5 +1,5 @@
 from Core.Definitions import Sense
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, ActionType
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, ActionType, RegainedOn
 from CharacterContent.Features.Core.Improvements import GrantSense
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
@@ -46,3 +46,6 @@ class HexMagic(Feature):
             "You can also cast the spell using any spell slots you have of the appropriate level. "
             "Intelligence, Wisdom, or Charisma is your spellcasting ability for the spells you cast with this trait (choose the ability when you select this species)."
         )
+
+    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+        return RegainedOn.LONG_REST

@@ -1,4 +1,4 @@
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, ActionType
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, ActionType, RegainedOn
 from Core.Definitions import Ability, MAX_ABILITY_MODIFIER
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
@@ -90,3 +90,6 @@ class EventHorizon(Feature):
             ("On Success", "Half damage, movement costs 2 extra feet per foot"),
             ("Recharge", "Long rest or 3rd+ level spell slot"),
         ]
+
+    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+        return RegainedOn.LONG_REST

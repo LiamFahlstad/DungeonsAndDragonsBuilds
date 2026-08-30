@@ -1,5 +1,5 @@
 from Core.Definitions import CharacterClass, MAX_ABILITY_MODIFIER
-from CharacterContent.Features.Core.BaseFeatures import FeatureUses, Feature, FeatureActivation, ActionType
+from CharacterContent.Features.Core.BaseFeatures import FeatureUses, Feature, FeatureActivation, ActionType, RegainedOn
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
@@ -55,6 +55,9 @@ class UnwaveringMark(Feature):
             ("Regain", "Long rest"),
         ]
 
+    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+        return RegainedOn.LONG_REST
+
 
 class WardingManeuver(Feature):
     def __init__(self):
@@ -80,6 +83,9 @@ class WardingManeuver(Feature):
             ("Uses", f"{uses} (Constitution modifier, minimum 1)"),
             ("Regain", "Long rest"),
         ]
+
+    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+        return RegainedOn.LONG_REST
 
 
 class HoldTheLine(Feature):

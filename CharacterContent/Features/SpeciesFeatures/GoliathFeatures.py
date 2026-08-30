@@ -1,7 +1,7 @@
 from enum import Enum
 
 from Core.Definitions import CreatureSize, MAX_PROFICIENCY_BONUS
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, ActionType
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, ActionType, RegainedOn
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 SPEED = 35  # Given by your species
@@ -23,6 +23,9 @@ class LargeForm(Feature):
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         return "Starting at character level 5, you can change your size to Large as a Bonus Action if you're in a big enough space. This transformation lasts for 10 minutes or until you end it (no action required). For that duration, you have Advantage on Strength checks, and your Speed increases by 10 feet. Once you use this trait, you can't use it again until you finish a Long Rest."
+
+    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+        return RegainedOn.LONG_REST
 
 
 class PowerfulBuild(Feature):
@@ -54,3 +57,6 @@ class GiantAncestry(Feature):
             text += "When you take damage from a creature within 60 feet of you, you can take a Reaction to deal 1d8 Thunder damage to that creature.\n"
         text += "You can use the benefit, and you regain all expended uses when you finish a Long Rest"
         return text
+
+    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+        return RegainedOn.LONG_REST

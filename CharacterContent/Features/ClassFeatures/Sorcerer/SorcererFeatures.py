@@ -1,5 +1,5 @@
 import Core.Definitions as Definitions
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, ActionType
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, ActionType, RegainedOn
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
@@ -27,6 +27,9 @@ class Spellcasting(Feature):
             ("Regaining Spell Slots", "All expended slots return on Long Rest"),
             ("Spellcasting Ability", "Charisma"),
         ]
+
+    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+        return RegainedOn.LONG_REST
 
 
 class InnateSorcery(Feature):
@@ -57,6 +60,9 @@ class InnateSorcery(Feature):
             ("Uses", "2 (regain on Long Rest)"),
             ("Effect", "Spell save DC +1; Advantage on Sorcerer spell attack rolls"),
         ]
+
+    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+        return RegainedOn.LONG_REST
 
 
 class FontOfMagic(Feature):
@@ -99,6 +105,9 @@ class FontOfMagic(Feature):
             )
         ]
         return [("Sorcery Points", steps)]
+
+    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+        return RegainedOn.LONG_REST
 
 
 class Metamagic(Feature):
@@ -156,6 +165,9 @@ class SorcerousRestoration(Feature):
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "When you finish a Short Rest, you can regain expended Sorcery Points, but no more than a number equal to half your Sorcerer level (round down). Once you use this feature, you can't do so again until you finish a Long Rest."
         return description
+
+    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+        return RegainedOn.LONG_REST
 
 
 class SorceryIncarnate(Feature):

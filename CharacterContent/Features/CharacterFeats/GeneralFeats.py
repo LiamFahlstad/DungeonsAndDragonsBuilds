@@ -1,4 +1,4 @@
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, RegainedOn
 from CharacterContent.Features.Core.Improvements import (
     AbilityScoreBonus,
     DamageResistance,
@@ -12,7 +12,17 @@ from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
 class GeneralFeat(Feature):
-    pass
+    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+        if self.uses is None or self.uses.regain_all_on is None:
+            return None
+        cadence = self.uses.regain_all_on.lower()
+        if cadence == "long rest":
+            return RegainedOn.LONG_REST
+        if cadence == "short rest":
+            return RegainedOn.SHORT_REST
+        if "short" in cadence and "long" in cadence:
+            return RegainedOn.SHORT_OR_LONG_REST
+        return RegainedOn.OTHER
 
 
 class _AbilityScoreFeat(GeneralFeat):
@@ -854,6 +864,9 @@ class EnclaveMAGIC(_AbilityScoreFeat):
             "Friend to Animals. You have Advantage on ability checks when taking the Influence action with Beasts.\n"
             "Two Hearts, One Mind. You always have the Beast Sense spell prepared. You can cast it once without a spell slot, and you regain the ability to cast it in that way when you finish a Long Rest. When you cast it without a spell slot using this feature, it doesn't require Concentration. You can also cast the spell using any spell slots you have of the appropriate level. The spell's spellcasting ability is the ability increased by this feat.\n"
         )
+
+    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+        return RegainedOn.LONG_REST
 
 
 class FairyTrickster(_AbilityScoreFeat):

@@ -1,6 +1,6 @@
 import Core.Definitions as Definitions
 from Core.Definitions import Ability, SORCERER_HIT_DIE
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType, RegainedOn
 from CharacterContent.Features.Core.Improvements import MultiAbilityArmorClass
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
@@ -86,3 +86,7 @@ class DragonCompanion(Feature):
             "Whenever you start casting the spell, you can modify it so that it doesn’t require Concentration. If you do so, the spell’s duration becomes 1 minute for that casting."
         )
         return description
+
+
+    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+        return RegainedOn.LONG_REST

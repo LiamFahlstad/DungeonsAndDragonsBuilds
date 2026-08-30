@@ -1,5 +1,5 @@
 from Core.Definitions import Skill
-from CharacterContent.Features.Core.BaseFeatures import FeatureUses, Feature, FeatureActivation, ActionType
+from CharacterContent.Features.Core.BaseFeatures import FeatureUses, Feature, FeatureActivation, ActionType, RegainedOn
 from CharacterContent.Features.Core.Improvements import SkillProficiencyChoice
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
@@ -69,6 +69,9 @@ class ArcaneShot(Feature):
         )
         return description
 
+    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+        return RegainedOn.SHORT_OR_LONG_REST
+
 
 class MagicArrow(Feature):
     def __init__(self):
@@ -91,6 +94,9 @@ class CurvingShot(Feature):
 class EverReadyShot(Feature):
     def __init__(self):
         super().__init__(name="Ever-Ready Shot", origin="Arcane Archer Fighter Level 15")
+
+    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+        return RegainedOn.OTHER
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "Starting at 15th level, your magical archery is available whenever battle starts. If you roll initiative and have no uses of Arcane Shot remaining, you regain one use of it."

@@ -3,6 +3,7 @@ from CharacterContent.Features.Core.BaseFeatures import (
     FeatureActivation,
     FeatureUses,
     ActionType,
+    RegainedOn,
 )
 from Core.Definitions import MAX_ABILITY_MODIFIER
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
@@ -22,6 +23,9 @@ class Spellcasting(Feature):
             "    * Spellcasting Ability: Intelligence is your spellcasting ability for your Artificer spells."
         )
         return description
+
+    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+        return RegainedOn.LONG_REST
 
 
 class TinkersMagic(Feature):
@@ -58,6 +62,9 @@ class TinkersMagic(Feature):
             "You can use this feature a number of times equal to your Intelligence modifier (minimum of once), and you regain all expended uses when you finish a Long Rest."
         )
         return description
+
+    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+        return RegainedOn.LONG_REST
 
 
 class ReplicateMagicItem(Feature):
@@ -191,6 +198,9 @@ class FlashofGenius(Feature):
             ("Bonus", f"+{bonus}"),
             ("Uses", f"{uses} per Long Rest"),
         ]
+
+    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+        return RegainedOn.LONG_REST
 
 
 class MagicItemAdept(Feature):

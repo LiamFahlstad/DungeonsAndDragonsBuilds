@@ -1,5 +1,5 @@
 from Core.Definitions import MAX_PROFICIENCY_BONUS, Sense, Skill
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, ActionType
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, ActionType, RegainedOn
 from CharacterContent.Features.Core.Improvements import SkillProficiencyChoice, GrantSense
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
@@ -48,6 +48,9 @@ class Howl(Feature):
         constitution_modifier = character_stat_block.get_constitution_modifier()
         proficiency_bonus = character_stat_block.get_proficiency_bonus()
         return 8 + constitution_modifier + proficiency_bonus
+
+    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+        return RegainedOn.LONG_REST
 
 
 class WerewolfInstincts(Feature):

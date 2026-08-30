@@ -1,5 +1,5 @@
 from Core.Definitions import ARTIFICER_HIT_DIE, Ability
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType, RegainedOn
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
@@ -85,6 +85,9 @@ class ArmorModel(Feature):
         return description
 
 
+
+    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+        return RegainedOn.LONG_REST
 class ExtraAttack(Feature):
     def __init__(self):
         super().__init__(name="Extra Attack", origin="Armorer Artificer Level 5")
@@ -123,6 +126,9 @@ class PerfectedArmor(Feature):
     def calculate_dc(self, character_stat_block: CharacterStatBlock) -> int:
         return character_stat_block.calculate_difficulty_class()
 
+
+    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+        return RegainedOn.LONG_REST
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
             "Your Arcane Armor gains additional benefits based on its model, as detailed below.\n"

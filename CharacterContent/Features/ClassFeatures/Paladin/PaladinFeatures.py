@@ -1,5 +1,5 @@
 import Core.Definitions as Definitions
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, ActionType
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, ActionType, RegainedOn
 from CharacterContent.Features.Core.Improvements import SavingThrowBonus
 from Core.Definitions import Ability
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
@@ -35,6 +35,9 @@ class LayOnHands(Feature):
             ("Use", "Touch a creature and restore HP up to pool maximum"),
             ("Alternative", "Expend 5 HP to remove Poisoned condition"),
         ]
+
+    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+        return RegainedOn.LONG_REST
 
 
 class WeaponMastery(Feature):
@@ -160,6 +163,9 @@ class ChannelDivinity(Feature):
         ]
         return [("Channel Divinity Uses", steps)]
 
+    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+        return RegainedOn.SHORT_OR_LONG_REST
+
 
 class ExtraAttack(Feature):
     def __init__(self):
@@ -180,6 +186,9 @@ class FaithfulSteed(Feature):
             "You can also cast the spell once without expending a spell slot, and you regain the ability to do so when you finish a Long Rest."
         )
         return description
+
+    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+        return RegainedOn.LONG_REST
 
 
 class AuraOfProtection(Feature):

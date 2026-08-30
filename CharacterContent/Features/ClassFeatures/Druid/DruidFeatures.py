@@ -4,7 +4,7 @@ from typing import Type
 from CharacterContent.Features.ClassFeatures.Druid.WildShapeForms import (
     format_wild_shape_form,
 )
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, ActionType
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, ActionType, RegainedOn
 from CharacterContent.Features.Core.Improvements import GrantLanguage
 from Combat.Definitions import ExtendedCombatantData
 from Core.Definitions import Language
@@ -40,6 +40,9 @@ class Spellcasting(Feature):
             ("Regaining Spell Slots", "Regain all expended slots on Long Rest"),
             ("Spellcasting Ability", "Wisdom"),
         ]
+
+    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+        return RegainedOn.LONG_REST
 
 
 class Druidic(Feature):
@@ -133,6 +136,9 @@ class WildShape(Feature):
             )
         ]
         return [("Wild Shape Uses", steps)]
+
+    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+        return RegainedOn.SHORT_OR_LONG_REST
 
 
 class AdditionalWildShapeForms(Feature):
@@ -289,3 +295,6 @@ class Archdruid(Feature):
             ),
             ("Longevity", "Age 1 year for every 10 years that pass"),
         ]
+
+    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+        return RegainedOn.OTHER

@@ -1,5 +1,5 @@
 from Core.Definitions import CreatureSize, MAX_PROFICIENCY_BONUS, Sense
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, ActionType
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, ActionType, RegainedOn
 from CharacterContent.Features.Core.Improvements import GrantSense
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
@@ -35,6 +35,9 @@ class AdrenalineRush(Feature):
             "You can use this trait, and you regain all expended uses when you finish a Short or Long Rest."
         )
         return text
+
+    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+        return RegainedOn.SHORT_OR_LONG_REST
 
 
 class RelentlessEndurance(Feature):

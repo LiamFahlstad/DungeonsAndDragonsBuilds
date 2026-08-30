@@ -1,5 +1,5 @@
 from Core.Definitions import FIGHTER_HIT_DIE, DamageType
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType, RegainedOn
 from CharacterContent.Features.Core.Improvements import DamageResistance
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
@@ -29,6 +29,9 @@ class PsionicPower(Feature):
         return description
 
 
+
+    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+        return RegainedOn.SHORT_OR_LONG_REST
 class TelekineticAdept(Feature):
     def __init__(self):
         super().__init__(name="Telekinetic Adept", origin="Psi Warrior Fighter Level 7", activation=FeatureActivation(action_type=ActionType.BONUS_ACTION, duration="Until End of Current Turn", range="10 Feet"), usage_tags=["buff", "control"])

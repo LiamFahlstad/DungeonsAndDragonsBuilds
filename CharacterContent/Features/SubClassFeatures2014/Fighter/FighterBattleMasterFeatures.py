@@ -1,4 +1,4 @@
-from CharacterContent.Features.Core.BaseFeatures import FeatureUses, Feature
+from CharacterContent.Features.Core.BaseFeatures import FeatureUses, Feature, RegainedOn
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
@@ -54,6 +54,9 @@ class CombatSuperiority(Feature):
             ("Regain", "Short or long rest"),
         ]
 
+    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+        return RegainedOn.SHORT_OR_LONG_REST
+
 
 class StudentOfWar(Feature):
     def __init__(self):
@@ -96,6 +99,9 @@ class ImprovedCombatSuperiority(Feature):
 class Relentless(Feature):
     def __init__(self):
         super().__init__(name="Relentless", origin="Battle Master Fighter Level 15")
+
+    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+        return RegainedOn.OTHER
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "Starting at 15th level, when you roll initiative and have no superiority dice remaining, you regain 1 superiority die."

@@ -1,5 +1,5 @@
 from Core.Definitions import BARD_HIT_DIE, Language, Skill
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, RegainedOn
 from CharacterContent.Features.Core.Improvements import GrantLanguage, SkillProficiencyChoice
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
@@ -84,6 +84,9 @@ class BlessingOfMoonlight(Feature):
         ]
 
 
+
+    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+        return RegainedOn.LONG_REST
 class EventidesSplendor(Feature):
     def __init__(self):
         super().__init__(

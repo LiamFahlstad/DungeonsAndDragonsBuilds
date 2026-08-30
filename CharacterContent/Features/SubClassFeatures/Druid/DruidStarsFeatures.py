@@ -1,6 +1,6 @@
 
 from Core.Definitions import Ability, DRUID_HIT_DIE, MAX_ABILITY_MODIFIER
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, ActionType
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, ActionType, RegainedOn
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
@@ -25,6 +25,9 @@ class StarMap(Feature):
         )
 
 
+
+    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+        return RegainedOn.LONG_REST
 class StarryForm(Feature):
     def __init__(self):
         super().__init__(name="Starry Form", origin="Circle of the Stars Druid Level 3", activation=FeatureActivation(action_type=ActionType.BONUS_ACTION, duration="10 Minutes or Until Dismissed/Incapacitated", range="10-Foot Radius"), usage_tags=["damage", "heal", "buff"])
@@ -55,6 +58,9 @@ class CosmicOmen(Feature):
         return description
 
 
+
+    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+        return RegainedOn.LONG_REST
 class TwinklingConstellations(Feature):
     def __init__(self):
         super().__init__(

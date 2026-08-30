@@ -1,4 +1,4 @@
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType, RegainedOn, FeatureUses
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
@@ -95,6 +95,9 @@ class UnyieldingSaint(Feature):
 class ExaltedChampion(Feature):
     def __init__(self):
         super().__init__(name="Exalted Champion", origin="Oath of the Crown Paladin Level 20", activation=FeatureActivation(action_type=ActionType.ACTION, duration="1 Hour", range="30 Feet"), usage_tags=["buff"], uses=FeatureUses(max_uses=1, regain_all_on="long rest"))
+
+    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+        return RegainedOn.LONG_REST
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

@@ -1,4 +1,4 @@
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, ActionType
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, ActionType, RegainedOn
 from CharacterContent.Features.Core.Improvements import InitiativeProficiency
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
@@ -150,6 +150,9 @@ class MortalBulwark(Feature):
             usage_tags=["buff", "control"],
             uses=FeatureUses(max_uses=1, regain_all_on="long rest"),
         )
+
+    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+        return RegainedOn.LONG_REST
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

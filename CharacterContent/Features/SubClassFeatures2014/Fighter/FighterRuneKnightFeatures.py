@@ -1,5 +1,5 @@
 from Core.Definitions import Language, MAX_PROFICIENCY_BONUS
-from CharacterContent.Features.Core.BaseFeatures import FeatureUses, Feature, FeatureActivation, ActionType
+from CharacterContent.Features.Core.BaseFeatures import FeatureUses, Feature, FeatureActivation, ActionType, RegainedOn
 from CharacterContent.Features.Core.Improvements import GrantLanguage
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
@@ -136,6 +136,9 @@ class RunicShield(Feature):
             ("Regain", "Long rest"),
         ]
 
+    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+        return RegainedOn.LONG_REST
+
 
 class GreatStature(Feature):
     def __init__(self):
@@ -163,6 +166,9 @@ class MasterOfRunes(Feature):
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "You can invoke each rune you know from your Rune Carver feature twice, rather than once, and you regain all expended uses when you finish a short or long rest."
         return description
+
+    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+        return RegainedOn.SHORT_OR_LONG_REST
 
 
 class RunicJuggernaut(Feature):

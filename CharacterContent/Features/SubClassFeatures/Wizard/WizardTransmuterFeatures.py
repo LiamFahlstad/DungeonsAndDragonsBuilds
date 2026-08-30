@@ -1,5 +1,5 @@
 from Core.Definitions import Ability, WIZARD_HIT_DIE, MAX_ABILITY_MODIFIER
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, ActionType
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, ActionType, RegainedOn
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
@@ -44,6 +44,9 @@ class WondrousAlteration(Feature):
         return description
 
 
+
+    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+        return RegainedOn.LONG_REST
 class EmpoweredTransmutation(Feature):
     def __init__(self):
         super().__init__(name="Empowered Transmutation", origin="Transmuter Wizard Level 6", uses=FeatureUses(max_uses=MAX_ABILITY_MODIFIER, regain_all_on="long rest", current_formula="Current amount: equal to your Intelligence modifier."))
@@ -56,6 +59,9 @@ class EmpoweredTransmutation(Feature):
         return description
 
 
+
+    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+        return RegainedOn.LONG_REST
 class PotentStone(Feature):
     def __init__(self):
         super().__init__(name="Potent Stone", origin="Transmuter Wizard Level 10", usage_tags=["buff"])
@@ -84,6 +90,9 @@ class ShapeShifter(Feature):
         return description
 
 
+
+    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+        return RegainedOn.LONG_REST
 class MasterTransmuter(Feature):
     def __init__(self):
         super().__init__(name="Master Transmuter", origin="Transmuter Wizard Level 14", activation=FeatureActivation(action_type=ActionType.ACTION), usage_tags=["heal", "utility"])

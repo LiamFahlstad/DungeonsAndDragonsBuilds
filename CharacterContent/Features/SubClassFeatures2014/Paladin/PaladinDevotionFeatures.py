@@ -1,5 +1,5 @@
 from Core.Definitions import PALADIN_HIT_DIE
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType, RegainedOn, FeatureUses
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
@@ -88,6 +88,9 @@ class PurityOfSpirit(Feature):
 class HolyNimbus(Feature):
     def __init__(self):
         super().__init__(name="Holy Nimbus", origin="Oath of Devotion Paladin Level 20", activation=FeatureActivation(action_type=ActionType.ACTION, duration="1 Minute", range="30-Foot Radius"), usage_tags=["damage", "buff"], uses=FeatureUses(max_uses=1, regain_all_on="long rest"))
+
+    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+        return RegainedOn.LONG_REST
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

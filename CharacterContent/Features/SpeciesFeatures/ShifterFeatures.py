@@ -1,7 +1,7 @@
 from enum import Enum
 
 from Core.Definitions import Skill, Sense
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType, RegainedOn
 from CharacterContent.Features.Core.Improvements import SkillProficiencyChoice, GrantSense
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
@@ -48,6 +48,9 @@ class Shifting(Feature):
         elif self.shift_form == ShiftForm.WILD_HUNT:
             description += "\n- While shifted, you have Advantage on Wisdom checks. Additionally, no creature within 30 feet of you can have Advantage on an attack roll against you unless you have the Incapacitated condition."
         return description
+
+    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+        return RegainedOn.LONG_REST
 
 
 class BestialInstincts(Feature):

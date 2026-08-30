@@ -1,6 +1,6 @@
 import Core.Definitions as Definitions
 from Core.Definitions import DamageType
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, RegainedOn
 from CharacterContent.Features.Core.Improvements import DamageImmunity, DamageResistance
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
@@ -32,3 +32,6 @@ class BlessingOfTheForge(Feature):
             "Once you use this feature, you can't use it again until you finish a long rest."
         )
         return description
+
+    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+        return RegainedOn.LONG_REST

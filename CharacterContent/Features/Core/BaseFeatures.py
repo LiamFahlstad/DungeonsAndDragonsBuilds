@@ -39,6 +39,18 @@ class ActionType(str, Enum):
     REACTION = "reaction"
 
 
+class RegainedOn(str, Enum):
+    """Cadence on which a feature's expended resource (uses, hit points, etc.)
+    comes back, as stated in the feature's own description."""
+
+    SHORT_REST = "short_rest"
+    LONG_REST = "long_rest"
+    SHORT_OR_LONG_REST = "short_or_long_rest"
+    # A regain condition tied to something other than a rest/time cadence
+    # (e.g. "regains a use when you roll initiative", "on a kill").
+    OTHER = "other"
+
+
 _RANGE_SHAPE_RE = re.compile(
     r"(\d+)-Foot[- ](Cone|Cube|Sphere|Line|Emanation|Cylinder|Radius(?: Sphere)?)",
     re.IGNORECASE,
@@ -482,6 +494,15 @@ class Feature:
         ability modifier plus proficiency bonus), so the value can be reused
         anywhere it's needed instead of being recomputed inline. Return None
         (default) for features with no DC."""
+        return None
+
+    def regained_on(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "RegainedOn | None":
+        """Override to return when this feature's expended resource (uses, hit
+        points, etc.) is regained (e.g. a short rest, long rest, or dawn), so
+        the value can be reused anywhere it's needed instead of being re-parsed
+        from prose. Return None (default) for features with nothing to regain."""
         return None
 
     def get_resource_tiles(

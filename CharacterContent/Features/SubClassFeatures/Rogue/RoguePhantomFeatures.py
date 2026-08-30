@@ -1,5 +1,5 @@
 from Core.Definitions import MAX_ABILITY_MODIFIER, ROGUE_HIT_DIE
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, ActionType
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, ActionType, RegainedOn
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
@@ -15,6 +15,9 @@ class WailsFromTheGrave(Feature):
         )
         return description
 
+
+    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+        return RegainedOn.LONG_REST
     def get_table_description(
         self, character_stat_block: CharacterStatBlock
     ) -> list[tuple[str, str]]:
@@ -69,6 +72,9 @@ class VoiceOfDeath(Feature):
         return description
 
 
+
+    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+        return RegainedOn.SHORT_OR_LONG_REST
 class GhostWalk(Feature):
     def __init__(self):
         super().__init__(name="Ghost Walk", origin="Phantom Rogue Level 13", activation=FeatureActivation(action_type=ActionType.BONUS_ACTION, duration="10 Minutes"), usage_tags=["buff", "utility"])

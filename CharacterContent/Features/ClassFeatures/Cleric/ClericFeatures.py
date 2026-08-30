@@ -1,4 +1,4 @@
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, ActionType
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, ActionType, RegainedOn
 from CharacterContent.Features.Core.Improvements import SkillBonus
 from Core.Definitions import Skill
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
@@ -28,6 +28,9 @@ class Spellcasting(Feature):
             ("Spellcasting Ability", "Wisdom"),
             ("Regaining Spell Slots", "All expended slots return on Long Rest"),
         ]
+
+    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+        return RegainedOn.LONG_REST
 
 
 class DivineOrderProtector(Feature):
@@ -103,6 +106,9 @@ class ChannelDivinity(Feature):
             )
         ]
         return [("Channel Divinity Uses", steps)]
+
+    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+        return RegainedOn.SHORT_OR_LONG_REST
 
 
 class SearUndead(Feature):

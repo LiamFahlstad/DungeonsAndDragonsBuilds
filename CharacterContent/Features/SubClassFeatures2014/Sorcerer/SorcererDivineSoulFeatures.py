@@ -1,6 +1,6 @@
 import Core.Definitions as Definitions
 from Core.Definitions import SORCERER_HIT_DIE
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, ActionType
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, ActionType, RegainedOn
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
@@ -35,6 +35,9 @@ class FavoredByTheGods(Feature):
             "Once you use this feature, you can't use it again until you finish a short or long rest."
         )
         return description
+
+    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+        return RegainedOn.SHORT_OR_LONG_REST
 
     def get_table_description(
         self, character_stat_block: CharacterStatBlock
@@ -101,6 +104,9 @@ class UnearthlyRecovery(Feature):
             "Once you use this feature, you can't use it again until you finish a long rest."
         )
         return description
+
+    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+        return RegainedOn.LONG_REST
 
     def get_table_description(
         self, character_stat_block: CharacterStatBlock

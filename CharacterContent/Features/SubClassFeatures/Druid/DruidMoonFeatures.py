@@ -1,6 +1,6 @@
 
 from Core.Definitions import DRUID_HIT_DIE, MAX_ABILITY_MODIFIER
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, ActionType
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, ActionType, RegainedOn
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
@@ -92,6 +92,9 @@ class MoonlightStep(Feature):
         ]
 
 
+
+    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+        return RegainedOn.LONG_REST
 class LunarForm(Feature):
     def __init__(self):
         super().__init__(name="Lunar Form", origin="Circle of the Moon Druid Level 14", usage_tags=["damage"])

@@ -1,6 +1,6 @@
 
 from Core.Definitions import Ability, RANGER_HIT_DIE, MAX_ABILITY_MODIFIER
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, ActionType
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, ActionType, RegainedOn
 from CharacterContent.Features.Core.Improvements import InitiativeBonus
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
@@ -23,6 +23,9 @@ class DreadAmbusher(Feature):
         return description
 
 
+
+    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+        return RegainedOn.LONG_REST
 class GloomStalkerSpells(Feature):
     def __init__(self):
         super().__init__(

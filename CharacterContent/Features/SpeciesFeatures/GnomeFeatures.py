@@ -1,5 +1,5 @@
 from Core.Definitions import Ability, CreatureSize, MAX_PROFICIENCY_BONUS, Sense
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, RegainedOn
 from CharacterContent.Features.Core.Improvements import SavingThrowAdvantage, GrantSense
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
@@ -42,6 +42,9 @@ class ForestGnomeSpeakWithAnimals(Feature):
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         text = "You also always have the Speak with Animals spell prepared. You can cast it without a spell slot, and you regain all expended uses when you finish a Long Rest. You can also use any spell slots you have to cast the spell."
         return text
+
+    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+        return RegainedOn.LONG_REST
 
 
 class RockGnomePrestidigitation(Feature):

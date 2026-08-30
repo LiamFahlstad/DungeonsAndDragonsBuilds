@@ -1,5 +1,5 @@
 from Core.Definitions import MONK_HIT_DIE
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, RegainedOn
 from CharacterContent.Items.Weapons import WeaponDamageRolls
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
@@ -103,6 +103,9 @@ class MysticFocus(Feature):
         return description
 
 
+
+    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+        return RegainedOn.SHORT_REST
 class FocusedStrike(Feature):
     def __init__(self):
         super().__init__(

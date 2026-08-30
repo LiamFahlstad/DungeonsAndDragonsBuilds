@@ -1,5 +1,5 @@
 from Core.Definitions import Ability, MAX_ABILITY_MODIFIER, SORCERER_HIT_DIE
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, ActionType
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, ActionType, RegainedOn
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
@@ -41,6 +41,9 @@ class RestoreBalance(Feature):
         )
         return description
 
+
+    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+        return RegainedOn.LONG_REST
 class BastionOfLaw(Feature):
     def __init__(self):
         super().__init__(name="Bastion of Law", origin="Clockwork Sorcerer Level 6", activation=FeatureActivation(action_type=ActionType.ACTION, duration="Until Long Rest or Used Again", range="30 Feet"), usage_tags=["buff"])

@@ -1,5 +1,5 @@
 from Core.Definitions import MAX_ABILITY_MODIFIER
-from CharacterContent.Features.Core.BaseFeatures import FeatureUses, Feature, FeatureActivation, ActionType
+from CharacterContent.Features.Core.BaseFeatures import FeatureUses, Feature, FeatureActivation, ActionType, RegainedOn
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
@@ -34,6 +34,9 @@ class UnleashIncarnation(Feature):
             "You regain all expended uses when you finish a long rest."
         )
         return description
+
+    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+        return RegainedOn.LONG_REST
 
     def get_table_description(
         self, character_stat_block: CharacterStatBlock
@@ -99,6 +102,9 @@ class ReclaimPotential(Feature):
         )
         return description
 
+    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+        return RegainedOn.LONG_REST
+
     def get_table_description(
         self, character_stat_block: CharacterStatBlock
     ) -> list[tuple[str, str]]:
@@ -125,3 +131,6 @@ class LegionOfOne(Feature):
             "In addition, when you roll initiative and have no uses of your Unleash Incarnation feature left, you regain one use of that feature."
         )
         return description
+
+    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+        return RegainedOn.OTHER

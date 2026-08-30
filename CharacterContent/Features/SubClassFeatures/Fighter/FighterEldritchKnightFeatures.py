@@ -1,5 +1,5 @@
 from Core.Definitions import FIGHTER_HIT_DIE
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType, RegainedOn
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
@@ -21,6 +21,9 @@ class EldritchKnightSpellcasting(Feature):
         )
         return description
 
+
+    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+        return RegainedOn.LONG_REST
     def get_concise_description(
         self, character_stat_block: CharacterStatBlock
     ) -> str:

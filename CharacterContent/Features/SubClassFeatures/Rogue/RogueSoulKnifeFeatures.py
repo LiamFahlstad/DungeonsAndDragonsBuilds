@@ -1,6 +1,6 @@
 from Core.Definitions import CharacterClass, ROGUE_HIT_DIE
 import Core.Definitions as Definitions
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, ActionType
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, ActionType, RegainedOn
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
@@ -28,6 +28,9 @@ class PsionicPower(Feature):
         return description
 
 
+
+    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+        return RegainedOn.SHORT_OR_LONG_REST
 class PsychicBlades(Feature):
     def __init__(self):
         super().__init__(name="Psychic Blades", origin="Soulknife Rogue Level 3", usage_tags=["damage"])

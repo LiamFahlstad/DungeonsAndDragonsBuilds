@@ -1,6 +1,6 @@
 import Core.Definitions as Definitions
 from Core.Definitions import Skill, WIZARD_HIT_DIE
-from CharacterContent.Features.Core.BaseFeatures import Feature
+from CharacterContent.Features.Core.BaseFeatures import Feature, RegainedOn
 from CharacterContent.Features.Core.Improvements import SkillExpertiseChoice
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
@@ -38,6 +38,9 @@ class ArcaneRecovery(Feature):
             ("Slot Restrictions", "None can be level 6 or higher"),
             ("Recharge", "Once per Long Rest"),
         ]
+
+    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+        return RegainedOn.LONG_REST
 
 
 class Scholar(Feature):

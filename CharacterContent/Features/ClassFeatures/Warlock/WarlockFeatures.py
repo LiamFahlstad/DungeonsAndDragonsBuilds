@@ -1,5 +1,5 @@
 from Core.Definitions import WARLOCK_HIT_DIE
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation
+from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, RegainedOn
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
@@ -59,6 +59,9 @@ class RegainingSpellSlots(Feature):
         description = "You regain all expended Pact Magic spell slots when you finish a Short or Long Rest."
         return description
 
+    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+        return RegainedOn.SHORT_OR_LONG_REST
+
 
 class MagicalCunning(Feature):
     def __init__(self):
@@ -75,6 +78,9 @@ class MagicalCunning(Feature):
             ("Effect", "Regain expended Pact Magic spell slots up to half your maximum (round up)"),
             ("Recharge", "Once per Long Rest"),
         ]
+
+    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+        return RegainedOn.LONG_REST
 
 
 class ContactPatron(Feature):
@@ -116,6 +122,9 @@ class MysticArcanum(Feature):
             "Gain additional arcanum spells (level 7 at 13th, level 8 at 15th, level 9 at 17th). "
             "You can replace any arcanum spell when you gain a Warlock level."
         )
+
+    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+        return RegainedOn.LONG_REST
 
 
 class EldritchMaster(Feature):
