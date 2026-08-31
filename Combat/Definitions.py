@@ -1,4 +1,5 @@
 from dataclasses import dataclass as dataclass_decorator
+from dataclasses import field
 from enum import Enum
 from typing import Optional
 
@@ -147,6 +148,57 @@ class DamageTypeEntry:
     note: str = ""
 
 
+class DiceType(int, Enum):
+    """A single die's size, e.g. the d6 in "2d6 + 5"."""
+
+    D4 = 4
+    D6 = 6
+    D8 = 8
+    D10 = 10
+    D12 = 12
+    D20 = 20
+
+    @property
+    def notation(self) -> str:
+        return f"d{self.value}"
+
+    def average(self, count: int = 1) -> float:
+        """True statistical average, e.g. D6.average() == 3.5. Callers that
+        need the 5e stat-block display convention (rounded down) floor this
+        themselves -- kept fractional here so other consumers (e.g. monster
+        scoring) can use the precise value."""
+        return count * (self.value + 1) / 2
+
+
+@dataclass_decorator
+class MeleeAttack(MonsterAbility):
+    """A MonsterAbility subclass for a standard melee attack action. Builds
+    the standard 5e stat-block sentence from structured inputs instead of a
+    hand-written description string."""
+
+    attack_bonus: int = 0
+    reach_ft: int = 5
+    dice_count: int = 1
+    dice_type: DiceType = DiceType.D4
+    damage_bonus: int = 0
+    damage_type: DamageType = DamageType.BLUDGEONING
+    additional_ruling: str = ""
+    description: str = field(init=False, default="")
+
+    def __post_init__(self):
+        average = int(self.dice_type.average(self.dice_count)) + self.damage_bonus
+        dice_notation = f"{self.dice_count}{self.dice_type.notation}"
+        if self.damage_bonus > 0:
+            dice_notation += f" + {self.damage_bonus}"
+        elif self.damage_bonus < 0:
+            dice_notation += f" - {abs(self.damage_bonus)}"
+        ruling = f" {self.additional_ruling}" if self.additional_ruling else ""
+        self.description = (
+            f"Melee Attack Roll: +{self.attack_bonus}, reach {self.reach_ft} ft. "
+            f"Hit: {average} ({dice_notation}) {self.damage_type.value} damage.{ruling}"
+        )
+
+
 @dataclass
 class BasicCombatantData:
     combatant_type: str
@@ -213,7 +265,9 @@ class ExtendedCombatantData(BasicCombatantData):
 
     cr: str = ""
     monster_type: Optional[MonsterType] = None
-    monster_type_note: str = ""  # e.g. "Metallic" or "Swarm of Tiny" -- subtype/swarm qualifier alongside monster_type
+    monster_type_note: str = (
+        ""  # e.g. "Metallic" or "Swarm of Tiny" -- subtype/swarm qualifier alongside monster_type
+    )
     alignment: Optional[Alignment] = None
     size: Optional[Size] = None
     ac_note: str = ""  # e.g. "natural armor"
@@ -221,7 +275,9 @@ class ExtendedCombatantData(BasicCombatantData):
     speed_ground_ft: Optional[int] = None
     speed_fly_ft: Optional[int] = None
     speed_climb_ft: Optional[int] = None
-    speed_special_rules: str = ""  # e.g. "hover" or any speed text that doesn't fit the fields above
+    speed_special_rules: str = (
+        ""  # e.g. "hover" or any speed text that doesn't fit the fields above
+    )
     skills: Optional[dict[Skill, int]] = None
     damage_vulnerabilities: Optional[list[DamageTypeEntry]] = None
     damage_resistances: Optional[list[DamageTypeEntry]] = None
@@ -232,12 +288,16 @@ class ExtendedCombatantData(BasicCombatantData):
     description: str = ""  # freeform flavor text / notes about the monster
     traits: Optional[list[MonsterAbility]] = None  # special traits / passive abilities
     actions: Optional[list[MonsterAbility]] = None  # standard action entries
-    bonus_actions: Optional[list[MonsterAbility]] = None  # bonus actions (some monsters)
+    bonus_actions: Optional[list[MonsterAbility]] = (
+        None  # bonus actions (some monsters)
+    )
     reactions: Optional[list[MonsterAbility]] = None  # reactions
     legendary_actions: Optional[list[MonsterAbility]] = None  # legendary actions
     legendary_resistances: int = 0  # count of legendary resistances
     lair_actions: Optional[list[MonsterAbility]] = None  # lair actions
-    mythic_actions: Optional[list[MonsterAbility]] = None  # mythic actions (some monsters)
+    mythic_actions: Optional[list[MonsterAbility]] = (
+        None  # mythic actions (some monsters)
+    )
 
     def __attrs_post_init__(self):
         super().__attrs_post_init__()

@@ -33,9 +33,8 @@ from PyQt6.QtWidgets import (
     QWidget,
 )
 
-from CharacterContent.Features.Core.BaseFeatures import RegainedOn
-
 import Combat.CombatantGroups as CombatantGroups
+from CharacterContent.Features.Core.BaseFeatures import RegainedOn
 from Combat.Definitions import Action
 
 from .app import CombatAppQt
@@ -126,7 +125,9 @@ def run_short_rest(player_log_path: str):
     outer.setContentsMargins(14, 14, 14, 14)
     outer.setSpacing(10)
 
-    info_lbl = QLabel("Enter a heal amount for each player who spends Hit Dice, then Apply.")
+    info_lbl = QLabel(
+        "Enter a heal amount for each player who spends Hit Dice, then Apply."
+    )
     info_lbl.setObjectName("secondary")
     info_lbl.setWordWrap(True)
     outer.addWidget(info_lbl)
@@ -169,7 +170,11 @@ def run_short_rest(player_log_path: str):
             pre_hp = char["hp"]
             char["hp"] = min(char["hp"] + heal, char["max_hp"])
             actual_heal = char["hp"] - pre_hp
-            heal_value = {"heal": actual_heal, "source_name": None, "target_name": char["name"]}
+            heal_value = {
+                "heal": actual_heal,
+                "source_name": None,
+                "target_name": char["name"],
+            }
             app.history.append((Action.HEAL, heal_value))
             app._log_event(
                 f"{char['name']} heals {actual_heal} HP (short rest)",

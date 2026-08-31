@@ -84,19 +84,19 @@ class CommonCultist(ExtendedCombatantData):
         )
 
 
-class AccursedGroupSmall(ExtendedCombatantData):
+class AccursedGroupOf3(ExtendedCombatantData):
     def __init__(self):
         super().__init__(
-            combatant_type="Accursed Group (Small)",
-            hp=32,
+            combatant_type="Accursed Group (3)",
+            hp=30,
             ac=13,
             temp_hp=0,
             conditions=[],
             ability_scores={
-                Ability.STRENGTH: 12,
-                Ability.DEXTERITY: 14,
-                Ability.CONSTITUTION: 12,
-                Ability.INTELLIGENCE: 3,
+                Ability.STRENGTH: 14,
+                Ability.DEXTERITY: 13,
+                Ability.CONSTITUTION: 13,
+                Ability.INTELLIGENCE: 6,
                 Ability.WISDOM: 11,
                 Ability.CHARISMA: 5,
             },

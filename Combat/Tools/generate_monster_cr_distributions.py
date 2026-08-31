@@ -28,7 +28,7 @@ import re
 import sys
 from pathlib import Path
 
-from Combat.Definitions import ExtendedCombatantData
+from Combat.Definitions import ExtendedCombatantData, MeleeAttack
 
 MONSTERS_DIR = Path(__file__).resolve().parent.parent / "Monsters"
 TEMPLATE_HTML = Path(__file__).resolve().parent / "monster_cr_distributions_template.html"
@@ -36,10 +36,12 @@ OUTPUT_HTML = Path(__file__).resolve().parent / "monster_cr_distributions.html"
 
 PLACEHOLDER = "__MONSTER_DATA_JSON__"
 
-# Same convention as analyze_monster_stats.py: to-hit and damage are read out
-# of the free-text ability descriptions (there's no structured field for
-# either), averaged across every "Attack Roll: +N" / "Hit: N (...)" found
-# among a monster's action-like ability lists.
+# `MeleeAttack` abilities carry structured attack_bonus/dice_type/dice_count/
+# damage_bonus fields, so their to-hit and damage-per-hit are read straight
+# off those (precise, possibly fractional, e.g. a D6.average() of 3.5) --
+# see _ability_attack_value/_ability_damage_value below. Plain `MonsterAbility`
+# entries (hand-written text, no structured fields) still fall back to
+# regexing "Attack Roll: +N" / "Hit: N (...)" out of the free-text description.
 _ATTACK_ROLL_RE = re.compile(r"Attack Roll:\s*([+-]\d+)")
 _DAMAGE_HIT_RE = re.compile(r"Hit:\s*(\d+)")
 _ACTION_LIKE_FIELDS = (
@@ -55,13 +57,27 @@ def cr_key(cr: str) -> float:
     return float(cr)
 
 
-def _avg_regex_match(instance, pattern):
+def _ability_attack_value(ability):
+    if isinstance(ability, MeleeAttack):
+        return float(ability.attack_bonus)
+    m = _ATTACK_ROLL_RE.search(ability.description)
+    return float(m.group(1)) if m else None
+
+
+def _ability_damage_value(ability):
+    if isinstance(ability, MeleeAttack):
+        return ability.dice_type.average(ability.dice_count) + ability.damage_bonus
+    m = _DAMAGE_HIT_RE.search(ability.description)
+    return float(m.group(1)) if m else None
+
+
+def _avg_ability_value(instance, value_fn):
     values = []
     for field in _ACTION_LIKE_FIELDS:
         for ability in getattr(instance, field, None) or []:
-            m = pattern.search(ability.description)
-            if m:
-                values.append(int(m.group(1)))
+            v = value_fn(ability)
+            if v is not None:
+                values.append(v)
     return sum(values) / len(values) if values else None
 
 
@@ -115,8 +131,8 @@ def extract_module(cr_folder: Path, filename: str, errors: list[str]) -> list[di
             "int": abilities.get("INT"),
             "wis": abilities.get("WIS"),
             "cha": abilities.get("CHA"),
-            "atk": _avg_regex_match(instance, _ATTACK_ROLL_RE),
-            "dmg": _avg_regex_match(instance, _DAMAGE_HIT_RE),
+            "atk": _avg_ability_value(instance, _ability_attack_value),
+            "dmg": _avg_ability_value(instance, _ability_damage_value),
             "condimm": len(instance.condition_immunities or []),
             "dmgimm": _damage_type_count(instance.damage_immunities),
             "dmgres": _damage_type_count(instance.damage_resistances),
