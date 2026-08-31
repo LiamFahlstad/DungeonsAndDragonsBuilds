@@ -1,0 +1,2675 @@
+{
+  "Acid Splash": {
+    "usage_tags": [
+      "damage"
+    ],
+    "target": "area"
+  },
+  "Aid": {
+    "usage_tags": [
+      "heal"
+    ],
+    "target": "ally"
+  },
+  "Alarm": {
+    "usage_tags": [
+      "control"
+    ],
+    "target": "creature"
+  },
+  "Alter Self": {
+    "usage_tags": [
+      "damage"
+    ],
+    "target": "self"
+  },
+  "Alustriel's Mooncloak": {
+    "usage_tags": [
+      "buff",
+      "heal"
+    ],
+    "target": "ally"
+  },
+  "Animal Friendship": {
+    "usage_tags": [
+      "control"
+    ],
+    "target": "enemy"
+  },
+  "Animal Messenger": {
+    "usage_tags": [
+      "utility"
+    ],
+    "target": "enemy"
+  },
+  "Animal Shapes": {
+    "usage_tags": [
+      "heal"
+    ],
+    "target": "ally"
+  },
+  "Animate Dead": {
+    "usage_tags": [
+      "summon"
+    ],
+    "target": "enemy"
+  },
+  "Animate Objects": {
+    "usage_tags": [
+      "summon"
+    ],
+    "target": "object"
+  },
+  "Antilife Shell": {
+    "usage_tags": [
+      "buff"
+    ],
+    "target": "self"
+  },
+  "Antimagic Field": {
+    "usage_tags": [
+      "buff"
+    ],
+    "target": "self"
+  },
+  "Antipathy/Sympathy": {
+    "usage_tags": [
+      "control"
+    ],
+    "target": "enemy"
+  },
+  "Arcane Eye": {
+    "usage_tags": [
+      "buff"
+    ],
+    "target": "creature"
+  },
+  "Arcane Gate": {
+    "usage_tags": [
+      "buff"
+    ],
+    "target": "area"
+  },
+  "Arcane Lock": {
+    "usage_tags": [
+      "utility"
+    ],
+    "target": "ally"
+  },
+  "Arcane Vigor": {
+    "usage_tags": [
+      "heal"
+    ],
+    "target": "self"
+  },
+  "Armor of Agathys": {
+    "usage_tags": [
+      "damage",
+      "heal"
+    ],
+    "target": "self"
+  },
+  "Arms of Hadar": {
+    "usage_tags": [
+      "damage"
+    ],
+    "target": "enemy"
+  },
+  "Astral Flood": {
+    "usage_tags": [
+      "control",
+      "damage"
+    ],
+    "target": "area"
+  },
+  "Astral Projection": {
+    "usage_tags": [
+      "heal"
+    ],
+    "target": "ally"
+  },
+  "Augury": {
+    "usage_tags": [
+      "utility"
+    ],
+    "target": "self"
+  },
+  "Aura of Life": {
+    "usage_tags": [
+      "buff",
+      "heal"
+    ],
+    "target": "ally"
+  },
+  "Aura of Purity": {
+    "usage_tags": [
+      "buff"
+    ],
+    "target": "ally"
+  },
+  "Aura of Vitality": {
+    "usage_tags": [
+      "buff",
+      "heal"
+    ],
+    "target": "self"
+  },
+  "Awaken": {
+    "usage_tags": [
+      "control"
+    ],
+    "target": "creature"
+  },
+  "Backlash": {
+    "usage_tags": [
+      "damage"
+    ],
+    "target": "enemy"
+  },
+  "Bane": {
+    "usage_tags": [
+      "control"
+    ],
+    "target": "enemy"
+  },
+  "Banishing Smite": {
+    "usage_tags": [
+      "control",
+      "damage"
+    ],
+    "target": "self"
+  },
+  "Banishment": {
+    "usage_tags": [
+      "control"
+    ],
+    "target": "enemy"
+  },
+  "Barkskin": {
+    "usage_tags": [
+      "buff"
+    ],
+    "target": "ally"
+  },
+  "Beacon of Hope": {
+    "usage_tags": [
+      "buff",
+      "heal"
+    ],
+    "target": "ally"
+  },
+  "Beast Sense": {
+    "usage_tags": [
+      "utility"
+    ],
+    "target": "creature"
+  },
+  "Befuddlement": {
+    "usage_tags": [
+      "control",
+      "damage"
+    ],
+    "target": "ally"
+  },
+  "Bestow Curse": {
+    "usage_tags": [
+      "buff",
+      "control",
+      "damage"
+    ],
+    "target": "ally"
+  },
+  "Bigby's Hand": {
+    "usage_tags": [
+      "control",
+      "damage"
+    ],
+    "target": "enemy"
+  },
+  "Blade Barrier": {
+    "usage_tags": [
+      "control"
+    ],
+    "target": "enemy"
+  },
+  "Blade of Disaster": {
+    "usage_tags": [
+      "control",
+      "damage"
+    ],
+    "target": "creature"
+  },
+  "Blade Ward": {
+    "usage_tags": [
+      "buff",
+      "control"
+    ],
+    "target": "self"
+  },
+  "Bless": {
+    "usage_tags": [
+      "buff"
+    ],
+    "target": "ally"
+  },
+  "Blight": {
+    "usage_tags": [
+      "damage"
+    ],
+    "target": "enemy"
+  },
+  "Blinding Smite": {
+    "usage_tags": [
+      "control",
+      "damage"
+    ],
+    "target": "self"
+  },
+  "Blindness/Deafness": {
+    "usage_tags": [
+      "control"
+    ],
+    "target": "enemy"
+  },
+  "Blink": {
+    "usage_tags": [
+      "buff"
+    ],
+    "target": "self"
+  },
+  "Blur": {
+    "usage_tags": [
+      "buff",
+      "control"
+    ],
+    "target": "self"
+  },
+  "Burning Hands": {
+    "usage_tags": [
+      "damage"
+    ],
+    "target": "area"
+  },
+  "Buzzing Bee": {
+    "usage_tags": [
+      "buff"
+    ],
+    "target": "creature"
+  },
+  "Cacophonic Shield": {
+    "usage_tags": [
+      "buff",
+      "control",
+      "damage",
+      "heal"
+    ],
+    "target": "self"
+  },
+  "Call Lightning": {
+    "usage_tags": [
+      "damage"
+    ],
+    "target": "area"
+  },
+  "Calm Emotions": {
+    "usage_tags": [
+      "heal"
+    ],
+    "target": "area"
+  },
+  "Chain Lightning": {
+    "usage_tags": [
+      "damage"
+    ],
+    "target": "enemy"
+  },
+  "Charm Monster": {
+    "usage_tags": [
+      "control"
+    ],
+    "target": "ally"
+  },
+  "Charm Person": {
+    "usage_tags": [
+      "control"
+    ],
+    "target": "ally"
+  },
+  "Chill Touch": {
+    "usage_tags": [
+      "damage",
+      "heal"
+    ],
+    "target": "enemy"
+  },
+  "Chromatic Orb": {
+    "usage_tags": [
+      "damage"
+    ],
+    "target": "enemy"
+  },
+  "Circle of Death": {
+    "usage_tags": [
+      "damage"
+    ],
+    "target": "area"
+  },
+  "Circle of Power": {
+    "usage_tags": [
+      "buff"
+    ],
+    "target": "ally"
+  },
+  "Clairvoyance": {
+    "usage_tags": [
+      "buff"
+    ],
+    "target": "creature"
+  },
+  "Clone": {
+    "usage_tags": [
+      "heal"
+    ],
+    "target": "ally"
+  },
+  "Cloud of Daggers": {
+    "usage_tags": [
+      "buff",
+      "damage"
+    ],
+    "target": "area"
+  },
+  "Cloudkill": {
+    "usage_tags": [
+      "control",
+      "damage"
+    ],
+    "target": "area"
+  },
+  "Color Spray": {
+    "usage_tags": [
+      "control"
+    ],
+    "target": "area"
+  },
+  "Command": {
+    "usage_tags": [
+      "control"
+    ],
+    "target": "enemy"
+  },
+  "Commune": {
+    "usage_tags": [
+      "utility"
+    ],
+    "target": "self"
+  },
+  "Commune with Nature": {
+    "usage_tags": [
+      "utility"
+    ],
+    "target": "self"
+  },
+  "Compelled Duel": {
+    "usage_tags": [
+      "buff",
+      "control"
+    ],
+    "target": "enemy"
+  },
+  "Comprehend Languages": {
+    "usage_tags": [
+      "utility"
+    ],
+    "target": "self"
+  },
+  "Compulsion": {
+    "usage_tags": [
+      "control"
+    ],
+    "target": "enemy"
+  },
+  "Cone of Cold": {
+    "usage_tags": [
+      "damage"
+    ],
+    "target": "area"
+  },
+  "Confusion": {
+    "usage_tags": [
+      "control"
+    ],
+    "target": "area"
+  },
+  "Conjure Animals": {
+    "usage_tags": [
+      "damage",
+      "summon"
+    ],
+    "target": "ally"
+  },
+  "Conjure Barrage": {
+    "usage_tags": [
+      "damage"
+    ],
+    "target": "area"
+  },
+  "Conjure Celestial": {
+    "usage_tags": [
+      "heal"
+    ],
+    "target": "area"
+  },
+  "Conjure Constructs": {
+    "usage_tags": [
+      "heal"
+    ],
+    "target": "enemy"
+  },
+  "Conjure Elemental": {
+    "usage_tags": [
+      "control",
+      "damage"
+    ],
+    "target": "enemy"
+  },
+  "Conjure Fey": {
+    "usage_tags": [
+      "buff",
+      "control",
+      "damage"
+    ],
+    "target": "creature"
+  },
+  "Conjure Minor Elementals": {
+    "usage_tags": [
+      "control"
+    ],
+    "target": "enemy"
+  },
+  "Conjure Volley": {
+    "usage_tags": [
+      "damage"
+    ],
+    "target": "area"
+  },
+  "Conjure Woodland Beings": {
+    "usage_tags": [
+      "damage"
+    ],
+    "target": "self"
+  },
+  "Contact Other Plane": {
+    "usage_tags": [
+      "control"
+    ],
+    "target": "self"
+  },
+  "Contagion": {
+    "usage_tags": [
+      "control",
+      "damage"
+    ],
+    "target": "enemy"
+  },
+  "Contingency": {
+    "usage_tags": [
+      "buff"
+    ],
+    "target": "self"
+  },
+  "Continual Flame": {
+    "usage_tags": [
+      "utility"
+    ],
+    "target": "ally"
+  },
+  "Control Water": {
+    "usage_tags": [
+      "control",
+      "damage"
+    ],
+    "target": "enemy"
+  },
+  "Control Weather": {
+    "usage_tags": [
+      "utility"
+    ],
+    "target": "self"
+  },
+  "Cordon of Arrows": {
+    "usage_tags": [
+      "damage"
+    ],
+    "target": "enemy"
+  },
+  "Counterspell": {
+    "usage_tags": [
+      "control"
+    ],
+    "target": "enemy"
+  },
+  "Create Food and Water": {
+    "usage_tags": [
+      "utility"
+    ],
+    "target": "area"
+  },
+  "Create or Destroy Water": {
+    "usage_tags": [
+      "utility"
+    ],
+    "target": "ally"
+  },
+  "Create Undead": {
+    "usage_tags": [
+      "summon"
+    ],
+    "target": "enemy"
+  },
+  "Creation": {
+    "usage_tags": [
+      "utility"
+    ],
+    "target": "creature"
+  },
+  "Crown of Madness": {
+    "usage_tags": [
+      "control"
+    ],
+    "target": "enemy"
+  },
+  "Crusader's Mantle": {
+    "usage_tags": [
+      "buff",
+      "damage"
+    ],
+    "target": "ally"
+  },
+  "Cure Wounds": {
+    "usage_tags": [
+      "heal"
+    ],
+    "target": "ally"
+  },
+  "Dancing Lights": {
+    "usage_tags": [
+      "utility"
+    ],
+    "target": "creature"
+  },
+  "Darkness": {
+    "usage_tags": [
+      "buff",
+      "control"
+    ],
+    "target": "enemy"
+  },
+  "Darkvision": {
+    "usage_tags": [
+      "buff"
+    ],
+    "target": "ally"
+  },
+  "Daylight": {
+    "usage_tags": [
+      "utility"
+    ],
+    "target": "enemy"
+  },
+  "Death Armor": {
+    "usage_tags": [
+      "buff",
+      "damage"
+    ],
+    "target": "ally"
+  },
+  "Death Ward": {
+    "usage_tags": [
+      "buff"
+    ],
+    "target": "ally"
+  },
+  "Delayed Blast Fireball": {
+    "usage_tags": [
+      "damage"
+    ],
+    "target": "area"
+  },
+  "Demiplane": {
+    "usage_tags": [
+      "heal"
+    ],
+    "target": "area"
+  },
+  "Deryan's Helpful Homunculi": {
+    "usage_tags": [
+      "utility"
+    ],
+    "target": "self"
+  },
+  "Destructive Wave": {
+    "usage_tags": [
+      "control",
+      "damage"
+    ],
+    "target": "enemy"
+  },
+  "Detect Evil and Good": {
+    "usage_tags": [
+      "utility"
+    ],
+    "target": "self"
+  },
+  "Detect Magic": {
+    "usage_tags": [
+      "utility"
+    ],
+    "target": "self"
+  },
+  "Detect Poison and Disease": {
+    "usage_tags": [
+      "utility"
+    ],
+    "target": "self"
+  },
+  "Detect Thoughts": {
+    "usage_tags": [
+      "buff"
+    ],
+    "target": "self"
+  },
+  "Dimension Door": {
+    "usage_tags": [
+      "buff"
+    ],
+    "target": "ally"
+  },
+  "Dirge": {
+    "usage_tags": [
+      "control",
+      "damage",
+      "heal"
+    ],
+    "target": "self"
+  },
+  "Disguise Self": {
+    "usage_tags": [
+      "utility"
+    ],
+    "target": "self"
+  },
+  "Disintegrate": {
+    "usage_tags": [
+      "control",
+      "damage",
+      "heal"
+    ],
+    "target": "enemy"
+  },
+  "Dispel Evil and Good": {
+    "usage_tags": [
+      "buff",
+      "control"
+    ],
+    "target": "self"
+  },
+  "Dispel Magic": {
+    "usage_tags": [
+      "utility"
+    ],
+    "target": "creature"
+  },
+  "Dissonant Whispers": {
+    "usage_tags": [
+      "damage"
+    ],
+    "target": "enemy"
+  },
+  "Divination": {
+    "usage_tags": [
+      "utility"
+    ],
+    "target": "self"
+  },
+  "Divine Favor": {
+    "usage_tags": [
+      "damage"
+    ],
+    "target": "self"
+  },
+  "Divine Smite": {
+    "usage_tags": [
+      "damage"
+    ],
+    "target": "self"
+  },
+  "Divine Word": {
+    "usage_tags": [
+      "damage",
+      "control"
+    ],
+    "target": "enemy"
+  },
+  "Dominate Beast": {
+    "usage_tags": [
+      "buff",
+      "control"
+    ],
+    "target": "ally"
+  },
+  "Dominate Monster": {
+    "usage_tags": [
+      "buff",
+      "control"
+    ],
+    "target": "ally"
+  },
+  "Dominate Person": {
+    "usage_tags": [
+      "buff",
+      "control"
+    ],
+    "target": "ally"
+  },
+  "Doomtide": {
+    "usage_tags": [
+      "buff",
+      "control",
+      "damage"
+    ],
+    "target": "area"
+  },
+  "Dragon's Breath": {
+    "usage_tags": [
+      "damage"
+    ],
+    "target": "area"
+  },
+  "Drawmij's Instant Summons": {
+    "usage_tags": [
+      "utility"
+    ],
+    "target": "ally"
+  },
+  "Dream": {
+    "usage_tags": [
+      "control",
+      "damage"
+    ],
+    "target": "ally"
+  },
+  "Druidcraft": {
+    "usage_tags": [
+      "utility"
+    ],
+    "target": "ally"
+  },
+  "Earthquake": {
+    "usage_tags": [
+      "control",
+      "damage"
+    ],
+    "target": "enemy"
+  },
+  "Eldritch Blast": {
+    "usage_tags": [
+      "damage"
+    ],
+    "target": "enemy"
+  },
+  "Elemental Weapon": {
+    "usage_tags": [
+      "buff",
+      "damage"
+    ],
+    "target": "ally"
+  },
+  "Elementalism": {
+    "usage_tags": [
+      "control"
+    ],
+    "target": "creature"
+  },
+  "Elminster's Effulgent Spheres": {
+    "usage_tags": [
+      "buff",
+      "damage"
+    ],
+    "target": "area"
+  },
+  "Elminster's Elusion": {
+    "usage_tags": [
+      "buff"
+    ],
+    "target": "self"
+  },
+  "Enhance Ability": {
+    "usage_tags": [
+      "buff"
+    ],
+    "target": "ally"
+  },
+  "Enlarge/Reduce": {
+    "usage_tags": [
+      "buff"
+    ],
+    "target": "ally"
+  },
+  "Ensnaring Strike": {
+    "usage_tags": [
+      "buff",
+      "control",
+      "damage"
+    ],
+    "target": "self"
+  },
+  "Entangle": {
+    "usage_tags": [
+      "control"
+    ],
+    "target": "enemy"
+  },
+  "Enthrall": {
+    "usage_tags": [
+      "control"
+    ],
+    "target": "enemy"
+  },
+  "Etherealness": {
+    "usage_tags": [
+      "utility"
+    ],
+    "target": "self"
+  },
+  "Evard's Black Tentacles": {
+    "usage_tags": [
+      "control",
+      "damage"
+    ],
+    "target": "enemy"
+  },
+  "Expeditious Retreat": {
+    "usage_tags": [
+      "buff"
+    ],
+    "target": "self"
+  },
+  "Eyebite": {
+    "usage_tags": [
+      "control"
+    ],
+    "target": "self"
+  },
+  "Fabricate": {
+    "usage_tags": [
+      "utility"
+    ],
+    "target": "ally"
+  },
+  "Faerie Fire": {
+    "usage_tags": [
+      "control"
+    ],
+    "target": "area"
+  },
+  "False Life": {
+    "usage_tags": [
+      "heal"
+    ],
+    "target": "self"
+  },
+  "Fear": {
+    "usage_tags": [
+      "control"
+    ],
+    "target": "area"
+  },
+  "Feather Fall": {
+    "usage_tags": [
+      "buff"
+    ],
+    "target": "ally"
+  },
+  "Feign Death": {
+    "usage_tags": [
+      "buff"
+    ],
+    "target": "ally"
+  },
+  "Find Familiar": {
+    "usage_tags": [
+      "buff",
+      "summon"
+    ],
+    "target": "creature"
+  },
+  "Find Steed": {
+    "usage_tags": [
+      "control"
+    ],
+    "target": "area"
+  },
+  "Find the Path": {
+    "usage_tags": [
+      "utility"
+    ],
+    "target": "self"
+  },
+  "Find Traps": {
+    "usage_tags": [
+      "heal"
+    ],
+    "target": "creature"
+  },
+  "Finger of Death": {
+    "usage_tags": [
+      "damage"
+    ],
+    "target": "enemy"
+  },
+  "Fire Bolt": {
+    "usage_tags": [
+      "damage"
+    ],
+    "target": "enemy"
+  },
+  "Fire Shield": {
+    "usage_tags": [
+      "buff",
+      "damage"
+    ],
+    "target": "area"
+  },
+  "Fire Storm": {
+    "usage_tags": [
+      "damage"
+    ],
+    "target": "area"
+  },
+  "Fireball": {
+    "usage_tags": [
+      "damage"
+    ],
+    "target": "area"
+  },
+  "Flame Blade": {
+    "usage_tags": [
+      "damage"
+    ],
+    "target": "area"
+  },
+  "Flame Strike": {
+    "usage_tags": [
+      "damage"
+    ],
+    "target": "area"
+  },
+  "Flaming Sphere": {
+    "usage_tags": [
+      "buff",
+      "damage"
+    ],
+    "target": "enemy"
+  },
+  "Flesh to Stone": {
+    "usage_tags": [
+      "control",
+      "heal"
+    ],
+    "target": "enemy"
+  },
+  "Fly": {
+    "usage_tags": [
+      "buff"
+    ],
+    "target": "ally"
+  },
+  "Fog Cloud": {
+    "usage_tags": [
+      "control"
+    ],
+    "target": "area"
+  },
+  "Forbiddance": {
+    "usage_tags": [
+      "damage"
+    ],
+    "target": "ally"
+  },
+  "Forcecage": {
+    "usage_tags": [
+      "buff",
+      "control"
+    ],
+    "target": "enemy"
+  },
+  "Foresight": {
+    "usage_tags": [
+      "buff",
+      "control"
+    ],
+    "target": "ally"
+  },
+  "Fount of Moonlight": {
+    "usage_tags": [
+      "buff",
+      "control",
+      "damage"
+    ],
+    "target": "area"
+  },
+  "Freedom of Movement": {
+    "usage_tags": [
+      "buff",
+      "control"
+    ],
+    "target": "ally"
+  },
+  "Friends": {
+    "usage_tags": [
+      "control",
+      "damage",
+      "heal"
+    ],
+    "target": "creature"
+  },
+  "Gaseous Form": {
+    "usage_tags": [
+      "buff"
+    ],
+    "target": "ally"
+  },
+  "Gate": {
+    "usage_tags": [
+      "control"
+    ],
+    "target": "creature"
+  },
+  "Geas": {
+    "usage_tags": [
+      "control",
+      "damage",
+      "heal"
+    ],
+    "target": "enemy"
+  },
+  "Gentle Repose": {
+    "usage_tags": [
+      "utility"
+    ],
+    "target": "ally"
+  },
+  "Giant Insect": {
+    "usage_tags": [
+      "summon"
+    ],
+    "target": "creature"
+  },
+  "Glibness": {
+    "usage_tags": [
+      "buff"
+    ],
+    "target": "self"
+  },
+  "Globe of Invulnerability": {
+    "usage_tags": [
+      "buff"
+    ],
+    "target": "self"
+  },
+  "Glyph of Warding": {
+    "usage_tags": [
+      "damage"
+    ],
+    "target": "ally"
+  },
+  "Goodberry": {
+    "usage_tags": [
+      "heal"
+    ],
+    "target": "self"
+  },
+  "Grasping Vine": {
+    "usage_tags": [
+      "control",
+      "damage"
+    ],
+    "target": "enemy"
+  },
+  "Grease": {
+    "usage_tags": [
+      "control"
+    ],
+    "target": "enemy"
+  },
+  "Greater Invisibility": {
+    "usage_tags": [
+      "buff"
+    ],
+    "target": "ally"
+  },
+  "Greater Restoration": {
+    "usage_tags": [
+      "control"
+    ],
+    "target": "creature"
+  },
+  "Guardian of Faith": {
+    "usage_tags": [
+      "damage",
+      "control"
+    ],
+    "target": "enemy"
+  },
+  "Guards and Wards": {
+    "usage_tags": [
+      "control"
+    ],
+    "target": "ally"
+  },
+  "Guidance": {
+    "usage_tags": [
+      "buff"
+    ],
+    "target": "ally"
+  },
+  "Guiding Bolt": {
+    "usage_tags": [
+      "damage"
+    ],
+    "target": "ally"
+  },
+  "Gust of Wind": {
+    "usage_tags": [
+      "control"
+    ],
+    "target": "area"
+  },
+  "Hail of Thorns": {
+    "usage_tags": [
+      "damage"
+    ],
+    "target": "self"
+  },
+  "Hallow": {
+    "usage_tags": [
+      "buff",
+      "control"
+    ],
+    "target": "ally"
+  },
+  "Hallucinatory Terrain": {
+    "usage_tags": [
+      "utility"
+    ],
+    "target": "enemy"
+  },
+  "Harm": {
+    "usage_tags": [
+      "damage"
+    ],
+    "target": "enemy"
+  },
+  "Haste": {
+    "usage_tags": [
+      "buff"
+    ],
+    "target": "ally"
+  },
+  "Heal": {
+    "usage_tags": [
+      "heal"
+    ],
+    "target": "ally"
+  },
+  "Healing Word": {
+    "usage_tags": [
+      "heal"
+    ],
+    "target": "ally"
+  },
+  "Heat Metal": {
+    "usage_tags": [
+      "control",
+      "damage"
+    ],
+    "target": "enemy"
+  },
+  "Hellish Rebuke": {
+    "usage_tags": [
+      "damage"
+    ],
+    "target": "enemy"
+  },
+  "Heroes' Feast": {
+    "usage_tags": [
+      "buff",
+      "damage",
+      "heal"
+    ],
+    "target": "area"
+  },
+  "Heroism": {
+    "usage_tags": [
+      "heal"
+    ],
+    "target": "ally"
+  },
+  "Hex": {
+    "usage_tags": [
+      "control",
+      "damage"
+    ],
+    "target": "enemy"
+  },
+  "Hold Monster": {
+    "usage_tags": [
+      "control"
+    ],
+    "target": "enemy"
+  },
+  "Hold Person": {
+    "usage_tags": [
+      "control"
+    ],
+    "target": "enemy"
+  },
+  "Holy Aura": {
+    "usage_tags": [
+      "buff",
+      "control",
+      "damage"
+    ],
+    "target": "self"
+  },
+  "Holy Star of Mystra": {
+    "usage_tags": [
+      "damage"
+    ],
+    "target": "area"
+  },
+  "Homunculus Servant": {
+    "usage_tags": [
+      "summon"
+    ],
+    "target": "area"
+  },
+  "Hunger of Hadar": {
+    "usage_tags": [
+      "control",
+      "damage"
+    ],
+    "target": "enemy"
+  },
+  "Hunter's Mark": {
+    "usage_tags": [
+      "damage"
+    ],
+    "target": "ally"
+  },
+  "Hypnotic Pattern": {
+    "usage_tags": [
+      "control"
+    ],
+    "target": "area"
+  },
+  "Ice Knife": {
+    "usage_tags": [
+      "damage"
+    ],
+    "target": "enemy"
+  },
+  "Ice Storm": {
+    "usage_tags": [
+      "damage"
+    ],
+    "target": "area"
+  },
+  "Identify": {
+    "usage_tags": [
+      "utility"
+    ],
+    "target": "object"
+  },
+  "Illusory Script": {
+    "usage_tags": [
+      "buff"
+    ],
+    "target": "ally"
+  },
+  "Imprisonment": {
+    "usage_tags": [
+      "buff",
+      "control"
+    ],
+    "target": "enemy"
+  },
+  "Incendiary Cloud": {
+    "usage_tags": [
+      "control",
+      "damage"
+    ],
+    "target": "area"
+  },
+  "Inflict Wounds": {
+    "usage_tags": [
+      "damage"
+    ],
+    "target": "enemy"
+  },
+  "Insect Plague": {
+    "usage_tags": [
+      "control",
+      "damage"
+    ],
+    "target": "area"
+  },
+  "Insidious Rhythm": {
+    "usage_tags": [
+      "control"
+    ],
+    "target": "enemy"
+  },
+  "Invisibility": {
+    "usage_tags": [
+      "damage"
+    ],
+    "target": "ally"
+  },
+  "Jallarzi's Storm of Radiance": {
+    "usage_tags": [
+      "damage"
+    ],
+    "target": "area"
+  },
+  "Jump": {
+    "usage_tags": [
+      "buff"
+    ],
+    "target": "ally"
+  },
+  "Knock": {
+    "usage_tags": [
+      "utility"
+    ],
+    "target": "object"
+  },
+  "Laeral's Silver Lance": {
+    "usage_tags": [
+      "control",
+      "damage"
+    ],
+    "target": "area"
+  },
+  "Legend Lore": {
+    "usage_tags": [
+      "utility"
+    ],
+    "target": "self"
+  },
+  "Leomund's Lamentable Belaborment": {
+    "usage_tags": [
+      "control"
+    ],
+    "target": "area"
+  },
+  "Leomund's Secret Chest": {
+    "usage_tags": [
+      "utility"
+    ],
+    "target": "creature"
+  },
+  "Leomund's Tiny Hut": {
+    "usage_tags": [
+      "buff"
+    ],
+    "target": "self"
+  },
+  "Lesser Restoration": {
+    "usage_tags": [
+      "heal"
+    ],
+    "target": "creature"
+  },
+  "Levitate": {
+    "usage_tags": [
+      "buff"
+    ],
+    "target": "enemy"
+  },
+  "Light": {
+    "usage_tags": [
+      "utility"
+    ],
+    "target": "creature"
+  },
+  "Lightning Arrow": {
+    "usage_tags": [
+      "damage"
+    ],
+    "target": "self"
+  },
+  "Lightning Bolt": {
+    "usage_tags": [
+      "damage"
+    ],
+    "target": "area"
+  },
+  "Locate Animals or Plants": {
+    "usage_tags": [
+      "utility"
+    ],
+    "target": "self"
+  },
+  "Locate Creature": {
+    "usage_tags": [
+      "utility"
+    ],
+    "target": "self"
+  },
+  "Locate Object": {
+    "usage_tags": [
+      "utility"
+    ],
+    "target": "self"
+  },
+  "Longstrider": {
+    "usage_tags": [
+      "buff"
+    ],
+    "target": "creature"
+  },
+  "Mage Armor": {
+    "usage_tags": [
+      "buff"
+    ],
+    "target": "ally"
+  },
+  "Mage Hand": {
+    "usage_tags": [
+      "utility"
+    ],
+    "target": "creature"
+  },
+  "Magic Circle": {
+    "usage_tags": [
+      "buff",
+      "control"
+    ],
+    "target": "enemy"
+  },
+  "Magic Jar": {
+    "usage_tags": [
+      "buff"
+    ],
+    "target": "self"
+  },
+  "Magic Missile": {
+    "usage_tags": [
+      "damage"
+    ],
+    "target": "enemy"
+  },
+  "Magic Mouth": {
+    "usage_tags": [
+      "utility"
+    ],
+    "target": "object"
+  },
+  "Magic Weapon": {
+    "usage_tags": [
+      "buff"
+    ],
+    "target": "ally"
+  },
+  "Major Image": {
+    "usage_tags": [
+      "utility"
+    ],
+    "target": "creature"
+  },
+  "Mass Cure Wounds": {
+    "usage_tags": [
+      "heal"
+    ],
+    "target": "area"
+  },
+  "Mass Heal": {
+    "usage_tags": [
+      "heal"
+    ],
+    "target": "ally"
+  },
+  "Mass Healing Word": {
+    "usage_tags": [
+      "heal"
+    ],
+    "target": "ally"
+  },
+  "Mass Suggestion": {
+    "usage_tags": [
+      "control"
+    ],
+    "target": "enemy"
+  },
+  "Maze": {
+    "usage_tags": [
+      "control"
+    ],
+    "target": "creature"
+  },
+  "Meld into Stone": {
+    "usage_tags": [
+      "control",
+      "damage"
+    ],
+    "target": "enemy"
+  },
+  "Melf's Acid Arrow": {
+    "usage_tags": [
+      "damage"
+    ],
+    "target": "enemy"
+  },
+  "Mending": {
+    "usage_tags": [
+      "utility"
+    ],
+    "target": "object"
+  },
+  "Message": {
+    "usage_tags": [
+      "utility"
+    ],
+    "target": "creature"
+  },
+  "Meteor Swarm": {
+    "usage_tags": [
+      "damage"
+    ],
+    "target": "area"
+  },
+  "Mind Blank": {
+    "usage_tags": [
+      "heal"
+    ],
+    "target": "ally"
+  },
+  "Mind Sliver": {
+    "usage_tags": [
+      "control",
+      "damage"
+    ],
+    "target": "creature"
+  },
+  "Mind Spike": {
+    "usage_tags": [
+      "buff",
+      "damage",
+      "heal"
+    ],
+    "target": "enemy"
+  },
+  "Minor Illusion": {
+    "usage_tags": [
+      "utility"
+    ],
+    "target": "creature"
+  },
+  "Mirage Arcane": {
+    "usage_tags": [
+      "buff",
+      "control"
+    ],
+    "target": "creature"
+  },
+  "Mirror Image": {
+    "usage_tags": [
+      "buff",
+      "control",
+      "damage"
+    ],
+    "target": "self"
+  },
+  "Mislead": {
+    "usage_tags": [
+      "buff"
+    ],
+    "target": "self"
+  },
+  "Misty Step": {
+    "usage_tags": [
+      "buff"
+    ],
+    "target": "self"
+  },
+  "Modify Memory": {
+    "usage_tags": [
+      "buff",
+      "control",
+      "heal"
+    ],
+    "target": "ally"
+  },
+  "Moonbeam": {
+    "usage_tags": [
+      "damage"
+    ],
+    "target": "area"
+  },
+  "Mordenkainen's Faithful Hound": {
+    "usage_tags": [
+      "buff",
+      "damage"
+    ],
+    "target": "enemy"
+  },
+  "Mordenkainen's Lucubration": {
+    "usage_tags": [
+      "utility"
+    ],
+    "target": "self"
+  },
+  "Mordenkainen's Magnificent Mansion": {
+    "usage_tags": [
+      "utility"
+    ],
+    "target": "area"
+  },
+  "Mordenkainen's Private Sanctum": {
+    "usage_tags": [
+      "buff",
+      "control"
+    ],
+    "target": "area"
+  },
+  "Mordenkainen's Sword": {
+    "usage_tags": [
+      "damage"
+    ],
+    "target": "enemy"
+  },
+  "Move Earth": {
+    "usage_tags": [
+      "control",
+      "heal"
+    ],
+    "target": "area"
+  },
+  "Nondetection": {
+    "usage_tags": [
+      "utility"
+    ],
+    "target": "ally"
+  },
+  "Nystul's Magic Aura": {
+    "usage_tags": [
+      "buff"
+    ],
+    "target": "ally"
+  },
+  "Otiluke's Freezing Sphere": {
+    "usage_tags": [
+      "control",
+      "damage"
+    ],
+    "target": "area"
+  },
+  "Otiluke's Resilient Sphere": {
+    "usage_tags": [
+      "buff",
+      "control"
+    ],
+    "target": "enemy"
+  },
+  "Otto's Irresistible Dance": {
+    "usage_tags": [
+      "buff",
+      "control"
+    ],
+    "target": "ally"
+  },
+  "Pass without Trace": {
+    "usage_tags": [
+      "buff"
+    ],
+    "target": "enemy"
+  },
+  "Passwall": {
+    "usage_tags": [
+      "utility"
+    ],
+    "target": "ally"
+  },
+  "Phantasmal Force": {
+    "usage_tags": [
+      "damage"
+    ],
+    "target": "enemy"
+  },
+  "Phantasmal Killer": {
+    "usage_tags": [
+      "control",
+      "damage"
+    ],
+    "target": "enemy"
+  },
+  "Phantom Steed": {
+    "usage_tags": [
+      "utility"
+    ],
+    "target": "creature"
+  },
+  "Planar Ally": {
+    "usage_tags": [
+      "summon"
+    ],
+    "target": "creature"
+  },
+  "Planar Binding": {
+    "usage_tags": [
+      "control",
+      "summon"
+    ],
+    "target": "enemy"
+  },
+  "Plane Shift": {
+    "usage_tags": [
+      "buff",
+      "control"
+    ],
+    "target": "ally"
+  },
+  "Plant Growth": {
+    "usage_tags": [
+      "control"
+    ],
+    "target": "creature"
+  },
+  "Poison Spray": {
+    "usage_tags": [
+      "damage"
+    ],
+    "target": "enemy"
+  },
+  "Polymorph": {
+    "usage_tags": [
+      "heal"
+    ],
+    "target": "enemy"
+  },
+  "Power Word Fortify": {
+    "usage_tags": [
+      "heal"
+    ],
+    "target": "enemy"
+  },
+  "Power Word Heal": {
+    "usage_tags": [
+      "control",
+      "heal"
+    ],
+    "target": "ally"
+  },
+  "Power Word Kill": {
+    "usage_tags": [
+      "damage"
+    ],
+    "target": "enemy"
+  },
+  "Power Word Stun": {
+    "usage_tags": [
+      "control"
+    ],
+    "target": "enemy"
+  },
+  "Prayer of Healing": {
+    "usage_tags": [
+      "heal"
+    ],
+    "target": "ally"
+  },
+  "Prestidigitation": {
+    "usage_tags": [
+      "utility"
+    ],
+    "target": "ally"
+  },
+  "Prismatic Spray": {
+    "usage_tags": [
+      "damage",
+      "control"
+    ],
+    "target": "area"
+  },
+  "Prismatic Wall": {
+    "usage_tags": [
+      "control"
+    ],
+    "target": "enemy"
+  },
+  "Produce Flame": {
+    "usage_tags": [
+      "damage"
+    ],
+    "target": "area"
+  },
+  "Programmed Illusion": {
+    "usage_tags": [
+      "control"
+    ],
+    "target": "creature"
+  },
+  "Project Image": {
+    "usage_tags": [
+      "buff",
+      "control"
+    ],
+    "target": "creature"
+  },
+  "Protection from Energy": {
+    "usage_tags": [
+      "buff"
+    ],
+    "target": "ally"
+  },
+  "Protection from Evil and Good": {
+    "usage_tags": [
+      "buff",
+      "control",
+      "heal"
+    ],
+    "target": "ally"
+  },
+  "Protection from Poison": {
+    "usage_tags": [
+      "buff"
+    ],
+    "target": "ally"
+  },
+  "Purify Food and Drink": {
+    "usage_tags": [
+      "heal"
+    ],
+    "target": "ally"
+  },
+  "Raise Dead": {
+    "usage_tags": [
+      "heal"
+    ],
+    "target": "ally"
+  },
+  "Rary's Telepathic Bond": {
+    "usage_tags": [
+      "buff"
+    ],
+    "target": "ally"
+  },
+  "Ray of Enfeeblement": {
+    "usage_tags": [
+      "buff"
+    ],
+    "target": "enemy"
+  },
+  "Ray of Frost": {
+    "usage_tags": [
+      "damage"
+    ],
+    "target": "enemy"
+  },
+  "Ray of Sickness": {
+    "usage_tags": [
+      "damage"
+    ],
+    "target": "enemy"
+  },
+  "Regenerate": {
+    "usage_tags": [
+      "heal"
+    ],
+    "target": "creature"
+  },
+  "Reincarnate": {
+    "usage_tags": [
+      "heal"
+    ],
+    "target": "enemy"
+  },
+  "Remove Curse": {
+    "usage_tags": [
+      "heal"
+    ],
+    "target": "creature"
+  },
+  "Resistance": {
+    "usage_tags": [
+      "buff"
+    ],
+    "target": "ally"
+  },
+  "Resurrection": {
+    "usage_tags": [
+      "buff",
+      "heal"
+    ],
+    "target": "enemy"
+  },
+  "Reverse Gravity": {
+    "usage_tags": [
+      "damage",
+      "control"
+    ],
+    "target": "area"
+  },
+  "Revivify": {
+    "usage_tags": [
+      "heal"
+    ],
+    "target": "ally"
+  },
+  "Rope Trick": {
+    "usage_tags": [
+      "utility"
+    ],
+    "target": "ally"
+  },
+  "Sacred Flame": {
+    "usage_tags": [
+      "damage"
+    ],
+    "target": "enemy"
+  },
+  "Sanctuary": {
+    "usage_tags": [
+      "damage"
+    ],
+    "target": "enemy"
+  },
+  "Scorching Ray": {
+    "usage_tags": [
+      "damage"
+    ],
+    "target": "enemy"
+  },
+  "Scrying": {
+    "usage_tags": [
+      "utility"
+    ],
+    "target": "self"
+  },
+  "Searing Orb": {
+    "usage_tags": [
+      "control",
+      "damage"
+    ],
+    "target": "enemy"
+  },
+  "Searing Smite": {
+    "usage_tags": [
+      "damage"
+    ],
+    "target": "self"
+  },
+  "See Invisibility": {
+    "usage_tags": [
+      "buff"
+    ],
+    "target": "self"
+  },
+  "Seeming": {
+    "usage_tags": [
+      "utility"
+    ],
+    "target": "enemy"
+  },
+  "Sending": {
+    "usage_tags": [
+      "utility"
+    ],
+    "target": "creature"
+  },
+  "Sequester": {
+    "usage_tags": [
+      "utility"
+    ],
+    "target": "ally"
+  },
+  "Shapechange": {
+    "usage_tags": [
+      "heal"
+    ],
+    "target": "self"
+  },
+  "Shatter": {
+    "usage_tags": [
+      "damage"
+    ],
+    "target": "area"
+  },
+  "Shield": {
+    "usage_tags": [
+      "buff",
+      "control"
+    ],
+    "target": "self"
+  },
+  "Shield of Faith": {
+    "usage_tags": [
+      "buff"
+    ],
+    "target": "creature"
+  },
+  "Shillelagh": {
+    "usage_tags": [
+      "buff"
+    ],
+    "target": "self"
+  },
+  "Shining Smite": {
+    "usage_tags": [
+      "damage",
+      "heal"
+    ],
+    "target": "area"
+  },
+  "Shocking Grasp": {
+    "usage_tags": [
+      "damage"
+    ],
+    "target": "enemy"
+  },
+  "Silence": {
+    "usage_tags": [
+      "control"
+    ],
+    "target": "creature"
+  },
+  "Silent Image": {
+    "usage_tags": [
+      "utility"
+    ],
+    "target": "creature"
+  },
+  "Simbul's Synostodweomer": {
+    "usage_tags": [
+      "heal"
+    ],
+    "target": "ally"
+  },
+  "Simulacrum": {
+    "usage_tags": [
+      "heal"
+    ],
+    "target": "ally"
+  },
+  "Sleep": {
+    "usage_tags": [
+      "control"
+    ],
+    "target": "area"
+  },
+  "Sleet Storm": {
+    "usage_tags": [
+      "control"
+    ],
+    "target": "enemy"
+  },
+  "Slow": {
+    "usage_tags": [
+      "control"
+    ],
+    "target": "enemy"
+  },
+  "Songal's Elemental Suffusion": {
+    "usage_tags": [
+      "buff",
+      "control",
+      "damage"
+    ],
+    "target": "area"
+  },
+  "Sorcerous Burst": {
+    "usage_tags": [
+      "damage"
+    ],
+    "target": "enemy"
+  },
+  "Spare the Dying": {
+    "usage_tags": [
+      "heal"
+    ],
+    "target": "creature"
+  },
+  "Speak with Animals": {
+    "usage_tags": [
+      "utility"
+    ],
+    "target": "self"
+  },
+  "Speak with Dead": {
+    "usage_tags": [
+      "utility"
+    ],
+    "target": "enemy"
+  },
+  "Speak with Plants": {
+    "usage_tags": [
+      "control"
+    ],
+    "target": "self"
+  },
+  "Spellfire Flare": {
+    "usage_tags": [
+      "damage"
+    ],
+    "target": "enemy"
+  },
+  "Spellfire Storm": {
+    "usage_tags": [
+      "damage"
+    ],
+    "target": "area"
+  },
+  "Spider Climb": {
+    "usage_tags": [
+      "buff"
+    ],
+    "target": "ally"
+  },
+  "Spike Growth": {
+    "usage_tags": [
+      "control",
+      "damage"
+    ],
+    "target": "creature"
+  },
+  "Spirit Guardians": {
+    "usage_tags": [
+      "damage"
+    ],
+    "target": "self"
+  },
+  "Spirit Lantern": {
+    "usage_tags": [
+      "control",
+      "damage",
+      "heal"
+    ],
+    "target": "area"
+  },
+  "Spiritual Weapon": {
+    "usage_tags": [
+      "damage"
+    ],
+    "target": "enemy"
+  },
+  "Staggering Smite": {
+    "usage_tags": [
+      "control",
+      "damage"
+    ],
+    "target": "self"
+  },
+  "Starry Wisp": {
+    "usage_tags": [
+      "buff",
+      "damage"
+    ],
+    "target": "enemy"
+  },
+  "Steel Wind Strike": {
+    "usage_tags": [
+      "buff",
+      "damage"
+    ],
+    "target": "ally"
+  },
+  "Sticks to Snakes": {
+    "usage_tags": [
+      "summon"
+    ],
+    "target": "creature"
+  },
+  "Stinking Cloud": {
+    "usage_tags": [
+      "control"
+    ],
+    "target": "area"
+  },
+  "Stone Shape": {
+    "usage_tags": [
+      "utility"
+    ],
+    "target": "enemy"
+  },
+  "Stoneskin": {
+    "usage_tags": [
+      "buff"
+    ],
+    "target": "ally"
+  },
+  "Storm of Vengeance": {
+    "usage_tags": [
+      "control",
+      "damage"
+    ],
+    "target": "enemy"
+  },
+  "Suggestion": {
+    "usage_tags": [
+      "control"
+    ],
+    "target": "enemy"
+  },
+  "Summon Aberration": {
+    "usage_tags": [
+      "summon"
+    ],
+    "target": "creature"
+  },
+  "Summon Beast": {
+    "usage_tags": [
+      "summon"
+    ],
+    "target": "creature"
+  },
+  "Summon Celestial": {
+    "usage_tags": [
+      "summon"
+    ],
+    "target": "creature"
+  },
+  "Summon Construct": {
+    "usage_tags": [
+      "summon"
+    ],
+    "target": "creature"
+  },
+  "Summon Dragon": {
+    "usage_tags": [
+      "summon"
+    ],
+    "target": "creature"
+  },
+  "Summon Elemental": {
+    "usage_tags": [
+      "summon"
+    ],
+    "target": "creature"
+  },
+  "Summon Fey": {
+    "usage_tags": [
+      "summon"
+    ],
+    "target": "creature"
+  },
+  "Summon Fiend": {
+    "usage_tags": [
+      "summon"
+    ],
+    "target": "creature"
+  },
+  "Summon Undead": {
+    "usage_tags": [
+      "summon"
+    ],
+    "target": "enemy"
+  },
+  "Sunbeam": {
+    "usage_tags": [
+      "control",
+      "damage"
+    ],
+    "target": "area"
+  },
+  "Sunburst": {
+    "usage_tags": [
+      "control",
+      "damage"
+    ],
+    "target": "area"
+  },
+  "Swift Quiver": {
+    "usage_tags": [
+      "buff"
+    ],
+    "target": "self"
+  },
+  "Sylune's Viper": {
+    "usage_tags": [
+      "buff",
+      "control",
+      "damage",
+      "heal"
+    ],
+    "target": "self"
+  },
+  "Symbol": {
+    "usage_tags": [
+      "buff",
+      "control"
+    ],
+    "target": "object"
+  },
+  "Synaptic Static": {
+    "usage_tags": [
+      "buff",
+      "control",
+      "damage"
+    ],
+    "target": "area"
+  },
+  "Tasha's Bubbling Cauldron": {
+    "usage_tags": [
+      "utility"
+    ],
+    "target": "creature"
+  },
+  "Tasha's Hideous Laughter": {
+    "usage_tags": [
+      "buff"
+    ],
+    "target": "ally"
+  },
+  "Telekinesis": {
+    "usage_tags": [
+      "control"
+    ],
+    "target": "object"
+  },
+  "Telepathy": {
+    "usage_tags": [
+      "buff"
+    ],
+    "target": "ally"
+  },
+  "Teleport": {
+    "usage_tags": [
+      "buff",
+      "damage"
+    ],
+    "target": "object"
+  },
+  "Teleportation Circle": {
+    "usage_tags": [
+      "buff"
+    ],
+    "target": "area"
+  },
+  "Tenser's Floating Disk": {
+    "usage_tags": [
+      "utility"
+    ],
+    "target": "area"
+  },
+  "Thaumaturgy": {
+    "usage_tags": [
+      "utility"
+    ],
+    "target": "ally"
+  },
+  "Thorn Whip": {
+    "usage_tags": [
+      "damage"
+    ],
+    "target": "creature"
+  },
+  "Thunderclap": {
+    "usage_tags": [
+      "damage"
+    ],
+    "target": "enemy"
+  },
+  "Thunderous Smite": {
+    "usage_tags": [
+      "control",
+      "damage"
+    ],
+    "target": "self"
+  },
+  "Thunderwave": {
+    "usage_tags": [
+      "control",
+      "damage"
+    ],
+    "target": "area"
+  },
+  "Time Stop": {
+    "usage_tags": [
+      "buff"
+    ],
+    "target": "self"
+  },
+  "Toll the Dead": {
+    "usage_tags": [
+      "damage"
+    ],
+    "target": "creature"
+  },
+  "Tongues": {
+    "usage_tags": [
+      "utility"
+    ],
+    "target": "creature"
+  },
+  "Tortoise Shell": {
+    "usage_tags": [
+      "buff"
+    ],
+    "target": "ally"
+  },
+  "Transport via Plants": {
+    "usage_tags": [
+      "utility"
+    ],
+    "target": "area"
+  },
+  "Tree Stride": {
+    "usage_tags": [
+      "utility"
+    ],
+    "target": "self"
+  },
+  "True Polymorph": {
+    "usage_tags": [
+      "heal"
+    ],
+    "target": "ally"
+  },
+  "True Resurrection": {
+    "usage_tags": [
+      "heal"
+    ],
+    "target": "enemy"
+  },
+  "True Seeing": {
+    "usage_tags": [
+      "buff"
+    ],
+    "target": "ally"
+  },
+  "True Strike": {
+    "usage_tags": [
+      "damage"
+    ],
+    "target": "self"
+  },
+  "Tsunami": {
+    "usage_tags": [
+      "damage"
+    ],
+    "target": "area"
+  },
+  "Unseen Servant": {
+    "usage_tags": [
+      "utility"
+    ],
+    "target": "area"
+  },
+  "Vampiric Touch": {
+    "usage_tags": [
+      "damage",
+      "heal"
+    ],
+    "target": "self"
+  },
+  "Vicious Mockery": {
+    "usage_tags": [
+      "damage"
+    ],
+    "target": "creature"
+  },
+  "Vitriolic Sphere": {
+    "usage_tags": [
+      "damage"
+    ],
+    "target": "area"
+  },
+  "Void Star": {
+    "usage_tags": [
+      "damage",
+      "heal"
+    ],
+    "target": "enemy"
+  },
+  "Wall of Fire": {
+    "usage_tags": [
+      "control",
+      "damage"
+    ],
+    "target": "area"
+  },
+  "Wall of Force": {
+    "usage_tags": [
+      "buff",
+      "control"
+    ],
+    "target": "enemy"
+  },
+  "Wall of Ice": {
+    "usage_tags": [
+      "control",
+      "damage"
+    ],
+    "target": "enemy"
+  },
+  "Wall of Stone": {
+    "usage_tags": [
+      "control"
+    ],
+    "target": "enemy"
+  },
+  "Wall of Thorns": {
+    "usage_tags": [
+      "buff",
+      "control",
+      "damage"
+    ],
+    "target": "area"
+  },
+  "Wardaway": {
+    "usage_tags": [
+      "damage"
+    ],
+    "target": "enemy"
+  },
+  "Warding Bond": {
+    "usage_tags": [
+      "buff"
+    ],
+    "target": "ally"
+  },
+  "Water Breathing": {
+    "usage_tags": [
+      "buff"
+    ],
+    "target": "ally"
+  },
+  "Water Walk": {
+    "usage_tags": [
+      "buff"
+    ],
+    "target": "ally"
+  },
+  "Web": {
+    "usage_tags": [
+      "control"
+    ],
+    "target": "enemy"
+  },
+  "Weird": {
+    "usage_tags": [
+      "control",
+      "damage"
+    ],
+    "target": "area"
+  },
+  "Wind Walk": {
+    "usage_tags": [
+      "buff",
+      "control"
+    ],
+    "target": "ally"
+  },
+  "Wind Wall": {
+    "usage_tags": [
+      "control",
+      "damage"
+    ],
+    "target": "area"
+  },
+  "Wish": {
+    "usage_tags": [
+      "buff",
+      "heal"
+    ],
+    "target": "self"
+  },
+  "Witch Bolt": {
+    "usage_tags": [
+      "damage"
+    ],
+    "target": "enemy"
+  },
+  "Wither and Bloom": {
+    "usage_tags": [
+      "damage",
+      "heal"
+    ],
+    "target": "area"
+  },
+  "Word of Radiance": {
+    "usage_tags": [
+      "damage"
+    ],
+    "target": "enemy"
+  },
+  "Word of Recall": {
+    "usage_tags": [
+      "buff"
+    ],
+    "target": "ally"
+  },
+  "Wrathful Smite": {
+    "usage_tags": [
+      "control",
+      "damage"
+    ],
+    "target": "self"
+  },
+  "Yolande's Regal Presence": {
+    "usage_tags": [
+      "control",
+      "damage",
+      "heal"
+    ],
+    "target": "self"
+  },
+  "Zone of Truth": {
+    "usage_tags": [
+      "control"
+    ],
+    "target": "enemy"
+  }
+}

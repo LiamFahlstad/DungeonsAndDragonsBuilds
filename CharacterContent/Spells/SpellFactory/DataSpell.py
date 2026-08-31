@@ -1,6 +1,7 @@
 from typing import Any, Optional
 
 import Core.Definitions as Definitions
+from CharacterContent.Features.Core.BaseFeatures import FeatureTarget
 from .Spell import Spell
 
 
@@ -91,3 +92,15 @@ class DataSpell(Spell):
                 f"Invalid usage_tags value for spell {self.name!r}: {value!r}"
             )
         return value
+
+    @property
+    def target(self) -> Optional[FeatureTarget]:
+        value = self._data.get("target")
+        if value is None:
+            return None
+        try:
+            return FeatureTarget(value)
+        except ValueError:
+            raise ValueError(
+                f"Invalid target value for spell {self.name!r}: {value!r}"
+            )

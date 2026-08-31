@@ -3,6 +3,7 @@ from abc import ABC, abstractmethod
 from typing import Optional, TextIO
 
 import Core.Definitions as Definitions
+from CharacterContent.Features.Core.BaseFeatures import FeatureTarget
 from .Enums import CastingTimeType, School
 from .Writer import write_spell_to_file
 
@@ -114,6 +115,13 @@ class Spell(ABC):
         spell's effect functionally does, for a quick-scan chip on the card. Defaults to
         empty (no chips) for any Spell subclass that doesn't provide its own data for this."""
         return []
+
+    @property
+    def target(self) -> Optional[FeatureTarget]:
+        """Who or what the spell's effect can be aimed at (self, ally, creature, enemy,
+        object, area - see FeatureTarget), as stated in the spell's own description.
+        Defaults to None for any Spell subclass that doesn't provide its own data for this."""
+        return None
 
     # ---------- Interpreted properties (derived from the raw strings above) ---------- #
 
@@ -237,6 +245,8 @@ class Spell(ABC):
         }
         if self.usage_tags:
             result["usage_tags"] = self.usage_tags
+        if self.target is not None:
+            result["target"] = self.target.value
         return result
 
     def write_to_file(

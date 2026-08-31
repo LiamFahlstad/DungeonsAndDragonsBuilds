@@ -31,7 +31,19 @@ class SpellFactory:
             # priority sources so higher-priority entries win outright.
             for path in reversed(cls.json_paths):
                 with open(path, "r", encoding="utf-8") as f:
-                    merged.update(json.load(f))
+                    source_data = json.load(f)
+                # Try to load extended data for this source
+                extended_path = path[:-5] + "_extended.json"
+                try:
+                    with open(extended_path, "r", encoding="utf-8") as f:
+                        extended_data = json.load(f)
+                except FileNotFoundError:
+                    extended_data = {}
+                # Merge extended fields into matching spells
+                for name, extra_fields in extended_data.items():
+                    if name in source_data:
+                        source_data[name].update(extra_fields)
+                merged.update(source_data)
             cls._cache = merged
         return cls._cache
 
