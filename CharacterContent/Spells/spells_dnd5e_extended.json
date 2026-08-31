@@ -13,7 +13,7 @@
     "target": "self"
   },
   "Acid Splash": {
-    "target": "ally"
+    "target": "area"
   },
   "Aganazzar's Scorcher": {
     "usage_tags": [
@@ -31,13 +31,13 @@
     "target": "ally"
   },
   "Alarm": {
-    "target": "ally"
+    "target": "area"
   },
   "Alter Self": {
     "target": "self"
   },
   "Animal Friendship": {
-    "target": "enemy"
+    "target": "creature"
   },
   "Animal Messenger": {
     "target": "creature"
@@ -46,7 +46,7 @@
     "target": "ally"
   },
   "Animate Dead": {
-    "target": "enemy"
+    "target": "object"
   },
   "Animate Objects": {
     "target": "object"
@@ -64,16 +64,14 @@
     "target": "self"
   },
   "Antimagic Field": {
-    "target": "self"
+    "target": "area"
   },
   "Antipathy/Sympathy": {
     "target": "enemy"
   },
-  "Arcane Eye": {
-    "target": "creature"
-  },
+  "Arcane Eye": {},
   "Arcane Gate": {
-    "target": "creature"
+    "target": "object"
   },
   "Arcane Lock": {
     "target": "object"
@@ -98,13 +96,13 @@
     "target": "self"
   },
   "Aura of Life": {
-    "target": "area"
+    "target": "ally"
   },
   "Aura of Purity": {
-    "target": "area"
+    "target": "ally"
   },
   "Aura of Vitality": {
-    "target": "self"
+    "target": "ally"
   },
   "Awaken": {
     "target": "ally"
@@ -113,7 +111,7 @@
     "target": "enemy"
   },
   "Banishing Smite": {
-    "target": "self"
+    "target": "enemy"
   },
   "Banishment": {
     "target": "enemy"
@@ -133,22 +131,22 @@
     "target": "ally"
   },
   "Beast Sense": {
-    "target": "creature"
+    "target": "ally"
   },
   "Bestow Curse": {
-    "target": "ally"
+    "target": "enemy"
   },
   "Bigby's Hand": {
-    "target": "ally"
+    "target": "enemy"
   },
   "Blade Barrier": {
-    "target": "enemy"
+    "target": "area"
   },
   "Blade Ward": {
     "target": "self"
   },
   "Blade of Disaster": {
-    "target": "creature"
+    "target": "enemy"
   },
   "Bless": {
     "target": "ally"
@@ -157,7 +155,7 @@
     "target": "enemy"
   },
   "Blinding Smite": {
-    "target": "self"
+    "target": "enemy"
   },
   "Blindness/Deafness": {
     "target": "enemy"
@@ -180,7 +178,7 @@
     "usage_tags": [
       "damage"
     ],
-    "target": "area"
+    "target": "enemy"
   },
   "Borrowed Knowledge": {
     "usage_tags": [
@@ -192,7 +190,7 @@
     "usage_tags": [
       "damage"
     ],
-    "target": "area"
+    "target": "enemy"
   },
   "Burning Hands": {
     "target": "area"
@@ -201,7 +199,7 @@
     "target": "area"
   },
   "Calm Emotions": {
-    "target": "enemy"
+    "target": "area"
   },
   "Catapult": {
     "usage_tags": [
@@ -240,10 +238,10 @@
     "target": "enemy"
   },
   "Charm Monster": {
-    "target": "ally"
+    "target": "enemy"
   },
   "Charm Person": {
-    "target": "ally"
+    "target": "enemy"
   },
   "Chill Touch": {
     "target": "enemy"
@@ -255,19 +253,17 @@
     "target": "area"
   },
   "Circle of Power": {
-    "target": "area"
+    "target": "ally"
   },
-  "Clairvoyance": {
-    "target": "creature"
-  },
+  "Clairvoyance": {},
   "Clone": {
     "target": "ally"
   },
   "Cloud of Daggers": {
-    "target": "creature"
+    "target": "area"
   },
   "Cloudkill": {
-    "target": "enemy"
+    "target": "area"
   },
   "Color Spray": {
     "target": "area"
@@ -297,28 +293,28 @@
     "target": "area"
   },
   "Conjure Animals": {
-    "target": "ally"
+    "target": "enemy"
   },
   "Conjure Barrage": {
-    "target": "area"
+    "target": "enemy"
   },
   "Conjure Celestial": {
-    "target": "area"
+    "target": "creature"
   },
   "Conjure Elemental": {
-    "target": "area"
+    "target": "enemy"
   },
   "Conjure Fey": {
-    "target": "ally"
+    "target": "enemy"
   },
   "Conjure Minor Elementals": {
-    "target": "ally"
+    "target": "self"
   },
   "Conjure Volley": {
-    "target": "area"
+    "target": "enemy"
   },
   "Conjure Woodland Beings": {
-    "target": "ally"
+    "target": "enemy"
   },
   "Contact Other Plane": {
     "target": "self"
@@ -330,19 +326,19 @@
     "target": "self"
   },
   "Continual Flame": {
-    "target": "ally"
+    "target": "object"
   },
   "Control Flames": {
     "usage_tags": [
       "utility"
     ],
-    "target": "creature"
+    "target": "object"
   },
   "Control Water": {
-    "target": "enemy"
+    "target": "area"
   },
   "Control Weather": {
-    "target": "self"
+    "target": "area"
   },
   "Control Winds": {
     "usage_tags": [
@@ -350,23 +346,23 @@
       "damage",
       "utility"
     ],
-    "target": "enemy"
+    "target": "area"
   },
   "Cordon of Arrows": {
-    "target": "enemy"
+    "target": "area"
   },
   "Counterspell": {
-    "target": "creature"
+    "target": "enemy"
   },
   "Create Bonfire": {
     "usage_tags": [
       "damage",
       "utility"
     ],
-    "target": "creature"
+    "target": "area"
   },
   "Create Food and Water": {
-    "target": "area"
+    "target": "object"
   },
   "Create Homunculus": {
     "usage_tags": [
@@ -387,16 +383,16 @@
     "usage_tags": [
       "utility"
     ],
-    "target": "ally"
+    "target": "object"
   },
   "Create Undead": {
-    "target": "enemy"
+    "target": "object"
   },
   "Create or Destroy Water": {
-    "target": "ally"
+    "target": "object"
   },
   "Creation": {
-    "target": "creature"
+    "target": "object"
   },
   "Crown of Madness": {
     "target": "enemy"
@@ -407,16 +403,16 @@
       "damage",
       "utility"
     ],
-    "target": "area"
+    "target": "enemy"
   },
   "Crusader's Mantle": {
-    "target": "area"
+    "target": "ally"
   },
   "Cure Wounds": {
     "target": "ally"
   },
   "Dancing Lights": {
-    "target": "creature"
+    "target": "object"
   },
   "Danse Macabre": {
     "usage_tags": [
@@ -424,7 +420,7 @@
       "control",
       "utility"
     ],
-    "target": "enemy"
+    "target": "object"
   },
   "Dark Star": {
     "usage_tags": [
@@ -432,10 +428,10 @@
       "damage",
       "utility"
     ],
-    "target": "enemy"
+    "target": "area"
   },
   "Darkness": {
-    "target": "enemy"
+    "target": "area"
   },
   "Darkvision": {
     "target": "ally"
@@ -448,7 +444,7 @@
     "target": "area"
   },
   "Daylight": {
-    "target": "enemy"
+    "target": "area"
   },
   "Death Ward": {
     "target": "ally"
@@ -457,10 +453,10 @@
     "target": "area"
   },
   "Demiplane": {
-    "target": "area"
+    "target": "object"
   },
   "Destructive Wave": {
-    "target": "area"
+    "target": "enemy"
   },
   "Detect Evil and Good": {
     "target": "self"
@@ -472,10 +468,10 @@
     "target": "self"
   },
   "Detect Thoughts": {
-    "target": "self"
+    "target": "creature"
   },
   "Dimension Door": {
-    "target": "ally"
+    "target": "self"
   },
   "Disguise Self": {
     "target": "self"
@@ -487,7 +483,7 @@
     "target": "self"
   },
   "Dispel Magic": {
-    "target": "ally"
+    "target": "creature"
   },
   "Dissonant Whispers": {
     "target": "enemy"
@@ -496,7 +492,7 @@
     "usage_tags": [
       "utility"
     ],
-    "target": "creature"
+    "target": "object"
   },
   "Divination": {
     "target": "self"
@@ -508,29 +504,29 @@
     "target": "enemy"
   },
   "Dominate Beast": {
-    "target": "ally"
+    "target": "enemy"
   },
   "Dominate Monster": {
-    "target": "ally"
+    "target": "enemy"
   },
   "Dominate Person": {
-    "target": "ally"
+    "target": "enemy"
   },
   "Draconic Transformation": {
     "usage_tags": [
       "damage",
       "utility"
     ],
-    "target": "area"
+    "target": "self"
   },
   "Dragon's Breath": {
-    "target": "area"
+    "target": "ally"
   },
   "Drawmij's Instant Summons": {
     "target": "object"
   },
   "Dream": {
-    "target": "ally"
+    "target": "creature"
   },
   "Dream of the Blue Veil": {
     "usage_tags": [
@@ -545,17 +541,17 @@
       "control",
       "utility"
     ],
-    "target": "creature"
+    "target": "area"
   },
   "Druidcraft": {
-    "target": "ally"
+    "target": "object"
   },
   "Dust Devil": {
     "usage_tags": [
       "damage",
       "utility"
     ],
-    "target": "enemy"
+    "target": "area"
   },
   "Earth Tremor": {
     "usage_tags": [
@@ -571,7 +567,7 @@
     "target": "enemy"
   },
   "Earthquake": {
-    "target": "enemy"
+    "target": "area"
   },
   "Eldritch Blast": {
     "target": "enemy"
@@ -582,10 +578,10 @@
       "damage",
       "utility"
     ],
-    "target": "ally"
+    "target": "enemy"
   },
   "Elemental Weapon": {
-    "target": "ally"
+    "target": "object"
   },
   "Encode Thoughts": {
     "usage_tags": [
@@ -614,16 +610,16 @@
     "target": "ally"
   },
   "Enlarge/Reduce": {
-    "target": "ally"
+    "target": "creature"
   },
   "Ensnaring Strike": {
-    "target": "self"
-  },
-  "Entangle": {
     "target": "enemy"
   },
+  "Entangle": {
+    "target": "area"
+  },
   "Enthrall": {
-    "target": "ally"
+    "target": "enemy"
   },
   "Erupting Earth": {
     "usage_tags": [
@@ -638,19 +634,19 @@
     "target": "self"
   },
   "Evard's Black Tentacles": {
-    "target": "enemy"
+    "target": "area"
   },
   "Expeditious Retreat": {
     "target": "self"
   },
   "Eyebite": {
-    "target": "self"
+    "target": "enemy"
   },
   "Fabricate": {
-    "target": "ally"
+    "target": "object"
   },
   "Faerie Fire": {
-    "target": "ally"
+    "target": "area"
   },
   "False Life": {
     "target": "self"
@@ -666,7 +662,7 @@
       "damage",
       "utility"
     ],
-    "target": "ally"
+    "target": "enemy"
   },
   "Fear": {
     "target": "area"
@@ -680,13 +676,13 @@
       "damage",
       "utility"
     ],
-    "target": "ally"
+    "target": "enemy"
   },
   "Feign Death": {
     "target": "ally"
   },
   "Find Familiar": {
-    "target": "enemy"
+    "target": "ally"
   },
   "Find Greater Steed": {
     "usage_tags": [
@@ -696,13 +692,13 @@
       "utility",
       "summon"
     ],
-    "target": "creature"
+    "target": "ally"
   },
   "Find Steed": {
-    "target": "area"
+    "target": "ally"
   },
   "Find Traps": {
-    "target": "creature"
+    "target": "self"
   },
   "Find the Path": {
     "target": "self"
@@ -714,13 +710,13 @@
     "target": "enemy"
   },
   "Fire Shield": {
-    "target": "area"
+    "target": "self"
   },
   "Fire Storm": {
     "target": "area"
   },
   "Fireball": {
-    "target": "enemy"
+    "target": "area"
   },
   "Fizban's Platinum Shield": {
     "usage_tags": [
@@ -734,16 +730,16 @@
     "usage_tags": [
       "damage"
     ],
-    "target": "ally"
+    "target": "object"
   },
   "Flame Blade": {
-    "target": "area"
+    "target": "enemy"
   },
   "Flame Strike": {
     "target": "area"
   },
   "Flaming Sphere": {
-    "target": "enemy"
+    "target": "area"
   },
   "Flesh to Stone": {
     "target": "enemy"
@@ -753,7 +749,7 @@
       "utility",
       "summon"
     ],
-    "target": "area"
+    "target": "ally"
   },
   "Fly": {
     "target": "ally"
@@ -762,7 +758,7 @@
     "target": "area"
   },
   "Forbiddance": {
-    "target": "creature"
+    "target": "area"
   },
   "Forcecage": {
     "target": "enemy"
@@ -781,7 +777,7 @@
     "target": "ally"
   },
   "Friends": {
-    "target": "self"
+    "target": "enemy"
   },
   "Frost Fingers": {
     "usage_tags": [
@@ -803,27 +799,27 @@
       "utility",
       "summon"
     ],
-    "target": "creature"
+    "target": "object"
   },
   "Galder's Tower": {
     "usage_tags": [
       "utility",
       "summon"
     ],
-    "target": "area"
+    "target": "object"
   },
   "Gaseous Form": {
     "target": "ally"
   },
   "Gate": {
-    "target": "creature"
+    "target": "object"
   },
   "Gate Seal": {
     "usage_tags": [
       "control",
       "utility"
     ],
-    "target": "ally"
+    "target": "area"
   },
   "Geas": {
     "target": "enemy"
@@ -832,7 +828,7 @@
     "target": "ally"
   },
   "Giant Insect": {
-    "target": "creature"
+    "target": "ally"
   },
   "Gift of Alacrity": {
     "usage_tags": [
@@ -844,7 +840,7 @@
     "usage_tags": [
       "utility"
     ],
-    "target": "self"
+    "target": "creature"
   },
   "Glibness": {
     "target": "self"
@@ -853,10 +849,10 @@
     "target": "self"
   },
   "Glyph of Warding": {
-    "target": "area"
+    "target": "object"
   },
   "Goodberry": {
-    "target": "creature"
+    "target": "object"
   },
   "Grasping Vine": {
     "target": "enemy"
@@ -875,23 +871,23 @@
     "target": "area"
   },
   "Grease": {
-    "target": "enemy"
+    "target": "area"
   },
   "Greater Invisibility": {
     "target": "ally"
   },
   "Greater Restoration": {
-    "target": "creature"
+    "target": "ally"
   },
   "Green-Flame Blade": {
     "usage_tags": [
       "damage",
       "utility"
     ],
-    "target": "area"
+    "target": "enemy"
   },
   "Guardian of Faith": {
-    "target": "ally"
+    "target": "enemy"
   },
   "Guardian of Nature": {
     "usage_tags": [
@@ -903,31 +899,31 @@
     "target": "self"
   },
   "Guards and Wards": {
-    "target": "creature"
+    "target": "area"
   },
   "Guidance": {
     "target": "ally"
   },
   "Guiding Bolt": {
-    "target": "ally"
+    "target": "enemy"
   },
   "Gust": {
     "usage_tags": [
       "utility"
     ],
-    "target": "ally"
+    "target": "creature"
   },
   "Gust of Wind": {
     "target": "area"
   },
   "Hail of Thorns": {
-    "target": "self"
+    "target": "enemy"
   },
   "Hallow": {
-    "target": "ally"
+    "target": "area"
   },
   "Hallucinatory Terrain": {
-    "target": "creature"
+    "target": "area"
   },
   "Harm": {
     "target": "enemy"
@@ -950,7 +946,7 @@
     "target": "ally"
   },
   "Heat Metal": {
-    "target": "enemy"
+    "target": "object"
   },
   "Hellish Rebuke": {
     "target": "enemy"
@@ -962,7 +958,7 @@
     "target": "ally"
   },
   "Hex": {
-    "target": "creature"
+    "target": "enemy"
   },
   "Hold Monster": {
     "target": "enemy"
@@ -971,7 +967,7 @@
     "target": "enemy"
   },
   "Holy Aura": {
-    "target": "self"
+    "target": "ally"
   },
   "Holy Weapon": {
     "usage_tags": [
@@ -979,13 +975,13 @@
       "damage",
       "utility"
     ],
-    "target": "area"
+    "target": "object"
   },
   "Hunger of Hadar": {
-    "target": "enemy"
+    "target": "area"
   },
   "Hunter's Mark": {
-    "target": "ally"
+    "target": "enemy"
   },
   "Hypnotic Pattern": {
     "target": "area"
@@ -997,7 +993,7 @@
     "target": "area"
   },
   "Identify": {
-    "target": "creature"
+    "target": "object"
   },
   "Illusory Dragon": {
     "usage_tags": [
@@ -1006,10 +1002,10 @@
       "damage",
       "utility"
     ],
-    "target": "area"
+    "target": "enemy"
   },
   "Illusory Script": {
-    "target": "ally"
+    "target": "object"
   },
   "Immolation": {
     "usage_tags": [
@@ -1052,7 +1048,7 @@
       "damage",
       "utility"
     ],
-    "target": "creature"
+    "target": "enemy"
   },
   "Inflict Wounds": {
     "target": "enemy"
@@ -1073,7 +1069,7 @@
       "damage",
       "utility"
     ],
-    "target": "area"
+    "target": "self"
   },
   "Investiture of Ice": {
     "usage_tags": [
@@ -1082,7 +1078,7 @@
       "damage",
       "utility"
     ],
-    "target": "area"
+    "target": "self"
   },
   "Investiture of Stone": {
     "usage_tags": [
@@ -1090,7 +1086,7 @@
       "control",
       "utility"
     ],
-    "target": "area"
+    "target": "self"
   },
   "Investiture of Wind": {
     "usage_tags": [
@@ -1098,7 +1094,7 @@
       "damage",
       "utility"
     ],
-    "target": "area"
+    "target": "self"
   },
   "Invisibility": {
     "target": "ally"
@@ -1124,7 +1120,7 @@
     "target": "enemy"
   },
   "Jump": {
-    "target": "creature"
+    "target": "ally"
   },
   "Kinetic Jaunt": {
     "usage_tags": [
@@ -1142,16 +1138,16 @@
     "target": "self"
   },
   "Leomund's Secret Chest": {
-    "target": "creature"
+    "target": "object"
   },
   "Leomund's Tiny Hut": {
     "target": "self"
   },
   "Lesser Restoration": {
-    "target": "creature"
+    "target": "ally"
   },
   "Levitate": {
-    "target": "enemy"
+    "target": "creature"
   },
   "Life Transference": {
     "usage_tags": [
@@ -1159,13 +1155,13 @@
       "heal",
       "utility"
     ],
-    "target": "creature"
+    "target": "ally"
   },
   "Light": {
     "target": "object"
   },
   "Lightning Arrow": {
-    "target": "self"
+    "target": "enemy"
   },
   "Lightning Bolt": {
     "target": "area"
@@ -1175,7 +1171,7 @@
       "damage",
       "utility"
     ],
-    "target": "area"
+    "target": "enemy"
   },
   "Locate Animals or Plants": {
     "target": "self"
@@ -1187,14 +1183,14 @@
     "target": "self"
   },
   "Longstrider": {
-    "target": "creature"
+    "target": "ally"
   },
   "Maddening Darkness": {
     "usage_tags": [
       "damage",
       "utility"
     ],
-    "target": "enemy"
+    "target": "area"
   },
   "Maelstrom": {
     "usage_tags": [
@@ -1202,19 +1198,19 @@
       "damage",
       "utility"
     ],
-    "target": "enemy"
+    "target": "area"
   },
   "Mage Armor": {
     "target": "ally"
   },
   "Mage Hand": {
-    "target": "creature"
+    "target": "object"
   },
   "Magic Circle": {
-    "target": "enemy"
+    "target": "area"
   },
   "Magic Jar": {
-    "target": "self"
+    "target": "enemy"
   },
   "Magic Missile": {
     "target": "enemy"
@@ -1226,10 +1222,10 @@
     "usage_tags": [
       "damage"
     ],
-    "target": "enemy"
+    "target": "object"
   },
   "Magic Weapon": {
-    "target": "ally"
+    "target": "object"
   },
   "Magnify Gravity": {
     "usage_tags": [
@@ -1239,10 +1235,10 @@
     "target": "area"
   },
   "Major Image": {
-    "target": "creature"
+    "target": "object"
   },
   "Mass Cure Wounds": {
-    "target": "area"
+    "target": "ally"
   },
   "Mass Heal": {
     "target": "ally"
@@ -1270,10 +1266,10 @@
     "target": "enemy"
   },
   "Maze": {
-    "target": "creature"
+    "target": "enemy"
   },
   "Meld into Stone": {
-    "target": "enemy"
+    "target": "self"
   },
   "Melf's Acid Arrow": {
     "target": "enemy"
@@ -1283,7 +1279,7 @@
       "damage",
       "utility"
     ],
-    "target": "self"
+    "target": "area"
   },
   "Mending": {
     "target": "object"
@@ -1297,7 +1293,7 @@
     "target": "enemy"
   },
   "Message": {
-    "target": "creature"
+    "target": "ally"
   },
   "Meteor Swarm": {
     "target": "area"
@@ -1307,22 +1303,22 @@
       "utility",
       "summon"
     ],
-    "target": "area"
+    "target": "object"
   },
   "Mind Blank": {
     "target": "ally"
   },
   "Mind Sliver": {
-    "target": "creature"
+    "target": "enemy"
   },
   "Mind Spike": {
     "target": "enemy"
   },
   "Minor Illusion": {
-    "target": "creature"
+    "target": "object"
   },
   "Mirage Arcane": {
-    "target": "creature"
+    "target": "area"
   },
   "Mirror Image": {
     "target": "self"
@@ -1334,23 +1330,23 @@
     "target": "self"
   },
   "Modify Memory": {
-    "target": "ally"
+    "target": "enemy"
   },
   "Mold Earth": {
     "usage_tags": [
       "control",
       "utility"
     ],
-    "target": "ally"
+    "target": "object"
   },
   "Moonbeam": {
-    "target": "enemy"
+    "target": "area"
   },
   "Mordenkainen's Faithful Hound": {
     "target": "enemy"
   },
   "Mordenkainen's Magnificent Mansion": {
-    "target": "area"
+    "target": "object"
   },
   "Mordenkainen's Private Sanctum": {
     "target": "area"
@@ -1373,7 +1369,7 @@
     "usage_tags": [
       "utility"
     ],
-    "target": "creature"
+    "target": "area"
   },
   "Negative Energy Flood": {
     "usage_tags": [
@@ -1388,22 +1384,22 @@
     "target": "ally"
   },
   "Nystul's Magic Aura": {
-    "target": "ally"
+    "target": "object"
   },
   "Otiluke's Freezing Sphere": {
     "target": "area"
   },
   "Otiluke's Resilient Sphere": {
-    "target": "enemy"
+    "target": "creature"
   },
   "Otto's Irresistible Dance": {
-    "target": "ally"
+    "target": "enemy"
   },
   "Pass without Trace": {
-    "target": "self"
+    "target": "ally"
   },
   "Passwall": {
-    "target": "ally"
+    "target": "object"
   },
   "Phantasmal Force": {
     "target": "enemy"
@@ -1412,10 +1408,10 @@
     "target": "enemy"
   },
   "Phantom Steed": {
-    "target": "creature"
+    "target": "ally"
   },
   "Planar Ally": {
-    "target": "creature"
+    "target": "ally"
   },
   "Planar Binding": {
     "target": "enemy"
@@ -1424,10 +1420,10 @@
     "target": "ally"
   },
   "Plant Growth": {
-    "target": "creature"
+    "target": "area"
   },
   "Poison Spray": {
-    "target": "creature"
+    "target": "enemy"
   },
   "Polymorph": {
     "target": "enemy"
@@ -1451,13 +1447,13 @@
     "target": "ally"
   },
   "Prestidigitation": {
-    "target": "ally"
+    "target": "object"
   },
   "Primal Savagery": {
     "usage_tags": [
       "damage"
     ],
-    "target": "self"
+    "target": "enemy"
   },
   "Primordial Ward": {
     "usage_tags": [
@@ -1469,16 +1465,16 @@
     "target": "area"
   },
   "Prismatic Wall": {
-    "target": "enemy"
-  },
-  "Produce Flame": {
     "target": "area"
   },
+  "Produce Flame": {
+    "target": "enemy"
+  },
   "Programmed Illusion": {
-    "target": "creature"
+    "target": "object"
   },
   "Project Image": {
-    "target": "creature"
+    "target": "self"
   },
   "Protection from Energy": {
     "target": "ally"
@@ -1505,13 +1501,13 @@
     "target": "area"
   },
   "Purify Food and Drink": {
-    "target": "ally"
+    "target": "object"
   },
   "Pyrotechnics": {
     "usage_tags": [
       "utility"
     ],
-    "target": "area"
+    "target": "object"
   },
   "Raise Dead": {
     "target": "ally"
@@ -1532,7 +1528,7 @@
       "damage",
       "utility"
     ],
-    "target": "enemy"
+    "target": "area"
   },
   "Ray of Enfeeblement": {
     "target": "enemy"
@@ -1556,7 +1552,7 @@
     "target": "ally"
   },
   "Remove Curse": {
-    "target": "creature"
+    "target": "ally"
   },
   "Resistance": {
     "target": "ally"
@@ -1578,13 +1574,13 @@
     "target": "area"
   },
   "Rope Trick": {
-    "target": "ally"
+    "target": "self"
   },
   "Sacred Flame": {
     "target": "enemy"
   },
   "Sanctuary": {
-    "target": "enemy"
+    "target": "ally"
   },
   "Sapping Sting": {
     "usage_tags": [
@@ -1592,31 +1588,31 @@
       "damage",
       "utility"
     ],
-    "target": "creature"
+    "target": "enemy"
   },
   "Scatter": {
     "usage_tags": [
       "utility"
     ],
-    "target": "enemy"
+    "target": "ally"
   },
   "Scorching Ray": {
     "target": "enemy"
   },
   "Scrying": {
-    "target": "self"
+    "target": "creature"
   },
   "Searing Smite": {
-    "target": "self"
+    "target": "enemy"
   },
   "See Invisibility": {
     "target": "self"
   },
   "Seeming": {
-    "target": "enemy"
+    "target": "ally"
   },
   "Sending": {
-    "target": "enemy"
+    "target": "ally"
   },
   "Sequester": {
     "target": "ally"
@@ -1639,7 +1635,7 @@
     "usage_tags": [
       "utility"
     ],
-    "target": "area"
+    "target": "object"
   },
   "Shapechange": {
     "target": "self"
@@ -1651,26 +1647,26 @@
     "target": "self"
   },
   "Shield of Faith": {
-    "target": "creature"
+    "target": "ally"
   },
   "Shillelagh": {
-    "target": "ally"
+    "target": "object"
   },
   "Shocking Grasp": {
-    "target": "ally"
+    "target": "enemy"
   },
   "Sickening Radiance": {
     "usage_tags": [
       "control",
       "damage"
     ],
-    "target": "enemy"
+    "target": "area"
   },
   "Silence": {
-    "target": "creature"
+    "target": "area"
   },
   "Silent Image": {
-    "target": "creature"
+    "target": "object"
   },
   "Silvery Barbs": {
     "usage_tags": [
@@ -1678,7 +1674,7 @@
       "control",
       "utility"
     ],
-    "target": "ally"
+    "target": "enemy"
   },
   "Simulacrum": {
     "target": "ally"
@@ -1693,13 +1689,13 @@
     "usage_tags": [
       "utility"
     ],
-    "target": "ally"
+    "target": "self"
   },
   "Sleep": {
     "target": "enemy"
   },
   "Sleet Storm": {
-    "target": "enemy"
+    "target": "area"
   },
   "Slow": {
     "target": "enemy"
@@ -1709,7 +1705,7 @@
       "control",
       "utility"
     ],
-    "target": "ally"
+    "target": "area"
   },
   "Snilloc's Snowball Swarm": {
     "usage_tags": [
@@ -1722,28 +1718,28 @@
       "heal",
       "utility"
     ],
-    "target": "ally"
+    "target": "creature"
   },
   "Spare the Dying": {
-    "target": "creature"
+    "target": "ally"
   },
   "Speak with Animals": {
     "target": "self"
   },
   "Speak with Dead": {
-    "target": "enemy"
+    "target": "creature"
   },
   "Speak with Plants": {
-    "target": "self"
+    "target": "area"
   },
   "Spider Climb": {
     "target": "ally"
   },
   "Spike Growth": {
-    "target": "enemy"
+    "target": "area"
   },
   "Spirit Guardians": {
-    "target": "area"
+    "target": "enemy"
   },
   "Spirit Shroud": {
     "usage_tags": [
@@ -1751,14 +1747,14 @@
       "heal",
       "utility"
     ],
-    "target": "self"
+    "target": "enemy"
   },
   "Spirit of Death": {
     "usage_tags": [
       "utility",
       "summon"
     ],
-    "target": "enemy"
+    "target": "ally"
   },
   "Spiritual Weapon": {
     "target": "enemy"
@@ -1770,16 +1766,16 @@
     "target": "area"
   },
   "Staggering Smite": {
-    "target": "self"
+    "target": "enemy"
   },
   "Steel Wind Strike": {
-    "target": "ally"
+    "target": "enemy"
   },
   "Stinking Cloud": {
     "target": "area"
   },
   "Stone Shape": {
-    "target": "enemy"
+    "target": "object"
   },
   "Stoneskin": {
     "target": "ally"
@@ -1793,38 +1789,38 @@
     "target": "area"
   },
   "Storm of Vengeance": {
-    "target": "enemy"
+    "target": "area"
   },
   "Suggestion": {
     "target": "enemy"
   },
   "Summon Aberration": {
-    "target": "creature"
+    "target": "ally"
   },
   "Summon Beast": {
-    "target": "creature"
+    "target": "ally"
   },
   "Summon Celestial": {
-    "target": "creature"
+    "target": "ally"
   },
   "Summon Construct": {
-    "target": "creature"
+    "target": "ally"
   },
   "Summon Draconic Spirit": {
     "usage_tags": [
       "utility",
       "summon"
     ],
-    "target": "creature"
+    "target": "ally"
   },
   "Summon Elemental": {
-    "target": "creature"
+    "target": "ally"
   },
   "Summon Fey": {
-    "target": "creature"
+    "target": "ally"
   },
   "Summon Fiend": {
-    "target": "creature"
+    "target": "ally"
   },
   "Summon Greater Demon": {
     "usage_tags": [
@@ -1832,33 +1828,33 @@
       "utility",
       "summon"
     ],
-    "target": "enemy"
+    "target": "ally"
   },
   "Summon Lesser Demons": {
     "usage_tags": [
       "utility",
       "summon"
     ],
-    "target": "area"
+    "target": "enemy"
   },
   "Summon Shadowspawn": {
     "usage_tags": [
       "utility",
       "summon"
     ],
-    "target": "creature"
+    "target": "ally"
   },
   "Summon Undead": {
-    "target": "enemy"
+    "target": "ally"
   },
   "Sunbeam": {
     "target": "area"
   },
   "Sunburst": {
-    "target": "enemy"
+    "target": "area"
   },
   "Swift Quiver": {
-    "target": "ally"
+    "target": "self"
   },
   "Sword Burst": {
     "usage_tags": [
@@ -1868,7 +1864,7 @@
     "target": "area"
   },
   "Symbol": {
-    "target": "object"
+    "target": "area"
   },
   "Synaptic Static": {
     "target": "area"
@@ -1881,7 +1877,7 @@
     "target": "area"
   },
   "Tasha's Hideous Laughter": {
-    "target": "ally"
+    "target": "enemy"
   },
   "Tasha's Mind Whip": {
     "usage_tags": [
@@ -1899,16 +1895,16 @@
     "target": "self"
   },
   "Telekinesis": {
-    "target": "object"
+    "target": "creature"
   },
   "Telepathy": {
     "target": "ally"
   },
   "Teleport": {
-    "target": "object"
+    "target": "ally"
   },
   "Teleportation Circle": {
-    "target": "area"
+    "target": "object"
   },
   "Temple of the Gods": {
     "usage_tags": [
@@ -1916,7 +1912,7 @@
       "heal",
       "utility"
     ],
-    "target": "enemy"
+    "target": "area"
   },
   "Temporal Shunt": {
     "usage_tags": [
@@ -1925,7 +1921,7 @@
     "target": "enemy"
   },
   "Tenser's Floating Disk": {
-    "target": "area"
+    "target": "object"
   },
   "Tenser's Transformation": {
     "usage_tags": [
@@ -1941,26 +1937,26 @@
       "heal",
       "utility"
     ],
-    "target": "enemy"
+    "target": "creature"
   },
   "Thaumaturgy": {
-    "target": "ally"
+    "target": "object"
   },
   "Thorn Whip": {
-    "target": "creature"
+    "target": "enemy"
   },
   "Thunder Step": {
     "usage_tags": [
       "damage",
       "utility"
     ],
-    "target": "ally"
+    "target": "self"
   },
   "Thunderclap": {
     "target": "area"
   },
   "Thunderous Smite": {
-    "target": "self"
+    "target": "enemy"
   },
   "Thunderwave": {
     "target": "area"
@@ -1970,7 +1966,7 @@
       "control",
       "damage"
     ],
-    "target": "enemy"
+    "target": "area"
   },
   "Time Ravage": {
     "usage_tags": [
@@ -1987,13 +1983,13 @@
     "usage_tags": [
       "summon"
     ],
-    "target": "enemy"
+    "target": "object"
   },
   "Toll the Dead": {
-    "target": "creature"
+    "target": "enemy"
   },
   "Tongues": {
-    "target": "creature"
+    "target": "ally"
   },
   "Transmute Rock": {
     "usage_tags": [
@@ -2001,40 +1997,40 @@
       "damage",
       "utility"
     ],
-    "target": "enemy"
+    "target": "area"
   },
   "Transport via Plants": {
-    "target": "area"
+    "target": "object"
   },
   "Tree Stride": {
     "target": "self"
   },
   "True Polymorph": {
-    "target": "ally"
+    "target": "creature"
   },
   "True Resurrection": {
-    "target": "enemy"
+    "target": "ally"
   },
   "True Seeing": {
     "target": "ally"
   },
   "True Strike": {
-    "target": "ally"
+    "target": "self"
   },
   "Tsunami": {
     "target": "area"
   },
   "Unseen Servant": {
-    "target": "area"
+    "target": "object"
   },
   "Vampiric Touch": {
-    "target": "self"
+    "target": "enemy"
   },
   "Vicious Mockery": {
-    "target": "creature"
+    "target": "enemy"
   },
   "Vitriolic Sphere": {
-    "target": "enemy"
+    "target": "area"
   },
   "Vortex Warp": {
     "usage_tags": [
@@ -2046,10 +2042,10 @@
     "target": "area"
   },
   "Wall of Force": {
-    "target": "enemy"
+    "target": "object"
   },
   "Wall of Ice": {
-    "target": "enemy"
+    "target": "area"
   },
   "Wall of Light": {
     "usage_tags": [
@@ -2063,10 +2059,10 @@
       "control",
       "utility"
     ],
-    "target": "enemy"
+    "target": "object"
   },
   "Wall of Stone": {
-    "target": "enemy"
+    "target": "object"
   },
   "Wall of Thorns": {
     "target": "area"
@@ -2077,7 +2073,7 @@
       "damage",
       "utility"
     ],
-    "target": "enemy"
+    "target": "object"
   },
   "Warding Bond": {
     "target": "ally"
@@ -2112,14 +2108,14 @@
     "target": "area"
   },
   "Weird": {
-    "target": "area"
+    "target": "enemy"
   },
   "Whirlwind": {
     "usage_tags": [
       "control",
       "damage"
     ],
-    "target": "enemy"
+    "target": "area"
   },
   "Wind Walk": {
     "target": "ally"
@@ -2134,7 +2130,7 @@
     "target": "enemy"
   },
   "Wither and Bloom": {
-    "target": "area"
+    "target": "enemy"
   },
   "Word of Radiance": {
     "target": "enemy"
@@ -2151,13 +2147,13 @@
     "target": "enemy"
   },
   "Wrathful Smite": {
-    "target": "self"
+    "target": "enemy"
   },
   "Wristpocket": {
     "usage_tags": [
       "utility"
     ],
-    "target": "self"
+    "target": "object"
   },
   "Zephyr Strike": {
     "usage_tags": [

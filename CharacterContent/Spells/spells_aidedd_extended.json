@@ -6,25 +6,25 @@
     "target": "ally"
   },
   "Alarm": {
-    "target": "creature"
+    "target": "area"
   },
   "Alter Self": {
     "target": "self"
   },
   "Alustriel's Mooncloak": {
-    "target": "self"
+    "target": "ally"
   },
   "Animal Friendship": {
-    "target": "enemy"
+    "target": "creature"
   },
   "Animal Messenger": {
-    "target": "enemy"
+    "target": "creature"
   },
   "Animal Shapes": {
     "target": "ally"
   },
   "Animate Dead": {
-    "target": "enemy"
+    "target": "object"
   },
   "Animate Objects": {
     "target": "object"
@@ -33,19 +33,17 @@
     "target": "self"
   },
   "Antimagic Field": {
-    "target": "self"
+    "target": "area"
   },
   "Antipathy/Sympathy": {
     "target": "enemy"
   },
-  "Arcane Eye": {
-    "target": "creature"
-  },
+  "Arcane Eye": {},
   "Arcane Gate": {
-    "target": "creature"
+    "target": "object"
   },
   "Arcane Lock": {
-    "target": "ally"
+    "target": "object"
   },
   "Arcane Vigor": {
     "target": "self"
@@ -54,7 +52,7 @@
     "target": "self"
   },
   "Arms of Hadar": {
-    "target": "enemy"
+    "target": "area"
   },
   "Astral Projection": {
     "target": "ally"
@@ -69,19 +67,19 @@
     "target": "ally"
   },
   "Aura of Vitality": {
-    "target": "self"
+    "target": "ally"
   },
   "Awaken": {
-    "target": "creature"
+    "target": "ally"
   },
   "Backlash": {
-    "target": "ally"
+    "target": "self"
   },
   "Bane": {
     "target": "enemy"
   },
   "Banishing Smite": {
-    "target": "self"
+    "target": "enemy"
   },
   "Banishment": {
     "target": "enemy"
@@ -93,25 +91,25 @@
     "target": "ally"
   },
   "Beast Sense": {
-    "target": "creature"
+    "target": "ally"
   },
   "Befuddlement": {
-    "target": "ally"
+    "target": "enemy"
   },
   "Bestow Curse": {
-    "target": "ally"
+    "target": "enemy"
   },
   "Bigby's Hand": {
     "target": "enemy"
   },
   "Blade Barrier": {
-    "target": "enemy"
+    "target": "area"
   },
   "Blade Ward": {
     "target": "self"
   },
   "Blade of Disaster": {
-    "target": "creature"
+    "target": "enemy"
   },
   "Bless": {
     "target": "ally"
@@ -120,7 +118,7 @@
     "target": "enemy"
   },
   "Blinding Smite": {
-    "target": "self"
+    "target": "enemy"
   },
   "Blindness/Deafness": {
     "target": "enemy"
@@ -135,7 +133,7 @@
     "target": "area"
   },
   "Cacophonic Shield": {
-    "target": "self"
+    "target": "area"
   },
   "Call Lightning": {
     "target": "area"
@@ -147,10 +145,10 @@
     "target": "enemy"
   },
   "Charm Monster": {
-    "target": "ally"
+    "target": "enemy"
   },
   "Charm Person": {
-    "target": "ally"
+    "target": "enemy"
   },
   "Chill Touch": {
     "target": "enemy"
@@ -164,9 +162,7 @@
   "Circle of Power": {
     "target": "ally"
   },
-  "Clairvoyance": {
-    "target": "creature"
-  },
+  "Clairvoyance": {},
   "Clone": {
     "target": "ally"
   },
@@ -204,13 +200,13 @@
     "target": "area"
   },
   "Conjure Animals": {
-    "target": "ally"
+    "target": "enemy"
   },
   "Conjure Barrage": {
-    "target": "area"
+    "target": "enemy"
   },
   "Conjure Celestial": {
-    "target": "area"
+    "target": "creature"
   },
   "Conjure Constructs": {
     "target": "creature"
@@ -219,16 +215,16 @@
     "target": "enemy"
   },
   "Conjure Fey": {
-    "target": "creature"
-  },
-  "Conjure Minor Elementals": {
     "target": "enemy"
   },
+  "Conjure Minor Elementals": {
+    "target": "self"
+  },
   "Conjure Volley": {
-    "target": "area"
+    "target": "enemy"
   },
   "Conjure Woodland Beings": {
-    "target": "self"
+    "target": "enemy"
   },
   "Contact Other Plane": {
     "target": "self"
@@ -240,31 +236,31 @@
     "target": "self"
   },
   "Continual Flame": {
-    "target": "ally"
+    "target": "object"
   },
   "Control Water": {
-    "target": "enemy"
+    "target": "area"
   },
   "Control Weather": {
-    "target": "self"
+    "target": "area"
   },
   "Cordon of Arrows": {
-    "target": "enemy"
+    "target": "area"
   },
   "Counterspell": {
     "target": "enemy"
   },
   "Create Food and Water": {
-    "target": "area"
+    "target": "object"
   },
   "Create Undead": {
-    "target": "enemy"
+    "target": "object"
   },
   "Create or Destroy Water": {
-    "target": "ally"
+    "target": "object"
   },
   "Creation": {
-    "target": "creature"
+    "target": "object"
   },
   "Crown of Madness": {
     "target": "enemy"
@@ -276,19 +272,19 @@
     "target": "ally"
   },
   "Dancing Lights": {
-    "target": "creature"
+    "target": "object"
   },
   "Darkness": {
-    "target": "enemy"
+    "target": "area"
   },
   "Darkvision": {
     "target": "ally"
   },
   "Daylight": {
-    "target": "enemy"
+    "target": "area"
   },
   "Death Armor": {
-    "target": "enemy"
+    "target": "ally"
   },
   "Death Ward": {
     "target": "ally"
@@ -297,7 +293,7 @@
     "target": "area"
   },
   "Demiplane": {
-    "target": "area"
+    "target": "object"
   },
   "Deryan's Helpful Homunculi": {
     "target": "self"
@@ -315,13 +311,13 @@
     "target": "self"
   },
   "Detect Thoughts": {
-    "target": "self"
+    "target": "creature"
   },
   "Dimension Door": {
-    "target": "ally"
+    "target": "self"
   },
   "Dirge": {
-    "target": "self"
+    "target": "area"
   },
   "Disguise Self": {
     "target": "self"
@@ -345,46 +341,46 @@
     "target": "self"
   },
   "Divine Smite": {
-    "target": "self"
+    "target": "enemy"
   },
   "Divine Word": {
     "target": "enemy"
   },
   "Dominate Beast": {
-    "target": "ally"
+    "target": "enemy"
   },
   "Dominate Monster": {
-    "target": "ally"
+    "target": "enemy"
   },
   "Dominate Person": {
-    "target": "ally"
+    "target": "enemy"
   },
   "Doomtide": {
-    "target": "creature"
-  },
-  "Dragon's Breath": {
     "target": "area"
   },
-  "Drawmij's Instant Summons": {
+  "Dragon's Breath": {
     "target": "ally"
+  },
+  "Drawmij's Instant Summons": {
+    "target": "object"
   },
   "Dream": {
-    "target": "ally"
+    "target": "creature"
   },
   "Druidcraft": {
-    "target": "ally"
+    "target": "object"
   },
   "Earthquake": {
-    "target": "enemy"
+    "target": "area"
   },
   "Eldritch Blast": {
     "target": "enemy"
   },
   "Elemental Weapon": {
-    "target": "ally"
+    "target": "object"
   },
   "Elementalism": {
-    "target": "creature"
+    "target": "object"
   },
   "Elminster's Effulgent Spheres": {
     "target": "self"
@@ -396,13 +392,13 @@
     "target": "ally"
   },
   "Enlarge/Reduce": {
-    "target": "ally"
+    "target": "creature"
   },
   "Ensnaring Strike": {
-    "target": "self"
+    "target": "enemy"
   },
   "Entangle": {
-    "target": "enemy"
+    "target": "area"
   },
   "Enthrall": {
     "target": "enemy"
@@ -411,16 +407,16 @@
     "target": "self"
   },
   "Evard's Black Tentacles": {
-    "target": "enemy"
+    "target": "area"
   },
   "Expeditious Retreat": {
     "target": "self"
   },
   "Eyebite": {
-    "target": "self"
+    "target": "enemy"
   },
   "Fabricate": {
-    "target": "ally"
+    "target": "object"
   },
   "Faerie Fire": {
     "target": "area"
@@ -438,13 +434,13 @@
     "target": "ally"
   },
   "Find Familiar": {
-    "target": "creature"
+    "target": "ally"
   },
   "Find Steed": {
-    "target": "area"
+    "target": "ally"
   },
   "Find Traps": {
-    "target": "creature"
+    "target": "self"
   },
   "Find the Path": {
     "target": "self"
@@ -456,7 +452,7 @@
     "target": "enemy"
   },
   "Fire Shield": {
-    "target": "area"
+    "target": "self"
   },
   "Fire Storm": {
     "target": "area"
@@ -465,13 +461,13 @@
     "target": "area"
   },
   "Flame Blade": {
-    "target": "area"
+    "target": "enemy"
   },
   "Flame Strike": {
     "target": "area"
   },
   "Flaming Sphere": {
-    "target": "enemy"
+    "target": "area"
   },
   "Flesh to Stone": {
     "target": "enemy"
@@ -483,7 +479,7 @@
     "target": "area"
   },
   "Forbiddance": {
-    "target": "creature"
+    "target": "area"
   },
   "Forcecage": {
     "target": "enemy"
@@ -492,19 +488,19 @@
     "target": "ally"
   },
   "Fount of Moonlight": {
-    "target": "area"
+    "target": "self"
   },
   "Freedom of Movement": {
     "target": "ally"
   },
   "Friends": {
-    "target": "creature"
+    "target": "enemy"
   },
   "Gaseous Form": {
     "target": "ally"
   },
   "Gate": {
-    "target": "creature"
+    "target": "object"
   },
   "Geas": {
     "target": "enemy"
@@ -513,7 +509,7 @@
     "target": "ally"
   },
   "Giant Insect": {
-    "target": "creature"
+    "target": "ally"
   },
   "Glibness": {
     "target": "self"
@@ -522,46 +518,46 @@
     "target": "self"
   },
   "Glyph of Warding": {
-    "target": "area"
+    "target": "object"
   },
   "Goodberry": {
-    "target": "self"
+    "target": "object"
   },
   "Grasping Vine": {
     "target": "enemy"
   },
   "Grease": {
-    "target": "enemy"
+    "target": "area"
   },
   "Greater Invisibility": {
     "target": "ally"
   },
   "Greater Restoration": {
-    "target": "creature"
+    "target": "ally"
   },
   "Guardian of Faith": {
     "target": "enemy"
   },
   "Guards and Wards": {
-    "target": "creature"
+    "target": "area"
   },
   "Guidance": {
     "target": "ally"
   },
   "Guiding Bolt": {
-    "target": "ally"
+    "target": "enemy"
   },
   "Gust of Wind": {
     "target": "area"
   },
   "Hail of Thorns": {
-    "target": "self"
+    "target": "enemy"
   },
   "Hallow": {
-    "target": "ally"
+    "target": "area"
   },
   "Hallucinatory Terrain": {
-    "target": "enemy"
+    "target": "area"
   },
   "Harm": {
     "target": "enemy"
@@ -576,13 +572,13 @@
     "target": "ally"
   },
   "Heat Metal": {
-    "target": "enemy"
+    "target": "object"
   },
   "Hellish Rebuke": {
     "target": "enemy"
   },
   "Heroes' Feast": {
-    "target": "area"
+    "target": "ally"
   },
   "Heroism": {
     "target": "ally"
@@ -597,19 +593,19 @@
     "target": "enemy"
   },
   "Holy Aura": {
-    "target": "self"
+    "target": "ally"
   },
   "Holy Star of Mystra": {
     "target": "self"
   },
   "Homunculus Servant": {
-    "target": "creature"
+    "target": "ally"
   },
   "Hunger of Hadar": {
-    "target": "enemy"
+    "target": "area"
   },
   "Hunter's Mark": {
-    "target": "ally"
+    "target": "enemy"
   },
   "Hypnotic Pattern": {
     "target": "area"
@@ -624,7 +620,7 @@
     "target": "object"
   },
   "Illusory Script": {
-    "target": "ally"
+    "target": "object"
   },
   "Imprisonment": {
     "target": "enemy"
@@ -651,28 +647,28 @@
     "target": "object"
   },
   "Laeral's Silver Lance": {
-    "target": "self"
+    "target": "enemy"
   },
   "Legend Lore": {
     "target": "self"
   },
   "Leomund's Secret Chest": {
-    "target": "creature"
+    "target": "object"
   },
   "Leomund's Tiny Hut": {
     "target": "self"
   },
   "Lesser Restoration": {
-    "target": "creature"
+    "target": "ally"
   },
   "Levitate": {
-    "target": "enemy"
-  },
-  "Light": {
     "target": "creature"
   },
+  "Light": {
+    "target": "object"
+  },
   "Lightning Arrow": {
-    "target": "self"
+    "target": "enemy"
   },
   "Lightning Bolt": {
     "target": "area"
@@ -687,19 +683,19 @@
     "target": "self"
   },
   "Longstrider": {
-    "target": "creature"
+    "target": "ally"
   },
   "Mage Armor": {
     "target": "ally"
   },
   "Mage Hand": {
-    "target": "creature"
+    "target": "object"
   },
   "Magic Circle": {
-    "target": "enemy"
+    "target": "area"
   },
   "Magic Jar": {
-    "target": "self"
+    "target": "enemy"
   },
   "Magic Missile": {
     "target": "enemy"
@@ -708,13 +704,13 @@
     "target": "object"
   },
   "Magic Weapon": {
-    "target": "ally"
+    "target": "object"
   },
   "Major Image": {
-    "target": "creature"
+    "target": "object"
   },
   "Mass Cure Wounds": {
-    "target": "area"
+    "target": "ally"
   },
   "Mass Heal": {
     "target": "ally"
@@ -726,10 +722,10 @@
     "target": "enemy"
   },
   "Maze": {
-    "target": "creature"
+    "target": "enemy"
   },
   "Meld into Stone": {
-    "target": "enemy"
+    "target": "self"
   },
   "Melf's Acid Arrow": {
     "target": "enemy"
@@ -738,7 +734,7 @@
     "target": "object"
   },
   "Message": {
-    "target": "creature"
+    "target": "ally"
   },
   "Meteor Swarm": {
     "target": "area"
@@ -747,16 +743,16 @@
     "target": "ally"
   },
   "Mind Sliver": {
-    "target": "creature"
+    "target": "enemy"
   },
   "Mind Spike": {
     "target": "enemy"
   },
   "Minor Illusion": {
-    "target": "creature"
+    "target": "object"
   },
   "Mirage Arcane": {
-    "target": "creature"
+    "target": "area"
   },
   "Mirror Image": {
     "target": "self"
@@ -768,7 +764,7 @@
     "target": "self"
   },
   "Modify Memory": {
-    "target": "ally"
+    "target": "enemy"
   },
   "Moonbeam": {
     "target": "area"
@@ -777,7 +773,7 @@
     "target": "enemy"
   },
   "Mordenkainen's Magnificent Mansion": {
-    "target": "area"
+    "target": "object"
   },
   "Mordenkainen's Private Sanctum": {
     "target": "area"
@@ -792,22 +788,22 @@
     "target": "ally"
   },
   "Nystul's Magic Aura": {
-    "target": "ally"
+    "target": "object"
   },
   "Otiluke's Freezing Sphere": {
     "target": "area"
   },
   "Otiluke's Resilient Sphere": {
-    "target": "enemy"
+    "target": "creature"
   },
   "Otto's Irresistible Dance": {
-    "target": "ally"
-  },
-  "Pass without Trace": {
     "target": "enemy"
   },
-  "Passwall": {
+  "Pass without Trace": {
     "target": "ally"
+  },
+  "Passwall": {
+    "target": "object"
   },
   "Phantasmal Force": {
     "target": "enemy"
@@ -816,10 +812,10 @@
     "target": "enemy"
   },
   "Phantom Steed": {
-    "target": "creature"
+    "target": "ally"
   },
   "Planar Ally": {
-    "target": "creature"
+    "target": "ally"
   },
   "Planar Binding": {
     "target": "enemy"
@@ -828,7 +824,7 @@
     "target": "ally"
   },
   "Plant Growth": {
-    "target": "creature"
+    "target": "area"
   },
   "Poison Spray": {
     "target": "enemy"
@@ -837,7 +833,7 @@
     "target": "enemy"
   },
   "Power Word Fortify": {
-    "target": "enemy"
+    "target": "ally"
   },
   "Power Word Heal": {
     "target": "ally"
@@ -852,22 +848,22 @@
     "target": "ally"
   },
   "Prestidigitation": {
-    "target": "ally"
+    "target": "object"
   },
   "Prismatic Spray": {
     "target": "area"
   },
   "Prismatic Wall": {
-    "target": "enemy"
-  },
-  "Produce Flame": {
     "target": "area"
   },
+  "Produce Flame": {
+    "target": "enemy"
+  },
   "Programmed Illusion": {
-    "target": "creature"
+    "target": "object"
   },
   "Project Image": {
-    "target": "creature"
+    "target": "self"
   },
   "Protection from Energy": {
     "target": "ally"
@@ -879,7 +875,7 @@
     "target": "ally"
   },
   "Purify Food and Drink": {
-    "target": "ally"
+    "target": "object"
   },
   "Raise Dead": {
     "target": "ally"
@@ -897,19 +893,19 @@
     "target": "enemy"
   },
   "Regenerate": {
-    "target": "creature"
+    "target": "ally"
   },
   "Reincarnate": {
-    "target": "enemy"
+    "target": "ally"
   },
   "Remove Curse": {
-    "target": "creature"
+    "target": "ally"
   },
   "Resistance": {
     "target": "ally"
   },
   "Resurrection": {
-    "target": "enemy"
+    "target": "ally"
   },
   "Reverse Gravity": {
     "target": "area"
@@ -918,31 +914,31 @@
     "target": "ally"
   },
   "Rope Trick": {
-    "target": "ally"
+    "target": "self"
   },
   "Sacred Flame": {
     "target": "enemy"
   },
   "Sanctuary": {
-    "target": "enemy"
+    "target": "ally"
   },
   "Scorching Ray": {
     "target": "enemy"
   },
   "Scrying": {
-    "target": "self"
+    "target": "creature"
   },
   "Searing Smite": {
-    "target": "self"
+    "target": "enemy"
   },
   "See Invisibility": {
     "target": "self"
   },
   "Seeming": {
-    "target": "enemy"
+    "target": "ally"
   },
   "Sending": {
-    "target": "creature"
+    "target": "ally"
   },
   "Sequester": {
     "target": "ally"
@@ -957,22 +953,22 @@
     "target": "self"
   },
   "Shield of Faith": {
-    "target": "creature"
+    "target": "ally"
   },
   "Shillelagh": {
-    "target": "self"
+    "target": "object"
   },
   "Shining Smite": {
-    "target": "area"
+    "target": "enemy"
   },
   "Shocking Grasp": {
     "target": "enemy"
   },
   "Silence": {
-    "target": "creature"
+    "target": "area"
   },
   "Silent Image": {
-    "target": "creature"
+    "target": "object"
   },
   "Simbul's Synostodweomer": {
     "target": "ally"
@@ -981,10 +977,10 @@
     "target": "ally"
   },
   "Sleep": {
-    "target": "area"
+    "target": "enemy"
   },
   "Sleet Storm": {
-    "target": "enemy"
+    "target": "area"
   },
   "Slow": {
     "target": "enemy"
@@ -996,85 +992,85 @@
     "target": "enemy"
   },
   "Spare the Dying": {
-    "target": "creature"
+    "target": "ally"
   },
   "Speak with Animals": {
     "target": "self"
   },
   "Speak with Dead": {
-    "target": "enemy"
+    "target": "creature"
   },
   "Speak with Plants": {
-    "target": "self"
+    "target": "area"
   },
   "Spellfire Flare": {
     "target": "enemy"
   },
   "Spellfire Storm": {
-    "target": "enemy"
+    "target": "area"
   },
   "Spider Climb": {
     "target": "ally"
   },
   "Spike Growth": {
-    "target": "creature"
+    "target": "area"
   },
   "Spirit Guardians": {
-    "target": "self"
+    "target": "enemy"
   },
   "Spiritual Weapon": {
     "target": "enemy"
   },
   "Staggering Smite": {
-    "target": "self"
+    "target": "enemy"
   },
   "Starry Wisp": {
     "target": "enemy"
   },
   "Steel Wind Strike": {
-    "target": "ally"
+    "target": "enemy"
   },
   "Stinking Cloud": {
     "target": "area"
   },
   "Stone Shape": {
-    "target": "enemy"
+    "target": "object"
   },
   "Stoneskin": {
     "target": "ally"
   },
   "Storm of Vengeance": {
-    "target": "enemy"
+    "target": "area"
   },
   "Suggestion": {
     "target": "enemy"
   },
   "Summon Aberration": {
-    "target": "creature"
+    "target": "ally"
   },
   "Summon Beast": {
-    "target": "creature"
+    "target": "ally"
   },
   "Summon Celestial": {
-    "target": "creature"
+    "target": "ally"
   },
   "Summon Construct": {
-    "target": "creature"
+    "target": "ally"
   },
   "Summon Dragon": {
-    "target": "creature"
+    "target": "ally"
   },
   "Summon Elemental": {
-    "target": "creature"
+    "target": "ally"
   },
   "Summon Fey": {
-    "target": "creature"
+    "target": "ally"
   },
   "Summon Fiend": {
-    "target": "creature"
+    "target": "ally"
   },
   "Summon Undead": {
-    "target": "enemy"
+    "target": "ally"
   },
   "Sunbeam": {
     "target": "area"
@@ -1089,43 +1085,43 @@
     "target": "self"
   },
   "Symbol": {
-    "target": "object"
+    "target": "area"
   },
   "Synaptic Static": {
     "target": "area"
   },
   "Tasha's Bubbling Cauldron": {
-    "target": "creature"
+    "target": "object"
   },
   "Tasha's Hideous Laughter": {
-    "target": "ally"
-  },
-  "Telekinesis": {
-    "target": "object"
-  },
-  "Telepathy": {
-    "target": "creature"
-  },
-  "Teleport": {
-    "target": "object"
-  },
-  "Teleportation Circle": {
-    "target": "area"
-  },
-  "Tenser's Floating Disk": {
-    "target": "area"
-  },
-  "Thaumaturgy": {
-    "target": "ally"
-  },
-  "Thorn Whip": {
-    "target": "creature"
-  },
-  "Thunderclap": {
     "target": "enemy"
   },
+  "Telekinesis": {
+    "target": "creature"
+  },
+  "Telepathy": {
+    "target": "ally"
+  },
+  "Teleport": {
+    "target": "ally"
+  },
+  "Teleportation Circle": {
+    "target": "object"
+  },
+  "Tenser's Floating Disk": {
+    "target": "object"
+  },
+  "Thaumaturgy": {
+    "target": "object"
+  },
+  "Thorn Whip": {
+    "target": "enemy"
+  },
+  "Thunderclap": {
+    "target": "area"
+  },
   "Thunderous Smite": {
-    "target": "self"
+    "target": "enemy"
   },
   "Thunderwave": {
     "target": "area"
@@ -1134,22 +1130,22 @@
     "target": "self"
   },
   "Toll the Dead": {
-    "target": "creature"
+    "target": "enemy"
   },
   "Tongues": {
-    "target": "creature"
+    "target": "ally"
   },
   "Transport via Plants": {
-    "target": "area"
+    "target": "object"
   },
   "Tree Stride": {
     "target": "self"
   },
   "True Polymorph": {
-    "target": "ally"
+    "target": "creature"
   },
   "True Resurrection": {
-    "target": "enemy"
+    "target": "ally"
   },
   "True Seeing": {
     "target": "ally"
@@ -1161,13 +1157,13 @@
     "target": "area"
   },
   "Unseen Servant": {
-    "target": "area"
+    "target": "object"
   },
   "Vampiric Touch": {
-    "target": "self"
+    "target": "enemy"
   },
   "Vicious Mockery": {
-    "target": "creature"
+    "target": "enemy"
   },
   "Vitriolic Sphere": {
     "target": "area"
@@ -1176,19 +1172,19 @@
     "target": "area"
   },
   "Wall of Force": {
-    "target": "enemy"
+    "target": "object"
   },
   "Wall of Ice": {
-    "target": "enemy"
+    "target": "area"
   },
   "Wall of Stone": {
-    "target": "enemy"
+    "target": "object"
   },
   "Wall of Thorns": {
     "target": "area"
   },
   "Wardaway": {
-    "target": "ally"
+    "target": "enemy"
   },
   "Warding Bond": {
     "target": "ally"
@@ -1200,10 +1196,10 @@
     "target": "ally"
   },
   "Web": {
-    "target": "enemy"
+    "target": "area"
   },
   "Weird": {
-    "target": "area"
+    "target": "enemy"
   },
   "Wind Walk": {
     "target": "ally"
@@ -1224,12 +1220,12 @@
     "target": "ally"
   },
   "Wrathful Smite": {
-    "target": "self"
+    "target": "enemy"
   },
   "Yolande's Regal Presence": {
-    "target": "self"
+    "target": "area"
   },
   "Zone of Truth": {
-    "target": "enemy"
+    "target": "area"
   }
 }
