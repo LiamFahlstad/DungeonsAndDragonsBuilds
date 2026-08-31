@@ -6,6 +6,7 @@ from PyQt6.QtWidgets import (
     QHBoxLayout,
     QLabel,
     QLineEdit,
+    QMessageBox,
     QPushButton,
     QTextEdit,
     QTreeWidget,
@@ -148,7 +149,7 @@ class SpellsMixin:
             target_names = ", ".join(t["name"] for t in self.target_characters)
             target_text = f"Target(s): {target_names}"
         else:
-            target_text = "Target(s): None selected — \"Apply to Target(s)\" will be unavailable"
+            target_text = "Target(s): None selected — spells that require a target will be unavailable"
         target_info_lbl = QLabel(target_text)
         target_info_lbl.setObjectName("secondary")
         target_info_lbl.setWordWrap(True)
@@ -202,9 +203,24 @@ class SpellsMixin:
                 f"<br><br>{spell.description.replace(chr(10) + chr(10), '<br><br>')}"
             )
             selected_spell["spell"] = spell
-            cast_btn.setEnabled(True)
-            condition_source_btn.setEnabled(True)
-            condition_target_btn.setEnabled(bool(self.target_characters))
+
+            range_text = (spell.range or "").strip().lower()
+            is_self_ranged = range_text == "self" or range_text.startswith("self (")
+            if is_self_ranged:
+                cast_btn.setEnabled(True)
+                cast_btn.setToolTip(
+                    f"Cast on {self.selected_character['name']} (self-applied)"
+                )
+            elif self.target_characters:
+                cast_btn.setEnabled(True)
+                target_names = ", ".join(t["name"] for t in self.target_characters)
+                cast_btn.setToolTip(f"Cast on {target_names} (range: {spell.range})")
+            else:
+                cast_btn.setEnabled(False)
+                cast_btn.setToolTip(
+                    f"This spell requires a target (range: {spell.range}) — "
+                    "select a target first (right-click a card)"
+                )
 
         def on_selection_changed():
             items = tree.selectedItems()
@@ -245,121 +261,76 @@ class SpellsMixin:
 
         cast_btn.clicked.connect(do_cast)
 
-        condition_source_btn = QPushButton("Apply to Source")
-        condition_source_btn.setEnabled(False)
-        condition_source_btn.setToolTip(
-            f"Add as a condition on {self.selected_character['name']} (self-applied)"
-        )
-
-        def do_apply_condition_source():
-            spell = selected_spell["spell"]
-            if spell is None:
-                return
-            self._apply_spell_as_condition(spell, apply_to_target=False)
-            dlg.accept()
-
-        condition_source_btn.clicked.connect(do_apply_condition_source)
-
-        condition_target_btn = QPushButton("Apply to Target(s)")
-        condition_target_btn.setEnabled(False)
-        condition_target_btn.setToolTip(
-            f"Add as a condition on {target_names}"
-            if self.target_characters
-            else "Select a target first (right-click a card)"
-        )
-
-        def do_apply_condition_target():
-            spell = selected_spell["spell"]
-            if spell is None:
-                return
-            self._apply_spell_as_condition(spell, apply_to_target=True)
-            dlg.accept()
-
-        condition_target_btn.clicked.connect(do_apply_condition_target)
-
         close_btn2 = QPushButton("Close")
         close_btn2.clicked.connect(dlg.reject)
         btn_row.addWidget(cast_btn)
-        btn_row.addWidget(condition_source_btn)
-        btn_row.addWidget(condition_target_btn)
         btn_row.addWidget(close_btn2)
         outer.addLayout(btn_row)
 
         dlg.exec()
 
     def _apply_cast_spell(self, spell):
-        """Apply a cast spell to the selected combatant: log it, auto-apply Concentrating,
-        add action economy, and start a duration timer (shown as a time bar) unless the
-        spell is instantaneous."""
-        char = self.selected_character
-        if char is None:
+        """Cast a spell. The spell's own declared metadata decides what happens:
+        spell.range decides who is affected (a "Self" range always means the
+        caster; any other range requires a target to be selected first),
+        spell.casting_time_type logs the action-economy cost on the caster,
+        spell.is_concentration breaks any prior concentration and marks the
+        caster Concentrating (concentration always belongs to the caster, even
+        when the spell's effect lands on a target), and spell.duration_seconds
+        (if set) adds a ticking duration bar on every recipient. Every cast also
+        adds a condition badge (with the description as a hover tooltip) on its
+        recipient(s) and increments the caster's spells_cast stat."""
+        source = self.selected_character
+        if source is None:
+            QMessageBox.warning(self._window, "Error", "Select a caster (character) first.")
             return
 
-        char.setdefault("stats", _default_stats())
-        char["stats"]["spells_cast"] = char["stats"].get("spells_cast", 0) + 1
-        increment_named_stat(char["stats"], "spells_cast_by_name", spell.name)
+        range_text = (spell.range or "").strip().lower()
+        is_self_ranged = range_text == "self" or range_text.startswith("self (")
+
+        if is_self_ranged:
+            recipients = [source]
+        else:
+            if not self.target_characters:
+                QMessageBox.warning(
+                    self._window,
+                    "Error",
+                    f"{spell.name} requires a target (range: {spell.range}) — select a target before casting.",
+                )
+                return
+            recipients = self.target_characters
+
+        # Usage bookkeeping on the caster
+        source.setdefault("stats", _default_stats())
+        source["stats"]["spells_cast"] = source["stats"].get("spells_cast", 0) + 1
+        increment_named_stat(source["stats"], "spells_cast_by_name", spell.name)
         cast_value = {"spell_name": spell.name}
         self.history.append((Action.CAST_SPELL, cast_value))
         self._log_event(
-            f"{char['name']} casts {spell.name}",
-            character=char["name"],
+            f"{source['name']} casts {spell.name}",
+            character=source["name"],
             action=Action.CAST_SPELL,
             value=cast_value,
         )
 
         if spell.is_concentration:
             # Break any existing concentration spells before starting a new one
-            active_spells = char.get("active_spells") or []
+            active_spells = source.get("active_spells") or []
             remaining_spells = []
             for entry in active_spells:
                 if entry.get("concentration"):
                     self._log_event(
-                        f"{char['name']}'s {entry['name']} ends (concentration broken by casting {spell.name})",
-                        character=char["name"],
+                        f"{source['name']}'s {entry['name']} ends (concentration broken by casting {spell.name})",
+                        character=source["name"],
                         action=Action.CAST_SPELL,
                     )
                 else:
                     remaining_spells.append(entry)
-            char["active_spells"] = remaining_spells
-            # Self-applied — the caster is always the source of their own concentration.
-            self._add_condition_to(char, Condition.CONCENTRATING.value, source=char)
+            source["active_spells"] = remaining_spells
+            # Concentration always belongs to the caster, regardless of who the spell targets.
+            self._add_condition_to(source, Condition.CONCENTRATING.value, source=source)
 
-        # Add action economy if casting time is an action economy type
-        try:
-            casting_time_type = spell.casting_time_type.value
-            if casting_time_type in self.ACTION_ECONOMY_TYPES:
-                self._add_action_use(casting_time_type)
-        except ValueError:
-            pass
-
-        duration = spell.duration_seconds
-        if duration:
-            char.setdefault("active_spells", []).append(
-                {
-                    "name": spell.name,
-                    "time_left": duration,
-                    "duration": duration,
-                    "concentration": spell.is_concentration,
-                }
-            )
-
-        self._refresh_selected_card()
-
-    def _apply_spell_as_condition(self, spell, apply_to_target: bool = False):
-        """Add a spell's name as a condition badge — on the caster (self-applied,
-        e.g. a self-buff like Shield of Faith on yourself) or on the current
-        target(s) (e.g. a debuff like Hold Person, which should badge the
-        creature it affects, not the caster) — with the spell's full description
-        available as a hover tooltip. The caster is always recorded as the
-        condition's source either way, for correct log/stat attribution."""
-        source = self.selected_character
-        if source is None:
-            return
-        recipients = self.target_characters if apply_to_target else [source]
-        if not recipients:
-            return
-
-        # Add action economy if casting time is an action economy type
+        # Action economy: the caster spends the action, regardless of who it affects
         try:
             casting_time_type = spell.casting_time_type.value
             if casting_time_type in self.ACTION_ECONOMY_TYPES:
@@ -391,6 +362,13 @@ class SpellsMixin:
         )
         badge_color = Spell.get_school_color(spell.school)
 
+        # Duration -> a ticking bar, always tracked on the caster (source) regardless
+        # of who the badge lands on — _tick_active_spells/_clear_concentration_if_unused
+        # clear Concentrating off whichever character owns the expiring entry, and
+        # Concentrating itself is only ever added to the caster.
+        duration = spell.duration_seconds
+        has_duration = bool(duration)
+
         # Store the tooltip description and badge color, and add the condition,
         # on every recipient (the caster for a self-cast, each target otherwise).
         for char in list(recipients):
@@ -398,14 +376,14 @@ class SpellsMixin:
             char.setdefault("spell_condition_colors", {})[spell.name] = badge_color
             self._add_condition_to(char, spell.name, source=source)
 
-            # Track duration on this recipient
-            duration = spell.duration_seconds
-            if duration:
-                char.setdefault("active_spells", []).append(
-                    {
-                        "name": spell.name,
-                        "time_left": duration,
-                        "duration": duration,
-                        "concentration": spell.is_concentration,
-                    }
-                )
+        if has_duration:
+            source.setdefault("active_spells", []).append(
+                {
+                    "name": spell.name,
+                    "time_left": duration,
+                    "duration": duration,
+                    "concentration": spell.is_concentration,
+                }
+            )
+
+        self._refresh_selected_card()

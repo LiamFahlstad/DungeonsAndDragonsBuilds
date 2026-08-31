@@ -6,6 +6,7 @@ from PyQt6.QtWidgets import (
     QHBoxLayout,
     QLabel,
     QLineEdit,
+    QMessageBox,
     QPushButton,
     QTextEdit,
     QTreeWidget,
@@ -13,6 +14,7 @@ from PyQt6.QtWidgets import (
     QVBoxLayout,
 )
 
+from CharacterContent.Features.Core.BaseFeatures import FeatureTarget
 from Combat.Definitions import Action
 from .stats import _default_stats, increment_named_stat
 from .styles import QSS
@@ -44,7 +46,7 @@ class FeaturesMixin:
             target_names = ", ".join(t["name"] for t in self.target_characters)
             target_text = f"Target(s): {target_names}"
         else:
-            target_text = "Target(s): None selected — \"Apply to Target(s)\" will be unavailable"
+            target_text = "Target(s): None selected — features that require a target will be unavailable"
         target_info_lbl = QLabel(target_text)
         target_info_lbl.setObjectName("secondary")
         target_info_lbl.setWordWrap(True)
@@ -80,14 +82,49 @@ class FeaturesMixin:
 
         def show_feature(feature):
             sb = self.selected_character.get("_stat_block")
+            feature_target = feature.target(sb) if sb is not None else None
+            regained_on = feature.regained_on(sb) if sb is not None else None
             description = None
             if sb and hasattr(feature, "get_description"):
                 description = feature.get_description(sb)
+
+            action_text = (
+                feature.activation.action_type.value.replace("_", " ").title()
+                if feature.activation and feature.activation.action_type is not None
+                else "None"
+            )
+            target_text = (
+                feature_target.value.replace("_", " ").title()
+                if feature_target is not None
+                else "None"
+            )
+            duration_text = (
+                feature.activation.duration
+                if feature.activation and feature.activation.duration
+                else "None"
+            )
+            recovery_text = (
+                regained_on.value.replace("_", " ").title()
+                if regained_on is not None
+                else "None"
+            )
 
             html_content = f"<b style='color:#c9a84c; font-size:14px;'>{feature.name}</b>"
             if feature.origin:
                 html_content += f"<br><span style='color:#a0a0b0;'>{feature.origin}</span>"
             html_content += "<br><br>"
+            html_content += (
+                f"<span style='color:#7a9fd4;'><b>Action Type:</b> {action_text}</span><br>"
+            )
+            html_content += (
+                f"<span style='color:#7a9fd4;'><b>Target:</b> {target_text}</span><br>"
+            )
+            html_content += (
+                f"<span style='color:#7a9fd4;'><b>Duration:</b> {duration_text}</span><br>"
+            )
+            html_content += (
+                f"<span style='color:#7a9fd4;'><b>Recovery:</b> {recovery_text}</span><br><br>"
+            )
             if description:
                 html_content += description.replace(chr(10) + chr(10), "<br><br>")
             else:
@@ -95,9 +132,24 @@ class FeaturesMixin:
 
             detail.setHtml(html_content)
             selected_feature["feature"] = feature
-            enable_btn.setEnabled(True)
-            condition_source_btn.setEnabled(True)
-            condition_target_btn.setEnabled(bool(self.target_characters))
+
+            if feature_target is None or feature_target == FeatureTarget.SELF:
+                apply_btn.setEnabled(True)
+                apply_btn.setToolTip(
+                    f"Apply to {self.selected_character['name']} (self-applied)"
+                )
+            elif self.target_characters:
+                apply_btn.setEnabled(True)
+                target_names = ", ".join(t["name"] for t in self.target_characters)
+                apply_btn.setToolTip(
+                    f"Apply to {target_names} (requires: {feature_target.value})"
+                )
+            else:
+                apply_btn.setEnabled(False)
+                apply_btn.setToolTip(
+                    f"This feature requires a target ({feature_target.value}) — "
+                    "select a target first (right-click a card)"
+                )
 
         def on_selection_changed():
             items = tree.selectedItems()
@@ -126,122 +178,69 @@ class FeaturesMixin:
         search_box.textChanged.connect(apply_filter)
 
         btn_row = QHBoxLayout()
-        enable_btn = QPushButton("Enable")
-        enable_btn.setEnabled(False)
+        apply_btn = QPushButton("Apply")
+        apply_btn.setEnabled(False)
 
-        def do_enable():
+        def do_apply():
             feature = selected_feature["feature"]
             if feature is None:
                 return
-            self._apply_enable_feature(feature)
+            self._apply_feature(feature)
             dlg.accept()
 
-        enable_btn.clicked.connect(do_enable)
-
-        condition_source_btn = QPushButton("Apply to Source")
-        condition_source_btn.setEnabled(False)
-        condition_source_btn.setToolTip(
-            f"Add as a condition on {self.selected_character['name']} (self-applied)"
-        )
-
-        def do_apply_condition_source():
-            feature = selected_feature["feature"]
-            if feature is None:
-                return
-            self._apply_feature_as_condition(feature, apply_to_target=False)
-            dlg.accept()
-
-        condition_source_btn.clicked.connect(do_apply_condition_source)
-
-        condition_target_btn = QPushButton("Apply to Target(s)")
-        condition_target_btn.setEnabled(False)
-        target_names = (
-            ", ".join(t["name"] for t in self.target_characters)
-            if self.target_characters
-            else ""
-        )
-        condition_target_btn.setToolTip(
-            f"Add as a condition on {target_names}"
-            if self.target_characters
-            else "Select a target first (right-click a card)"
-        )
-
-        def do_apply_condition_target():
-            feature = selected_feature["feature"]
-            if feature is None:
-                return
-            self._apply_feature_as_condition(feature, apply_to_target=True)
-            dlg.accept()
-
-        condition_target_btn.clicked.connect(do_apply_condition_target)
+        apply_btn.clicked.connect(do_apply)
 
         close_btn2 = QPushButton("Close")
         close_btn2.clicked.connect(dlg.reject)
-        btn_row.addWidget(enable_btn)
-        btn_row.addWidget(condition_source_btn)
-        btn_row.addWidget(condition_target_btn)
+        btn_row.addWidget(apply_btn)
         btn_row.addWidget(close_btn2)
         outer.addLayout(btn_row)
 
         dlg.exec()
 
-    def _apply_enable_feature(self, feature):
-        """Apply an enabled feature to the selected combatant: log it, track duration,
-        add action economy, and update stats."""
-        char = self.selected_character
-        if char is None:
+    def _apply_feature(self, feature):
+        """Apply a feature. The feature's own declared metadata decides what happens:
+        feature.target() decides who is affected (SELF/None always means the source
+        itself; any other target type requires a target to be selected first),
+        feature.activation.action_type logs the action-economy cost on the source,
+        and feature.activation.duration_to_seconds() (if positive) adds a ticking
+        duration bar on every recipient. Every application also adds a condition
+        badge (with the description as a hover tooltip) on its recipient(s) and
+        increments the source's features_enabled stat."""
+        source = self.selected_character
+        if source is None:
+            QMessageBox.warning(self._window, "Error", "Select a source (character) first.")
             return
 
-        char.setdefault("stats", _default_stats())
-        char["stats"]["features_enabled"] = char["stats"].get("features_enabled", 0) + 1
-        increment_named_stat(char["stats"], "features_enabled_by_name", feature.name)
+        sb = source.get("_stat_block")
+        feature_target = feature.target(sb) if sb is not None else None
+
+        if feature_target is None or feature_target == FeatureTarget.SELF:
+            recipients = [source]
+        else:
+            if not self.target_characters:
+                QMessageBox.warning(
+                    self._window,
+                    "Error",
+                    f"{feature.name} requires a target ({feature_target.value}) — select a target before applying.",
+                )
+                return
+            recipients = self.target_characters
+
+        # Usage bookkeeping on the source
+        source.setdefault("stats", _default_stats())
+        source["stats"]["features_enabled"] = source["stats"].get("features_enabled", 0) + 1
+        increment_named_stat(source["stats"], "features_enabled_by_name", feature.name)
         feature_value = {"feature_name": feature.name}
         self.history.append((Action.ENABLE_FEATURE, feature_value))
         self._log_event(
-            f"{char['name']} uses {feature.name}",
-            character=char["name"],
+            f"{source['name']} uses {feature.name}",
+            character=source["name"],
             action=Action.ENABLE_FEATURE,
             value=feature_value,
         )
 
-        # Track duration if present
-        if feature.activation:
-            duration_value = feature.activation.duration_to_seconds()
-            if isinstance(duration_value, int) and duration_value > 0:
-                char.setdefault("active_features", []).append(
-                    {
-                        "name": feature.name,
-                        "time_left": duration_value,
-                        "duration": duration_value,
-                    }
-                )
-
-            # Add action economy if present
-            if feature.activation.action_type is not None:
-                action_type_map = {
-                    "action": "Action",
-                    "bonus_action": "Bonus Action",
-                    "reaction": "Reaction",
-                }
-                action_label = action_type_map.get(feature.activation.action_type.value)
-                if action_label:
-                    self._add_action_use(action_label)
-
-        self._refresh_selected_card()
-
-    def _apply_feature_as_condition(self, feature, apply_to_target: bool = False):
-        """Add a feature's name as a condition badge — on the source (self-applied)
-        or on the current target(s) — with the feature's full description available
-        as a hover tooltip. The source is always recorded as the condition's source
-        either way, for correct log/stat attribution."""
-        source = self.selected_character
-        if source is None:
-            return
-        recipients = self.target_characters if apply_to_target else [source]
-        if not recipients:
-            return
-
-        # Add action economy if present
+        # Action economy: the source spends the action, regardless of who it affects
         if feature.activation and feature.activation.action_type is not None:
             action_type_map = {
                 "action": "Action",
@@ -252,8 +251,7 @@ class FeaturesMixin:
             if action_label:
                 self._add_action_use(action_label)
 
-        # Build tooltip HTML from the feature details
-        sb = source.get("_stat_block")
+        # Condition badge + tooltip on every recipient
         description = None
         if sb and hasattr(feature, "get_description"):
             description = feature.get_description(sb)
@@ -262,31 +260,34 @@ class FeaturesMixin:
         if feature.origin:
             tooltip_html += f"<br><span style='color:#a0a0b0;'>{feature.origin}</span>"
         tooltip_html += "<br><br>"
-        if description:
-            tooltip_html += description.replace(chr(10) + chr(10), "<br><br>")
-        else:
-            tooltip_html += "No description available."
-
+        tooltip_html += (
+            description.replace(chr(10) + chr(10), "<br><br>")
+            if description
+            else "No description available."
+        )
         badge_color = "#4c7ac9"
 
-        # Store the tooltip description and badge color, and add the condition,
-        # on every recipient (the source for a self-cast, each target otherwise).
+        # Duration -> a ticking bar on every recipient
+        duration_value = (
+            feature.activation.duration_to_seconds() if feature.activation else None
+        )
+        has_duration = isinstance(duration_value, int) and duration_value > 0
+
         for char in list(recipients):
             char.setdefault("feature_condition_descriptions", {})[feature.name] = tooltip_html
             char.setdefault("feature_condition_colors", {})[feature.name] = badge_color
             self._add_condition_to(char, feature.name, source=source)
 
-            # Track duration on this recipient
-            if feature.activation:
-                duration_value = feature.activation.duration_to_seconds()
-                if isinstance(duration_value, int) and duration_value > 0:
-                    char.setdefault("active_features", []).append(
-                        {
-                            "name": feature.name,
-                            "time_left": duration_value,
-                            "duration": duration_value,
-                        }
-                    )
+            if has_duration:
+                char.setdefault("active_features", []).append(
+                    {
+                        "name": feature.name,
+                        "time_left": duration_value,
+                        "duration": duration_value,
+                    }
+                )
+
+        self._refresh_selected_card()
 
     def _tick_active_features(self):
         """Deduct 6 seconds (one round) from every combatant's active feature timers,
@@ -308,10 +309,14 @@ class FeaturesMixin:
         self._rebuild_cards()
 
     def _remove_active_feature(self, char: dict, entry: dict):
-        """Manually dismiss an active feature before its duration timer runs out."""
+        """Manually dismiss an active feature before its duration timer runs out —
+        also clears the matching condition badge so the two stay in sync."""
         active_features = char.get("active_features") or []
         if entry not in active_features:
             return
         active_features.remove(entry)
         self._log_event(f"{char['name']}'s {entry['name']} ends early")
-        self._rebuild_card(char)
+        if entry["name"] in char.get("conditions", []):
+            self._remove_condition_from(char, entry["name"], source=char)
+        else:
+            self._rebuild_card(char)
