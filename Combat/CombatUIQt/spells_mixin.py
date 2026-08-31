@@ -14,6 +14,7 @@ from PyQt6.QtWidgets import (
     QVBoxLayout,
 )
 
+from CharacterContent.Features.Core.BaseFeatures import FeatureTarget
 from Combat.Definitions import Action, Condition
 from .stats import _default_stats, increment_named_stat, spell_slots_used_key
 from .styles import QSS
@@ -193,20 +194,26 @@ class SpellsMixin:
             if spell.is_ritual:
                 tags.append("Ritual")
             tag_text = f" [{', '.join(tags)}]" if tags else ""
+
+            target_text = (
+                spell.target.value.replace("_", " ").title()
+                if spell.target is not None
+                else "None"
+            )
+
             detail.setHtml(
                 f"<b style='color:#c9a84c; font-size:14px;'>{spell.name}</b>{tag_text}"
                 f"<br><span style='color:#a0a0b0;'>{level_label(spell.level)} · {spell.school}</span>"
                 f"<br><br><b>Casting Time:</b> {spell.casting_time}"
                 f"<br><b>Range:</b> {spell.range}"
+                f"<br><b>Target:</b> {target_text}"
                 f"<br><b>Components:</b> {spell.components}"
                 f"<br><b>Duration:</b> {spell.duration}"
                 f"<br><br>{spell.description.replace(chr(10) + chr(10), '<br><br>')}"
             )
             selected_spell["spell"] = spell
 
-            range_text = (spell.range or "").strip().lower()
-            is_self_ranged = range_text == "self" or range_text.startswith("self (")
-            if is_self_ranged:
+            if spell.target is None or spell.target == FeatureTarget.SELF:
                 cast_btn.setEnabled(True)
                 cast_btn.setToolTip(
                     f"Cast on {self.selected_character['name']} (self-applied)"
@@ -214,11 +221,11 @@ class SpellsMixin:
             elif self.target_characters:
                 cast_btn.setEnabled(True)
                 target_names = ", ".join(t["name"] for t in self.target_characters)
-                cast_btn.setToolTip(f"Cast on {target_names} (range: {spell.range})")
+                cast_btn.setToolTip(f"Cast on {target_names} (requires: {spell.target.value})")
             else:
                 cast_btn.setEnabled(False)
                 cast_btn.setToolTip(
-                    f"This spell requires a target (range: {spell.range}) — "
+                    f"This spell requires a target ({spell.target.value}) — "
                     "select a target first (right-click a card)"
                 )
 
@@ -271,8 +278,8 @@ class SpellsMixin:
 
     def _apply_cast_spell(self, spell):
         """Cast a spell. The spell's own declared metadata decides what happens:
-        spell.range decides who is affected (a "Self" range always means the
-        caster; any other range requires a target to be selected first),
+        spell.target decides who is affected (SELF/None always means the
+        caster; any other target type requires a target to be selected first),
         spell.casting_time_type logs the action-economy cost on the caster,
         spell.is_concentration breaks any prior concentration and marks the
         caster Concentrating (concentration always belongs to the caster, even
@@ -285,17 +292,14 @@ class SpellsMixin:
             QMessageBox.warning(self._window, "Error", "Select a caster (character) first.")
             return
 
-        range_text = (spell.range or "").strip().lower()
-        is_self_ranged = range_text == "self" or range_text.startswith("self (")
-
-        if is_self_ranged:
+        if spell.target is None or spell.target == FeatureTarget.SELF:
             recipients = [source]
         else:
             if not self.target_characters:
                 QMessageBox.warning(
                     self._window,
                     "Error",
-                    f"{spell.name} requires a target (range: {spell.range}) — select a target before casting.",
+                    f"{spell.name} requires a target ({spell.target.value}) — select a target before casting.",
                 )
                 return
             recipients = self.target_characters
@@ -351,11 +355,18 @@ class SpellsMixin:
         def level_label(level: int) -> str:
             return "Cantrips" if level == 0 else f"Level {level}"
 
+        target_text = (
+            spell.target.value.replace("_", " ").title()
+            if spell.target is not None
+            else "None"
+        )
+
         tooltip_html = (
             f"<b style='color:#c9a84c; font-size:14px;'>{spell.name}</b>{tag_text}"
             f"<br><span style='color:#a0a0b0;'>{level_label(spell.level)} · {spell.school}</span>"
             f"<br><br><b>Casting Time:</b> {spell.casting_time}"
             f"<br><b>Range:</b> {spell.range}"
+            f"<br><b>Target:</b> {target_text}"
             f"<br><b>Components:</b> {spell.components}"
             f"<br><b>Duration:</b> {spell.duration}"
             f"<br><br>{spell.description.replace(chr(10) + chr(10), '<br><br>')}"
