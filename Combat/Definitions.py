@@ -199,6 +199,252 @@ class MeleeAttack(MonsterAbility):
         )
 
 
+def _format_dice_notation(
+    dice_count: int, dice_type: DiceType, damage_bonus: int
+) -> tuple[str, int]:
+    """Shared by RangedAttack/SavingThrowEffect: renders a "NdM + B" damage
+    entry and its rounded-down average, matching 5e stat-block convention."""
+    average = int(dice_type.average(dice_count)) + damage_bonus
+    dice_notation = f"{dice_count}{dice_type.notation}"
+    if damage_bonus > 0:
+        dice_notation += f" + {damage_bonus}"
+    elif damage_bonus < 0:
+        dice_notation += f" - {abs(damage_bonus)}"
+    return dice_notation, average
+
+
+@dataclass_decorator
+class RangedAttack(MonsterAbility):
+    """A MonsterAbility subclass for a standard ranged attack action (thrown
+    weapons, bows, ranged spell-like attacks). Builds the standard 5e
+    stat-block sentence from structured inputs instead of a hand-written
+    description string."""
+
+    attack_bonus: int = 0
+    range_ft: int = 30
+    long_range_ft: Optional[int] = None
+    dice_count: int = 1
+    dice_type: DiceType = DiceType.D4
+    damage_bonus: int = 0
+    damage_type: DamageType = DamageType.PIERCING
+    additional_ruling: str = ""
+    description: str = field(init=False, default="")
+
+    def __post_init__(self):
+        dice_notation, average = _format_dice_notation(
+            self.dice_count, self.dice_type, self.damage_bonus
+        )
+        range_text = (
+            f"{self.range_ft}/{self.long_range_ft} ft."
+            if self.long_range_ft
+            else f"{self.range_ft} ft."
+        )
+        ruling = f" {self.additional_ruling}" if self.additional_ruling else ""
+        self.description = (
+            f"Ranged Attack Roll: +{self.attack_bonus}, range {range_text} "
+            f"Hit: {average} ({dice_notation}) {self.damage_type.value} damage.{ruling}"
+        )
+
+
+@dataclass_decorator
+class SavingThrowEffect(MonsterAbility):
+    """A MonsterAbility subclass for a saving-throw-based effect (breath
+    weapons, gaze attacks, and other area effects). Builds the standard 5e
+    "<Ability> Saving Throw: DC N, <target>. Failure: ... Success: ..."
+    stat-block sentence from structured inputs instead of a hand-written
+    description string. Leave `damage_type` as None for a saving throw with
+    no direct damage (e.g. a condition- or exhaustion-only effect) — in that
+    case `failure_effect` is used verbatim as the Failure text."""
+
+    ability: Ability = Ability.DEXTERITY
+    dc: int = 10
+    target: str = ""
+    dice_count: int = 0
+    dice_type: DiceType = DiceType.D6
+    damage_bonus: int = 0
+    damage_type: Optional[DamageType] = None
+    failure_effect: str = ""
+    success_effect: str = ""
+    extra_ruling: str = ""
+    description: str = field(init=False, default="")
+
+    def __post_init__(self):
+        sentences = [f"{self.ability.value} Saving Throw: DC {self.dc}, {self.target}."]
+
+        if self.dice_count > 0 and self.damage_type is not None:
+            dice_notation, average = _format_dice_notation(
+                self.dice_count, self.dice_type, self.damage_bonus
+            )
+            failure_text = (
+                f"{average} ({dice_notation}) {self.damage_type.value} damage"
+            )
+            if self.failure_effect:
+                failure_text += f", {self.failure_effect}"
+            failure_text += "."
+        else:
+            failure_text = self.failure_effect
+        sentences.append(f"Failure: {failure_text}")
+
+        if self.success_effect:
+            sentences.append(f"Success: {self.success_effect}")
+        if self.extra_ruling:
+            sentences.append(self.extra_ruling)
+
+        self.description = " ".join(sentences)
+
+
+@dataclass_decorator
+class MagicResistance(MonsterAbility):
+    """A trait for the standard "Advantage on saving throws against spells
+    and other magical effects" text. `creature_name` is the monster's
+    lowercase self-reference (e.g. "sphinx"), matching stat-block convention."""
+
+    name: str = field(init=False, default="")
+    description: str = field(init=False, default="")
+    creature_name: str = "creature"
+
+    def __post_init__(self):
+        self.name = "Magic Resistance"
+        self.description = (
+            f"The {self.creature_name} has Advantage on saving throws "
+            f"against spells and other magical effects."
+        )
+
+
+@dataclass_decorator
+class LegendaryResistance(MonsterAbility):
+    """A trait for the standard Legendary Resistance text, with the
+    "(N/Day, or M/Day in Lair)" name suffix built from `uses`/`lair_uses`."""
+
+    name: str = field(init=False, default="")
+    description: str = field(init=False, default="")
+    creature_name: str = "creature"
+    uses: int = 1
+    lair_uses: Optional[int] = None
+
+    def __post_init__(self):
+        lair_note = f", or {self.lair_uses}/Day in Lair" if self.lair_uses else ""
+        self.name = f"Legendary Resistance ({self.uses}/Day{lair_note})"
+        self.description = (
+            f"If the {self.creature_name} fails a saving throw, "
+            f"it can choose to succeed instead."
+        )
+
+
+@dataclass_decorator
+class Regeneration(MonsterAbility):
+    """A trait for the standard "regains N Hit Points at the start of each
+    of its turns" text. `exception_note` covers riders like "If the troll
+    takes Acid or Fire damage, this trait doesn't function on the troll's
+    next turn." `name_suffix` covers qualifiers like "(Slaad Only)"."""
+
+    name: str = field(init=False, default="")
+    description: str = field(init=False, default="")
+    creature_name: str = "creature"
+    hp: int = 5
+    exception_note: str = ""
+    name_suffix: str = ""
+
+    def __post_init__(self):
+        self.name = (
+            f"Regeneration ({self.name_suffix})" if self.name_suffix else "Regeneration"
+        )
+        exception = f" {self.exception_note}" if self.exception_note else ""
+        self.description = (
+            f"The {self.creature_name} regains {self.hp} Hit Points at the "
+            f"start of each of its turns if it has at least 1 Hit Point.{exception}"
+        )
+
+
+@dataclass_decorator
+class PackTactics(MonsterAbility):
+    """A trait for the standard Pack Tactics text (Advantage on an attack
+    roll if an ally is adjacent to the target). `name_suffix` covers
+    qualifiers like "(Land and Water Only)"."""
+
+    name: str = field(init=False, default="")
+    description: str = field(init=False, default="")
+    creature_name: str = "creature"
+    name_suffix: str = ""
+
+    def __post_init__(self):
+        self.name = (
+            f"Pack Tactics ({self.name_suffix})" if self.name_suffix else "Pack Tactics"
+        )
+        self.description = (
+            f"The {self.creature_name} has Advantage on an attack roll against a "
+            f"creature if at least one of the {self.creature_name}'s allies is "
+            f"within 5 feet of the creature and the ally doesn't have the "
+            f"Incapacitated condition."
+        )
+
+
+@dataclass_decorator
+class Amphibious(MonsterAbility):
+    """A trait for the standard "can breathe air and water" text."""
+
+    name: str = field(init=False, default="Amphibious")
+    description: str = field(init=False, default="")
+    creature_name: str = "creature"
+
+    def __post_init__(self):
+        self.description = f"The {self.creature_name} can breathe air and water."
+
+
+@dataclass_decorator
+class SunlightSensitivity(MonsterAbility):
+    """A trait for the standard Sunlight Sensitivity text (Disadvantage on
+    ability checks and attack rolls while in sunlight)."""
+
+    name: str = field(init=False, default="Sunlight Sensitivity")
+    description: str = field(init=False, default="")
+    creature_name: str = "creature"
+
+    def __post_init__(self):
+        self.description = (
+            f"While in sunlight, the {self.creature_name} has Disadvantage "
+            f"on ability checks and attack rolls."
+        )
+
+
+@dataclass_decorator
+class Rampage(MonsterAbility):
+    """A bonus action for the standard Rampage text (a free move + extra
+    attack after bloodying a creature). Set `uses_per_day` for a limited
+    variant (e.g. `1` -> "Rampage (1/Day)"); leave None for an at-will one."""
+
+    name: str = field(init=False, default="")
+    description: str = field(init=False, default="")
+    creature_name: str = "creature"
+    attack_name: str = "Bite"
+    uses_per_day: Optional[int] = None
+
+    def __post_init__(self):
+        self.name = (
+            f"Rampage ({self.uses_per_day}/Day)" if self.uses_per_day else "Rampage"
+        )
+        self.description = (
+            f"Immediately after dealing damage to a creature that is "
+            f"already Bloodied, the {self.creature_name} moves up to half "
+            f"its Speed, and it makes one {self.attack_name} attack."
+        )
+
+
+@dataclass_decorator
+class NimbleEscape(MonsterAbility):
+    """A bonus action for the standard Nimble Escape text (Disengage or
+    Hide as a bonus action)."""
+
+    name: str = field(init=False, default="Nimble Escape")
+    description: str = field(init=False, default="")
+    creature_name: str = "creature"
+
+    def __post_init__(self):
+        self.description = (
+            f"The {self.creature_name} takes the Disengage or Hide action."
+        )
+
+
 @dataclass
 class BasicCombatantData:
     combatant_type: str

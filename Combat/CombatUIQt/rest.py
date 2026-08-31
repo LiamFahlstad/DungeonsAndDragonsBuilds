@@ -33,7 +33,7 @@ from PyQt6.QtWidgets import (
     QWidget,
 )
 
-import Combat.CombatantGroups as CombatantGroups
+import Combat.Campaigns.CurseOfTheLich.Players as Players
 from CharacterContent.Features.Core.BaseFeatures import RegainedOn
 from Combat.Definitions import Action
 
@@ -54,7 +54,7 @@ def _rest_checkpoint_path(player_log_path: str, suffix: str) -> str:
 def _build_party_state(player_log_path: str) -> CombatAppQt:
     """Headlessly replay player_log_path onto a fresh CombatAppQt instance
     (no window, no event loop — .run() is never called)."""
-    players = CombatantGroups.get_players_group()
+    players = Players.get_players_group()
     return CombatAppQt(
         combatants=[],
         character_sheets=players,

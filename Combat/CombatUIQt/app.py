@@ -90,9 +90,15 @@ class CombatAppQt(
 
         log_dir = Path("Combat/CombatLogs")
         log_dir.mkdir(exist_ok=True)
-        timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-        self.log_file = log_dir / f"encounter_log_{timestamp}.json"
-        self._write_log({})
+        if resume_log_path:
+            # `run()` calls `_load_log_from_path` right after this, which reassigns
+            # `self.log_file` to this same path once it's actually read — don't write
+            # here first or we'd clobber the saved log before it's loaded.
+            self.log_file = Path(resume_log_path)
+        else:
+            timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+            self.log_file = log_dir / f"encounter_log_{timestamp}.json"
+            self._write_log({})
 
         # card widget registry: maps id(char_dict) -> QFrame
         self._card_widgets: dict = {}

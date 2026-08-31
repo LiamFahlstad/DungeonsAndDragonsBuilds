@@ -24,14 +24,7 @@ python RunCombatSimulator.py --player-log Combat/PlayerLogs/main_party.json
 
 | Scenario | Command |
 |---|---|
-| Time Loop — Square | `python RunCombatSimulator.py --scenario time_loop_square --player-log Combat/PlayerLogs/main_party.json --log Combat/CombatLogs/time_loop_square.json` |
-| Time Loop — Drunk Oxe | `python RunCombatSimulator.py --scenario time_loop_drunk_oxe --player-log Combat/PlayerLogs/main_party.json --log Combat/CombatLogs/time_loop_drunk_oxe.json` |
-| Grim's Castle — Bull | `python RunCombatSimulator.py --scenario grims_castle_bull --player-log Combat/PlayerLogs/main_party.json --log Combat/CombatLogs/grims_castle_bull.json` |
-| Curse of the Lich — Black Tongues Skirmish | `python RunCombatSimulator.py --scenario curse_of_the_lich_black_tongues_skirmish --player-log Combat/PlayerLogs/main_party.json --log Combat/CombatLogs/curse_of_the_lich_black_tongues_skirmish.json` |
-| Curse of the Lich — Yellow Capes Patrol | `python RunCombatSimulator.py --scenario curse_of_the_lich_yellow_capes_patrol --player-log Combat/PlayerLogs/main_party.json --log Combat/CombatLogs/curse_of_the_lich_yellow_capes_patrol.json` |
-| Curse of the Lich — Black Tongues Ritual | `python RunCombatSimulator.py --scenario curse_of_the_lich_black_tongues_ritual --player-log Combat/PlayerLogs/main_party.json --log Combat/CombatLogs/curse_of_the_lich_black_tongues_ritual.json` |
-| Curse of the Lich — Yellow Capes Last Stand | `python RunCombatSimulator.py --scenario curse_of_the_lich_yellow_capes_last_stand --player-log Combat/PlayerLogs/main_party.json --log Combat/CombatLogs/curse_of_the_lich_yellow_capes_last_stand.json` |
-| Curse of the Lich — Mouth That Walks | `python RunCombatSimulator.py --scenario curse_of_the_lich_mouth_that_walks --player-log Combat/PlayerLogs/main_party.json --log Combat/CombatLogs/curse_of_the_lich_mouth_that_walks.json` |
+| Ashelm Church | `python RunCombatSimulator.py --scenario ashelm_church --player-log Combat/PlayerLogs/main_party.json --log Combat/CombatLogs/ashelm_church.json` |
 
 ## Other flags
 

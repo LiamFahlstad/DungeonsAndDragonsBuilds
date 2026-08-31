@@ -41,7 +41,9 @@ Step-by-step instructions to create your first build:
    "
 
 5. FIND YOUR CHARACTER SHEET
-   Look in Output/ directory for HTML file starting with your character name
+   Look in Output/ for a folder starting with your character name — it contains
+   character.html plus per-section pages (features/, fighting_styles.html, spells.html,
+   items.html — the last of which includes your weapons)
 
 REFERENCE FILES
 ===============

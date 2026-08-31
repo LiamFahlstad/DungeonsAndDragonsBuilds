@@ -17,7 +17,7 @@ import json
 from datetime import datetime
 from pathlib import Path
 
-import Combat.CombatantGroups as CombatantGroups
+import Combat.Campaigns.CurseOfTheLich.Players as Players
 from Combat.CombatUIQt.stats import (
     SPELL_SLOT_LEVELS,
     compute_player_log_stats,
@@ -29,10 +29,10 @@ from Combat.Definitions import DamageType
 
 
 def player_roster() -> list[str]:
-    """Load the canonical player roster (character names) from CombatantGroups.
+    """Load the canonical player roster (character names) from Players.
     Skip and warn if a character builder raises."""
     names = []
-    for cs in CombatantGroups.get_players_group():
+    for cs in Players.get_players_group():
         try:
             names.append(cs.character_name)
         except Exception as exc:

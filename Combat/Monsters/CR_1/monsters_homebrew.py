@@ -3,7 +3,9 @@ from Combat.Definitions import (
     Condition,
     DamageType,
     DamageTypeEntry,
+    DiceType,
     ExtendedCombatantData,
+    MeleeAttack,
     MonsterAbility,
     MonsterType,
     Size,
@@ -119,38 +121,35 @@ class AccursedGroupOf3(ExtendedCombatantData):
             damage_immunities=[
                 DamageTypeEntry(damage_types=[DamageType.POISON], note=""),
             ],
-            condition_immunities=[Condition.EXHAUSTION, Condition.POISONED],
+            condition_immunities=[Condition.GRAPPLED, Condition.RESTRAINED],
             senses="darkvision 60 ft., Passive Perception 10",
             languages="Understands the languages its bodies knew in life but can't speak",
-            traits=[
-                MonsterAbility(
-                    name="Thinning Ranks",
-                    description="The Small Group represents a cluster of roughly 3 to 4 Accursed shambling and grasping as a single combatant. The number of Rotten Grasp attacks it can make with Multiattack falls as its bodies are destroyed: 4 attacks while it has 25 or more Hit Points, 3 attacks at 17-24 Hit Points, 2 attacks at 9-16 Hit Points, and 1 attack at 8 Hit Points or fewer.",
-                ),
-                MonsterAbility(
-                    name="Noc'tra's Failed Bargain",
-                    description="If damage reduces the Small Group to 0 Hit Points, it must make a Constitution saving throw (DC 5 plus the damage taken) unless the damage is Radiant or from a Critical Hit. On a successful save, its last husk still standing holds together and the Small Group drops to 1 Hit Point instead.",
-                ),
-                MonsterAbility(
-                    name="Herd-Bound",
-                    description="While within 5 feet of at least one other Accursed creature, the Small Group has Advantage on saving throws against being frightened and against effects that would move it against its will, as the press of its fellow husks holds the line.",
-                ),
-                MonsterAbility(
-                    name="Directed by the Faithful",
-                    description="A priest of Noc'tra within 30 feet of the Small Group can take a Bonus Action to command it, causing the Small Group to immediately take the Attack action or to move up to its Speed toward a point the priest designates. Without such direction, the Small Group can only shamble toward the nearest creature it can sense and attack that creature.",
-                ),
-            ],
+            traits=[],
             actions=[
                 MonsterAbility(
                     name="Multiattack",
-                    description="The Small Group makes a number of Rotten Grasp attacks determined by its Thinning Ranks trait (up to 4).",
+                    description="30-21: 3 attacks, 20-11: 2 attacks, 10-1: 1 attack. An attack can be either a Smash or a Grab.",
+                ),
+                MeleeAttack(
+                    name="Smash",
+                    attack_bonus=4,
+                    reach_ft=5,
+                    dice_count=1,
+                    dice_type=DiceType.D6,
+                    damage_bonus=1,
+                    damage_type=DamageType.BLUDGEONING,
                 ),
                 MonsterAbility(
-                    name="Rotten Grasp",
-                    description="Melee Attack Roll: +2, reach 5 ft. Hit: 3 (1d6) Bludgeoning damage.",
+                    name="Grab",
+                    description="reach 5 ft. If the target is a Medium or smaller creature, it has the Grappled condition (escape DC 12).",
                 ),
             ],
-            bonus_actions=[],
+            bonus_actions=[
+                MonsterAbility(
+                    name="Rush",
+                    description="The Accursed Group of 3 can dash as a bonus action on it's first turn of combat.",
+                ),
+            ],
             reactions=[],
             legendary_actions=[],
             legendary_resistances=0,

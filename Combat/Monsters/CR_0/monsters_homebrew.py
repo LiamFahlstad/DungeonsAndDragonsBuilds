@@ -53,7 +53,7 @@ class Accursed(ExtendedCombatantData):
             traits=[],
             actions=[
                 MeleeAttack(
-                    name="Shambling Strike",
+                    name="Smash",
                     attack_bonus=3,
                     reach_ft=5,
                     dice_count=1,
@@ -128,17 +128,17 @@ class PhysicalAccursed(ExtendedCombatantData):
         super().__init__(
             combatant_type="Physical Accursed",
             description="A more physically imposing Accursed, with a stronger body.",
-            hp=16,
+            hp=15,
             ac=12,
             temp_hp=0,
             conditions=[],
             ability_scores={
                 Ability.STRENGTH: 13,
-                Ability.DEXTERITY: 13,
+                Ability.DEXTERITY: 14,
                 Ability.CONSTITUTION: 13,
-                Ability.INTELLIGENCE: 3,
+                Ability.INTELLIGENCE: 6,
                 Ability.WISDOM: 10,
-                Ability.CHARISMA: 5,
+                Ability.CHARISMA: 8,
             },
             saving_throws={},
             spell_slots={},
@@ -149,7 +149,7 @@ class PhysicalAccursed(ExtendedCombatantData):
             size=Size.MEDIUM,
             ac_note="",
             hp_formula="3d8+3",
-            speed_ground_ft=20,
+            speed_ground_ft=30,
             speed_fly_ft=None,
             speed_climb_ft=None,
             speed_special_rules="",
@@ -167,16 +167,22 @@ class PhysicalAccursed(ExtendedCombatantData):
                 ),
             ],
             actions=[
-                MonsterAbility(
-                    name="Crushing strike",
-                    description="Melee Attack Roll: +3, reach 5 ft. Hit: 5 (1d8 + 1) Bludgeoning damage.",
-                ),
-                MonsterAbility(
-                    name="Grab",
-                    description="Melee Attack Roll: +2, reach 5 ft. Hit: 3 (1d4 + 1) Bludgeoning damage. If the target is a Medium or smaller creature, it has the Grappled condition (escape DC 10).",
+                MeleeAttack(
+                    name="Smash",
+                    attack_bonus=4,
+                    reach_ft=5,
+                    dice_count=1,
+                    dice_type=DiceType.D6,
+                    damage_bonus=1,
+                    damage_type=DamageType.BLUDGEONING,
                 ),
             ],
-            bonus_actions=[],
+            bonus_actions=[
+                MonsterAbility(
+                    name="Rush",
+                    description="The Accursed Group of 3 can dash as a bonus action on it's first turn of combat.",
+                ),
+            ],
             reactions=[],
             legendary_actions=[],
             legendary_resistances=0,

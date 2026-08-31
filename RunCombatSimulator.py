@@ -1,7 +1,7 @@
 import argparse
 import sys
 
-import Combat.CombatantGroups as CombatantGroups
+import Combat.Campaigns.CurseOfTheLich.Players as Players
 import Combat.Scenarios as Scenarios
 from Combat.CombatUIQt import CombatAppQt
 
@@ -56,14 +56,14 @@ if __name__ == "__main__":
         sys.exit(0)
 
     if args.scenario is None and not args.player_log:
-        args.scenario = "time_loop_square"
+        args.scenario = "ashelm_church"
 
     scenario = Scenarios.SCENARIOS[args.scenario] if args.scenario else None
     combatants = scenario.build_combatants() if scenario else []
     character_sheets = scenario.build_character_sheets() if scenario else []
 
     if args.player_log:
-        players_group = CombatantGroups.get_players_group()
+        players_group = Players.get_players_group()
         player_names = {cs.character_name for cs in players_group}
         character_sheets = [
             cs for cs in character_sheets if cs.character_name not in player_names

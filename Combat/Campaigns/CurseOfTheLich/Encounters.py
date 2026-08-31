@@ -1,25 +1,12 @@
-from Builds.CharacterBuilder import CharacterSheetData
-from Builds.Characters.Y2024_Cleric_Light_SolenneBrightward import (
-    Y2024ClericLightSolenneBrightwardCharacterBuilder,
-)
-from Builds.Characters.Y2024_Paladin_Vengeance_NadiaIronvow import (
-    Y2024PaladinVengeanceNadiaIronvowCharacterBuilder,
-)
-from Builds.Characters.Y2024_Rogue_Assassin_LysandraNightblade import (
-    Y2024RogueAssassinLysandraNightbladeCharacterBuilder,
-)
-from Builds.Characters.Y2024_Wizard_Bladesinger_IlyanaBladesong import (
-    Y2024WizardBladesingerIlyanaBladesongCharacterBuilder,
-)
 from Combat import Combatants
 from Combat.Monsters.CR_0.monsters_homebrew import (
     Accursed,
     ArmoredAccursed,
     PhysicalAccursed,
 )
-from Combat.Monsters.CR_1.monsters_homebrew import CommonCultist
+from Combat.Monsters.CR_1.monsters_homebrew import AccursedGroupOf3, CommonCultist
 from Combat.Monsters.CR_2.monsters_homebrew import (
-    AccursedGroupLarge,
+    AccursedGroupOf5,
     PriestOfTheBlackTongues,
 )
 from Combat.Monsters.CR_3.monsters_homebrew import (
@@ -29,15 +16,6 @@ from Combat.Monsters.CR_3.monsters_homebrew import (
 )
 from Combat.Monsters.CR_4.monsters_homebrew import MarshalVirel
 from Combat.Monsters.CR_6.monsters_homebrew import TheMouthThatWalks
-
-
-def get_players() -> list[CharacterSheetData]:
-    return [
-        Y2024PaladinVengeanceNadiaIronvowCharacterBuilder().build(),
-        Y2024WizardBladesingerIlyanaBladesongCharacterBuilder().build(),
-        Y2024ClericLightSolenneBrightwardCharacterBuilder().build(),
-        Y2024RogueAssassinLysandraNightbladeCharacterBuilder().build(),
-    ]
 
 
 def get_black_tongues_skirmish_combatants() -> list[Combatants.BasicCombatantData]:
@@ -79,7 +57,7 @@ def get_black_tongues_ritual_combatants() -> list[Combatants.BasicCombatantData]
     warden = ArmoredAccursed()
     warden.set_name("Accursed Warden")
 
-    accursed_group = AccursedGroupLarge()
+    accursed_group = AccursedGroupOf5()
     accursed_group.set_name("Accursed Group")
 
     return [priest, brute, warden, accursed_group]
@@ -109,3 +87,16 @@ def get_mouth_that_walks_combatants() -> list[Combatants.BasicCombatantData]:
     accursed2.set_name("Accursed 2")
 
     return [mouth, cantor, accursed1, accursed2]
+
+
+def get_accursed_ambush_combatants() -> list[Combatants.BasicCombatantData]:
+    physical_accursed1 = PhysicalAccursed()
+    physical_accursed1.set_name("Physical Accursed 1")
+
+    physical_accursed2 = PhysicalAccursed()
+    physical_accursed2.set_name("Physical Accursed 2")
+
+    accursed_group = AccursedGroupOf3()
+    accursed_group.set_name("Accursed Group of 3")
+
+    return [physical_accursed1, physical_accursed2, accursed_group]

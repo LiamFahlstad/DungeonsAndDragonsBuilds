@@ -1,6 +1,6 @@
 import argparse
 
-from Combat.CombatantGroups import get_players_group_not_obmar
+from Combat.Campaigns.CurseOfTheLich.Players import get_players_group_not_obmar
 from Utils.BuildGroupSheetWriter import write_build_group_pages
 
 
