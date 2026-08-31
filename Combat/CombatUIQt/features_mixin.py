@@ -108,6 +108,9 @@ class FeaturesMixin:
                 if regained_on is not None
                 else "None"
             )
+            uses_text = (
+                str(feature.number_of_uses(sb)) if feature.uses is not None else "None"
+            )
 
             html_content = f"<b style='color:#c9a84c; font-size:14px;'>{feature.name}</b>"
             if feature.origin:
@@ -123,7 +126,10 @@ class FeaturesMixin:
                 f"<span style='color:#7a9fd4;'><b>Duration:</b> {duration_text}</span><br>"
             )
             html_content += (
-                f"<span style='color:#7a9fd4;'><b>Recovery:</b> {recovery_text}</span><br><br>"
+                f"<span style='color:#7a9fd4;'><b>Recovery:</b> {recovery_text}</span><br>"
+            )
+            html_content += (
+                f"<span style='color:#7a9fd4;'><b>Uses:</b> {uses_text}</span><br><br>"
             )
             if description:
                 html_content += description.replace(chr(10) + chr(10), "<br><br>")
@@ -260,6 +266,49 @@ class FeaturesMixin:
         if feature.origin:
             tooltip_html += f"<br><span style='color:#a0a0b0;'>{feature.origin}</span>"
         tooltip_html += "<br><br>"
+
+        # Add tag block (Action Type, Target, Duration, Recovery, Uses)
+        regained_on = feature.regained_on(sb) if sb is not None else None
+        action_text = (
+            feature.activation.action_type.value.replace("_", " ").title()
+            if feature.activation and feature.activation.action_type is not None
+            else "None"
+        )
+        target_text = (
+            feature_target.value.replace("_", " ").title()
+            if feature_target is not None
+            else "None"
+        )
+        duration_text = (
+            feature.activation.duration
+            if feature.activation and feature.activation.duration
+            else "None"
+        )
+        recovery_text = (
+            regained_on.value.replace("_", " ").title()
+            if regained_on is not None
+            else "None"
+        )
+        uses_text = (
+            str(feature.number_of_uses(sb)) if feature.uses is not None else "None"
+        )
+
+        tooltip_html += (
+            f"<span style='color:#7a9fd4;'><b>Action Type:</b> {action_text}</span><br>"
+        )
+        tooltip_html += (
+            f"<span style='color:#7a9fd4;'><b>Target:</b> {target_text}</span><br>"
+        )
+        tooltip_html += (
+            f"<span style='color:#7a9fd4;'><b>Duration:</b> {duration_text}</span><br>"
+        )
+        tooltip_html += (
+            f"<span style='color:#7a9fd4;'><b>Recovery:</b> {recovery_text}</span><br>"
+        )
+        tooltip_html += (
+            f"<span style='color:#7a9fd4;'><b>Uses:</b> {uses_text}</span><br><br>"
+        )
+
         tooltip_html += (
             description.replace(chr(10) + chr(10), "<br><br>")
             if description
