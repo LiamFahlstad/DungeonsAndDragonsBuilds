@@ -31,6 +31,7 @@ class Action(str, Enum):
     DEATH_SAVE_FAIL = "death_save_fail"
     DEATH_SAVE_SUCCESS = "death_save_success"
     ADD_TEMP_HP = "add_temp_hp"
+    REGAIN_FEATURE_CHARGE = "regain_feature_charge"
 
 
 class Condition(str, Enum):

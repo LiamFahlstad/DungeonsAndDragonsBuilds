@@ -122,10 +122,10 @@ def get_starter_class_builder():
     )
 
 
-class Y2024ClericLightGrabrielCharacterBuilder(CharacterBuilder):
+class Y2024ClericLightGabrielGreybeardCharacterBuilder(CharacterBuilder):
     def __init__(self):
         super().__init__(
-            name="Gabriel Gråskägg",
+            name="Gabriel Greybeard",
             starter_class_builder=get_starter_class_builder(),
             species_builder=Dwarf.DwarfSpeciesBuilder(),
         )

@@ -269,6 +269,30 @@ class CardsMixin:
             for cond in conditions:
                 spell_desc = char.get("spell_condition_descriptions", {}).get(cond) or char.get("feature_condition_descriptions", {}).get(cond)
                 spell_color = char.get("spell_condition_colors", {}).get(cond) or char.get("feature_condition_colors", {}).get(cond)
+                if spell_desc is None:
+                    # Feature-condition tooltips/colors are transient UI state, not
+                    # persisted to the player log — after replaying a saved session
+                    # (see logging_mixin._apply_replay_action) the condition name is
+                    # restored but the dicts above are empty. Reconstruct the tooltip
+                    # from a matching Feature object so the badge stays clickable/
+                    # removable exactly as it was before restart. The feature may
+                    # belong to a *different* character than the one wearing the
+                    # badge (e.g. Warding Flare is granted by its caster onto an
+                    # ally/enemy target) — search every loaded character for the
+                    # owner, not just this one, and build the tooltip (incl. "Uses
+                    # Left") from that owner's own state.
+                    feature = owner = None
+                    for candidate in self.characters:
+                        feature = next(
+                            (f for f in candidate.get("_feature_objects", []) if f.name == cond),
+                            None,
+                        )
+                        if feature is not None:
+                            owner = candidate
+                            break
+                    if feature is not None:
+                        spell_desc = self._feature_condition_tooltip(owner, feature)
+                        spell_color = spell_color or "#4c7ac9"
                 badge_color = spell_color or self._CONDITION_COLORS.get(cond, "#7a5c00")
                 has_rule = ConditionRule.from_name(cond) is not None
                 if has_rule or spell_desc:

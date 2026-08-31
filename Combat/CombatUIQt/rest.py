@@ -1,11 +1,21 @@
-"""Headless long-rest checkpointing and the short-rest healing window.
+"""Long-rest checkpointing and the short-rest healing window.
 
-Both paths reuse CombatAppQt to reconstruct the party's current state (it
+A long rest empties the current player log in place: the tracked party's
+character sheets are always built at full HP, full spell slots, and zero
+feature uses spent, so an empty log already replays to a fully rested party
+on the next run — no manual restoration needed. Before it's cleared, the
+log's full session history is archived to a new, timestamped sibling path
+so nothing is lost.
+
+A short rest reuses CombatAppQt to reconstruct the party's current state (it
 already knows how to replay a player log onto freshly-built characters —
-see LoggingMixin._init_player_log) without ever calling `.run()`, so no
-combat window or QApplication event loop is created for a long rest.
+see LoggingMixin._init_player_log) without ever calling `.run()`, and opens
+a small standalone window — not the main combat window — to manually heal
+each player and regain any short-rest-cadence feature uses (e.g. Channel
+Divinity), appending the result to the same log.
 """
 
+import json
 import sys
 from datetime import datetime
 from pathlib import Path
@@ -23,11 +33,15 @@ from PyQt6.QtWidgets import (
     QWidget,
 )
 
+from CharacterContent.Features.Core.BaseFeatures import RegainedOn
+
 import Combat.CombatantGroups as CombatantGroups
 from Combat.Definitions import Action
 
 from .app import CombatAppQt
 from .styles import QSS
+
+SHORT_REST_CADENCES = {RegainedOn.SHORT_REST, RegainedOn.SHORT_OR_LONG_REST}
 
 
 def _rest_checkpoint_path(player_log_path: str, suffix: str) -> str:
@@ -38,77 +52,67 @@ def _rest_checkpoint_path(player_log_path: str, suffix: str) -> str:
     return str(src.with_name(f"{src.stem}_{suffix}_{timestamp}{src.suffix}"))
 
 
-def _build_party_state(player_log_path: str, write_path: str | None) -> CombatAppQt:
+def _build_party_state(player_log_path: str) -> CombatAppQt:
     """Headlessly replay player_log_path onto a fresh CombatAppQt instance
-    (no window, no event loop — .run() is never called). If write_path is
-    given, all further writes to the player log go there instead of
-    player_log_path, leaving the original file untouched."""
+    (no window, no event loop — .run() is never called)."""
     players = CombatantGroups.get_players_group()
     return CombatAppQt(
         combatants=[],
         character_sheets=players,
         player_log_path=player_log_path,
-        player_log_write_path=write_path,
         scenario_name=None,
     )
 
 
-def _restore_hp(app: CombatAppQt, char: dict, note: str):
-    if char["hp"] >= char["max_hp"]:
+def _restore_feature_uses(app: CombatAppQt, char: dict, cadences: set, note: str):
+    stat_block = char.get("_stat_block")
+    if stat_block is None:
         return
-    was_downed = app._char_death_state(char) != "alive"
-    heal = char["max_hp"] - char["hp"]
-    char["hp"] = char["max_hp"]
-    heal_value = {"heal": heal, "source_name": None, "target_name": char["name"]}
-    app.history.append((Action.HEAL, heal_value))
-    app._log_event(
-        f"{char['name']} heals {heal} HP ({note})",
-        character=char["name"],
-        action=Action.HEAL,
-        value=heal_value,
-    )
-    if was_downed:
-        char["death_saves_fail"] = 0
-        char["death_saves_success"] = 0
-    app._apply_bloodied_condition(char)
-
-
-def _restore_spell_slots(app: CombatAppQt, char: dict):
-    max_slots = char.get("max_spell_slots", {})
-    for level, full_count in max_slots.items():
-        current = char["spell_slots"].get(level, 0)
-        for _ in range(full_count - current):
-            char["spell_slots"][level] = char["spell_slots"].get(level, 0) + 1
-            app.history.append((Action.ADD_SPELL_SLOT, level))
+    used = char.setdefault("feature_uses_used", {})
+    for feature in char.get("_feature_objects", []):
+        if feature.uses is None:
+            continue
+        if feature.regained_on(stat_block) not in cadences:
+            continue
+        for _ in range(used.get(feature.name, 0)):
+            used[feature.name] = max(used.get(feature.name, 0) - 1, 0)
+            app.history.append((Action.REGAIN_FEATURE_CHARGE, feature.name))
             app._log_event(
-                f"{char['name']} regains a Level {level} spell slot (long rest)",
+                f"{char['name']} regains a use of {feature.name} ({note})",
                 character=char["name"],
-                action=Action.ADD_SPELL_SLOT,
-                value=level,
+                action=Action.REGAIN_FEATURE_CHARGE,
+                value=feature.name,
             )
 
 
 def apply_long_rest(player_log_path: str) -> str:
-    """Fully heal and restore spell slots for every tracked player, writing
-    the result to a NEW, appropriately-named player log file (the original
-    is left untouched) and returning its path. Never opens a window."""
-    write_path = _rest_checkpoint_path(player_log_path, "long_rest")
-    app = _build_party_state(player_log_path, write_path)
-    for char in app.characters:
-        if not char.get("_is_player"):
-            continue
-        _restore_hp(app, char, note="long rest")
-        _restore_spell_slots(app, char)
-    app._write_player_log()
-    return write_path
+    """Archive the current player log's full session history to a new,
+    timestamped sibling path, then empty the current log in place and
+    return the backup path. An empty log already replays to a fully rested
+    party — full HP, full spell slots, zero feature uses spent — since
+    character sheets are always built that way. Never opens a window."""
+    src = Path(player_log_path)
+    backup_path = Path(_rest_checkpoint_path(player_log_path, "long_rest"))
+    backup_path.parent.mkdir(parents=True, exist_ok=True)
+    if src.exists():
+        backup_path.write_text(src.read_text())
+    else:
+        backup_path.write_text(json.dumps({"sessions": []}, indent=2))
+    src.parent.mkdir(parents=True, exist_ok=True)
+    src.write_text(json.dumps({"sessions": []}, indent=2))
+    return str(backup_path)
 
 
 def run_short_rest(player_log_path: str):
     """Open a small standalone healing window (not the main combat window)
-    letting each tracked player be healed a manually-entered amount. Heals
-    are appended to the same player log passed in — no new file is created."""
-    app = _build_party_state(player_log_path, write_path=None)
+    letting each tracked player be healed a manually-entered amount, and
+    automatically regain any short-rest-cadence feature uses. Heals and
+    regains are appended to the same player log passed in — no new file is
+    created."""
+    app = _build_party_state(player_log_path)
     players = [c for c in app.characters if c.get("_is_player")]
+    for char in players:
+        _restore_feature_uses(app, char, SHORT_REST_CADENCES, note="short rest")
 
     qapp = QApplication.instance() or QApplication(sys.argv)
     qapp.setStyleSheet(QSS)

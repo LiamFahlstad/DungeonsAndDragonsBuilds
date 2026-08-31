@@ -34,10 +34,11 @@ if __name__ == "__main__":
         choices=["long", "short"],
         default=None,
         help="Apply a rest to the tracked party instead of launching a session (requires "
-        "--player-log). 'long' fully restores HP and spell slots and writes a new, "
-        "timestamped player log file, without opening any window. 'short' opens a small "
-        "healing window (not the main combat window) where each player can be healed a "
-        "manually-entered amount, updating the existing player log in place.",
+        "--player-log). 'long' fully restores HP and spell slots by resetting the player "
+        "log in place, first backing up its session history to a new, timestamped sibling "
+        "file, without opening any window. 'short' opens a small healing window (not the "
+        "main combat window) where each player can be healed a manually-entered amount, "
+        "updating the existing player log in place.",
     )
     args = parser.parse_args()
 
@@ -48,8 +49,8 @@ if __name__ == "__main__":
         from Combat.CombatUIQt.rest import apply_long_rest, run_short_rest
 
         if args.rest == "long":
-            new_path = apply_long_rest(args.player_log)
-            print(f"Long rest applied. New player log: {new_path}")
+            backup_path = apply_long_rest(args.player_log)
+            print(f"Long rest applied. Player log reset; old session history backed up to: {backup_path}")
         else:
             run_short_rest(args.player_log)
         sys.exit(0)

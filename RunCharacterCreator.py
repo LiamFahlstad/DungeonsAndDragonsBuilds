@@ -3,48 +3,42 @@ import importlib
 import inspect
 import pkgutil
 
-import Core.Definitions as Definitions
 import Builds.Examples
-from Builds.Characters import (
-    Y2024_Artificer_BattleSmith_PetraGearhollow,
-    Y2024_Artificer_Cartographer_ObmarStalskagg,
-    Y2024_Barbarian_Berserker_YmiraSkullcrusher,
-    Y2024_Barbarian_WorldTree_DagnyEvergrasp,
-    Y2024_Bard_Glamour_IselleMoonweave,
-    Y2024_Bard_Lore_TobiasGreyquill,
-    Y2024_Bard_Valor_Clover,
-    Y2024_Cleric_Knowledge_ThaddeusLoreweaver,
-    Y2024_Cleric_Light_SolenneBrightward,
-    Y2024_Cleric_Light_Grabriel,
-    Y2024_Druid_Moon_UrsalineNightpelt,
-    Y2024_Monk_Elements_KragStormfist,
-    Y2024_Fighter_BattleMaster_ReynardSteelvow,
-    Y2024_Fighter_Champion_OsricIronheart,
-    Y2024_Fighter_Champion_TaliaSwiftguard,
-    Y2024_Monk_Shadow_UmbraSilentfang,
-    Y2024_Monk_Elements_KiviJatti,
-    Y2024_Paladin_Glory_BalderSunoath,
-    Y2024_Paladin_Vengeance_NadiaIronvow,
-    Y2024_Paladin_Devotion_ElricPactsworn,
-    Y2024_Paladin_Devotion_Edmund,
-    Y2024_Ranger_BeastMaster_OrinPackleader,
-    Y2024_Ranger_GloomStalker_NyxShadowtracker,
-    Y2024_Rogue_ArcaneTrickster_ThumSchtock,
-    Y2024_Rogue_Assassin_LysandraNightblade,
-    Y2024_Rogue_ShadowMonk_KagenVoidstep,
-    Y2024_Sorcerer_Draconic_IgnatiaEmberscale,
-    Y2024_Warlock_Archfey_WrennaThornpact,
-    Y2024_Warlock_Archfey_CaelumBladefey,
-    Y2024_Wizard_Bladesinger_IlyanaBladesong,
-    Y2024_Wizard_Divination_PercivalFarsight,
-)
-from Builds.Tests import (
-    SpellSlotTestWizard5,
-    SpellSlotTestPaladin5,
-    SpellSlotTestPaladin4Wizard3,
-    SpellSlotTestWizard3Warlock3,
-)
+import Core.Definitions as Definitions
 from Builds.CharacterBuilder import CharacterBuilder
+from Builds.Characters import (Y2024_Artificer_BattleSmith_PetraGearhollow,
+                               Y2024_Artificer_Cartographer_ObmarStalskagg,
+                               Y2024_Barbarian_Berserker_YmiraSkullcrusher,
+                               Y2024_Barbarian_WorldTree_DagnyEvergrasp,
+                               Y2024_Bard_Glamour_IselleMoonweave,
+                               Y2024_Bard_Lore_TobiasGreyquill,
+                               Y2024_Bard_Valor_Clover,
+                               Y2024_Cleric_Knowledge_ThaddeusLoreweaver,
+                               Y2024_Cleric_Light_GabrielGreybeard,
+                               Y2024_Cleric_Light_SolenneBrightward,
+                               Y2024_Druid_Moon_UrsalineNightpelt,
+                               Y2024_Fighter_BattleMaster_ReynardSteelvow,
+                               Y2024_Fighter_Champion_OsricIronheart,
+                               Y2024_Fighter_Champion_TaliaSwiftguard,
+                               Y2024_Monk_Elements_KiviJatti,
+                               Y2024_Monk_Elements_KragStormfist,
+                               Y2024_Monk_Shadow_UmbraSilentfang,
+                               Y2024_Paladin_Devotion_Edmund,
+                               Y2024_Paladin_Devotion_ElricPactsworn,
+                               Y2024_Paladin_Glory_BalderSunoath,
+                               Y2024_Paladin_Vengeance_NadiaIronvow,
+                               Y2024_Ranger_BeastMaster_OrinPackleader,
+                               Y2024_Ranger_GloomStalker_NyxShadowtracker,
+                               Y2024_Rogue_ArcaneTrickster_ThumSchtock,
+                               Y2024_Rogue_Assassin_LysandraNightblade,
+                               Y2024_Rogue_ShadowMonk_KagenVoidstep,
+                               Y2024_Sorcerer_Draconic_IgnatiaEmberscale,
+                               Y2024_Warlock_Archfey_CaelumBladefey,
+                               Y2024_Warlock_Archfey_WrennaThornpact,
+                               Y2024_Wizard_Bladesinger_IlyanaBladesong,
+                               Y2024_Wizard_Divination_PercivalFarsight)
+from Builds.Tests import (SpellSlotTestPaladin4Wizard3, SpellSlotTestPaladin5,
+                          SpellSlotTestWizard3Warlock3, SpellSlotTestWizard5)
 from Utils.CharacterSheetWriters import HtmlCharacterSheetWriter
 
 
@@ -61,7 +55,7 @@ class BuildSelector:
             "Y2024_Bard_Valor_Clover": Y2024_Bard_Valor_Clover.Y2024BardValorCloverCharacterBuilder(),
             "Y2024_Cleric_Knowledge_ThaddeusLoreweaver": Y2024_Cleric_Knowledge_ThaddeusLoreweaver.Y2024ClericKnowledgeThaddeusLoreweaverCharacterBuilder(),
             "Y2024_Cleric_Light_SolenneBrightward": Y2024_Cleric_Light_SolenneBrightward.Y2024ClericLightSolenneBrightwardCharacterBuilder(),
-            "Y2024_Cleric_Light_Grabriel": Y2024_Cleric_Light_Grabriel.Y2024ClericLightGrabrielCharacterBuilder(),
+            "Y2024_Cleric_Light_GabrielGreybeard": Y2024_Cleric_Light_GabrielGreybeard.Y2024ClericLightGabrielGreybeardCharacterBuilder(),
             "Y2024_Druid_Moon_UrsalineNightpelt": Y2024_Druid_Moon_UrsalineNightpelt.Y2024DruidMoonUrsalineNightpeltCharacterBuilder(),
             "Y2024_Monk_Elements_KragStormfist": Y2024_Monk_Elements_KragStormfist.Y2024MonkElementsKragStormfistCharacterBuilder(),
             "Y2024_Fighter_BattleMaster_ReynardSteelvow": Y2024_Fighter_BattleMaster_ReynardSteelvow.Y2024FighterBattleMasterReynardSteelvowCharacterBuilder(),

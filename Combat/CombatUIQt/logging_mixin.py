@@ -241,6 +241,20 @@ class LoggingMixin:
                         )
             else:
                 char["temp_hp"] -= value
+        elif action == Action.ENABLE_FEATURE:
+            feature_name = value["feature_name"] if isinstance(value, dict) else value
+            feature = {f.name: f for f in char.get("_feature_objects", [])}.get(feature_name)
+            char.setdefault("stats", _default_stats())
+            char["stats"]["features_enabled"] = max(
+                char["stats"].get("features_enabled", 0) - 1, 0
+            )
+            decrement_named_stat(char["stats"], "features_enabled_by_name", feature_name)
+            if feature is not None and feature.uses is not None:
+                used = char.setdefault("feature_uses_used", {})
+                used[feature_name] = max(used.get(feature_name, 0) - 1, 0)
+        elif action == Action.REGAIN_FEATURE_CHARGE:
+            used = char.setdefault("feature_uses_used", {})
+            used[value] = used.get(value, 0) + 1
 
         if action in (Action.DAMAGE, Action.HEAL):
             self._apply_bloodied_condition(char)
@@ -464,6 +478,18 @@ class LoggingMixin:
                         )
             else:
                 char["temp_hp"] = char.get("temp_hp", 0) + value
+        elif action == Action.ENABLE_FEATURE:
+            feature_name = value["feature_name"] if isinstance(value, dict) else value
+            char.setdefault("stats", _default_stats())
+            char["stats"]["features_enabled"] = char["stats"].get("features_enabled", 0) + 1
+            increment_named_stat(char["stats"], "features_enabled_by_name", feature_name)
+            feature = {f.name: f for f in char.get("_feature_objects", [])}.get(feature_name)
+            if feature is not None and feature.uses is not None:
+                used = char.setdefault("feature_uses_used", {})
+                used[feature_name] = used.get(feature_name, 0) + 1
+        elif action == Action.REGAIN_FEATURE_CHARGE:
+            used = char.setdefault("feature_uses_used", {})
+            used[value] = max(used.get(value, 0) - 1, 0)
 
     def _compute_player_log_stats(self) -> dict[str, dict]:
         """Aggregate lifetime stats per character name across the player log."""

@@ -57,7 +57,6 @@ class CombatAppQt(
         combatants_per_column: int = 4,
         resume_log_path: str | None = None,
         player_log_path: str | None = None,
-        player_log_write_path: str | None = None,
         scenario_name: str | None = None,
     ):
         self.combatants_per_column = combatants_per_column
@@ -88,12 +87,6 @@ class CombatAppQt(
         self.player_log_data: dict = {"sessions": []}
         if self.player_log_file:
             self._init_player_log()
-            # A rest checkpoint reads the party's current state from player_log_path
-            # but must not mutate that file — redirect writes (including the one
-            # below, via _write_log -> _write_player_log) to a fresh file instead.
-            if player_log_write_path:
-                self.player_log_file = Path(player_log_write_path)
-                self.player_log_file.parent.mkdir(parents=True, exist_ok=True)
 
         log_dir = Path("Combat/CombatLogs")
         log_dir.mkdir(exist_ok=True)
@@ -158,8 +151,7 @@ class CombatAppQt(
                 "death_saves_fail": 0,
                 "death_saves_success": 0,
                 "stats": _default_stats(),
-                "spell_slots": dict(spell_slots),
-                "max_spell_slots": dict(spell_slots),
+                "spell_slots": spell_slots,
                 "Ability Scores": {
                     ability.short_name: character.get_ability_score(ability)
                     for ability in Definitions.Ability

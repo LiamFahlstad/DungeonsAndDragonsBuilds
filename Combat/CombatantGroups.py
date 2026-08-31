@@ -6,8 +6,8 @@ from Builds.Characters.Y2024_Artificer_Cartographer_ObmarStalskagg import (
 from Builds.Characters.Y2024_Bard_Valor_Clover import (
     Y2024BardValorCloverCharacterBuilder,
 )
-from Builds.Characters.Y2024_Cleric_Light_Grabriel import (
-    Y2024ClericLightGrabrielCharacterBuilder,
+from Builds.Characters.Y2024_Cleric_Light_GabrielGreybeard import (
+    Y2024ClericLightGabrielGreybeardCharacterBuilder,
 )
 from Builds.Characters.Y2024_Monk_Elements_KiviJatti import (
     Y2024MonkElementsKiviJattiCharacterBuilder,
@@ -26,7 +26,7 @@ def get_players_group() -> list:
         Y2024ArtificerCartographerObmarStalskaggCharacterBuilder().build(),
         Y2024PaladinDevotionEdmundCharacterBuilder().build(),
         Y2024BardValorCloverCharacterBuilder().build(),
-        Y2024ClericLightGrabrielCharacterBuilder().build(),
+        Y2024ClericLightGabrielGreybeardCharacterBuilder().build(),
         Y2024RogueArcaneTricksterThumSchtockCharacterBuilder().build(),
         Y2024MonkElementsKiviJattiCharacterBuilder().build(),
     ]
@@ -37,7 +37,7 @@ def get_players_group_not_obmar() -> list:
     return [
         Y2024PaladinDevotionEdmundCharacterBuilder().build(),
         Y2024BardValorCloverCharacterBuilder().build(),
-        Y2024ClericLightGrabrielCharacterBuilder().build(),
+        Y2024ClericLightGabrielGreybeardCharacterBuilder().build(),
         Y2024RogueArcaneTricksterThumSchtockCharacterBuilder().build(),
         Y2024MonkElementsKiviJattiCharacterBuilder().build(),
     ]
