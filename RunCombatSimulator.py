@@ -40,10 +40,21 @@ if __name__ == "__main__":
         "main combat window) where each player can be healed a manually-entered amount, "
         "updating the existing player log in place.",
     )
+    parser.add_argument(
+        "--difficulty",
+        action="store_true",
+        help="Print the D&D 2024 difficulty analysis for --scenario's encounter against the "
+        "party's levels, then exit without opening the application window. Requires character "
+        "levels: pass --player-log to source them from a tracked party, or use a scenario whose "
+        "build_character_sheets provides them.",
+    )
     args = parser.parse_args()
 
     if args.rest and not args.player_log:
         parser.error("--rest requires --player-log")
+
+    if args.difficulty and args.rest:
+        parser.error("--difficulty cannot be combined with --rest")
 
     if args.rest:
         from Combat.CombatUIQt.rest import apply_long_rest, run_short_rest
@@ -69,6 +80,35 @@ if __name__ == "__main__":
             cs for cs in character_sheets if cs.character_name not in player_names
         ]
         character_sheets = players_group + character_sheets
+
+    if args.difficulty:
+        if not combatants:
+            parser.error("--difficulty requires --scenario to have monsters to evaluate")
+        if not character_sheets:
+            parser.error(
+                "--difficulty requires character levels; pass --player-log to load a "
+                "tracked party, or use a scenario whose build_character_sheets provides them"
+            )
+
+        from Combat.EncounterDifficulty import evaluate_encounter_combatants
+
+        character_levels = [cs.character_level for cs in character_sheets]
+        result = evaluate_encounter_combatants(character_levels, combatants)
+
+        print(f"Scenario: {args.scenario}")
+        print(f"Party levels: {character_levels}")
+        print(f"Monsters: {[c.combatant_type for c in combatants]}")
+        print(f"Base XP: {result.base_xp}")
+        print(f"Adjusted XP: {result.adjusted_xp}")
+        print(
+            "Party thresholds -- "
+            f"Low: {result.thresholds.low}, "
+            f"Moderate: {result.thresholds.moderate}, "
+            f"High: {result.thresholds.high}"
+        )
+        print(f"Difficulty: {result.difficulty}")
+        print(f"XP awarded: {result.xp_awarded}")
+        sys.exit(0)
 
     app = CombatAppQt(
         combatants=combatants,

@@ -49,7 +49,7 @@ ATTRS = [
 
 
 def build_stats(official_monsters):
-    """stats[attr][cr] = (mean, std, n), fit from official monsters only."""
+    """stats[attr][cr] = (mean, std, median, min, max, n), fit from official monsters only."""
     by_cr = {}
     for m in official_monsters:
         by_cr.setdefault(m["cr"], []).append(m)
@@ -61,7 +61,14 @@ def build_stats(official_monsters):
             if len(values) >= 2:
                 # Sample standard deviation (n-1), matching groupStats() in
                 # the HTML report's JS -- keep these two tools' numbers in sync.
-                stats[key][cr] = (statistics.mean(values), statistics.stdev(values), len(values))
+                stats[key][cr] = (
+                    statistics.mean(values),
+                    statistics.stdev(values),
+                    statistics.median(values),
+                    min(values),
+                    max(values),
+                    len(values),
+                )
     return stats
 
 
@@ -71,22 +78,23 @@ def normal_cdf(x):
 
 def score_monster(m, stats):
     """Returns (score, k, breakdown) where breakdown is a list of
-    (label, value, mean, std, z) with mean/std/z = None when that
-    attribute had no usable CR-tier distribution. z is already sign-flipped
-    for "lower is better" attributes, so positive always means "better."""
+    (label, value, mean, std, median, lo, hi, z) with mean/std/median/lo/hi/z
+    = None when that attribute had no usable CR-tier distribution. z is
+    already sign-flipped for "lower is better" attributes, so positive
+    always means "better."""
     zs = []
     breakdown = []
     for key, label, invert in ATTRS:
         v = m[key]
         tier = stats[key].get(m["cr"])
         if v is None or tier is None:
-            breakdown.append((label, v, None, None, None))
+            breakdown.append((label, v, None, None, None, None, None, None))
             continue
-        mean, std, _n = tier
+        mean, std, median, lo, hi, _n = tier
         raw_z = (v - mean) / std if std > 1e-9 else 0.0
         z = -raw_z if invert else raw_z
         zs.append(z)
-        breakdown.append((label, v, mean, std, z))
+        breakdown.append((label, v, mean, std, median, lo, hi, z))
 
     k = len(zs)
     avg_z = sum(zs) / k if k else 0.0
@@ -134,11 +142,14 @@ def main():
         tag = "  [homebrew]" if is_homebrew else ""
         print(f"{m['name']:<32} CR {m['cr']:<5} score {score:.2f}  ({k}/{len(ATTRS)} attrs){tag}")
         if args.verbose:
-            for label, v, mean, std, z in breakdown:
+            for label, v, mean, std, median, lo, hi, z in breakdown:
                 if z is None:
                     print(f"    {label:<7} {v!s:>6}   n/a (insufficient CR-tier data)")
                 else:
-                    print(f"    {label:<7} {v!s:>6}   mean {mean:6.1f}  sd {std:5.1f}   z {z:+.2f}")
+                    print(
+                        f"    {label:<7} {v!s:>6}   mean {mean:6.1f}  median {median:6.1f}  "
+                        f"sd {std:5.1f}   min {lo:6.1f}  max {hi:6.1f}   z {z:+.2f}"
+                    )
 
     sys.exit(0 if ok else 1)
 

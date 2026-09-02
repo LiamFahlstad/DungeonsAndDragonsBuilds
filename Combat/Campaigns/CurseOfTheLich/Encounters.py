@@ -90,13 +90,21 @@ def get_mouth_that_walks_combatants() -> list[Combatants.BasicCombatantData]:
 
 
 def get_accursed_ambush_combatants() -> list[Combatants.BasicCombatantData]:
-    physical_accursed1 = PhysicalAccursed()
-    physical_accursed1.set_name("Physical Accursed 1")
+    accursed_group_of5_1 = AccursedGroupOf5()
+    accursed_group_of5_1.set_name("(1) Accursed Group of 5")
 
-    physical_accursed2 = PhysicalAccursed()
-    physical_accursed2.set_name("Physical Accursed 2")
+    accursed_group_of5_2 = AccursedGroupOf5()
+    accursed_group_of5_2.set_name("(2) Accursed Group of 5")
 
-    accursed_group = AccursedGroupOf3()
-    accursed_group.set_name("Accursed Group of 3")
+    accursed_group_of5_3 = AccursedGroupOf5()
+    accursed_group_of5_3.set_name("(3) Accursed Group of 5")
 
-    return [physical_accursed1, physical_accursed2, accursed_group]
+    accursed_group_of3 = AccursedGroupOf3()
+    accursed_group_of3.set_name("Accursed Group of 3")
+
+    return [
+        accursed_group_of5_1,
+        accursed_group_of5_2,
+        accursed_group_of5_3,
+        accursed_group_of3,
+    ]
