@@ -8,6 +8,8 @@ from Combat.Definitions import (
     MeleeAttack,
     MonsterAbility,
     MonsterType,
+    Multiattack,
+    RangedAttack,
     Size,
 )
 from Core.Definitions import Ability, Skill
@@ -237,13 +239,18 @@ class ArmoredAccursed(ExtendedCombatantData):
                 ),
             ],
             actions=[
-                MonsterAbility(
-                    name="Multiattack",
-                    description="The Accursed Warden makes two Rusted Halberd attacks.",
+                Multiattack(
+                    creature_name="Accursed Warden",
+                    attacks_text="two Rusted Halberd attacks",
                 ),
-                MonsterAbility(
+                MeleeAttack(
                     name="Rusted Halberd",
-                    description="Melee Attack Roll: +4, reach 10 ft. Hit: 5 (1d10) Slashing damage.",
+                    attack_bonus=4,
+                    reach_ft=10,
+                    dice_count=1,
+                    dice_type=DiceType.D10,
+                    damage_bonus=0,
+                    damage_type=DamageType.SLASHING,
                 ),
             ],
             bonus_actions=[],
@@ -311,9 +318,14 @@ class BrainBloatedAccursed(ExtendedCombatantData):
                 ),
             ],
             actions=[
-                MonsterAbility(
+                RangedAttack(
                     name="Mind Shatter",
-                    description="Ranged Attack Roll: +4, range 30 ft. Hit: 5 (1d8 + 1) Psychic damage.",
+                    attack_bonus=4,
+                    range_ft=30,
+                    dice_count=1,
+                    dice_type=DiceType.D8,
+                    damage_bonus=1,
+                    damage_type=DamageType.PSYCHIC,
                 ),
             ],
             bonus_actions=[],
@@ -377,13 +389,24 @@ class CurseHighAccursed(ExtendedCombatantData):
                 ),
             ],
             actions=[
-                MonsterAbility(
+                MeleeAttack(
                     name="Manic Strike",
-                    description="Melee Attack Roll: +3, reach 5 ft. Hit: 4 (1d6 + 1) Bludgeoning damage.",
+                    attack_bonus=3,
+                    reach_ft=5,
+                    dice_count=1,
+                    dice_type=DiceType.D6,
+                    damage_bonus=1,
+                    damage_type=DamageType.BLUDGEONING,
                 ),
-                MonsterAbility(
+                MeleeAttack(
                     name="Clinging Euphoria",
-                    description="Melee Attack Roll: +4, reach 5 ft. Hit: 4 (1d6 + 1) Slashing damage. The target must succeed on a DC 16 Strength or Dexterity saving throw or the Curse-High Accursed attaches to its back. While attached, it moves with the target, cannot be targeted separately, and the target's speed is halved. At the start of the Accursed's turn, the target takes 3 (1d6) Psychic damage. The target can use its action to make a DC 16 Strength (Athletics) or Dexterity (Acrobatics) check to detach it; an adjacent creature can instead make a DC 8 Strength (Athletics) check.",
+                    attack_bonus=4,
+                    reach_ft=5,
+                    dice_count=1,
+                    dice_type=DiceType.D6,
+                    damage_bonus=1,
+                    damage_type=DamageType.SLASHING,
+                    additional_ruling="The target must succeed on a DC 16 Strength or Dexterity saving throw or the Curse-High Accursed attaches to its back. While attached, it moves with the target, cannot be targeted separately, and the target's speed is halved. At the start of the Accursed's turn, the target takes 3 (1d6) Psychic damage. The target can use its action to make a DC 16 Strength (Athletics) or Dexterity (Acrobatics) check to detach it; an adjacent creature can instead make a DC 8 Strength (Athletics) check.",
                 ),
             ],
             bonus_actions=[],

@@ -4,8 +4,10 @@ from Combat.Definitions import (
     DamageType,
     DamageTypeEntry,
     ExtendedCombatantData,
+    LegendaryResistance,
     MonsterAbility,
     MonsterType,
+    Multiattack,
     Size,
     Skill,
 )
@@ -60,9 +62,10 @@ class TheMouthThatWalks(ExtendedCombatantData):
             senses="blindsight 60 ft. (blind beyond this radius), Passive Perception 10",
             languages="understands Common and Undercommon but can speak only in broken, overlapping fragments of Noc'tra",
             traits=[
-                MonsterAbility(
-                    name="Legendary Resistance (1/Day)",
-                    description="If the Mouth fails a saving throw, it can choose to succeed instead, its ruined mind refusing the concept of a true, final death.",
+                LegendaryResistance(
+                    creature_name="Mouth",
+                    uses=1,
+                    flavor_note="its ruined mind refusing the concept of a true, final death",
                 ),
                 MonsterAbility(
                     name="The Ceaseless Litany",
@@ -150,9 +153,9 @@ class TheHunter(ExtendedCombatantData):
                 ),
             ],
             actions=[
-                MonsterAbility(
-                    name="Multiattack",
-                    description="The Hunter makes two Cursed Kris attacks.",
+                Multiattack(
+                    creature_name="Hunter",
+                    attacks_text="two Cursed Kris attacks",
                 ),
                 MonsterAbility(
                     name="Cursed Kris",

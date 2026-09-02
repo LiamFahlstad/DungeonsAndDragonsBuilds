@@ -8,6 +8,8 @@ from Combat.Definitions import (
     MeleeAttack,
     MonsterAbility,
     MonsterType,
+    Multiattack,
+    RangedAttack,
     Size,
     Skill,
 )
@@ -68,13 +70,24 @@ class CommonCultist(ExtendedCombatantData):
                 ),
             ],
             actions=[
-                MonsterAbility(
+                MeleeAttack(
                     name="Scavenged Sickle",
-                    description="Melee Attack Roll: +4, reach 5 ft. Hit: 5 (1d6 + 2) Slashing damage.",
+                    attack_bonus=4,
+                    reach_ft=5,
+                    dice_count=1,
+                    dice_type=DiceType.D6,
+                    damage_bonus=2,
+                    damage_type=DamageType.SLASHING,
                 ),
-                MonsterAbility(
+                RangedAttack(
                     name="Scavenged Sling",
-                    description="Ranged Attack Roll: +4, range 30/120 ft. Hit: 4 (1d4 + 2) Bludgeoning damage.",
+                    attack_bonus=4,
+                    range_ft=30,
+                    long_range_ft=120,
+                    dice_count=1,
+                    dice_type=DiceType.D4,
+                    damage_bonus=2,
+                    damage_type=DamageType.BLUDGEONING,
                 ),
             ],
             bonus_actions=[],
@@ -212,9 +225,14 @@ class CurseCracked(ExtendedCombatantData):
                 ),
             ],
             actions=[
-                MonsterAbility(
+                RangedAttack(
                     name="Curse Bolt",
-                    description="Ranged Attack Roll: +5, range 60 ft. Hit: 9 (2d6 + 2) Force damage.",
+                    attack_bonus=5,
+                    range_ft=60,
+                    dice_count=2,
+                    dice_type=DiceType.D6,
+                    damage_bonus=2,
+                    damage_type=DamageType.FORCE,
                 ),
                 MonsterAbility(
                     name="Cracking Surge (Recharge 5-6)",
@@ -293,9 +311,9 @@ class CurseBodyBroken(ExtendedCombatantData):
                 ),
             ],
             actions=[
-                MonsterAbility(
-                    name="Multiattack",
-                    description="The Curse Body Broken makes two Eldritch Strike attacks.",
+                Multiattack(
+                    creature_name="Curse Body Broken",
+                    attacks_text="two Eldritch Strike attacks",
                 ),
                 MonsterAbility(
                     name="Eldritch Strike",
@@ -371,9 +389,14 @@ class CurseMindBroken(ExtendedCombatantData):
                 ),
             ],
             actions=[
-                MonsterAbility(
+                RangedAttack(
                     name="Mind Lash",
-                    description="Ranged Attack Roll: +4, range 30 ft. Hit: 9 (2d6 + 2) Psychic damage.",
+                    attack_bonus=4,
+                    range_ft=30,
+                    dice_count=2,
+                    dice_type=DiceType.D6,
+                    damage_bonus=2,
+                    damage_type=DamageType.PSYCHIC,
                 ),
                 MonsterAbility(
                     name="Memory Shatter (Recharge 5-6)",

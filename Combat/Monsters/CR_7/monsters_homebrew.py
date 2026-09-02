@@ -3,9 +3,14 @@ from Combat.Definitions import (
     Condition,
     DamageType,
     DamageTypeEntry,
+    DiceType,
     ExtendedCombatantData,
+    LegendaryResistance,
+    MeleeAttack,
     MonsterAbility,
     MonsterType,
+    Multiattack,
+    SavingThrowEffect,
     Size,
     Skill,
 )
@@ -61,9 +66,9 @@ class TheCrownWithoutAKing(ExtendedCombatantData):
             senses="Truesight 30 ft., Passive Perception 11",
             languages="telepathy 60 ft., understands all languages known by its current or most recent host",
             traits=[
-                MonsterAbility(
-                    name="Legendary Resistance (1/Day)",
-                    description="If the crown fails a saving throw, it can choose to succeed instead.",
+                LegendaryResistance(
+                    creature_name="crown",
+                    uses=1,
                 ),
                 MonsterAbility(
                     name="Discorporate",
@@ -71,9 +76,14 @@ class TheCrownWithoutAKing(ExtendedCombatantData):
                 ),
             ],
             actions=[
-                MonsterAbility(
+                MeleeAttack(
                     name="Crown Spike",
-                    description="Melee Attack Roll: +7, reach 5 ft. Hit: 9 (2d6 + 2) Piercing damage.",
+                    attack_bonus=7,
+                    reach_ft=5,
+                    dice_count=2,
+                    dice_type=DiceType.D6,
+                    damage_bonus=2,
+                    damage_type=DamageType.PIERCING,
                 ),
                 MonsterAbility(
                     name="Coronation (Recharge 5-6)",
@@ -145,9 +155,10 @@ class TheRoadChoir(ExtendedCombatantData):
             senses="darkvision 60 ft., tremorsense 30 ft., Passive Perception 14",
             languages="understands Common and Undercommon but speaks only in the overlapping, mismatched voices of the dozens fused within it",
             traits=[
-                MonsterAbility(
-                    name="Legendary Resistance (1/Day)",
-                    description="If the Road Choir fails a saving throw, it can choose to succeed instead, the fragments of a hundred stubborn wills refusing to let this body fall to a single failure.",
+                LegendaryResistance(
+                    creature_name="Road Choir",
+                    uses=1,
+                    flavor_note="the fragments of a hundred stubborn wills refusing to let this body fall to a single failure",
                 ),
                 MonsterAbility(
                     name="A Hundred Anchors",
@@ -163,17 +174,21 @@ class TheRoadChoir(ExtendedCombatantData):
                 ),
             ],
             actions=[
-                MonsterAbility(
-                    name="Multiattack",
-                    description="The Road Choir makes three Grasping Limb attacks. It can replace one of these attacks with a use of Swallowed Into the Mass.",
+                Multiattack(
+                    creature_name="Road Choir",
+                    attacks_text="three Grasping Limb attacks",
+                    extra_ruling="It can replace one of these attacks with a use of Swallowed Into the Mass.",
                 ),
                 MonsterAbility(
                     name="Grasping Limb",
                     description="Melee Attack Roll: +8, reach 10 ft. Hit: 12 (2d6 + 5) Bludgeoning damage plus 5 (1d8) Necrotic damage.",
                 ),
-                MonsterAbility(
+                SavingThrowEffect(
                     name="Swallowed Into the Mass",
-                    description="Strength Saving Throw: DC 16, one Large or smaller creature within 10 feet. Failure: The target is dragged into the writhing mass of bodies and has the Grappled condition (escape DC 16). Until the grapple ends, the target has the Restrained condition and takes 9 (2d8) Necrotic damage at the start of each of its turns as dozens of dead hands claw at it from every side. The Road Choir can have up to two creatures Grappled by this action at a time.",
+                    ability=Ability.STRENGTH,
+                    dc=16,
+                    target="one Large or smaller creature within 10 feet",
+                    failure_effect="The target is dragged into the writhing mass of bodies and has the Grappled condition (escape DC 16). Until the grapple ends, the target has the Restrained condition and takes 9 (2d8) Necrotic damage at the start of each of its turns as dozens of dead hands claw at it from every side. The Road Choir can have up to two creatures Grappled by this action at a time.",
                 ),
                 MonsterAbility(
                     name="Directions to Salvation (Recharge 5-6)",

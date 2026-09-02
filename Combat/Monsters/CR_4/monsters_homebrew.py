@@ -3,7 +3,9 @@ from Combat.Definitions import (
     Condition,
     DamageType,
     DamageTypeEntry,
+    DiceType,
     ExtendedCombatantData,
+    MeleeAttack,
     MonsterAbility,
     MonsterType,
     Size,
@@ -74,9 +76,15 @@ class MarshalVirel(ExtendedCombatantData):
                     name="Duelist's Rapier",
                     description="Melee Attack Roll: +6, reach 5 ft. Hit: 11 (1d8 + 6) Piercing damage. If this attack is a critical hit, the target must succeed on a DC 13 Constitution saving throw or have the Silenced condition (it can't speak or cast spells that require a Verbal component) until the end of its next turn.",
                 ),
-                MonsterAbility(
+                MeleeAttack(
                     name="Throat Strike (Recharge 5-6)",
-                    description="Melee Attack Roll: +6, reach 5 ft. Hit: 18 (2d8 + 9) Piercing damage. The target must succeed on a DC 13 Constitution saving throw or have the Silenced condition (it can't speak or cast spells that require a Verbal component) and can't take Reactions until the end of its next turn.",
+                    attack_bonus=6,
+                    reach_ft=5,
+                    dice_count=2,
+                    dice_type=DiceType.D8,
+                    damage_bonus=9,
+                    damage_type=DamageType.PIERCING,
+                    additional_ruling="The target must succeed on a DC 13 Constitution saving throw or have the Silenced condition (it can't speak or cast spells that require a Verbal component) and can't take Reactions until the end of its next turn.",
                 ),
             ],
             bonus_actions=[

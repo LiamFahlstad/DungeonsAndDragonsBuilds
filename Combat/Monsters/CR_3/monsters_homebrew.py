@@ -3,9 +3,12 @@ from Combat.Definitions import (
     Condition,
     DamageType,
     DamageTypeEntry,
+    DiceType,
     ExtendedCombatantData,
+    MeleeAttack,
     MonsterAbility,
     MonsterType,
+    Multiattack,
     Size,
     Skill,
 )
@@ -67,9 +70,9 @@ class CantorOfTheBlackChoir(ExtendedCombatantData):
                 ),
             ],
             actions=[
-                MonsterAbility(
-                    name="Multiattack",
-                    description="The Cantor makes two Curseward Lash attacks.",
+                Multiattack(
+                    creature_name="Cantor",
+                    attacks_text="two Curseward Lash attacks",
                 ),
                 MonsterAbility(
                     name="Curseward Lash",
@@ -150,9 +153,10 @@ class GarronTheKindly(ExtendedCombatantData):
                 ),
             ],
             actions=[
-                MonsterAbility(
-                    name="Multiattack",
-                    description="Garron makes two Surgeon's Maul attacks.",
+                Multiattack(
+                    creature_name="Garron",
+                    attacks_text="two Surgeon's Maul attacks",
+                    use_article=False,
                 ),
                 MonsterAbility(
                     name="Surgeon's Maul",
@@ -233,13 +237,19 @@ class SerCaldusTheVowOfSilence(ExtendedCombatantData):
                 ),
             ],
             actions=[
-                MonsterAbility(
-                    name="Multiattack",
-                    description="Ser Caldus makes two Silencing Blade attacks.",
+                Multiattack(
+                    creature_name="Ser Caldus",
+                    attacks_text="two Silencing Blade attacks",
+                    use_article=False,
                 ),
-                MonsterAbility(
+                MeleeAttack(
                     name="Silencing Blade",
-                    description="Melee Attack Roll: +6, reach 5 ft. Hit: 11 (2d6 + 4) Slashing damage.",
+                    attack_bonus=6,
+                    reach_ft=5,
+                    dice_count=2,
+                    dice_type=DiceType.D6,
+                    damage_bonus=4,
+                    damage_type=DamageType.SLASHING,
                 ),
                 MonsterAbility(
                     name="Rite of Silence (3/Day)",
@@ -316,13 +326,20 @@ class Greypaw(ExtendedCombatantData):
                 ),
             ],
             actions=[
-                MonsterAbility(
-                    name="Multiattack",
-                    description="Greypaw makes two Bite attacks.",
+                Multiattack(
+                    creature_name="Greypaw",
+                    attacks_text="two Bite attacks",
+                    use_article=False,
                 ),
-                MonsterAbility(
+                MeleeAttack(
                     name="Bite",
-                    description="Melee Attack Roll: +6, reach 5 ft. Hit: 13 (2d8 + 4) Piercing damage. If the target is a Medium or smaller creature, it must succeed on a DC 14 Strength saving throw or be knocked Prone.",
+                    attack_bonus=6,
+                    reach_ft=5,
+                    dice_count=2,
+                    dice_type=DiceType.D8,
+                    damage_bonus=4,
+                    damage_type=DamageType.PIERCING,
+                    additional_ruling="If the target is a Medium or smaller creature, it must succeed on a DC 14 Strength saving throw or be knocked Prone.",
                 ),
             ],
             bonus_actions=[],

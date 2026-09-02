@@ -182,6 +182,10 @@ class MeleeAttack(MonsterAbility):
     dice_type: DiceType = DiceType.D4
     damage_bonus: int = 0
     damage_type: DamageType = DamageType.BLUDGEONING
+    secondary_dice_count: int = 0
+    secondary_dice_type: DiceType = DiceType.D4
+    secondary_damage_bonus: int = 0
+    secondary_damage_type: Optional[DamageType] = None
     additional_ruling: str = ""
     description: str = field(init=False, default="")
 
@@ -192,10 +196,16 @@ class MeleeAttack(MonsterAbility):
             dice_notation += f" + {self.damage_bonus}"
         elif self.damage_bonus < 0:
             dice_notation += f" - {abs(self.damage_bonus)}"
+        secondary = ""
+        if self.secondary_dice_count > 0 and self.secondary_damage_type is not None:
+            sec_notation, sec_average = _format_dice_notation(
+                self.secondary_dice_count, self.secondary_dice_type, self.secondary_damage_bonus
+            )
+            secondary = f" plus {sec_average} ({sec_notation}) {self.secondary_damage_type.value} damage"
         ruling = f" {self.additional_ruling}" if self.additional_ruling else ""
         self.description = (
             f"Melee Attack Roll: +{self.attack_bonus}, reach {self.reach_ft} ft. "
-            f"Hit: {average} ({dice_notation}) {self.damage_type.value} damage.{ruling}"
+            f"Hit: {average} ({dice_notation}) {self.damage_type.value} damage{secondary}.{ruling}"
         )
 
 
@@ -227,6 +237,10 @@ class RangedAttack(MonsterAbility):
     dice_type: DiceType = DiceType.D4
     damage_bonus: int = 0
     damage_type: DamageType = DamageType.PIERCING
+    secondary_dice_count: int = 0
+    secondary_dice_type: DiceType = DiceType.D4
+    secondary_damage_bonus: int = 0
+    secondary_damage_type: Optional[DamageType] = None
     additional_ruling: str = ""
     description: str = field(init=False, default="")
 
@@ -239,10 +253,16 @@ class RangedAttack(MonsterAbility):
             if self.long_range_ft
             else f"{self.range_ft} ft."
         )
+        secondary = ""
+        if self.secondary_dice_count > 0 and self.secondary_damage_type is not None:
+            sec_notation, sec_average = _format_dice_notation(
+                self.secondary_dice_count, self.secondary_dice_type, self.secondary_damage_bonus
+            )
+            secondary = f" plus {sec_average} ({sec_notation}) {self.secondary_damage_type.value} damage"
         ruling = f" {self.additional_ruling}" if self.additional_ruling else ""
         self.description = (
             f"Ranged Attack Roll: +{self.attack_bonus}, range {range_text} "
-            f"Hit: {average} ({dice_notation}) {self.damage_type.value} damage.{ruling}"
+            f"Hit: {average} ({dice_notation}) {self.damage_type.value} damage{secondary}.{ruling}"
         )
 
 
@@ -321,13 +341,15 @@ class LegendaryResistance(MonsterAbility):
     creature_name: str = "creature"
     uses: int = 1
     lair_uses: Optional[int] = None
+    flavor_note: str = ""
 
     def __post_init__(self):
         lair_note = f", or {self.lair_uses}/Day in Lair" if self.lair_uses else ""
         self.name = f"Legendary Resistance ({self.uses}/Day{lair_note})"
+        tail = f", {self.flavor_note}" if self.flavor_note else ""
         self.description = (
             f"If the {self.creature_name} fails a saving throw, "
-            f"it can choose to succeed instead."
+            f"it can choose to succeed instead{tail}."
         )
 
 
@@ -442,6 +464,275 @@ class NimbleEscape(MonsterAbility):
     def __post_init__(self):
         self.description = (
             f"The {self.creature_name} takes the Disengage or Hide action."
+        )
+
+
+@dataclass_decorator
+class Multiattack(MonsterAbility):
+    """An action for the standard Multiattack text. `attacks_text` is the
+    free-text clause that follows "The <creature> makes " (e.g. "two Rend
+    attacks" or "two attacks, using Scimitar and Pistol in any
+    combination"); the wide variety of real stat-block phrasing here doesn't
+    template further without becoming lossy. `extra_ruling` covers a
+    trailing rider sentence like "It can replace one attack with a Bite
+    attack." Only fits monsters whose Multiattack sentence actually starts
+    with "The <creature> makes ..." -- ones phrased around a different verb
+    (e.g. "The zombie uses Eye Rays twice.") should stay a plain
+    MonsterAbility instead of being forced into this shape. Set
+    `use_article=False` for a proper-name monster whose stat block omits
+    "The" (e.g. "Garron makes two Surgeon's Maul attacks." rather than
+    "The Garron makes...") -- pass the exact display name as `creature_name`
+    in that case."""
+
+    name: str = field(init=False, default="Multiattack")
+    description: str = field(init=False, default="")
+    creature_name: str = "creature"
+    attacks_text: str = ""
+    extra_ruling: str = ""
+    use_article: bool = True
+
+    def __post_init__(self):
+        article = "The " if self.use_article else ""
+        ruling = f" {self.extra_ruling}" if self.extra_ruling else ""
+        self.description = f"{article}{self.creature_name} makes {self.attacks_text}.{ruling}"
+
+
+@dataclass_decorator
+class SpiderClimb(MonsterAbility):
+    """A trait for the standard Spider Climb text (climbing difficult
+    surfaces, including ceilings, without an ability check)."""
+
+    name: str = field(init=False, default="Spider Climb")
+    description: str = field(init=False, default="")
+    creature_name: str = "creature"
+
+    def __post_init__(self):
+        self.description = (
+            f"The {self.creature_name} can climb difficult surfaces, "
+            f"including along ceilings, without needing to make an ability check."
+        )
+
+
+@dataclass_decorator
+class Illumination(MonsterAbility):
+    """A trait for the standard Illumination text (shedding Bright/Dim
+    Light in a radius). `dim_radius_ft` is the extra Dim Light distance
+    beyond `radius_ft`, matching the "an additional N feet" stat-block
+    phrasing."""
+
+    name: str = field(init=False, default="Illumination")
+    description: str = field(init=False, default="")
+    creature_name: str = "creature"
+    radius_ft: int = 10
+    dim_radius_ft: int = 10
+
+    def __post_init__(self):
+        self.description = (
+            f"The {self.creature_name} sheds Bright Light in a {self.radius_ft}-foot "
+            f"radius and Dim Light for an additional {self.dim_radius_ft} feet."
+        )
+
+
+@dataclass_decorator
+class SiegeMonster(MonsterAbility):
+    """A trait for the standard Siege Monster text (double damage to
+    objects and structures)."""
+
+    name: str = field(init=False, default="Siege Monster")
+    description: str = field(init=False, default="")
+    creature_name: str = "creature"
+
+    def __post_init__(self):
+        self.description = (
+            f"The {self.creature_name} deals double damage to objects and structures."
+        )
+
+
+@dataclass_decorator
+class Pounce(MonsterAbility):
+    """A legendary action for the standard Pounce text (a free half-Speed
+    move plus one attack, with no Bloodied trigger -- unlike Rampage).
+    `attack_name` defaults to "Rend", matching every stat block that uses
+    this trait in the current corpus."""
+
+    name: str = field(init=False, default="Pounce")
+    description: str = field(init=False, default="")
+    creature_name: str = "creature"
+    attack_name: str = "Rend"
+
+    def __post_init__(self):
+        self.description = (
+            f"The {self.creature_name} moves up to half its Speed, and it "
+            f"makes one {self.attack_name} attack."
+        )
+
+
+@dataclass_decorator
+class WebWalker(MonsterAbility):
+    """A trait for the standard Web Walker text (ignoring web movement
+    restrictions). Set `knows_location=False` for the shorter variant that
+    omits the "knows the location of any other creature in contact with the
+    same web" clause."""
+
+    name: str = field(init=False, default="Web Walker")
+    description: str = field(init=False, default="")
+    creature_name: str = "creature"
+    knows_location: bool = True
+
+    def __post_init__(self):
+        self.description = f"The {self.creature_name} ignores movement restrictions caused by webs"
+        if self.knows_location:
+            self.description += (
+                f", and the {self.creature_name} knows the location of any "
+                f"other creature in contact with the same web."
+            )
+        else:
+            self.description += "."
+
+
+@dataclass_decorator
+class WaterBreathing(MonsterAbility):
+    """A trait for the standard "can breathe only underwater" text."""
+
+    name: str = field(init=False, default="Water Breathing")
+    description: str = field(init=False, default="")
+    creature_name: str = "creature"
+
+    def __post_init__(self):
+        self.description = f"The {self.creature_name} can breathe only underwater."
+
+
+@dataclass_decorator
+class PrimalBond(MonsterAbility):
+    """A trait for the standard Primal Bond text (add your Proficiency
+    Bonus to the beast's ability checks/saving throws). Always phrased
+    around "the beast" regardless of the specific creature, matching the
+    5e source text verbatim -- no variable fields."""
+
+    name: str = field(init=False, default="Primal Bond")
+    description: str = field(
+        init=False,
+        default="Add your Proficiency Bonus to any ability check or saving throw the beast makes.",
+    )
+
+
+@dataclass_decorator
+class Flyby(MonsterAbility):
+    """A trait for the standard Flyby text (no Opportunity Attack when
+    flying out of an enemy's reach)."""
+
+    name: str = field(init=False, default="Flyby")
+    description: str = field(init=False, default="")
+    creature_name: str = "creature"
+
+    def __post_init__(self):
+        self.description = (
+            f"The {self.creature_name} doesn't provoke Opportunity Attacks "
+            f"when it flies out of an enemy's reach."
+        )
+
+
+@dataclass_decorator
+class TinySwarm(MonsterAbility):
+    """A trait for the standard tiny-creature Swarm text (occupying another
+    creature's space, moving through Tiny-sized openings, and losing the
+    ability to regain Hit Points/gain Temporary Hit Points while at reduced
+    strength). `creature_type` is the singular Tiny creature named in the
+    "opening large enough for a Tiny X" clause (e.g. "bat", "insect",
+    "rat", "raven")."""
+
+    name: str = field(init=False, default="Swarm")
+    description: str = field(init=False, default="")
+    creature_type: str = "creature"
+
+    def __post_init__(self):
+        self.description = (
+            f"The swarm can occupy another creature's space and vice versa, "
+            f"and the swarm can move through any opening large enough for a "
+            f"Tiny {self.creature_type}. The swarm can't regain Hit Points "
+            f"or gain Temporary Hit Points."
+        )
+
+
+@dataclass_decorator
+class MeleeOrRangedAttack(MonsterAbility):
+    """A MonsterAbility subclass for a combined "Melee or Ranged Attack
+    Roll" action (a weapon usable either way, e.g. a dagger, or a spirit's
+    slam that can also lash out at range). `attack_bonus_note` covers a
+    trailing qualifier appended directly after the bonus, e.g. " (with
+    Advantage if the target is inside the revenant's space)"."""
+
+    name: str
+    attack_bonus: int = 0
+    attack_bonus_note: str = ""
+    reach_ft: int = 5
+    range_ft: int = 30
+    long_range_ft: Optional[int] = None
+    dice_count: int = 1
+    dice_type: DiceType = DiceType.D4
+    damage_bonus: int = 0
+    damage_type: DamageType = DamageType.PIERCING
+    additional_ruling: str = ""
+    description: str = field(init=False, default="")
+
+    def __post_init__(self):
+        dice_notation, average = _format_dice_notation(
+            self.dice_count, self.dice_type, self.damage_bonus
+        )
+        range_text = (
+            f"{self.range_ft}/{self.long_range_ft} ft."
+            if self.long_range_ft
+            else f"{self.range_ft} ft."
+        )
+        ruling = f" {self.additional_ruling}" if self.additional_ruling else ""
+        self.description = (
+            f"Melee or Ranged Attack Roll: +{self.attack_bonus}{self.attack_bonus_note}, "
+            f"reach {self.reach_ft} ft. or range {range_text} "
+            f"Hit: {average} ({dice_notation}) {self.damage_type.value} damage.{ruling}"
+        )
+
+
+@dataclass_decorator
+class CastSpellLegendaryAction(MonsterAbility):
+    """A legendary action for the standard "uses Spellcasting to cast X"
+    idiom, with the fixed "can't take this action again until the start of
+    its next turn" recharge rider."""
+
+    name: str
+    creature_name: str = "creature"
+    spell: str = ""
+    description: str = field(init=False, default="")
+
+    def __post_init__(self):
+        self.description = (
+            f"The {self.creature_name} uses Spellcasting to cast {self.spell}. "
+            f"The {self.creature_name} can't take this action again until "
+            f"the start of its next turn."
+        )
+
+
+@dataclass_decorator
+class NamedAttackAction(MonsterAbility):
+    """An action for the "makes one X attack" idiom under a bespoke action
+    name -- unlike Multiattack, whose name is always literally
+    "Multiattack", this covers a legendary/bonus action with its own name
+    (e.g. "Chain Lash (Costs 1 Action)") whose entire body is "The bell
+    saint makes one Chain Lash attack." `use_article` mirrors Multiattack's
+    for proper-name monsters that don't take "The" (pass the exact display
+    name as `creature_name` in that case)."""
+
+    name: str
+    creature_name: str = "creature"
+    attack_name: str = ""
+    use_article: bool = True
+    extra_ruling: str = ""
+    description: str = field(init=False, default="")
+
+    def __post_init__(self):
+        article = "The " if self.use_article else ""
+        ruling = f" {self.extra_ruling}" if self.extra_ruling else ""
+        self.description = (
+            f"{article}{self.creature_name} makes one {self.attack_name} attack.{ruling}"
         )
 
 

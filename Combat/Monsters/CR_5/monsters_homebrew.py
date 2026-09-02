@@ -6,6 +6,7 @@ from Combat.Definitions import (
     ExtendedCombatantData,
     MonsterAbility,
     MonsterType,
+    Multiattack,
     Size,
     Skill,
 )
@@ -71,9 +72,9 @@ class TheChoirmasterOfHollowHymns(ExtendedCombatantData):
                 ),
             ],
             actions=[
-                MonsterAbility(
-                    name="Multiattack",
-                    description="The Choirmaster makes two Hooked Bow attacks.",
+                Multiattack(
+                    creature_name="Choirmaster",
+                    attacks_text="two Hooked Bow attacks",
                 ),
                 MonsterAbility(
                     name="Hooked Bow",
