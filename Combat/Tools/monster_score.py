@@ -5,8 +5,12 @@ tier's mean and standard deviation (HP, AC, the six ability scores, attack
 roll bonus, damage per hit, action economy, and defensive tags) are fit from
 the *official* monsters.py stat blocks only, then the monster you name
 (official or homebrew) is scored by how many standard deviations its stats
-sit from that tier's mean, averaged and mapped to a 0-1 percentile
-(0.5 = exactly average for its CR).
+sit from that tier's mean (0.5 = exactly average for its CR).
+
+Those per-attribute z-scores are combined into a single number several
+different ways (see AGGREGATIONS below) -- "score" is the original combined
+significance score, the rest are alternate views of the same underlying
+z-scores, printed alongside it.
 
 Usage (from the repo root):
     python Combat/Tools/monster_score.py "Air Elemental" "Barbed Devil"
@@ -76,8 +80,72 @@ def normal_cdf(x):
     return 0.5 * (1 + math.erf(x / math.sqrt(2)))
 
 
+# (key, label) -- ways to collapse a monster's per-attribute z-scores (one
+# per ATTRS entry, positive always meaning "better") into a single 0-1
+# power score. "score" is the original metric (unchanged); the rest are
+# alternate views over the same z-scores, computed in aggregate_scores().
+AGGREGATIONS = [
+    ("score", "combined significance score, original/default metric"),
+    ("mean", "percentile of the plain average z-score"),
+    ("median", "percentile of the median z-score (robust to outlier attrs)"),
+    ("min", "percentile of the single weakest attribute (bottleneck)"),
+    ("max", "percentile of the single strongest attribute (ceiling)"),
+    ("geomean", "geometric mean of each attribute's own percentile"),
+    ("vote_share", "fraction of attributes that beat their CR-tier average"),
+]
+
+
+def aggregate_scores(zs):
+    """zs is the list of usable per-attribute z-scores for one monster
+    (positive = better). Returns {method_key: 0-1 score} for every entry in
+    AGGREGATIONS. All fall back to 0.5 ("average") when zs is empty."""
+    if not zs:
+        return {key: 0.5 for key, _desc in AGGREGATIONS}
+
+    k = len(zs)
+    avg_z = sum(zs) / k
+    # "score": treat the mean of k z-scores as itself ~N(0, 1/k) under the
+    # null hypothesis of an average monster, so this sharpens toward 0/1 as
+    # more attributes agree. Kept exactly as before.
+    combined = normal_cdf(avg_z * math.sqrt(k))
+    # "mean": the average z-score's own percentile, with no sqrt(k)
+    # amplification -- reads like "how far above/below average overall."
+    mean_score = normal_cdf(avg_z)
+    # "median": same idea but robust to one or two extreme attributes.
+    median_score = normal_cdf(statistics.median(zs))
+    # "min": the monster's weakest dimension, i.e. a bottleneck view --
+    # low even if every other attribute is exceptional.
+    min_score = normal_cdf(min(zs))
+    # "max": the mirror of "min" -- the monster's single standout
+    # attribute, i.e. a ceiling/specialization view. High even if every
+    # other attribute is mediocre.
+    max_score = normal_cdf(max(zs))
+    # "geomean": convert each attribute to its own percentile first, then
+    # take the geometric mean -- like "mean" but penalizes having any one
+    # very weak attribute much more than a linear average would.
+    eps = 1e-9
+    percentiles = [min(max(normal_cdf(z), eps), 1 - eps) for z in zs]
+    geomean_score = math.exp(sum(math.log(p) for p in percentiles) / k)
+    # "vote_share": ignores magnitude entirely -- just what fraction of
+    # attributes are individually above their CR-tier average. A monster
+    # with many small edges scores as well here as one with a few huge
+    # ones, unlike every z-magnitude-based metric above.
+    vote_share = sum(1 for z in zs if z > 0) / k
+
+    return {
+        "score": combined,
+        "mean": mean_score,
+        "median": median_score,
+        "min": min_score,
+        "max": max_score,
+        "geomean": geomean_score,
+        "vote_share": vote_share,
+    }
+
+
 def score_monster(m, stats):
-    """Returns (score, k, breakdown) where breakdown is a list of
+    """Returns (scores, k, breakdown) where scores is {method_key: 0-1
+    score} (see AGGREGATIONS) and breakdown is a list of
     (label, value, mean, std, median, lo, hi, z) with mean/std/median/lo/hi/z
     = None when that attribute had no usable CR-tier distribution. z is
     already sign-flipped for "lower is better" attributes, so positive
@@ -97,10 +165,8 @@ def score_monster(m, stats):
         breakdown.append((label, v, mean, std, median, lo, hi, z))
 
     k = len(zs)
-    avg_z = sum(zs) / k if k else 0.0
-    standardized = avg_z * math.sqrt(k)
-    score = normal_cdf(standardized) if k else 0.5
-    return score, k, breakdown
+    scores = aggregate_scores(zs)
+    return scores, k, breakdown
 
 
 def find_matches(name, official, homebrew):
@@ -138,9 +204,13 @@ def main():
             continue
 
         m, is_homebrew = matches[0]
-        score, k, breakdown = score_monster(m, stats)
+        scores, k, breakdown = score_monster(m, stats)
         tag = "  [homebrew]" if is_homebrew else ""
-        print(f"{m['name']:<32} CR {m['cr']:<5} score {score:.2f}  ({k}/{len(ATTRS)} attrs){tag}")
+        print(f"{m['name']:<32} CR {m['cr']:<5} ({k}/{len(ATTRS)} attrs){tag}")
+        cols = [f"{key} {scores[key]:.2f}" for key, _desc in AGGREGATIONS]
+        per_row = 4
+        for i in range(0, len(cols), per_row):
+            print("    " + "   ".join(f"{c:<14}" for c in cols[i:i + per_row]).rstrip())
         if args.verbose:
             for label, v, mean, std, median, lo, hi, z in breakdown:
                 if z is None:
