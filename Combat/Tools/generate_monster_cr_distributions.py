@@ -2,9 +2,10 @@
 
 Imports every CR_*/monsters.py (official) and CR_*/monsters_homebrew.py
 (homebrew) stat block, computes per-CR-tier means and standard deviations
-(HP, AC, the six ability scores, attack roll bonus, damage per hit, action
-economy, and defensive tags) from the *official* monsters only, and writes
-a self-contained interactive HTML report:
+(HP, AC, the six ability scores, attack roll bonus, damage per hit,
+multiattack-aware damage per round, per-ability saving throw modifiers,
+save DC, action economy, and defensive tags) from the *official* monsters
+only, and writes a self-contained interactive HTML report:
 
   - a ridgeline (joyplot) chart per attribute showing the fitted normal
     distribution for each CR tier, with real stat blocks plotted as dots
@@ -28,10 +29,17 @@ import re
 import sys
 from pathlib import Path
 
-from Combat.Definitions import ExtendedCombatantData, MeleeAttack
+from Combat.Definitions import (
+    ExtendedCombatantData,
+    MeleeAttack,
+    Multiattack,
+    SavingThrowEffect,
+)
 
 MONSTERS_DIR = Path(__file__).resolve().parent.parent / "Monsters"
-TEMPLATE_HTML = Path(__file__).resolve().parent / "monster_cr_distributions_template.html"
+TEMPLATE_HTML = (
+    Path(__file__).resolve().parent / "monster_cr_distributions_template.html"
+)
 OUTPUT_HTML = Path(__file__).resolve().parent / "monster_cr_distributions.html"
 
 PLACEHOLDER = "__MONSTER_DATA_JSON__"
@@ -44,9 +52,37 @@ PLACEHOLDER = "__MONSTER_DATA_JSON__"
 # regexing "Attack Roll: +N" / "Hit: N (...)" out of the free-text description.
 _ATTACK_ROLL_RE = re.compile(r"Attack Roll:\s*([+-]\d+)")
 _DAMAGE_HIT_RE = re.compile(r"Hit:\s*(\d+)")
+_SAVE_DC_RE = re.compile(r"DC\s*(\d+)")
 _ACTION_LIKE_FIELDS = (
-    "actions", "bonus_actions", "reactions",
-    "legendary_actions", "mythic_actions", "lair_actions",
+    "actions",
+    "bonus_actions",
+    "reactions",
+    "legendary_actions",
+    "mythic_actions",
+    "lair_actions",
+)
+
+# Leading count word/digit in a Multiattack's `attacks_text` (e.g. "two Rend
+# attacks" -> 2, "three attacks, using ..." -> 3) -- see _multiattack_count.
+# This is a heuristic over free text and only reads the first count it finds,
+# so mixed phrasing like "one Bite attack and uses Antennae twice" under-counts
+# (reads 1, not "however many attacks that implies"); good enough for a rough
+# damage-per-round estimate, not exact.
+_MULTIATTACK_COUNT_WORDS = {
+    "once": 1,
+    "one": 1,
+    "twice": 2,
+    "two": 2,
+    "thrice": 3,
+    "three": 3,
+    "four": 4,
+    "five": 5,
+    "six": 6,
+    "seven": 7,
+    "eight": 8,
+}
+_MULTIATTACK_COUNT_RE = re.compile(
+    r"\b(" + "|".join(_MULTIATTACK_COUNT_WORDS) + r"|\d+)\b", re.IGNORECASE
 )
 
 
@@ -71,6 +107,16 @@ def _ability_damage_value(ability):
     return float(m.group(1)) if m else None
 
 
+def _ability_save_dc(ability):
+    # A handful of summon stat blocks give a non-numeric dc like "equals
+    # your spell save DC" (derived from the summoner, not a fixed stat) --
+    # fall through to the regex path, which correctly finds nothing there.
+    if isinstance(ability, SavingThrowEffect) and isinstance(ability.dc, (int, float)):
+        return float(ability.dc)
+    m = _SAVE_DC_RE.search(ability.description)
+    return float(m.group(1)) if m else None
+
+
 def _avg_ability_value(instance, value_fn):
     values = []
     for field in _ACTION_LIKE_FIELDS:
@@ -79,6 +125,59 @@ def _avg_ability_value(instance, value_fn):
             if v is not None:
                 values.append(v)
     return sum(values) / len(values) if values else None
+
+
+def _multiattack_count(instance):
+    """Total attacks-per-round implied by a Multiattack action's
+    attacks_text (e.g. "two Rend attacks" -> 2), or None when there's no
+    Multiattack action or its phrasing doesn't parse -- see the heuristic
+    note by _MULTIATTACK_COUNT_WORDS above."""
+    for ability in instance.actions or []:
+        if isinstance(ability, Multiattack):
+            m = _MULTIATTACK_COUNT_RE.search(ability.attacks_text)
+            if not m:
+                return None
+            token = m.group(1).lower()
+            return _MULTIATTACK_COUNT_WORDS.get(token) or (
+                int(token) if token.isdigit() else None
+            )
+    return None
+
+
+def _damage_per_round(instance):
+    """Multiattack-aware damage estimate: average per-hit damage across the
+    monster's attack actions, scaled by its Multiattack count when present
+    (e.g. two Rend attacks averaging 9 damage each -> ~18/round). Falls back
+    to the plain per-hit average (same as "dmg") when there's no parseable
+    Multiattack action, so a single-attack monster's dpr equals its dmg."""
+    avg_hit = _avg_ability_value(instance, _ability_damage_value)
+    if avg_hit is None:
+        return None
+    count = _multiattack_count(instance)
+    return avg_hit * count if count else avg_hit
+
+
+_SAVE_ABILITIES = ("STR", "DEX", "CON", "INT", "WIS", "CHA")
+
+
+def _save_mods(instance):
+    """Per-ability saving throw modifier for all six abilities: the listed
+    stat-block value from `saving_throws` where the monster is proficient
+    (e.g. {WIS: 0} for a Zombie's mediocre Wisdom save), otherwise the
+    plain ability modifier floor((score - 10) / 2) -- so every monster gets
+    a save mod for every ability, proficient or not. Returns a dict keyed
+    by short ability name ("STR".."CHA"), values None only when the
+    ability score itself is missing."""
+    throws = instance.saving_throws or {}
+    scores = instance.ability_scores or {}
+    mods = {}
+    for short in _SAVE_ABILITIES:
+        if throws.get(short) is not None:
+            mods[short] = throws[short]
+        else:
+            score = scores.get(short)
+            mods[short] = (score - 10) // 2 if score is not None else None
+    return mods
 
 
 def _damage_type_count(entries) -> int:
@@ -120,27 +219,38 @@ def extract_module(cr_folder: Path, filename: str, errors: list[str]) -> list[di
         # exclude it from HP specifically (AC/ability scores are still
         # fixed and valid).
         hp_value = instance.hp if hp_formula.strip() else None
-        out.append({
-            "name": instance.combatant_type,
-            "cr": instance.cr,
-            "hp": hp_value,
-            "ac": instance.ac,
-            "str": abilities.get("STR"),
-            "dex": abilities.get("DEX"),
-            "con": abilities.get("CON"),
-            "int": abilities.get("INT"),
-            "wis": abilities.get("WIS"),
-            "cha": abilities.get("CHA"),
-            "atk": _avg_ability_value(instance, _ability_attack_value),
-            "dmg": _avg_ability_value(instance, _ability_damage_value),
-            "condimm": len(instance.condition_immunities or []),
-            "dmgimm": _damage_type_count(instance.damage_immunities),
-            "dmgres": _damage_type_count(instance.damage_resistances),
-            "dmgvuln": _damage_type_count(instance.damage_vulnerabilities),
-            "actions": len(instance.actions or []),
-            "bonusact": len(instance.bonus_actions or []),
-            "speed": instance.speed_ground_ft,
-        })
+        save_mods = _save_mods(instance)
+        out.append(
+            {
+                "name": instance.combatant_type,
+                "cr": instance.cr,
+                "hp": hp_value,
+                "ac": instance.ac,
+                "str": abilities.get("STR"),
+                "dex": abilities.get("DEX"),
+                "con": abilities.get("CON"),
+                "int": abilities.get("INT"),
+                "wis": abilities.get("WIS"),
+                "cha": abilities.get("CHA"),
+                "atk": _avg_ability_value(instance, _ability_attack_value),
+                "dmg": _avg_ability_value(instance, _ability_damage_value),
+                "dpr": _damage_per_round(instance),
+                "strsave": save_mods["STR"],
+                "dexsave": save_mods["DEX"],
+                "consave": save_mods["CON"],
+                "intsave": save_mods["INT"],
+                "wissave": save_mods["WIS"],
+                "chasave": save_mods["CHA"],
+                "dc": _avg_ability_value(instance, _ability_save_dc),
+                "condimm": len(instance.condition_immunities or []),
+                "dmgimm": _damage_type_count(instance.damage_immunities),
+                "dmgres": _damage_type_count(instance.damage_resistances),
+                "dmgvuln": _damage_type_count(instance.damage_vulnerabilities),
+                "actions": len(instance.actions or []),
+                "bonusact": len(instance.bonus_actions or []),
+                "speed": instance.speed_ground_ft,
+            }
+        )
     return out
 
 

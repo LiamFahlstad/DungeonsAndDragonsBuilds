@@ -2,7 +2,9 @@
 
 Same statistical model as generate_monster_cr_distributions.py -- each CR
 tier's mean and standard deviation (HP, AC, the six ability scores, attack
-roll bonus, damage per hit, action economy, and defensive tags) are fit from
+roll bonus, damage per hit, multiattack-aware damage per round,
+per-ability saving throw modifiers, save DC, action economy, and
+defensive tags) are fit from
 the *official* monsters.py stat blocks only, then the monster you name
 (official or homebrew) is scored by how many standard deviations its stats
 sit from that tier's mean (0.5 = exactly average for its CR).
@@ -28,28 +30,42 @@ sys.path.insert(0, str(ROOT))
 
 from Combat.Tools.generate_monster_cr_distributions import extract_all  # noqa: E402
 
-# (key, label, invert) -- invert=True means "lower is better" (e.g. fewer
-# vulnerabilities), so its z is flipped before scoring/display so positive
-# always means "better," consistently across every attribute.
+# (key, label, invert, scored) -- invert=True means "lower is better" (e.g.
+# fewer vulnerabilities), so its z is flipped before scoring/display so
+# positive always means "better," consistently across every attribute.
+# scored=False means the attribute is still shown (in the -v breakdown) but
+# excluded from every aggregate score: DMG/DPR are read straight off
+# freeform ability text via a fragile regex fallback and swing wildly with
+# multiattack phrasing, so they're informative to look at but too noisy to
+# let drive "how good is this monster."
 ATTRS = [
-    ("hp", "HP", False),
-    ("ac", "AC", False),
-    ("str", "STR", False),
-    ("dex", "DEX", False),
-    ("con", "CON", False),
-    ("int", "INT", False),
-    ("wis", "WIS", False),
-    ("cha", "CHA", False),
-    ("atk", "ATK", False),
-    ("dmg", "DMG", False),
-    ("condimm", "C-IMM", False),
-    ("dmgimm", "D-IMM", False),
-    ("dmgres", "D-RES", False),
-    ("dmgvuln", "D-VULN", True),
-    ("actions", "ACT", False),
-    ("bonusact", "B-ACT", False),
-    ("speed", "SPD", False),
+    ("hp", "HP", False, True),
+    ("ac", "AC", False, True),
+    ("str", "STR", False, True),
+    ("dex", "DEX", False, True),
+    ("con", "CON", False, True),
+    ("int", "INT", False, True),
+    ("wis", "WIS", False, True),
+    ("cha", "CHA", False, True),
+    ("atk", "ATK", False, True),
+    ("dmg", "DMG", False, False),
+    ("dpr", "DPR", False, False),
+    ("strsave", "STR-SV", False, True),
+    ("dexsave", "DEX-SV", False, True),
+    ("consave", "CON-SV", False, True),
+    ("intsave", "INT-SV", False, True),
+    ("wissave", "WIS-SV", False, True),
+    ("chasave", "CHA-SV", False, True),
+    ("dc", "DC", False, True),
+    ("condimm", "C-IMM", False, True),
+    ("dmgimm", "D-IMM", False, True),
+    ("dmgres", "D-RES", False, True),
+    ("dmgvuln", "D-VULN", True, True),
+    ("actions", "ACT", False, True),
+    ("bonusact", "B-ACT", False, True),
+    ("speed", "SPD", False, True),
 ]
+SCORED_ATTR_COUNT = sum(1 for _key, _label, _invert, scored in ATTRS if scored)
 
 
 def build_stats(official_monsters):
@@ -58,9 +74,9 @@ def build_stats(official_monsters):
     for m in official_monsters:
         by_cr.setdefault(m["cr"], []).append(m)
 
-    stats = {key: {} for key, _label, _invert in ATTRS}
+    stats = {key: {} for key, _label, _invert, _scored in ATTRS}
     for cr, group in by_cr.items():
-        for key, _label, _invert in ATTRS:
+        for key, _label, _invert, _scored in ATTRS:
             values = [m[key] for m in group if m[key] is not None]
             if len(values) >= 2:
                 # Sample standard deviation (n-1), matching groupStats() in
@@ -149,10 +165,12 @@ def score_monster(m, stats):
     (label, value, mean, std, median, lo, hi, z) with mean/std/median/lo/hi/z
     = None when that attribute had no usable CR-tier distribution. z is
     already sign-flipped for "lower is better" attributes, so positive
-    always means "better."""
+    always means "better." Every ATTRS entry appears in breakdown (for the
+    -v display), but only scored=True attributes feed the z-scores behind
+    `scores` and `k` -- see the ATTRS comment for why DMG/DPR are excluded."""
     zs = []
     breakdown = []
-    for key, label, invert in ATTRS:
+    for key, label, invert, scored in ATTRS:
         v = m[key]
         tier = stats[key].get(m["cr"])
         if v is None or tier is None:
@@ -161,7 +179,8 @@ def score_monster(m, stats):
         mean, std, median, lo, hi, _n = tier
         raw_z = (v - mean) / std if std > 1e-9 else 0.0
         z = -raw_z if invert else raw_z
-        zs.append(z)
+        if scored:
+            zs.append(z)
         breakdown.append((label, v, mean, std, median, lo, hi, z))
 
     k = len(zs)
@@ -206,18 +225,19 @@ def main():
         m, is_homebrew = matches[0]
         scores, k, breakdown = score_monster(m, stats)
         tag = "  [homebrew]" if is_homebrew else ""
-        print(f"{m['name']:<32} CR {m['cr']:<5} ({k}/{len(ATTRS)} attrs){tag}")
+        print(f"{m['name']:<32} CR {m['cr']:<5} ({k}/{SCORED_ATTR_COUNT} scored attrs){tag}")
         cols = [f"{key} {scores[key]:.2f}" for key, _desc in AGGREGATIONS]
         per_row = 4
         for i in range(0, len(cols), per_row):
             print("    " + "   ".join(f"{c:<14}" for c in cols[i:i + per_row]).rstrip())
         if args.verbose:
             for label, v, mean, std, median, lo, hi, z in breakdown:
+                v_str = f"{v:.1f}" if isinstance(v, float) else str(v)
                 if z is None:
-                    print(f"    {label:<7} {v!s:>6}   n/a (insufficient CR-tier data)")
+                    print(f"    {label:<7} {v_str:>6}   n/a (insufficient CR-tier data)")
                 else:
                     print(
-                        f"    {label:<7} {v!s:>6}   mean {mean:6.1f}  median {median:6.1f}  "
+                        f"    {label:<7} {v_str:>6}   mean {mean:6.1f}  median {median:6.1f}  "
                         f"sd {std:5.1f}   min {lo:6.1f}  max {hi:6.1f}   z {z:+.2f}"
                     )
 
