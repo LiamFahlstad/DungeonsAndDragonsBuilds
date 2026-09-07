@@ -1,3 +1,4 @@
+import re
 from dataclasses import dataclass as dataclass_decorator
 from dataclasses import field
 from enum import Enum
@@ -119,6 +120,29 @@ class MonsterAbility:
 
     name: str
     description: str
+
+
+_DC_PATTERN = re.compile(r"\bDC\s*(\d+)", re.IGNORECASE)
+
+
+def extract_dc_from_text(text: str) -> Optional[int]:
+    """Pull the first "DC <n>" (or "DC<n>") out of free-form ability text,
+    e.g. "Wisdom Saving Throw: DC 14, ..." or "... forces a DC15 Constitution
+    save." -> 14 / 15. Returns None if no such pattern is found."""
+    match = _DC_PATTERN.search(text)
+    return int(match.group(1)) if match else None
+
+
+@dataclass_decorator
+class DcMonsterAbility(MonsterAbility):
+    """A MonsterAbility whose description is hand-written prose (rather than
+    built from structured fields like SavingThrowEffect) but still names a
+    save DC inline. extract_dc() pulls that number back out of the free text,
+    so the combat UI can still render a save-chance-by-modifier table without
+    the ability needing to be rewritten as a fully structured subclass."""
+
+    def extract_dc(self) -> Optional[int]:
+        return extract_dc_from_text(self.description)
 
 
 class DamageType(str, Enum):
@@ -267,14 +291,17 @@ class RangedAttack(MonsterAbility):
 
 
 @dataclass_decorator
-class SavingThrowEffect(MonsterAbility):
+class SavingThrowEffect(DcMonsterAbility):
     """A MonsterAbility subclass for a saving-throw-based effect (breath
     weapons, gaze attacks, and other area effects). Builds the standard 5e
     "<Ability> Saving Throw: DC N, <target>. Failure: ... Success: ..."
     stat-block sentence from structured inputs instead of a hand-written
     description string. Leave `damage_type` as None for a saving throw with
     no direct damage (e.g. a condition- or exhaustion-only effect) — in that
-    case `failure_effect` is used verbatim as the Failure text."""
+    case `failure_effect` is used verbatim as the Failure text. Inherits from
+    DcMonsterAbility since it always has a DC, though callers should read the
+    `dc` field directly rather than extract_dc() -- it's the exact value,
+    not a regex guess."""
 
     ability: Ability = Ability.DEXTERITY
     dc: int = 10

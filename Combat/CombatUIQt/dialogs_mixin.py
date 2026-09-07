@@ -19,8 +19,10 @@ from PyQt6.QtWidgets import (
 )
 
 import Core.Definitions as Definitions
-from Combat.Definitions import ConditionRule, DamageType
+from Combat.Definitions import ConditionRule, DamageType, DcMonsterAbility, extract_dc_from_text
 from Combat.Rules import Rule, group_by_category, load_rules
+from Core.Definitions import DiceRollCondition, Die
+from Utils.DamageCalculator import probability_of_success
 
 from .stats import SPELL_SLOT_LEVELS, damage_dealt_key, damage_taken_key, spell_slots_used_key
 from .styles import QSS
@@ -112,6 +114,93 @@ def _damage_entry_text(entry) -> str:
     if note:
         text = f"{text} {note}" if text else note
     return text
+
+
+def _ability_field(ab, key: str):
+    """Read a field off a MonsterAbility subclass instance, or off the plain
+    dict it becomes once round-tripped through a saved combat log."""
+    if isinstance(ab, dict):
+        return ab.get(key)
+    return getattr(ab, key, None)
+
+
+_HIT_TABLE_ACS = range(10, 21)
+_SAVE_TABLE_MODIFIERS = range(-5, 11)
+
+
+def _probability_row_html(header_cells: list[str], value_cells: list[str]) -> str:
+    td = "border:1px solid #0f3460;text-align:center;padding:2px 6px;"
+    header_html = "".join(f"<th style='{td}color:#c9a84c'>{h}</th>" for h in header_cells)
+    value_html = "".join(f"<td style='{td}'>{v}</td>" for v in value_cells)
+    return f"<table style='border-collapse:collapse'><tr>{header_html}</tr><tr>{value_html}</tr></table>"
+
+
+def _hit_chance_table_html(attack_bonus: int) -> str:
+    """Chance the monster's attack roll (1d20 + attack_bonus) hits, for a
+    spread of target ACs — powered by Utils.DamageCalculator."""
+    values = [
+        probability_of_success(
+            difficulty_class=ac,
+            die=Die.D20,
+            condition=DiceRollCondition.NEUTRAL,
+            bonus=attack_bonus,
+        )
+        for ac in _HIT_TABLE_ACS
+    ]
+    return _probability_row_html(
+        [f"AC {ac}" for ac in _HIT_TABLE_ACS],
+        [f"{p * 100:.0f}%" for p in values],
+    )
+
+
+def _save_chance_table_html(dc: int) -> str:
+    """Chance a target's saving throw (1d20 + modifier) FAILS against the
+    monster's DC, for a spread of target save modifiers -- i.e. the
+    monster's chance of landing the effect, not the target's chance of
+    resisting it. Powered by Utils.DamageCalculator."""
+    values = [
+        1
+        - probability_of_success(
+            difficulty_class=dc,
+            die=Die.D20,
+            condition=DiceRollCondition.NEUTRAL,
+            bonus=modifier,
+        )
+        for modifier in _SAVE_TABLE_MODIFIERS
+    ]
+    return _probability_row_html(
+        [f"{modifier:+}" for modifier in _SAVE_TABLE_MODIFIERS],
+        [f"{p * 100:.0f}%" for p in values],
+    )
+
+
+def _ability_dc(ab) -> int | None:
+    """DC for a save-based ability: the `dc` field on a SavingThrowEffect, or
+    (for a DcMonsterAbility, live or resumed from a saved log as a plain
+    dict) the DC pulled out of its free-text description."""
+    dc = _ability_field(ab, "dc")
+    if dc is not None:
+        return dc
+    if isinstance(ab, DcMonsterAbility):
+        return ab.extract_dc()
+    if isinstance(ab, dict):
+        return extract_dc_from_text(ab.get("description", ""))
+    return None
+
+
+def _ability_probability_table_html(ab) -> str | None:
+    """A MeleeAttack/RangedAttack gets a hit-chance-by-AC table; a
+    SavingThrowEffect or DcMonsterAbility gets a table of the target's
+    save-failure chance (i.e. the monster's chance of landing the effect)
+    by save modifier; anything else (traits, Multiattack, plain abilities,
+    ...) gets none."""
+    attack_bonus = _ability_field(ab, "attack_bonus")
+    if attack_bonus is not None:
+        return _hit_chance_table_html(attack_bonus)
+    dc = _ability_dc(ab)
+    if dc is not None:
+        return _save_chance_table_html(dc)
+    return None
 
 
 class DialogsMixin:
@@ -631,7 +720,35 @@ class DialogsMixin:
                     add_header(section_label)
                     for ab in abilities:
                         name, desc = _ability_entry(ab)
-                        add_ability(name, desc)
+                        table_html = _ability_probability_table_html(ab)
+                        if table_html is None:
+                            add_ability(name, desc)
+                            continue
+
+                        attack_bonus = _ability_field(ab, "attack_bonus")
+                        if attack_bonus is not None:
+                            header_suffix = f"{attack_bonus:+} to hit"
+                            caption_text = "Chance to hit, by target AC"
+                        else:
+                            header_suffix = f"DC {_ability_dc(ab)}"
+                            caption_text = "Target's chance to fail the save, by save modifier"
+
+                        aw = QWidget()
+                        awl = QVBoxLayout(aw)
+                        awl.setContentsMargins(16, 2, 0, 4)
+                        awl.setSpacing(4)
+                        desc_lbl = QLabel(desc)
+                        desc_lbl.setWordWrap(True)
+                        awl.addWidget(desc_lbl)
+                        caption_lbl = QLabel(caption_text)
+                        caption_lbl.setStyleSheet("color: #a0a0b0; font-size: 10px;")
+                        awl.addWidget(caption_lbl)
+                        table_lbl = QLabel(table_html)
+                        table_lbl.setTextFormat(Qt.TextFormat.RichText)
+                        awl.addWidget(table_lbl)
+                        lay.addWidget(
+                            make_expandable(f"{name}  ({header_suffix})", aw)
+                        )
 
         lay.addStretch()
         scroll.setWidget(content)

@@ -3,6 +3,7 @@ from Combat.Definitions import (
     Condition,
     DamageType,
     DamageTypeEntry,
+    DcMonsterAbility,
     DiceType,
     ExtendedCombatantData,
     MeleeAttack,
@@ -20,7 +21,7 @@ class CommonCultist(ExtendedCombatantData):
     def __init__(self):
         super().__init__(
             combatant_type="Common Cultist",
-            hp=22,
+            hp=28,
             ac=12,
             temp_hp=0,
             conditions=[],
@@ -40,7 +41,7 @@ class CommonCultist(ExtendedCombatantData):
             alignment=Alignment.NEUTRAL_EVIL,
             size=Size.MEDIUM,
             ac_note="scavenged padding",
-            hp_formula="4d8+4",
+            hp_formula="5d8+5",
             speed_ground_ft=30,
             speed_fly_ft=None,
             speed_climb_ft=None,
@@ -50,7 +51,9 @@ class CommonCultist(ExtendedCombatantData):
                 Skill.INTIMIDATION: 3,
             },
             damage_vulnerabilities=[],
-            damage_resistances=[],
+            damage_resistances=[
+                DamageTypeEntry(damage_types=[DamageType.POISON], note=""),
+            ],
             damage_immunities=[],
             condition_immunities=[],
             senses="Passive Perception 10",
@@ -90,7 +93,12 @@ class CommonCultist(ExtendedCombatantData):
                     damage_type=DamageType.BLUDGEONING,
                 ),
             ],
-            bonus_actions=[],
+            bonus_actions=[
+                MonsterAbility(
+                    name="Fanatic's Surge",
+                    description="The cultist recites a fragment of the Black Choir's litany, gaining Advantage on its next attack roll before the end of its turn.",
+                ),
+            ],
             reactions=[],
             legendary_actions=[],
             legendary_resistances=0,
@@ -152,7 +160,7 @@ class AccursedGroupOf3(ExtendedCombatantData):
                     damage_bonus=1,
                     damage_type=DamageType.BLUDGEONING,
                 ),
-                MonsterAbility(
+                DcMonsterAbility(
                     name="Grab",
                     description="reach 5 ft. If the target is a Medium or smaller creature, it has the Grappled condition (escape DC 12).",
                 ),
@@ -175,13 +183,13 @@ class CurseCracked(ExtendedCombatantData):
     def __init__(self):
         super().__init__(
             combatant_type="Curse Cracked",
-            hp=22,
+            hp=26,
             ac=13,
             temp_hp=0,
             conditions=[],
             ability_scores={
-                Ability.STRENGTH: 8,
-                Ability.DEXTERITY: 10,
+                Ability.STRENGTH: 10,
+                Ability.DEXTERITY: 12,
                 Ability.CONSTITUTION: 13,
                 Ability.INTELLIGENCE: 14,
                 Ability.WISDOM: 12,
@@ -195,7 +203,7 @@ class CurseCracked(ExtendedCombatantData):
             alignment=Alignment.NEUTRAL_EVIL,
             size=Size.MEDIUM,
             ac_note="unnaturally cracked hide",
-            hp_formula="5d8",
+            hp_formula="5d8+5",
             speed_ground_ft=30,
             speed_fly_ft=None,
             speed_climb_ft=None,
@@ -203,11 +211,7 @@ class CurseCracked(ExtendedCombatantData):
             skills={},
             damage_vulnerabilities=[
                 DamageTypeEntry(
-                    damage_types=[
-                        DamageType.BLUDGEONING,
-                        DamageType.PIERCING,
-                        DamageType.SLASHING,
-                    ],
+                    damage_types=[DamageType.BLUDGEONING],
                     note="",
                 ),
             ],
@@ -234,7 +238,7 @@ class CurseCracked(ExtendedCombatantData):
                     damage_bonus=2,
                     damage_type=DamageType.FORCE,
                 ),
-                MonsterAbility(
+                DcMonsterAbility(
                     name="Cracking Surge (Recharge 5-6)",
                     description="The cracks across the Curse Cracked's body flare with searing light. Each creature within 10 feet of it must make a DC 12 Dexterity saving throw, taking 10 (3d6) Force damage on a failed save, or half as much damage on a successful one.",
                 ),
@@ -263,7 +267,7 @@ class CurseBodyBroken(ExtendedCombatantData):
             conditions=[],
             ability_scores={
                 Ability.STRENGTH: 16,
-                Ability.DEXTERITY: 10,
+                Ability.DEXTERITY: 12,
                 Ability.CONSTITUTION: 14,
                 Ability.INTELLIGENCE: 6,
                 Ability.WISDOM: 10,
@@ -315,17 +319,17 @@ class CurseBodyBroken(ExtendedCombatantData):
                     creature_name="Curse Body Broken",
                     attacks_text="two Eldritch Strike attacks",
                 ),
-                MonsterAbility(
+                DcMonsterAbility(
                     name="Eldritch Strike",
                     description="Melee Attack Roll: +5, reach 10 ft. Hit: 7 (1d8 + 3) Bludgeoning damage, and the target must succeed on a DC 12 Strength saving throw or have the Prone condition as the impossibly bent limb wrenches it off balance.",
                 ),
-                MonsterAbility(
+                DcMonsterAbility(
                     name="Scream of the Trapped (Recharge 5-6)",
                     description="For one horrible instant, the victim's own voice tears free from the curse's grip in a scream of agony. Each creature within 20 feet that can hear the Curse Body Broken must succeed on a DC 12 Wisdom saving throw or have the Frightened condition until the end of the Curse Body Broken's next turn.",
                 ),
             ],
             bonus_actions=[
-                MonsterAbility(
+                DcMonsterAbility(
                     name="Grasping Mutation",
                     description="Melee Attack Roll: +5, reach 15 ft. Hit: 5 (1d6 + 3) Bludgeoning damage, and the target has the Grappled condition (escape DC 13) if the Curse Body Broken doesn't have another creature grappled with this action.",
                 ),
@@ -351,7 +355,7 @@ class CurseMindBroken(ExtendedCombatantData):
                 Ability.DEXTERITY: 12,
                 Ability.CONSTITUTION: 12,
                 Ability.INTELLIGENCE: 3,
-                Ability.WISDOM: 3,
+                Ability.WISDOM: 12,
                 Ability.CHARISMA: 14,
             },
             saving_throws={},
@@ -368,9 +372,7 @@ class CurseMindBroken(ExtendedCombatantData):
             speed_climb_ft=None,
             speed_special_rules="",
             skills={},
-            damage_vulnerabilities=[
-                DamageTypeEntry(damage_types=[DamageType.FORCE], note=""),
-            ],
+            damage_vulnerabilities=[],
             damage_resistances=[
                 DamageTypeEntry(damage_types=[DamageType.PSYCHIC], note=""),
             ],
@@ -391,14 +393,14 @@ class CurseMindBroken(ExtendedCombatantData):
             actions=[
                 RangedAttack(
                     name="Mind Lash",
-                    attack_bonus=4,
+                    attack_bonus=5,
                     range_ft=30,
                     dice_count=2,
                     dice_type=DiceType.D6,
                     damage_bonus=2,
                     damage_type=DamageType.PSYCHIC,
                 ),
-                MonsterAbility(
+                DcMonsterAbility(
                     name="Memory Shatter (Recharge 5-6)",
                     description="One creature the Curse Mind Broken can see within 30 feet must succeed on a DC 12 Wisdom saving throw or have the Stunned condition until the end of its next turn, as fragments of stolen memory overwhelm its mind.",
                 ),
@@ -406,7 +408,7 @@ class CurseMindBroken(ExtendedCombatantData):
                     name="Whispering Madness",
                     description="Each creature within 15 feet of the Curse Mind Broken that can hear its ceaseless whispering has Disadvantage on Concentration saving throws and can't speak or cast spells with a Verbal component clearly enough to be understood.",
                 ),
-                MonsterAbility(
+                DcMonsterAbility(
                     name="Curse Discharge (Recharge 5-6)",
                     description="Raw curse-magic bursts outward in a wave. Each creature within 15 feet of the Curse Mind Broken must make a DC 12 Dexterity saving throw, taking 16 (3d10) Force damage on a failed save, or half as much damage on a successful one.",
                 ),

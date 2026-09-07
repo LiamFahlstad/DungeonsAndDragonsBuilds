@@ -3,6 +3,7 @@ from Combat.Definitions import (
     Condition,
     DamageType,
     DamageTypeEntry,
+    DcMonsterAbility,
     ExtendedCombatantData,
     MonsterAbility,
     MonsterType,
@@ -27,11 +28,11 @@ class TheChoirmasterOfHollowHymns(ExtendedCombatantData):
                 Ability.CONSTITUTION: 14,
                 Ability.INTELLIGENCE: 12,
                 Ability.WISDOM: 16,
-                Ability.CHARISMA: 16,
+                Ability.CHARISMA: 12,
             },
             saving_throws={
                 Ability.CONSTITUTION: 5,
-                Ability.WISDOM: 6,
+                Ability.WISDOM: 3,
             },
             spell_slots={},
             cr="5",
@@ -80,7 +81,7 @@ class TheChoirmasterOfHollowHymns(ExtendedCombatantData):
                     name="Hooked Bow",
                     description="Melee Attack Roll: +6, reach 5 ft. Hit: 10 (1d8 + 3) Slashing damage plus 4 (1d8) Necrotic damage as the curse bleeds from his own throat into the wound.",
                 ),
-                MonsterAbility(
+                DcMonsterAbility(
                     name="Warding Rasp (Recharge 5-6)",
                     description="The Choirmaster drags the hooked bow across his throat, and a broken fragment of Noc'tra tears free in a 20-foot Cone. Each creature in the area must make a DC 14 Wisdom saving throw, taking 17 (5d6) Psychic damage and gaining the Frightened condition until the end of the Choirmaster's next turn on a failed save, or half as much damage only on a successful one. The Choirmaster then gains one stack of Throat-Strain (see Throat-Strain).",
                 ),

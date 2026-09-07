@@ -3,6 +3,7 @@ from Combat.Definitions import (
     Condition,
     DamageType,
     DamageTypeEntry,
+    DcMonsterAbility,
     DiceType,
     ExtendedCombatantData,
     MeleeAttack,
@@ -19,20 +20,20 @@ class MarshalVirel(ExtendedCombatantData):
         super().__init__(
             combatant_type="Marshal Virel",
             hp=78,
-            ac=17,
+            ac=15,
             temp_hp=0,
             conditions=[],
             ability_scores={
                 Ability.STRENGTH: 14,
-                Ability.DEXTERITY: 18,
+                Ability.DEXTERITY: 14,
                 Ability.CONSTITUTION: 14,
-                Ability.INTELLIGENCE: 13,
-                Ability.WISDOM: 16,
+                Ability.INTELLIGENCE: 11,
+                Ability.WISDOM: 13,
                 Ability.CHARISMA: 11,
             },
             saving_throws={
-                Ability.CONSTITUTION: 4,
-                Ability.WISDOM: 5,
+                Ability.CONSTITUTION: 3,
+                Ability.WISDOM: 2,
             },
             spell_slots={},
             cr="4",
@@ -72,7 +73,7 @@ class MarshalVirel(ExtendedCombatantData):
                     name="Multiattack",
                     description="Virel makes two Duelist's Rapier attacks.",
                 ),
-                MonsterAbility(
+                DcMonsterAbility(
                     name="Duelist's Rapier",
                     description="Melee Attack Roll: +6, reach 5 ft. Hit: 11 (1d8 + 6) Piercing damage. If this attack is a critical hit, the target must succeed on a DC 13 Constitution saving throw or have the Silenced condition (it can't speak or cast spells that require a Verbal component) until the end of its next turn.",
                 ),

@@ -3,6 +3,7 @@ from Combat.Definitions import (
     Condition,
     DamageType,
     DamageTypeEntry,
+    DcMonsterAbility,
     DiceType,
     ExtendedCombatantData,
     LegendaryResistance,
@@ -21,12 +22,12 @@ class TheCrownWithoutAKing(ExtendedCombatantData):
     def __init__(self):
         super().__init__(
             combatant_type="The Crown Without a King",
-            hp=90,
+            hp=130,
             ac=16,
             temp_hp=0,
             conditions=[],
             ability_scores={
-                Ability.STRENGTH: 4,
+                Ability.STRENGTH: 6,
                 Ability.DEXTERITY: 18,
                 Ability.CONSTITUTION: 14,
                 Ability.INTELLIGENCE: 14,
@@ -40,8 +41,8 @@ class TheCrownWithoutAKing(ExtendedCombatantData):
             monster_type=MonsterType.UNDEAD, monster_type_note='',
             alignment=Alignment.LAWFUL_EVIL,
             ac_note="natural armor",
-            hp_formula="20d4+40",
-            speed_ground_ft=0,
+            hp_formula="20d8+40",
+            speed_ground_ft=30,
             speed_fly_ft=30,
             speed_climb_ft=None,
             speed_special_rules="hover",
@@ -85,7 +86,7 @@ class TheCrownWithoutAKing(ExtendedCombatantData):
                     damage_bonus=2,
                     damage_type=DamageType.PIERCING,
                 ),
-                MonsterAbility(
+                DcMonsterAbility(
                     name="Coronation (Recharge 5-6)",
                     description="The crown flings itself at a creature it can see within 5 feet, attempting to seize their head. The target must succeed on a DC 16 Charisma saving throw or become the crown's Host: for the next 24 hours, the target is Charmed by the crown and treats the crown's telepathic commands as though they came from a trusted ally, and the crown can take control of the Host's actions on the crown's turn. If the saving throw fails by 5 or more, the Host's own personality is suppressed entirely and it becomes a loyal servant of the Cult of the Curse until the crown is forcibly removed (requires a successful DC 16 Strength check as an action, dealing 10 Force damage to the crown to knock it free).",
                 ),
@@ -107,7 +108,7 @@ class TheRoadChoir(ExtendedCombatantData):
     def __init__(self):
         super().__init__(
             combatant_type="The Road Choir",
-            hp=168,
+            hp=152,
             ac=15,
             temp_hp=0,
             conditions=[],
@@ -129,7 +130,7 @@ class TheRoadChoir(ExtendedCombatantData):
             alignment=Alignment.NEUTRAL_EVIL,
             size=Size.HUGE,
             ac_note="matted, overlapping husks of flesh, bone, and scavenged plates of armor",
-            hp_formula="16d12 + 64",
+            hp_formula="16d10 + 64",
             speed_ground_ft=20,
             speed_fly_ft=None,
             speed_climb_ft=20,
@@ -141,7 +142,6 @@ class TheRoadChoir(ExtendedCombatantData):
             damage_resistances=[
                 DamageTypeEntry(damage_types=[DamageType.NECROTIC], note=""),
                 DamageTypeEntry(damage_types=[DamageType.BLUDGEONING], note=""),
-                DamageTypeEntry(damage_types=[DamageType.PIERCING], note=""),
                 DamageTypeEntry(damage_types=[DamageType.SLASHING], note=""),
             ],
             damage_immunities=[
@@ -168,7 +168,7 @@ class TheRoadChoir(ExtendedCombatantData):
                     name="Endless Reknitting",
                     description="The Road Choir regains 15 Hit Points at the start of its turn if it has at least 1 Hit Point, its many corpses shifting and knitting fresh wounds shut with borrowed flesh. If the Road Choir takes Radiant damage or damage from a Critical Hit, this trait doesn't function at the start of the Road Choir's next turn.",
                 ),
-                MonsterAbility(
+                DcMonsterAbility(
                     name="The Long List",
                     description="The Road Choir remembers scraps of a hundred lives fused into its flesh: half-true directions to safehouses, the names of the dead, and roads Noc'tra has not yet claimed. A creature that spends an action to question the Road Choir, or that remains within 40 feet of it and can hear it without attacking it or moving away for a full turn, hears an answer that may or may not be true. At the end of that creature's turn, it must succeed on a DC 16 Wisdom saving throw or gain 1 stack of Corrupted Hope (maximum 5 stacks). While a creature has 3 or more stacks of Corrupted Hope, it has Disadvantage on Wisdom and Charisma saving throws; while it has 5 stacks, it also has the Frightened condition against every creature except the Road Choir, having learned to trust nothing but the voices that lied to it so sweetly. A creature loses 1 stack of Corrupted Hope whenever it finishes a Long Rest away from the Road Choir's presence.",
                 ),
@@ -190,7 +190,7 @@ class TheRoadChoir(ExtendedCombatantData):
                     target="one Large or smaller creature within 10 feet",
                     failure_effect="The target is dragged into the writhing mass of bodies and has the Grappled condition (escape DC 16). Until the grapple ends, the target has the Restrained condition and takes 9 (2d8) Necrotic damage at the start of each of its turns as dozens of dead hands claw at it from every side. The Road Choir can have up to two creatures Grappled by this action at a time.",
                 ),
-                MonsterAbility(
+                DcMonsterAbility(
                     name="Directions to Salvation (Recharge 5-6)",
                     description="The Road Choir calls out in a chorus of overlapping voices, offering true-sounding directions to shelter, safety, or someone the target lost long ago. One creature the Road Choir can see within 90 feet that can hear it must succeed on a DC 16 Wisdom saving throw or have the Charmed condition until the end of its next turn. While Charmed in this way, the target must use its movement on its turn to move as close to the Road Choir as it can by the safest route available to it, and it can't willingly move away from the Road Choir. A creature that succeeds on this saving throw is immune to this Road Choir's Directions to Salvation for the next 24 hours, having caught the lie beneath the layered voices.",
                 ),
