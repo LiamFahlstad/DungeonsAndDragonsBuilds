@@ -153,6 +153,7 @@ from .Potions import (
 )
 from .Scrolls import (
     SpellScroll,
+    Scroll,
 )
 from .SpellFocus import (
     ArcaneFocus,

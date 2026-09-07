@@ -102,8 +102,13 @@ def get_starter_class_builder():
             Armor.LeatherArmor(),
             Armor.ShieldArmor(),
         ],
+        # Not Martial-proficient yet at level 1 (that's a Valor Bard 3
+        # feature - see BardValorLevel3.add_features), but by the time
+        # equipment is applied at the end of CharacterBuilder.build() she's
+        # already level 3, so add_weapon's auto-proficiency check picks
+        # this up on its own - no override needed.
         weapons=[
-            Weapons.Shortsword(player_is_proficient=True),
+            Weapons.Shortsword(),
         ],
         # Trimmed to 12 items total carried (was 36) - kept one of each type,
         # with Rations bumped to a few days' worth.
@@ -164,4 +169,24 @@ class Y2024BardValorCloverCharacterBuilder(CharacterBuilder):
                     spell_casting_ability=Ability.CHARISMA,
                 ),
             ),
+        )
+        # Stonehill Armory upgrade (gifted, not purchased), now that
+        # Valor's Martial Training backs up medium armor/shields/martial
+        # weapons: Leather traded up to Breastplate (the upgrade the
+        # build's starting-equipment note flagged), and the Shortsword
+        # traded up to a Rapier (still finesse, bigger die). Also given a
+        # Scimitar (light + finesse, same Nick mastery as a Shortsword) so
+        # she can choose Rapier + Shield for AC, or drop the shield and
+        # dual-wield instead, plus a Longbow for a ranged option - her +3
+        # Dex makes it as good as anyone's, and it matches a Light
+        # Crossbow's d8 with double the range. All auto-detected as
+        # proficient (see the Shortsword comment above).
+        self.drop_item(Armor.LeatherArmor)
+        self.add_adventuring_gear(
+            "Stonehill Armory Upgrade",
+            armor=[Armor.BreastplateArmor()],
+            weapons=[
+                Weapons.Scimitar(),
+                Weapons.Longbow(),
+            ],
         )

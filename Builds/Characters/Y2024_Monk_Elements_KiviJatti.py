@@ -24,6 +24,7 @@ from CharacterContent.Features.ClassFeatures.Monk import MonkFeatures
 from CharacterContent.Features.SpeciesFeatures import GoliathFeatures
 from CharacterContent.Items import Items, Weapons
 from CharacterContent.Species import Goliath
+from CharacterContent.Spells import SpellLists
 from CharacterContent.ToolProficiencies.Proficiencies import Drum, NavigatorsTools
 from Core.Definitions import Ability, Skill
 from StatBlocks.AbilitiesStatBlock import PointBuyAbilitiesStatBlock
@@ -125,4 +126,24 @@ class Y2024MonkElementsKiviJattiCharacterBuilder(CharacterBuilder):
             species_builder=Goliath.GoliathSpeciesBuilder(
                 giant_ancestry_type=GoliathFeatures.GiantAncestryType.STONE_GIANT
             ),
+        )
+        # Stonehill Armory upgrade (gifted, not purchased): no armor or
+        # weapons - he's not offered any. Unarmored Defense (10 + Dex +
+        # Wis) beats any armor he could wear (and armor would cost him
+        # Unarmored Movement/Martial Arts), and his Unarmed Strike already
+        # matches or beats any weapon he could carry, melee or ranged - a
+        # Monk really doesn't need weapons. Given a stock of good potions
+        # instead: healing to keep him standing, Speed for extra mobility
+        # on top of Unarmored Movement, and Resistance for whatever damage
+        # type a fight throws at him.
+        self.add_adventuring_gear(
+            "Stonehill Armory Upgrade",
+            items=[
+                (Items.PotionOfHealing(), 2),
+                (Items.PotionOfInvisibility(), 1),
+                (Items.PotionOfSpeed(), 1),
+                (Items.PotionOfResistance(), 1),
+                (Items.Scroll(SpellLists.AbjurationLevel1Spells.HEALING_WORD), 1),
+                (Items.Scroll(SpellLists.ConjurationLevel2Spells.MISTY_STEP), 1),
+            ],
         )

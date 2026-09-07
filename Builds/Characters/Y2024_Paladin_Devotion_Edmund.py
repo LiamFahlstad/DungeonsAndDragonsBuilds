@@ -83,10 +83,11 @@ def get_starter_class_builder():
         base_class_level_features=ClassBuilder.BaseClassLevelFeatures(
             base_class_features_by_level={
                 1: PaladinLevel1(
-                    # Sap and Nick weapon masteries, both on weapons he
-                    # actually carries: Longsword (Sap) and Dagger (Nick).
+                    # Sap and Vex weapon masteries, both on weapons he
+                    # actually carries: Longsword (Sap) and Handaxe (Vex,
+                    # after the armory upgrade replaced his Dagger).
                     weapon_mastery_1=Weapons.Longsword(),
-                    weapon_mastery_2=Weapons.Dagger(),
+                    weapon_mastery_2=Weapons.Handaxe(),
                     spell_1=PaladinLevel1Spells.CURE_WOUNDS,
                     spell_2=PaladinLevel1Spells.DIVINE_FAVOR,
                 ),
@@ -120,4 +121,20 @@ class Y2024PaladinDevotionEdmundCharacterBuilder(CharacterBuilder):
                 character_level=3,
                 fiendish_lineage=Tiefling.FiendishLineage.CHTHONIC,
             ),
+        )
+        # Stonehill Armory upgrade (gifted, not purchased): Chain Mail
+        # traded up to Splint (his 17 Strength clears the 15 requirement)
+        # for AC 17 instead of 16. Longsword+Shield stays - already the
+        # best one-handed option - but the Dagger became a Handaxe for a
+        # harder-hitting thrown backup. Also given a Greatsword so he can
+        # drop the shield and go two-handed when the extra AC isn't worth
+        # it, and a Longbow for a ranged option - full Martial proficiency
+        # means it costs him nothing over a Light Crossbow, and it matches
+        # its d8 die with double the range.
+        self.drop_item(Armor.ChainMailArmor)
+        self.drop_item(Weapons.Dagger)
+        self.add_adventuring_gear(
+            "Stonehill Armory Upgrade",
+            armor=[Armor.SplintArmor()],
+            weapons=[Weapons.Handaxe(), Weapons.Greatsword(), Weapons.Longbow()],
         )

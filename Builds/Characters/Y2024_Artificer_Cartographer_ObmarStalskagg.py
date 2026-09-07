@@ -17,6 +17,8 @@ from CharacterContent.Spells import SpellLists as SpellDefinitions
 from CharacterContent.ToolProficiencies.Proficiencies import (
     CalligraphersSupplies,
     CartographersTools,
+    MasonsTools,
+    NavigatorsTools,
     ThievesTools,
     TinkersTools,
 )
@@ -74,23 +76,28 @@ def get_starter_class_builder():
             Armor.StuddedLeatherArmor(),
             Armor.ShieldArmor(),
         ],
+        # Dagger and Spear are both Simple weapons, so Artificers
+        # (weapon_proficiencies=[SIMPLE] in ArtificerBase) are proficient
+        # with both and add_weapon auto-detects it without needing a
+        # player_is_proficient override. The Spear is swapped for a Light
+        # Hammer at Stonehill - see __init__.
         weapons=[
-            Weapons.Longsword(player_is_proficient=True, ability=Ability.INTELLIGENCE),
             Weapons.Dagger(),
+            Weapons.Spear(),
         ],
         base_class_level_features=ClassBuilder.BaseClassLevelFeatures(
             base_class_features_by_level={
                 1: ArtificerLevel1(
-                    cantrip_1=SpellDefinitions.ArtificerLevel0Spells.FIRE_BOLT,
-                    cantrip_2=SpellDefinitions.ArtificerLevel0Spells.GUIDANCE,
-                    spell_1=SpellDefinitions.ArtificerLevel1Spells.FALSE_LIFE,
-                    spell_2=SpellDefinitions.ArtificerLevel1Spells.CURE_WOUNDS,
+                    cantrip_1=SpellDefinitions.ArtificerLevel0Spells.MAGE_HAND,
+                    cantrip_2=SpellDefinitions.ArtificerLevel0Spells.TRUE_STRIKE,
+                    spell_1=SpellDefinitions.ArtificerLevel1Spells.FEATHER_FALL,
+                    spell_2=SpellDefinitions.ArtificerLevel1Spells.GREASE,
                 ),
                 2: ArtificerLevel2(
-                    spell=SpellDefinitions.ArtificerLevel1Spells.CATAPULT,
+                    spell=SpellDefinitions.ArtificerLevel1Spells.CURE_WOUNDS,
                 ),
                 3: ArtificerLevel3(
-                    spell=SpellDefinitions.ArtificerLevel1Spells.TASHAS_CAUSTIC_BREW,
+                    spell=SpellDefinitions.ArtificerLevel1Spells.LONGSTRIDER,
                 ),
             },
             subclass_features_by_level={
@@ -102,6 +109,8 @@ def get_starter_class_builder():
             TinkersTools(),
             CalligraphersSupplies(),
             CartographersTools(),
+            MasonsTools(),
+            NavigatorsTools(),
         ],
     )
 
@@ -112,4 +121,15 @@ class Y2024ArtificerCartographerObmarStalskaggCharacterBuilder(CharacterBuilder)
             name="Obmar Stålskägg",
             starter_class_builder=get_starter_class_builder(),
             species_builder=Dwarf.DwarfSpeciesBuilder(),
+        )
+        # Stonehill Armory upgrade (gifted, not purchased): traded the
+        # Studded Leather for a Breastplate (still medium, still
+        # proficient) and swapped the Spear for a Light Hammer as a
+        # harder-hitting thrown/melee backup. The Dagger is untouched.
+        self.drop_item(Armor.StuddedLeatherArmor)
+        self.drop_item(Weapons.Spear)
+        self.add_adventuring_gear(
+            "Stonehill Armory Upgrade",
+            armor=[Armor.BreastplateArmor()],
+            weapons=[Weapons.LightHammer()],
         )

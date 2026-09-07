@@ -12,7 +12,8 @@ from CharacterContent.Classes.SubClasses2024.RogueArcaneTrickster import (
 )
 from CharacterContent.Features.CharacterFeats import Backgrounds, OriginFeats
 from CharacterContent.Items import Armor, Items
-from CharacterContent.Items.Weapons.MartialMelee import Shortsword
+from CharacterContent.Items.Weapons.MartialMelee import Scimitar, Shortsword
+from CharacterContent.Items.Weapons.Ranged import HandCrossbow
 from CharacterContent.Items.Weapons.SimpleMelee import Dagger
 from CharacterContent.Species import Dwarf
 from CharacterContent.Spells.SpellLists import (
@@ -20,9 +21,9 @@ from CharacterContent.Spells.SpellLists import (
     WizardLevel0Spells,
     WizardLevel1Spells,
 )
+from CharacterContent.ToolProficiencies.Proficiencies import ThievesTools
 from Core.Definitions import Ability, Skill
 from StatBlocks.AbilitiesStatBlock import PointBuyAbilitiesStatBlock
-from CharacterContent.ToolProficiencies.Proficiencies import ThievesTools
 from StatBlocks.SkillsStatBlock import RogueSkillsStatBlock
 
 
@@ -90,7 +91,10 @@ def get_starter_class_builder():
                 1: RogueLevel1(
                     skill_expertise_1=Skill.INVESTIGATION,
                     skill_expertise_2=Skill.SLEIGHT_OF_HAND,
-                    weapon_mastery_1=Dagger(),
+                    # Nick (Scimitar, after the armory upgrade replaced the
+                    # Dagger) and Vex (Shortsword) - both weapons he
+                    # actually carries.
+                    weapon_mastery_1=Scimitar(),
                     weapon_mastery_2=Shortsword(),
                 ),
                 2: RogueLevel2(),
@@ -115,4 +119,21 @@ class Y2024RogueArcaneTricksterThumSchtockCharacterBuilder(CharacterBuilder):
             name="Thum Schtock",
             starter_class_builder=get_starter_class_builder(),
             species_builder=Dwarf.DwarfSpeciesBuilder(),
+        )
+        # Stonehill Armory upgrade (gifted, not purchased): Leather traded
+        # up to Studded Leather (still light, still proficient, AC 12 base
+        # instead of 11). The Dagger became a Scimitar - same Nick mastery,
+        # bigger die (d6 instead of d4) - while the Shortsword stays,
+        # already tied for the best light/finesse martial weapon he's
+        # proficient with. Also given a Hand Crossbow for a ranged Sneak
+        # Attack option - it's light (matches his Martial proficiency and
+        # keeps a hand free, unlike the two-handed Light Crossbow/Longbow)
+        # and it's a real weapon type either way, since Sneak Attack works
+        # off any ranged weapon regardless of finesse.
+        self.drop_item(Armor.LeatherArmor)
+        self.drop_item(Dagger)
+        self.add_adventuring_gear(
+            "Stonehill Armory Upgrade",
+            armor=[Armor.StuddedLeatherArmor()],
+            weapons=[Scimitar(), HandCrossbow(), HandCrossbow()],
         )

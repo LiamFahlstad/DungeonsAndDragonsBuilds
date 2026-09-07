@@ -23,6 +23,7 @@ from CharacterContent.Classes.SubClasses2024.ClericLight import (
     ClericLightLevel3,
 )
 from CharacterContent.Features.CharacterFeats import Backgrounds, OriginFeats
+from CharacterContent.Items import Armor, Weapons
 from CharacterContent.Species import Dwarf
 from CharacterContent.Spells.SpellLists import (
     ClericLevel0Spells,
@@ -128,4 +129,21 @@ class Y2024ClericLightGabrielGreybeardCharacterBuilder(CharacterBuilder):
             name="Gabriel Greybeard",
             starter_class_builder=get_starter_class_builder(),
             species_builder=Dwarf.DwarfSpeciesBuilder(),
+        )
+        # Stonehill Armory upgrade (gifted, not purchased): Chain Shirt
+        # traded up to Breastplate (still medium, still proficient, AC 14
+        # instead of 13). His Mace stays - already the best one-handed
+        # option he's proficient with alongside a shield (Cleric
+        # proficiency is Simple weapons only, since he took the
+        # Thaumaturge Divine Order rather than Protector). Also given a
+        # Quarterstaff (Simple, versatile) so he can drop the shield and
+        # swing two-handed for a bigger die when he doesn't need the extra
+        # AC, and a Light Crossbow for a ranged option - the best die (d8)
+        # among the Simple-weapon ranged options he's actually proficient
+        # with.
+        self.drop_item(Armor.ChainShirtArmor)
+        self.add_adventuring_gear(
+            "Stonehill Armory Upgrade",
+            armor=[Armor.BreastplateArmor()],
+            weapons=[Weapons.Quarterstaff(), Weapons.LightCrossbow()],
         )

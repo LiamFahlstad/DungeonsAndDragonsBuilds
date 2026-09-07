@@ -2,12 +2,14 @@ from typing import Optional
 
 import attr
 
+import Core.Definitions as Definitions
 from CharacterContent.Classes.BaseClasses import ClassBuilder
 from CharacterContent.Classes.BaseClasses.BardBase import (
     BardMulticlassBuilder,
     BardCustomStarterClassArgs,
 )
 from Builds.CharacterSheetAccumulator import CharacterSheetData
+from CharacterContent.Items import Weapons
 from Core.Definitions import BardSubclass
 from CharacterContent.Features.SubClassFeatures.Bard import BardValorFeatures
 from CharacterContent.Features.ClassFeatures.Bard import BardFeatures
@@ -25,6 +27,14 @@ class BardValorLevel3(ClassBuilder.SubclassLevel3):
         )[0]
         bardic_inspiration.extend_feature(BardValorFeatures.CombatInspiration())
         data.add_feature(BardValorFeatures.MartialTraining())
+        # MartialTraining's own text describes these grants, but (unlike
+        # e.g. ClericBase's Divine Order Protector) never actually applied
+        # them - so proficiency-based logic (weapon auto-proficiency on
+        # add_weapon, the sheet's "Armor/Weapon Prof." display) silently
+        # treated a Valor Bard as still Light-armor/Simple-weapon-only.
+        data.add_weapon_proficiency(Weapons.WeaponProficiency.MARTIAL)
+        data.add_armor_proficiency(Definitions.ArmorType.MEDIUM)
+        data.add_armor_proficiency(Definitions.ArmorType.SHIELD)
         return data
 
 
