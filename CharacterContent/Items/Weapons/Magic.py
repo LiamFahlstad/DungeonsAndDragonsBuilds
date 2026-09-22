@@ -85,7 +85,7 @@ class RicochetBlade(AbstractWeapon):
         )
         self.name = "Ricochet Blade"
         self.ability = Ability.DEXTERITY
-        self.properties = [WeaponProperty.FINESSE]
+        self.properties = [WeaponProperty.FINESSE, WeaponProperty.LIGHT]
         self.mastery = WeaponMastery.NICK
         self.weapon_type = WeaponType.MARTIAL_MELEE
         self.damage_type = WeaponDamageTypes.SLASHING
@@ -163,7 +163,7 @@ class CoinflipCutBlade(AbstractWeapon):
         )
         self.name = "Coinflip Cut"
         self.ability = Ability.DEXTERITY
-        self.properties = [WeaponProperty.FINESSE]
+        self.properties = [WeaponProperty.FINESSE, WeaponProperty.LIGHT]
         self.mastery = WeaponMastery.NICK
         self.weapon_type = WeaponType.MARTIAL_MELEE
         self.damage_type = WeaponDamageTypes.SLASHING

@@ -1,32 +1,25 @@
 from Core.Definitions import Ability
 from .Base import AbstractWeapon
 from .Enums import WeaponMastery, WeaponProperty, WeaponType, WeaponDamageRolls, WeaponDamageTypes
+from .WeaponFamilies import AxeMedium, DaggerLight, HammerLight, MaceLight, MaceMedium, SpearMedium
 
 
-class Club(AbstractWeapon):
+class Club(MaceLight):
     def base_stats(self) -> None:
+        super().base_stats()
         self.name = "Club"
-        self.ability = Ability.STRENGTH
-        self.properties = [WeaponProperty.LIGHT]
         self.mastery = WeaponMastery.SLOW
-        self.weapon_type = WeaponType.SIMPLE_MELEE
-        self.damage_type = WeaponDamageTypes.BLUDGEONING
-        self.damage_roll = WeaponDamageRolls.D4
-        self.weight = 2
         self.value = 0.1
+        self.is_homebrew = False
 
 
-class Dagger(AbstractWeapon):
+class Dagger(DaggerLight):
     def base_stats(self) -> None:
+        super().base_stats()
         self.name = "Dagger"
-        self.ability = Ability.STRENGTH
         self.properties = [WeaponProperty.FINESSE, WeaponProperty.LIGHT, WeaponProperty.THROWN]
-        self.mastery = WeaponMastery.NICK
-        self.weapon_type = WeaponType.SIMPLE_MELEE
-        self.damage_type = WeaponDamageTypes.PIERCING
-        self.damage_roll = WeaponDamageRolls.D4
-        self.weight = 1
         self.value = 2
+        self.is_homebrew = False
 
 
 class Greatclub(AbstractWeapon):
@@ -42,56 +35,40 @@ class Greatclub(AbstractWeapon):
         self.value = 0.2
 
 
-class Handaxe(AbstractWeapon):
+class Handaxe(AxeMedium):
     def base_stats(self) -> None:
+        super().base_stats()
         self.name = "Handaxe"
-        self.ability = Ability.STRENGTH
         self.properties = [WeaponProperty.LIGHT, WeaponProperty.THROWN]
         self.mastery = WeaponMastery.VEX
-        self.weapon_type = WeaponType.SIMPLE_MELEE
-        self.damage_type = WeaponDamageTypes.SLASHING
-        self.damage_roll = WeaponDamageRolls.D6
-        self.weight = 2
         self.value = 5
+        self.is_homebrew = False
 
 
-class Javelin(AbstractWeapon):
+class Javelin(SpearMedium):
     def base_stats(self) -> None:
+        super().base_stats()
         self.name = "Javelin"
-        self.ability = Ability.STRENGTH
         self.properties = [WeaponProperty.THROWN]
         self.mastery = WeaponMastery.SLOW
-        self.weapon_type = WeaponType.SIMPLE_MELEE
-        self.damage_type = WeaponDamageTypes.PIERCING
-        self.damage_roll = WeaponDamageRolls.D6
         self.weight = 2
         self.value = 0.5
+        self.is_homebrew = False
 
 
-class LightHammer(AbstractWeapon):
+class LightHammer(HammerLight):
     def base_stats(self) -> None:
+        super().base_stats()
         self.name = "Light Hammer"
-        self.ability = Ability.STRENGTH
-        self.properties = [WeaponProperty.LIGHT, WeaponProperty.THROWN]
         self.mastery = WeaponMastery.NICK
-        self.weapon_type = WeaponType.SIMPLE_MELEE
-        self.damage_type = WeaponDamageTypes.BLUDGEONING
-        self.damage_roll = WeaponDamageRolls.D4
-        self.weight = 2
-        self.value = 2
+        self.is_homebrew = False
 
 
-class Mace(AbstractWeapon):
+class Mace(MaceMedium):
     def base_stats(self) -> None:
+        super().base_stats()
         self.name = "Mace"
-        self.ability = Ability.STRENGTH
-        self.properties = []
-        self.mastery = WeaponMastery.SAP
-        self.weapon_type = WeaponType.SIMPLE_MELEE
-        self.damage_type = WeaponDamageTypes.BLUDGEONING
-        self.damage_roll = WeaponDamageRolls.D6
-        self.weight = 4
-        self.value = 5
+        self.is_homebrew = False
 
 
 class Quarterstaff(AbstractWeapon):
@@ -120,14 +97,10 @@ class Sickle(AbstractWeapon):
         self.value = 1
 
 
-class Spear(AbstractWeapon):
+class Spear(SpearMedium):
     def base_stats(self) -> None:
+        super().base_stats()
         self.name = "Spear"
-        self.ability = Ability.STRENGTH
         self.properties = [WeaponProperty.VERSATILE_8, WeaponProperty.THROWN]
         self.mastery = WeaponMastery.SAP
-        self.weapon_type = WeaponType.SIMPLE_MELEE
-        self.damage_type = WeaponDamageTypes.PIERCING
-        self.damage_roll = WeaponDamageRolls.D6
-        self.weight = 3
-        self.value = 1
+        self.is_homebrew = False
