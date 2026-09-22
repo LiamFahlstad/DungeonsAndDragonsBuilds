@@ -8,12 +8,23 @@
 # MonsterAbility(name=..., description=...) calls. Re-running
 # generate_monsters.py will overwrite these back to plain MonsterAbility(...)
 # calls.
+#
+# Additionally, entries whose freeform description names a save DC (e.g. "DC
+# 15 Wisdom saving throw") without matching a full structured template have
+# been wrapped in
+# DcMonsterAbility (see Combat/Definitions.py) so extract_dc() can still read
+# the DC back out for the combat UI, without rewriting the entry as a fully
+# structured subclass. Affected classes: Darkmantle, DustMephit, Flumph,
+# GasSporeFungus, Homunculus, IceMephit, Kenku, Kuotoa, MagmaMephit, Magmin,
+# MudMephit, Piercer, Pixie, Raven, RustMonster, SmokeMephit, SteamMephit,
+# VineBlight, Zombie.
 from Combat.Definitions import (
     Alignment,
     Amphibious,
     Condition,
     DamageType,
     DamageTypeEntry,
+    DcMonsterAbility,
     DiceType,
     ExtendedCombatantData,
     Flyby,
@@ -2038,7 +2049,7 @@ class Darkmantle(ExtendedCombatantData):
             languages="None",
             traits=[],
             actions=[
-                MonsterAbility(
+                DcMonsterAbility(
                     name="Crush",
                     description="Melee Attack Roll: +5, reach 5 ft. Hit: 6 (1d6 + 3) Bludgeoning damage, and the darkmantle attaches to the target. If the target is a Medium or smaller creature and the darkmantle had Advantage on the attack roll, it covers the target, which has the Blinded condition and is suffocating while the darkmantle is attached in this way. While attached to a target, the darkmantle can attack only the target but has Advantage on its attack rolls. Its Speed becomes 0, it can't benefit from any bonus to its Speed, and it moves with the target. A creature can take an action to try to detach the darkmantle from itself, doing so with a successful DC 13 Strength (Athletics) check. On its turn, the darkmantle can detach itself by using 5 feet of movement.",
                 ),
@@ -2369,7 +2380,7 @@ class DustMephit(ExtendedCombatantData):
             senses="Darkvision 60 ft., Passive Perception 12",
             languages="Primordial (Auran, Terran)",
             traits=[
-                MonsterAbility(
+                DcMonsterAbility(
                     name="Death Burst",
                     description="The mephit explodes when it dies. Dexterity Saving Throw: DC 10, each creature in a 5-foot Emanation originating from the mephit. Failure: 5 (2d4) Bludgeoning damage. Success: Half damage.",
                 ),
@@ -2393,7 +2404,7 @@ class DustMephit(ExtendedCombatantData):
                     damage_type=None,
                     failure_effect="The target has the Blinded condition until the end of the mephit's next turn.",
                 ),
-                MonsterAbility(
+                DcMonsterAbility(
                     name="Sleep (1/Day)",
                     description="The mephit casts the Sleep spell, requiring no spell components and using Charisma as the spellcasting ability (spell save DC 10).",
                 ),
@@ -2788,7 +2799,7 @@ class Flumph(ExtendedCombatantData):
                     name="Advanced Telepathy",
                     description="The flumph perceives the content of any telepathic communication within 60 feet of it.",
                 ),
-                MonsterAbility(
+                DcMonsterAbility(
                     name="Prone Deficiency",
                     description="If the flumph receives the Prone condition, roll a die. On an odd number, it has the Incapacitated condition. At the end of each of its turns, the flumph makes a DC 10 Dexterity saving throw, ending the Incapacitated condition on a success.",
                 ),
@@ -2988,7 +2999,7 @@ class GasSporeFungus(ExtendedCombatantData):
             senses="Blindsight 30 ft., Passive Perception 5",
             languages="—",
             traits=[
-                MonsterAbility(
+                DcMonsterAbility(
                     name="Death Burst",
                     description="The gas spore bursts when it dies. Constitution Saving Throw: DC 10, each creature in a 20-foot Emanation originating from the gas spore. Failure: The target takes 10 (3d6) Poison damage and has the Poisoned condition for 1d12 hours. Unless the Poisoned condition is removed, the target dies at the end of that time and sprouts 2d4 Tiny Gas Spore Fungi (each with 1 Hit Point). After 2d6 days, they become Large and have 13 Hit Points.",
                 ),
@@ -4578,7 +4589,7 @@ class Homunculus(ExtendedCombatantData):
                 ),
             ],
             actions=[
-                MonsterAbility(
+                DcMonsterAbility(
                     name="Bite",
                     description="Melee Attack Roll: +4, reach 5 ft. Hit: 1 Piercing damage, and the target is subjected to the following effect. Constitution Saving Throw: DC 12. Failure: The target has the Poisoned condition until the end of the homunculus's next turn. Failure by 5 or More: The target has the Poisoned condition for 1 minute. While Poisoned, the target has the Unconscious condition, which ends early if the target takes any damage.",
                 ),
@@ -4693,7 +4704,7 @@ class IceMephit(ExtendedCombatantData):
             senses="Darkvision 60 ft., Passive Perception 12",
             languages="Primordial (Aquan, Auran)",
             traits=[
-                MonsterAbility(
+                DcMonsterAbility(
                     name="Death Burst",
                     description="The mephit explodes when it dies. Constitution Saving Throw: DC 10, each creature in a 5-foot Emanation originating from the mephit. Failure: 5 (2d4) Cold damage. Success: Half damage.",
                 ),
@@ -4910,7 +4921,7 @@ class Kenku(ExtendedCombatantData):
             senses="Darkvision 60 ft., Passive Perception 12",
             languages="Common, Primordial (Auran)",
             traits=[
-                MonsterAbility(
+                DcMonsterAbility(
                     name="Mimicry",
                     description="The kenku can mimic any sounds it has heard, including voices. A creature that hears the sounds can tell they are imitations with a successful DC 14 Wisdom (Insight) check.",
                 ),
@@ -4928,7 +4939,7 @@ class Kenku(ExtendedCombatantData):
                 ),
             ],
             bonus_actions=[
-                MonsterAbility(
+                DcMonsterAbility(
                     name="Eldritch Lantern (Recharge 4–6)",
                     description="The kenku casts Faerie Fire, using Intelligence as the spellcasting ability (spell save DC 10).",
                 ),
@@ -5065,7 +5076,7 @@ class Kuotoa(ExtendedCombatantData):
             ],
             bonus_actions=[],
             reactions=[
-                MonsterAbility(
+                DcMonsterAbility(
                     name="Sticky Shield",
                     description="Trigger: A creature misses the kuo-toa with a melee attack roll using a weapon. Response—Strength Saving Throw: DC 11, the triggering creature. Failure: The attack's weapon sticks to the kuo-toa's shield. If the target doesn't let go of the weapon, the target has the Grappled condition while the weapon is stuck (escape DC 11). While stuck, the weapon can't be used. The target can take an action to make a DC 11 Strength (Athletics) check, freeing the weapon on a success.",
                 ),
@@ -5301,7 +5312,7 @@ class MagmaMephit(ExtendedCombatantData):
             senses="Darkvision 60 ft., Passive Perception 10",
             languages="Primordial (Ignan, Terran)",
             traits=[
-                MonsterAbility(
+                DcMonsterAbility(
                     name="Death Burst",
                     description="The mephit explodes when it dies. Dexterity Saving Throw: DC 11, each creature in a 5-foot Emanation originating from the mephit. Failure: 7 (2d6) Fire damage. Success: Half damage.",
                 ),
@@ -5378,7 +5389,7 @@ class Magmin(ExtendedCombatantData):
             senses="Darkvision 60 ft., Passive Perception 10",
             languages="Primordial (Ignan)",
             traits=[
-                MonsterAbility(
+                DcMonsterAbility(
                     name="Death Burst",
                     description="The magmin explodes when it dies. Dexterity Saving Throw: DC 11, each creature in a 10-foot Emanation originating from the magmin. Failure: 7 (2d6) Fire damage. Success: Half damage.",
                 ),
@@ -5627,7 +5638,7 @@ class MudMephit(ExtendedCombatantData):
             senses="Darkvision 60 ft., Passive Perception 10",
             languages="Primordial (Aquan, Terran)",
             traits=[
-                MonsterAbility(
+                DcMonsterAbility(
                     name="Death Burst",
                     description="The mephit explodes when it dies. Dexterity Saving Throw: DC 11, each creature in a 5-foot Emanation originating from the mephit. Failure: The target has the Restrained condition until the end of its next turn.",
                 ),
@@ -6361,7 +6372,7 @@ class Piercer(ExtendedCombatantData):
                     damage_bonus=1,
                     damage_type=DamageType.PIERCING,
                 ),
-                MonsterAbility(
+                DcMonsterAbility(
                     name="Drop",
                     description="The piercer falls. Dexterity Saving Throw: DC 11, one creature directly underneath the piercer. Failure: 10 (3d6) Piercing damage. Failure or Success: The piercer reduces any damage it takes from the fall by 20.",
                 ),
@@ -6473,7 +6484,7 @@ class Pixie(ExtendedCombatantData):
                     name="Faerie Dust",
                     description="Melee or Ranged Attack Roll: +4, reach 5 ft. or range 60 ft. Hit: 1 Radiant damage, and the target has the Charmed or Poisoned condition (pixie's choice) until the start of the pixie's next turn.",
                 ),
-                MonsterAbility(
+                DcMonsterAbility(
                     name="Spellcasting",
                     description="The pixie casts one of the following spells, requiring no Material components and using Charisma as the spellcasting ability (spell save DC 12):",
                 ),
@@ -6850,7 +6861,7 @@ class Raven(ExtendedCombatantData):
             senses="Passive Perception 13",
             languages="None",
             traits=[
-                MonsterAbility(
+                DcMonsterAbility(
                     name="Mimicry",
                     description="The raven can mimic simple sounds it has heard, such as a whisper or chitter. A hearer can discern the sounds are imitations with a successful DC 10 Wisdom (Insight) check.",
                 ),
@@ -7043,7 +7054,7 @@ class RustMonster(ExtendedCombatantData):
                     damage_bonus=1,
                     damage_type=DamageType.PIERCING,
                 ),
-                MonsterAbility(
+                DcMonsterAbility(
                     name="Antennae",
                     description="The rust monster targets one nonmagical metal object—armor or a weapon—worn or carried by a creature within 5 feet of itself. Dexterity Saving Throw: DC 11, the creature with the object. Failure: The object takes a −1 penalty to the AC it offers (armor) or to its attack rolls (weapon). Armor is destroyed if the penalty reduces its AC to 10, and a weapon is destroyed if its penalty reaches −5. The penalty can be removed by casting the Mending spell on the armor or weapon.",
                 ),
@@ -7717,7 +7728,7 @@ class SmokeMephit(ExtendedCombatantData):
             senses="Darkvision 60 ft., Passive Perception 12",
             languages="Primordial (Auran, Ignan)",
             traits=[
-                MonsterAbility(
+                DcMonsterAbility(
                     name="Death Burst",
                     description="The mephit explodes when it dies. Constitution Saving Throw: DC 11, each creature in a 5-foot Emanation originating from the mephit. Failure: The target has the Poisoned condition until the end of its next turn.",
                 ),
@@ -7924,7 +7935,7 @@ class SteamMephit(ExtendedCombatantData):
                     name="Blurred Form",
                     description="Attack rolls against the mephit are made with Disadvantage unless the mephit has the Incapacitated condition.",
                 ),
-                MonsterAbility(
+                DcMonsterAbility(
                     name="Death Burst",
                     description="The mephit explodes when it dies. Dexterity Saving Throw: DC 10, each creature in a 5-foot Emanation originating from the mephit. Failure: 5 (2d4) Fire damage. Success: Half damage.",
                 ),
@@ -8753,7 +8764,7 @@ class VineBlight(ExtendedCombatantData):
                     damage_type=DamageType.BLUDGEONING,
                     additional_ruling="If the target is a Large or smaller creature, it has the Grappled condition (escape DC 12). Until the grapple ends, the target takes 4 (1d8) Bludgeoning damage at the start of each of its turns, and the blight can't make Constricting Vine attacks.",
                 ),
-                MonsterAbility(
+                DcMonsterAbility(
                     name="Entangling Plants (Recharge 5–6)",
                     description="The blight casts the Entangle spell, using Constitution as the spellcasting ability (spell save DC 12).",
                 ),
@@ -9341,7 +9352,7 @@ class Zombie(ExtendedCombatantData):
             senses="darkvision 60 ft., Passive Perception 8",
             languages="Understands Common plus one other language but can't speak",
             traits=[
-                MonsterAbility(
+                DcMonsterAbility(
                     name="Undead Fortitude",
                     description="If damage reduces the zombie to 0 Hit Points, it must make a Constitution saving throw (DC 5 plus the damage taken) unless the damage is Radiant or from a Critical Hit. On a successful save, the zombie drops to 1 Hit Point instead.",
                 ),

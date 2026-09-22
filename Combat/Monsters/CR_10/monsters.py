@@ -10,12 +10,22 @@
 # SpiderClimb, WebWalker).
 # Re-running generate_monsters.py will overwrite these back to plain
 # MonsterAbility(...) calls.
+#
+# Additionally, entries whose freeform description names a save DC (e.g. "DC
+# 15 Wisdom saving throw") without matching a full structured template have
+# been wrapped in
+# DcMonsterAbility (see Combat/Definitions.py) so extract_dc() can still read
+# the DC back out for the combat UI, without rewriting the entry as a fully
+# structured subclass. Affected classes: Aboleth, CultistHierophant,
+# CyclopsOracle, DeathSlaad, Deva, GuardianNaga, NobleProdigy, PerformerLegend,
+# SpyMaster, StoneGolem, Yochlol.
 from Combat.Definitions import (
     Alignment,
     Amphibious,
     Condition,
     DamageType,
     DamageTypeEntry,
+    DcMonsterAbility,
     DiceType,
     ExtendedCombatantData,
     LegendaryResistance,
@@ -84,7 +94,7 @@ class Aboleth(ExtendedCombatantData):
                     description="If destroyed, the aboleth gains a new body in 5d10 days, reviving with all its Hit Points in the Far Realm or another location chosen by the DM.",
                 ),
                 LegendaryResistance(creature_name="aboleth", uses=3, lair_uses=4),
-                MonsterAbility(
+                DcMonsterAbility(
                     name="Mucus Cloud",
                     description="While underwater, the aboleth is surrounded by mucus. Constitution Saving Throw: DC 14, each creature in a 5-foot Emanation originating from the aboleth at the end of the aboleth's turn. Failure: The target is cursed. Until the curse ends, the target's skin becomes slimy, the target can breathe air and water, and it can't regain Hit Points unless it is underwater. While the cursed creature is outside a body of water, the creature takes 6 (1d12) Acid damage at the end of every 10 minutes unless moisture is applied to its skin before those minutes have passed.",
                 ),
@@ -207,7 +217,7 @@ class CultistHierophant(ExtendedCombatantData):
                     damage_bonus=5,
                     damage_type=DamageType.RADIANT,
                 ),
-                MonsterAbility(
+                DcMonsterAbility(
                     name="Spellcasting",
                     description="The cultist casts one of the following spells, using Charisma as the spellcasting ability (spell save DC 17):",
                 ),
@@ -276,7 +286,7 @@ class CyclopsOracle(ExtendedCombatantData):
                     name="Flash of Light",
                     description="Ranged Attack Roll: +10, range 120 ft. Hit: 17 (2d10 + 6) Radiant damage, and the target has Disadvantage on attack rolls until the end of the cyclops's next turn.",
                 ),
-                MonsterAbility(
+                DcMonsterAbility(
                     name="Spellcasting",
                     description="The cyclops casts one of the following spells, requiring no Material components and using Wisdom as the spellcasting ability (spell save DC 16):",
                 ),
@@ -359,7 +369,7 @@ class DeathSlaad(ExtendedCombatantData):
                     secondary_damage_type=DamageType.NECROTIC,
                     additional_ruling="Until the start of the slaad's next turn, the target has a condition determined by rolling 1d4: on a 1, Charmed; on a 2, Frightened; on a 3, Poisoned; or on a 4, Incapacitated.",
                 ),
-                MonsterAbility(
+                DcMonsterAbility(
                     name="Spellcasting",
                     description="The slaad casts one of the following spells, requiring no Material components and using Charisma as the spellcasting ability (spell save DC 16):",
                 ),
@@ -444,7 +454,7 @@ class Deva(ExtendedCombatantData):
                     secondary_dice_type=DiceType.D8,
                     secondary_damage_type=DamageType.RADIANT,
                 ),
-                MonsterAbility(
+                DcMonsterAbility(
                     name="Spellcasting",
                     description="The deva casts one of the following spells, requiring no Material components and using Charisma as the spellcasting ability (spell save DC 17):",
                 ),
@@ -621,7 +631,7 @@ class GuardianNaga(ExtendedCombatantData):
                     failure_effect="and the target has the Blinded condition until the start of the naga's next turn",
                     success_effect="Half damage only.",
                 ),
-                MonsterAbility(
+                DcMonsterAbility(
                     name="Spellcasting",
                     description="The naga casts one of the following spells, requiring no Somatic or Material components and using Wisdom as the spellcasting ability (spell save DC 16):",
                 ),
@@ -785,7 +795,7 @@ class NobleProdigy(ExtendedCombatantData):
                     name="Beguiling Strike",
                     description="Melee or Ranged Attack Roll: +8, reach 5 ft. or range 60 ft. Hit: 18 (4d6 + 4) Psychic damage, and the target has the Charmed condition until the start of the noble's next turn.",
                 ),
-                MonsterAbility(
+                DcMonsterAbility(
                     name="Spellcasting",
                     description="The noble casts one of the following spells, requiring no Material components and using Charisma as the spellcasting ability (spell save DC 16):",
                 ),
@@ -881,14 +891,14 @@ class PerformerLegend(ExtendedCombatantData):
                     failure_effect="and the target has the Charmed or Frightened condition (performer's choice) until the end of the performer's next turn",
                     success_effect="Half damage only.",
                 ),
-                MonsterAbility(
+                DcMonsterAbility(
                     name="Spellcasting",
                     description="The performer casts one of the following spells, requiring no Material components and using Charisma as the spellcasting ability (spell save DC 17):",
                 ),
             ],
             bonus_actions=[],
             reactions=[
-                MonsterAbility(
+                DcMonsterAbility(
                     name="Warding Charm",
                     description="Trigger: A creature hits the performer with an attack roll. Response—Wisdom Saving Throw: DC 17, the triggering creature. Failure: The attack roll misses the performer, and the target has the Charmed condition until the end of the performer's next turn.",
                 ),
@@ -979,7 +989,7 @@ class SpyMaster(ExtendedCombatantData):
                     secondary_dice_type=DiceType.D8,
                     secondary_damage_type=DamageType.POISON,
                 ),
-                MonsterAbility(
+                DcMonsterAbility(
                     name="Smoke Bomb (1/Day)",
                     description="The spy throws a bomb to a point it can see within 30 feet of itself. Constitution Saving Throw: DC 16, each creature in a 20-foot-radius Sphere centered on that point. Failure: 28 (8d6) Poison damage, and the target has the Blinded condition until the end of the spy's next turn. Success: Half damage only.",
                 ),
@@ -1077,7 +1087,7 @@ class StoneGolem(ExtendedCombatantData):
                 ),
             ],
             bonus_actions=[
-                MonsterAbility(
+                DcMonsterAbility(
                     name="Slow (Recharge 5–6)",
                     description="The golem casts the Slow spell, requiring no spell components and using Constitution as the spellcasting ability (spell save DC 17).",
                 ),
@@ -1250,7 +1260,7 @@ class Yochlol(ExtendedCombatantData):
                     damage_bonus=4,
                     damage_type=DamageType.ACID,
                 ),
-                MonsterAbility(
+                DcMonsterAbility(
                     name="Spellcasting",
                     description="The yochlol casts one of the following spells, requiring no Material components and using Charisma as the spellcasting ability (spell save DC 15):",
                 ),
@@ -1262,7 +1272,7 @@ class Yochlol(ExtendedCombatantData):
                 ),
             ],
             reactions=[
-                MonsterAbility(
+                DcMonsterAbility(
                     name="Toxic Escape",
                     description="Trigger: The yochlol is hit by an attack roll. Response: The yochlol halves the attack's damage to itself (round down), and it teleports to an unoccupied space it can see within 30 feet of itself. Constitution Saving Throw: DC 15, each creature within 5 feet of the yochlol's destination space. Failure: The target has the Poisoned condition until the end of its next turn. While Poisoned, it has the Incapacitated condition.",
                 ),
