@@ -11,7 +11,7 @@ from CharacterContent.Classes.SubClasses2024.RogueArcaneTrickster import (
     RogueArcaneTricksterLevel3,
 )
 from CharacterContent.Features.CharacterFeats import Backgrounds, OriginFeats
-from CharacterContent.Items import Armor, Items
+from CharacterContent.Items import Armor, Items, Weapons
 from CharacterContent.Items.Weapons.MartialMelee import Scimitar, Shortsword
 from CharacterContent.Items.Weapons.Ranged import HandCrossbow
 from CharacterContent.Items.Weapons.SimpleMelee import Dagger
@@ -136,4 +136,10 @@ class Y2024RogueArcaneTricksterThumSchtockCharacterBuilder(CharacterBuilder):
             "Stonehill Armory Upgrade",
             armor=[Armor.StuddedLeatherArmor()],
             weapons=[Scimitar(), HandCrossbow(), HandCrossbow()],
+        )
+        # Adventure to Ashelm: Halfling's Trick, a shortsword that can be
+        # hidden within a sleeve for silent attacks.
+        self.add_adventuring_gear(
+            "Adventure to Ashelm",
+            weapons=[Weapons.HalflingssTrick()],
         )

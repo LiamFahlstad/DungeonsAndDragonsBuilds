@@ -133,3 +133,10 @@ class Y2024ArtificerCartographerObmarStalskaggCharacterBuilder(CharacterBuilder)
             armor=[Armor.BreastplateArmor()],
             weapons=[Weapons.LightHammer()],
         )
+        # Adventure to Ashelm: Sulvesburg's Folly, a one-of-a-kind
+        # Dual/Two-Handed Hammer & Segway weapon recovered from Clan
+        # Sulvesburg's mining works.
+        self.add_adventuring_gear(
+            "Adventure to Ashelm",
+            weapons=[Weapons.SulvesburgsFolly()],
+        )

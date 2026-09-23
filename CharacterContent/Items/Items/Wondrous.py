@@ -1,5 +1,5 @@
 from Core.Definitions import Ability
-from CharacterContent.Features.Core.Improvements import AbilityScoreBonus, ArmorClassBonus
+from CharacterContent.Features.Core.Improvements import AbilityScoreBonus, ArmorClassBonus, SpeedBonus
 from .Base import Item, ItemCategory, ItemRarity
 
 
@@ -282,4 +282,58 @@ class GauntletsOfStrength(Item):
                     error_prefix="Gauntlets of Strength bonus",
                 )
             ],
+        )
+
+
+class CurseEnergyBandage(Item):
+    """Bandages infused with curse energy, usable with Unarmed Strikes.
+    Each hand holds 1 charge (max 2 total).
+
+    Curse Extraction: as a Bonus Action, extract curse energy from a deceased
+    'Accursed' creature to fill one bandage/charge.
+
+    Cursed Strike: when you hit with an Unarmed Strike, expend a charge to deal
+    an additional 1d6 Necrotic damage."""
+
+    def __init__(self, is_wearing: bool = True):
+        super().__init__(
+            "Curse-Energy Bandage",
+            rarity=ItemRarity.UNCOMMON,
+            requires_attunement=True,
+            category=ItemCategory.WONDROUS,
+            slots=1,
+            description_text=(
+                "Bandages designed by Celeste and infused with curse energy. "
+                "Despite their origin, the bindings should be completely safe to wield, "
+                "channeling cursed energy without harming the wearer.\n\n"
+                "Each hand can hold 1 charge (max 2 total). "
+                "Curse Extraction: As a Bonus Action, extract curse energy from a deceased "
+                "'Accursed' creature to fill one bandage/charge.\n"
+                "Cursed Strike: When you hit with an Unarmed Strike, you can expend a charge "
+                "to deal an additional 1d6 Necrotic damage."
+            ),
+            is_wearing=is_wearing,
+            is_homebrew=True,
+        )
+
+
+class MirinelsBootsOfElvenSpeed(Item):
+    """Enchanted boots that grant +5 to speed while worn.
+    Crafted with elven magic for swift and silent movement."""
+
+    def __init__(self, is_wearing: bool = True):
+        super().__init__(
+            "Mirinel's Boots of Elven Speed",
+            rarity=ItemRarity.UNCOMMON,
+            requires_attunement=True,
+            category=ItemCategory.WONDROUS,
+            slots=1,
+            description_text=(
+                "While wearing these enchanted boots, your speed increases by 5 feet.\n\n"
+                "These supple leather boots shimmer with elven craftsmanship, "
+                "allowing the wearer to move with swift, silent grace."
+            ),
+            is_wearing=is_wearing,
+            improvements=[SpeedBonus(5)],
+            is_homebrew=True,
         )

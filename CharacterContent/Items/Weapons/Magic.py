@@ -442,4 +442,219 @@ class VanguardsSpear(Spear):
         )
 
 
+class HalflingssTrick(Shortsword):
+    """A magical shortsword with a +1 bonus to attack and damage rolls.
+    Can be hidden within a sleeve and used for silent attacks.
+    Forged for stealth and precision."""
+
+    def base_stats(self) -> None:
+        super().base_stats()
+        self.rarity = ItemRarity.UNCOMMON
+        self.description_text = (
+            "This finely crafted shortsword is designed to be concealed within a sleeve. "
+            "It grants a +1 bonus to attack and damage rolls. When you use it to make "
+            "a silent attack, you have advantage on Stealth checks made to conceal the attack."
+        )
+
+    def setup_improvements(self) -> None:
+        self.add_weapon_improvement(AddAttackRollBonus(1, "Halfling's Trick"))
+        self.add_weapon_improvement(AddDamageRollBonus(1, "Halfling's Trick"))
+        self.add_weapon_improvement(SetItemName("Halfling's Trick"))
+
+
+class ModarinsWrath(Maul):
+    """A sacred maul from Moradin's altar, empowered by divine fury.
+    Has 3 Wrath stacks that degrade when the wielder rolls a 1-3 on attack rolls.
+    Deals radiant damage and grows weaker as it degrades, until finally destroyed.
+
+    Stack system: starts at +3 total bonus (distributed across stages).
+    Each attack roll of 1-3 destroys the weapon by one stage (loses one Wrath stack).
+    At 0 stacks, the weapon is destroyed completely."""
+
+    def base_stats(self) -> None:
+        super().base_stats()
+        self.rarity = ItemRarity.VERY_RARE
+        self.requires_attunement = True
+        self.description_text = (
+            "A sacred symbol of Moradin, torn from its altar by an outsider cleric. "
+            "This maul has 3 Wrath stacks, each granting +1 to attack and damage rolls. "
+            "When you roll a 1-3 on an attack roll with this weapon, it is destroyed by one stage, "
+            "losing one Wrath stack. At 3 stacks: +3 bonus. At 2 stacks: +2 bonus. At 1 stack: +1 bonus. "
+            "At 0 stacks: weapon is destroyed completely. "
+            "Damage type: you may choose between Radiant or Bludgeoning damage."
+        )
+
+    def setup_improvements(self) -> None:
+        self.add_weapon_improvement(AddAttackRollBonus(3, "Wrath Stacks (3/3)"))
+        self.add_weapon_improvement(AddDamageRollBonus(3, "Wrath Stacks (3/3)"))
+        self.add_weapon_improvement(SetItemName("Moradin's Wrath"))
+
+
+class AHushedBell(Mace):
+    """A magical mace forged to silence curses, with +1 to attack and damage.
+    Can disrupt speech and prevent creatures from using abilities requiring
+    intelligible speech. Usable twice per short rest."""
+
+    def base_stats(self) -> None:
+        super().base_stats()
+        self.rarity = ItemRarity.UNCOMMON
+        self.requires_attunement = True
+        self.description_text = (
+            "Forged by the Yellow Capes to silence those who speak the Curse, this massive "
+            "bell-shaped mace twists the words of anyone it strikes. Its ringing is never heard—"
+            "only the broken speech of its victims. It grants a +1 bonus to attack and damage rolls. "
+            "Distorted Speech: When you hit a creature with this mace, you can disrupt its speech for 1 turn. "
+            "Until the end of its next turn, it can't speak coherently or use abilities requiring intelligible speech. "
+            "You can use this ability twice per short rest."
+        )
+
+    def setup_improvements(self) -> None:
+        self.add_weapon_improvement(AddAttackRollBonus(1, "A Hushed Bell"))
+        self.add_weapon_improvement(AddDamageRollBonus(1, "A Hushed Bell"))
+        self.add_weapon_improvement(SetItemName("A Hushed Bell"))
+
+
+class SulvesburgsFolly(AbstractWeapon):
+    """A one-of-a-kind versatile weapon crafted by Clan Sulvesburg, a mining clan
+    with no warriors or smiths. Has three modes: Dual Hammer, Two-Handed Hammer, and Segway.
+    Switching modes costs a bonus action.
+
+    Dual Hammer mode: two hammers dealing 1d6 each with +1 bonus.
+    Two-Handed Hammer mode: deals 1d8 with +1 bonus.
+    Segway mode: doubles speed, can only use action for Dismount, Ram, or movement.
+    Ram ability (Segway mode): spend movement to ram; target makes DEX save or falls prone."""
+
+    def base_stats(self) -> None:
+        self.name = "Sulvesburg's Folly"
+        self.ability = Ability.STRENGTH
+        self.properties = []
+        self.mastery = WeaponMastery.PUSH
+        self.weapon_type = WeaponType.MARTIAL_MELEE
+        self.damage_type = WeaponDamageTypes.BLUDGEONING
+        self.damage_roll = WeaponDamageRolls.D8
+        self.weight = 6
+        self.rarity = ItemRarity.LEGENDARY
+        self.requires_attunement = True
+        self.description_text = (
+            "A one-of-a-kind weapon crafted by Clan Sulvesburg, a mining clan with neither "
+            "warriors nor smiths among its ranks. Born from ingenuity rather than martial expertise, "
+            "it is their best—and most unconventional—attempt at building a weapon.\n\n"
+            "Versatile Engineering: Switch between three modes as a bonus action.\n"
+            "1) Dual Hammer: Wielded as two hammers, each 1d6 damage with +1 attack and damage.\n"
+            "2) Two-Handed Hammer: 1d8 damage with +1 attack and damage.\n"
+            "3) Segway: Doubles your speed. Can only use your action for Dismount, Ram, or movement.\n\n"
+            "Ram (Segway mode only): Spend movement to ram a creature. The target makes a Dexterity "
+            "saving throw (DC = 8 + floor(movement spent ÷ 5)) or falls prone."
+        )
+        self.is_homebrew = True
+
+    def setup_improvements(self) -> None:
+        self.add_weapon_improvement(AddAttackRollBonus(1, "Sulvesburg's Folly"))
+        self.add_weapon_improvement(AddDamageRollBonus(1, "Sulvesburg's Folly"))
+
+
+class Lightning(AbstractWeapon):
+    """One of a pair of twin magic hammers forged by Clan Stormwill.
+    Deals 1d6 damage with +1 to attack and damage rolls.
+    Wielder chooses bludgeoning or lightning damage per hit.
+    On a hit, gain 1 Storm Charge (max 3, shared with Thunder).
+    Twinbound: Can summon Thunder into free hand (within 60 ft)."""
+
+    def base_stats(self) -> None:
+        self.name = "Lightning"
+        self.ability = Ability.STRENGTH
+        self.properties = []
+        self.mastery = WeaponMastery.NICK
+        self.weapon_type = WeaponType.SIMPLE_MELEE
+        self.damage_type = WeaponDamageTypes.BLUDGEONING
+        self.damage_roll = WeaponDamageRolls.D6
+        self.weight = 2
+        self.rarity = ItemRarity.VERY_RARE
+        self.requires_attunement = True
+        self.description_text = (
+            "One of a pair of twin hammers forged by Clan Stormwill, the fortress's warrior clan. "
+            "This hammer, called Lightning, deals 1d6 damage with +1 to attack and damage rolls. "
+            "You may choose bludgeoning or lightning damage per hit. On a hit, gain 1 Storm Charge "
+            "(max 3, shared with Thunder).\n"
+            "Twinbound: While wielding this hammer, you can summon Thunder into your free hand as long "
+            "as it is within 60 feet of you. The two hammers can combine into The Storm when wielded together."
+        )
+        self.is_homebrew = True
+
+    def setup_improvements(self) -> None:
+        self.add_weapon_improvement(AddAttackRollBonus(1, "Lightning"))
+        self.add_weapon_improvement(AddDamageRollBonus(1, "Lightning"))
+        self.add_weapon_improvement(SetItemName("Lightning"))
+
+
+class Thunder(AbstractWeapon):
+    """One of a pair of twin magic hammers forged by Clan Stormwill.
+    Deals 1d6 damage with +1 to attack and damage rolls.
+    Wielder chooses bludgeoning or thunder damage per hit.
+    On a hit, may expend any number of Storm Charges to deal additional 1d6 damage per charge.
+    Twinbound: Can summon Lightning into free hand (within 60 ft)."""
+
+    def base_stats(self) -> None:
+        self.name = "Thunder"
+        self.ability = Ability.STRENGTH
+        self.properties = []
+        self.mastery = WeaponMastery.NICK
+        self.weapon_type = WeaponType.SIMPLE_MELEE
+        self.damage_type = WeaponDamageTypes.BLUDGEONING
+        self.damage_roll = WeaponDamageRolls.D6
+        self.weight = 2
+        self.rarity = ItemRarity.VERY_RARE
+        self.requires_attunement = True
+        self.description_text = (
+            "One of a pair of twin hammers forged by Clan Stormwill, the fortress's warrior clan. "
+            "This hammer, called Thunder, deals 1d6 damage with +1 to attack and damage rolls. "
+            "You may choose bludgeoning or thunder damage per hit. On a hit with Thunder, you may expend "
+            "any number of Storm Charges to deal additional 1d6 thunder or lightning damage per charge expended "
+            "(max 3 charges total, shared with Lightning).\n"
+            "Twinbound: While wielding this hammer, you can summon Lightning into your free hand as long "
+            "as it is within 60 feet of you. The two hammers can combine into The Storm when wielded together."
+        )
+        self.is_homebrew = True
+
+    def setup_improvements(self) -> None:
+        self.add_weapon_improvement(AddAttackRollBonus(1, "Thunder"))
+        self.add_weapon_improvement(AddDamageRollBonus(1, "Thunder"))
+        self.add_weapon_improvement(SetItemName("Thunder"))
+
+
+class TheStorm(AbstractWeapon):
+    """The combined form of Lightning and Thunder when wielded together in both hands.
+    Deals 2d6 damage with +1 to attack and damage rolls.
+    Each hit grants 1 Storm Charge (max 3).
+    Can expend 3 Storm Charges to unleash a storm bolt at a creature within 60 feet:
+    5d6 lightning or thunder damage, and the target is knocked prone."""
+
+    def base_stats(self) -> None:
+        self.name = "The Storm"
+        self.ability = Ability.STRENGTH
+        self.properties = [WeaponProperty.TWO_HANDED, WeaponProperty.HEAVY]
+        self.mastery = WeaponMastery.PUSH
+        self.weapon_type = WeaponType.MARTIAL_MELEE
+        self.damage_type = WeaponDamageTypes.BLUDGEONING
+        self.damage_roll = WeaponDamageRolls.D6x2
+        self.weight = 4
+        self.rarity = ItemRarity.LEGENDARY
+        self.requires_attunement = True
+        self.description_text = (
+            "The combined form of Lightning and Thunder when wielded together (both hands). "
+            "Forged by Clan Stormwill, the fortress's warrior clan, Thunder and Lightning are a pair of twin "
+            "hammers designed to be wielded as one. Their mastery of storm-forged weaponry allows the hammers "
+            "to build and unleash devastating power, culminating in their most feared form: The Storm.\n"
+            "This two-handed weapon deals 2d6 damage with +1 to attack and damage rolls. "
+            "Each hit grants 1 Storm Charge (max 3). You can expend 3 Storm Charges to unleash a storm bolt "
+            "at a creature within 60 feet: 5d6 lightning or thunder damage, and the target is knocked prone."
+        )
+        self.is_homebrew = True
+
+    def setup_improvements(self) -> None:
+        self.add_weapon_improvement(AddAttackRollBonus(1, "The Storm"))
+        self.add_weapon_improvement(AddDamageRollBonus(1, "The Storm"))
+        self.add_weapon_improvement(SetItemName("The Storm"))
+
+
 ### Utility functions

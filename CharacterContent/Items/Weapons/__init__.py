@@ -127,5 +127,12 @@ from .Magic import (
     FlameTongueSword,
     SkirmishersShortsword,
     VanguardsSpear,
+    HalflingssTrick,
+    ModarinsWrath,
+    AHushedBell,
+    SulvesburgsFolly,
+    Lightning,
+    Thunder,
+    TheStorm,
 )
 from .Writer import write_weapons_to_file

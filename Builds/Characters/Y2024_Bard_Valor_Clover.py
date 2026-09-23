@@ -190,3 +190,8 @@ class Y2024BardValorCloverCharacterBuilder(CharacterBuilder):
                 Weapons.Longbow(),
             ],
         )
+        # Adventure to Ashelm: Mirinel's Boots of Elven Speed.
+        self.add_adventuring_gear(
+            "Adventure to Ashelm",
+            items=[(Items.MirinelsBootsOfElvenSpeed(), 1)],
+        )

@@ -206,4 +206,6 @@ from .Wondrous import (
     CloakOfProtection,
     BracersOfArchery,
     GauntletsOfStrength,
+    CurseEnergyBandage,
+    MirinelsBootsOfElvenSpeed,
 )

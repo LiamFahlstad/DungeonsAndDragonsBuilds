@@ -138,3 +138,9 @@ class Y2024PaladinDevotionEdmundCharacterBuilder(CharacterBuilder):
             armor=[Armor.SplintArmor()],
             weapons=[Weapons.Handaxe(), Weapons.Greatsword(), Weapons.Longbow()],
         )
+        # Adventure to Ashelm: A Hushed Bell, a bell-shaped mace forged by
+        # the Yellow Capes to silence those who speak the Curse.
+        self.add_adventuring_gear(
+            "Adventure to Ashelm",
+            weapons=[Weapons.AHushedBell()],
+        )

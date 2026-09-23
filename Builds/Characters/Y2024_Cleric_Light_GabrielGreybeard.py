@@ -147,3 +147,9 @@ class Y2024ClericLightGabrielGreybeardCharacterBuilder(CharacterBuilder):
             armor=[Armor.BreastplateArmor()],
             weapons=[Weapons.Quarterstaff(), Weapons.LightCrossbow()],
         )
+        # Adventure to Ashelm: Moradin's Wrath, a sacred maul torn from the
+        # god's altar - the religious symbol recovered on the trip.
+        self.add_adventuring_gear(
+            "Adventure to Ashelm",
+            weapons=[Weapons.ModarinsWrath()],
+        )

@@ -147,3 +147,9 @@ class Y2024MonkElementsKiviJattiCharacterBuilder(CharacterBuilder):
                 (Items.Scroll(SpellLists.ConjurationLevel2Spells.MISTY_STEP), 1),
             ],
         )
+        # Adventure to Ashelm: a Curse-Energy Bandage, infused bindings that
+        # empower his Unarmed Strikes with necrotic damage.
+        self.add_adventuring_gear(
+            "Adventure to Ashelm",
+            items=[(Items.CurseEnergyBandage(), 1)],
+        )
