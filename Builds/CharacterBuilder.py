@@ -105,7 +105,11 @@ class CharacterBuilder:
         ability_with_highest_modifier = (
             abilities.get_spell_casting_ability_with_highest_modifier()
         )
-        character_sheet_data.spell_casting_ability = ability_with_highest_modifier
+        # A spellcasting class states its own ability (Paladin: Charisma, ...);
+        # only a character with no class spellcasting falls back to their best
+        # mental score (e.g. for species/feat spells).
+        if character_sheet_data.spell_casting_ability is None:
+            character_sheet_data.spell_casting_ability = ability_with_highest_modifier
 
         self.species_builder.set_character_level(character_sheet_data.character_level)
         self.species_builder.set_spell_casting_ability(ability_with_highest_modifier)

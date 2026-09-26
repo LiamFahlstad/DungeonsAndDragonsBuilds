@@ -233,8 +233,10 @@ class PrimalKnowledgeSkillProficiency(Feature):
         )
 
     def apply(self, character_stat_block: CharacterStatBlock):
-        for skill in self.SKILL_POOL:
-            character_stat_block.skills.update_skill_to_ability(skill, Ability.STRENGTH)
+        # Only the proficiency is permanent. Making Acrobatics, Intimidation,
+        # Perception, Stealth or Survival checks with Strength is a
+        # while-raging option (see PrimalKnowledge), so the sheet keeps each
+        # skill's normal ability.
         self._proficiency.apply(character_stat_block)
 
 
@@ -282,8 +284,10 @@ class FastMovementBonus(Feature):
     def __init__(self):
         super().__init__(skippable_in_concise=True, usage_tags=["buff"])
 
-    def apply(self, character_stat_block: CharacterStatBlock):
-        SpeedBonus(10).apply(character_stat_block)
+    def apply_after_armor(self, character_stat_block: CharacterStatBlock):
+        # "...while you aren't wearing Heavy armor."
+        if character_stat_block.worn_armor_type != Definitions.ArmorType.HEAVY:
+            SpeedBonus(10).apply(character_stat_block)
 
 
 class FeralInstinct(Feature):
@@ -473,6 +477,7 @@ class PrimalChampion(Feature):
                 (Ability.CONSTITUTION, 4),
             ],
             total=8,
+            max_score=25,
         )
 
     def apply(self, character_stat_block: CharacterStatBlock):

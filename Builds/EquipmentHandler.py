@@ -200,6 +200,10 @@ class EquipmentHandler:
             unwrapped, price = _unwrap_bought(raw_item)
             entry.items.append((unwrapped, quantity))
             if price is not None:
+                # Catalog value is per unit (as in _entry_value); an explicit
+                # Bought(price=X) is the total actually paid for the stack.
+                if isinstance(raw_item, Bought) and raw_item.price is None:
+                    price *= quantity
                 entry.purchases.append((unwrapped, price))
         self._entries.append(entry)
         return entry
@@ -256,6 +260,17 @@ class EquipmentHandler:
         see get_starting_item() for a lookup scoped to starting gear only."""
         if isinstance(item, type):
             item = self._find_item_by_type(item)
+        owned = (
+            [self._unarmed_strike]
+            + [a for entry in self._entries for a in entry.armors]
+            + [w for entry in self._entries for w in entry.weapons]
+            + [i for entry in self._entries for i, _ in entry.items]
+        )
+        if not any(o is item for o in owned):
+            raise ValueError(
+                f"Cannot drop {getattr(item, 'name', item)!r}: it isn't in this "
+                "character's equipment (already dropped, or never added?)."
+            )
         if self._unarmed_strike is item:
             self._unarmed_strike = None
         for entry in self._entries:
@@ -269,6 +284,8 @@ class EquipmentHandler:
         whichever entries hold it, in the order they were added, removing an
         entry's row entirely once its share hits zero. Raises ValueError if
         fewer than `quantity` are owned anywhere."""
+        if quantity < 1:
+            raise ValueError(f"Can only consume a positive quantity, got {quantity}.")
         total_owned = sum(q for i, q in self.items if type(i) is item_type)
         if total_owned < quantity:
             raise ValueError(

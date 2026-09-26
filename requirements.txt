@@ -12,3 +12,7 @@ attrs>=24.0.0
 # Combat Simulator Dependencies
 # Required to run RunCombatSimulator.py and the PyQt6-based combat UI (Combat/CombatUIQt/)
 PyQt6>=6.0.0
+
+# Testing
+# Required to run pytest tests (run_tests.sh)
+pytest>=8.0.0

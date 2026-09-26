@@ -1,7 +1,12 @@
 from abc import ABC, abstractmethod
 from typing import TextIO
 
-from CharacterContent.Items.Weapons import AbstractWeapon, WeaponProperty, WeaponType
+from CharacterContent.Items.Weapons import (
+    AbstractWeapon,
+    UnarmedStrike,
+    WeaponProperty,
+    WeaponType,
+)
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
@@ -31,6 +36,14 @@ class FightStyleWeaponFeature(FightingStyle):
         pass
 
 
+def _add_bonus_once(bonuses: list[tuple[int, str]], bonus: tuple[int, str]) -> None:
+    """Weapon fighting styles write into the weapon objects themselves, which
+    outlive a single setup_character_stat_block() call - so applying one
+    again (a rebuild after a cache invalidation) must not stack the bonus."""
+    if bonus not in bonuses:
+        bonuses.append(bonus)
+
+
 # Archery
 class Archery(FightStyleWeaponFeature):
     def apply(self, weapons: list[AbstractWeapon]):
@@ -39,7 +52,9 @@ class Archery(FightStyleWeaponFeature):
                 WeaponType.MARTIAL_RANGED,
                 WeaponType.SIMPLE_RANGED,
             ):
-                weapon.attack_roll_bonuses.append((2, "2 (Archery Fighting Style)"))
+                _add_bonus_once(
+                    weapon.attack_roll_bonuses, (2, "2 (Archery Fighting Style)")
+                )
 
     def description(self):
         return "Archery: You gain a +2 bonus to attack rolls you make with Ranged weapons. (calculated automatically)"
@@ -52,7 +67,8 @@ class BlindFighting(FightingStyle):
 
 class Defense(FightStyleModifier):
     def apply(self, character_stat_block: CharacterStatBlock):
-        character_stat_block.combat.increase_armor_class(1)
+        if character_stat_block.is_wearing_armor:
+            character_stat_block.combat.increase_armor_class(1)
 
     def description(self):
         return "Defense: While you're wearing Light, Medium, or Heavy armor, you gain a +1 bonus to Armor Class. (calculated automatically)"
@@ -61,15 +77,22 @@ class Defense(FightStyleModifier):
 class Dueling(FightStyleWeaponFeature):
     def apply(self, weapons: list[AbstractWeapon]):
         for weapon in weapons:
-            if weapon.weapon_type in (
-                WeaponType.MARTIAL_MELEE,
-                WeaponType.SIMPLE_MELEE,
+            if (
+                weapon.weapon_type
+                in (
+                    WeaponType.MARTIAL_MELEE,
+                    WeaponType.SIMPLE_MELEE,
+                )
+                and WeaponProperty.TWO_HANDED not in weapon.properties
+                # An Unarmed Strike isn't a weapon you hold in one hand.
+                and not isinstance(weapon, UnarmedStrike)
             ):
-                weapon.attack_roll_bonuses.append(
+                _add_bonus_once(
+                    weapon.damage_roll_bonuses,
                     (
                         2,
                         "2 (Dueling Fighting Style - Applied if one-handed weapon and no other weapons)",
-                    )
+                    ),
                 )
 
     def description(self):
@@ -95,8 +118,9 @@ class ThrownWeaponFighting(FightStyleWeaponFeature):
     def apply(self, weapons: list[AbstractWeapon]):
         for weapon in weapons:
             if WeaponProperty.THROWN in weapon.properties:
-                weapon.attack_roll_bonuses.append(
-                    (2, "2 (Thrown Weapon Fighting Style)")
+                _add_bonus_once(
+                    weapon.damage_roll_bonuses,
+                    (2, "2 (Thrown Weapon Fighting Style - ranged attacks only)"),
                 )
 
     def description(self):

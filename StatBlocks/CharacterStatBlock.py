@@ -39,9 +39,14 @@ class CharacterStatBlock:
         self.starting_gold = starting_gold
         self.current_gold = current_gold
         self.pact_magic_slots: dict[int, int] = {}
+        # Set by worn armor as it applies; read by armor-conditional effects
+        # (Defense fighting style, Unarmored Movement, Fast Movement, ...).
+        self.worn_armor_type: Optional[Definitions.ArmorType] = None
+        self.is_wielding_shield = False
         self._caster_registry: dict = {}
         self.initiative_proficiency = False
         self.initiative_roll_condition = Definitions.DiceRollCondition.NEUTRAL
+        self._initiative_roll_conditions: set[Definitions.DiceRollCondition] = set()
         self.initiative_bonus = 0
         self.spell_save_dc_bonus = 0
         # (source, slots) pairs; bonus sources only (Person is computed dynamically)
@@ -56,6 +61,11 @@ class CharacterStatBlock:
         self.sense_sources: dict[Definitions.Sense, list[tuple[int, str]]] = {}
         # (language -> [source, ...]) grants of a known language
         self.languages: dict[Definitions.Language, list[str]] = {}
+
+    @property
+    def is_wearing_armor(self) -> bool:
+        """Wearing Light, Medium or Heavy armor (a shield alone doesn't count)."""
+        return self.worn_armor_type is not None
 
     @property
     def character_level(self) -> int:
@@ -86,7 +96,14 @@ class CharacterStatBlock:
         self.initiative_proficiency = True
 
     def add_initiative_roll_condition(self, condition: Definitions.DiceRollCondition):
-        self.initiative_roll_condition = condition
+        # Advantage and Disadvantage from any number of sources cancel out.
+        self._initiative_roll_conditions.add(condition)
+        advantage = Definitions.DiceRollCondition.ADVANTAGE
+        disadvantage = Definitions.DiceRollCondition.DISADVANTAGE
+        if {advantage, disadvantage} <= self._initiative_roll_conditions:
+            self.initiative_roll_condition = Definitions.DiceRollCondition.NEUTRAL
+        else:
+            self.initiative_roll_condition = condition
 
     def add_initiative_bonus(self, bonus: int) -> None:
         self.initiative_bonus += bonus

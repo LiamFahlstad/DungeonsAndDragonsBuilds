@@ -2,6 +2,7 @@ import Core.Definitions as Definitions
 from Core.Definitions import Language
 from CharacterContent.Features.Core.BaseFeatures import (
     Feature,
+    FeatureUses,
     FeatureActivation,
     ActionType,
     RegainedOn,

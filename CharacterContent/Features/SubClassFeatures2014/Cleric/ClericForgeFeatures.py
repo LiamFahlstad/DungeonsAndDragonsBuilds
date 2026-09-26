@@ -2,6 +2,7 @@ import Core.Definitions as Definitions
 from Core.Definitions import DamageType
 from CharacterContent.Features.Core.BaseFeatures import (
     Feature,
+    FeatureUses,
     FeatureActivation,
     RegainedOn,
     FeatureTarget,

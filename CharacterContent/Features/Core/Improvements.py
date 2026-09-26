@@ -168,21 +168,46 @@ class SavingThrowBonus(CharacterImprovement):
 
 
 class AbilityScoreBonus(CharacterImprovement):
-    """Applies (Ability, bonus) pairs, validated to sum to `total`."""
+    """Applies (Ability, bonus) pairs, validated to sum to `total`.
+
+    max_per_ability: largest combined increase one ability may get (e.g. 2 for
+        an ASI's "+2 to one or +1 to two", or a background's "+2/+1 or
+        +1/+1/+1"). None means unchecked.
+    max_score: "to a maximum of N" - an increase never raises a score above
+        this, but also never lowers a score something else already pushed
+        past it. None means uncapped (e.g. magic items with their own rules).
+    """
 
     def __init__(
         self,
         bonuses: list[tuple[Ability, int]],
         total: int,
         error_prefix: str = "Invalid ability bonus",
+        max_per_ability: Optional[int] = None,
+        max_score: Optional[int] = None,
     ):
+        if any(bonus <= 0 for _, bonus in bonuses):
+            raise ValueError(f"{error_prefix}: bonuses must be positive.")
         if sum(b[1] for b in bonuses) != total:
             raise ValueError(f"{error_prefix}: bonuses must sum to {total}.")
+        if max_per_ability is not None:
+            per_ability: dict[Ability, int] = {}
+            for ability, bonus in bonuses:
+                per_ability[ability] = per_ability.get(ability, 0) + bonus
+            if any(b > max_per_ability for b in per_ability.values()):
+                raise ValueError(
+                    f"{error_prefix}: at most +{max_per_ability} to any one ability."
+                )
         self.bonuses = bonuses
+        self.max_score = max_score
 
     def apply(self, character_stat_block: CharacterStatBlock):
         for ability, bonus in self.bonuses:
-            character_stat_block.abilities.add_bonus(ability, bonus)
+            if self.max_score is not None:
+                score = character_stat_block.abilities.get_score(ability)
+                bonus = min(bonus, max(0, self.max_score - score))
+            if bonus:
+                character_stat_block.abilities.add_bonus(ability, bonus)
 
 
 class SetArmorClass(CharacterImprovement):

@@ -1,6 +1,7 @@
 from Core.Definitions import ARTIFICER_HIT_DIE, Ability, MAX_ABILITY_MODIFIER
 from CharacterContent.Features.Core.BaseFeatures import (
     Feature,
+    FeatureUses,
     FeatureActivation,
     RegainedOn,
 )

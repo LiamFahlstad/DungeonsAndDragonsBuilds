@@ -12,7 +12,11 @@ class FreeBackgroundAbilityBonus(Feature):
 
     def __init__(self, bonuses: list[tuple[Ability, int]]):
         self._bonus = AbilityScoreBonus(
-            bonuses, total=3, error_prefix="Free Background Ability Bonus"
+            bonuses,
+            total=3,
+            error_prefix="Free Background Ability Bonus",
+            max_per_ability=2,
+            max_score=20,
         )
         super().__init__(
             name="Free Background Ability Bonus",

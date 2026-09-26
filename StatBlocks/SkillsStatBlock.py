@@ -26,6 +26,11 @@ class SkillsStatBlock(StatBlock):
         )
         # Per-skill list of reasons for the currently active roll condition
         self.roll_condition_reasons: dict[Skill, list[str]] = {}
+        # Per-skill {condition: [reasons]} for every source seen, so that
+        # Advantage and Disadvantage can cancel out.
+        self._roll_condition_sources: dict[
+            Skill, dict[DiceRollCondition, list[str]]
+        ] = {}
         self.skill_to_ability = self.get_default_skill_to_ability_mapping()
 
     def add_skill_proficiency(self, skill: Skill):
@@ -56,12 +61,33 @@ class SkillsStatBlock(StatBlock):
     def set_roll_condition(
         self, skill: Skill, condition: DiceRollCondition, reason: Optional[str] = None
     ):
-        # A new condition replaces the old one, so stale reasons are dropped
-        if self.dice_roll_conditions.get(skill) != condition:
+        """Add a source of Advantage/Disadvantage on a skill. Per the rules,
+        having both cancels out to a straight roll no matter how many sources
+        of each there are. NEUTRAL clears every source."""
+        if condition == DiceRollCondition.NEUTRAL:
+            self._roll_condition_sources.pop(skill, None)
+            self.dice_roll_conditions[skill] = condition
             self.roll_condition_reasons.pop(skill, None)
-        self.dice_roll_conditions[skill] = condition
+            return
+        sources = self._roll_condition_sources.setdefault(skill, {})
+        initial = self.dice_roll_conditions.get(skill, DiceRollCondition.NEUTRAL)
+        if not sources and initial != DiceRollCondition.NEUTRAL:
+            sources[initial] = []  # condition passed to __init__
+        sources.setdefault(condition, [])
         if reason is not None:
-            self.roll_condition_reasons.setdefault(skill, []).append(reason)
+            sources[condition].append(reason)
+        if (
+            DiceRollCondition.ADVANTAGE in sources
+            and DiceRollCondition.DISADVANTAGE in sources
+        ):
+            effective = DiceRollCondition.NEUTRAL
+        else:
+            effective = condition
+        self.dice_roll_conditions[skill] = effective
+        if effective == DiceRollCondition.NEUTRAL:
+            self.roll_condition_reasons.pop(skill, None)
+        else:
+            self.roll_condition_reasons[skill] = list(sources[effective])
 
     def get_roll_condition_reasons(self, skill: Skill) -> list[str]:
         return self.roll_condition_reasons.get(skill, [])

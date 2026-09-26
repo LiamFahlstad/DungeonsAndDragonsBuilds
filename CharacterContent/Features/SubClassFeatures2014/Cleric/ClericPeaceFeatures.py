@@ -1,6 +1,7 @@
 from Core.Definitions import Ability, MAX_PROFICIENCY_BONUS
 from CharacterContent.Features.Core.BaseFeatures import (
     Feature,
+    FeatureUses,
     FeatureActivation,
     ActionType,
     RegainedOn,

@@ -7,6 +7,7 @@ from Core.Definitions import (
 )
 from CharacterContent.Features.Core.BaseFeatures import (
     Feature,
+    FeatureUses,
     FeatureActivation,
     ActionType,
     FeatureTarget,

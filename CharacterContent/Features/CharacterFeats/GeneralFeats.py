@@ -62,7 +62,7 @@ class _AbilityScoreFeat(GeneralFeat):
             raise ValueError(f"{self._NAME} ability increase must be {allowed}.")
         self.ability = ability
         self._bonus = AbilityScoreBonus(
-            [(ability, 1)], total=1, error_prefix=self._NAME
+            [(ability, 1)], total=1, error_prefix=self._NAME, max_score=20
         )
         super().__init__(name=self._NAME, origin=self._ORIGIN, uses=self._USES)
 
@@ -75,7 +75,11 @@ class AbilityScoreImprovement(GeneralFeat):
 
     def __init__(self, bonuses: list[tuple[Ability, int]]):
         self._bonus = AbilityScoreBonus(
-            bonuses, total=2, error_prefix="Ability Score Improvement"
+            bonuses,
+            total=2,
+            error_prefix="Ability Score Improvement",
+            max_per_ability=2,
+            max_score=20,
         )
         super().__init__(
             name="Ability Score Improvement",
@@ -130,7 +134,7 @@ class Athlete(_AbilityScoreFeat):
             raise ValueError(f"{self._NAME} ability increase must be {allowed}.")
         self.ability = ability
         self._bonus = AbilityScoreBonus(
-            [(ability, 1)], total=1, error_prefix=self._NAME
+            [(ability, 1)], total=1, error_prefix=self._NAME, max_score=20
         )
         Feature.__init__(
             self, name=self._NAME, origin=self._ORIGIN, usage_tags=["utility"]
@@ -542,7 +546,7 @@ class Poisoner(_AbilityScoreFeat):
             raise ValueError(f"{self._NAME} ability increase must be {allowed}.")
         self.ability = ability
         self._bonus = AbilityScoreBonus(
-            [(ability, 1)], total=1, error_prefix=self._NAME
+            [(ability, 1)], total=1, error_prefix=self._NAME, max_score=20
         )
         Feature.__init__(
             self, name=self._NAME, origin=self._ORIGIN, usage_tags=["utility"]
@@ -625,7 +629,7 @@ class RitualCaster(_AbilityScoreFeat):
             raise ValueError(f"{self._NAME} ability increase must be {allowed}.")
         self.ability = ability
         self._bonus = AbilityScoreBonus(
-            [(ability, 1)], total=1, error_prefix=self._NAME
+            [(ability, 1)], total=1, error_prefix=self._NAME, max_score=20
         )
         Feature.__init__(
             self, name=self._NAME, origin=self._ORIGIN, usage_tags=["utility"]
@@ -866,7 +870,7 @@ class Telepathic(_AbilityScoreFeat):
             raise ValueError(f"{self._NAME} ability increase must be {allowed}.")
         self.ability = ability
         self._bonus = AbilityScoreBonus(
-            [(ability, 1)], total=1, error_prefix=self._NAME
+            [(ability, 1)], total=1, error_prefix=self._NAME, max_score=20
         )
         Feature.__init__(
             self, name=self._NAME, origin=self._ORIGIN, usage_tags=["utility"]

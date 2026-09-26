@@ -84,7 +84,7 @@ def get_starter_class_builder():
             (Items.Makarov(), 1),
             (Items.NightVisionGoggles(), 2),
             (Items.ButterflyKnife(), 2),
-            (Items.Arrows(), 20),
+            (Items.Arrows(), 1),  # one bundle of 20 arrows
             (Items.Quiver(), 1),
             (Items.ThievesTools(), 1),
             (Items.DisguiseKit(), 1),

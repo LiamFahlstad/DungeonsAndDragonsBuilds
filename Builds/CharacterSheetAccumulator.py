@@ -1,3 +1,4 @@
+import copy
 from typing import Any, Literal, Optional
 
 import attr
@@ -33,6 +34,8 @@ from Utils import CharacterSheetWriters
 # XP accumulated by an earlier builder. All enums used in sheet fields are str
 # enums with non-empty values, so none of them compare equal to "" or 0.
 _MERGE_EMPTY_VALUES = (None, [], {}, "", 0)
+
+MAX_ATTUNED_ITEMS = 3
 
 
 @attr.dataclass
@@ -349,6 +352,19 @@ class CharacterSheetData:
                 f"(Shields do not count toward this limit.)"
             )
 
+        # Attunement: a creature can be attuned to at most three magic items.
+        # Unworn gear (is_wearing=False) is carried, not attuned.
+        attuned = [
+            gear.name
+            for gear in [*self.armors, *self.weapons, *(i for i, _ in self.items)]
+            if gear.requires_attunement and gear.is_wearing
+        ]
+        if len(attuned) > MAX_ATTUNED_ITEMS:
+            raise ValueError(
+                f"Character can attune to at most {MAX_ATTUNED_ITEMS} magic items, "
+                f"but is attuned to {len(attuned)}: {', '.join(attuned)}."
+            )
+
         # Validate each attribute
         if self.character_name is None:
             raise ValueError("Character name must be set.")
@@ -371,16 +387,21 @@ class CharacterSheetData:
             speed=self.speed,
             size=self.size,
         )
+        # Features mutate these sub-blocks in place (ability bonuses, skill
+        # proficiencies, ...), so the stat block gets its own copies. Sharing
+        # them would re-apply every bonus on the next rebuild after a cache
+        # invalidation, and on every build() of the same builder instance
+        # (which hands the same AbilitiesStatBlock to each CharacterSheetData).
         character = CharacterStatBlock(
             name=self.character_name,
             character_subclass=self.character_subclass,
             base_class=self.base_class,
             level_per_class=self.level_per_class,
             class_by_character_level=self.class_by_character_level,
-            abilities=self.abilities,
-            skills=self.skills,
+            abilities=copy.deepcopy(self.abilities),
+            skills=copy.deepcopy(self.skills),
             combat=combat,
-            saving_throws=self.saving_throws,
+            saving_throws=copy.deepcopy(self.saving_throws),
             spell_casting_ability=self.spell_casting_ability,
             spell_slots=self.spell_slots,
             starting_gold=self.starting_gold,
@@ -400,6 +421,11 @@ class CharacterSheetData:
 
         for armor in self.armors:
             armor.apply(character)
+
+        for apply_when in (ApplyWhen.IMMEDIATE, ApplyWhen.LAST):
+            for when, feature in self.feature_apply_order:
+                if when == apply_when:
+                    feature.apply_after_armor(character)
 
         for weapon in self.weapons:
             weapon.apply(character)

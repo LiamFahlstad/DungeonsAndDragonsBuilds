@@ -105,20 +105,17 @@ def _compute_effective_caster_level(registry: dict, level_per_class: dict) -> in
     if not non_warlock:
         return 0
 
-    # Single half-caster: use ceiling division to match the official half-caster table.
-    # Multiple casters: PHB multiclass rule says "half your levels (rounded down)".
-    single_half_caster = (
-        len(non_warlock) == 1
-        and next(iter(non_warlock.values())) == CasterType.HALF_CASTER
-    )
-
+    # 2024 PHB multiclassing: "half your levels (round up) in Paladin and
+    # Ranger" - the same ceiling division that reproduces the single-class
+    # half-caster table. (Artificer has always rounded up.) The 2014 PHB
+    # rounded Paladin/Ranger down; the base classes here follow 2024.
     total = 0
     for cls, ct in non_warlock.items():
         level = level_per_class.get(cls, 0)
         if ct == CasterType.FULL_CASTER:
             total += level
         elif ct == CasterType.HALF_CASTER:
-            total += (level + 1) // 2 if single_half_caster else level // 2
+            total += (level + 1) // 2
         elif ct == CasterType.THIRD_CASTER:
             total += level // 3
     return total
@@ -139,7 +136,7 @@ class SpellSlots(Feature):
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         caster_map = {
             CasterType.FULL_CASTER: "You are a full spellcaster and gain spell slots according to the full caster table.",
-            CasterType.HALF_CASTER: "You are a half-spellcaster and gain spell slots at half your class level (rounded up for a single half-caster).",
+            CasterType.HALF_CASTER: "You are a half-spellcaster and gain spell slots at half your class level (rounded up).",
             CasterType.WARLOCK_CASTER: "You are a warlock and gain pact magic slots that refresh on short or long rests.",
             CasterType.THIRD_CASTER: "You are a one-third spellcaster and gain spell slots according to one-third of your class level.",
         }
@@ -186,6 +183,8 @@ class SpellSlots(Feature):
             character_stat_block.level_per_class,
         )
         if effective_level < 1:
+            # Clear anything an earlier class's SpellSlots left behind.
+            character_stat_block.spell_slots = {}
             return
         character_stat_block.spell_slots = {
             i + 1: count

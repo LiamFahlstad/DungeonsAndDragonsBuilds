@@ -104,7 +104,7 @@ class HeavyCrossbow(AbstractWeapon):
             WeaponProperty.LOADING,
             WeaponProperty.TWO_HANDED,
         ]
-        self.mastery = WeaponMastery.SLOW
+        self.mastery = WeaponMastery.PUSH
         self.weapon_type = WeaponType.MARTIAL_RANGED
         self.damage_type = WeaponDamageTypes.PIERCING
         self.damage_roll = WeaponDamageRolls.D10

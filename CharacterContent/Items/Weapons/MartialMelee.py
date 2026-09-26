@@ -167,7 +167,7 @@ class Shortsword(DaggerMedium):
         super().base_stats()
         self.name = "Shortsword"
         self.mastery = WeaponMastery.VEX
-        self.value = 25
+        self.value = 10
         self.is_homebrew = False
 
 
@@ -184,20 +184,20 @@ class Warhammer(HammerHeavy):
     def base_stats(self) -> None:
         super().base_stats()
         self.name = "Warhammer"
-        self.weight = 2
+        self.weight = 5
         self.is_homebrew = False
 
 
 class WarPick(AbstractWeapon):
     def base_stats(self) -> None:
-        self.name = "WarPick"
+        self.name = "War Pick"
         self.ability = Ability.STRENGTH
         self.properties = [WeaponProperty.VERSATILE_10]
         self.mastery = WeaponMastery.SAP
         self.weapon_type = WeaponType.MARTIAL_MELEE
         self.damage_type = WeaponDamageTypes.PIERCING
         self.damage_roll = WeaponDamageRolls.D8
-        self.weight = 2
+        self.weight = 5
         self.value = 5
 
 

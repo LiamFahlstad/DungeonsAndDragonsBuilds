@@ -487,6 +487,12 @@ class Feature:
     def apply(self, character_stat_block: CharacterStatBlock):
         pass
 
+    def apply_after_armor(self, character_stat_block: CharacterStatBlock):
+        """Second pass, run for every feature after worn armor has applied -
+        for effects conditioned on armor ("while you aren't wearing Heavy
+        armor"), which apply() can't check because it runs before armor."""
+        pass
+
     def get_description(self, character_stat_block: CharacterStatBlock) -> str | None:
         return None
 

@@ -257,7 +257,13 @@ class UnarmoredMovement(Feature):
             name="Unarmored Movement", origin="Monk Level 2", skippable_in_concise=True
         )
 
-    def apply(self, character_stat_block: CharacterStatBlock):
+    def apply_after_armor(self, character_stat_block: CharacterStatBlock):
+        # "...while you aren't wearing armor or wielding a Shield."
+        if (
+            character_stat_block.is_wearing_armor
+            or character_stat_block.is_wielding_shield
+        ):
+            return
         monk_level = character_stat_block.get_class_level(
             Definitions.CharacterClass.MONK
         )
@@ -588,6 +594,7 @@ class BodyAndMind(Feature):
                 (Ability.WISDOM, 4),
             ],
             total=8,
+            max_score=25,
         )
 
     def apply(self, character_stat_block: CharacterStatBlock):

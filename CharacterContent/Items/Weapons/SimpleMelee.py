@@ -43,12 +43,12 @@ class Greatclub(AbstractWeapon):
     def base_stats(self) -> None:
         self.name = "Greatclub"
         self.ability = Ability.STRENGTH
-        self.properties = [WeaponProperty.HEAVY, WeaponProperty.TWO_HANDED]
+        self.properties = [WeaponProperty.TWO_HANDED]
         self.mastery = WeaponMastery.PUSH
         self.weapon_type = WeaponType.SIMPLE_MELEE
         self.damage_type = WeaponDamageTypes.BLUDGEONING
         self.damage_roll = WeaponDamageRolls.D8
-        self.weight = 5
+        self.weight = 10
         self.value = 0.2
 
 
