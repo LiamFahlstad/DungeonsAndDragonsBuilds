@@ -135,4 +135,8 @@ from .Magic import (
     Thunder,
     TheStorm,
 )
-from .Writer import write_weapons_to_file
+from .Writer import (
+    write_weapons_to_file,
+    write_weapon_reference_card,
+    write_weapons_reference_to_file,
+)

@@ -7,10 +7,12 @@ from CharacterContent.Features.CombatFeatures.FightingStyles import FightingStyl
 from CharacterContent.Features.Core.BaseFeatures import FEATURE_CARD_CSS, Feature, parse_feature_level
 from CharacterContent.Invocations.InvocationFactory import InvocationFactory
 from CharacterContent.Items import Armor, Items
+from CharacterContent.Items.Armor.Writer import ARMOR_CARD_CSS, write_armors_to_file
 from CharacterContent.Items.Weapons import (
     AbstractWeapon,
     UnarmedStrike,
     WeaponProficiency,
+    write_weapons_reference_to_file,
     write_weapons_to_file,
 )
 from CharacterContent.Items.Weapons.Writer import WEAPON_CARD_CSS
@@ -837,7 +839,7 @@ class HtmlCharacterSheetWriter:
             sorted_armors = sorted(entry.armors, key=lambda a: (a.category.value, a.name))
             armor_rows = [
                 (
-                    f"{armor.name}{self._worn_tag(armor)}"
+                    f"{armor.name}{self._worn_tag(armor)}{Html.attunement_tag(armor)}"
                     f"{self._acquisition_tag(armor, entry, is_starting_equipment)}",
                     self._description_or_dash(armor.description_text),
                     armor.slots,
@@ -855,6 +857,7 @@ class HtmlCharacterSheetWriter:
             weapon_rows = [
                 (
                     f"{weapon.name}{self._worn_tag(weapon, 'Wielded', 'Not wielded')}"
+                    f"{Html.attunement_tag(weapon)}"
                     f"{self._acquisition_tag(weapon, entry, is_starting_equipment)}",
                     self._description_or_dash(weapon.description_text),
                     weapon.slots,
@@ -876,7 +879,7 @@ class HtmlCharacterSheetWriter:
             )
             item_rows = [
                 (
-                    f"{item.name} ({quantity}){self._worn_tag(item)}"
+                    f"{item.name} ({quantity}){self._worn_tag(item)}{Html.attunement_tag(item)}"
                     f"{self._acquisition_tag(item, entry, is_starting_equipment)}",
                     item.description_text,
                     item.slots,
@@ -1532,7 +1535,11 @@ class HtmlCharacterSheetWriter:
         items: Optional[list[tuple[Items.Item, int]]] = None,
     ):
         """Generate a standalone item sheet HTML page showing a fixed set of
-        items (armor/weapons/other) without character context or mechanics."""
+        items (armor/weapons/other) without character context or mechanics.
+        Armor and weapons render as rules-reference cards (AC/attack/damage
+        formulas, properties, restrictions) rather than the generic
+        label/description/price row used for other items, since those are
+        the two categories a player actually rolls dice against."""
         if armors is None:
             armors = []
         if weapons is None:
@@ -1540,17 +1547,38 @@ class HtmlCharacterSheetWriter:
         if items is None:
             items = []
 
-        entry = EquipmentEntry(label=title, armors=armors, weapons=weapons, items=items)
+        entry = EquipmentEntry(label=title, armors=[], weapons=[], items=items)
 
         output_file = pathlib.Path(output_path)
         output_file.parent.mkdir(parents=True, exist_ok=True)
 
         with open(output_file, "w", encoding="utf-8") as file:
-            file.write(Html.render_style_block(Html.BASE_CHARACTER_SHEET_CSS))
+            file.write(
+                Html.render_style_block(
+                    Html.BASE_CHARACTER_SHEET_CSS, WEAPON_CARD_CSS, ARMOR_CARD_CSS
+                )
+            )
             file.write(f"<h1>{title}</h1>\n")
 
+            wrote_section = False
+
+            if armors:
+                write_armors_to_file(armors, file)
+                wrote_section = True
+
+            non_unarmed_weapons = sorted(
+                (w for w in weapons if not isinstance(w, UnarmedStrike)),
+                key=lambda w: w.name,
+            )
+            if non_unarmed_weapons:
+                if wrote_section:
+                    file.write("<hr>")
+                write_weapons_reference_to_file(non_unarmed_weapons, file)
+                wrote_section = True
+
             sections = self._build_item_sections(entry, is_starting_equipment=True)
-            for i, (section_title, rows) in enumerate(sections):
-                if i > 0:
+            for section_title, rows in sections:
+                if wrote_section:
                     file.write("<hr>")
                 Html.write_item_cards(file, section_title, rows)
+                wrote_section = True

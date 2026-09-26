@@ -4,7 +4,6 @@ import pkgutil
 
 import Builds.ItemSheets
 
-
 if __name__ == "__main__":
     for module_info in pkgutil.iter_modules(Builds.ItemSheets.__path__):
         module_name = module_info.name

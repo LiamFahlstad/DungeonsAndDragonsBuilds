@@ -16,6 +16,11 @@ class CombatStatBlock(StatBlock):
         self.armor_class_base = 10  # Overridden during character creation
         self.armor_class_abilities = {Definitions.Ability.DEXTERITY}
         self.armor_class_modifier = 0  # Non-ability related modifier
+        # Ceiling on the summed ability modifier added to AC (e.g. Medium
+        # armor: "add your Dexterity modifier, to a maximum of +2"). None
+        # means uncapped. Set alongside the ability itself so switching to
+        # armor without a cap (light/heavy) clears a stale one.
+        self.armor_class_ability_modifier_cap: Optional[int] = None
 
     def update_armor_class_base(self, new_armor_class_base: int):
         self.armor_class_base = new_armor_class_base
@@ -31,6 +36,9 @@ class CombatStatBlock(StatBlock):
             self.armor_class_abilities.clear()
         else:
             self.armor_class_abilities = {new_ability}
+
+    def update_armor_class_ability_modifier_cap(self, cap: Optional[int]):
+        self.armor_class_ability_modifier_cap = cap
 
     def calculate_hit_points(
         self,

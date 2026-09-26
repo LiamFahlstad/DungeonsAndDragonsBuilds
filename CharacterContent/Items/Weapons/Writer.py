@@ -1,10 +1,10 @@
 from typing import TextIO
 
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
-from Utils import DamageCalculator, Html
+from Utils import DamageCalculator, Html, ItemSheetSettings
 
 from .Base import AbstractWeapon, UnarmedStrike
-from .Enums import WeaponDamageTypes
+from .Enums import WeaponDamageTypes, WeaponProperty
 
 _DAMAGE_TYPE_CSS_CLASS = {
     WeaponDamageTypes.SLASHING: "wtag-dmg-slashing",
@@ -143,6 +143,15 @@ WEAPON_CARD_CSS = """/* ── Weapon entries ───────────�
             font-style: italic;
         }
 
+        /* Attunement chip - shown next to the name on any item category
+           (weapon, armor, wondrous, ...) that requires attunement, since
+           the 3-item attunement limit matters regardless of category. */
+        .wtag-attunement {
+            border-color: #b89060;
+            color: #8a6200;
+            font-weight: 600;
+        }
+
         /* Damage type chip, next to the Damage roll — one color per type */
         .wtag-dmg-slashing, .wtag-dmg-piercing, .wtag-dmg-bludgeoning {
             border-color: #b0a89a;
@@ -268,6 +277,46 @@ WEAPON_CARD_CSS = """/* ── Weapon entries ───────────�
             align-items: center;
             gap: 0.5rem;
             margin: 0.2rem 0 0 0;
+        }
+
+/* ── Reference-card layout (standalone item sheets) ──────────────────
+   Unlike the resolved character-sheet quickstats (a short "1d20 +4"
+   that fits a fixed two-column split), a reference formula runs long -
+   Attack and Damage share one wrapping row and only drop to separate
+   lines if both can't fit side by side. */
+        .weapon-ref-meta {
+            color: var(--muted-color);
+            font-size: 0.8rem;
+            margin: 0 0 0.25rem 0;
+        }
+
+        .weapon-roll-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.15rem 1.5rem;
+            font-size: 0.85rem;
+            margin: 0.1rem 0 0 0;
+        }
+
+        .wroll-pair {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.3rem;
+            align-items: baseline;
+        }
+
+        .wroll-label {
+            font-weight: 600;
+            white-space: nowrap;
+            flex-shrink: 0;
+            color: var(--muted-color);
+            font-size: 0.78rem;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .wroll-value {
+            color: #333;
         }
 
         """
@@ -439,5 +488,166 @@ def write_weapons_to_file(
         _write_single_weapon(
             weapon, character_stat_block, file, include_probability_tables
         )
+
+    file.write("</div>\n")
+
+
+def _reference_ability_label(weapon: AbstractWeapon) -> str:
+    """Ability a wielder rolls with, without resolving it against any one
+    character - the fixed override if set, "Str or Dex" for Finesse
+    weapons (the wielder's choice), else the weapon's base ability."""
+    if weapon._ability_override is not None:
+        return weapon._ability_override.short_name
+    if WeaponProperty.FINESSE in weapon.properties:
+        return "Str or Dex"
+    return weapon.ability.short_name
+
+
+def _reference_attack_roll_formula(weapon: AbstractWeapon) -> str:
+    if weapon._attack_roll_override is not None:
+        return f"1d20 {weapon._attack_roll_override:+} (fixed)"
+    formula = f"1d20 + {_reference_ability_label(weapon)} mod + proficiency (if proficient)"
+    for _, label in weapon.attack_roll_bonuses:
+        # label is already pre-formatted as "<value> (<reason>)" by
+        # AddAttackRollBonus.apply - the raw int isn't reformatted here.
+        formula += f" + {label}"
+    return formula
+
+
+def _reference_damage_roll_formula(weapon: AbstractWeapon) -> str:
+    if weapon._damage_bonus_override is not None:
+        formula = f"{weapon.damage_roll.value} {weapon._damage_bonus_override:+} (fixed)"
+    else:
+        formula = f"{weapon.damage_roll.value} + {_reference_ability_label(weapon)} mod"
+        for _, label in weapon.damage_roll_bonuses:
+            formula += f" + {label}"
+    if weapon.extra_damage:
+        extra = " + ".join(ed.format_damage() for ed in weapon.extra_damage)
+        formula += f" + {extra}"
+    return formula
+
+
+def write_weapon_reference_card(weapon: AbstractWeapon, file: TextIO) -> None:
+    """Render a single weapon as a rules-reference card: attack/damage
+    roll formulas and properties, with no character-specific bonuses
+    resolved - used by standalone item sheets, which have no character to
+    compute an attack bonus or a proficiency status against."""
+    file.write("<div class='weapon-entry'>\n")
+
+    # No "Wielded" tag here - every weapon on a standalone reference sheet
+    # is implicitly wielded/carried, unlike the character-sheet weapon
+    # list, where multiple weapons can be owned but only some in hand.
+    attunement_tag = Html.attunement_tag(weapon)
+    Html.write_gear_header(
+        file,
+        f"<span class='weapon-name'>{weapon.name}{attunement_tag}</span>",
+        Html.carrying_checkbox_id(weapon.name),
+    )
+
+    # A resolved character-sheet attack line reads "1d20 +4" - short enough
+    # for the two-column .weapon-quickstats layout. A reference-card
+    # formula ("1d20 + STR mod + proficiency (if proficient) + 1 (A Hushed
+    # Bell)") runs much longer, so Attack/Damage share one wrapping flex
+    # row (each pair only drops to its own line if it doesn't fit) rather
+    # than a rigid two-column split, and the type/rarity/price/slots facts
+    # collapse into one compact line above.
+    _, rarity, price = Html.item_type_rarity_price(weapon)
+    rarity_class = f"rarity-{rarity.lower().replace(' ', '-')}"
+    slot_label = "slot" if weapon.slots == 1 else "slots"
+    file.write(
+        f"<div class='weapon-ref-meta'>{weapon.weapon_type.value}"
+        f"<span class='wsep'>·</span>{_reference_ability_label(weapon)}"
+        f"<span class='wsep'>·</span><span class='{rarity_class}'>{rarity}</span>"
+        f"<span class='wsep'>·</span>{price}"
+        f"<span class='wsep'>·</span>{weapon.slots} {slot_label}"
+        f"</div>\n"
+    )
+
+    damage_type_class = _DAMAGE_TYPE_CSS_CLASS.get(weapon.damage_type, "")
+    damage_type_tag = (
+        f" <span class='wtag {damage_type_class}'>{weapon.damage_type.value}</span>"
+    )
+    file.write(
+        f"<div class='weapon-roll-row'>"
+        f"<span class='wroll-pair'>"
+        f"<span class='wroll-label'>Attack</span>"
+        f"<span class='wroll-value'>{_reference_attack_roll_formula(weapon)}</span>"
+        f"</span>"
+        f"<span class='wroll-pair'>"
+        f"<span class='wroll-label'>Damage</span>"
+        f"<span class='wroll-value'>{_reference_damage_roll_formula(weapon)}{damage_type_tag}</span>"
+        f"</span>"
+        f"</div>\n"
+    )
+
+    visible_properties = [
+        prop
+        for prop in weapon.properties
+        if prop != WeaponProperty.AMMUNITION or ItemSheetSettings.TRACK_AMMUNITION
+    ]
+
+    if visible_properties or weapon.mastery:
+        tags_html = ""
+        for prop in visible_properties:
+            tags_html += f"<span class='wtag'>{prop.value}</span> "
+        if weapon.mastery:
+            tags_html += (
+                f"<span class='wtag wtag-mastery'>Mastery: {weapon.mastery.value}</span>"
+            )
+        file.write(
+            f"<div class='weapon-tags'>"
+            f"<span class='wlabel-col'>Properties</span>"
+            f"<span>{tags_html.strip()}</span>"
+            f"</div>\n"
+        )
+
+    for prop in visible_properties:
+        prop_desc_processed = Html.boxes_to_html(prop.description)
+        prop_desc_html = prop_desc_processed.replace("\n", "<br>")
+        file.write(
+            f"<div class='weapon-prop'>"
+            f"<span class='wprop-label'>{prop.value}</span>"
+            f"<span class='wprop-desc'>{prop_desc_html}</span>"
+            f"</div>\n"
+        )
+
+    if weapon.mastery:
+        mastery_desc_processed = Html.boxes_to_html(weapon.mastery.description)
+        mastery_desc_html = mastery_desc_processed.replace("\n", "<br>")
+        file.write(
+            f"<div class='weapon-mastery'>"
+            f"<span class='wmastery-label'>Mastery — {weapon.mastery.value}</span>"
+            f"<span class='wmastery-desc'>{mastery_desc_html}</span>"
+            f"</div>\n"
+        )
+
+    if weapon.description_text:
+        desc_processed = Html.boxes_to_html(weapon.description_text)
+        desc_html = desc_processed.replace("\n", "<br>")
+        file.write(
+            f"<div class='weapon-addl'>"
+            f"<span class='wlabel-col'>Notes</span>"
+            f"<span class='waddl-desc'>{desc_html}</span>"
+            f"</div>\n"
+        )
+
+    file.write("</div>\n")
+
+
+def write_weapons_reference_to_file(
+    weapons: list[AbstractWeapon], file: TextIO
+) -> None:
+    """Character-independent counterpart to write_weapons_to_file, for
+    standalone item sheets that have no character to resolve attack/damage
+    bonuses against - renders the roll formula (die + modifier + any fixed
+    bonuses) in place of a resolved number."""
+    if not weapons:
+        return
+
+    file.write("<div class='weapons'>\n")
+    file.write("<h3>Weapons</h3>\n")
+
+    for weapon in weapons:
+        write_weapon_reference_card(weapon, file)
 
     file.write("</div>\n")

@@ -220,6 +220,9 @@ class CharacterStatBlock:
             self.get_ability_modifier(ability)
             for ability in self.combat.armor_class_abilities
         )
+        cap = self.combat.armor_class_ability_modifier_cap
+        if cap is not None:
+            ability_modifier = min(ability_modifier, cap)
         return (
             self.combat.armor_class_base
             + ability_modifier

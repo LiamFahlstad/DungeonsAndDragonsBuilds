@@ -319,6 +319,75 @@ def write_item_table(file: TextIO, title: str, rows: list[tuple[str, str]]):
     file.write("</table>\n")
 
 
+def attunement_tag(item) -> str:
+    """Chip marking an item as requiring attunement, in the same wtag
+    language as the existing worn/mastery/acquisition chips - shared
+    across every item category (weapon, armor, wondrous, ...) since the
+    3-item attunement limit is a mechanical fact regardless of category."""
+    if not item.requires_attunement:
+        return ""
+    return " <span class='wtag wtag-attunement'>Requires Attunement</span>"
+
+
+def item_type_rarity_price(item, quantity: int = 1) -> tuple[str, str, str]:
+    """(type label, rarity label, 'buy/sell' price display) for an Item -
+    shared between the generic gear-card table and the weapon/armor
+    reference cards, which have direct Item access rather than
+    pre-resolved tuples."""
+    value = item.get_value_display()
+    sell_value = item.get_sell_value_display()
+    prefix = f"{quantity} x " if quantity != 1 else ""
+    if value and sell_value:
+        buy_amount = value.removesuffix(" GP")
+        sell_amount = sell_value.removesuffix(" GP")
+        price = f"{prefix}{buy_amount}/{sell_amount} GP"
+    else:
+        price = "-"
+    return (
+        item.category.value.title(),
+        item.rarity.value.title(),
+        price,
+    )
+
+
+def carrying_checkbox_id(label: str) -> str:
+    """Slug an item's (possibly HTML-tagged) label into the id used to pair
+    a 'Carrying' checkbox with its <label>. Shared so weapon/armor
+    reference cards generate ids the same way the generic gear cards do."""
+    plain_label = re.sub(r"<span[^>]*>.*?</span>", "", label)
+    plain_label = re.sub(r"<[^>]*>", "", plain_label).strip()
+    return plain_label.replace(" ", "_").replace("(", "").replace(")", "") + "_carrying"
+
+
+def write_gear_header(file: TextIO, name_html: str, carrying_id: str):
+    """Title row shared by every item card (generic gear, weapon, armor):
+    the item's name alongside a 'Carrying' checkbox, always on one line."""
+    file.write("<div class='gear-header'>\n")
+    file.write(f"{name_html}\n")
+    file.write(
+        f"<label class='gear-carrying' for='{carrying_id}_check'>Carrying"
+        f"<input type='checkbox' id='{carrying_id}_check' name='{carrying_id}_check'/></label>\n"
+    )
+    file.write("</div>\n")
+
+
+def write_gear_meta_line(
+    file: TextIO, item_type: str, rarity: str, price: str, slots: int
+):
+    """Type/rarity/buy-sell-price/slots line shared by every item card
+    (generic gear, weapon, armor) - the acquisition/carrying bookkeeping
+    that applies regardless of category."""
+    rarity_class = f"rarity-{rarity.lower().replace(' ', '-')}"
+    file.write(
+        f"<div class='gear-meta'>{item_type}"
+        f"<span class='gsep'>·</span><span class='{rarity_class}'>{rarity}</span>"
+        f"<span class='gsep'>·</span>"
+        f"<span class='glabel'>Buy/Sell</span> {price}"
+        f"<span class='gsep'>·</span>"
+        f"<span class='glabel'>Slots</span> {slots}</div>\n"
+    )
+
+
 def write_item_cards(
     file: TextIO, title: Optional[str], rows: list[tuple[str, str, int, str, str, str]]
 ):
@@ -326,41 +395,18 @@ def write_item_cards(
     visual language) with type, rarity, buy/sell price, slot cost, and
     carrying tracking. Each row is (label, description, slots, item_type,
     rarity, price_display)."""
-    import re
-
     if title:
         file.write(f"<h3>{title}</h3>\n")
     file.write("<div class='gear-list'>\n")
 
     for label, description, slots, item_type, rarity, price in rows:
-        plain_label = re.sub(r"<span[^>]*>.*?</span>", "", label)
-        plain_label = re.sub(r"<[^>]*>", "", plain_label).strip()
-        carrying_id = (
-            plain_label.replace(" ", "_").replace("(", "").replace(")", "")
-            + "_carrying"
-        )
-
         file.write("<div class='gear-entry'>\n")
 
         # ── Title row: item name + carrying checkbox always stay
         # together on one line. Quick-stats flow as their own wrapping
         # line below, as a single unit instead of being split apart. ───
-        file.write("<div class='gear-header'>\n")
-        file.write(f"<span class='gear-name'>{label}</span>\n")
-        file.write(
-            f"<label class='gear-carrying' for='{carrying_id}_check'>Carrying"
-            f"<input type='checkbox' id='{carrying_id}_check' name='{carrying_id}_check'/></label>\n"
-        )
-        file.write("</div>\n")
-        rarity_class = f"rarity-{rarity.lower().replace(' ', '-')}"
-        file.write(
-            f"<div class='gear-meta'>{item_type}"
-            f"<span class='gsep'>·</span><span class='{rarity_class}'>{rarity}</span>"
-            f"<span class='gsep'>·</span>"
-            f"<span class='glabel'>Buy/Sell</span> {price}"
-            f"<span class='gsep'>·</span>"
-            f"<span class='glabel'>Slots</span> {slots}</div>\n"
-        )
+        write_gear_header(file, f"<span class='gear-name'>{label}</span>", carrying_checkbox_id(label))
+        write_gear_meta_line(file, item_type, rarity, price, slots)
 
         # ── Description ──────────────────────────────────────────────────
         if description and description != "-":

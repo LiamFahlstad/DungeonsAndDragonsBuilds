@@ -196,13 +196,24 @@ class SetArmorClass(CharacterImprovement):
     after all features, so worn armor deliberately overrides feature-provided
     AC formulas such as Unarmored Defense."""
 
-    def __init__(self, base: int, ability: Optional[Ability]):
+    def __init__(
+        self,
+        base: int,
+        ability: Optional[Ability],
+        ability_modifier_cap: Optional[int] = None,
+    ):
         self.base = base
         self.ability = ability
+        # e.g. Medium armor: "add your Dexterity modifier, to a maximum of
+        # +2". None means uncapped (Light armor, or no ability at all).
+        self.ability_modifier_cap = ability_modifier_cap
 
     def apply(self, character_stat_block: CharacterStatBlock):
         character_stat_block.combat.update_armor_class_base(self.base)
         character_stat_block.combat.change_armor_class_ability(self.ability)
+        character_stat_block.combat.update_armor_class_ability_modifier_cap(
+            self.ability_modifier_cap
+        )
 
 
 class MultiAbilityArmorClass(CharacterImprovement):

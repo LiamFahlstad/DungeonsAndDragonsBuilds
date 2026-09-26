@@ -127,6 +127,14 @@ class AbstractArmor(Item, ABC):
             if self.ac_bonus:
                 ArmorClassBonus(self.ac_bonus).apply(character_stat_block)
         else:
-            SetArmorClass(self.base_ac, self.ac_ability).apply(character_stat_block)
+            # Medium armor: "add your Dexterity modifier, to a maximum of
+            # +2" - Light armor is uncapped and Heavy armor has no ability
+            # modifier at all, so the cap only ever applies here.
+            ability_modifier_cap = (
+                2 if self.armor_type == Definitions.ArmorType.MEDIUM else None
+            )
+            SetArmorClass(
+                self.base_ac, self.ac_ability, ability_modifier_cap
+            ).apply(character_stat_block)
             if self.ac_bonus:
                 ArmorClassBonus(self.ac_bonus).apply(character_stat_block)
