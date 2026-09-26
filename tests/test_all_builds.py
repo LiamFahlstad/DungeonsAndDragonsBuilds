@@ -14,38 +14,7 @@ from RunCharacterCreator import BuildSelector, ExampleSelector
 
 ALL_BUILDS = {**BuildSelector.builds(), **ExampleSelector.builds()}
 
-# Builds whose 2014 subclass feature files were truncated by commit 677b444
-# ("Create Feature Uses object"), deleting classes they still reference.
-TRUNCATED_BY_677B444 = {
-    "Y2014ArtificerAlchemistBramwellFizzlecogCharacterBuilder",
-    "Y2014ArtificerBattleSmithDorricSteamwellCharacterBuilder",
-    "Y2014BarbarianAncestralGuardianKodiakStonewatchCharacterBuilder",
-    "Y2014BarbarianWildMagicFenwickChaosbornCharacterBuilder",
-    "Y2014ClericForgeBrennaHearthforgeCharacterBuilder",
-    "Y2014ClericOrderCastellanTruewardCharacterBuilder",
-    "Y2014ClericPeaceHalcyonMeadowlightCharacterBuilder",
-    "Y2014ClericTempestStormWavecrestCharacterBuilder",
-    "Y2014ClericTwilightVesperNightsongCharacterBuilder",
-    "Y2014DruidDreamsSomnaDriftwillowCharacterBuilder",
-    "Y2014DruidShepherdMeridianFlockwardCharacterBuilder",
-    "Y2014DruidSporesMossenRotbloomCharacterBuilder",
-    "Y2014DruidWildfireEmberAshgroveCharacterBuilder",
-}
-
-
-def _params():
-    for name in sorted(ALL_BUILDS):
-        marks = ()
-        if name in TRUNCATED_BY_677B444:
-            marks = pytest.mark.xfail(
-                strict=True,
-                raises=AttributeError,
-                reason="BUG: feature classes deleted by commit 677b444",
-            )
-        yield pytest.param(name, marks=marks, id=name)
-
-
-BUILD_PARAMS = list(_params())
+BUILD_PARAMS = sorted(ALL_BUILDS)
 
 # PHB proficiency bonus by total character level.
 PHB_PROFICIENCY_BONUS = {
@@ -129,3 +98,58 @@ def test_single_class_caster_uses_class_ability(name):
     ):
         return
     assert data.spell_casting_ability == PHB_SPELLCASTING_ABILITY[data.base_class]
+
+
+def _all_features(features):
+    for feature in features:
+        yield feature
+        yield from _all_features(feature.extensions)
+
+
+@pytest.mark.parametrize("name", BUILD_PARAMS)
+def test_every_feature_renders(name):
+    # Descriptions are only evaluated when a sheet is written, so a broken
+    # get_description (missing import, deleted helper) otherwise goes unseen.
+    data = type(ALL_BUILDS[name])().build()
+    character = data.setup_character_stat_block()
+    for feature in _all_features(data.features):
+        description = feature.get_description(character)
+        assert description is None or isinstance(description, str), feature.name
+        feature.get_table_description(character)
+        feature.get_concise_description(character)
+
+
+# Features that grant proficiency *and* Expertise: picking a skill you already
+# have still gains the Expertise, so the overlap isn't wasted.
+_EXPERTISE_GRANTING = {"BlessingsOfKnowledge"}
+
+
+@pytest.mark.parametrize("name", BUILD_PARAMS)
+def test_no_wasted_skill_proficiency(name, monkeypatch):
+    # PHB: gaining a proficiency you already have from another source means
+    # choosing a different one instead - a build shouldn't pick it twice.
+    import inspect
+
+    from CharacterContent.Features.Core.BaseFeatures import Feature
+    from StatBlocks.SkillsStatBlock import SkillsStatBlock
+
+    original = SkillsStatBlock.add_skill_proficiency
+    wasted = []
+
+    def recording(self, skill):
+        if self.is_proficient(skill):
+            source = next(
+                (
+                    type(frame.frame.f_locals["self"]).__name__
+                    for frame in inspect.stack()[1:15]
+                    if isinstance(frame.frame.f_locals.get("self"), Feature)
+                ),
+                "?",
+            )
+            if source not in _EXPERTISE_GRANTING:
+                wasted.append((skill.name, source))
+        return original(self, skill)
+
+    monkeypatch.setattr(SkillsStatBlock, "add_skill_proficiency", recording)
+    type(ALL_BUILDS[name])().build().setup_character_stat_block()
+    assert wasted == []

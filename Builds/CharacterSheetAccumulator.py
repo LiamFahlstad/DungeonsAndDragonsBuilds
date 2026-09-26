@@ -104,6 +104,10 @@ class CharacterSheetData:
     # per-level class flow (species spells, origin feat spells via
     # add_origin_feat, etc).
     _current_grant_level: int = 1
+    # {class: subclass} for every class that has reached its subclass level,
+    # in the order gained - character_subclass shows them joined with " / ".
+    # Maintained by ClassBuilder.create (private, so merge_with skips it).
+    _active_subclasses: dict[CharacterClass, str] = attr.Factory(dict)
 
     # Records (apply_when, feature) in the order add_feature was called.
     # Unlike `features` (ordered for display - newest IMMEDIATE feature
@@ -419,6 +423,8 @@ class CharacterSheetData:
                 if when == apply_when:
                     feature.apply(character)
 
+        self._validate_multiclass_prerequisites(character)
+
         for armor in self.armors:
             armor.apply(character)
 
@@ -438,9 +444,30 @@ class CharacterSheetData:
                 fighting_style.apply(character)
             elif isinstance(fighting_style, FightStyleWeaponFeature):
                 fighting_style.apply(self.weapons)
+
+        for item, _quantity in self.items:
+            if item.is_wearing is not False:
+                item.apply_to_weapons(self.weapons)
         self._character_cached = character
 
         return character
+
+    def _validate_multiclass_prerequisites(self, character: CharacterStatBlock):
+        """A multiclass character needs 13+ in the prerequisite abilities of
+        every class it has. Checked on the scores after class/feat/background
+        bonuses but before items - the engine has no per-level score history,
+        so this is the end-of-build approximation of "at the time you
+        multiclass"."""
+        if len(self.level_per_class) < 2:
+            return
+        for character_class in self.level_per_class:
+            for group in character_class.multiclass_prerequisites:
+                if not any(character.get_ability_score(a) >= 13 for a in group):
+                    needed = " or ".join(a.value for a in group)
+                    raise ValueError(
+                        f"Multiclassing into or out of {character_class.value} "
+                        f"requires {needed} 13+."
+                    )
 
     def get_ability_modifier(self, ability: Ability) -> int:
         character = self.setup_character_stat_block()
@@ -463,7 +490,7 @@ class CharacterSheetData:
         mode_suffix = f"_{description_mode}" if description_mode else ""
         return (
             f"Output/{example_prefix}{self.base_class.lower()}_"
-            f"{self.character_subclass.lower()}_"
+            f"{self.character_subclass.lower().replace(' / ', '_')}_"
             f"{self._slugify_name(self.character_name)}{mode_suffix}"
         )
 

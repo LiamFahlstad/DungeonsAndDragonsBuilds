@@ -51,9 +51,9 @@ def get_starter_class_builder():
                     Skill.ACROBATICS: True,
                     Skill.ATHLETICS: False,
                     Skill.HISTORY: False,
-                    Skill.INSIGHT: True,
+                    Skill.INSIGHT: False,
                     Skill.RELIGION: False,
-                    Skill.STEALTH: False,
+                    Skill.STEALTH: True,
                 }
             ),
             monk_level=monk_level,
@@ -77,8 +77,8 @@ def get_starter_class_builder():
         ),
         background_skill_proficiencies=Backgrounds.FreeBackgroundSkillProficiency(
             [
-                Skill.MEDICINE,
-                Skill.INSIGHT,
+                Skill.SURVIVAL,
+                Skill.ANIMAL_HANDLING,
             ]
         ),
         add_default_equipment=True,

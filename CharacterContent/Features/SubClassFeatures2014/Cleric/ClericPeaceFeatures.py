@@ -79,3 +79,85 @@ class EmboldeningBond(Feature):
 
     def number_of_uses(self, character_stat_block: CharacterStatBlock) -> int:
         return character_stat_block.get_proficiency_bonus()
+
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        proficiency_bonus = character_stat_block.get_proficiency_bonus()
+        return [
+            ("Action", "Action"),
+            ("Range", "30 feet"),
+            ("Targets", f"Willing creatures (up to {proficiency_bonus})"),
+            ("Duration", "10 minutes or until you use this feature again"),
+            (
+                "Bonus",
+                "+1d4 to attack roll, ability check, or saving throw (once per turn)",
+            ),
+            ("Uses", f"Proficiency bonus ({proficiency_bonus})"),
+            ("Recharge", "Long rest"),
+        ]
+
+
+class BalmOfPeaceChannelDivinity(Feature):
+    def __init__(self):
+        super().__init__(
+            name="Channel Divinity: Balm of Peace",
+            origin="Peace Domain Cleric Level 3",
+            usage_tags=["heal"],
+            activation=FeatureActivation(action_type="action"),
+        )
+
+    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+        description = "You can use your Channel Divinity to make your very presence a soothing balm. As an action, you can move up to your speed, without provoking opportunity attacks, and when you move within 5 feet of any other creature during this action, you can restore a number of hit points to that creature equal to 2d6 + your Wisdom modifier (minimum of 1 hit point). A creature can receive this healing only once whenever you take this action."
+        return description
+
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        return [
+            ("Action", "Action"),
+            ("Movement", "Up to your speed (no opportunity attacks)"),
+            ("Healing per Creature", "2d6 + Wisdom modifier (minimum 1)"),
+            ("Range of Healing", "Within 5 feet of you during movement"),
+            ("Limit", "Once per creature per action"),
+        ]
+
+
+class ProtectiveBond(Feature):
+    def __init__(self):
+        super().__init__(
+            name="Protective Bond",
+            origin="Peace Domain Cleric Level 6",
+            usage_tags=["control"],
+            activation=FeatureActivation(action_type="reaction"),
+        )
+
+    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+        description = "The bond you forge between people helps them protect each other. When a creature affected by your Emboldening Bond feature is about to take damage, a second bonded creature within 30 feet of the first can use its reaction to teleport to an unoccupied space within 5 feet of the first creature. The second creature then takes all the damage instead."
+        return description
+
+
+class PotentSpellcasting(Feature):
+    def __init__(self):
+        super().__init__(
+            name="Potent Spellcasting",
+            origin="Peace Domain Cleric Level 8",
+            usage_tags=["damage"],
+        )
+
+    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+        description = "You add your Wisdom modifier to the damage you deal with any cleric cantrip."
+        return description
+
+
+class ExpansiveBond(Feature):
+    def __init__(self):
+        super().__init__(
+            name="Expansive Bond",
+            origin="Peace Domain Cleric Level 17",
+            usage_tags=["buff"],
+        )
+
+    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+        description = "The benefits of your Emboldening Bond and Protective Bond features now work when the creatures are within 60 feet of each other. Moreover, when a creature uses Protective Bond to take someone else's damage, the creature has resistance to that damage."
+        return description

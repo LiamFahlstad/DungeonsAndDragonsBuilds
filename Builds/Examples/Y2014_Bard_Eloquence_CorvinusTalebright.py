@@ -169,6 +169,6 @@ class Y2014BardEloquenceCorvinusTalebrightCharacterBuilder(CharacterBuilder):
             starter_class_builder=get_starter_class_builder(),
             species_builder=Human.HumanSpeciesBuilder(
                 origin_feat=SpeciesOriginFeats.Tough(),
-                skill_proficiency=Skill.INSIGHT,
+                skill_proficiency=Skill.INTIMIDATION,
             ),
         )

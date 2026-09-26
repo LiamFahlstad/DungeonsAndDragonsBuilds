@@ -366,12 +366,36 @@ class ClassBuilder(ABC):
                 starting_character_level + offset, self.base_class
             )
 
+        previous_subclass = character_sheet_data.character_subclass
         character_sheet_data.merge_with(base_sheet_data)
+        self._update_subclass_name(character_sheet_data, previous_subclass)
         character_sheet_data = self.base_class_level_features.add_features(
             character_sheet_data, self.base_class, applied_level_features
         )
         character_sheet_data.replace_spells(self.replace_spells or {})
         return character_sheet_data
+
+    def _update_subclass_name(
+        self, data: CharacterSheetData, previous_subclass: Optional[str]
+    ) -> None:
+        """Show every class's subclass on a multiclass sheet ("Oath of Glory /
+        Bladesinger") instead of only the last builder's. Classes that
+        haven't reached their subclass level are left out; if none has, the
+        first declared subclass is kept."""
+        subclass = getattr(self, "subclass", None)
+        if subclass and _subclass_reached(self):
+            data._active_subclasses[self.base_class] = subclass
+        if data._active_subclasses:
+            data.character_subclass = " / ".join(data._active_subclasses.values())
+        elif previous_subclass is not None:
+            data.character_subclass = previous_subclass
+
+
+def _subclass_reached(builder: "ClassBuilder") -> bool:
+    """A class has a subclass once its level reaches the first level that
+    grants subclass features (e.g. a Fighter 1 dip has none yet)."""
+    subclass_levels = builder.base_class_level_features.subclass_features_by_level
+    return any(level <= builder.base_class_level for level in subclass_levels)
 
 
 class CustomStarterClassArgs:

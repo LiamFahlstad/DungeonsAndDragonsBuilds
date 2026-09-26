@@ -96,6 +96,6 @@ class Y2024PaladinAncientsSylvanaGreenwardCharacterBuilder(CharacterBuilder):
             starter_class_builder=get_starter_class_builder(),
             species_builder=Elf.ElfSpeciesBuilder(
                 elven_lineage=ElvenLineage.WOOD_ELF,
-                skill_proficiency=Skill.INSIGHT,
+                skill_proficiency=Skill.PERCEPTION,
             ),
         )

@@ -43,12 +43,12 @@ def get_starter_class_builder():
         non_generic_arguments=PaladinGloryCustomStarterClassArgs(
             skills=PaladinSkillsStatBlock(
                 proficiencies={
-                    Skill.ATHLETICS: True,
+                    Skill.ATHLETICS: False,
                     Skill.INSIGHT: False,
                     Skill.INTIMIDATION: True,
                     Skill.MEDICINE: False,
                     Skill.PERSUASION: False,
-                    Skill.RELIGION: False,
+                    Skill.RELIGION: True,
                 }
             ),
         ),

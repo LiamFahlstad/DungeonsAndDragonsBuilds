@@ -62,7 +62,10 @@ def get_starter_class_builder():
             charisma=12,
         ),
         background_ability_bonuses=Backgrounds.FreeBackgroundAbilityBonus(
-            [(Ability.INTELLIGENCE, 2), (Ability.DEXTERITY, 1)]
+            [
+                (Ability.INTELLIGENCE, 2),
+                (Ability.CHARISMA, 1),
+            ]  # CHA 13: Warlock multiclass prerequisite
         ),
         background_skill_proficiencies=Backgrounds.FreeBackgroundSkillProficiency(
             [Skill.ACROBATICS, Skill.STEALTH]

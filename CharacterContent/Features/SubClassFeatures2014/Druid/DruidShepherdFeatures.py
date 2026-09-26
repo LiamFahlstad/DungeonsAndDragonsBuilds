@@ -73,3 +73,66 @@ class SpiritTotem(Feature):
         self, character_stat_block: CharacterStatBlock
     ) -> "FeatureTarget | None":
         return FeatureTarget.AREA
+
+
+class MightySummoner(Feature):
+    def __init__(self):
+        super().__init__(
+            name="Mighty Summoner",
+            origin="Circle of the Shepherd Druid Level 6",
+            usage_tags=["buff"],
+        )
+
+    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+        description = (
+            "Beasts and fey that you conjure are more resilient than normal. Any beast or fey summoned or created by a spell that you cast gains two benefits:\n"
+            "\n"
+            "    * The creature appears with more hit points than normal: 2 extra hit points per Hit Die it has.\n"
+            "    * The damage from its natural weapons is considered magical for the purpose of overcoming immunity and resistance to nonmagical attacks and damage."
+        )
+        return description
+
+
+class GuardianSpirit(Feature):
+    def __init__(self):
+        super().__init__(
+            name="Guardian Spirit",
+            origin="Circle of the Shepherd Druid Level 10",
+            usage_tags=["heal"],
+        )
+
+    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+        description = "Your Spirit Totem safeguards the beasts and fey that you call forth with your magic. When a beast or fey that you summoned or created with a spell ends its turn in your Spirit Totem aura, that creature regains a number of hit points equal to half your druid level."
+        return description
+
+
+class FaithfulSummons(Feature):
+    def __init__(self):
+        super().__init__(
+            name="Faithful Summons",
+            origin="Circle of the Shepherd Druid Level 14",
+            usage_tags=["buff", "summon"],
+            activation=FeatureActivation(duration="1 Hour", range="20 Feet"),
+        )
+
+    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+        description = (
+            "The nature spirits you commune with protect you when you are the most defenseless. If you are reduced to 0 hit points or are incapacitated against your will, you can immediately gain the benefits of Conjure Animals as if it were cast with a 9th-level spell slot. It summons four beasts of your choice that are challenge rating 2 or lower. The conjured beasts appear within 20 feet of you. If they receive no commands from you, they protect you from harm and attack your foes. The spell lasts for 1 hour, requiring no concentration, or until you dismiss it (no action required).\n"
+            "\n"
+            "Once you use this feature, you can't use it again until you finish a long rest."
+        )
+        return StringUtils.add_boxes(description, 1, regain_all_on="long rest")
+
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        return [
+            ("Trigger", "Reduced to 0 HP or incapacitated against your will"),
+            (
+                "Effect",
+                "Cast Conjure Animals (9th-level); summon four CR 2 or lower beasts within 20 feet",
+            ),
+            ("Behavior", "Without commands, beasts protect you and attack foes"),
+            ("Duration", "1 hour, no concentration; dismiss as free action"),
+            ("Regain", "Long rest"),
+        ]

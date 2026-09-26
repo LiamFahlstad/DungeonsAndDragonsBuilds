@@ -97,7 +97,7 @@ def get_starter_class_builder():
                 ),
                 2: BarbarianLevel2(),
                 3: BarbarianLevel3(
-                    skill_proficiency=Skill.SURVIVAL,
+                    skill_proficiency=Skill.PERCEPTION,
                 ),
                 4: BarbarianLevel4(
                     general_feat=GeneralFeats.Sentinel(

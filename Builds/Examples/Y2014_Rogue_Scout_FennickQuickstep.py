@@ -54,11 +54,11 @@ def get_starter_class_builder():
                     Skill.ACROBATICS: True,
                     Skill.ATHLETICS: False,
                     Skill.DECEPTION: False,
-                    Skill.INSIGHT: True,
+                    Skill.INSIGHT: False,
                     Skill.INTIMIDATION: False,
                     Skill.INVESTIGATION: False,
                     Skill.PERCEPTION: True,
-                    Skill.SLEIGHT_OF_HAND: False,
+                    Skill.SLEIGHT_OF_HAND: True,
                     Skill.STEALTH: True,
                 }
             ),
@@ -165,6 +165,6 @@ class Y2014RogueScoutFennickQuickstepCharacterBuilder(CharacterBuilder):
             starter_class_builder=get_starter_class_builder(),
             species_builder=Elf.ElfSpeciesBuilder(
                 elven_lineage=Elf.ElvenLineage.WOOD_ELF,
-                skill_proficiency=Definitions.Skill.SURVIVAL,
+                skill_proficiency=Definitions.Skill.INSIGHT,
             ),
         )

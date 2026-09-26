@@ -185,7 +185,7 @@ class Y2014WarlockCelestialAurielDawnpactCharacterBuilder(CharacterBuilder):
             name="Auriel Dawnpact",
             starter_class_builder=get_starter_class_builder(),
             species_builder=Human.HumanSpeciesBuilder(
-                skill_proficiency=Skill.PERSUASION,
+                skill_proficiency=Skill.INTIMIDATION,
                 origin_feat=OriginFeats.Skilled(
                     skills=[
                         Skill.ANIMAL_HANDLING,

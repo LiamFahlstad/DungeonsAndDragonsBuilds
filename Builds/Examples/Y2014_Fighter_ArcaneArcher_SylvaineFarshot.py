@@ -75,7 +75,7 @@ def get_starter_class_builder():
         ),
         background_skill_proficiencies=Backgrounds.FreeBackgroundSkillProficiency(
             [
-                Skill.ARCANA,
+                Skill.SLEIGHT_OF_HAND,
                 Skill.INVESTIGATION,
             ]
         ),
@@ -161,7 +161,7 @@ class Y2014FighterArcaneArcherSylvaineFarshotCharacterBuilder(CharacterBuilder):
             name="Sylvaine Farshot",
             starter_class_builder=get_starter_class_builder(),
             species_builder=Human.HumanSpeciesBuilder(
-                skill_proficiency=Skill.PERCEPTION,
+                skill_proficiency=Skill.HISTORY,
                 origin_feat=OriginFeats.Skilled(
                     skills=[
                         Skill.SURVIVAL,

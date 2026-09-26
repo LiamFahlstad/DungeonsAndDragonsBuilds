@@ -166,7 +166,7 @@ class Y2024FighterBanneretRoderickVanguardCharacterBuilder(CharacterBuilder):
                 skill_proficiency=Skill.SURVIVAL,
                 origin_feat=OriginFeats.Skilled(
                     skills=[
-                        Skill.PERSUASION,
+                        Skill.DECEPTION,
                         Skill.INVESTIGATION,
                         Skill.HISTORY,
                     ]

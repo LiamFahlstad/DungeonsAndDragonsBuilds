@@ -81,7 +81,7 @@ def get_starter_class_builder():
         ),
         background_skill_proficiencies=Backgrounds.FreeBackgroundSkillProficiency(
             [
-                Skill.SURVIVAL,
+                Skill.ACROBATICS,
                 Skill.NATURE,
             ]
         ),
@@ -172,7 +172,7 @@ class Y2014RangerHunterSilasTrailwardenCharacterBuilder(CharacterBuilder):
             name="Silas Trailwarden",
             starter_class_builder=get_starter_class_builder(),
             species_builder=Human.HumanSpeciesBuilder(
-                skill_proficiency=Skill.SURVIVAL,
+                skill_proficiency=Skill.SLEIGHT_OF_HAND,
                 origin_feat=OriginFeats.Alert(),
             ),
         )

@@ -124,3 +124,30 @@ class RestorativeReagents(Feature):
 
     def number_of_uses(self, character_stat_block: CharacterStatBlock) -> int:
         return character_stat_block.get_intelligence_modifier()
+
+
+class ChemicalMastery(Feature):
+    def __init__(self):
+        super().__init__(
+            name="Chemical Mastery",
+            origin="Alchemist Artificer Level 15",
+            usage_tags=["utility", "buff"],
+        )
+        self._resistances = [
+            DamageResistance(DamageType.ACID, self.name),
+            DamageResistance(DamageType.POISON, self.name),
+        ]
+        self._immunity = ConditionImmunity(Condition.POISONED, self.name)
+
+    def apply(self, character_stat_block: CharacterStatBlock):
+        for resistance in self._resistances:
+            resistance.apply(character_stat_block)
+        self._immunity.apply(character_stat_block)
+
+    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+        description = (
+            "By 15th level, you have been exposed to so many chemicals that they pose little risk to you, and you can use them to quickly end certain ailments.\n"
+            "You gain resistance to acid damage and poison damage, and you are now immune to the poisoned condition.\n"
+            "You can cast Greater Restoration and Heal without expending a spell slot, without preparing the spell, and without providing the material component, provided you use alchemist's supplies as the spellcasting focus. Once you cast either spell with this feature, you can't cast that spell with it again until you finish a long rest."
+        )
+        return description

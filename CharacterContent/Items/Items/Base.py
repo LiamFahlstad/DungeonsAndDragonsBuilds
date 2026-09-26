@@ -99,6 +99,12 @@ class Item(Feature):
         for improvement in self.improvements:
             improvement.apply(character_stat_block)
 
+    def apply_to_weapons(self, weapons: list) -> None:
+        """For items that change the wielder's weapons (e.g. Bracers of
+        Archery), called with every weapon after all other effects. Must be
+        idempotent: weapons outlive a single stat block setup."""
+        pass
+
     def get_description(self, character_stat_block: CharacterStatBlock) -> str | None:
         """Return the item description. Subclasses can override for a description
         that depends on the character (e.g. scaling with level or ability scores)."""

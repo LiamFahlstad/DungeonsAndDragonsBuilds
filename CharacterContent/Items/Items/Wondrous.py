@@ -240,7 +240,11 @@ class CloakOfProtection(Item):
 
 
 class BracersOfArchery(Item):
-    """Magical bracers that grant +2 Dexterity for ranged combat."""
+    """DMG: proficiency with the Longbow and Shortbow, and +2 damage on ranged
+    attacks made with them."""
+
+    _BOWS = ("Longbow", "Shortbow")
+    _BONUS = (2, "2 (Bracers of Archery)")
 
     def __init__(self, is_wearing: bool = True):
         super().__init__(
@@ -249,19 +253,23 @@ class BracersOfArchery(Item):
             requires_attunement=True,
             category=ItemCategory.WONDROUS,
             description_text=(
-                "While wearing these bracers, you gain a +2 bonus to your Dexterity score.\n\n"
+                "While wearing these bracers, you have proficiency with the Longbow and "
+                "Shortbow, and you gain a +2 bonus to damage rolls on ranged attacks made "
+                "with such weapons. (calculated automatically)\n\n"
                 "These leather bracers are reinforced with magical sinew, enhancing the wielder's precision."
             ),
             is_wearing=is_wearing,
-            improvements=[
-                AbilityScoreBonus(
-                    bonuses=[(Ability.DEXTERITY, 2)],
-                    total=2,
-                    error_prefix="Bracers of Archery bonus",
-                )
-            ],
             is_homebrew=False,
         )
+
+    def apply_to_weapons(self, weapons: list) -> None:
+        for weapon in weapons:
+            # Match by class name (magic bows subclass these) - importing the
+            # Weapons package here would be circular.
+            if any(cls.__name__ in self._BOWS for cls in type(weapon).__mro__):
+                weapon.player_is_proficient = True
+                if self._BONUS not in weapon.damage_roll_bonuses:
+                    weapon.damage_roll_bonuses.append(self._BONUS)
 
 
 class GauntletsOfStrength(Item):

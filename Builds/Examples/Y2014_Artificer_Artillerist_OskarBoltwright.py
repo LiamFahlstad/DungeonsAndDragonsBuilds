@@ -82,7 +82,7 @@ def get_starter_class_builder():
         ),
         background_skill_proficiencies=Backgrounds.FreeBackgroundSkillProficiency(
             [
-                Skill.INVESTIGATION,
+                Skill.HISTORY,
                 Skill.PERCEPTION,
             ]
         ),

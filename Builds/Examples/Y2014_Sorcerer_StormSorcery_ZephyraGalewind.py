@@ -176,7 +176,7 @@ class Y2014SorcererStormSorceryZephyraGalewindCharacterBuilder(CharacterBuilder)
             name="Zephyra Galewind",
             starter_class_builder=get_starter_class_builder(),
             species_builder=Human.HumanSpeciesBuilder(
-                skill_proficiency=Skill.ARCANA,
+                skill_proficiency=Skill.INTIMIDATION,
                 origin_feat=OriginFeats.Lucky(),
             ),
         )

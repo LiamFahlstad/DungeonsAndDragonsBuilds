@@ -90,8 +90,8 @@ def get_starter_class_builder():
         ),
         background_skill_proficiencies=Backgrounds.FreeBackgroundSkillProficiency(
             [
-                Skill.PERSUASION,
-                Skill.INSIGHT,
+                Skill.ATHLETICS,
+                Skill.DECEPTION,
             ]
         ),
         add_default_equipment=True,
@@ -199,7 +199,7 @@ class Y2014PaladinRedemptionPaxMercywardCharacterBuilder(CharacterBuilder):
             name="Pax Mercyward",
             starter_class_builder=get_starter_class_builder(),
             species_builder=Human.HumanSpeciesBuilder(
-                skill_proficiency=Skill.PERSUASION,
+                skill_proficiency=Skill.INTIMIDATION,
                 origin_feat=OriginFeats.Alert(),
             ),
         )

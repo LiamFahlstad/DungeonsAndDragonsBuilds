@@ -91,6 +91,6 @@ class Y2014MonkDrunkenMasterChenWobblejarCharacterBuilder(CharacterBuilder):
             starter_class_builder=get_starter_class_builder(),
             species_builder=Human.HumanSpeciesBuilder(
                 origin_feat=OriginFeats.Alert(),
-                skill_proficiency=Skill.PERCEPTION,
+                skill_proficiency=Skill.ANIMAL_HANDLING,
             ),
         )

@@ -88,7 +88,7 @@ def get_starter_class_builder():
         background_skill_proficiencies=Backgrounds.FreeBackgroundSkillProficiency(
             [
                 Skill.HISTORY,
-                Skill.MEDICINE,
+                Skill.ATHLETICS,
             ]
         ),
         add_default_equipment=True,

@@ -90,7 +90,7 @@ def get_starter_class_builder():
         ),
         background_skill_proficiencies=Backgrounds.FreeBackgroundSkillProficiency(
             [
-                Skill.INSIGHT,
+                Skill.ATHLETICS,
                 Skill.PERCEPTION,
             ]
         ),
@@ -199,7 +199,7 @@ class Y2014PaladinWatchersArgusFarwatchCharacterBuilder(CharacterBuilder):
             name="Argus Farwatch",
             starter_class_builder=get_starter_class_builder(),
             species_builder=Human.HumanSpeciesBuilder(
-                skill_proficiency=Skill.PERCEPTION,
+                skill_proficiency=Skill.DECEPTION,
                 origin_feat=OriginFeats.Alert(),
             ),
         )

@@ -180,7 +180,7 @@ class Y2014FighterChampionDorianHardridgeCharacterBuilder(CharacterBuilder):
                 skill_proficiency=Skill.PERCEPTION,
                 origin_feat=OriginFeats.Skilled(
                     skills=[
-                        Skill.SURVIVAL,
+                        Skill.ACROBATICS,
                         Skill.INSIGHT,
                         Skill.HISTORY,
                     ]

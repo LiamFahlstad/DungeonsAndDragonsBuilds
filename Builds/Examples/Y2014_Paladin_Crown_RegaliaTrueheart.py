@@ -89,8 +89,8 @@ def get_starter_class_builder():
         ),
         background_skill_proficiencies=Backgrounds.FreeBackgroundSkillProficiency(
             [
-                Skill.PERSUASION,
-                Skill.ATHLETICS,
+                Skill.DECEPTION,
+                Skill.INTIMIDATION,
             ]
         ),
         add_default_equipment=True,
@@ -197,7 +197,7 @@ class Y2014PaladinCrownRegaliaTrueheartCharacterBuilder(CharacterBuilder):
             name="Regalia Trueheart",
             starter_class_builder=get_starter_class_builder(),
             species_builder=Human.HumanSpeciesBuilder(
-                skill_proficiency=Skill.PERSUASION,
+                skill_proficiency=Skill.PERFORMANCE,
                 origin_feat=OriginFeats.Alert(),
             ),
         )

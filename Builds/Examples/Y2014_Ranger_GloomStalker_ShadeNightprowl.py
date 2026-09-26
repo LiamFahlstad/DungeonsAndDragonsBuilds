@@ -193,7 +193,7 @@ class Y2014RangerGloomStalkerShadeNightprowlCharacterBuilder(CharacterBuilder):
             name="Shade Nightprowl",
             starter_class_builder=get_starter_class_builder(),
             species_builder=Human.HumanSpeciesBuilder(
-                skill_proficiency=Skill.SURVIVAL,
+                skill_proficiency=Skill.ACROBATICS,
                 origin_feat=OriginFeats.Alert(),
             ),
         )

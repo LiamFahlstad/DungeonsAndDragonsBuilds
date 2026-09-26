@@ -131,3 +131,36 @@ class ArcaneJolt(Feature):
 
     def number_of_uses(self, character_stat_block: CharacterStatBlock) -> int:
         return character_stat_block.get_intelligence_modifier()
+
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        intelligence_modifier = character_stat_block.get_ability_modifier(
+            Ability.INTELLIGENCE
+        )
+        uses = max(1, intelligence_modifier)
+        return [
+            ("Trigger", "Magic weapon or Steel Defender attack hits"),
+            ("Option 1", "2d6 force damage to target"),
+            ("Option 2", "2d6 healing to creature within 30 feet"),
+            ("Uses", f"{uses} per long rest"),
+            ("Limit", "Once per turn"),
+        ]
+
+
+class ImprovedDefender(Feature):
+    def __init__(self):
+        super().__init__(
+            name="Improved Defender",
+            origin="Battle Smith Artificer Level 15",
+            usage_tags=["damage", "buff"],
+        )
+
+    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+        description = (
+            "At 15th level, your Arcane Jolt and steel defender become more powerful.\n"
+            "The extra damage and the healing of your Arcane Jolt both increase to 4d6.\n"
+            "Your steel defender gains a +2 bonus to Armor Class.\n"
+            "Whenever your steel defender uses its Deflect Attack, the attacker takes force damage equal to 1d4 + your Intelligence modifier."
+        )
+        return description

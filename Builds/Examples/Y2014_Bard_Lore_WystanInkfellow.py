@@ -155,8 +155,8 @@ def get_starter_class_builder():
             },
             subclass_features_by_level={
                 3: BardLoreLevel3(
-                    skill_proficiency_1=Skill.HISTORY,
-                    skill_proficiency_2=Skill.ARCANA,
+                    skill_proficiency_1=Skill.DECEPTION,
+                    skill_proficiency_2=Skill.INTIMIDATION,
                     skill_proficiency_3=Skill.INVESTIGATION,
                 ),
                 6: BardLoreLevel6(),
@@ -173,6 +173,6 @@ class Y2014BardLoreWystanInkfellowCharacterBuilder(CharacterBuilder):
             starter_class_builder=get_starter_class_builder(),
             species_builder=Human.HumanSpeciesBuilder(
                 origin_feat=SpeciesOriginFeats.Tough(),
-                skill_proficiency=Skill.INSIGHT,
+                skill_proficiency=Skill.NATURE,
             ),
         )

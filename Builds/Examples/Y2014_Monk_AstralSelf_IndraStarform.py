@@ -59,7 +59,7 @@ def get_starter_class_builder():
         ),
         background_skill_proficiencies=Backgrounds.FreeBackgroundSkillProficiency(
             [
-                Skill.INSIGHT,
+                Skill.ANIMAL_HANDLING,
                 Skill.PERCEPTION,
             ]
         ),
@@ -91,6 +91,6 @@ class Y2014MonkAstralSelfIndraStarformCharacterBuilder(CharacterBuilder):
             starter_class_builder=get_starter_class_builder(),
             species_builder=Human.HumanSpeciesBuilder(
                 origin_feat=OriginFeats.Alert(),
-                skill_proficiency=Skill.PERCEPTION,
+                skill_proficiency=Skill.MEDICINE,
             ),
         )

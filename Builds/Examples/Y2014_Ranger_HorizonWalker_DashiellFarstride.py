@@ -86,7 +86,7 @@ def get_starter_class_builder():
         ),
         background_skill_proficiencies=Backgrounds.FreeBackgroundSkillProficiency(
             [
-                Skill.SURVIVAL,
+                Skill.ANIMAL_HANDLING,
                 Skill.NATURE,
             ]
         ),
@@ -193,7 +193,7 @@ class Y2014RangerHorizonWalkerDashiellFarstrideCharacterBuilder(CharacterBuilder
             name="Dashiell Farstride",
             starter_class_builder=get_starter_class_builder(),
             species_builder=Human.HumanSpeciesBuilder(
-                skill_proficiency=Skill.SURVIVAL,
+                skill_proficiency=Skill.INSIGHT,
                 origin_feat=OriginFeats.Alert(),
             ),
         )

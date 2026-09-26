@@ -94,7 +94,7 @@ class Y2024PaladinDevotionGarethLightbearerCharacterBuilder(CharacterBuilder):
             name="Gareth Lightbearer",
             starter_class_builder=get_starter_class_builder(),
             species_builder=Human.HumanSpeciesBuilder(
-                skill_proficiency=Skill.MEDICINE,
+                skill_proficiency=Skill.DECEPTION,
                 origin_feat=OriginFeats.Alert(),
             ),
         )

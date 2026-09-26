@@ -215,6 +215,6 @@ class Y2024DruidSeaCoralTidewalkerCharacterBuilder(CharacterBuilder):
             starter_class_builder=get_starter_class_builder(),
             species_builder=ElfSpeciesBuilder(
                 elven_lineage=ElvenLineage.WOOD_ELF,
-                skill_proficiency=Skill.PERCEPTION,
+                skill_proficiency=Skill.INSIGHT,
             ),
         )

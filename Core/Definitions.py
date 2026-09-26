@@ -70,6 +70,27 @@ class CharacterClass(str, Enum):
     def average_hit_die(self) -> int:
         return (self.hit_die // 2) + 1
 
+    @property
+    def multiclass_prerequisites(self) -> list[tuple["Ability", ...]]:
+        """2024 PHB multiclassing: a score of 13+ in every listed group (any
+        one ability of a group suffices - Fighter needs STR *or* DEX)."""
+        a = Ability
+        return {
+            CharacterClass.ARTIFICER: [(a.INTELLIGENCE,)],
+            CharacterClass.BARBARIAN: [(a.STRENGTH,)],
+            CharacterClass.BARD: [(a.CHARISMA,)],
+            CharacterClass.CLERIC: [(a.WISDOM,)],
+            CharacterClass.DRUID: [(a.WISDOM,)],
+            CharacterClass.FIGHTER: [(a.STRENGTH, a.DEXTERITY)],
+            CharacterClass.MONK: [(a.DEXTERITY,), (a.WISDOM,)],
+            CharacterClass.PALADIN: [(a.STRENGTH,), (a.CHARISMA,)],
+            CharacterClass.RANGER: [(a.DEXTERITY,), (a.WISDOM,)],
+            CharacterClass.ROGUE: [(a.DEXTERITY,)],
+            CharacterClass.SORCERER: [(a.CHARISMA,)],
+            CharacterClass.WARLOCK: [(a.CHARISMA,)],
+            CharacterClass.WIZARD: [(a.INTELLIGENCE,)],
+        }[self]
+
 
 class Species(str, Enum):
     HUMAN = "Human"

@@ -185,7 +185,7 @@ class Y2014WarlockHexbladeDravenCursebladeCharacterBuilder(CharacterBuilder):
             name="Draven Curseblade",
             starter_class_builder=get_starter_class_builder(),
             species_builder=Human.HumanSpeciesBuilder(
-                skill_proficiency=Skill.INTIMIDATION,
+                skill_proficiency=Skill.DECEPTION,
                 origin_feat=OriginFeats.Alert(),
             ),
         )

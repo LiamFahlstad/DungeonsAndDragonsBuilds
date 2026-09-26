@@ -57,7 +57,7 @@ def get_starter_class_builder():
         ),
         background_skill_proficiencies=Backgrounds.FreeBackgroundSkillProficiency(
             [
-                Skill.INSIGHT,
+                Skill.ACROBATICS,
                 Skill.DECEPTION,
             ]
         ),
@@ -97,6 +97,6 @@ class Y2024RangerFeyWandererAlderMistwalkerCharacterBuilder(CharacterBuilder):
             starter_class_builder=get_starter_class_builder(),
             species_builder=Elf.ElfSpeciesBuilder(
                 elven_lineage=ElvenLineage.WOOD_ELF,
-                skill_proficiency=Skill.PERCEPTION,
+                skill_proficiency=Skill.SURVIVAL,
             ),
         )

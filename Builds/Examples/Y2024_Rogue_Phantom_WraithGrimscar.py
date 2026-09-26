@@ -82,7 +82,7 @@ def get_starter_class_builder():
         background_skill_proficiencies=Backgrounds.FreeBackgroundSkillProficiency(
             [
                 Skill.RELIGION,
-                Skill.INSIGHT,
+                Skill.ANIMAL_HANDLING,
             ]
         ),
         add_default_equipment=False,

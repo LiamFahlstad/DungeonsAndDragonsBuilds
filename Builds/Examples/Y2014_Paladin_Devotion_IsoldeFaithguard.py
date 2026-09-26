@@ -90,7 +90,7 @@ def get_starter_class_builder():
         ),
         background_skill_proficiencies=Backgrounds.FreeBackgroundSkillProficiency(
             [
-                Skill.PERSUASION,
+                Skill.DECEPTION,
                 Skill.INSIGHT,
             ]
         ),
@@ -199,7 +199,7 @@ class Y2014PaladinDevotionIsoldeFaithguardCharacterBuilder(CharacterBuilder):
             name="Isolde Faithguard",
             starter_class_builder=get_starter_class_builder(),
             species_builder=Human.HumanSpeciesBuilder(
-                skill_proficiency=Skill.PERSUASION,
+                skill_proficiency=Skill.INTIMIDATION,
                 origin_feat=OriginFeats.Alert(),
             ),
         )

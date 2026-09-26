@@ -103,3 +103,27 @@ class ConsultTheSpirits(Feature):
         self, character_stat_block: CharacterStatBlock
     ) -> "RegainedOn | None":
         return RegainedOn.SHORT_OR_LONG_REST
+
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        return [
+            ("Spells", "Augury or Clairvoyance"),
+            ("Cost", "No spell slot or material components"),
+            ("Casting Ability", "Wisdom"),
+            ("Clairvoyance", "Summons ancestral spirit, not sensor"),
+            ("Recharge", "Short or long rest"),
+        ]
+
+
+class VengefulAncestors(Feature):
+    def __init__(self):
+        super().__init__(
+            name="Vengeful Ancestors",
+            origin="Path Of The Ancestral Guardian Barbarian Level 14",
+            usage_tags=["damage"],
+        )
+
+    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+        description = "At 14th level, your ancestral spirits grow powerful enough to retaliate. When you use your Spirit Shield to reduce the damage of an attack, the attacker takes an amount of force damage that your Spirit Shield prevents."
+        return description

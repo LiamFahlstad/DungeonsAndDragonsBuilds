@@ -182,9 +182,9 @@ class Y2014FighterRuneKnightBjornGiantforgeCharacterBuilder(CharacterBuilder):
                 skill_proficiency=Skill.PERCEPTION,
                 origin_feat=OriginFeats.Skilled(
                     skills=[
-                        Skill.SURVIVAL,
+                        Skill.ACROBATICS,
                         Skill.INSIGHT,
-                        Skill.HISTORY,
+                        Skill.DECEPTION,
                     ]
                 ),
             ),

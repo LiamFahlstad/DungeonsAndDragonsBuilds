@@ -83,7 +83,7 @@ def get_starter_class_builder():
         background_skill_proficiencies=Backgrounds.FreeBackgroundSkillProficiency(
             [
                 Skill.ARCANA,
-                Skill.NATURE,
+                Skill.ANIMAL_HANDLING,
             ]
         ),
         add_default_equipment=True,
@@ -178,6 +178,6 @@ class Y2014DruidDreamsSomnaDriftwillowCharacterBuilder(CharacterBuilder):
             starter_class_builder=get_starter_class_builder(),
             species_builder=Human.HumanSpeciesBuilder(
                 origin_feat=SpeciesOriginFeats.Tough(),
-                skill_proficiency=Skill.INSIGHT,
+                skill_proficiency=Skill.MEDICINE,
             ),
         )

@@ -90,8 +90,8 @@ def get_starter_class_builder():
         ),
         background_skill_proficiencies=Backgrounds.FreeBackgroundSkillProficiency(
             [
-                Skill.INTIMIDATION,
-                Skill.ATHLETICS,
+                Skill.DECEPTION,
+                Skill.PERFORMANCE,
             ]
         ),
         add_default_equipment=True,
@@ -199,7 +199,7 @@ class Y2014PaladinConquestMalacharIronwillCharacterBuilder(CharacterBuilder):
             name="Malachar Ironwill",
             starter_class_builder=get_starter_class_builder(),
             species_builder=Human.HumanSpeciesBuilder(
-                skill_proficiency=Skill.INTIMIDATION,
+                skill_proficiency=Skill.PERSUASION,
                 origin_feat=OriginFeats.Alert(),
             ),
         )
