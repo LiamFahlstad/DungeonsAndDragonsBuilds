@@ -1,5 +1,5 @@
 import Core.Definitions as Definitions
-from Core.Definitions import Ability, SORCERER_HIT_DIE
+from Core.Definitions import Ability, DamageType, SORCERER_HIT_DIE
 from CharacterContent.Features.Core.BaseFeatures import (
     Feature,
     FeatureActivation,
@@ -7,7 +7,10 @@ from CharacterContent.Features.Core.BaseFeatures import (
     RegainedOn,
     FeatureTarget,
 )
-from CharacterContent.Features.Core.Improvements import MultiAbilityArmorClass
+from CharacterContent.Features.Core.Improvements import (
+    DamageResistance,
+    MultiAbilityArmorClass,
+)
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
@@ -53,17 +56,35 @@ class DraconicResilience(Feature):
         return description
 
 
+ELEMENTAL_AFFINITY_TYPES = [
+    DamageType.ACID,
+    DamageType.COLD,
+    DamageType.FIRE,
+    DamageType.LIGHTNING,
+    DamageType.POISON,
+]
+
+
 class ElementalAffinity(Feature):
-    def __init__(self):
+    def __init__(self, damage_type: DamageType):
+        if damage_type not in ELEMENTAL_AFFINITY_TYPES:
+            raise ValueError(
+                f"Elemental Affinity must be Acid, Cold, Fire, Lightning, or Poison, not {damage_type}."
+            )
+        self.damage_type = damage_type
         super().__init__(
             name="Elemental Affinity",
             origin="Draconic Sorcerer Level 6",
             usage_tags=["buff", "damage"],
         )
+        self._resistance = DamageResistance(damage_type, self.name)
+
+    def apply(self, character_stat_block: CharacterStatBlock):
+        self._resistance.apply(character_stat_block)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
-            "Your draconic magic has an affinity with a damage type associated with dragons. Choose one of those types: Acid, Cold, Fire, Lightning, or Poison.\n"
+            f"Your draconic magic has an affinity with a damage type associated with dragons. Choose one of those types: Acid, Cold, Fire, Lightning, or Poison. You chose {self.damage_type.value}.\n"
             "You have Resistance to that damage type, and when you cast a spell that deals damage of that type, you can add your Charisma modifier to one damage roll of that spell."
         )
         return description

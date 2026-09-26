@@ -13,6 +13,7 @@ from CharacterContent.Classes.BaseClasses.SorcererBase import (
 from CharacterContent.Classes.SubClasses2024.SorcererDraconic import (
     SorcererDraconicCustomStarterClassArgs,
     SorcererDraconicLevel3,
+    SorcererDraconicLevel5,
 )
 from Core.Definitions import Ability, Skill
 from CharacterContent.Features.CharacterFeats import (
@@ -102,6 +103,7 @@ def get_starter_class_builder():
             },
             subclass_features_by_level={
                 3: SorcererDraconicLevel3(),
+                5: SorcererDraconicLevel5(),
             },
         ),
     )

@@ -12,9 +12,9 @@ from CharacterContent.Features.Core.BaseFeatures import (
     FeatureUses,
     RegainedOn,
 )
-from CharacterContent.Features.Core.Improvements import GrantLanguage
+from CharacterContent.Features.Core.Improvements import GrantLanguage, SkillBonus
 from Combat.Definitions import ExtendedCombatantData
-from Core.Definitions import CharacterClass, Language
+from Core.Definitions import CharacterClass, Language, Skill
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
@@ -76,6 +76,13 @@ class PrimalOrder(Feature):
             name="Primal Order", origin="Druid Level 1", usage_tags=["buff"]
         )
         self.order = order
+
+    def apply(self, character_stat_block: CharacterStatBlock):
+        if self.order != PrimalOrderType.MAGICIAN:
+            return
+        bonus = max(1, character_stat_block.get_wisdom_modifier())
+        SkillBonus(Skill.ARCANA, bonus, source=self.name).apply(character_stat_block)
+        SkillBonus(Skill.NATURE, bonus, source=self.name).apply(character_stat_block)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         if self.order == PrimalOrderType.WARDEN:

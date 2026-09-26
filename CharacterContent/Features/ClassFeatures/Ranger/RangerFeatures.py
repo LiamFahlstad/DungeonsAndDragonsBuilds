@@ -8,7 +8,7 @@ from CharacterContent.Features.Core.BaseFeatures import (
 )
 from CharacterContent.Features.Core.Improvements import SkillExpertiseChoice, SpeedBonus
 import Core.Definitions as Definitions
-from Core.Definitions import Skill, MAX_ABILITY_MODIFIER
+from Core.Definitions import CharacterClass, Skill, MAX_ABILITY_MODIFIER
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
@@ -109,13 +109,14 @@ class FavoredEnemy(Feature):
         return RegainedOn.LONG_REST
 
     def number_of_uses(self, character_stat_block: CharacterStatBlock) -> int:
-        if character_stat_block.character_level < 5:
+        ranger_level = character_stat_block.get_class_level(CharacterClass.RANGER)
+        if ranger_level < 5:
             return 2
-        elif character_stat_block.character_level < 9:
+        elif ranger_level < 9:
             return 3
-        elif character_stat_block.character_level < 13:
+        elif ranger_level < 13:
             return 4
-        elif character_stat_block.character_level < 17:
+        elif ranger_level < 17:
             return 5
         else:
             return 6

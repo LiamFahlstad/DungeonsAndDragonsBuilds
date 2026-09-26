@@ -4,8 +4,8 @@ from CharacterContent.Features.Core.BaseFeatures import (
     RegainedOn,
     FeatureTarget,
 )
-from CharacterContent.Features.Core.Improvements import GrantSense
-from Core.Definitions import MAX_PROFICIENCY_BONUS, Sense
+from CharacterContent.Features.Core.Improvements import DamageResistance, GrantSense
+from Core.Definitions import MAX_PROFICIENCY_BONUS, DamageType, Sense
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 SPEED = 35  # Given by your species
@@ -47,6 +47,10 @@ class TraceOfUndeath(Feature):
         super().__init__(
             name="Trace of Undeath", origin="Dhampir Trait", usage_tags=["buff"]
         )
+        self._resistance = DamageResistance(DamageType.NECROTIC, self.name)
+
+    def apply(self, character_stat_block: CharacterStatBlock):
+        self._resistance.apply(character_stat_block)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         return "You have Resistance to Necrotic damage."

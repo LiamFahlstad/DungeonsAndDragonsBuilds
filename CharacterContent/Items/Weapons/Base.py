@@ -293,6 +293,12 @@ def weapon_matches_proficiency(
             WeaponProperty.FINESSE in weapon.properties
             or WeaponProperty.LIGHT in weapon.properties
         )
+    if proficiency == WeaponProficiency.MARTIAL_MELEE_NOT_HEAVY_OR_TWO_HANDED:
+        return (
+            weapon.weapon_type == WeaponType.MARTIAL_MELEE
+            and WeaponProperty.HEAVY not in weapon.properties
+            and WeaponProperty.TWO_HANDED not in weapon.properties
+        )
     raise ValueError(f"Unhandled weapon proficiency: {proficiency}")
 
 

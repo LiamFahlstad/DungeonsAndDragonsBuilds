@@ -52,7 +52,7 @@ class LargeForm(Feature):
 class PowerfulBuild(Feature):
     def __init__(self):
         super().__init__(
-            name="Goliath Nimbleness", origin="Goliath Trait", usage_tags=["buff"]
+            name="Powerful Build", origin="Goliath Trait", usage_tags=["buff"]
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:

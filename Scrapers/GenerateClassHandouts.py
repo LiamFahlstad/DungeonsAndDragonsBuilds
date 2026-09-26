@@ -562,11 +562,6 @@ SUBCLASS_SUMMARIES_2014: dict[str, str] = {
         "lightning), and can spend bonus actions to move the aura or deal extra damage. A blaster-style "
         "Path combining Rage durability with AoE rider damage."
     ),
-    "BarbarianPathOfTheTotemWarrior": (
-        "Gains animal-spirit totems (Bear, Eagle, Wolf) chosen at level 3, each granting passive "
-        "bonuses (extra resistance, bonus speed, pack-tactics benefits) swappable when finishing a "
-        "long rest. A flexible buff/utility Path with minor animal-themed features."
-    ),
     "BarbarianPathOfWildMagic": (
         "Casting spells near you during Rage triggers random Wild Magic Surge effects (damage, teleport, "
         "forced movement, etc.), and you can spend rage to trigger surges deliberately. A chaotic, "
@@ -764,11 +759,6 @@ SUBCLASS_SUMMARIES_2014: dict[str, str] = {
         "wants to swagger and swashbuckle."
     ),
     # --- Sorcerer ---
-    "SorcererAberrantMind": (
-        "Psionic Sorcery lets you cast divination/enchantment spells with Sorcery Points instead of spells "
-        "known, plus telepathy and psychic damage rider spells. An intrigue/telepathy Sorcery built around "
-        "subtle mind-affecting effects."
-    ),
     "SorcererDivineSoul": (
         "Bonus cleric-flavored spells and Channel Divinity options (healing burst, turning undead), plus "
         "Unerring Spell lets you reroll damage dice. A divine-flavored Sorcery that blends cleric and sorcerer "
@@ -1052,11 +1042,6 @@ LEGACY_2014_SUBCLASSES: dict[str, list[SubclassInfo]] = {
             "BarbarianPathOfTheStormHerald", "Path of the Storm Herald", "storm_herald"
         ),
         _legacy2014(
-            "BarbarianPathOfTheTotemWarrior",
-            "Path of the Totem Warrior",
-            "totem_warrior",
-        ),
-        _legacy2014(
             "BarbarianPathOfWildMagic", "Path of Wild Magic", "barbarian_wild_magic"
         ),
     ],
@@ -1114,7 +1099,6 @@ LEGACY_2014_SUBCLASSES: dict[str, list[SubclassInfo]] = {
         _legacy2014("RogueSwashbuckler", "Swashbuckler", "swashbuckler"),
     ],
     "Sorcerer": [
-        _legacy2014("SorcererAberrantMind", "Aberrant Mind", "aberrant_mind"),
         _legacy2014("SorcererDivineSoul", "Divine Soul", "divine_soul"),
         _legacy2014("SorcererLunarSorcery", "Lunar Sorcery", "lunar_sorcery"),
         _legacy2014("SorcererStormSorcery", "Storm Sorcery", "storm_sorcery"),

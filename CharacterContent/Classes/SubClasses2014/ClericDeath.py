@@ -9,6 +9,7 @@ from CharacterContent.Classes.BaseClasses.ClericBase import (
 )
 from Builds.CharacterSheetAccumulator import CharacterSheetData
 from Core.Definitions import ClericSubclass2014
+from CharacterContent.Items.Weapons.Enums import WeaponProficiency
 from CharacterContent.Features.SubClassFeatures2014.Cleric import ClericDeathFeatures
 from StatBlocks.SkillsStatBlock import ClericSkillsStatBlock
 
@@ -21,6 +22,7 @@ class ClericDeathLevel3(ClassBuilder.SubclassLevel3):
         data: CharacterSheetData,
     ) -> CharacterSheetData:
         data.add_feature(ClericDeathFeatures.BonusProficiency())
+        data.add_weapon_proficiency(WeaponProficiency.MARTIAL)
         data.add_feature(ClericDeathFeatures.Reaper())
         data.add_feature(ClericDeathFeatures.DeathDomainSpells())
         data.add_feature(ClericDeathFeatures.TouchOfDeathChannelDivinity())
@@ -40,17 +42,6 @@ class ClericDeathLevel6(ClassBuilder.SubclassLevel6):
             ]
         )
         touch_of_death.extend_feature(ClericDeathFeatures.InescapableDestruction())
-        return data
-
-
-@attr.dataclass
-class ClericDeathLevel8(ClassBuilder.SubclassLevel8):
-
-    def add_features(
-        self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
-        data.add_feature(ClericDeathFeatures.DivineStrike())
         return data
 
 

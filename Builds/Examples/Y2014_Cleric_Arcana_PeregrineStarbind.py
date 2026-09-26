@@ -29,7 +29,6 @@ from CharacterContent.Classes.SubClasses2014.ClericArcana import (
     ClericArcanaCustomStarterClassArgs,
     ClericArcanaLevel3,
     ClericArcanaLevel6,
-    ClericArcanaLevel8,
     ClericArcanaLevel17,
 )
 from Core.Definitions import Ability, Skill
@@ -178,7 +177,6 @@ def get_starter_class_builder():
             subclass_features_by_level={
                 3: ClericArcanaLevel3(),
                 6: ClericArcanaLevel6(),
-                8: ClericArcanaLevel8(),
                 17: ClericArcanaLevel17(),
             },
         ),

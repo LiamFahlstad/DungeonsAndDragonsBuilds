@@ -32,7 +32,7 @@ class EntertainersPack(Pack):
             (Items.Mirror(), 1),
             (Items.FlasksOfOil(), 8),
             (Items.Rations(), 9),
-            (Items.Tinderbox(), 10),
+            (Items.Tinderbox(), 1),
             (Items.Waterskin(), 1),
         ]
 
@@ -46,6 +46,7 @@ class BurglarsPack(Pack):
             (Items.Candle(), 10),
             (Items.Crowbar(), 1),
             (Items.HoodedLantern(), 1),
+            (Items.FlasksOfOil(), 7),
             (Items.Rations(), 5),
             (Items.Rope(), 1),
             (Items.Tinderbox(), 1),

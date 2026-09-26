@@ -29,7 +29,6 @@ from CharacterContent.Classes.SubClasses2014.ClericTempest import (
     ClericTempestCustomStarterClassArgs,
     ClericTempestLevel3,
     ClericTempestLevel6,
-    ClericTempestLevel8,
     ClericTempestLevel17,
 )
 from Core.Definitions import Ability, Skill
@@ -178,7 +177,6 @@ def get_starter_class_builder():
             subclass_features_by_level={
                 3: ClericTempestLevel3(),
                 6: ClericTempestLevel6(),
-                8: ClericTempestLevel8(),
                 17: ClericTempestLevel17(),
             },
         ),

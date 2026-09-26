@@ -58,7 +58,13 @@ class FightingSpirit(Feature):
                 duration="Until End of Current Turn",
             ),
             usage_tags=["buff"],
+            uses=FeatureUses(max_uses=3, regain_all_on="long rest"),
         )
+
+    def regained_on(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "RegainedOn | None":
+        return RegainedOn.LONG_REST
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

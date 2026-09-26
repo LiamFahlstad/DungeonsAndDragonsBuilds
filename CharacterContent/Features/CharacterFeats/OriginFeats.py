@@ -459,7 +459,7 @@ class FamiliarFriend(OriginFeat):
         return description
 
     def number_of_uses(self, character_stat_block: CharacterStatBlock) -> int:
-        return character_stat_block.get_proficiency_bonus()
+        return 1
 
 
 class HarperAgent(OriginFeat):

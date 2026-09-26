@@ -29,7 +29,6 @@ from CharacterContent.Classes.SubClasses2014.ClericNature import (
     ClericNatureCustomStarterClassArgs,
     ClericNatureLevel3,
     ClericNatureLevel6,
-    ClericNatureLevel8,
     ClericNatureLevel17,
 )
 from Core.Definitions import Ability, Skill
@@ -178,7 +177,6 @@ def get_starter_class_builder():
             subclass_features_by_level={
                 3: ClericNatureLevel3(),
                 6: ClericNatureLevel6(),
-                8: ClericNatureLevel8(),
                 17: ClericNatureLevel17(),
             },
         ),

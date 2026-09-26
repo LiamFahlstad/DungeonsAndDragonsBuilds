@@ -7,7 +7,7 @@ from CharacterContent.Features.Core.BaseFeatures import (
     RegainedOn,
 )
 from CharacterContent.Features.Core.Improvements import SkillBonus
-from Core.Definitions import Skill
+from Core.Definitions import CharacterClass, Skill
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
@@ -124,9 +124,10 @@ class ChannelDivinity(Feature):
         return RegainedOn.SHORT_OR_LONG_REST
 
     def number_of_uses(self, character_stat_block: CharacterStatBlock) -> int:
-        if character_stat_block.character_level >= 18:
+        cleric_level = character_stat_block.get_class_level(CharacterClass.CLERIC)
+        if cleric_level >= 18:
             return 4
-        elif character_stat_block.character_level >= 6:
+        elif cleric_level >= 6:
             return 3
         else:
             return 2

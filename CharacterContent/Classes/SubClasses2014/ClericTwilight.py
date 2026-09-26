@@ -8,7 +8,8 @@ from CharacterContent.Classes.BaseClasses.ClericBase import (
     ClericCustomStarterClassArgs,
 )
 from Builds.CharacterSheetAccumulator import CharacterSheetData
-from Core.Definitions import ClericSubclass2014
+from Core.Definitions import ArmorType, ClericSubclass2014
+from CharacterContent.Items.Weapons.Enums import WeaponProficiency
 from CharacterContent.Features.SubClassFeatures2014.Cleric import ClericTwilightFeatures
 from StatBlocks.SkillsStatBlock import ClericSkillsStatBlock
 
@@ -21,6 +22,8 @@ class ClericTwilightLevel3(ClassBuilder.SubclassLevel3):
         data: CharacterSheetData,
     ) -> CharacterSheetData:
         data.add_feature(ClericTwilightFeatures.BonusProficiencies())
+        data.add_armor_proficiency(ArmorType.HEAVY)
+        data.add_weapon_proficiency(WeaponProficiency.MARTIAL)
         data.add_feature(ClericTwilightFeatures.TwilightDomainSpells())
         data.add_feature(ClericTwilightFeatures.EyesOfNight())
         data.add_feature(ClericTwilightFeatures.VigilantBlessing())
@@ -36,17 +39,6 @@ class ClericTwilightLevel6(ClassBuilder.SubclassLevel6):
         data: CharacterSheetData,
     ) -> CharacterSheetData:
         data.add_feature(ClericTwilightFeatures.StepsOfNight())
-        return data
-
-
-@attr.dataclass
-class ClericTwilightLevel8(ClassBuilder.SubclassLevel8):
-
-    def add_features(
-        self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
-        data.add_feature(ClericTwilightFeatures.DivineStrike())
         return data
 
 

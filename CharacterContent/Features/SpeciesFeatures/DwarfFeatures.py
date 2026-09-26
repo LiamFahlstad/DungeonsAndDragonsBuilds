@@ -7,10 +7,11 @@ from CharacterContent.Features.Core.BaseFeatures import (
     FeatureTarget,
 )
 from CharacterContent.Features.Core.Improvements import (
+    DamageResistance,
     GrantSense,
     HitPointsPerLevelBonus,
 )
-from Core.Definitions import MAX_PROFICIENCY_BONUS, CreatureSize, Sense
+from Core.Definitions import MAX_PROFICIENCY_BONUS, CreatureSize, DamageType, Sense
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 SPEED = 30  # Given by your species
@@ -36,6 +37,10 @@ class DwarvenResilience(Feature):
         super().__init__(
             name="Dwarven Resilience", origin="Dwarf Trait", usage_tags=["buff"]
         )
+        self._resistance = DamageResistance(DamageType.POISON, self.name)
+
+    def apply(self, character_stat_block: CharacterStatBlock):
+        self._resistance.apply(character_stat_block)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         return "You have Resistance to Poison damage. You also have Advantage on saving throws you make to avoid or end the Poisoned condition."

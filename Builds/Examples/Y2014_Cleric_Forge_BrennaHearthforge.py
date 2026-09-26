@@ -29,7 +29,6 @@ from CharacterContent.Classes.SubClasses2014.ClericForge import (
     ClericForgeCustomStarterClassArgs,
     ClericForgeLevel3,
     ClericForgeLevel6,
-    ClericForgeLevel8,
     ClericForgeLevel17,
 )
 from Core.Definitions import Ability, Skill
@@ -181,7 +180,6 @@ def get_starter_class_builder():
             subclass_features_by_level={
                 3: ClericForgeLevel3(),
                 6: ClericForgeLevel6(),
-                8: ClericForgeLevel8(),
                 17: ClericForgeLevel17(),
             },
         ),

@@ -1,4 +1,4 @@
-from Core.Definitions import Ability, PALADIN_HIT_DIE
+from Core.Definitions import Ability, CharacterClass, PALADIN_HIT_DIE
 from CharacterContent.Features.Core.BaseFeatures import (
     Feature,
     FeatureActivation,
@@ -117,7 +117,9 @@ class AuraOfConquest(Feature):
     def get_table_description(
         self, character_stat_block: CharacterStatBlock
     ) -> list[tuple[str, str]]:
-        half_paladin_level = character_stat_block.character_level // 2
+        half_paladin_level = (
+            character_stat_block.get_class_level(CharacterClass.PALADIN) // 2
+        )
         range_text = "10 feet (30 at 18th level)"
         return [
             ("Range", range_text),

@@ -6,6 +6,7 @@ from CharacterContent.Features.Core.BaseFeatures import (
     FeatureUses,
     RegainedOn,
 )
+from Core.Definitions import CharacterClass
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
@@ -65,10 +66,11 @@ class SecondWind(Feature):
         return RegainedOn.SHORT_OR_LONG_REST
 
     def number_of_uses(self, character_stat_block: CharacterStatBlock) -> int:
+        fighter_level = character_stat_block.get_class_level(CharacterClass.FIGHTER)
         uses = 2
-        if character_stat_block.character_level >= 4:
+        if fighter_level >= 4:
             uses = 3
-        if character_stat_block.character_level >= 10:
+        if fighter_level >= 10:
             uses = 4
         return uses
 
@@ -126,7 +128,7 @@ class ActionSurge(Feature):
     ) -> list[tuple[str, str]]:
         uses = self.number_of_uses(character_stat_block)
         recharge = "Short or long rest"
-        if character_stat_block.character_level >= 17:
+        if character_stat_block.get_class_level(CharacterClass.FIGHTER) >= 17:
             recharge = "Short or long rest (max 1 per turn)"
         return [
             ("What", "Take one additional action"),
@@ -141,7 +143,8 @@ class ActionSurge(Feature):
         return RegainedOn.SHORT_OR_LONG_REST
 
     def number_of_uses(self, character_stat_block: CharacterStatBlock) -> int:
-        return 2 if character_stat_block.character_level >= 17 else 1
+        fighter_level = character_stat_block.get_class_level(CharacterClass.FIGHTER)
+        return 2 if fighter_level >= 17 else 1
 
 
 class TacticalMind(Feature):
@@ -225,9 +228,10 @@ class Indomitable(Feature):
         return RegainedOn.LONG_REST
 
     def number_of_uses(self, character_stat_block: CharacterStatBlock) -> int:
-        if character_stat_block.character_level >= 17:
+        fighter_level = character_stat_block.get_class_level(CharacterClass.FIGHTER)
+        if fighter_level >= 17:
             return 3
-        elif character_stat_block.character_level >= 13:
+        elif fighter_level >= 13:
             return 2
         else:
             return 1

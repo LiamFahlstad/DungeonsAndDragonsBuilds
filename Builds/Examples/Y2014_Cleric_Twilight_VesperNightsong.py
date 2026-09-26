@@ -29,7 +29,6 @@ from CharacterContent.Classes.SubClasses2014.ClericTwilight import (
     ClericTwilightCustomStarterClassArgs,
     ClericTwilightLevel3,
     ClericTwilightLevel6,
-    ClericTwilightLevel8,
     ClericTwilightLevel17,
 )
 from Core.Definitions import Ability, Skill
@@ -178,7 +177,6 @@ def get_starter_class_builder():
             subclass_features_by_level={
                 3: ClericTwilightLevel3(),
                 6: ClericTwilightLevel6(),
-                8: ClericTwilightLevel8(),
                 17: ClericTwilightLevel17(),
             },
         ),

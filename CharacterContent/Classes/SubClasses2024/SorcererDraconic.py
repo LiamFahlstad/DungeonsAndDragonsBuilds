@@ -8,7 +8,7 @@ from CharacterContent.Classes.BaseClasses.SorcererBase import (
     SorcererCustomStarterClassArgs,
 )
 from Builds.CharacterSheetAccumulator import CharacterSheetData
-from Core.Definitions import SorcererSubclass
+from Core.Definitions import DamageType, SorcererSubclass
 from CharacterContent.Features.SubClassFeatures.Sorcerer import SorcererDraconicFeatures
 from CharacterContent.Spells.SpellLists import (
     SorcererLevel1Spells,
@@ -51,11 +51,15 @@ class SorcererDraconicLevel5(ClassBuilder.SubclassLevel5):
 
 @attr.dataclass
 class SorcererDraconicLevel6(ClassBuilder.SubclassLevel6):
+    elemental_affinity: DamageType
+
     def add_features(
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(SorcererDraconicFeatures.ElementalAffinity())
+        data.add_feature(
+            SorcererDraconicFeatures.ElementalAffinity(self.elemental_affinity)
+        )
         return data
 
 

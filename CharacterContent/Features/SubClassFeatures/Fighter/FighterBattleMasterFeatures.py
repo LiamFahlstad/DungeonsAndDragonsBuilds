@@ -1,4 +1,4 @@
-from Core.Definitions import Ability, FIGHTER_HIT_DIE
+from Core.Definitions import Ability, CharacterClass, FIGHTER_HIT_DIE
 from CharacterContent.Features.Core.BaseFeatures import (
     Feature,
     FeatureUses,
@@ -17,13 +17,25 @@ class SuperiorityDice(Feature):
         super().__init__(
             name="Superiority Dice",
             origin="Battle Master Fighter Level 3",
-            uses=FeatureUses(max_uses=6, regain_all_on="short or long rest"),
+            uses=FeatureUses(
+                max_uses=6,
+                regain_all_on="short or long rest",
+                current_formula="Current amount: 4, increasing to 5 at Fighter level 7 and 6 at Fighter level 15.",
+            ),
         )
 
+    def number_of_uses(self, character_stat_block: CharacterStatBlock) -> int:
+        fighter_level = character_stat_block.get_class_level(CharacterClass.FIGHTER)
+        if fighter_level >= 15:
+            return 6
+        if fighter_level >= 7:
+            return 5
+        return 4
+
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        if character_stat_block.character_level < 10:
+        if character_stat_block.get_class_level(CharacterClass.FIGHTER) < 10:
             superiority_die = "1d8"
-        elif character_stat_block.character_level < 18:
+        elif character_stat_block.get_class_level(CharacterClass.FIGHTER) < 18:
             superiority_die = "1d10"
         else:
             superiority_die = "1d12"

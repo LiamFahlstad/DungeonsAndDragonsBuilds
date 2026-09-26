@@ -29,7 +29,6 @@ from CharacterContent.Classes.SubClasses2014.ClericDeath import (
     ClericDeathCustomStarterClassArgs,
     ClericDeathLevel3,
     ClericDeathLevel6,
-    ClericDeathLevel8,
     ClericDeathLevel17,
 )
 from Core.Definitions import Ability, Skill
@@ -178,7 +177,6 @@ def get_starter_class_builder():
             subclass_features_by_level={
                 3: ClericDeathLevel3(),
                 6: ClericDeathLevel6(),
-                8: ClericDeathLevel8(),
                 17: ClericDeathLevel17(),
             },
         ),

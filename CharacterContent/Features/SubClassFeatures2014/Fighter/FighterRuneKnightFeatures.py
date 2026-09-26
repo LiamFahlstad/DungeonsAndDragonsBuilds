@@ -87,7 +87,20 @@ class GiantsMight(Feature):
                 action_type=ActionType.BONUS_ACTION, duration="1 Minute"
             ),
             usage_tags=["buff", "damage"],
+            uses=FeatureUses(
+                max_uses=MAX_PROFICIENCY_BONUS,
+                regain_all_on="long rest",
+                current_formula="Current amount: equal to your proficiency bonus.",
+            ),
         )
+
+    def regained_on(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "RegainedOn | None":
+        return RegainedOn.LONG_REST
+
+    def number_of_uses(self, character_stat_block: CharacterStatBlock) -> int:
+        return character_stat_block.get_proficiency_bonus()
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

@@ -1,5 +1,5 @@
 import Core.Definitions as Definitions
-from Core.Definitions import DamageType
+from Core.Definitions import ArmorType, DamageType
 from CharacterContent.Features.Core.BaseFeatures import (
     Feature,
     FeatureUses,
@@ -7,7 +7,11 @@ from CharacterContent.Features.Core.BaseFeatures import (
     RegainedOn,
     FeatureTarget,
 )
-from CharacterContent.Features.Core.Improvements import DamageImmunity, DamageResistance
+from CharacterContent.Features.Core.Improvements import (
+    ArmorClassBonus,
+    DamageImmunity,
+    DamageResistance,
+)
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
@@ -117,6 +121,11 @@ class SoulOfTheForge(Feature):
     def apply(self, character_stat_block: CharacterStatBlock):
         self._resistance.apply(character_stat_block)
 
+    def apply_after_armor(self, character_stat_block: CharacterStatBlock):
+        # "While wearing heavy armor, you gain a +1 bonus to AC."
+        if character_stat_block.worn_armor_type == ArmorType.HEAVY:
+            ArmorClassBonus(1).apply(character_stat_block)
+
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
             "Your mastery of the forge grants you special abilities.\n"
@@ -124,34 +133,6 @@ class SoulOfTheForge(Feature):
             "While wearing heavy armor, you gain a +1 bonus to AC."
         )
         return description
-
-
-class DivineStrike(Feature):
-    def __init__(self):
-        super().__init__(
-            name="Divine Strike",
-            origin="Forge Domain Cleric Level 8",
-            usage_tags=["damage"],
-        )
-
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        description = "You gain the ability to infuse your weapon strikes with the fiery power of the forge. Once on each of your turns when you hit a creature with a weapon attack, you can cause the attack to deal an extra 1d8 fire damage to the target. When you reach 14th level, the extra damage increases to 2d8."
-        return description
-
-    def get_table_description(
-        self, character_stat_block: CharacterStatBlock
-    ) -> list[tuple[str, str]]:
-        import Core.Definitions as Definitions
-
-        cleric_level = character_stat_block.get_class_level(
-            Definitions.CharacterClass.CLERIC
-        )
-        damage = "2d8" if cleric_level >= 14 else "1d8"
-        return [
-            ("Trigger", "On weapon attack hit (once per turn)"),
-            ("Damage Type", "Fire"),
-            ("Damage", f"{damage} fire"),
-        ]
 
 
 class SaintOfForgeAndFire(Feature):

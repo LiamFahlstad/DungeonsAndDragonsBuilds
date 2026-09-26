@@ -74,7 +74,7 @@ class TinkersMagic(Feature):
         return RegainedOn.LONG_REST
 
     def number_of_uses(self, character_stat_block: CharacterStatBlock) -> int:
-        return character_stat_block.get_intelligence_modifier()
+        return max(1, character_stat_block.get_intelligence_modifier())
 
     def target(
         self, character_stat_block: CharacterStatBlock
@@ -232,7 +232,7 @@ class FlashofGenius(Feature):
         return RegainedOn.LONG_REST
 
     def number_of_uses(self, character_stat_block: CharacterStatBlock) -> int:
-        return character_stat_block.get_intelligence_modifier()
+        return max(1, character_stat_block.get_intelligence_modifier())
 
     def target(
         self, character_stat_block: CharacterStatBlock

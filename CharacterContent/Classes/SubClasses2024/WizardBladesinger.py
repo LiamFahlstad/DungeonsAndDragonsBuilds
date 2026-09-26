@@ -8,6 +8,7 @@ from CharacterContent.Classes.BaseClasses.WizardBase import (
     WizardCustomStarterClassArgs,
 )
 from Builds.CharacterSheetAccumulator import CharacterSheetData
+from CharacterContent.Items.Weapons.Enums import WeaponProficiency
 from Core.Definitions import Skill, WizardSubclass
 from CharacterContent.Features.SubClassFeatures.Wizard import WizardBladesingerFeatures
 from StatBlocks.SkillsStatBlock import WizardSkillsStatBlock
@@ -25,6 +26,9 @@ class WizardBladesingerLevel3(ClassBuilder.SubclassLevel3):
         data.add_feature(WizardBladesingerFeatures.Bladesong())
         data.add_feature(
             WizardBladesingerFeatures.TrainingInWarAndSong(Skill.ATHLETICS)
+        )
+        data.add_weapon_proficiency(
+            WeaponProficiency.MARTIAL_MELEE_NOT_HEAVY_OR_TWO_HANDED
         )
         return data
 

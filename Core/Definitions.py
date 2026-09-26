@@ -217,13 +217,6 @@ class ArtificerSubclass(str, Enum):
     REANIMATOR = "Reanimator"
 
 
-class ArtificerSubclass2014(str, Enum):
-    ALCHEMIST = "Alchemist"
-    ARMORER = "Armorer"
-    ARTILLERIST = "Artillerist"
-    BATTLE_SMITH = "Battle Smith"
-
-
 class PaladinSubclass(str, Enum):
     OATH_OF_DEVOTION = "Oath of Devotion"
     OATH_OF_THE_ANCIENTS = "Oath of the Ancients"
@@ -236,8 +229,6 @@ class PaladinSubclass(str, Enum):
 
 class PaladinSubclass2014(str, Enum):
     OATHBREAKER = "Oathbreaker"
-    DEVOTION = "Oath of Devotion"
-    VENGEANCE = "Oath of Vengeance"
     REDEMPTION = "Oath of Redemption"
     CONQUEST = "Oath of Conquest"
     CROWN = "Oath of the Crown"
@@ -259,7 +250,6 @@ class ClericSubclass(str, Enum):
 class ClericSubclass2014(str, Enum):
     ARCANA = "Arcana"
     FORGE = "Forge"
-    LIFE = "Life"
     DEATH = "Death"
     NATURE = "Nature"
     ORDER = "Order"
@@ -279,10 +269,8 @@ class RogueSubclass(str, Enum):
 
 class RogueSubclass2014(str, Enum):
     SWASHBUCKLER = "Swashbuckler"
-    THIEF = "Thief"
     MASTERMIND = "Mastermind"
     SCOUT = "Scout"
-    ASSASSIN = "Assassin"
 
 
 class BardSubclass(str, Enum):
@@ -298,7 +286,6 @@ class BardSubclass(str, Enum):
 
 class BardSubclass2014(str, Enum):
     ELOQUENCE = "College of Eloquence"
-    LORE = "College of Lore"
     WHISPERS = "College of Whispers"
     SWORD = "College of Swords"
     CREATION = "College of Creation"
@@ -338,15 +325,11 @@ class WizardSubclass(str, Enum):
 
 class WizardSubclass2014(str, Enum):
     NECROMANCY = "Necromancy"
-    EVOCATION = "Evocation"
-    ABJURATION = "Abjuration"
-    ILLUSION = "Illusion"
     CONJURATION = "Conjuration"
     ENCHANTMENT = "Enchantment"
     ORDER_OF_SCRIBES = "Order of Scribes"
     CHRONURGY = "Chronurgy"
     GRAVITURGY = "Graviturgy"
-    DIVINATION = "Divination"
 
 
 class SorcererSubclass(str, Enum):
@@ -363,7 +346,6 @@ class SorcererSubclass2014(str, Enum):
     DRACONIC = "Draconic"
     DIVINE_SOUL = "Divine Soul"
     LUNAR_SORCERY = "Lunar Sorcery"
-    ABERRANT_MIND = "Aberrant Mind"
 
 
 class WarlockSubclass(str, Enum):
@@ -376,13 +358,9 @@ class WarlockSubclass(str, Enum):
 
 class WarlockSubclass2014(str, Enum):
     HEXBLADE = "Hexblade"
-    FIEND = "Fiend"
-    THE_ARCHFEY = "The Archfey"
-    THE_GREAT_OLD_ONE = "The Great Old One"
     THE_FATHOMLESS = "The Fathomless"
     THE_GENIE = "The Genie"
     THE_UNDYING = "The Undying"
-    THE_CELESTIAL = "The Celestial"
 
 
 class WarlockGenieKind(str, Enum):
@@ -402,9 +380,6 @@ class FighterSubclass(str, Enum):
 
 class FighterSubclass2014(str, Enum):
     RUNE_KNIGHT = "Rune Knight"
-    CHAMPION = "Champion"
-    BATTLE_MASTER = "Battle Master"
-    ELDRITCH_KNIGHT = "Eldritch Knight"
     CAVALIER = "Cavalier"
     ARCANE_ARCHER = "Arcane Archer"
     ECHO_KNIGHT = "Echo Knight"
@@ -422,11 +397,9 @@ class RangerSubclass(str, Enum):
 
 class RangerSubclass2014(str, Enum):
     HORIZON_WALKER = "Horizon Walker"
-    HUNTER = "Hunter"
     SWARMKEEPER = "Swarmkeeper"
     MONSTER_SLAYER = "Monster Slayer"
     DRAKEWARDEN = "Drakewarden"
-    GLOOM_STALKER = "Gloom Stalker"
 
 
 class MonkSubclass(str, Enum):
@@ -443,7 +416,6 @@ class MonkSubclass2014(str, Enum):
     ASTRAL_SELF = "Astral Self"
     DRUNKEN_MASTER = "Drunken Master"
     LONG_DEATH = "Long Death"
-    OPEN_HAND = "Open Hand"
 
 
 class BarbarianSubclass(str, Enum):
@@ -454,8 +426,6 @@ class BarbarianSubclass(str, Enum):
 
 
 class BarbarianSubclass2014(str, Enum):
-    PATH_OF_THE_TOTEM_WARRIOR = "Path of the Totem Warrior"
-    PATH_OF_THE_BERSERKER = "Path of the Berserker"
     PATH_OF_THE_STORM_HERALD = "Path of the Storm Herald"
     PATH_OF_THE_ANCESTRAL_GUARDIAN = "Path of the Ancestral Guardian"
     PATH_OF_THE_BATTLERAGER = "Path of the Battlerager"

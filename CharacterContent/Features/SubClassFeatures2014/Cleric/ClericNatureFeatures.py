@@ -1,4 +1,3 @@
-import Core.Definitions as Definitions
 from CharacterContent.Features.Core.BaseFeatures import (
     Feature,
     FeatureActivation,
@@ -107,37 +106,6 @@ class DampenElements(Feature):
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "When you or a creature within 30 feet of you takes acid, cold, fire, lightning, or thunder damage, you can use your reaction to grant resistance to the creature against that instance of the damage."
         return description
-
-
-class DivineStrike(Feature):
-    def __init__(self):
-        super().__init__(
-            name="Divine Strike",
-            origin="Nature Domain Cleric Level 8",
-            usage_tags=["damage"],
-        )
-
-    def target(
-        self, character_stat_block: CharacterStatBlock
-    ) -> "FeatureTarget | None":
-        return FeatureTarget.ENEMY
-
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        description = "You gain the ability to infuse your weapon strikes with divine energy. Once on each of your turns when you hit a creature with a weapon attack, you can cause the attack to deal an extra 1d8 cold, fire, or lightning damage (your choice) to the target. When you reach 14th level, the extra damage increases to 2d8."
-        return description
-
-    def get_table_description(
-        self, character_stat_block: CharacterStatBlock
-    ) -> list[tuple[str, str]]:
-        cleric_level = character_stat_block.get_class_level(
-            Definitions.CharacterClass.CLERIC
-        )
-        damage = "2d8" if cleric_level >= 14 else "1d8"
-        return [
-            ("Trigger", "On weapon attack hit (once per turn)"),
-            ("Damage Type", "Cold, fire, or lightning (your choice)"),
-            ("Damage", f"{damage} damage"),
-        ]
 
 
 class MasterOfNature(Feature):

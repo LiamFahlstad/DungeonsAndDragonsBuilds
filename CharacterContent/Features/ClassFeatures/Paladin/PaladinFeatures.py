@@ -8,7 +8,7 @@ from CharacterContent.Features.Core.BaseFeatures import (
     RegainedOn,
 )
 from CharacterContent.Features.Core.Improvements import SavingThrowBonus
-from Core.Definitions import Ability
+from Core.Definitions import Ability, CharacterClass
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
@@ -185,7 +185,8 @@ class ChannelDivinity(Feature):
         return RegainedOn.SHORT_OR_LONG_REST
 
     def number_of_uses(self, character_stat_block: CharacterStatBlock) -> int:
-        return 3 if character_stat_block.character_level >= 11 else 2
+        paladin_level = character_stat_block.get_class_level(CharacterClass.PALADIN)
+        return 3 if paladin_level >= 11 else 2
 
 
 class ExtraAttack(Feature):

@@ -8,7 +8,8 @@ from CharacterContent.Classes.BaseClasses.ClericBase import (
     ClericCustomStarterClassArgs,
 )
 from Builds.CharacterSheetAccumulator import CharacterSheetData
-from Core.Definitions import ClericSubclass2014
+from Core.Definitions import ArmorType, ClericSubclass2014
+from CharacterContent.Features.ClassFeatures.Cleric import ClericFeatures
 from CharacterContent.Features.SubClassFeatures2014.Cleric import ClericOrderFeatures
 from StatBlocks.SkillsStatBlock import ClericSkillsStatBlock
 
@@ -21,6 +22,7 @@ class ClericOrderLevel3(ClassBuilder.SubclassLevel3):
         data: CharacterSheetData,
     ) -> CharacterSheetData:
         data.add_feature(ClericOrderFeatures.BonusProficiencies())
+        data.add_armor_proficiency(ArmorType.HEAVY)
         data.add_feature(ClericOrderFeatures.VoiceOfAuthority())
         data.add_feature(ClericOrderFeatures.OrderDomainSpells())
         data.add_feature(ClericOrderFeatures.OrdersDemandChannelDivinity())
@@ -39,27 +41,19 @@ class ClericOrderLevel6(ClassBuilder.SubclassLevel6):
 
 
 @attr.dataclass
-class ClericOrderLevel8(ClassBuilder.SubclassLevel8):
-
-    def add_features(
-        self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
-        data.add_feature(ClericOrderFeatures.DivineStrike())
-        return data
-
-
-@attr.dataclass
 class ClericOrderLevel17(ClassBuilder.SubclassLevel17):
 
     def add_features(
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        divine_strike: ClericOrderFeatures.DivineStrike = data.get_features_by_type(
-            ClericOrderFeatures.DivineStrike
-        )[0]
-        divine_strike.extend_feature(ClericOrderFeatures.OrdersWrath())
+        # The 2024 base Cleric's Blessed Strikes replaces the 2014 domain's own
+        # Divine Strike, so Order's Wrath rides on that when it was chosen.
+        divine_strikes = data.get_features_by_type(ClericFeatures.DivineStrike)
+        if divine_strikes:
+            divine_strikes[0].extend_feature(ClericOrderFeatures.OrdersWrath())
+        else:
+            data.add_feature(ClericOrderFeatures.OrdersWrath())
         return data
 
 

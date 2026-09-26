@@ -7,8 +7,12 @@ rebuild side effects across all ~160 builds, not per-build numbers.
 No sheet is written to Output/.
 """
 
+import inspect
+import sys
+
 import pytest
 
+from CharacterContent.Classes.BaseClasses import ClassBuilder
 from Core.Definitions import Ability, CharacterClass, Skill
 from RunCharacterCreator import BuildSelector, ExampleSelector
 
@@ -153,3 +157,47 @@ def test_no_wasted_skill_proficiency(name, monkeypatch):
     monkeypatch.setattr(SkillsStatBlock, "add_skill_proficiency", recording)
     type(ALL_BUILDS[name])().build().setup_character_stat_block()
     assert wasted == []
+
+
+def _class_builders(build):
+    builders = []
+    for value in vars(build).values():
+        if isinstance(value, ClassBuilder.ClassBuilder):
+            builders.append(value)
+        elif isinstance(value, (list, tuple)):
+            builders += [v for v in value if isinstance(v, ClassBuilder.ClassBuilder)]
+    return builders
+
+
+def _subclass_levels_defined(module) -> dict[int, str]:
+    """{level: class name} for every SubclassLevelN builder in a subclass module."""
+    levels = {}
+    for name, cls in inspect.getmembers(module, inspect.isclass):
+        if cls.__module__ != module.__name__:
+            continue
+        for base in cls.__mro__[1:]:
+            suffix = base.__name__.removeprefix("SubclassLevel")
+            if base.__name__.startswith("SubclassLevel") and suffix.isdigit():
+                levels[int(suffix)] = name
+                break
+    return levels
+
+
+@pytest.mark.parametrize("name", BUILD_PARAMS)
+def test_no_subclass_level_is_skipped(name):
+    # A subclass level missing from subclass_features_by_level is silently
+    # skipped by BaseClassLevelFeatures.add_features, so the character loses
+    # that level's features and always-prepared spells without any error.
+    for class_builder in _class_builders(ALL_BUILDS[name]):
+        subclass_levels = (
+            class_builder.base_class_level_features.subclass_features_by_level
+        )
+        if not subclass_levels:
+            continue
+        module = sys.modules[type(next(iter(subclass_levels.values()))).__module__]
+        missing = [
+            (level, cls_name)
+            for level, cls_name in sorted(_subclass_levels_defined(module).items())
+            if level <= class_builder.base_class_level and level not in subclass_levels
+        ]
+        assert not missing, f"{name}: missing subclass levels {missing}"

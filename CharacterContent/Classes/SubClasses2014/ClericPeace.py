@@ -42,17 +42,6 @@ class ClericPeaceLevel6(ClassBuilder.SubclassLevel6):
 
 
 @attr.dataclass
-class ClericPeaceLevel8(ClassBuilder.SubclassLevel8):
-
-    def add_features(
-        self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
-        data.add_feature(ClericPeaceFeatures.PotentSpellcasting())
-        return data
-
-
-@attr.dataclass
 class ClericPeaceLevel17(ClassBuilder.SubclassLevel17):
 
     def add_features(

@@ -8,7 +8,7 @@ from CharacterContent.Classes.BaseClasses.ClericBase import (
     ClericCustomStarterClassArgs,
 )
 from Builds.CharacterSheetAccumulator import CharacterSheetData
-from Core.Definitions import ClericSubclass2014
+from Core.Definitions import ArmorType, ClericSubclass2014
 from CharacterContent.Features.SubClassFeatures2014.Cleric import ClericNatureFeatures
 from StatBlocks.SkillsStatBlock import ClericSkillsStatBlock
 
@@ -22,6 +22,7 @@ class ClericNatureLevel3(ClassBuilder.SubclassLevel3):
     ) -> CharacterSheetData:
         data.add_feature(ClericNatureFeatures.AcolyteOfNature())
         data.add_feature(ClericNatureFeatures.BonusProficiency())
+        data.add_armor_proficiency(ArmorType.HEAVY)
         data.add_feature(ClericNatureFeatures.NatureDomainSpells())
         data.add_feature(ClericNatureFeatures.CharmAnimalsAndPlantsChannelDivinity())
         return data
@@ -35,17 +36,6 @@ class ClericNatureLevel6(ClassBuilder.SubclassLevel6):
         data: CharacterSheetData,
     ) -> CharacterSheetData:
         data.add_feature(ClericNatureFeatures.DampenElements())
-        return data
-
-
-@attr.dataclass
-class ClericNatureLevel8(ClassBuilder.SubclassLevel8):
-
-    def add_features(
-        self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
-        data.add_feature(ClericNatureFeatures.DivineStrike())
         return data
 
 

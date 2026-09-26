@@ -5,7 +5,11 @@ from CharacterContent.Features.Core.BaseFeatures import (
     ActionType,
     FeatureTarget,
 )
-from CharacterContent.Features.Core.Improvements import SkillProficiency, SkillExpertise
+from CharacterContent.Features.Core.Improvements import (
+    SkillProficiency,
+    SkillExpertise,
+    SpeedBonus,
+)
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
@@ -54,6 +58,10 @@ class SuperiorMobility(Feature):
             origin="Scout Rogue Level 9",
             usage_tags=["utility"],
         )
+        self._speed = SpeedBonus(10)
+
+    def apply(self, character_stat_block: CharacterStatBlock):
+        self._speed.apply(character_stat_block)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "At 9th level, your walking speed increases by 10 feet. If you have a climbing or swimming speed, this increase applies to that speed as well."

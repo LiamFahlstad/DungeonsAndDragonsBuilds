@@ -137,19 +137,6 @@ class ProtectiveBond(Feature):
         return description
 
 
-class PotentSpellcasting(Feature):
-    def __init__(self):
-        super().__init__(
-            name="Potent Spellcasting",
-            origin="Peace Domain Cleric Level 8",
-            usage_tags=["damage"],
-        )
-
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        description = "You add your Wisdom modifier to the damage you deal with any cleric cantrip."
-        return description
-
-
 class ExpansiveBond(Feature):
     def __init__(self):
         super().__init__(

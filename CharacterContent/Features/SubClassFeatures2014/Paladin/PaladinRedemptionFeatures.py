@@ -1,4 +1,4 @@
-from Core.Definitions import PALADIN_HIT_DIE
+from Core.Definitions import CharacterClass, PALADIN_HIT_DIE
 from CharacterContent.Features.Core.BaseFeatures import (
     Feature,
     FeatureActivation,
@@ -146,7 +146,7 @@ class ProtectiveSpirit(Feature):
     def get_table_description(
         self, character_stat_block: CharacterStatBlock
     ) -> list[tuple[str, str]]:
-        half_level = character_stat_block.character_level // 2
+        half_level = character_stat_block.get_class_level(CharacterClass.PALADIN) // 2
         return [
             ("Trigger", "End turn in combat with < half HP"),
             ("Effect", f"Regain 1d6 + {half_level} HP"),

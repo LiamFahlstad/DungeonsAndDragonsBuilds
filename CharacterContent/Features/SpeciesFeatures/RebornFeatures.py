@@ -1,6 +1,9 @@
-from Core.Definitions import Skill
+from Core.Definitions import DamageType, Skill
 from CharacterContent.Features.Core.BaseFeatures import Feature, RegainedOn
-from CharacterContent.Features.Core.Improvements import SkillProficiencyChoice
+from CharacterContent.Features.Core.Improvements import (
+    DamageResistance,
+    SkillProficiencyChoice,
+)
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 SPEED = 30  # Given by your species
@@ -64,12 +67,23 @@ class RebornKnowledgeSkill(Feature):
         return f"You gain proficiency in the {self.skill.value} skill."
 
 
+STRANGE_ENDURANCE_OPTIONS = [DamageType.COLD, DamageType.NECROTIC, DamageType.POISON]
+
+
 class StrangeEndurance(Feature):
-    def __init__(self):
+    def __init__(self, damage_type: DamageType):
+        if damage_type not in STRANGE_ENDURANCE_OPTIONS:
+            raise ValueError(
+                f"Strange Endurance must be Cold, Necrotic, or Poison, not {damage_type}."
+            )
+        self.damage_type = damage_type
         super().__init__(
             name="Strange Endurance", origin="Reborn Trait", usage_tags=["buff"]
         )
+        self._resistance = DamageResistance(damage_type, self.name)
+
+    def apply(self, character_stat_block: CharacterStatBlock):
+        self._resistance.apply(character_stat_block)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        description = "You have Resistance to one of the following damage types of your choice: Cold, Necrotic, or Poison."
-        return description
+        return f"You have Resistance to {self.damage_type.value} damage."

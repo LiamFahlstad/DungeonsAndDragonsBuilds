@@ -1,4 +1,4 @@
-from Core.Definitions import BARD_HIT_DIE
+from Core.Definitions import BARD_HIT_DIE, CharacterClass
 from CharacterContent.Features.Core.BaseFeatures import (
     FeatureUses,
     Feature,
@@ -24,11 +24,11 @@ class PsychicBlades(Feature):
         return FeatureTarget.ENEMY
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        if character_stat_block.character_level < 5:
+        if character_stat_block.get_class_level(CharacterClass.BARD) < 5:
             psychic_damage = "2d6"
-        elif character_stat_block.character_level < 10:
+        elif character_stat_block.get_class_level(CharacterClass.BARD) < 10:
             psychic_damage = "3d6"
-        elif character_stat_block.character_level < 15:
+        elif character_stat_block.get_class_level(CharacterClass.BARD) < 15:
             psychic_damage = "5d6"
         else:
             psychic_damage = "8d6"
@@ -45,11 +45,11 @@ class PsychicBlades(Feature):
     def get_table_description(
         self, character_stat_block: CharacterStatBlock
     ) -> list[tuple[str, str]]:
-        if character_stat_block.character_level < 5:
+        if character_stat_block.get_class_level(CharacterClass.BARD) < 5:
             psychic_damage = "2d6"
-        elif character_stat_block.character_level < 10:
+        elif character_stat_block.get_class_level(CharacterClass.BARD) < 10:
             psychic_damage = "3d6"
-        elif character_stat_block.character_level < 15:
+        elif character_stat_block.get_class_level(CharacterClass.BARD) < 15:
             psychic_damage = "5d6"
         else:
             psychic_damage = "8d6"

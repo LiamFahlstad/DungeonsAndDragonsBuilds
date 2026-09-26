@@ -83,6 +83,9 @@ class WeaponProficiency(Enum):
     MARTIAL = "Martial weapons"
     MARTIAL_LIGHT = "Martial weapons with the Light property"
     MARTIAL_FINESSE_OR_LIGHT = "Martial weapons with the Finesse or Light property"
+    MARTIAL_MELEE_NOT_HEAVY_OR_TWO_HANDED = (
+        "Melee Martial weapons without the Two-Handed or Heavy property"
+    )
 
 
 class WeaponDamageTypes(Enum):

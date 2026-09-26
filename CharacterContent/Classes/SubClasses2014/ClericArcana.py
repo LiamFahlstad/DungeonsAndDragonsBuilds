@@ -38,17 +38,6 @@ class ClericArcanaLevel6(ClassBuilder.SubclassLevel6):
 
 
 @attr.dataclass
-class ClericArcanaLevel8(ClassBuilder.SubclassLevel8):
-
-    def add_features(
-        self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
-        data.add_feature(ClericArcanaFeatures.PotentSpellcasting())
-        return data
-
-
-@attr.dataclass
 class ClericArcanaLevel17(ClassBuilder.SubclassLevel17):
 
     def add_features(

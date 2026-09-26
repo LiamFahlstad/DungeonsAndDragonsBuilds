@@ -120,7 +120,7 @@ class FungalInfestation(Feature):
         return FeatureTarget.ALLY
 
     def number_of_uses(self, character_stat_block: CharacterStatBlock) -> int:
-        return character_stat_block.get_wisdom_modifier()
+        return max(1, character_stat_block.get_wisdom_modifier())
 
     def get_table_description(
         self, character_stat_block: CharacterStatBlock

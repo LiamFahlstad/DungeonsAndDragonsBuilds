@@ -23,6 +23,7 @@ class ForestGnomeSpeciesBuilder(SpeciesBuilder):
         data.size = GnomeFeatures.SIZE  # Given by your species
 
         data.add_feature(GnomeFeatures.Darkvision())
+        data.add_feature(GnomeFeatures.GnomishCunning())
         data.add_feature(GnomeFeatures.ForestGnomeSpeakWithAnimals())
 
         data.add_spell(BardLevel0Spells.MINOR_ILLUSION, self.spell_casting_ability)
@@ -50,6 +51,7 @@ class RockGnomeSpeciesBuilder(SpeciesBuilder):
         data.size = GnomeFeatures.SIZE  # Given by your species
 
         data.add_feature(GnomeFeatures.Darkvision())
+        data.add_feature(GnomeFeatures.GnomishCunning())
         data.add_feature(GnomeFeatures.RockGnomePrestidigitation())
 
         data.add_spell(BardLevel0Spells.MENDING, Ability.INTELLIGENCE)
